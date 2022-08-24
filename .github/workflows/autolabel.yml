@@ -1,4 +1,4 @@
-name: 'Pull request labeler and user assign'
+name: "Pull request labeler"
 
 # ** What it does? **
 #    - Auto labels PRs if certain files are changed and assign users as reviewers based on that labels.
@@ -16,56 +16,10 @@ permissions:
 
 jobs:
   label_pull_request:
-    name: 'Add labels to pull request'
+    name: "Add labels to pull request"
     runs-on: ubuntu-latest
     steps:
-      - name: 'Label PR with labels in labeler.yml'
+      - name: "Label PR with labels in labeler.yml"
         uses: actions/labeler@v4
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN}}
-
-  assign_vlaja:
-    name: 'Assign vlaja if stancic has created PR with devops label'
-    if: >-
-      ${{ 
-        contains(github.event.pull_request.user.login, 'stancic') &&
-        contains(github.event.pull_request.labels.*.name, 'devops')
-      }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Assign vlaja'
-        uses: murs313/request-review@v1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: 'vlaja'
-
-  assign_stancic:
-    name: 'Assign stancic if vlaja has created PR with devops label'
-    if: >-
-      ${{ 
-        contains(github.event.pull_request.user.login, 'vlaja') &&
-        contains(github.event.pull_request.labels.*.name, 'devops')
-      }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Assign stancic'
-        uses: murs313/request-review@v1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: 'stancic'
-
-  assign_both_vlaja_and_stancic:
-    name: 'Assign both vlaja and stancic if the PR is created with devops label'
-    if: >-
-      ${{ 
-        !contains(github.event.pull_request.user.login, 'stancic') && 
-        !contains(github.event.pull_request.user.login, 'vlaja') &&
-        contains(github.event.pull_request.labels.*.name, 'devops')
-      }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Assign both vlaja and stancic'
-        uses: murs313/request-review@v1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          reviewers: 'vlaja stancic'
