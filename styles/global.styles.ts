@@ -138,21 +138,35 @@ export const globalStyles = css`
   --transition-easing-cubic: cubic-bezier(0.55, 0.06, 0.68, 0.19);
 
   @font-face {
-    font-family: 'Neutra2-Light';
-    font-weight: 300;
-    src: url('/fonts/Neutra2-Light.otf') format('opentype');
-  }
-
-  @font-face {
-    font-family: 'Neutra2-Book';
+    font-family: 'Styrene A LC';
+    font-style: italic;
     font-weight: 400;
-    src: url('/fonts/Neutra2-Book.otf') format('opentype');
+    font-display: swap;
+    src: url('/assets/fonts/StyreneALC-RegularItalic.woff2') format('woff2');
   }
 
   @font-face {
-    font-family: 'Neutra2-Demi';
-    font-weight: 600;
-    src: url('/fonts/Neutra2-Demi.otf') format('opentype');
+    font-family: 'Styrene A LC';
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/assets/fonts/StyreneALC-BoldItalic.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Styrene A LC';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/StyreneALC-Regular.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Styrene A LC';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/assets/fonts/StyreneALC-Bold.woff2') format('woff2');
   }
 
   @keyframes rotateClockwise {
@@ -175,6 +189,12 @@ export const globalStyles = css`
 
   html {
     box-sizing: border-box;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+
+    @media (--screen-medium-large) {
+      overflow: hidden;
+    }
   }
 
   body {
@@ -182,9 +202,37 @@ export const globalStyles = css`
     margin: 0 auto;
     color: var(--color-text);
     max-width: 1720px;
+    font-family: var(--font-family-primary);
 
     @media ${breakpoints.toMed} {
       padding: 0 20px;
+    }
+
+    background-color: var(--color-foreground-secondary);
+    color: var(--color-text-5);
+    overflow-x: hidden;
+
+    @media ${breakpoints.fromLrg} {
+      overflow: hidden;
+    }
+
+    .no-scroll & {
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden;
+    }
+
+    .no-scroll--mobile & {
+      @media (--screen-medium-max) {
+        max-width: 100%;
+        max-height: 100%;
+        overflow: hidden;
+      }
+    }
+
+    *::-webkit-scrollbar,
+    *::-webkit-scrollbar-track {
+      border-radius: 8px;
     }
   }
   *,
@@ -217,6 +265,7 @@ export const globalStyles = css`
   ul {
     margin: 0;
     padding: 0;
+    font-weight: var(--font-weight-normal);
   }
 
   ul,
@@ -228,5 +277,38 @@ export const globalStyles = css`
     margin-inline-end: 0px;
     padding-inline-start: 0px;
     list-style: none;
+  }
+
+  address {
+    font-style: normal;
+  }
+
+  @media screen and (prefers-reduced-motion: reduce), (update: slow) {
+    * {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--color-text-1);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-text-3);
+    border-radius: 8px;
+    outline: 0;
+
+    &:hover,
+    &:active {
+      background: var(--color-text-4);
+    }
   }
 `;
