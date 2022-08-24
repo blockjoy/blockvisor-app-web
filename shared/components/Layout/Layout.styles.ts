@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { colors } from 'styles/utils.colors.styles';
 
 const layout = css`
   display: flex;
