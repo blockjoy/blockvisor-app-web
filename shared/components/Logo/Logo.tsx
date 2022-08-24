@@ -1,4 +1,5 @@
-import Image from 'next/image';
+import LogoLarge from '@public/assets/icons/blockjoy-logo-large.svg';
+import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
 import {
   logo,
   logoLink,
@@ -6,6 +7,7 @@ import {
   logoLinkCentered,
   logoFaded,
 } from './Logo.styles';
+import { display } from 'styles/utils.display.styles';
 
 type IconType = 'blockvisor-small' | 'faded' | 'blockjoy-large';
 
@@ -20,22 +22,22 @@ export function Logo({ type = 'blockvisor-small', centered = false }: Props) {
       case 'blockjoy-large':
         return (
           <>
-            <span className="visually-hidden">BlockJoy</span>
-            <Image src="/blockjoy-logo-large.svg" />
+            <span css={[display.visuallyHidden]}>BlockJoy</span>
+            <LogoLarge />
           </>
         );
       case 'faded':
         return (
           <span css={[logoFaded]}>
-            <Image src="/lockjoy-logo-small.svg" />
+            <LogoSmall />
           </span>
         );
 
       default:
         return (
           <span css={[logoPrimary]}>
-            <span className="visually-hidden">BlockJoy</span>
-            <Image layout="fill" src="/lockjoy-logo-small.svg" />
+            <span css={[display.visuallyHidden]}>BlockJoy</span>
+            <LogoSmall />
           </span>
         );
     }

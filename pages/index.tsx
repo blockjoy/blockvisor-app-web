@@ -6,6 +6,8 @@ const Login: NextPage = () => {
   return (
     <Layout title="Login">
       <div>Login form goes here</div>
+      <input />
+      <p>adsdadasdad</p>
     </Layout>
   );
 };

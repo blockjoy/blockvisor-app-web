@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { colors } from 'styles/utils.colors.styles';
 
 const layout = css`
   display: flex;
@@ -10,8 +11,7 @@ const layout = css`
 `;
 
 const layoutWrapper = css`
-  opacity: 0;
-  background-color: hsla(90, 29%, 97%, 0.03);
+  background-color: var(--color-text-5-o3);
   border-radius: 8px;
   padding: 30px;
 
@@ -27,29 +27,3 @@ const layoutTitle = css`
 `;
 
 export { layout, layoutTitle, layoutWrapper };
-
-/* .layout {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 24px 12px;
-
-    &__wrapper {
-      opacity: 0;
-      background-color: theme(--color-text-5-o3);
-      border-radius: 8px;
-      padding: 30px;
-
-      @media (--screen-medium-small) {
-        padding: 60px;
-        width: 380px;
-      }
-    }
-
-    &__title {
-      margin-top: 40px;
-      margin-bottom: 24px;
-    }
-  } */

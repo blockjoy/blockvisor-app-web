@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 const logo = css`
   margin: 0;
@@ -6,7 +7,7 @@ const logo = css`
 
 const logoLink = css`
   display: inline-block;
-  transition: opacity 0.18s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+  transition: opacity 0.18s var(--transition-easing-cubic);
 
   &:hover,
   &:active {
@@ -23,7 +24,7 @@ const logoPrimary = css`
   fill: #f8faf6;
   opacity: 0.3;
 
-  @media (min-width: 55rem) {
+  @media ${breakpoints.fromLrg} {
     fill: var(--color-primary);
     opacity: 1;
   }
