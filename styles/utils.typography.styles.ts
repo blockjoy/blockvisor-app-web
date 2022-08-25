@@ -9,11 +9,16 @@ export const typo = {
   button: css`
     font-size: var(--font-size-button);
     line-height: var(--line-height-button);
-    letter-spacing: var(--letter-spacing-default);
+    letter-spacing: var(--letter-spacing-button);
   `,
   base: css`
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
+    letter-spacing: var(--letter-spacing-default);
+  `,
+  medium: css`
+    font-size: var(--font-size-medium);
+    line-height: var(--line-height-medium);
     letter-spacing: var(--letter-spacing-default);
   `,
   small: css`

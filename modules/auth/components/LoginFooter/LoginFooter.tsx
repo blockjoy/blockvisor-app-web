@@ -28,18 +28,3 @@ export function LoginFooter() {
     </footer>
   );
 }
-
-/* 
-<footer class="login-footer t-tiny">
-<div class="t-right">
-  <a class="link login__link" href={ROUTES.FORGOT_PASSWORD}
-    >Forgot password?</a
-  >
-</div>
-<div class="login-footer__account">
-  <p class="t-color-text-2">Don't have a BlockVisor account?</p>
-  <a href={ROUTES.REGISTER} class="link link--primary"
-    >Create an Account</a
-  >
-</div>
-</footer> */
