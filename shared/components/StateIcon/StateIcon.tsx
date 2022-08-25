@@ -1,13 +1,13 @@
 import { FC } from 'react';
-import IconChain from 'icons/chain-12.svg';
-import IconCheckmark from 'icons/checkmark-12.svg';
-import IconConsensus from 'icons/consensus-12.svg';
-import IconFlag from 'icons/flag-12.svg';
-import IconExclamation from 'icons/exclamation-12.svg';
-import IconIndicator from 'icons/indicator-12.svg';
-import IconStopwatch from 'icons/stopwatch-12.svg';
-import IconUpdate from 'icons/update-12.svg';
-import IconRefresh from 'icons/refresh-12.svg';
+import IconChain from '@public/assets/icons/chain-12.svg';
+import IconCheckmark from '@public/assets/icons/checkmark-12.svg';
+import IconConsensus from '@public/assets/icons/consensus-12.svg';
+import IconFlag from '@public/assets/icons/flag-12.svg';
+import IconExclamation from '@public/assets/icons/exclamation-12.svg';
+import IconIndicator from '@public/assets/icons/indicator-12.svg';
+import IconStopwatch from '@public/assets/icons/stopwatch-12.svg';
+import IconUpdate from '@public/assets/icons/update-12.svg';
+import IconRefresh from '@public/assets/icons/refresh-12.svg';
 
 export interface Props {
   status: HostState | NodeState;
