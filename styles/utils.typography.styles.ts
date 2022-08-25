@@ -27,3 +27,9 @@ export const typo = {
     letter-spacing: var(--letter-spacing-default);
   `,
 };
+
+export const tAlign = {
+  right: css`
+    text-align: right;
+  `,
+};
