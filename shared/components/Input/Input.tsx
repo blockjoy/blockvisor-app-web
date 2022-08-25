@@ -1,4 +1,8 @@
 import { InputHTMLAttributes, ReactNode } from 'react';
+import { SerializedStyles } from '@emotion/react';
+import { RegisterOptions, useFormContext } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
+
 import { InputUtil } from './InputUtil';
 import {
   inputWrapper,
@@ -11,7 +15,8 @@ import {
   inputFieldDefault,
 } from './Input.styles';
 import { InputLabel } from './InputLabel';
-import { SerializedStyles } from '@emotion/react';
+import { typo, textColor } from 'styles/utils.typography.styles';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export type InputSize = 'small' | 'medium' | 'large';
 
@@ -23,6 +28,7 @@ type InputProps = {
   labelElement?: ReactNode;
   labelStyles?: SerializedStyles[];
   inputSize?: InputSize;
+  validationOptions?: RegisterOptions;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function Input({
@@ -33,15 +39,19 @@ export function Input({
   disabled,
   labelElement,
   labelStyles,
+  validationOptions,
+  value,
   ...rest
 }: InputProps) {
-  // replace with hook form
-  const isValid = true;
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   const inputClasses = setInputStyles(
     inputSize,
     disabled,
-    isValid,
+    !!errors[name],
     !!leftIcon,
     !!rightIcon,
   );
@@ -53,9 +63,20 @@ export function Input({
       </InputLabel>
       <div tabIndex={0} css={[inputWrapper]}>
         <InputUtil position="left">{leftIcon}</InputUtil>
-        <input css={[inputClasses]} disabled={disabled} {...rest} />
+        <input
+          {...register(name, validationOptions)}
+          css={[inputClasses]}
+          disabled={disabled}
+          {...rest}
+          name={name}
+        />
         <InputUtil position="right">{rightIcon}</InputUtil>
       </div>
+      <ErrorMessage
+        name={name}
+        errors={errors}
+        as={<p css={[typo.smaller, textColor.warning, spacing.top.small]} />}
+      />
     </>
   );
 }
@@ -77,7 +98,7 @@ function setInputStyles(
     fieldClasses.push(inputFieldDisabled);
   }
 
-  if (!isValid) {
+  if (isValid) {
     fieldClasses.push(inputFieldError);
   }
 
