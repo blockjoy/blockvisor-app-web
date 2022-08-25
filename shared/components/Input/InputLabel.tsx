@@ -1,3 +1,4 @@
+import { SerializedStyles } from '@emotion/react';
 import type { InputHTMLAttributes, ReactNode } from 'react';
 import { InputSize } from './Input';
 import {
@@ -10,6 +11,7 @@ type Props = {
   name: string;
   children?: ReactNode;
   labelSize?: InputSize;
+  additionalStyles?: SerializedStyles[];
 } & InputHTMLAttributes<HTMLLabelElement>;
 
 export function InputLabel({
@@ -17,11 +19,16 @@ export function InputLabel({
   children,
   labelSize = 'medium',
   disabled,
+  additionalStyles,
 }: Props) {
   const labelStyles = [inputLabel, inputLabelSize[labelSize]];
 
   if (disabled) {
     labelStyles.push(inputLabelDisabled);
+  }
+
+  if (additionalStyles) {
+    labelStyles.push(...additionalStyles);
   }
 
   return (

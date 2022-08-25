@@ -11,6 +11,7 @@ import {
   inputFieldDefault,
 } from './Input.styles';
 import { InputLabel } from './InputLabel';
+import { SerializedStyles } from '@emotion/react';
 
 export type InputSize = 'small' | 'medium' | 'large';
 
@@ -20,6 +21,7 @@ type InputProps = {
   rightIcon?: ReactNode;
   hints?: ReactNode;
   labelElement?: ReactNode;
+  labelStyles?: SerializedStyles[];
   inputSize?: InputSize;
 } & InputHTMLAttributes<HTMLInputElement>;
 
@@ -30,6 +32,7 @@ export function Input({
   rightIcon,
   disabled,
   labelElement,
+  labelStyles,
   ...rest
 }: InputProps) {
   // replace with hook form
@@ -45,7 +48,9 @@ export function Input({
 
   return (
     <>
-      <InputLabel name={name}>{labelElement}</InputLabel>
+      <InputLabel additionalStyles={labelStyles} name={name}>
+        {labelElement}
+      </InputLabel>
       <div tabIndex={0} css={[inputWrapper]}>
         <InputUtil position="left">{leftIcon}</InputUtil>
         <input css={[inputClasses]} disabled={disabled} {...rest} />

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const display = {
+export const spacing = {
   bottom: {
     micro: css`
       margin-bottom: 4px;
