@@ -68,6 +68,11 @@ export const typo = {
   `,
 
   /** Special */
+  label: css`
+    font-size: var(--font-size-label);
+    line-height: var(--line-height-label);
+    letter-spacing: var(--letter-spacing-label);
+  `,
   microlabel: css`
     font-size: var(--font-size-microlabel);
     line-height: var(--line-height-microlabel);
