@@ -1,19 +1,41 @@
-import { css } from '@emotion/react'
-import { breakpoints } from './variables.styles'
+import { css } from '@emotion/react';
+import { breakpoints } from './variables.styles';
 
 /**
  * Display grid
  */
 
-export const grid = css`
+const grid = css`
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-column-gap: 20px;
-  grid-auto-rows: min-content;
-  max-width: 1720px;
+  grid-row-gap: 32px;
 
-  @media ${breakpoints.fromSml} {
-    grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 40px;
+  @media (--screen-medium-small) {
+    grid-column-gap: 28px;
   }
-`
+
+  @media (--screen-medium) {
+    grid-template-columns: repeat(12, 1fr);
+  }
+`;
+
+const gridSpacing = css`
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @media (--screen-large) {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+`;
+
+const gridSpacingSmallOnly = css`
+  padding-left: 28px;
+  padding-right: 28px;
+
+  @media (--screen-large) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+`;
+
+export { grid, gridSpacing, gridSpacingSmallOnly };

@@ -91,3 +91,38 @@ export const tAlign = {
     text-align: right;
   `,
 };
+
+const fluidCalc = (min: string, max: string, size = '2vw + 1rem') =>
+  `clamp(var(${min}), ${size}, var(${max}))`;
+
+export const fluid = {
+  large: css`
+    font-size: ${fluidCalc(
+      '--font-size-base',
+      '--font-size-large',
+      '1.6vw + 0.5rem',
+    )};
+    line-height: ${fluidCalc(
+      '--line-height-base',
+      '--line-height-large',
+      '1.6vw + 1rem',
+    )};
+  `,
+  huge: css`
+    font-size: ${fluidCalc(
+      '--font-size-xxlarge',
+      '--font-size-huge',
+      '4vw + 1.25rem',
+    )};
+    line-height: ${fluidCalc(
+      '--line-height-xxlarge',
+      '--line-height-huge',
+      '4vw + 1.5rem',
+    )};
+    letter-spacing: ${fluidCalc(
+      '--letter-spacing-huge',
+      '--letter-spacing-xxlarge',
+      '-2vw + 1rem',
+    )};
+  `,
+};
