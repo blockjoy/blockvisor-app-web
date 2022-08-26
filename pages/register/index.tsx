@@ -1,10 +1,13 @@
+import { RegisterFooter, RegisterForm } from '@modules/auth';
+import { Layout } from '@shared/components';
 import type { NextPage } from 'next';
 
 const Register: NextPage = () => {
   return (
-    <div>
-      <main>Register index page</main>
-    </div>
+    <Layout title="Create Account">
+      <RegisterForm />
+      <RegisterFooter />
+    </Layout>
   );
 };
 

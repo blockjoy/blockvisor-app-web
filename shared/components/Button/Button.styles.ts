@@ -46,8 +46,8 @@ const buttonStyle = {
     }
   `,
   warning: css`
-    background-color: theme(--color-utility-warning);
-    color: theme(--color-foreground-primary);
+    background-color: var(--color-utility-warning);
+    color: var(--color-foreground-primary);
     box-shadow: 0px 0px 0px 3px var(--color-utility-warning-o0);
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 

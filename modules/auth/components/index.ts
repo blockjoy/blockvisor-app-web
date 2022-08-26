@@ -1,3 +1,4 @@
 export * from './LoginForm';
 export * from './PasswordTogle';
-export * from './LoginFooter';
+export * from './Footer';
+export * from './RegisterForm';
