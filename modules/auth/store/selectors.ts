@@ -1,5 +1,5 @@
 import { DefaultValue, selector } from 'recoil';
-import { User } from '../models';
+import { User } from '..';
 import { authAtoms } from './atoms';
 
 const { creationTimeAtom, emailAtom, userUidAtom } = authAtoms;
