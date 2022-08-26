@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { normalize } from './normalize.styles';
 import { breakpoints } from './variables.styles';
 
 /**
@@ -6,6 +7,7 @@ import { breakpoints } from './variables.styles';
  */
 
 export const globalStyles = css`
+  ${normalize}
   :root {
     /* --- PRIMARY --- */
     --color-primary: hsl(90, 84%, 75%);

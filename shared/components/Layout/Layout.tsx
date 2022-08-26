@@ -24,7 +24,7 @@ export function Layout({ children, title }: Props) {
 
   return (
     <main tabIndex={0} id="content" css={[layout]}>
-      <section css={[layoutWrapper, typo.small]} id="js-auth-layout">
+      <section css={[layoutWrapper]} id="js-auth-layout">
         <header>
           <Logo />
           <h1 css={[layoutTitle]}>{title}</h1>

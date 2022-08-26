@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from 'react';
+import { MouseEventHandler, ReactNode, Children } from 'react';
 import {
   buttonBorder,
   buttonSize,
@@ -8,6 +8,7 @@ import {
 } from './Button.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { SerializedStyles } from '@emotion/react';
+import Link from 'next/link';
 
 type ButtonSize = 'small' | 'medium' | 'normal';
 
@@ -60,9 +61,11 @@ export function Button({
   }
 
   if (href) {
-    <a href={href} css={[buttonStyles]}>
-      {children}
-    </a>;
+    return (
+      <Link href={href} passHref>
+        <a css={[buttonStyles]}>{children}</a>
+      </Link>
+    );
   }
 
   return (

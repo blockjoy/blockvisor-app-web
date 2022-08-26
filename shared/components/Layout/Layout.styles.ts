@@ -22,6 +22,7 @@ const layoutWrapper = css`
 `;
 
 const layoutTitle = css`
+  font-size: 20px;
   margin-top: 40px;
   margin-bottom: 24px;
 `;

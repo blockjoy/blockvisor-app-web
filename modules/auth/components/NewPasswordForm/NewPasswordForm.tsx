@@ -2,29 +2,29 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Button, Input } from '@shared/components';
-import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
+import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { PasswordToggle } from '../PasswordTogle';
-import { isValidEmail } from '@shared/utils/validation';
 
-type LoginForm = {
-  email: string;
+type NewPassword = {
   password: string;
+  confirmPassword: string;
 };
 
-export function LoginForm() {
-  const form = useForm<LoginForm>();
+export function NewPasswordForm() {
+  const form = useForm<NewPassword>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-
+  const { handleSubmit, watch } = form;
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
     setActiveType(type);
   };
 
-  const onSubmit = form.handleSubmit(({ email, password }) => {
-    console.log({ email, password });
+  const onSubmit = handleSubmit(({ password, confirmPassword }) => {
+    console.log({ password, confirmPassword });
   });
+
   return (
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
@@ -32,26 +32,37 @@ export function LoginForm() {
           <li css={[spacing.bottom.mediumSmall]}>
             <Input
               labelStyles={[display.visuallyHidden]}
-              name="email"
-              placeholder="Email"
-              validationOptions={{
-                required: 'Your e-mail address is required',
-                pattern: {
-                  value: isValidEmail(),
-                  message: 'Email format is not correct',
-                },
-              }}
-            />
-          </li>
-          <li css={[spacing.bottom.medium]}>
-            <Input
-              labelStyles={[display.visuallyHidden]}
               name="password"
               placeholder="Password"
               type={activeType}
               validationOptions={{
                 required: 'This is a mandatory field',
-                minLength: { value: 6, message: 'Password too short' },
+                minLength: {
+                  value: 8,
+                  message: 'Password should be at least 8 characters long',
+                },
+              }}
+              rightIcon={
+                <PasswordToggle
+                  activeType={activeType}
+                  onClick={handleIconClick}
+                />
+              }
+            />
+          </li>
+          <li css={[spacing.bottom.medium]}>
+            <Input
+              labelStyles={[display.visuallyHidden]}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              type={activeType}
+              validationOptions={{
+                required: 'This is a mandatory field',
+                validate: (value) => {
+                  if (watch('password') != value) {
+                    return 'Passwords do not match';
+                  }
+                },
               }}
               rightIcon={
                 <PasswordToggle
@@ -63,7 +74,7 @@ export function LoginForm() {
           </li>
         </ul>
         <Button size="medium" display="block" style="primary" type="submit">
-          Login
+          Set New Password
         </Button>
       </form>
     </FormProvider>

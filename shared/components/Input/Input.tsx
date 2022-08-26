@@ -15,7 +15,8 @@ import {
   inputFieldDefault,
 } from './Input.styles';
 import { InputLabel } from './InputLabel';
-import { typo, textColor } from 'styles/utils.typography.styles';
+import { typo } from 'styles/utils.typography.styles';
+import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 
 export type InputSize = 'small' | 'medium' | 'large';
@@ -75,7 +76,7 @@ export function Input({
       <ErrorMessage
         name={name}
         errors={errors}
-        as={<p css={[typo.smaller, textColor.warning, spacing.top.small]} />}
+        as={<p css={[typo.smaller, colors.warning, spacing.top.small]} />}
       />
     </>
   );
