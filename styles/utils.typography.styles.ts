@@ -86,9 +86,3 @@ export const tAlign = {
     text-align: right;
   `,
 };
-
-export const textColor = {
-  warning: css`
-    color: var(--color-utility-warning);
-  `,
-};
