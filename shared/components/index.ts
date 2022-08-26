@@ -7,4 +7,3 @@ export * from './Layout/Layout';
 export * from './LazyImg/LazyImg';
 export * from './Logo/Logo';
 export * from './SEO/SEO';
-export * from './StateIcon/StateIcon';

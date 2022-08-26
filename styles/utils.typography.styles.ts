@@ -41,16 +41,6 @@ export const typo = {
     line-height: var(--line-height-smaller);
     letter-spacing: var(--letter-spacing-default);
   `,
-  smaller: css`
-    font-size: var(--font-size-small);
-    line-height: var(--line-height-small);
-    letter-spacing: var(--letter-spacing-default);
-  `,
-  medium: css`
-    font-size: var(--font-size-medium);
-    line-height: var(--line-height-medium);
-    letter-spacing: var(--letter-spacing-default);
-  `,
   large: css`
     font-size: var(--font-size-large);
     line-height: var(--line-height-large);

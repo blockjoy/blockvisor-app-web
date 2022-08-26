@@ -1,8 +1,8 @@
 import { ReactNode, useEffect } from 'react';
 import anime from 'animejs';
 import { layout, layoutWrapper, layoutTitle } from './Layout.styles';
-import { Logo } from '../Logo';
 import { typo } from 'styles/utils.typography.styles';
+import { Logo } from '..';
 
 type Props = {
   title?: string;

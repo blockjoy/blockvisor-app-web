@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { authSelectors } from '../store';
+import { authSelectors } from '../store/selectors';
 
 /**
  * Use Authentication Redirects Hook
@@ -10,22 +10,21 @@ import { authSelectors } from '../store';
  */
 
 export const useAuthRedirects = () => {
-    const [loading, setLoading] = useState(true);
-    const user = useRecoilValue(authSelectors.user);
-    const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const user = useRecoilValue(authSelectors.user);
+  const router = useRouter();
 
-    useEffect(() => {
-        if (user?.userUid === null) {
-            router.replace('/login');
-            setLoading(false);
-        }
+  useEffect(() => {
+    if (user?.userUid === null) {
+      router.replace('/login');
+      setLoading(false);
+    }
 
-        if (user?.userUid) {
-            router.replace('/');
-            setLoading(false);
-        }
+    if (user?.userUid) {
+      router.replace('/');
+      setLoading(false);
+    }
+  }, [user?.userUid]);
 
-    }, [user?.userUid]);
-
-    return { loading };
+  return { loading };
 };
