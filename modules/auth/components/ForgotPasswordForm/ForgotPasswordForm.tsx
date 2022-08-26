@@ -23,7 +23,7 @@ export function ForgotPasswordForm() {
           <li css={[spacing.bottom.medium]}>
             <Input
               name="email"
-              placeholder="Email"
+              placeholder="Your e-mail"
               validationOptions={{
                 required: 'Your e-mail address is required',
                 pattern: {
