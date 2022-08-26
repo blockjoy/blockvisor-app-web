@@ -1,4 +1,3 @@
-import { ROUTES } from '@shared/constants';
 import {
   footerLogin,
   footerLoginLink,
@@ -7,6 +6,7 @@ import {
 import { typo, tAlign } from 'styles/utils.typography.styles';
 import { link, linkPrimary, linkUnderline } from 'styles/link.styles';
 import { colors } from 'styles/utils.colors.styles';
+import { ROUTES } from '@shared/constants/routes';
 
 export function LoginFooter() {
   return (
