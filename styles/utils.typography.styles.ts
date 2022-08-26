@@ -37,8 +37,8 @@ export const typo = {
     letter-spacing: var(--letter-spacing-default);
   `,
   small: css`
-    font-size: var(--font-size-smaller);
-    line-height: var(--line-height-smaller);
+    font-size: var(--font-size-small);
+    line-height: var(--line-height-small);
     letter-spacing: var(--letter-spacing-default);
   `,
   large: css`
