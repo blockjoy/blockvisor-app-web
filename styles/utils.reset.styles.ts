@@ -11,7 +11,7 @@ export const reset = {
     border-width: 0;
     padding: 0;
   `,
-  listReset: css`
+  link: css`
     color: inherit;
     text-decoration: inherit;
   `,

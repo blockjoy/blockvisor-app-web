@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren } from 'react';
-import { resets } from 'styles/utils.resets.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from '../ActionTitleHeader/ActionTitleHeader.styles';
 import CheckIcon from '@public/assets/icons/check-empty-12.svg';
+import { reset } from 'styles/utils.reset.styles';
 
 interface Props extends PropsWithChildren {
   step: number;
@@ -29,7 +29,7 @@ export const StepLabel: FC<Props> = ({
 
   return (
     <button
-      css={[resets.button, typo.label, styles[stepLabel]]}
+      css={[reset.button, typo.label, styles[stepLabel]]}
       disabled={currentStep <= step}
       type="button"
       onClick={handleClick}
