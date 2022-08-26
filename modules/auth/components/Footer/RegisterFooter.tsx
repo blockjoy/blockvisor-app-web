@@ -1,4 +1,4 @@
-import { ROUTES } from '@shared/constants';
+import { ROUTES } from '@shared/constants/routes';
 import { footerLogin, footerLoginAccount } from './LoginFooter.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { link, linkPrimary, linkUnderline } from 'styles/link.styles';

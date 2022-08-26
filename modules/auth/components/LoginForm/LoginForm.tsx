@@ -6,7 +6,7 @@ import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { PasswordToggle } from '../PasswordTogle';
-import { isValidEmail } from '@shared/utils';
+import { isValidEmail } from '@shared/utils/validation';
 
 type LoginForm = {
   email: string;
