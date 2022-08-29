@@ -1,6 +1,5 @@
 import { SerializedStyles } from '@emotion/react';
 import type { InputHTMLAttributes, ReactNode } from 'react';
-import { InputSize } from './Input';
 import {
   inputLabel,
   inputLabelSize,

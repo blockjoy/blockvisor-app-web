@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { grid } from 'styles/grid.styes';
+import { grid } from 'styles/grid.styles';
 import { SkipToContent } from '..';
 import { styles } from './LayoutTwoColumn.styles';
 

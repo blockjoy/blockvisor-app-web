@@ -6,8 +6,8 @@ import {
   quoteBlockRole,
 } from './QuoteBlock.styles';
 import { containers } from 'styles/containers.styles';
-import { grid, gridSpacingSmallOnly } from 'styles/grid.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { grid } from 'styles/grid.styles';
 
 type Props = {
   children?: ReactNode;
@@ -20,7 +20,7 @@ export function QuoteBlock({ children, author, role, authorImage }: Props) {
   return (
     <section css={[quoteBlock]}>
       <article
-        css={[containers.large, containers.main, grid, gridSpacingSmallOnly]}
+        css={[containers.large, containers.main, grid.base, grid.smallOnly]}
       >
         <div css={[quoteBlockContent, typo.medium]}>
           {children}
