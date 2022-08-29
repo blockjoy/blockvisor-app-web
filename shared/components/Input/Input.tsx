@@ -19,8 +19,6 @@ import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 
-export type InputSize = 'small' | 'medium' | 'large';
-
 type InputProps = {
   name: string;
   leftIcon?: ReactNode;

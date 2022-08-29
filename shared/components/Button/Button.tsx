@@ -10,20 +10,6 @@ import { reset } from 'styles/utils.reset.styles';
 import { SerializedStyles } from '@emotion/react';
 import Link from 'next/link';
 
-type ButtonSize = 'small' | 'medium' | 'normal';
-
-type ButtonStyle =
-  | 'primary'
-  | 'secondary'
-  | 'outline'
-  | 'ghost'
-  | 'warning'
-  | 'basic';
-
-type ButtonBorder = 'rounded' | 'round';
-
-type ButtonDisplay = 'inline' | 'block';
-
 type Props = {
   children?: ReactNode;
   size?: ButtonSize;
