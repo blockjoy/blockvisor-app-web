@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { normalize } from './normalize.styles';
 import { breakpoints } from './variables.styles';
 
 /**
@@ -6,6 +7,7 @@ import { breakpoints } from './variables.styles';
  */
 
 export const globalStyles = css`
+  ${normalize}
   :root {
     /* --- PRIMARY --- */
     --color-primary: hsl(90, 84%, 75%);
@@ -73,100 +75,102 @@ export const globalStyles = css`
     --color-text-1: hsl(96, 3%, 65%);
   }
 
-  /* --- FONT SIZES --- */
-  --root-font-size: 16;
-  --font-size-button: calc((16 / var(--root-font-size)) * 1rem);
-  --font-size-button-small: calc((13 / var(--root-font-size)) * 1rem);
-  --font-size-microlabel: calc((10 / var(--root-font-size)) * 1rem);
-  --font-size-micro: calc((10 / var(--root-font-size)) * 1rem);
-  --font-size-tiny: calc((12 / var(--root-font-size)) * 1rem);
-  --font-size-label: calc((12 / var(--root-font-size)) * 1rem);
-  --font-size-smaller: calc((13 / var(--root-font-size)) * 1rem);
-  --font-size-small: calc((14 / var(--root-font-size)) * 1rem);
-  --font-size-base: calc((16 / var(--root-font-size)) * 1rem);
-  --font-size-medium: calc((20 / var(--root-font-size)) * 1rem);
-  --font-size-large: calc((24 / var(--root-font-size)) * 1rem);
-  --font-size-xlarge: calc((32 / var(--root-font-size)) * 1rem);
-  --font-size-xxlarge: calc((40 / var(--root-font-size)) * 1rem);
-  --font-size-xxxlarge: calc((48 / var(--root-font-size)) * 1rem);
-  --font-size-huge: calc((60 / var(--root-font-size)) * 1rem);
+  :root {
+    /* --- FONT SIZES --- */
+    --root-font-size: 16;
+    --font-size-button: calc((16 / var(--root-font-size)) * 1rem);
+    --font-size-button-small: calc((13 / var(--root-font-size)) * 1rem);
+    --font-size-microlabel: calc((10 / var(--root-font-size)) * 1rem);
+    --font-size-micro: calc((10 / var(--root-font-size)) * 1rem);
+    --font-size-tiny: calc((12 / var(--root-font-size)) * 1rem);
+    --font-size-label: calc((12 / var(--root-font-size)) * 1rem);
+    --font-size-smaller: calc((13 / var(--root-font-size)) * 1rem);
+    --font-size-small: calc((14 / var(--root-font-size)) * 1rem);
+    --font-size-base: calc((16 / var(--root-font-size)) * 1rem);
+    --font-size-medium: calc((20 / var(--root-font-size)) * 1rem);
+    --font-size-large: calc((24 / var(--root-font-size)) * 1rem);
+    --font-size-xlarge: calc((32 / var(--root-font-size)) * 1rem);
+    --font-size-xxlarge: calc((40 / var(--root-font-size)) * 1rem);
+    --font-size-xxxlarge: calc((48 / var(--root-font-size)) * 1rem);
+    --font-size-huge: calc((60 / var(--root-font-size)) * 1rem);
 
-  /* --- LINE HEIGHTS--- */
-  --line-height-micro: calc((12 / var(--root-font-size)) * 1rem);
-  --line-height-tiny: calc((16 / var(--root-font-size)) * 1rem);
-  --line-height-microlabel: calc((16 / var(--root-font-size)) * 1rem);
-  --line-height-label: calc((16 / var(--root-font-size)) * 1rem);
-  --line-height-smaller: calc((20 / var(--root-font-size)) * 1rem);
-  --line-height-small: calc((20 / var(--root-font-size)) * 1rem);
-  --line-height-base: calc((24 / var(--root-font-size)) * 1rem);
-  --line-height-button-small: calc((20 / var(--root-font-size)) * 1rem);
-  --line-height-button: calc((24 / var(--root-font-size)) * 1rem);
-  --line-height-medium: calc((28 / var(--root-font-size)) * 1rem);
-  --line-height-large: calc((32 / var(--root-font-size)) * 1rem);
-  --line-height-xlarge: calc((40 / var(--root-font-size)) * 1rem);
-  --line-height-xxlarge: calc((44 / var(--root-font-size)) * 1rem);
-  --line-height-xxxlarge: calc((52 / var(--root-font-size)) * 1rem);
-  --line-height-huge: calc((64 / var(--root-font-size)) * 1rem);
+    /* --- LINE HEIGHTS--- */
+    --line-height-micro: calc((12 / var(--root-font-size)) * 1rem);
+    --line-height-tiny: calc((16 / var(--root-font-size)) * 1rem);
+    --line-height-microlabel: calc((16 / var(--root-font-size)) * 1rem);
+    --line-height-label: calc((16 / var(--root-font-size)) * 1rem);
+    --line-height-smaller: calc((20 / var(--root-font-size)) * 1rem);
+    --line-height-small: calc((20 / var(--root-font-size)) * 1rem);
+    --line-height-base: calc((24 / var(--root-font-size)) * 1rem);
+    --line-height-button-small: calc((20 / var(--root-font-size)) * 1rem);
+    --line-height-button: calc((24 / var(--root-font-size)) * 1rem);
+    --line-height-medium: calc((28 / var(--root-font-size)) * 1rem);
+    --line-height-large: calc((32 / var(--root-font-size)) * 1rem);
+    --line-height-xlarge: calc((40 / var(--root-font-size)) * 1rem);
+    --line-height-xxlarge: calc((44 / var(--root-font-size)) * 1rem);
+    --line-height-xxxlarge: calc((52 / var(--root-font-size)) * 1rem);
+    --line-height-huge: calc((64 / var(--root-font-size)) * 1rem);
 
-  /* --- LETTER SPACINGS --- */
-  --letter-spacing-huge: calc((-2 / var(--root-font-size)) * 1rem);
-  --letter-spacing-xxxlarge: calc((-2 / var(--root-font-size)) * 1rem);
-  --letter-spacing-xxlarge: calc((-1 / var(--root-font-size)) * 1rem);
-  --letter-spacing-button: calc((-0.5 / var(--root-font-size)) * 1rem);
-  --letter-spacing-default: calc((0 / var(--root-font-size)) * 1rem);
-  --letter-spacing-microlabel: calc((1 / var(--root-font-size)) * 1rem);
-  --letter-spacing-label: calc((1.25 / var(--root-font-size)) * 1rem);
+    /* --- LETTER SPACINGS --- */
+    --letter-spacing-huge: calc((-2 / var(--root-font-size)) * 1rem);
+    --letter-spacing-xxxlarge: calc((-2 / var(--root-font-size)) * 1rem);
+    --letter-spacing-xxlarge: calc((-1 / var(--root-font-size)) * 1rem);
+    --letter-spacing-button: calc((-0.5 / var(--root-font-size)) * 1rem);
+    --letter-spacing-default: calc((0 / var(--root-font-size)) * 1rem);
+    --letter-spacing-microlabel: calc((1 / var(--root-font-size)) * 1rem);
+    --letter-spacing-label: calc((1.25 / var(--root-font-size)) * 1rem);
 
-  /* --- FONT FAMILIES --- */
-  --font-family-primary: 'Styrene A LC', -apple-system, BlinkMacSystemFont,
-    avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto,
-    noto, arial, sans-serif;
+    /* --- FONT FAMILIES --- */
+    --font-family-primary: 'Styrene A LC', -apple-system, BlinkMacSystemFont,
+      avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto,
+      noto, arial, sans-serif;
 
-  /* --- FONT WEIGHTS --- */
-  --font-weight-normal: 400;
-  --font-weight-bold: 700;
+    /* --- FONT WEIGHTS --- */
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
 
-  /** --- LEVELS --- */
-  --level-n1: -1;
-  --level-1: 1;
-  --level-2: 2;
-  --level-3: 3;
-  --level-4: 4;
-  --level-9: 9;
+    /** --- LEVELS --- */
+    --level-n1: -1;
+    --level-1: 1;
+    --level-2: 2;
+    --level-3: 3;
+    --level-4: 4;
+    --level-9: 9;
 
-  /* --- TRANSITION EASING --- */
-  --transition-easing-cubic: cubic-bezier(0.55, 0.06, 0.68, 0.19);
+    /* --- TRANSITION EASING --- */
+    --transition-easing-cubic: cubic-bezier(0.55, 0.06, 0.68, 0.19);
 
-  @font-face {
-    font-family: 'Styrene A LC';
-    font-style: italic;
-    font-weight: 400;
-    font-display: swap;
-    src: url('/assets/fonts/StyreneALC-RegularItalic.woff2') format('woff2');
-  }
+    @font-face {
+      font-family: 'Styrene A LC';
+      font-style: italic;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/assets/fonts/StyreneALC-RegularItalic.woff2') format('woff2');
+    }
 
-  @font-face {
-    font-family: 'Styrene A LC';
-    font-style: italic;
-    font-weight: 700;
-    font-display: swap;
-    src: url('/assets/fonts/StyreneALC-BoldItalic.woff2') format('woff2');
-  }
+    @font-face {
+      font-family: 'Styrene A LC';
+      font-style: italic;
+      font-weight: 700;
+      font-display: swap;
+      src: url('/assets/fonts/StyreneALC-BoldItalic.woff2') format('woff2');
+    }
 
-  @font-face {
-    font-family: 'Styrene A LC';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('/assets/fonts/StyreneALC-Regular.woff2') format('woff2');
-  }
+    @font-face {
+      font-family: 'Styrene A LC';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/assets/fonts/StyreneALC-Regular.woff2') format('woff2');
+    }
 
-  @font-face {
-    font-family: 'Styrene A LC';
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url('/assets/fonts/StyreneALC-Bold.woff2') format('woff2');
+    @font-face {
+      font-family: 'Styrene A LC';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('/assets/fonts/StyreneALC-Bold.woff2') format('woff2');
+    }
   }
 
   @keyframes rotateClockwise {
@@ -203,10 +207,6 @@ export const globalStyles = css`
     color: var(--color-text);
     max-width: 1720px;
     font-family: var(--font-family-primary);
-
-    @media ${breakpoints.toMed} {
-      padding: 0 20px;
-    }
 
     background-color: var(--color-foreground-secondary);
     color: var(--color-text-5);
@@ -262,6 +262,7 @@ export const globalStyles = css`
   h5,
   h6,
   p,
+  figure,
   ul {
     margin: 0;
     padding: 0;

@@ -11,5 +11,5 @@ export const useGrpc = () => {
         setClient(grpcClient);
     }, [])
 
-    return [client]
+    return client
 }

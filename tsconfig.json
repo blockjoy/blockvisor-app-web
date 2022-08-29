@@ -14,12 +14,14 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
+    "suppressImplicitAnyIndexErrors": true,
     "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@assets/*": ["./assets/*"],
       "@modules/*": ["./modules/*"],
-      "@shared/*": ["./shared/*"]
+      "@shared/*": ["./shared/*"],
+      "@public/*": ["./public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
