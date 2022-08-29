@@ -12,3 +12,4 @@ export * from './QuoteBlock/QuoteBlock';
 export * from './SkipToContent/SkipToContent';
 export * from './LayoutSingleColumn/LayoutSingleColumn';
 export * from './LayoutTwoColumn/LayoutTwoColumn';
+export * from './ButtonSelector/ButtonSelector';
