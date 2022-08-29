@@ -8,3 +8,4 @@ export * from './LazyImg/LazyImg';
 export * from './Logo/Logo';
 export * from './SEO/SEO';
 export * from './StatusLabel/StatusLabel';
+export * from './QuoteBlock/QuoteBlock';

@@ -208,10 +208,6 @@ export const globalStyles = css`
     max-width: 1720px;
     font-family: var(--font-family-primary);
 
-    @media ${breakpoints.toMed} {
-      padding: 0 20px;
-    }
-
     background-color: var(--color-foreground-secondary);
     color: var(--color-text-5);
     overflow-x: hidden;
@@ -266,6 +262,7 @@ export const globalStyles = css`
   h5,
   h6,
   p,
+  figure,
   ul {
     margin: 0;
     padding: 0;
