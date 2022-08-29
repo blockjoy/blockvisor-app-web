@@ -6,7 +6,7 @@ import {
   quoteBlockRole,
 } from './QuoteBlock.styles';
 import { containers } from 'styles/containers.styles';
-import { grid, gridSpacingSmallOnly } from 'styles/grid.styes';
+import { grid, gridSpacingSmallOnly } from 'styles/grid.styles';
 import { typo } from 'styles/utils.typography.styles';
 
 type Props = {
@@ -20,7 +20,7 @@ export function QuoteBlock({ children, author, role, authorImage }: Props) {
   return (
     <section css={[quoteBlock]}>
       <article
-        css={[containers.main, containers.large, grid, gridSpacingSmallOnly]}
+        css={[containers.large, containers.main, grid, gridSpacingSmallOnly]}
       >
         <div css={[quoteBlockContent, typo.medium]}>
           {children}

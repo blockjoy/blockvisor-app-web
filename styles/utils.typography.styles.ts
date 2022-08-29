@@ -92,10 +92,43 @@ export const tAlign = {
   `,
 };
 
+/**
+ * Fluid typography settings:
+ * - Hold the minimum value from 0px to 500px screen width
+ * - Have a variable value between 500px and 1000px screen width
+ * - Hold the maximum value from 1000px screen width
+ */
+
 const fluidCalc = (min: string, max: string, size = '2vw + 1rem') =>
   `clamp(var(${min}), ${size}, var(${max}))`;
 
 export const fluid = {
+  /* https://modern-fluid-typography.vercel.app?rootFontSize=16&minSize=12&fluidSize=0.8&relativeSize=0.5&maxSize=16 */
+  base: css`
+    font-size: fluidCalc(
+      '--font-size-tiny,' '--font-size-base',
+      '0.8vw + 0.5rem'
+    );
+    line-height: fluidCalc(
+      '--line-height-tiny',
+      '--line-height-base',
+      '1.9vw + 0.4rem'
+    );
+  `,
+  /* https://modern-fluid-typography.vercel.app/?rootFontSize=16&minSize=14&fluidSize=1.1&relativeSize=0.6&maxSize=20 */
+  medium: css`
+    font-size: fluidCalc(
+      '--font-size-small',
+      ' --font-size-medium',
+      '1.2vw + 0.5rem'
+    );
+    line-height: fluidCalc(
+      '--line-height-small',
+      '--line-height-medium',
+      '0.8vw + 1rem'
+    );
+  `,
+  /* https://modern-fluid-typography.vercel.app/?rootFontSize=16&minSize=16&fluidSize=2&relativeSize=0.5&maxSize=24 */
   large: css`
     font-size: ${fluidCalc(
       '--font-size-base',
@@ -108,6 +141,56 @@ export const fluid = {
       '1.6vw + 1rem',
     )};
   `,
+  /* https://modern-fluid-typography.vercel.app?rootFontSize=16&minSize=20&fluidSize=2.4&relativeSize=0.7&maxSize=32 */
+  xlarge: css`
+    font-size: fluidCalc(
+      '--font-size-medium',
+      '--font-size-xlarge',
+      '2.4vw + 0.5rem'
+    );
+    line-height: fluidCalc(
+      '--line-height-medium',
+      '--line-height-xlarge',
+      '3.2vw + 0.5rem'
+    );
+  `,
+  /* https://modern-fluid-typography.vercel.app?rootFontSize=16&minSize=24&fluidSize=2&relativeSize=1&maxSize=40 */
+  xxlarge: css`
+    font-size: fluidCalc(
+      '--font-size-large',
+      '--font-size-xxlarge',
+      '3.2vw + 0.5rem'
+    );
+    line-height: fluidCalc(
+      '--line-height-large',
+      '--line-height-xxlarge',
+      '2.4vw + 1.25rem'
+    );
+    letter-spacing: fluidCalc(
+      '--letter-spacing-xxlarge',
+      '--letter-spacing-default',
+      '-2vw + 1rem'
+    );
+  `,
+  /* https://modern-fluid-typography.vercel.app?rootFontSize=16&minSize=32&fluidSize=3.2&relativeSize=1&maxSize=48 */
+  xxxlarge: css`
+    font-size: fluidCalc(
+      '--font-size-xlarge',
+      '--font-size-xxxlarge',
+      '3.2vw + 1rem'
+    );
+    line-height: fluidCalc(
+      ' --line-height-xlarge',
+      '  --line-height-xxxlarge',
+      2vw + 2rem
+    );
+    letter-spacing: fluidCalc(
+      '--letter-spacing-xxxlarge',
+      '--letter-spacing-default',
+      -2vw + 1rem
+    );
+  `,
+  /* https://modern-fluid-typography.vercel.app?rootFontSize=16&minSize=40&fluidSize=4&relativeSize=1.25&maxSize=60 */
   huge: css`
     font-size: ${fluidCalc(
       '--font-size-xxlarge',
