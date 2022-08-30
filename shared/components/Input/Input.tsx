@@ -1,25 +1,23 @@
-import { InputHTMLAttributes, ReactNode } from 'react';
 import { SerializedStyles } from '@emotion/react';
-import { RegisterOptions, useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import { InputHTMLAttributes, ReactNode } from 'react';
+import { RegisterOptions, useFormContext } from 'react-hook-form';
 
-import { InputUtil } from './InputUtil';
+import { colors } from 'styles/utils.colors.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { typo } from 'styles/utils.typography.styles';
 import {
-  inputWrapper,
   inputField,
+  inputFieldDefault,
   inputFieldDisabled,
-  inputTypesStyle,
   inputFieldError,
   inputFieldWithUtilLeft,
   inputFieldWithUtilRight,
-  inputFieldDefault,
+  inputTypesStyle,
+  inputWrapper,
 } from './Input.styles';
 import { InputLabel } from './InputLabel';
-import { typo } from 'styles/utils.typography.styles';
-import { colors } from 'styles/utils.colors.styles';
-import { spacing } from 'styles/utils.spacing.styles';
-
-export type InputSize = 'small' | 'medium' | 'large';
+import { InputUtil } from './InputUtil';
 
 type InputProps = {
   name: string;

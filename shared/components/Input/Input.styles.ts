@@ -1,6 +1,5 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { typo } from 'styles/utils.typography.styles';
-import { InputSize } from './Input';
 
 const inputWrapper = css`
   position: relative;

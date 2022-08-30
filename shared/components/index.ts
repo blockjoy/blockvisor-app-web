@@ -9,3 +9,6 @@ export * from './Logo/Logo';
 export * from './SEO/SEO';
 export * from './StatusLabel/StatusLabel';
 export * from './QuoteBlock/QuoteBlock';
+export * from './SkipToContent/SkipToContent';
+export * from './LayoutSingleColumn/LayoutSingleColumn';
+export * from './LayoutTwoColumn/LayoutTwoColumn';
