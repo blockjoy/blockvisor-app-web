@@ -3,6 +3,8 @@ export * from './Avatar/Avatar';
 export * from './Button/Button';
 export * from './DataState/DataState';
 export * from './Input/Input';
+export * from './Input/InputUtil';
+export * from './Input/InputLabel';
 export * from './Layout/Layout';
 export * from './LazyImg/LazyImg';
 export * from './Logo/Logo';

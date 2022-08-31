@@ -31,7 +31,7 @@ export function MultiSelect({ label, name, control, options, rules }: Props) {
         control={control}
         render={({ field, formState }) => (
           <>
-            <Select {...field} options={options} />
+            <Select isMulti={true} {...field} options={options} />
             <ErrorMessage
               name={name}
               errors={formState.errors[name]}
