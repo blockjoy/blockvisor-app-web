@@ -6,7 +6,7 @@ type Props = {
   value?: ReactNode;
   children?: ReactNode;
 };
-export function ValueWithStyles({ label, value, children }: Props) {
+export function ValueWithUtil({ label, value, children }: Props) {
   return (
     <article css={[styles.base]}>
       <div>
