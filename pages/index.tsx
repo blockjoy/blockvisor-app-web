@@ -1,13 +1,13 @@
 import { LoginFooter, LoginForm } from '@modules/auth';
-import { Layout } from '@shared/components';
+import { AuthLayout } from '@modules/layout';
 import type { NextPage } from 'next';
 
 const Login: NextPage = () => {
   return (
-    <Layout title="Login">
+    <AuthLayout layoutTitle='Login'>
       <LoginForm />
       <LoginFooter />
-    </Layout>
+    </AuthLayout>
   );
 };
 

@@ -3,7 +3,7 @@ import { AppLayout } from "@modules/layout";
 const Dashboard = () => {
   return (
     <div>
-      <main>Dashboard index page</main>
+      <main>Nodes index page</main>
     </div>
   );
 };
