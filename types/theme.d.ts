@@ -24,5 +24,3 @@ interface ITheme {
 declare module "@emotion/react" {
     export interface Theme extends ITheme extends ThemeProvider {}
 }
-
-declare module "@emotion/css"

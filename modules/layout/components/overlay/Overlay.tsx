@@ -2,7 +2,6 @@ import { useRecoilState } from "recoil";
 import { appState } from "@modules/layout/store";
 
 import styled from "@emotion/styled";
-import { css } from "@emotion/css";
 
 type Props = { isSidebarOpen: boolean, isProfileOpen: boolean };
 

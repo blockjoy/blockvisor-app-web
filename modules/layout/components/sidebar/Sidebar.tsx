@@ -2,7 +2,6 @@ import { useRecoilValue } from "recoil";
 import { appState } from "@modules/layout/store";
 
 import styled from "@emotion/styled";
-import { css } from "@emotion/css";
 
 import SidebarHeader from "./SidebarHeader";
 // import SidebarLeft from "./SidebarLeft";
@@ -11,10 +10,6 @@ import SidebarMain from "./SidebarMain";
 type Props = {
   isSidebarOpen: boolean
 }
-
-const openStyles = css`
-  transform: translateX(0);
-`;
 
 const StyledSidebar = styled.div<Props>`
   position: fixed;
