@@ -2,7 +2,7 @@ import { ReactNode, TextareaHTMLAttributes } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 import { InputLabel } from '../Input/InputLabel';
-import { styles } from './TextArea.styles';
+import { styles } from './Textarea.styles';
 import { ErrorMessage } from '@hookform/error-message';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
