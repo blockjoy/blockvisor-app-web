@@ -1,4 +1,6 @@
-export const themeDefault: ITheme = {
+import { Theme } from "@emotion/react";
+
+export const themeDefault: Theme = {
     colorPrimary: "#bff589",
     colorAccent: "#bff589",
     colorBorder: "#363938",

@@ -1,6 +1,8 @@
 import { themeDefault } from "./themeDefault";
 
-export const themeLight: ITheme = {
+import { Theme } from "@emotion/react";
+
+export const themeLight: Theme = {
     ...themeDefault,
     id: "light",
     colorPrimary: "#bff589",

@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 
 interface ITheme {
-    id: string,
+    id?: string,
     colorPrimary: string;
     colorAccent: string;
     colorDefault: string;
