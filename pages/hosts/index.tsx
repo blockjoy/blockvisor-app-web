@@ -8,8 +8,9 @@ const Dashboard = () => {
   );
 };
 
+Dashboard.getLayout = function getLayout(page: any) {
+  return <AppLayout breadcrumb={["Hosts", "Status"]}>{page}</AppLayout>
+}
+
 export default Dashboard;
 
-Dashboard.getLayout = function getLayout(page: any) {
-  return <AppLayout>{page}</AppLayout>
-}

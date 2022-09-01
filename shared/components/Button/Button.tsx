@@ -7,7 +7,7 @@ import {
   button,
 } from './Button.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { css } from '@emotion/serialize'
+import { SerializedStyles } from '@emotion/serialize';
 import Link from 'next/link';
 
 type Props = {

@@ -1,4 +1,4 @@
-import { Global } from '@emotion/css';
+import { Global } from '@emotion/react';
 import type { AppProps } from 'next/app';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +11,7 @@ import ThemeProvider from "./ThemeProvider";
 
 // todo extend AppProps type to include getLayout
 function MyApp({ Component, pageProps }: any) {
-  const getLayout = Component.getLayout || ((page: any) => page);
+  const getLayout = Component?.getLayout || ((page: any) => page);
 
   return (
     <RecoilRoot>

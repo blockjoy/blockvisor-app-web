@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css } from '@emotion/react';
 
 const footerLoginLink = css`
   color: var(--color-text-2);

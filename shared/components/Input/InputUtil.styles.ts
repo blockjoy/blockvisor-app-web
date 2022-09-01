@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css } from '@emotion/react';
 
 const inputUtil = css`
   color: var(--color-text-2);

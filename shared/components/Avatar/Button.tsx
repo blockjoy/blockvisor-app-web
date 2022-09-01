@@ -7,7 +7,7 @@ import {
   button,
 } from './Button.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { css } from '@emotion/css'
+import { css } from '@emotion/react'
 import Link from 'next/link';
 
 type Props = {

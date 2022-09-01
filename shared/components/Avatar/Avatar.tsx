@@ -1,4 +1,4 @@
-import { css } from '@emotion/css'
+import { css } from '@emotion/react'
 import { FC, PropsWithChildren } from 'react';
 import { LazyImg } from '..';
 import { styles } from './Avatar.styles';

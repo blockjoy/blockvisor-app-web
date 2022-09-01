@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css } from '@emotion/react';
 import { breakpoints } from './variables.styles';
 
 const small = css`

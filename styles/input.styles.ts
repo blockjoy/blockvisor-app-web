@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css } from '@emotion/react';
 import { typo } from './typo.styles';
 import { breakpoints } from './variables.styles';
 

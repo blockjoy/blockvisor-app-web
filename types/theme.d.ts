@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@emotion/react";
+
 interface ITheme {
     id: string,
     colorPrimary: string;
@@ -19,7 +21,7 @@ interface ITheme {
 }
 
 declare module "@emotion/react" {
-    export interface Theme extends ITheme {}
+    export interface Theme extends ITheme extends ThemeProvider {}
 }
 
 declare module "@emotion/css"

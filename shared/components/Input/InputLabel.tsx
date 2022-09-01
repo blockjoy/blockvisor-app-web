@@ -1,10 +1,11 @@
-import { css } from '@emotion/serialize'
+import { css } from '@emotion/react'
 import type { InputHTMLAttributes, ReactNode } from 'react';
 import {
   inputLabel,
   inputLabelSize,
   inputLabelDisabled,
 } from './InputLabel.styles';
+import { SerializedStyles } from "@emotion/serialize"
 
 type Props = {
   name: string;
