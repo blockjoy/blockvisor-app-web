@@ -1,9 +1,10 @@
 import { atom } from 'recoil';
 
-export const appState = atom({
-  key: 'appState',
+export const layoutState = atom({
+  key: 'layoutState',
   default: {
     isSidebarOpen: false,
     isProfileOpen: false,
+    isNodeAddOpen: false
   },
 });

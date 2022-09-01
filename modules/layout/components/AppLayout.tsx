@@ -2,6 +2,7 @@ import Sidebar from "./sidebar/Sidebar";
 import Overlay from "./overlay/Overlay";
 import Topbar from "./topbar/Topbar";
 import Profile from "./profile/Profile";
+import NodeAdd from "./nodeAdd/NodeAdd";
 import Page from "./page/Page";
 import Breadcrumb from "./breadcrumb/Breadcrumb";
 
@@ -17,8 +18,9 @@ export const AppLayout: React.FC<LayoutType>  = ({ children, breadcrumb }) => {
       <Overlay />
       <Topbar />
       <Profile />
+      <NodeAdd />
+      <Breadcrumb breadcrumb={breadcrumb} />
       <Page>
-          <Breadcrumb breadcrumb={breadcrumb} />
           {children}
       </Page>
    </>

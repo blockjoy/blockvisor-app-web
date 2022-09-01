@@ -1,21 +1,29 @@
 import styled from "@emotion/styled";
 
+import IconArrow from "@public/assets/icons/arrow-right-12.svg";
+
+import SizedIcon from "../shared/SizedIcon";
+
 const StyledBreadcrumb = styled.div`
-  display: flex;
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: 300px;
+  display: none;
   align-items: center;
   gap: 10px;
   height: 56px;
-  padding: 0 16px;
-  margin-top: 56px;
+  padding: 0 24px;
   font-size: 13px;
 
   @media only screen and (min-width: ${p => p.theme.screenSm}) {
-    margin-top: 0;
+    display: flex;
   }
 `;
 
 const StyledBreadcrumbItem = styled.span`
   display: flex;
+  align-items: center;
   gap: 12px;
   
   & > .breadcrumb-icon {
@@ -44,7 +52,7 @@ interface LayoutType {
                 {link}
                 </span>
                 {index !== breadcrumb.length - 1 
-                    && <span className="breadcrumb-icon uil uil-angle-right" />}
+                    && <SizedIcon size="6px"><IconArrow className="breadcrumb-icon" /></SizedIcon>}
             </StyledBreadcrumbItem>
         )}
     </StyledBreadcrumb>

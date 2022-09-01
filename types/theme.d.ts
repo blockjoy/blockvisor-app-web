@@ -13,6 +13,7 @@ interface ITheme {
     colorActive: string;
     colorText: string;
     colorBackground: string;
+    colorLightGrey: string;
     screenXs: string;
     screenSm: string;
     screenMd: string;

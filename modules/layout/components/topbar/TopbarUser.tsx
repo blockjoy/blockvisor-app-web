@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { appState } from "@modules/layout/store"
+import { layoutState } from "@modules/layout/store"
 
 import styled from "@emotion/styled";
 
@@ -20,7 +20,7 @@ const StyledAvatar = styled.button`
 `;
 
 export default () => {
-  const [app, setApp] = useRecoilState(appState);
+  const [app, setApp] = useRecoilState(layoutState);
 
   const handleClick = () => {
     setApp({

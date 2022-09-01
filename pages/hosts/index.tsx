@@ -1,5 +1,5 @@
 import { AppLayout } from "@modules/layout";
-import HostsModule from "@modules/app/hosts/Hosts";
+import HostsModule from "@modules/app/components/hosts/Hosts";
 
 const Hosts = () => <HostsModule />
 

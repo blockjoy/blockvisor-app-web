@@ -38,6 +38,8 @@ export default () => {
             },
         },   
         stroke: {
+            width: 2,
+            lineCap: "round",
             curve: "straight",
             colors: [theme.colorAccent]
         },

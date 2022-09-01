@@ -1,6 +1,4 @@
 import styled from "@emotion/styled";
-import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
-import { OrgDropdown } from "../shared/OrgDropdown";
 
 const StyledHeader = styled.header`
   color: #A5A8A3;

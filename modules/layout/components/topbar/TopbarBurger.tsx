@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { appState } from "@modules/layout/store"
+import { layoutState } from "@modules/layout/store"
 
 import styled from "@emotion/styled";
 
@@ -11,6 +11,7 @@ const StyledButton = styled.button`
     background: transparent;
     border: 0;
     cursor: pointer;
+    padding: 0;
 
   @media only screen and (min-width: ${p => p.theme.screenSm}) {
     display: none;
@@ -18,7 +19,7 @@ const StyledButton = styled.button`
 `;
 
 export default () => {
-  const [app, setApp] = useRecoilState(appState);
+  const [app, setApp] = useRecoilState(layoutState);
 
   const handleClick = () => {
     setApp({

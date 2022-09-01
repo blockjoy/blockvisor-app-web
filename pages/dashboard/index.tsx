@@ -1,5 +1,5 @@
 import { AppLayout } from "@modules/layout";
-import DashboardModule from "@modules/app/dashboard/Dashboard";
+import DashboardModule from "@modules/app/components/dashboard/Dashboard";
 
 const Dashboard = () => <DashboardModule />;
 

@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { PropsWithChildren } from "react";
 
 const StyledWrapper = styled.header`
     display: flex;
@@ -10,10 +11,12 @@ const StyledWrapper = styled.header`
     color: ${p => p.theme.colorText};
 `;
 
-export default () => {
+const DrawerHeader: React.FC<PropsWithChildren> =  ({ children }) => {
   return (
    <StyledWrapper>
-      Profile Settings
+      {children}
    </StyledWrapper>
   );
 }
+
+export default DrawerHeader;

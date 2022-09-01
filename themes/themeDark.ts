@@ -13,4 +13,5 @@ export const themeDark: Theme = {
     colorCard: "#272a29",
     colorPlaceholder: "#A5A8A3",
     colorBackground: "#222524",
+    colorLightGrey: "#363938",
 }

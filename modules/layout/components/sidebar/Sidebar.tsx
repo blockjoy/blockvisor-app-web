@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { appState } from "@modules/layout/store";
+import { layoutState } from "@modules/layout/store";
 
 import styled from "@emotion/styled";
 
@@ -13,7 +13,7 @@ type Props = {
 
 const StyledSidebar = styled.div<Props>`
   position: fixed;
-  z-index: 6;
+  z-index: 8;
   top: 0;
   left: 0;
   display: flex;
@@ -28,7 +28,7 @@ const StyledSidebar = styled.div<Props>`
 
   @media only screen and (min-width: ${p => p.theme.screenSm}) {
     transform: translateX(0);
-    z-index: 1;
+    z-index: 5;
   }
 `;
 
@@ -38,7 +38,7 @@ const StyledSidebarWrapper = styled.div`
 `;
 
 export default () => {
-  const { isSidebarOpen } = useRecoilValue(appState);
+  const { isSidebarOpen } = useRecoilValue(layoutState);
   return (
    <StyledSidebar isSidebarOpen={isSidebarOpen}>
     <SidebarHeader />

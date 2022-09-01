@@ -25,7 +25,7 @@ const StyledWrapper = styled.div`
 
     @media only screen and (min-width: ${p => p.theme.screenSm}) {
       padding-left: 300px;
-      background: transparent;
+      z-index: 4;
     }
 `;
 
