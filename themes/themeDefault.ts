@@ -1,8 +1,9 @@
 import { Theme } from "@emotion/react";
 
 export const themeDefault: Theme = {
+    fontPrimary: "'Styrene A LC',-apple-system,BlinkMacSystemFont,avenir next,avenir,segoe ui,helvetica neue,helvetica,Ubuntu,roboto,noto,arial,sans-serif;",
     colorPrimary: "#bff589",
-    colorAccent: "#bff589",
+    colorAccent: "#e9c09c",
     colorBorder: "#363938",
     colorLabel: "#5F615D",
     colorDefault: "#5F615D",

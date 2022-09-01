@@ -20,6 +20,25 @@ const ThemeProvider: React.FC<Props> = ({ children }) => {
                     body {
                         background: ${theme.colorBackground};
                     }
+
+                    /* .apexcharts-tooltip {
+                        opacity: 1 !important;
+                    } */
+
+                    body .apexcharts-tooltip.apexcharts-theme-light {
+                        padding: 16px;
+                        border: 0;
+                        border-radius: 10px;
+                        box-shadow: none;
+                        background: rgba( 0, 0, 0, 0.4 );
+                        backdrop-filter: blur( 10px );
+                        -webkit-backdrop-filter: blur( 10px );
+                    }
+
+                    body .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+                        background: transparent;
+                        border: 0;
+                    }
                 `}
                 />
                 {children}

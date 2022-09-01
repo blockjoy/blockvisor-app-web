@@ -7,7 +7,7 @@ export const themeDark: Theme = {
     id: "dark",
     colorBorder: "#363938",
     colorLabel: "#5F615D",
-    colorDefault: "#5F615D",
+    colorDefault: "#a7a7a7",
     colorActive: "#363938",
     colorText: "#f9f9f9",
     colorCard: "#272a29",

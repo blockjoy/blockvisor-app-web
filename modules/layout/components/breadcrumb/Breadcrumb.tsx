@@ -7,7 +7,6 @@ const StyledBreadcrumb = styled.div`
   height: 56px;
   padding: 0 16px;
   margin-top: 56px;
-  margin-bottom: 16px;
   font-size: 13px;
 
   @media only screen and (min-width: ${p => p.theme.screenSm}) {
@@ -27,7 +26,7 @@ const StyledBreadcrumbItem = styled.span`
     color: #a5a8a3;
   }
 
-  &:first-child .breadcrumb-text {
+  &:first-of-type .breadcrumb-text {
     color: ${p => p.theme.colorPrimary};
   }
 `;

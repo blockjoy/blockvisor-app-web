@@ -1,16 +1,11 @@
 import { AppLayout } from "@modules/layout";
+import HostsModule from "@modules/app/hosts/Hosts";
 
-const Dashboard = () => {
-  return (
-    <div>
-      <main>Hosts index page</main>
-    </div>
-  );
-};
+const Hosts = () => <HostsModule />
 
-Dashboard.getLayout = function getLayout(page: any) {
+Hosts.getLayout = function getLayout(page: any) {
   return <AppLayout breadcrumb={["Hosts", "Status"]}>{page}</AppLayout>
 }
 
-export default Dashboard;
+export default Hosts;
 
