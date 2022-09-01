@@ -20,10 +20,12 @@ const StyledWrapper = styled.div`
     height: 56px;
     padding-left: 16px;
     padding-right: 16px;
+    background: ${p => p.theme.colorBackground};
     border-bottom: 1px solid #363938;
 
     @media only screen and (min-width: ${p => p.theme.screenSm}) {
       padding-left: 300px;
+      background: transparent;
     }
 `;
 
