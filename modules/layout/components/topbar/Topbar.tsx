@@ -13,7 +13,7 @@ const StyledWrapper = styled.div`
     justify-content: flex-end;
     gap: 10px;
     position: fixed;
-    z-index: 3;
+    z-index: 4;
     top: 0;
     left: 0;
     width: 100%;
