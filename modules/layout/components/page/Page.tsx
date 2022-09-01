@@ -2,9 +2,15 @@ import styled from "@emotion/styled";
 import React from "react";
 
 const StyledWrapper = styled.div`
-    padding: 72px 16px 16px;
-    margin-left: 300px;
-    background: purple;
+    position: relative;
+    z-index: 3;
+    padding: 0 0 16px;
+    transition: margin 0.4s;
+
+    @media only screen and (min-width: ${p => p.theme.screenSm}) {
+      margin-left: 300px;
+      z-index: 2;
+    }
 `;
 
 type LayoutType = {

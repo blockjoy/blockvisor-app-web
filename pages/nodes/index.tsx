@@ -11,5 +11,5 @@ const Dashboard = () => {
 export default Dashboard;
 
 Dashboard.getLayout = function getLayout(page: any) {
-  return <AppLayout>{page}</AppLayout>
+  return <AppLayout breadcrumb={["Nodes", "Status"]}>{page}</AppLayout>
 }

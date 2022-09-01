@@ -4,12 +4,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { RecoilRoot } from 'recoil';
 import { globalStyles } from 'styles/global.styles';
-import Head from 'next/head'
+
+import Head from 'next/head';
+
+import ThemeProvider from "./ThemeProvider";
 
 function MyApp({ Component, pageProps }: any) {
-
-  const getLayout = Component.getLayout || ((page: any) => page)
-  
+  const getLayout = Component.getLayout || ((page: any) => page);
 
   return (
     <RecoilRoot>
@@ -17,8 +18,10 @@ function MyApp({ Component, pageProps }: any) {
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
       </Head>
       <Global styles={globalStyles} />
-      {getLayout(<Component {...pageProps} />)}
-      <ToastContainer position="bottom-left" />
+      <ThemeProvider>
+        {getLayout(<Component {...pageProps} />)}
+        <ToastContainer position="bottom-left" />
+      </ThemeProvider>
     </RecoilRoot>
   );
 }

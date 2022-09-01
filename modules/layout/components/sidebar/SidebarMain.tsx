@@ -2,6 +2,11 @@ import styled from "@emotion/styled";
 import Link from 'next/link';
 import { useRouter } from "next/router";
 
+import IconDashboard from "@public/assets/icons/grid-12.svg";
+import IconNodes from "@public/assets/icons/box-12.svg";
+import IconHosts from "@public/assets/icons/host-12.svg";
+import IconAdmin from "@public/assets/icons/sliders-12.svg";
+
 const StyledWrapper = styled.main`
     flex: 1 1 auto;
     padding: 20px 16px;
@@ -23,15 +28,20 @@ const StyledLink = styled.a`
   gap: 10px;
   color: #f9f9f9;
   padding: 12px 10px;
-  font-size: 15px;
+  font-size: 13px;
   border-radius: 8px;
+  user-select: none;
 
   &.active {
-    background: #363938;
+    background: ${p => p.theme.colorActive};
   }
 
-  &.active > span {
-    color: #bff589;
+  & path {
+    fill: ${p => p.theme.colorLabel};
+  }
+
+  &.active path {
+    fill: ${p => p.theme.colorPrimary};
   }
 `;
 
@@ -39,48 +49,47 @@ const blocks = [
   {
     title: "NODES & HOSTS",
     items: [
-      { name: "Dashboard", path: "/dashboard", icon: "apps" },
-      { name: "Nodes", path: "/nodes", icon: "box" },
-      { name: "Hosts", path: "/hosts", icon: "server" },
+      { name: "Dashboard", path: "/dashboard", icon: <IconDashboard /> },
+      { name: "Nodes", path: "/nodes", icon: <IconNodes /> },
+      { name: "Hosts", path: "/hosts", icon: <IconHosts /> },
     ]
   },
-  {
-    title: "BROADCASTS",
-    items: [
-      { name: "Automation", path: "/automation", icon: "sync" },
-    ]
-  },
+  // {
+  //   title: "BROADCASTS",
+  //   items: [
+  //     { name: "Automation", path: "/automation", icon: "sync" },
+  //   ]
+  // },
   {
     title: "ADMIN",
     items: [
-      { name: "Admin Console", path: "/admin", icon: "arrow-random" },
+      { name: "Admin Console", path: "/admin", icon: <IconAdmin /> },
     ]
   }
 ]
 
 export default () => {
   const router = useRouter();
-  console.log("router", router.pathname);
   return (
    <StyledWrapper>
     {blocks.map(block => (
-      <>
+      <div key={block.title}>
         <StyledHeader>
           {block.title}
         </StyledHeader>
         <StyledList>
           {block.items.map(item => (
-            <li>
+            <li key={item.name}>
               <Link href={item.path}>
                 <StyledLink className={router.pathname === item.path ? "active" : ""}>
-                  <span className={`uil uil-${item.icon}`} />
+                  {item.icon}
                   {item.name}
                 </StyledLink>
               </Link>
             </li>
           ))}
         </StyledList>
-      </>
+      </div>
     ))}
    </StyledWrapper>
   );

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-
+import { useGrpc } from '@modules/auth/hooks';
+import { useRouter } from 'next/router';
 import { Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -14,6 +15,8 @@ type LoginForm = {
 };
 
 export function LoginForm() {
+  const router = useRouter();
+  const client = useGrpc();
   const form = useForm<LoginForm>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
 
@@ -22,8 +25,29 @@ export function LoginForm() {
     setActiveType(type);
   };
 
-  const onSubmit = form.handleSubmit(({ email, password }) => {
-    console.log({ email, password });
+  const onSubmit = form.handleSubmit(async ({ email, password }) => {
+    // show spinner in button
+
+    // await the api response
+    const response = await client?.login(email, password);
+
+    // we should be able to use try/catch 
+    // long term but this works for now
+    // there is a LoginUserResponse but 
+    // I need to find out how this works!
+    if ((response as any)?.code === "Unauthenticated") {
+      // it error'd
+      const { code } = (response as any);
+      console.log(code);
+    } else {
+      // your logged in, do the redirect
+      const result = (response as any)?.toObject();
+      console.log("response", response);
+      console.log("result", result);
+      console.log("result", result?.token?.value);
+      router.push("/dashboard");
+    }
+
   });
   return (
     <FormProvider {...form}>
