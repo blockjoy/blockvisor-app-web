@@ -7,7 +7,7 @@ import Breadcrumb from "./breadcrumb/Breadcrumb";
 
 type LayoutType = {
   children: React.ReactNode,
-  breadcrumb: string[]
+  breadcrumb?: string[]
 }
 
 export const AppLayout: React.FC<LayoutType>  = ({ children, breadcrumb }) => {

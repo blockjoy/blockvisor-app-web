@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from '@emotion/css';
 
 const base = css`
   margin: 0 auto;

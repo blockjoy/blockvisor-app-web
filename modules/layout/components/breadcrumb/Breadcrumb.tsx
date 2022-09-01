@@ -32,9 +32,9 @@ const StyledBreadcrumbItem = styled.span`
   }
 `;
 
-type LayoutType = {
-    breadcrumb: string[]
-  }
+interface LayoutType {
+  breadcrumb?: string[]
+}
 
   const Breadcrumb: React.FC<LayoutType>  = ({ breadcrumb }) => {
   return (

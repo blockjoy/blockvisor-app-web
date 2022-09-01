@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from '@emotion/css';
 
 const notFoundPage = css`
   min-height: 100vh;

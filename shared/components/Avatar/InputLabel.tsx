@@ -1,4 +1,4 @@
-import { css } from '@emotion/serialize'
+import { css } from '@emotion/css'
 import type { InputHTMLAttributes, ReactNode } from 'react';
 import {
   inputLabel,

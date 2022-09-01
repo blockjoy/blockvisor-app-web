@@ -1,4 +1,4 @@
-import { css } from '@emotion/serialize'
+import { SerializeStyles } from '@emotion/css'
 import { ErrorMessage } from '@hookform/error-message';
 import { InputHTMLAttributes, ReactNode } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';

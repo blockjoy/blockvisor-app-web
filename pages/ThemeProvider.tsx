@@ -1,8 +1,7 @@
 import { atom, useRecoilValue } from 'recoil';
-import { ThemeProvider as StyledThemeProvider, Global } from '@emotion/react';
-import { css } from "@emotion/css";
+// import { ThemeProvider as StyledThemeProvider, Global } from '@emotion/react';
+import { ThemeProvider as StyledThemeProvider, css, Global } from "@emotion/css";
 import { themeDark } from "../themes";
-
 
 export const themeState = atom({
   key: 'themeState',

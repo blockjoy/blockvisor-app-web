@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from '@emotion/css';
 import { typo } from './typo.styles';
 
 const wrapper = css`

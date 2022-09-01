@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from '@emotion/css';
 import { normalize } from './normalize.styles';
 import { breakpoints } from './variables.styles';
 
