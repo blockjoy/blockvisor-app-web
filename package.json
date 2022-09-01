@@ -11,8 +11,6 @@
     "export": "next build && next export"
   },
   "dependencies": {
-    "@emotion/core": "^11.0.0",
-    "@emotion/css": "^11.10.0",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.10.4",
     "@hookform/error-message": "^2.0.0",
