@@ -1,5 +1,3 @@
-import styled from "@emotion/styled";
-
 import { useRecoilState } from "recoil";
 
 import { layoutState } from "@modules/layout/store";

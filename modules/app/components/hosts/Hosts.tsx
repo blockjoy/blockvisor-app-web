@@ -32,6 +32,7 @@ const StyledStatus = styled.span`
 const rows = mockHosts.map(host => (
         {
             id: host.id,
+            name: host.name,
             isDanger: host.status === "ISSUE",
             cells: [
                 { 
@@ -79,6 +80,10 @@ export default () => {
 
     const handleRowClick = (args: any) => {
         console.log('args', args);
+        setApp({
+            ...app,
+            dynamicBreadcrumb: args.name
+        });
         router.push(`${router.pathname}/${args.id}`)
     }
 

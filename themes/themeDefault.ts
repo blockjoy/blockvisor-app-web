@@ -12,6 +12,7 @@ export const themeDefault: Theme = {
     colorCard: "#272a29",
     colorPlaceholder: "#A5A8A3",
     colorBackground: "#222524",
+    colorSidebar: "#222524",
     colorLightGrey: "#e7e7e7",
     colorDanger: "#EE7070",
     screenXs: "500px",

@@ -1,3 +1,6 @@
+import { useRecoilValue } from "recoil";
+import { appState } from "@modules/app/store";
+
 import styled from "@emotion/styled";
 
 import IconArrow from "@public/assets/icons/arrow-right-12.svg";
@@ -44,6 +47,9 @@ interface LayoutType {
 }
 
   const Breadcrumb: React.FC<LayoutType>  = ({ breadcrumb }) => {
+    const { dynamicBreadcrumb } = useRecoilValue(appState);
+
+    
   return (
     <StyledBreadcrumb>
         {breadcrumb?.map((link, index) => 
@@ -51,9 +57,15 @@ interface LayoutType {
                 <span className="breadcrumb-text">
                 {link}
                 </span>
-                {index !== breadcrumb.length - 1 
-                    && <SizedIcon size="6px"><IconArrow className="breadcrumb-icon" /></SizedIcon>}
+                {(index !== breadcrumb.length - 1 || dynamicBreadcrumb)
+                 ? <SizedIcon size="6px"><IconArrow className="breadcrumb-icon" /></SizedIcon>
+                 : null}
             </StyledBreadcrumbItem>
+        )}
+        {dynamicBreadcrumb && (
+          <StyledBreadcrumbItem>
+            {dynamicBreadcrumb}
+          </StyledBreadcrumbItem>
         )}
     </StyledBreadcrumb>
   );

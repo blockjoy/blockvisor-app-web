@@ -21,7 +21,7 @@ const StyledSidebar = styled.div<Props>`
   width: 300px;
   height: 100%;
   border-right: 1px solid ${p => p.theme.colorBorder};
-  background: #212423;
+  background: ${p => p.theme.colorSidebar};
   transform: translateX(${p => p.isSidebarOpen ? 0 : "-100%"});
   transition-property: transform;
   transition-duration: 0.4s;

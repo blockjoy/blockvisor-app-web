@@ -66,7 +66,7 @@ const StyledMenu = styled.div<MenuProps>`
   position: absolute;
   top: 62px;
   left: 0;
-  background: ${p => p.theme.colorBackground};
+  background: ${p => p.theme.colorSidebar};
   border: 1px solid ${p => p.theme.colorBorder};
   border-radius: 6px;
   padding: 16px;

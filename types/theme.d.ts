@@ -15,6 +15,7 @@ interface ITheme {
     colorBackground: string;
     colorLightGrey: string;
     colorDanger: string;
+    colorSidebar: string;
     screenXs: string;
     screenSm: string;
     screenMd: string;
