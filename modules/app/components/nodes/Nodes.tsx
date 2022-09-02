@@ -52,7 +52,7 @@ const rows = mockNodes.map(node => (
                     key: "1",
                     component: 
                         <>
-                            <NodesTableBlock key="1" id={node.id} name={node.name} address={node.address} />
+                            <NodesTableBlock id={node.id} name={node.name} address={node.address} />
                             <StyledAddedCell>Added {formatDistance(subDays(new Date(node.added), 3), new Date(), { addSuffix: true })}</StyledAddedCell>
                         </>,
                 },

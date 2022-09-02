@@ -39,7 +39,7 @@ const StyledAddress = styled.span`
   }
 `;
 
-const NodesTableBlock: React.FC<Props> = ({ name, id, address, location }) => (
+const NodesTableBlock: React.FC<Props> = ({ name, address, location }) => (
     <StyledWrapper>
         <StyledName className="has-hover-color">
             {name}
