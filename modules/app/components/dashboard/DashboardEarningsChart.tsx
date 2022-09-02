@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useTheme } from '@emotion/react';
 import styled from "@emotion/styled";
+
+import DashboardEarningsChartDialog from "./DashboardEarningsChartDialog";
+
+import { mockSeries } from "./mockChartData";
+
 import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-const StyledChartWrapper = styled.div`
+const StyledWrapper = styled.div`
   position: relative;
 `;
 
@@ -67,14 +72,18 @@ export default () => {
             max: 100,
         },
         xaxis: {
+            show: false,
+            // labels: {
+            //     style: {
+            //         colors: theme.colorDefault,
+            //         fontFamily: theme.fontPrimary
+            //     }
+            // },
+            // crosshairs: {
+            //     show: false
+            // },
             labels: {
-                style: {
-                    colors: theme.colorDefault,
-                    fontFamily: theme.fontPrimary
-                }
-            },
-            crosshairs: {
-                show: false
+                show: false,
             },
             axisBorder: {
                 color: theme.colorBorder,
@@ -82,10 +91,10 @@ export default () => {
             axisTicks: {
                 show: false
             },
-            categories: ["", "1d", "1w", "1m", "3m", "6m", "1y", "All Time"],
-            tooltip: {
-                enabled: false
-            }
+            // categories: ["", "1d", "1w", "1m", "3m", "6m", "1y", "All Time"],
+            // tooltip: {
+            //     enabled: false
+            // }
         },
         dataLabels: {
             enabled: false,
@@ -116,15 +125,13 @@ export default () => {
         }
       })
 
-    const [series, setSeries] = useState<any>([
-        {
-          name: "Earnings",
-          data: [0, 40, 25, 60, 39, 80, 50, 100]
-        }
-      ])
+    const [series, setSeries] = useState<any>(mockSeries)
+
+    console.log("series", series);
 
     return (
-        <StyledChartWrapper>
+        <StyledWrapper>
+            <DashboardEarningsChartDialog />
             <StyledChartHeader>
                 NODE EARNINGS (USD)
             </StyledChartHeader>
@@ -132,9 +139,9 @@ export default () => {
                 options={options}
                 series={series}
                 type="area"
-                height="360px"
+                height="320px"
                 width="100%"
             />
-        </StyledChartWrapper>
+        </StyledWrapper>
     )
 }

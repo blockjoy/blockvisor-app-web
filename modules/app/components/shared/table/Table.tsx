@@ -1,7 +1,31 @@
-import { Children } from "react";
 import { EmotionJSX } from "@emotion/react/types/jsx-namespace";
 import styled from "@emotion/styled";
 import TableLoader from "./TableLoader";
+
+type Cell = {
+    key: string,
+    component: EmotionJSX.Element,
+}
+
+type Row = {
+    cells: Cell[],
+    isDanger?: boolean
+}
+
+type Header = {
+    key: string,
+    name: string,
+    width: string,
+    isHiddenOnMobile?: boolean,
+    component: EmotionJSX.Element,
+}
+
+type Props = {
+    headers?: Header[],
+    rows: Row[],
+    onRowClick?: () => void,
+    isLoading: boolean
+}
 
 const StyledTableWrapper = styled.div`
   position: relative;
@@ -14,10 +38,16 @@ const StyledTable = styled.table`
         padding: 0 0 10px;
         color: ${p => p.theme.colorDefault};
         letter-spacing: 1px;
-        font-size: 12px;
+        font-size: 10px;
         font-weight: 500;
         text-transform: uppercase;
         text-align: left;
+    }
+
+    @media only screen and (max-width: ${p => p.theme.screenSm}) {
+        .hidden-on-mobile {
+            display: none;
+        }
     }
 
     & .has-hover-color {
@@ -37,25 +67,11 @@ const StyledTable = styled.table`
         border-bottom: 1px solid ${p => p.theme.colorBorder};
     }
     
+    & .danger span,
+    & tr:hover.danger .has-hover-color {
+        color: ${p => p.theme.colorDanger};
+    }
 `;
-
-type Row = {
-    cells: EmotionJSX.Element[],
-}
-
-type Header = {
-    key: string,
-    name: string,
-    width: string,
-    component: EmotionJSX.Element,
-}
-
-type Props = {
-    headers?: Header[],
-    rows: Row[],
-    onRowClick?: () => void,
-    isLoading: boolean
-}
 
 export const Table: React.FC<Props> = ({ headers, rows, onRowClick, isLoading }) => {
 
@@ -73,7 +89,7 @@ export const Table: React.FC<Props> = ({ headers, rows, onRowClick, isLoading })
                     <thead>
                         <tr>
                             {headers.map(th => (
-                                <th key={th.key} style={{maxWidth: th.width}}>
+                                <th className={th.isHiddenOnMobile ? "hidden-on-mobile" : ""} key={th.key} style={{maxWidth: th.width}}>
                                     {th.component}
                                 </th>
                             ))}
@@ -82,10 +98,10 @@ export const Table: React.FC<Props> = ({ headers, rows, onRowClick, isLoading })
                 )}
                 <tbody>
                     {rows?.map(tr => (
-                        <tr onClick={handleRowClick}>
-                            {tr.cells?.map(td => (
-                                <td key={td.key}>
-                                    {td}
+                        <tr className={tr.isDanger ? "danger" : ""} onClick={handleRowClick}>
+                            {tr.cells?.map((td, index) => (
+                                <td className={headers && headers[index].isHiddenOnMobile ? "hidden-on-mobile": ""} key={td.key}>
+                                    {td.component}
                                 </td>
                             ))}
                         </tr>

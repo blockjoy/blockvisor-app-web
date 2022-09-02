@@ -5,6 +5,7 @@ export const layoutState = atom({
   default: {
     isSidebarOpen: false,
     isProfileOpen: false,
-    isNodeAddOpen: false
+    isNodeAddOpen: false,
+    isHostsAddOpen: false,
   },
 });

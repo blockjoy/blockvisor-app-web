@@ -36,18 +36,18 @@ export const mockNodes: Node[] = [
         added: "2022-08-21T15:36:41+00:00",
         status: "OFFLINE"
     },
-    {
-        name: "PurpleTurtle",
-        id: "423423-324fdsdf-32-4",
-        address: "212.213.214.2",
-        added: "2022-08-16T15:36:41+00:00",
-        status: "SYNCING"
-    },
-    {
-        name: "YellowBaggage",
-        id: "423423-324fdsdf-32-4",
-        address: "212.213.214.2",
-        added: "2022-08-12T15:36:41+00:00",
-        status: "DEAD"
-    },
+    // {
+    //     name: "PurpleTurtle",
+    //     id: "423423-324fdsdf-32-4",
+    //     address: "212.213.214.2",
+    //     added: "2022-08-16T15:36:41+00:00",
+    //     status: "SYNCING"
+    // },
+    // {
+    //     name: "YellowBaggage",
+    //     id: "423423-324fdsdf-32-4",
+    //     address: "212.213.214.2",
+    //     added: "2022-08-12T15:36:41+00:00",
+    //     status: "DEAD"
+    // },
 ]

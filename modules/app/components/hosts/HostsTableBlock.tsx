@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 type Props = {
-    id: string,
     address: string,
+    location: string,
     name: string
 }
 
@@ -22,19 +22,12 @@ const StyledRow = styled.span`
 
   @media only screen and (min-width: ${p => p.theme.screenSm}) {
     flex-direction: row;
-    gap: 0;
+    gap: 16px;
   }
 `;
 
-const StyledId = styled.span`
-    color: ${p => p.theme.colorDefault};
-
-    @media only screen and (min-width: ${p => p.theme.screenSm}) {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 130px;
-    }
+const StyledLocation = styled.span`
+    color: ${p => p.theme.colorLabel};
 `;
 
 const StyledAddress = styled.span`
@@ -46,18 +39,19 @@ const StyledAddress = styled.span`
   }
 `;
 
-const NodesTableBlock: React.FC<Props> = ({ name, id, address }) => (
+const NodesTableBlock: React.FC<Props> = ({ name, id, address, location }) => (
     <StyledWrapper>
         <StyledName className="has-hover-color">
             {name}
         </StyledName>
         <StyledRow>
-            <StyledId>
-                {id}
-            </StyledId>
             <StyledAddress>
                 {address}
             </StyledAddress>
+            <StyledLocation>
+                <span className="uil uil-location-point" />
+                {location}
+            </StyledLocation>
         </StyledRow>
     </StyledWrapper>
 );

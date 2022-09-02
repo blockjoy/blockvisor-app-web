@@ -13,6 +13,7 @@ export const themeDefault: Theme = {
     colorPlaceholder: "#A5A8A3",
     colorBackground: "#222524",
     colorLightGrey: "#e7e7e7",
+    colorDanger: "#EE7070",
     screenXs: "500px",
     screenSm: "768px",
     screenMd: "980px",

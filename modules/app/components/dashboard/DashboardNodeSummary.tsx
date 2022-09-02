@@ -1,6 +1,10 @@
 import styled from "@emotion/styled";
 
-import { PageHeader } from "../shared";
+import { PageHeader, BlockButton } from "../shared";
+
+import { useRecoilState} from "recoil";
+
+import { layoutState } from "@modules/layout/store";
 
 import IconNodes from "@public/assets/icons/box-12.svg";
 
@@ -71,9 +75,14 @@ const mockItems = [
 ]
 
 export default () => {
+    const [layout, setLayout] = useRecoilState(layoutState);
+    const handleAddNode = () => setLayout({ ...layout, isNodeAddOpen: true })
     return (
         <>
-            <PageHeader>Your Nodes</PageHeader>
+            <PageHeader>
+                Your Nodes
+                <BlockButton onClick={handleAddNode}>Add Node</BlockButton>
+            </PageHeader>
             <StyledList>
                 {mockItems.map(item => (
                     <StyledItemBlock key={item.label}>

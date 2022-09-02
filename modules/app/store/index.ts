@@ -6,5 +6,8 @@ export const appState = atom({
     nodesLoading: true,
     nodesSortExpression: "added",
     nodesSortOrder: "asc",
+    hostsLoading: true,
+    hostsSortExpression: "added",
+    hostsSortOrder: "asc",
   },
 });

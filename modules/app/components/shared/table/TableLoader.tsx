@@ -13,12 +13,12 @@ const loadingStyles = css`
 
 const StyledWrapper = styled.div<Props>`
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -5%;
+    left: -5%;
     display: grid;
     place-items: center;
-    width: 100%;
-    height: 100%;
+    width: 110%;
+    height: 110%;
     backdrop-filter: blur( 4px );
     -webkit-backdrop-filter: blur( 4px );
     visibility: hidden;

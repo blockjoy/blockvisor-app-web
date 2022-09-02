@@ -40,16 +40,17 @@ const StyledOverlay = styled.div<Props>`
 
 const Overlay = () => {
   const [ layout, setLayout ] = useRecoilState(layoutState);
-  const { isSidebarOpen, isProfileOpen, isNodeAddOpen } = layout;
+  const { isSidebarOpen, isProfileOpen, isNodeAddOpen, isHostsAddOpen } = layout;
   
   const handleClick = () => setLayout({ 
     ...layout, 
     isSidebarOpen: false, 
     isProfileOpen: false,
-    isNodeAddOpen: false
+    isNodeAddOpen: false,
+    isHostsAddOpen: false
   });
 
-  const isOthersOpen = isNodeAddOpen || isProfileOpen;
+  const isOthersOpen = isNodeAddOpen || isProfileOpen || isHostsAddOpen;
 
   return (
     <StyledOverlay 

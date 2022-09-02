@@ -19,6 +19,18 @@ const StyledAdded = styled.span`
   color: ${p => p.theme.colorLabel};
 `;
 
+const StyledAddedCell = styled.span`
+    display: block;
+    margin-top: 20px;
+    font-size: 13px;
+    color: ${p => p.theme.colorLabel};
+
+
+  @media only screen and (min-width: ${p => p.theme.screenSm}) {
+        display: none;
+    }
+`;
+
 const StyledStatus = styled.span`
     font-size: 12px;
     letter-spacing: 1px;
@@ -36,9 +48,22 @@ export type Node = {
 const rows = mockNodes.map(node => (
         {
             cells: [
-                <NodesTableBlock key="1" id={node.id} name={node.name} address={node.address} />, 
-                <StyledAdded key="2">{formatDistance(subDays(new Date(node.added), 3), new Date(), { addSuffix: true })}</StyledAdded>, 
-                <StyledStatus key="3" className="has-hover-color">{node.status}</StyledStatus>
+                { 
+                    key: "1",
+                    component: 
+                        <>
+                            <NodesTableBlock key="1" id={node.id} name={node.name} address={node.address} />
+                            <StyledAddedCell>Added {formatDistance(subDays(new Date(node.added), 3), new Date(), { addSuffix: true })}</StyledAddedCell>
+                        </>,
+                },
+                { 
+                    key: "2",
+                    component: <StyledAdded key="2">{formatDistance(subDays(new Date(node.added), 3), new Date(), { addSuffix: true })}</StyledAdded>,
+                },
+                { 
+                    key: "3",
+                    component: <StyledStatus key="3" className="has-hover-color">{node.status}</StyledStatus>,
+                }
             ]
         }
     )
@@ -77,7 +102,7 @@ export default () => {
 
     const headers = [
         {name: "Name", component: <SortButton>name</SortButton>, width: "100px", key: "1" },
-        {name: "Added", component: <SortButton>added</SortButton>, width: "100px", key: "2" },
+        {name: "Added", isHiddenOnMobile: true, component: <SortButton>added</SortButton>, width: "100px", key: "2" },
         {name: "Status", component: <SortButton>status</SortButton>, width: "100px", key: "3" },
     ];
 
