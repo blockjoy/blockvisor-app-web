@@ -23,15 +23,19 @@ type Header = {
 type Props = {
     headers?: Header[],
     rows: Row[],
-    onRowClick?: () => void,
+    onRowClick?: (arg0: any) => void,
     isLoading: boolean
+}
+
+type TableProps = {
+    hasRowClick?: boolean
 }
 
 const StyledTableWrapper = styled.div`
   position: relative;
 `;
 
-const StyledTable = styled.table`
+const StyledTable = styled.table<TableProps>`
     width: 100%;
 
     & th {
@@ -71,20 +75,22 @@ const StyledTable = styled.table`
     & tr:hover.danger .has-hover-color {
         color: ${p => p.theme.colorDanger};
     }
+
+    ${p => p.hasRowClick && "tr { cursor: pointer; } "};
 `;
 
 export const Table: React.FC<Props> = ({ headers, rows, onRowClick, isLoading }) => {
 
-    const handleRowClick = () => {
+    const handleRowClick = (tr: any) => {
         if (onRowClick) {
-            onRowClick();
+            onRowClick(tr);
         }
     }
 
     return (
         <StyledTableWrapper>
             <TableLoader isLoading={isLoading} />
-            <StyledTable>
+            <StyledTable hasRowClick={!!onRowClick}>
                 {headers && (
                     <thead>
                         <tr>
@@ -98,7 +104,7 @@ export const Table: React.FC<Props> = ({ headers, rows, onRowClick, isLoading })
                 )}
                 <tbody>
                     {rows?.map(tr => (
-                        <tr className={tr.isDanger ? "danger" : ""} onClick={handleRowClick}>
+                        <tr className={tr.isDanger ? "danger" : ""} onClick={() => handleRowClick(tr)}>
                             {tr.cells?.map((td, index) => (
                                 <td className={headers && headers[index].isHiddenOnMobile ? "hidden-on-mobile": ""} key={td.key}>
                                     {td.component}

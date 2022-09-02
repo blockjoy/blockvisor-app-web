@@ -9,5 +9,6 @@ export const appState = atom({
     hostsLoading: true,
     hostsSortExpression: "added",
     hostsSortOrder: "asc",
+    dynamicBreadcrumb: ""
   },
 });

@@ -2,12 +2,12 @@ import styled from "@emotion/styled";
 
 import { useRecoilState } from "recoil";
 
+import { useRouter } from 'next/router'
+
 import { appState } from "@modules/app/store";
 import { layoutState } from "@modules/layout/store";
 
 import { PageSection, PageHeader, Table, TableSortButton, BlockButton } from "../shared";
-
-import { formatDistance, subDays } from 'date-fns';
 
 import HostsTableBlock from "./HostsTableBlock";
 
@@ -16,6 +16,7 @@ import { useEffect, PropsWithChildren } from "react";
 import { mockHosts } from "./mockData";
 
 export type Host = {
+    id: string,
     name: string,
     address: string,
     location: string,
@@ -30,6 +31,7 @@ const StyledStatus = styled.span`
 
 const rows = mockHosts.map(host => (
         {
+            id: host.id,
             isDanger: host.status === "ISSUE",
             cells: [
                 { 
@@ -46,6 +48,8 @@ const rows = mockHosts.map(host => (
 );
 
 export default () => {
+    const router = useRouter();
+
     const [app, setApp] = useRecoilState(appState);
     const [layout, setLayout] = useRecoilState(layoutState);
 
@@ -71,6 +75,11 @@ export default () => {
             ...layout,
             isHostsAddOpen: true,
         })
+    }
+
+    const handleRowClick = (args: any) => {
+        console.log('args', args);
+        router.push(`${router.pathname}/${args.id}`)
     }
 
     const SortButton: React.FC<PropsWithChildren> = ({ children }) => 
@@ -101,7 +110,7 @@ export default () => {
                 Hosts
                 <BlockButton onClick={handleAddHost}>Add Host</BlockButton>
             </PageHeader>
-            <Table isLoading={hostsLoading} headers={headers} rows={rows} onRowClick={() => console.log("row clicked")} />
+            <Table isLoading={hostsLoading} headers={headers} rows={rows} onRowClick={handleRowClick} />
         </PageSection>
     );
 }
