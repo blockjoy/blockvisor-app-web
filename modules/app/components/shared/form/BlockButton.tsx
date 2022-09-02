@@ -22,6 +22,8 @@ const StyledButton = styled.button`
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+
+  white-space: nowrap;
 `;
 
 export const BlockButton: React.FC<Props> = ({ children, onClick }) => {

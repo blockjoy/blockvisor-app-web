@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 
 type Props = {
     children?: React.ReactNode,
+    className?: string,
     size: string
 }
 
@@ -16,8 +17,8 @@ const StyledIconWrapper = styled.span<Props>`
   }
 `;
 
-const SizedIcon: React.FC<Props> = ({children, size}) => (
-    <StyledIconWrapper size={size}>
+const SizedIcon: React.FC<Props> = ({children, size, className}) => (
+    <StyledIconWrapper size={size} className={className}>
       {children}
     </StyledIconWrapper>
 );
