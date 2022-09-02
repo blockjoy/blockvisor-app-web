@@ -23,3 +23,7 @@ export * from './MultiSelect/MultiSelect';
 export * from './Select/Select';
 export * from './SelectWithDescription/SelectWithDescription';
 export * from './ValueWithUtil/ValueWithUtil';
+export * from './Textarea/Textarea';
+export * from './Toggle/Toggle';
+export * from './Pill/Pill';
+export * from './PillBox/PillBox';
