@@ -8,7 +8,7 @@ const StyledWrapper = styled.header`
   justify-content: space-between;
   height: 56px;
   padding: 0 16px;
-  border-bottom: 1px solid #363938;
+  border-bottom: 1px solid ${p => p.theme.colorBorder};
 `;
 
 const StyledLogo = styled(LogoSmall)`

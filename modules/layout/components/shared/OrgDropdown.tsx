@@ -30,7 +30,7 @@ const StyledDropdownButton = styled.button`
   gap: 10px;
   height: 56px;
   width: 200px;
-  background: ${p => p.theme.colorBackground};
+  background: transparent;
   border: 0;
   cursor: pointer;
 `;
@@ -73,7 +73,7 @@ const StyledMenu = styled.div<MenuProps>`
   font-size: 14px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-30px);
+  transform: translateY(-16px);
   transition: all 0.4s;
 
   ${p => p.isOpen && menuOpenStyles};

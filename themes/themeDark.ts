@@ -5,6 +5,8 @@ import { Theme } from "@emotion/react";
 export const themeDark: Theme = {
     ...themeDefault,
     id: "dark",
+    colorPrimary: "#bff589",
+    colorPrimaryText: "#222524",
     colorBorder: "#363938",
     colorLabel: "#5F615D",
     colorDefault: "#a7a7a7",

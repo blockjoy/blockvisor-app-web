@@ -4,6 +4,7 @@ interface ITheme {
     id?: string,
     fontPrimary: string;
     colorPrimary: string;
+    colorPrimaryText: string;
     colorAccent: string;
     colorDefault: string;
     colorCard: string;

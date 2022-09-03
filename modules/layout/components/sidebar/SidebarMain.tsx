@@ -13,7 +13,7 @@ const StyledWrapper = styled.main`
 `;
 
 const StyledHeader = styled.header`
-  color: #A5A8A3;
+  color: ${p => p.theme.colorLabel};
   letter-spacing: 1.5px;
   font-size: 10px;
   margin-bottom: 16px;
@@ -26,7 +26,7 @@ const StyledList = styled.ul`
 const StyledLink = styled.a`
   display: flex;
   gap: 10px;
-  color: #f9f9f9;
+  color: ${p => p.theme.colorText};
   padding: 12px 10px;
   font-size: 13px;
   border-radius: 8px;

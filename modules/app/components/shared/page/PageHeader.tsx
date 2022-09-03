@@ -8,6 +8,7 @@ const StyledHeader = styled.header`
   height: 36px;
   font-size: 20px;
   margin: 0 0 32px;
+  color: ${p => p.theme.colorText};
 `;
 
 export const PageHeader: React.FC<React.PropsWithChildren> = ({ children }) => (

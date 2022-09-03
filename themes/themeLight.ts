@@ -5,7 +5,8 @@ import { Theme } from "@emotion/react";
 export const themeLight: Theme = {
     ...themeDefault,
     id: "light",
-    colorPrimary: "#13B555",
+    colorPrimary: "#222524",
+    colorPrimaryText: "#bff589",
     colorAccent: "#13B555",
     colorBorder: "#e7e7e7",
     colorLabel: "#6d6e6c",
@@ -16,4 +17,5 @@ export const themeLight: Theme = {
     colorPlaceholder: "#A5A8A3",
     colorBackground: "#fafafa",
     colorLightGrey: "#f7f7f7",
+    colorSidebar: "#fafafa",
 }

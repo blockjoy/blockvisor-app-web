@@ -34,6 +34,7 @@ const StyledItemBlock = styled.li`
 const StyledItemValue = styled.div`
   font-size: 28px;
   margin-bottom: 6px;
+  color: ${p => p.theme.colorText};
 
   @media only screen and (min-width: ${p => p.theme.screenSm}) {
     font-size: 40px;
@@ -44,6 +45,7 @@ const StyledItemLabel = styled.div`
   display: flex;
   gap: 6px;
   font-size: 14px;
+  color: ${p => p.theme.colorLabel};
 `;
 
 const StyledItemLabelIcon = styled.span`
@@ -53,7 +55,7 @@ const StyledItemLabelIcon = styled.span`
 `;
 
 const StyledItemLabelText = styled.span`
-  
+  color: ${p => p.theme.colorLabel};
 `;
 
 const mockItems = [

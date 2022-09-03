@@ -17,13 +17,12 @@ const StyledButton = styled.button`
     padding: 0 10px;
     border: 0;
     border-radius: 4px;
-  background: ${p => p.theme.colorPrimary};
-  color: #1a1a1a;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-
-  white-space: nowrap;
+    background: ${p => p.theme.colorPrimary};
+    color: ${p => p.theme.colorPrimaryText};
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
 `;
 
 export const BlockButton: React.FC<Props> = ({ children, onClick }) => {
