@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { inputUtil, inputUtilLeft, inputUtilRight } from './InputUtil.styles';
 
 type Props = {
-  position: 'left' | 'right';
+  position?: 'left' | 'right';
   children?: ReactNode;
 };
 
