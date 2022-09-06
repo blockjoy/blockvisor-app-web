@@ -1,10 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    images: {
-      unoptimized: true,
-    },
+  compiler: {
+    emotion: true,
   },
   webpack(config) {
     config.module.rules.push({
@@ -19,7 +17,9 @@ const nextConfig = {
         {
           loader: '@svgr/webpack',
           options: {
-            svgoConfig: { plugins: [{ removeViewBox: false }] },
+            svgoConfig: {
+              plugins: [{ name: 'preset-default', removeViewBox: false }],
+            },
           },
         },
       ],

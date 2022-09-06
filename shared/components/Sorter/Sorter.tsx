@@ -46,7 +46,7 @@ export const Sorter: FC<Props> = ({ id, active, callback }) => {
     >
       <span className="visually-hidden">Sort by </span>
       <slot />
-      <IconSort class="sorter__arrow" />
+      <IconSort className="sorter__arrow" />
     </button>
   );
 };
