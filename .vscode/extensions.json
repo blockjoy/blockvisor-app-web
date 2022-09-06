@@ -1,3 +1,6 @@
 {
-  "recommendations": ["vunguyentuan.vscode-css-variables"]
+  "recommendations": [
+    "vunguyentuan.vscode-css-variables",
+    "esbenp.prettier-vscode"
+  ]
 }
