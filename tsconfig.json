@@ -17,6 +17,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "incremental": true,
     "baseUrl": ".",
+    "types": ["@emotion/react/types/css-prop"],
     "paths": {
       "@assets/*": ["./assets/*"],
       "@modules/*": ["./modules/*"],

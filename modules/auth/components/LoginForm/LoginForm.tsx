@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useGrpc } from '@modules/auth/hooks';
+import { useRouter } from 'next/router';
 import { Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -14,6 +15,7 @@ type LoginForm = {
 };
 
 export function LoginForm() {
+  const router = useRouter();
   const client = useGrpc();
   const form = useForm<LoginForm>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
@@ -43,6 +45,7 @@ export function LoginForm() {
       console.log("response", response);
       console.log("result", result);
       console.log("result", result?.token?.value);
+      router.push("/dashboard");
     }
 
   });

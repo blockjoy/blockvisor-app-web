@@ -1,4 +1,4 @@
-import { SerializedStyles } from '@emotion/react';
+import { SerializedStyles } from '@emotion/serialize';
 import { FC, PropsWithChildren } from 'react';
 import { containers } from 'styles/containers.styles';
 import { styles } from './ActionTitleHeader.styles';

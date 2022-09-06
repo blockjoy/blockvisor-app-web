@@ -8,3 +8,4 @@
   "github-actions.workflows.pinned.workflows": [".github/workflows/*.yml"],
   "cssVariables.lookupFiles": ["**/*.styles.ts"]
 }
+
