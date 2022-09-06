@@ -9,9 +9,11 @@ import { layoutState } from "@modules/layout/store";
 
 import { PageSection, PageHeader, Table, TableSortButton, BlockButton } from "../shared";
 
-import HostsTableBlock from "./HostsTableBlock";
+import { HostsSortButton } from "./shared";
 
-import { useEffect, PropsWithChildren } from "react";
+import HostsTableBlock from "./shared/HostsTableBlock";
+
+import { useEffect } from "react";
 
 import { mockHosts } from "./mockData";
 
@@ -86,12 +88,31 @@ export default () => {
         router.push(`${router.pathname}/${args.key}`)
     }
 
-    const SortButton: React.FC<PropsWithChildren> = ({ children }) => 
-        <TableSortButton activeSortExpression={hostsSortExpression} sortExpression={children?.toString() || ""} onClick={() => handleSort(children?.toString() || "")}>{children}</TableSortButton>
-
     const headers = [
-        {name: "Name", component: <SortButton>name</SortButton>, width: "100px", key: "1" },
-        {name: "Status", component: <SortButton>status</SortButton>, width: "100px", key: "2" },
+        {
+            name: "Name", 
+            width: "100px", 
+            key: "1", 
+            component: 
+                <HostsSortButton 
+                    handleSort={handleSort} 
+                    hostsSortExpression={hostsSortExpression}
+                >
+                    name
+                </HostsSortButton>
+        },
+        {
+            name: "Status", 
+            width: "100px", 
+            key: "2",
+            component: 
+                <HostsSortButton 
+                    handleSort={handleSort} 
+                    hostsSortExpression={hostsSortExpression}
+                >
+                    status
+                </HostsSortButton>
+        }
     ];
 
     useEffect(() => {

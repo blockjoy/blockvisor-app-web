@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTheme } from '@emotion/react';
 import styled from "@emotion/styled";
 
-import DashboardEarningsChartDialog from "./DashboardEarningsChartDialog";
+import { DashboardEarningsChartDialog } from "./";
 
 import { mockSeries } from "./mockChartData";
 
@@ -22,7 +22,7 @@ const StyledChartHeader = styled.header`
   font-size: 14px;
 `;
 
-export default () => {
+export const DashboardEarningsChart = () => {
     const theme = useTheme();
 
     const [options, setOptions] = useState<any>({

@@ -29,7 +29,7 @@ const StyledChartDialogMessage = styled.div`
     line-height: 1.35;
 `;
 
-export default () => {
+export const DashboardEarningsChartDialog = () => {
     return (
         <StyledChartDialog>
             <StyledChartDialogMessage>

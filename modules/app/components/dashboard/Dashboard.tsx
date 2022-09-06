@@ -1,7 +1,9 @@
 import { PageSection } from "../shared";
 
-import DashboardNodeSummary from "./DashboardNodeSummary";
-import DashboardEarnings from "./DashboardEarnings";
+import { 
+    DashboardNodeSummary, 
+    DashboardEarnings 
+} from "./shared";
 
 export default () => {
     return (

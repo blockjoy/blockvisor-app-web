@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import { PageHeader, BlockButton } from "../shared";
+import { PageHeader, BlockButton } from "../../shared";
 
 import { useRecoilState} from "recoil";
 
@@ -76,7 +76,7 @@ const mockItems = [
     }
 ]
 
-export default () => {
+export const DashboardNodeSummary = () => {
     const [layout, setLayout] = useRecoilState(layoutState);
     const handleAddNode = () => setLayout({ ...layout, isNodeAddOpen: true })
     return (

@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 
-import { PageHeader } from "../shared";
+import { PageHeader } from "../../shared";
+
+import { mockEarningsData as mockItems } from "./mockEarningsData";
 
 const StyledList = styled.ul`
   display: flex;
@@ -44,13 +46,7 @@ const StyledItemSuffix = styled.div`
   
 `;
 
-const mockItems = [
-    { name: "TOTAL EARNED", value: 252.21 },
-    { name: "LAST 30 DAYS", value: 12.5 },
-    { name: "LAST 24 HOURS", value: 0.5 },
-]
-
-export default () => {
+export const DashboardEarningsSummary = () => {
     return (
         <>
             <PageHeader>
