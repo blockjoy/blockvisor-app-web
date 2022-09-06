@@ -13,6 +13,7 @@ const StyledWrapper = styled.span`
 const StyledName = styled.span`
   display: block;
   margin-bottom: 10px;
+  color: ${p => p.theme.colorText};
 `;
 
 const StyledRow = styled.span`
@@ -49,7 +50,6 @@ const NodesTableBlock: React.FC<Props> = ({ name, address, location }) => (
                 {address}
             </StyledAddress>
             <StyledLocation>
-                <span className="uil uil-location-point" />
                 {location}
             </StyledLocation>
         </StyledRow>

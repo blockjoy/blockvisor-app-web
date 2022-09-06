@@ -6,7 +6,7 @@ const Host = () => <HostModule />
 Host.getLayout = function getLayout(page: any) {
     
 
-  return <AppLayout breadcrumb={["Hosts", "All"]}>{page}</AppLayout>
+  return <AppLayout breadcrumb={["Hosts", "View Host"]}>{page}</AppLayout>
 }
 
 export default Host;

@@ -13,6 +13,7 @@ const StyledWrapper = styled.span`
 const StyledName = styled.span`
   display: block;
   margin-bottom: 10px;
+  color: ${p => p.theme.colorText};
 `;
 
 const StyledRow = styled.span`

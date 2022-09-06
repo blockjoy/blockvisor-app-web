@@ -47,6 +47,7 @@ export type Node = {
 
 const rows = mockNodes.map(node => (
         {
+            key: node.id,
             cells: [
                 { 
                     key: "1",

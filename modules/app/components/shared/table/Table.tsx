@@ -8,6 +8,7 @@ type Cell = {
 }
 
 type Row = {
+    key: string,
     cells: Cell[],
     isDanger?: boolean
 }
@@ -104,9 +105,9 @@ export const Table: React.FC<Props> = ({ headers, rows, onRowClick, isLoading })
                 )}
                 <tbody>
                     {rows?.map(tr => (
-                        <tr className={tr.isDanger ? "danger" : ""} onClick={() => handleRowClick(tr)}>
+                        <tr key={tr.key} className={tr.isDanger ? "danger" : ""} onClick={() => handleRowClick(tr)}>
                             {tr.cells?.map((td, index) => (
-                                <td className={headers && headers[index].isHiddenOnMobile ? "hidden-on-mobile": ""} key={td.key}>
+                                <td  key={td.key} className={headers && headers[index].isHiddenOnMobile ? "hidden-on-mobile": ""}>
                                     {td.component}
                                 </td>
                             ))}

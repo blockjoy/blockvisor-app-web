@@ -127,8 +127,6 @@ export default () => {
 
     const [series, setSeries] = useState<any>(mockSeries)
 
-    console.log("series", series);
-
     return (
         <StyledWrapper>
             <DashboardEarningsChartDialog />

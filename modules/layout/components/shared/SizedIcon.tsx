@@ -12,6 +12,11 @@ const StyledIconWrapper = styled.span<Props>`
   width: ${p => p.size};
   height: ${p => p.size};
 
+  & svg {
+    width: 100%;
+    height: 100%;
+  }
+
   & path {
     color: ${p => p.theme.colorLabel};
   }
