@@ -1,3 +1,5 @@
+import { css } from "@emotion/react";
+
 export const styles = {
   base: css`
     padding: 6px 0;
