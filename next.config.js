@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  compiler: {
-    emotion: true,
-  },
   experimental: {
     images: {
-      unoptimized: true
-    }
+      unoptimized: true,
+    },
   },
   webpack(config) {
     config.module.rules.push({
