@@ -28,7 +28,8 @@
     "react-hook-form": "^7.34.2",
     "react-intersection-observer": "^9.4.0",
     "react-toastify": "^9.0.7",
-    "recoil": "^0.7.4"
+    "recoil": "^0.7.4",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@emotion/types": "^0.7.0",
