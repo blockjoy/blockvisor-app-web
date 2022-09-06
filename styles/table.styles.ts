@@ -1,3 +1,5 @@
+import { css } from '@emotion/react';
+
 export const table = {
   base: css`
     width: 100%;
