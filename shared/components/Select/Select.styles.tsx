@@ -5,7 +5,7 @@ export const styles = {
   inputWrapper: css`
     display: block;
   `,
-  wrappeer: css`
+  wrapper: css`
     position: relative;
     color: var(--color-text-3);
   `,

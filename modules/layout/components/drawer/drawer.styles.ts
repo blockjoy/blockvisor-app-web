@@ -37,4 +37,9 @@ export const styles = {
     border-bottom: 1px solid var(--color-overlay-background-1);
     color: var(--color-text-5);
   `,
+  actions: css`
+    border-bottom: 1px solid var(--color-overlay-background-1);
+    border-top: 1px solid var(--color-overlay-background-1);
+    padding: 24px;
+  `,
 };

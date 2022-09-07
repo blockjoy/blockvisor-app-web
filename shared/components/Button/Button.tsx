@@ -9,6 +9,7 @@ import {
 import { reset } from 'styles/utils.reset.styles';
 import { SerializedStyles } from '@emotion/serialize';
 import Link from 'next/link';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 type Props = {
   children?: ReactNode;
@@ -19,19 +20,21 @@ type Props = {
   display?: ButtonDisplay;
   customCss?: SerializedStyles[];
   href?: string;
+  loading?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 export function Button({
   children,
   onClick,
-  size = 'normal',
+  size = 'medium',
   style = 'primary',
   border = 'rounded',
   display = 'inline',
   type = 'button',
   href,
   customCss,
+  loading,
 }: Props) {
   const buttonStyles = [
     reset.button,
@@ -55,8 +58,8 @@ export function Button({
   }
 
   return (
-    <button type={type} css={[buttonStyles]} onClick={onClick}>
-      {children}
+    <button type={type} css={buttonStyles} onClick={onClick}>
+      {loading ? <LoadingSpinner size="small" /> : children}
     </button>
   );
 }
