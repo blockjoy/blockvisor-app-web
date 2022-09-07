@@ -2,11 +2,15 @@ import { css } from '@emotion/react';
 import { typo } from 'styles/utils.typography.styles';
 
 export const styles = {
+  inputWrapper: css`
+    display: block;
+  `,
   wrappeer: css`
     position: relative;
     color: var(--color-text-3);
   `,
   field: css`
+    width: 100%;
     border-radius: 4px;
     color: inherit;
     cursor: pointer;
