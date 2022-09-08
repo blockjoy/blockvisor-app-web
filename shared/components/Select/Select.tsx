@@ -42,9 +42,10 @@ export function Select({
     inputSize,
     inputStyle,
     disabled,
-    !!errors[name],
-    !!leftIcon,
+    Boolean(errors[name]),
+    Boolean(leftIcon),
   );
+
   return (
     <>
       {label && (
@@ -57,7 +58,7 @@ export function Select({
           {label}
         </InputLabel>
       )}
-      <div css={[styles.wrappeer]}>
+      <div css={[styles.wrapper]}>
         {leftIcon && <InputUtil position="left">{leftIcon}</InputUtil>}
         <select
           css={[selectStyles]}
@@ -82,7 +83,7 @@ function setInputStyles(
   inputSize: InputSize,
   inputStyle: InputStyle,
   disabled?: boolean,
-  isValid?: boolean,
+  hasError?: boolean,
   leftIcon?: boolean,
   inputStyles?: SerializedStyles[],
 ) {
@@ -105,7 +106,7 @@ function setInputStyles(
     fieldClasses.push(styles.inputFieldDisabled, styles.inputHintsDisabled);
   }
 
-  if (!isValid) {
+  if (hasError) {
     fieldClasses.push(styles.fieldError);
   }
 

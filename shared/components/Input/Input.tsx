@@ -1,4 +1,4 @@
-import { css, SerializedStyles } from '@emotion/react'
+import { SerializedStyles } from '@emotion/react';
 import { ErrorMessage } from '@hookform/error-message';
 import { InputHTMLAttributes, ReactNode } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
@@ -16,7 +16,7 @@ import {
   inputTypesStyle,
   inputWrapper,
 } from './Input.styles';
-import { InputLabel } from './InputLabel';
+import { inputLabel, inputLabelSize } from './InputLabel.styles';
 import { InputUtil } from './InputUtil';
 
 type InputProps = {
@@ -24,7 +24,7 @@ type InputProps = {
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   hints?: ReactNode;
-  labelElement?: ReactNode;
+  label?: string;
   labelStyles?: SerializedStyles[];
   inputSize?: InputSize;
   validationOptions?: RegisterOptions;
@@ -36,7 +36,7 @@ export function Input({
   leftIcon,
   rightIcon,
   disabled,
-  labelElement,
+  label,
   labelStyles,
   validationOptions,
   value,
@@ -57,9 +57,12 @@ export function Input({
 
   return (
     <>
-      <InputLabel additionalStyles={labelStyles} name={name}>
-        {labelElement}
-      </InputLabel>
+      <label
+        htmlFor={name}
+        css={[inputLabel, inputLabelSize.small, labelStyles]}
+      >
+        {label}
+      </label>
       <div tabIndex={0} css={[inputWrapper]}>
         <InputUtil position="left">{leftIcon}</InputUtil>
         <input

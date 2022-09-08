@@ -64,6 +64,7 @@ const buttonStyle = {
 
 const button = css`
   font-weight: var(--font-weight-bold);
+  position: relative;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -101,9 +102,11 @@ const buttonBorder = {
 const buttonSize = {
   small: css`
     padding: 6px 16px;
+    height: 32px;
     ${typo.buttonSmall}
   `,
   medium: css`
+    height: 28px;
     padding: 8px 28px;
   `,
   normal: css`
