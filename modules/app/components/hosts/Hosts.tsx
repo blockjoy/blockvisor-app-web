@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 
-import { useRecoilState } from 'recoil';
-import { useRouter } from 'next/router';
 import { appState } from '@modules/app/store';
 import { layoutState } from '@modules/layout/store';
-import { BlockButton, PageHeader, PageSection, Table } from '../shared';
+import { Button } from '@shared/components';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { PageHeader, PageSection, Table } from '../shared';
+import { mockHosts } from './mockData';
 import { HostsSortButton } from './shared';
 import HostsTableBlock from './shared/HostsTableBlock';
-import { useEffect } from 'react';
-import { mockHosts } from './mockData';
-import { Button } from '@shared/components';
 
 export type Host = {
   id: string;

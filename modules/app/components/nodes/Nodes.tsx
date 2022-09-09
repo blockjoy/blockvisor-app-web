@@ -15,6 +15,7 @@ import { PropsWithChildren, useEffect } from 'react';
 
 import { Button } from '@shared/components';
 import { mockNodes } from './mockData';
+import router from 'next/router';
 
 const StyledAdded = styled.span`
   color: ${(p) => p.theme.colorLabel};
@@ -47,6 +48,7 @@ export type Node = {
 
 const rows = mockNodes.map((node) => ({
   key: node.id,
+  name: node.name,
   cells: [
     {
       key: '1',
@@ -125,6 +127,14 @@ export default () => {
     </TableSortButton>
   );
 
+  const handleRowClick = (args: any) => {
+    setApp({
+      ...app,
+      dynamicBreadcrumb: args.name,
+    });
+    router.push(`${router.pathname}/${args.key}`);
+  };
+
   const headers = [
     {
       name: 'Name',
@@ -173,7 +183,7 @@ export default () => {
         isLoading={nodesLoading}
         headers={headers}
         rows={rows}
-        onRowClick={() => console.log('row clicked')}
+        onRowClick={handleRowClick}
       />
     </PageSection>
   );
