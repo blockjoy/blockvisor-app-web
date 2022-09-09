@@ -2,7 +2,7 @@ import { layoutState } from '@modules/layout/store';
 import { useRecoilValue } from 'recoil';
 
 import { Button, Select } from '@shared/components';
-import { FC, FormEventHandler, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import { Drawer, DrawerAction, DrawerContent, DrawerHeader } from '..';
@@ -20,12 +20,23 @@ export const NodeAdd: FC = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit: SubmitHandler<NodeAddForm> = ({}) => {
+  const onSubmit: SubmitHandler<NodeAddForm> = ({ blockchain, host, type }) => {
+    console.log(blockchain, host, type);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
   };
+
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return null;
+  }
 
   return (
     <Drawer isOpen={isNodeAddOpen}>
@@ -38,7 +49,7 @@ export const NodeAdd: FC = () => {
                 label="Type"
                 inputSize="small"
                 inputStyle="default"
-                name="nodeType"
+                name="type"
                 options={[{ label: 'test', value: 'test' }]}
               />
             </div>

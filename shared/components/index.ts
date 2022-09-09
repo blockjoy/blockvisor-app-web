@@ -28,3 +28,4 @@ export * from './Toggle/Toggle';
 export * from './Pill/Pill';
 export * from './PillBox/PillBox';
 export * from './LoadingSpinner';
+export * from './form';
