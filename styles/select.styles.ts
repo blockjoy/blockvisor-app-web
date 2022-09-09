@@ -5,6 +5,7 @@ import { breakpoints } from './variables.styles';
 const base = css`
   cursor: pointer;
   transition: all 0.2s ease-out;
+  appearance: none;
 `;
 
 const primary = css`
