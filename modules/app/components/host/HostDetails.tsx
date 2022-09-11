@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
+import { formatDistanceToNow } from 'date-fns';
 import { appState } from '@modules/app/store';
 import { hostStyles } from './host.styles';
 import { Skeleton } from '../shared';
@@ -13,12 +14,17 @@ type Detail = {
 export const HostDetails = () => {
   const [rows, setRows] = useState<Detail[]>();
   const { activeHost, hostsLoading } = useRecoilValue(appState);
-  const { createdAt, diskSize, memSize, version } = activeHost;
+  const { created_at_datetime, diskSize, memSize, version } = activeHost;
 
   useEffect(() => {
     if (activeHost?.name) {
       setRows([
-        { label: 'Created', value: createdAt },
+        {
+          label: 'Created',
+          value: formatDistanceToNow(new Date(created_at_datetime), {
+            addSuffix: true,
+          }),
+        },
         { label: 'Version', value: version },
         { label: 'Disk Size', value: `${diskSize}GB` },
         { label: 'Memory Size', value: `${memSize}GB` },

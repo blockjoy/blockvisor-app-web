@@ -64,6 +64,7 @@ import {
 import { GetUpdatesResponse } from 'blockjoy-mock-grpc/dist/out/update_service_pb';
 import { CommandResponse } from 'blockjoy-mock-grpc/dist/out/command_service_pb';
 import { Parameter } from 'blockjoy-mock-grpc/dist/out/common_pb';
+import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 
 export type StatusResponse = {
   code: string;
@@ -89,6 +90,58 @@ export type UIHostCreate = {
   name: string;
   location?: string;
 };
+
+export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
+  if (ts !== undefined) {
+    return new Date(ts.getSeconds() * 1000);
+  }
+}
+
+export function id_to_string(id: Uuid | undefined): string | undefined {
+  if (id !== undefined) {
+    return id.getValue();
+  }
+}
+
+export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
+  return {
+    ...node,
+    groupsList: [],
+    created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
+    id_str: id_to_string(node?.getId()),
+    updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
+  };
+}
+
+export function host_to_grpc_host(host: Host | undefined): GrpcHostObject {
+  return {
+    ...host?.toObject(),
+    created_at_datetime: timestamp_to_date(host?.getCreatedAt()) || undefined,
+    id_str: id_to_string(host?.getId()) || '',
+    nodesList: host?.getNodesList().map((node) => node.toObject()) || [],
+    node_objects: host?.getNodesList().map((node) => node_to_grpc_node(node)),
+  };
+}
+
+export function user_to_grpc_user(user: User | undefined): GrpcUserObject {
+  return {
+    ...user?.toObject(),
+    created_at_datetime: timestamp_to_date(user?.getCreatedAt()),
+    updated_at_datetime: timestamp_to_date(user?.getUpdatedAt()),
+    id_str: id_to_string(user?.getId()),
+  };
+}
+
+export type ConvenienceConversion = {
+  created_at_datetime: Date | undefined;
+  id_str: string | undefined;
+};
+export type GrpcHostObject = Host.AsObject &
+  ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
+export type GrpcNodeObject = Node.AsObject &
+  ConvenienceConversion & { updated_at_datetime: Date | undefined };
+export type GrpcUserObject = User.AsObject &
+  ConvenienceConversion & { updated_at_datetime: Date | undefined };
 
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
@@ -194,10 +247,14 @@ export class GrpcClient {
   }
 
   getDummyTimestamp(): google_protobuf_timestamp_pb.Timestamp {
+    let now = new Date();
     let fromdate = new Date();
+
+    fromdate.setDate(now.getDate() - Math.floor(Math.random() * 10));
+
     let timestamp = new google_protobuf_timestamp_pb.Timestamp();
 
-    timestamp.setSeconds(fromdate.getSeconds());
+    timestamp.setSeconds(fromdate.getTime() / 1000);
     timestamp.setNanos(0);
 
     return timestamp;
@@ -265,14 +322,25 @@ export class GrpcClient {
 
   /* Dashboard service */
 
-  async getDashboardKPIs(): Promise<Array<Metric.AsObject> | StatusResponse> {
+  async getDashboardMetrics(): Promise<
+    Array<Metric.AsObject> | StatusResponse
+  > {
     let metric = new Metric();
-    metric.setName(Name.NODES);
-    metric.setValue(new google_protobuf_any_pb.Any());
+    metric.setName(Name.ONLINE);
+    let value = new google_protobuf_any_pb.Any();
+    value.setValue('8');
+    metric.setValue(value);
+
+    let metric2 = new Metric();
+    metric2.setName(Name.OFFLINE);
+    let value2 = new google_protobuf_any_pb.Any();
+    value2.setValue('2');
+    metric2.setValue(value2);
 
     let response = new DashboardMetricsResponse();
     response.setMeta(this.getDummyMeta());
     response.addMetrics(metric);
+    response.addMetrics(metric2);
 
     return response.getMetricsList().map((item) => item.toObject());
   }
@@ -283,7 +351,7 @@ export class GrpcClient {
     host_id?: Uuid,
     org_id?: Uuid,
     token?: string,
-  ): Promise<Array<Host.AsObject> | StatusResponse> {
+  ): Promise<Array<GrpcHostObject> | StatusResponse> {
     let response = new GetHostsResponse();
     response.setMeta(this.getDummyMeta());
     response.addHosts(this.getDummyHost());
@@ -292,7 +360,9 @@ export class GrpcClient {
       setTimeout(
         resolve.bind(
           null,
-          response.getHostsList().map((item) => item.toObject()),
+          response.getHostsList().map((item) => {
+            return host_to_grpc_host(item);
+          }),
         ),
         1000,
       );
@@ -359,12 +429,13 @@ export class GrpcClient {
 
   async getNode(
     node_id: Uuid,
-  ): Promise<Node.AsObject | StatusResponse | undefined> {
+  ): Promise<GrpcNodeObject | StatusResponse | undefined> {
     let response = new GetNodeResponse();
     response.setMeta(this.getDummyMeta());
     response.setNode(this.getDummyNode());
+    let node = response?.getNode();
 
-    return response.getNode()?.toObject();
+    return node_to_grpc_node(node);
   }
 
   async createNode(
@@ -434,7 +505,7 @@ export class GrpcClient {
 
   /* User service */
 
-  async getUser(): Promise<User.AsObject | StatusResponse | undefined> {
+  async getUser(): Promise<GrpcUserObject | StatusResponse | undefined> {
     let user = new User();
     user.setId(this.getDummyUuid());
     user.setFirstName('max');
@@ -447,7 +518,7 @@ export class GrpcClient {
     response.setMeta(this.getDummyMeta());
     response.setUser(user);
 
-    return response.getUser()?.toObject();
+    return user_to_grpc_user(response.getUser());
   }
 
   async createUser(

@@ -19,6 +19,11 @@ export const tableStyles = {
     }
 
     @media only screen and (max-width: ${theme.screenSm}) {
+      & tr th:last-of-type,
+      & tr td:last-of-type {
+        text-align: right;
+      }
+
       .hidden-on-mobile {
         display: none;
       }

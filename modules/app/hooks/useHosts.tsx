@@ -1,5 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import { formatDistanceToNow } from 'date-fns';
 import { appState } from '@modules/app/store';
 import { layoutState } from '@modules/layout/store';
 import { useEffect, useState } from 'react';
@@ -77,6 +78,7 @@ export const useHosts = (): Hook => {
       name: 'Added',
       width: '100px',
       key: '2',
+      isHiddenOnMobile: true,
       component: (
         <TableSortButton
           onClick={handleSort}
@@ -116,29 +118,35 @@ export const useHosts = (): Hook => {
 
   useEffect(() => {
     if (hosts?.length) {
-      const rows = hosts.map((node: any) => ({
-        key: node.id.value,
+      console.log('hosts', hosts);
+      const rows = hosts.map((host: any) => ({
+        key: host.id.value,
         cells: [
           {
             key: '1',
             component: (
               <>
                 <TableBlockHosts
-                  location={node.location}
-                  name={node.name}
-                  address={node.address}
+                  location={host.location}
+                  name={host.name}
+                  address={host.address}
                 />
-                <span>Added just now</span>
               </>
             ),
           },
           {
             key: '2',
-            component: <span>Added just now</span>,
+            component: (
+              <span>
+                {formatDistanceToNow(new Date(host.created_at_datetime), {
+                  addSuffix: true,
+                })}
+              </span>
+            ),
           },
           {
             key: '3',
-            component: <HostStatus status={node.status} />,
+            component: <HostStatus status={host.status} />,
           },
         ],
       }));
