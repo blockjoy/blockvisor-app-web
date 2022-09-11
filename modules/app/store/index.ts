@@ -9,7 +9,7 @@ const defaultHost: Host = {
   ip: '',
   location: '',
   nodesList: [],
-  createdAt: '',
+  created_at_datetime: '',
   diskSize: '',
   memSize: '',
   version: '',
