@@ -109,9 +109,6 @@ export default () => {
     const hostId = new Uuid();
     hostId.setValue('34234234234');
     const nodes: any = await grpcClient.getNode(hostId);
-
-    console.log('nodes', nodes);
-
     setApp({
       ...app,
       nodes,

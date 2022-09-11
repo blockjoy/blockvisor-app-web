@@ -14,6 +14,7 @@ export const dashboardEarningsStyles = {
     }
   `,
   itemHeader: (theme: ITheme) => css`
+    display: block;
     color: ${theme.colorLabel};
     letter-spacing: 1px;
     font-size: 12px;

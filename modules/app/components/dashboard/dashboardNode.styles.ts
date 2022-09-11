@@ -24,6 +24,7 @@ export const dashboardNodeStyles = {
     }
   `,
   itemValue: (theme: ITheme) => css`
+    display: block;
     font-size: 28px;
     margin-bottom: 6px;
     color: ${theme.colorText};

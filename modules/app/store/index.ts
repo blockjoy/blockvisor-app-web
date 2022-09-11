@@ -2,6 +2,10 @@
 import { GrpcClient } from './stub_client';
 import { atom } from 'recoil';
 import { Host } from '@modules/app/components/host/Host';
+import {
+  Dashboard,
+  NodeMetric,
+} from '@modules/app/components/dashboard/Dashboard';
 
 const defaultHost: Host = {
   name: '',
@@ -15,9 +19,16 @@ const defaultHost: Host = {
   version: '',
 };
 
+const defaultDashboard: Dashboard = {
+  nodeMetrics: [],
+};
+
 export const appState = atom({
   key: 'appState',
   default: {
+    dashboard: defaultDashboard,
+    dashboardLoading: true,
+    grpcClient: new GrpcClient('https://localhost:8080'),
     nodes: [],
     nodesLoading: true,
     nodesSorting: false,
@@ -28,8 +39,6 @@ export const appState = atom({
     hostsSorting: false,
     hostsSortExpression: 'added',
     hostsSortOrder: 'asc',
-    dynamicBreadcrumb: '',
     activeHost: defaultHost,
-    grpcClient: new GrpcClient('test'),
   },
 });

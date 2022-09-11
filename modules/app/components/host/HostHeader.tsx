@@ -21,35 +21,43 @@ export const HostHeader = () => {
         Back
       </Button>
       <header css={hostStyles.header}>
-        <span css={hostStyles.headerTitle}>
-          {!hostsLoading ? (
-            <>
-              <span css={hostStyles.headerTitleText}>{activeHost?.name}</span>
-              <HostStatus status={activeHost?.status} />
-            </>
-          ) : (
-            <Skeleton width="260px" />
-          )}
-        </span>
-        <span css={hostStyles.actions}>
-          <Button style="secondary" size="small" type="button">
+        <div>
+          <div css={hostStyles.headerTitle}>
+            {!hostsLoading ? (
+              <>
+                <span css={hostStyles.headerTitleText}>{activeHost?.name}</span>
+                <HostStatus status={activeHost?.status} />
+              </>
+            ) : (
+              <Skeleton width="260px" />
+            )}
+          </div>
+          <div css={hostStyles.headerLower}>
+            {!hostsLoading ? (
+              <>
+                <span>{activeHost.ip}</span>
+                <span>{activeHost.location}</span>
+              </>
+            ) : (
+              <Skeleton />
+            )}
+          </div>
+        </div>
+
+        <div css={hostStyles.actions}>
+          <Button
+            disabled={hostsLoading}
+            style="secondary"
+            size="small"
+            type="button"
+          >
             Stop
           </Button>
           <Button disabled style="secondary" size="small" type="button">
             Start
           </Button>
-        </span>
+        </div>
       </header>
-      <footer css={hostStyles.headerLower}>
-        {!hostsLoading ? (
-          <>
-            <span>{activeHost.ip}</span>
-            <span>{activeHost.location}</span>
-          </>
-        ) : (
-          <Skeleton />
-        )}
-      </footer>
     </>
   );
 };

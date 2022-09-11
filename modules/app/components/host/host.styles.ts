@@ -2,11 +2,17 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const hostStyles = {
-  header: css`
+  header: (theme: ITheme) => css`
     flex: 1 1 auto;
+    flex-wrap: wrap;
     display: flex;
-    align-items: center;
+    gap: 20px;
     justify-content: space-between;
+    margin-bottom: 50px;
+
+    @media only screen and (min-width: ${theme.screenSm}) {
+      flex-wrap: nowrap;
+    }
   `,
   headerTitle: css`
     display: flex;
@@ -26,14 +32,13 @@ export const hostStyles = {
     display: flex;
     gap: 12px;
     margin-top: 12px;
-    margin-bottom: 50px;
     color: ${theme.colorLabel};
   `,
   detailsRow: (theme: ITheme) => css`
     display: flex;
-    align-items: flex-end;
-    height: 50px;
-    padding-bottom: 16px;
+    align-items: center;
+    padding-top: 18px;
+    padding-bottom: 12px;
     border-bottom: 1px solid ${theme.colorBorder};
   `,
   detailsLabel: (theme: ITheme) => css`
@@ -51,15 +56,5 @@ export const hostStyles = {
     font-size: 12px;
     line-height: 1;
     color: ${theme.colorPrimary};
-  `,
-  added: (theme: ITheme) => css`
-    display: block;
-    margin-top: 20px;
-    font-size: 13px;
-    color: ${theme.colorLabel};
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      display: none;
-    }
   `,
 };

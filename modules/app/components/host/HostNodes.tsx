@@ -22,8 +22,6 @@ export const HostNodes = () => {
   const [app] = useRecoilState(appState);
   const { activeHost, hostsLoading } = app;
 
-  console.log('activeHost', activeHost);
-
   useEffect(() => {
     if (activeHost?.nodesList?.length) {
       const rows = activeHost.nodesList.map((node: any) => ({
@@ -38,16 +36,11 @@ export const HostNodes = () => {
                   name={node.name}
                   address={node.address}
                 />
-                <span css={hostStyles.added}>Added just now</span>
               </>
             ),
           },
           {
             key: '2',
-            component: <span css={hostStyles.added}>Added just now</span>,
-          },
-          {
-            key: '3',
             component: <HostStatus status={node.status} />,
           },
         ],
