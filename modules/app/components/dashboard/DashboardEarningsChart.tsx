@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-
 import { DashboardEarningsChartDialog } from './';
-
 import { mockSeries } from './mockChartData';
-
 import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 

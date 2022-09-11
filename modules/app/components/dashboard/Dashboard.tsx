@@ -1,19 +1,15 @@
-import { PageSection } from "../shared";
-
-import { 
-    DashboardNodeSummary, 
-    DashboardEarnings 
-} from "./shared";
+import { PageSection } from '../shared';
+import { DashboardNodeSummary, DashboardEarnings } from '.';
 
 export default () => {
-    return (
-        <>
-            <PageSection>
-                <DashboardNodeSummary />
-            </PageSection>
-            <PageSection>
-                <DashboardEarnings />
-            </PageSection>
-        </>
-    );
-}
+  return (
+    <>
+      <PageSection>
+        <DashboardNodeSummary />
+      </PageSection>
+      <PageSection>
+        <DashboardEarnings />
+      </PageSection>
+    </>
+  );
+};

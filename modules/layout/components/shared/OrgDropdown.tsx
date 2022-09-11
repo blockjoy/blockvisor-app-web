@@ -1,22 +1,22 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
-import { css } from "@emotion/react";
+import { css } from '@emotion/react';
 
-import IconArrow from "@public/assets/icons/arrow-right-12.svg";
+import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
-import SizedIcon from "@modules/layout/components/shared/SizedIcon";
+import SizedIcon from '@modules/layout/components/shared/SizedIcon';
 
-import { BlockButton } from "@modules/app/components/shared";
+import { Button } from '@shared/components';
 
 type Props = {
-  hideName?: boolean
-}
+  hideName?: boolean;
+};
 
 type MenuProps = {
-  isOpen: boolean
-}
+  isOpen: boolean;
+};
 
 const StyledWrapper = styled.div`
   position: relative;
@@ -36,19 +36,19 @@ const StyledDropdownButton = styled.button`
 `;
 
 const StyledOrgIcon = styled.div`
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #BFF589;
-    color: #212423;
-    font-size: 12px;
-    font-weight: 500;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #bff589;
+  color: #212423;
+  font-size: 12px;
+  font-weight: 500;
 `;
 
 const StyledOrgName = styled.div`
-  color: ${p => p.theme.colorText};
+  color: ${(p) => p.theme.colorText};
   font-size: 14px;
 `;
 
@@ -66,8 +66,8 @@ const StyledMenu = styled.div<MenuProps>`
   position: absolute;
   top: 62px;
   left: 0;
-  background: ${p => p.theme.colorSidebar};
-  border: 1px solid ${p => p.theme.colorBorder};
+  background: ${(p) => p.theme.colorSidebar};
+  border: 1px solid ${(p) => p.theme.colorBorder};
   border-radius: 6px;
   padding: 16px;
   font-size: 14px;
@@ -76,7 +76,7 @@ const StyledMenu = styled.div<MenuProps>`
   transform: translateY(-16px);
   transition: all 0.4s;
 
-  ${p => p.isOpen && menuOpenStyles};
+  ${(p) => p.isOpen && menuOpenStyles};
 `;
 
 export const OrgDropdown: React.FC<Props> = ({ hideName }) => {
@@ -85,25 +85,24 @@ export const OrgDropdown: React.FC<Props> = ({ hideName }) => {
   return (
     <StyledWrapper>
       <StyledDropdownButton onClick={() => setOpen(!isOpen)}>
-          <StyledOrgIcon>
-              B
-          </StyledOrgIcon>
-          {!hideName && (
-              <StyledOrgName>
-                  Blockjoy
-              </StyledOrgName>
-          )}
-          <StyledDropdownIcon size="10px">
-            <IconArrow />
-          </StyledDropdownIcon>
+        <StyledOrgIcon>B</StyledOrgIcon>
+        {!hideName && <StyledOrgName>Blockjoy</StyledOrgName>}
+        <StyledDropdownIcon size="10px">
+          <IconArrow />
+        </StyledDropdownIcon>
       </StyledDropdownButton>
       <StyledMenu isOpen={isOpen}>
         You only have one organization
-        <br /><br />
-        <BlockButton onClick={() => console.log("add org")}>
-          Create Organization
-        </BlockButton>
+        <br />
+        <br />
+        <Button
+          display="block"
+          size="small"
+          onClick={() => console.log('add org')}
+        >
+          Create
+        </Button>
       </StyledMenu>
     </StyledWrapper>
   );
-}
+};

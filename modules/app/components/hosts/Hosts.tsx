@@ -19,118 +19,14 @@ export type Host = {
   status: string;
 };
 
-const StyledStatus = styled.span`
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: ${(p) => p.theme.colorDefault};
-`;
+export const Hosts = () => {
+  const { hostsLoading, hostsSorting } = useRecoilValue(appState);
 
-const rows = mockHosts.map((host) => ({
-  key: host.id,
-  name: host.name,
-  isDanger: host.status === 'ISSUE',
-  cells: [
-    {
-      key: '1',
-      component: (
-        <HostsTableBlock
-          key="1"
-          location={host.location}
-          name={host.name}
-          address={host.address}
-        />
-      ),
-    },
-    {
-      key: '2',
-      component: (
-        <StyledStatus key="2" className="has-hover-color">
-          {host.status}
-        </StyledStatus>
-      ),
-    },
-  ],
-}));
-
-export default () => {
-  const router = useRouter();
-
-  const [app, setApp] = useRecoilState(appState);
-  const [layout, setLayout] = useRecoilState(layoutState);
-
-  const { hostsSortExpression, hostsLoading } = app;
-
-  const handleSort = (hostsSortExpression: string) => {
-    setApp({
-      ...app,
-      hostsSortExpression,
-      hostsLoading: true,
-    });
-    setTimeout(() => {
-      setApp({
-        ...app,
-        hostsSortExpression,
-        hostsLoading: false,
-      });
-    }, 600);
-  };
-
-  const handleAddHost = () => {
-    setLayout({
-      ...layout,
-      isHostsAddOpen: true,
-    });
-  };
-
-  const handleRowClick = (args: any) => {
-    setApp({
-      ...app,
-      dynamicBreadcrumb: args.name,
-    });
-    router.push(`${router.pathname}/${args.key}`);
-  };
-
-  const headers = [
-    {
-      name: 'Name',
-      width: '100px',
-      key: '1',
-      component: (
-        <HostsSortButton
-          handleSort={handleSort}
-          hostsSortExpression={hostsSortExpression}
-        >
-          name
-        </HostsSortButton>
-      ),
-    },
-    {
-      name: 'Status',
-      width: '100px',
-      key: '2',
-      component: (
-        <HostsSortButton
-          handleSort={handleSort}
-          hostsSortExpression={hostsSortExpression}
-        >
-          status
-        </HostsSortButton>
-      ),
-    },
-  ];
+  const { loadHosts, handleRowClick, handleAddHost, headers, rows } =
+    useHosts();
 
   useEffect(() => {
-    setApp({
-      ...app,
-      hostsLoading: true,
-    });
-
-    setTimeout(() => {
-      setApp({
-        ...app,
-        hostsLoading: false,
-      });
-    }, 600);
+    loadHosts();
   }, []);
 
   return (
@@ -142,6 +38,7 @@ export default () => {
         </Button>
       </PageHeader>
       <Table
+        isSorting={hostsSorting}
         isLoading={hostsLoading}
         headers={headers}
         rows={rows}

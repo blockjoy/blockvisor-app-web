@@ -1,91 +1,55 @@
 import { useRecoilValue } from 'recoil';
-
+import { useRouter } from 'next/router';
 import { appState } from '@modules/app/store';
-
-import styled from '@emotion/styled';
-
-import { Button } from '@shared/components';
-
 import { HostStatus } from './HostStatus';
+import { hostStyles } from './host.styles';
+import { Skeleton } from '../shared';
+import { Button } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
-const StyledHeader = styled.div`
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const StyledTitle = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-`;
-
-const StyledTitleText = styled.span`
-  font-size: 20px;
-`;
-
-const StyledActions = styled.span`
-  display: flex;
-  gap: 8px;
-`;
-
-const StyledFooter = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-  color: ${(p) => p.theme.colorLabel};
-`;
-
-const StyledSkeleton = styled.span`
-  display: block;
-  background: #4d4f4d;
-  border-radius: 4px;
-  width: 100px;
-  height: 20px;
-`;
-
-export default () => {
-  const { activeHost } = useRecoilValue(appState);
-  const handleStopClicked = () => null;
-  const handleStartClicked = () => null;
-
+export const HostHeader = () => {
+  const router = useRouter();
+  const { activeHost, hostsLoading } = useRecoilValue(appState);
   return (
     <>
-      <StyledHeader>
-        <StyledTitle>
-          <StyledTitleText>
-            {activeHost?.name || <StyledSkeleton style={{ width: '260px' }} />}
-          </StyledTitleText>
-          <HostStatus status={activeHost?.status} />
-        </StyledTitle>
-        <StyledActions>
-          <Button
-            style="secondary"
-            size="small"
-            type="button"
-            // loading={loading}
-            // customCss={[styles.action]}
-          >
+      <Button
+        onClick={() => router.push('/hosts')}
+        customCss={[spacing.bottom.large, spacing.top.micro]}
+        size="small"
+        style="outline"
+      >
+        Back
+      </Button>
+      <header css={hostStyles.header}>
+        <span css={hostStyles.headerTitle}>
+          {!hostsLoading ? (
+            <>
+              <span css={hostStyles.headerTitleText}>{activeHost?.name}</span>
+              <HostStatus status={activeHost?.status} />
+            </>
+          ) : (
+            <Skeleton width="260px" />
+          )}
+        </span>
+        <span css={hostStyles.actions}>
+          <Button style="secondary" size="small" type="button">
             Stop
           </Button>
-          <Button
-            disabled
-            style="secondary"
-            size="small"
-            type="button"
-            // loading={loading}
-            // customCss={[styles.action]}
-          >
+          <Button disabled style="secondary" size="small" type="button">
             Start
           </Button>
-        </StyledActions>
-      </StyledHeader>
-      <StyledFooter>
-        <span>{activeHost.ip || <StyledSkeleton />}</span>
-        <span>{activeHost.location}</span>
-      </StyledFooter>
+        </span>
+      </header>
+      <footer css={hostStyles.headerLower}>
+        {!hostsLoading ? (
+          <>
+            <span>{activeHost.ip}</span>
+            <span>{activeHost.location}</span>
+          </>
+        ) : (
+          <Skeleton />
+        )}
+      </footer>
     </>
   );
 };

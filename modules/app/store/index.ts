@@ -8,15 +8,24 @@ const defaultHost: Host = {
   status: '',
   ip: '',
   location: '',
+  nodesList: [],
+  createdAt: '',
+  diskSize: '',
+  memSize: '',
+  version: '',
 };
 
 export const appState = atom({
   key: 'appState',
   default: {
+    nodes: [],
     nodesLoading: true,
+    nodesSorting: false,
     nodesSortExpression: 'added',
     nodesSortOrder: 'asc',
+    hosts: [],
     hostsLoading: true,
+    hostsSorting: false,
     hostsSortExpression: 'added',
     hostsSortOrder: 'asc',
     dynamicBreadcrumb: '',

@@ -20,6 +20,9 @@ type Props = {
   status: string;
 };
 
-export const HostStatus: FC<Props> = ({ status }) => (
-  <span css={hostStyles.hostStatus}>{statusList[status]?.name}</span>
-);
+export const HostStatus: FC<Props> = ({ status }) => {
+  console.log('status', status);
+  return (
+    <span css={hostStyles.status}>{statusList[status]?.name || 'Unknown'}</span>
+  );
+};

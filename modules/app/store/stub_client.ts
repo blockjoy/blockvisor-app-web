@@ -91,15 +91,15 @@ export type UIHostCreate = {
 };
 
 export class GrpcClient {
-  private authentication: AuthenticationServiceClient;
-  private billing: BillingServiceClient;
-  private dashboard: DashboardServiceClient;
-  private host: HostServiceClient;
-  private host_provision: HostProvisionServiceClient;
-  private node: NodeServiceClient;
-  private organization: OrganizationServiceClient;
-  private update: UpdateServiceClient;
-  private user: UserServiceClient;
+  private authentication: AuthenticationServiceClient | undefined;
+  private billing: BillingServiceClient | undefined;
+  private dashboard: DashboardServiceClient | undefined;
+  private host: HostServiceClient | undefined;
+  private host_provision: HostProvisionServiceClient | undefined;
+  private node: NodeServiceClient | undefined;
+  private organization: OrganizationServiceClient | undefined;
+  private update: UpdateServiceClient | undefined;
+  private user: UserServiceClient | undefined;
 
   private token: string;
 
