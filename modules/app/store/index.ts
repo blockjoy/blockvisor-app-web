@@ -2,10 +2,7 @@
 import { GrpcClient } from './stub_client';
 import { atom } from 'recoil';
 import { Host } from '@modules/app/components/host/Host';
-import {
-  Dashboard,
-  NodeMetric,
-} from '@modules/app/components/dashboard/Dashboard';
+import { Dashboard } from '@modules/app/components/dashboard/Dashboard';
 
 const defaultHost: Host = {
   name: '',
