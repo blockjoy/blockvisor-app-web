@@ -26,8 +26,8 @@ export const HostDetails = () => {
           }),
         },
         { label: 'Version', value: version },
-        { label: 'Disk Size', value: `${diskSize}GB` },
-        { label: 'Memory Size', value: `${memSize}GB` },
+        { label: 'Disk Size', value: diskSize },
+        { label: 'Memory Size', value: memSize },
       ]);
     }
   }, [activeHost.name]);

@@ -7,6 +7,8 @@ export type NodeMetric = {
   name: string;
   icon?: string;
   value: number;
+  isPrimary?: boolean;
+  isGreyedOut?: boolean;
 };
 
 export type Dashboard = {

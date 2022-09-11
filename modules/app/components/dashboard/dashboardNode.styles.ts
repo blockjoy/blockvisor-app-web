@@ -14,6 +14,11 @@ export const dashboardNodeStyles = {
   `,
   itemBlock: (theme: ITheme) => css`
     padding-right: 16px;
+    color: ${theme.colorText};
+
+    & path {
+      fill: ${theme.colorText};
+    }
 
     @media only screen and (min-width: ${theme.screenSm}) {
       padding-right: 30px;
@@ -22,12 +27,30 @@ export const dashboardNodeStyles = {
     &:first-of-type {
       border-right: 1px solid ${theme.colorBorder};
     }
+
+    &:nth-of-type(2) {
+      padding-right: 8px;
+    }
+  `,
+  itemBlockPrimary: (theme: ITheme) => css`
+    color: ${theme.colorPrimary};
+
+    & path {
+      fill: ${theme.colorPrimary};
+    }
+  `,
+  itemBlockGreyedOut: (theme: ITheme) => css`
+    color: ${theme.colorLabel};
+
+    & path {
+      fill: ${theme.colorLabel};
+    }
   `,
   itemValue: (theme: ITheme) => css`
     display: block;
     font-size: 28px;
     margin-bottom: 6px;
-    color: ${theme.colorText};
+    color: inherit;
 
     @media only screen and (min-width: ${theme.screenSm}) {
       font-size: 40px;
@@ -37,14 +60,5 @@ export const dashboardNodeStyles = {
     display: flex;
     gap: 6px;
     font-size: 14px;
-    color: ${theme.colorLabel};
-  `,
-  itemLabelIcon: (theme: ITheme) => css`
-    & path {
-      fill: ${theme.colorLabel};
-    }
-  `,
-  itemLabelText: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
   `,
 };

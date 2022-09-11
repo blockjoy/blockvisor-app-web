@@ -1,8 +1,13 @@
-import { DashboardEarningsChart, DashboardEarningsSummary } from './';
+import {
+  DashboardEarningsChart,
+  DashboardEarningsSummary,
+  DashboardEarningsDialog,
+} from './';
 
 export const DashboardEarnings = () => (
   <>
     <DashboardEarningsSummary />
     <DashboardEarningsChart />
+    <DashboardEarningsDialog />
   </>
 );

@@ -1,5 +1,5 @@
 export * from './DashboardEarnings';
 export * from './DashboardEarningsChart';
-export * from './DashboardEarningsChartDialog';
+export * from './DashboardEarningsDialog';
 export * from './DashboardEarningsSummary';
 export * from './DashboardNodeSummary';

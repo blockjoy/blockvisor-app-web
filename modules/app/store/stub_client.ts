@@ -342,7 +342,15 @@ export class GrpcClient {
     response.addMetrics(metric);
     response.addMetrics(metric2);
 
-    return response.getMetricsList().map((item) => item.toObject());
+    return new Promise((resolve) => {
+      setTimeout(
+        resolve.bind(
+          null,
+          response.getMetricsList().map((item) => item.toObject()),
+        ),
+        500,
+      );
+    });
   }
 
   /* Host service */

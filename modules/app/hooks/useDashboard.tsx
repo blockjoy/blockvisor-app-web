@@ -25,8 +25,8 @@ export const useDashboard = (): Hook => {
     const dashboard: Dashboard = {
       nodeMetrics: [
         { name: 'Total', value: total },
-        { name: 'Online', value: online },
-        { name: 'Offline', value: offline },
+        { name: 'Online', value: online, isPrimary: true },
+        { name: 'Offline', value: offline, isGreyedOut: true },
       ],
     };
 
