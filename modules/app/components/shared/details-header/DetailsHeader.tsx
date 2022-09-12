@@ -36,8 +36,12 @@ export const DetailsHeader: FC<Props> = ({ title, ip, id, date }) => {
         </div>
       </div>
       <form css={styles.actions}>
-        <Button style="secondary">Stop</Button>
-        <Button style="secondary">Start</Button>
+        <Button disabled={true} style="secondary" size="small">
+          Stop
+        </Button>
+        <Button style="secondary" size="small">
+          Start
+        </Button>
       </form>
     </header>
   );
