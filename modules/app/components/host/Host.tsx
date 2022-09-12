@@ -51,7 +51,7 @@ export default () => {
         />
         <DetailsTable bodyElements={tableElements} />
       </PageSection>
-      <PageSection>chart</PageSection>
+      <PageSection>nodes list</PageSection>
       <PageSection>
         <DangerZone handleDelete={() => console.log('handle delete')}>
           <p>No longer need this node?</p>
