@@ -1,8 +1,8 @@
-import { PageHeader } from '../shared';
+import { PageHeader } from '@modules/app/components/shared';
 import { mockEarningsData as mockItems } from './mockEarningsData';
-import { dashboardEarningsStyles } from './dashboardEarnings.styles';
+import { dashboardEarningsStyles } from './NodeEarnings.styles';
 
-export const DashboardEarningsSummary = () => {
+export const NodeEarningsSummary = () => {
   return (
     <>
       <PageHeader>Earnings</PageHeader>

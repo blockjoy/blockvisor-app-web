@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
-import React from "react";
+import styled from '@emotion/styled';
+import React from 'react';
 
 const StyledHeader = styled.header`
   display: flex;
@@ -8,11 +8,9 @@ const StyledHeader = styled.header`
   height: 36px;
   font-size: 20px;
   margin: 0 0 32px;
-  color: ${p => p.theme.colorText};
+  color: ${(p) => p.theme.colorText};
 `;
 
 export const PageHeader: React.FC<React.PropsWithChildren> = ({ children }) => (
-    <StyledHeader>
-        {children}
-    </StyledHeader>
+  <StyledHeader>{children}</StyledHeader>
 );
