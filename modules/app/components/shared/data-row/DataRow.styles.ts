@@ -6,7 +6,7 @@ import { breakpoints } from 'styles/variables.styles';
 export const styles = {
   base: css`
     word-break: break-all;
-    border-bottom: 1px solid var(--color-border-2);
+    border-bottom: 1px solid var(--color-text-5-o10);
 
     @media ${breakpoints.toXlrg} {
       display: block;
