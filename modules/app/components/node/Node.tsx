@@ -1,42 +1,41 @@
-import { useRecoilState } from 'recoil';
-
-import { layoutState } from '@modules/layout/store';
-
-import { PageSection, PageHeader } from '../shared';
+import { useRecoilValue } from 'recoil';
+import {
+  PageSection,
+  PageHeader,
+  SkeletonGrid,
+  Skeleton,
+  TableSkeleton,
+} from '../shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { DetailsHeader } from '../shared/details-header/DetailsHeader';
 import { DetailsTable } from '../shared/details-table/DetailsTable';
 import { DangerZone } from '../shared/danger-zone/DangerZone';
+import { appState } from '@modules/app/store';
+import { useNode } from '@modules/app/hooks/useNode';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { NodeEarnings } from '@shared/components';
 
-const tableElements = [
-  {
-    label: 'Type',
-    data: 'Node/api',
-  },
-  {
-    label: 'Blockchain',
-    data: 'Bitcoin',
-  },
-  {
-    label: 'Host',
-    data: 'BlockJoy Host',
-  },
-  {
-    label: 'Wallet address',
-    data: 'mizAjYud6o9oLh2UZH13o9zyR9crKYRPEm',
-  },
-  {
-    label: 'Version',
-    data: '1.6.2',
-  },
-  {
-    label: 'Block Height',
-    data: '1206202',
-  },
-];
+export type Node = {
+  id: string;
+  name: string;
+  ip: string;
+  created: string;
+  status: number;
+  details: { label: string; data: string }[];
+};
 
 export default () => {
-  const [layout, setLayout] = useRecoilState(layoutState);
+  const router = useRouter();
+  const { id } = router.query;
+  const { loadNode } = useNode();
+  const { node, nodeLoading } = useRecoilValue(appState);
+
+  useEffect(() => {
+    if (router.isReady) {
+      loadNode(id?.toString() || '');
+    }
+  }, [router.isReady]);
 
   return (
     <>
@@ -44,16 +43,38 @@ export default () => {
         <PageHeader>
           <BackButton />
         </PageHeader>
-        <DetailsHeader
-          status="consensus"
-          title="YellowBeaver"
-          ip="212.213.214.2"
-          date="5 weeks ago"
-          id="cv0983t48cv09820348"
-        />
-        <DetailsTable bodyElements={tableElements} />
+
+        {!nodeLoading ? (
+          <>
+            <DetailsHeader
+              status={node.status.toString()}
+              title={node.name}
+              ip={node.ip}
+              date={node.created}
+              id={node.id}
+            />
+            <DetailsTable bodyElements={node.details} />
+          </>
+        ) : (
+          <>
+            <SkeletonGrid padding="10px 0 70px">
+              <Skeleton width="260px" />
+              <Skeleton width="180px" />
+            </SkeletonGrid>
+            <TableSkeleton />
+          </>
+        )}
       </PageSection>
-      <PageSection>chart</PageSection>
+      <PageSection>
+        {nodeLoading ? (
+          <>
+            <Skeleton width="200px" margin="0 0 20px" />
+            <Skeleton width="100%" height="400px" />
+          </>
+        ) : (
+          <NodeEarnings />
+        )}
+      </PageSection>
       <PageSection>
         <DangerZone handleDelete={() => console.log('handle delete')}>
           <p>No longer need this node?</p>

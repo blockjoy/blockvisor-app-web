@@ -3,6 +3,7 @@ import { GrpcClient } from './stub_client';
 import { atom } from 'recoil';
 import { Dashboard } from '@modules/app/components/dashboard/Dashboard';
 import { Host } from '@modules/app/components/host/Host';
+import { Node } from '@modules/app/components/node/Node';
 
 const defaultDashboard: Dashboard = {
   nodeMetrics: [],
@@ -18,6 +19,15 @@ const defaultHost: Host = {
   nodes: [],
 };
 
+const defaultNode: Node = {
+  name: '',
+  created: '',
+  id: '',
+  ip: '',
+  status: 0,
+  details: [],
+};
+
 export const appState = atom({
   key: 'appState',
   default: {
@@ -26,10 +36,9 @@ export const appState = atom({
     grpcClient: new GrpcClient('https://localhost:8080'),
     hosts: [],
     hostsLoading: true,
-    hostsSorting: false,
-    hostsSortExpression: 'added',
-    hostsSortOrder: 'asc',
     host: defaultHost,
     hostLoading: true,
+    node: defaultNode,
+    nodeLoading: true,
   },
 });

@@ -105,8 +105,8 @@ export function id_to_string(id: Uuid | undefined): string | undefined {
 
 export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
   return {
-    ...node,
-    groupsList: [],
+    ...node?.toObject(),
+    groupsList: node?.getGroupsList() || [],
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
     id_str: id_to_string(node?.getId()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
@@ -342,15 +342,7 @@ export class GrpcClient {
     response.addMetrics(metric);
     response.addMetrics(metric2);
 
-    return new Promise((resolve) => {
-      setTimeout(
-        resolve.bind(
-          null,
-          response.getMetricsList().map((item) => item.toObject()),
-        ),
-        500,
-      );
-    });
+    return response.getMetricsList().map((item) => item.toObject());
   }
 
   /* Host service */
@@ -441,9 +433,13 @@ export class GrpcClient {
     let response = new GetNodeResponse();
     response.setMeta(this.getDummyMeta());
     response.setNode(this.getDummyNode());
-    let node = response?.getNode();
 
-    return node_to_grpc_node(node);
+    return new Promise((resolve) => {
+      setTimeout(
+        resolve.bind(null, node_to_grpc_node(response?.getNode())),
+        1000,
+      );
+    });
   }
 
   async createNode(

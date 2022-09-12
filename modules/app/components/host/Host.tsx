@@ -28,6 +28,8 @@ export default () => {
   const { loadHost } = useHost();
   const { host, hostLoading } = useRecoilValue(appState);
 
+  const handleNodeClicked = (args: any) => router.push(`/nodes/${args.key}`);
+
   useEffect(() => {
     if (router.isReady) {
       loadHost(id?.toString() || '');
@@ -65,9 +67,18 @@ export default () => {
         <Table
           isSorting={false}
           isLoading={hostLoading}
-          // headers={headers}
+          headers={[
+            {
+              name: 'Name',
+              key: '1',
+            },
+            {
+              name: 'Status',
+              key: '2',
+            },
+          ]}
           rows={host.nodes}
-          // onRowClick={handleRowClick}
+          onRowClick={handleNodeClicked}
         />
       </PageSection>
       <PageSection>

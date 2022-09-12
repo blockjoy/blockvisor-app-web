@@ -32,22 +32,7 @@ export const useHosts = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
   const [layout, setLayout] = useRecoilState(layoutState);
 
-  const { grpcClient, hosts, hostsSortExpression } = app;
-
-  const handleSort = (hostsSortExpression: string) => {
-    setApp({
-      ...app,
-      hostsSortExpression,
-      hostsSorting: true,
-    });
-    setTimeout(() => {
-      setApp({
-        ...app,
-        hostsSortExpression,
-        hostsSorting: false,
-      });
-    }, 600);
-  };
+  const { grpcClient, hosts } = app;
 
   const handleAddHost = () => {
     setLayout({
@@ -65,41 +50,20 @@ export const useHosts = (): Hook => {
       name: 'Name',
       width: '100px',
       key: '1',
-      component: (
-        <TableSortButton
-          onClick={handleSort}
-          sortExpression={hostsSortExpression}
-        >
-          name
-        </TableSortButton>
-      ),
+      component: <>name</>,
     },
     {
       name: 'Added',
       width: '100px',
       key: '2',
       isHiddenOnMobile: true,
-      component: (
-        <TableSortButton
-          onClick={handleSort}
-          sortExpression={hostsSortExpression}
-        >
-          added
-        </TableSortButton>
-      ),
+      component: <>added</>,
     },
     {
       name: 'Status',
       width: '100px',
       key: '3',
-      component: (
-        <TableSortButton
-          onClick={handleSort}
-          sortExpression={hostsSortExpression}
-        >
-          status
-        </TableSortButton>
-      ),
+      component: <>status</>,
     },
   ];
 

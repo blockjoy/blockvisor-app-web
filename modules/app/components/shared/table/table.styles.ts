@@ -16,6 +16,7 @@ export const tableStyles = {
       font-weight: 500;
       text-transform: uppercase;
       text-align: left;
+      cursor: default;
     }
 
     @media only screen and (max-width: ${theme.screenSm}) {
@@ -56,7 +57,7 @@ export const tableStyles = {
     gap: 20px;
   `,
   hasHoverRows: css`
-    tr:hover {
+    tbody tr:hover {
       cursor: pointer;
     }
   `,

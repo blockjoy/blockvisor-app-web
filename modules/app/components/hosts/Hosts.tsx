@@ -14,7 +14,7 @@ export type Host = {
 };
 
 export const Hosts = () => {
-  const { hostsLoading, hostsSorting } = useRecoilValue(appState);
+  const { hostsLoading } = useRecoilValue(appState);
 
   const { loadHosts, handleRowClick, handleAddHost, headers, rows } =
     useHosts();
@@ -32,7 +32,6 @@ export const Hosts = () => {
         </Button>
       </PageHeader>
       <Table
-        isSorting={hostsSorting}
         isLoading={hostsLoading}
         headers={headers}
         rows={rows}
