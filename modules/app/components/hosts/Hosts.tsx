@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
-
 import { appState } from '@modules/app/store';
 import { layoutState } from '@modules/layout/store';
 import { Button } from '@shared/components';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { PageHeader, PageSection, Table } from '../shared';
+import { PageSection, PageHeader, Table } from '../shared';
 import { mockHosts } from './mockData';
 import { HostsSortButton } from './shared';
 import HostsTableBlock from './shared/HostsTableBlock';
@@ -52,7 +51,7 @@ const rows = mockHosts.map((host) => ({
   ],
 }));
 
-export default () => {
+export const Hosts: FC = () => {
   const router = useRouter();
 
   const [app, setApp] = useRecoilState(appState);

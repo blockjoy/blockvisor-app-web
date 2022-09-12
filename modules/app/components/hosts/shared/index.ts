@@ -1,1 +1,1 @@
-export { HostsSortButton } from "./HostsSortButton";
+export { HostsSortButton } from './HostsSortButton';
