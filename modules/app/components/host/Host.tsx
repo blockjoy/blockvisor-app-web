@@ -8,7 +8,10 @@ import { DetailsTable } from '../shared/details-table/DetailsTable';
 import { useHost } from '@modules/app/hooks/useHost';
 import { useEffect } from 'react';
 import { appState } from '@modules/app/store';
-import { Skeleton, SkeletonGrid, TableSkeleton } from '../shared';
+import { Skeleton, SkeletonGrid, TableSkeleton, Table } from '../shared';
+import { Row } from '../shared/table/Table';
+import { typo } from 'styles/utils.typography.styles';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export type Host = {
   name: string;
@@ -16,6 +19,7 @@ export type Host = {
   ip: string;
   location: string;
   details: { label: string; data: string }[];
+  nodes: Row[];
 };
 
 export default () => {
@@ -56,7 +60,16 @@ export default () => {
           </>
         )}
       </PageSection>
-      <PageSection>nodes list</PageSection>
+      <PageSection>
+        <h2 css={[typo.large, spacing.bottom.large]}>Nodes</h2>
+        <Table
+          isSorting={false}
+          isLoading={hostLoading}
+          // headers={headers}
+          rows={host.nodes}
+          // onRowClick={handleRowClick}
+        />
+      </PageSection>
       <PageSection>
         <DangerZone handleDelete={() => console.log('handle delete')}>
           <p>No longer need this node?</p>
