@@ -6,6 +6,5 @@ export const TableSkeleton = () => (
     <Skeleton width="200px" />
     <Skeleton width="300px" />
     <Skeleton width="150px" />
-    <Skeleton />
   </div>
 );

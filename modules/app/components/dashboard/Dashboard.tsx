@@ -1,12 +1,11 @@
 import { useRecoilValue } from 'recoil';
-import { PageSection } from '../shared';
+import { PageSection, SkeletonGrid, Skeleton } from '../shared';
 import { appState } from '@modules/app/store';
 import { DashboardNodeSummary } from './DashboardNodeSummary';
 import { DashboardRecentHosts } from './DashboardRecentHosts';
 import { NodeEarnings } from '@shared/components';
 import { useDashboard } from '@modules/app/hooks/useDashboard';
 import { useEffect, useState } from 'react';
-import { TableSkeleton } from '../shared';
 
 export type NodeMetric = {
   name: string;
@@ -42,7 +41,14 @@ export default () => {
         <DashboardRecentHosts />
       </PageSection>
       <PageSection>
-        {dashboardLoading ? <TableSkeleton /> : <NodeEarnings />}
+        {dashboardLoading ? (
+          <SkeletonGrid>
+            <Skeleton width="200px" />
+            <Skeleton width="100%" height="400px" />
+          </SkeletonGrid>
+        ) : (
+          <NodeEarnings />
+        )}
       </PageSection>
     </>
   );

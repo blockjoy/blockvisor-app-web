@@ -17,9 +17,9 @@ export type Row = {
 export type Header = {
   key: string;
   name: string;
-  width: string;
+  width?: string;
   isHiddenOnMobile?: boolean;
-  component: EmotionJSX.Element;
+  component?: EmotionJSX.Element;
 };
 
 type Props = {
@@ -63,7 +63,7 @@ export const Table: React.FC<Props> = ({
                     key={th.key}
                     style={{ maxWidth: th.width }}
                   >
-                    {th.component}
+                    {th.component || th.name}
                   </th>
                 ))}
               </tr>
