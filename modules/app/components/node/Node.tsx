@@ -45,6 +45,7 @@ export default () => {
           <BackButton />
         </PageHeader>
         <DetailsHeader
+          status="consensus"
           title="YellowBeaver"
           ip="212.213.214.2"
           date="5 weeks ago"
