@@ -21,6 +21,7 @@ type Props = {
   customCss?: SerializedStyles[];
   href?: string;
   loading?: boolean;
+  disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
@@ -35,6 +36,7 @@ export function Button({
   href,
   customCss,
   loading,
+  disabled,
 }: Props) {
   const buttonStyles = [
     reset.button,
@@ -58,7 +60,12 @@ export function Button({
   }
 
   return (
-    <button type={type} css={buttonStyles} onClick={onClick}>
+    <button
+      disabled={disabled}
+      type={type}
+      css={buttonStyles}
+      onClick={onClick}
+    >
       {loading ? <LoadingSpinner size="small" /> : children}
     </button>
   );

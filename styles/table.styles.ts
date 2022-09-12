@@ -7,7 +7,7 @@ export const table = {
     border-collapse: collapse;
   `,
   row: css`
-    border-bottom: 1px solid theme(--color-text-5-o10);
+    border-bottom: 1px solid var(--color-text-5-o10);
   `,
   heading: css`
     font-weight: var(--font-weight-normal);

@@ -22,6 +22,9 @@ export const colors = {
   secondary: css`
     color: var(--color-secondary);
   `,
+  success: css`
+    color: var(--color-utility-success);
+  `,
   warning: css`
     color: var(--color-utility-warning);
   `,
