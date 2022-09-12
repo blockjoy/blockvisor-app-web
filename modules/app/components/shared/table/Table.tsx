@@ -27,7 +27,7 @@ type Props = {
   rows?: Row[];
   onRowClick?: (arg0: any) => void;
   isLoading: boolean;
-  isSorting: boolean;
+  isSorting?: boolean;
 };
 
 type TableProps = {
@@ -39,7 +39,7 @@ export const Table: React.FC<Props> = ({
   rows = [],
   onRowClick,
   isLoading,
-  isSorting,
+  isSorting = false,
 }) => {
   const handleRowClick = (tr: any) => {
     if (onRowClick) {

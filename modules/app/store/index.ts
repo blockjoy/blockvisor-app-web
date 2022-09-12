@@ -6,6 +6,7 @@ import { Host } from '@modules/app/components/host/Host';
 
 const defaultDashboard: Dashboard = {
   nodeMetrics: [],
+  recentHosts: [],
 };
 
 const defaultHost: Host = {

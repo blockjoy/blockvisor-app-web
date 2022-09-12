@@ -18,7 +18,7 @@ const StyledChartHeader = styled.header`
   font-size: 14px;
 `;
 
-export const DashboardEarningsChart = () => {
+export const NodeEarningsChart = () => {
   const theme = useTheme();
 
   const [options, setOptions] = useState<any>({

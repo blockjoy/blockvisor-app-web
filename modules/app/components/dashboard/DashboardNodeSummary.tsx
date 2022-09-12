@@ -14,6 +14,7 @@ const icons = [<IconNode />, <IconNodeOnline />, <IconNodeOffline />];
 export const DashboardNodeSummary = () => {
   const [layout, setLayout] = useRecoilState(layoutState);
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
+  const { nodeMetrics } = dashboard;
   const handleAddNode = () => setLayout({ ...layout, isNodeAddOpen: true });
   return (
     <>
@@ -28,11 +29,9 @@ export const DashboardNodeSummary = () => {
           Add Node
         </Button>
       </PageHeader>
-      {!dashboard?.nodeMetrics?.length ? (
-        <Skeleton width="200px" height="20px" />
-      ) : (
+      {!dashboardLoading ? (
         <ul css={styles.list}>
-          {dashboard.nodeMetrics.map((item, index) => (
+          {nodeMetrics.map((item, index) => (
             <li
               css={[
                 styles.itemBlock,
@@ -49,6 +48,11 @@ export const DashboardNodeSummary = () => {
             </li>
           ))}
         </ul>
+      ) : (
+        <div>
+          <Skeleton width="200px" height="20px" margin="10px 0 20px" />
+          <Skeleton width="100px" height="20px" margin="0 0 8px" />
+        </div>
       )}
     </>
   );
