@@ -18,6 +18,7 @@ export const styles = {
     }
   `,
   title: css`
+    ${typo.xlarge}
     padding-right: 36px;
     position: relative;
     word-break: break-all;
@@ -45,5 +46,8 @@ export const styles = {
     ${typo.microlabel}
     ${colors.primary}
     ${typo.uppercase}
+  `,
+  copyText: css`
+    max-width: 80px;
   `,
 };

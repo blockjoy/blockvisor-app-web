@@ -9,9 +9,7 @@ interface Props {
 export const DataRow: FC<Props> = ({ label, children }) => {
   return (
     <tr css={styles.base}>
-      <th colSpan={80} css={[styles.column, styles.heading]}>
-        {label}
-      </th>
+      <th css={[styles.column, styles.heading]}>{label}</th>
       <td css={styles.column}>{children}</td>
     </tr>
   );

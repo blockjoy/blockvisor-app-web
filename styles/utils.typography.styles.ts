@@ -84,6 +84,11 @@ export const typo = {
   capitalize: css`
     text-transform: capitalize;
   `,
+  ellipsis: css`
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  `,
 };
 
 export const tAlign = {

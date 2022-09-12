@@ -9,20 +9,28 @@ import { DetailsTable } from '../shared/details-table/DetailsTable';
 
 const tableElements = [
   {
-    label: 'test',
-    data: 'test',
+    label: 'Type',
+    data: 'Node/api',
   },
   {
-    label: 'test',
-    data: 'test',
+    label: 'Blockchain',
+    data: 'Bitcoin',
   },
   {
-    label: 'test',
-    data: 'test',
+    label: 'Host',
+    data: 'BlockJoy Host',
   },
   {
-    label: 'test',
-    data: 'test',
+    label: 'Wallet address',
+    data: 'mizAjYud6o9oLh2UZH13o9zyR9crKYRPEm',
+  },
+  {
+    label: 'Version',
+    data: '1.6.2',
+  },
+  {
+    label: 'Block Height',
+    data: '1206202',
   },
 ];
 

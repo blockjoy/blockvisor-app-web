@@ -1,4 +1,5 @@
 import { Button, DataState } from '@shared/components';
+import { CopyNode } from '@shared/components/CopyNode/CopyNode';
 import { StateIcon } from '@shared/components/StateIcon/StateIcon';
 import { FC } from 'react';
 import { colors } from 'styles/utils.colors.styles';
@@ -23,7 +24,13 @@ export const DetailsHeader: FC<Props> = ({ title, ip, id, date }) => {
           </span>
         </h2>
         <div css={styles.summary}>
-          <small css={[typo.small]}>{id}</small>
+          <CopyNode value={id}>
+            <small
+              css={[typo.small, colors.text3, typo.ellipsis, styles.copyText]}
+            >
+              {id}
+            </small>
+          </CopyNode>
           <small css={[typo.small, colors.text2]}>{ip}</small>
           <small css={[typo.small, colors.text2]}>{date}</small>
         </div>
