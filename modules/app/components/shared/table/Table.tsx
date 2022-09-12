@@ -1,6 +1,6 @@
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import styled from '@emotion/styled';
 import TableLoader from './TableLoader';
+import { tableStyles } from './table.styles';
 
 type Cell = {
   key: string;
@@ -23,66 +23,19 @@ type Header = {
 
 type Props = {
   headers?: Header[];
-  rows: Row[];
+  rows?: Row[];
   onRowClick?: (arg0: any) => void;
   isLoading: boolean;
+  isSorting: boolean;
 };
 
 type TableProps = {
   hasRowClick?: boolean;
 };
 
-const StyledTableWrapper = styled.div`
-  position: relative;
-`;
-
-const StyledTable = styled.table<TableProps>`
-  width: 100%;
-
-  & th {
-    padding: 0 0 10px;
-    color: ${(p) => p.theme.colorDefault};
-    letter-spacing: 1px;
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    text-align: left;
-  }
-
-  @media only screen and (max-width: ${(p) => p.theme.screenSm}) {
-    .hidden-on-mobile {
-      display: none;
-    }
-  }
-
-  & .has-hover-color {
-    transition: color 0.3s;
-  }
-
-  & td {
-    padding: 20px 0 30px;
-    vertical-align: top;
-  }
-
-  & tr:hover .has-hover-color {
-    color: ${(p) => p.theme.colorPrimary};
-  }
-
-  & tbody tr td {
-    border-bottom: 1px solid ${(p) => p.theme.colorBorder};
-  }
-
-  & .danger span,
-  & tr:hover.danger .has-hover-color {
-    color: ${(p) => p.theme.colorDanger};
-  }
-
-  ${(p) => p.hasRowClick && 'tr { cursor: pointer; } '};
-`;
-
 export const Table: React.FC<Props> = ({
   headers,
-  rows,
+  rows = [],
   onRowClick,
   isLoading,
 }) => {
@@ -93,9 +46,11 @@ export const Table: React.FC<Props> = ({
   };
 
   return (
-    <StyledTableWrapper>
+    <div css={tableStyles.wrapper}>
       <TableLoader isLoading={isLoading} />
-      <StyledTable hasRowClick={!!onRowClick}>
+      <table
+        css={[tableStyles.wrapper, !!onRowClick && tableStyles.hasHoverRows]}
+      >
         {headers && (
           <thead>
             <tr>
@@ -133,7 +88,7 @@ export const Table: React.FC<Props> = ({
             </tr>
           ))}
         </tbody>
-      </StyledTable>
-    </StyledTableWrapper>
+      </table>
+    </div>
   );
 };

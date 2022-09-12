@@ -41,10 +41,6 @@ const StyledSpinner = styled.div`
   animation: ${spinKeyframes} 0.7s infinite linear;
 `;
 
-const StyledSkeletonRows = styled.div`
-  position: absolute;
-`;
-
 const TableLoader: React.FC<Props> = ({ isLoading }) => {
   return (
     <StyledWrapper isLoading={isLoading}>
