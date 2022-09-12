@@ -1,15 +1,16 @@
 import { css } from '@emotion/react';
+import { colors } from 'styles/utils.colors.styles';
+import { typo } from 'styles/utils.typography.styles';
 import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   base: css`
-    margin-bottom: 40px;
     display: flex;
     flex-direction: column;
     gap: 28px;
+    margin-bottom: 36px;
 
     @media ${breakpoints.fromMed} {
-      margin-bottom: 80px;
       gap: 40px;
       justify-content: space-between;
       align-items: baseline;
@@ -38,5 +39,11 @@ export const styles = {
     flex-wrap: wrap;
     gap: 6px;
     align-items: center;
+  `,
+  status: css`
+    margin-left: 12px;
+    ${typo.microlabel}
+    ${colors.primary}
+    ${typo.uppercase}
   `,
 };
