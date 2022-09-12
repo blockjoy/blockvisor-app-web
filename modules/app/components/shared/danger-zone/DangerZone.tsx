@@ -11,7 +11,7 @@ interface Props {
 export const DangerZone: FC<Props> = ({ handleDelete, children }) => {
   return (
     <section>
-      <h2 css={[typo.xlarge, spacing.bottom.large]}>Danger Zone</h2>
+      <h2 css={[typo.large, spacing.bottom.large]}>Danger Zone</h2>
       <div css={spacing.bottom.medium}>{children}</div>
       <Button size="small" style="warning" onClick={handleDelete}>
         Delete

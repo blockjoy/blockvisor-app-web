@@ -14,6 +14,7 @@ const defaultHost: Host = {
   ip: '',
   location: '',
   details: [],
+  nodes: [],
 };
 
 export const appState = atom({
@@ -22,11 +23,6 @@ export const appState = atom({
     dashboard: defaultDashboard,
     dashboardLoading: true,
     grpcClient: new GrpcClient('https://localhost:8080'),
-    nodes: [],
-    nodesLoading: true,
-    nodesSorting: false,
-    nodesSortExpression: 'added',
-    nodesSortOrder: 'asc',
     hosts: [],
     hostsLoading: true,
     hostsSorting: false,
