@@ -6,7 +6,7 @@ import { appState } from '@modules/app/store';
 import IconNode from '@public/assets/icons/box-12.svg';
 import IconNodeOnline from '@public/assets/icons/node-online-12.svg';
 import IconNodeOffline from '@public/assets/icons/node-offline-12.svg';
-import { dashboardNodeStyles as styles } from './dashboardNode.styles';
+import { dashboardNodeStyles as styles } from './DashboardNode.styles';
 import { Skeleton } from '../shared';
 
 const icons = [<IconNode />, <IconNodeOnline />, <IconNodeOffline />];
