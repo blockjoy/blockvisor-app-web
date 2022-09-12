@@ -9,30 +9,46 @@ import { styles } from './DetailsHeader.styles';
 interface Props {
   title: string;
   ip: string;
-  id: string;
-  date: string;
+  id?: string;
+  date?: string;
+  location?: string;
+  status: HostState | NodeState;
 }
 
-export const DetailsHeader: FC<Props> = ({ title, ip, id, date }) => {
+export const DetailsHeader: FC<Props> = ({
+  title,
+  ip,
+  id,
+  date,
+  status,
+  location,
+}) => {
   return (
     <header css={styles.base}>
       <div>
         <h2 css={[styles.title]}>
           {title}{' '}
           <span css={styles.status}>
-            <DataState status="consensus" />
+            <DataState status={status} />
           </span>
         </h2>
         <div css={styles.summary}>
-          <CopyNode value={id}>
-            <small
-              css={[typo.small, colors.text3, typo.ellipsis, styles.copyText]}
-            >
-              {id}
+          {id && (
+            <CopyNode value={id}>
+              <small
+                css={[typo.small, colors.text3, typo.ellipsis, styles.copyText]}
+              >
+                {id}
+              </small>
+            </CopyNode>
+          )}
+          {ip && <small css={[typo.small, colors.text2]}>{ip}</small>}
+          {date && <small css={[typo.small, colors.text2]}>{date}</small>}
+          {location && (
+            <small css={[typo.small, colors.text2]}>
+              <address>{location}</address>
             </small>
-          </CopyNode>
-          <small css={[typo.small, colors.text2]}>{ip}</small>
-          <small css={[typo.small, colors.text2]}>{date}</small>
+          )}
         </div>
       </div>
       <form css={styles.actions}>
