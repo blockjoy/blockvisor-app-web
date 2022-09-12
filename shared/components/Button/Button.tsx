@@ -33,6 +33,7 @@ export function Button({
   border = 'rounded',
   display = 'inline',
   type = 'button',
+  disabled = false,
   href,
   customCss,
   loading,

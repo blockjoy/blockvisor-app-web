@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { appState } from '@modules/app/store';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useGrpc } from '@modules/auth/hooks';
 import { useRouter } from 'next/router';
 import { Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
@@ -16,9 +17,10 @@ type LoginForm = {
 
 export function LoginForm() {
   const router = useRouter();
-  const client = useGrpc();
   const form = useForm<LoginForm>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+
+  const { grpcClient } = useRecoilValue(appState);
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -31,9 +33,9 @@ export function LoginForm() {
     // await the api response
     // const response = await client?.login(email, password);
 
-    // // we should be able to use try/catch 
+    // // we should be able to use try/catch
     // // long term but this works for now
-    // // there is a LoginUserResponse but 
+    // // there is a LoginUserResponse but
     // // I need to find out how this works!
     // if ((response as any)?.code === "Unauthenticated") {
     //   // it error'd
@@ -45,9 +47,8 @@ export function LoginForm() {
     //   console.log("response", response);
     //   console.log("result", result);
     //   console.log("result", result?.token?.value);
-       router.push("/dashboard");
+    router.push('/dashboard');
     //  }
-
   });
   return (
     <FormProvider {...form}>

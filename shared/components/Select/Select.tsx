@@ -66,7 +66,9 @@ export function Select({
           {...register(name, validationOptions)}
         >
           {options.map((option) => (
-            <option value={option.value}>{option.label}</option>
+            <option key={option.label} value={option.value}>
+              {option.label}
+            </option>
           ))}
         </select>
       </div>
