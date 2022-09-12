@@ -37,7 +37,6 @@ export function Button({
   href,
   customCss,
   loading,
-  disabled,
 }: Props) {
   const buttonStyles = [
     reset.button,

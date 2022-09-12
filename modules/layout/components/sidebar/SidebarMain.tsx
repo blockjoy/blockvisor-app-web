@@ -3,9 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import IconDashboard from '@public/assets/icons/grid-12.svg';
-import IconOrganizations from '@public/assets/icons/organization-16.svg';
 import IconHosts from '@public/assets/icons/host-12.svg';
-import IconAdmin from '@public/assets/icons/sliders-12.svg';
+import IconOrganizations from '@public/assets/icons/organization-16.svg';
 
 const StyledWrapper = styled.main`
   flex: 1 1 auto;
