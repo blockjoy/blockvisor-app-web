@@ -1,8 +1,8 @@
 import { Skeleton } from '../skeleton/Skeleton';
-import { skeletonStyles } from '../skeleton/skeleton.styles';
+import { tableStyles } from './table.styles';
 
 export const TableSkeleton = () => (
-  <div css={skeletonStyles.skeletonGrid}>
+  <div css={tableStyles.tableSkeleton}>
     <Skeleton width="200px" />
     <Skeleton width="300px" />
     <Skeleton width="150px" />

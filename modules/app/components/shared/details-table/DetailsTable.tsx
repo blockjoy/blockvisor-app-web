@@ -11,8 +11,10 @@ export const DetailsTable: FC<Props> = ({ bodyElements }) => {
   return (
     <table css={[table.base, styles.base]}>
       <tbody>
-        {bodyElements.map((item) => (
-          <DataRow label={item.label}>{item.data}</DataRow>
+        {bodyElements?.map((item) => (
+          <DataRow key={item.label} label={item.label}>
+            {item.data}
+          </DataRow>
         ))}
       </tbody>
     </table>

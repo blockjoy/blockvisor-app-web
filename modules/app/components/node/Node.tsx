@@ -2,7 +2,7 @@ import { useRecoilState } from 'recoil';
 
 import { layoutState } from '@modules/layout/store';
 
-import { PageSection, PageHeader, BlockButton } from '../shared';
+import { PageSection, PageHeader } from '../shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { DetailsHeader } from '../shared/details-header/DetailsHeader';
 import { DetailsTable } from '../shared/details-table/DetailsTable';

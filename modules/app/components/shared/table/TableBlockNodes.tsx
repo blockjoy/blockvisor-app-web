@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 

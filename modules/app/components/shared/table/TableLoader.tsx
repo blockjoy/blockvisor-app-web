@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { keyframes, css } from '@emotion/react';
+import { FC } from 'react';
 
 type Props = {
   isLoading: boolean;
@@ -41,16 +42,10 @@ const StyledSpinner = styled.div`
   animation: ${spinKeyframes} 0.7s infinite linear;
 `;
 
-const StyledSkeletonRows = styled.div`
-  position: absolute;
-`;
-
-const TableLoader: React.FC<Props> = ({ isLoading }) => {
+export const TableLoader: FC<Props> = ({ isLoading }) => {
   return (
     <StyledWrapper isLoading={isLoading}>
       <StyledSpinner />
     </StyledWrapper>
   );
 };
-
-export default TableLoader;

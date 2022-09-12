@@ -4,6 +4,7 @@ import { StateIcon } from '@shared/components/StateIcon/StateIcon';
 import { FC } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { HostStatus } from '@modules/app/components/host/HostStatus';
 import { styles } from './DetailsHeader.styles';
 
 interface Props {
@@ -12,7 +13,8 @@ interface Props {
   id?: string;
   date?: string;
   location?: string;
-  status: HostState | NodeState;
+  // status: HostState | NodeState;
+  status?: string;
 }
 
 export const DetailsHeader: FC<Props> = ({
@@ -29,7 +31,8 @@ export const DetailsHeader: FC<Props> = ({
         <h2 css={[styles.title]}>
           {title}{' '}
           <span css={styles.status}>
-            <DataState status={status} />
+            <HostStatus status={status || ''} />
+            {/* <DataState status={status} /> */}
           </span>
         </h2>
         <div css={styles.summary}>
