@@ -51,6 +51,10 @@ export const tableStyles = {
       color: ${theme.colorDanger};
     }
   `,
+  tableSkeleton: css`
+    display: grid;
+    gap: 20px;
+  `,
   hasHoverRows: css`
     tr:hover {
       cursor: pointer;

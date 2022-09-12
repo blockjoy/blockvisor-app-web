@@ -1,23 +1,19 @@
 // import { GrpcClient } from 'blockjoy-mock-grpc/dist/stub_client';
 import { GrpcClient } from './stub_client';
 import { atom } from 'recoil';
-import { Host } from '@modules/app/components/host/Host';
 import { Dashboard } from '@modules/app/components/dashboard/Dashboard';
+import { Host } from '@modules/app/components/host/Host';
+
+const defaultDashboard: Dashboard = {
+  nodeMetrics: [],
+};
 
 const defaultHost: Host = {
   name: '',
   status: '',
   ip: '',
   location: '',
-  nodesList: [],
-  created_at_datetime: '',
-  diskSize: '',
-  memSize: '',
-  version: '',
-};
-
-const defaultDashboard: Dashboard = {
-  nodeMetrics: [],
+  details: [],
 };
 
 export const appState = atom({
@@ -36,6 +32,7 @@ export const appState = atom({
     hostsSorting: false,
     hostsSortExpression: 'added',
     hostsSortOrder: 'asc',
-    activeHost: defaultHost,
+    host: defaultHost,
+    hostLoading: true,
   },
 });

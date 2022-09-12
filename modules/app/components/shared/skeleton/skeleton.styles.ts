@@ -8,9 +8,9 @@ export const skeletonStyles = {
     width: 100px;
     height: 20px;
   `,
-  skeletonGrid: css`
+  skeletonGrid: (padding: string) => css`
     display: grid;
-    gap: 30px;
-    padding: 26px 0;
+    gap: 20px;
+    padding: ${padding};
   `,
 };

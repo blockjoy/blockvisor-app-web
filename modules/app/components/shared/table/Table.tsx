@@ -1,19 +1,20 @@
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import TableLoader from './TableLoader';
+import { TableLoader } from './TableLoader';
 import { tableStyles } from './table.styles';
+import { TableSkeleton } from './TableSkeleton';
 
 type Cell = {
   key: string;
   component: EmotionJSX.Element;
 };
 
-type Row = {
+export type Row = {
   key: string;
   cells: Cell[];
   isDanger?: boolean;
 };
 
-type Header = {
+export type Header = {
   key: string;
   name: string;
   width: string;
@@ -38,6 +39,7 @@ export const Table: React.FC<Props> = ({
   rows = [],
   onRowClick,
   isLoading,
+  isSorting,
 }) => {
   const handleRowClick = (tr: any) => {
     if (onRowClick) {
@@ -47,48 +49,52 @@ export const Table: React.FC<Props> = ({
 
   return (
     <div css={tableStyles.wrapper}>
-      <TableLoader isLoading={isLoading} />
-      <table
-        css={[tableStyles.wrapper, !!onRowClick && tableStyles.hasHoverRows]}
-      >
-        {headers && (
-          <thead>
-            <tr>
-              {headers.map((th) => (
-                <th
-                  className={th.isHiddenOnMobile ? 'hidden-on-mobile' : ''}
-                  key={th.key}
-                  style={{ maxWidth: th.width }}
-                >
-                  {th.component}
-                </th>
-              ))}
-            </tr>
-          </thead>
-        )}
-        <tbody>
-          {rows?.map((tr) => (
-            <tr
-              key={tr.key}
-              className={tr.isDanger ? 'danger' : ''}
-              onClick={() => handleRowClick(tr)}
-            >
-              {tr.cells?.map((td, index) => (
-                <td
-                  key={td.key}
-                  className={
-                    headers && headers[index].isHiddenOnMobile
-                      ? 'hidden-on-mobile'
-                      : ''
-                  }
-                >
-                  {td.component}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TableLoader isLoading={isSorting} />
+      {!isLoading ? (
+        <table
+          css={[tableStyles.table, !!onRowClick && tableStyles.hasHoverRows]}
+        >
+          {headers && (
+            <thead>
+              <tr>
+                {headers.map((th) => (
+                  <th
+                    className={th.isHiddenOnMobile ? 'hidden-on-mobile' : ''}
+                    key={th.key}
+                    style={{ maxWidth: th.width }}
+                  >
+                    {th.component}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {rows?.map((tr) => (
+              <tr
+                key={tr.key}
+                className={tr.isDanger ? 'danger' : ''}
+                onClick={() => handleRowClick(tr)}
+              >
+                {tr.cells?.map((td, index) => (
+                  <td
+                    key={td.key}
+                    className={
+                      headers && headers[index].isHiddenOnMobile
+                        ? 'hidden-on-mobile'
+                        : ''
+                    }
+                  >
+                    {td.component}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <TableSkeleton />
+      )}
     </div>
   );
 };

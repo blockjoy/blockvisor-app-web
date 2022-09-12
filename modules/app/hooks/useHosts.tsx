@@ -118,7 +118,6 @@ export const useHosts = (): Hook => {
 
   useEffect(() => {
     if (hosts?.length) {
-      console.log('hosts', hosts);
       const rows = hosts.map((host: any) => ({
         key: host.id.value,
         cells: [

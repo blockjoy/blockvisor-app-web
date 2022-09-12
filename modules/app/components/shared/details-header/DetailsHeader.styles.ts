@@ -8,7 +8,7 @@ export const styles = {
     display: flex;
     flex-direction: column;
     gap: 28px;
-    margin-bottom: 36px;
+    margin-bottom: 12px;
 
     @media ${breakpoints.fromMed} {
       gap: 40px;
