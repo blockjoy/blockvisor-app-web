@@ -14,7 +14,7 @@ export const useDashboard = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
 
   const getRecentHosts = async () => {
-    const hostsResponse: any = await grpcClient.getHosts();
+    const hostsResponse: any = await apiClient.getHosts();
 
     const hosts = hostsResponse.map((host: any) => ({
       key: host.id.value,
