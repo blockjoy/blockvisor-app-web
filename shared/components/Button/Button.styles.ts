@@ -106,7 +106,7 @@ const buttonSize = {
     ${typo.buttonSmall}
   `,
   medium: css`
-    height: 28px;
+    height: 40px;
     padding: 8px 28px;
   `,
   normal: css`

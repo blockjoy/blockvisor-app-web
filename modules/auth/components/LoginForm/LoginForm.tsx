@@ -8,8 +8,12 @@ import { reset } from 'styles/utils.reset.styles';
 import { PasswordToggle } from '../PasswordTogle';
 import { isValidEmail } from '@shared/utils/validation';
 import { apiClient } from '@modules/client';
-import { isLoginSuccess } from '@modules/auth/utils/authGuards';
+import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
 import { saveUser } from '@shared/utils/browserStorage';
+import { typo } from 'styles/utils.typography.styles';
+import { colors } from 'styles/utils.colors.styles';
+import { useRecoilState } from 'recoil';
+import { authAtoms } from '@modules/auth/store/atoms';
 
 type LoginForm = {
   email: string;
@@ -20,6 +24,8 @@ export function LoginForm() {
   const router = useRouter();
   const form = useForm<LoginForm>();
   const [loading, setIsLoading] = useState(false);
+  const [, setAuth] = useRecoilState(authAtoms.user);
+  const [loginError, setLoginError] = useState<string | undefined>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
 
   const handleIconClick = () => {
@@ -29,12 +35,15 @@ export function LoginForm() {
 
   // for signin use the hardcoded email in stub client: user@test.com
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
-    const response = await apiClient.login(email, password);
+    setLoginError(undefined);
     setIsLoading(true);
-    console.log('res', response);
-    if (isLoginSuccess(response)) {
-      saveUser({ accessToken: response.token });
 
+    const response = await apiClient.login(email, password);
+
+    if (isLoginSuccess(response)) {
+      saveUser({ accessToken: response.value });
+      setAuth({ accessToken: response.value });
+      apiClient.setTokenValue(response.value);
       // simulate async req
       setTimeout(() => {
         setIsLoading(false);
@@ -42,6 +51,7 @@ export function LoginForm() {
       }, 1000);
     } else {
       setIsLoading(false);
+      setLoginError(response?.message);
     }
   });
   return (
@@ -51,6 +61,7 @@ export function LoginForm() {
           <li css={[spacing.bottom.mediumSmall]}>
             <Input
               labelStyles={[display.visuallyHidden]}
+              disabled={loading}
               name="email"
               placeholder="Email"
               validationOptions={{
@@ -65,6 +76,7 @@ export function LoginForm() {
           <li css={[spacing.bottom.medium]}>
             <Input
               labelStyles={[display.visuallyHidden]}
+              disabled={loading}
               name="password"
               placeholder="Password"
               type={activeType}
@@ -83,6 +95,7 @@ export function LoginForm() {
         </ul>
         <Button
           loading={loading}
+          disabled={loading}
           size="medium"
           display="block"
           style="primary"
@@ -90,6 +103,11 @@ export function LoginForm() {
         >
           Login
         </Button>
+        {loginError && (
+          <p css={[typo.smaller, colors.warning, spacing.top.small]}>
+            {loginError}
+          </p>
+        )}
       </form>
     </FormProvider>
   );

@@ -6,6 +6,7 @@ import HostAdd from './hostAdd/HostAdd';
 import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
 import { NodeAdd } from '.';
+import { PrivateRoute } from '@modules/auth';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -15,14 +16,16 @@ type LayoutType = {
 export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
   return (
     <>
-      <Sidebar />
-      <Overlay />
-      <Topbar />
-      <Profile />
-      <NodeAdd />
-      <HostAdd />
-      <Breadcrumb breadcrumb={breadcrumb} />
-      <Page>{children}</Page>
+      <PrivateRoute>
+        <Sidebar />
+        <Overlay />
+        <Topbar />
+        <Profile />
+        <NodeAdd />
+        <HostAdd />
+        <Breadcrumb breadcrumb={breadcrumb} />
+        <Page>{children}</Page>
+      </PrivateRoute>
     </>
   );
 };

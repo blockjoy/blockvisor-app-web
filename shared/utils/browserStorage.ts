@@ -14,11 +14,12 @@ const getUser = () => {
       if (isUser(parsed)) {
         return parsed;
       }
-      return;
+      return null;
     }
 
-    return;
+    return null;
   }
+  return null;
 };
 
 const saveUser = (value: User): void => {

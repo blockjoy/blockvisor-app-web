@@ -1,7 +1,8 @@
 import { authAtoms } from '@modules/auth/store/atoms';
+import { getUser } from '@shared/utils/browserStorage';
 import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
-import { useRecoilValue } from 'recoil';
+import { ReactNode, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   children?: ReactNode;
@@ -9,9 +10,14 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
-  const token = useRecoilValue(authAtoms.accessTokenAtom);
+  const [user, setUser] = useRecoilState(authAtoms.user);
 
-  if (!token) router.push('/');
+  useEffect(() => {
+    if (!getUser()) {
+      setUser(null);
+      router.push('/');
+    }
+  }, [user, router.route]);
 
   return <>{children}</>;
 }

@@ -66,7 +66,7 @@ export function Button({
       css={buttonStyles}
       onClick={onClick}
     >
-      {loading ? <LoadingSpinner size="small" /> : children}
+      {loading ? <LoadingSpinner size="medium" /> : children}
     </button>
   );
 }
