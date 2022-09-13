@@ -7,6 +7,9 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const StyledWrapper = styled.div`
   position: relative;
+  min-height: 400px;
+  max-height: 400px;
+  height: 400px;
 `;
 
 const StyledChartHeader = styled.header`

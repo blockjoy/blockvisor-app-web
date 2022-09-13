@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { PageSection, SkeletonGrid, Skeleton } from '../shared';
+import { PageSection } from '../shared';
 import { appState } from '@modules/app/store';
 import { DashboardNodeSummary } from './DashboardNodeSummary';
 import { DashboardRecentHosts } from './DashboardRecentHosts';
@@ -40,16 +40,11 @@ export default () => {
       <PageSection>
         <DashboardRecentHosts />
       </PageSection>
-      <PageSection>
-        {dashboardLoading ? (
-          <SkeletonGrid>
-            <Skeleton width="200px" />
-            <Skeleton width="100%" height="400px" />
-          </SkeletonGrid>
-        ) : (
+      {!dashboardLoading && (
+        <PageSection>
           <NodeEarnings />
-        )}
-      </PageSection>
+        </PageSection>
+      )}
     </>
   );
 };

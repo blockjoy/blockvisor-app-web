@@ -1,10 +1,8 @@
-import { Button, DataState } from '@shared/components';
+import { Button } from '@shared/components';
 import { CopyNode } from '@shared/components/CopyNode/CopyNode';
-import { StateIcon } from '@shared/components/StateIcon/StateIcon';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { HostStatus } from '@modules/app/components/host/HostStatus';
 import { styles } from './DetailsHeader.styles';
 
 interface Props {
@@ -13,8 +11,10 @@ interface Props {
   id?: string;
   date?: string;
   location?: string;
+  status: ReactNode;
   // status: HostState | NodeState;
-  status?: string;
+  handleStop?: VoidFunction;
+  handleRestart?: VoidFunction;
 }
 
 export const DetailsHeader: FC<Props> = ({
@@ -24,6 +24,8 @@ export const DetailsHeader: FC<Props> = ({
   date,
   status,
   location,
+  handleStop,
+  handleRestart,
 }) => {
   return (
     <header css={styles.base}>
@@ -31,7 +33,7 @@ export const DetailsHeader: FC<Props> = ({
         <h2 css={[styles.title]}>
           {title}{' '}
           <span css={styles.status}>
-            <HostStatus status={status || ''} />
+            {status}
             {/* <DataState status={status} /> */}
           </span>
         </h2>
@@ -55,11 +57,11 @@ export const DetailsHeader: FC<Props> = ({
         </div>
       </div>
       <form css={styles.actions}>
-        <Button disabled={true} style="secondary" size="small">
+        <Button onClick={handleStop} style="secondary" size="small">
           Stop
         </Button>
-        <Button style="secondary" size="small">
-          Start
+        <Button onClick={handleRestart} style="secondary" size="small">
+          Restart
         </Button>
       </form>
     </header>

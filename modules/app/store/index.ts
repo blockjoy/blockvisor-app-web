@@ -12,7 +12,7 @@ const defaultDashboard: Dashboard = {
 
 const defaultHost: Host = {
   name: '',
-  status: '',
+  status: 0,
   ip: '',
   location: '',
   details: [],

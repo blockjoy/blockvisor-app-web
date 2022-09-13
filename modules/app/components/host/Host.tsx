@@ -6,16 +6,22 @@ import { DangerZone } from '../shared/danger-zone/DangerZone';
 import { DetailsHeader } from '../shared/details-header/DetailsHeader';
 import { DetailsTable } from '../shared/details-table/DetailsTable';
 import { useHost } from '@modules/app/hooks/useHost';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { appState } from '@modules/app/store';
-import { Skeleton, SkeletonGrid, TableSkeleton, Table } from '../shared';
+import {
+  Skeleton,
+  SkeletonGrid,
+  TableSkeleton,
+  Table,
+  HostStatus,
+} from '../shared';
 import { Row } from '../shared/table/Table';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 
 export type Host = {
   name: string;
-  status: string;
+  status: number;
   ip: string;
   location: string;
   details: { label: string; data: string }[];
@@ -23,6 +29,7 @@ export type Host = {
 };
 
 export default () => {
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const { id } = router.query;
   const { loadHost } = useHost();
@@ -31,10 +38,13 @@ export default () => {
   const handleNodeClicked = (args: any) => router.push(`/nodes/${args.key}`);
 
   useEffect(() => {
+    setIsMounted(true);
     if (router.isReady) {
       loadHost(id?.toString() || '');
     }
   }, [router.isReady]);
+
+  if (!isMounted) return null;
 
   return (
     <>
@@ -47,7 +57,7 @@ export default () => {
             <DetailsHeader
               title={host.name}
               ip={host.ip}
-              status={host.status}
+              status={<HostStatus status={host.status} />}
               location={host.location}
             />
             <DetailsTable bodyElements={host.details} />
@@ -82,10 +92,11 @@ export default () => {
         />
       </PageSection>
       <PageSection>
-        <DangerZone handleDelete={() => console.log('handle delete')}>
-          <p>No longer need this node?</p>
-          <small>Click the button below to delete it.</small>
-        </DangerZone>
+        <DangerZone
+          elementName="Host"
+          elementNameToCompare={host.name}
+          handleDelete={() => console.log('handle delete')}
+        />
       </PageSection>
     </>
   );

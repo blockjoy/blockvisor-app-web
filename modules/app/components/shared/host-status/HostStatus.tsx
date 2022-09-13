@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { hostStyles } from './host.styles';
+import { styles } from './HostStatus.styles';
 
 const statusList = [
   { id: 0, name: 'Undefined', icon: '' },
@@ -17,11 +17,13 @@ const statusList = [
 ];
 
 type Props = {
-  status: string;
+  status: number;
 };
 
 export const HostStatus: FC<Props> = ({ status }) => {
   return (
-    <span css={hostStyles.status}>{statusList[status]?.name || 'Unknown'}</span>
+    <span css={styles.status}>
+      {statusList.find((s) => s.id === status)?.name || 'Unknown'}
+    </span>
   );
 };

@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { appState } from '@modules/app/store';
 import { layoutState } from '@modules/layout/store';
 import { useEffect, useState } from 'react';
-import { HostStatus } from '@modules/app/components/host/HostStatus';
+import { HostStatus } from '@modules/app/components/shared/host-status/HostStatus';
 import { Header, Row } from '@modules/app/components/shared/table/Table';
 import { TableBlockHosts, TableSortButton } from '../components/shared';
 
@@ -48,22 +48,16 @@ export const useHosts = (): Hook => {
   const headers = [
     {
       name: 'Name',
-      width: '100px',
       key: '1',
-      component: <>name</>,
     },
     {
       name: 'Added',
-      width: '100px',
       key: '2',
       isHiddenOnMobile: true,
-      component: <>added</>,
     },
     {
       name: 'Status',
-      width: '100px',
       key: '3',
-      component: <>status</>,
     },
   ];
 

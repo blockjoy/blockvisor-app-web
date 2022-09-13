@@ -3,7 +3,7 @@ import { appState } from '@modules/app/store';
 import { Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
 import { Host } from '@modules/app/components/host/Host';
 import { TableBlockNodes } from '@modules/app/components/shared/table/TableBlockNodes';
-import { HostStatus } from '@modules/app/components/host/HostStatus';
+import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
 
 type Hook = {
   loadHost: (args1: string) => void;
@@ -18,13 +18,12 @@ export const useHost = (): Hook => {
       ...app,
       hostLoading: true,
     });
+
     const uuid = new Uuid();
     uuid.setValue(id!);
+
     const hosts: any = await grpcClient.getHosts(uuid);
-
     const host = hosts[0];
-
-    console.log('host', host);
 
     const nodes = host.nodesList.map((node: any) => ({
       key: node.id.value,
@@ -43,7 +42,7 @@ export const useHost = (): Hook => {
         },
         {
           key: '2',
-          component: <HostStatus status={node.status} />,
+          component: <NodeStatus status={node.status} />,
         },
       ],
     }));
