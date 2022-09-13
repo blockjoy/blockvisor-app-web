@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { appState } from '@modules/app/store';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { Button, Input } from '@shared/components';
@@ -9,6 +7,9 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { PasswordToggle } from '../PasswordTogle';
 import { isValidEmail } from '@shared/utils/validation';
+import { apiClient } from '@modules/client';
+import { isLoginSuccess } from '@modules/auth/utils/authGuards';
+import { saveUser } from '@shared/utils/browserStorage';
 
 type LoginForm = {
   email: string;
@@ -18,37 +19,30 @@ type LoginForm = {
 export function LoginForm() {
   const router = useRouter();
   const form = useForm<LoginForm>();
+  const [loading, setIsLoading] = useState(false);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-
-  const { grpcClient } = useRecoilValue(appState);
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
     setActiveType(type);
   };
 
+  // for signin use the hardcoded email in stub client: user@test.com
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
-    // show spinner in button
+    const response = await apiClient.login(email, password);
+    setIsLoading(true);
+    console.log('res', response);
+    if (isLoginSuccess(response)) {
+      saveUser({ accessToken: response.token });
 
-    // await the api response
-    // const response = await client?.login(email, password);
-
-    // // we should be able to use try/catch
-    // // long term but this works for now
-    // // there is a LoginUserResponse but
-    // // I need to find out how this works!
-    // if ((response as any)?.code === "Unauthenticated") {
-    //   // it error'd
-    //   const { code } = (response as any);
-    //   console.log(code);
-    // } else {
-    //   // your logged in, do the redirect
-    //   const result = (response as any)?.toObject();
-    //   console.log("response", response);
-    //   console.log("result", result);
-    //   console.log("result", result?.token?.value);
-    router.push('/dashboard');
-    //  }
+      // simulate async req
+      setTimeout(() => {
+        setIsLoading(false);
+        router.push('/dashboard');
+      }, 1000);
+    } else {
+      setIsLoading(false);
+    }
   });
   return (
     <FormProvider {...form}>
@@ -87,7 +81,13 @@ export function LoginForm() {
             />
           </li>
         </ul>
-        <Button size="medium" display="block" style="primary" type="submit">
+        <Button
+          loading={loading}
+          size="medium"
+          display="block"
+          style="primary"
+          type="submit"
+        >
           Login
         </Button>
       </form>

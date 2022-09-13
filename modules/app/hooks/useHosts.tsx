@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { HostStatus } from '@modules/app/components/shared/host-status/HostStatus';
 import { Header, Row } from '@modules/app/components/shared/table/Table';
 import { TableBlockHosts, TableSortButton } from '../components/shared';
+import { apiClient } from '@modules/client';
 
 interface State {
   rows?: Row[];
@@ -66,7 +67,7 @@ export const useHosts = (): Hook => {
       ...app,
       hostsLoading: true,
     });
-    const hosts: any = await grpcClient.getHosts();
+    const hosts: any = await apiClient.getHosts();
     setApp({
       ...app,
       hosts,

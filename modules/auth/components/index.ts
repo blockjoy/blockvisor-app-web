@@ -5,3 +5,4 @@ export * from './Footer/RegisterFooter';
 export * from './RegisterForm/RegisterForm';
 export * from './ForgotPasswordForm/ForgotPasswordForm';
 export * from './NewPasswordForm/NewPasswordForm';
+export * from './PrivateRoute/PrivateRoute';
