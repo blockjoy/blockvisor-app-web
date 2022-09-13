@@ -53,7 +53,7 @@ const buttonStyle = {
 
     &:hover,
     &:active {
-      box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
+      box-shadow: 0px 0px 0px 3px var(--color-utility-warning-o30);
     }
   `,
   basic: css`

@@ -3,7 +3,7 @@ import { appState } from '@modules/app/store';
 import { Dashboard } from '../components/dashboard/Dashboard';
 import { TableBlockHosts } from '../components/shared';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import { HostStatus } from '../components/host/HostStatus';
+import { HostStatus } from '../components/shared/host-status/HostStatus';
 
 interface Hook {
   loadDashboard: () => void;
@@ -15,8 +15,6 @@ export const useDashboard = (): Hook => {
 
   const getRecentHosts = async () => {
     const hostsResponse: any = await grpcClient.getHosts();
-
-    console.log('hostsResponse', hostsResponse);
 
     const hosts = hostsResponse.map((host: any) => ({
       key: host.id.value,

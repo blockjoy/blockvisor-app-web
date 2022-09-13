@@ -5,6 +5,7 @@ import {
   SkeletonGrid,
   Skeleton,
   TableSkeleton,
+  NodeStatus,
 } from '../shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { DetailsHeader } from '../shared/details-header/DetailsHeader';
@@ -13,7 +14,7 @@ import { DangerZone } from '../shared/danger-zone/DangerZone';
 import { appState } from '@modules/app/store';
 import { useNode } from '@modules/app/hooks/useNode';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NodeEarnings } from '@shared/components';
 
 export type Node = {
@@ -26,16 +27,24 @@ export type Node = {
 };
 
 export default () => {
+  const [isMounted, setMounted] = useState(false);
   const router = useRouter();
   const { id } = router.query;
-  const { loadNode } = useNode();
+  const { loadNode, deleteNode, stopNode, restartNode } = useNode();
   const { node, nodeLoading } = useRecoilValue(appState);
 
+  const handleStop = () => stopNode(id);
+  const handleRestart = () => restartNode(id);
+  const handleDelete = () => deleteNode(id);
+
   useEffect(() => {
+    setMounted(true);
     if (router.isReady) {
-      loadNode(id?.toString() || '');
+      loadNode(id);
     }
   }, [router.isReady]);
+
+  if (!isMounted) return null;
 
   return (
     <>
@@ -47,7 +56,9 @@ export default () => {
         {!nodeLoading ? (
           <>
             <DetailsHeader
-              status={node.status.toString()}
+              handleStop={handleStop}
+              handleRestart={handleRestart}
+              status={<NodeStatus status={node.status} />}
               title={node.name}
               ip={node.ip}
               date={node.created}
@@ -65,21 +76,19 @@ export default () => {
           </>
         )}
       </PageSection>
-      <PageSection>
-        {nodeLoading ? (
-          <>
-            <Skeleton width="200px" margin="0 0 20px" />
-            <Skeleton width="100%" height="400px" />
-          </>
-        ) : (
+
+      {!nodeLoading && (
+        <PageSection>
           <NodeEarnings />
-        )}
-      </PageSection>
+        </PageSection>
+      )}
+
       <PageSection>
-        <DangerZone handleDelete={() => console.log('handle delete')}>
-          <p>No longer need this node?</p>
-          <small>Click the button below to delete it.</small>
-        </DangerZone>
+        <DangerZone
+          elementName="Node"
+          elementNameToCompare={node.name}
+          handleDelete={handleDelete}
+        ></DangerZone>
       </PageSection>
     </>
   );

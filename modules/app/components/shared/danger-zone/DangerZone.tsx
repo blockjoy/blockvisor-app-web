@@ -1,21 +1,102 @@
-import { Button } from '@shared/components';
-import { FC } from 'react';
+import { useRouter } from 'next/router';
+import { Button, Input } from '@shared/components';
+import { FC, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { display } from 'styles/utils.display.styles';
+import { styles } from './DangerZone.styles';
+import { FormProvider, useForm } from 'react-hook-form';
 
 interface Props {
   handleDelete: VoidFunction;
-  children: React.ReactNode;
+  elementName: string | 'Node' | 'Host';
+  elementNameToCompare: string;
 }
 
-export const DangerZone: FC<Props> = ({ handleDelete, children }) => {
+type DeleteForm = {
+  elementNameToDelete: string;
+};
+
+export const DangerZone: FC<Props> = ({
+  handleDelete,
+  elementName = 'Node',
+  elementNameToCompare,
+}) => {
+  const router = useRouter();
+  const [step, setStep] = useState<number | 1 | 2>(1);
+  const form = useForm<DeleteForm>();
+  const { isValid } = form.formState;
+
+  const gotoStep = (step: number) => setStep(step);
+
+  const doNamesMatch = (name: string) => {
+    return name !== elementNameToCompare;
+  };
+
+  const handleRedirect = () =>
+    router.push(elementName === 'Node' ? '/dashboard' : '/hosts');
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    handleDelete();
+    handleRedirect();
+  };
+
   return (
     <section>
       <h2 css={[typo.large, spacing.bottom.large]}>Danger Zone</h2>
-      <div css={spacing.bottom.medium}>{children}</div>
-      <Button size="small" style="warning" onClick={handleDelete}>
-        Delete
-      </Button>
+      {step === 1 && (
+        <>
+          <div css={spacing.bottom.medium}>
+            <p>No longer need this {elementName}?</p>
+            <small>Click the button below to delete it.</small>
+          </div>
+          <Button size="small" style="warning" onClick={() => gotoStep(2)}>
+            Delete
+          </Button>
+        </>
+      )}
+      {step === 2 && (
+        <div css={spacing.bottom.medium}>
+          <p css={spacing.bottom.medium}>
+            To delete, type the name of your {elementName} and then click
+            "confirm".
+          </p>
+          <FormProvider {...form}>
+            <form onSubmit={onSubmit}>
+              <Input
+                style={{ maxWidth: '320px' }}
+                labelStyles={[display.visuallyHidden]}
+                name="elementNameToDelete"
+                placeholder={`Enter your ${elementName} name here`}
+                type="text"
+                validationOptions={{
+                  required: 'This is a mandatory field',
+                  validate: (name) => doNamesMatch(name),
+                }}
+              />
+              <div css={[styles.actions, spacing.top.medium]}>
+                <Button
+                  disabled={!isValid}
+                  type="submit"
+                  size="small"
+                  style="warning"
+                  css={spacing.right.large}
+                >
+                  Confirm
+                </Button>
+                <Button
+                  onClick={() => gotoStep(1)}
+                  size="small"
+                  style="outline"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
+        </div>
+      )}
     </section>
   );
 };

@@ -41,6 +41,7 @@ export const globalStyles = css`
     --color-utility-success-o10: hsla(143, 61%, 37%, 0.1);
     --color-utility-warning: hsl(0, 79%, 69%);
     --color-utility-warning-o10: hsla(0, 69%, 45%, 0.1);
+    --color-utility-warning-o30: hsla(0, 69%, 45%, 0.3);
     --color-utility-note: hsl(40, 80%, 57%);
 
     /* --- BACKGROUND --- */
