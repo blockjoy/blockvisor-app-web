@@ -18,7 +18,7 @@ export const styles = {
     }
   `,
   title: css`
-    ${typo.xlarge}
+    ${typo.large}
     padding-right: 36px;
     position: relative;
     word-break: break-all;
@@ -36,9 +36,9 @@ export const styles = {
     align-items: center;
   `,
   actions: css`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    display: inline-grid;
+    grid-template-columns: repeat(2, 88px);
+    gap: 10px;
     align-items: center;
   `,
   status: css`

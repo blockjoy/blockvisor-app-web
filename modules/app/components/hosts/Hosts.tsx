@@ -27,7 +27,7 @@ export const Hosts = () => {
     <PageSection>
       <PageHeader>
         Hosts
-        <Button onClick={handleAddHost} size="small">
+        <Button onClick={handleAddHost} style="secondary" size="small">
           Add Host
         </Button>
       </PageHeader>

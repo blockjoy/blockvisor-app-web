@@ -30,10 +30,6 @@ type Props = {
   isSorting?: boolean;
 };
 
-type TableProps = {
-  hasRowClick?: boolean;
-};
-
 export const Table: React.FC<Props> = ({
   headers,
   rows = [],
@@ -61,7 +57,7 @@ export const Table: React.FC<Props> = ({
                   <th
                     className={th.isHiddenOnMobile ? 'hidden-on-mobile' : ''}
                     key={th.key}
-                    style={{ maxWidth: th.width }}
+                    style={{ width: th.width }}
                   >
                     {th.component || th.name}
                   </th>
@@ -80,7 +76,7 @@ export const Table: React.FC<Props> = ({
                   <td
                     key={td.key}
                     className={
-                      headers && headers[index].isHiddenOnMobile
+                      headers && headers[index]?.isHiddenOnMobile
                         ? 'hidden-on-mobile'
                         : ''
                     }

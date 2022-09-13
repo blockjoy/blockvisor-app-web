@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { Button } from '@shared/components';
 import { CopyNode } from '@shared/components/CopyNode/CopyNode';
 import { FC, ReactNode } from 'react';

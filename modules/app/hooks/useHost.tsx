@@ -5,13 +5,63 @@ import { Host } from '@modules/app/components/host/Host';
 import { TableBlockNodes } from '@modules/app/components/shared/table/TableBlockNodes';
 import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
 import { apiClient } from '@modules/client';
+import { Button } from '@shared/components';
+import { styles as detailsHeaderStyles } from '@modules/app/components/shared/details-header/DetailsHeader.styles';
+import { toast } from 'react-toastify';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 type Hook = {
   loadHost: (args1: string) => void;
+  stopHost: (args1: string) => void;
+  restartHost: (args1: string) => void;
+  deleteHost: (args1: string) => void;
+  stopNode: (args1: string, args2?: InputEvent) => void;
+  restartNode: (args1: string, args2?: InputEvent) => void;
 };
 
 export const useHost = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
+
+  const deleteHost = async (id: string) => {
+    const uuid = new Uuid();
+    uuid.setValue(id?.toString()!);
+    await grpcClient.execDeleteNode(uuid);
+    toast.success(`Host Deleted`);
+  };
+
+  const stopHost = async (id: string) => {
+    const uuid = new Uuid();
+    uuid.setValue(id?.toString()!);
+    await grpcClient.execStopHost(uuid);
+    toast.success(`Host Stopped`);
+  };
+
+  const restartHost = async (id: string) => {
+    const uuid = new Uuid();
+    uuid.setValue(id?.toString()!);
+    await grpcClient.execRestartHost(uuid);
+    toast.success(`Host Restarted`);
+  };
+
+  const stopNode = async (id: string, e: any) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    const uuid = new Uuid();
+    uuid.setValue(id!);
+    await grpcClient.execStopNode(uuid);
+    toast.success(`Node Stopped`);
+  };
+
+  const restartNode = async (id: string, e: any) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    const uuid = new Uuid();
+    uuid.setValue(id!);
+    await grpcClient.execRestartNode(uuid);
+    toast.success(`Node Restarted`);
+  };
 
   const loadHost = async (id: string) => {
     setApp({
@@ -44,11 +94,39 @@ export const useHost = (): Hook => {
           key: '2',
           component: <NodeStatus status={node.status} />,
         },
+        {
+          key: '3',
+          component: (
+            <span className="show-on-hover" css={detailsHeaderStyles.actions}>
+              <Button
+                onClick={(e) => stopNode(id, e)}
+                type="button"
+                size="small"
+                style="secondary"
+              >
+                Stop
+              </Button>
+              <Button
+                onClick={(e) => restartNode(id, e)}
+                type="button"
+                size="small"
+                style="secondary"
+              >
+                Restart
+              </Button>
+            </span>
+          ),
+        },
       ],
     }));
 
     const details = [
-      { label: 'CREATED', data: host.created_at_datetime.toLocaleDateString() },
+      {
+        label: 'CREATED',
+        data: formatDistanceToNow(new Date(host.created_at_datetime), {
+          addSuffix: true,
+        }),
+      },
       { label: 'VERSION', data: host.version },
       { label: 'DISK SIZE', data: host.diskSize.toString() },
       { label: 'MEMORY SIZE', data: host.memSize.toString() },
@@ -72,5 +150,10 @@ export const useHost = (): Hook => {
 
   return {
     loadHost,
+    stopHost,
+    restartHost,
+    stopNode,
+    restartNode,
+    deleteHost,
   };
 };

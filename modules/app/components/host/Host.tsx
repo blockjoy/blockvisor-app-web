@@ -32,10 +32,13 @@ export default () => {
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const { id } = router.query;
-  const { loadHost } = useHost();
+  const { loadHost, restartHost, stopHost, deleteHost } = useHost();
   const { host, hostLoading } = useRecoilValue(appState);
 
   const handleNodeClicked = (args: Row) => router.push(`/nodes/${args.key}`);
+  const handleRestartHost = () => restartHost(id?.toString()!);
+  const handleStopHost = () => stopHost(id?.toString()!);
+  const handleDelete = () => deleteHost(id?.toString()!);
 
   useEffect(() => {
     setIsMounted(true);
@@ -59,6 +62,8 @@ export default () => {
               ip={host.ip}
               status={<HostStatus status={host.status} />}
               location={host.location}
+              handleRestart={handleRestartHost}
+              handleStop={handleStopHost}
             />
             <DetailsTable bodyElements={host.details} />
           </>
@@ -80,11 +85,19 @@ export default () => {
           headers={[
             {
               name: 'Name',
+              width: '40%',
               key: '1',
             },
             {
               name: 'Status',
               key: '2',
+              width: '30%',
+            },
+            {
+              name: '',
+              key: '3',
+              width: '10%',
+              isHiddenOnMobile: true,
             },
           ]}
           rows={host.nodes}
@@ -95,7 +108,7 @@ export default () => {
         <DangerZone
           elementName="Host"
           elementNameToCompare={host.name}
-          handleDelete={() => console.log('handle delete')}
+          handleDelete={handleDelete}
         />
       </PageSection>
     </>
