@@ -57,47 +57,45 @@ export const DangerZone: FC<Props> = ({
         </>
       )}
       {step === 2 && (
-        <>
-          <div css={spacing.bottom.medium}>
-            <p css={spacing.bottom.medium}>
-              To delete, type the name of your {elementName} and then click
-              "confirm".
-            </p>
-            <FormProvider {...form}>
-              <form onSubmit={onSubmit}>
-                <Input
-                  style={{ maxWidth: '320px' }}
-                  labelStyles={[display.visuallyHidden]}
-                  name="elementNameToDelete"
-                  placeholder={`Enter your ${elementName} name here`}
-                  type="text"
-                  validationOptions={{
-                    required: 'This is a mandatory field',
-                    validate: (name) => doNamesMatch(name),
-                  }}
-                />
-                <div css={[styles.actions, spacing.top.medium]}>
-                  <Button
-                    disabled={!isValid}
-                    type="submit"
-                    size="small"
-                    style="warning"
-                    css={spacing.right.large}
-                  >
-                    Confirm
-                  </Button>
-                  <Button
-                    onClick={() => gotoStep(1)}
-                    size="small"
-                    style="outline"
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </FormProvider>
-          </div>
-        </>
+        <div css={spacing.bottom.medium}>
+          <p css={spacing.bottom.medium}>
+            To delete, type the name of your {elementName} and then click
+            "confirm".
+          </p>
+          <FormProvider {...form}>
+            <form onSubmit={onSubmit}>
+              <Input
+                style={{ maxWidth: '320px' }}
+                labelStyles={[display.visuallyHidden]}
+                name="elementNameToDelete"
+                placeholder={`Enter your ${elementName} name here`}
+                type="text"
+                validationOptions={{
+                  required: 'This is a mandatory field',
+                  validate: (name) => doNamesMatch(name),
+                }}
+              />
+              <div css={[styles.actions, spacing.top.medium]}>
+                <Button
+                  disabled={!isValid}
+                  type="submit"
+                  size="small"
+                  style="warning"
+                  css={spacing.right.large}
+                >
+                  Confirm
+                </Button>
+                <Button
+                  onClick={() => gotoStep(1)}
+                  size="small"
+                  style="outline"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
+        </div>
       )}
     </section>
   );

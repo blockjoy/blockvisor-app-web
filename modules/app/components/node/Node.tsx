@@ -35,6 +35,7 @@ export default () => {
 
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id);
+  const handleDelete = () => deleteNode(id);
 
   useEffect(() => {
     setMounted(true);
@@ -86,7 +87,7 @@ export default () => {
         <DangerZone
           elementName="Node"
           elementNameToCompare={node.name}
-          handleDelete={() => deleteNode(node.id)}
+          handleDelete={handleDelete}
         ></DangerZone>
       </PageSection>
     </>

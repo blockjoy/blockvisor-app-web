@@ -35,7 +35,7 @@ export default () => {
   const { loadHost } = useHost();
   const { host, hostLoading } = useRecoilValue(appState);
 
-  const handleNodeClicked = (args: any) => router.push(`/nodes/${args.key}`);
+  const handleNodeClicked = (args: Row) => router.push(`/nodes/${args.key}`);
 
   useEffect(() => {
     setIsMounted(true);
