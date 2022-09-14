@@ -1,4 +1,4 @@
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilValue } from 'recoil';
 import { Button, Select } from '@shared/components';
 import { FC, useState, useEffect } from 'react';

@@ -1,4 +1,4 @@
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { overlayStyles } from './overlay.styles';
 

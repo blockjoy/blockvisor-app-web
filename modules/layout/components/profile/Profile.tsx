@@ -1,5 +1,5 @@
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 import ProfileSwitch from './ProfileSwitch';
 

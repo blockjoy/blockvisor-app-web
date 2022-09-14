@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 import styled from '@emotion/styled';
 

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { PageHeader, PageSection, Table } from '../shared';
 import { useHosts } from '@modules/app/hooks/useHosts';
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 export type Host = {
   id: string;

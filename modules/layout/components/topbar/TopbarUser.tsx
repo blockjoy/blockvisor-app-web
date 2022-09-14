@@ -1,4 +1,4 @@
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useSetRecoilState } from 'recoil';
 
 import styled from '@emotion/styled';
