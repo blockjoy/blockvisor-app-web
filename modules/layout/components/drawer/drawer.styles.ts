@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export const styles = {
   base: css`
@@ -29,6 +30,7 @@ export const styles = {
     margin-bottom: 16px;
   `,
   header: css`
+    position: relative;
     display: flex;
     align-items: center;
     height: 56px;
@@ -41,5 +43,20 @@ export const styles = {
     border-bottom: 1px solid var(--color-overlay-background-1);
     border-top: 1px solid var(--color-overlay-background-1);
     padding: 24px;
+  `,
+  closeButton: (theme: ITheme) => css`
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 56px;
+    height: 56px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    path {
+      fill: ${theme.colorText};
+    }
   `,
 };

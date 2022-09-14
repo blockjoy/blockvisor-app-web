@@ -14,6 +14,8 @@ export const layoutState = atom({
     isProfileOpen: false,
     isNodeAddOpen: false,
     isHostsAddOpen: false,
+    hostAddCreating: false,
+    hostAddKey: undefined,
     nodeAddHostsList: defaultHostList,
     nodeAddHostsListLoading: true,
     nodeAddCreating: false,

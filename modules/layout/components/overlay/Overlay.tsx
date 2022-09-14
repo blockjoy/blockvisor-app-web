@@ -13,7 +13,6 @@ const Overlay = () => {
       isSidebarOpen: false,
       isProfileOpen: false,
       isNodeAddOpen: false,
-      isHostsAddOpen: false,
     });
 
   const isOthersOpen = isNodeAddOpen || isProfileOpen || isHostsAddOpen;

@@ -34,13 +34,9 @@ export const useNodeAdd = (): Hook => {
       nodeAddHostsList: mappedHosts,
       nodeAddHostsListLoading: false,
     });
-
-    console.log('useNodeAdd Load hosts', mappedHosts);
   };
 
   const createNode = async (params: CreateNodeParams) => {
-    console.log('createNode', params);
-
     setLayout({
       ...layout,
       nodeAddCreating: true,
