@@ -23,7 +23,7 @@ export default () => {
   const setLayout = useSetRecoilState(layoutState);
 
   const handleClick = () => {
-    setLayout(undefined);
+    setLayout('profile');
   };
 
   return <StyledAvatar onClick={handleClick}>JH</StyledAvatar>;

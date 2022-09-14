@@ -32,7 +32,7 @@ export default () => {
   };
 
   return (
-    <Drawer isOpen={Boolean(layout)}>
+    <Drawer isOpen={layout === 'profile'}>
       <DrawerHeader>Profile Settings</DrawerHeader>
       <DrawerContent>
         <DrawerSubheader>ACCESSIBILITY</DrawerSubheader>
