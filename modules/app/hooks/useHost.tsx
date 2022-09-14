@@ -25,21 +25,21 @@ export const useHost = (): Hook => {
   const deleteHost = async (id: string) => {
     const uuid = new Uuid();
     uuid.setValue(id?.toString()!);
-    await grpcClient.execDeleteNode(uuid);
+    await apiClient.execDeleteNode(uuid);
     toast.success(`Host Deleted`);
   };
 
   const stopHost = async (id: string) => {
     const uuid = new Uuid();
     uuid.setValue(id?.toString()!);
-    await grpcClient.execStopHost(uuid);
+    await apiClient.execStopHost(uuid);
     toast.success(`Host Stopped`);
   };
 
   const restartHost = async (id: string) => {
     const uuid = new Uuid();
     uuid.setValue(id?.toString()!);
-    await grpcClient.execRestartHost(uuid);
+    await apiClient.execRestartHost(uuid);
     toast.success(`Host Restarted`);
   };
 
@@ -49,7 +49,7 @@ export const useHost = (): Hook => {
     }
     const uuid = new Uuid();
     uuid.setValue(id!);
-    await grpcClient.execStopNode(uuid);
+    await apiClient.execStopNode(uuid);
     toast.success(`Node Stopped`);
   };
 
@@ -59,7 +59,7 @@ export const useHost = (): Hook => {
     }
     const uuid = new Uuid();
     uuid.setValue(id!);
-    await grpcClient.execRestartNode(uuid);
+    await apiClient.execRestartNode(uuid);
     toast.success(`Node Restarted`);
   };
 
