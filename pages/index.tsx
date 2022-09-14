@@ -1,5 +1,5 @@
 import { authAtoms, LoginFooter, LoginForm } from '@modules/auth';
-import { AuthLayout } from '@modules/layout';
+import { Layout } from '@shared/components';
 import type { NextPage } from 'next';
 import Router from 'next/router';
 import { useEffect } from 'react';
@@ -14,10 +14,10 @@ const Login: NextPage = () => {
     }
   }, []);
   return (
-    <AuthLayout layoutTitle="Login">
+    <Layout title="Login">
       <LoginForm />
       <LoginFooter />
-    </AuthLayout>
+    </Layout>
   );
 };
 
