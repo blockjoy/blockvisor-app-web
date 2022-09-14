@@ -1,21 +1,19 @@
-import { PageHeader } from '../shared';
-import { Button } from '@shared/components';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { layoutState } from '@modules/layout/store';
 import { appState } from '@modules/app/store';
+import { layoutState } from '@modules/layout/store';
 import IconNode from '@public/assets/icons/box-12.svg';
-import IconNodeOnline from '@public/assets/icons/node-online-12.svg';
 import IconNodeOffline from '@public/assets/icons/node-offline-12.svg';
+import IconNodeOnline from '@public/assets/icons/node-online-12.svg';
+import { Button } from '@shared/components';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { PageHeader, Skeleton } from '../shared';
 import { dashboardNodeStyles as styles } from './Dashboard.styles';
-import { Skeleton } from '../shared';
 
 const icons = [<IconNode />, <IconNodeOnline />, <IconNodeOffline />];
 
 export const DashboardNodeSummary = () => {
-  const [layout, setLayout] = useRecoilState(layoutState);
+  const setLayoutState = useSetRecoilState(layoutState);
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
   const { nodeMetrics } = dashboard;
-  const handleAddNode = () => setLayout({ ...layout, isNodeAddOpen: true });
   return (
     <>
       <PageHeader>
@@ -24,7 +22,7 @@ export const DashboardNodeSummary = () => {
           disabled={dashboardLoading}
           size="small"
           style="secondary"
-          onClick={handleAddNode}
+          onClick={() => setLayoutState('nodes')}
         >
           Add Node
         </Button>

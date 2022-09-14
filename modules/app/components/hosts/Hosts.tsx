@@ -1,9 +1,10 @@
 import { appState } from '@modules/app/store';
 import { Button } from '@shared/components';
 import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { PageHeader, PageSection, Table } from '../shared';
 import { useHosts } from '@modules/app/hooks/useHosts';
+import { layoutState } from '@modules/layout/store';
 
 export type Host = {
   id: string;
@@ -15,9 +16,9 @@ export type Host = {
 
 export const Hosts = () => {
   const { hostsLoading } = useRecoilValue(appState);
+  const setLayoutState = useSetRecoilState(layoutState);
 
-  const { loadHosts, handleRowClick, handleAddHost, headers, rows } =
-    useHosts();
+  const { loadHosts, handleRowClick, headers, rows } = useHosts();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,7 +29,7 @@ export const Hosts = () => {
     <PageSection>
       <PageHeader>
         Hosts
-        <Button onClick={handleAddHost} style="secondary" size="small">
+        <Button onClick={() => setLayoutState('hosts')} size="small">
           Add Host
         </Button>
       </PageHeader>

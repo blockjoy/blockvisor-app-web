@@ -2,8 +2,6 @@ import { useState } from 'react';
 
 import styled from '@emotion/styled';
 
-import { css } from '@emotion/react';
-
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
 import SizedIcon from '@modules/layout/components/shared/SizedIcon';

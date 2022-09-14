@@ -16,7 +16,6 @@ interface State {
 
 interface Hook extends State {
   loadHosts: () => void;
-  handleAddHost: () => void;
   handleRowClick: (args1: any) => void;
 }
 
@@ -31,16 +30,8 @@ export const useHosts = (): Hook => {
   const { rows } = state;
 
   const [app, setApp] = useRecoilState(appState);
-  const [layout, setLayout] = useRecoilState(layoutState);
 
   const { hosts } = app;
-
-  const handleAddHost = () => {
-    setLayout({
-      ...layout,
-      isHostsAddOpen: true,
-    });
-  };
 
   const handleRowClick = (args: any) => {
     router.push(`${router.pathname}/${args.key}`);
@@ -117,7 +108,6 @@ export const useHosts = (): Hook => {
 
   return {
     loadHosts,
-    handleAddHost,
     handleRowClick,
     headers,
     rows,

@@ -1,37 +1,30 @@
-import { useRecoilState } from "recoil";
-import { layoutState } from "@modules/layout/store"
+import { layoutState } from '@modules/layout/store';
+import { useSetRecoilState } from 'recoil';
 
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
 const StyledAvatar = styled.button`
-    display: grid;
-    place-items: center;
-    width: 30px;
-    min-width: 30px;
-    max-width: 30px;
-    height: 30px;
-    padding: 0;
-    font-size: 12px;
-    border: 0;
-    border-radius: 50%;
-    background: #8f44fd;
-    color: #f9f9f9;
-    cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 12px;
+  border: 0;
+  border-radius: 50%;
+  background: #8f44fd;
+  color: #f9f9f9;
+  cursor: pointer;
 `;
 
 export default () => {
-  const [app, setApp] = useRecoilState(layoutState);
+  const setLayout = useSetRecoilState(layoutState);
 
   const handleClick = () => {
-    setApp({
-      ...app,
-      isProfileOpen: !app.isProfileOpen
-    });
-  }
+    setLayout(undefined);
+  };
 
-  return (
-   <StyledAvatar onClick={handleClick}>
-      JH
-   </StyledAvatar>
-  );
-}
+  return <StyledAvatar onClick={handleClick}>JH</StyledAvatar>;
+};

@@ -17,8 +17,7 @@ type NodeAddForm = {
 export const NodeAdd: FC = () => {
   const { loadHosts, createNode } = useNodeAdd();
   const form = useForm<NodeAddForm>();
-  const { isNodeAddOpen, nodeAddHostsList, nodeAddCreating } =
-    useRecoilValue(layoutState);
+  const layout = useRecoilValue(layoutState);
 
   const onSubmit: SubmitHandler<NodeAddForm> = ({ host, nodeType }) => {
     const params: CreateNodeParams = {
@@ -48,7 +47,7 @@ export const NodeAdd: FC = () => {
   }
 
   return (
-    <Drawer isOpen={isNodeAddOpen}>
+    <Drawer isOpen={layout === 'nodes'}>
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <DrawerHeader>Add Node</DrawerHeader>

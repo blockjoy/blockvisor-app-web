@@ -1,15 +1,15 @@
-import { useRecoilValue } from "recoil";
-import { layoutState } from "@modules/layout/store";
+import { useRecoilValue } from 'recoil';
+import { layoutState } from '@modules/layout/store';
 
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
-import SidebarHeader from "./SidebarHeader";
+import SidebarHeader from './SidebarHeader';
 // import SidebarLeft from "./SidebarLeft";
-import SidebarMain from "./SidebarMain";
+import SidebarMain from './SidebarMain';
 
 type Props = {
-  isSidebarOpen: boolean
-}
+  isSidebarOpen: boolean;
+};
 
 const StyledSidebar = styled.div<Props>`
   position: fixed;
@@ -20,32 +20,33 @@ const StyledSidebar = styled.div<Props>`
   flex-direction: column;
   width: 300px;
   height: 100%;
-  border-right: 1px solid ${p => p.theme.colorBorder};
-  background: ${p => p.theme.colorSidebar};
-  transform: translateX(${p => p.isSidebarOpen ? 0 : "-100%"});
+  border-right: 1px solid ${(p) => p.theme.colorBorder};
+  background: ${(p) => p.theme.colorSidebar};
+  transform: translateX(${(p) => (p.isSidebarOpen ? 0 : '-100%')});
   transition-property: transform;
   transition-duration: 0.4s;
 
-  @media only screen and (min-width: ${p => p.theme.screenSm}) {
+  @media only screen and (min-width: ${(p) => p.theme.screenSm}) {
     transform: translateX(0);
     z-index: 5;
   }
 `;
 
 const StyledSidebarWrapper = styled.div`
-    flex:1 1 auto;
-    display: flex;
+  flex: 1 1 auto;
+  display: flex;
 `;
 
 export default () => {
-  const { isSidebarOpen } = useRecoilValue(layoutState);
+  const layout = useRecoilValue(layoutState);
+
   return (
-   <StyledSidebar isSidebarOpen={isSidebarOpen}>
-    <SidebarHeader />
-    <StyledSidebarWrapper>
+    <StyledSidebar isSidebarOpen={Boolean(layout)}>
+      <SidebarHeader />
+      <StyledSidebarWrapper>
         {/* <SidebarLeft /> */}
         <SidebarMain />
-    </StyledSidebarWrapper>
-   </StyledSidebar>
+      </StyledSidebarWrapper>
+    </StyledSidebar>
   );
-}
+};

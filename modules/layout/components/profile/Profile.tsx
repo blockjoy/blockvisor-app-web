@@ -19,8 +19,7 @@ import { deleteUser } from '@shared/utils/browserStorage';
 import { authAtoms } from '@modules/auth';
 
 export default () => {
-  const { isProfileOpen } = useRecoilValue(layoutState);
-  const [, setAuth] = useRecoilState(authAtoms.user);
+  const layout = useRecoilValue(layoutState);
   const [theme, setTheme] = useRecoilState(themeState);
 
   const handleDarkModeToggled = () => {
@@ -33,7 +32,7 @@ export default () => {
   };
 
   return (
-    <Drawer isOpen={isProfileOpen}>
+    <Drawer isOpen={Boolean(layout)}>
       <DrawerHeader>Profile Settings</DrawerHeader>
       <DrawerContent>
         <DrawerSubheader>ACCESSIBILITY</DrawerSubheader>
