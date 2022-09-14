@@ -10,11 +10,18 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 10px;
-    height: 56px;
     width: 200px;
     background: transparent;
     border: 0;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: all 0.1s ease-out;
+
+    &:hover,
+    &:focus {
+      background: var(--color-overlay-background-1);
+    }
   `,
   icon: css`
     display: grid;
