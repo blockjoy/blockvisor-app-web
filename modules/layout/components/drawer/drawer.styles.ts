@@ -22,6 +22,7 @@ export const styles = {
   `,
   content: css`
     padding: 28px;
+    overflow: auto;
   `,
   subheader: css`
     color: #a5a8a3;
@@ -34,6 +35,7 @@ export const styles = {
     display: flex;
     align-items: center;
     height: 56px;
+    min-height: 56px;
     padding-left: 16px;
     padding-right: 16px;
     border-bottom: 1px solid var(--color-overlay-background-1);

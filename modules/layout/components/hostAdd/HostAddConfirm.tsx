@@ -55,7 +55,7 @@ export const HostAddConfirm: FC<Props> = ({
 }) => (
   <div css={[styles.overlay, isVisible && styles.overlayVisible]}>
     <div css={styles.dialog}>
-      <div>Done with your token?</div>
+      <div>Done with your key?</div>
       <div css={styles.dialogButtons}>
         <Button onClick={onYesClicked} style="primary" size="small">
           Yes

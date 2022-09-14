@@ -25,7 +25,7 @@ export const useHost = (): Hook => {
   const deleteHost = async (id: string) => {
     const uuid = new Uuid();
     uuid.setValue(id?.toString()!);
-    await apiClient.execDeleteNode(uuid);
+    await apiClient.execDeleteHost(uuid);
     toast.success(`Host Deleted`);
   };
 

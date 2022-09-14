@@ -38,6 +38,7 @@ export default () => {
   const handleDelete = () => deleteNode(id);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setMounted(true);
     if (router.isReady) {
       loadNode(id);

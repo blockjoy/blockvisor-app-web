@@ -26,6 +26,7 @@ export default () => {
   const { loadDashboard } = useDashboard();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     loadDashboard();
     setRendered(true);
   }, []);
