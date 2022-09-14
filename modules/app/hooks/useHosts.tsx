@@ -33,7 +33,7 @@ export const useHosts = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
   const [layout, setLayout] = useRecoilState(layoutState);
 
-  const { grpcClient, hosts } = app;
+  const { hosts } = app;
 
   const handleAddHost = () => {
     setLayout({
