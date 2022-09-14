@@ -207,6 +207,7 @@ export class GrpcClient {
 
   getDummyNode(): Node {
     let node = new Node();
+    node.setHostId(this.getDummyUuid());
     node.setId(this.getDummyUuid());
     node.setOrgId(this.getDummyUuid());
     node.setBlockchainId(this.getDummyUuid());
@@ -400,7 +401,7 @@ export class GrpcClient {
 
   async getHostProvision(
     otp: string,
-  ): Promise<HostProvision.AsObject | StatusResponse | undefined> {
+  ): Promise<Array<HostProvision.AsObject> | StatusResponse | undefined> {
     let provision = new HostProvision();
     provision.setId(otp);
     provision.setOrgId(this.getDummyUuid());
@@ -411,9 +412,11 @@ export class GrpcClient {
 
     let response = new GetHostProvisionResponse();
     response.setMeta(this.getDummyMeta());
-    response.setHostProvision(provision);
+    response.setHostProvisionsList([provision]);
 
-    return response.getHostProvision()?.toObject();
+    return response
+      .getHostProvisionsList()
+      ?.map((provision) => provision.toObject());
   }
 
   async createHostProvision(
