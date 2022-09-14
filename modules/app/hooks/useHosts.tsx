@@ -6,7 +6,7 @@ import { layoutState } from '@modules/layout/store';
 import { useEffect, useState } from 'react';
 import { HostStatus } from '@modules/app/components/shared/host-status/HostStatus';
 import { Header, Row } from '@modules/app/components/shared/table/Table';
-import { TableBlockHosts, TableSortButton } from '../components/shared';
+import { TableBlockHosts } from '../components/shared';
 import { apiClient } from '@modules/client';
 
 interface State {

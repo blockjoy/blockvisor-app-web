@@ -181,6 +181,8 @@ export const normalize = css`
   select {
     /* 1 */
     text-transform: none;
+    appearance: none;
+    outline: none;
   }
 
   button,

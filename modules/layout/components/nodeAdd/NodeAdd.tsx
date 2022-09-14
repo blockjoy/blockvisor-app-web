@@ -1,38 +1,47 @@
 import { layoutState } from '@modules/layout/store';
 import { useRecoilValue } from 'recoil';
-
 import { Button, Select } from '@shared/components';
 import { FC, useState, useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import { Drawer, DrawerAction, DrawerContent, DrawerHeader } from '..';
 import { styles } from './nodeAdd.styles';
+import { NodeTypePicker } from '../shared/NodeTypePicker';
+import { CreateNodeParams, useNodeAdd } from '@modules/layout/hooks/useNodeAdd';
 
 type NodeAddForm = {
-  type: 'Node/api' | 'other';
-  blockchain: 'Bitcoin' | 'other';
-  host: 'BlockJoy Host' | 'other';
+  nodeType: string;
+  host: string;
 };
 
 export const NodeAdd: FC = () => {
+  const { loadHosts, createNode } = useNodeAdd();
   const form = useForm<NodeAddForm>();
-  const { isNodeAddOpen } = useRecoilValue(layoutState);
+  const { isNodeAddOpen, nodeAddHostsList, nodeAddCreating } =
+    useRecoilValue(layoutState);
 
-  const [loading, setLoading] = useState(false);
+  const onSubmit: SubmitHandler<NodeAddForm> = ({ host, nodeType }) => {
+    const params: CreateNodeParams = {
+      host,
+      nodeType,
+    };
 
-  const onSubmit: SubmitHandler<NodeAddForm> = ({ blockchain, host, type }) => {
-    console.log(blockchain, host, type);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    createNode(params);
   };
 
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
+    loadHosts();
   }, []);
+
+  useEffect(() => {
+    if (nodeAddHostsList?.length) {
+      form.setValue('host', nodeAddHostsList[0]?.value);
+      form.setValue('nodeType', '1');
+    }
+  }, [nodeAddHostsList?.length]);
 
   if (!hasMounted) {
     return null;
@@ -45,30 +54,13 @@ export const NodeAdd: FC = () => {
           <DrawerHeader>Add Node</DrawerHeader>
           <DrawerContent>
             <div css={spacing.bottom.medium}>
-              <Select
-                label="Type"
-                inputSize="small"
-                inputStyle="default"
-                name="type"
-                options={[{ label: 'test', value: 'test' }]}
-              />
-            </div>
-            <div css={spacing.bottom.medium}>
-              <Select
-                label="Blockchain"
-                inputSize="small"
-                inputStyle="default"
-                name="blockchain"
-                options={[{ label: 'test', value: 'test' }]}
-              />
-            </div>
-            <div css={spacing.bottom.medium}>
+              <NodeTypePicker name="nodeType" label="Node Type" />
               <Select
                 label="Host"
                 inputSize="small"
                 inputStyle="default"
                 name="host"
-                options={[{ label: 'test', value: 'test' }]}
+                options={nodeAddHostsList}
               />
             </div>
           </DrawerContent>
@@ -76,7 +68,7 @@ export const NodeAdd: FC = () => {
             <Button
               size="small"
               type="submit"
-              loading={loading}
+              loading={nodeAddCreating}
               customCss={[styles.action]}
             >
               Finish

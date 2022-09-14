@@ -1,5 +1,12 @@
 import { atom } from 'recoil';
 
+type HostListItem = {
+  label: string;
+  value: string;
+};
+
+const defaultHostList: HostListItem[] = [];
+
 export const layoutState = atom({
   key: 'layoutState',
   default: {
@@ -7,5 +14,8 @@ export const layoutState = atom({
     isProfileOpen: false,
     isNodeAddOpen: false,
     isHostsAddOpen: false,
+    nodeAddHostsList: defaultHostList,
+    nodeAddHostsListLoading: true,
+    nodeAddCreating: false,
   },
 });

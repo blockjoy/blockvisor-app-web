@@ -7,6 +7,7 @@ import {
 } from '@emotion/react';
 import { themeDark } from '../themes';
 import { ITheme } from 'types/theme';
+import { rgba } from 'polished';
 
 export const themeState = atom({
   key: 'themeState',
@@ -20,6 +21,15 @@ type Props = {
 const globalStyles = (theme: ITheme) => css`
   body {
     background: ${theme.colorBackground};
+
+    /* select styles */
+    select {
+      transition: box-shadow;
+      accent-color: ${theme.colorPrimary};
+      &:focus {
+        box-shadow: 0 0 0 3px ${rgba(theme.colorPrimary || '#fff', 0.3)};
+      }
+    }
 
     /* apexcharts */
     & .apexcharts-tooltip.apexcharts-theme-light {
