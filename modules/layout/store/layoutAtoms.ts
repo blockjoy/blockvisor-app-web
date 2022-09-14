@@ -1,6 +1,8 @@
 import { atom } from 'recoil';
 
-export const layoutState = atom<'hosts' | 'nodes' | 'profile' | undefined>({
+export type LayoutStates = 'hosts' | 'nodes' | 'profile' | 'organisation';
+
+export const layoutState = atom<LayoutStates | undefined>({
   key: 'layoutState',
   default: undefined,
 });

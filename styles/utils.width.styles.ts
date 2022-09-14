@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
 
-export const styles = {
-  base: css``,
-  action: css`
+export const width = {
+  full: css`
     width: 100%;
   `,
 };

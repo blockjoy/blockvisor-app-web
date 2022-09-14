@@ -8,6 +8,8 @@ import SizedIcon from '@modules/layout/components/shared/SizedIcon';
 
 import { Button } from '@shared/components';
 import { styles } from './OrganizationDropdown.styles';
+import { useSetRecoilState } from 'recoil';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 type Props = {
   hideName?: boolean;
@@ -19,6 +21,7 @@ const StyledDropdownIcon = styled(SizedIcon)<any>`
 
 export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
   const [isOpen, setOpen] = useState(false);
+  const setLayout = useSetRecoilState(layoutState);
 
   return (
     <div css={styles.base}>
@@ -36,7 +39,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
         <Button
           display="block"
           size="small"
-          onClick={() => console.log('add org')}
+          onClick={() => setLayout('organisation')}
         >
           Create
         </Button>
