@@ -30,6 +30,15 @@ export const tableStyles = {
       }
     }
 
+    & .show-on-hover {
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    tr:hover .show-on-hover {
+      opacity: 1;
+    }
+
     & .has-hover-color {
       transition: color 0.3s;
     }

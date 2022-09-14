@@ -41,6 +41,7 @@ const globalStyles = (theme: ITheme) => css`
     & .Toastify__toast {
       box-shadow: none;
       font-family: var(--font-family-primary);
+      font-weight: 600;
     }
 
     & .Toastify__toast-icon {

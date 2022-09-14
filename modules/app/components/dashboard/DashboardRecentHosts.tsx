@@ -33,10 +33,12 @@ export const DashboardRecentHosts = () => {
           {
             name: 'Name',
             key: '1',
+            width: '35%',
           },
           {
             name: 'Added',
             key: '2',
+            width: '35%',
             isHiddenOnMobile: true,
           },
           {

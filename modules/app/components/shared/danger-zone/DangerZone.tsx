@@ -24,13 +24,13 @@ export const DangerZone: FC<Props> = ({
 }) => {
   const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
-  const form = useForm<DeleteForm>();
+  const form = useForm<DeleteForm>({ mode: 'onChange' });
   const { isValid } = form.formState;
 
   const gotoStep = (step: number) => setStep(step);
 
   const doNamesMatch = (name: string) => {
-    return name !== elementNameToCompare;
+    return name === elementNameToCompare;
   };
 
   const handleRedirect = () =>
@@ -63,7 +63,7 @@ export const DangerZone: FC<Props> = ({
             "confirm".
           </p>
           <FormProvider {...form}>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={(e) => onSubmit(e)}>
               <Input
                 style={{ maxWidth: '320px' }}
                 labelStyles={[display.visuallyHidden]}
@@ -86,6 +86,7 @@ export const DangerZone: FC<Props> = ({
                   Confirm
                 </Button>
                 <Button
+                  type="submit"
                   onClick={() => gotoStep(1)}
                   size="small"
                   style="outline"
