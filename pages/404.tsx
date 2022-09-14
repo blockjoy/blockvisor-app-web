@@ -6,7 +6,7 @@ import { notFoundPage } from 'styles/utils.page';
 
 export default function NotFound() {
   return (
-    <main>
+    <main css={[notFoundPage]}>
       <QuoteBlock>
         <figure css={[spacing.bottom.large]}>
           <Logo type="blockjoy-large" />

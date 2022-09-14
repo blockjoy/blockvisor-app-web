@@ -4,6 +4,7 @@ import { Dashboard } from '../components/dashboard/Dashboard';
 import { TableBlockHosts } from '../components/shared';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { HostStatus } from '../components/shared/host-status/HostStatus';
+import { apiClient } from '@modules/client';
 
 interface Hook {
   loadDashboard: () => void;
@@ -11,10 +12,9 @@ interface Hook {
 
 export const useDashboard = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
-  const { grpcClient } = app;
 
   const getRecentHosts = async () => {
-    const hostsResponse: any = await grpcClient.getHosts();
+    const hostsResponse: any = await apiClient.getHosts();
 
     const hosts = hostsResponse.map((host: any) => ({
       key: host.id.value,
@@ -57,7 +57,7 @@ export const useDashboard = (): Hook => {
       dashboardLoading: true,
     });
 
-    const nodes: any = await grpcClient.getDashboardMetrics();
+    const nodes: any = await apiClient.getDashboardMetrics();
 
     const online = +nodes[0]?.value?.value,
       offline = +nodes[1]?.value?.value,

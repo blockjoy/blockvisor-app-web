@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { appState } from '@modules/app/store';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { Button, Input } from '@shared/components';
@@ -9,6 +7,13 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { PasswordToggle } from '../PasswordTogle';
 import { isValidEmail } from '@shared/utils/validation';
+import { apiClient } from '@modules/client';
+import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
+import { saveUser } from '@shared/utils/browserStorage';
+import { typo } from 'styles/utils.typography.styles';
+import { colors } from 'styles/utils.colors.styles';
+import { useRecoilState } from 'recoil';
+import { authAtoms } from '@modules/auth/store/atoms';
 
 type LoginForm = {
   email: string;
@@ -18,37 +23,36 @@ type LoginForm = {
 export function LoginForm() {
   const router = useRouter();
   const form = useForm<LoginForm>();
+  const [loading, setIsLoading] = useState(false);
+  const [, setAuth] = useRecoilState(authAtoms.user);
+  const [loginError, setLoginError] = useState<string | undefined>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-
-  const { grpcClient } = useRecoilValue(appState);
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
     setActiveType(type);
   };
 
+  // for signin use the hardcoded email in stub client: user@test.com
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
-    // show spinner in button
+    setLoginError(undefined);
+    setIsLoading(true);
 
-    // await the api response
-    // const response = await client?.login(email, password);
+    const response = await apiClient.login(email, password);
 
-    // // we should be able to use try/catch
-    // // long term but this works for now
-    // // there is a LoginUserResponse but
-    // // I need to find out how this works!
-    // if ((response as any)?.code === "Unauthenticated") {
-    //   // it error'd
-    //   const { code } = (response as any);
-    //   console.log(code);
-    // } else {
-    //   // your logged in, do the redirect
-    //   const result = (response as any)?.toObject();
-    //   console.log("response", response);
-    //   console.log("result", result);
-    //   console.log("result", result?.token?.value);
-    router.push('/dashboard');
-    //  }
+    if (isLoginSuccess(response)) {
+      saveUser({ accessToken: response.value });
+      setAuth({ accessToken: response.value });
+      apiClient.setTokenValue(response.value);
+      // simulate async req
+      setTimeout(() => {
+        setIsLoading(false);
+        router.push('/dashboard');
+      }, 1000);
+    } else {
+      setIsLoading(false);
+      setLoginError(response?.message);
+    }
   });
   return (
     <FormProvider {...form}>
@@ -57,6 +61,7 @@ export function LoginForm() {
           <li css={[spacing.bottom.mediumSmall]}>
             <Input
               labelStyles={[display.visuallyHidden]}
+              disabled={loading}
               name="email"
               placeholder="Email"
               validationOptions={{
@@ -71,6 +76,7 @@ export function LoginForm() {
           <li css={[spacing.bottom.medium]}>
             <Input
               labelStyles={[display.visuallyHidden]}
+              disabled={loading}
               name="password"
               placeholder="Password"
               type={activeType}
@@ -87,9 +93,21 @@ export function LoginForm() {
             />
           </li>
         </ul>
-        <Button size="medium" display="block" style="primary" type="submit">
+        <Button
+          loading={loading}
+          disabled={loading}
+          size="medium"
+          display="block"
+          style="primary"
+          type="submit"
+        >
           Login
         </Button>
+        {loginError && (
+          <p css={[typo.smaller, colors.warning, spacing.top.small]}>
+            {loginError}
+          </p>
+        )}
       </form>
     </FormProvider>
   );

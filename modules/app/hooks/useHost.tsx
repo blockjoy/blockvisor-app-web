@@ -4,6 +4,7 @@ import { Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
 import { Host } from '@modules/app/components/host/Host';
 import { TableBlockNodes } from '@modules/app/components/shared/table/TableBlockNodes';
 import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
+import { apiClient } from '@modules/client';
 
 type Hook = {
   loadHost: (args1: string) => void;
@@ -11,7 +12,6 @@ type Hook = {
 
 export const useHost = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
-  const { grpcClient } = app;
 
   const loadHost = async (id: string) => {
     setApp({
@@ -22,7 +22,7 @@ export const useHost = (): Hook => {
     const uuid = new Uuid();
     uuid.setValue(id!);
 
-    const hosts: any = await grpcClient.getHosts(uuid);
+    const hosts: any = await apiClient.getHosts(uuid);
     const host = hosts[0];
 
     const nodes = host.nodesList.map((node: any) => ({

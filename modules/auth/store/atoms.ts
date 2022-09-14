@@ -1,25 +1,11 @@
+import { getUser } from '@shared/utils/browserStorage';
 import { atom } from 'recoil';
 
-const emailAtom = atom<string | null>({
-    key: 'authentication.user.email',
-    default: null,
+const user = atom<User | null>({
+  key: 'authentication.user',
+  default: getUser(),
 });
-
-const userUidAtom = atom<string | null>({
-    key: 'authentication.user.uid',
-    default: '',
-});
-
-const creationTimeAtom = atom<string | undefined>({
-    key: 'authentication.user.creationTime',
-    default: undefined,
-});
-
-
 
 export const authAtoms = {
-    emailAtom,
-    userUidAtom,
-    creationTimeAtom,
-
-}
+  user,
+};

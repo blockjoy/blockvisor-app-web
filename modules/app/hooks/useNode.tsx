@@ -5,6 +5,7 @@ import { Node } from '@modules/app/components/node/Node';
 import { formatDistanceToNow } from 'date-fns';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
+import { apiClient } from '@modules/client';
 
 type Args = string | string[] | undefined;
 
@@ -23,20 +24,19 @@ const createNodeId = (id: Args) => {
 
 export const useNode = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
-  const { grpcClient } = app;
 
   const deleteNode = async (id: Args) => {
-    await grpcClient.execDeleteNode(createNodeId(id));
+    await apiClient.execDeleteNode(createNodeId(id));
     toast.success(`Node Deleted`);
   };
 
   const stopNode = async (id: Args) => {
-    await grpcClient.execDeleteNode(createNodeId(id));
+    await apiClient.execDeleteNode(createNodeId(id));
     toast.success(`Node Stopped`);
   };
 
   const restartNode = async (id: Args) => {
-    await grpcClient.execStopNode(createNodeId(id));
+    await apiClient.execStopNode(createNodeId(id));
     toast.success(`Node Restarted`);
   };
 
@@ -48,7 +48,7 @@ export const useNode = (): Hook => {
 
     const nodeId = createNodeId(id);
 
-    const node: any = await grpcClient.getNode(nodeId);
+    const node: any = await apiClient.getNode(nodeId);
 
     const details = [
       {

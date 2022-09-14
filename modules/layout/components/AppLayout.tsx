@@ -6,10 +6,7 @@ import HostAdd from './hostAdd/HostAdd';
 import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
 import { NodeAdd } from '.';
-import { useRecoilState } from 'recoil';
-import { appState } from '@modules/app/store';
-import { GrpcClient } from '@modules/app/store/stub_client';
-import { useEffect } from 'react';
+import { PrivateRoute } from '@modules/auth';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -17,26 +14,18 @@ type LayoutType = {
 };
 
 export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
-  const [app, setApp] = useRecoilState(appState);
-
-  useEffect(() => {
-    const grpcClient = new GrpcClient('http://localhost:8080');
-    setApp({
-      ...app,
-      grpcClient,
-    });
-  }, []);
-
   return (
     <>
-      <Sidebar />
-      <Overlay />
-      <Topbar />
-      <Profile />
-      <NodeAdd />
-      <HostAdd />
-      <Breadcrumb breadcrumb={breadcrumb} />
-      <Page>{children}</Page>
+      <PrivateRoute>
+        <Sidebar />
+        <Overlay />
+        <Topbar />
+        <Profile />
+        <NodeAdd />
+        <HostAdd />
+        <Breadcrumb breadcrumb={breadcrumb} />
+        <Page>{children}</Page>
+      </PrivateRoute>
     </>
   );
 };
