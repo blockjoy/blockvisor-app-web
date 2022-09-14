@@ -256,15 +256,13 @@ export class GrpcClient {
         request.setPassword(pwd);
         request.setMeta(request_meta);
 
-        let response = await this.authentication?.login(request, null);
-
-        if (response !== undefined) {
-            console.log(`Got response: ${response}`);
+        return this.authentication?.login(request, null).then((response) => {
+            console.log(`Got login response: ${response}`);
             return response.getToken()?.toObject();
-        } else {
+        }).catch((err) => {
             return {
                 code: "Unauthenticated",
-                message: "invalid authentication credentials\n\n",
+                message: `${err}`,
                 metadata: {
                     headers: {
                         "content-type": "application/grpc",
@@ -274,7 +272,7 @@ export class GrpcClient {
                 },
                 source: "None"
             }
-        }
+        });
     }
     
     async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
