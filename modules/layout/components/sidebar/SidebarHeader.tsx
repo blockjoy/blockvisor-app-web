@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
-import { OrgDropdown } from "../shared/OrgDropdown";
+import { OrganizationDropdown } from '../organization/OrganizationDropdown';
 
 const StyledWrapper = styled.header`
   display: flex;
@@ -8,7 +8,7 @@ const StyledWrapper = styled.header`
   justify-content: space-between;
   height: 56px;
   padding: 0 16px;
-  border-bottom: 1px solid ${p => p.theme.colorBorder};
+  border-bottom: 1px solid ${(p) => p.theme.colorBorder};
 `;
 
 const StyledLogo = styled(LogoSmall)`
@@ -19,9 +19,9 @@ const StyledLogo = styled(LogoSmall)`
 
 export default () => {
   return (
-   <StyledWrapper>
-      <OrgDropdown />
+    <StyledWrapper>
+      <OrganizationDropdown />
       <StyledLogo />
-   </StyledWrapper>
+    </StyledWrapper>
   );
-}
+};

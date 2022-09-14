@@ -1,32 +1,32 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
-import TopbarUser from "./TopbarUser";
+import TopbarUser from './TopbarUser';
 // import TopbarSearch from "./TopbarSearch";
-import TopbarBlockvisor from "./TopbarBlockvisor";
-import TopbarBurger from "./TopbarBurger";
+import TopbarBlockvisor from './TopbarBlockvisor';
+import TopbarBurger from './TopbarBurger';
 
-import { OrgDropdown } from "../shared/OrgDropdown";
+import { OrganizationDropdown } from '../organization/OrganizationDropdown';
 
 const StyledWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    position: fixed;
-    z-index: 4;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 56px;
-    padding-left: 16px;
-    padding-right: 16px;
-    background: ${p => p.theme.colorBackground};
-    border-bottom: 1px solid ${p => p.theme.colorBorder};
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background: ${(p) => p.theme.colorBackground};
+  border-bottom: 1px solid ${(p) => p.theme.colorBorder};
 
-    @media only screen and (min-width: ${p => p.theme.screenSm}) {
-      padding-left: 300px;
-      z-index: 4;
-    }
+  @media only screen and (min-width: ${(p) => p.theme.screenSm}) {
+    padding-left: 300px;
+    z-index: 4;
+  }
 `;
 
 const StyledActionsLeft = styled.div`
@@ -41,7 +41,7 @@ const StyledActionsLeft = styled.div`
   padding: 0 16px;
   transition: all 0.3s;
 
-  @media only screen and (min-width: ${p => p.theme.screenSm}) {
+  @media only screen and (min-width: ${(p) => p.theme.screenSm}) {
     opacity: 0;
     visibility: hidden;
   }
@@ -49,14 +49,14 @@ const StyledActionsLeft = styled.div`
 
 export default () => {
   return (
-   <StyledWrapper>
+    <StyledWrapper>
       <StyledActionsLeft>
         <TopbarBurger />
-        <OrgDropdown hideName />
+        <OrganizationDropdown hideName />
       </StyledActionsLeft>
       <TopbarBlockvisor />
       {/* <TopbarSearch /> */}
       <TopbarUser />
-   </StyledWrapper>
+    </StyledWrapper>
   );
-}
+};
