@@ -15,7 +15,6 @@ import {
   Table,
   HostStatus,
 } from '../shared';
-import { Row } from '../shared/table/Table';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 

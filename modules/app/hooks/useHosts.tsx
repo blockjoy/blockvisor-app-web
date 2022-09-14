@@ -1,17 +1,15 @@
-import { useRecoilState } from 'recoil';
-import { useRouter } from 'next/router';
-import { formatDistanceToNow } from 'date-fns';
-import { appState } from '@modules/app/store';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useEffect, useState } from 'react';
 import { HostStatus } from '@modules/app/components/shared/host-status/HostStatus';
-import { Header, Row } from '@modules/app/components/shared/table/Table';
-import { TableBlockHosts } from '../components/shared';
+import { appState } from '@modules/app/store';
 import { apiClient } from '@modules/client';
+import { formatDistanceToNow } from 'date-fns';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { TableBlockHosts } from '../components/shared';
 
 interface State {
   rows?: Row[];
-  headers?: Header[];
+  headers?: TableHeader[];
 }
 
 interface Hook extends State {

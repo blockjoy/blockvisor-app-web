@@ -4,7 +4,7 @@ import { wrapper } from 'styles/wrapper.styles';
 
 const StyledContent = styled.section`
   position: relative;
-  padding: 24px 24px 40px;
+  padding: 24px 0px;
   border-bottom: 1px solid ${(p) => p.theme.colorBorder};
   margin: 0 auto;
 `;
