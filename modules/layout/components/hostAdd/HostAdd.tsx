@@ -7,16 +7,15 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { Drawer, DrawerContent, DrawerHeader, DrawerAction } from '..';
 import { styles } from './hostAdd.styles';
-import { useHostAdd } from '@modules/layout/hooks/useHostAdd';
 import { HostAddConfirm } from './HostAddConfirm';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useHost } from '@modules/app/hooks/useHost';
 
 export const HostAdd = () => {
   const router = useRouter();
 
   const [layout, setLayout] = useRecoilState(layoutState);
-
-  const { createHostProvision } = useHostAdd();
+  const { createHostProvision, hostAddKey } = useHost();
 
   const [step, setStep] = useState<1 | 2>(1);
   const [showCloseDialog, setShowCloseDialog] = useState<boolean>(false);
@@ -86,7 +85,7 @@ export const HostAdd = () => {
             <Button
               size="small"
               type="submit"
-              loading={hostAddCreating}
+              loading={false}
               customCss={[styles.action]}
               onClick={onCreateNodeProvision}
             >
