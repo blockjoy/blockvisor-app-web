@@ -5,7 +5,6 @@ import { FC, useState, useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import { Drawer, DrawerAction, DrawerContent, DrawerHeader } from '..';
-import { styles } from './nodeAdd.styles';
 import { NodeTypePicker } from '../shared/NodeTypePicker';
 import { CreateNodeParams, useNodeAdd } from '@modules/layout/hooks/useNodeAdd';
 

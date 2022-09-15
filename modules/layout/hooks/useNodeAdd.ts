@@ -1,5 +1,5 @@
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/layoutAtoms';
 import { apiClient } from '@modules/client';
 import { Node, Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';

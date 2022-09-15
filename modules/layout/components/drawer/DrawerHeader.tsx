@@ -1,7 +1,7 @@
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
+import IconClose from '@public/assets/icons/close-12.svg';
 import { useRecoilState } from 'recoil';
 import { styles } from './drawer.styles';
-import IconClose from '@public/assets/icons/close-12.svg';
 
 interface Props {
   children: React.ReactNode;

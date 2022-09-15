@@ -1,4 +1,5 @@
-import { authAtoms, LoginFooter, LoginForm } from '@modules/auth';
+import { LoginFooter, LoginForm } from '@modules/auth';
+import { authAtoms } from '@modules/auth/store/authAtoms';
 import { Layout } from '@shared/components';
 import type { NextPage } from 'next';
 import Router from 'next/router';

@@ -1,4 +1,4 @@
-import { authAtoms } from '@modules/auth/store/atoms';
+import { authAtoms } from '@modules/auth/store/authAtoms';
 import { getUser } from '@shared/utils/browserStorage';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
