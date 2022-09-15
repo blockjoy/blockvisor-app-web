@@ -11,7 +11,7 @@ import { styles } from './hostAdd.styles';
 import { useHostAdd } from '@modules/layout/hooks/useHostAdd';
 import { HostAddConfirm } from './HostAddConfirm';
 
-export default () => {
+export const HostAdd = () => {
   const router = useRouter();
 
   const [layout, setLayout] = useRecoilState(layoutState);
