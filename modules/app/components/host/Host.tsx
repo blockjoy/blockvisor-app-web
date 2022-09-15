@@ -41,6 +41,7 @@ export default () => {
   const handleDelete = () => deleteHost(id?.toString()!);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setIsMounted(true);
     if (router.isReady) {
       loadHost(id?.toString() || '');

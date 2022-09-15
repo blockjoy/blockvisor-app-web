@@ -20,6 +20,7 @@ export const Hosts = () => {
     useHosts();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     loadHosts();
   }, []);
 

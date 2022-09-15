@@ -1,5 +1,9 @@
 import {AuthenticationServiceClient} from "blockjoy-mock-grpc/dist/out/Authentication_serviceServiceClientPb";
-import {LoginUserResponse, RefreshTokenResponse} from "blockjoy-mock-grpc/dist/out/authentication_service_pb";
+import {
+    LoginUserRequest,
+    LoginUserResponse,
+    RefreshTokenResponse,
+} from 'blockjoy-mock-grpc/dist/out/authentication_service_pb';
 import {
     ApiToken,
     Bill,
@@ -10,8 +14,8 @@ import {
     Node,
     Organization,
     ResponseMeta,
-    User, UserConfigurationParameter, Uuid
-} from "blockjoy-mock-grpc/dist/out/common_pb";
+    User, UserConfigurationParameter, Uuid, RequestMeta,
+} from 'blockjoy-mock-grpc/dist/out/common_pb';
 import {v4 as uuidv4} from 'uuid';
 import {BillingServiceClient} from "blockjoy-mock-grpc/dist/out/Billing_serviceServiceClientPb";
 import {DashboardServiceClient} from "blockjoy-mock-grpc/dist/out/Dashboard_serviceServiceClientPb";
@@ -134,7 +138,7 @@ export class GrpcClient {
 
     constructor(host: string) {
         // TODO: uncomment when backend services are available
-        // this.initClients(host);
+        this.initClients(host).then(() => console.log("Clients connected"));
 
         this.token = "";
     }
@@ -148,6 +152,7 @@ export class GrpcClient {
      */
     private async initClients(host: string) {
         this.authentication = new AuthenticationServiceClient(host, null, null);
+        /*
         this.billing = new BillingServiceClient(host, null, null);
         this.dashboard = new DashboardServiceClient(host, null, null);
         this.host = new HostServiceClient(host, null, null);
@@ -156,6 +161,7 @@ export class GrpcClient {
         this.organization = new OrganizationServiceClient(host, null, null);
         this.update = new UpdateServiceClient(host, null, null);
         this.user = new UserServiceClient(host, null, null);
+         */
     }
 
     getApiToken() {
@@ -242,16 +248,21 @@ export class GrpcClient {
     async login(email: string, pwd: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
         console.debug(`Using "${email}" => "${pwd}" for login`);
 
-        if(email === "user@test.com") {
-            let response = new LoginUserResponse();
-            response.setMeta(this.getDummyMeta());
-            response.setToken(this.getApiToken());
+        let request_meta = new RequestMeta();
+        request_meta.setId(this.getDummyUuid());
 
-            return response.getToken()?.toObject()
-        } else {
+        let request = new LoginUserRequest();
+        request.setEmail(email);
+        request.setPassword(pwd);
+        request.setMeta(request_meta);
+
+        return this.authentication?.login(request, null).then((response) => {
+            console.log(`Got login response: ${response}`);
+            return response.getToken()?.toObject();
+        }).catch((err) => {
             return {
                 code: "Unauthenticated",
-                message: "invalid authentication credentials\n\n",
+                message: `${err}`,
                 metadata: {
                     headers: {
                         "content-type": "application/grpc",
@@ -261,9 +272,9 @@ export class GrpcClient {
                 },
                 source: "None"
             }
-        }
+        });
     }
-
+    
     async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
         let response = new RefreshTokenResponse();
         response.setMeta(this.getDummyMeta());
@@ -272,7 +283,7 @@ export class GrpcClient {
     }
 
     /* Billing service */
-
+ 
     async createBill(user_id: Uuid, org_id: Uuid): Promise<Bill.AsObject | StatusResponse | undefined> {
         let bill = new Bill();
         bill.setId("some-bill-id");
