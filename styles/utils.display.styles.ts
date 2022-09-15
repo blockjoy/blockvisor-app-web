@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from './variables.styles';
 
 export const display = {
   none: css`
@@ -24,5 +25,26 @@ export const display = {
   `,
   table: css`
     display: table;
+  `,
+  displayToMediumLarge: css`
+    @media ${breakpoints.fromMed} {
+      display: none;
+    }
+  `,
+  hideFromMediumLarge: css`
+    display: none;
+
+    @media ${breakpoints.fromMed} {
+      display: initial;
+    }
+  `,
+  visuallyHidden: css`
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
   `,
 };

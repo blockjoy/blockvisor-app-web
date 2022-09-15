@@ -1,26 +1,24 @@
-import { useAuth } from '@modules/auth';
+import { authAtoms, LoginFooter, LoginForm } from '@modules/auth';
+import { Layout } from '@shared/components';
 import type { NextPage } from 'next';
-import { SEO } from 'ui';
+import Router from 'next/router';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 
-const Home: NextPage = () => {
-  const { logout } = useAuth();
-  const url = process.env.NEXT_PUBLIC_URL || '';
+const Login: NextPage = () => {
+  const [auth] = useRecoilState(authAtoms.user);
 
+  useEffect(() => {
+    if (auth) {
+      Router.push('/dashboard');
+    }
+  }, []);
   return (
-    <div>
-      <SEO
-        title="Homepage | Next Prototyp Template"
-        description="No nonsense nationwide platform that makes hard money loans easy"
-      />
-      <main>
-        Hello world
-        <br />
-        <button type="button" onClick={logout}>
-          Logout
-        </button>
-      </main>
-    </div>
+    <Layout title="Login">
+      <LoginForm />
+      <LoginFooter />
+    </Layout>
   );
 };
 
-export default Home;
+export default Login;
