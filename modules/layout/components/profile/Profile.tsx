@@ -21,13 +21,14 @@ import { authAtoms } from '@modules/auth';
 export default () => {
   const layout = useRecoilValue(layoutState);
   const [theme, setTheme] = useRecoilState(themeState);
+  const [, setUser] = useRecoilState(authAtoms.user);
 
   const handleDarkModeToggled = () => {
     setTheme(theme.id === 'dark' ? { ...themeLight } : { ...themeDark });
   };
 
   const handleLogout = () => {
-    setAuth(null);
+    setUser(null);
     deleteUser();
   };
 
