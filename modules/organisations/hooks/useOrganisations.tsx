@@ -14,16 +14,6 @@ export const useOrganisations = () => {
     organisationAtoms.allOrganisations,
   );
 
-  const currentOrg =
-    (organisations.organisations && organisations.organisations[0].name) ?? '';
-
-  const noOfMembers = organisations?.organisations?.reduce(
-    (acc, org) => acc + (org?.memberCount ?? 0),
-    0,
-  );
-
-  const noOfOrganisations = organisations?.organisations?.length ?? 0;
-
   const getOrganizations = async () => {
     setOrganisations({ isLoading: true });
 
@@ -79,8 +69,5 @@ export const useOrganisations = () => {
     loadingOrganizations: Boolean(organisations?.isLoading),
     getOrganizations,
     createOrganisation,
-    noOfMembers,
-    noOfOrganisations,
-    currentOrg,
   };
 };

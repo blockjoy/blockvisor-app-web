@@ -8,10 +8,13 @@ import PersonIcon from '@public/assets/icons/person-12.svg';
 import { flex } from 'styles/utils.flex.styles';
 import { PageTitle } from '@modules/app/components/page-title/PageTitle';
 import { PageSection } from '@modules/app/components/shared';
-import { useOrganisations } from '../hooks/useOrganisations';
+import { useRecoilValue } from 'recoil';
+import { organisationAtoms } from '../store/organisationAtoms';
 
 export const OrganisationsPage: FC = () => {
-  const { noOfMembers, noOfOrganisations } = useOrganisations();
+  const memberCount = useRecoilValue(organisationAtoms.organisationMemberCount);
+  const orgCount = useRecoilValue(organisationAtoms.organisationCount);
+
   return (
     <>
       <PageTitle title="Organisation Management"></PageTitle>
@@ -30,7 +33,7 @@ export const OrganisationsPage: FC = () => {
             <PersonIcon />{' '}
           </span>
           <span css={[spacing.left.small, colors.text4]}>
-            {noOfMembers} users in {noOfOrganisations} organisations
+            {memberCount} users in {orgCount} organisations
           </span>
         </small>
 
