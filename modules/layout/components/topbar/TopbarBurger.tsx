@@ -22,10 +22,7 @@ export default () => {
   const [app, setApp] = useRecoilState(layoutState);
 
   const handleClick = () => {
-    setApp({
-      ...app,
-      isSidebarOpen: !app.isSidebarOpen,
-    });
+    setApp(app);
   };
 
   return (

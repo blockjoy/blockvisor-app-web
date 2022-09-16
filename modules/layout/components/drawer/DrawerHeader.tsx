@@ -15,11 +15,7 @@ export const DrawerHeader: React.FC<Props> = ({ children, onCloseClicked }) => {
     if (onCloseClicked) {
       onCloseClicked();
     } else {
-      setLayout({
-        ...layout,
-        isNodeAddOpen: false,
-        isProfileOpen: false,
-      });
+      setLayout(layout);
     }
   };
 

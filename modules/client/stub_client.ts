@@ -357,7 +357,7 @@ export class GrpcClient {
 
     /* Host provision service */
 
-    async getHostProvision(otp?: string): Promise<Array<HostProvision.AsObject> | StatusResponse | undefined> {
+    async getHostProvision(otp?: string): Promise<Array<HostProvision.AsObject> | StatusResponse | undefined | void> {
         let provision = new HostProvision();
 
         if (otp) provision.setId(otp);
@@ -370,11 +370,11 @@ export class GrpcClient {
 
         let response = new GetHostProvisionResponse();
         response.setMeta(this.getDummyMeta());
-        response.setHostProvisionsList([provision]);
+        //response.setHostProvisionsList([provision]);
 
         console.debug("retrieving host provisions");
 
-        return response.getHostProvisionsList()?.map((provision) => provision.toObject())
+        //return response.getHostProvisionsList()?.map((provision) => provision.toObject())
     }
 
     async createHostProvision(host_provision: HostProvision): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {

@@ -2,7 +2,7 @@ import { appState } from '@modules/app/store';
 import { apiClient } from '@modules/client';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { nodeTypeList } from '@shared/constants/lookups';
-import { Node, Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
+import { Uuid, Node } from 'blockjoy-mock-grpc/dist/out/common_pb';
 import { formatDistanceToNow } from 'date-fns';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -23,6 +23,7 @@ const createNodeId = (id: Args) => {
 
 export const useNode = () => {
   const setLayout = useSetRecoilState(layoutState);
+  const [app, setApp] = useRecoilState(appState);
   const [node, setNode] = useState<Node>();
   const [nodes, setNodes] = useState<MappedHost[]>();
 
@@ -56,7 +57,7 @@ export const useNode = () => {
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
     ];
 
-    const activeNode: Node = {
+    const activeNode: any = {
       id: node.id.value,
       status: node.status,
       name: node.name,
@@ -68,6 +69,7 @@ export const useNode = () => {
     };
 
     setNode(activeNode);
+    setApp({ ...app, nodeLoading: false, node: activeNode });
   };
 
   const loadHosts = async () => {
