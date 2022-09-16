@@ -1,4 +1,4 @@
-type Organizations = {
+type Organisation = {
   createdAt?: {
     nanos: number;
     seconds: number;

@@ -6,7 +6,7 @@ import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
 import { NodeAdd, HostAdd } from '.';
 import { PrivateRoute } from '@modules/auth';
-import { OrganisationAdd } from './organization/OrganisationAdd';
+import { OrganisationAdd } from '@modules/organisations';
 
 type LayoutType = {
   children: React.ReactNode;

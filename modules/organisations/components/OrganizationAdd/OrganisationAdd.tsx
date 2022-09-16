@@ -1,12 +1,18 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import { Button, Input, Select } from '@shared/components';
 import { FC, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
-import { Drawer, DrawerAction, DrawerContent, DrawerHeader } from '..';
+import {
+  Drawer,
+  DrawerAction,
+  DrawerContent,
+  DrawerHeader,
+} from '../../../layout/components';
 import { width } from 'styles/utils.width.styles';
+import { delay, useOrganisations } from '@modules/organisations';
 
 type OrganisationAddForm = {
   name: string;
@@ -14,15 +20,17 @@ type OrganisationAddForm = {
 
 export const OrganisationAdd: FC = () => {
   const form = useForm<OrganisationAddForm>();
-  const layout = useRecoilValue(layoutState);
+  const [layout, setLayout] = useRecoilState(layoutState);
+  const { createOrganisation } = useOrganisations();
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit: SubmitHandler<OrganisationAddForm> = ({ name }) => {
+  const onSubmit: SubmitHandler<OrganisationAddForm> = async ({ name }) => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    createOrganisation(name);
+    await delay(2000);
+    setLoading(false);
+    setLayout(undefined);
   };
 
   return (

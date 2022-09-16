@@ -6,11 +6,14 @@ const currentOrganisation = atom<string | null>({
 });
 
 const allOrganisations = atom<{
-  organisations?: Organizations[];
+  organisations?: Organisation[];
   isLoading?: boolean;
-} | null>({
+}>({
   key: 'organisation.all',
-  default: null,
+  default: {
+    organisations: [],
+    isLoading: false,
+  },
 });
 
 export const organisationAtoms = {

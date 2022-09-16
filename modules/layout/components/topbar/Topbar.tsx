@@ -4,8 +4,7 @@ import TopbarUser from './TopbarUser';
 // import TopbarSearch from "./TopbarSearch";
 import TopbarBlockvisor from './TopbarBlockvisor';
 import TopbarBurger from './TopbarBurger';
-
-import { OrganizationDropdown } from '../organization/OrganizationDropdown';
+import { OrganizationDropdown } from '@modules/organisations';
 
 const StyledWrapper = styled.div`
   display: flex;

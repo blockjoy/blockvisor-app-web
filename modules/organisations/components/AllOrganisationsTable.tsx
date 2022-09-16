@@ -1,96 +1,7 @@
 import { Table } from '@modules/app/components/shared';
+import { Button } from '@shared/components';
 import { FC, useEffect } from 'react';
-import { useOrganisations } from '../hooks/useOrganizations';
-
-const rows: Row[] = [
-  {
-    key: 'first',
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    key: 'second',
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    key: 'third',
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <>
-            <p>lala</p>
-          </>
-        ),
-      },
-    ],
-  },
-];
+import { useOrganisations } from '../hooks/useOrganisations';
 
 const headers: TableHeader[] = [
   {
@@ -103,6 +14,40 @@ const headers: TableHeader[] = [
   },
 ];
 
+const mapOrganisationsToRows = (organisations?: Organisation[]) => {
+  return organisations?.map((org, idx) => ({
+    key: org.id?.value ?? `${idx}`,
+    cells: [
+      {
+        key: '1',
+        component: (
+          <>
+            <p>{org.name}</p>
+          </>
+        ),
+      },
+      {
+        key: '2',
+        component: (
+          <>
+            <p>{org.memberCount}</p>
+          </>
+        ),
+      },
+      {
+        key: '3',
+        component: (
+          <>
+            <Button style="outline" size="small">
+              Members
+            </Button>
+          </>
+        ),
+      },
+    ],
+  }));
+};
+
 export const AllOrganisationsTable: FC = () => {
   const { getOrganizations, organisations, loadingOrganizations } =
     useOrganisations();
@@ -110,13 +55,10 @@ export const AllOrganisationsTable: FC = () => {
   useEffect(() => {
     getOrganizations();
   }, []);
-  console.log('orgs', organisations);
+
+  const rows = mapOrganisationsToRows(organisations);
+
   return (
-    <Table
-      isLoading={loadingOrganizations}
-      headers={headers}
-      rows={rows}
-      onRowClick={() => console.log('la')}
-    />
+    <Table isLoading={loadingOrganizations} headers={headers} rows={rows} />
   );
 };
