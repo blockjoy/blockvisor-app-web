@@ -1,5 +1,6 @@
-import { FC } from 'react';
-import { Table } from '../shared';
+import { Table } from '@modules/app/components/shared';
+import { FC, useEffect } from 'react';
+import { useOrganisations } from '../hooks/useOrganizations';
 
 const rows: Row[] = [
   {
@@ -103,9 +104,16 @@ const headers: TableHeader[] = [
 ];
 
 export const AllOrganisationsTable: FC = () => {
+  const { getOrganizations, organisations, loadingOrganizations } =
+    useOrganisations();
+
+  useEffect(() => {
+    getOrganizations();
+  }, []);
+  console.log('orgs', organisations);
   return (
     <Table
-      isLoading={false}
+      isLoading={loadingOrganizations}
       headers={headers}
       rows={rows}
       onRowClick={() => console.log('la')}

@@ -5,12 +5,15 @@ const currentOrganisation = atom<string | null>({
   default: null,
 });
 
-const allOrganisations = atom<string[] | null>({
+const allOrganisations = atom<{
+  organisations?: Organizations[];
+  isLoading?: boolean;
+} | null>({
   key: 'organisation.all',
   default: null,
 });
 
-export const authAtoms = {
+export const organisationAtoms = {
   currentOrganisation,
   allOrganisations,
 };

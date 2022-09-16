@@ -2,13 +2,14 @@ import { FC } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { PageTitle } from '../page-title/PageTitle';
-import { PageSection } from '../shared';
+
 import { AllOrganisationsTable } from './AllOrganisationsTable';
 import PersonIcon from '@public/assets/icons/person-12.svg';
 import { flex } from 'styles/utils.flex.styles';
+import { PageTitle } from '@modules/app/components/page-title/PageTitle';
+import { PageSection } from '@modules/app/components/shared';
 
-export const OrganizationsPage: FC = () => (
+export const OrganisationsPage: FC = () => (
   <>
     <PageTitle title="Organisation Management"></PageTitle>
     <PageSection>
