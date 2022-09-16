@@ -25,7 +25,7 @@ export const ActionTitleHeader: FC<Props> = ({
 
   return (
     <header className="test" css={classes}>
-      <div css={[styles.inner, containers.large]}>
+      <div css={[styles.inner]}>
         <div css={styles.main}>
           <>{title}</>
           <>{action}</>

@@ -1,4 +1,3 @@
-import { layoutState } from '@modules/layout/store';
 import { Button } from '@shared/components';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -8,17 +7,15 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { Drawer, DrawerContent, DrawerHeader, DrawerAction } from '..';
 import { styles } from './hostAdd.styles';
-import { useHostAdd } from '@modules/layout/hooks/useHostAdd';
 import { HostAddConfirm } from './HostAddConfirm';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useHost } from '@modules/app/hooks/useHost';
 
 export const HostAdd = () => {
   const router = useRouter();
 
   const [layout, setLayout] = useRecoilState(layoutState);
-
-  const { isHostsAddOpen, hostAddCreating, hostAddKey } = layout;
-
-  const { createHostProvision } = useHostAdd();
+  const { createHostProvision, hostAddKey } = useHost();
 
   const [step, setStep] = useState<1 | 2>(1);
   const [showCloseDialog, setShowCloseDialog] = useState<boolean>(false);
@@ -33,10 +30,7 @@ export const HostAdd = () => {
 
   const handleClose = () => {
     if (step === 1) {
-      setLayout({
-        ...layout,
-        isHostsAddOpen: false,
-      });
+      setLayout(undefined);
     } else {
       setShowCloseDialog(true);
     }
@@ -52,10 +46,7 @@ export const HostAdd = () => {
   const handleCloseConfirmed = () => {
     setShowCloseDialog(false);
     setStep(1);
-    setLayout({
-      ...layout,
-      isHostsAddOpen: false,
-    });
+    setLayout(undefined);
     if (shouldRedirectToHosts) {
       setShouldRedirectToHosts(false);
       router.push('/hosts');
@@ -68,7 +59,7 @@ export const HostAdd = () => {
   };
 
   return (
-    <Drawer isOpen={isHostsAddOpen}>
+    <Drawer isOpen={layout === 'hosts'}>
       <HostAddConfirm
         onYesClicked={handleCloseConfirmed}
         onNoClicked={handleCloseCancelled}
@@ -94,7 +85,7 @@ export const HostAdd = () => {
             <Button
               size="small"
               type="submit"
-              loading={hostAddCreating}
+              loading={false}
               customCss={[styles.action]}
               onClick={onCreateNodeProvision}
             >

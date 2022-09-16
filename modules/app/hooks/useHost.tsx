@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { appState } from '@modules/app/store';
-import { Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
+import { HostProvision, Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
 import { Host } from '@modules/app/components/host/Host';
 import { TableBlockNodes } from '@modules/app/components/shared/table/TableBlockNodes';
 import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
@@ -9,18 +9,11 @@ import { Button } from '@shared/components';
 import { styles as detailsHeaderStyles } from '@modules/app/components/shared/details-header/DetailsHeader.styles';
 import { toast } from 'react-toastify';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { useState } from 'react';
 
-type Hook = {
-  loadHost: (args1: string) => void;
-  stopHost: (args1: string) => void;
-  restartHost: (args1: string) => void;
-  deleteHost: (args1: string) => void;
-  stopNode: (args1: string, args2?: InputEvent) => void;
-  restartNode: (args1: string, args2?: InputEvent) => void;
-};
-
-export const useHost = (): Hook => {
+export const useHost = () => {
   const [app, setApp] = useRecoilState(appState);
+  const [hostAddKey, setHostAddKey] = useState<string>();
 
   const deleteHost = async (id: string) => {
     const uuid = new Uuid();
@@ -148,6 +141,26 @@ export const useHost = (): Hook => {
     });
   };
 
+  const createHostProvision = async (callback: () => void) => {
+    const orgId = new Uuid();
+    orgId.setValue('to-be-populated');
+
+    const hostProvision = new HostProvision();
+    hostProvision.setOrgId;
+
+    const response: any = await apiClient.createHostProvision(hostProvision);
+
+    toast.success('Provisioning Host');
+
+    setTimeout(() => {
+      setHostAddKey(response.key || 'EQ2WBtEt50');
+
+      callback();
+    }, 1000);
+
+    return response;
+  };
+
   return {
     loadHost,
     stopHost,
@@ -155,5 +168,7 @@ export const useHost = (): Hook => {
     stopNode,
     restartNode,
     deleteHost,
+    createHostProvision,
+    hostAddKey,
   };
 };

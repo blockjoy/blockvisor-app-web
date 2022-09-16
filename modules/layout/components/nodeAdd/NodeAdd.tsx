@@ -1,13 +1,13 @@
-import { layoutState } from '@modules/layout/store';
-import { useRecoilValue } from 'recoil';
+import { CreateNodeParams, useNode } from '@modules/app/hooks/useNode';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { Button, Select } from '@shared/components';
-import { FC, useState, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
+import { width } from 'styles/utils.width.styles';
 import { Drawer, DrawerAction, DrawerContent, DrawerHeader } from '..';
-import { styles } from './nodeAdd.styles';
 import { NodeTypePicker } from '../shared/NodeTypePicker';
-import { CreateNodeParams, useNodeAdd } from '@modules/layout/hooks/useNodeAdd';
 
 type NodeAddForm = {
   nodeType: string;
@@ -15,10 +15,9 @@ type NodeAddForm = {
 };
 
 export const NodeAdd: FC = () => {
-  const { loadHosts, createNode } = useNodeAdd();
+  const { loadHosts, createNode, nodes } = useNode();
   const form = useForm<NodeAddForm>();
-  const { isNodeAddOpen, nodeAddHostsList, nodeAddCreating } =
-    useRecoilValue(layoutState);
+  const layout = useRecoilValue(layoutState);
 
   const onSubmit: SubmitHandler<NodeAddForm> = ({ host, nodeType }) => {
     const params: CreateNodeParams = {
@@ -37,18 +36,18 @@ export const NodeAdd: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (nodeAddHostsList?.length) {
-      form.setValue('host', nodeAddHostsList[0]?.value);
+    if (nodes?.length) {
+      form.setValue('host', nodes[0]?.value);
       form.setValue('nodeType', '1');
     }
-  }, [nodeAddHostsList?.length]);
+  }, [nodes?.length]);
 
   if (!hasMounted) {
     return null;
   }
 
   return (
-    <Drawer isOpen={isNodeAddOpen}>
+    <Drawer isOpen={layout === 'nodes'}>
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <DrawerHeader>Add Node</DrawerHeader>
@@ -60,7 +59,7 @@ export const NodeAdd: FC = () => {
                 inputSize="small"
                 inputStyle="default"
                 name="host"
-                options={nodeAddHostsList}
+                options={nodes || []}
               />
             </div>
           </DrawerContent>
@@ -68,8 +67,8 @@ export const NodeAdd: FC = () => {
             <Button
               size="small"
               type="submit"
-              loading={nodeAddCreating}
-              customCss={[styles.action]}
+              loading={false}
+              customCss={[width.full]}
             >
               Finish
             </Button>

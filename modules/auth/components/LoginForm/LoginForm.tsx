@@ -1,19 +1,19 @@
+import { authAtoms } from '@modules/auth/store/authAtoms';
+import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
+import { apiClient } from '@modules/client';
+import { Button, Input } from '@shared/components';
+import { saveUser } from '@shared/utils/browserStorage';
+import { isValidEmail } from '@shared/utils/validation';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
-import { Button, Input } from '@shared/components';
-import { display } from 'styles/utils.display.styles';
-import { spacing } from 'styles/utils.spacing.styles';
-import { reset } from 'styles/utils.reset.styles';
-import { PasswordToggle } from '../PasswordTogle';
-import { isValidEmail } from '@shared/utils/validation';
-import { apiClient } from '@modules/client';
-import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
-import { saveUser } from '@shared/utils/browserStorage';
-import { typo } from 'styles/utils.typography.styles';
-import { colors } from 'styles/utils.colors.styles';
 import { useRecoilState } from 'recoil';
-import { authAtoms } from '@modules/auth/store/atoms';
+import { colors } from 'styles/utils.colors.styles';
+import { display } from 'styles/utils.display.styles';
+import { reset } from 'styles/utils.reset.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { typo } from 'styles/utils.typography.styles';
+import { PasswordToggle } from '../PasswordTogle';
 
 type LoginForm = {
   email: string;

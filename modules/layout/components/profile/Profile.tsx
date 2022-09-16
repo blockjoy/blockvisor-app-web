@@ -1,5 +1,5 @@
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { layoutState } from '@modules/layout/store';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 import ProfileSwitch from './ProfileSwitch';
 
@@ -19,21 +19,21 @@ import { deleteUser } from '@shared/utils/browserStorage';
 import { authAtoms } from '@modules/auth';
 
 export default () => {
-  const { isProfileOpen } = useRecoilValue(layoutState);
-  const [, setAuth] = useRecoilState(authAtoms.user);
+  const layout = useRecoilValue(layoutState);
   const [theme, setTheme] = useRecoilState(themeState);
+  const [, setUser] = useRecoilState(authAtoms.user);
 
   const handleDarkModeToggled = () => {
     setTheme(theme.id === 'dark' ? { ...themeLight } : { ...themeDark });
   };
 
   const handleLogout = () => {
-    setAuth(null);
+    setUser(null);
     deleteUser();
   };
 
   return (
-    <Drawer isOpen={isProfileOpen}>
+    <Drawer isOpen={layout === 'profile'}>
       <DrawerHeader>Profile Settings</DrawerHeader>
       <DrawerContent>
         <DrawerSubheader>ACCESSIBILITY</DrawerSubheader>

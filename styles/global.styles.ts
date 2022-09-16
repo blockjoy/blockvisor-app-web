@@ -48,6 +48,7 @@ export const globalStyles = css`
     --color-overlay-background-1: hsl(160, 3%, 22%);
     --color-overlay-background-2: hsl(180, 4%, 15%);
     --color-overlay-background-2-o50: hsla(180, 4%, 15%, 0.5);
+    --color-background: hsla(0, 0%, 20%, 1);
 
     /* --- BORDER --- */
     --color-border-1: hsl(160, 4%, 14%);
@@ -204,9 +205,7 @@ export const globalStyles = css`
 
   body {
     min-height: 100vh;
-    margin: 0 auto;
     color: var(--color-text);
-    max-width: 1720px;
     font-family: var(--font-family-primary);
 
     background-color: var(--color-foreground-secondary);

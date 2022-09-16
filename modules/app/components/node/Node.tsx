@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import {
   PageSection,
   PageHeader,
@@ -32,6 +32,7 @@ export default () => {
   const { id } = router.query;
   const { loadNode, deleteNode, stopNode, restartNode } = useNode();
   const { node, nodeLoading } = useRecoilValue(appState);
+  const [app, setApp] = useRecoilState(appState);
 
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id);

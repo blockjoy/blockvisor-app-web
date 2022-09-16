@@ -1,5 +1,6 @@
 import { DefaultValue, selector } from 'recoil';
-import { authAtoms } from './atoms';
+//import { User } from '..';
+import { authAtoms } from './authAtoms';
 
 /* const user = selector<User | null>({
   key: 'authentication.user',
