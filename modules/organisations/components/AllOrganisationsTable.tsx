@@ -1,6 +1,6 @@
 import { Table } from '@modules/app/components/shared';
 import { Button, ButtonWithDropdown, DropdownItem } from '@shared/components';
-import { FC, useEffect } from 'react';
+import { FC, MouseEventHandler, useEffect } from 'react';
 import { useOrganisations } from '../hooks/useOrganisations';
 import PersonIcon from '@public/assets/icons/person-12.svg';
 import EditIcon from '@public/assets/icons/pencil-12.svg';
@@ -8,6 +8,8 @@ import RemoveIcon from '@public/assets/icons/close-12.svg';
 import { flex } from 'styles/utils.flex.styles';
 import { divider, spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useRecoilState } from 'recoil';
 
 const headers: TableHeader[] = [
   {
@@ -20,7 +22,11 @@ const headers: TableHeader[] = [
   },
 ];
 
-const mapOrganisationsToRows = (organisations?: Organisation[]) => {
+const mapOrganisationsToRows = (
+  organisations?: Organisation[],
+  handleRemove?: MouseEventHandler<HTMLButtonElement>,
+  handleEdit?: MouseEventHandler<HTMLButtonElement>,
+) => {
   return organisations?.map((org, idx) => ({
     key: org.id?.value ?? `${idx}`,
     cells: [
@@ -52,13 +58,21 @@ const mapOrganisationsToRows = (organisations?: Organisation[]) => {
               <ButtonWithDropdown>
                 <ul css={[reset.list]}>
                   <li>
-                    <DropdownItem size="large">
+                    <DropdownItem
+                      id={org.id?.value}
+                      size="large"
+                      onButtonClick={handleEdit}
+                    >
                       <EditIcon />
                       Edit
                     </DropdownItem>
                   </li>
                   <li css={[divider]}>
-                    <DropdownItem size="large">
+                    <DropdownItem
+                      onButtonClick={handleRemove}
+                      id={org.id?.value}
+                      size="large"
+                    >
                       <RemoveIcon />
                       Remove
                     </DropdownItem>
@@ -74,14 +88,31 @@ const mapOrganisationsToRows = (organisations?: Organisation[]) => {
 };
 
 export const AllOrganisationsTable: FC = () => {
-  const { getOrganizations, organisations, loadingOrganizations } =
-    useOrganisations();
+  const {
+    getOrganizations,
+    organisations,
+    loadingOrganizations,
+    removeOrganisation,
+    selectOrganisation,
+  } = useOrganisations();
+  const [, setLayout] = useRecoilState(layoutState);
 
   useEffect(() => {
     getOrganizations();
   }, []);
 
-  const rows = mapOrganisationsToRows(organisations);
+  const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const id = e.currentTarget.id;
+    removeOrganisation(id);
+  };
+
+  const handleEdit: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const id = e.currentTarget.id;
+    selectOrganisation(id);
+    setLayout('editOrganisation');
+  };
+
+  const rows = mapOrganisationsToRows(organisations, handleRemove, handleEdit);
 
   return (
     <Table isLoading={loadingOrganizations} headers={headers} rows={rows} />

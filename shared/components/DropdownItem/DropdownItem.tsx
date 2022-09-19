@@ -6,6 +6,7 @@ import { typo } from 'styles/utils.typography.styles';
 import { reset } from 'styles/utils.reset.styles';
 
 type Props = {
+  id?: string;
   href?: string;
   children?: ReactNode;
   size?: 'large' | 'small';
@@ -13,18 +14,20 @@ type Props = {
 };
 export function DropdownItem({
   href,
+  id,
   children,
   size = 'small',
   onButtonClick,
 }: Props) {
   if (href) {
-    <Link href={href} passHref>
+    <Link id={id} href={href} passHref>
       <a css={[typo.tiny, link, styles.base, styles[size]]}>{children}</a>
     </Link>;
   }
 
   return (
     <button
+      id={id}
       onClick={onButtonClick}
       css={[reset.button, typo.tiny, styles.base, styles[size]]}
     >

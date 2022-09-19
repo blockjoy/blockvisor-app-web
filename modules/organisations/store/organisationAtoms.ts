@@ -1,19 +1,13 @@
 import { atom, selector } from 'recoil';
 
-const currentOrganisation = atom<string | null>({
+const selectedOrganisation = atom<Organisation | null>({
   key: 'organisation.current',
   default: null,
 });
 
-const allOrganisations = atom<{
-  organisations?: Organisation[];
-  isLoading?: boolean;
-}>({
+const allOrganisations = atom<Organisation[]>({
   key: 'organisation.all',
-  default: {
-    organisations: [],
-    isLoading: false,
-  },
+  default: [],
 });
 
 const organisationMemberCount = selector({
@@ -21,10 +15,7 @@ const organisationMemberCount = selector({
   get: ({ get }) => {
     const organisations = get(allOrganisations);
 
-    return organisations.organisations?.reduce(
-      (acc, org) => acc + (org?.memberCount ?? 0),
-      0,
-    );
+    return organisations.reduce((acc, org) => acc + (org?.memberCount ?? 0), 0);
   },
 });
 
@@ -33,12 +24,12 @@ const organisationCount = selector({
   get: ({ get }) => {
     const organisations = get(allOrganisations);
 
-    return organisations?.organisations?.length;
+    return organisations.length;
   },
 });
 
 export const organisationAtoms = {
-  currentOrganisation,
+  selectedOrganisation,
   allOrganisations,
   organisationMemberCount,
   organisationCount,

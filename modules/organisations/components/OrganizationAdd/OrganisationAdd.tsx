@@ -13,6 +13,7 @@ import {
 } from '../../../layout/components';
 import { width } from 'styles/utils.width.styles';
 import { delay, useOrganisations } from '@modules/organisations';
+import { toast } from 'react-toastify';
 
 type OrganisationAddForm = {
   name: string;
@@ -31,6 +32,7 @@ export const OrganisationAdd: FC = () => {
     await delay(2000);
     setLoading(false);
     setLayout(undefined);
+    toast.success('Organisation created');
   };
 
   return (

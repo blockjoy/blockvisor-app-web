@@ -69,6 +69,7 @@ export function Input({
           {...register(name, validationOptions)}
           css={[inputClasses]}
           disabled={disabled}
+          value={value}
           {...rest}
           name={name}
         />
