@@ -2,7 +2,7 @@ import { appState } from '@modules/app/store';
 import { apiClient } from '@modules/client';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { nodeTypeList } from '@shared/constants/lookups';
-import { Uuid, Node } from 'blockjoy-mock-grpc/dist/out/common_pb';
+import { Uuid, Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { formatDistanceToNow } from 'date-fns';
 import { useState } from 'react';
 import { toast } from 'react-toastify';

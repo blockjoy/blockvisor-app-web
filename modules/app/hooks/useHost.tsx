@@ -1,6 +1,9 @@
 import { useRecoilState } from 'recoil';
 import { appState } from '@modules/app/store';
-import { HostProvision, Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
+import {
+  HostProvision,
+  Uuid,
+} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { Host } from '@modules/app/components/host/Host';
 import { TableBlockNodes } from '@modules/app/components/shared/table/TableBlockNodes';
 import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';

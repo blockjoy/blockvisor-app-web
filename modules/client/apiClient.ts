@@ -1,4 +1,4 @@
-// import { GrpcClient } from 'blockjoy-mock-grpc/dist/stub_client';
+// import { GrpcClient } from '@blockjoy/blockjoy-grpc/dist/stub_client';
 import { GrpcClient as StubClient } from './stub_client';
 import { GrpcClient as RealClient } from './grpc_client';
 

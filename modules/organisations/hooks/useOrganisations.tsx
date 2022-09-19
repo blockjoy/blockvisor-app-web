@@ -1,5 +1,5 @@
 import { apiClient } from '@modules/client';
-import { Organization, Uuid } from 'blockjoy-mock-grpc/dist/out/common_pb';
+import { Organization, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organisationAtoms';
