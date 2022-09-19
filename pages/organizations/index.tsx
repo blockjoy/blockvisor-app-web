@@ -1,7 +1,7 @@
-import { OrganizationsPage } from '@modules/app/components/organizations/OrganizationsPage';
 import { AppLayout } from '@modules/layout';
+import { OrganisationsPage } from '@modules/organisations';
 
-const Organizations = () => <OrganizationsPage />;
+const Organizations = () => <OrganisationsPage />;
 
 Organizations.getLayout = function getLayout(page: any) {
   return <AppLayout breadcrumb={['Organizations', 'All']}>{page}</AppLayout>;

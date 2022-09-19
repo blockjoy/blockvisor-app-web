@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
+import { OrganizationDropdown } from '@modules/organisations';
 import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
-import { OrganizationDropdown } from '../organization/OrganizationDropdown';
 
 const StyledWrapper = styled.header`
   display: flex;

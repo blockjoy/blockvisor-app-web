@@ -29,3 +29,5 @@ export * from './Pill/Pill';
 export * from './PillBox/PillBox';
 export * from './LoadingSpinner';
 export * from './NodeEarnings/NodeEarnings';
+export * from './ButtonWithDropdown/ButtonWithDropdown';
+export * from './DropdownItem/DropdownItem';

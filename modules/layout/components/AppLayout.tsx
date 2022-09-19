@@ -6,7 +6,7 @@ import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
 import { NodeAdd, HostAdd } from '.';
 import { PrivateRoute } from '@modules/auth';
-import { OrganisationAdd } from './organization/OrganisationAdd';
+import { EditOrganisaton, OrganisationAdd } from '@modules/organisations';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -24,6 +24,7 @@ export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
         <NodeAdd />
         <HostAdd />
         <OrganisationAdd />
+        <EditOrganisaton />
         <Breadcrumb breadcrumb={breadcrumb} />
         <Page>{children}</Page>
       </PrivateRoute>
