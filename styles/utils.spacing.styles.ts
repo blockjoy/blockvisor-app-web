@@ -1,5 +1,9 @@
 import { css } from '@emotion/react';
 
+export const divider = css`
+  border-top: 1px solid var(--color-text-5-o10);
+`;
+
 export const spacing = {
   bottom: {
     micro: css`
