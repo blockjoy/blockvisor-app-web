@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 import IconDashboard from '@public/assets/icons/grid-12.svg';
 import IconHosts from '@public/assets/icons/host-12.svg';
+import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
 
 const StyledWrapper = styled.main`
@@ -49,8 +50,8 @@ const blocks = [
     title: 'BLOCKVISOR',
     items: [
       { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
-      // { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
       { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
+      { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
     ],
   },
   // {
