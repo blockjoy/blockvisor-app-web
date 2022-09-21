@@ -31,7 +31,6 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(true);
 
     const hosts: any = await apiClient.getHosts();
-    console.log(`Got hosts: ${JSON.stringify(hosts)}`);
     const mappedHosts = hosts.map((host: any) => ({
       value: host.id.value,
       label: host.name,
@@ -39,7 +38,6 @@ export const useNodeAdd = (): Hook => {
     setHostList(mappedHosts);
 
     const blockchains: any = await apiClient.getBlockchains();
-    console.log(`Got blockchains in component: ${JSON.stringify(blockchains)}`);
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id.value,
       label: b.label,

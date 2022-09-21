@@ -53,7 +53,6 @@ export const NodeAdd: FC = () => {
 
   useEffect(() => {
     if (blockchainList?.length) {
-      console.log(`Got node types: ${JSON.stringify(blockchainList[0])}`);
       const nodeTypes = blockchainList[0].supportedNodeTypes;
       setSupportedNodeTypes(nodeTypes);
       form.setValue('nodeType', nodeTypes[0]);
