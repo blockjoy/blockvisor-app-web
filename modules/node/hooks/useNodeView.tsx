@@ -1,18 +1,28 @@
-import { appState } from '@modules/app/store';
-import { apiClient } from '@modules/client';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { nodeTypeList } from '@shared/constants/lookups';
-import { Uuid, Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { formatDistanceToNow } from 'date-fns';
-import { useState } from 'react';
+import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { apiClient } from '@modules/client';
+import { useState } from 'react';
 
 type Args = string | string[] | undefined;
 
-export type CreateNodeParams = {
-  nodeType: string;
-  host: string;
+type Hook = {
+  loadNode: (args1: Args) => void;
+  deleteNode: (args1: Args) => void;
+  stopNode: (args1: Args) => void;
+  restartNode: (args1: Args) => void;
+  isLoading: boolean;
+  node: BlockjoyNode;
+};
+
+const defaultNode: BlockjoyNode = {
+  status: 0,
+  name: '',
+  id: '',
+  ip: '',
+  created: '',
+  details: [],
 };
 
 const createNodeId = (id: Args) => {
@@ -21,11 +31,9 @@ const createNodeId = (id: Args) => {
   return nodeId;
 };
 
-export const useNode = () => {
-  const setLayout = useSetRecoilState(layoutState);
-  const [app, setApp] = useRecoilState(appState);
-  const [node, setNode] = useState<Node>();
-  const [nodes, setNodes] = useState<MappedHost[]>();
+export const useNodeView = (): Hook => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [node, setNode] = useState<BlockjoyNode>(defaultNode);
 
   const deleteNode = async (id: Args) => {
     await apiClient.execDeleteNode(createNodeId(id));
@@ -43,9 +51,13 @@ export const useNode = () => {
   };
 
   const loadNode = async (id: Args) => {
+    setIsLoading(true);
+
     const nodeId = createNodeId(id);
 
     const node: any = await apiClient.getNode(nodeId);
+
+    console.log('node', node);
 
     const details = [
       {
@@ -57,7 +69,7 @@ export const useNode = () => {
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
     ];
 
-    const activeNode: any = {
+    const activeNode: BlockjoyNode = {
       id: node.id.value,
       status: node.status,
       name: node.name,
@@ -69,34 +81,7 @@ export const useNode = () => {
     };
 
     setNode(activeNode);
-    setApp({ ...app, nodeLoading: false, node: activeNode });
-  };
-
-  const loadHosts = async () => {
-    const hosts: any = await apiClient.getHosts();
-
-    const mappedHosts = hosts.map((host: Host) => ({
-      value: host.id.value,
-      label: host.name,
-    }));
-
-    setNodes(mappedHosts);
-  };
-
-  const createNode = async (params: CreateNodeParams) => {
-    const nodeType = Node.NodeType[params.nodeType];
-
-    const hostId = new Uuid();
-    hostId.setValue(params.host);
-
-    const node = new Node();
-    node.setType(nodeType);
-    node.setHostId();
-
-    await apiClient.createNode(node);
-
-    toast.success('Node Created');
-    setLayout(undefined);
+    setIsLoading(false);
   };
 
   return {
@@ -104,8 +89,7 @@ export const useNode = () => {
     deleteNode,
     stopNode,
     restartNode,
-    loadHosts,
-    createNode,
-    nodes,
+    node,
+    isLoading,
   };
 };

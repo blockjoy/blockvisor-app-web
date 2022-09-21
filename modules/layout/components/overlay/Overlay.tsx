@@ -7,7 +7,14 @@ const Overlay = () => {
 
   return (
     <div
-      css={[overlayStyles.overlay, Boolean(layout) && overlayStyles.visible]}
+      css={[
+        overlayStyles.overlay,
+        Boolean(layout) && overlayStyles.visible,
+        overlayStyles.hidden({
+          isSidebarOpen: layout === 'sidebar',
+          isOthersOpen: (layout && layout !== 'sidebar') || false,
+        }),
+      ]}
       onClick={() => setLayout(undefined)}
     />
   );

@@ -8,11 +8,12 @@ import {
   Bill,
   Host,
   HostProvision,
-  UpdateNotification,
   Metric,
   Node,
   Organization,
+  Parameter,
   ResponseMeta,
+  UpdateNotification,
   User,
   UserConfigurationParameter,
   Uuid,
@@ -28,18 +29,14 @@ import { UpdateServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Update_ser
 import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_serviceServiceClientPb';
 import { CreateBillResponse } from '@blockjoy/blockjoy-grpc/dist/out/billing_service_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
+import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb';
 import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostResponse,
   DeleteHostResponse,
-  GetHostsResponse,
   UpdateHostResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
-import Name = Metric.Name;
-import HostStatus = Host.HostStatus;
-import NodeType = Node.NodeType;
-import NodeStatus = Node.NodeStatus;
 import {
   CreateHostProvisionResponse,
   GetHostProvisionResponse,
@@ -63,9 +60,89 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
 import { CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
-import { Parameter } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
+import {
+  adjectives,
+  animals,
+  colors,
+  uniqueNamesGenerator,
+} from 'unique-names-generator';
+import Name = Metric.Name;
+import HostStatus = Host.HostStatus;
+import NodeType = Node.NodeType;
+import NodeStatus = Node.NodeStatus;
 
+export class LocalStorageWrapper {
+  HOSTS_KEY: string = 'hosts';
+  NODES_KEY: string = 'nodes';
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      if (window.localStorage.getItem(this.NODES_KEY) === '')
+        window.localStorage.setItem(this.NODES_KEY, JSON.stringify([]));
+      if (window.localStorage.getItem(this.HOSTS_KEY) === '')
+        window.localStorage.setItem(this.HOSTS_KEY, JSON.stringify([]));
+    }
+  }
+
+  setHosts(hosts: Array<GrpcHostObject>) {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(this.HOSTS_KEY, JSON.stringify(hosts));
+    }
+  }
+
+  setNodes(nodes: Array<GrpcNodeObject>) {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(this.NODES_KEY, JSON.stringify(nodes));
+    }
+  }
+
+  getHosts(): Array<GrpcHostObject> {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(window.localStorage.getItem(this.HOSTS_KEY) || '[]');
+    }
+
+    return [];
+  }
+
+  getHost(id: Uuid): GrpcHostObject | undefined {
+    return this.getHosts().find((host) => {
+      return host.id?.value === id.getValue();
+    });
+  }
+
+  addHost(host: GrpcHostObject) {
+    let hosts = this.getHosts();
+    hosts.push(host);
+
+    this.setHosts(hosts);
+  }
+
+  getNodes(): Array<GrpcNodeObject> {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(window.localStorage.getItem(this.NODES_KEY) || '[]');
+    }
+    return [];
+  }
+
+  getNode(id: Uuid): GrpcNodeObject | undefined {
+    return this.getNodes().find((node) => {
+      return node.id?.value === id.getValue();
+    });
+  }
+
+  addNode(node: GrpcNodeObject) {
+    let nodes = this.getNodes();
+    nodes.push(node);
+
+    this.setNodes(nodes);
+  }
+}
+
+export type Blockchain = {
+  id: Uuid.AsObject;
+  label: string;
+  supportedNodeTypes: Array<Node.NodeType>;
+};
 export type StatusResponse = {
   code: string;
   message: string;
@@ -153,6 +230,7 @@ export class GrpcClient {
   private organization: OrganizationServiceClient | undefined;
   private update: UpdateServiceClient | undefined;
   private user: UserServiceClient | undefined;
+  private storage: LocalStorageWrapper | undefined;
 
   private token: string;
 
@@ -161,6 +239,15 @@ export class GrpcClient {
     // this.initClients(host);
 
     this.token = '';
+  }
+
+  initStorage() {
+    this.storage = new LocalStorageWrapper();
+    this.storage.setHosts(
+      this.getDummyHosts().map((host) => {
+        return host_to_grpc_host(host);
+      }),
+    );
   }
 
   setTokenValue(token: string) {
@@ -180,6 +267,59 @@ export class GrpcClient {
     this.organization = new OrganizationServiceClient(host, null, null);
     this.update = new UpdateServiceClient(host, null, null);
     this.user = new UserServiceClient(host, null, null);
+  }
+
+  async getBlockchains(): Promise<Array<Blockchain>> {
+    let chain_definitions = [
+      {
+        label: 'Algorand',
+        supportedNodeTypes: [NodeType.NODE, NodeType.VALIDATOR],
+      },
+      {
+        label: 'Aptos',
+        supportedNodeTypes: [NodeType.NODE, NodeType.VALIDATOR],
+      },
+      {
+        label: 'Avalanche',
+        supportedNodeTypes: [NodeType.NODE, NodeType.VALIDATOR],
+      },
+      { label: 'Cosmos', supportedNodeTypes: [NodeType.NODE] },
+      {
+        label: 'Ethereum',
+        supportedNodeTypes: [NodeType.NODE, NodeType.VALIDATOR],
+      },
+      {
+        label: 'Helium',
+        supportedNodeTypes: [
+          NodeType.NODE,
+          NodeType.VALIDATOR,
+          NodeType.ETL,
+          NodeType.ORACLE,
+        ],
+      },
+      { label: 'Lightning', supportedNodeTypes: [NodeType.NODE] },
+      {
+        label: 'Near',
+        supportedNodeTypes: [NodeType.NODE, NodeType.VALIDATOR],
+      },
+      { label: 'Pocket', supportedNodeTypes: [NodeType.NODE] },
+      { label: 'Polygon', supportedNodeTypes: [NodeType.NODE] },
+      {
+        label: 'Solana',
+        supportedNodeTypes: [NodeType.NODE, NodeType.VALIDATOR],
+      },
+    ];
+    let chains: Array<Blockchain> = [];
+
+    chain_definitions.forEach((definition: any, _idx, _arr) => {
+      chains.push({
+        id: this.getDummyUuid().toObject(),
+        label: definition.label,
+        supportedNodeTypes: definition.supportedNodeTypes,
+      });
+    });
+
+    return chains;
   }
 
   getApiToken() {
@@ -206,12 +346,13 @@ export class GrpcClient {
   }
 
   getDummyNode(): Node {
+    let rand = Math.floor(Math.random() * 100);
     let node = new Node();
     node.setHostId(this.getDummyUuid());
     node.setId(this.getDummyUuid());
     node.setOrgId(this.getDummyUuid());
     node.setBlockchainId(this.getDummyUuid());
-    node.setName('lorem-node');
+    node.setName(`new-node-${rand}`);
     node.setGroupsList(['group-one']);
     node.setVersion('0.1.0');
     node.setIp('127.0.0.1');
@@ -247,6 +388,44 @@ export class GrpcClient {
     return host;
   }
 
+  getDummyHosts(): Array<Host> {
+    let hosts: Array<Host> = [];
+    let host_names = [
+      'HostFox',
+      'HostRabbit',
+      'HostMongoose',
+      'HostBeaver',
+      'HostDeer',
+    ];
+
+    host_names.forEach((name: string, _idx, _arr) => {
+      let host = this.getDummyHost();
+      host.setName(name);
+      hosts.push(host);
+    });
+
+    return hosts;
+  }
+
+  getDummyNodes(): Array<Node> {
+    let nodes: Array<Node> = [];
+    let nodes_names = [
+      'jules-cass-sparrow',
+      'carlisle-toby-rylie',
+      'ratnam-scout-fortune',
+      'georgie-navdeep-lorin',
+      'emery-jyoti-jade',
+    ];
+
+    nodes_names.forEach((name: string, _idx, _arr) => {
+      let node = this.getDummyNode();
+      node.setName(`name-${Math.floor(Math.random() * 100)}`);
+      nodes.push(node);
+    });
+
+    return nodes;
+  }
+
   getDummyTimestamp(): google_protobuf_timestamp_pb.Timestamp {
     let now = new Date();
     let fromdate = new Date();
@@ -259,6 +438,12 @@ export class GrpcClient {
     timestamp.setNanos(0);
 
     return timestamp;
+  }
+
+  getRandomName(): string {
+    return uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, animals],
+    });
   }
 
   /* Authentication service */
@@ -326,16 +511,17 @@ export class GrpcClient {
   async getDashboardMetrics(): Promise<
     Array<Metric.AsObject> | StatusResponse
   > {
+    let nodes = this.storage?.getNodes();
     let metric = new Metric();
     metric.setName(Name.ONLINE);
     let value = new google_protobuf_any_pb.Any();
-    value.setValue('8');
+    value.setValue(nodes?.length + '');
     metric.setValue(value);
 
     let metric2 = new Metric();
     metric2.setName(Name.OFFLINE);
     let value2 = new google_protobuf_any_pb.Any();
-    value2.setValue('2');
+    value2.setValue('0');
     metric2.setValue(value2);
 
     let response = new DashboardMetricsResponse();
@@ -353,20 +539,23 @@ export class GrpcClient {
     org_id?: Uuid,
     token?: string,
   ): Promise<Array<GrpcHostObject> | StatusResponse> {
-    let response = new GetHostsResponse();
-    response.setMeta(this.getDummyMeta());
-    response.addHosts(this.getDummyHost());
+    let hosts = this.storage?.getHosts() || [];
+
+    hosts?.forEach((host) => {
+      host.node_objects = this.storage
+        ?.getNodes()
+        .filter((n) => n.hostId?.value === host.id?.value);
+      /*
+            host.node_objects = this.storage?.getNodes().map((node) => {
+                if (node.hostId?.value === host.id?.value)
+                    return node
+            });
+            */
+      // host.node_objects = this.storage?.getNodes();
+    });
 
     return new Promise((resolve) => {
-      setTimeout(
-        resolve.bind(
-          null,
-          response.getHostsList().map((item) => {
-            return host_to_grpc_host(item);
-          }),
-        ),
-        1000,
-      );
+      setTimeout(resolve.bind(null, hosts), 1000);
     });
   }
 
@@ -441,12 +630,17 @@ export class GrpcClient {
     response.setMeta(this.getDummyMeta());
     response.setNode(this.getDummyNode());
 
+    let node = this.storage?.getNode(node_id);
+
+    console.log(`returning single node: ${JSON.stringify(node)}`);
+
     return new Promise((resolve) => {
-      setTimeout(
-        resolve.bind(null, node_to_grpc_node(response?.getNode())),
-        1000,
-      );
+      setTimeout(resolve.bind(null, node), 1000);
     });
+  }
+
+  async listNodes(): Promise<Array<GrpcNodeObject>> {
+    return this.storage?.getNodes() || [];
   }
 
   async createNode(
@@ -455,7 +649,17 @@ export class GrpcClient {
     let response = new CreateNodeResponse();
     response.setMeta(this.getDummyMeta());
 
-    return response.getMeta()?.toObject();
+    let new_node = this.getDummyNode();
+    new_node.setName(this.getRandomName());
+    new_node.setType(node.getType());
+    new_node.setHostId(node.getHostId());
+
+    let response_meta = response.getMeta()?.toObject();
+    response_meta?.messagesList.push(node.getId()?.getValue() || '');
+
+    this.storage?.addNode(node_to_grpc_node(new_node));
+
+    return response_meta;
   }
 
   async updateNode(
@@ -463,6 +667,20 @@ export class GrpcClient {
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpdateNodeResponse();
     response.setMeta(this.getDummyMeta());
+
+    let nodes: Array<GrpcNodeObject> = this.storage?.getNodes() || [];
+
+    if (nodes.length > 0) {
+      nodes.forEach((val: GrpcNodeObject, idx, array) => {
+        if (node.getId()?.getValue() === val.id?.value) {
+          let ts = new Timestamp();
+          ts.setSeconds(new Date().getTime() / 1000);
+          ts.setNanos(0);
+
+          val.updatedAt = ts.toObject();
+        }
+      });
+    }
 
     return response.getMeta()?.toObject();
   }

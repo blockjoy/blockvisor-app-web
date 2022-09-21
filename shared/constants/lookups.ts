@@ -9,6 +9,19 @@ export const nodeTypeList = [
   { id: 7, name: 'Relay' },
 ];
 
+export const blockchainList = [
+  { value: '1', label: 'Algorand' },
+  { value: '2', label: 'Aptos' },
+  { value: '3', label: 'Cosmos' },
+  { value: '4', label: 'Ethereum' },
+  { value: '5', label: 'Helium' },
+  { value: '6', label: 'Lightning' },
+  { value: '7', label: 'Near' },
+  { value: '8', label: 'Pocket' },
+  { value: '9', label: 'Polygon' },
+  { value: '10', label: 'Solana' },
+];
+
 export const nodeStatusList = [
   { id: 0, name: 'Undefined' },
   { id: 1, name: 'Broadcasting' },

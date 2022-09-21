@@ -41,7 +41,7 @@ export default () => {
   const layout = useRecoilValue(layoutState);
 
   return (
-    <StyledSidebar isSidebarOpen={Boolean(layout)}>
+    <StyledSidebar isSidebarOpen={layout === 'sidebar'}>
       <SidebarHeader />
       <StyledSidebarWrapper>
         {/* <SidebarLeft /> */}

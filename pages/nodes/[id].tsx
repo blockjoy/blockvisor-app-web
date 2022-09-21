@@ -1,5 +1,5 @@
 import { AppLayout } from '@modules/layout';
-import NodeModule from '@modules/app/components/node/Node';
+import NodeModule from '@modules/node/components/nodeView/NodeView';
 
 const Node = () => <NodeModule />;
 

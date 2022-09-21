@@ -4,7 +4,7 @@ import Topbar from './topbar/Topbar';
 import Profile from './profile/Profile';
 import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
-import { NodeAdd } from '.';
+import { NodeAdd } from '@modules/node/components/nodeAdd/NodeAdd';
 import { PrivateRoute } from '@modules/auth';
 import { EditOrganisaton, OrganisationAdd } from '@modules/organisations';
 import { HostAdd } from '@modules/hosts';
