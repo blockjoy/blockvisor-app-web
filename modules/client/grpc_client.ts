@@ -167,7 +167,7 @@ export class GrpcClient {
   private token: string;
 
   constructor(host: string) {
-    this.initClients(host).then(() => console.log('Clients connected'));
+    this.initClients(host);
 
     this.token = '';
   }
@@ -187,7 +187,7 @@ export class GrpcClient {
   /**
    * Initialize all gRPC clients
    */
-  private async initClients(host: string) {
+  private initClients(host: string) {
     this.authentication = new AuthenticationServiceClient(host, null, null);
     this.host = new HostServiceClient(host, null, null);
     this.blockchain = new BlockchainServiceClient(host, null, null);
@@ -213,7 +213,6 @@ export class GrpcClient {
   }
 
   getAuthHeader(): AuthHeader {
-    console.log(`Using auth header: ${JSON.stringify(this.getApiToken())}`);
     return { authorization: `Bearer ${this.getApiToken()}` }
   }
 
@@ -368,7 +367,6 @@ export class GrpcClient {
 
     return this.blockchain?.list(request, this.getAuthHeader())
         .then((response) => {
-          console.log(`Got blockchain response: ${response}`);
           return response.getBlockchainsList().map((chain) => chain.toObject());
         })
         .catch((err) => {
@@ -430,7 +428,6 @@ export class GrpcClient {
     return this.host
       ?.get(request, this.getAuthHeader())
       .then((response) => {
-        console.log(`Got host response: ${response}`);
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
