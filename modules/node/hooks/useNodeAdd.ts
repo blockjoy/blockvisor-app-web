@@ -1,11 +1,12 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
-import { Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Blockchain, Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { GrpcHostObject } from '@modules/client/grpc_client';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useNodeList } from './useNodeList';
+import NodeType = Node.NodeType;
 
 type Hook = {
   loadLookups: VoidFunction;
@@ -38,10 +39,11 @@ export const useNodeAdd = (): Hook => {
     setHostList(mappedHosts);
 
     const blockchains: any = await apiClient.getBlockchains();
+    console.log(`Got blockchains in component: ${JSON.stringify(blockchains)}`);
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id.value,
       label: b.label,
-      supportedNodeTypes: b.supportedNodeTypes,
+      supportedNodeTypes: b.supportedNodesTypesList,
     }));
 
     setBlockchainList(mappedBlockchains);
