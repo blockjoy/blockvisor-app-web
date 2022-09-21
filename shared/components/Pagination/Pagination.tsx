@@ -58,7 +58,6 @@ export const Pagination: FC<Props> = ({
     }
 
     if (totalPages && currentPage === totalPages - 1) {
-      console.log('predzadnja');
       return setPagesToRender([
         currentPage - 3,
         currentPage - 2,
