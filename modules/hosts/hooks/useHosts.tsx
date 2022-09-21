@@ -1,5 +1,4 @@
 import { useRecoilState } from 'recoil';
-import { appState } from '@modules/app/store';
 import {
   HostProvision,
   Uuid,
@@ -11,9 +10,7 @@ import { hostsAtoms } from '../store/hostAtoms';
 import { delay } from '@shared/utils/delay';
 
 export const useHosts = () => {
-  const [app, setApp] = useRecoilState(appState);
   const [hostAddKey, setHostAddKey] = useState<string>();
-
   const [hosts, setHosts] = useRecoilState(hostsAtoms.hosts);
   const [host, setHost] = useRecoilState(hostsAtoms.host);
   const [loadingHost, setHostLoading] = useRecoilState(hostsAtoms.hostLoading);
