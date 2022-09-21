@@ -5,17 +5,22 @@ import { useRecoilState } from 'recoil';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { Drawer, DrawerContent, DrawerHeader, DrawerAction } from '..';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerAction,
+} from '../../../layout/components';
 import { styles } from './hostAdd.styles';
 import { HostAddConfirm } from './HostAddConfirm';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useHost } from '@modules/app/hooks/useHost';
+import { useHosts } from '@modules/hosts/hooks/useHosts';
 
 export const HostAdd = () => {
   const router = useRouter();
 
   const [layout, setLayout] = useRecoilState(layoutState);
-  const { createHostProvision, hostAddKey } = useHost();
+  const { createHostProvision, hostAddKey } = useHosts();
 
   const [step, setStep] = useState<1 | 2>(1);
   const [showCloseDialog, setShowCloseDialog] = useState<boolean>(false);

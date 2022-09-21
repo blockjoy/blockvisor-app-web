@@ -3,8 +3,9 @@ import { Organization, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organisationAtoms';
-import { delay } from '../utils/delay';
+
 import { isStatusResponse } from '../utils/typeGuards';
+import { delay } from '@shared/utils/delay';
 
 // used for generating mock member count
 function randomIntFromInterval(min: number, max: number) {

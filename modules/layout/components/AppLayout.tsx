@@ -4,9 +4,10 @@ import Topbar from './topbar/Topbar';
 import Profile from './profile/Profile';
 import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
-import { NodeAdd, HostAdd } from '.';
+import { NodeAdd } from '.';
 import { PrivateRoute } from '@modules/auth';
 import { EditOrganisaton, OrganisationAdd } from '@modules/organisations';
+import { HostAdd } from '@modules/hosts';
 
 type LayoutType = {
   children: React.ReactNode;

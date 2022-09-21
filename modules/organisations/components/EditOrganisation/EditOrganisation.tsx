@@ -6,7 +6,7 @@ import {
 } from '@modules/layout/components';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useOrganisations } from '@modules/organisations/hooks/useOrganisations';
-import { delay } from '@modules/organisations/utils/delay';
+import { delay } from '@shared/utils/delay';
 import { Button, Input } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';

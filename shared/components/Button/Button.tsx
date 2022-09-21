@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { LoadingSpinner } from '../LoadingSpinner';
 
 type Props = {
+  id?: string;
   children?: ReactNode;
   size?: ButtonSize;
   style?: ButtonStyle;
@@ -34,6 +35,7 @@ export function Button({
   display = 'inline',
   type = 'button',
   disabled = false,
+  id,
   href,
   customCss,
   loading,
@@ -61,6 +63,7 @@ export function Button({
 
   return (
     <button
+      id={id}
       disabled={disabled}
       type={type}
       css={buttonStyles}

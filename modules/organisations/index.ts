@@ -6,4 +6,3 @@ export * from './components/EditOrganisation/EditOrganisation';
 export * from './hooks/useOrganisations';
 export * from './store/organisationAtoms';
 export * from './utils/typeGuards';
-export * from './utils/delay';

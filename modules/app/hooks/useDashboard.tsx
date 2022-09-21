@@ -1,10 +1,9 @@
 import { useRecoilState } from 'recoil';
 import { appState } from '@modules/app/store';
 import { Dashboard } from '../components/dashboard/Dashboard';
-import { TableBlockHosts } from '../components/shared';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import { HostStatus } from '../components/shared/host-status/HostStatus';
 import { apiClient } from '@modules/client';
+import { HostStatus, TableBlockHosts } from '@modules/hosts';
 
 interface Hook {
   loadDashboard: () => void;

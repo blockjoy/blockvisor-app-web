@@ -1,13 +1,7 @@
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
-type Props = {
-  address: string;
-  location: string;
-  name: string;
-};
-
-const styles = {
+export const styles = {
   wrapper: css`
     display: block;
   `,
@@ -45,19 +39,3 @@ const styles = {
     }
   `,
 };
-
-export const TableBlockHosts: React.FC<Props> = ({
-  name,
-  location,
-  address,
-}) => (
-  <span css={styles.wrapper}>
-    <span css={styles.name} className="has-hover-color">
-      {name}
-    </span>
-    <span css={styles.row}>
-      <span css={styles.location}>{location}</span>
-      <span css={styles.address}>{address}</span>
-    </span>
-  </span>
-);
