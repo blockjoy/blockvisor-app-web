@@ -6,6 +6,7 @@ import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../utils/toRow';
+import { Pagination } from '@shared/components/Pagination/Pagination';
 
 const headers = [
   {
@@ -52,6 +53,7 @@ export function Hosts() {
         rows={rows}
         onRowClick={handleRowClick}
       />
+      <Pagination numberOfItems={10} itemsPerPage={1} />
     </PageSection>
   );
 }
