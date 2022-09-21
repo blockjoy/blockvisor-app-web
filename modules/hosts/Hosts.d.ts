@@ -56,11 +56,3 @@ type Host = {
   status: number;
   version: string;
 };
-
-type SingleHost = {
-  id: string;
-  name: string;
-  address: string;
-  location: string;
-  status: string;
-};
