@@ -5,6 +5,7 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
 import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { delay } from '@shared/utils/delay';
 
 interface Hook {
   loadDashboard: () => void;
@@ -81,6 +82,8 @@ export const useDashboard = (): Hook => {
       ],
       recentHosts,
     };
+
+    await delay(300);
 
     setApp({
       ...app,

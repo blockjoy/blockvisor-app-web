@@ -4,6 +4,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
 import { apiClient } from '@modules/client';
 import { useState } from 'react';
+import { delay } from '@shared/utils/delay';
 
 type Args = string | string[] | undefined;
 
@@ -81,6 +82,9 @@ export const useNodeView = (): Hook => {
     };
 
     setNode(activeNode);
+
+    await delay(300);
+
     setIsLoading(false);
   };
 
