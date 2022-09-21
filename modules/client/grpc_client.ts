@@ -18,6 +18,7 @@ import {
   UserConfigurationParameter,
   Uuid,
   RequestMeta,
+  Blockchain,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -34,7 +35,7 @@ import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb'
 import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostResponse,
-  DeleteHostResponse,
+  DeleteHostResponse, GetHostsRequest,
   GetHostsResponse,
   UpdateHostResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
@@ -58,6 +59,7 @@ import {
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
+  CreateUserRequest,
   CreateUserResponse,
   GetConfigurationResponse,
   GetUserResponse,
@@ -159,7 +161,6 @@ export class GrpcClient {
   private token: string;
 
   constructor(host: string) {
-    // TODO: uncomment when backend services are available
     this.initClients(host).then(() => console.log('Clients connected'));
 
     this.token = '';
@@ -174,10 +175,10 @@ export class GrpcClient {
    */
   private async initClients(host: string) {
     this.authentication = new AuthenticationServiceClient(host, null, null);
+    this.host = new HostServiceClient(host, null, null);
     /*
         this.billing = new BillingServiceClient(host, null, null);
         this.dashboard = new DashboardServiceClient(host, null, null);
-        this.host = new HostServiceClient(host, null, null);
         this.host_provision = new HostProvisionServiceClient(host, null, null);
         this.node = new NodeServiceClient(host, null, null);
         this.organization = new OrganizationServiceClient(host, null, null);
@@ -188,10 +189,10 @@ export class GrpcClient {
 
   getApiToken() {
     let api_token = new ApiToken();
-    // TODO: base64 encode token value
     api_token.setValue(this.token);
 
-    return api_token;
+    this.token = JSON.parse(window.localStorage.getItem("identity") || "").accessToken;
+    return Buffer.from(this.token).toString('base64')
   }
 
   getDummyMeta(): ResponseMeta {
@@ -285,6 +286,8 @@ export class GrpcClient {
       ?.login(request, null)
       .then((response) => {
         console.log(`Got login response: ${response}`);
+        this.token = response.getToken()?.toObject().value || "";
+
         return response.getToken()?.toObject();
       })
       .catch((err) => {
@@ -333,6 +336,23 @@ export class GrpcClient {
     return response.getBill()?.toObject();
   }
 
+  /* Blockchain service */
+
+  async getBlockchains(): Promise<Array<Blockchain.AsObject> | StatusResponse | undefined> {
+    return {
+      code: 'Unauthenticated',
+      message: `getBlockchains not yet implemented`,
+      metadata: {
+        headers: {
+          'content-type': 'application/grpc',
+          date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+          'content-length': '0',
+        },
+      },
+      source: 'None',
+    };
+  }
+
   /* Dashboard service */
 
   async getDashboardMetrics(): Promise<
@@ -364,21 +384,33 @@ export class GrpcClient {
     host_id?: Uuid,
     org_id?: Uuid,
     token?: string,
-  ): Promise<Array<GrpcHostObject> | StatusResponse> {
-    let response = new GetHostsResponse();
-    response.setMeta(this.getDummyMeta());
-    response.addHosts(this.getDummyHost());
+  ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
+    let auth = { authorization: `Bearer ${this.getApiToken()}` };
+    let oid = new Uuid();
+    oid.setValue("2592312d-daf6-4a0e-b2da-012d89b41088");
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+    let request = new GetHostsRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(oid);
 
-    return new Promise((resolve) => {
-      setTimeout(
-        resolve.bind(
-          null,
-          response.getHostsList().map((item) => {
-            return host_to_grpc_host(item);
-          }),
-        ),
-        1000,
-      );
+    return this.host?.get(request, auth).then((response) => {
+          console.log(`Got host response: ${response}`);
+          return response.getHostsList()?.map((host) => host_to_grpc_host(host))
+    })
+    .catch((err) => {
+      return {
+        code: 'Unknown',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
     });
   }
 

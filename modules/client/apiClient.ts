@@ -2,11 +2,11 @@
 import { GrpcClient as StubClient } from './stub_client';
 import { GrpcClient as RealClient } from './grpc_client';
 
-// export const apiClient =
-//   process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
-//     ? new RealClient('http://157.245.21.140:80')
-//     : new StubClient('http://157.245.21.140:80');
+export const apiClient =
+  process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+    ? new RealClient(process.env.NEXT_PUBLIC_API_URL || '')
+    : new StubClient('http://localhost:8080');
 
-export const apiClient = new RealClient('http://api.alpha.blockvisor.dev');
-
-// apiClient.initStorage();
+// if (process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production') {
+//   apiClient.initStorage();
+// }

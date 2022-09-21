@@ -2,6 +2,7 @@ import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
 import { Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { GrpcHostObject } from '@modules/client/grpc_client';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useNodeList } from './useNodeList';
@@ -29,6 +30,7 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(true);
 
     const hosts: any = await apiClient.getHosts();
+    console.log(`Got hosts: ${JSON.stringify(hosts)}`);
     const mappedHosts = hosts.map((host: any) => ({
       value: host.id.value,
       label: host.name,
