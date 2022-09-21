@@ -60,7 +60,7 @@ export const useNodeList = (): Hook => {
     setIsLoading(true);
     // TODO: Org ID needs be set here
     let org_id = new Uuid();
-    org_id.setValue('92c092b7-1e21-4247-b90c-b11fcbff8591');
+    org_id.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
     const nodes: any = await apiClient.listNodes(org_id);
 
     setNodeList(nodes);
