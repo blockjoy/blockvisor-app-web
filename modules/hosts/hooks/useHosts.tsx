@@ -22,6 +22,8 @@ export const useHosts = () => {
     setLoadingHosts(true);
     // revisit this once types are consolidated
     const hosts: any = await apiClient.getHosts();
+
+    console.log('hosts', hosts);
     setHosts(hosts);
     await delay(2000);
     setLoadingHosts(false);
