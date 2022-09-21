@@ -1,5 +1,3 @@
-import { useRecoilState } from 'recoil';
-import { appState } from '@modules/app/store';
 import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { formatDistanceToNow } from 'date-fns';
 import { nodeTypeList } from '@shared/constants/lookups';
@@ -14,6 +12,17 @@ type Hook = {
   deleteNode: (args1: Args) => void;
   stopNode: (args1: Args) => void;
   restartNode: (args1: Args) => void;
+  isLoading: boolean;
+  node: BlockjoyNode;
+};
+
+const defaultNode: BlockjoyNode = {
+  status: 0,
+  name: '',
+  id: '',
+  ip: '',
+  created: '',
+  details: [],
 };
 
 const createNodeId = (id: Args) => {
@@ -22,12 +31,9 @@ const createNodeId = (id: Args) => {
   return nodeId;
 };
 
-export const useNode = (): Hook => {
-  const [app, setApp] = useRecoilState(appState);
-
+export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const [selectedNode, setSelectedNode] = useState<BlockjoyNode>();
+  const [node, setNode] = useState<BlockjoyNode>(defaultNode);
 
   const deleteNode = async (id: Args) => {
     await apiClient.execDeleteNode(createNodeId(id));
@@ -45,14 +51,13 @@ export const useNode = (): Hook => {
   };
 
   const loadNode = async (id: Args) => {
-    setApp({
-      ...app,
-      nodeLoading: true,
-    });
+    setIsLoading(true);
 
     const nodeId = createNodeId(id);
 
     const node: any = await apiClient.getNode(nodeId);
+
+    console.log('node', node);
 
     const details = [
       {
@@ -75,7 +80,7 @@ export const useNode = (): Hook => {
       details,
     };
 
-    setSelectedNode(activeNode);
+    setNode(activeNode);
     setIsLoading(false);
   };
 
@@ -84,5 +89,7 @@ export const useNode = (): Hook => {
     deleteNode,
     stopNode,
     restartNode,
+    node,
+    isLoading,
   };
 };

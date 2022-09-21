@@ -12,18 +12,19 @@ import { DetailsHeader } from '../../../app/components/shared/details-header/Det
 import { DetailsTable } from '../../../app/components/shared/details-table/DetailsTable';
 import { DangerZone } from '../../../app/components/shared/danger-zone/DangerZone';
 import { appState } from '@modules/app/store';
-import { useNode } from '@modules/app/hooks/useNode';
+import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { NodeEarnings } from '@shared/components';
 
 export default () => {
-  const [isMounted, setMounted] = useState(false);
+  const [isMounted, setMounted] = useState<boolean>(false);
+
   const router = useRouter();
   const { id } = router.query;
-  const { loadNode, deleteNode, stopNode, restartNode } = useNode();
-  const { node, nodeLoading } = useRecoilValue(appState);
-  const [app, setApp] = useRecoilState(appState);
+
+  const { loadNode, deleteNode, stopNode, restartNode, isLoading, node } =
+    useNodeView();
 
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id);
@@ -46,7 +47,7 @@ export default () => {
           <BackButton />
         </PageHeader>
 
-        {!nodeLoading ? (
+        {!isLoading ? (
           <>
             <DetailsHeader
               handleStop={handleStop}
@@ -70,7 +71,7 @@ export default () => {
         )}
       </PageSection>
 
-      {!nodeLoading && (
+      {!isLoading && (
         <PageSection>
           <NodeEarnings />
         </PageSection>
