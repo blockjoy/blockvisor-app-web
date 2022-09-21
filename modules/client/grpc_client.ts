@@ -34,6 +34,7 @@ import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/t
 import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb';
 import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
+  CreateHostRequest,
   CreateHostResponse,
   DeleteHostResponse,
   GetHostsRequest,
@@ -450,10 +451,29 @@ export class GrpcClient {
   async createHost(
     host: Host,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateHostResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new CreateHostRequest();
+    request.setMeta(request_meta);
+    request.setHost(host);
+
+    return this.host?.create(request, this.getAuthHeader())
+        .then((response) => response.getMeta()?.toObject())
+        .catch((err) => {
+          return {
+            code: 'Create host error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   async updateHost(
