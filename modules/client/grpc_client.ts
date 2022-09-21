@@ -52,7 +52,7 @@ import {
 import {
   CreateNodeRequest,
   CreateNodeResponse, GetNodeRequest,
-  GetNodeResponse,
+  GetNodeResponse, ListNodesRequest,
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
@@ -180,10 +180,6 @@ export class GrpcClient {
 
   initStorage() {
     return null;
-  }
-
-  async listNodes(): Promise<Array<GrpcNodeObject>> {
-    return [];
   }
 
   /**
@@ -531,6 +527,34 @@ export class GrpcClient {
 
   /* Node service */
 
+  async listNodes(org_id: Uuid): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
+    console.log(`listing all nodes over all hosts of org ${org_id}`);
+
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ListNodesRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(org_id);
+
+    return this.node?.list(request, this.getAuthHeader()).then((response) => {
+      return response.getNodesList().map((node) => node_to_grpc_node(node));
+    }).catch((err) => {
+      return {
+        code: 'Get nodes error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
+  }
+
   async getNode(
     node_id: Uuid,
   ): Promise<GrpcNodeObject | StatusResponse | undefined> {
@@ -564,6 +588,7 @@ export class GrpcClient {
   async createNode(
     node: Node,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    console.log(`Got node to create: ${node}`);
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -572,8 +597,10 @@ export class GrpcClient {
     request.setNode(node);
 
     return this.node?.create(request, this.getAuthHeader()).then((response) => {
+      console.log(`created node: ${JSON.stringify(response.toObject())}`);
       return response.getMeta()?.toObject();
     }).catch((err) => {
+      console.log(`got err: ${err}`);
       return {
         code: 'Create node error',
         message: `${err}`,
