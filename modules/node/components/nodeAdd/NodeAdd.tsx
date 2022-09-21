@@ -62,6 +62,7 @@ export const NodeAdd: FC = () => {
   useEffect(() => {
     if (hostList?.length) {
       form.setValue('host', hostList[0]?.value);
+      form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', '1');
     }
   }, [hostList?.length]);

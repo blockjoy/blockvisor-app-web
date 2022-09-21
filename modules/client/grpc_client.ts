@@ -176,6 +176,10 @@ export class GrpcClient {
   }
 
   async listNodes(): Promise<Array<GrpcNodeObject>> {
+    const hosts = await this.getHosts();
+
+    console.log('hosts', hosts);
+
     return [];
   }
 
