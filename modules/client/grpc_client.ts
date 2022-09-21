@@ -49,6 +49,7 @@ import {
   GetHostProvisionResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
+  CreateNodeRequest,
   CreateNodeResponse, GetNodeRequest,
   GetNodeResponse,
   UpdateNodeResponse,
@@ -543,10 +544,29 @@ export class GrpcClient {
   async createNode(
     node: Node,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateNodeResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new CreateNodeRequest();
+    request.setMeta(request_meta);
+    request.setNode(node);
+
+    return this.node?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject();
+    }).catch((err) => {
+      return {
+        code: 'Create node error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
   }
 
   async updateNode(
