@@ -12,8 +12,9 @@ import {
   DrawerHeader,
 } from '../../../layout/components';
 import { width } from 'styles/utils.width.styles';
-import { delay, useOrganisations } from '@modules/organisations';
+import { useOrganisations } from '@modules/organisations';
 import { toast } from 'react-toastify';
+import { delay } from '@shared/utils/delay';
 
 type OrganisationAddForm = {
   name: string;

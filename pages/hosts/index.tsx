@@ -1,10 +1,10 @@
 import { AppLayout } from '@modules/layout';
-import { Hosts as HostsModule } from '@modules/app/components/hosts/Hosts';
+import { Hosts } from '@modules/hosts/components/Hosts';
 
-const Hosts = () => <HostsModule />;
+const HostsPage = () => <Hosts />;
 
-Hosts.getLayout = function getLayout(page: any) {
+HostsPage.getLayout = function getLayout(page: any) {
   return <AppLayout breadcrumb={['Hosts', 'All']}>{page}</AppLayout>;
 };
 
-export default Hosts;
+export default HostsPage;
