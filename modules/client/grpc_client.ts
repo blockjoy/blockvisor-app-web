@@ -35,9 +35,7 @@ import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb'
 import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostRequest,
-  CreateHostResponse,
-  DeleteHostResponse,
-  GetHostsRequest,
+  CreateHostResponse, DeleteHostResponse, GetHostsRequest,
   GetHostsResponse,
   UpdateHostResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
@@ -46,6 +44,7 @@ import HostStatus = Host.HostStatus;
 import NodeType = Node.NodeType;
 import NodeStatus = Node.NodeStatus;
 import {
+  CreateHostProvisionRequest,
   CreateHostProvisionResponse,
   GetHostProvisionResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
@@ -75,10 +74,15 @@ import { CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_servic
 import { Parameter } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
+<<<<<<< HEAD
 import {
   GetBlockchainRequest,
   ListBlockchainsRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
+=======
+import { GetBlockchainRequest, ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
+import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+>>>>>>> be9025f (feat: update grpc client, static org id)
 
 export type StatusResponse = {
   code: string;
@@ -154,11 +158,11 @@ export type ConvenienceConversion = {
   id_str: string | undefined;
 };
 export type GrpcHostObject = Host.AsObject &
-  ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
+    ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
 export type GrpcNodeObject = Node.AsObject &
-  ConvenienceConversion & { updated_at_datetime: Date | undefined };
+    ConvenienceConversion & { updated_at_datetime: Date | undefined };
 export type GrpcUserObject = User.AsObject &
-  ConvenienceConversion & { updated_at_datetime: Date | undefined };
+    ConvenienceConversion & { updated_at_datetime: Date | undefined };
 
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
@@ -195,10 +199,10 @@ export class GrpcClient {
     this.host = new HostServiceClient(host, null, null);
     this.blockchain = new BlockchainServiceClient(host, null, null);
     this.node = new NodeServiceClient(host, null, null);
+    this.host_provision = new HostProvisionServiceClient(host, null, null);
     /*
         this.billing = new BillingServiceClient(host, null, null);
         this.dashboard = new DashboardServiceClient(host, null, null);
-        this.host_provision = new HostProvisionServiceClient(host, null, null);
         this.organization = new OrganizationServiceClient(host, null, null);
         this.update = new UpdateServiceClient(host, null, null);
         this.user = new UserServiceClient(host, null, null);
@@ -210,7 +214,7 @@ export class GrpcClient {
     api_token.setValue(this.token);
 
     this.token = JSON.parse(
-      window.localStorage.getItem('identity') || '',
+        window.localStorage.getItem('identity') || '',
     ).accessToken;
     return Buffer.from(this.token).toString('base64');
   }
@@ -293,8 +297,8 @@ export class GrpcClient {
   /* Authentication service */
 
   async login(
-    email: string,
-    pwd: string,
+      email: string,
+      pwd: string,
   ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
     console.debug(`Using "${email}" => "${pwd}" for login`);
 
@@ -307,27 +311,26 @@ export class GrpcClient {
     request.setMeta(request_meta);
 
     return this.authentication
-      ?.login(request, null)
-      .then((response) => {
-        console.log(`Got login response: ${response}`);
-        this.token = response.getToken()?.toObject().value || '';
+        ?.login(request, null)
+        .then((response) => {
+          this.token = response.getToken()?.toObject().value || '';
 
-        return response.getToken()?.toObject();
-      })
-      .catch((err) => {
-        return {
-          code: 'Unauthenticated',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
+          return response.getToken()?.toObject();
+        })
+        .catch((err) => {
+          return {
+            code: 'Unauthenticated',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
             },
-          },
-          source: 'None',
-        };
-      });
+            source: 'None',
+          };
+        });
   }
 
   async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
@@ -340,8 +343,8 @@ export class GrpcClient {
   /* Billing service */
 
   async createBill(
-    user_id: Uuid,
-    org_id: Uuid,
+      user_id: Uuid,
+      org_id: Uuid,
   ): Promise<Bill.AsObject | StatusResponse | undefined> {
     let bill = new Bill();
     bill.setId('some-bill-id');
@@ -394,8 +397,8 @@ export class GrpcClient {
   /* Dashboard service */
 
   async getDashboardMetrics(): Promise<
-    Array<Metric.AsObject> | StatusResponse
-  > {
+      Array<Metric.AsObject> | StatusResponse
+      > {
     let metric = new Metric();
     metric.setName(Name.ONLINE);
     let value = new google_protobuf_any_pb.Any();
@@ -419,12 +422,16 @@ export class GrpcClient {
   /* Host service */
 
   async getHosts(
-    host_id?: Uuid,
-    org_id?: Uuid,
-    token?: string,
+      host_id?: Uuid,
+      org_id?: Uuid,
+      token?: string,
   ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
     let oid = new Uuid();
+<<<<<<< HEAD
     oid.setValue('2592312d-daf6-4a0e-b2da-012d89b41088');
+=======
+    oid.setValue('92c092b7-1e21-4247-b90c-b11fcbff8591');
+>>>>>>> be9025f (feat: update grpc client, static org id)
 
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -432,6 +439,7 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setOrgId(oid);
 
+<<<<<<< HEAD
     return this.host
       ?.get(request, this.getAuthHeader())
       .then((response) => {
@@ -448,15 +456,31 @@ export class GrpcClient {
               'content-type': 'application/grpc',
               date: 'Fri, 26 Aug 2022 17:55:33 GMT',
               'content-length': '0',
+=======
+    return this.host?.get(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getHostsList()?.map((host) => host_to_grpc_host(host));
+        })
+        .catch((err) => {
+          console.error(`error on get hosts: ${err}`);
+          return {
+            code: 'Unknown',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+>>>>>>> be9025f (feat: update grpc client, static org id)
             },
-          },
-          source: 'None',
-        };
-      });
+            source: 'None',
+          };
+        });
   }
 
   async createHost(
-    host: Host,
+      host: Host,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -485,7 +509,7 @@ export class GrpcClient {
   }
 
   async updateHost(
-    host: Host,
+      host: Host,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpdateHostResponse();
     response.setMeta(this.getDummyMeta());
@@ -494,7 +518,7 @@ export class GrpcClient {
   }
 
   async deleteHost(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new DeleteHostResponse();
     response.setMeta(this.getDummyMeta());
@@ -505,10 +529,10 @@ export class GrpcClient {
   /* Host provision service */
 
   async getHostProvision(
-    otp?: string,
+      otp?: string,
   ): Promise<
-    Array<HostProvision.AsObject> | StatusResponse | undefined | void
-  > {
+      Array<HostProvision.AsObject> | StatusResponse | undefined | void
+      > {
     let provision = new HostProvision();
 
     if (otp) provision.setId(otp);
@@ -529,21 +553,44 @@ export class GrpcClient {
   }
 
   async createHostProvision(
-    host_provision: HostProvision,
+      host_provision: HostProvision,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateHostProvisionResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new CreateHostProvisionRequest();
+    request.setMeta(request_meta);
+    request.setHostProvision(host_provision);
+
+    return this.host_provision?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return {
+        code: 'Create host provision error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
   }
 
   /* Node service */
 
+<<<<<<< HEAD
   async listNodes(
     org_id: Uuid,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
     console.log(`listing all nodes over all hosts of org ${org_id}`);
 
+=======
+  async listNodes(org_id: Uuid): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
+>>>>>>> be9025f (feat: update grpc client, static org id)
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -551,6 +598,7 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setOrgId(org_id);
 
+<<<<<<< HEAD
     return this.node
       ?.list(request, this.getAuthHeader())
       .then((response) => {
@@ -570,10 +618,28 @@ export class GrpcClient {
           source: 'None',
         };
       });
+=======
+    return this.node?.list(request, this.getAuthHeader()).then((response) => {
+      return response.getNodesList().map((node) => node_to_grpc_node(node));
+    }).catch((err) => {
+      return {
+        code: 'Get nodes error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
+>>>>>>> be9025f (feat: update grpc client, static org id)
   }
 
   async getNode(
-    node_id: Uuid,
+      node_id: Uuid,
   ): Promise<GrpcNodeObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -604,11 +670,16 @@ export class GrpcClient {
   }
 
   async createNode(
-    node: Node,
+      node: Node,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     console.log(`Got node to create: ${node}`);
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
+
+    node.setName(uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }));
+    node.setStatus(NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
+    node.setWalletAddress("0x0198230123120");
+    node.setAddress("0x023848388637");
 
     let request = new CreateNodeRequest();
     request.setMeta(request_meta);
@@ -638,7 +709,7 @@ export class GrpcClient {
   }
 
   async updateNode(
-    node: Node,
+      node: Node,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpdateNodeResponse();
     response.setMeta(this.getDummyMeta());
@@ -649,8 +720,8 @@ export class GrpcClient {
   /* Organization service */
 
   async getOrganizations(): Promise<
-    Array<Organization.AsObject> | StatusResponse
-  > {
+      Array<Organization.AsObject> | StatusResponse
+      > {
     let organization = new Organization();
     organization.setId(this.getDummyUuid());
     organization.setName('ThisGroup');
@@ -667,7 +738,7 @@ export class GrpcClient {
   }
 
   async createOrganization(
-    organization: Organization,
+      organization: Organization,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CreateOrganizationResponse();
     response.setMeta(this.getDummyMeta());
@@ -676,7 +747,7 @@ export class GrpcClient {
   }
 
   async updateOrganization(
-    organization: Organization,
+      organization: Organization,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpdateOrganizationResponse();
     response.setMeta(this.getDummyMeta());
@@ -685,7 +756,7 @@ export class GrpcClient {
   }
 
   async deleteOrganization(
-    organization_id: Uuid,
+      organization_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new DeleteOrganizationResponse();
     response.setMeta(this.getDummyMeta());
@@ -712,10 +783,8 @@ export class GrpcClient {
   }
 
   async createUser(
-    user: UIUser,
+      user: UIUser,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    console.log(`using user data: ${user}`);
-
     let response = new CreateUserResponse();
     response.setMeta(this.getDummyMeta());
 
@@ -723,7 +792,7 @@ export class GrpcClient {
   }
 
   async upsertConfiguration(
-    params: Array<UserConfigurationParameter>,
+      params: Array<UserConfigurationParameter>,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpsertConfigurationResponse();
     response.setMeta(this.getDummyMeta());
@@ -732,8 +801,8 @@ export class GrpcClient {
   }
 
   async getConfiguration(): Promise<
-    Array<UserConfigurationParameter.AsObject> | StatusResponse | undefined
-  > {
+      Array<UserConfigurationParameter.AsObject> | StatusResponse | undefined
+      > {
     let response = new GetConfigurationResponse();
     response.setMeta(this.getDummyMeta());
 
@@ -743,10 +812,10 @@ export class GrpcClient {
   /* Update service */
 
   async getUpdates(): Promise<
-    | Array<UpdateNotification.AsObject | undefined>
-    | StatusResponse
-    | Array<undefined>
-  > {
+      | Array<UpdateNotification.AsObject | undefined>
+      | StatusResponse
+      | Array<undefined>
+      > {
     let update = new UpdateNotification();
     update.setNode(this.getDummyNode());
 
@@ -760,8 +829,8 @@ export class GrpcClient {
   /* Command service */
 
   async execCreateNode(
-    host_id: Uuid,
-    node: UINodeCreate,
+      host_id: Uuid,
+      node: UINodeCreate,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -770,7 +839,7 @@ export class GrpcClient {
   }
 
   async execDeleteNode(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -779,7 +848,7 @@ export class GrpcClient {
   }
 
   async execStartNode(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -788,7 +857,7 @@ export class GrpcClient {
   }
 
   async execStopNode(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -797,7 +866,7 @@ export class GrpcClient {
   }
 
   async execRestartNode(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -806,7 +875,7 @@ export class GrpcClient {
   }
 
   async execCreateHost(
-    host: UIHostCreate,
+      host: UIHostCreate,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -815,7 +884,7 @@ export class GrpcClient {
   }
 
   async execDeleteHost(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -824,7 +893,7 @@ export class GrpcClient {
   }
 
   async execStartHost(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -833,7 +902,7 @@ export class GrpcClient {
   }
 
   async execStopHost(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -842,7 +911,7 @@ export class GrpcClient {
   }
 
   async execRestartHost(
-    host_id: Uuid,
+      host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -851,8 +920,8 @@ export class GrpcClient {
   }
 
   async execGeneric(
-    host_id: Uuid,
-    params: Array<Parameter>,
+      host_id: Uuid,
+      params: Array<Parameter>,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());

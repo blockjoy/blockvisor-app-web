@@ -16,7 +16,7 @@ export const useDashboard = (): Hook => {
   const getRecentHosts = async () => {
     const org_id = new Uuid();
 
-    org_id.setValue('2592312d-daf6-4a0e-b2da-012d89b41088');
+    org_id.setValue('92c092b7-1e21-4247-b90c-b11fcbff8591');
 
     const hostsResponse: any = await apiClient.getHosts(
       undefined,
