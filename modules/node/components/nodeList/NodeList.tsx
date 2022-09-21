@@ -5,8 +5,10 @@ import { Pagination } from '@shared/components/Pagination/Pagination';
 import { useEffect } from 'react';
 
 export const NodeList = () => {
-  const { loadNodes, handleRowClick, handleAddNode, headers, rows, isLoading } =
-    useNodeList();
+  const { loadNodes, handleRowClick, handleAddNode } = useNodeList();
+
+  const isLoading = useRecoilValue(nodeAtoms.isLoading);
+  const nodeRows = useRecoilValue(nodeAtoms.nodeRows);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,8 +25,17 @@ export const NodeList = () => {
       </PageHeader>
       <Table
         isLoading={isLoading}
-        headers={headers}
-        rows={rows}
+        headers={[
+          {
+            name: 'Name',
+            key: '1',
+          },
+          {
+            name: 'Status',
+            key: '2',
+          },
+        ]}
+        rows={nodeRows || []}
         onRowClick={handleRowClick}
       />
       <Pagination numberOfItems={10} itemsPerPage={1} />

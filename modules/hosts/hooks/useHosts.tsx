@@ -25,7 +25,7 @@ export const useHosts = () => {
 
     console.log('hosts', hosts);
     setHosts(hosts);
-    await delay(2000);
+    await delay(300);
     setLoadingHosts(false);
   };
   const deleteHost = async (id: string) => {
