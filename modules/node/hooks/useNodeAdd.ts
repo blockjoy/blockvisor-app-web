@@ -1,7 +1,11 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
-import { Blockchain, Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import {
+  Blockchain,
+  Node,
+  Uuid,
+} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { GrpcHostObject } from '@modules/client/grpc_client';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
@@ -58,7 +62,7 @@ export const useNodeAdd = (): Hook => {
     const node = new Node();
     // TODO: Org ID needs be set here
     let org_id = new Uuid();
-    org_id.setValue('92c092b7-1e21-4247-b90c-b11fcbff8591');
+    org_id.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
     let blockchain_id = new Uuid();
     blockchain_id.setValue(params.blockchain);
 
