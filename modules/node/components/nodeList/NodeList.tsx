@@ -1,10 +1,8 @@
-import { appState } from '@modules/app/store';
-import { Button } from '@shared/components';
-import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
 import { PageHeader, PageSection, Table } from '@modules/app/components/shared';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
+import { Button } from '@shared/components';
 import { Pagination } from '@shared/components/Pagination/Pagination';
+import { useEffect } from 'react';
 
 export const NodeList = () => {
   const { loadNodes, handleRowClick, handleAddNode, headers, rows, isLoading } =
