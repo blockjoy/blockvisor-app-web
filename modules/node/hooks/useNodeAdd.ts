@@ -40,7 +40,7 @@ export const useNodeAdd = (): Hook => {
     const blockchains: any = await apiClient.getBlockchains();
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id.value,
-      label: b.label,
+      label: b.name,
       supportedNodeTypes: b.supportedNodesTypesList,
     }));
 
