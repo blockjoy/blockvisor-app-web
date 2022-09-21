@@ -56,6 +56,18 @@ export const useNodeAdd = (): Hook => {
     hostId.setValue(params.host);
 
     const node = new Node();
+    // TODO: Org ID needs be set here
+    let org_id = new Uuid();
+    org_id.setValue('2592312d-daf6-4a0e-b2da-012d89b41088');
+    let blockchain_id = new Uuid();
+    blockchain_id.setValue(params.blockchain);
+
+    console.log(`blockchain_id: ${blockchain_id}`);
+    console.log(`host_id: ${hostId}`);
+    console.log(`org_id: ${org_id}`);
+
+    node.setBlockchainId(blockchain_id);
+    node.setOrgId(org_id);
     node.setType(+params.nodeType);
     node.setHostId(hostId);
 
