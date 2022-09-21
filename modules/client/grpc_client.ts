@@ -35,7 +35,8 @@ import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb'
 import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostResponse,
-  DeleteHostResponse, GetHostsRequest,
+  DeleteHostResponse,
+  GetHostsRequest,
   GetHostsResponse,
   UpdateHostResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
@@ -170,6 +171,14 @@ export class GrpcClient {
     this.token = token;
   }
 
+  initStorage() {
+    return null;
+  }
+
+  async listNodes(): Promise<Array<GrpcNodeObject>> {
+    return [];
+  }
+
   /**
    * Initialize all gRPC clients
    */
@@ -191,8 +200,10 @@ export class GrpcClient {
     let api_token = new ApiToken();
     api_token.setValue(this.token);
 
-    this.token = JSON.parse(window.localStorage.getItem("identity") || "").accessToken;
-    return Buffer.from(this.token).toString('base64')
+    this.token = JSON.parse(
+      window.localStorage.getItem('identity') || '',
+    ).accessToken;
+    return Buffer.from(this.token).toString('base64');
   }
 
   getDummyMeta(): ResponseMeta {
@@ -286,7 +297,7 @@ export class GrpcClient {
       ?.login(request, null)
       .then((response) => {
         console.log(`Got login response: ${response}`);
-        this.token = response.getToken()?.toObject().value || "";
+        this.token = response.getToken()?.toObject().value || '';
 
         return response.getToken()?.toObject();
       })
@@ -338,7 +349,9 @@ export class GrpcClient {
 
   /* Blockchain service */
 
-  async getBlockchains(): Promise<Array<Blockchain.AsObject> | StatusResponse | undefined> {
+  async getBlockchains(): Promise<
+    Array<Blockchain.AsObject> | StatusResponse | undefined
+  > {
     return {
       code: 'Unauthenticated',
       message: `getBlockchains not yet implemented`,
@@ -387,31 +400,33 @@ export class GrpcClient {
   ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
     let auth = { authorization: `Bearer ${this.getApiToken()}` };
     let oid = new Uuid();
-    oid.setValue("2592312d-daf6-4a0e-b2da-012d89b41088");
+    oid.setValue('2592312d-daf6-4a0e-b2da-012d89b41088');
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
     request.setMeta(request_meta);
     request.setOrgId(oid);
 
-    return this.host?.get(request, auth).then((response) => {
-          console.log(`Got host response: ${response}`);
-          return response.getHostsList()?.map((host) => host_to_grpc_host(host))
-    })
-    .catch((err) => {
-      return {
-        code: 'Unknown',
-        message: `${err}`,
-        metadata: {
-          headers: {
-            'content-type': 'application/grpc',
-            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-            'content-length': '0',
+    return this.host
+      ?.get(request, auth)
+      .then((response) => {
+        console.log(`Got host response: ${response}`);
+        return response.getHostsList()?.map((host) => host_to_grpc_host(host));
+      })
+      .catch((err) => {
+        return {
+          code: 'Unknown',
+          message: `${err}`,
+          metadata: {
+            headers: {
+              'content-type': 'application/grpc',
+              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+              'content-length': '0',
+            },
           },
-        },
-        source: 'None',
-      };
-    });
+          source: 'None',
+        };
+      });
   }
 
   async createHost(

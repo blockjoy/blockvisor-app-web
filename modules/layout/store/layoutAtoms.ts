@@ -5,7 +5,8 @@ export type LayoutStates =
   | 'nodes'
   | 'profile'
   | 'organisation'
-  | 'editOrganisation';
+  | 'editOrganisation'
+  | 'sidebar';
 
 export const layoutState = atom<LayoutStates | undefined>({
   key: 'layoutState',

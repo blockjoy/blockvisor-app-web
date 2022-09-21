@@ -4,8 +4,8 @@ import { GrpcClient as RealClient } from './grpc_client';
 
 export const apiClient =
   process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
-    ? new RealClient(process.env.NEXT_PUBLIC_API_URL || '')
-    : new StubClient('http://localhost:8080');
+    ? new RealClient('http://157.245.21.140:80')
+    : new StubClient('http://157.245.21.140:80');
 
 // if (process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production') {
 //   apiClient.initStorage();
