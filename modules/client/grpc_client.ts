@@ -34,6 +34,7 @@ import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/t
 import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb';
 import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
+  CreateHostRequest,
   CreateHostResponse,
   DeleteHostResponse,
   GetHostsRequest,
@@ -49,7 +50,8 @@ import {
   GetHostProvisionResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
-  CreateNodeResponse,
+  CreateNodeRequest,
+  CreateNodeResponse, GetNodeRequest,
   GetNodeResponse,
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
@@ -70,6 +72,7 @@ import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_serv
 import { CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
 import { Parameter } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
+import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
 
 export type StatusResponse = {
   code: string;
@@ -95,6 +98,9 @@ export type UIHostCreate = {
   name: string;
   location?: string;
 };
+export type AuthHeader = {
+  authorization: string;
+}
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
   if (ts !== undefined) {
@@ -158,11 +164,12 @@ export class GrpcClient {
   private organization: OrganizationServiceClient | undefined;
   private update: UpdateServiceClient | undefined;
   private user: UserServiceClient | undefined;
+  private blockchain: BlockchainServiceClient | undefined;
 
   private token: string;
 
   constructor(host: string) {
-    this.initClients(host).then(() => console.log('Clients connected'));
+    this.initClients(host);
 
     this.token = '';
   }
@@ -186,14 +193,15 @@ export class GrpcClient {
   /**
    * Initialize all gRPC clients
    */
-  private async initClients(host: string) {
+  private initClients(host: string) {
     this.authentication = new AuthenticationServiceClient(host, null, null);
     this.host = new HostServiceClient(host, null, null);
+    this.blockchain = new BlockchainServiceClient(host, null, null);
+    this.node = new NodeServiceClient(host, null, null);
     /*
         this.billing = new BillingServiceClient(host, null, null);
         this.dashboard = new DashboardServiceClient(host, null, null);
         this.host_provision = new HostProvisionServiceClient(host, null, null);
-        this.node = new NodeServiceClient(host, null, null);
         this.organization = new OrganizationServiceClient(host, null, null);
         this.update = new UpdateServiceClient(host, null, null);
         this.user = new UserServiceClient(host, null, null);
@@ -208,6 +216,10 @@ export class GrpcClient {
       window.localStorage.getItem('identity') || '',
     ).accessToken;
     return Buffer.from(this.token).toString('base64');
+  }
+
+  getAuthHeader(): AuthHeader {
+    return { authorization: `Bearer ${this.getApiToken()}` }
   }
 
   getDummyMeta(): ResponseMeta {
@@ -353,21 +365,30 @@ export class GrpcClient {
 
   /* Blockchain service */
 
-  async getBlockchains(): Promise<
-    Array<Blockchain.AsObject> | StatusResponse | undefined
-  > {
-    return {
-      code: 'Unauthenticated',
-      message: `getBlockchains not yet implemented`,
-      metadata: {
-        headers: {
-          'content-type': 'application/grpc',
-          date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-          'content-length': '0',
-        },
-      },
-      source: 'None',
-    };
+  async getBlockchains(): Promise<Array<Blockchain.AsObject> | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+    let request = new GetHostsRequest();
+    request.setMeta(request_meta);
+
+    return this.blockchain?.list(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getBlockchainsList().map((chain) => chain.toObject());
+        })
+        .catch((err) => {
+          return {
+            code: 'Blockchain error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   /* Dashboard service */
@@ -402,7 +423,6 @@ export class GrpcClient {
     org_id?: Uuid,
     token?: string,
   ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
-    let auth = { authorization: `Bearer ${this.getApiToken()}` };
     let oid = new Uuid();
     oid.setValue('2592312d-daf6-4a0e-b2da-012d89b41088');
     let request_meta = new RequestMeta();
@@ -412,9 +432,8 @@ export class GrpcClient {
     request.setOrgId(oid);
 
     return this.host
-      ?.get(request, auth)
+      ?.get(request, this.getAuthHeader())
       .then((response) => {
-        console.log(`Got host response: ${response}`);
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
@@ -436,10 +455,29 @@ export class GrpcClient {
   async createHost(
     host: Host,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateHostResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new CreateHostRequest();
+    request.setMeta(request_meta);
+    request.setHost(host);
+
+    return this.host?.create(request, this.getAuthHeader())
+        .then((response) => response.getMeta()?.toObject())
+        .catch((err) => {
+          return {
+            code: 'Create host error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   async updateHost(
@@ -500,25 +538,59 @@ export class GrpcClient {
   async getNode(
     node_id: Uuid,
   ): Promise<GrpcNodeObject | StatusResponse | undefined> {
-    let response = new GetNodeResponse();
-    response.setMeta(this.getDummyMeta());
-    response.setNode(this.getDummyNode());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return new Promise((resolve) => {
-      setTimeout(
-        resolve.bind(null, node_to_grpc_node(response?.getNode())),
-        1000,
-      );
-    });
+    let request = new GetNodeRequest();
+    request.setMeta(request_meta);
+    request.setId(node_id);
+
+    return this.node?.get(request, this.getAuthHeader())
+        .then((response) => {
+          return node_to_grpc_node(response.getNode());
+        })
+        .catch((err) => {
+          return {
+            code: 'Get node error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   async createNode(
     node: Node,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateNodeResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new CreateNodeRequest();
+    request.setMeta(request_meta);
+    request.setNode(node);
+
+    return this.node?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject();
+    }).catch((err) => {
+      return {
+        code: 'Create node error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
   }
 
   async updateNode(
