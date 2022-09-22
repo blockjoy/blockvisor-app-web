@@ -1,12 +1,9 @@
 import { Button } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
 import { PageHeader, PageSection, Table } from '../../app/components/shared';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../utils/toRow';
-import { delay } from '@shared/utils/delay';
 import { css } from '@emotion/react';
 
 const headers = [
@@ -26,8 +23,6 @@ const headers = [
 ];
 
 export function Hosts() {
-  const setLayoutState = useSetRecoilState(layoutState);
-
   const [isCreating, setIsCreating] = useState(false);
 
   const router = useRouter();
