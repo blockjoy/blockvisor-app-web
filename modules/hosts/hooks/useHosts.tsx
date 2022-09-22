@@ -56,6 +56,9 @@ export const useHosts = () => {
     uuid.setValue(id!);
     // revisit this once types are consolidated
     const hosts: any = await apiClient.getHosts(uuid);
+
+    console.log('host nodeTypes', hosts);
+
     setHost(hosts[0]);
     await delay(500);
     setHostLoading(false);
