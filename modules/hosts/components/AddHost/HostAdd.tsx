@@ -80,7 +80,7 @@ export const HostAdd = () => {
                 typo.small,
                 colors.text3,
                 spacing.top.small,
-                spacing.bottom.medium,
+                spacing.bottom.micro,
               ]}
             >
               Please click the button below to begin the creation process.
@@ -94,7 +94,7 @@ export const HostAdd = () => {
               customCss={[styles.action]}
               onClick={onCreateNodeProvision}
             >
-              Begin Creation
+              Get Started
             </Button>
           </DrawerAction>
           <DrawerContent>
