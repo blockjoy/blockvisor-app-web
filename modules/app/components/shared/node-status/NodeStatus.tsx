@@ -46,7 +46,7 @@ export const NodeStatus: FC<Props> = ({ status }) => {
 
   return (
     <span css={styles.status}>
-      {getIcon(statusInfo?.name)}
+      {/* {getIcon(statusInfo?.name)} */}
       <span css={styles.statusText}>{statusInfo?.name || 'Unknown'}</span>
     </span>
   );
