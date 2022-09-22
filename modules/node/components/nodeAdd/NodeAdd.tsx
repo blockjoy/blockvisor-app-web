@@ -20,6 +20,7 @@ import { styles } from './nodeAdd.styles';
 import { NodeTypePicker } from '@shared/components';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { FormSlider } from './forms/FormSlider';
+import { FormCheckbox } from './forms/FormCheckbox';
 
 type NodeAddForm = {
   nodeType: number;
@@ -124,6 +125,7 @@ export const NodeAdd: FC = () => {
 
       form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
+      form.setValue('selfManaged', true);
 
       console.log('form', form.getValues());
     }
@@ -166,7 +168,6 @@ export const NodeAdd: FC = () => {
               supportedNodeTypes={supportedNodeTypes}
               onChange={handleNodeTypeChanged}
             />
-
             {activeNodeType?.properties?.map((property) => (
               <div key={property.name} css={spacing.bottom.medium}>
                 {property.type === 'string' && (
@@ -178,15 +179,14 @@ export const NodeAdd: FC = () => {
                   />
                 )}
                 {property.type === 'boolean' && (
-                  <>
-                    <InputLabel name="selfManaged" labelSize="small">
-                      {property.label}
-                    </InputLabel>
-                    <Checkbox name="ip" label={property.label} />
-                  </>
+                  <div css={spacing.bottom.medium}>
+                    <FormCheckbox label="Self managed?" name="selfManaged" />
+                  </div>
                 )}
                 {property.type === 'number' && (
-                  <FormSlider label="Batch Create" name="batchCreate" />
+                  <div css={spacing.bottom.medium}>
+                    <FormSlider label="Batch Create" name="batchCreate" />
+                  </div>
                 )}
               </div>
             ))}
