@@ -14,7 +14,7 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@blockjoy/blockjoy-grpc": "^1.1.22",
+    "@blockjoy/blockjoy-grpc": "^1.1.23",
     "@emotion/babel-plugin": "^11.10.2",
     "@emotion/babel-preset-css-prop": "^11.10.0",
     "@emotion/react": "^11.9.3",
