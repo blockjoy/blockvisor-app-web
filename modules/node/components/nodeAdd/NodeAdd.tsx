@@ -1,8 +1,13 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
-import { Button, Select, Input } from '@shared/components';
+import { Button, Select, Input, InputLabel } from '@shared/components';
 import { FC, useState, useEffect } from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   Drawer,
@@ -13,19 +18,22 @@ import {
 import { styles } from './nodeAdd.styles';
 import { NodeTypePicker } from '@shared/components';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 type NodeAddForm = {
   nodeType: number;
   host: string;
   blockchain: string;
   ip?: string;
+  batchCreate: number;
 };
 
 type NodeTypeConfigProperty = {
   name: string;
   label: string;
   default: any;
-  type: string | 'string' | 'boolean';
+  type: string | 'string' | 'boolean' | 'number';
 };
 
 type NodeTypeConfig = {
@@ -101,6 +109,7 @@ export const NodeAdd: FC = () => {
   useEffect(() => {
     if (hostList?.length) {
       form.setValue('host', hostList[0]?.value);
+      form.setValue('batchCreate', 50);
     }
   }, [hostList?.length]);
 
@@ -155,6 +164,32 @@ export const NodeAdd: FC = () => {
                     placeholder="Enter IP Address"
                     label={property.label}
                   />
+                )}
+                {property.type === 'number' && (
+                  <>
+                    <div>
+                      <InputLabel labelSize="small">
+                        {property.label}
+                      </InputLabel>
+                    </div>
+                    <Controller
+                      control={form.control}
+                      name="batchCreate"
+                      defaultValue={50}
+                      render={({ field: { value, onChange } }) => (
+                        <div css={styles.slider}>
+                          <div css={styles.sliderValue}>{value}</div>
+                          <Slider
+                            onChange={onChange}
+                            min={50}
+                            max={1000}
+                            step={50}
+                            value={value}
+                          />
+                        </div>
+                      )}
+                    />
+                  </>
                 )}
               </div>
             ))}
