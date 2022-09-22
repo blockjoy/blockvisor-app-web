@@ -114,7 +114,9 @@ export const NodeAdd: FC = () => {
 
   useEffect(() => {
     if (blockchainList?.length) {
-      console.log(`first blockchain node types: ${JSON.stringify(blockchainList[0])}`);
+      console.log(
+        `first blockchain node types: ${JSON.stringify(blockchainList[0])}`,
+      );
       setSupportedNodeTypes(
         blockchainList[0].supportedNodeTypes.map((t: any) => t.id),
       );
@@ -161,7 +163,7 @@ export const NodeAdd: FC = () => {
             <NodeTypePicker
               name="nodeType"
               label="Node Type"
-              supportedNodeTypes={supportedNodeTypes?.map((t: any) => t?.id)}
+              supportedNodeTypes={supportedNodeTypes}
               onChange={handleNodeTypeChanged}
             />
 
