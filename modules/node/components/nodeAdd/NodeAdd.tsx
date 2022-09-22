@@ -15,7 +15,7 @@ import { NodeTypePicker } from '@shared/components';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 
 type NodeAddForm = {
-  nodeType: string;
+  nodeType: number;
   host: string;
   blockchain: string;
 };
@@ -55,15 +55,17 @@ export const NodeAdd: FC = () => {
     if (blockchainList?.length) {
       const nodeTypes = blockchainList[0].supportedNodeTypes;
       setSupportedNodeTypes(nodeTypes);
+
+      form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', nodeTypes[0]);
+
+      console.log('form', form.getValues());
     }
   }, [blockchainList?.length]);
 
   useEffect(() => {
     if (hostList?.length) {
       form.setValue('host', hostList[0]?.value);
-      form.setValue('blockchain', blockchainList[0]?.value);
-      form.setValue('nodeType', '1');
     }
   }, [hostList?.length]);
 
@@ -107,7 +109,7 @@ export const NodeAdd: FC = () => {
               supportedNodeTypes={supportedNodeTypes}
             />
 
-            <div css={spacing.bottom.large}>
+            <div css={spacing.bottom.micro}>
               <Select
                 label="Host"
                 inputSize="small"

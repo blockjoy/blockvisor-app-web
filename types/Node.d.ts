@@ -8,7 +8,7 @@ type BlockjoyNode = {
 };
 
 type CreateNodeParams = {
-  nodeType: string;
+  nodeType: number;
   host: string;
   blockchain: string;
 };
