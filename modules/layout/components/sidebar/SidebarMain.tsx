@@ -64,8 +64,8 @@ const blocks = [
     title: 'ADMIN',
     items: [
       {
-        name: 'Organizations',
-        path: '/organizations',
+        name: 'Organisations',
+        path: '/organisations',
         icon: <IconOrganizations />,
       },
     ],

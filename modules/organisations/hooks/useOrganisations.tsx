@@ -36,11 +36,29 @@ export const useOrganisations = () => {
     }
   };
 
+  const getOrganisation = async (id: string) => {
+    setIsLoading(true);
+    // mocked part
+    const res = await apiClient.getOrganizations();
+    setSelectedOrganisation(res[0]);
+    await delay(2000);
+    setIsLoading(false);
+  };
+
   const selectOrganisation = (id: string) => {
     const selectedOrg = organisations.find((org) => org.id?.value === id);
 
     if (selectedOrg) {
       setSelectedOrganisation(selectedOrg);
+    }
+  };
+
+  const renameOrganisation = (id: string, name: string) => {
+    //mocked
+    const org = organisations.find((org) => org.id?.value === id);
+
+    if (org) {
+      org.name = name;
     }
   };
 
@@ -103,5 +121,7 @@ export const useOrganisations = () => {
     removeOrganisation,
     selectOrganisation,
     updateOrganisation,
+    getOrganisation,
+    renameOrganisation,
   };
 };

@@ -1,15 +1,8 @@
 import { Table } from '@modules/app/components/shared';
-import { Button, ButtonWithDropdown, DropdownItem } from '@shared/components';
-import { FC, MouseEventHandler, useEffect } from 'react';
+import { Button } from '@shared/components';
+import { FC, useEffect } from 'react';
 import { useOrganisations } from '../hooks/useOrganisations';
-import PersonIcon from '@public/assets/icons/person-12.svg';
-import EditIcon from '@public/assets/icons/pencil-12.svg';
-import RemoveIcon from '@public/assets/icons/close-12.svg';
 import { flex } from 'styles/utils.flex.styles';
-import { divider, spacing } from 'styles/utils.spacing.styles';
-import { reset } from 'styles/utils.reset.styles';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useRecoilState } from 'recoil';
 
 const headers: TableHeader[] = [
   {
@@ -20,13 +13,13 @@ const headers: TableHeader[] = [
     name: 'Members',
     key: '2',
   },
+  {
+    name: 'Type',
+    key: '3',
+  },
 ];
 
-const mapOrganisationsToRows = (
-  organisations?: Organisation[],
-  handleRemove?: MouseEventHandler<HTMLButtonElement>,
-  handleEdit?: MouseEventHandler<HTMLButtonElement>,
-) => {
+const mapOrganisationsToRows = (organisations?: Organisation[]) => {
   return organisations?.map((org, idx) => ({
     key: org.id?.value ?? `${idx}`,
     cells: [
@@ -49,37 +42,22 @@ const mapOrganisationsToRows = (
       {
         key: '3',
         component: (
+          <>
+            <p>{org.personal ? 'Personal' : 'Other'}</p>
+          </>
+        ),
+      },
+      {
+        key: '4',
+        component: (
           <div css={[flex.display.flex]}>
-            <Button style="outline" size="small">
-              <PersonIcon />
-              Members
+            <Button
+              href={`organisations/${org.id?.value}`}
+              style="outline"
+              size="small"
+            >
+              Edit
             </Button>
-            <div css={[spacing.left.small]}>
-              <ButtonWithDropdown>
-                <ul css={[reset.list]}>
-                  <li>
-                    <DropdownItem
-                      id={org.id?.value}
-                      size="large"
-                      onButtonClick={handleEdit}
-                    >
-                      <EditIcon />
-                      Edit
-                    </DropdownItem>
-                  </li>
-                  <li css={[divider]}>
-                    <DropdownItem
-                      onButtonClick={handleRemove}
-                      id={org.id?.value}
-                      size="large"
-                    >
-                      <RemoveIcon />
-                      Remove
-                    </DropdownItem>
-                  </li>
-                </ul>
-              </ButtonWithDropdown>
-            </div>
           </div>
         ),
       },
@@ -88,32 +66,14 @@ const mapOrganisationsToRows = (
 };
 
 export const AllOrganisationsTable: FC = () => {
-  const {
-    getOrganizations,
-    organisations,
-    loadingOrganizations,
-    removeOrganisation,
-    selectOrganisation,
-  } = useOrganisations();
-  const [, setLayout] = useRecoilState(layoutState);
+  const { getOrganizations, organisations, loadingOrganizations } =
+    useOrganisations();
 
   useEffect(() => {
     getOrganizations();
   }, []);
 
-  const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
-    const id = e.currentTarget.id;
-    removeOrganisation(id);
-  };
-
-  const handleEdit: MouseEventHandler<HTMLButtonElement> = (e) => {
-    const id = e.currentTarget.id;
-    selectOrganisation(id);
-    setLayout('editOrganisation');
-  };
-
-  const rows = mapOrganisationsToRows(organisations, handleRemove, handleEdit);
-
+  const rows = mapOrganisationsToRows(organisations);
   return (
     <Table isLoading={loadingOrganizations} headers={headers} rows={rows} />
   );
