@@ -637,7 +637,7 @@ export class GrpcClient {
     node.setName(
       uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
     );
-    node.setStatus(NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
+    node.setStatus(NodeStatus.DISABLED);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
 
