@@ -676,10 +676,19 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
+<<<<<<< HEAD
     node.setName(uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }));
     node.setStatus(NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
     node.setWalletAddress("0x0198230123120");
     node.setAddress("0x023848388637");
+=======
+    node.setName(
+      uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
+    );
+    node.setStatus(NodeStatus.DISABLED);
+    node.setWalletAddress('0x0198230123120');
+    node.setAddress('0x023848388637');
+>>>>>>> 45527d3 (feat: update node status at creation)
 
     let request = new CreateNodeRequest();
     request.setMeta(request_meta);
