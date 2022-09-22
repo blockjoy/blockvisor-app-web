@@ -42,6 +42,9 @@ export const useNodeAdd = (): Hook => {
     setHostList(mappedHosts);
 
     const blockchains: any = await apiClient.getBlockchains();
+
+    console.log('get blockchains', blockchains);
+
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id.value,
       label: b.name,

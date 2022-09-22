@@ -44,11 +44,7 @@ type Props = {
 };
 
 export const FormSlider: FC<Props> = ({ label, name }) => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext();
-
+  const { control } = useFormContext();
   return (
     <>
       <div>
