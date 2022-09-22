@@ -5,7 +5,7 @@ import { DangerZone } from '../../app/components/shared/danger-zone/DangerZone';
 import { DetailsHeader } from '../../app/components/shared/details-header/DetailsHeader';
 import { DetailsTable } from '../../app/components/shared/details-table/DetailsTable';
 import { useHosts } from '@modules/hosts/hooks/useHosts';
-import { MouseEventHandler, useEffect } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import {
   Skeleton,
   SkeletonGrid,
@@ -20,6 +20,7 @@ import { nodeListToRow } from '../utils/toRow';
 import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
+import { HostCharts } from './HostCharts/HostCharts';
 
 function getHostDetails(host: Host | null) {
   if (!host) {
@@ -42,6 +43,7 @@ function getHostDetails(host: Host | null) {
 }
 
 export function Host() {
+  const [isMounted, setMounted] = useState<boolean>(false);
   const router = useRouter();
   const { id } = router.query;
   const { loadHost, restartHost, stopHost, deleteHost, host, loadingHost } =
@@ -73,11 +75,14 @@ export function Host() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setMounted(true);
     loadHost(id?.toString() || '');
   }, []);
 
   const hostRow = nodeListToRow(host, handleStopNode, handleRestartNode);
   const hostDetails = getHostDetails(host);
+
+  if (!isMounted) return null;
 
   return (
     <>
@@ -95,6 +100,7 @@ export function Host() {
               handleRestart={handleRestartHost}
               handleStop={handleStopHost}
             />
+            <HostCharts />
             <DetailsTable bodyElements={hostDetails ?? []} />
           </>
         ) : (
