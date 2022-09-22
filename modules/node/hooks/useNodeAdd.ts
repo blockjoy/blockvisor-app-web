@@ -45,7 +45,7 @@ export const useNodeAdd = (): Hook => {
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id.value,
       label: b.name,
-      supportedNodeTypes: b.supportedNodesTypesList,
+      supportedNodeTypes: b.supported_node_types,
     }));
 
     setBlockchainList(mappedBlockchains);

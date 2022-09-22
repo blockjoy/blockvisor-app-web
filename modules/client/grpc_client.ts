@@ -1,24 +1,21 @@
 import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
-import {
-  LoginUserRequest,
-  LoginUserResponse,
-  RefreshTokenResponse,
-} from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
+import { LoginUserRequest, RefreshTokenResponse } from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
   ApiToken,
   Bill,
+  Blockchain,
   Host,
   HostProvision,
-  UpdateNotification,
   Metric,
   Node,
   Organization,
+  Parameter,
+  RequestMeta,
   ResponseMeta,
+  UpdateNotification,
   User,
   UserConfigurationParameter,
   Uuid,
-  RequestMeta,
-  Blockchain,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -31,30 +28,22 @@ import { UpdateServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Update_ser
 import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_serviceServiceClientPb';
 import { CreateBillResponse } from '@blockjoy/blockjoy-grpc/dist/out/billing_service_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
+import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb';
 import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostRequest,
-  CreateHostResponse,
   DeleteHostResponse,
   GetHostsRequest,
-  GetHostsResponse,
   UpdateHostResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
-import Name = Metric.Name;
-import HostStatus = Host.HostStatus;
-import NodeType = Node.NodeType;
-import NodeStatus = Node.NodeStatus;
 import {
   CreateHostProvisionRequest,
-  CreateHostProvisionResponse,
   GetHostProvisionResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
   CreateNodeRequest,
-  CreateNodeResponse,
   GetNodeRequest,
-  GetNodeResponse,
   ListNodesRequest,
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
@@ -65,7 +54,6 @@ import {
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
-  CreateUserRequest,
   CreateUserResponse,
   GetConfigurationResponse,
   GetUserResponse,
@@ -73,19 +61,12 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
 import { CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
-import { Parameter } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
-import {
-  GetBlockchainRequest,
-  ListBlockchainsRequest,
-} from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
-import {
-  adjectives,
-  animals,
-  colors,
-  uniqueNamesGenerator,
-} from 'unique-names-generator';
+import { ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
+import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+import Name = Metric.Name;
+import HostStatus = Host.HostStatus;
+import NodeStatus = Node.NodeStatus;
 
 export type StatusResponse = {
   code: string;
@@ -102,7 +83,7 @@ export type UIUser = {
 };
 export type UINodeCreate = {
   host_id: Uuid;
-  node_type: NodeType;
+  node_type: string;
   blockchain_id: Uuid;
   command: 'create_node';
   sub_cmd?: string;
@@ -147,6 +128,23 @@ export function host_to_grpc_host(host: Host | undefined): GrpcHostObject {
   };
 }
 
+export function blockchain_to_grpc_blockchain(chain: Blockchain | undefined): GrpcBlockchainObject {
+  return {
+    name: chain?.getName() || "",
+    status: chain?.getStatus() || Blockchain.BlockchainStatus.DEVELOPMENT,
+    supportedNodesTypes: chain?.getSupportedNodesTypes() || "",
+    supportsBroadcast: false,
+    supportsEtl: chain?.getSupportsEtl() || true,
+    supportsNode: chain?.getSupportsNode() || true,
+    supportsStaking: chain?.getSupportsStaking() || true,
+    ...chain?.toObject(),
+    created_at_datetime: timestamp_to_date(chain?.getCreatedAt()) || undefined,
+    updated_at_datetime: timestamp_to_date(chain?.getUpdatedAt()) || undefined,
+    id_str: id_to_string(chain?.getId()) || '',
+    supported_node_types: JSON.parse(chain?.getSupportedNodesTypes() || "") || []
+  }
+}
+
 export function user_to_grpc_user(user: User | undefined): GrpcUserObject {
   return {
     ...user?.toObject(),
@@ -160,6 +158,9 @@ export type ConvenienceConversion = {
   created_at_datetime: Date | undefined;
   id_str: string | undefined;
 };
+export type GrpcBlockchainObject = Blockchain.AsObject & ConvenienceConversion & {
+  supported_node_types: any; updated_at_datetime: Date | undefined;
+}
 export type GrpcHostObject = Host.AsObject &
   ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
 export type GrpcNodeObject = Node.AsObject &
@@ -251,7 +252,7 @@ export class GrpcClient {
     node.setGroupsList(['group-one']);
     node.setVersion('0.1.0');
     node.setIp('127.0.0.1');
-    node.setType(NodeType.NODE);
+    node.setType("");
     node.setAddress('0x999999999');
     node.setWalletAddress('0x000000001');
     node.setBlockHeight(12_121_112);
@@ -369,7 +370,7 @@ export class GrpcClient {
   /* Blockchain service */
 
   async getBlockchains(): Promise<
-    Array<Blockchain.AsObject> | StatusResponse | undefined
+    Array<GrpcBlockchainObject> | StatusResponse | undefined
   > {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -379,7 +380,7 @@ export class GrpcClient {
     return this.blockchain
       ?.list(request, this.getAuthHeader())
       .then((response) => {
-        return response.getBlockchainsList().map((chain) => chain.toObject());
+        return response.getBlockchainsList().map((chain) => blockchain_to_grpc_blockchain(chain));
       })
       .catch((err) => {
         return {
