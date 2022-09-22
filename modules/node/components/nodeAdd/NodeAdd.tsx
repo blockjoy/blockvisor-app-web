@@ -168,7 +168,7 @@ export const NodeAdd: FC = () => {
                 {property.type === 'number' && (
                   <>
                     <div>
-                      <InputLabel labelSize="small">
+                      <InputLabel name="batchCreate" labelSize="small">
                         {property.label}
                       </InputLabel>
                     </div>
