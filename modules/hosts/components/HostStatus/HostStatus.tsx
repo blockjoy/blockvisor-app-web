@@ -18,7 +18,6 @@ const getIcon = (name: string = '') => {
     case 'Installing':
     case 'Snapshotting':
       return <IconPending />;
-    case 'Undefined':
     case 'Running':
     case 'Broadcasting':
       return <IconNormal />;
