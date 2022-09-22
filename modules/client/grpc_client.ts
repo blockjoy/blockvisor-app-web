@@ -30,7 +30,10 @@ import { CreateBillResponse } from '@blockjoy/blockjoy-grpc/dist/out/billing_ser
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb';
-import { DashboardMetricsResponse } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
+import {
+  DashboardMetricsRequest,
+  DashboardMetricsResponse,
+} from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostRequest,
   DeleteHostResponse,
@@ -64,9 +67,6 @@ import { CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_servic
 import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
 import { ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
 import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
-import Name = Metric.Name;
-import HostStatus = Host.HostStatus;
-import NodeStatus = Node.NodeStatus;
 
 export type StatusResponse = {
   code: string;
@@ -105,6 +105,14 @@ export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
 export function id_to_string(id: Uuid | undefined): string | undefined {
   if (id !== undefined) {
     return id.getValue();
+  }
+}
+
+export function metric_to_grpc_metric(metric: Metric | undefined): GrpcMetricObject {
+  return {
+    name: metric?.getName() || Metric.Name.UNKNOWN,
+    ...metric?.toObject(),
+    value_str: new TextDecoder().decode(metric?.getValue()?.getValue())
   }
 }
 
@@ -167,7 +175,7 @@ export type GrpcNodeObject = Node.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
-
+export type GrpcMetricObject = Metric.AsObject & { value_str: string | undefined };
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
@@ -204,9 +212,9 @@ export class GrpcClient {
     this.blockchain = new BlockchainServiceClient(host, null, null);
     this.node = new NodeServiceClient(host, null, null);
     this.host_provision = new HostProvisionServiceClient(host, null, null);
+    this.dashboard = new DashboardServiceClient(host, null, null);
     /*
         this.billing = new BillingServiceClient(host, null, null);
-        this.dashboard = new DashboardServiceClient(host, null, null);
         this.organization = new OrganizationServiceClient(host, null, null);
         this.update = new UpdateServiceClient(host, null, null);
         this.user = new UserServiceClient(host, null, null);
@@ -259,7 +267,7 @@ export class GrpcClient {
     node.setNodeData('some-blob');
     node.setCreatedAt(this.getDummyTimestamp());
     node.setUpdatedAt(this.getDummyTimestamp());
-    node.setStatus(NodeStatus.PROCESSING);
+    node.setStatus(Node.NodeStatus.PROCESSING);
 
     return node;
   }
@@ -278,7 +286,7 @@ export class GrpcClient {
     host.setOsVersion('21.6.0 Darwin Kernel Version 21.6.');
     host.setIp('127.0.0.1');
     host.addNodes(this.getDummyNode());
-    host.setStatus(HostStatus.CREATING);
+    host.setStatus(Host.HostStatus.CREATING);
     host.setCreatedAt(this.getDummyTimestamp());
 
     return host;
@@ -401,26 +409,33 @@ export class GrpcClient {
   /* Dashboard service */
 
   async getDashboardMetrics(): Promise<
-    Array<Metric.AsObject> | StatusResponse
-  > {
-    let metric = new Metric();
-    metric.setName(Name.ONLINE);
-    let value = new google_protobuf_any_pb.Any();
-    value.setValue('8');
-    metric.setValue(value);
+      Array<GrpcMetricObject> | undefined | StatusResponse
+      > {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    let metric2 = new Metric();
-    metric2.setName(Name.OFFLINE);
-    let value2 = new google_protobuf_any_pb.Any();
-    value2.setValue('2');
-    metric2.setValue(value2);
+    let request = new DashboardMetricsRequest();
+    request.setMeta(request_meta);
 
-    let response = new DashboardMetricsResponse();
-    response.setMeta(this.getDummyMeta());
-    response.addMetrics(metric);
-    response.addMetrics(metric2);
-
-    return response.getMetricsList().map((item) => item.toObject());
+    return this.dashboard?.metrics(request, this.getAuthHeader())
+        .then((response) => {
+          console.log("got metrics: ", response.getMetricsList().map((item) => metric_to_grpc_metric(item)));
+          return response.getMetricsList().map((item) => metric_to_grpc_metric(item))
+        })
+        .catch((err) => {
+          return {
+            code: 'Get metrics error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   /* Host service */
@@ -638,7 +653,7 @@ export class GrpcClient {
     node.setName(
       uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
     );
-    node.setStatus(NodeStatus.DISABLED);
+    node.setStatus(Node.NodeStatus.DISABLED);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
 
