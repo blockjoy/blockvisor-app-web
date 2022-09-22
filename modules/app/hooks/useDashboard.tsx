@@ -68,9 +68,9 @@ export const useDashboard = (): Hook => {
 
     const nodes: any = await apiClient.getDashboardMetrics();
 
-    const online = +nodes[0]?.value?.value,
-      offline = +nodes[1]?.value?.value,
-      total = +nodes[0]?.value?.value + +nodes[1]?.value?.value;
+    const online = +nodes[0]?.value_str,
+      offline = +nodes[1]?.value_str,
+      total = +nodes[0]?.value_str + +nodes[1]?.value_str;
 
     const recentHosts = await getRecentHosts();
 
