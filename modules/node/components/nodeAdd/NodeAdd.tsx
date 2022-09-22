@@ -1,13 +1,14 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
-import { Button, Select, Input, InputLabel } from '@shared/components';
-import { FC, useState, useEffect } from 'react';
 import {
-  Controller,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from 'react-hook-form';
+  Button,
+  Select,
+  Input,
+  InputLabel,
+  Checkbox,
+} from '@shared/components';
+import { FC, useState, useEffect } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   Drawer,
@@ -18,8 +19,7 @@ import {
 import { styles } from './nodeAdd.styles';
 import { NodeTypePicker } from '@shared/components';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import { FormSlider } from './forms/FormSlider';
 
 type NodeAddForm = {
   nodeType: number;
@@ -27,6 +27,7 @@ type NodeAddForm = {
   blockchain: string;
   ip?: string;
   batchCreate: number;
+  selfManaged: boolean;
 };
 
 type NodeTypeConfigProperty = {
@@ -46,6 +47,12 @@ const mockNodeTypeConfig: NodeTypeConfig[] = [
     id: 5,
     properties: [
       { name: 'ip', label: 'IP Address', default: '', type: 'string' },
+      {
+        name: 'selfManaged',
+        label: 'Self Managed',
+        default: '',
+        type: 'boolean',
+      },
       { name: 'batch', label: 'Batch Create', default: 100, type: 'number' },
     ],
   },
@@ -56,8 +63,6 @@ export const NodeAdd: FC = () => {
     useNodeAdd();
 
   const form = useForm<NodeAddForm>();
-
-  const [config, setConfig] = useState<NodeTypeConfig>();
 
   const [layout] = useRecoilState(layoutState);
 
@@ -77,16 +82,29 @@ export const NodeAdd: FC = () => {
 
   const [hasMounted, setHasMounted] = useState(false);
 
-  const [supportedNodeTypes, setSupportedNodeTypes] = useState<any>();
+  const [supportedNodeTypes, setSupportedNodeTypes] = useState<number[]>([]);
+  const [activeNodeType, setActiveNodeType] = useState<NodeTypeConfig>();
 
   const handleNodeTypeChanged = (nodeType: number) => {
     console.log('nodeType', nodeType);
 
-    const activeConfig = mockNodeTypeConfig.find((c) => c.id === nodeType);
+    const activeNodeType = blockchainList[0].supportedNodeTypes.find(
+      (t: any) => t.id === nodeType,
+    );
 
-    setConfig(activeConfig);
+    setActiveNodeType(activeNodeType);
+  };
 
-    console.log('config', config);
+  const handleBlockchainChanged = (e: any) => {
+    console.log('e', e.target.selectedIndex);
+
+    const supportedNodeTypes = blockchainList[
+      e.target.selectedIndex
+    ].supportedNodeTypes.map((t: any) => t.id);
+
+    setSupportedNodeTypes(supportedNodeTypes);
+
+    console.log('supportedNodeTypes', supportedNodeTypes);
   };
 
   useEffect(() => {
@@ -96,11 +114,13 @@ export const NodeAdd: FC = () => {
 
   useEffect(() => {
     if (blockchainList?.length) {
-      const nodeTypes = blockchainList[0].supportedNodeTypes;
-      setSupportedNodeTypes(nodeTypes);
+      setSupportedNodeTypes(
+        blockchainList[0].supportedNodeTypes.map((t: any) => t.id),
+      );
+      setActiveNodeType(blockchainList[0].supportedNodeTypes);
 
       form.setValue('blockchain', blockchainList[0]?.value);
-      form.setValue('nodeType', nodeTypes[0]);
+      form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
 
       console.log('form', form.getValues());
     }
@@ -132,18 +152,7 @@ export const NodeAdd: FC = () => {
                   name="blockchain"
                   options={blockchainList}
                   validationOptions={{
-                    onChange: (e: any) => {
-                      console.log('e', e.target.selectedIndex);
-
-                      const supportedNodeTypes =
-                        blockchainList[e.target.selectedIndex]
-                          .supportedNodeTypes;
-
-                      setSupportedNodeTypes(supportedNodeTypes);
-                      setConfig(undefined);
-
-                      console.log('supportedNodeTypes', supportedNodeTypes);
-                    },
+                    onChange: handleBlockchainChanged,
                   }}
                 />
               </div>
@@ -151,12 +160,12 @@ export const NodeAdd: FC = () => {
             <NodeTypePicker
               name="nodeType"
               label="Node Type"
-              supportedNodeTypes={supportedNodeTypes}
+              supportedNodeTypes={supportedNodeTypes?.map((t: any) => t?.id)}
               onChange={handleNodeTypeChanged}
             />
 
-            {config?.properties.map((property) => (
-              <div css={spacing.bottom.medium}>
+            {activeNodeType?.properties?.map((property) => (
+              <div key={property.name} css={spacing.bottom.medium}>
                 {property.type === 'string' && (
                   <Input
                     name="ip"
@@ -165,31 +174,16 @@ export const NodeAdd: FC = () => {
                     label={property.label}
                   />
                 )}
-                {property.type === 'number' && (
+                {property.type === 'boolean' && (
                   <>
-                    <div>
-                      <InputLabel name="batchCreate" labelSize="small">
-                        {property.label}
-                      </InputLabel>
-                    </div>
-                    <Controller
-                      control={form.control}
-                      name="batchCreate"
-                      defaultValue={50}
-                      render={({ field: { value, onChange } }) => (
-                        <div css={styles.slider}>
-                          <div css={styles.sliderValue}>{value}</div>
-                          <Slider
-                            onChange={onChange}
-                            min={50}
-                            max={1000}
-                            step={50}
-                            value={value}
-                          />
-                        </div>
-                      )}
-                    />
+                    <InputLabel name="selfManaged" labelSize="small">
+                      {property.label}
+                    </InputLabel>
+                    <Checkbox name="ip" label={property.label} />
                   </>
+                )}
+                {property.type === 'number' && (
+                  <FormSlider label="Batch Create" name="batchCreate" />
                 )}
               </div>
             ))}

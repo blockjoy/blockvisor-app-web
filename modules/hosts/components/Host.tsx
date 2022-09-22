@@ -80,6 +80,9 @@ export function Host() {
   }, []);
 
   const hostRow = nodeListToRow(host, handleStopNode, handleRestartNode);
+
+  console.log('hostRow', hostRow);
+
   const hostDetails = getHostDetails(host);
 
   if (!isMounted) return null;

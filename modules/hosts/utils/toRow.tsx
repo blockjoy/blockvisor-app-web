@@ -45,6 +45,8 @@ export function nodeListToRow(
   stopNode: MouseEventHandler<HTMLButtonElement>,
   restartNode: MouseEventHandler<HTMLButtonElement>,
 ) {
+  console.log('host nodesList', host?.nodesList);
+
   return host?.nodesList?.map((node: any) => ({
     key: node.id.value,
     cells: [
