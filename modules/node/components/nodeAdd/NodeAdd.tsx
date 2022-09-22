@@ -1,6 +1,6 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
-import { Button, Select } from '@shared/components';
+import { Button, Select, Input } from '@shared/components';
 import { FC, useState, useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -18,13 +18,38 @@ type NodeAddForm = {
   nodeType: number;
   host: string;
   blockchain: string;
+  ip?: string;
 };
+
+type NodeTypeConfigProperty = {
+  name: string;
+  label: string;
+  default: any;
+  type: string | 'string' | 'boolean';
+};
+
+type NodeTypeConfig = {
+  id: number;
+  properties: NodeTypeConfigProperty[];
+};
+
+const mockNodeTypeConfig: NodeTypeConfig[] = [
+  {
+    id: 5,
+    properties: [
+      { name: 'ip', label: 'IP Address', default: '', type: 'string' },
+      { name: 'batch', label: 'Batch Create', default: 100, type: 'number' },
+    ],
+  },
+];
 
 export const NodeAdd: FC = () => {
   const { createNode, loadLookups, isLoading, blockchainList, hostList } =
     useNodeAdd();
 
   const form = useForm<NodeAddForm>();
+
+  const [config, setConfig] = useState<NodeTypeConfig>();
 
   const [layout] = useRecoilState(layoutState);
 
@@ -45,6 +70,16 @@ export const NodeAdd: FC = () => {
   const [hasMounted, setHasMounted] = useState(false);
 
   const [supportedNodeTypes, setSupportedNodeTypes] = useState<any>();
+
+  const handleNodeTypeChanged = (nodeType: number) => {
+    console.log('nodeType', nodeType);
+
+    const activeConfig = mockNodeTypeConfig.find((c) => c.id === nodeType);
+
+    setConfig(activeConfig);
+
+    console.log('config', config);
+  };
 
   useEffect(() => {
     setHasMounted(true);
@@ -96,6 +131,7 @@ export const NodeAdd: FC = () => {
                           .supportedNodeTypes;
 
                       setSupportedNodeTypes(supportedNodeTypes);
+                      setConfig(undefined);
 
                       console.log('supportedNodeTypes', supportedNodeTypes);
                     },
@@ -107,7 +143,21 @@ export const NodeAdd: FC = () => {
               name="nodeType"
               label="Node Type"
               supportedNodeTypes={supportedNodeTypes}
+              onChange={handleNodeTypeChanged}
             />
+
+            {config?.properties.map((property) => (
+              <div css={spacing.bottom.medium}>
+                {property.type === 'string' && (
+                  <Input
+                    name="ip"
+                    inputSize="small"
+                    placeholder="Enter IP Address"
+                    label={property.label}
+                  />
+                )}
+              </div>
+            ))}
 
             <div css={spacing.bottom.micro}>
               <Select

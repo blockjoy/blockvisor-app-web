@@ -9,6 +9,7 @@ type Props = {
   name: string;
   label: string;
   supportedNodeTypes: number[];
+  onChange: (args1: number) => void;
 };
 
 const styles = {
@@ -46,8 +47,13 @@ export const NodeTypePicker: FC<Props> = ({
   name,
   label,
   supportedNodeTypes = [1],
+  onChange,
 }) => {
   const { register } = useFormContext();
+
+  const handleChange = (nodeType: number) => {
+    onChange(nodeType);
+  };
 
   return (
     <>
@@ -62,7 +68,8 @@ export const NodeTypePicker: FC<Props> = ({
               <li key={type.id}>
                 <>
                   <input
-                    {...register(name)}
+                    name={name}
+                    onChange={() => handleChange(type.id)}
                     css={styles.input}
                     id={type.name}
                     type="radio"
