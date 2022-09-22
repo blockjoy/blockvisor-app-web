@@ -114,6 +114,7 @@ export const NodeAdd: FC = () => {
 
   useEffect(() => {
     if (blockchainList?.length) {
+      console.log(`first blockchain node types: ${JSON.stringify(blockchainList[0])}`);
       setSupportedNodeTypes(
         blockchainList[0].supportedNodeTypes.map((t: any) => t.id),
       );
