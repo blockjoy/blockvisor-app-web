@@ -16,8 +16,8 @@ const styles = {
     display: grid;
     gap: 12px;
     grid-template-columns: repeat(3, 1fr);
-    padding-top: 8px;
-    margin-bottom: 36px;
+    padding-top: 2px;
+    margin-bottom: 24px;
   `,
   input: (theme: ITheme) => css`
     position: absolute;

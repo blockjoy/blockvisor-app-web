@@ -63,7 +63,7 @@ export const useNodeList = (): Hook => {
                 <TableBlockNodes
                   id={node.id.value}
                   name={node.name}
-                  address="test"
+                  address={node.address}
                 />
               </>
             ),
