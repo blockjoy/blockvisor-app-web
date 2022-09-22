@@ -7,6 +7,11 @@ export const nodeTypeList = [
   { id: 5, name: 'Validator' },
   { id: 6, name: 'Oracle' },
   { id: 7, name: 'Relay' },
+  { id: 8, name: 'Beacon' },
+  { id: 9, name: 'MEV Boost' },
+  { id: 10, name: 'Node' },
+  { id: 11, name: 'FullNode' },
+  { id: 12, name: 'LightNode' },
 ];
 
 export const blockchainList = [
