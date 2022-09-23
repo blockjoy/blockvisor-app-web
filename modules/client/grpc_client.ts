@@ -41,7 +41,7 @@ import {
   UpdateHostResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
 import {
-  CreateHostProvisionRequest,
+  CreateHostProvisionRequest, GetHostProvisionRequest,
   GetHostProvisionResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
@@ -549,22 +549,33 @@ export class GrpcClient {
       Array<HostProvision.AsObject> | StatusResponse | undefined | void
       > {
     let provision = new HostProvision();
+    provision.setId(otp);
 
-    if (otp) provision.setId(otp);
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    provision.setOrgId(this.getDummyUuid());
-    provision.setHostId(this.getDummyUuid());
-    provision.setInstallCmd('install cmd');
-    provision.setCreatedAt(this.getDummyTimestamp());
-    provision.setClaimedAt(this.getDummyTimestamp());
+    let request = new GetHostProvisionRequest();
+    request.setMeta(request_meta);
+    request.setId(otp);
 
-    let response = new GetHostProvisionResponse();
-    response.setMeta(this.getDummyMeta());
-    //response.setHostProvisionsList([provision]);
-
-    console.debug('retrieving host provisions');
-
-    //return response.getHostProvisionsList()?.map((provision) => provision.toObject())
+    return this.host_provision?.get(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getHostProvisionsList().map((hp) => hp.toObject())
+        })
+        .catch((err) => {
+          return {
+            code: 'Get host provisions error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   async createHostProvision(
