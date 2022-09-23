@@ -25,7 +25,8 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
 
   return (
     <div css={styles.base}>
-      <button css={styles.button} onClick={() => setOpen(!isOpen)}>
+      {/* <button css={styles.button} onClick={() => setOpen(!isOpen)}> */}
+      <button css={styles.button}>
         <span css={styles.icon}>B</span>
         {!hideName && <p css={styles.orgName}>Blockjoy</p>}
         <StyledDropdownIcon size="10px">

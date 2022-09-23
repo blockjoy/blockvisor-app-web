@@ -18,10 +18,10 @@ export const styles = {
     border-radius: 4px;
     transition: all 0.1s ease-out;
 
-    &:hover,
+    /* &:hover,
     &:focus {
       background: var(--color-overlay-background-1);
-    }
+    } */
   `,
   icon: css`
     display: grid;

@@ -4,10 +4,7 @@ type Node = {
   blockchainId: {
     value: string;
   };
-  createdAt: {
-    nanos: number;
-    seconds: number;
-  };
+  createdAt: string;
   groupsList: string[];
   hostId: {
     value: string;

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { apiClient } from '@modules/client';
 import { useState } from 'react';
 import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 type Args = string | string[] | undefined;
 
@@ -83,7 +84,7 @@ export const useNodeView = (): Hook => {
 
     setNode(activeNode);
 
-    await delay(300);
+    await delay(env.loadingDuration);
 
     setIsLoading(false);
   };

@@ -15,6 +15,7 @@ import { width } from 'styles/utils.width.styles';
 import { useOrganisations } from '@modules/organisations';
 import { toast } from 'react-toastify';
 import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 type OrganisationAddForm = {
   name: string;
@@ -30,7 +31,7 @@ export const OrganisationAdd: FC = () => {
   const onSubmit: SubmitHandler<OrganisationAddForm> = async ({ name }) => {
     setLoading(true);
     createOrganisation(name);
-    await delay(2000);
+    await delay(env.loadingDuration);
     setLoading(false);
     setLayout(undefined);
     toast.success('Organisation created');

@@ -6,6 +6,7 @@ import { organisationAtoms } from '../store/organisationAtoms';
 
 import { isStatusResponse } from '../utils/typeGuards';
 import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 // used for generating mock member count
 function randomIntFromInterval(min: number, max: number) {
@@ -25,7 +26,7 @@ export const useOrganisations = () => {
     setIsLoading(true);
 
     const res = await apiClient.getOrganizations();
-    await delay(2000);
+    await delay(env.loadingDuration);
 
     if (isStatusResponse(res)) {
       setOrganisations([]);
@@ -82,7 +83,7 @@ export const useOrganisations = () => {
 
     const res = await apiClient.createOrganization(organisation);
 
-    await delay(2000);
+    await delay(env.loadingDuration);
     setOrganisations([...(organisations ?? []), clientOrganisation]);
   };
 

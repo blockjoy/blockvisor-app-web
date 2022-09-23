@@ -9,6 +9,7 @@ import { TableBlockNodes } from '@modules/app/components/shared';
 import { apiClient } from '@modules/client';
 import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 interface Hook {
   loadNodes: () => void;
@@ -45,7 +46,7 @@ export const useNodeList = (): Hook => {
 
     console.log('nodes', nodes);
 
-    await delay(400);
+    await delay(env.loadingDuration);
 
     setIsLoading(false);
   };
