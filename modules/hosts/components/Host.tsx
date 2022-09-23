@@ -30,7 +30,7 @@ function getHostDetails(host: Host | null) {
   const details = [
     {
       label: 'CREATED',
-      data: formatDistanceToNow(new Date(host.createdAt.seconds), {
+      data: formatDistanceToNow(new Date(host.created_at_datetime), {
         addSuffix: true,
       }),
     },
