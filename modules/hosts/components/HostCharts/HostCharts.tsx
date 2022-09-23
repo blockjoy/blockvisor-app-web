@@ -57,7 +57,7 @@ const charts = [
     series: mockCpu,
     value: 62,
     color: '#e9a34d',
-    total: '/ 100%',
+    total: '/ 100',
     suffix: '%',
   },
   {
@@ -65,7 +65,7 @@ const charts = [
     series: mockMemory,
     value: 1.3,
     color: '#79db4a',
-    total: '/7.9',
+    total: '/ 7.9',
     suffix: ' GB',
   },
   {
