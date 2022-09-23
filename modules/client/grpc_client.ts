@@ -112,6 +112,7 @@ export function metric_to_grpc_metric(metric: Metric | undefined): GrpcMetricObj
   return {
     name: metric?.getName() || Metric.Name.UNKNOWN,
     ...metric?.toObject(),
+    // @ts-ignore
     value_str: new TextDecoder().decode(metric?.getValue()?.getValue())
   }
 }
@@ -653,9 +654,10 @@ export class GrpcClient {
     node.setName(
       uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
     );
-    node.setStatus(Node.NodeStatus.DISABLED);
+    node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
+    node.setType('{"id": 0, "properties": []}');
 
     let request = new CreateNodeRequest();
     request.setMeta(request_meta);
