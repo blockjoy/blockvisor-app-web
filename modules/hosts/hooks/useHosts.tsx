@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { hostsAtoms } from '../store/hostAtoms';
 import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 export const useHosts = () => {
   const [hostAddKey, setHostAddKey] = useState<string>();
@@ -25,7 +26,7 @@ export const useHosts = () => {
 
     console.log('hosts', hosts);
     setHosts(hosts);
-    await delay(300);
+    await delay(env.loadingDuration);
     setLoadingHosts(false);
   };
   const deleteHost = async (id: string) => {
@@ -60,7 +61,7 @@ export const useHosts = () => {
     console.log('host nodeTypes', hosts);
 
     setHost(hosts[0]);
-    await delay(500);
+    await delay(env.loadingDuration);
     setHostLoading(false);
   };
 

@@ -15,6 +15,7 @@ import {
   TableSkeleton,
 } from '@modules/app/components/shared';
 import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 export const HostAdd = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ export const HostAdd = () => {
 
   useEffect(() => {
     (async () => {
-      await delay(500);
+      await delay(env.loadingDuration);
       setIsLoading(false);
     })();
   }, []);

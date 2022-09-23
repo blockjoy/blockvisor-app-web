@@ -36,13 +36,13 @@ export default () => {
   return (
     <Drawer isOpen={layout === 'profile'}>
       <DrawerHeader>Profile Settings</DrawerHeader>
-      <DrawerContent>
+      {/* <DrawerContent>
         <DrawerSubheader>ACCESSIBILITY</DrawerSubheader>
         <ProfileSwitch
           isChecked={theme.id === 'dark'}
           onChecked={handleDarkModeToggled}
         />
-      </DrawerContent>
+      </DrawerContent> */}
       <DrawerAction>
         <DrawerSubheader>PROFILE</DrawerSubheader>
         <ProfileUpdate />
