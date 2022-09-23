@@ -58,9 +58,12 @@ export const useHosts = () => {
     // revisit this once types are consolidated
     const hosts: any = await apiClient.getHosts(uuid);
 
-    console.log('host nodeTypes', hosts);
+    // temp fix to get host from full list
+    const host = hosts.find((h: any) => h.id.value === id);
 
-    setHost(hosts[0]);
+    console.log('loadHost', host);
+
+    setHost(host);
     await delay(env.loadingDuration);
     setHostLoading(false);
   };

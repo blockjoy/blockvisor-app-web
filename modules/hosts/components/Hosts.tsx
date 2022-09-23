@@ -29,6 +29,7 @@ export function Hosts() {
   const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
 
   const handleRowClick = (args: any) => {
+    console.log('handleRowClick', args);
     router.push(`${router.pathname}/${args.key}`);
   };
 
