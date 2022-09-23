@@ -1,4 +1,4 @@
-import { StatusResponse } from '@modules/client/stub_client';
+import { StatusResponse } from '@modules/client/grpc_client';
 import {
   ApiToken,
   ResponseMeta,

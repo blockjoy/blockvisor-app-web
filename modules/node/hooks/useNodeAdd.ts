@@ -2,15 +2,12 @@ import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
 import {
-  Blockchain,
   Node,
   Uuid,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-import { GrpcHostObject } from '@modules/client/grpc_client';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useNodeList } from './useNodeList';
-import NodeType = Node.NodeType;
 
 type Hook = {
   loadLookups: VoidFunction;
@@ -75,7 +72,7 @@ export const useNodeAdd = (): Hook => {
 
     node.setBlockchainId(blockchain_id);
     node.setOrgId(org_id);
-    node.setType(+params.nodeType);
+    // node.setType(+params.nodeType);
     node.setHostId(hostId);
 
     await apiClient.createNode(node);

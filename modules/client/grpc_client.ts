@@ -115,6 +115,7 @@ export function metric_to_grpc_metric(metric: Metric | undefined): GrpcMetricObj
   return {
     name: metric?.getName() || Metric.Name.UNKNOWN,
     ...metric?.toObject(),
+    // @ts-ignore
     value_str: new TextDecoder().decode(metric?.getValue()?.getValue())
   }
 }

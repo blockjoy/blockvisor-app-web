@@ -1,5 +1,3 @@
-// import { GrpcClient } from '@blockjoy/blockjoy-grpc/dist/stub_client';
-// import { GrpcClient as StubClient } from './stub_client';
 import { GrpcClient } from './grpc_client';
 
 export const apiClient = new GrpcClient(
