@@ -21,9 +21,15 @@ const hostsLoading = atom<boolean | null>({
   default: null,
 });
 
+const hostProvisionKeys = atom<string[]>({
+  key: 'hosts.provisionKeys',
+  default: [],
+});
+
 export const hostsAtoms = {
   host,
   hostLoading,
   hosts,
   hostsLoading,
+  hostProvisionKeys,
 };

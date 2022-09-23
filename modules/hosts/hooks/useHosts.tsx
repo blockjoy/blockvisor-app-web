@@ -5,13 +5,16 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { hostsAtoms } from '../store/hostAtoms';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 
 export const useHosts = () => {
-  const [hostAddKey, setHostAddKey] = useState<string>();
+  // const [hostAddKey, setHostAddKey] = useState<string>();
+  const [hostProvisionKeys, setHostProvisionKeys] = useRecoilState(
+    hostsAtoms.hostProvisionKeys,
+  );
   const [hosts, setHosts] = useRecoilState(hostsAtoms.hosts);
   const [host, setHost] = useRecoilState(hostsAtoms.host);
   const [loadingHost, setHostLoading] = useRecoilState(hostsAtoms.hostLoading);
@@ -25,6 +28,24 @@ export const useHosts = () => {
     const hosts: any = await apiClient.getHosts();
 
     console.log('hosts', hosts);
+
+    // load provisioning hosts
+    if (localStorage.getItem('hostProvisionKeys')) {
+      const hostProvisionKeys = JSON.parse(
+        localStorage.getItem('hostProvisionKeys') || '',
+      );
+
+      for (let key of hostProvisionKeys) {
+        console.log('hostProvisionKey', key);
+
+        const hostProvisionRecord = await apiClient.getHostProvision(key);
+
+        console.log('hostProvisionRecord', hostProvisionRecord);
+      }
+    }
+
+    const hostProvisions = await apiClient.getHostProvision();
+
     setHosts(hosts);
     await delay(env.loadingDuration);
     setLoadingHosts(false);
@@ -70,23 +91,42 @@ export const useHosts = () => {
 
   const createHostProvision = async (callback: () => void) => {
     const orgId = new Uuid();
-    orgId.setValue('to-be-populated');
+    orgId.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
 
     const hostProvision = new HostProvision();
-    hostProvision.setOrgId;
+    hostProvision.setOrgId(orgId);
 
     const response: any = await apiClient.createHostProvision(hostProvision);
 
+    console.log('createHostProvision', response);
+
     toast.success('Provisioning Host');
 
-    setTimeout(() => {
-      setHostAddKey(response.key || 'EQ2WBtEt50');
+    const hostProvisionKeysCopy = [...hostProvisionKeys];
 
-      callback();
-    }, 1000);
+    hostProvisionKeysCopy.push(response?.messagesList[0]);
+
+    setHostProvisionKeys(hostProvisionKeysCopy);
+
+    localStorage.setItem(
+      'hostProvisionKeys',
+      JSON.stringify(hostProvisionKeysCopy),
+    );
+
+    await delay(env.loadingDuration);
+
+    callback();
 
     return response;
   };
+
+  useEffect(() => {
+    if (localStorage.getItem('hostProvisionKeys')) {
+      setHostProvisionKeys(
+        JSON.parse(localStorage.getItem('hostProvisionKeys') || ''),
+      );
+    }
+  }, []);
 
   return {
     loadHost,
@@ -95,7 +135,7 @@ export const useHosts = () => {
     deleteHost,
     createHostProvision,
     getHosts,
-    hostAddKey,
+    hostAddKey: hostProvisionKeys?.length ? hostProvisionKeys[0] : '',
     hosts,
     loadingHosts: Boolean(loadingHosts),
     host,
