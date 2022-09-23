@@ -50,6 +50,7 @@ const styles = {
 
 export const FormCheckbox: FC<Props> = ({ label, name }) => {
   const { control } = useFormContext();
+  console.log('label', label);
   return (
     <>
       <div>
