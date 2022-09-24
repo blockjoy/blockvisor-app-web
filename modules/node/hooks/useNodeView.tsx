@@ -57,18 +57,16 @@ export const useNodeView = (): Hook => {
     setIsLoading(true);
 
     const nodeId = createUuid(id);
-
     const node: any = await apiClient.getNode(nodeId);
-
-    console.log('node', node);
+    const nodeTypeId = JSON.parse(node.type).id;
 
     const details = [
       {
         label: 'TYPE',
-        data: nodeTypeList.find((n) => n.id === node.type)?.name,
+        data: nodeTypeList.find((n) => n.id === nodeTypeId)?.name,
       },
       { label: 'WALLET ADDRESS', data: node.walletAddress },
-      { label: 'VERSION', data: node.version },
+      { label: 'VERSION', data: node.version || 'Latest' },
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
     ];
 

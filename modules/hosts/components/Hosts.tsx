@@ -10,6 +10,7 @@ const headers = [
   {
     name: 'Name',
     key: '1',
+    width: '320px',
   },
   {
     name: 'Added',

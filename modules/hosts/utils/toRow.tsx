@@ -25,7 +25,7 @@ export function hostsToRows(hosts: Host[] | null) {
       {
         key: '2',
         component: (
-          <span>
+          <span style={{ fontSize: '14px' }}>
             {formatDistanceToNow(new Date(host.created_at_datetime), {
               addSuffix: true,
             })}
