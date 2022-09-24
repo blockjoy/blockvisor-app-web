@@ -28,16 +28,22 @@ export function Hosts() {
   const router = useRouter();
   const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
 
-  const handleRowClick = (args: any) => {
+  const handleRowClick = (args: any, isHostProvision: boolean) => {
     console.log('handleRowClick', args);
-    router.push(`${router.pathname}/${args.key}`);
+
+    if (args.key.length < 12) {
+      router.push(`hosts/install/${args.key}`);
+    } else {
+      router.push(`${router.pathname}/${args.key}`);
+    }
   };
 
   const handleCreateClicked = async () => {
     setIsCreating(true);
-    createHostProvision(() => console.log('host provision created'));
-    setIsCreating(false);
-    router.push('host-install');
+    createHostProvision((key: string) => {
+      router.push(`hosts/install/${key}`);
+      setIsCreating(false);
+    });
   };
 
   useEffect(() => {

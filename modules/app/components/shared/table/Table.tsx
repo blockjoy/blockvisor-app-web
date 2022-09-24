@@ -1,26 +1,6 @@
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { tableStyles } from './table.styles';
 import { TableLoader } from './TableLoader';
 import { TableSkeleton } from './TableSkeleton';
-
-type Cell = {
-  key: string;
-  component: EmotionJSX.Element;
-};
-
-export type Row = {
-  key: string;
-  cells: Cell[];
-  isDanger?: boolean;
-};
-
-export type Header = {
-  key: string;
-  name: string;
-  width?: string;
-  isHiddenOnMobile?: boolean;
-  component?: EmotionJSX.Element;
-};
 
 type Props = {
   headers?: TableHeader[];
