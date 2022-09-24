@@ -6,7 +6,7 @@ import {
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { hostsAtoms } from '../store/hostAtoms';
+import { hostsAtoms } from '@modules/hosts';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 
@@ -70,17 +70,17 @@ export const useHosts = () => {
 
   const createHostProvision = async (callback: () => void) => {
     const orgId = new Uuid();
-    orgId.setValue('to-be-populated');
+    orgId.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
 
     const hostProvision = new HostProvision();
-    hostProvision.setOrgId;
+    hostProvision.setOrgId(orgId);
 
     const response: any = await apiClient.createHostProvision(hostProvision);
 
     toast.success('Provisioning Host');
 
     setTimeout(() => {
-      setHostAddKey(response.key || 'EQ2WBtEt50');
+      setHostAddKey(response.key || '');
 
       callback();
     }, 1000);
