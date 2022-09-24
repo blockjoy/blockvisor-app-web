@@ -1,5 +1,6 @@
 type BlockjoyNode = {
   id: string;
+  hostId: string;
   name: string;
   ip: string;
   created: string;

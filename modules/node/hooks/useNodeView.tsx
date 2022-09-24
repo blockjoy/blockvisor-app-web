@@ -22,15 +22,16 @@ const defaultNode: BlockjoyNode = {
   status: 0,
   name: '',
   id: '',
+  hostId: '',
   ip: '',
   created: '',
   details: [],
 };
 
-const createNodeId = (id: Args) => {
-  const nodeId = new Uuid();
-  nodeId.setValue(id?.toString() || '');
-  return nodeId;
+const createUuid = (id: Args) => {
+  const uuid = new Uuid();
+  uuid.setValue(id?.toString() || '');
+  return uuid;
 };
 
 export const useNodeView = (): Hook => {
@@ -38,24 +39,24 @@ export const useNodeView = (): Hook => {
   const [node, setNode] = useState<BlockjoyNode>(defaultNode);
 
   const deleteNode = async (id: Args) => {
-    await apiClient.execDeleteNode(createNodeId(id));
+    await apiClient.execDeleteNode(createUuid(id));
     toast.success(`Node Deleted`);
   };
 
   const stopNode = async (id: Args) => {
-    await apiClient.execDeleteNode(createNodeId(id));
+    await apiClient.execDeleteNode(createUuid(id));
     toast.success(`Node Stopped`);
   };
 
   const restartNode = async (id: Args) => {
-    await apiClient.execStopNode(createNodeId(id));
+    await apiClient.execStopNode(createUuid(node.hostId), createUuid(id));
     toast.success(`Node Restarted`);
   };
 
   const loadNode = async (id: Args) => {
     setIsLoading(true);
 
-    const nodeId = createNodeId(id);
+    const nodeId = createUuid(id);
 
     const node: any = await apiClient.getNode(nodeId);
 
@@ -73,6 +74,7 @@ export const useNodeView = (): Hook => {
 
     const activeNode: BlockjoyNode = {
       id: node.id.value,
+      hostId: node.hostId.value,
       status: node.status,
       name: node.name,
       ip: node.ip,

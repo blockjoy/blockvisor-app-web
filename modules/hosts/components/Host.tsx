@@ -57,11 +57,13 @@ export function Host() {
   // refactor these to utilize useNode hook
   const handleStopNode: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.stopPropagation();
-    const id = e.currentTarget.id;
-    console.log('stopping id', id);
-    const uuid = new Uuid();
-    uuid.setValue(id!);
-    await apiClient.execStopNode(uuid);
+    const nodeIdString = e.currentTarget.id;
+    console.log('stopping id', nodeIdString);
+    const nodeId = new Uuid();
+    nodeId.setValue(nodeIdString!);
+    const hostId = new Uuid();
+    hostId.setValue(id?.toString()!);
+    await apiClient.execStopNode(hostId, nodeId);
     toast.success(`Node Stopped`);
   };
   const handleRestartNode: MouseEventHandler<HTMLButtonElement> = async (e) => {
