@@ -33,12 +33,8 @@ export const useHosts = () => {
       );
 
       for (let key of hostProvisionKeys) {
-        console.log('hostProvisionKey', key);
-
         const response: any = await apiClient.getHostProvision(key);
-
         const hostProvisionRecord = response[0];
-
         hosts.unshift({
           isHostProvision: true,
           name: 'Host Provisioning',
@@ -87,8 +83,6 @@ export const useHosts = () => {
     // temp fix to get host from full list
     const host = hosts.find((h: any) => h.id.value === id);
 
-    console.log('loadHost', host);
-
     setHost(host);
     await delay(env.loadingDuration);
     setHostLoading(false);
@@ -102,13 +96,7 @@ export const useHosts = () => {
     hostProvision.setOrgId(orgId);
 
     const response: any = await apiClient.createHostProvision(hostProvision);
-
     const hostProvisionKey = response?.messagesList[0];
-
-    console.log('createHostProvision', response);
-
-    toast.success('Provisioning Host');
-
     const hostProvisionKeysCopy = [...hostProvisionKeys];
 
     hostProvisionKeysCopy.push(hostProvisionKey);
@@ -122,9 +110,9 @@ export const useHosts = () => {
 
     await delay(env.loadingDuration);
 
-    callback(hostProvisionKey);
+    toast.success('Provisioning Host');
 
-    return response;
+    callback(hostProvisionKey);
   };
 
   useEffect(() => {

@@ -22,6 +22,18 @@ import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
 import { HostCharts } from './HostCharts/HostCharts';
 
+function formatBytes(bytes: number, decimals = 1) {
+  if (!+bytes) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
 function getHostDetails(host: Host | null) {
   if (!host) {
     return null;
@@ -35,8 +47,9 @@ function getHostDetails(host: Host | null) {
       }),
     },
     { label: 'VERSION', data: host.version },
-    { label: 'DISK SIZE', data: host.diskSize.toString() },
-    { label: 'MEMORY SIZE', data: host.memSize.toString() },
+    { label: 'DISK SIZE', data: formatBytes(host.diskSize) },
+    { label: 'MEMORY SIZE', data: formatBytes(host.memSize) },
+    { label: 'CPU Count', data: host.cpuCount },
   ];
 
   return details;
