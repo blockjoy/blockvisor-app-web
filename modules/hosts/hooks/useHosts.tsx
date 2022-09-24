@@ -5,7 +5,7 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { hostsAtoms } from '../store/hostAtoms';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
