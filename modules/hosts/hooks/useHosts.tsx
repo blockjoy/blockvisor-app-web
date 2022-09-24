@@ -38,13 +38,25 @@ export const useHosts = () => {
       for (let key of hostProvisionKeys) {
         console.log('hostProvisionKey', key);
 
-        const hostProvisionRecord = await apiClient.getHostProvision(key);
+        const response: any = await apiClient.getHostProvision(key);
+
+        const hostProvisionRecord = response[0];
+
+        hosts.unshift({
+          isHostProvision: true,
+          name: 'Host Provisioning',
+          location: `Key: ${hostProvisionRecord.id}`,
+          id: {
+            value: hostProvisionRecord.id,
+          },
+          created_at_datetime: new Date(),
+        });
 
         console.log('hostProvisionRecord', hostProvisionRecord);
       }
     }
 
-    const hostProvisions = await apiClient.getHostProvision();
+    console.log('all hosts', hosts);
 
     setHosts(hosts);
     await delay(env.loadingDuration);
@@ -89,7 +101,7 @@ export const useHosts = () => {
     setHostLoading(false);
   };
 
-  const createHostProvision = async (callback: () => void) => {
+  const createHostProvision = async (callback: (args1: string) => void) => {
     const orgId = new Uuid();
     orgId.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
 
@@ -98,13 +110,15 @@ export const useHosts = () => {
 
     const response: any = await apiClient.createHostProvision(hostProvision);
 
+    const hostProvisionKey = response?.messagesList[0];
+
     console.log('createHostProvision', response);
 
     toast.success('Provisioning Host');
 
     const hostProvisionKeysCopy = [...hostProvisionKeys];
 
-    hostProvisionKeysCopy.push(response?.messagesList[0]);
+    hostProvisionKeysCopy.push(hostProvisionKey);
 
     setHostProvisionKeys(hostProvisionKeysCopy);
 
@@ -115,7 +129,7 @@ export const useHosts = () => {
 
     await delay(env.loadingDuration);
 
-    callback();
+    callback(hostProvisionKey);
 
     return response;
   };
