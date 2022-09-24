@@ -9,7 +9,7 @@ export const styles = {
     right: 0;
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 330px;
     height: 100%;
     border-left: 1px solid var(--color-overlay-background-1);
     background: var(--color-foreground-secondary);
