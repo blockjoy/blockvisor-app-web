@@ -28,7 +28,7 @@ export function Hosts() {
   const router = useRouter();
   const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
 
-  const handleRowClick = (args: any, isHostProvision: boolean) => {
+  const handleRowClick = (args: any) => {
     console.log('handleRowClick', args);
 
     if (args.key.length < 12) {

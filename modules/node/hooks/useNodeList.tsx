@@ -4,7 +4,6 @@ import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useEffect, useState } from 'react';
 import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
-import { Header, Row } from '@modules/app/components/shared/table/Table';
 import { TableBlockNodes } from '@modules/app/components/shared';
 import { apiClient } from '@modules/client';
 import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
