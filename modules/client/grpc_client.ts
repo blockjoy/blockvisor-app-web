@@ -63,10 +63,11 @@ import {
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
-import { CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
+import { CommandRequest, CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
 import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
 import { ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
 import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+import { CommandServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Command_serviceServiceClientPb';
 
 export type StatusResponse = {
   code: string;
@@ -188,6 +189,7 @@ export class GrpcClient {
   private update: UpdateServiceClient | undefined;
   private user: UserServiceClient | undefined;
   private blockchain: BlockchainServiceClient | undefined;
+  private command: CommandServiceClient | undefined;
 
   private token: string;
 
@@ -214,6 +216,7 @@ export class GrpcClient {
     this.node = new NodeServiceClient(host, null, null);
     this.host_provision = new HostProvisionServiceClient(host, null, null);
     this.dashboard = new DashboardServiceClient(host, null, null);
+    this.command = new CommandServiceClient(host, null, null);
     /*
         this.billing = new BillingServiceClient(host, null, null);
         this.organization = new OrganizationServiceClient(host, null, null);
@@ -836,20 +839,78 @@ export class GrpcClient {
 
   async execStartNode(
     host_id: Uuid,
+    node_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CommandResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let param = new Parameter();
+    let value = new google_protobuf_any_pb.Any();
+    value.setValue(node_id.toString());
+    param.setName("resource_id");
+    param.setValue(value);
+
+    let request = new CommandRequest();
+    request.setMeta(request_meta);
+    request.setId(host_id);
+    request.addParams(param);
+
+    return this.command?.startNode(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getMeta()?.toObject();
+        })
+        .catch((err) => {
+          return {
+            code: 'Start node error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   async execStopNode(
     host_id: Uuid,
+    node_id: Uuid
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CommandResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let param = new Parameter();
+    let value = new google_protobuf_any_pb.Any();
+    value.setValue(node_id.toString());
+    param.setName("resource_id");
+    param.setValue(value);
+
+    let request = new CommandRequest();
+    request.setMeta(request_meta);
+    request.setId(host_id);
+    request.addParams(param);
+
+    return this.command?.stopNode(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getMeta()?.toObject();
+        })
+        .catch((err) => {
+          return {
+            code: 'Start node error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        });
   }
 
   async execRestartNode(
@@ -900,10 +961,32 @@ export class GrpcClient {
   async execRestartHost(
     host_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CommandResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new CommandRequest();
+    request.setMeta(request_meta);
+    request.setId(host_id);
+
+    return this.command?.restartHost(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject();
+    }).catch((err) => {
+      return {
+            code: 'Restart host error',
+            message: `${err}`,
+            metadata: {
+              headers: {
+                'content-type': 'application/grpc',
+                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+                'content-length': '0',
+              },
+            },
+            source: 'None',
+          };
+        }
+    );
+
+
   }
 
   async execGeneric(
