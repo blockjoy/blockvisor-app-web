@@ -78,6 +78,8 @@ export const NodeAdd: FC = () => {
       blockchain,
     };
 
+    console.log('params', params);
+
     createNode(params);
   };
 
