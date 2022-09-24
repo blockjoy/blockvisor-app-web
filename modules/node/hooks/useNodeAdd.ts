@@ -1,10 +1,7 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
-import {
-  Node,
-  Uuid,
-} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useNodeList } from './useNodeList';
@@ -72,8 +69,10 @@ export const useNodeAdd = (): Hook => {
 
     node.setBlockchainId(blockchain_id);
     node.setOrgId(org_id);
-    // node.setType(+params.nodeType);
+    node.setType(`{ "id": ${params.nodeType.toString()}, "properties": [] }`);
     node.setHostId(hostId);
+
+    console.log('node', node);
 
     await apiClient.createNode(node);
 
