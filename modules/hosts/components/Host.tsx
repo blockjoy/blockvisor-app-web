@@ -47,9 +47,9 @@ function getHostDetails(host: Host | null) {
       }),
     },
     { label: 'VERSION', data: host.version },
-    { label: 'DISK SIZE', data: formatBytes(host.diskSize) },
-    { label: 'MEMORY SIZE', data: formatBytes(host.memSize) },
-    { label: 'CPU Count', data: host.cpuCount },
+    { label: 'DISK SIZE', data: formatBytes(host.diskSize)?.toString() },
+    { label: 'MEMORY SIZE', data: formatBytes(host.memSize)?.toString() },
+    { label: 'CPU Count', data: host.cpuCount?.toString() },
   ];
 
   return details;
