@@ -868,12 +868,13 @@ export class GrpcClient {
     host_id: Uuid,
     node_id: Uuid,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    console.log("got host_id", host_id, " node_id: ", node_id.toString());
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let param = new Parameter();
     let value = new google_protobuf_any_pb.Any();
-    value.setValue(node_id.toString());
+    value.setValue(node_id.serializeBinary());
     param.setName('resource_id');
     param.setValue(value);
 
