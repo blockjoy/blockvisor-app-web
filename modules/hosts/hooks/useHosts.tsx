@@ -35,6 +35,9 @@ export const useHosts = () => {
       for (let key of hostProvisionKeys) {
         const response: any = await apiClient.getHostProvision(key);
         const hostProvisionRecord = response[0];
+
+        console.log('hostProvisionRecord', hostProvisionRecord);
+
         hosts.unshift({
           isHostProvision: true,
           name: 'Host Provisioning',
