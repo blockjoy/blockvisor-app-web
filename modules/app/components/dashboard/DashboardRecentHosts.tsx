@@ -14,8 +14,9 @@ export const DashboardRecentHosts = () => {
   const handleHostClicked = (args: any) => router.push(`hosts/${args.key}`);
 
   const handleCreateClicked = async () => {
-    createHostProvision(() => console.log('host provision created'));
-    router.push('host-install');
+    createHostProvision((key: string) => {
+      router.push(`hosts/install/${key}`);
+    });
   };
 
   return (
