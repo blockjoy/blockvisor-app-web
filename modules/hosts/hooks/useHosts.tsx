@@ -38,15 +38,17 @@ export const useHosts = () => {
 
         console.log('hostProvisionRecord', hostProvisionRecord);
 
-        hosts.unshift({
-          isHostProvision: true,
-          name: 'Host Provisioning',
-          location: `Key: ${hostProvisionRecord.id}`,
-          id: {
-            value: hostProvisionRecord.id,
-          },
-          created_at_datetime: new Date(),
-        });
+        if (!hostProvisionRecord.claimedAt) {
+          hosts.unshift({
+            isHostProvision: true,
+            name: 'Host Provisioning',
+            location: `Key: ${hostProvisionRecord.id}`,
+            id: {
+              value: hostProvisionRecord.id,
+            },
+            created_at_datetime: new Date(),
+          });
+        }
       }
     }
 
