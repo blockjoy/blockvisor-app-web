@@ -1,12 +1,7 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
-import {
-  Button,
-  Select,
-  Input,
-  InputLabel,
-  Checkbox,
-} from '@shared/components';
+import { Button, Select, Input } from '@shared/components';
+import { useRouter } from 'next/router';
 import { FC, useState, useEffect } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -43,23 +38,9 @@ type NodeTypeConfig = {
   properties: NodeTypeConfigProperty[];
 };
 
-const mockNodeTypeConfig: NodeTypeConfig[] = [
-  {
-    id: 5,
-    properties: [
-      { name: 'ip', label: 'IP Address', default: '', type: 'string' },
-      {
-        name: 'selfManaged',
-        label: 'Self Managed',
-        default: '',
-        type: 'boolean',
-      },
-      { name: 'batch', label: 'Batch Create', default: 100, type: 'number' },
-    ],
-  },
-];
-
 export const NodeAdd: FC = () => {
+  const router = useRouter();
+
   const { createNode, loadLookups, isLoading, blockchainList, hostList } =
     useNodeAdd();
 
@@ -80,7 +61,16 @@ export const NodeAdd: FC = () => {
 
     console.log('params', params);
 
-    createNode(params);
+    createNode(params, (nodeId: string) => {
+      form.setValue('blockchain', blockchainList[0]?.value);
+      form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
+      form.setValue('host', hostList[0]?.value);
+      setActiveNodeType(blockchainList[0].supportedNodeTypes[0]);
+      setSupportedNodeTypes(
+        blockchainList[0].supportedNodeTypes.map((t: any) => t.id),
+      );
+      router.push(`/nodes/${nodeId}`);
+    });
   };
 
   const [hasMounted, setHasMounted] = useState(false);
@@ -91,21 +81,30 @@ export const NodeAdd: FC = () => {
   const handleNodeTypeChanged = (nodeType: number) => {
     console.log('nodeType', nodeType);
 
-    const activeNodeType = blockchainList[0].supportedNodeTypes.find(
+    console.log('blockchainList', blockchainList);
+
+    const activeBlockchain = blockchainList.find(
+      (b) => b.value === form.getValues().blockchain,
+    );
+
+    console.log('activeBlockchain', activeBlockchain);
+
+    const activeNodeType = activeBlockchain.supportedNodeTypes.find(
       (t: any) => t.id === nodeType,
     );
 
     setActiveNodeType(activeNodeType);
+    form.setValue('nodeType', nodeType);
   };
 
   const handleBlockchainChanged = (e: any) => {
     console.log('e', e.target.selectedIndex);
 
-    const supportedNodeTypes = blockchainList[
-      e.target.selectedIndex
-    ].supportedNodeTypes.map((t: any) => t.id);
+    const supportedNodeTypes =
+      blockchainList[e.target.selectedIndex].supportedNodeTypes;
 
-    setSupportedNodeTypes(supportedNodeTypes);
+    setSupportedNodeTypes(supportedNodeTypes.map((t: any) => t.id));
+    setActiveNodeType(supportedNodeTypes[0]);
 
     console.log('supportedNodeTypes', supportedNodeTypes);
   };
@@ -123,7 +122,7 @@ export const NodeAdd: FC = () => {
       setSupportedNodeTypes(
         blockchainList[0].supportedNodeTypes.map((t: any) => t.id),
       );
-      setActiveNodeType(blockchainList[0].supportedNodeTypes);
+      setActiveNodeType(blockchainList[0].supportedNodeTypes[0]);
 
       form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
@@ -165,8 +164,7 @@ export const NodeAdd: FC = () => {
               </div>
             </div>
             <NodeTypePicker
-              name="nodeType"
-              label="Node Type"
+              activeNodeType={activeNodeType?.id || 0}
               supportedNodeTypes={supportedNodeTypes}
               onChange={handleNodeTypeChanged}
             />

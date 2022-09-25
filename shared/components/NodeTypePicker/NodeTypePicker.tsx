@@ -1,14 +1,12 @@
 import { css } from '@emotion/react';
 import { FC } from 'react';
 import { nodeTypeList } from 'shared/constants/lookups';
-import { useFormContext } from 'react-hook-form';
 import { InputLabel } from '@shared/components/Input/InputLabel';
 import { ITheme } from 'types/theme';
 
 type Props = {
-  name: string;
-  label: string;
   supportedNodeTypes: number[];
+  activeNodeType: number;
   onChange: (args1: number) => void;
 };
 
@@ -20,45 +18,39 @@ const styles = {
     padding-top: 2px;
     margin-bottom: 24px;
   `,
-  input: (theme: ITheme) => css`
-    position: absolute;
-    transform: scale(0);
+  button: (isActive: boolean) => (theme: ITheme) =>
+    css`
+      display: grid;
+      place-items: center;
+      height: 44px;
+      width: 100%;
+      border-radius: 4px;
+      background: ${theme.colorActive};
+      color: ${theme.colorText};
+      font-size: 12px;
+      border: 1px solid transparent;
+      cursor: pointer;
 
-    &:checked ~ label {
-      border-color: ${theme.colorPrimary};
-    }
-  `,
-  radioLabel: (theme: ITheme) => css`
-    display: grid;
-    place-items: center;
-    height: 44px;
-    border-radius: 4px;
-    background: ${theme.colorActive};
-    border: 1px solid transparent;
-    cursor: pointer;
-  `,
-  radioLabelText: css`
-    display: block;
-    font-size: 12px;
-  `,
+      ${isActive &&
+      css`
+        border-color: ${theme.colorPrimary};
+      `};
+    `,
 };
 
 export const NodeTypePicker: FC<Props> = ({
-  name,
-  label,
   supportedNodeTypes = [1],
   onChange,
+  activeNodeType,
 }) => {
-  const { register } = useFormContext();
-
   const handleChange = (nodeType: number) => {
     onChange(nodeType);
   };
 
   return (
     <>
-      <InputLabel name={name} labelSize="small">
-        {label || name}
+      <InputLabel name="nodeType" labelSize="small">
+        Node Type
       </InputLabel>
       <ul css={styles.list}>
         {nodeTypeList.map(
@@ -66,19 +58,13 @@ export const NodeTypePicker: FC<Props> = ({
             index !== 0 &&
             supportedNodeTypes?.includes(type.id) && (
               <li key={type.id}>
-                <>
-                  <input
-                    name={name}
-                    onChange={() => handleChange(type.id)}
-                    css={styles.input}
-                    id={type.name}
-                    type="radio"
-                    value={type.id}
-                  />
-                  <label htmlFor={type.name} css={styles.radioLabel}>
-                    <span css={styles.radioLabelText}>{type.name}</span>
-                  </label>
-                </>
+                <button
+                  type="button"
+                  onClick={() => handleChange(type.id)}
+                  css={styles.button(activeNodeType === type.id)}
+                >
+                  {type.name}
+                </button>
               </li>
             ),
         )}
