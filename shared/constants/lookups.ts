@@ -8,10 +8,10 @@ export const nodeTypeList = [
   { id: 6, name: 'Relay' },
   { id: 7, name: 'Execution' },
   { id: 8, name: 'Beacon' },
-  { id: 9, name: 'MEVBoost' },
+  { id: 9, name: 'MEV Boost' },
   { id: 10, name: 'Node' },
-  { id: 11, name: 'FullNode' },
-  { id: 12, name: 'LightNode' },
+  { id: 11, name: 'Full Node' },
+  { id: 12, name: 'Light Node' },
 ];
 /*
 Unknown = 0,

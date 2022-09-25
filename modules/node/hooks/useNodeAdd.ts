@@ -4,11 +4,13 @@ import { apiClient } from '@modules/client';
 import { Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { useNodeList } from './useNodeList';
 
 type Hook = {
   loadLookups: VoidFunction;
-  createNode: (args: CreateNodeParams) => void;
+  createNode: (
+    args: CreateNodeParams,
+    onSuccess: (args0?: any) => void,
+  ) => void;
   isLoading: boolean;
   blockchainList: any[];
   hostList: any[];
@@ -16,8 +18,6 @@ type Hook = {
 
 export const useNodeAdd = (): Hook => {
   const [layout, setLayout] = useRecoilState(layoutState);
-
-  const { loadNodes } = useNodeList();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -50,7 +50,10 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(false);
   };
 
-  const createNode = async (params: CreateNodeParams) => {
+  const createNode = async (
+    params: CreateNodeParams,
+    onSuccess: (args0?: string) => void,
+  ) => {
     setIsLoading(true);
 
     const hostId = new Uuid();
@@ -74,12 +77,16 @@ export const useNodeAdd = (): Hook => {
 
     console.log('node', node);
 
-    await apiClient.createNode(node);
+    const createdNode: any = await apiClient.createNode(node);
+
+    const nodeId = createdNode.messagesList[0];
+
+    console.log('createdNode', createdNode);
 
     toast.success('Node Created');
     setIsLoading(false);
     setLayout(undefined);
-    loadNodes();
+    onSuccess(nodeId);
   };
 
   return {

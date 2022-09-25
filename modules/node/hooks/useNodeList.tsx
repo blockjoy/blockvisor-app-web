@@ -9,6 +9,7 @@ import { apiClient } from '@modules/client';
 import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
+import { nodeTypeList } from '@shared/constants/lookups';
 
 interface Hook {
   loadNodes: () => void;
@@ -71,6 +72,14 @@ export const useNodeList = (): Hook => {
           {
             key: '2',
             component: <NodeStatus status={node.status} />,
+            // component: (
+            //   <>
+            //     {
+            //       nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)
+            //         ?.name
+            //     }
+            //   </>
+            // ),
           },
         ],
       }));

@@ -10,6 +10,7 @@ const StyledWrapper = styled.div`
   min-height: 400px;
   max-height: 400px;
   height: 400px;
+  max-width: 700px;
 `;
 
 const StyledChartHeader = styled.header`
