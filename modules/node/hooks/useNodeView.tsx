@@ -44,13 +44,13 @@ export const useNodeView = (): Hook => {
   };
 
   const stopNode = async (id: Args) => {
-    await apiClient.execDeleteNode(createUuid(id));
+    await apiClient.execStopNode(createUuid(node.hostId), createUuid(id));
     toast.success(`Node Stopped`);
   };
 
   const restartNode = async (id: Args) => {
-    await apiClient.execStopNode(createUuid(node.hostId), createUuid(id));
-    toast.success(`Node Restarted`);
+    await apiClient.execStartNode(createUuid(node.hostId), createUuid(id));
+    toast.success(`Node Started`);
   };
 
   const loadNode = async (id: Args) => {
