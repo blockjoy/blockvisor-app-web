@@ -1,7 +1,4 @@
 import { useState } from 'react';
-
-import styled from '@emotion/styled';
-
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
 import SizedIcon from '@modules/layout/components/shared/SizedIcon';
@@ -15,10 +12,6 @@ type Props = {
   hideName?: boolean;
 };
 
-const StyledDropdownIcon = styled(SizedIcon)<any>`
-  transform: rotate(90deg);
-`;
-
 export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
   const [isOpen, setOpen] = useState(false);
   const setLayout = useSetRecoilState(layoutState);
@@ -28,9 +21,9 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
       <button css={styles.button} onClick={() => setOpen(!isOpen)}>
         <span css={styles.icon}>B</span>
         {!hideName && <p css={styles.orgName}>Blockjoy</p>}
-        <StyledDropdownIcon size="10px">
+        <SizedIcon additionalStyles={[styles.rotateIcon]} size="10px">
           <IconArrow />
-        </StyledDropdownIcon>
+        </SizedIcon>
       </button>
       <div css={[styles.menu, isOpen && styles.isOpen]}>
         You only have one organization

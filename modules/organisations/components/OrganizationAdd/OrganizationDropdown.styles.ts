@@ -38,6 +38,9 @@ export const styles = {
     color: var(--color-text-5);
     font-size: 14px;
   `,
+  rotateIcon: css`
+    transform: rotate(90deg);
+  `,
   menu: css`
     position: absolute;
     top: 62px;

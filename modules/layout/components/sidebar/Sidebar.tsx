@@ -1,52 +1,26 @@
 import { useRecoilValue } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { styles } from './Sidebar.styles';
 
-import styled from '@emotion/styled';
-
-import SidebarHeader from './SidebarHeader';
+import { SidebarHeader } from './SidebarHeader';
 // import SidebarLeft from "./SidebarLeft";
 import SidebarMain from './SidebarMain';
-
-type Props = {
-  isSidebarOpen: boolean;
-};
-
-const StyledSidebar = styled.div<Props>`
-  position: fixed;
-  z-index: 8;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  height: 100%;
-  border-right: 1px solid ${(p) => p.theme.colorBorder};
-  background: ${(p) => p.theme.colorSidebar};
-  transform: translateX(${(p) => (p.isSidebarOpen ? 0 : '-100%')});
-  transition-property: transform;
-  transition-duration: 0.4s;
-
-  @media only screen and (min-width: ${(p) => p.theme.screenSm}) {
-    transform: translateX(0);
-    z-index: 5;
-  }
-`;
-
-const StyledSidebarWrapper = styled.div`
-  flex: 1 1 auto;
-  display: flex;
-`;
 
 export default () => {
   const layout = useRecoilValue(layoutState);
 
   return (
-    <StyledSidebar isSidebarOpen={layout === 'sidebar'}>
+    <div
+      css={[
+        styles.sidebar,
+        layout === 'sidebar' ? styles.sidebarOpen : styles.sidebarClosed,
+      ]}
+    >
       <SidebarHeader />
-      <StyledSidebarWrapper>
+      <div css={[styles.wrapper]}>
         {/* <SidebarLeft /> */}
         <SidebarMain />
-      </StyledSidebarWrapper>
-    </StyledSidebar>
+      </div>
+    </div>
   );
 };
