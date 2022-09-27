@@ -5,6 +5,7 @@ import IconDashboard from '@public/assets/icons/grid-12.svg';
 import IconHosts from '@public/assets/icons/host-12.svg';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 
 const blocks = [
   {
@@ -37,28 +38,31 @@ export default () => {
   const router = useRouter();
   return (
     <main css={[styles.wrapper]}>
-      {blocks.map((block) => (
-        <div key={block.title}>
-          <header css={[styles.header]}>{block.title}</header>
-          <ul css={[styles.list]}>
-            {block.items.map((item) => (
-              <li key={item.name}>
-                <Link href={item.path}>
-                  <a
-                    css={[styles.link]}
-                    className={
-                      router.pathname.includes(item.path) ? 'active' : ''
-                    }
-                  >
-                    {item.icon}
-                    {item.name}
-                  </a>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <div>
+        {blocks.map((block) => (
+          <div key={block.title}>
+            <header css={[styles.header]}>{block.title}</header>
+            <ul css={[styles.list]}>
+              {block.items.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.path}>
+                    <a
+                      css={[styles.link]}
+                      className={
+                        router.pathname.includes(item.path) ? 'active' : ''
+                      }
+                    >
+                      {item.icon}
+                      {item.name}
+                    </a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <SidebarFooter />
     </main>
   );
 };
