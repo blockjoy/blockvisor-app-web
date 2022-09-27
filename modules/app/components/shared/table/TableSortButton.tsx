@@ -1,8 +1,6 @@
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
-
 import IconSort from '@public/assets/icons/sort-12.svg';
 import SizedIcon from '@modules/layout/components/shared/SizedIcon';
+import { styles } from './TableSortButton.styles';
 
 type Props = {
   children: React.ReactNode;
@@ -11,53 +9,6 @@ type Props = {
   activeSortExpression?: string;
 };
 
-type ButtonProps = {
-  isActive: boolean;
-};
-
-const activeStyles = (p: any) => {
-  return css`
-    &,
-    &:hover {
-      color: ${p.theme.colorPrimary};
-    }
-    & path,
-    &:hover path {
-      fill: ${p.theme.colorPrimary};
-    }
-  `;
-};
-
-const StyledButton = styled.button<ButtonProps>`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  color: inherit;
-  cursor: pointer;
-
-  &:hover {
-    color: ${(p) => p.theme.colorText};
-  }
-
-  &:hover path {
-    fill: ${(p) => p.theme.colorText};
-  }
-
-  ${(p) => p.isActive && activeStyles};
-`;
-
-const StyledText = styled.span`
-  letter-spacing: inherit;
-  text-transform: inherit;
-  color: inherit;
-  line-height: 1;
-`;
-
 export const TableSortButton: React.FC<Props> = ({
   children,
   onClick,
@@ -65,14 +16,17 @@ export const TableSortButton: React.FC<Props> = ({
   activeSortExpression,
 }) => {
   return (
-    <StyledButton
+    <button
       onClick={() => onClick(sortExpression || '')}
-      isActive={sortExpression === activeSortExpression}
+      css={[
+        styles.button,
+        sortExpression === activeSortExpression ? styles.active : '',
+      ]}
     >
-      <StyledText>{children}</StyledText>
+      <span css={[styles.text]}>{children}</span>
       <SizedIcon size="10px">
         <IconSort />
       </SizedIcon>
-    </StyledButton>
+    </button>
   );
 };

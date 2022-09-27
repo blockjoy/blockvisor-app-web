@@ -1,28 +1,12 @@
-import styled from "@emotion/styled";
-import React from "react";
-
-const StyledWrapper = styled.div`
-    position: relative;
-    z-index: 3;
-    padding: 56px 0 16px;
-    transition: margin 0.4s;
-
-    @media only screen and (min-width: ${p => p.theme.screenSm}) {
-      margin-left: 300px;
-      z-index: 3;
-    }
-`;
+import React from 'react';
+import { styles } from './Page.styles';
 
 type LayoutType = {
-    children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
-const Page: React.FC<LayoutType>  = ({ children }) => {
-  return (
-    <StyledWrapper>
-        {children}
-    </StyledWrapper>
-  );
-}
+const Page: React.FC<LayoutType> = ({ children }) => {
+  return <div css={[styles.wrapper]}>{children}</div>;
+};
 
 export default Page;

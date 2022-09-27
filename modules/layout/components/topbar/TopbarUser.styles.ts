@@ -1,0 +1,19 @@
+import { css } from '@emotion/react';
+
+export const styles = {
+  button: css`
+    display: grid;
+    place-items: center;
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    height: 30px;
+    padding: 0;
+    font-size: 12px;
+    border: 0;
+    border-radius: 50%;
+    background: #8f44fd;
+    color: #f9f9f9;
+    cursor: pointer;
+  `,
+};

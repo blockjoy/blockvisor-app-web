@@ -1,27 +1,12 @@
-import styled from '@emotion/styled';
+import { styles } from './SidebarHeader.styles';
 import { OrganizationDropdown } from '@modules/organisations';
 import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
 
-const StyledWrapper = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 56px;
-  padding: 0 16px;
-  border-bottom: 1px solid ${(p) => p.theme.colorBorder};
-`;
-
-const StyledLogo = styled(LogoSmall)`
-  & path {
-    fill: #4c4f4d;
-  }
-`;
-
-export default () => {
+export const SidebarHeader = () => {
   return (
-    <StyledWrapper>
+    <header css={[styles.wrapper]}>
       <OrganizationDropdown />
-      <StyledLogo />
-    </StyledWrapper>
+      <LogoSmall css={[styles.logo]} />
+    </header>
   );
 };
