@@ -7,6 +7,6 @@ export const apiClient =
     ? new RealClient(process.env.NEXT_PUBLIC_API_URL || '')
     : new StubClient('http://localhost:8080');
 
-// if (process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production') {
-//   apiClient.initStorage();
-// }
+if (process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production') {
+  apiClient.initStorage();
+}
