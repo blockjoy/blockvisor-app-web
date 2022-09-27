@@ -17,6 +17,7 @@ import { Button } from '@shared/components';
 import { styles } from './Profile.styles';
 import { deleteUser } from '@shared/utils/browserStorage';
 import { authAtoms } from '@modules/auth';
+import { ProfileUpdate } from './ProfileUpdateForm/ProfileUpdateForm';
 
 export default () => {
   const layout = useRecoilValue(layoutState);
@@ -42,6 +43,10 @@ export default () => {
           onChecked={handleDarkModeToggled}
         />
       </DrawerContent>
+      <DrawerAction>
+        <DrawerSubheader>PROFILE</DrawerSubheader>
+        <ProfileUpdate />
+      </DrawerAction>
       <DrawerAction>
         <Button
           onClick={handleLogout}
