@@ -15,7 +15,6 @@
     "@emotion/babel-plugin": "^11.10.2",
     "@emotion/babel-preset-css-prop": "^11.10.0",
     "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.10.4",
     "@hookform/error-message": "^2.0.0",
     "@types/google-protobuf": "^3.15.6",
     "animejs": "^3.2.1",
