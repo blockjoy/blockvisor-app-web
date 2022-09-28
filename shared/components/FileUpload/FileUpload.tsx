@@ -1,21 +1,41 @@
 import Image from 'next/image';
-import { useDropzone } from 'react-dropzone';
+import { useCallback } from 'react';
+import { useDropzone, DropzoneOptions, FileWithPath } from 'react-dropzone';
 import { styles } from './FileUpload.styles';
 import { reset } from 'styles/utils.reset.styles';
+import { typo } from 'styles/utils.typography.styles';
+import IconClose from 'public/assets/icons/close-12.svg';
 
 type Props = {
-  files: any[];
+  files: FileWithPath[];
+  dropzoneOptions: DropzoneOptions;
+  onChange: (value: any) => void;
+  placeholder: string;
 };
 
-export function FileUpload({ files }: Props) {
-  const { getRootProps, getInputProps } = useDropzone({ multiple: false });
+export function FileUpload({
+  files,
+  dropzoneOptions,
+  onChange,
+  placeholder,
+}: Props) {
+  const onDrop = useCallback(async (droppedFiles: File[]) => {
+    const newFiles = [...files, ...Array.from(droppedFiles)];
+
+    onChange(newFiles);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    ...dropzoneOptions,
+    onDrop,
+  });
 
   return (
-    <div {...getRootProps()}>
+    <div css={[styles.base]} {...getRootProps()}>
       <input
         disabled={Boolean(files.length)}
         className="file-upload__input"
-        {...getInputProps()}
+        {...getInputProps({ onChange })}
       />
       {Boolean(files.length) ? (
         <>
@@ -29,12 +49,7 @@ export function FileUpload({ files }: Props) {
             {files.map(({ name }) => name).join(', ')}
           </span>
           <button css={[reset.button, styles.remove]}>
-            <Image
-              src="/assets/icons/close-12.svg"
-              layout="fixed"
-              width={12}
-              height={12}
-            />
+            <IconClose />
           </button>
         </>
       ) : (
@@ -45,7 +60,7 @@ export function FileUpload({ files }: Props) {
             width={24}
             height={24}
           />
-          <div>Select a file to upload</div>
+          <p css={[styles.text, typo.small]}>{placeholder}</p>
         </>
       )}
     </div>
