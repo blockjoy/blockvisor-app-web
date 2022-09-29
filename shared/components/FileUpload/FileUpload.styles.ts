@@ -10,11 +10,6 @@ export const styles = {
     border: 1px dashed var(--color-border-2);
     border-radius: 4px;
     cursor: pointer;
-
-    &:hover,
-    &:active {
-      background-color: var(--color-text-5-o3);
-    }
   `,
   text: css`
     color: var(--color-text-3);
@@ -24,6 +19,15 @@ export const styles = {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  `,
+  noFiles: css`
+    &:hover,
+    &:active {
+      background-color: var(--color-text-5-o3);
+    }
+  `,
+  hasFiles: css`
+    cursor: auto;
   `,
   remove: css`
     padding-left: 6px;

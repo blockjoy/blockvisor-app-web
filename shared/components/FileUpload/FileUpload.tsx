@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { useCallback } from 'react';
-import { useDropzone, DropzoneOptions, FileWithPath } from 'react-dropzone';
+import { MouseEventHandler, useCallback } from 'react';
+import { useDropzone, FileWithPath } from 'react-dropzone';
 import { styles } from './FileUpload.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -8,34 +8,31 @@ import IconClose from 'public/assets/icons/close-12.svg';
 
 type Props = {
   files: FileWithPath[];
-  dropzoneOptions: DropzoneOptions;
-  onChange: (value: any) => void;
+  onChange: (files: File[]) => void;
+  remove: MouseEventHandler<HTMLButtonElement>;
   placeholder: string;
 };
 
-export function FileUpload({
-  files,
-  dropzoneOptions,
-  onChange,
-  placeholder,
-}: Props) {
+export function FileUpload({ files, onChange, placeholder, remove }: Props) {
   const onDrop = useCallback(async (droppedFiles: File[]) => {
     const newFiles = [...files, ...Array.from(droppedFiles)];
-
     onChange(newFiles);
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
-    ...dropzoneOptions,
+    multiple: false,
     onDrop,
   });
 
   return (
-    <div css={[styles.base]} {...getRootProps()}>
+    <div
+      css={[styles.base, !!files.length ? styles.hasFiles : styles.noFiles]}
+      {...getRootProps()}
+    >
       <input
         disabled={Boolean(files.length)}
         className="file-upload__input"
-        {...getInputProps({ onChange })}
+        {...getInputProps()}
       />
       {Boolean(files.length) ? (
         <>
@@ -45,10 +42,10 @@ export function FileUpload({
             width={24}
             height={24}
           />
-          <span css={[styles.label]}>
+          <span css={[styles.label, styles.text]}>
             {files.map(({ name }) => name).join(', ')}
           </span>
-          <button css={[reset.button, styles.remove]}>
+          <button onClick={remove} css={[reset.button, styles.remove]}>
             <IconClose />
           </button>
         </>
