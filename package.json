@@ -8,10 +8,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next build && next export"
+    "export": "next build && next export",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public",
+    "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@blockjoy/blockjoy-grpc": "^1.1.21",
+    "@blockjoy/blockjoy-grpc": "1.1.21",
     "@emotion/babel-plugin": "^11.10.2",
     "@emotion/babel-preset-css-prop": "^11.10.0",
     "@emotion/react": "^11.9.3",
@@ -36,6 +39,13 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^6.4.9",
+    "@storybook/addon-essentials": "^6.4.9",
+    "@storybook/addon-links": "^6.4.9",
+    "@storybook/builder-webpack5": "^6.4.9",
+    "@storybook/manager-webpack5": "^6.4.9",
+    "@emotion/babel-preset-css-prop": "^11.10.0",
+    "@storybook/react": "^6.4.9",
     "@svgr/webpack": "^6.3.1",
     "@types/animejs": "^3.1.5",
     "@types/node": "18.6.1",
@@ -44,6 +54,7 @@
     "@types/uuid": "^8.3.4",
     "eslint": "8.20.0",
     "eslint-config-next": "12.2.3",
+    "storybook-addon-next": "^1.6.9",
     "typescript": "4.7.4"
   }
 }
