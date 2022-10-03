@@ -1,17 +1,34 @@
 import Image from 'next/image';
-import { useDropzone } from 'react-dropzone';
+import { MouseEventHandler, useCallback } from 'react';
+import { useDropzone, FileWithPath } from 'react-dropzone';
 import { styles } from './FileUpload.styles';
 import { reset } from 'styles/utils.reset.styles';
+import { typo } from 'styles/utils.typography.styles';
+import IconClose from 'public/assets/icons/close-12.svg';
 
 type Props = {
-  files: any[];
+  files: FileWithPath[];
+  onChange: (files: File[]) => void;
+  remove: MouseEventHandler<HTMLButtonElement>;
+  placeholder: string;
 };
 
-export function FileUpload({ files }: Props) {
-  const { getRootProps, getInputProps } = useDropzone({ multiple: false });
+export function FileUpload({ files, onChange, placeholder, remove }: Props) {
+  const onDrop = useCallback(async (droppedFiles: File[]) => {
+    const newFiles = [...files, ...Array.from(droppedFiles)];
+    onChange(newFiles);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    onDrop,
+  });
 
   return (
-    <div {...getRootProps()}>
+    <div
+      css={[styles.base, !!files.length ? styles.hasFiles : styles.noFiles]}
+      {...getRootProps()}
+    >
       <input
         disabled={Boolean(files.length)}
         className="file-upload__input"
@@ -25,16 +42,11 @@ export function FileUpload({ files }: Props) {
             width={24}
             height={24}
           />
-          <span css={[styles.label]}>
+          <span css={[styles.label, styles.text]}>
             {files.map(({ name }) => name).join(', ')}
           </span>
-          <button css={[reset.button, styles.remove]}>
-            <Image
-              src="/assets/icons/close-12.svg"
-              layout="fixed"
-              width={12}
-              height={12}
-            />
+          <button onClick={remove} css={[reset.button, styles.remove]}>
+            <IconClose />
           </button>
         </>
       ) : (
@@ -45,7 +57,7 @@ export function FileUpload({ files }: Props) {
             width={24}
             height={24}
           />
-          <div>Select a file to upload</div>
+          <p css={[styles.text, typo.small]}>{placeholder}</p>
         </>
       )}
     </div>
