@@ -4,7 +4,6 @@ import { Dashboard } from '../components/dashboard/Dashboard';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
-import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 
@@ -16,9 +15,7 @@ export const useDashboard = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
 
   const getRecentHosts = async () => {
-    const org_id = new Uuid();
-
-    org_id.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
+    const org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
 
     const hostsResponse: any = await apiClient.getHosts(
       undefined,

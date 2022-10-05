@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
 import { TableBlockNodes } from '@modules/app/components/shared';
 import { apiClient } from '@modules/client';
-import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { nodeTypeList } from '@shared/constants/lookups';
@@ -38,8 +37,7 @@ export const useNodeList = (): Hook => {
   const loadNodes = async () => {
     setIsLoading(true);
     // TODO: Org ID needs be set here
-    let org_id = new Uuid();
-    org_id.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
+    let org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
     const nodes: any = await apiClient.listNodes(org_id);
 
     setNodeList(nodes);

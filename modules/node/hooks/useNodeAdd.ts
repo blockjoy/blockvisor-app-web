@@ -1,7 +1,7 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
-import { Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 
@@ -56,15 +56,12 @@ export const useNodeAdd = (): Hook => {
   ) => {
     setIsLoading(true);
 
-    const hostId = new Uuid();
-    hostId.setValue(params.host);
+    const hostId = params.host;
 
     const node = new Node();
     // TODO: Org ID needs be set here
-    let org_id = new Uuid();
-    org_id.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
-    let blockchain_id = new Uuid();
-    blockchain_id.setValue(params.blockchain);
+    let org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
+    let blockchain_id = params.blockchain;
 
     console.log(`blockchain_id: ${blockchain_id}`);
     console.log(`host_id: ${hostId}`);

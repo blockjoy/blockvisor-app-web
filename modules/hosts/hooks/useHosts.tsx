@@ -1,7 +1,6 @@
 import { useRecoilState } from 'recoil';
 import {
   HostProvision,
-  Uuid,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
@@ -57,22 +56,19 @@ export const useHosts = () => {
     setLoadingHosts(false);
   };
   const deleteHost = async (id: string) => {
-    const uuid = new Uuid();
-    uuid.setValue(id?.toString()!);
+    const uuid = id?.toString()!;
     await apiClient.execDeleteHost(uuid);
     toast.success(`Host Deleted`);
   };
 
   const stopHost = async (id: string) => {
-    const uuid = new Uuid();
-    uuid.setValue(id?.toString()!);
+    const uuid = id?.toString()!;
     await apiClient.execStopHost(uuid);
     toast.success(`Host Stopped`);
   };
 
   const restartHost = async (id: string) => {
-    const uuid = new Uuid();
-    uuid.setValue(id?.toString()!);
+    const uuid = id?.toString()!;
     await apiClient.execRestartHost(uuid);
     toast.success(`Host Restarted`);
   };
@@ -80,8 +76,7 @@ export const useHosts = () => {
   const loadHost = async (id: string) => {
     setHostLoading(true);
 
-    const uuid = new Uuid();
-    uuid.setValue(id!);
+    const uuid = id!;
     // revisit this once types are consolidated
     const hosts: any = await apiClient.getHosts(uuid);
 
@@ -94,8 +89,7 @@ export const useHosts = () => {
   };
 
   const createHostProvision = async (callback: (args1: string) => void) => {
-    const orgId = new Uuid();
-    orgId.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
+    const orgId = process.env.NEXT_PUBLIC_ORG_ID || '';
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);

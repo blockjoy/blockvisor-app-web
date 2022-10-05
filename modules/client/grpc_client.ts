@@ -18,7 +18,6 @@ import {
   UpdateNotification,
   User,
   UserConfigurationParameter,
-  Uuid,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -56,7 +55,7 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
   CreateOrganizationResponse,
-  DeleteOrganizationResponse,
+  DeleteOrganizationResponse, GetOrganizationsRequest,
   GetOrganizationsResponse,
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
@@ -95,9 +94,9 @@ export type UIUser = {
   password_confirmation: string;
 };
 export type UINodeCreate = {
-  host_id: Uuid;
+  host_id: string;
   node_type: string;
-  blockchain_id: Uuid;
+  blockchain_id: string;
   command: 'create_node';
   sub_cmd?: string;
 };
@@ -115,29 +114,11 @@ export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
   }
 }
 
-export function id_to_string(id: Uuid | undefined): string | undefined {
-  if (id !== undefined) {
-    return id.getValue();
-  }
-}
-
-export function metric_to_grpc_metric(
-  metric: Metric | undefined,
-): GrpcMetricObject {
-  return {
-    name: metric?.getName() || Metric.Name.UNKNOWN,
-    ...metric?.toObject(),
-    // @ts-ignore
-    value_str: new TextDecoder().decode(metric?.getValue()?.getValue()),
-  };
-}
-
 export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
   return {
     ...node?.toObject(),
     groupsList: node?.getGroupsList() || [],
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
-    id_str: id_to_string(node?.getId()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
   };
 }
@@ -146,7 +127,6 @@ export function host_to_grpc_host(host: Host | undefined): GrpcHostObject {
   return {
     ...host?.toObject(),
     created_at_datetime: timestamp_to_date(host?.getCreatedAt()) || undefined,
-    id_str: id_to_string(host?.getId()) || '',
     nodesList: host?.getNodesList().map((node) => node.toObject()) || [],
     node_objects: host?.getNodesList().map((node) => node_to_grpc_node(node)),
   };
@@ -156,6 +136,7 @@ export function blockchain_to_grpc_blockchain(
   chain: Blockchain | undefined,
 ): GrpcBlockchainObject {
   return {
+    id: chain?.getId() || '',
     name: chain?.getName() || '',
     status: chain?.getStatus() || Blockchain.BlockchainStatus.DEVELOPMENT,
     supportedNodesTypes: chain?.getSupportedNodesTypes() || '',
@@ -166,9 +147,8 @@ export function blockchain_to_grpc_blockchain(
     ...chain?.toObject(),
     created_at_datetime: timestamp_to_date(chain?.getCreatedAt()) || undefined,
     updated_at_datetime: timestamp_to_date(chain?.getUpdatedAt()) || undefined,
-    id_str: id_to_string(chain?.getId()) || '',
     supported_node_types:
-      JSON.parse(chain?.getSupportedNodesTypes() || '') || [],
+      JSON.parse(chain?.getSupportedNodesTypes() || '') || []
   };
 }
 
@@ -177,13 +157,11 @@ export function user_to_grpc_user(user: User | undefined): GrpcUserObject {
     ...user?.toObject(),
     created_at_datetime: timestamp_to_date(user?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(user?.getUpdatedAt()),
-    id_str: id_to_string(user?.getId()),
   };
 }
 
 export type ConvenienceConversion = {
   created_at_datetime: Date | undefined;
-  id_str: string | undefined;
 };
 export type GrpcBlockchainObject = Blockchain.AsObject &
   ConvenienceConversion & {
@@ -196,9 +174,6 @@ export type GrpcNodeObject = Node.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
-export type GrpcMetricObject = Metric.AsObject & {
-  value_str: string | undefined;
-};
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
@@ -268,11 +243,8 @@ export class GrpcClient {
     return meta;
   }
 
-  getDummyUuid(): Uuid {
-    let uuid = new Uuid();
-    uuid.setValue(uuidv4());
-
-    return uuid;
+  getDummyUuid(): string {
+    return uuidv4();
   }
 
   getDummyNode(): Node {
@@ -380,8 +352,8 @@ export class GrpcClient {
   /* Billing service */
 
   async createBill(
-    user_id: Uuid,
-    org_id: Uuid,
+    user_id: string,
+    org_id: string,
   ): Promise<Bill.AsObject | StatusResponse | undefined> {
     let bill = new Bill();
     bill.setId('some-bill-id');
@@ -436,7 +408,7 @@ export class GrpcClient {
   /* Dashboard service */
 
   async getDashboardMetrics(): Promise<
-    Array<GrpcMetricObject> | undefined | StatusResponse
+    Array<Metric.AsObject> | undefined | StatusResponse
   > {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -449,11 +421,11 @@ export class GrpcClient {
       .then((response) => {
         console.log(
           'got metrics: ',
-          response.getMetricsList().map((item) => metric_to_grpc_metric(item)),
+          response.getMetricsList().map((item) => item.toObject()),
         );
         return response
           .getMetricsList()
-          .map((item) => metric_to_grpc_metric(item));
+          .map((item) => item.toObject());
       })
       .catch((err) => {
         return {
@@ -474,13 +446,11 @@ export class GrpcClient {
   /* Host service */
 
   async getHosts(
-    host_id?: Uuid,
-    org_id?: Uuid,
+    host_id?: string,
+    org_id?: string,
     token?: string,
   ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
-    let oid = new Uuid();
-    oid.setValue(process.env.NEXT_PUBLIC_ORG_ID || '');
-
+    let oid = process.env.NEXT_PUBLIC_ORG_ID || '';
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
@@ -548,7 +518,7 @@ export class GrpcClient {
   }
 
   async deleteHost(
-    host_id: Uuid,
+    host_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new DeleteHostResponse();
     response.setMeta(this.getDummyMeta());
@@ -626,7 +596,7 @@ export class GrpcClient {
   /* Node service */
 
   async listNodes(
-    org_id: Uuid,
+    org_id: string,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -657,7 +627,7 @@ export class GrpcClient {
   }
 
   async getNode(
-    node_id: Uuid,
+    node_id: string,
   ): Promise<GrpcNodeObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -737,21 +707,30 @@ export class GrpcClient {
   /* Organization service */
 
   async getOrganizations(): Promise<
-    Array<Organization.AsObject> | StatusResponse
+    Array<Organization.AsObject> | StatusResponse | undefined
   > {
-    let organization = new Organization();
-    organization.setId(this.getDummyUuid());
-    organization.setName('ThisGroup');
-    organization.setPersonal(true);
-    organization.setMemberCount(1);
-    organization.setCreatedAt(this.getDummyTimestamp());
-    organization.setUpdatedAt(this.getDummyTimestamp());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    let response = new GetOrganizationsResponse();
-    response.setMeta(this.getDummyMeta());
-    response.setOrganizationsList([organization]);
+    let request = new GetOrganizationsRequest();
+    request.setMeta(request_meta);
 
-    return response.getOrganizationsList().map((item) => item.toObject());
+    return this.organization?.get(request, this.getAuthHeader()).then((response) => {
+      return response.getOrganizationsList().map((item) => item.toObject());
+    }).catch((err) => {
+      return {
+        code: 'Get organizations error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
   }
 
   async createOrganization(
@@ -773,7 +752,7 @@ export class GrpcClient {
   }
 
   async deleteOrganization(
-    organization_id: Uuid,
+    organization_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new DeleteOrganizationResponse();
     response.setMeta(this.getDummyMeta());
@@ -846,7 +825,7 @@ export class GrpcClient {
   /* Command service */
 
   async execCreateNode(
-    host_id: Uuid,
+    host_id: string,
     node: UINodeCreate,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
@@ -856,7 +835,7 @@ export class GrpcClient {
   }
 
   async execDeleteNode(
-    host_id: Uuid,
+    host_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -865,18 +844,16 @@ export class GrpcClient {
   }
 
   async execStartNode(
-    host_id: Uuid,
-    node_id: Uuid,
+    host_id: string,
+    node_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     console.log("got host_id", host_id, " node_id: ", node_id.toString());
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let param = new Parameter();
-    let value = new google_protobuf_any_pb.Any();
-    value.setValue(node_id.serializeBinary());
     param.setName('resource_id');
-    param.setValue(value);
+    param.setValue(node_id);
 
     let request = new CommandRequest();
     request.setMeta(request_meta);
@@ -905,17 +882,15 @@ export class GrpcClient {
   }
 
   async execStopNode(
-    host_id: Uuid,
-    node_id: Uuid,
+    host_id: string,
+    node_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let param = new Parameter();
-    let value = new google_protobuf_any_pb.Any();
-    value.setValue(node_id.toString());
     param.setName('resource_id');
-    param.setValue(value);
+    param.setValue(node_id.toString());
 
     let request = new CommandRequest();
     request.setMeta(request_meta);
@@ -944,7 +919,7 @@ export class GrpcClient {
   }
 
   async execRestartNode(
-    host_id: Uuid,
+    host_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -962,7 +937,7 @@ export class GrpcClient {
   }
 
   async execDeleteHost(
-    host_id: Uuid,
+    host_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -971,7 +946,7 @@ export class GrpcClient {
   }
 
   async execStartHost(
-    host_id: Uuid,
+    host_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -980,7 +955,7 @@ export class GrpcClient {
   }
 
   async execStopHost(
-    host_id: Uuid,
+    host_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
     response.setMeta(this.getDummyMeta());
@@ -989,7 +964,7 @@ export class GrpcClient {
   }
 
   async execRestartHost(
-    host_id: Uuid,
+    host_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -1020,7 +995,7 @@ export class GrpcClient {
   }
 
   async execGeneric(
-    host_id: Uuid,
+    host_id: string,
     params: Array<Parameter>,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new CommandResponse();
