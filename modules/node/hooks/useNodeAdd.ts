@@ -30,7 +30,7 @@ export const useNodeAdd = (): Hook => {
 
     const hosts: any = await apiClient.getHosts();
     const mappedHosts = hosts.map((host: any) => ({
-      value: host.id.value,
+      value: host.id,
       label: host.name,
     }));
     setHostList(mappedHosts);
@@ -40,7 +40,7 @@ export const useNodeAdd = (): Hook => {
     console.log('get blockchains', blockchains);
 
     const mappedBlockchains = blockchains.map((b: any) => ({
-      value: b.id.value,
+      value: b.id,
       label: b.name,
       supportedNodeTypes: b.supported_node_types,
     }));

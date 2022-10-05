@@ -66,6 +66,8 @@ export const useDashboard = (): Hook => {
 
     const nodes: any = await apiClient.getDashboardMetrics();
 
+    console.log('dashboard', nodes);
+
     const online = +nodes[0]?.value_str,
       offline = +nodes[1]?.value_str,
       total = +nodes[0]?.value_str + +nodes[1]?.value_str;

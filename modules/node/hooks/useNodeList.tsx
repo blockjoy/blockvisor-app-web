@@ -31,6 +31,8 @@ export const useNodeList = (): Hook => {
   };
 
   const handleRowClick = (args: any) => {
+    console.log('args', args);
+
     router.push(`${router.pathname}/${args.key}`);
   };
 
@@ -53,7 +55,7 @@ export const useNodeList = (): Hook => {
     if (nodeList?.length) {
       console.log('nodeList has changed', nodeList);
       const rows = nodeList?.map((node: any) => ({
-        key: node.id.value,
+        key: node.id,
         cells: [
           {
             key: '1',
