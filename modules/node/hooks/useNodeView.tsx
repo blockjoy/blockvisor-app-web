@@ -1,4 +1,3 @@
-import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { formatDistanceToNow } from 'date-fns';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
@@ -29,8 +28,7 @@ const defaultNode: BlockjoyNode = {
 };
 
 const createUuid = (id: Args) => {
-  const uuid = new Uuid();
-  uuid.setValue(id?.toString() || '');
+  const uuid = id?.toString() || '';
   return uuid;
 };
 

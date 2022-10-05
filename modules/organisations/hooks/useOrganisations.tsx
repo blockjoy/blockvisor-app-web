@@ -1,5 +1,5 @@
 import { apiClient } from '@modules/client';
-import { Organization, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Organization } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organisationAtoms';
@@ -65,8 +65,7 @@ export const useOrganisations = () => {
 
   const updateOrganisation = async (id: string, name: string) => {
     const organisation = new Organization();
-    const uuid = new Uuid();
-    uuid.setValue(id);
+    const uuid = id;
     organisation.setName(name);
     const res = await apiClient.updateOrganization(organisation);
 
@@ -87,8 +86,7 @@ export const useOrganisations = () => {
     setIsLoading(true);
 
     const organisation = new Organization();
-    const uuid = new Uuid();
-    uuid.setValue(Math.random().toString());
+    const uuid = Math.random().toString();
     organisation.setId(uuid);
     organisation.setName(name);
     organisation.setMemberCount(randomIntFromInterval(1, 100));
@@ -107,8 +105,7 @@ export const useOrganisations = () => {
 
   const removeOrganisation = async (id: string) => {
     const orgs = organisations.filter((org) => org.id?.value !== id);
-    const uuid = new Uuid();
-    uuid.setValue(id);
+    const uuid = id;
     const res = await apiClient.deleteOrganization(uuid);
     setOrganisations(orgs);
   };

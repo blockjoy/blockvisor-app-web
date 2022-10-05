@@ -17,7 +17,6 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { HostStatus } from './HostStatus/HostStatus';
 import { formatDistanceToNow } from 'date-fns';
 import { nodeListToRow } from '../utils/toRow';
-import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
 import { HostCharts } from './HostCharts/HostCharts';
@@ -72,18 +71,16 @@ export function Host() {
     e.stopPropagation();
     const nodeIdString = e.currentTarget.id;
     console.log('stopping id', nodeIdString);
-    const nodeId = new Uuid();
-    nodeId.setValue(nodeIdString!);
-    const hostId = new Uuid();
-    hostId.setValue(id?.toString()!);
+    const nodeId = nodeIdString!;
+    const hostId = id?.toString()!;
     await apiClient.execStopNode(hostId, nodeId);
     toast.success(`Node Stopped`);
   };
   const handleRestartNode: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.stopPropagation();
     const id = e.currentTarget.id;
-    const uuid = new Uuid();
-    uuid.setValue(id);
+    const uuid = id;
+
     await apiClient.execRestartNode(uuid);
     toast.success(`Node Restarted`);
   };
