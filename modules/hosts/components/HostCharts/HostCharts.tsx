@@ -1,55 +1,9 @@
-import styled from '@emotion/styled';
+import { styles } from './HostCharts.styles';
 
 import dynamic from 'next/dynamic';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 import { mockCpu, mockDiskSpace, mockMemory } from './mockChartData';
-
-const StyledWrapper = styled.div`
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  margin-bottom: 20px;
-  display: none;
-
-  @media only screen and (min-width: ${(p) => p.theme.screenSm}) {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  @media only screen and (min-width: ${(p) => p.theme.screenLg}) {
-    min-height: 122px;
-  }
-`;
-
-const StyledLabel = styled.div`
-  letter-spacing: 1px;
-  font-size: 12px;
-  color: ${(p) => p.theme.colorDefault};
-`;
-
-const StyledValue = styled.div`
-  font-size: 28px;
-  margin-top: 10px;
-  margin-bottom: 4px;
-`;
-
-const StyledTotal = styled.div`
-  color: ${(p) => p.theme.colorLabel};
-  font-size: 12px;
-`;
-
-const StyledBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-
-  @media only screen and (min-width: ${(p) => p.theme.screenSm}) {
-    text-align: left;
-    flex-direction: row;
-  }
-`;
 
 const charts = [
   {
@@ -106,9 +60,9 @@ const options = {
 
 export const HostCharts = () => {
   return (
-    <StyledWrapper>
+    <div css={styles.wrapper}>
       {charts.map((chart) => (
-        <StyledBlock>
+        <div css={styles.block}>
           <Chart
             width="120px"
             height="120px"
@@ -120,18 +74,18 @@ export const HostCharts = () => {
             series={chart.series}
           />
           <div>
-            <StyledLabel>{chart.name}</StyledLabel>
-            <StyledValue style={{ color: chart.color }}>
+            <label css={styles.label}>{chart.name}</label>
+            <span css={styles.value} style={{ color: chart.color }}>
               {chart.value}
               {chart.suffix}
-            </StyledValue>
-            <StyledTotal>
+            </span>
+            <span css={styles.total}>
               {chart.total}
               {chart.suffix}
-            </StyledTotal>
+            </span>
           </div>
-        </StyledBlock>
+        </div>
       ))}
-    </StyledWrapper>
+    </div>
   );
 };

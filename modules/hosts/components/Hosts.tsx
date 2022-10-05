@@ -1,4 +1,4 @@
-import { Button } from '@shared/components';
+import { Button, Pagination } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { PageHeader, PageSection, Table } from '../../app/components/shared';
 import { useHosts } from '../hooks/useHosts';

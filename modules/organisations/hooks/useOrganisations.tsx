@@ -25,7 +25,7 @@ export const useOrganisations = () => {
   const getOrganizations = async () => {
     setIsLoading(true);
 
-    const res = await apiClient.getOrganizations();
+    const res: any = await apiClient.getOrganizations();
     await delay(env.loadingDuration);
 
     if (isStatusResponse(res)) {
@@ -40,7 +40,7 @@ export const useOrganisations = () => {
   const getOrganisation = async (id: string) => {
     setIsLoading(true);
     // mocked part
-    const res = await apiClient.getOrganizations();
+    const res: any = await apiClient.getOrganizations();
     setSelectedOrganisation(res[0]);
     await delay(2000);
     setIsLoading(false);
