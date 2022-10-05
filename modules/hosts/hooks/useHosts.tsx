@@ -1,7 +1,5 @@
 import { useRecoilState } from 'recoil';
-import {
-  HostProvision,
-} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { HostProvision } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
@@ -10,7 +8,6 @@ import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 
 export const useHosts = () => {
-  // const [hostAddKey, setHostAddKey] = useState<string>();
   const [hostProvisionKeys, setHostProvisionKeys] = useRecoilState(
     hostsAtoms.hostProvisionKeys,
   );
@@ -25,8 +22,6 @@ export const useHosts = () => {
     setLoadingHosts(true);
     // revisit this once types are consolidated
     const hosts: any = await apiClient.getHosts();
-
-    console.log('hosts', hosts);
 
     // load provisioning hosts
     if (localStorage.getItem('hostProvisionKeys')) {
@@ -53,8 +48,6 @@ export const useHosts = () => {
         }
       }
     }
-
-    console.log('all hosts', hosts);
 
     setHosts(hosts);
     await delay(env.loadingDuration);

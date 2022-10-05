@@ -4,8 +4,6 @@ import { PageHeader, PageSection, Table } from '../../app/components/shared';
 import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../utils/toRow';
-import { Pagination } from '@shared/components/Pagination/Pagination';
-import { delay } from '@shared/utils/delay';
 import { css } from '@emotion/react';
 
 const headers = [
@@ -31,7 +29,7 @@ export function Hosts() {
   const router = useRouter();
   const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
 
-  const handleRowClick = (args: any, isHostProvision: boolean) => {
+  const handleRowClick = (args: any) => {
     console.log('handleRowClick', args);
 
     if (args.key.length < 12) {

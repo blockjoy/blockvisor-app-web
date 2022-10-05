@@ -44,10 +44,6 @@ export default () => {
         />
       </DrawerContent> */}
       <DrawerAction>
-        <DrawerSubheader>PROFILE</DrawerSubheader>
-        <ProfileUpdate />
-      </DrawerAction>
-      <DrawerAction>
         <Button
           onClick={handleLogout}
           size="small"

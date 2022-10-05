@@ -1,8 +1,6 @@
 import { PageHeader, PageSection, Table } from '@modules/app/components/shared';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
-import { Button } from '@shared/components';
-import { Pagination } from '@shared/components/Pagination/Pagination';
-import { useEffect } from 'react';
+import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 
 export const NodeList = () => {
   const { loadNodes, handleRowClick, handleAddNode } = useNodeList();

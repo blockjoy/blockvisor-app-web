@@ -49,7 +49,7 @@ export const HostInstall = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const onViewHostsClicked = () => {
-    router.push('hosts');
+    router.push('/hosts');
   };
 
   useEffect(() => {

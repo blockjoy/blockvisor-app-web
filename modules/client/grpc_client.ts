@@ -38,8 +38,8 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostRequest,
-  CreateHostResponse, DeleteHostResponse, GetHostsRequest,
-  GetHostsResponse,
+  DeleteHostResponse,
+  GetHostsRequest,
   UpdateHostResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
 import {
@@ -232,7 +232,7 @@ export class GrpcClient {
   }
 
   getAuthHeader(): AuthHeader {
-    return { authorization: this.getApiToken() };
+    return { authorization: `Bearer ${this.getApiToken()}` };
   }
 
   getDummyMeta(): ResponseMeta {
@@ -320,22 +320,21 @@ export class GrpcClient {
     request.setMeta(request_meta);
 
     return this.authentication
-        ?.login(request, null)
-        .then((response) => {
-          this.token = response.getToken()?.toObject().value || '';
+      ?.login(request, null)
+      .then((response) => {
+        this.token = response.getToken()?.toObject().value || '';
 
-          return response.getToken()?.toObject();
-        })
-        .catch((err) => {
-          return {
-            code: 'Unauthenticated',
-            message: `${err}`,
-            metadata: {
-              headers: {
-                'content-type': 'application/grpc',
-                date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-                'content-length': '0',
-              },
+        return response.getToken()?.toObject();
+      })
+      .catch((err) => {
+        return {
+          code: 'Unauthenticated',
+          message: `${err}`,
+          metadata: {
+            headers: {
+              'content-type': 'application/grpc',
+              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+              'content-length': '0',
             },
             source: 'None',
           };
@@ -460,7 +459,6 @@ export class GrpcClient {
     return this.host
       ?.get(request, this.getAuthHeader())
       .then((response) => {
-        console.log(`got hosts: ${response.getHostsList()}`);
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
@@ -572,22 +570,25 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setHostProvision(host_provision);
 
-    return this.host_provision?.create(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta()?.toObject()
-    }).catch((err) => {
-      return {
-        code: 'Create host provision error',
-        message: `${err}`,
-        metadata: {
-          headers: {
-            'content-type': 'application/grpc',
-            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-            'content-length': '0',
+    return this.host_provision
+      ?.create(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getMeta()?.toObject();
+      })
+      .catch((err) => {
+        return {
+          code: 'Create host provision error',
+          message: `${err}`,
+          metadata: {
+            headers: {
+              'content-type': 'application/grpc',
+              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+              'content-length': '0',
+            },
           },
-        },
-        source: 'None',
-      };
-    });
+          source: 'None',
+        };
+      });
   }
 
   /* Node service */
@@ -595,8 +596,6 @@ export class GrpcClient {
   async listNodes(
     org_id: string,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
-    console.log(`listing all nodes over all hosts of org ${org_id}`);
-
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -659,7 +658,6 @@ export class GrpcClient {
   async createNode(
       node: Node,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    console.log(`Got node to create: ${node}`);
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -677,11 +675,9 @@ export class GrpcClient {
     return this.node
       ?.create(request, this.getAuthHeader())
       .then((response) => {
-        console.log(`created node: ${JSON.stringify(response.toObject())}`);
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        console.log(`got err: ${err}`);
         return {
           code: 'Create node error',
           message: `${err}`,
