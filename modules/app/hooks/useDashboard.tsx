@@ -6,6 +6,7 @@ import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
+import { Metric } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 
 interface Hook {
   loadDashboard: () => void;
@@ -64,15 +65,15 @@ export const useDashboard = (): Hook => {
       dashboardLoading: true,
     });
 
-    const nodes: any = await apiClient.getDashboardMetrics();
+    const metrics = await apiClient.getDashboardMetrics();
 
-    console.log('dashboard', nodes);
+    console.log('dashboard', metrics);
 
-    const online = +nodes[0]?.value_str,
-      offline = +nodes[1]?.value_str,
-      total = +nodes[0]?.value_str + +nodes[1]?.value_str;
+    const online = +metrics[0]?.value,
+        offline = +metrics[1]?.value,
+        total = +metrics[0]?.value + +metrics[1]?.value;
 
-    const recentHosts = await getRecentHosts();
+    const recentHosts: never[] = await getRecentHosts();
 
     const dashboard: Dashboard = {
       nodeMetrics: [
@@ -90,6 +91,7 @@ export const useDashboard = (): Hook => {
       dashboard,
       dashboardLoading: false,
     });
+
   };
   return {
     loadDashboard,
