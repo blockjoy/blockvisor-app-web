@@ -25,7 +25,7 @@ export const useDashboard = (): Hook => {
     );
 
     const hosts = hostsResponse.map((host: any) => ({
-      key: host.id.value,
+      key: host.id,
       cells: [
         {
           key: '1',
