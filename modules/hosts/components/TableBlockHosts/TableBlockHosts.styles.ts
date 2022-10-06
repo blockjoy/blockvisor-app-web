@@ -6,7 +6,7 @@ const spin = keyframes`
   transform: translateX(-100%);
 }
 100% { 
-  transform: translateX(100%); 
+  transform: translateX(200%); 
 }
 `;
 
@@ -38,7 +38,7 @@ export const styles = {
       height: 100%;
       background: ${theme.colorPrimary};
       border-radius: inherit;
-      animation: ${spin} 1.5s infinite ease-out;
+      animation: ${spin} 1.5s infinite cubic-bezier(0.69, 0.2, 0.9, 0.55);
     }
   `,
   name: (theme: ITheme) => css`
