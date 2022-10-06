@@ -1,4 +1,5 @@
 export * from './components/Host';
+export * from './components/HostInstall';
 export * from './components/Hosts';
 export * from './components/HostStatus/HostStatus';
 export * from './components/TableBlockHosts/TableBlockHosts';

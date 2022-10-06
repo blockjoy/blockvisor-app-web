@@ -12,7 +12,9 @@ export const styles = {
     }
   `,
   statusText: css`
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   `,
 };

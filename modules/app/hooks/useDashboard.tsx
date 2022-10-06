@@ -4,7 +4,9 @@ import { Dashboard } from '../components/dashboard/Dashboard';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
-import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
+import { Metric } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 
 interface Hook {
   loadDashboard: () => void;
@@ -14,9 +16,7 @@ export const useDashboard = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
 
   const getRecentHosts = async () => {
-    const org_id = new Uuid();
-
-    org_id.setValue('2592312d-daf6-4a0e-b2da-012d89b41088');
+    const org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
 
     const hostsResponse: any = await apiClient.getHosts(
       undefined,
@@ -65,13 +65,13 @@ export const useDashboard = (): Hook => {
       dashboardLoading: true,
     });
 
-    const nodes: any = await apiClient.getDashboardMetrics();
+    const metrics = await apiClient.getDashboardMetrics();
 
-    const online = +nodes[0]?.value?.value,
-      offline = +nodes[1]?.value?.value,
-      total = +nodes[0]?.value?.value + +nodes[1]?.value?.value;
+    const online = +metrics[0]?.value,
+      offline = +metrics[1]?.value,
+      total = +metrics[0]?.value + +metrics[1]?.value;
 
-    const recentHosts = await getRecentHosts();
+    const recentHosts: never[] = await getRecentHosts();
 
     const dashboard: Dashboard = {
       nodeMetrics: [
@@ -81,6 +81,8 @@ export const useDashboard = (): Hook => {
       ],
       recentHosts,
     };
+
+    await delay(env.loadingDuration);
 
     setApp({
       ...app,

@@ -17,6 +17,7 @@ export const styles = {
     height: 100%;
     border-right: 1px solid ${theme.colorBorder};
     background: ${theme.colorSidebar};
+    transform: translateX(-100%);
 
     transition-property: transform;
     transition-duration: 0.4s;
@@ -30,6 +31,6 @@ export const styles = {
     transform: translateX(0);
   `,
   sidebarClosed: css`
-    transform: translateX('-100%');
+    transform: translateX(-100%);
   `,
 };

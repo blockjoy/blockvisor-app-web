@@ -1,9 +1,10 @@
-import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { formatDistanceToNow } from 'date-fns';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
 import { apiClient } from '@modules/client';
 import { useState } from 'react';
+import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 type Args = string | string[] | undefined;
 
@@ -20,15 +21,15 @@ const defaultNode: BlockjoyNode = {
   status: 0,
   name: '',
   id: '',
+  hostId: '',
   ip: '',
   created: '',
   details: [],
 };
 
-const createNodeId = (id: Args) => {
-  const nodeId = new Uuid();
-  nodeId.setValue(id?.toString() || '');
-  return nodeId;
+const createUuid = (id: Args) => {
+  const uuid = id?.toString() || '';
+  return uuid;
 };
 
 export const useNodeView = (): Hook => {
@@ -36,41 +37,40 @@ export const useNodeView = (): Hook => {
   const [node, setNode] = useState<BlockjoyNode>(defaultNode);
 
   const deleteNode = async (id: Args) => {
-    await apiClient.execDeleteNode(createNodeId(id));
+    await apiClient.execDeleteNode(createUuid(id));
     toast.success(`Node Deleted`);
   };
 
   const stopNode = async (id: Args) => {
-    await apiClient.execDeleteNode(createNodeId(id));
+    await apiClient.execStopNode(createUuid(node.hostId), createUuid(id));
     toast.success(`Node Stopped`);
   };
 
   const restartNode = async (id: Args) => {
-    await apiClient.execStopNode(createNodeId(id));
-    toast.success(`Node Restarted`);
+    await apiClient.execStartNode(createUuid(node.hostId), createUuid(id));
+    toast.success(`Node Started`);
   };
 
   const loadNode = async (id: Args) => {
     setIsLoading(true);
 
-    const nodeId = createNodeId(id);
-
+    const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
-
-    console.log('node', node);
+    const nodeTypeId = JSON.parse(node.type).id;
 
     const details = [
       {
         label: 'TYPE',
-        data: nodeTypeList.find((n) => n.id === node.type)?.name,
+        data: nodeTypeList.find((n) => n.id === nodeTypeId)?.name,
       },
       { label: 'WALLET ADDRESS', data: node.walletAddress },
-      { label: 'VERSION', data: node.version },
+      { label: 'VERSION', data: node.version || 'Latest' },
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
     ];
 
     const activeNode: BlockjoyNode = {
       id: node.id.value,
+      hostId: node.hostId.value,
       status: node.status,
       name: node.name,
       ip: node.ip,
@@ -81,6 +81,9 @@ export const useNodeView = (): Hook => {
     };
 
     setNode(activeNode);
+
+    await delay(env.loadingDuration);
+
     setIsLoading(false);
   };
 

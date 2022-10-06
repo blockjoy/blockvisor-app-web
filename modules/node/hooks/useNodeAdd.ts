@@ -1,15 +1,16 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
-import { Node, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-import { GrpcHostObject } from '@modules/client/grpc_client';
+import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { useNodeList } from './useNodeList';
 
 type Hook = {
   loadLookups: VoidFunction;
-  createNode: (args: CreateNodeParams) => void;
+  createNode: (
+    args: CreateNodeParams,
+    onSuccess: (args0?: any) => void,
+  ) => void;
   isLoading: boolean;
   blockchainList: any[];
   hostList: any[];
@@ -17,8 +18,6 @@ type Hook = {
 
 export const useNodeAdd = (): Hook => {
   const [layout, setLayout] = useRecoilState(layoutState);
-
-  const { loadNodes } = useNodeList();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -30,18 +29,18 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(true);
 
     const hosts: any = await apiClient.getHosts();
-    console.log(`Got hosts: ${JSON.stringify(hosts)}`);
     const mappedHosts = hosts.map((host: any) => ({
-      value: host.id.value,
+      value: host.id,
       label: host.name,
     }));
     setHostList(mappedHosts);
 
     const blockchains: any = await apiClient.getBlockchains();
+
     const mappedBlockchains = blockchains.map((b: any) => ({
-      value: b.id.value,
-      label: b.label,
-      supportedNodeTypes: b.supportedNodeTypes,
+      value: b.id,
+      label: b.name,
+      supportedNodeTypes: b.supported_node_types,
     }));
 
     setBlockchainList(mappedBlockchains);
@@ -49,22 +48,33 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(false);
   };
 
-  const createNode = async (params: CreateNodeParams) => {
+  const createNode = async (
+    params: CreateNodeParams,
+    onSuccess: (args0?: string) => void,
+  ) => {
     setIsLoading(true);
 
-    const hostId = new Uuid();
-    hostId.setValue(params.host);
+    const hostId = params.host;
 
     const node = new Node();
-    node.setType(+params.nodeType);
+
+    // TODO: Org ID needs be set here
+    let org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
+    let blockchain_id = params.blockchain;
+
+    node.setBlockchainId(blockchain_id);
+    node.setOrgId(org_id);
+    node.setType(`{ "id": ${params.nodeType.toString()}, "properties": [] }`);
     node.setHostId(hostId);
 
-    await apiClient.createNode(node);
+    const createdNode: any = await apiClient.createNode(node);
+
+    const nodeId = createdNode.messagesList[0];
 
     toast.success('Node Created');
     setIsLoading(false);
     setLayout(undefined);
-    loadNodes();
+    onSuccess(nodeId);
   };
 
   return {

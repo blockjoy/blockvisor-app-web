@@ -1,17 +1,23 @@
 import { appState } from '@modules/app/store';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useHosts } from '@modules/hosts';
 import { Button } from '@shared/components';
 import { useRouter } from 'next/router';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { PageHeader, Table } from '../shared';
 
 export const DashboardRecentHosts = () => {
   const router = useRouter();
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
   const { recentHosts } = dashboard;
-  const setLayoutState = useSetRecoilState(layoutState);
+  const { createHostProvision } = useHosts();
 
   const handleHostClicked = (args: any) => router.push(`hosts/${args.key}`);
+
+  const handleCreateClicked = async () => {
+    createHostProvision((key: string) => {
+      router.push(`hosts/install/${key}`);
+    });
+  };
 
   return (
     <>
@@ -21,7 +27,7 @@ export const DashboardRecentHosts = () => {
           disabled={dashboardLoading}
           size="small"
           style="secondary"
-          onClick={() => setLayoutState('hosts')}
+          onClick={handleCreateClicked}
         >
           Add Host
         </Button>

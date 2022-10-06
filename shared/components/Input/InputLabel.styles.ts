@@ -4,7 +4,7 @@ import { typo } from 'styles/utils.typography.styles';
 const inputLabel = css`
   display: inline-block;
   color: var(--color-text-3);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 `;
 
 const inputLabelDisabled = css`

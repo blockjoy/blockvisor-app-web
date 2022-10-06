@@ -18,7 +18,6 @@ const getIcon = (name: string = '') => {
     case 'Installing':
     case 'Snapshotting':
       return <IconPending />;
-    case 'Undefined':
     case 'Running':
     case 'Broadcasting':
       return <IconNormal />;
@@ -42,7 +41,7 @@ export const HostStatus: FC<Props> = ({ status }) => {
 
   return (
     <span css={styles.status}>
-      {getIcon(statusInfo?.name)}
+      {/* {getIcon(statusInfo?.name)} */}
       <span css={styles.statusText}>{statusInfo?.name || 'Unknown'}</span>
     </span>
   );

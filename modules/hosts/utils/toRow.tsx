@@ -8,7 +8,7 @@ import { styles as detailsHeaderStyles } from '@modules/app/components/shared/de
 
 export function hostsToRows(hosts: Host[] | null) {
   return hosts?.map((host: any) => ({
-    key: host.id.value,
+    key: host.id,
     cells: [
       {
         key: '1',
@@ -25,7 +25,7 @@ export function hostsToRows(hosts: Host[] | null) {
       {
         key: '2',
         component: (
-          <span>
+          <span style={{ fontSize: '14px' }}>
             {formatDistanceToNow(new Date(host.created_at_datetime), {
               addSuffix: true,
             })}

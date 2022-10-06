@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { styles } from './hostAdd.styles';
+import { css } from '@emotion/react';
 import { useHosts } from '@modules/hosts/hooks/useHosts';
 import {
   PageHeader,
@@ -16,15 +16,40 @@ import { env } from '@shared/constants/env';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as theme } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
-export const HostAdd = () => {
+export const styles = {
+  base: css``,
+  action: css`
+    width: 100%;
+  `,
+  steps: css`
+    border-top: 1px solid var(--color-overlay-background-1);
+  `,
+  step: css`
+    padding-bottom: 28px;
+  `,
+  title: css`
+    ${typo.small};
+    ${colors.primary};
+    padding-bottom: 8px;
+  `,
+  stepDescription: css`
+    ${typo.small};
+    ${colors.text3};
+    padding-bottom: 12px;
+  `,
+};
+
+export const HostInstall = () => {
   const router = useRouter();
 
-  const { hostAddKey } = useHosts();
+  const { id: hostAddKey } = router.query;
+
+  // const { hostAddKey } = useHosts();
 
   const [isLoading, setIsLoading] = useState(true);
 
   const onViewHostsClicked = () => {
-    router.push('hosts');
+    router.push('/hosts');
   };
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { DangerZone } from '../../app/components/shared/danger-zone/DangerZone';
 import { DetailsHeader } from '../../app/components/shared/details-header/DetailsHeader';
 import { DetailsTable } from '../../app/components/shared/details-table/DetailsTable';
 import { useHosts } from '@modules/hosts/hooks/useHosts';
-import { MouseEventHandler, useEffect } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import {
   Skeleton,
   SkeletonGrid,
@@ -17,9 +17,21 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { HostStatus } from './HostStatus/HostStatus';
 import { formatDistanceToNow } from 'date-fns';
 import { nodeListToRow } from '../utils/toRow';
-import { Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
+import { HostCharts } from './HostCharts/HostCharts';
+
+function formatBytes(bytes: number, decimals = 1) {
+  if (!+bytes) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
 
 function getHostDetails(host: Host | null) {
   if (!host) {
@@ -29,19 +41,21 @@ function getHostDetails(host: Host | null) {
   const details = [
     {
       label: 'CREATED',
-      data: formatDistanceToNow(new Date(host.createdAt.seconds), {
+      data: formatDistanceToNow(new Date(host.created_at_datetime), {
         addSuffix: true,
       }),
     },
     { label: 'VERSION', data: host.version },
-    { label: 'DISK SIZE', data: host.diskSize.toString() },
-    { label: 'MEMORY SIZE', data: host.memSize.toString() },
+    { label: 'DISK SIZE', data: formatBytes(host.diskSize)?.toString() },
+    { label: 'MEMORY SIZE', data: formatBytes(host.memSize)?.toString() },
+    { label: 'CPU Count', data: host.cpuCount?.toString() },
   ];
 
   return details;
 }
 
 export function Host() {
+  const [isMounted, setMounted] = useState<boolean>(false);
   const router = useRouter();
   const { id } = router.query;
   const { loadHost, restartHost, stopHost, deleteHost, host, loadingHost } =
@@ -55,29 +69,32 @@ export function Host() {
   // refactor these to utilize useNode hook
   const handleStopNode: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.stopPropagation();
-    const id = e.currentTarget.id;
-    console.log('stopping id', id);
-    const uuid = new Uuid();
-    uuid.setValue(id!);
-    await apiClient.execStopNode(uuid);
+    const nodeIdString = e.currentTarget.id;
+    const nodeId = nodeIdString!;
+    const hostId = id?.toString()!;
+    await apiClient.execStopNode(hostId, nodeId);
     toast.success(`Node Stopped`);
   };
   const handleRestartNode: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.stopPropagation();
     const id = e.currentTarget.id;
-    const uuid = new Uuid();
-    uuid.setValue(id);
+    const uuid = id;
+
     await apiClient.execRestartNode(uuid);
     toast.success(`Node Restarted`);
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setMounted(true);
     loadHost(id?.toString() || '');
   }, []);
 
   const hostRow = nodeListToRow(host, handleStopNode, handleRestartNode);
+
   const hostDetails = getHostDetails(host);
+
+  if (!isMounted) return null;
 
   return (
     <>
@@ -95,6 +112,7 @@ export function Host() {
               handleRestart={handleRestartHost}
               handleStop={handleStopHost}
             />
+            <HostCharts />
             <DetailsTable bodyElements={hostDetails ?? []} />
           </>
         ) : (

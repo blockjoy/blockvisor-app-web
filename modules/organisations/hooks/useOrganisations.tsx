@@ -1,11 +1,12 @@
 import { apiClient } from '@modules/client';
-import { Organization, Uuid } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Organization } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organisationAtoms';
 
 import { isStatusResponse } from '../utils/typeGuards';
 import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
 
 // used for generating mock member count
 function randomIntFromInterval(min: number, max: number) {
@@ -24,22 +25,17 @@ export const useOrganisations = () => {
   const getOrganizations = async () => {
     setIsLoading(true);
 
-    const res = await apiClient.getOrganizations();
-    await delay(2000);
+    const res: any = await apiClient.getOrganizations();
+    await delay(env.loadingDuration);
 
-    if (isStatusResponse(res)) {
-      setOrganisations([]);
-      setIsLoading(false);
-    } else {
-      setOrganisations(res);
-      setIsLoading(false);
-    }
+    setOrganisations(res);
+    setIsLoading(false);
   };
 
   const getOrganisation = async (id: string) => {
     setIsLoading(true);
     // mocked part
-    const res = await apiClient.getOrganizations();
+    const res: any = await apiClient.getOrganizations();
     setSelectedOrganisation(res[0]);
     await delay(2000);
     setIsLoading(false);
@@ -64,8 +60,7 @@ export const useOrganisations = () => {
 
   const updateOrganisation = async (id: string, name: string) => {
     const organisation = new Organization();
-    const uuid = new Uuid();
-    uuid.setValue(id);
+    const uuid = id;
     organisation.setName(name);
     const res = await apiClient.updateOrganization(organisation);
 
@@ -86,8 +81,7 @@ export const useOrganisations = () => {
     setIsLoading(true);
 
     const organisation = new Organization();
-    const uuid = new Uuid();
-    uuid.setValue(Math.random().toString());
+    const uuid = Math.random().toString();
     organisation.setId(uuid);
     organisation.setName(name);
     organisation.setMemberCount(randomIntFromInterval(1, 100));
@@ -100,14 +94,13 @@ export const useOrganisations = () => {
 
     const res = await apiClient.createOrganization(organisation);
 
-    await delay(2000);
+    await delay(env.loadingDuration);
     setOrganisations([...(organisations ?? []), clientOrganisation]);
   };
 
   const removeOrganisation = async (id: string) => {
     const orgs = organisations.filter((org) => org.id?.value !== id);
-    const uuid = new Uuid();
-    uuid.setValue(id);
+    const uuid = id;
     const res = await apiClient.deleteOrganization(uuid);
     setOrganisations(orgs);
   };

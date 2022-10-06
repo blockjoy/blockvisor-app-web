@@ -1,17 +1,16 @@
-import { Button } from '@shared/components';
-import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { Button, Pagination } from '@shared/components';
+import { useEffect, useState } from 'react';
 import { PageHeader, PageSection, Table } from '../../app/components/shared';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../utils/toRow';
-import { Pagination } from '@shared/components/Pagination/Pagination';
+import { css } from '@emotion/react';
 
 const headers = [
   {
     name: 'Name',
     key: '1',
+    width: '350px',
   },
   {
     name: 'Added',
@@ -25,12 +24,25 @@ const headers = [
 ];
 
 export function Hosts() {
-  const setLayoutState = useSetRecoilState(layoutState);
+  const [isCreating, setIsCreating] = useState(false);
+
   const router = useRouter();
-  const { getHosts, loadingHosts, hosts } = useHosts();
+  const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
 
   const handleRowClick = (args: any) => {
-    router.push(`${router.pathname}/${args.key}`);
+    if (args.key.length < 12) {
+      router.push(`hosts/install/${args.key}`);
+    } else {
+      router.push(`${router.pathname}/${args.key}`);
+    }
+  };
+
+  const handleCreateClicked = async () => {
+    setIsCreating(true);
+    createHostProvision((key: string) => {
+      router.push(`hosts/install/${key}`);
+      setIsCreating(false);
+    });
   };
 
   useEffect(() => {
@@ -43,7 +55,16 @@ export function Hosts() {
     <PageSection>
       <PageHeader>
         Hosts
-        <Button onClick={() => setLayoutState('hosts')} size="small">
+        <Button
+          loading={isCreating}
+          style="secondary"
+          onClick={handleCreateClicked}
+          size="small"
+          css={css`
+            min-width: 100px;
+            width: 100px;
+          `}
+        >
           Add Host
         </Button>
       </PageHeader>

@@ -1,38 +1,28 @@
 import { useRouter } from 'next/router';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
+import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useEffect, useState } from 'react';
 import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
-import { Header, Row } from '@modules/app/components/shared/table/Table';
 import { TableBlockNodes } from '@modules/app/components/shared';
 import { apiClient } from '@modules/client';
+import { delay } from '@shared/utils/delay';
+import { env } from '@shared/constants/env';
+import { nodeTypeList } from '@shared/constants/lookups';
 
-interface TableState {
-  rows?: Row[];
-  headers?: Header[];
-}
-
-interface Hook extends TableState {
+interface Hook {
   loadNodes: () => void;
   handleAddNode: () => void;
   handleRowClick: (args1: any) => void;
-  isLoading: boolean;
-  nodeList: BlockjoyNode[];
 }
 
 export const useNodeList = (): Hook => {
   const router = useRouter();
 
+  const [nodeRows, setNodeRows] = useRecoilState(nodeAtoms.nodeRows);
+  const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
+
   const setLayout = useSetRecoilState(layoutState);
-
-  const [tableState, setTableState] = useState<TableState>({
-    rows: [],
-    headers: [],
-  });
-
-  const { rows } = tableState;
-
-  const [isLoading, setIsLoading] = useState(true);
 
   const [nodeList, setNodeList] = useState<BlockjoyNode[]>([]);
 
@@ -44,30 +34,23 @@ export const useNodeList = (): Hook => {
     router.push(`${router.pathname}/${args.key}`);
   };
 
-  const headers = [
-    {
-      name: 'Name',
-      key: '1',
-    },
-    {
-      name: 'Status',
-      key: '2',
-    },
-  ];
-
   const loadNodes = async () => {
     setIsLoading(true);
-
-    const nodes: any = await apiClient.listNodes();
+    // TODO: Org ID needs be set here
+    let org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
+    const nodes: any = await apiClient.listNodes(org_id);
 
     setNodeList(nodes);
+
+    await delay(env.loadingDuration);
+
     setIsLoading(false);
   };
 
   useEffect(() => {
     if (nodeList?.length) {
       const rows = nodeList?.map((node: any) => ({
-        key: node.id.value,
+        key: node.id,
         cells: [
           {
             key: '1',
@@ -76,7 +59,7 @@ export const useNodeList = (): Hook => {
                 <TableBlockNodes
                   id={node.id.value}
                   name={node.name}
-                  address="test"
+                  address={node.address}
                 />
               </>
             ),
@@ -88,9 +71,7 @@ export const useNodeList = (): Hook => {
         ],
       }));
 
-      setTableState({
-        rows,
-      });
+      setNodeRows(rows);
     }
   }, [nodeList?.length]);
 
@@ -98,9 +79,5 @@ export const useNodeList = (): Hook => {
     loadNodes,
     handleAddNode,
     handleRowClick,
-    headers,
-    rows,
-    nodeList,
-    isLoading,
   };
 };

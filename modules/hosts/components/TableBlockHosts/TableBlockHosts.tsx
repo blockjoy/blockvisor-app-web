@@ -10,7 +10,8 @@ export function TableBlockHosts({ name, location, address }: Props) {
   return (
     <span css={styles.wrapper}>
       <span css={styles.name} className="has-hover-color">
-        {name}
+        <span css={styles.nameText}>{name}</span>
+        {name === 'Host Provisioning' && <span css={styles.spinner} />}
       </span>
       <span css={styles.row}>
         <span css={styles.location}>{location}</span>

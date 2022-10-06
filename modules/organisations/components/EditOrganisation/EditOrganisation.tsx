@@ -14,6 +14,7 @@ import { useRecoilState } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
 import { width } from 'styles/utils.width.styles';
 import { toast } from 'react-toastify';
+import { env } from '@shared/constants/env';
 
 type EditOrganisationForm = {
   name: string;
@@ -30,7 +31,7 @@ export function EditOrganisaton() {
     if (selectedOrganisation?.id) {
       setIsLoading(true);
       updateOrganisation(selectedOrganisation?.id?.value, name);
-      await delay(2000);
+      await delay(env.loadingDuration);
       setIsLoading(false);
       setLayout(undefined);
       toast.success('Saved');
