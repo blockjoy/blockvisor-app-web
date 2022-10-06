@@ -214,12 +214,10 @@ export class GrpcClient {
     this.host_provision = new HostProvisionServiceClient(host, null, null);
     this.dashboard = new DashboardServiceClient(host, null, null);
     this.command = new CommandServiceClient(host, null, null);
-    /*
-        this.billing = new BillingServiceClient(host, null, null);
-        this.organization = new OrganizationServiceClient(host, null, null);
-        this.update = new UpdateServiceClient(host, null, null);
-        this.user = new UserServiceClient(host, null, null);
-         */
+    this.organization = new OrganizationServiceClient(host, null, null);
+    this.billing = new BillingServiceClient(host, null, null);
+    this.update = new UpdateServiceClient(host, null, null);
+    this.user = new UserServiceClient(host, null, null);
   }
 
   getApiToken() {
