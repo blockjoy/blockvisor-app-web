@@ -65,7 +65,7 @@ export const useDashboard = (): Hook => {
       dashboardLoading: true,
     });
 
-    const metrics = await apiClient.getDashboardMetrics();
+    const metrics: any = await apiClient.getDashboardMetrics();
 
     const online = +metrics[0]?.value,
       offline = +metrics[1]?.value,
