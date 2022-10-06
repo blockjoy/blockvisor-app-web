@@ -67,11 +67,9 @@ export const useDashboard = (): Hook => {
 
     const metrics = await apiClient.getDashboardMetrics();
 
-    console.log('dashboard', metrics);
-
     const online = +metrics[0]?.value,
-        offline = +metrics[1]?.value,
-        total = +metrics[0]?.value + +metrics[1]?.value;
+      offline = +metrics[1]?.value,
+      total = +metrics[0]?.value + +metrics[1]?.value;
 
     const recentHosts: never[] = await getRecentHosts();
 
@@ -91,7 +89,6 @@ export const useDashboard = (): Hook => {
       dashboard,
       dashboardLoading: false,
     });
-
   };
   return {
     loadDashboard,

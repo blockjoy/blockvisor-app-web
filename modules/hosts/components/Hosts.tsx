@@ -30,8 +30,6 @@ export function Hosts() {
   const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
 
   const handleRowClick = (args: any) => {
-    console.log('handleRowClick', args);
-
     if (args.key.length < 12) {
       router.push(`hosts/install/${args.key}`);
     } else {

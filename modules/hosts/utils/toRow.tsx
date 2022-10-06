@@ -8,7 +8,7 @@ import { styles as detailsHeaderStyles } from '@modules/app/components/shared/de
 
 export function hostsToRows(hosts: Host[] | null) {
   return hosts?.map((host: any) => ({
-    key: host.id.value,
+    key: host.id,
     cells: [
       {
         key: '1',
@@ -45,8 +45,6 @@ export function nodeListToRow(
   stopNode: MouseEventHandler<HTMLButtonElement>,
   restartNode: MouseEventHandler<HTMLButtonElement>,
 ) {
-  console.log('host nodesList', host?.nodesList);
-
   return host?.nodesList?.map((node: any) => ({
     key: node.id.value,
     cells: [

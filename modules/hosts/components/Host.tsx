@@ -70,7 +70,6 @@ export function Host() {
   const handleStopNode: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.stopPropagation();
     const nodeIdString = e.currentTarget.id;
-    console.log('stopping id', nodeIdString);
     const nodeId = nodeIdString!;
     const hostId = id?.toString()!;
     await apiClient.execStopNode(hostId, nodeId);
@@ -92,8 +91,6 @@ export function Host() {
   }, []);
 
   const hostRow = nodeListToRow(host, handleStopNode, handleRestartNode);
-
-  console.log('hostRow', hostRow);
 
   const hostDetails = getHostDetails(host);
 

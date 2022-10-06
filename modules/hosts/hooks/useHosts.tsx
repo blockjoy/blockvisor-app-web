@@ -32,17 +32,12 @@ export const useHosts = () => {
       for (let key of hostProvisionKeys) {
         const response: any = await apiClient.getHostProvision(key);
         const hostProvisionRecord = response[0];
-
-        console.log('hostProvisionRecord', hostProvisionRecord);
-
         if (!hostProvisionRecord.claimedAt) {
           hosts.unshift({
             isHostProvision: true,
             name: 'Host Provisioning',
             location: `Key: ${hostProvisionRecord.id}`,
-            id: {
-              value: hostProvisionRecord.id,
-            },
+            id: hostProvisionRecord.id,
             created_at_datetime: new Date(),
           });
         }
@@ -79,7 +74,7 @@ export const useHosts = () => {
     const hosts: any = await apiClient.getHosts(uuid);
 
     // temp fix to get host from full list
-    const host = hosts.find((h: any) => h.id.value === id);
+    const host = hosts.find((h: any) => h.id === id);
 
     setHost(host);
     await delay(env.loadingDuration);
@@ -93,6 +88,8 @@ export const useHosts = () => {
     hostProvision.setOrgId(orgId);
 
     const response: any = await apiClient.createHostProvision(hostProvision);
+    1;
+
     const hostProvisionKey = response?.messagesList[0];
     const hostProvisionKeysCopy = [...hostProvisionKeys];
 

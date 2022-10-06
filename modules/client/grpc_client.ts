@@ -420,10 +420,6 @@ export class GrpcClient {
     return this.dashboard
       ?.metrics(request, this.getAuthHeader())
       .then((response) => {
-        console.log(
-          'got metrics: ',
-          response.getMetricsList().map((item) => item.toObject()),
-        );
         return response.getMetricsList().map((item) => item.toObject());
       })
       .catch((err) => {
@@ -850,7 +846,6 @@ export class GrpcClient {
     host_id: string,
     node_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    console.log('got host_id', host_id, ' node_id: ', node_id.toString());
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 

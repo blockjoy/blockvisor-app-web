@@ -31,8 +31,6 @@ export const useNodeList = (): Hook => {
   };
 
   const handleRowClick = (args: any) => {
-    console.log('args', args);
-
     router.push(`${router.pathname}/${args.key}`);
   };
 
@@ -44,8 +42,6 @@ export const useNodeList = (): Hook => {
 
     setNodeList(nodes);
 
-    console.log('nodes', nodes);
-
     await delay(env.loadingDuration);
 
     setIsLoading(false);
@@ -53,7 +49,6 @@ export const useNodeList = (): Hook => {
 
   useEffect(() => {
     if (nodeList?.length) {
-      console.log('nodeList has changed', nodeList);
       const rows = nodeList?.map((node: any) => ({
         key: node.id,
         cells: [
@@ -72,14 +67,6 @@ export const useNodeList = (): Hook => {
           {
             key: '2',
             component: <NodeStatus status={node.status} />,
-            // component: (
-            //   <>
-            //     {
-            //       nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)
-            //         ?.name
-            //     }
-            //   </>
-            // ),
           },
         ],
       }));

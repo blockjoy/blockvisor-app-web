@@ -58,9 +58,6 @@ export const NodeAdd: FC = () => {
       nodeType,
       blockchain,
     };
-
-    console.log('params', params);
-
     createNode(params, (nodeId: string) => {
       form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
@@ -79,15 +76,9 @@ export const NodeAdd: FC = () => {
   const [activeNodeType, setActiveNodeType] = useState<NodeTypeConfig>();
 
   const handleNodeTypeChanged = (nodeType: number) => {
-    console.log('nodeType', nodeType);
-
-    console.log('blockchainList', blockchainList);
-
     const activeBlockchain = blockchainList.find(
       (b) => b.value === form.getValues().blockchain,
     );
-
-    console.log('activeBlockchain', activeBlockchain);
 
     const activeNodeType = activeBlockchain.supportedNodeTypes.find(
       (t: any) => t.id === nodeType,
@@ -98,15 +89,11 @@ export const NodeAdd: FC = () => {
   };
 
   const handleBlockchainChanged = (e: any) => {
-    console.log('e', e.target.selectedIndex);
-
     const supportedNodeTypes =
       blockchainList[e.target.selectedIndex].supportedNodeTypes;
 
     setSupportedNodeTypes(supportedNodeTypes.map((t: any) => t.id));
     setActiveNodeType(supportedNodeTypes[0]);
-
-    console.log('supportedNodeTypes', supportedNodeTypes);
   };
 
   useEffect(() => {
@@ -116,19 +103,13 @@ export const NodeAdd: FC = () => {
 
   useEffect(() => {
     if (blockchainList?.length) {
-      console.log(
-        `first blockchain node types: ${JSON.stringify(blockchainList[0])}`,
-      );
       setSupportedNodeTypes(
         blockchainList[0].supportedNodeTypes.map((t: any) => t.id),
       );
       setActiveNodeType(blockchainList[0].supportedNodeTypes[0]);
-
       form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
       form.setValue('selfManaged', true);
-
-      console.log('form', form.getValues());
     }
   }, [blockchainList?.length]);
 

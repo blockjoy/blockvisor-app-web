@@ -37,8 +37,6 @@ export const useNodeAdd = (): Hook => {
 
     const blockchains: any = await apiClient.getBlockchains();
 
-    console.log('get blockchains', blockchains);
-
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id,
       label: b.name,
@@ -59,26 +57,19 @@ export const useNodeAdd = (): Hook => {
     const hostId = params.host;
 
     const node = new Node();
+
     // TODO: Org ID needs be set here
     let org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
     let blockchain_id = params.blockchain;
-
-    console.log(`blockchain_id: ${blockchain_id}`);
-    console.log(`host_id: ${hostId}`);
-    console.log(`org_id: ${org_id}`);
 
     node.setBlockchainId(blockchain_id);
     node.setOrgId(org_id);
     node.setType(`{ "id": ${params.nodeType.toString()}, "properties": [] }`);
     node.setHostId(hostId);
 
-    console.log('node', node);
-
     const createdNode: any = await apiClient.createNode(node);
 
     const nodeId = createdNode.messagesList[0];
-
-    console.log('createdNode', createdNode);
 
     toast.success('Node Created');
     setIsLoading(false);

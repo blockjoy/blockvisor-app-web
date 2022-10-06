@@ -28,13 +28,8 @@ export const useOrganisations = () => {
     const res: any = await apiClient.getOrganizations();
     await delay(env.loadingDuration);
 
-    if (isStatusResponse(res)) {
-      setOrganisations([]);
-      setIsLoading(false);
-    } else {
-      setOrganisations(res);
-      setIsLoading(false);
-    }
+    setOrganisations(res);
+    setIsLoading(false);
   };
 
   const getOrganisation = async (id: string) => {
