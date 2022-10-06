@@ -46,14 +46,14 @@ export function nodeListToRow(
   restartNode: MouseEventHandler<HTMLButtonElement>,
 ) {
   return host?.nodesList?.map((node: any) => ({
-    key: node.id.value,
+    key: node.id,
     cells: [
       {
         key: '1',
         component: (
           <>
             <TableBlockNodes
-              id={node.id.value}
+              id={node.id}
               name={node.name}
               address={node.address}
             />
