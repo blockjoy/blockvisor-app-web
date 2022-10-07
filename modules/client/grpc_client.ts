@@ -1,7 +1,7 @@
 import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
 import {
   LoginUserRequest,
-  RefreshTokenResponse,
+  RefreshTokenResponse, ResetPasswordResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
   ApiToken,
@@ -341,6 +341,27 @@ export class GrpcClient {
   }
 
   async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    let response = new RefreshTokenResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getToken()?.toObject();
+  }
+
+  async resetPassword(email: string): Promise<ResetPasswordResponse.AsObject | StatusResponse | undefined> {
+    let response = new ResetPasswordResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.toObject();
+  }
+
+  async updateResetPassword(pwd: string, pwd_confirmation: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    let response = new RefreshTokenResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getToken()?.toObject();
+  }
+
+  async updatePassword(old_pwd: string, new_pwd: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
     let response = new RefreshTokenResponse();
     response.setMeta(this.getDummyMeta());
 
