@@ -1,6 +1,6 @@
 import { styles } from './OrganizationDetails.styles';
 import IconPencil from 'public/assets/icons/pencil-3-16.svg';
-import { FocusEventHandler, useEffect, useRef, useState } from 'react';
+import { FocusEventHandler, useRef, useState } from 'react';
 import { Button } from '@shared/components';
 import { useOrganizations } from '@modules/organisations/hooks/useOrganizations';
 import { toast } from 'react-toastify';
@@ -15,7 +15,7 @@ export function OrganizationDetails({ name, id }: Props) {
   const [isEditable, setIsEditable] = useState(false);
   const fieldRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
+  const focusField = () => {
     if (fieldRef.current) {
       fieldRef.current.focus();
       // move caret to end
@@ -29,7 +29,7 @@ export function OrganizationDetails({ name, id }: Props) {
       sel?.removeAllRanges();
       sel?.addRange(range);
     }
-  }, [isEditable]);
+  };
 
   const handleBlur: FocusEventHandler<HTMLHeadingElement> = (e) => {
     const id = e.currentTarget.id;
@@ -40,10 +40,8 @@ export function OrganizationDetails({ name, id }: Props) {
   };
 
   const handleOnClick = () => {
-    if (fieldRef.current) {
-      setIsEditable(true);
-      fieldRef.current.focus();
-    }
+    setIsEditable(true);
+    focusField();
   };
 
   return (
