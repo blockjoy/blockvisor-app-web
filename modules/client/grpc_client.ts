@@ -303,7 +303,6 @@ export class GrpcClient {
   }
 
   /* Authentication service */
-
   async login(
     email: string,
     pwd: string,
