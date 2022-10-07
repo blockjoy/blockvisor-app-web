@@ -33,7 +33,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
         <Button
           display="block"
           size="small"
-          onClick={() => setLayout('organisation')}
+          onClick={() => setLayout('organization')}
         >
           Create
         </Button>

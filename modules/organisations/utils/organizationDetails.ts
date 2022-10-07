@@ -1,4 +1,4 @@
-export function getOrganisationDetails(org: Organisation | null) {
+export function getOrganizationDetails(org: ClientOrganization | null) {
   if (!org) {
     return null;
   }

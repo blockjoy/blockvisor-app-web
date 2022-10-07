@@ -10,33 +10,33 @@ import {
 } from '@modules/app/components/shared';
 import { DangerZone } from '@modules/app/components/shared/danger-zone/DangerZone';
 import { BackButton } from '@shared/components/BackButton/BackButton';
-import { useOrganisations } from '../hooks/useOrganisations';
+import { useOrganizations } from '../hooks/useOrganizations';
 import { queryAsString } from '@shared/utils/query';
-import { OrganisationDetails } from './OrganisationDetails/OrganisationDetails';
+import { OrganizationDetails } from './OrganizationDetails/OrganizationDetails';
 import { DetailsTable } from '@modules/app/components/shared/details-table/DetailsTable';
-import { getOrganisationDetails } from '../utils/organisationDetails';
+import { getOrganizationDetails } from '../utils/organizationDetails';
 import { spacing } from 'styles/utils.spacing.styles';
 import { MembersTable } from './MembersTable/MembersTable';
 
-const OrganisationPage: NextPage = () => {
+const Organization: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const {
-    removeOrganisation,
-    selectedOrganisation,
-    getOrganisation,
+    removeOrganization,
+    selectedOrganization,
+    getOrganization,
     loadingOrganizations,
-  } = useOrganisations();
+  } = useOrganizations();
 
   const handleDeleteOrganisation = async (id: string) => {
-    await removeOrganisation(id);
+    await removeOrganization(id);
   };
 
   useEffect(() => {
-    getOrganisation(queryAsString(id));
+    getOrganization(queryAsString(id));
   }, []);
 
-  const details = getOrganisationDetails(selectedOrganisation);
+  const details = getOrganizationDetails(selectedOrganization);
 
   return (
     <>
@@ -54,9 +54,9 @@ const OrganisationPage: NextPage = () => {
           </>
         ) : (
           <>
-            <OrganisationDetails
-              id={selectedOrganisation?.id?.value ?? ''}
-              name={selectedOrganisation?.name ?? ''}
+            <OrganizationDetails
+              id={selectedOrganization?.id?.value ?? ''}
+              name={selectedOrganization?.name ?? ''}
             />
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
@@ -67,8 +67,8 @@ const OrganisationPage: NextPage = () => {
       </PageSection>
       <PageSection>
         <DangerZone
-          elementName="Organisation"
-          elementNameToCompare={selectedOrganisation?.name ?? ''}
+          elementName="Organization"
+          elementNameToCompare={selectedOrganization?.name ?? ''}
           handleDelete={() => handleDeleteOrganisation(queryAsString(id))}
         ></DangerZone>
       </PageSection>
@@ -76,4 +76,4 @@ const OrganisationPage: NextPage = () => {
   );
 };
 
-export default OrganisationPage;
+export default Organization;

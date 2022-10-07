@@ -1,25 +1,25 @@
-import { FC } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 
-import { AllOrganisationsTable } from './AllOrganisationsTable';
+import { AllOrganizationsTable } from './AllOrganizationsTable';
 import PersonIcon from '@public/assets/icons/person-12.svg';
 import { flex } from 'styles/utils.flex.styles';
 import { PageTitle } from '@modules/app/components/page-title/PageTitle';
 import { PageSection } from '@modules/app/components/shared';
 import { useRecoilValue } from 'recoil';
-import { organisationAtoms } from '../store/organisationAtoms';
+import { organisationAtoms } from '../store/organizationAtoms';
+import { NextPage } from 'next';
 
-export const OrganisationsPage: FC = () => {
-  const memberCount = useRecoilValue(organisationAtoms.organisationMemberCount);
+export const OrganizationsPage: NextPage = () => {
+  const memberCount = useRecoilValue(organisationAtoms.organizationMemberCount);
   const orgCount = useRecoilValue(organisationAtoms.organisationCount);
 
   return (
     <>
-      <PageTitle title="Organisation Management"></PageTitle>
+      <PageTitle title="Organization Management"></PageTitle>
       <PageSection>
-        <h2 css={spacing.top.large}>Organisations</h2>
+        <h2 css={spacing.top.large}>Organizations</h2>
         <small
           css={[
             spacing.top.mediumSmall,
@@ -33,12 +33,12 @@ export const OrganisationsPage: FC = () => {
             <PersonIcon />{' '}
           </span>
           <span css={[spacing.left.small, colors.text4]}>
-            {memberCount} users in {orgCount} organisations
+            {memberCount} users in {orgCount} organizations
           </span>
         </small>
 
         <section css={spacing.top.xLarge}>
-          <AllOrganisationsTable />
+          <AllOrganizationsTable />
         </section>
       </PageSection>
     </>
