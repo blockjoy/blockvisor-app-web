@@ -1,5 +1,5 @@
 import { styles } from './SidebarHeader.styles';
-import { OrganizationDropdown } from '@modules/organisations';
+import { OrganizationDropdown } from '@modules/organizations';
 import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
 
 export const SidebarHeader = () => {

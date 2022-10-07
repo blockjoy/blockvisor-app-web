@@ -5,7 +5,7 @@ import {
   DrawerHeader,
 } from '@modules/layout/components';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useOrganizations } from '@modules/organisations/hooks/useOrganizations';
+import { useOrganizations } from '@modules/organizations/hooks/useOrganizations';
 import { delay } from '@shared/utils/delay';
 import { Button, Input } from '@shared/components';
 import { useEffect, useState } from 'react';

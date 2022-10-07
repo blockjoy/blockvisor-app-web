@@ -1,5 +1,5 @@
 import { AppLayout } from '@modules/layout';
-import { OrganizationsPage } from '@modules/organisations';
+import { OrganizationsPage } from '@modules/organizations';
 
 const Organizations = () => <OrganizationsPage />;
 

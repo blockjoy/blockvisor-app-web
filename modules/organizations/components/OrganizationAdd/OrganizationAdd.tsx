@@ -12,7 +12,7 @@ import {
   DrawerHeader,
 } from '../../../layout/components';
 import { width } from 'styles/utils.width.styles';
-import { useOrganizations } from '@modules/organisations';
+import { useOrganizations } from '@modules/organizations';
 import { toast } from 'react-toastify';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';

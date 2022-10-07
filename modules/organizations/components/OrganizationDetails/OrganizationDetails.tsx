@@ -2,7 +2,7 @@ import { styles } from './OrganizationDetails.styles';
 import IconPencil from 'public/assets/icons/pencil-3-16.svg';
 import { FocusEventHandler, useRef, useState } from 'react';
 import { Button } from '@shared/components';
-import { useOrganizations } from '@modules/organisations/hooks/useOrganizations';
+import { useOrganizations } from '@modules/organizations/hooks/useOrganizations';
 import { toast } from 'react-toastify';
 
 type Props = {
