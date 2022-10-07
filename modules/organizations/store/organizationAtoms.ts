@@ -1,8 +1,14 @@
+import { getDefaultOrganization } from '@shared/utils/browserStorage';
 import { atom, selector } from 'recoil';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
   default: null,
+});
+
+const defaultOrganization = atom<string | null>({
+  key: 'organization.default',
+  default: getDefaultOrganization() ?? null,
 });
 
 const allOrganizations = atom<ClientOrganization[]>({
@@ -33,4 +39,5 @@ export const organisationAtoms = {
   allOrganizations,
   organizationMemberCount,
   organisationCount,
+  defaultOrganization,
 };

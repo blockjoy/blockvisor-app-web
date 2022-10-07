@@ -5,8 +5,10 @@ import SizedIcon from '@modules/layout/components/shared/SizedIcon';
 
 import { Button } from '@shared/components';
 import { styles } from './OrganizationDropdown.styles';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useOrganizations } from '@modules/organizations/hooks/useOrganizations';
+import { organisationAtoms } from '@modules/organizations/store/organizationAtoms';
 
 type Props = {
   hideName?: boolean;
@@ -15,6 +17,7 @@ type Props = {
 export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
   const [isOpen, setOpen] = useState(false);
   const setLayout = useSetRecoilState(layoutState);
+  const org = useRecoilValue(organisationAtoms.defaultOrganization);
 
   return (
     <div css={styles.base}>
@@ -26,8 +29,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
         </SizedIcon>
       </button>
       <div css={[styles.menu, isOpen && styles.isOpen]}>
-        You only have one organization
-        <br />
+        <p>{org ?? ''}</p>
         <br />
         <Button
           display="block"

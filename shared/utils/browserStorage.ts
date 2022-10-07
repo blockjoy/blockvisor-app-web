@@ -6,6 +6,17 @@ function isUser(value: unknown): value is User {
 
 const isBrowser = typeof window !== 'undefined';
 
+const saveDefaultOrganization = (org: string) => {
+  const user = getUser();
+
+  if (user) {
+    user.defaultOrganization = org;
+    saveUser(user);
+  }
+};
+
+const getDefaultOrganization = () => getUser()?.defaultOrganization;
+
 const getUser = () => {
   if (isBrowser) {
     const item = localStorage.getItem(AUTH_KEY);
@@ -34,4 +45,10 @@ const deleteUser = () => {
   }
 };
 
-export { getUser, deleteUser, saveUser };
+export {
+  getUser,
+  deleteUser,
+  saveUser,
+  saveDefaultOrganization,
+  getDefaultOrganization,
+};

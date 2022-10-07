@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organizationAtoms';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
+import { saveDefaultOrganization } from '@shared/utils/browserStorage';
 
 // used for generating mock member count
 function randomIntFromInterval(min: number, max: number) {
@@ -27,6 +28,7 @@ export const useOrganizations = () => {
     await delay(env.loadingDuration);
 
     setOrganizations(res);
+    saveDefaultOrganization(res[0].name);
     setIsLoading(false);
   };
 
