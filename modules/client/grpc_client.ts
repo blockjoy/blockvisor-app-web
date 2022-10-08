@@ -108,6 +108,11 @@ export type UIHostCreate = {
 export type AuthHeader = {
   authorization: string;
 };
+export type NewPassword = {
+  old_pwd: string;
+  new_pwd: string;
+  new_pwd_confirmation: string;
+};
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
   if (ts !== undefined) {
@@ -415,21 +420,38 @@ export class GrpcClient {
     }
   }
 
-  async updatePassword(old_pwd: string, new_pwd: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
-    let request_meta = new RequestMeta();
-    request_meta.setId(this.getDummyUuid());
+  async updatePassword(pwd: NewPassword): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    if (pwd.new_pwd === pwd.new_pwd_confirmation) {
+      let request_meta = new RequestMeta();
+      request_meta.setId(this.getDummyUuid());
 
-    let request = new UpdateUIPasswordRequest();
-    request.setMeta(request_meta);
-    request.setOldPwd(old_pwd);
-    request.setNewPwd(new_pwd);
+      let request = new UpdateUIPasswordRequest();
+      request.setMeta(request_meta);
+      request.setOldPwd(pwd.old_pwd);
+      request.setNewPwd(pwd.new_pwd);
+      request.setNewPwdConfirmation(pwd.new_pwd_confirmation);
 
-    return this.authentication?.updateUIPassword(request, this.getAuthHeader()).then((response) => {
-      return response.getToken()?.toObject();
-    }).catch((err) => {
+      return this.authentication?.updateUIPassword(request, this.getAuthHeader()).then((response) => {
+        return response.getToken()?.toObject();
+      }).catch((err) => {
+        return {
+          code: 'Update password via UI error',
+          message: `${err}`,
+          source: 'None',
+          metadata: {
+            headers: {
+              'content-type': 'application/grpc',
+              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+              'content-length': '0',
+            },
+          },
+        };
+      });
+    }
+    else {
       return {
-        code: 'Update password via UI error',
-        message: `${err}`,
+        code: 'Update password error',
+        message: 'Password does not match confirmation',
         source: 'None',
         metadata: {
           headers: {
@@ -439,7 +461,7 @@ export class GrpcClient {
           },
         },
       };
-    });
+    }
   }
 
   /* Billing service */
