@@ -1,7 +1,7 @@
 import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
 import {
   LoginUserRequest,
-  RefreshTokenResponse, ResetPasswordResponse,
+  RefreshTokenResponse, ResetPasswordRequest, ResetPasswordResponse, UpdatePasswordRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
   ApiToken,
@@ -348,17 +348,67 @@ export class GrpcClient {
   }
 
   async resetPassword(email: string): Promise<ResetPasswordResponse.AsObject | StatusResponse | undefined> {
-    let response = new ResetPasswordResponse();
-    response.setMeta(this.getDummyMeta());
+    let request = new ResetPasswordRequest();
+    request.setEmail(email);
 
-    return response.toObject();
+    return this.authentication?.resetPassword(request, this.getAuthHeader()).then((response) => {
+      return response.toObject();
+    }).catch((err) => {
+      return {
+        code: 'Reset password error',
+        message: `${err}`,
+        source: 'None',
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+      };
+    });
   }
 
-  async updateResetPassword(pwd: string, pwd_confirmation: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
-    let response = new RefreshTokenResponse();
-    response.setMeta(this.getDummyMeta());
+  async updateResetPassword(pwd: string, pwd_confirmation: string): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    if (pwd === pwd_confirmation) {
+      let request_meta = new RequestMeta();
+      request_meta.setId(this.getDummyUuid());
 
-    return response.getToken()?.toObject();
+      let request = new UpdatePasswordRequest();
+      request.setMeta(request_meta);
+      request.setPassword(pwd);
+
+      return this.authentication?.updatePassword(request, this.getAuthHeader()).then((response) => {
+        return response.getMeta()?.toObject();
+      }).catch((err) => {
+        return {
+          code: 'Update password error',
+          message: `${err}`,
+          source: 'None',
+          metadata: {
+            headers: {
+              'content-type': 'application/grpc',
+              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+              'content-length': '0',
+            },
+          },
+        };
+      });
+    }
+    else {
+      return {
+        code: 'Update password error',
+        message: 'Password does not match confirmation',
+        source: 'None',
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+      };
+    }
   }
 
   async updatePassword(old_pwd: string, new_pwd: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
