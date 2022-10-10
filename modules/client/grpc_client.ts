@@ -61,6 +61,7 @@ import {
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
+  CreateUserRequest,
   CreateUserResponse,
   GetConfigurationResponse,
   GetUserResponse,
@@ -892,12 +893,37 @@ export class GrpcClient {
   }
 
   async createUser(
-    user: UIUser,
+    ui_user: UIUser,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateUserResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let user = new User();
+    user.setEmail(ui_user.email);
+    user.setFirstName(ui_user.first_name);
+    user.setLastName(ui_user.last_name);
+
+    let request = new CreateUserRequest();
+    request.setPassword(ui_user.password);
+    request.setPasswordConfirmation(ui_user.password_confirmation);
+    request.setUser(user);
+
+    return this.user?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject();
+    }).catch((err) => {
+      return {
+        code: 'Create user error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
   }
 
   async upsertConfiguration(
