@@ -1,4 +1,3 @@
-import { getDefaultOrganization } from '@shared/utils/browserStorage';
 import { atom, selector } from 'recoil';
 
 const selectedOrganization = atom<ClientOrganization | null>({
@@ -8,7 +7,7 @@ const selectedOrganization = atom<ClientOrganization | null>({
 
 const defaultOrganization = atom<string | null>({
   key: 'organization.default',
-  default: getDefaultOrganization() ?? null,
+  default: null,
 });
 
 const allOrganizations = atom<ClientOrganization[]>({

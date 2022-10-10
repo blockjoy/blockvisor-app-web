@@ -5,7 +5,10 @@ import { useRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organizationAtoms';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { saveDefaultOrganization } from '@shared/utils/browserStorage';
+import {
+  getDefaultOrgFromStorage,
+  saveDefaultOrgToStorage,
+} from '@shared/utils/browserStorage';
 
 // used for generating mock member count
 function randomIntFromInterval(min: number, max: number) {
@@ -21,6 +24,10 @@ export const useOrganizations = () => {
     organisationAtoms.selectedOrganization,
   );
 
+  const [defaultOrganization, setDefaultOrganization] = useRecoilState(
+    organisationAtoms.defaultOrganization,
+  );
+
   const getOrganizations = async () => {
     setIsLoading(true);
 
@@ -28,7 +35,23 @@ export const useOrganizations = () => {
     await delay(env.loadingDuration);
 
     setOrganizations(res);
-    saveDefaultOrganization(res[0].name);
+
+    setIsLoading(false);
+  };
+
+  const getDefaultOrganization = async () => {
+    setIsLoading(true);
+
+    const defaultOrg = getDefaultOrgFromStorage();
+    if (!defaultOrg) {
+      const res: any = await apiClient.getOrganizations();
+      await delay(env.loadingDuration);
+
+      saveDefaultOrgToStorage(res[0].name);
+      setDefaultOrganization(res[0].name);
+      return;
+    }
+    setDefaultOrganization(defaultOrg);
     setIsLoading(false);
   };
 
@@ -109,6 +132,8 @@ export const useOrganizations = () => {
     organizations,
     loadingOrganizations: loading,
     selectedOrganization,
+    defaultOrganization,
+    getDefaultOrganization,
     getOrganizations,
     createOrganization,
     removeOrganization,

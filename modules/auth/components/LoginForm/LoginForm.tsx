@@ -1,7 +1,6 @@
 import { authAtoms } from '@modules/auth/store/authAtoms';
 import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
 import { apiClient } from '@modules/client';
-import { useOrganizations } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
 import { saveUser } from '@shared/utils/browserStorage';
 import { isValidEmail } from '@shared/utils/validation';
@@ -23,7 +22,6 @@ type LoginForm = {
 
 export function LoginForm() {
   const router = useRouter();
-  const { getOrganizations } = useOrganizations();
   const form = useForm<LoginForm>();
   const [loading, setIsLoading] = useState(false);
   const [, setAuth] = useRecoilState(authAtoms.user);
@@ -48,7 +46,6 @@ export function LoginForm() {
       });
       setAuth({ accessToken: response.value });
       apiClient.setTokenValue(response.value);
-      getOrganizations();
       // simulate async req
       setTimeout(() => {
         setIsLoading(false);

@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
 import SizedIcon from '@modules/layout/components/shared/SizedIcon';
 
 import { Button } from '@shared/components';
 import { styles } from './OrganizationDropdown.styles';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useOrganizations } from '@modules/organizations/hooks/useOrganizations';
-import { organisationAtoms } from '@modules/organizations/store/organizationAtoms';
 
 type Props = {
   hideName?: boolean;
@@ -17,7 +16,11 @@ type Props = {
 export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
   const [isOpen, setOpen] = useState(false);
   const setLayout = useSetRecoilState(layoutState);
-  const org = useRecoilValue(organisationAtoms.defaultOrganization);
+  const { getDefaultOrganization, defaultOrganization } = useOrganizations();
+
+  useEffect(() => {
+    getDefaultOrganization();
+  }, []);
 
   return (
     <div css={styles.base}>
@@ -29,7 +32,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
         </SizedIcon>
       </button>
       <div css={[styles.menu, isOpen && styles.isOpen]}>
-        <p>{org ?? ''}</p>
+        <p>{defaultOrganization}</p>
         <br />
         <Button
           display="block"
