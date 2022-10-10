@@ -1,23 +1,14 @@
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 
-import ProfileSwitch from './ProfileSwitch';
-
-import {
-  Drawer,
-  DrawerAction,
-  DrawerContent,
-  DrawerHeader,
-  DrawerSubheader,
-} from '..';
+import { Drawer, DrawerAction, DrawerHeader } from '..';
 
 import { themeDark, themeLight } from '../../../../themes';
-import { themeState } from '../../../../pages/ThemeProvider';
+import { themeState } from '../../../theme/ThemeProvider';
 import { Button } from '@shared/components';
 import { styles } from './Profile.styles';
 import { deleteUser } from '@shared/utils/browserStorage';
 import { authAtoms } from '@modules/auth';
-import { ProfileUpdate } from './ProfileUpdateForm/ProfileUpdateForm';
 
 export default () => {
   const layout = useRecoilValue(layoutState);
