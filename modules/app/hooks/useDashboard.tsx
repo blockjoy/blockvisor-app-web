@@ -6,7 +6,6 @@ import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { Metric } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 
 interface Hook {
   loadDashboard: () => void;
