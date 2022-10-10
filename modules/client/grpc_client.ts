@@ -908,7 +908,7 @@ export class GrpcClient {
     request.setPasswordConfirmation(ui_user.password_confirmation);
     request.setUser(user);
 
-    return this.user?.create(request, this.getAuthHeader()).then((response) => {
+    return this.user?.create(request, null).then((response) => {
       return response.getMeta()?.toObject();
     }).catch((err) => {
       return {
