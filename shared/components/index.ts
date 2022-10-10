@@ -33,3 +33,4 @@ export * from './ButtonWithDropdown/ButtonWithDropdown';
 export * from './DropdownItem/DropdownItem';
 export * from './NodeTypePicker/NodeTypePicker';
 export * from './Pagination/Pagination';
+export * from './CodeBlock/CodeBlock';
