@@ -63,7 +63,7 @@ export function Input({
       >
         {label}
       </label>
-      <div tabIndex={0} css={[inputWrapper]}>
+      <div css={[inputWrapper]}>
         <InputUtil position="left">{leftIcon}</InputUtil>
         <input
           {...register(name, validationOptions)}
