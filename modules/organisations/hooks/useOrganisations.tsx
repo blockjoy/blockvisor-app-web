@@ -26,6 +26,9 @@ export const useOrganisations = () => {
     setIsLoading(true);
 
     const res: any = await apiClient.getOrganizations();
+
+    console.log('organizations', res);
+
     await delay(env.loadingDuration);
 
     setOrganisations(res);
