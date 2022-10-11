@@ -39,7 +39,7 @@ export function LoginForm() {
     setIsLoading(true);
 
     const response = await apiClient.login(email, password);
-
+    console.log('respo', response);
     if (isLoginSuccess(response)) {
       saveUser({
         accessToken: response.value,
@@ -47,6 +47,7 @@ export function LoginForm() {
       setAuth({ accessToken: response.value });
       apiClient.setTokenValue(response.value);
       // simulate async req
+
       setTimeout(() => {
         setIsLoading(false);
         router.push('/dashboard');
