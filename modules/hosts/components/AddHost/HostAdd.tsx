@@ -1,4 +1,4 @@
-import { Button } from '@shared/components';
+import { Button, CodeBlock } from '@shared/components';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { colors } from 'styles/utils.colors.styles';
@@ -13,8 +13,6 @@ import {
 } from '@modules/app/components/shared';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { a11yDark as theme } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 export const HostAdd = () => {
   const router = useRouter();
@@ -61,18 +59,10 @@ export const HostAdd = () => {
               <p css={styles.stepDescription}>
                 Run the following command containing your key.
               </p>
-              <SyntaxHighlighter
-                customStyle={{
-                  lineHeight: '0.75',
-                  fontSize: '12px',
-                  borderRadius: 0,
-                  width: '360px',
-                }}
-                language="shell"
-                style={theme}
-              >
-                {`curl http://bvs.sh/ | bash -s -- ${hostAddKey}`}
-              </SyntaxHighlighter>
+              <CodeBlock
+                language="bash"
+                code={`curl http://bvs.sh/ | bash -s -- ${hostAddKey}`}
+              />
             </section>
 
             <section css={styles.step}>

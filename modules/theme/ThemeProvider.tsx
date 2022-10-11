@@ -5,7 +5,7 @@ import {
   css,
   Global,
 } from '@emotion/react';
-import { themeDark } from '../themes';
+import { themeDark } from '../../themes';
 import { ITheme } from 'types/theme';
 import { rgba } from 'polished';
 
