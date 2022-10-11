@@ -1,7 +1,7 @@
 import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
 import {
   LoginUserRequest,
-  RefreshTokenResponse,
+  RefreshTokenResponse, ResetPasswordRequest, ResetPasswordResponse, UpdatePasswordRequest, UpdateUIPasswordRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
   ApiToken,
@@ -61,6 +61,7 @@ import {
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
+  CreateUserRequest,
   CreateUserResponse,
   GetConfigurationResponse,
   GetUserResponse,
@@ -107,6 +108,11 @@ export type UIHostCreate = {
 };
 export type AuthHeader = {
   authorization: string;
+};
+export type NewPassword = {
+  old_pwd: string;
+  new_pwd: string;
+  new_pwd_confirmation: string;
 };
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
@@ -303,7 +309,6 @@ export class GrpcClient {
   }
 
   /* Authentication service */
-
   async login(
     email: string,
     pwd: string,
@@ -346,6 +351,118 @@ export class GrpcClient {
     response.setMeta(this.getDummyMeta());
 
     return response.getToken()?.toObject();
+  }
+
+  async resetPassword(email: string): Promise<ResetPasswordResponse.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ResetPasswordRequest();
+    request.setMeta(request_meta);
+    request.setEmail(email);
+
+    return this.authentication?.resetPassword(request, this.getAuthHeader()).then((response) => {
+      return response.toObject();
+    }).catch((err) => {
+      return {
+        code: 'Reset password error',
+        message: `${err}`,
+        source: 'None',
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+      };
+    });
+  }
+
+  async updateResetPassword(pwd: string, pwd_confirmation: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    if (pwd === pwd_confirmation) {
+      let request_meta = new RequestMeta();
+      request_meta.setId(this.getDummyUuid());
+
+      let request = new UpdatePasswordRequest();
+      request.setMeta(request_meta);
+      request.setPassword(pwd);
+
+      return this.authentication?.updatePassword(request, this.getAuthHeader()).then((response) => {
+        return response.getToken()?.toObject();
+      }).catch((err) => {
+        return {
+          code: 'Update password error',
+          message: `${err}`,
+          source: 'None',
+          metadata: {
+            headers: {
+              'content-type': 'application/grpc',
+              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+              'content-length': '0',
+            },
+          },
+        };
+      });
+    }
+    else {
+      return {
+        code: 'Update password error',
+        message: 'Password does not match confirmation',
+        source: 'None',
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+      };
+    }
+  }
+
+  async updatePassword(pwd: NewPassword): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    if (pwd.new_pwd === pwd.new_pwd_confirmation) {
+      let request_meta = new RequestMeta();
+      request_meta.setId(this.getDummyUuid());
+
+      let request = new UpdateUIPasswordRequest();
+      request.setMeta(request_meta);
+      request.setOldPwd(pwd.old_pwd);
+      request.setNewPwd(pwd.new_pwd);
+      request.setNewPwdConfirmation(pwd.new_pwd_confirmation);
+
+      return this.authentication?.updateUIPassword(request, this.getAuthHeader()).then((response) => {
+        return response.getToken()?.toObject();
+      }).catch((err) => {
+        return {
+          code: 'Update password via UI error',
+          message: `${err}`,
+          source: 'None',
+          metadata: {
+            headers: {
+              'content-type': 'application/grpc',
+              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+              'content-length': '0',
+            },
+          },
+        };
+      });
+    }
+    else {
+      return {
+        code: 'Update password error',
+        message: 'Password does not match confirmation',
+        source: 'None',
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+      };
+    }
   }
 
   /* Billing service */
@@ -776,12 +893,37 @@ export class GrpcClient {
   }
 
   async createUser(
-    user: UIUser,
+    ui_user: UIUser,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateUserResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let user = new User();
+    user.setEmail(ui_user.email);
+    user.setFirstName(ui_user.first_name);
+    user.setLastName(ui_user.last_name);
+
+    let request = new CreateUserRequest();
+    request.setPassword(ui_user.password);
+    request.setPasswordConfirmation(ui_user.password_confirmation);
+    request.setUser(user);
+
+    return this.user?.create(request, null).then((response) => {
+      return response.getMeta()?.toObject();
+    }).catch((err) => {
+      return {
+        code: 'Create user error',
+        message: `${err}`,
+        metadata: {
+          headers: {
+            'content-type': 'application/grpc',
+            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
+            'content-length': '0',
+          },
+        },
+        source: 'None',
+      };
+    });
   }
 
   async upsertConfiguration(

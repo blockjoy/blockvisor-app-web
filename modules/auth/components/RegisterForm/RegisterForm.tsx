@@ -15,6 +15,8 @@ import { colors } from 'styles/utils.colors.styles';
 import { RegistrationStatus } from '../types';
 
 type RegisterForm = {
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -42,27 +44,51 @@ export function RegisterForm() {
         password_confirmation: confirmPassword,
       });
 
+      console.log('signup', response);
+
       // simulate async req
-      setTimeout(() => {
-        if (isResponeMetaObject(response)) {
-          if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
-            setIsLoading(false);
-            Router.push('/');
-          } else {
-            setIsLoading(false);
-            setRegisterError('something went wrong');
-          }
+      // setTimeout(() => {
+      if (isResponeMetaObject(response)) {
+        if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
+          setIsLoading(false);
+          Router.push('/dashboard');
         } else {
           setIsLoading(false);
-          setRegisterError(response?.message);
+          setRegisterError('something went wrong');
         }
-      }, 1000);
+      } else {
+        setIsLoading(false);
+        setRegisterError(response?.message);
+      }
+      // }, 1000);
     },
   );
   return (
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <ul css={[reset.list]}>
+          <li css={[spacing.bottom.mediumSmall]}>
+            <Input
+              labelStyles={[display.visuallyHidden]}
+              disabled={loading}
+              name="first_name"
+              placeholder="First Name"
+              validationOptions={{
+                required: 'Your first name is required',
+              }}
+            />
+          </li>
+          <li css={[spacing.bottom.mediumSmall]}>
+            <Input
+              labelStyles={[display.visuallyHidden]}
+              disabled={loading}
+              name="last_name"
+              placeholder="Last Name"
+              validationOptions={{
+                required: 'Your last name is required',
+              }}
+            />
+          </li>
           <li css={[spacing.bottom.mediumSmall]}>
             <Input
               labelStyles={[display.visuallyHidden]}
