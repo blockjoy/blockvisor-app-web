@@ -4,8 +4,8 @@ export type LayoutStates =
   | 'hosts'
   | 'nodes'
   | 'profile'
-  | 'organisation'
-  | 'editOrganisation'
+  | 'organization'
+  | 'editOrganization'
   | 'sidebar';
 
 export const layoutState = atom<LayoutStates | undefined>({

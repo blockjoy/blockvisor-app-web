@@ -1,7 +1,7 @@
 import { Table } from '@modules/app/components/shared';
 import { Button } from '@shared/components';
 import { FC, useEffect } from 'react';
-import { useOrganisations } from '../hooks/useOrganisations';
+import { useOrganizations } from '../hooks/useOrganizations';
 import { flex } from 'styles/utils.flex.styles';
 
 const headers: TableHeader[] = [
@@ -19,8 +19,8 @@ const headers: TableHeader[] = [
   },
 ];
 
-const mapOrganisationsToRows = (organisations?: Organisation[]) => {
-  return organisations?.map((org, idx) => ({
+const mapOrganizationsToRows = (organizations?: ClientOrganization[]) => {
+  return organizations?.map((org, idx) => ({
     key: org.id?.value ?? `${idx}`,
     cells: [
       {
@@ -52,7 +52,7 @@ const mapOrganisationsToRows = (organisations?: Organisation[]) => {
         component: (
           <div css={[flex.display.flex]}>
             <Button
-              href={`organisations/${org.id?.value}`}
+              href={`organizations/${org.id}`}
               style="outline"
               size="small"
             >
@@ -65,15 +65,15 @@ const mapOrganisationsToRows = (organisations?: Organisation[]) => {
   }));
 };
 
-export const AllOrganisationsTable: FC = () => {
-  const { getOrganizations, organisations, loadingOrganizations } =
-    useOrganisations();
+export const AllOrganizationsTable: FC = () => {
+  const { getOrganizations, organizations, loadingOrganizations } =
+    useOrganizations();
 
   useEffect(() => {
     getOrganizations();
   }, []);
 
-  const rows = mapOrganisationsToRows(organisations);
+  const rows = mapOrganizationsToRows(organizations);
   return (
     <Table isLoading={loadingOrganizations} headers={headers} rows={rows} />
   );

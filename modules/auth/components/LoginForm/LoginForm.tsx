@@ -41,7 +41,9 @@ export function LoginForm() {
     const response = await apiClient.login(email, password);
 
     if (isLoginSuccess(response)) {
-      saveUser({ accessToken: response.value });
+      saveUser({
+        accessToken: response.value,
+      });
       setAuth({ accessToken: response.value });
       apiClient.setTokenValue(response.value);
       // simulate async req

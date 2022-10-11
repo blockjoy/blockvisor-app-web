@@ -1,4 +1,4 @@
-type Organisation = {
+type ClientOrganization = {
   createdAt?: {
     nanos: number;
     seconds: number;

@@ -5,7 +5,7 @@ import {
   DrawerHeader,
 } from '@modules/layout/components';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useOrganisations } from '@modules/organisations/hooks/useOrganisations';
+import { useOrganizations } from '@modules/organizations/hooks/useOrganizations';
 import { delay } from '@shared/utils/delay';
 import { Button, Input } from '@shared/components';
 import { useEffect, useState } from 'react';
@@ -20,17 +20,17 @@ type EditOrganisationForm = {
   name: string;
 };
 
-export function EditOrganisaton() {
+export function EditOrganization() {
   const [loading, setIsLoading] = useState(false);
-  const { selectedOrganisation, updateOrganisation } = useOrganisations();
+  const { selectedOrganization, updateOrganization } = useOrganizations();
 
   const form = useForm<EditOrganisationForm>();
   const [layout, setLayout] = useRecoilState(layoutState);
 
   const onSubmit: SubmitHandler<EditOrganisationForm> = async ({ name }) => {
-    if (selectedOrganisation?.id) {
+    if (selectedOrganization?.id) {
       setIsLoading(true);
-      updateOrganisation(selectedOrganisation?.id?.value, name);
+      updateOrganization(selectedOrganization?.id?.value, name);
       await delay(env.loadingDuration);
       setIsLoading(false);
       setLayout(undefined);
@@ -43,19 +43,19 @@ export function EditOrganisaton() {
   };
 
   useEffect(() => {
-    form.setValue('name', selectedOrganisation?.name ?? '');
-  }, [selectedOrganisation?.name]);
+    form.setValue('name', selectedOrganization?.name ?? '');
+  }, [selectedOrganization?.name]);
 
   return (
-    <Drawer isOpen={layout === 'editOrganisation'}>
+    <Drawer isOpen={layout === 'editOrganization'}>
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <DrawerHeader onCloseClicked={handleClickClose}>
-            Edit Organisation
+            Edit Organization
           </DrawerHeader>
           <DrawerContent>
             <div css={spacing.bottom.medium}>
-              <Input disabled={loading} label="Organisation name" name="name" />
+              <Input disabled={loading} label="Organization name" name="name" />
             </div>
           </DrawerContent>
           <DrawerAction>

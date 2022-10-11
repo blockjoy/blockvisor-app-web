@@ -17,7 +17,7 @@ export const PageTitle: FC<Props> = ({ title }) => {
     <header css={styles.base}>
       <div css={[wrapper.main, styles.actions]}>
         <h1 css={typo.large}>{title}</h1>
-        <Button onClick={() => setLayout('organisation')} size="small">
+        <Button onClick={() => setLayout('organization')} size="small">
           Create new
         </Button>
       </div>
