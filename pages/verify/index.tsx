@@ -1,4 +1,4 @@
-import { Layout } from '@shared/components';
+import { Layout, LoadingSpinner } from '@shared/components';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -17,13 +17,17 @@ const Verify: NextPage = () => {
     }
   }, []);
 
-  return (
-    <Layout title="We have Sent a Link to Your Email Address.">
-      <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
-        Check your e-mail and start using BlockVisor!
-      </p>
-    </Layout>
-  );
+  if (!isUserVerified(getUser())) {
+    return (
+      <Layout title="We have Sent a Link to Your Email Address.">
+        <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
+          Check your e-mail and start using BlockVisor!
+        </p>
+      </Layout>
+    );
+  }
+
+  return <LoadingSpinner size="page" />;
 };
 
 export default Verify;
