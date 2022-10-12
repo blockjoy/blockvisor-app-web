@@ -30,4 +30,6 @@ export function PrivateRoute({ children }: Props) {
   if (isVerified && isLoggedIn) {
     return <>{children}</>;
   }
+
+  return null;
 }
