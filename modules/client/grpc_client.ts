@@ -31,10 +31,8 @@ import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_service
 import { CreateBillResponse } from '@blockjoy/blockjoy-grpc/dist/out/billing_service_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
-import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb';
 import {
   DashboardMetricsRequest,
-  DashboardMetricsResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostRequest,
@@ -45,7 +43,6 @@ import {
 import {
   CreateHostProvisionRequest,
   GetHostProvisionRequest,
-  GetHostProvisionResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
   CreateNodeRequest,
@@ -57,12 +54,10 @@ import {
   CreateOrganizationResponse,
   DeleteOrganizationResponse,
   GetOrganizationsRequest,
-  GetOrganizationsResponse,
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
-  CreateUserResponse,
   GetConfigurationResponse,
   GetUserResponse,
   UpsertConfigurationResponse,
@@ -74,20 +69,12 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
 import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
 import { ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
-import {
-  adjectives,
-  animals,
-  colors,
-  uniqueNamesGenerator,
-} from 'unique-names-generator';
 import { CommandServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Command_serviceServiceClientPb';
+import {
+  StatusResponse,
+  StatusResponseFactory
+} from '@modules/client/status_response';
 
-export type StatusResponse = {
-  code: string;
-  message: string;
-  metadata: { headers: {} };
-  source: string;
-};
 export type UIUser = {
   first_name: string;
   last_name: string;
@@ -331,18 +318,7 @@ export class GrpcClient {
         return response.getToken()?.toObject();
       })
       .catch((err) => {
-        return {
-          code: 'Unauthenticated',
-          message: `${err}`,
-          source: 'None',
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-        };
+        return StatusResponseFactory.loginResponse(err, "grpcClient")
       });
   }
 
@@ -364,18 +340,7 @@ export class GrpcClient {
     return this.authentication?.resetPassword(request, this.getAuthHeader()).then((response) => {
       return response.toObject();
     }).catch((err) => {
-      return {
-        code: 'Reset password error',
-        message: `${err}`,
-        source: 'None',
-        metadata: {
-          headers: {
-            'content-type': 'application/grpc',
-            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-            'content-length': '0',
-          },
-        },
-      };
+      return StatusResponseFactory.resetPasswordResponse(err, "grpcClient")
     });
   }
 
@@ -391,33 +356,11 @@ export class GrpcClient {
       return this.authentication?.updatePassword(request, this.getAuthHeader()).then((response) => {
         return response.getToken()?.toObject();
       }).catch((err) => {
-        return {
-          code: 'Update password error',
-          message: `${err}`,
-          source: 'None',
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-        };
+        return StatusResponseFactory.updateResetPasswordResponse(err, "grpcClient")
       });
     }
     else {
-      return {
-        code: 'Update password error',
-        message: 'Password does not match confirmation',
-        source: 'None',
-        metadata: {
-          headers: {
-            'content-type': 'application/grpc',
-            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-            'content-length': '0',
-          },
-        },
-      };
+      return StatusResponseFactory.updateResetPasswordResponse(null, "grpcClient")
     }
   }
 
@@ -435,33 +378,11 @@ export class GrpcClient {
       return this.authentication?.updateUIPassword(request, this.getAuthHeader()).then((response) => {
         return response.getToken()?.toObject();
       }).catch((err) => {
-        return {
-          code: 'Update password via UI error',
-          message: `${err}`,
-          source: 'None',
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-        };
+        return StatusResponseFactory.updatePasswordResponse(err, "grpcClient")
       });
     }
     else {
-      return {
-        code: 'Update password error',
-        message: 'Password does not match confirmation',
-        source: 'None',
-        metadata: {
-          headers: {
-            'content-type': 'application/grpc',
-            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-            'content-length': '0',
-          },
-        },
-      };
+      return StatusResponseFactory.updatePasswordResponse(null, "grpcClient")
     }
   }
 
@@ -506,18 +427,7 @@ export class GrpcClient {
           .map((chain) => blockchain_to_grpc_blockchain(chain));
       })
       .catch((err) => {
-        return {
-          code: 'Blockchain error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.getBlockchainsResponse(err, "grpcClient")
       });
   }
 
@@ -538,18 +448,7 @@ export class GrpcClient {
         return response.getMetricsList().map((item) => item.toObject());
       })
       .catch((err) => {
-        return {
-          code: 'Get metrics error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.getDashboardMetricsResponse(err, "grpcClient")
       });
   }
 
@@ -560,12 +459,11 @@ export class GrpcClient {
     org_id?: string,
     token?: string,
   ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
-    let oid = process.env.NEXT_PUBLIC_ORG_ID || '';
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
     request.setMeta(request_meta);
-    request.setOrgId(oid);
+    request.setOrgId(org_id || "");
 
     return this.host
       ?.get(request, this.getAuthHeader())
@@ -573,20 +471,7 @@ export class GrpcClient {
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
-        console.error(`error on get hosts: ${err}`);
-        return {
-          code: 'Unknown',
-          source: '',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-            source: 'None',
-          },
-        };
+        return StatusResponseFactory.getHostsResponse(err, "grpcClient")
       });
   }
 
@@ -604,18 +489,7 @@ export class GrpcClient {
       ?.create(request, this.getAuthHeader())
       .then((response) => response.getMeta()?.toObject())
       .catch((err) => {
-        return {
-          code: 'Create host error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.createHostResponse(err, "grpcClient")
       });
   }
 
@@ -658,18 +532,7 @@ export class GrpcClient {
         return response.getHostProvisionsList().map((hp) => hp.toObject());
       })
       .catch((err) => {
-        return {
-          code: 'Get host provisions error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.getHostProvisionResponse(err, "grpcClient")
       });
   }
 
@@ -689,18 +552,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return {
-          code: 'Create host provision error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.createHostProvisionResponse(err, "grpcClient")
       });
   }
 
@@ -722,18 +574,7 @@ export class GrpcClient {
         return response.getNodesList().map((node) => node_to_grpc_node(node));
       })
       .catch((err) => {
-        return {
-          code: 'Get nodes error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.listNodesResponse(err, "grpcClient")
       });
   }
 
@@ -753,18 +594,7 @@ export class GrpcClient {
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
-        return {
-          code: 'Get node error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.getNodeResponse(err, "grpcClient")
       });
   }
 
@@ -774,9 +604,6 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    node.setName(
-      uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }),
-    );
     node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
@@ -791,18 +618,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return {
-          code: 'Create node error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.createNodeResponse(err, "grpcClient")
       });
   }
 
@@ -832,18 +648,7 @@ export class GrpcClient {
         return response.getOrganizationsList().map((item) => item.toObject());
       })
       .catch((err) => {
-        return {
-          code: 'Get organizations error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.getOrganizationsResponse(err, "grpcClient")
       });
   }
 
@@ -911,18 +716,7 @@ export class GrpcClient {
     return this.user?.create(request, null).then((response) => {
       return response.getMeta()?.toObject();
     }).catch((err) => {
-      return {
-        code: 'Create user error',
-        message: `${err}`,
-        metadata: {
-          headers: {
-            'content-type': 'application/grpc',
-            date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-            'content-length': '0',
-          },
-        },
-        source: 'None',
-      };
+      return StatusResponseFactory.createUserResponse(err, "grpcClient")
     });
   }
 
@@ -1004,18 +798,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return {
-          code: 'Start node error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.execStartNodeResponse(err, "grpcClient")
       });
   }
 
@@ -1041,18 +824,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return {
-          code: 'Start node error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.execStopNodeResponse(err, "grpcClient")
       });
   }
 
@@ -1117,18 +889,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return {
-          code: 'Restart host error',
-          message: `${err}`,
-          metadata: {
-            headers: {
-              'content-type': 'application/grpc',
-              date: 'Fri, 26 Aug 2022 17:55:33 GMT',
-              'content-length': '0',
-            },
-          },
-          source: 'None',
-        };
+        return StatusResponseFactory.execRestartHostResponse(err, "grpcClient")
       });
   }
 
