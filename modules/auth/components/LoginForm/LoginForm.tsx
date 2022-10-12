@@ -34,13 +34,11 @@ export function LoginForm() {
     setActiveType(type);
   };
 
-  // for signin use the hardcoded email in stub client: user@test.com
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
     setLoginError(undefined);
     setIsLoading(true);
 
     const response = await apiClient.login(email, password);
-
     if (isLoginSuccess(response)) {
       saveUser({
         accessToken: response.value,
@@ -57,7 +55,7 @@ export function LoginForm() {
       }, 1000);
     } else {
       setIsLoading(false);
-      setLoginError(response?.message);
+      setLoginError('Invalid Credentials');
     }
   });
   return (

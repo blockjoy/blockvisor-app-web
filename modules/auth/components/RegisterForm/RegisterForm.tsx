@@ -13,6 +13,7 @@ import Router from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { RegistrationStatus } from '../types';
+import { Routes } from '@modules/auth/utils/routes';
 
 type RegisterForm = {
   first_name: string;
@@ -34,24 +35,20 @@ export function RegisterForm() {
   };
 
   const onSubmit = handleSubmit(
-    async ({ email, password, confirmPassword }) => {
+    async ({ email, password, confirmPassword, first_name, last_name }) => {
       setIsLoading(true);
       const response = await apiClient.createUser({
-        first_name: '',
-        last_name: '',
+        first_name,
+        last_name,
         email,
         password,
         password_confirmation: confirmPassword,
       });
 
-      console.log('signup', response);
-
-      // simulate async req
-      // setTimeout(() => {
       if (isResponeMetaObject(response)) {
         if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
           setIsLoading(false);
-          Router.push('/dashboard');
+          Router.push(Routes.verify);
         } else {
           setIsLoading(false);
           setRegisterError('something went wrong');
@@ -60,7 +57,6 @@ export function RegisterForm() {
         setIsLoading(false);
         setRegisterError(response?.message);
       }
-      // }, 1000);
     },
   );
   return (
