@@ -33,7 +33,7 @@ export const useNodeAdd = (): Hook => {
   const loadLookups = async () => {
     setIsLoading(true);
 
-    const hosts: any = await apiClient.getHosts();
+    const hosts: any = await apiClient.getHosts(defaultOrganization?.id || '');
     const mappedHosts = hosts?.map((host: any) => ({
       value: host.id,
       label: host.name,
@@ -63,7 +63,6 @@ export const useNodeAdd = (): Hook => {
 
     const node = new Node();
 
-    // TODO: Org ID needs be set here
     let org_id = defaultOrganization?.id || '';
     let blockchain_id = params.blockchain;
 
