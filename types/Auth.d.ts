@@ -1,4 +1,8 @@
 type User = {
   accessToken: string;
-  defaultOrganization?: string;
+  verified?: boolean;
+  defaultOrganization?: {
+    name?: string;
+    id?: string;
+  };
 };

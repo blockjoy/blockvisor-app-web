@@ -6,3 +6,4 @@ export * from './RegisterForm/RegisterForm';
 export * from './ForgotPasswordForm/ForgotPasswordForm';
 export * from './NewPasswordForm/NewPasswordForm';
 export * from './PrivateRoute/PrivateRoute';
+export * from './PublicRoute/PublicRoute';

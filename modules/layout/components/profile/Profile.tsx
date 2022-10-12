@@ -1,4 +1,4 @@
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 import { Drawer, DrawerAction, DrawerHeader } from '..';
@@ -9,9 +9,11 @@ import { Button } from '@shared/components';
 import { styles } from './Profile.styles';
 import { deleteUser } from '@shared/utils/browserStorage';
 import { authAtoms } from '@modules/auth';
+import { useRouter } from 'next/router';
 
 export default () => {
-  const layout = useRecoilValue(layoutState);
+  const router = useRouter();
+  const [layout, setLayout] = useRecoilState(layoutState);
   const [theme, setTheme] = useRecoilState(themeState);
   const [, setUser] = useRecoilState(authAtoms.user);
 
@@ -21,7 +23,9 @@ export default () => {
 
   const handleLogout = () => {
     setUser(null);
+    setLayout(undefined);
     deleteUser();
+    router.reload();
   };
 
   return (
