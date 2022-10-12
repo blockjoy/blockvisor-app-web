@@ -1,6 +1,5 @@
-import { isUserLoggedIn, Routes } from '@modules/auth';
+import { Routes, useAuth } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
-import { getUser } from '@shared/utils/browserStorage';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 
@@ -10,21 +9,17 @@ interface Props {
 
 export function PublicRoute({ children }: Props) {
   const router = useRouter();
-
-  const authCheck = (user: User | null) => {
-    if (isUserLoggedIn(user)) {
-      router.push(Routes.dashboard);
-      return;
-    }
-  };
+  const { isLoggedIn, status } = useAuth();
 
   useEffect(() => {
-    authCheck(getUser());
-  }, []);
+    if (status === 'finished' && isLoggedIn) {
+      router.push(Routes.dashboard);
+    }
+  }, [status]);
 
-  if (!isUserLoggedIn(getUser())) {
-    return <>{children}</>;
+  if (status === 'checking') {
+    return <LoadingSpinner size="page" />;
   }
 
-  return <LoadingSpinner size="page" />;
+  return <>{children}</>;
 }
