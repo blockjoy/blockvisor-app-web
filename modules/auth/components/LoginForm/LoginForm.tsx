@@ -1,3 +1,4 @@
+import { Routes } from '@modules/auth';
 import { authAtoms } from '@modules/auth/store/authAtoms';
 import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
 import { apiClient } from '@modules/client';
@@ -39,10 +40,12 @@ export function LoginForm() {
     setIsLoading(true);
 
     const response = await apiClient.login(email, password);
-    console.log('respo', response);
+
     if (isLoginSuccess(response)) {
       saveUser({
         accessToken: response.value,
+        // for demo purposes only, this will be set later
+        verified: true,
       });
       setAuth({ accessToken: response.value });
       apiClient.setTokenValue(response.value);
@@ -50,7 +53,7 @@ export function LoginForm() {
 
       setTimeout(() => {
         setIsLoading(false);
-        router.push('/dashboard');
+        router.push(Routes.dashboard);
       }, 1000);
     } else {
       setIsLoading(false);

@@ -9,8 +9,10 @@ import { Button } from '@shared/components';
 import { styles } from './Profile.styles';
 import { deleteUser } from '@shared/utils/browserStorage';
 import { authAtoms } from '@modules/auth';
+import { useRouter } from 'next/router';
 
 export default () => {
+  const router = useRouter();
   const [layout, setLayout] = useRecoilState(layoutState);
   const [theme, setTheme] = useRecoilState(themeState);
   const [, setUser] = useRecoilState(authAtoms.user);
@@ -23,6 +25,7 @@ export default () => {
     setUser(null);
     setLayout(undefined);
     deleteUser();
+    router.reload();
   };
 
   return (
