@@ -560,12 +560,11 @@ export class GrpcClient {
     org_id?: string,
     token?: string,
   ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
-    let oid = process.env.NEXT_PUBLIC_ORG_ID || '';
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
     request.setMeta(request_meta);
-    request.setOrgId(oid);
+    request.setOrgId(org_id || "");
 
     return this.host
       ?.get(request, this.getAuthHeader())
