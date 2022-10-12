@@ -1,6 +1,5 @@
-import { isUserLoggedIn, isUserVerified, Routes } from '@modules/auth';
+import { Routes, useAuth } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
-import { getUser } from '@shared/utils/browserStorage';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 
@@ -10,25 +9,25 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
+  const { isLoggedIn, isVerified, status } = useAuth();
 
-  const authCheck = (user: User | null) => {
-    if (!isUserLoggedIn(user)) {
+  useEffect(() => {
+    if (status === 'finished' && !isLoggedIn) {
       router.push(Routes.login);
       return;
     }
-    if (!isUserVerified(user)) {
-      router.replace(Routes.verify, undefined, { shallow: true });
+
+    if (status === 'finished' && !isVerified) {
+      router.push(Routes.verify);
       return;
     }
-  };
+  }, [router.pathname, status]);
 
-  useEffect(() => {
-    authCheck(getUser());
-  }, [router.pathname]);
-
-  if (isUserVerified(getUser())) {
-    return <>{children}</>;
+  if (status !== 'finished') {
+    return <LoadingSpinner size="page" />;
   }
 
-  return <LoadingSpinner size="page" />;
+  if (isVerified && isLoggedIn) {
+    return <>{children}</>;
+  }
 }
