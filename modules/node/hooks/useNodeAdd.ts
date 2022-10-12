@@ -29,7 +29,7 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(true);
 
     const hosts: any = await apiClient.getHosts();
-    const mappedHosts = hosts.map((host: any) => ({
+    const mappedHosts = hosts?.map((host: any) => ({
       value: host.id,
       label: host.name,
     }));
