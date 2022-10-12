@@ -5,7 +5,7 @@ const selectedOrganization = atom<ClientOrganization | null>({
   default: null,
 });
 
-const defaultOrganization = atom<string | null>({
+const defaultOrganization = atom<{ name: string; id: string } | null>({
   key: 'organization.default',
   default: null,
 });

@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { appState } from '@modules/app/store';
 import { Dashboard } from '../components/dashboard/Dashboard';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
@@ -6,6 +6,7 @@ import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
+import { organisationAtoms, useOrganizations } from '@modules/organizations';
 
 interface Hook {
   loadDashboard: () => void;
@@ -13,9 +14,12 @@ interface Hook {
 
 export const useDashboard = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
+  const defaultOrganization = useRecoilValue(
+    organisationAtoms.defaultOrganization,
+  );
 
   const getRecentHosts = async () => {
-    const org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
+    const org_id = defaultOrganization?.id || '';
 
     const hostsResponse: any = await apiClient.getHosts(
       undefined,

@@ -47,11 +47,15 @@ export const useOrganizations = () => {
       const res: any = await apiClient.getOrganizations();
       await delay(env.loadingDuration);
 
-      saveDefaultOrgToStorage(res[0].name);
-      setDefaultOrganization(res[0].name);
+      const { name, id } = res[0];
+      saveDefaultOrgToStorage(name, id);
+      setDefaultOrganization({ name, id });
       return;
     }
-    setDefaultOrganization(defaultOrg);
+    setDefaultOrganization({
+      name: defaultOrg.name ?? '',
+      id: defaultOrg.id ?? '',
+    });
     setIsLoading(false);
   };
 

@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { HostProvision } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { hostsAtoms } from '../store/hostAtoms';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
+import { organisationAtoms } from '@modules/organizations';
 
 export const useHosts = () => {
   const [hostProvisionKeys, setHostProvisionKeys] = useRecoilState(
@@ -16,6 +17,10 @@ export const useHosts = () => {
   const [loadingHost, setHostLoading] = useRecoilState(hostsAtoms.hostLoading);
   const [loadingHosts, setLoadingHosts] = useRecoilState(
     hostsAtoms.hostsLoading,
+  );
+
+  const defaultOrganization = useRecoilValue(
+    organisationAtoms.defaultOrganization,
   );
 
   const getHosts = async () => {
@@ -82,7 +87,7 @@ export const useHosts = () => {
   };
 
   const createHostProvision = async (callback: (args1: string) => void) => {
-    const orgId = process.env.NEXT_PUBLIC_ORG_ID || '';
+    const orgId = defaultOrganization?.id || '';
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);

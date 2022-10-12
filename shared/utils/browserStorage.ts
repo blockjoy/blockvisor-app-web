@@ -6,11 +6,14 @@ function isUser(value: unknown): value is User {
 
 const isBrowser = typeof window !== 'undefined';
 
-const saveDefaultOrgToStorage = (org: string) => {
+const saveDefaultOrgToStorage = (name: string, id: string) => {
   const user = getUser();
 
-  if (user) {
-    user.defaultOrganization = org;
+  if (user && isBrowser) {
+    user.defaultOrganization = {
+      name,
+      id,
+    };
     saveUser(user);
   }
 };

@@ -1,9 +1,10 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { apiClient } from '@modules/client';
 import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { organisationAtoms } from '@modules/organizations';
 
 type Hook = {
   loadLookups: VoidFunction;
@@ -24,6 +25,10 @@ export const useNodeAdd = (): Hook => {
   const [blockchainList, setBlockchainList] = useState([]);
 
   const [hostList, setHostList] = useState([]);
+
+  const defaultOrganization = useRecoilValue(
+    organisationAtoms.defaultOrganization,
+  );
 
   const loadLookups = async () => {
     setIsLoading(true);
@@ -59,7 +64,7 @@ export const useNodeAdd = (): Hook => {
     const node = new Node();
 
     // TODO: Org ID needs be set here
-    let org_id = process.env.NEXT_PUBLIC_ORG_ID || '';
+    let org_id = defaultOrganization?.id || '';
     let blockchain_id = params.blockchain;
 
     node.setBlockchainId(blockchain_id);

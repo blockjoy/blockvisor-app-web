@@ -16,11 +16,7 @@ type Props = {
 export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
   const [isOpen, setOpen] = useState(false);
   const setLayout = useSetRecoilState(layoutState);
-  const { getDefaultOrganization, defaultOrganization } = useOrganizations();
-
-  useEffect(() => {
-    getDefaultOrganization();
-  }, []);
+  const { defaultOrganization } = useOrganizations();
 
   return (
     <div css={styles.base}>
@@ -32,7 +28,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
         </SizedIcon>
       </button>
       <div css={[styles.menu, isOpen && styles.isOpen]}>
-        <p>{defaultOrganization}</p>
+        <p>{defaultOrganization?.name}</p>
         <br />
         <Button
           display="block"

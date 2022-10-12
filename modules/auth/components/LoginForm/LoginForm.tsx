@@ -2,6 +2,7 @@ import { Routes } from '@modules/auth';
 import { authAtoms } from '@modules/auth/store/authAtoms';
 import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
 import { apiClient } from '@modules/client';
+import { useOrganizations } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
 import { saveUser } from '@shared/utils/browserStorage';
 import { isValidEmail } from '@shared/utils/validation';
@@ -28,6 +29,7 @@ export function LoginForm() {
   const [, setAuth] = useRecoilState(authAtoms.user);
   const [loginError, setLoginError] = useState<string | undefined>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+  const { getDefaultOrganization } = useOrganizations();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -48,7 +50,7 @@ export function LoginForm() {
       setAuth({ accessToken: response.value });
       apiClient.setTokenValue(response.value);
       // simulate async req
-
+      getDefaultOrganization();
       setTimeout(() => {
         setIsLoading(false);
         router.push(Routes.dashboard);
