@@ -26,7 +26,11 @@ export const useHosts = () => {
   const getHosts = async () => {
     setLoadingHosts(true);
     // revisit this once types are consolidated
-    const hosts: any = await apiClient.getHosts();
+    const hosts: any = await apiClient.getHosts(
+      undefined,
+      defaultOrganization?.id,
+      undefined,
+    );
 
     // load provisioning hosts
     if (localStorage.getItem('hostProvisionKeys')) {
@@ -76,7 +80,11 @@ export const useHosts = () => {
 
     const uuid = id!;
     // revisit this once types are consolidated
-    const hosts: any = await apiClient.getHosts(uuid);
+    const hosts: any = await apiClient.getHosts(
+      undefined,
+      defaultOrganization?.id,
+      undefined,
+    );
 
     // temp fix to get host from full list
     const host = hosts.find((h: any) => h.id === id);

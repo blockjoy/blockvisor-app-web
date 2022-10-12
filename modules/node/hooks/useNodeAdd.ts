@@ -33,7 +33,12 @@ export const useNodeAdd = (): Hook => {
   const loadLookups = async () => {
     setIsLoading(true);
 
-    const hosts: any = await apiClient.getHosts(defaultOrganization?.id || '');
+    const hosts: any = await apiClient.getHosts(
+      undefined,
+      defaultOrganization?.id || '',
+      undefined,
+    );
+
     const mappedHosts = hosts?.map((host: any) => ({
       value: host.id,
       label: host.name,
