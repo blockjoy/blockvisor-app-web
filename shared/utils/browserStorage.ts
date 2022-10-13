@@ -1,4 +1,5 @@
 export const AUTH_KEY = 'identity';
+export const HOST_PROVISIONS_KEY = 'hostProvisionKeys';
 
 function isUser(value: unknown): value is User {
   return (value as User).accessToken !== undefined;
@@ -49,6 +50,7 @@ const saveUser = (value: User): void => {
 const deleteUser = () => {
   if (isBrowser) {
     localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(HOST_PROVISIONS_KEY);
   }
 };
 

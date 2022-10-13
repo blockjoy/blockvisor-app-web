@@ -13,7 +13,6 @@ export const useAuth = () => {
     deleteUser();
     //setUser(null);
     setStauts('finished');
-    localStorage.removeItem('hostProvisionKeys');
   };
 
   const checkUser = () => {
