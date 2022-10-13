@@ -26,7 +26,6 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    console.log('checking');
     checkUser();
   }, []);
 
