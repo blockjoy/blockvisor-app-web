@@ -43,8 +43,14 @@ export const useOrganizations = () => {
     setIsLoading(true);
 
     const defaultOrg = getDefaultOrgFromStorage();
+
+    console.log('defaultOrg', defaultOrg);
+
     if (!defaultOrg) {
       const res: any = await apiClient.getOrganizations();
+
+      console.log('organizations', res);
+
       await delay(env.loadingDuration);
 
       const { name, id } = res[0];

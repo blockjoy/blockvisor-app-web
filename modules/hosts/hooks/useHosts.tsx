@@ -26,11 +26,16 @@ export const useHosts = () => {
   const getHosts = async () => {
     setLoadingHosts(true);
     // revisit this once types are consolidated
+
+    console.log('defaultOrganization', defaultOrganization?.id);
+
     const hosts: any = await apiClient.getHosts(
       undefined,
-      defaultOrganization?.id,
+      defaultOrganization?.id || '',
       undefined,
     );
+
+    console.log('hosts', hosts);
 
     // load provisioning hosts
     if (localStorage.getItem('hostProvisionKeys')) {
@@ -41,7 +46,7 @@ export const useHosts = () => {
       for (let key of hostProvisionKeys) {
         const response: any = await apiClient.getHostProvision(key);
         const hostProvisionRecord = response[0];
-        if (!hostProvisionRecord.claimedAt) {
+        if (!hostProvisionRecord?.claimedAt) {
           hosts.unshift({
             isHostProvision: true,
             name: 'Host Provisioning',
