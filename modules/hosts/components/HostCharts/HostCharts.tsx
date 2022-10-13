@@ -74,15 +74,17 @@ export const HostCharts = () => {
             series={chart.series}
           />
           <div>
-            <label css={styles.label}>{chart.name}</label>
-            <span css={styles.value} style={{ color: chart.color }}>
-              {chart.value}
-              {chart.suffix}
-            </span>
-            <span css={styles.total}>
-              {chart.total}
-              {chart.suffix}
-            </span>
+            <div>
+              <label css={styles.label}>{chart.name}</label>
+              <div css={styles.value} style={{ color: chart.color }}>
+                {chart.value}
+                {chart.suffix}
+              </div>
+              <div css={styles.total}>
+                {chart.total}
+                {chart.suffix}
+              </div>
+            </div>
           </div>
         </div>
       ))}
