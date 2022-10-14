@@ -1,7 +1,11 @@
 import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
 import {
   LoginUserRequest,
-  RefreshTokenResponse, ResetPasswordRequest, ResetPasswordResponse, UpdatePasswordRequest, UpdateUIPasswordRequest,
+  RefreshTokenResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+  UpdatePasswordRequest,
+  UpdateUIPasswordRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
   ApiToken,
@@ -31,9 +35,7 @@ import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_service
 import { CreateBillResponse } from '@blockjoy/blockjoy-grpc/dist/out/billing_service_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
-import {
-  DashboardMetricsRequest,
-} from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
+import { DashboardMetricsRequest } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostRequest,
   DeleteHostResponse,
@@ -60,6 +62,7 @@ import {
   CreateUserRequest,
   GetConfigurationResponse,
   GetUserResponse,
+  UpdateUserResponse,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
@@ -72,8 +75,9 @@ import { ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockch
 import { CommandServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Command_serviceServiceClientPb';
 import {
   StatusResponse,
-  StatusResponseFactory
+  StatusResponseFactory,
 } from '@modules/client/status_response';
+import Status = ResponseMeta.Status;
 
 export type UIUser = {
   first_name: string;
@@ -214,11 +218,13 @@ export class GrpcClient {
   }
 
   getApiToken() {
+    if (!window.localStorage.getItem('identity')) return;
+
     let api_token = new ApiToken();
     api_token.setValue(this.token);
 
     this.token = JSON.parse(
-      window.localStorage.getItem('identity') || '',
+      window.localStorage.getItem('identity') || '{}',
     ).accessToken;
     return Buffer.from(this.token).toString('base64');
   }
@@ -318,7 +324,7 @@ export class GrpcClient {
         return response.getToken()?.toObject();
       })
       .catch((err) => {
-        return StatusResponseFactory.loginResponse(err, "grpcClient")
+        return StatusResponseFactory.loginResponse(err, 'grpcClient');
       });
   }
 
@@ -329,7 +335,9 @@ export class GrpcClient {
     return response.getToken()?.toObject();
   }
 
-  async resetPassword(email: string): Promise<ResetPasswordResponse.AsObject | StatusResponse | undefined> {
+  async resetPassword(
+    email: string,
+  ): Promise<ResetPasswordResponse.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -337,14 +345,20 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setEmail(email);
 
-    return this.authentication?.resetPassword(request, this.getAuthHeader()).then((response) => {
-      return response.toObject();
-    }).catch((err) => {
-      return StatusResponseFactory.resetPasswordResponse(err, "grpcClient")
-    });
+    return this.authentication
+      ?.resetPassword(request, this.getAuthHeader())
+      .then((response) => {
+        return response.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.resetPasswordResponse(err, 'grpcClient');
+      });
   }
 
-  async updateResetPassword(pwd: string, pwd_confirmation: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+  async updateResetPassword(
+    pwd: string,
+    pwd_confirmation: string,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
     if (pwd === pwd_confirmation) {
       let request_meta = new RequestMeta();
       request_meta.setId(this.getDummyUuid());
@@ -353,18 +367,28 @@ export class GrpcClient {
       request.setMeta(request_meta);
       request.setPassword(pwd);
 
-      return this.authentication?.updatePassword(request, this.getAuthHeader()).then((response) => {
-        return response.getToken()?.toObject();
-      }).catch((err) => {
-        return StatusResponseFactory.updateResetPasswordResponse(err, "grpcClient")
-      });
-    }
-    else {
-      return StatusResponseFactory.updateResetPasswordResponse(null, "grpcClient")
+      return this.authentication
+        ?.updatePassword(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getToken()?.toObject();
+        })
+        .catch((err) => {
+          return StatusResponseFactory.updateResetPasswordResponse(
+            err,
+            'grpcClient',
+          );
+        });
+    } else {
+      return StatusResponseFactory.updateResetPasswordResponse(
+        null,
+        'grpcClient',
+      );
     }
   }
 
-  async updatePassword(pwd: NewPassword): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+  async updatePassword(
+    pwd: NewPassword,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
     if (pwd.new_pwd === pwd.new_pwd_confirmation) {
       let request_meta = new RequestMeta();
       request_meta.setId(this.getDummyUuid());
@@ -375,14 +399,19 @@ export class GrpcClient {
       request.setNewPwd(pwd.new_pwd);
       request.setNewPwdConfirmation(pwd.new_pwd_confirmation);
 
-      return this.authentication?.updateUIPassword(request, this.getAuthHeader()).then((response) => {
-        return response.getToken()?.toObject();
-      }).catch((err) => {
-        return StatusResponseFactory.updatePasswordResponse(err, "grpcClient")
-      });
-    }
-    else {
-      return StatusResponseFactory.updatePasswordResponse(null, "grpcClient")
+      return this.authentication
+        ?.updateUIPassword(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getToken()?.toObject();
+        })
+        .catch((err) => {
+          return StatusResponseFactory.updatePasswordResponse(
+            err,
+            'grpcClient',
+          );
+        });
+    } else {
+      return StatusResponseFactory.updatePasswordResponse(null, 'grpcClient');
     }
   }
 
@@ -427,7 +456,7 @@ export class GrpcClient {
           .map((chain) => blockchain_to_grpc_blockchain(chain));
       })
       .catch((err) => {
-        return StatusResponseFactory.getBlockchainsResponse(err, "grpcClient")
+        return StatusResponseFactory.getBlockchainsResponse(err, 'grpcClient');
       });
   }
 
@@ -448,7 +477,10 @@ export class GrpcClient {
         return response.getMetricsList().map((item) => item.toObject());
       })
       .catch((err) => {
-        return StatusResponseFactory.getDashboardMetricsResponse(err, "grpcClient")
+        return StatusResponseFactory.getDashboardMetricsResponse(
+          err,
+          'grpcClient',
+        );
       });
   }
 
@@ -463,7 +495,7 @@ export class GrpcClient {
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
     request.setMeta(request_meta);
-    request.setOrgId(org_id || "");
+    request.setOrgId(org_id || '');
 
     return this.host
       ?.get(request, this.getAuthHeader())
@@ -471,7 +503,7 @@ export class GrpcClient {
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
-        return StatusResponseFactory.getHostsResponse(err, "grpcClient")
+        return StatusResponseFactory.getHostsResponse(err, 'grpcClient');
       });
   }
 
@@ -489,7 +521,7 @@ export class GrpcClient {
       ?.create(request, this.getAuthHeader())
       .then((response) => response.getMeta()?.toObject())
       .catch((err) => {
-        return StatusResponseFactory.createHostResponse(err, "grpcClient")
+        return StatusResponseFactory.createHostResponse(err, 'grpcClient');
       });
   }
 
@@ -532,7 +564,10 @@ export class GrpcClient {
         return response.getHostProvisionsList().map((hp) => hp.toObject());
       })
       .catch((err) => {
-        return StatusResponseFactory.getHostProvisionResponse(err, "grpcClient")
+        return StatusResponseFactory.getHostProvisionResponse(
+          err,
+          'grpcClient',
+        );
       });
   }
 
@@ -552,7 +587,10 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return StatusResponseFactory.createHostProvisionResponse(err, "grpcClient")
+        return StatusResponseFactory.createHostProvisionResponse(
+          err,
+          'grpcClient',
+        );
       });
   }
 
@@ -574,7 +612,7 @@ export class GrpcClient {
         return response.getNodesList().map((node) => node_to_grpc_node(node));
       })
       .catch((err) => {
-        return StatusResponseFactory.listNodesResponse(err, "grpcClient")
+        return StatusResponseFactory.listNodesResponse(err, 'grpcClient');
       });
   }
 
@@ -594,7 +632,7 @@ export class GrpcClient {
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
-        return StatusResponseFactory.getNodeResponse(err, "grpcClient")
+        return StatusResponseFactory.getNodeResponse(err, 'grpcClient');
       });
   }
 
@@ -618,7 +656,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return StatusResponseFactory.createNodeResponse(err, "grpcClient")
+        return StatusResponseFactory.createNodeResponse(err, 'grpcClient');
       });
   }
 
@@ -648,7 +686,10 @@ export class GrpcClient {
         return response.getOrganizationsList().map((item) => item.toObject());
       })
       .catch((err) => {
-        return StatusResponseFactory.getOrganizationsResponse(err, "grpcClient")
+        return StatusResponseFactory.getOrganizationsResponse(
+          err,
+          'grpcClient',
+        );
       });
   }
 
@@ -713,11 +754,20 @@ export class GrpcClient {
     request.setPasswordConfirmation(ui_user.password_confirmation);
     request.setUser(user);
 
-    return this.user?.create(request, null).then((response) => {
-      return response.getMeta()?.toObject();
-    }).catch((err) => {
-      return StatusResponseFactory.createUserResponse(err, "grpcClient")
-    });
+    return this.user
+      ?.create(request, null)
+      .then((response) => {
+        return response.getMeta()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.createUserResponse(err, 'grpcClient');
+      });
+  }
+
+  async updateUser(
+    user: User,
+  ): Promise<User.AsObject | StatusResponse | undefined> {
+    return user.toObject();
   }
 
   async upsertConfiguration(
@@ -798,7 +848,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return StatusResponseFactory.execStartNodeResponse(err, "grpcClient")
+        return StatusResponseFactory.execStartNodeResponse(err, 'grpcClient');
       });
   }
 
@@ -824,7 +874,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return StatusResponseFactory.execStopNodeResponse(err, "grpcClient")
+        return StatusResponseFactory.execStopNodeResponse(err, 'grpcClient');
       });
   }
 
@@ -889,7 +939,7 @@ export class GrpcClient {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return StatusResponseFactory.execRestartHostResponse(err, "grpcClient")
+        return StatusResponseFactory.execRestartHostResponse(err, 'grpcClient');
       });
   }
 
