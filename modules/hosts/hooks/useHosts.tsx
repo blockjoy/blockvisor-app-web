@@ -25,8 +25,6 @@ export const useHosts = () => {
     setLoadingHosts(true);
     // revisit this once types are consolidated
 
-    console.log('defaultOrganization', defaultOrganization?.id);
-
     const hosts: any = await apiClient.getHosts(
       undefined,
       user?.defaultOrganization?.id,
