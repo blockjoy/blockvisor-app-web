@@ -1,7 +1,11 @@
 import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
 import {
   LoginUserRequest,
-  RefreshTokenResponse, ResetPasswordRequest, ResetPasswordResponse, UpdatePasswordRequest, UpdateUIPasswordRequest,
+  RefreshTokenResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+  UpdatePasswordRequest,
+  UpdateUIPasswordRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
   ApiToken,
@@ -31,9 +35,7 @@ import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_service
 import { CreateBillResponse } from '@blockjoy/blockjoy-grpc/dist/out/billing_service_pb';
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
-import {
-  DashboardMetricsRequest,
-} from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
+import { DashboardMetricsRequest } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
   CreateHostRequest,
   DeleteHostResponse,
@@ -60,20 +62,16 @@ import {
   CreateUserRequest,
   GetConfigurationResponse,
   GetUserResponse,
+  UpdateUserResponse,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
-import {
-  CommandRequest,
-  CommandResponse,
-} from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
+import { CommandRequest, CommandResponse } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
 import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
 import { ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
 import { CommandServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Command_serviceServiceClientPb';
-import {
-  StatusResponse,
-  StatusResponseFactory
-} from '@modules/client/status_response';
+import { StatusResponse, StatusResponseFactory } from '@modules/client/status_response';
+import Status = ResponseMeta.Status;
 
 export type UIUser = {
   first_name: string;
@@ -718,6 +716,10 @@ export class GrpcClient {
     }).catch((err) => {
       return StatusResponseFactory.createUserResponse(err, "grpcClient")
     });
+  }
+
+  async updateUser(user: User): Promise<User.AsObject | StatusResponse | undefined> {
+    return user.toObject();
   }
 
   async upsertConfiguration(
