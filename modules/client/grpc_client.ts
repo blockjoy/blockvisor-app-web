@@ -62,6 +62,7 @@ import {
   CreateUserRequest,
   GetConfigurationResponse,
   GetUserResponse,
+  UpdateUserResponse,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
@@ -76,6 +77,7 @@ import {
   StatusResponse,
   StatusResponseFactory,
 } from '@modules/client/status_response';
+import Status = ResponseMeta.Status;
 
 export type UIUser = {
   first_name: string;
@@ -760,6 +762,12 @@ export class GrpcClient {
       .catch((err) => {
         return StatusResponseFactory.createUserResponse(err, 'grpcClient');
       });
+  }
+
+  async updateUser(
+    user: User,
+  ): Promise<User.AsObject | StatusResponse | undefined> {
+    return user.toObject();
   }
 
   async upsertConfiguration(
