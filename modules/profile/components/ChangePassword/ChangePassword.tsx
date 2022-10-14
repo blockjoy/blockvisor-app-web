@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Button, Input } from '@shared/components';
-import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { PasswordToggle } from '@modules/auth';
+import { isSuccess, PasswordToggle } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
+import { styles } from './ChangePassword.styles';
+import { apiClient } from '@modules/client';
+import { updateAccessToken } from '@shared/utils/browserStorage';
+import { toast } from 'react-toastify';
 
 type ChangePasswordForm = {
   currentPassword: string;
-  password: string;
+  newPassword: string;
   confirmPassword: string;
 };
 
@@ -29,7 +32,24 @@ export function ChangePassword() {
   };
 
   const onSubmit = handleSubmit(
-    async ({ currentPassword, password, confirmPassword }) => {},
+    async ({ currentPassword, newPassword, confirmPassword }) => {
+      setIsLoading(true);
+      const res = await apiClient.updatePassword({
+        old_pwd: currentPassword,
+        new_pwd: newPassword,
+        new_pwd_confirmation: confirmPassword,
+      });
+
+      if (isSuccess(res)) {
+        updateAccessToken(res.value);
+        setIsLoading(false);
+        form.reset();
+        toast.success('Password changed');
+      } else {
+        setChangePasswordError(res?.message);
+        toast.error('Something went wrong');
+      }
+    },
   );
   return (
     <FormProvider {...form}>
@@ -85,14 +105,14 @@ export function ChangePassword() {
             <Input
               label="Confirm new password"
               disabled={loading}
-              name="confirmNewPassword"
+              name="confirmPassword"
               placeholder="Confirm Password"
               inputSize="large"
               type={activeType}
               validationOptions={{
                 required: 'This is a mandatory field',
                 validate: (value) => {
-                  if (watch('password') != value) {
+                  if (watch('newPassword') != value) {
                     return 'Passwords do not match';
                   }
                 },
@@ -108,6 +128,7 @@ export function ChangePassword() {
         </ul>
         <Button
           loading={loading}
+          customCss={[styles.loadingButton]}
           disabled={loading}
           size="medium"
           display="inline"

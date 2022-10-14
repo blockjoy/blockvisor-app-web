@@ -1,6 +1,6 @@
 import { Routes } from '@modules/auth';
 import { authAtoms } from '@modules/auth/store/authAtoms';
-import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
+import { isSuccess } from '@modules/auth/utils/authTypeGuards';
 import { apiClient } from '@modules/client';
 import { useOrganizations } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
@@ -41,7 +41,7 @@ export function LoginForm() {
     setIsLoading(true);
 
     const response = await apiClient.login(email, password);
-    if (isLoginSuccess(response)) {
+    if (isSuccess(response)) {
       saveUser({
         accessToken: response.value,
         // for demo purposes only, this will be set later

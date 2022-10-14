@@ -44,8 +44,6 @@ export const useOrganizations = () => {
 
     const defaultOrg = getDefaultOrgFromStorage();
 
-    console.log('defaultOrg', defaultOrg);
-
     if (!defaultOrg) {
       const res: any = await apiClient.getOrganizations();
 
