@@ -35,3 +35,4 @@ export * from './NodeTypePicker/NodeTypePicker';
 export * from './Pagination/Pagination';
 export * from './CodeBlock/CodeBlock';
 export * from './Dropdown/Dropdown';
+export * from './Tabs/Tabs';
