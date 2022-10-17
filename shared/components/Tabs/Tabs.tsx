@@ -4,16 +4,12 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './Tabs.styles';
 
 type Props = {
+  activeTab: string;
   tabItems: Array<{ value: string; label: string; component: ReactNode }>;
+  onTabClick: (tabValue: string) => void;
 };
 
-export function Tabs({ tabItems }: Props) {
-  const [activeTab, setActiveTab] = useState(() => tabItems[0].value);
-
-  const handleClick = (tabValue: string) => {
-    setActiveTab(tabValue);
-  };
-
+export function Tabs({ tabItems, activeTab, onTabClick }: Props) {
   return (
     <>
       <nav css={[styles.tabs]}>
@@ -27,7 +23,7 @@ export function Tabs({ tabItems }: Props) {
                   typo.medium,
                   activeTab === item.value && styles.activeButton,
                 ]}
-                onClick={() => handleClick(item.value)}
+                onClick={() => onTabClick(item.value)}
               >
                 {item.label}
               </button>
