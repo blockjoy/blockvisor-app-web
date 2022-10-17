@@ -1,6 +1,11 @@
+import { User } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { apiClient } from '@modules/client';
+import { isStatusResponse } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
+import { delay } from '@shared/utils/delay';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { containers } from 'styles/containers.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -8,17 +13,33 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './EditUserForm.styles';
 
-type LoginForm = {
+type EditUserForm = {
   firstName: string;
   lastName: string;
 };
 
 export function EditUser() {
-  const form = useForm<LoginForm>();
+  const form = useForm<EditUserForm>();
   const [loading, setIsLoading] = useState(false);
-  const [loginError, setLoginError] = useState<string | undefined>();
+  const [updateError, setUpdateError] = useState<string | undefined>();
 
-  const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {});
+  const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {
+    setIsLoading(true);
+
+    const user = new User();
+    user.setFirstName(firstName);
+    user.setLastName(lastName);
+    const res = await apiClient.updateUser(user);
+
+    await delay(1000);
+    if (isStatusResponse(res)) {
+      setIsLoading(false);
+      setUpdateError(res.message);
+    } else {
+      setIsLoading(false);
+      toast.success('Profile updated');
+    }
+  });
 
   return (
     <FormProvider {...form}>
@@ -51,6 +72,7 @@ export function EditUser() {
         </ul>
         <Button
           loading={loading}
+          customCss={[styles.loadingButton]}
           disabled={loading}
           size="medium"
           display="inline"
@@ -59,9 +81,9 @@ export function EditUser() {
         >
           Save
         </Button>
-        {loginError && (
+        {updateError && (
           <p css={[typo.smaller, colors.warning, spacing.top.small]}>
-            {loginError}
+            {updateError}
           </p>
         )}
       </form>
