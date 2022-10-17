@@ -61,7 +61,7 @@ import {
 import {
   CreateUserRequest,
   GetConfigurationResponse,
-  GetUserResponse,
+  GetUserResponse, UpdateUserRequest,
   UpdateUserResponse,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
@@ -767,7 +767,18 @@ export class GrpcClient {
   async updateUser(
     user: User,
   ): Promise<User.AsObject | StatusResponse | undefined> {
-    return user.toObject();
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new UpdateUserRequest();
+    request.setMeta(request_meta);
+    request.setUser(user);
+
+    return this.user?.update(request, this.getAuthHeader()).then((response) => {
+      return response.getUser()?.toObject();
+    }).catch((err) => {
+      return StatusResponseFactory.updateUserResponse(err, "grpcClient");
+    });
   }
 
   async upsertConfiguration(
