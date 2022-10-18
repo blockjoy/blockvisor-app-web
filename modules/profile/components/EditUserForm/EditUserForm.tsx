@@ -1,11 +1,14 @@
 import { User } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { authAtoms } from '@modules/auth';
 import { apiClient } from '@modules/client';
 import { isStatusResponse } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
+import { updateUser } from '@shared/utils/browserStorage';
 import { delay } from '@shared/utils/delay';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { containers } from 'styles/containers.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -22,6 +25,12 @@ export function EditUser() {
   const form = useForm<EditUserForm>();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
+  const [auth, setAuth] = useRecoilState(authAtoms.user);
+
+  useEffect(() => {
+    form.setValue('firstName', auth?.firstName ?? '');
+    form.setValue('lastName', auth?.lastName ?? '');
+  }, []);
 
   const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {
     setIsLoading(true);
@@ -29,7 +38,9 @@ export function EditUser() {
     const user = new User();
     user.setFirstName(firstName);
     user.setLastName(lastName);
-    const res = await apiClient.updateUser(user);
+    user.setId(auth?.id ?? '');
+
+    const res: any = await apiClient.updateUser(user);
 
     await delay(1000);
     if (isStatusResponse(res)) {
@@ -37,6 +48,12 @@ export function EditUser() {
       setUpdateError(res.message);
     } else {
       setIsLoading(false);
+      updateUser({
+        id: res?.id,
+        firstName: res?.firstName,
+        lastName: res?.lastName,
+        email: res?.email,
+      });
       toast.success('Profile updated');
     }
   });

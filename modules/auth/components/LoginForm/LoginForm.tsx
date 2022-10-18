@@ -4,7 +4,7 @@ import { isSuccess } from '@modules/auth/utils/authTypeGuards';
 import { apiClient } from '@modules/client';
 import { useOrganizations } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
-import { saveUser } from '@shared/utils/browserStorage';
+import { saveUser, updateUser } from '@shared/utils/browserStorage';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -42,13 +42,27 @@ export function LoginForm() {
 
     const response = await apiClient.login(email, password);
     if (isSuccess(response)) {
+      apiClient.setTokenValue(response.value);
       saveUser({
         accessToken: response.value,
         // for demo purposes only, this will be set later
         verified: true,
       });
-      setAuth({ accessToken: response.value });
-      apiClient.setTokenValue(response.value);
+      const user: any = await apiClient.getUser();
+      updateUser({
+        id: user?.id,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        email: user?.email,
+      });
+      setAuth({
+        accessToken: response.value,
+        id: user?.id,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        email: user?.email,
+      });
+
       // simulate async req
       getDefaultOrganization();
       setTimeout(() => {

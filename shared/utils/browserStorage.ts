@@ -61,6 +61,21 @@ const updateAccessToken = (token: string): void => {
     }
   }
 };
+
+const updateUser = (user: User) => {
+  if (isBrowser) {
+    const item = localStorage.getItem(AUTH_KEY);
+
+    if (item) {
+      const parsed = JSON.parse(item);
+      if (isUser(parsed)) {
+        const updated = { ...parsed, ...user };
+
+        saveUser(updated);
+      }
+    }
+  }
+};
 const deleteUser = () => {
   if (isBrowser) {
     localStorage.removeItem(AUTH_KEY);
@@ -72,6 +87,7 @@ export {
   getUser,
   deleteUser,
   saveUser,
+  updateUser,
   updateAccessToken,
   saveDefaultOrgToStorage,
   getDefaultOrgFromStorage,
