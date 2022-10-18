@@ -23,6 +23,7 @@ export enum StatusResponseCode {
     CreateNode,
     GetOrganizations,
     CreateUser,
+    GetUser,
     UpdateUser,
     ExecStartNode,
     ExecStopNode,
@@ -131,6 +132,13 @@ export class StatusResponseFactory {
     static createUserResponse(err: any, source: StatusSource): StatusResponse {
         return StatusResponseFactory.createResponse(StatusResponseCode.CreateUser,
             "Error creating user",
+            err,
+            source)
+    }
+
+    static getUserResponse(err: any, source: StatusSource): StatusResponse {
+        return StatusResponseFactory.createResponse(StatusResponseCode.GetUser,
+            "Error getting user",
             err,
             source)
     }
