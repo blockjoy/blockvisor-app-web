@@ -10,6 +10,7 @@ import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { organisationAtoms } from '@modules/organizations';
+import { authAtoms } from '@modules/auth';
 
 interface Hook {
   loadNodes: () => void;
@@ -19,9 +20,7 @@ interface Hook {
 
 export const useNodeList = (): Hook => {
   const router = useRouter();
-  const defaultOrganization = useRecoilValue(
-    organisationAtoms.defaultOrganization,
-  );
+  const user = useRecoilValue(authAtoms.user);
 
   const [nodeRows, setNodeRows] = useRecoilState(nodeAtoms.nodeRows);
   const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
@@ -41,7 +40,7 @@ export const useNodeList = (): Hook => {
   const loadNodes = async () => {
     setIsLoading(true);
     // TODO: Org ID needs be set here
-    let org_id = defaultOrganization?.id || '';
+    let org_id = user?.defaultOrganization?.id || '';
 
     const nodes: any = await apiClient.listNodes(org_id);
 

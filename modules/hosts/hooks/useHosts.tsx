@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { hostsAtoms } from '../store/hostAtoms';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { organisationAtoms } from '@modules/organizations';
+import { authAtoms } from '@modules/auth';
 
 export const useHosts = () => {
   const [hostProvisionKeys, setHostProvisionKeys] = useRecoilState(
@@ -19,19 +19,15 @@ export const useHosts = () => {
     hostsAtoms.hostsLoading,
   );
 
-  const defaultOrganization = useRecoilValue(
-    organisationAtoms.defaultOrganization,
-  );
+  const user = useRecoilValue(authAtoms.user);
 
   const getHosts = async () => {
     setLoadingHosts(true);
     // revisit this once types are consolidated
 
-    console.log('defaultOrganization', defaultOrganization?.id);
-
     const hosts: any = await apiClient.getHosts(
       undefined,
-      defaultOrganization?.id || '',
+      user?.defaultOrganization?.id,
       undefined,
     );
 
@@ -87,7 +83,7 @@ export const useHosts = () => {
     // revisit this once types are consolidated
     const hosts: any = await apiClient.getHosts(
       undefined,
-      defaultOrganization?.id,
+      user?.defaultOrganization?.id,
       undefined,
     );
 
@@ -100,7 +96,7 @@ export const useHosts = () => {
   };
 
   const createHostProvision = async (callback: (args1: string) => void) => {
-    const orgId = defaultOrganization?.id || '';
+    const orgId = user?.defaultOrganization?.id || '';
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);

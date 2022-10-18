@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
 import SizedIcon from '@modules/layout/components/shared/SizedIcon';
 
 import { Button } from '@shared/components';
 import { styles } from './OrganizationDropdown.styles';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useOrganizations } from '@modules/organizations/hooks/useOrganizations';
+import { authAtoms } from '@modules/auth';
 
 type Props = {
   hideName?: boolean;
@@ -16,7 +16,7 @@ type Props = {
 export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
   const [isOpen, setOpen] = useState(false);
   const setLayout = useSetRecoilState(layoutState);
-  const { defaultOrganization } = useOrganizations();
+  const user = useRecoilValue(authAtoms.user);
 
   return (
     <div css={styles.base}>
@@ -28,7 +28,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
         </SizedIcon>
       </button>
       <div css={[styles.menu, isOpen && styles.isOpen]}>
-        <p>{defaultOrganization?.name}</p>
+        <p>{user?.defaultOrganization?.name}</p>
         <br />
         <Button
           display="block"

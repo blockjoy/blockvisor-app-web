@@ -4,7 +4,7 @@ import { apiClient } from '@modules/client';
 import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { organisationAtoms } from '@modules/organizations';
+import { authAtoms } from '@modules/auth';
 
 type Hook = {
   loadLookups: VoidFunction;
@@ -26,16 +26,14 @@ export const useNodeAdd = (): Hook => {
 
   const [hostList, setHostList] = useState([]);
 
-  const defaultOrganization = useRecoilValue(
-    organisationAtoms.defaultOrganization,
-  );
+  const user = useRecoilValue(authAtoms.user);
 
   const loadLookups = async () => {
     setIsLoading(true);
 
     const hosts: any = await apiClient.getHosts(
       undefined,
-      defaultOrganization?.id || '',
+      user?.defaultOrganization?.id || '',
       undefined,
     );
 
@@ -68,7 +66,7 @@ export const useNodeAdd = (): Hook => {
 
     const node = new Node();
 
-    let org_id = defaultOrganization?.id || '';
+    let org_id = user?.defaultOrganization?.id || '';
     let blockchain_id = params.blockchain;
 
     node.setBlockchainId(blockchain_id);

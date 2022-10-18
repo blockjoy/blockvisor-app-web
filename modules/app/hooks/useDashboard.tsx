@@ -6,7 +6,7 @@ import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { organisationAtoms } from '@modules/organizations';
+import { authAtoms } from '@modules/auth';
 
 interface Hook {
   loadDashboard: () => void;
@@ -14,12 +14,10 @@ interface Hook {
 
 export const useDashboard = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
-  const defaultOrganization = useRecoilValue(
-    organisationAtoms.defaultOrganization,
-  );
+  const user = useRecoilValue(authAtoms.user);
 
   const getRecentHosts = async () => {
-    const org_id = defaultOrganization?.id || '';
+    const org_id = user?.defaultOrganization?.id || '';
 
     const hostsResponse: any = await apiClient.getHosts(
       undefined,

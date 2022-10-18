@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode, Children } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 import {
   buttonBorder,
   buttonSize,

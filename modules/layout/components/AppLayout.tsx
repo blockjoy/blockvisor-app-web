@@ -6,14 +6,7 @@ import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
 import { NodeAdd } from '@modules/node/components/nodeAdd/NodeAdd';
 import { PrivateRoute } from '@modules/auth';
-import {
-  EditOrganization,
-  organisationAtoms,
-  OrganizationAdd,
-} from '@modules/organizations';
-import { useEffect, useState } from 'react';
-import { getDefaultOrgFromStorage } from '@shared/utils/browserStorage';
-import { useRecoilState } from 'recoil';
+import { EditOrganization, OrganizationAdd } from '@modules/organizations';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -21,22 +14,7 @@ type LayoutType = {
 };
 
 export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
-  const [gotDefaultOrg, setGotDefaultOrg] = useState<boolean>(false);
-
-  const [, setDefaultOrganization] = useRecoilState(
-    organisationAtoms.defaultOrganization,
-  );
-
-  useEffect(() => {
-    const defaultOrg = getDefaultOrgFromStorage();
-    setDefaultOrganization({
-      id: defaultOrg?.id!,
-      name: defaultOrg?.name!,
-    });
-    setGotDefaultOrg(true);
-  }, []);
-
-  return !gotDefaultOrg ? null : (
+  return (
     <>
       <PrivateRoute>
         <Sidebar />

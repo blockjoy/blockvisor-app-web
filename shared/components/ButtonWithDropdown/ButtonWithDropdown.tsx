@@ -1,28 +1,33 @@
-import { ReactNode, useRef, useState } from 'react';
-import { Button } from '../Button/Button';
-import DotsIcon from '@public/assets/icons/dots-12.svg';
+import {
+  ReactNode,
+  useRef,
+  useState,
+  isValidElement,
+  cloneElement,
+  ReactElement,
+} from 'react';
 import { styles } from './ButtonWithDropdown.styles';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
+import { Dropdown } from '../Dropdown/Dropdown';
 
 type Props = {
   children?: ReactNode;
+  button: ReactNode;
 };
 
-export function ButtonWithDropdown({ children }: Props) {
+export function ButtonWithDropdown({ children, button }: Props) {
   const [isOpen, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
+  const handleClick = () => setOpen(!isOpen);
   const handleClickOutside = () => setOpen(false);
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   return (
     <div ref={dropdownRef} css={[styles.base]}>
-      <Button onClick={() => setOpen(!isOpen)} size="small" style="ghost">
-        <DotsIcon />
-      </Button>
-      <div css={[styles.menu, styles.right, isOpen && styles.isOpen]}>
-        {children}
-      </div>
+      {isValidElement<HTMLButtonElement>(button) &&
+        cloneElement(button as ReactElement, { onClick: handleClick })}
+      <Dropdown isOpen={isOpen}>{children}</Dropdown>
     </div>
   );
 }
