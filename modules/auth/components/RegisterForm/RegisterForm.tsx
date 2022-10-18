@@ -37,7 +37,7 @@ export function RegisterForm() {
   const onSubmit = handleSubmit(
     async ({ email, password, confirmPassword, first_name, last_name }) => {
       setIsLoading(true);
-      const response = await apiClient.createUser({
+      const response: any = await apiClient.createUser({
         first_name,
         last_name,
         email,
@@ -51,11 +51,11 @@ export function RegisterForm() {
           Router.push(Routes.verify);
         } else {
           setIsLoading(false);
-          setRegisterError('something went wrong');
+          setRegisterError('Error creating account, please try again.');
         }
       } else {
         setIsLoading(false);
-        setRegisterError(response?.message);
+        setRegisterError('Error creating account, please try again.');
       }
     },
   );
