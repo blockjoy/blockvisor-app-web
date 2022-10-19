@@ -4,10 +4,13 @@ import { reset } from 'styles/utils.reset.styles';
 import { divider } from 'styles/utils.spacing.styles';
 import IconCog from '@public/assets/icons/cog-12.svg';
 import IconDoor from '@public/assets/icons/door-12.svg';
-import { useAuth } from '@modules/auth';
 import { useRouter } from 'next/router';
+import { authAtoms, useAuth } from '@modules/auth';
+import { useRecoilValue } from 'recoil';
 
 export const TopbarUser = () => {
+  const user = useRecoilValue(authAtoms.user);
+
   const router = useRouter();
   const { signOut } = useAuth();
 
@@ -17,7 +20,14 @@ export const TopbarUser = () => {
   };
 
   return (
-    <ButtonWithDropdown button={<button css={[styles.button]}>JH</button>}>
+    <ButtonWithDropdown
+      button={
+        <button css={[styles.button]}>
+          {user?.firstName?.substring(0, 1)}
+          {user?.lastName?.substring(0, 1)}
+        </button>
+      }
+    >
       <ul css={[reset.list]}>
         <li>
           <DropdownItem href="/profile/settings">
