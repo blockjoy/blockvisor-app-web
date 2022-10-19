@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { PageHeader, PageSection, Table } from '@modules/app/components/shared';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import { Button, Pagination } from '@shared/components';
+import { Button, EmptyColumn } from '@shared/components';
 
 export const NodeList = () => {
   const { loadNodes, handleRowClick, handleAddNode } = useNodeList();
@@ -17,29 +17,37 @@ export const NodeList = () => {
   }, []);
 
   return (
-    <PageSection>
+    <PageSection bottomBorder={false}>
       <PageHeader>
         Nodes
         <Button onClick={handleAddNode} style="secondary" size="small">
           Add Node
         </Button>
       </PageHeader>
-      <Table
-        isLoading={isLoading}
-        headers={[
-          {
-            name: 'Name',
-            key: '1',
-          },
-          {
-            name: 'Status',
-            key: '2',
-          },
-        ]}
-        rows={nodeRows || []}
-        onRowClick={handleRowClick}
-      />
-      {/* <Pagination numberOfItems={10} itemsPerPage={1} /> */}
+      {Boolean(nodeRows) ? (
+        <>
+          <Table
+            isLoading={isLoading}
+            headers={[
+              {
+                name: 'Name',
+                key: '1',
+              },
+              {
+                name: 'Status',
+                key: '2',
+              },
+            ]}
+            rows={nodeRows || []}
+            onRowClick={handleRowClick}
+          />
+        </>
+      ) : (
+        <EmptyColumn
+          title="No Nodes."
+          description="Add your nodes and hosts to get started with BlockVisor."
+        />
+      )}
     </PageSection>
   );
 };
