@@ -7,12 +7,16 @@ export const styles = {
     align-items: center;
     justify-content: space-between;
     height: 56px;
-    padding: 0 16px;
     border-bottom: 1px solid ${theme.colorBorder};
+    box-sizing: border-box;
   `,
   logo: css`
     & path {
       fill: #4c4f4d;
     }
+  `,
+  logoWrapper: css`
+    flex: 0 0 28px;
+    margin-right: 20px;
   `,
 };

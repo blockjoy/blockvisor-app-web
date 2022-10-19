@@ -63,6 +63,8 @@ export function LoginForm() {
         email: user?.email,
       });
 
+      console.log('user', user);
+
       // simulate async req
       getDefaultOrganization();
       setTimeout(() => {

@@ -21,13 +21,17 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
   return (
     <div css={styles.base}>
       <button css={styles.button} onClick={() => setOpen(!isOpen)}>
-        <span css={styles.icon}>B</span>
-        {!hideName && <p css={styles.orgName}>Blockjoy</p>}
-        <SizedIcon additionalStyles={[styles.rotateIcon]} size="10px">
+        <span css={styles.icon}>
+          {user?.defaultOrganization?.name?.substring(0, 1)?.toUpperCase()}
+        </span>
+        {!hideName && (
+          <p css={styles.orgName}>{user?.defaultOrganization?.name}</p>
+        )}
+        {/* <SizedIcon additionalStyles={[styles.rotateIcon]} size="10px">
           <IconArrow />
-        </SizedIcon>
+        </SizedIcon> */}
       </button>
-      <div css={[styles.menu, isOpen && styles.isOpen]}>
+      {/* <div css={[styles.menu, isOpen && styles.isOpen]}>
         <p>{user?.defaultOrganization?.name}</p>
         <br />
         <Button
@@ -37,7 +41,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
         >
           Create
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };

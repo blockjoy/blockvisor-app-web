@@ -26,7 +26,7 @@ export const useDashboard = (): Hook => {
     );
 
     if (hostsResponse?.code === 6) {
-      return;
+      return [];
     }
 
     console.log('hostsResponse', hostsResponse);
@@ -73,6 +73,8 @@ export const useDashboard = (): Hook => {
     });
 
     const metrics: any = await apiClient.getDashboardMetrics();
+
+    console.log('dashboard', metrics);
 
     const online = +metrics[0]?.value,
       offline = +metrics[1]?.value,
