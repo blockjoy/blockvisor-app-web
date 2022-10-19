@@ -1,11 +1,14 @@
 import { User } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { authAtoms } from '@modules/auth';
 import { apiClient } from '@modules/client';
 import { isStatusResponse } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
+import { updateUser } from '@shared/utils/browserStorage';
 import { delay } from '@shared/utils/delay';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { containers } from 'styles/containers.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -18,10 +21,22 @@ type EditUserForm = {
   lastName: string;
 };
 
-export function EditUser() {
+type Props = {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+};
+
+export function EditUser({ firstName, lastName, id }: Props) {
   const form = useForm<EditUserForm>();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
+  const [, setAuth] = useRecoilState(authAtoms.user);
+
+  useEffect(() => {
+    form.setValue('firstName', firstName ?? '');
+    form.setValue('lastName', lastName ?? '');
+  }, []);
 
   const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {
     setIsLoading(true);
@@ -29,7 +44,9 @@ export function EditUser() {
     const user = new User();
     user.setFirstName(firstName);
     user.setLastName(lastName);
-    const res = await apiClient.updateUser(user);
+    user.setId(id ?? '');
+
+    const res: any = await apiClient.updateUser(user);
 
     await delay(1000);
     if (isStatusResponse(res)) {
@@ -37,6 +54,13 @@ export function EditUser() {
       setUpdateError(res.message);
     } else {
       setIsLoading(false);
+      updateUser({
+        id: res?.id,
+        firstName: res?.firstName,
+        lastName: res?.lastName,
+        email: res?.email,
+      });
+      setAuth((current) => ({ ...current, ...res }));
       toast.success('Profile updated');
     }
   });

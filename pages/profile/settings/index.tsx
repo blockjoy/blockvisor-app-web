@@ -1,31 +1,44 @@
 import { PageSection } from '@modules/app/components/shared';
+import { authAtoms } from '@modules/auth';
 import { AppLayout } from '@modules/layout';
 import { ChangePassword, EditUser, PageTitle } from '@modules/profile';
 import { Tabs } from '@shared/components';
 import { useTabs } from '@shared/index';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
 
-const items = [
-  {
-    label: 'Personal Information',
-    value: '1',
-    component: <EditUser />,
-  },
-  {
-    label: 'Account',
-    value: '2',
-    component: (
-      <>
-        <h2 css={spacing.bottom.large}>Change Password</h2>
-        <ChangePassword />
-      </>
-    ),
-  },
-];
 const Profile = () => {
+  const user = useRecoilValue(authAtoms.user);
   const { push } = useRouter();
-  const { activeTab, setActiveTab } = useTabs(items.length);
+  const tabItems = useMemo(
+    () => [
+      {
+        label: 'Personal Information',
+        value: '1',
+        component: (
+          <EditUser
+            firstName={user?.firstName}
+            lastName={user?.lastName}
+            id={user?.id}
+          />
+        ),
+      },
+      {
+        label: 'Account',
+        value: '2',
+        component: (
+          <>
+            <h2 css={spacing.bottom.large}>Change Password</h2>
+            <ChangePassword />
+          </>
+        ),
+      },
+    ],
+    [user?.firstName, user?.lastName],
+  );
+  const { activeTab, setActiveTab } = useTabs(tabItems.length);
 
   const handleClick = (tabValue: string) => {
     setActiveTab(tabValue);
@@ -42,7 +55,11 @@ const Profile = () => {
     <>
       <PageTitle title="Settings" />
       <PageSection>
-        <Tabs activeTab={activeTab} onTabClick={handleClick} tabItems={items} />
+        <Tabs
+          activeTab={activeTab}
+          onTabClick={handleClick}
+          tabItems={tabItems}
+        />
       </PageSection>
     </>
   );

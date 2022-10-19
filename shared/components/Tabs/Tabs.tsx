@@ -14,8 +14,8 @@ export function Tabs({ tabItems, activeTab, onTabClick }: Props) {
     <>
       <nav css={[styles.tabs]}>
         <ul css={[reset.list, styles.tabList]}>
-          {tabItems.map((item) => (
-            <li>
+          {tabItems.map((item, index) => (
+            <li key={index}>
               <button
                 css={[
                   reset.button,
@@ -31,9 +31,11 @@ export function Tabs({ tabItems, activeTab, onTabClick }: Props) {
           ))}
         </ul>
       </nav>
-      {tabItems.map((item) => {
+      {tabItems.map((item, index) => {
         return activeTab === item.value ? (
-          <div css={[styles.tabComponent]}>{item.component}</div>
+          <div key={index} css={[styles.tabComponent]}>
+            {item.component}
+          </div>
         ) : null;
       })}
     </>
