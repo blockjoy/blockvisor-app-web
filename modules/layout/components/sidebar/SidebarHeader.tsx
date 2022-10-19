@@ -6,7 +6,9 @@ export const SidebarHeader = () => {
   return (
     <header css={[styles.wrapper]}>
       <OrganizationDropdown />
-      <LogoSmall css={[styles.logo]} />
+      <span css={styles.logoWrapper}>
+        <LogoSmall css={[styles.logo]} />
+      </span>
     </header>
   );
 };

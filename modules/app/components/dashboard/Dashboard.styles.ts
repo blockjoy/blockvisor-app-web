@@ -58,7 +58,12 @@ export const dashboardNodeStyles = {
   `,
   itemLabel: (theme: ITheme) => css`
     display: flex;
+    align-items: center;
     gap: 6px;
     font-size: 14px;
+
+    & svg {
+      translate: 0 1px;
+    }
   `,
 };
