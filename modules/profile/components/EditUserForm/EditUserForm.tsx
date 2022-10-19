@@ -21,15 +21,21 @@ type EditUserForm = {
   lastName: string;
 };
 
-export function EditUser() {
+type Props = {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+};
+
+export function EditUser({ firstName, lastName, id }: Props) {
   const form = useForm<EditUserForm>();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
-  const [auth, setAuth] = useRecoilState(authAtoms.user);
+  const [, setAuth] = useRecoilState(authAtoms.user);
 
   useEffect(() => {
-    form.setValue('firstName', auth?.firstName ?? '');
-    form.setValue('lastName', auth?.lastName ?? '');
+    form.setValue('firstName', firstName ?? '');
+    form.setValue('lastName', lastName ?? '');
   }, []);
 
   const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {
@@ -38,7 +44,7 @@ export function EditUser() {
     const user = new User();
     user.setFirstName(firstName);
     user.setLastName(lastName);
-    user.setId(auth?.id ?? '');
+    user.setId(id ?? '');
 
     const res: any = await apiClient.updateUser(user);
 
@@ -54,6 +60,7 @@ export function EditUser() {
         lastName: res?.lastName,
         email: res?.email,
       });
+      setAuth((current) => ({ ...current, ...res }));
       toast.success('Profile updated');
     }
   });
