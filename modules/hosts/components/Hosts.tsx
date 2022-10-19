@@ -74,7 +74,7 @@ export function Hosts() {
         rows={rows}
         onRowClick={handleRowClick}
       />
-      <Pagination numberOfItems={10} itemsPerPage={1} />
+      {/* <Pagination numberOfItems={10} itemsPerPage={1} /> */}
     </PageSection>
   );
 }

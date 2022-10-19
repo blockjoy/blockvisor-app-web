@@ -25,6 +25,12 @@ export const useDashboard = (): Hook => {
       undefined,
     );
 
+    if (hostsResponse?.code === 6) {
+      return;
+    }
+
+    console.log('hostsResponse', hostsResponse);
+
     const hosts = hostsResponse.map((host: any) => ({
       key: host.id,
       cells: [
