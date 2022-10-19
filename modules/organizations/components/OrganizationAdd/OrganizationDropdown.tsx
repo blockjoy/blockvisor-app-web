@@ -20,7 +20,11 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
 
   return (
     <div css={styles.base}>
-      <button css={styles.button} onClick={() => setOpen(!isOpen)}>
+      <button
+        css={styles.button}
+        style={{ padding: hideName ? '0' : '' }}
+        onClick={() => setOpen(!isOpen)}
+      >
         <span css={styles.icon}>
           {user?.defaultOrganization?.name?.substring(0, 1)?.toUpperCase()}
         </span>

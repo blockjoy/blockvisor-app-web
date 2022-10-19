@@ -16,13 +16,9 @@ export const styles = {
     background: transparent;
     border: 0;
     cursor: pointer;
-    padding: 8px 0;
+    padding: 8px 20px;
     border-radius: 4px;
     transition: all 0.1s ease-out;
-
-    @media ${breakpoints.fromMed} {
-      padding: 8px 20px;
-    }
 
     /* &:hover,
     &:focus {
