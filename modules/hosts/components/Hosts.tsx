@@ -1,4 +1,4 @@
-import { Button, Pagination } from '@shared/components';
+import { Button, EmptyColumn, Pagination } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { PageHeader, PageSection, Table } from '../../app/components/shared';
 import { useHosts } from '../hooks/useHosts';
@@ -52,7 +52,7 @@ export function Hosts() {
 
   const rows = hostsToRows(hosts);
   return (
-    <PageSection>
+    <PageSection bottomBorder={false}>
       <PageHeader>
         Hosts
         <Button
@@ -68,12 +68,20 @@ export function Hosts() {
           Add Host
         </Button>
       </PageHeader>
-      <Table
-        isLoading={loadingHosts}
-        headers={headers}
-        rows={rows}
-        onRowClick={handleRowClick}
-      />
+      {Boolean(rows) ? (
+        <Table
+          isLoading={loadingHosts}
+          headers={headers}
+          rows={rows}
+          onRowClick={handleRowClick}
+        />
+      ) : (
+        <EmptyColumn
+          title="No Hosts."
+          description="Add your nodes and hosts to get started with BlockVisor."
+        />
+      )}
+
       {/* <Pagination numberOfItems={10} itemsPerPage={1} /> */}
     </PageSection>
   );

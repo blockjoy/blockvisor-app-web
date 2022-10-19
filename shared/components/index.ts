@@ -36,3 +36,4 @@ export * from './Pagination/Pagination';
 export * from './CodeBlock/CodeBlock';
 export * from './Dropdown/Dropdown';
 export * from './Tabs/Tabs';
+export * from './EmptyColumn/EmptyColum';
