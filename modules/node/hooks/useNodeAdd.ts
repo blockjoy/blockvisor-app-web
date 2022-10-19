@@ -37,11 +37,15 @@ export const useNodeAdd = (): Hook => {
       undefined,
     );
 
-    const mappedHosts = hosts?.map((host: any) => ({
-      value: host.id,
-      label: host.name,
-    }));
-    setHostList(mappedHosts);
+    let mappedHosts = [];
+
+    if (hosts?.code !== 6) {
+      mappedHosts = hosts?.map((host: any) => ({
+        value: host.id,
+        label: host.name,
+      }));
+      setHostList(mappedHosts);
+    }
 
     const blockchains: any = await apiClient.getBlockchains();
 

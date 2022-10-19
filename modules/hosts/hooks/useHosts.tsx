@@ -33,6 +33,10 @@ export const useHosts = () => {
 
     console.log('hosts', hosts);
 
+    if (hosts?.code === 6) {
+      return;
+    }
+
     // load provisioning hosts
     if (localStorage.getItem('hostProvisionKeys')) {
       const hostProvisionKeys = JSON.parse(

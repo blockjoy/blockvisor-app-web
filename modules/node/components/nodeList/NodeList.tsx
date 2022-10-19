@@ -39,7 +39,7 @@ export const NodeList = () => {
         rows={nodeRows || []}
         onRowClick={handleRowClick}
       />
-      <Pagination numberOfItems={10} itemsPerPage={1} />
+      {/* <Pagination numberOfItems={10} itemsPerPage={1} /> */}
     </PageSection>
   );
 };
