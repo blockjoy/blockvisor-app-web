@@ -1,9 +1,7 @@
 import { NodeStatus, TableBlockNodes } from '@modules/app/components/shared';
-import { Button } from '@shared/components';
+import { Button, HostStatus, TableBlockHosts } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { MouseEventHandler } from 'react';
-import { HostStatus } from '../components/HostStatus/HostStatus';
-import { TableBlockHosts } from '../components/TableBlockHosts/TableBlockHosts';
 import { styles as detailsHeaderStyles } from '@modules/app/components/shared/details-header/DetailsHeader.styles';
 
 export function hostsToRows(hosts: Host[] | null) {

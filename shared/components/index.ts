@@ -39,3 +39,5 @@ export * from './Tabs/Tabs';
 export * from './EmptyColumn/EmptyColum';
 export * from './EmptyColumn/AnimatedGraphic';
 export * from './ActionRow/ActionRow';
+export * from './HostStatus/HostStatus';
+export * from './TableBlockHosts/TableBlockHosts';
