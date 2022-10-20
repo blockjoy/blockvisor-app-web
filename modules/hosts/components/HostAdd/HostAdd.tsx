@@ -7,9 +7,9 @@ export const HostAdd = () => {
   return (
     <PageSection>
       <>
-        <PageHeader>Host Add</PageHeader>
+        <PageHeader>Add Host</PageHeader>
         <>
-          <h2 css={typo.base}>Great news, your host is being provisioned.</h2>
+          <h2 css={typo.base}>Let's create a new host.</h2>
           <p
             css={[
               typo.small,
@@ -18,7 +18,7 @@ export const HostAdd = () => {
               spacing.bottom.large,
             ]}
           >
-            Please follow the steps below to complete the installation process.
+            Please enter the information below to get started.
           </p>
         </>
       </>

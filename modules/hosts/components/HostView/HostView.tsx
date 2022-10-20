@@ -20,7 +20,7 @@ import {
   Table,
   TableSkeleton,
 } from '@shared/components';
-import { HostCharts } from '../HostCharts/HostCharts';
+import { HostCharts } from './HostCharts/HostCharts';
 
 function formatBytes(bytes: number, decimals = 1) {
   if (!+bytes) return '0 Bytes';

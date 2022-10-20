@@ -30,8 +30,6 @@ const headers = [
 ];
 
 export function Hosts() {
-  const [isCreating, setIsCreating] = useState(false);
-
   const router = useRouter();
   const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
 
@@ -44,11 +42,7 @@ export function Hosts() {
   };
 
   const handleCreateClicked = async () => {
-    setIsCreating(true);
-    createHostProvision((key: string) => {
-      router.push(`hosts/install/${key}`);
-      setIsCreating(false);
-    });
+    router.push('hosts/add');
   };
 
   const animateEntry = () =>
@@ -74,7 +68,6 @@ export function Hosts() {
       <PageHeader>
         Hosts
         <Button
-          loading={isCreating}
           style="secondary"
           onClick={handleCreateClicked}
           size="small"
