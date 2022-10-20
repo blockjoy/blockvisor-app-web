@@ -49,3 +49,6 @@ export * from './BackButton/BackButton';
 export * from './Table/Table';
 export * from './Table/TableSkeleton';
 export * from './Table/TableBlockNodes';
+export * from './DetailsHeader/DetailsHeader';
+export * from './DetailsTable/DetailsTable';
+export * from './DataRow/DataRow';

@@ -1,7 +1,4 @@
 import { useRouter } from 'next/router';
-
-import { DetailsHeader } from '../../app/components/shared/details-header/DetailsHeader';
-import { DetailsTable } from '../../app/components/shared/details-table/DetailsTable';
 import { useHosts } from '@modules/hosts/hooks/useHosts';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import { typo } from 'styles/utils.typography.styles';
@@ -15,6 +12,8 @@ import { HostCharts } from './HostCharts/HostCharts';
 import {
   BackButton,
   DangerZone,
+  DetailsHeader,
+  DetailsTable,
   PageHeader,
   PageSection,
   Skeleton,
