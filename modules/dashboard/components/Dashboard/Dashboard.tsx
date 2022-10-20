@@ -2,13 +2,12 @@ import { useRecoilValue } from 'recoil';
 
 import { appState } from '@modules/dashboard/store';
 
-import { NodeEarnings } from '@shared/components';
+import { NodeEarnings, PageSection } from '@shared/components';
 import { useDashboard } from '@modules/dashboard/hooks/useDashboard';
 import { useEffect, useState } from 'react';
 import { DashboardEmpty } from '../DashboardEmpty/DashboardEmpty';
 import { NodeSummary } from '../NodeSummary/NodeSummary';
 import { RecentHosts } from '../RecentHosts/RecentHosts';
-import { PageSection } from '@modules/app/components/shared';
 
 export type NodeMetric = {
   name: string;

@@ -1,9 +1,9 @@
+import { Table } from '@modules/app/components/shared';
 import { appState } from '@modules/dashboard/store';
 import { useHosts } from '@modules/hosts';
-import { Button } from '@shared/components';
+import { Button, PageHeader } from '@shared/components';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import { PageHeader, Table } from '../../../app/components/shared';
 
 export const RecentHosts = () => {
   const router = useRouter();

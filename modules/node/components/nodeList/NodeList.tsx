@@ -1,9 +1,14 @@
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { PageHeader, PageSection, Table } from '@modules/app/components/shared';
+import { Table } from '@modules/app/components/shared';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import { Button, EmptyColumn } from '@shared/components';
+import {
+  Button,
+  EmptyColumn,
+  PageHeader,
+  PageSection,
+} from '@shared/components';
 import anime from 'animejs';
 
 export const NodeList = () => {

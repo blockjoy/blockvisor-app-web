@@ -1,16 +1,11 @@
-import { Button, CodeBlock } from '@shared/components';
+import { Button, CodeBlock, PageHeader, PageSection } from '@shared/components';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { css } from '@emotion/react';
-import { useHosts } from '@modules/hosts/hooks/useHosts';
-import {
-  PageHeader,
-  PageSection,
-  TableSkeleton,
-} from '@modules/app/components/shared';
+import { TableSkeleton } from '@modules/app/components/shared';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 

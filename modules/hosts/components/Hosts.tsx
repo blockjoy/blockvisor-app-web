@@ -1,6 +1,11 @@
-import { Button, EmptyColumn, Pagination } from '@shared/components';
+import {
+  Button,
+  EmptyColumn,
+  PageHeader,
+  PageSection,
+} from '@shared/components';
 import { useEffect, useState } from 'react';
-import { PageHeader, PageSection, Table } from '../../app/components/shared';
+import { Table } from '../../app/components/shared';
 import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../utils/toRow';

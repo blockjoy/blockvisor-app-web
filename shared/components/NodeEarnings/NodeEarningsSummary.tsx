@@ -1,4 +1,4 @@
-import { PageHeader } from '@modules/app/components/shared';
+import { PageHeader } from '../Page/PageHeader';
 import { mockEarningsData as mockItems } from './mockEarningsData';
 import { dashboardEarningsStyles } from './NodeEarnings.styles';
 

@@ -1,21 +1,19 @@
-import { useRecoilValue, useRecoilState } from 'recoil';
-import {
-  PageSection,
-  PageHeader,
-  SkeletonGrid,
-  Skeleton,
-  TableSkeleton,
-  NodeStatus,
-} from '../../../app/components/shared';
+import { TableSkeleton, NodeStatus } from '../../../app/components/shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { DetailsHeader } from '../../../app/components/shared/details-header/DetailsHeader';
 import { DetailsTable } from '../../../app/components/shared/details-table/DetailsTable';
-import { DangerZone } from '../../../app/components/shared/danger-zone/DangerZone';
-import { appState } from '@modules/dashboard/store';
+
 import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { NodeEarnings } from '@shared/components';
+import {
+  DangerZone,
+  NodeEarnings,
+  PageHeader,
+  PageSection,
+  Skeleton,
+  SkeletonGrid,
+} from '@shared/components';
 
 export default () => {
   const [isMounted, setMounted] = useState<boolean>(false);

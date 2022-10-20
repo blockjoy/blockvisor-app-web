@@ -1,4 +1,4 @@
-import { Skeleton } from '../skeleton/Skeleton';
+import { Skeleton } from '@shared/components';
 import { tableStyles } from './table.styles';
 
 export const TableSkeleton = () => (

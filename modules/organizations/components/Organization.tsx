@@ -1,14 +1,7 @@
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useEffect } from 'react';
-import {
-  PageHeader,
-  PageSection,
-  Skeleton,
-  SkeletonGrid,
-  TableSkeleton,
-} from '@modules/app/components/shared';
-import { DangerZone } from '@modules/app/components/shared/danger-zone/DangerZone';
+import { TableSkeleton } from '@modules/app/components/shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { useOrganizations } from '../hooks/useOrganizations';
 import { queryAsString } from '@shared/utils/query';
@@ -17,6 +10,13 @@ import { DetailsTable } from '@modules/app/components/shared/details-table/Detai
 import { getOrganizationDetails } from '../utils/organizationDetails';
 import { spacing } from 'styles/utils.spacing.styles';
 import { MembersTable } from './MembersTable/MembersTable';
+import {
+  DangerZone,
+  PageHeader,
+  PageSection,
+  Skeleton,
+  SkeletonGrid,
+} from '@shared/components';
 
 const Organization: NextPage = () => {
   const router = useRouter();

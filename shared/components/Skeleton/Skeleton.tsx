@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { skeletonStyles } from './skeleton.styles';
+import { styles } from './Skeleton.styles';
 
 type Props = {
   width?: string;
@@ -14,6 +14,6 @@ export const Skeleton: FC<Props> = ({ width, height, margin }) => (
       height,
       margin,
     }}
-    css={skeletonStyles.skeleton}
+    css={styles.skeleton}
   />
 );

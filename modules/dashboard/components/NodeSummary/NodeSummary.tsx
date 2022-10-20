@@ -1,10 +1,9 @@
-import { PageHeader, Skeleton } from '@modules/app/components/shared';
 import { appState } from '@modules/dashboard/store';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import IconNode from '@public/assets/icons/box-12.svg';
 import IconNodeOffline from '@public/assets/icons/node-offline-12.svg';
 import IconNodeOnline from '@public/assets/icons/node-online-12.svg';
-import { Button } from '@shared/components';
+import { Button, PageHeader, Skeleton } from '@shared/components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { dashboardNodeStyles as styles } from '../Dashboard/Dashboard.styles';
