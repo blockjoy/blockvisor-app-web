@@ -37,3 +37,5 @@ export * from './CodeBlock/CodeBlock';
 export * from './Dropdown/Dropdown';
 export * from './Tabs/Tabs';
 export * from './EmptyColumn/EmptyColum';
+export * from './EmptyColumn/AnimatedGraphic';
+export * from './ActionRow/ActionRow';

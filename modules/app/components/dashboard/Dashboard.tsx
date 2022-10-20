@@ -6,6 +6,7 @@ import { DashboardRecentHosts } from './DashboardRecentHosts';
 import { NodeEarnings } from '@shared/components';
 import { useDashboard } from '@modules/app/hooks/useDashboard';
 import { useEffect, useState } from 'react';
+import { DashboardEmpty } from './DashboardEmpty';
 
 export type NodeMetric = {
   name: string;
@@ -20,9 +21,12 @@ export type Dashboard = {
   recentHosts: any;
 };
 
+const isEmpty = (metrics: NodeMetric[]) => metrics.every((m) => m.value === 0);
+
 export default () => {
   const [isRendered, setRendered] = useState(false);
-  const { dashboardLoading } = useRecoilValue(appState);
+  const { dashboardLoading, dashboard } = useRecoilValue(appState);
+  const { recentHosts, nodeMetrics } = dashboard;
   const { loadDashboard } = useDashboard();
 
   useEffect(() => {
@@ -33,7 +37,11 @@ export default () => {
 
   if (!isRendered) return null;
 
-  return (
+  return !Boolean(recentHosts.length) && isEmpty(nodeMetrics) ? (
+    <PageSection bottomBorder={false}>
+      <DashboardEmpty />
+    </PageSection>
+  ) : (
     <>
       <PageSection>
         <DashboardNodeSummary />

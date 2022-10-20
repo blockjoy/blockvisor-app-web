@@ -4,6 +4,7 @@ import { PageHeader, PageSection, Table } from '@modules/app/components/shared';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { Button, EmptyColumn } from '@shared/components';
+import anime from 'animejs';
 
 export const NodeList = () => {
   const { loadNodes, handleRowClick, handleAddNode } = useNodeList();
@@ -11,6 +12,17 @@ export const NodeList = () => {
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
   const nodeRows = useRecoilValue(nodeAtoms.nodeRows);
 
+  const animateEntry = () =>
+    anime({
+      targets: `#js-nodes-empty`,
+      opacity: [0, 1],
+      translateY: [8, 0],
+      easing: 'easeInOutQuad',
+      duration: 400,
+    });
+  useEffect(() => {
+    animateEntry();
+  }, []);
   useEffect(() => {
     window.scrollTo(0, 0);
     loadNodes();
@@ -44,6 +56,7 @@ export const NodeList = () => {
         </>
       ) : (
         <EmptyColumn
+          id="js-nodes-empty"
           title="No Nodes."
           description="Add your nodes and hosts to get started with BlockVisor."
         />

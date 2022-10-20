@@ -23,25 +23,3 @@ export const styles = {
     min-width: 120px;
   `,
 };
-
-/* .action-row {
-    display: flex;
-    margin: 40px 0;
-    gap: 24px;
-    flex-direction: column;
-
-    @media (--screen-medium-small) {
-      gap: 100px;
-      justify-content: space-between;
-      align-items: center;
-      flex-direction: row;
-    }
-
-    &__description {
-      margin-top: 20px;
-      color: theme(--color-text-3);
-    }
-
-    &__action {
-      min-width: 120px;
-    } */

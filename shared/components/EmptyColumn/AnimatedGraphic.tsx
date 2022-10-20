@@ -43,7 +43,7 @@ export function AnimatedGraphic({
 
   return (
     <figure css={[styles.figure]}>
-      <Graphic />
+      <Graphic id={id} />
     </figure>
   );
 }
