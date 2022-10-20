@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
+import { hostsAtoms } from '@modules/hosts/store/hostAtoms';
 import {
   Button,
   EmptyColumn,
@@ -16,6 +17,7 @@ export const NodeList = () => {
 
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
   const nodeRows = useRecoilValue(nodeAtoms.nodeRows);
+  const hasHosts = !!useRecoilValue(hostsAtoms.hosts)?.length;
 
   const animateEntry = () =>
     anime({
@@ -39,7 +41,12 @@ export const NodeList = () => {
     <PageSection bottomBorder={false}>
       <PageHeader>
         Nodes
-        <Button onClick={handleAddNode} style="secondary" size="small">
+        <Button
+          disabled={!hasHosts}
+          onClick={handleAddNode}
+          style="secondary"
+          size="small"
+        >
           Add Node
         </Button>
       </PageHeader>
