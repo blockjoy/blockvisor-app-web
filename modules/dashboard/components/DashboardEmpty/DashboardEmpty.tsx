@@ -10,14 +10,11 @@ import { styles } from './DashboardEmpty.styles';
 
 export function DashboardEmpty() {
   const router = useRouter();
-  const { handleAddNode } = useNodeList();
-  const { createHostProvision } = useHosts();
 
   const handleAddHost = async () => {
-    createHostProvision((key: string) => {
-      router.push(`hosts/install/${key}`);
-    });
+    router.push('hosts/add');
   };
+
   useEffect(() => {
     anime({
       targets: '#js-title',
@@ -47,6 +44,17 @@ export function DashboardEmpty() {
       <ul id="js-action-rows" css={[reset.list, styles.content]}>
         <li>
           <ActionRow
+            title="Create a New Host"
+            description="Add your first host now to get BlockVisor up and running."
+            action={
+              <Button style="secondary" size="small" onClick={handleAddHost}>
+                Add Host
+              </Button>
+            }
+          />
+        </li>
+        {/* <li>
+          <ActionRow
             title="Create a New Node"
             description=" Add your nodes and hosts to get started with BlockVisor."
             action={
@@ -55,18 +63,7 @@ export function DashboardEmpty() {
               </Button>
             }
           />
-        </li>
-        <li>
-          <ActionRow
-            title="Create a New Host"
-            description="Add your nodes and hosts to get started with BlockVisor."
-            action={
-              <Button style="secondary" size="small" onClick={handleAddHost}>
-                Add Host
-              </Button>
-            }
-          />
-        </li>
+        </li> */}
       </ul>
     </section>
   );
