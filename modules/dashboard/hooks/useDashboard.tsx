@@ -1,12 +1,13 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { appState } from '@modules/dashboard/store';
-import { Dashboard } from '../components/dashboard/Dashboard';
+
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { apiClient } from '@modules/client';
 import { HostStatus, TableBlockHosts } from '@modules/hosts';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { authAtoms } from '@modules/auth';
+import type { Dashboard } from '../components/Dashboard/Dashboard';
 
 interface Hook {
   loadDashboard: () => void;
