@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
-import { PageSection, PageHeader } from '../../app/components/shared';
+import { PageSection, PageHeader } from '../../../app/components/shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
-import { DangerZone } from '../../app/components/shared/danger-zone/DangerZone';
-import { DetailsHeader } from '../../app/components/shared/details-header/DetailsHeader';
-import { DetailsTable } from '../../app/components/shared/details-table/DetailsTable';
+import { DangerZone } from '../../../app/components/shared/danger-zone/DangerZone';
+import { DetailsHeader } from '../../../app/components/shared/details-header/DetailsHeader';
+import { DetailsTable } from '../../../app/components/shared/details-table/DetailsTable';
 import { useHosts } from '@modules/hosts/hooks/useHosts';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import {
@@ -11,15 +11,15 @@ import {
   SkeletonGrid,
   TableSkeleton,
   Table,
-} from '../../app/components/shared';
+} from '../../../app/components/shared';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { HostStatus } from './HostStatus/HostStatus';
+import { HostStatus } from '../../../../shared/components/HostStatus/HostStatus';
 import { formatDistanceToNow } from 'date-fns';
-import { nodeListToRow } from '../utils/toRow';
+import { nodeListToRow } from '../../utils/toRow';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { HostCharts } from './HostCharts/HostCharts';
+import { HostCharts } from '../HostCharts/HostCharts';
 
 function formatBytes(bytes: number, decimals = 1) {
   if (!+bytes) return '0 Bytes';

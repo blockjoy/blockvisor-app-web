@@ -1,5 +1,5 @@
 import { AppLayout } from '@modules/layout';
-import { Hosts } from '@modules/hosts/components/Hosts';
+import { Hosts } from '@modules/hosts/components/HostList/HostList';
 
 const HostsPage = () => <Hosts />;
 
