@@ -1,5 +1,5 @@
-import { NodeStatus, TableBlockNodes } from '@modules/app/components/shared';
-import { Button } from '@shared/components';
+import { NodeStatus } from '@modules/app/components/shared';
+import { Button, TableBlockNodes } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { MouseEventHandler } from 'react';
 import { HostStatus } from '../components/HostStatus/HostStatus';

@@ -1,5 +1,4 @@
-import { Table } from '@modules/app/components/shared';
-import { Button } from '@shared/components';
+import { Button, Table } from '@shared/components';
 import { FC, useEffect } from 'react';
 import { useOrganizations } from '../hooks/useOrganizations';
 import { flex } from 'styles/utils.flex.styles';

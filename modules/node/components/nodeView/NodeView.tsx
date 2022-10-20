@@ -1,4 +1,4 @@
-import { TableSkeleton, NodeStatus } from '../../../app/components/shared';
+import { NodeStatus } from '../../../app/components/shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { DetailsHeader } from '../../../app/components/shared/details-header/DetailsHeader';
 import { DetailsTable } from '../../../app/components/shared/details-table/DetailsTable';
@@ -13,6 +13,7 @@ import {
   PageSection,
   Skeleton,
   SkeletonGrid,
+  TableSkeleton,
 } from '@shared/components';
 
 export default () => {

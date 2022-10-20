@@ -1,7 +1,7 @@
-import { Table } from '@modules/app/components/shared';
 import { appState } from '@modules/dashboard/store';
 import { useHosts } from '@modules/hosts';
-import { Button, PageHeader } from '@shared/components';
+import { Button, PageHeader, Table } from '@shared/components';
+
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 

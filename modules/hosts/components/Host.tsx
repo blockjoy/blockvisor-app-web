@@ -4,7 +4,6 @@ import { DetailsHeader } from '../../app/components/shared/details-header/Detail
 import { DetailsTable } from '../../app/components/shared/details-table/DetailsTable';
 import { useHosts } from '@modules/hosts/hooks/useHosts';
 import { MouseEventHandler, useEffect, useState } from 'react';
-import { TableSkeleton, Table } from '../../app/components/shared';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { HostStatus } from './HostStatus/HostStatus';
@@ -20,6 +19,8 @@ import {
   PageSection,
   Skeleton,
   SkeletonGrid,
+  Table,
+  TableSkeleton,
 } from '@shared/components';
 
 function formatBytes(bytes: number, decimals = 1) {

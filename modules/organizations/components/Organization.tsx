@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useEffect } from 'react';
-import { TableSkeleton } from '@modules/app/components/shared';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { useOrganizations } from '../hooks/useOrganizations';
 import { queryAsString } from '@shared/utils/query';
@@ -16,6 +15,7 @@ import {
   PageSection,
   Skeleton,
   SkeletonGrid,
+  TableSkeleton,
 } from '@shared/components';
 
 const Organization: NextPage = () => {

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Table } from '@modules/app/components/shared';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import {
@@ -8,6 +7,7 @@ import {
   EmptyColumn,
   PageHeader,
   PageSection,
+  Table,
 } from '@shared/components';
 import anime from 'animejs';
 

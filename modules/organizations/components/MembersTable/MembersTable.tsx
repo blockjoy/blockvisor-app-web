@@ -1,4 +1,4 @@
-import { Table } from '@modules/app/components/shared';
+import { Table } from '@shared/components';
 
 type Props = {
   isLoading: boolean;

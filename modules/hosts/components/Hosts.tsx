@@ -3,9 +3,9 @@ import {
   EmptyColumn,
   PageHeader,
   PageSection,
+  Table,
 } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { Table } from '../../app/components/shared';
 import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../utils/toRow';

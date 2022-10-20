@@ -46,3 +46,6 @@ export * from './DangerZone/DangerZone';
 export * from './Skeleton/Skeleton';
 export * from './Skeleton/SkeletonGrid';
 export * from './BackButton/BackButton';
+export * from './Table/Table';
+export * from './Table/TableSkeleton';
+export * from './Table/TableBlockNodes';
