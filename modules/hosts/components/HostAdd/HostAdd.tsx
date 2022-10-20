@@ -1,7 +1,7 @@
+import { PageHeader, PageSection } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { PageHeader, PageSection } from '@modules/app/components/shared';
 
 export const HostAdd = () => {
   return (
