@@ -2,16 +2,16 @@ import { css } from '@emotion/react';
 
 export const styles = {
   figure: css`
-    & :global(svg *) {
+    & svg {
       will-change: transform, opacity;
       backface-visibility: hidden;
     }
 
-    & :global(g) {
+    & g {
       transform-origin: 50% 50%;
     }
 
-    & :global(.star) {
+    & .star {
       transform-origin: 80px 80px;
     }
   `,

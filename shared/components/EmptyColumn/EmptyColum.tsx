@@ -3,13 +3,14 @@ import { AnimatedGraphic } from './AnimatedGraphic';
 import { styles } from './EmptyColumn.styles';
 
 type Props = {
+  id?: string;
   title: string;
   description: string;
 };
 
-export function EmptyColumn({ title, description }: Props) {
+export function EmptyColumn({ id, title, description }: Props) {
   return (
-    <article css={[styles.columnEmpty]}>
+    <article id={id} css={[styles.columnEmpty]}>
       <AnimatedGraphic />
       <div>
         <div css={[typo.medium]}>{title}</div>

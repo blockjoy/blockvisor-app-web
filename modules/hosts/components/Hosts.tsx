@@ -5,6 +5,7 @@ import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../utils/toRow';
 import { css } from '@emotion/react';
+import anime from 'animejs';
 
 const headers = [
   {
@@ -45,6 +46,18 @@ export function Hosts() {
     });
   };
 
+  const animateEntry = () =>
+    anime({
+      targets: `#js-host-empty`,
+      opacity: [0, 1],
+      translateY: [8, 0],
+      easing: 'easeInOutQuad',
+      duration: 400,
+    });
+  useEffect(() => {
+    animateEntry();
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     getHosts();
@@ -77,6 +90,7 @@ export function Hosts() {
         />
       ) : (
         <EmptyColumn
+          id="js-host-empty"
           title="No Hosts."
           description="Add your nodes and hosts to get started with BlockVisor."
         />
