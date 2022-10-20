@@ -19,7 +19,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { nodeListToRow } from '../../utils/toRow';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { HostCharts } from '../HostCharts/HostCharts';
+import { HostCharts } from './HostCharts/HostCharts';
 
 function formatBytes(bytes: number, decimals = 1) {
   if (!+bytes) return '0 Bytes';
