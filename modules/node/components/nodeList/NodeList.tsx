@@ -20,9 +20,11 @@ export const NodeList = () => {
       easing: 'easeInOutQuad',
       duration: 400,
     });
+
   useEffect(() => {
     animateEntry();
   }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     loadNodes();

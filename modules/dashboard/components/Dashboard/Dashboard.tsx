@@ -1,12 +1,14 @@
 import { useRecoilValue } from 'recoil';
-import { PageSection } from '../shared';
-import { appState } from '@modules/app/store';
-import { DashboardNodeSummary } from './DashboardNodeSummary';
-import { DashboardRecentHosts } from './DashboardRecentHosts';
+
+import { appState } from '@modules/dashboard/store';
+
 import { NodeEarnings } from '@shared/components';
-import { useDashboard } from '@modules/app/hooks/useDashboard';
+import { useDashboard } from '@modules/dashboard/hooks/useDashboard';
 import { useEffect, useState } from 'react';
-import { DashboardEmpty } from './DashboardEmpty';
+import { DashboardEmpty } from '../DashboardEmpty/DashboardEmpty';
+import { NodeSummary } from '../NodeSummary/NodeSummary';
+import { RecentHosts } from '../RecentHosts/RecentHosts';
+import { PageSection } from '@modules/app/components/shared';
 
 export type NodeMetric = {
   name: string;
@@ -23,7 +25,7 @@ export type Dashboard = {
 
 const isEmpty = (metrics: NodeMetric[]) => metrics.every((m) => m.value === 0);
 
-export default () => {
+export function Dashboard() {
   const [isRendered, setRendered] = useState(false);
   const { dashboardLoading, dashboard } = useRecoilValue(appState);
   const { recentHosts, nodeMetrics } = dashboard;
@@ -44,10 +46,10 @@ export default () => {
   ) : (
     <>
       <PageSection>
-        <DashboardNodeSummary />
+        <NodeSummary />
       </PageSection>
       <PageSection>
-        <DashboardRecentHosts />
+        <RecentHosts />
       </PageSection>
       {!dashboardLoading && (
         <PageSection>
@@ -56,4 +58,4 @@ export default () => {
       )}
     </>
   );
-};
+}

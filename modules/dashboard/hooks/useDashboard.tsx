@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { appState } from '@modules/app/store';
+import { appState } from '@modules/dashboard/store';
 import { Dashboard } from '../components/dashboard/Dashboard';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { apiClient } from '@modules/client';
