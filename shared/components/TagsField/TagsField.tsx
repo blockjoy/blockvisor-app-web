@@ -50,10 +50,11 @@ export function TagsField({
       <InputLabel name={name} additionalStyles={labelClass} disabled={disabled}>
         {label}
       </InputLabel>
-      <div css={fieldClasses}>
+      <div css={inputClasses}>
         <PillBox>
-          {values.map((value) => (
+          {values.map((value, idx) => (
             <Pill
+              key={idx}
               data-pill-value={value}
               onClick={handleDelete}
               showFull={true}
@@ -64,7 +65,7 @@ export function TagsField({
         </PillBox>
         <input
           {...register(name, validationOptions)}
-          css={inputClasses}
+          css={fieldClasses}
           tabIndex={-1}
         />
       </div>

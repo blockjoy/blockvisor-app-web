@@ -54,3 +54,4 @@ export * from './DetailsTable/DetailsTable';
 export * from './DataRow/DataRow';
 export * from './HostStatus/HostStatus';
 export * from './TableBlockHosts/TableBlockHosts';
+export * from './TagsField/TagsField';

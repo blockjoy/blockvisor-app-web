@@ -20,6 +20,17 @@ module.exports = {
             require.resolve('@emotion/babel-preset-css-prop')
         ];
 
+        const filesRule = config.module.rules.find((r) => r.test.test(".svg"));
+        filesRule.exclude = /\.svg$/;
+
+        // We push the new loader, as usual
+        config.module.rules.push(
+            {
+                test: /\.svg$/,
+                use: ["@svgr/webpack"],
+            }
+        )
         return config;
+
     }
 }
