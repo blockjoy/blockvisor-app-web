@@ -3,7 +3,7 @@ import { appState } from '@modules/dashboard/store';
 
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { apiClient } from '@modules/client';
-import { HostStatus, TableBlockHosts } from '@modules/hosts';
+import { HostStatus, TableBlockHosts } from '@shared/components';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { authAtoms } from '@modules/auth';

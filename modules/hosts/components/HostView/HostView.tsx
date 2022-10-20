@@ -3,12 +3,11 @@ import { useHosts } from '@modules/hosts/hooks/useHosts';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { HostStatus } from './HostStatus/HostStatus';
+import { HostStatus } from '../../../../shared/components/HostStatus/HostStatus';
 import { formatDistanceToNow } from 'date-fns';
-import { nodeListToRow } from '../utils/toRow';
+import { nodeListToRow } from '../../utils/toRow';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { HostCharts } from './HostCharts/HostCharts';
 import {
   BackButton,
   DangerZone,
@@ -21,6 +20,7 @@ import {
   Table,
   TableSkeleton,
 } from '@shared/components';
+import { HostCharts } from '../HostCharts/HostCharts';
 
 function formatBytes(bytes: number, decimals = 1) {
   if (!+bytes) return '0 Bytes';

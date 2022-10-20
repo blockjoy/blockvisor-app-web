@@ -52,3 +52,5 @@ export * from './Table/TableBlockNodes';
 export * from './DetailsHeader/DetailsHeader';
 export * from './DetailsTable/DetailsTable';
 export * from './DataRow/DataRow';
+export * from './HostStatus/HostStatus';
+export * from './TableBlockHosts/TableBlockHosts';

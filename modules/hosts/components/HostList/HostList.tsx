@@ -6,11 +6,11 @@ import {
   Table,
 } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { useHosts } from '../hooks/useHosts';
 import { useRouter } from 'next/router';
-import { hostsToRows } from '../utils/toRow';
+import { hostsToRows } from '../../utils/toRow';
 import { css } from '@emotion/react';
 import anime from 'animejs';
+import { useHosts } from '@modules/hosts';
 
 const headers = [
   {

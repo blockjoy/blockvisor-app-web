@@ -1,8 +1,11 @@
-import { Button, TableBlockNodes } from '@shared/components';
+import {
+  Button,
+  HostStatus,
+  TableBlockHosts,
+  TableBlockNodes,
+} from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { MouseEventHandler } from 'react';
-import { HostStatus } from '../components/HostStatus/HostStatus';
-import { TableBlockHosts } from '../components/TableBlockHosts/TableBlockHosts';
 import { styles as detailsHeaderStyles } from '@shared/components/DetailsHeader/DetailsHeader.styles';
 import { NodeStatus } from '@modules/node';
 
