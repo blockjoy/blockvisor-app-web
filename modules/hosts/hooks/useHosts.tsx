@@ -113,6 +113,7 @@ export const useHosts = () => {
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);
+<<<<<<< HEAD
     hostProvision.setIpGateway(gatewayIpAddress);
     hostProvision.setIpRangeFrom(ipAddressFrom);
     hostProvision.setIpRangeTo(ipAddressTo);
@@ -125,6 +126,16 @@ export const useHosts = () => {
     }
 
     console.log('response', response);
+=======
+    // TODO: impl the following
+    /*
+    hostProvision.setIpGateway("<your gateway ip>");
+    hostProvision.setIpRangeFrom("<ip range start>");
+    hostProvision.setIpRangeTo("<ip range end>");
+    */
+
+    const response: any = await apiClient.createHostProvision(hostProvision);
+>>>>>>> ad6b4bf (feat: updated protos)
 
     const hostProvisionKey = response?.messagesList[0];
     const hostProvisionKeysCopy = [...hostProvisionKeys];
