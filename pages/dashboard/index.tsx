@@ -1,12 +1,10 @@
-import { AppLayout } from "@modules/layout";
-import DashboardModule from "@modules/app/components/dashboard/Dashboard";
+import { AppLayout } from '@modules/layout';
+import { Dashboard as DashboardPage } from '@modules/dashboard';
 
-const Dashboard = () => <DashboardModule />;
+const Dashboard = () => <DashboardPage />;
 
 Dashboard.getLayout = function getLayout(page: any) {
-  return <AppLayout breadcrumb={["Dashboard", "Home"]}>{page}</AppLayout>
-}
+  return <AppLayout breadcrumb={['Dashboard', 'Home']}>{page}</AppLayout>;
+};
 
 export default Dashboard;
-
-

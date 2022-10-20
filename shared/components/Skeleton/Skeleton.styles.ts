@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const skeletonStyles = {
+export const styles = {
   skeleton: css`
     display: block;
     background: #4d4f4d;

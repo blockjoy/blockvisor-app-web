@@ -1,11 +1,11 @@
-import { appState } from '@modules/app/store';
+import { appState } from '@modules/dashboard/store';
 import { useHosts } from '@modules/hosts';
-import { Button } from '@shared/components';
+import { Button, PageHeader, Table } from '@shared/components';
+
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import { PageHeader, Table } from '../shared';
 
-export const DashboardRecentHosts = () => {
+export const RecentHosts = () => {
   const router = useRouter();
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
   const { recentHosts } = dashboard;

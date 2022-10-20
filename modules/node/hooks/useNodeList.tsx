@@ -3,14 +3,13 @@ import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useEffect, useState } from 'react';
-import { NodeStatus } from '@modules/app/components/shared/node-status/NodeStatus';
-import { TableBlockNodes } from '@modules/app/components/shared';
+
 import { apiClient } from '@modules/client';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { nodeTypeList } from '@shared/constants/lookups';
-import { organisationAtoms } from '@modules/organizations';
 import { authAtoms } from '@modules/auth';
+import { TableBlockNodes } from '@shared/components';
+import { NodeStatus } from '../components/NodeStatus/NodeStatus';
 
 interface Hook {
   loadNodes: () => void;

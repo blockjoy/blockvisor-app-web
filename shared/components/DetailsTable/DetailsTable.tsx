@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { table } from 'styles/table.styles';
-import { DataRow } from '../data-row/DataRow';
+import { DataRow } from '../DataRow/DataRow';
+
 import { styles } from './DetailsTable.styles';
 
 interface Props {

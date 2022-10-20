@@ -1,15 +1,13 @@
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-
 import { AllOrganizationsTable } from './AllOrganizationsTable';
 import PersonIcon from '@public/assets/icons/person-12.svg';
 import { flex } from 'styles/utils.flex.styles';
-import { PageTitle } from '@modules/app/components/page-title/PageTitle';
-import { PageSection } from '@modules/app/components/shared';
 import { useRecoilValue } from 'recoil';
 import { organisationAtoms } from '../store/organizationAtoms';
 import { NextPage } from 'next';
+import { PageSection, PageTitle } from '@shared/components';
 
 export const OrganizationsPage: NextPage = () => {
   const memberCount = useRecoilValue(organisationAtoms.organizationMemberCount);

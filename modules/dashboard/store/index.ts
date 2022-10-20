@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Dashboard } from '@modules/app/components/dashboard/Dashboard';
+import { Dashboard } from '../components/Dashboard/Dashboard';
 
 const defaultDashboard: Dashboard = {
   nodeMetrics: [],

@@ -1,8 +1,13 @@
-import { NodeStatus, TableBlockNodes } from '@modules/app/components/shared';
-import { Button, HostStatus, TableBlockHosts } from '@shared/components';
+import {
+  Button,
+  HostStatus,
+  TableBlockHosts,
+  TableBlockNodes,
+} from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { MouseEventHandler } from 'react';
-import { styles as detailsHeaderStyles } from '@modules/app/components/shared/details-header/DetailsHeader.styles';
+import { styles as detailsHeaderStyles } from '@shared/components/DetailsHeader/DetailsHeader.styles';
+import { NodeStatus } from '@modules/node';
 
 export function hostsToRows(hosts: Host[] | null) {
   return hosts?.map((host: any) => ({

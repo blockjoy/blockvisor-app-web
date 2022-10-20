@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { skeletonStyles } from './skeleton.styles';
+import { styles } from './Skeleton.styles';
 
 type Props = {
   children: ReactNode;
@@ -7,5 +7,5 @@ type Props = {
 };
 
 export const SkeletonGrid: FC<Props> = ({ children, padding = '' }) => (
-  <div css={skeletonStyles.skeletonGrid(padding)}>{children}</div>
+  <div css={styles.skeletonGrid(padding)}>{children}</div>
 );

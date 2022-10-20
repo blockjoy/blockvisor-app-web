@@ -1,8 +1,7 @@
-import { PageSection } from '@modules/app/components/shared';
 import { authAtoms } from '@modules/auth';
 import { AppLayout } from '@modules/layout';
 import { ChangePassword, EditUser, PageTitle } from '@modules/profile';
-import { Tabs } from '@shared/components';
+import { PageSection, Tabs } from '@shared/components';
 import { useTabs } from '@shared/index';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
