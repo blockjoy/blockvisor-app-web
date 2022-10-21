@@ -103,8 +103,13 @@ export const useHosts = () => {
     setHostLoading(false);
   };
 
-  const createHostProvision = async (callback: (args1: string) => void) => {
-    const orgId = user?.defaultOrganization?.id || '';
+  const createHostProvision = async (
+    ipAddressFrom: string,
+    ipAddressTo: string,
+    gatewayIpAddress: string,
+    callback: (args1: string) => void,
+  ) => {
+    const orgId = user?.defaultOrganization?.id!;
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);
