@@ -30,6 +30,11 @@ export function Dashboard() {
   const { recentHosts, nodeMetrics } = dashboard;
   const { loadDashboard } = useDashboard();
 
+  const empty =
+    !Boolean(recentHosts.length) &&
+    isEmpty(nodeMetrics) &&
+    dashboardLoading === 'finished';
+
   useEffect(() => {
     window.scrollTo(0, 0);
     loadDashboard();
@@ -38,7 +43,7 @@ export function Dashboard() {
 
   if (!isRendered) return null;
 
-  return !Boolean(recentHosts.length) && isEmpty(nodeMetrics) ? (
+  return empty ? (
     <PageSection bottomBorder={false}>
       <DashboardEmpty />
     </PageSection>

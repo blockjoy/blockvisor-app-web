@@ -14,12 +14,14 @@ export const NodeSummary = () => {
   const setLayoutState = useSetRecoilState(layoutState);
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
   const { nodeMetrics } = dashboard;
+  const loading =
+    dashboardLoading === 'loading' || dashboardLoading === 'initializing';
   return (
     <>
       <PageHeader>
         Your Nodes
         <Button
-          disabled={dashboardLoading}
+          disabled={loading}
           size="small"
           style="secondary"
           onClick={() => setLayoutState('nodes')}
@@ -27,7 +29,7 @@ export const NodeSummary = () => {
           Add Node
         </Button>
       </PageHeader>
-      {!dashboardLoading ? (
+      {!loading ? (
         <ul css={styles.list}>
           {nodeMetrics.map((item, index) => (
             <li

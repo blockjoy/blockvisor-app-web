@@ -22,7 +22,7 @@ export const useHosts = () => {
   const user = useRecoilValue(authAtoms.user);
 
   const getHosts = async () => {
-    setLoadingHosts(true);
+    setLoadingHosts('loading');
     // revisit this once types are consolidated
 
     const hosts: any = await apiClient.getHosts(
@@ -31,9 +31,8 @@ export const useHosts = () => {
       undefined,
     );
 
-    console.log('hosts', hosts);
-
     if (hosts?.code === 6) {
+      setLoadingHosts('finished');
       return;
     }
 
@@ -60,7 +59,7 @@ export const useHosts = () => {
 
     setHosts(hosts);
     await delay(env.loadingDuration);
-    setLoadingHosts(false);
+    setLoadingHosts('finished');
   };
   const deleteHost = async (id: string) => {
     const uuid = id?.toString()!;
@@ -144,7 +143,7 @@ export const useHosts = () => {
     getHosts,
     hostAddKey: hostProvisionKeys?.length ? hostProvisionKeys[0] : '',
     hosts,
-    loadingHosts: Boolean(loadingHosts),
+    loadingHosts: loadingHosts,
     host,
     loadingHost: Boolean(loadingHost),
   };

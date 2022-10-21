@@ -37,7 +37,7 @@ export const useNodeList = (): Hook => {
   };
 
   const loadNodes = async () => {
-    setIsLoading(true);
+    setIsLoading('loading');
     // TODO: Org ID needs be set here
     let org_id = user?.defaultOrganization?.id || '';
 
@@ -47,7 +47,7 @@ export const useNodeList = (): Hook => {
 
     await delay(env.loadingDuration);
 
-    setIsLoading(false);
+    setIsLoading('finished');
   };
 
   useEffect(() => {

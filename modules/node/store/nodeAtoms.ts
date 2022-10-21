@@ -12,9 +12,9 @@ const nodeRows = atom<Row[] | null>({
   default: null,
 });
 
-const isLoading = atom<boolean>({
+const isLoading = atom<LoadingState>({
   key: 'node.loading',
-  default: true,
+  default: 'initializing',
 });
 
 export const nodeAtoms = {

@@ -10,20 +10,22 @@ interface Props {
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
   const { isLoggedIn, isVerified, status } = useAuth();
+  const loading = status === 'initializing' || status === 'loading';
+  const finished = status === 'finished';
 
   useEffect(() => {
-    if (status === 'finished' && !isLoggedIn) {
+    if (finished && !isLoggedIn) {
       router.push(Routes.login);
       return;
     }
 
-    if (status === 'finished' && !isVerified) {
+    if (finished && !isVerified) {
       router.push(Routes.verify);
       return;
     }
   }, [router.pathname, status]);
 
-  if (status !== 'finished') {
+  if (loading) {
     return <LoadingSpinner size="page" />;
   }
 
