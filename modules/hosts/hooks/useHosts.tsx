@@ -122,6 +122,13 @@ export const useHosts = () => {
 
     const response: any = await apiClient.createHostProvision(hostProvision);
 
+    if (response?.code === 9) {
+      callback('');
+      return;
+    }
+
+    console.log('response', response);
+
     const hostProvisionKey = response?.messagesList[0];
     const hostProvisionKeysCopy = [...hostProvisionKeys];
 
