@@ -14,7 +14,11 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@blockjoy/blockjoy-grpc": "^1.1.32",
+=======
+    "@blockjoy/blockjoy-grpc": "^1.1.31",
+>>>>>>> 4ebf3ff (feat: updated protos)
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "animejs": "^3.2.1",
