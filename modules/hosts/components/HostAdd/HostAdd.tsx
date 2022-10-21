@@ -55,10 +55,24 @@ export const HostAdd = () => {
           </p>
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <IpAddressInput
-                onChange={handleIpChanged}
-                placeholder="001.001.001.001"
-              />
+              <section css={[spacing.bottom.medium]}>
+                <IpAddressInput
+                  onChange={handleIpChanged}
+                  label="IP Address From"
+                />
+              </section>
+              <section css={[spacing.bottom.medium]}>
+                <IpAddressInput
+                  onChange={handleIpChanged}
+                  label="IP Address To"
+                />
+              </section>
+              <section css={[spacing.bottom.medium]}>
+                <IpAddressInput
+                  onChange={handleIpChanged}
+                  label="Gateway IP Address"
+                />
+              </section>
             </form>
           </FormProvider>
         </>
