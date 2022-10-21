@@ -11,15 +11,17 @@ const Verified: NextPage = () => {
   const { query } = useRouter();
 
   useEffect(() => {
-    const { token } = query;
+    (async () => {
+      const { token } = query;
 
-    const response: any = apiClient.registration_confirmation(
-      token?.toString()!,
-    );
+      const response: any = await apiClient.registration_confirmation(
+        token?.toString()!,
+      );
 
-    console.log('verified', response);
+      console.log('verified', response);
 
-    console.log(query.token);
+      console.log(query.token);
+    })();
   }, []);
 
   return (
