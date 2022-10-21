@@ -10,7 +10,12 @@ export const IpAddressInput: FC<Props> = ({ onChange, placeholder }) => {
   return (
     <Cleave
       placeholder={placeholder}
-      options={{ delimiter: '·', blocks: [3, 3, 3], uppercase: true }}
+      options={{
+        delimiter: '.',
+        blocks: [3, 3, 3, 3],
+        uppercase: true,
+        numericOnly: true,
+      }}
       onChange={onChange}
     />
   );
