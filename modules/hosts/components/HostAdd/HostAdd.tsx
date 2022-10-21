@@ -1,5 +1,5 @@
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { PageHeader, PageSection } from '@shared/components';
+import { PageHeader, PageSection, Button } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -8,33 +8,49 @@ import { useRouter } from 'next/router';
 import { IpAddressInput } from '@shared/components';
 
 type Form = {
-  location?: string;
-  ipAddressMin: string;
-  ipAddressMax: string;
-  gatewayIpAddressMin: string;
-  gatewayIpAddressMax: string;
+  ipAddressFrom: string;
+  ipAddressTo: string;
+  gatewayIpAddress: string;
 };
 
 export const HostAdd = () => {
   const router = useRouter();
   const form = useForm<Form>();
 
+  const { setValue } = form;
+
   const { createHostProvision } = useHosts();
 
   const onSubmit: SubmitHandler<Form> = ({
-    location,
-    ipAddressMin,
-    ipAddressMax,
-    gatewayIpAddressMin,
-    gatewayIpAddressMax,
+    ipAddressFrom,
+    ipAddressTo,
+    gatewayIpAddress,
   }) => {
-    createHostProvision((key: string) => {
-      router.push(`hosts/install/${key}`);
-    });
+    console.log('params', ipAddressFrom, ipAddressTo, gatewayIpAddress);
+
+    createHostProvision(
+      ipAddressFrom,
+      ipAddressTo,
+      gatewayIpAddress,
+      (key: string) => {
+        router.push(`hosts/install/${key}`);
+      },
+    );
   };
 
-  const handleIpChanged = () => {
-    console.log('ip changed!');
+  const handleIpFromChanged = (newValue: string) => {
+    setValue('ipAddressFrom', newValue);
+    console.log('ip changed!', newValue);
+  };
+
+  const handleIpToChanged = (newValue: string) => {
+    setValue('ipAddressTo', newValue);
+    console.log('ip changed!', newValue);
+  };
+
+  const handleGatewayIpChanged = (newValue: string) => {
+    setValue('gatewayIpAddress', newValue);
+    console.log('ip changed!', newValue);
   };
 
   return (
@@ -57,22 +73,25 @@ export const HostAdd = () => {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <section css={[spacing.bottom.medium]}>
                 <IpAddressInput
-                  onChange={handleIpChanged}
+                  onChange={handleIpFromChanged}
                   label="IP Address From"
                 />
               </section>
               <section css={[spacing.bottom.medium]}>
                 <IpAddressInput
-                  onChange={handleIpChanged}
+                  onChange={handleIpToChanged}
                   label="IP Address To"
                 />
               </section>
-              <section css={[spacing.bottom.medium]}>
+              <section css={[spacing.bottom.large]}>
                 <IpAddressInput
-                  onChange={handleIpChanged}
+                  onChange={handleGatewayIpChanged}
                   label="Gateway IP Address"
                 />
               </section>
+              <Button type="submit" style="primary" size="small">
+                Add Host
+              </Button>
             </form>
           </FormProvider>
         </>
