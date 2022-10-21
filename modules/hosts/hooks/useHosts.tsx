@@ -105,7 +105,7 @@ export const useHosts = () => {
     gatewayIpAddress: string,
     callback: (args1: string) => void,
   ) => {
-    const orgId = user?.defaultOrganization?.id || '';
+    const orgId = user?.defaultOrganization?.id!;
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);
