@@ -1,5 +1,6 @@
 import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
 import {
+  ConfirmRegistrationRequest,
   LoginUserRequest,
   RefreshTokenResponse,
   ResetPasswordRequest,
@@ -326,6 +327,23 @@ export class GrpcClient {
       .catch((err) => {
         return StatusResponseFactory.loginResponse(err, 'grpcClient');
       });
+  }
+
+  async registration_confirmation(token: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let header = this.getAuthHeader();
+    header.authorization = `Bearer ${token}`;
+
+    let request = new ConfirmRegistrationRequest();
+    request.setMeta(request_meta);
+
+    return this.authentication?.confirm(request, header).then((response) => {
+      return response.getToken()?.toObject();
+    }).catch((err) => {
+      return StatusResponseFactory.registrationConfirmation(err, "grpcClient");
+    });
   }
 
   async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
