@@ -18,6 +18,8 @@ export const HostAdd = () => {
   const router = useRouter();
   const form = useForm<Form>();
 
+  const [serverError, setServerError] = useState<string>('');
+
   const [validation, setValidation] = useState({
     isDirty: false,
     ipAddressFrom: {
@@ -25,7 +27,7 @@ export const HostAdd = () => {
     },
     ipAddressTo: {
       valid: false,
-      greaterThanFrom: false,
+      lessThanFrom: false,
     },
     gatewayIpAddress: {
       valid: false,
@@ -43,12 +45,20 @@ export const HostAdd = () => {
     ipAddressTo,
     gatewayIpAddress,
   }) => {
+    setServerError('');
     createHostProvision(
       ipAddressFrom,
       ipAddressTo,
       gatewayIpAddress,
       (key: string) => {
-        router.push(`hosts/install/${key}`);
+        // if no key show error message
+        if (key) {
+          router.push(`/hosts/install/${key}`);
+        } else {
+          setServerError(
+            'Host could not be created, please check the details entered and try again.',
+          );
+        }
       },
     );
   };
@@ -95,7 +105,7 @@ export const HostAdd = () => {
       isDirty: true,
       ipAddressTo: {
         valid: checkIpIsValid(newValue),
-        greaterThanFrom: ipAddressToNumber > ipAddressFromNumber,
+        lessThanFrom: ipAddressToNumber > ipAddressFromNumber,
       },
     });
   };
@@ -149,14 +159,14 @@ export const HostAdd = () => {
                   label="IP Address To"
                 />
                 {form.getValues().ipAddressTo &&
-                  (!ipAddressTo.valid || !ipAddressTo.greaterThanFrom) && (
-                    <div
-                      css={[typo.microlabel, colors.warning, spacing.top.small]}
-                    >
-                      You must enter a valid IP Address that is higher than IP
-                      Address From
-                    </div>
-                  )}
+                (!ipAddressTo.valid || !ipAddressTo.lessThanFrom) ? (
+                  <div
+                    css={[typo.microlabel, colors.warning, spacing.top.small]}
+                  >
+                    You must enter a valid IP Address that is higher than IP
+                    Address From
+                  </div>
+                ) : null}
               </section>
               <section css={[spacing.bottom.large]}>
                 <IpAddressInput
@@ -172,11 +182,12 @@ export const HostAdd = () => {
                     </div>
                   )}
               </section>
+
               <Button
                 disabled={
-                  !isDirty ||
                   !ipAddressFrom.valid ||
                   !ipAddressTo.valid ||
+                  !ipAddressTo.lessThanFrom ||
                   !gatewayIpAddress.valid
                 }
                 type="submit"
@@ -185,6 +196,14 @@ export const HostAdd = () => {
               >
                 Add Host
               </Button>
+
+              {serverError && (
+                <div
+                  css={[typo.microlabel, colors.warning, spacing.top.medium]}
+                >
+                  {serverError}
+                </div>
+              )}
             </form>
           </FormProvider>
         </>
