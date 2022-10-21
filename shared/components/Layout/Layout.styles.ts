@@ -14,6 +14,7 @@ const layoutWrapper = css`
   background-color: var(--color-text-5-o3);
   border-radius: 8px;
   padding: 30px;
+  overflow: hidden;
 
   @media (min-width: 35.5rem) {
     padding: 60px;
