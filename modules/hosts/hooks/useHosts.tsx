@@ -103,30 +103,11 @@ export const useHosts = () => {
     setHostLoading(false);
   };
 
-  const createHostProvision = async (
-    ipAddressFrom: string,
-    ipAddressTo: string,
-    gatewayIpAddress: string,
-    callback: (args1: string) => void,
-  ) => {
-    const orgId = user?.defaultOrganization?.id!;
+  const createHostProvision = async (callback: (args1: string) => void) => {
+    const orgId = user?.defaultOrganization?.id || '';
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);
-<<<<<<< HEAD
-    hostProvision.setIpGateway(gatewayIpAddress);
-    hostProvision.setIpRangeFrom(ipAddressFrom);
-    hostProvision.setIpRangeTo(ipAddressTo);
-
-    const response: any = await apiClient.createHostProvision(hostProvision);
-
-    if (response?.code === 9) {
-      callback('');
-      return;
-    }
-
-    console.log('response', response);
-=======
     // TODO: impl the following
     /*
     hostProvision.setIpGateway("<your gateway ip>");
@@ -135,7 +116,6 @@ export const useHosts = () => {
     */
 
     const response: any = await apiClient.createHostProvision(hostProvision);
->>>>>>> ad6b4bf (feat: updated protos)
 
     const hostProvisionKey = response?.messagesList[0];
     const hostProvisionKeysCopy = [...hostProvisionKeys];
