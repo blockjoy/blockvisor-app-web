@@ -25,7 +25,9 @@ export const useHosts = () => {
     setLoadingHosts(true);
     // revisit this once types are consolidated
 
-    const hosts: any = await apiClient.getHosts(
+    let hosts: any[] = [];
+
+    const hostsResponse: any = await apiClient.getHosts(
       undefined,
       user?.defaultOrganization?.id,
       undefined,
@@ -33,8 +35,8 @@ export const useHosts = () => {
 
     console.log('hosts', hosts);
 
-    if (hosts?.code === 6) {
-      return;
+    if (hostsResponse?.code !== 6) {
+      hosts = hostsResponse;
     }
 
     // load provisioning hosts
@@ -62,6 +64,7 @@ export const useHosts = () => {
     await delay(env.loadingDuration);
     setLoadingHosts(false);
   };
+
   const deleteHost = async (id: string) => {
     const uuid = id?.toString()!;
     await apiClient.execDeleteHost(uuid);
@@ -114,6 +117,13 @@ export const useHosts = () => {
     hostProvision.setIpRangeTo(ipAddressTo);
 
     const response: any = await apiClient.createHostProvision(hostProvision);
+
+    if (response?.code === 9) {
+      callback('');
+      return;
+    }
+
+    console.log('response', response);
 
     const hostProvisionKey = response?.messagesList[0];
     const hostProvisionKeysCopy = [...hostProvisionKeys];

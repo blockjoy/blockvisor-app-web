@@ -63,6 +63,8 @@ export function Hosts() {
   }, []);
 
   const rows = hostsToRows(hosts);
+  console.log('rows', rows);
+
   return (
     <PageSection bottomBorder={false}>
       <PageHeader>
@@ -79,7 +81,7 @@ export function Hosts() {
           Add Host
         </Button>
       </PageHeader>
-      {Boolean(rows) ? (
+      {Boolean(rows?.length) ? (
         <Table
           isLoading={loadingHosts}
           headers={headers}
