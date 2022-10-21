@@ -28,6 +28,7 @@ export enum StatusResponseCode {
     ExecStartNode,
     ExecStopNode,
     ExecRestartHost,
+    RegistrationConfirmation,
 }
 
 export class StatusResponseFactory {
@@ -167,6 +168,13 @@ export class StatusResponseFactory {
     static execRestartHostResponse(err: any, source: StatusSource): StatusResponse {
         return StatusResponseFactory.createResponse(StatusResponseCode.ExecRestartHost,
             "Error restarting host",
+            err,
+            source)
+    }
+
+    static registrationConfirmation(err: any, source: StatusSource): StatusResponse {
+        return StatusResponseFactory.createResponse(StatusResponseCode.RegistrationConfirmation,
+            "Registration confirmation error",
             err,
             source)
     }
