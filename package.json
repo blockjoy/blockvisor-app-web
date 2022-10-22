@@ -15,10 +15,14 @@
   },
   "dependencies": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@blockjoy/blockjoy-grpc": "^1.1.32",
 =======
     "@blockjoy/blockjoy-grpc": "^1.1.31",
 >>>>>>> 4ebf3ff (feat: updated protos)
+=======
+    "@blockjoy/blockjoy-grpc": "^1.1.32",
+>>>>>>> 68492db (feat: update organization service methods)
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "animejs": "^3.2.1",
