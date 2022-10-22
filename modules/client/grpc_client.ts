@@ -54,9 +54,10 @@ import {
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
-  CreateOrganizationResponse,
+  CreateOrganizationRequest,
+  CreateOrganizationResponse, DeleteOrganizationRequest,
   DeleteOrganizationResponse,
-  GetOrganizationsRequest,
+  GetOrganizationsRequest, RestoreOrganizationRequest, UpdateOrganizationRequest,
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
@@ -714,28 +715,67 @@ export class GrpcClient {
   async createOrganization(
     organization: Organization,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new CreateOrganizationResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new CreateOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setOrganization(organization);
+
+    return this.organization?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.deleteOrganizationResponse(err, "grpcClient")
+    });
   }
 
   async updateOrganization(
     organization: Organization,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new UpdateOrganizationResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new UpdateOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setOrganization(organization);
+
+    return this.organization?.update(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.deleteOrganizationResponse(err, "grpcClient")
+    });
   }
 
   async deleteOrganization(
     organization_id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-    let response = new DeleteOrganizationResponse();
-    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    return response.getMeta()?.toObject();
+    let request = new DeleteOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setId(organization_id);
+
+    return this.organization?.delete(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.deleteOrganizationResponse(err, "grpcClient")
+    });
+  }
+
+  async restoreOrganization(organization_id: string,): Promise<Organization.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new RestoreOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setId(organization_id);
+
+    return this.organization?.restore(request, this.getAuthHeader()).then((response) => {
+      return response.getOrganization()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.restoreOrganizationResponse(err, "grpcClient")
+    });
   }
 
   /* User service */
