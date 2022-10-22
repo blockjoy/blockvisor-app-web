@@ -29,6 +29,10 @@ export enum StatusResponseCode {
     ExecStopNode,
     ExecRestartHost,
     RegistrationConfirmation,
+    CreateOrganization,
+    DeleteOrganization,
+    UpdateOrganization,
+    RestoreOrganization,
 }
 
 export class StatusResponseFactory {
@@ -175,6 +179,34 @@ export class StatusResponseFactory {
     static registrationConfirmation(err: any, source: StatusSource): StatusResponse {
         return StatusResponseFactory.createResponse(StatusResponseCode.RegistrationConfirmation,
             "Registration confirmation error",
+            err,
+            source)
+    }
+
+    static createOrganizationResponse(err: any, source: StatusSource): StatusResponse {
+        return StatusResponseFactory.createResponse(StatusResponseCode.CreateOrganization,
+            "Create organization error",
+            err,
+            source)
+    }
+
+    static updateOrganizationResponse(err: any, source: StatusSource): StatusResponse {
+        return StatusResponseFactory.createResponse(StatusResponseCode.UpdateOrganization,
+            "Update organization error",
+            err,
+            source)
+    }
+
+    static deleteOrganizationResponse(err: any, source: StatusSource): StatusResponse {
+        return StatusResponseFactory.createResponse(StatusResponseCode.DeleteOrganization,
+            "Delete organization error",
+            err,
+            source)
+    }
+
+    static restoreOrganizationResponse(err: any, source: StatusSource): StatusResponse {
+        return StatusResponseFactory.createResponse(StatusResponseCode.RestoreOrganization,
+            "Restore organization error",
             err,
             source)
     }
