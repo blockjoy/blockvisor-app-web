@@ -6,10 +6,13 @@ const defaultDashboard: Dashboard = {
   recentHosts: [],
 };
 
-export const appState = atom({
+export const appState = atom<{
+  dashboard: Dashboard;
+  dashboardLoading: LoadingState;
+}>({
   key: 'appState',
   default: {
     dashboard: defaultDashboard,
-    dashboardLoading: true,
+    dashboardLoading: 'initializing',
   },
 });

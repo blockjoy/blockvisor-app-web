@@ -10,14 +10,16 @@ interface Props {
 export function PublicRoute({ children }: Props) {
   const router = useRouter();
   const { isLoggedIn, status } = useAuth();
+  const loading = status === 'initializing' || status === 'loading';
+  const finished = status === 'finished';
 
   useEffect(() => {
-    if (status === 'finished' && isLoggedIn) {
+    if (finished && isLoggedIn) {
       router.push(Routes.dashboard);
     }
   }, [status]);
 
-  if (status === 'checking') {
+  if (loading) {
     return <LoadingSpinner size="page" />;
   }
 

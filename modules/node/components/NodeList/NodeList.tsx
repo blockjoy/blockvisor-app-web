@@ -18,7 +18,8 @@ export const NodeList = () => {
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
   const nodeRows = useRecoilValue(nodeAtoms.nodeRows);
   const hasHosts = !!useRecoilValue(hostsAtoms.hosts)?.length;
-
+  const loading = isLoading === 'initializing' || isLoading === 'loading';
+  const finished = isLoading === 'finished';
   const animateEntry = () =>
     anime({
       targets: `#js-nodes-empty`,
@@ -50,29 +51,29 @@ export const NodeList = () => {
           Add Node
         </Button>
       </PageHeader>
-      {Boolean(nodeRows) ? (
+      {!Boolean(nodeRows?.length) && finished ? (
         <>
-          <Table
-            isLoading={isLoading}
-            headers={[
-              {
-                name: 'Name',
-                key: '1',
-              },
-              {
-                name: 'Status',
-                key: '2',
-              },
-            ]}
-            rows={nodeRows || []}
-            onRowClick={handleRowClick}
+          <EmptyColumn
+            id="js-nodes-empty"
+            title="No Nodes."
+            description="Add your nodes and hosts to get started with BlockVisor."
           />
         </>
       ) : (
-        <EmptyColumn
-          id="js-nodes-empty"
-          title="No Nodes."
-          description="Add your nodes and hosts to get started with BlockVisor."
+        <Table
+          isLoading={loading}
+          headers={[
+            {
+              name: 'Name',
+              key: '1',
+            },
+            {
+              name: 'Status',
+              key: '2',
+            },
+          ]}
+          rows={nodeRows || []}
+          onRowClick={handleRowClick}
         />
       )}
     </PageSection>

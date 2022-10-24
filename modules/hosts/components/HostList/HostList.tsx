@@ -32,6 +32,8 @@ const headers = [
 export function Hosts() {
   const router = useRouter();
   const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
+  const loading = loadingHosts === 'initializing' || loadingHosts === 'loading';
+  const finished = loadingHosts === 'finished';
 
   const handleRowClick = (args: any) => {
     if (args.key.length < 12) {
@@ -79,9 +81,9 @@ export function Hosts() {
           Add Host
         </Button>
       </PageHeader>
-      {Boolean(rows) ? (
+      {Boolean(rows) || !finished ? (
         <Table
-          isLoading={loadingHosts}
+          isLoading={loading}
           headers={headers}
           rows={rows}
           onRowClick={handleRowClick}

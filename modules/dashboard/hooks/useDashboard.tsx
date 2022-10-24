@@ -70,7 +70,7 @@ export const useDashboard = (): Hook => {
   const loadDashboard = async () => {
     setApp({
       ...app,
-      dashboardLoading: true,
+      dashboardLoading: 'loading',
     });
 
     const metrics: any = await apiClient.getDashboardMetrics();
@@ -97,7 +97,7 @@ export const useDashboard = (): Hook => {
     setApp({
       ...app,
       dashboard,
-      dashboardLoading: false,
+      dashboardLoading: 'finished',
     });
   };
   return {

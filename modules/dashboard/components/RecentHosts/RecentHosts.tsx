@@ -10,6 +10,8 @@ export const RecentHosts = () => {
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
   const { recentHosts } = dashboard;
   const { createHostProvision } = useHosts();
+  const loading =
+    dashboardLoading === 'loading' || dashboardLoading === 'initializing';
 
   const handleHostClicked = (args: any) => router.push(`hosts/${args.key}`);
 
@@ -24,7 +26,7 @@ export const RecentHosts = () => {
       <PageHeader>
         Recent Hosts
         <Button
-          disabled={dashboardLoading}
+          disabled={loading}
           size="small"
           style="secondary"
           onClick={handleCreateClicked}
@@ -52,7 +54,7 @@ export const RecentHosts = () => {
           },
         ]}
         rows={recentHosts}
-        isLoading={dashboardLoading}
+        isLoading={loading}
         onRowClick={handleHostClicked}
       />
     </>

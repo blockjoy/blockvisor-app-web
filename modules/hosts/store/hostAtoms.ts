@@ -16,9 +16,9 @@ const hosts = atom<Host[] | null>({
   default: null,
 });
 
-const hostsLoading = atom<boolean | null>({
+const hostsLoading = atom<LoadingState>({
   key: 'hosts.loading',
-  default: null,
+  default: 'initializing',
 });
 
 const hostProvisionKeys = atom<string[]>({

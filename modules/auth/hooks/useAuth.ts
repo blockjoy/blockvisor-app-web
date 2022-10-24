@@ -5,18 +5,17 @@ import { useRecoilState } from 'recoil';
 
 export const useAuth = () => {
   const [user, setUser] = useRecoilState(authAtoms.user);
-  const [status, setStauts] =
-    useState<'checking' | 'finished' | 'initializing'>('initializing');
+  const [status, setStauts] = useState<LoadingState>('initializing');
 
   const signOut = () => {
-    setStauts('checking');
+    setStauts('loading');
     deleteUser();
     //setUser(null);
     setStauts('finished');
   };
 
   const checkUser = () => {
-    setStauts('checking');
+    setStauts('loading');
     const user = getUser();
 
     if (user) {
