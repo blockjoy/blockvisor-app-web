@@ -1,22 +1,30 @@
 import { authAtoms } from '@modules/auth/store/authAtoms';
-import { deleteUser, getUser } from '@shared/utils/browserStorage';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { BrowserStorage } from '../utils/BrowserStorage';
+import { IdentityRepository } from '../utils/IdentityRepository';
 
 export const useAuth = () => {
   const [user, setUser] = useRecoilState(authAtoms.user);
-  const [status, setStauts] = useState<LoadingState>('initializing');
+  const isBrowser = () => typeof window !== 'undefined';
+  const repository = useMemo(() => {
+    if (isBrowser()) {
+      const storage = new BrowserStorage<User>(localStorage, JSON);
+      return new IdentityRepository(storage);
+    }
+  }, []);
+  const [status, setStauts] =
+    useState<'checking' | 'finished' | 'initializing'>('initializing');
 
   const signOut = () => {
-    setStauts('loading');
-    deleteUser();
-    //setUser(null);
+    setStauts('checking');
+    repository?.delete();
     setStauts('finished');
   };
 
   const checkUser = () => {
-    setStauts('loading');
-    const user = getUser();
+    setStauts('checking');
+    const user = repository?.get();
 
     if (user) {
       setUser(user);
