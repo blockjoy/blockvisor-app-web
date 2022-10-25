@@ -6,11 +6,10 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { isSuccess, PasswordToggle } from '@modules/auth';
+import { isSuccess, PasswordToggle, useIdentity } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
 import { styles } from './ChangePassword.styles';
 import { apiClient } from '@modules/client';
-import { updateAccessToken } from '@shared/utils/browserStorage';
 import { toast } from 'react-toastify';
 
 type ChangePasswordForm = {
@@ -21,6 +20,7 @@ type ChangePasswordForm = {
 
 export function ChangePassword() {
   const form = useForm<ChangePasswordForm>();
+  const { updateUser } = useIdentity();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const [changePasswordError, setChangePasswordError] =
     useState<string | undefined>();
@@ -41,7 +41,7 @@ export function ChangePassword() {
       });
 
       if (isSuccess(res)) {
-        updateAccessToken(res.value);
+        updateUser({ accessToken: res.value });
         setIsLoading(false);
         form.reset();
         toast.success('Password changed');

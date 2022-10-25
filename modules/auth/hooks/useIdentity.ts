@@ -12,19 +12,22 @@ type Loading = 'loading' | 'done' | 'initializing';
 export const useIdentity = () => {
   const [, setUser] = useRecoilState(authAtoms.user);
   const isBrowser = () => typeof window !== 'undefined';
+  const [status, setStatus] = useState<Loading>('initializing');
+
   const repository = useMemo(() => {
     if (isBrowser()) {
       const storage = new BrowserStorage<User>(localStorage, JSON);
       return new IdentityRepository(storage);
     }
   }, []);
-  const [status, setStatus] = useState<Loading>('initializing');
 
   const signOut = () => {
     setStatus('loading');
     repository?.deleteIdentity();
     setStatus('done');
   };
+
+  const updateUser = (user: User) => repository?.updateIdentity(user);
 
   const signIn = async (email: string, password: string) => {
     setStatus;
@@ -65,6 +68,7 @@ export const useIdentity = () => {
     status: status,
     isLoading: status === 'initializing' || status === 'loading',
     isDone: status === 'done',
+    updateUser,
     signOut,
     signIn,
   };

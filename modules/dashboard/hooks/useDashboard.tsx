@@ -81,7 +81,7 @@ export const useDashboard = (): Hook => {
       offline = +metrics[1]?.value,
       total = +metrics[0]?.value + +metrics[1]?.value;
 
-    const recentHosts: never[] = await getRecentHosts();
+    const recentHosts: any[] = await getRecentHosts();
 
     const dashboard: Dashboard = {
       nodeMetrics: [
