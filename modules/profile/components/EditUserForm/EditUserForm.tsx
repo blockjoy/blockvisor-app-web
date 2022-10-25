@@ -1,14 +1,10 @@
-import { User } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-import { authAtoms } from '@modules/auth';
-import { apiClient } from '@modules/client';
-import { isStatusResponse } from '@modules/organizations';
+import { useIdentity } from '@modules/auth';
+import { EditUserError } from '@modules/auth/utils/Errors';
 import { Button, Input } from '@shared/components';
-import { updateUser } from '@shared/utils/browserStorage';
 import { delay } from '@shared/utils/delay';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { containers } from 'styles/containers.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -29,9 +25,9 @@ type Props = {
 
 export function EditUser({ firstName, lastName, id }: Props) {
   const form = useForm<EditUserForm>();
+  const { editUser } = useIdentity();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
-  const [, setAuth] = useRecoilState(authAtoms.user);
 
   useEffect(() => {
     form.setValue('firstName', firstName ?? '');
@@ -41,27 +37,17 @@ export function EditUser({ firstName, lastName, id }: Props) {
   const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {
     setIsLoading(true);
 
-    const user = new User();
-    user.setFirstName(firstName);
-    user.setLastName(lastName);
-    user.setId(id ?? '');
-
-    const res: any = await apiClient.updateUser(user);
-
-    await delay(1000);
-    if (isStatusResponse(res)) {
+    try {
+      await editUser(firstName, lastName, id ?? '');
+      await delay(1000);
       setIsLoading(false);
-      setUpdateError(res.message);
-    } else {
-      setIsLoading(false);
-      updateUser({
-        id: res?.id,
-        firstName: res?.firstName,
-        lastName: res?.lastName,
-        email: res?.email,
-      });
-      setAuth((current) => ({ ...current, ...res }));
       toast.success('Profile updated');
+    } catch (error) {
+      if (error instanceof EditUserError) {
+        setUpdateError(error.message);
+      }
+    } finally {
+      setIsLoading(false);
     }
   });
 

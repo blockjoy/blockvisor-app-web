@@ -1,10 +1,12 @@
+import { User as ApiUser } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { authAtoms } from '@modules/auth/store/authAtoms';
 import { apiClient } from '@modules/client';
+import { isStatusResponse } from '@modules/organizations';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { isSuccess } from '../utils/authTypeGuards';
 import { BrowserStorage } from '../utils/BrowserStorage';
-import { LoginError } from '../utils/Errors';
+import { EditUserError, LoginError } from '../utils/Errors';
 import { IdentityRepository } from '../utils/IdentityRepository';
 
 type Loading = 'loading' | 'done' | 'initializing';
@@ -27,7 +29,21 @@ export const useIdentity = () => {
     setStatus('done');
   };
 
-  const updateUser = (user: User) => repository?.updateIdentity(user);
+  const editUser = async (firstName: string, lastName: string, id: string) => {
+    const user = new ApiUser();
+    user.setFirstName(firstName);
+    user.setLastName(lastName);
+    user.setId(id ?? '');
+
+    const response: any = await apiClient.updateUser(user);
+
+    if (isStatusResponse(response)) {
+      throw new EditUserError('EditUserError', response.message);
+    } else {
+      setUser((current) => ({ ...current, ...response }));
+      repository?.updateIdentity({ ...response });
+    }
+  };
 
   const signIn = async (email: string, password: string) => {
     setStatus;
@@ -68,7 +84,7 @@ export const useIdentity = () => {
     status: status,
     isLoading: status === 'initializing' || status === 'loading',
     isDone: status === 'done',
-    updateUser,
+    editUser,
     signOut,
     signIn,
   };
