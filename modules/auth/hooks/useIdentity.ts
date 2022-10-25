@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { isSuccess } from '../utils/authTypeGuards';
 import { BrowserStorage } from '../utils/BrowserStorage';
-import { EditUserError, LoginError } from '../utils/Errors';
+import { ApplicationError } from '../utils/Errors';
 import { IdentityRepository } from '../utils/IdentityRepository';
 
 type Loading = 'loading' | 'done' | 'initializing';
@@ -38,15 +38,36 @@ export const useIdentity = () => {
     const response: any = await apiClient.updateUser(user);
 
     if (isStatusResponse(response)) {
-      throw new EditUserError('EditUserError', response.message);
+      throw new ApplicationError('EditUserError', response.message);
     } else {
       setUser((current) => ({ ...current, ...response }));
       repository?.updateIdentity({ ...response });
     }
   };
 
+  const changePassword = async (
+    currentPassword: string,
+    newPassword: string,
+    confirmPassword: string,
+  ) => {
+    const response = await apiClient.updatePassword({
+      old_pwd: currentPassword,
+      new_pwd: newPassword,
+      new_pwd_confirmation: confirmPassword,
+    });
+
+    if (isSuccess(response)) {
+      repository?.updateIdentity({ accessToken: response.value });
+      apiClient.setTokenValue(response.value);
+    } else {
+      throw new ApplicationError(
+        'ChangePasswordError',
+        response?.message ?? '',
+      );
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
-    setStatus;
     const response = await apiClient.login(email, password);
     if (isSuccess(response)) {
       apiClient.setTokenValue(response.value);
@@ -60,7 +81,7 @@ export const useIdentity = () => {
       repository?.updateIdentity(userData);
       setUser((current) => ({ ...current, ...userData }));
     } else {
-      throw new LoginError('LoginError', response?.message ?? '');
+      throw new ApplicationError('LoginError', response?.message ?? '');
     }
   };
 
@@ -85,6 +106,7 @@ export const useIdentity = () => {
     isLoading: status === 'initializing' || status === 'loading',
     isDone: status === 'done',
     editUser,
+    changePassword,
     signOut,
     signIn,
   };

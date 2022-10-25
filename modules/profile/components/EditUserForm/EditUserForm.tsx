@@ -1,5 +1,5 @@
 import { useIdentity } from '@modules/auth';
-import { EditUserError } from '@modules/auth/utils/Errors';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 import { Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
 import { useEffect, useState } from 'react';
@@ -43,7 +43,7 @@ export function EditUser({ firstName, lastName, id }: Props) {
       setIsLoading(false);
       toast.success('Profile updated');
     } catch (error) {
-      if (error instanceof EditUserError) {
+      if (error instanceof ApplicationError) {
         setUpdateError(error.message);
       }
     } finally {

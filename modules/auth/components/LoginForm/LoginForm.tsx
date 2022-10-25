@@ -1,5 +1,5 @@
 import { Routes, useIdentity } from '@modules/auth';
-import { LoginError } from '@modules/auth/utils/Errors';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useOrganizations } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
@@ -44,7 +44,7 @@ export function LoginForm() {
       setIsLoading(false);
       router.push(Routes.dashboard);
     } catch (error) {
-      if (error instanceof LoginError) {
+      if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
       }
     } finally {
