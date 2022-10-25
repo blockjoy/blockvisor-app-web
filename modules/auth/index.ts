@@ -3,4 +3,4 @@ export * from './store/selectors';
 export * from './utils/authTypeGuards';
 export * from './utils/routes';
 export * from './store/authAtoms';
-export * from './hooks/useAuth';
+export * from './hooks/useIdentity';

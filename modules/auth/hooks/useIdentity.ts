@@ -9,7 +9,7 @@ import { IdentityRepository } from '../utils/IdentityRepository';
 
 type Loading = 'loading' | 'done' | 'initializing';
 
-export const useAuth = () => {
+export const useIdentity = () => {
   const [, setUser] = useRecoilState(authAtoms.user);
   const isBrowser = () => typeof window !== 'undefined';
   const repository = useMemo(() => {

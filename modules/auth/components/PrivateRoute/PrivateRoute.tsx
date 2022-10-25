@@ -1,4 +1,4 @@
-import { Routes, useAuth } from '@modules/auth';
+import { Routes, useIdentity } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
@@ -9,7 +9,7 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoggedIn, isVerified, status, isDone, isLoading } = useAuth();
+  const { isLoggedIn, isVerified, status, isDone, isLoading } = useIdentity();
 
   useEffect(() => {
     if (isDone && !isLoggedIn) {
