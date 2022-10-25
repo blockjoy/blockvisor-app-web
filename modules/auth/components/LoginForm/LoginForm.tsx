@@ -1,15 +1,12 @@
-import { Routes } from '@modules/auth';
-import { authAtoms } from '@modules/auth/store/authAtoms';
-import { isSuccess } from '@modules/auth/utils/authTypeGuards';
-import { apiClient } from '@modules/client';
+import { Routes, useAuth } from '@modules/auth';
+import { LoginError } from '@modules/auth/utils/Errors';
 import { useOrganizations } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
-import { saveUser, updateUser } from '@shared/utils/browserStorage';
+import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -24,10 +21,10 @@ type LoginForm = {
 
 export function LoginForm() {
   const router = useRouter();
+  const { signIn } = useAuth();
   const form = useForm<LoginForm>();
   const [loading, setIsLoading] = useState(false);
-  const [, setAuth] = useRecoilState(authAtoms.user);
-  const [loginError, setLoginError] = useState<string | undefined>();
+  const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getDefaultOrganization } = useOrganizations();
 
@@ -37,41 +34,21 @@ export function LoginForm() {
   };
 
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
-    setLoginError(undefined);
     setIsLoading(true);
 
-    const response = await apiClient.login(email, password);
-    if (isSuccess(response)) {
-      apiClient.setTokenValue(response.value);
-      saveUser({
-        accessToken: response.value,
-        // for demo purposes only, this will be set later
-        verified: true,
-      });
-      const user: any = await apiClient.getUser();
-      updateUser({
-        id: user?.id,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        email: user?.email,
-      });
-      setAuth({
-        accessToken: response.value,
-        id: user?.id,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        email: user?.email,
-      });
+    try {
+      await signIn(email, password);
+      await getDefaultOrganization();
 
-      // simulate async req
-      getDefaultOrganization();
-      setTimeout(() => {
-        setIsLoading(false);
-        router.push(Routes.dashboard);
-      }, 1000);
-    } else {
+      await delay(1000);
       setIsLoading(false);
-      setLoginError('Invalid Credentials');
+      router.push(Routes.dashboard);
+    } catch (error) {
+      if (error instanceof LoginError) {
+        setLoginError('Invalid Credentials');
+      }
+    } finally {
+      setIsLoading(false);
     }
   });
   return (

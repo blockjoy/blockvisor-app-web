@@ -1,11 +1,16 @@
 import { authAtoms } from '@modules/auth/store/authAtoms';
+import { apiClient } from '@modules/client';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { isSuccess } from '../utils/authTypeGuards';
 import { BrowserStorage } from '../utils/BrowserStorage';
+import { LoginError } from '../utils/Errors';
 import { IdentityRepository } from '../utils/IdentityRepository';
 
+type Loading = 'loading' | 'done' | 'initializing';
+
 export const useAuth = () => {
-  const [user, setUser] = useRecoilState(authAtoms.user);
+  const [, setUser] = useRecoilState(authAtoms.user);
   const isBrowser = () => typeof window !== 'undefined';
   const repository = useMemo(() => {
     if (isBrowser()) {
@@ -13,23 +18,41 @@ export const useAuth = () => {
       return new IdentityRepository(storage);
     }
   }, []);
-  const [status, setStauts] =
-    useState<'checking' | 'finished' | 'initializing'>('initializing');
+  const [status, setStatus] = useState<Loading>('initializing');
 
   const signOut = () => {
-    setStauts('checking');
-    repository?.delete();
-    setStauts('finished');
+    setStatus('loading');
+    repository?.deleteIdentity();
+    setStatus('done');
+  };
+
+  const signIn = async (email: string, password: string) => {
+    setStatus;
+    const response = await apiClient.login(email, password);
+    if (isSuccess(response)) {
+      apiClient.setTokenValue(response.value);
+      repository?.saveIdentity({
+        accessToken: response.value,
+        // for demo purposes only, this will be set later
+        verified: true,
+      });
+
+      const userData: any = await apiClient.getUser();
+      repository?.updateIdentity(userData);
+      setUser((current) => ({ ...current, ...userData }));
+    } else {
+      throw new LoginError('LoginError', response?.message ?? '');
+    }
   };
 
   const checkUser = () => {
-    setStauts('checking');
-    const user = repository?.get();
+    setStatus('loading');
+    const user = repository?.getIdentity();
 
     if (user) {
       setUser(user);
     }
-    setStauts('finished');
+    setStatus('done');
   };
 
   useEffect(() => {
@@ -37,9 +60,12 @@ export const useAuth = () => {
   }, []);
 
   return {
-    isLoggedIn: Boolean(user?.accessToken),
-    isVerified: Boolean(user?.verified),
+    isLoggedIn: Boolean(repository?.getIdentity()?.accessToken),
+    isVerified: Boolean(repository?.getIdentity()?.verified),
     status: status,
+    isLoading: status === 'initializing' || status === 'loading',
+    isDone: status === 'done',
     signOut,
+    signIn,
   };
 };

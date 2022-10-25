@@ -11,7 +11,7 @@ export function PublicRoute({ children }: Props) {
   const router = useRouter();
   const { isLoggedIn, status } = useAuth();
   const loading = status === 'initializing' || status === 'loading';
-  const finished = status === 'finished';
+  const finished = status === 'done';
 
   useEffect(() => {
     if (finished && isLoggedIn) {
