@@ -6,7 +6,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { PasswordToggle, useIdentity } from '@modules/auth';
+import { PasswordToggle, useChangePassword } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
 import { styles } from './ChangePassword.styles';
 import { toast } from 'react-toastify';
@@ -20,7 +20,7 @@ type ChangePasswordForm = {
 
 export function ChangePassword() {
   const form = useForm<ChangePasswordForm>();
-  const { changePassword } = useIdentity();
+  const changePassword = useChangePassword();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const [changePasswordError, setChangePasswordError] =
     useState<string | undefined>();

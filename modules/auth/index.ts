@@ -4,3 +4,6 @@ export * from './utils/authTypeGuards';
 export * from './utils/routes';
 export * from './store/authAtoms';
 export * from './hooks/useIdentity';
+export * from './hooks/useIdentityRepository';
+export * from './hooks/useSignIn';
+export * from './hooks/useChangePassword';

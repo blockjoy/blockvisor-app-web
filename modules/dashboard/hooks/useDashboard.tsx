@@ -30,8 +30,6 @@ export const useDashboard = (): Hook => {
       return [];
     }
 
-    console.log('hostsResponse', hostsResponse);
-
     const hosts = hostsResponse.map((host: any) => ({
       key: host.id,
       cells: [
@@ -74,8 +72,6 @@ export const useDashboard = (): Hook => {
     });
 
     const metrics: any = await apiClient.getDashboardMetrics();
-
-    console.log('dashboard', metrics);
 
     const online = +metrics[0]?.value,
       offline = +metrics[1]?.value,

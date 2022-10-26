@@ -9,7 +9,7 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoggedIn, isVerified, status, isDone, isLoading } = useIdentity();
+  const { isLoggedIn, isVerified, isDone, isLoading, status } = useIdentity();
 
   useEffect(() => {
     if (isDone && !isLoggedIn) {

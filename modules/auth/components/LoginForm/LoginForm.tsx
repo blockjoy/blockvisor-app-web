@@ -1,4 +1,4 @@
-import { Routes, useIdentity } from '@modules/auth';
+import { Routes, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useOrganizations } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
@@ -21,7 +21,7 @@ type LoginForm = {
 
 export function LoginForm() {
   const router = useRouter();
-  const { signIn } = useIdentity();
+  const signIn = useSignIn();
   const form = useForm<LoginForm>();
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
