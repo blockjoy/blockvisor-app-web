@@ -9,16 +9,13 @@ export const RecentHosts = () => {
   const router = useRouter();
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
   const { recentHosts } = dashboard;
-  const { createHostProvision } = useHosts();
   const loading =
     dashboardLoading === 'loading' || dashboardLoading === 'initializing';
 
   const handleHostClicked = (args: any) => router.push(`hosts/${args.key}`);
 
   const handleCreateClicked = async () => {
-    createHostProvision((key: string) => {
-      router.push(`hosts/install/${key}`);
-    });
+    router.push(`hosts/add`);
   };
 
   return (
