@@ -7,3 +7,4 @@ export * from './hooks/useIdentity';
 export * from './hooks/useIdentityRepository';
 export * from './hooks/useSignIn';
 export * from './hooks/useChangePassword';
+export * from './hooks/useEditUser';

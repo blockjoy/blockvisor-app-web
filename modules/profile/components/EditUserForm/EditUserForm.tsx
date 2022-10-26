@@ -1,4 +1,4 @@
-import { useIdentity } from '@modules/auth';
+import { useEditUser } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
@@ -25,7 +25,7 @@ type Props = {
 
 export function EditUser({ firstName, lastName, id }: Props) {
   const form = useForm<EditUserForm>();
-  const { editUser } = useIdentity();
+  const editUser = useEditUser();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
 
