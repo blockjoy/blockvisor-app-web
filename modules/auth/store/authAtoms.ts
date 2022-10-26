@@ -5,6 +5,12 @@ const user = atom<User | null>({
   default: null,
 });
 
+const loading = atom<LoadingState>({
+  key: 'authentication.loading',
+  default: 'initializing',
+});
+
 export const authAtoms = {
   user,
+  loading,
 };

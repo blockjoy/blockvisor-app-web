@@ -9,7 +9,7 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoggedIn, isVerified, isDone, isLoading, status } = useIdentity();
+  const { isLoggedIn, isVerified, isDone, isLoading, state } = useIdentity();
 
   useEffect(() => {
     if (isDone && !isLoggedIn) {
@@ -21,7 +21,7 @@ export function PrivateRoute({ children }: Props) {
       router.push(Routes.verify);
       return;
     }
-  }, [router.pathname, status]);
+  }, [router.pathname, state]);
 
   if (isLoading) {
     return <LoadingSpinner size="page" />;

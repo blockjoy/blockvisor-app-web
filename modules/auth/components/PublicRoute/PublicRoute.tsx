@@ -9,13 +9,13 @@ interface Props {
 
 export function PublicRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoggedIn, status, isDone, isLoading } = useIdentity();
+  const { isLoggedIn, state, isDone, isLoading } = useIdentity();
 
   useEffect(() => {
     if (isDone && isLoggedIn) {
       router.push(Routes.dashboard);
     }
-  }, [status]);
+  }, [state]);
 
   if (isLoading) {
     return <LoadingSpinner size="page" />;
