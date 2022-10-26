@@ -8,6 +8,7 @@ import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { authAtoms } from '@modules/auth';
 import type { Dashboard } from '../components/Dashboard/Dashboard';
+import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 
 interface Hook {
   loadDashboard: () => void;
@@ -15,10 +16,10 @@ interface Hook {
 
 export const useDashboard = (): Hook => {
   const [app, setApp] = useRecoilState(appState);
-  const user = useRecoilValue(authAtoms.user);
+  const repository = useIdentityRepository();
 
   const getRecentHosts = async () => {
-    const org_id = user?.defaultOrganization?.id || '';
+    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
 
     const hostsResponse: any = await apiClient.getHosts(
       undefined,
