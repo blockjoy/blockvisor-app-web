@@ -113,12 +113,9 @@ export const useHosts = () => {
 
     const hostProvision = new HostProvision();
     hostProvision.setOrgId(orgId);
-    // TODO: impl the following
-    /*
-    hostProvision.setIpGateway("<your gateway ip>");
-    hostProvision.setIpRangeFrom("<ip range start>");
-    hostProvision.setIpRangeTo("<ip range end>");
-    */
+    hostProvision.setIpGateway(gatewayIpAddress);
+    hostProvision.setIpRangeFrom(ipAddressFrom);
+    hostProvision.setIpRangeTo(ipAddressTo);
 
     const response: any = await apiClient.createHostProvision(hostProvision);
 
