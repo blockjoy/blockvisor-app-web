@@ -1,10 +1,10 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
 import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { authAtoms } from '@modules/auth';
+import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 
 type Hook = {
   loadLookups: VoidFunction;
@@ -26,14 +26,14 @@ export const useNodeAdd = (): Hook => {
 
   const [hostList, setHostList] = useState([]);
 
-  const user = useRecoilValue(authAtoms.user);
+  const repository = useIdentityRepository();
 
   const loadLookups = async () => {
     setIsLoading(true);
-
+    const orgId = repository?.getIdentity()?.defaultOrganization?.id;
     const hosts: any = await apiClient.getHosts(
       undefined,
-      user?.defaultOrganization?.id || '',
+      orgId || '',
       undefined,
     );
 
@@ -70,16 +70,16 @@ export const useNodeAdd = (): Hook => {
 
     const node = new Node();
 
-    let org_id = user?.defaultOrganization?.id || '';
+    const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';
     let blockchain_id = params.blockchain;
 
     node.setBlockchainId(blockchain_id);
-    node.setOrgId(org_id);
+    node.setOrgId(orgId);
     node.setType(`{ "id": ${params.nodeType.toString()}, "properties": [] }`);
     node.setHostId(hostId);
 
     const createdNode: any = await apiClient.createNode(node);
-
+    console.log('res', createdNode);
     const nodeId = createdNode.messagesList[0];
 
     toast.success('Node Created');
