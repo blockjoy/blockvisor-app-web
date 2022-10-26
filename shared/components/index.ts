@@ -58,3 +58,4 @@ export * from './TagsField/TagsField';
 export * from './FileUpload/FileUpload';
 export * from './Skeleton/Skeleton';
 export * from './Skeleton/SkeletonGrid';
+export * from './IpAddressInput/IpAddressInput';
