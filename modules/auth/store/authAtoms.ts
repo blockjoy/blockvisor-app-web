@@ -1,4 +1,3 @@
-import { getUser } from '@shared/utils/browserStorage';
 import { atom } from 'recoil';
 
 const user = atom<User | null>({
@@ -6,6 +5,12 @@ const user = atom<User | null>({
   default: null,
 });
 
+const loading = atom<LoadingState>({
+  key: 'authentication.loading',
+  default: 'initializing',
+});
+
 export const authAtoms = {
   user,
+  loading,
 };

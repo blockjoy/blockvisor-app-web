@@ -1,4 +1,4 @@
-import { Routes, useAuth } from '@modules/auth';
+import { Routes, useIdentity } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
@@ -9,17 +9,15 @@ interface Props {
 
 export function PublicRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoggedIn, status } = useAuth();
-  const loading = status === 'initializing' || status === 'loading';
-  const finished = status === 'finished';
+  const { isLoggedIn, state, isDone, isLoading } = useIdentity();
 
   useEffect(() => {
-    if (finished && isLoggedIn) {
+    if (isDone && isLoggedIn) {
       router.push(Routes.dashboard);
     }
-  }, [status]);
+  }, [state]);
 
-  if (loading) {
+  if (isLoading) {
     return <LoadingSpinner size="page" />;
   }
 

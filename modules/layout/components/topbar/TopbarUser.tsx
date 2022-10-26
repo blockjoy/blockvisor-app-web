@@ -5,16 +5,16 @@ import { divider } from 'styles/utils.spacing.styles';
 import IconCog from '@public/assets/icons/cog-12.svg';
 import IconDoor from '@public/assets/icons/door-12.svg';
 import { useRouter } from 'next/router';
-import { authAtoms, useAuth } from '@modules/auth';
+import { authAtoms, useSignOut } from '@modules/auth';
 import { useRecoilValue } from 'recoil';
 
 export const TopbarUser = () => {
   const user = useRecoilValue(authAtoms.user);
 
   const router = useRouter();
-  const { signOut } = useAuth();
+  const signOut = useSignOut();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     signOut();
     router.reload();
   };

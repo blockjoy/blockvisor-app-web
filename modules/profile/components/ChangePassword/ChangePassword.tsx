@@ -6,12 +6,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { isSuccess, PasswordToggle } from '@modules/auth';
+import { PasswordToggle, useChangePassword } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
 import { styles } from './ChangePassword.styles';
-import { apiClient } from '@modules/client';
-import { updateAccessToken } from '@shared/utils/browserStorage';
 import { toast } from 'react-toastify';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 
 type ChangePasswordForm = {
   currentPassword: string;
@@ -21,6 +20,7 @@ type ChangePasswordForm = {
 
 export function ChangePassword() {
   const form = useForm<ChangePasswordForm>();
+  const changePassword = useChangePassword();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const [changePasswordError, setChangePasswordError] =
     useState<string | undefined>();
@@ -34,20 +34,19 @@ export function ChangePassword() {
   const onSubmit = handleSubmit(
     async ({ currentPassword, newPassword, confirmPassword }) => {
       setIsLoading(true);
-      const res = await apiClient.updatePassword({
-        old_pwd: currentPassword,
-        new_pwd: newPassword,
-        new_pwd_confirmation: confirmPassword,
-      });
 
-      if (isSuccess(res)) {
-        updateAccessToken(res.value);
+      try {
+        await changePassword(currentPassword, newPassword, confirmPassword);
         setIsLoading(false);
         form.reset();
         toast.success('Password changed');
-      } else {
-        setChangePasswordError(res?.message);
-        toast.error('Something went wrong');
+      } catch (error) {
+        if (error instanceof ApplicationError) {
+          setChangePasswordError(error.message);
+          toast.error('Something went wrong');
+        }
+      } finally {
+        setIsLoading(false);
       }
     },
   );
