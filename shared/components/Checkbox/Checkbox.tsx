@@ -1,4 +1,9 @@
-import { ChangeEventHandler, InputHTMLAttributes, ReactNode } from 'react';
+import {
+  ChangeEventHandler,
+  InputHTMLAttributes,
+  MouseEventHandler,
+  ReactNode,
+} from 'react';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './Checkbox.styles';
 
@@ -8,7 +13,7 @@ type Props = {
   description?: string;
   formTouched?: boolean;
   checked?: boolean;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  onChange: MouseEventHandler<HTMLLabelElement>;
   children?: ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
@@ -27,12 +32,15 @@ export function Checkbox({
       <input
         css={[display.visuallyHidden]}
         id={name}
-        checked={checked}
-        onChange={onChange}
+        defaultChecked={checked}
         type="checkbox"
         {...rest}
       />
-      <label css={[styles.base, checked ? styles.input : '']} htmlFor={name}>
+      <label
+        onClick={onChange}
+        css={[styles.base, checked ? styles.input : '']}
+        htmlFor={name}
+      >
         {children}
       </label>
     </>

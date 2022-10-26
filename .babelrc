@@ -19,6 +19,7 @@
                 "theme": "okaidia",
                 "css": true
             }
-        ]
+        ],
+        "react-require"
     ]
 }

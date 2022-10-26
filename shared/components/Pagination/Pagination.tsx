@@ -87,9 +87,10 @@ export const Pagination: FC<Props> = ({
   }, [currentPage]);
 
   function renderPages() {
-    return pagesToRender?.map((item) => {
+    return pagesToRender?.map((item, idx) => {
       return (
         <PaginationItem
+          key={idx}
           type="page"
           active={item === currentPage}
           number={item}

@@ -27,6 +27,7 @@ export const styles = {
     border: 1px solid var(--color-input-background);
   `,
   outline: css`
+    background-color: var(--color-input-background);
     border: 1px solid var(--color-text-2);
     border-radius: 4px;
     color: var(--color-text-5);

@@ -28,7 +28,7 @@ export const styles = {
     color: var(--color-border-4);
     opacity: 0.3;
 
-    & :global(path) {
+    & path {
       transition: opacity 0.18s var(--transition-easing-cubic);
     }
 
