@@ -37,7 +37,6 @@ export const useHosts = () => {
 
     if (hostsResponse?.code !== 6) {
       hosts = hostsResponse;
-      setLoadingHosts('finished');
     }
 
     // load provisioning hosts
@@ -61,8 +60,8 @@ export const useHosts = () => {
       }
     }
 
-    setHosts(hosts);
     await delay(env.loadingDuration);
+    setHosts(hosts);
     setLoadingHosts('finished');
   };
 

@@ -55,7 +55,7 @@ export function Dashboard() {
       <PageSection>
         <RecentHosts />
       </PageSection>
-      {!dashboardLoading && (
+      {dashboardLoading === 'finished' && (
         <PageSection>
           <NodeEarnings />
         </PageSection>
