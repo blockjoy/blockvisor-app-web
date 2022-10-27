@@ -5,6 +5,9 @@ import { apiClient } from '@modules/client';
 import { useState } from 'react';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
+import { useIdentityRepository } from '@modules/auth';
+import { hostname } from 'os';
+import { useRouter } from 'next/router';
 
 type Args = string | string[] | undefined;
 
@@ -35,6 +38,8 @@ const createUuid = (id: Args) => {
 export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [node, setNode] = useState<BlockjoyNode>(defaultNode);
+  const repository = useIdentityRepository();
+  const router = useRouter();
 
   const deleteNode = async (id: Args) => {
     await apiClient.execDeleteNode(createUuid(id));
@@ -58,7 +63,30 @@ export const useNodeView = (): Hook => {
     const node: any = await apiClient.getNode(nodeId);
     const nodeTypeId = JSON.parse(node.type).id;
 
+    console.log('node', node);
+
+    // horrible hack to get Host name
+
+    const orgId = repository?.getIdentity()?.defaultOrganization?.id;
+    const hosts: any = await apiClient.getHosts(
+      undefined,
+      orgId || '',
+      undefined,
+    );
+
+    console.log('hosts', hosts);
+
+    const host = hosts.find((h: any) => h.id === node.hostId);
+
+    console.log('hostName', host.name);
+
     const details = [
+      {
+        label: 'HOST',
+        data: (
+          <a onClick={() => router.push(`/hosts/${host.id}`)}>{host.name}</a>
+        ),
+      },
       {
         label: 'TYPE',
         data: nodeTypeList.find((n) => n.id === nodeTypeId)?.name,
