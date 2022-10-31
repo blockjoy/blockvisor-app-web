@@ -13,7 +13,7 @@ export function useUpdateOrganization() {
     if (isResponeMetaObject(response)) {
       return;
     } else {
-      throw new ApplicationError('RenameOrganization', 'Rename failed');
+      throw new ApplicationError('UpdateOrganization', 'Update failed');
     }
   };
 
