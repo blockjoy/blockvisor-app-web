@@ -1,19 +1,30 @@
 import { styles } from './OrganizationDetails.styles';
 import IconPencil from 'public/assets/icons/pencil-3-16.svg';
-import { FocusEventHandler, useRef, useState } from 'react';
+import { FocusEventHandler, useEffect, useRef, useState } from 'react';
 import { Button } from '@shared/components';
-import { useOrganizations } from '@modules/organizations/hooks/useOrganizations';
 import { toast } from 'react-toastify';
+import { useGetOrganizationById } from '@modules/organizations/hooks/useGetOrganizationById';
+import { useRouter } from 'next/router';
+import { queryAsString } from '@shared/utils/query';
+import { useUpdateOrganization } from '@modules/organizations/hooks/useUpdateOrganization';
 
 type Props = {
-  name: string;
-  id: string;
+  name?: string;
+  id?: string;
 };
 
 export function OrganizationDetails({ name, id }: Props) {
-  const { renameOrganization } = useOrganizations();
+  const router = useRouter();
+  const { getOrganization, organization } = useGetOrganizationById();
+  const { updateOrganization } = useUpdateOrganization();
   const [isEditable, setIsEditable] = useState(false);
   const fieldRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (!id) {
+      getOrganization(queryAsString(router.query.id));
+    }
+  }, [id, router.query.id]);
 
   const focusField = () => {
     if (fieldRef.current) {
@@ -31,12 +42,16 @@ export function OrganizationDetails({ name, id }: Props) {
     }
   };
 
-  const handleBlur: FocusEventHandler<HTMLHeadingElement> = (e) => {
+  const handleBlur: FocusEventHandler<HTMLHeadingElement> = async (e) => {
     const id = e.currentTarget.id;
     const value = e.currentTarget.innerHTML;
-    renameOrganization(id, value);
-    toast.success('Organisation renamed');
-    setIsEditable(false);
+    try {
+      updateOrganization(id, value);
+      toast.success('Organisation renamed');
+      setIsEditable(false);
+    } catch (error) {
+      toast.error('Rename failed');
+    }
   };
 
   const handleOnClick = () => {
@@ -49,14 +64,14 @@ export function OrganizationDetails({ name, id }: Props) {
       <h2
         onFocus={() => console.log('focused')}
         tabIndex={0}
-        id={id}
+        id={id ?? organization?.id}
         ref={fieldRef}
         css={[styles.title]}
         onBlur={handleBlur}
         contentEditable={isEditable}
         suppressContentEditableWarning={true}
       >
-        {name}{' '}
+        {name ?? organization?.name}{' '}
       </h2>{' '}
       <Button
         customCss={[styles.editable]}

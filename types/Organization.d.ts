@@ -4,7 +4,7 @@ type ClientOrganization = {
     seconds: number;
   };
 
-  id?: { value: string };
+  id?: string;
   memberCount?: number;
   name?: string;
   personal?: boolean;

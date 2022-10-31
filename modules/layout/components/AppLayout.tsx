@@ -4,7 +4,7 @@ import { Topbar } from './topbar/Topbar';
 import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
 import { PrivateRoute } from '@modules/auth';
-import { EditOrganization, OrganizationAdd } from '@modules/organizations';
+import { OrganizationAdd } from '@modules/organizations';
 import { NodeAdd } from '@modules/node';
 
 type LayoutType = {
@@ -21,7 +21,6 @@ export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
         <Topbar />
         <NodeAdd />
         <OrganizationAdd />
-        <EditOrganization />
         <Breadcrumb breadcrumb={breadcrumb} />
         <Page>{children}</Page>
       </PrivateRoute>

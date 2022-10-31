@@ -17,6 +17,12 @@ type DeleteForm = {
   elementNameToDelete: string;
 };
 
+const redirects = {
+  Node: '/dashboard',
+  Host: '/hosts',
+  Organization: '/organizations',
+};
+
 export const DangerZone: FC<Props> = ({
   handleDelete,
   elementName = 'Node',
@@ -33,8 +39,7 @@ export const DangerZone: FC<Props> = ({
     return name === elementNameToCompare;
   };
 
-  const handleRedirect = () =>
-    router.push(elementName === 'Node' ? '/dashboard' : '/hosts');
+  const handleRedirect = () => router.push(redirects[elementName]);
 
   const onSubmit = (e: any) => {
     e.preventDefault();
