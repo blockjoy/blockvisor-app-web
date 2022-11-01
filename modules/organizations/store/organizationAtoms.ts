@@ -15,6 +15,16 @@ const allOrganizations = atom<ClientOrganization[]>({
   default: [],
 });
 
+const organizationsLoadingState = atom<LoadingState>({
+  key: 'organizations.loadingState',
+  default: 'initializing',
+});
+
+const organizationLoadingState = atom<LoadingState>({
+  key: 'organization.loadingState',
+  default: 'initializing',
+});
+
 const organizationMemberCount = selector({
   key: 'organization.memberCount',
   get: ({ get }) => {
@@ -35,6 +45,8 @@ const organisationCount = selector({
 
 export const organisationAtoms = {
   selectedOrganization,
+  organizationLoadingState,
+  organizationsLoadingState,
   allOrganizations,
   organizationMemberCount,
   organisationCount,

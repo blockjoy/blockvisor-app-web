@@ -12,7 +12,10 @@ import {
   DrawerHeader,
 } from '../../../layout/components';
 import { width } from 'styles/utils.width.styles';
-import { useOrganizations } from '@modules/organizations';
+import {
+  useCreateOrganization,
+  useGetOrganizations,
+} from '@modules/organizations';
 import { toast } from 'react-toastify';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
@@ -24,14 +27,16 @@ type OrganisationAddForm = {
 export const OrganizationAdd: FC = () => {
   const form = useForm<OrganisationAddForm>();
   const [layout, setLayout] = useRecoilState(layoutState);
-  const { createOrganization } = useOrganizations();
-
+  const createOrganization = useCreateOrganization();
+  const { getOrganizations } = useGetOrganizations();
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<OrganisationAddForm> = async ({ name }) => {
     setLoading(true);
-    createOrganization(name);
+    await createOrganization(name);
+    await getOrganizations();
     await delay(env.loadingDuration);
+    form.reset();
     setLoading(false);
     setLayout(undefined);
     toast.success('Organisation created');

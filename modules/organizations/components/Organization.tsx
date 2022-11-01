@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useEffect } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
-import { useOrganizations } from '../hooks/useOrganizations';
 import { queryAsString } from '@shared/utils/query';
 import { OrganizationDetails } from './OrganizationDetails/OrganizationDetails';
 import { getOrganizationDetails } from '../utils/organizationDetails';
@@ -17,26 +16,30 @@ import {
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
+import { useDeleteOrganization } from '../hooks/useDeleteOrganization';
+import { useGetOrganizationById } from '../hooks/useGetOrganizationById';
+import { toast } from 'react-toastify';
 
 const Organization: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const {
-    removeOrganization,
-    selectedOrganization,
-    getOrganization,
-    loadingOrganizations,
-  } = useOrganizations();
+  const { getOrganization, organization, loading } = useGetOrganizationById();
+  const { deleteOrganization } = useDeleteOrganization();
 
   const handleDeleteOrganisation = async (id: string) => {
-    await removeOrganization(id);
+    try {
+      await deleteOrganization(id);
+      toast.success('Deleted successfully');
+    } catch (error) {
+      toast.error('Delete failed');
+    }
   };
 
   useEffect(() => {
     getOrganization(queryAsString(id));
   }, []);
 
-  const details = getOrganizationDetails(selectedOrganization);
+  const details = getOrganizationDetails(organization);
 
   return (
     <>
@@ -44,7 +47,7 @@ const Organization: NextPage = () => {
         <PageHeader>
           <BackButton />
         </PageHeader>
-        {loadingOrganizations ? (
+        {loading ? (
           <>
             <SkeletonGrid padding="10px 0 70px">
               <Skeleton width="260px" />
@@ -55,20 +58,20 @@ const Organization: NextPage = () => {
         ) : (
           <>
             <OrganizationDetails
-              id={selectedOrganization?.id?.value ?? ''}
-              name={selectedOrganization?.name ?? ''}
+              id={organization?.id}
+              name={organization?.name}
             />
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <h2 css={[spacing.bottom.large]}>Members</h2>
-            <MembersTable isLoading={loadingOrganizations} />
+            <MembersTable isLoading={loading} />
           </>
         )}
       </PageSection>
       <PageSection>
         <DangerZone
           elementName="Organization"
-          elementNameToCompare={selectedOrganization?.name ?? ''}
+          elementNameToCompare={organization?.name ?? ''}
           handleDelete={() => handleDeleteOrganisation(queryAsString(id))}
         ></DangerZone>
       </PageSection>

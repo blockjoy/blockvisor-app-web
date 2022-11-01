@@ -1,6 +1,6 @@
 import { Routes, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { useOrganizations } from '@modules/organizations';
+import { useDefaultOrganization } from '@modules/organizations';
 import { Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
@@ -26,7 +26,7 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-  const { getDefaultOrganization } = useOrganizations();
+  const { getDefaultOrganization } = useDefaultOrganization();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
