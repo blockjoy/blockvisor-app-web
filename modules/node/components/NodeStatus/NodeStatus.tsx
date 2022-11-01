@@ -39,13 +39,14 @@ const getIcon = (name: string = '') => {
 
 type Props = {
   status: number;
+  hasBorder?: boolean;
 };
 
-export const NodeStatus: FC<Props> = ({ status }) => {
+export const NodeStatus: FC<Props> = ({ status, hasBorder }) => {
   const statusInfo = nodeStatusList.find((s) => s.id === status);
 
   return (
-    <span css={styles.status}>
+    <span css={[styles.status, hasBorder && styles.statusBorder]}>
       {/* {getIcon(statusInfo?.name)} */}
       <span css={styles.statusText}>{statusInfo?.name || 'Unknown'}</span>
     </span>

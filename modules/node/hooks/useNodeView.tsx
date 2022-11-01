@@ -63,22 +63,14 @@ export const useNodeView = (): Hook => {
     const node: any = await apiClient.getNode(nodeId);
     const nodeTypeId = JSON.parse(node.type).id;
 
-    console.log('node', node);
-
     // horrible hack to get Host name
-
     const orgId = repository?.getIdentity()?.defaultOrganization?.id;
     const hosts: any = await apiClient.getHosts(
       undefined,
       orgId || '',
       undefined,
     );
-
-    console.log('hosts', hosts);
-
     const host = hosts.find((h: any) => h.id === node.hostId);
-
-    console.log('hostName', host.name);
 
     const details = [
       {

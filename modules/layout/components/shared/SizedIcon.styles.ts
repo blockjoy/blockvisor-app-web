@@ -7,8 +7,8 @@ export const styles = {
     place-items: center;
 
     & svg {
-      width: 100%;
-      height: 100%;
+      width: 100% !important;
+      height: 100% !important;
     }
 
     & path {
