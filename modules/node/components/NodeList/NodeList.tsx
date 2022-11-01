@@ -94,7 +94,7 @@ export const NodeList = () => {
                 onRowClick={handleNodeClick}
               />
             ) : (
-              <TableGrid cells={nodeCells} />
+              <TableGrid isLoading={loading} cells={nodeCells} />
             )}
           </div>
         )}
