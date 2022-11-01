@@ -8,14 +8,14 @@ export const styles = {
     top: 0;
     right: 0;
     display: flex;
-    gap: 8px;
   `,
   iconButton: (theme: ITheme) => css`
     display: block;
     background: transparent;
     border: 0;
     cursor: pointer;
-    padding: 0;
+    padding: 24px 0 14px 10px;
+    translate: 0 -50%;
 
     & path {
       fill: ${theme.colorLabel};

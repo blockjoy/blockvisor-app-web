@@ -4,18 +4,27 @@ import { typo } from 'styles/utils.typography.styles';
 import { AllOrganizationsTable } from './AllOrganizationsTable';
 import PersonIcon from '@public/assets/icons/person-12.svg';
 import { flex } from 'styles/utils.flex.styles';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organizationAtoms';
 import { NextPage } from 'next';
 import { PageSection, PageTitle } from '@shared/components';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 export const OrganizationsPage: NextPage = () => {
   const memberCount = useRecoilValue(organisationAtoms.organizationMemberCount);
   const orgCount = useRecoilValue(organisationAtoms.organisationCount);
+  const setLayout = useSetRecoilState(layoutState);
+
+  const handleCreateClicked = () => {
+    setLayout('organization');
+  };
 
   return (
     <>
-      <PageTitle title="Organization Management"></PageTitle>
+      <PageTitle
+        title="Organization Management"
+        actionOnClick={handleCreateClicked}
+      ></PageTitle>
       <PageSection>
         <h2 css={spacing.top.large}>Organizations</h2>
         <small

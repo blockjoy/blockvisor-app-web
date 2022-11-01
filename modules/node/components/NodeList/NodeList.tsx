@@ -4,10 +4,9 @@ import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { hostsAtoms } from '@modules/hosts/store/hostAtoms';
 import {
-  Button,
   EmptyColumn,
-  PageHeader,
   PageSection,
+  PageTitle,
   Table,
   TableGrid,
 } from '@shared/components';
@@ -50,60 +49,56 @@ export const NodeList = () => {
   }, []);
 
   return (
-    <PageSection bottomBorder={false}>
-      <PageHeader>
-        Nodes
-        <Button
-          disabled={!hasHosts}
-          onClick={handleAddNode}
-          style="secondary"
-          size="small"
-        >
-          Add Node
-        </Button>
-      </PageHeader>
-      {!Boolean(nodeRows?.length) && finished ? (
-        <>
-          <EmptyColumn
-            id="js-nodes-empty"
-            title="No Nodes."
-            description="Add your nodes and hosts to get started with BlockVisor."
-          />
-        </>
-      ) : (
-        <div style={{ position: 'relative' }}>
-          <ListTypeToggle
-            activeListType={activeListType}
-            onTypeChanged={handleListTypeChanged}
-          />
-          {activeListType === 'table' ? (
-            <Table
-              isLoading={loading}
-              headers={[
-                {
-                  name: 'Name',
-                  key: '1',
-                  width: '300px',
-                },
-                {
-                  name: 'Added',
-                  key: '2',
-                  width: '200px',
-                },
-                {
-                  name: 'Status',
-                  key: '3',
-                  width: '200px',
-                },
-              ]}
-              rows={nodeRows || []}
-              onRowClick={handleNodeClick}
+    <>
+      <PageTitle
+        title="All Nodes"
+        actionOnClick={handleAddNode}
+        actionText="Add Node"
+      ></PageTitle>
+      <PageSection bottomBorder={false}>
+        {!Boolean(nodeRows?.length) && finished ? (
+          <>
+            <EmptyColumn
+              id="js-nodes-empty"
+              title="No Nodes."
+              description="Add your nodes and hosts to get started with BlockVisor."
             />
-          ) : (
-            <TableGrid cells={nodeCells} />
-          )}
-        </div>
-      )}
-    </PageSection>
+          </>
+        ) : (
+          <div style={{ position: 'relative', marginTop: '20px' }}>
+            <ListTypeToggle
+              activeListType={activeListType}
+              onTypeChanged={handleListTypeChanged}
+            />
+            {activeListType === 'table' ? (
+              <Table
+                isLoading={loading}
+                headers={[
+                  {
+                    name: 'Name',
+                    key: '1',
+                    width: '300px',
+                  },
+                  {
+                    name: 'Added',
+                    key: '2',
+                    width: '200px',
+                  },
+                  {
+                    name: 'Status',
+                    key: '3',
+                    width: '200px',
+                  },
+                ]}
+                rows={nodeRows || []}
+                onRowClick={handleNodeClick}
+              />
+            ) : (
+              <TableGrid cells={nodeCells} />
+            )}
+          </div>
+        )}
+      </PageSection>
+    </>
   );
 };

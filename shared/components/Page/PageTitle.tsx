@@ -8,17 +8,21 @@ import { styles } from './PageTitle.styles';
 
 interface Props {
   title: string;
+  actionText?: string;
+  actionOnClick: VoidFunction;
 }
 
-export const PageTitle: FC<Props> = ({ title }) => {
-  const setLayout = useSetRecoilState(layoutState);
-
+export const PageTitle: FC<Props> = ({
+  title,
+  actionText = 'Create New',
+  actionOnClick,
+}) => {
   return (
     <header css={styles.base}>
       <div css={[wrapper.main, styles.actions]}>
         <h1 css={typo.large}>{title}</h1>
-        <Button onClick={() => setLayout('organization')} size="small">
-          Create new
+        <Button onClick={actionOnClick} size="small">
+          {actionText}
         </Button>
       </div>
     </header>

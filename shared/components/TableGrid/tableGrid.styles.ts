@@ -46,6 +46,7 @@ export const styles = {
     flex: 1;
     text-align: center;
     font-size: 13px;
+    white-space: nowrap;
   `,
   cell: css`
     display: flex;
