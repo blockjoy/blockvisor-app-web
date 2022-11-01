@@ -8,21 +8,24 @@ import { apiClient } from '@modules/client';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { authAtoms } from '@modules/auth';
-import { TableBlockNodes } from '@shared/components';
-import { NodeStatus } from '../components/NodeStatus/NodeStatus';
+import { toRows } from '../utils/toRows';
+import { toGrid } from '../utils/toGrid';
 
 interface Hook {
   loadNodes: () => void;
   handleAddNode: () => void;
-  handleRowClick: (args1: any) => void;
+  handleNodeClick: (args1: any) => void;
 }
 
 export const useNodeList = (): Hook => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
 
-  const [nodeRows, setNodeRows] = useRecoilState(nodeAtoms.nodeRows);
-  const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
+  const activeListType = useRecoilValue(nodeAtoms.activeListType);
+
+  const [, setNodeRows] = useRecoilState(nodeAtoms.nodeRows);
+  const [, setNodeCells] = useRecoilState(nodeAtoms.nodeCells);
+  const [, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
 
   const setLayout = useSetRecoilState(layoutState);
 
@@ -32,7 +35,8 @@ export const useNodeList = (): Hook => {
     setLayout('nodes');
   };
 
-  const handleRowClick = (args: any) => {
+  const handleNodeClick = (args: any) => {
+    console.log('args', args);
     router.push(`${router.pathname}/${args.key}`);
   };
 
@@ -52,35 +56,20 @@ export const useNodeList = (): Hook => {
 
   useEffect(() => {
     if (nodeList?.length) {
-      const rows = nodeList?.map((node: any) => ({
-        key: node.id,
-        cells: [
-          {
-            key: '1',
-            component: (
-              <>
-                <TableBlockNodes
-                  id={node.id.value}
-                  name={node.name}
-                  address={node.address}
-                />
-              </>
-            ),
-          },
-          {
-            key: '2',
-            component: <NodeStatus status={node.status} />,
-          },
-        ],
-      }));
-
-      setNodeRows(rows);
+      if (activeListType === 'table') {
+        const rows = toRows(nodeList);
+        setNodeRows(rows!);
+      } else {
+        const cells = toGrid(nodeList, handleNodeClick);
+        console.log('cells', cells);
+        setNodeCells(cells!);
+      }
     }
-  }, [nodeList?.length]);
+  }, [nodeList?.length, activeListType]);
 
   return {
     loadNodes,
     handleAddNode,
-    handleRowClick,
+    handleNodeClick,
   };
 };
