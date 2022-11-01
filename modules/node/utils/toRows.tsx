@@ -12,11 +12,7 @@ export const toRows = (nodeList: BlockjoyNode[] | null) => {
         key: '1',
         component: (
           <>
-            <TableBlockNodes
-              id={node.id.value}
-              name={node.name}
-              address={node.address}
-            />
+            <TableBlockNodes id={node.id} name={node.name} address={node.ip} />
           </>
         ),
       },

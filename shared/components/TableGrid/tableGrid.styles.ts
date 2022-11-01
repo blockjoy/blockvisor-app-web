@@ -17,6 +17,10 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       grid-template-columns: repeat(3, 1fr);
     }
+
+    @media ${breakpoints.fromHuge} {
+      grid-template-columns: repeat(4, 1fr);
+    }
   `,
   gridHeader: css`
     display: flex;
