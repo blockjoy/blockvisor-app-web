@@ -111,6 +111,7 @@ export type FilterCriteria = {
   blockchain?: string,
   node_type?: string,
   node_status?: number,
+  version?: string,
 };
 export type SortingCriteria = {
   name?: "asc" | "desc",
