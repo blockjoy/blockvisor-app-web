@@ -50,9 +50,8 @@ export function OrganizationDetails({ name, id }: Props) {
   };
 
   const handleBlur: FocusEventHandler<HTMLHeadingElement> = async (e) => {
-    if (fieldRef.current && !isEditable) {
+    if (fieldRef.current) {
       fieldRef.current.blur();
-      fieldRef.current.textContent = name || organization?.name || '';
     }
   };
 
