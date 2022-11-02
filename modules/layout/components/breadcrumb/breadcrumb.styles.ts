@@ -6,7 +6,7 @@ export const breadcrumbStyles = {
     position: fixed;
     z-index: 5;
     top: 0;
-    left: 300px;
+    left: 260px;
     display: none;
     align-items: center;
     gap: 10px;

@@ -14,7 +14,7 @@ export const styles = {
     background: transparent;
     border: 0;
     cursor: pointer;
-    padding: 24px 0 14px 10px;
+    padding: 27px 0 14px 10px;
     translate: 0 -50%;
 
     & path {

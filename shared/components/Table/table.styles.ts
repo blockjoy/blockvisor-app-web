@@ -4,6 +4,7 @@ import { ITheme } from 'types/theme';
 export const tableStyles = {
   wrapper: css`
     position: relative;
+    width: 100%;
   `,
   table: (theme: ITheme) => css`
     width: 100%;

@@ -9,9 +9,11 @@ import {
   PageTitle,
   Table,
   TableGrid,
+  TableFilters,
 } from '@shared/components';
 import anime from 'animejs';
 import { ListTypeToggle } from '@shared/components/ListTypeToggle/ListTypeToggle';
+import { styles } from './nodeList.styles';
 
 export const NodeList = () => {
   const { loadNodes, handleNodeClick, handleAddNode } = useNodeList();
@@ -65,11 +67,12 @@ export const NodeList = () => {
             />
           </>
         ) : (
-          <div style={{ position: 'relative', marginTop: '20px' }}>
+          <div css={styles.wrapper}>
             <ListTypeToggle
               activeListType={activeListType}
               onTypeChanged={handleListTypeChanged}
             />
+            <TableFilters />
             {activeListType === 'table' ? (
               <Table
                 isLoading={loading}
@@ -94,7 +97,9 @@ export const NodeList = () => {
                 onRowClick={handleNodeClick}
               />
             ) : (
-              <TableGrid isLoading={loading} cells={nodeCells} />
+              <div css={styles.gridWrapper}>
+                <TableGrid isLoading={loading} cells={nodeCells} />
+              </div>
             )}
           </div>
         )}

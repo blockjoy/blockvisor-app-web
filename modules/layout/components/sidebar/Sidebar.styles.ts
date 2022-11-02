@@ -13,7 +13,7 @@ export const styles = {
     left: 0;
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 260px;
     height: 100%;
     border-right: 1px solid ${theme.colorBorder};
     background: ${theme.colorSidebar};
