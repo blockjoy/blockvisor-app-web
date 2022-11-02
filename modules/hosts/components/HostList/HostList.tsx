@@ -5,12 +5,12 @@ import {
   PageSection,
   Table,
 } from '@shared/components';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../../utils/toRow';
 import { css } from '@emotion/react';
 import anime from 'animejs';
-import { useHosts } from '@modules/hosts';
+import { useGetHosts } from '@modules/hosts';
 
 const headers = [
   {
@@ -31,9 +31,7 @@ const headers = [
 
 export function Hosts() {
   const router = useRouter();
-  const { getHosts, createHostProvision, loadingHosts, hosts } = useHosts();
-  const loading = loadingHosts === 'initializing' || loadingHosts === 'loading';
-  const finished = loadingHosts === 'finished';
+  const { getHosts, loading, hosts, finished } = useGetHosts();
 
   const handleRowClick = (args: any) => {
     if (args.key.length < 12) {
@@ -65,7 +63,6 @@ export function Hosts() {
   }, []);
 
   const rows = hostsToRows(hosts);
-  console.log('rows', rows);
 
   return (
     <PageSection bottomBorder={false}>
