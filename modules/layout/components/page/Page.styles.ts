@@ -9,7 +9,7 @@ export const styles = {
     transition: margin 0.4s;
 
     @media only screen and (min-width: ${theme.screenSm}) {
-      margin-left: 300px;
+      margin-left: 260px;
       z-index: 3;
     }
   `,
