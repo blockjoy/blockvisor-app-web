@@ -107,6 +107,15 @@ export type NewPassword = {
   new_pwd: string;
   new_pwd_confirmation: string;
 };
+export type FilterCriteria = {
+  blockchain?: string,
+  node_type?: string,
+  node_status?: number,
+};
+export type SortingCriteria = {
+  name?: "asc" | "desc",
+
+};
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
   if (ts !== undefined) {
@@ -617,6 +626,8 @@ export class GrpcClient {
 
   async listNodes(
     org_id: string,
+    sorting_criteria?: SortingCriteria,
+    filter_criteria?: FilterCriteria,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
