@@ -34,8 +34,6 @@ export function useGetHostById() {
       await delay(env.loadingDuration);
       setLoadingHost('finished');
     }
-
-    // temp fix to get host from full list
   };
   return {
     getHostById,

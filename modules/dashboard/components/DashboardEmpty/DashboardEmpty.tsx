@@ -1,5 +1,3 @@
-import { useHosts } from '@modules/hosts';
-import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { ActionRow, AnimatedGraphic, Button } from '@shared/components';
 import anime from 'animejs';
 import { useRouter } from 'next/router';

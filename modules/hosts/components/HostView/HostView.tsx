@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { useHosts } from '@modules/hosts/hooks/useHosts';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -23,6 +22,11 @@ import {
 import { HostCharts } from './HostCharts/HostCharts';
 import { GrpcHostObject } from '@modules/client/grpc_client';
 import { useGetHostById } from '@modules/hosts/hooks/useGetHostById';
+import { useRestartHost } from '@modules/hosts/hooks/useRestartHost';
+import { queryAsString } from '@shared/utils/query';
+import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useStopHost } from '@modules/hosts/hooks/useStopHost';
+import { useDeleteHost } from '@modules/hosts/hooks/useDeleteHost';
 
 function formatBytes(bytes: number, decimals = 1) {
   if (!+bytes) return '0 Bytes';
@@ -70,13 +74,42 @@ export function Host() {
   const [isMounted, setMounted] = useState<boolean>(false);
   const router = useRouter();
   const { id } = router.query;
-  const { restartHost, stopHost, deleteHost } = useHosts();
+  const { restartHost } = useRestartHost();
+  const { deleteHost } = useDeleteHost();
+  const { stopHost } = useStopHost();
   const { getHostById, loading, host } = useGetHostById();
 
   const handleNodeClicked = (args: Row) => router.push(`/nodes/${args.key}`);
-  const handleRestartHost = () => restartHost(id?.toString()!);
-  const handleStopHost = () => stopHost(id?.toString()!);
-  const handleDelete = () => deleteHost(id?.toString()!);
+  const handleRestartHost = async () => {
+    try {
+      await restartHost(queryAsString(id));
+      toast.success(`Host Restarted`);
+    } catch (error) {
+      if (error instanceof ApplicationError) {
+        toast.error(`Restart Failed with: ${error.message}`);
+      }
+    }
+  };
+  const handleStopHost = async () => {
+    try {
+      await stopHost(queryAsString(id));
+      toast.success(`Host Stopped`);
+    } catch (error) {
+      if (error instanceof ApplicationError) {
+        toast.error(`Stop Failed with: ${error.message}`);
+      }
+    }
+  };
+  const handleDelete = async () => {
+    try {
+      await deleteHost(queryAsString(id));
+      toast.success(`Host Deleted`);
+    } catch (error) {
+      if (error instanceof ApplicationError) {
+        toast.error(`Delete Failed with: ${error.message}`);
+      }
+    }
+  };
 
   // refactor these to utilize useNode hook
   const handleStopNode: MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -99,8 +132,8 @@ export function Host() {
   useEffect(() => {
     window.scrollTo(0, 0);
     setMounted(true);
-    getHostById(id?.toString() || '');
-  }, []);
+    getHostById(queryAsString(id));
+  }, [id]);
 
   const hostRow = nodeListToRow(host, handleStopNode, handleRestartNode);
 
@@ -114,13 +147,13 @@ export function Host() {
         <PageHeader>
           <BackButton />
         </PageHeader>
-        {!loading && host ? (
+        {!loading ? (
           <>
             <DetailsHeader
-              title={host.name ?? ''}
-              ip={host.ip ?? ''}
-              status={<HostStatus status={host.status ?? 0} />}
-              location={host.location}
+              title={host?.name ?? ''}
+              ip={host?.ip ?? ''}
+              status={<HostStatus status={host?.status ?? 0} />}
+              location={host?.location}
               handleRestart={handleRestartHost}
               handleStop={handleStopHost}
             />

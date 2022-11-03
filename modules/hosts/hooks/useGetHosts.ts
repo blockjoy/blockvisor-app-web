@@ -30,6 +30,7 @@ export function useGetHosts() {
 
       const hostProvisionKeys = keyRepository?.getHostProvisionKeys();
 
+      // mocked provisioning
       if (hostProvisionKeys) {
         for (let key of hostProvisionKeys) {
           const response: any = await apiClient.getHostProvision(key);
