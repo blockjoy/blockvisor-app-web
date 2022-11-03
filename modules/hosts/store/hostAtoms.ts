@@ -12,7 +12,7 @@ const hostLoading = atom<boolean | null>({
   default: null,
 });
 
-const hosts = atom<GrpcHostObject[]>({
+const hosts = atom<Host[]>({
   key: 'hosts.list',
   default: [],
 });

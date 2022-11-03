@@ -3,6 +3,7 @@ import { apiClient } from '@modules/client';
 import { isStatusResponse } from '@modules/organizations';
 import { useRecoilState } from 'recoil';
 import { hostsAtoms } from '../store/hostAtoms';
+import { useProvisionKeysRepository } from './useProvisionKeysRepository';
 
 export function useGetHosts() {
   const [hosts, setHosts] = useRecoilState(hostsAtoms.hosts);
@@ -10,6 +11,7 @@ export function useGetHosts() {
     hostsAtoms.hostsLoading,
   );
   const repository = useIdentityRepository();
+  const keyRepository = useProvisionKeysRepository();
 
   const getHosts = async () => {
     setLoadingHosts('loading');
@@ -23,7 +25,28 @@ export function useGetHosts() {
       // add some error handling
       //throw new ApplicationError('GetHosts', response.message);
     } else {
-      setHosts(response ?? []);
+      // load provisioning hosts
+      let loadedHosts: any = response ? [...response] : [];
+
+      const hostProvisionKeys = keyRepository?.getHostProvisionKeys();
+
+      if (hostProvisionKeys) {
+        for (let key of hostProvisionKeys) {
+          const response: any = await apiClient.getHostProvision(key);
+          const hostProvisionRecord = response[0];
+          if (!hostProvisionRecord?.claimedAt) {
+            loadedHosts.unshift({
+              isHostProvision: true,
+              name: 'Host Provisioning',
+              location: `Key: ${hostProvisionRecord.id}`,
+              id: hostProvisionRecord.id,
+              created_at_datetime: new Date(),
+            });
+          }
+        }
+      }
+
+      setHosts(loadedHosts ?? []);
       setLoadingHosts('finished');
     }
   };

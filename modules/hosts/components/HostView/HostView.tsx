@@ -46,10 +46,10 @@ function getHostDetails(host: Host | null) {
         addSuffix: true,
       }),
     },
-    { label: 'VERSION', data: host.version },
-    { label: 'DISK SIZE', data: formatBytes(host.diskSize)?.toString() },
-    { label: 'MEMORY SIZE', data: formatBytes(host.memSize)?.toString() },
-    { label: 'CPU Count', data: host.cpuCount?.toString() },
+    { label: 'VERSION', data: host.version ?? '' },
+    { label: 'DISK SIZE', data: formatBytes(host.diskSize)?.toString() ?? '' },
+    { label: 'MEMORY SIZE', data: formatBytes(host.memSize)?.toString() ?? '' },
+    { label: 'CPU Count', data: host.cpuCount?.toString() ?? '' },
   ];
 
   return details;
