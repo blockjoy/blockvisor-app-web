@@ -2,6 +2,7 @@ import { HostProvision } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { isResponeMetaObject, useIdentityRepository } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { hostsAtoms } from '../store/hostAtoms';
 import { useProvisionKeysRepository } from './useProvisionKeysRepository';
@@ -15,6 +16,13 @@ export function useCreateHostProvision() {
   );
   const provisionKeyRepository = useProvisionKeysRepository();
   const repository = useIdentityRepository();
+
+  useEffect(() => {
+    const keys = provisionKeyRepository?.getHostProvisionKeys();
+    if (keys) {
+      setHostProvisionKeys(keys);
+    }
+  }, []);
 
   const createHostProvision = async (
     ipAddressFrom: string,
