@@ -8,12 +8,10 @@ type HostNode = {
   };
   groupsList: string[];
   hostId?: string;
-  id: {
-    value: string;
-  };
-  ip: string;
-  name: string;
-  nodeData: string;
+  id?: string;
+  ip?: string;
+  name?: string;
+  nodeData?: string;
   orgId: {
     value: string;
   };
@@ -34,12 +32,12 @@ type Host = {
     seconds: number;
   };
   created_at_datetime: string;
-  diskSize: number;
+  diskSize?: number;
   id?: string;
-  ip: string;
+  ip?: string;
   location?: string;
-  name: string;
-  memSize: number;
+  name?: string;
+  memSize?: number;
   nodesList?: HostNode[];
   orgId?: string;
   os?: string;

@@ -21,50 +21,6 @@ export const useHosts = () => {
 
   const user = useRecoilValue(authAtoms.user);
 
-  const getHosts = async () => {
-    setLoadingHosts('loading');
-    // revisit this once types are consolidated
-
-    let hosts: any[] = [];
-
-    const hostsResponse: any = await apiClient.getHosts(
-      undefined,
-      user?.defaultOrganization?.id,
-      undefined,
-    );
-
-    console.log('hosts', hosts);
-
-    if (hostsResponse?.code !== 6) {
-      hosts = hostsResponse;
-    }
-
-    // load provisioning hosts
-    if (localStorage.getItem('hostProvisionKeys')) {
-      const hostProvisionKeys = JSON.parse(
-        localStorage.getItem('hostProvisionKeys') || '',
-      );
-
-      for (let key of hostProvisionKeys) {
-        const response: any = await apiClient.getHostProvision(key);
-        const hostProvisionRecord = response[0];
-        if (!hostProvisionRecord?.claimedAt) {
-          hosts.unshift({
-            isHostProvision: true,
-            name: 'Host Provisioning',
-            location: `Key: ${hostProvisionRecord.id}`,
-            id: hostProvisionRecord.id,
-            created_at_datetime: new Date(),
-          });
-        }
-      }
-    }
-
-    await delay(env.loadingDuration);
-    setHosts(hosts);
-    setLoadingHosts('finished');
-  };
-
   const deleteHost = async (id: string) => {
     const uuid = id?.toString()!;
     await apiClient.execDeleteHost(uuid);
@@ -83,67 +39,6 @@ export const useHosts = () => {
     toast.success(`Host Restarted`);
   };
 
-  const loadHost = async (id: string) => {
-    setHostLoading(true);
-
-    const uuid = id!;
-    // revisit this once types are consolidated
-    const hosts: any = await apiClient.getHosts(
-      undefined,
-      user?.defaultOrganization?.id,
-      undefined,
-    );
-
-    // temp fix to get host from full list
-    const host = hosts.find((h: any) => h.id === id);
-
-    setHost(host);
-    await delay(env.loadingDuration);
-    setHostLoading(false);
-  };
-
-  const createHostProvision = async (
-    ipAddressFrom: string,
-    ipAddressTo: string,
-    gatewayIpAddress: string,
-    callback: (args1: string) => void,
-  ) => {
-    const orgId = user?.defaultOrganization?.id!;
-
-    const hostProvision = new HostProvision();
-    hostProvision.setOrgId(orgId);
-    hostProvision.setIpGateway(gatewayIpAddress);
-    hostProvision.setIpRangeFrom(ipAddressFrom);
-    hostProvision.setIpRangeTo(ipAddressTo);
-
-    const response: any = await apiClient.createHostProvision(hostProvision);
-
-    if (response?.code === 9) {
-      callback('');
-      return;
-    }
-
-    console.log('response', response);
-
-    const hostProvisionKey = response?.messagesList[0];
-    const hostProvisionKeysCopy = [...hostProvisionKeys];
-
-    hostProvisionKeysCopy.push(hostProvisionKey);
-
-    setHostProvisionKeys(hostProvisionKeysCopy);
-
-    localStorage.setItem(
-      'hostProvisionKeys',
-      JSON.stringify(hostProvisionKeysCopy),
-    );
-
-    await delay(env.loadingDuration);
-
-    toast.success('Provisioning Host');
-
-    callback(hostProvisionKey);
-  };
-
   useEffect(() => {
     if (localStorage.getItem('hostProvisionKeys')) {
       setHostProvisionKeys(
@@ -153,16 +48,12 @@ export const useHosts = () => {
   }, []);
 
   return {
-    loadHost,
     stopHost,
     restartHost,
     deleteHost,
-    createHostProvision,
-    getHosts,
     hostAddKey: hostProvisionKeys?.length ? hostProvisionKeys[0] : '',
     hosts,
     loadingHosts: loadingHosts,
-    host,
     loadingHost: Boolean(loadingHost),
   };
 };

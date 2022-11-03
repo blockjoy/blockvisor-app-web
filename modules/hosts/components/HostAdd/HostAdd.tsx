@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { IpAddressInput } from '@shared/components';
 import { useState } from 'react';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { toast } from 'react-toastify';
 
 type Form = {
   ipAddressFrom: string;
@@ -52,6 +53,8 @@ export const HostAdd = () => {
         ipAddressTo,
         gatewayIpAddress,
       );
+
+      toast.success('Provisioning Host');
       router.push(`/hosts/install/${key}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
@@ -190,7 +193,6 @@ export const HostAdd = () => {
                 type="submit"
                 style="primary"
                 size="small"
-                loading={loading}
               >
                 Add Host
               </Button>

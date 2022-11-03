@@ -21,6 +21,8 @@ import {
   TableSkeleton,
 } from '@shared/components';
 import { HostCharts } from './HostCharts/HostCharts';
+import { GrpcHostObject } from '@modules/client/grpc_client';
+import { useGetHostById } from '@modules/hosts/hooks/useGetHostById';
 
 function formatBytes(bytes: number, decimals = 1) {
   if (!+bytes) return '0 Bytes';
@@ -34,7 +36,7 @@ function formatBytes(bytes: number, decimals = 1) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-function getHostDetails(host: Host | null) {
+function getHostDetails(host: GrpcHostObject | null) {
   if (!host) {
     return null;
   }
@@ -42,13 +44,22 @@ function getHostDetails(host: Host | null) {
   const details = [
     {
       label: 'CREATED',
-      data: formatDistanceToNow(new Date(host.created_at_datetime), {
-        addSuffix: true,
-      }),
+      data: formatDistanceToNow(
+        new Date(host.created_at_datetime?.toDateString() ?? ''),
+        {
+          addSuffix: true,
+        },
+      ),
     },
     { label: 'VERSION', data: host.version ?? '' },
-    { label: 'DISK SIZE', data: formatBytes(host.diskSize)?.toString() ?? '' },
-    { label: 'MEMORY SIZE', data: formatBytes(host.memSize)?.toString() ?? '' },
+    {
+      label: 'DISK SIZE',
+      data: formatBytes(host.diskSize ?? 0)?.toString() ?? '',
+    },
+    {
+      label: 'MEMORY SIZE',
+      data: formatBytes(host.memSize ?? 0)?.toString() ?? '',
+    },
     { label: 'CPU Count', data: host.cpuCount?.toString() ?? '' },
   ];
 
@@ -59,8 +70,8 @@ export function Host() {
   const [isMounted, setMounted] = useState<boolean>(false);
   const router = useRouter();
   const { id } = router.query;
-  const { loadHost, restartHost, stopHost, deleteHost, host, loadingHost } =
-    useHosts();
+  const { restartHost, stopHost, deleteHost } = useHosts();
+  const { getHostById, loading, host } = useGetHostById();
 
   const handleNodeClicked = (args: Row) => router.push(`/nodes/${args.key}`);
   const handleRestartHost = () => restartHost(id?.toString()!);
@@ -88,7 +99,7 @@ export function Host() {
   useEffect(() => {
     window.scrollTo(0, 0);
     setMounted(true);
-    loadHost(id?.toString() || '');
+    getHostById(id?.toString() || '');
   }, []);
 
   const hostRow = nodeListToRow(host, handleStopNode, handleRestartNode);
@@ -103,12 +114,12 @@ export function Host() {
         <PageHeader>
           <BackButton />
         </PageHeader>
-        {!loadingHost && host ? (
+        {!loading && host ? (
           <>
             <DetailsHeader
-              title={host.name}
-              ip={host.ip}
-              status={<HostStatus status={host.status} />}
+              title={host.name ?? ''}
+              ip={host.ip ?? ''}
+              status={<HostStatus status={host.status ?? 0} />}
               location={host.location}
               handleRestart={handleRestartHost}
               handleStop={handleStopHost}
@@ -130,7 +141,7 @@ export function Host() {
         <h2 css={[typo.large, spacing.bottom.large]}>Nodes</h2>
         <Table
           isSorting={false}
-          isLoading={loadingHost}
+          isLoading={loading}
           headers={[
             {
               name: 'Name',

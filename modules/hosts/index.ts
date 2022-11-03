@@ -9,3 +9,4 @@ export * from './utils/ProvisionKeysRepository';
 export * from './hooks/useGetHosts';
 export * from './hooks/useProvisionKeysRepository';
 export * from './hooks/useCreateHostProvision';
+export * from './hooks/useGetHostById';
