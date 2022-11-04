@@ -20,7 +20,6 @@
     "animejs": "^3.2.1",
     "apexcharts": "^3.35.5",
     "date-fns": "^2.29.2",
-    "dompurify": "^2.4.0",
     "google-protobuf": "^3.21.0",
     "next": "^12.2.5",
     "polished": "^4.2.2",

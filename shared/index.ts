@@ -6,4 +6,3 @@ export * from './constants/routes';
 export * from './hooks/useClickOutside';
 export * from './hooks/useTabs';
 export * from './utils/storybook';
-export * from './utils/input';
