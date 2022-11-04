@@ -219,17 +219,21 @@ export class GrpcClient {
    * Initialize all gRPC clients
    */
   private initClients(host: string) {
-    this.authentication = new AuthenticationServiceClient(host, null, null);
-    this.host = new HostServiceClient(host, null, null);
-    this.blockchain = new BlockchainServiceClient(host, null, null);
-    this.node = new NodeServiceClient(host, null, null);
-    this.host_provision = new HostProvisionServiceClient(host, null, null);
-    this.dashboard = new DashboardServiceClient(host, null, null);
-    this.command = new CommandServiceClient(host, null, null);
-    this.organization = new OrganizationServiceClient(host, null, null);
-    this.billing = new BillingServiceClient(host, null, null);
-    this.update = new UpdateServiceClient(host, null, null);
-    this.user = new UserServiceClient(host, null, null);
+    let opts = {
+      withCredentials: true,
+    };
+
+    this.authentication = new AuthenticationServiceClient(host, null, opts);
+    this.host = new HostServiceClient(host, null, opts);
+    this.blockchain = new BlockchainServiceClient(host, null, opts);
+    this.node = new NodeServiceClient(host, null, opts);
+    this.host_provision = new HostProvisionServiceClient(host, null, opts);
+    this.dashboard = new DashboardServiceClient(host, null, opts);
+    this.command = new CommandServiceClient(host, null, opts);
+    this.organization = new OrganizationServiceClient(host, null, opts);
+    this.billing = new BillingServiceClient(host, null, opts);
+    this.update = new UpdateServiceClient(host, null, opts);
+    this.user = new UserServiceClient(host, null, opts);
   }
 
   getApiToken() {
