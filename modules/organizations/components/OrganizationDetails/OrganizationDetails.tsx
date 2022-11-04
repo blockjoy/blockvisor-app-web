@@ -1,111 +1,76 @@
 import { styles } from './OrganizationDetails.styles';
-import IconPencil from 'public/assets/icons/pencil-3-16.svg';
-import {
-  FocusEventHandler,
-  KeyboardEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { Button } from '@shared/components';
+import { useEffect, useState } from 'react';
+import { Button, Input } from '@shared/components';
 import { toast } from 'react-toastify';
 import { useGetOrganizationById } from '@modules/organizations/hooks/useGetOrganizationById';
 import { useRouter } from 'next/router';
 import { queryAsString } from '@shared/utils/query';
 import { useUpdateOrganization } from '@modules/organizations/hooks/useUpdateOrganization';
-import { stripAndSanitize } from '@shared/index';
+import { FormProvider, useForm } from 'react-hook-form';
+import { spacing } from 'styles/utils.spacing.styles';
 
 type Props = {
   name?: string;
   id?: string;
 };
 
+type OrganizationDetailsForm = {
+  name: string;
+};
+
 export function OrganizationDetails({ name, id }: Props) {
   const router = useRouter();
-  const { getOrganization, organization } = useGetOrganizationById();
+  const [isSubmiting, setIsSubmitting] = useState(false);
+  const form = useForm<OrganizationDetailsForm>();
+  const { handleSubmit, setValue } = form;
+  const { getOrganization } = useGetOrganizationById();
   const { updateOrganization } = useUpdateOrganization();
-  const [isEditable, setIsEditable] = useState(false);
-  const fieldRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     if (!id) {
       getOrganization(queryAsString(router.query.id));
     }
-  }, [id, router.query.id]);
 
-  const focusField = () => {
-    if (fieldRef.current) {
-      fieldRef.current.focus();
-      // move caret to end
-      const textLength = fieldRef.current.innerText.length;
-      const range = document.createRange();
-      const sel = window.getSelection();
+    setValue('name', name ?? '');
+  }, [id, name]);
 
-      range.setStart(fieldRef.current.childNodes[0], textLength);
-      range.collapse(true);
+  const onSubmit = handleSubmit(async ({ name }, e) => {
+    setIsSubmitting(true);
+    const id = e?.target.id;
 
-      sel?.removeAllRanges();
-      sel?.addRange(range);
+    try {
+      updateOrganization(id, name);
+      toast.success('Organisation renamed');
+      setIsSubmitting(true);
+      getOrganization(queryAsString(router.query.id));
+    } catch (error) {
+      setIsSubmitting(true);
+      toast.error('Rename failed');
     }
-  };
-
-  const handleBlur: FocusEventHandler<HTMLHeadingElement> = async (e) => {
-    if (fieldRef.current) {
-      fieldRef.current.blur();
-    }
-  };
-
-  const handleKeyDown: KeyboardEventHandler<HTMLHeadingElement> = (e) => {
-    if (e.key !== 'Enter') {
-      return;
-    }
-
-    const id = e.currentTarget.id;
-    const value = stripAndSanitize(e.currentTarget.textContent ?? '');
-
-    if (fieldRef.current) {
-      fieldRef.current.textContent = value;
-    }
-
-    if (value) {
-      try {
-        updateOrganization(id, value);
-        fieldRef.current?.blur();
-        toast.success('Organisation renamed');
-        setIsEditable(false);
-      } catch (error) {
-        toast.error('Rename failed');
-      }
-    }
-  };
-
-  const handleOnClick = () => {
-    setIsEditable(true);
-    focusField();
-  };
+  });
 
   return (
-    <header css={styles.base}>
-      <h2
-        onKeyDown={handleKeyDown}
-        tabIndex={0}
-        id={id ?? organization?.id}
-        ref={fieldRef}
-        css={[styles.title]}
-        onBlur={handleBlur}
-        contentEditable={isEditable}
-        suppressContentEditableWarning={true}
-      >
-        {name ?? organization?.name}{' '}
-      </h2>{' '}
-      <Button
-        customCss={[styles.editable]}
-        size="medium"
-        style="basic"
-        onClick={handleOnClick}
-      >
-        <IconPencil />
-      </Button>
-    </header>
+    <FormProvider {...form}>
+      <form id={id} onSubmit={onSubmit} css={[spacing.bottom.large]}>
+        <div css={[spacing.bottom.medium, styles.formInput]}>
+          <Input
+            label="Organization name"
+            disabled={isSubmiting}
+            name="name"
+            validationOptions={{
+              required: 'Organization name is required',
+            }}
+          />
+        </div>
+        <Button
+          loading={isSubmiting}
+          size="small"
+          type="submit"
+          disabled={isSubmiting}
+        >
+          Save
+        </Button>
+      </form>
+    </FormProvider>
   );
 }

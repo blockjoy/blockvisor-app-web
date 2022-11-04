@@ -45,6 +45,7 @@ const Organization: NextPage = () => {
     <>
       <PageSection>
         <PageHeader>
+          Organization Details
           <BackButton />
         </PageHeader>
         {loading ? (
