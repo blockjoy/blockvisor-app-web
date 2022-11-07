@@ -18,7 +18,9 @@ const headers: TableHeader[] = [
   },
 ];
 
-const mapOrganizationsToRows = (organizations?: ClientOrganization[]) => {
+export const mapOrganizationsToRows = (
+  organizations?: ClientOrganization[],
+) => {
   return organizations?.map((org, idx) => ({
     key: org.id ?? `${idx}`,
     cells: [
