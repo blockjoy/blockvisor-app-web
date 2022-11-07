@@ -6,4 +6,7 @@ export const styles = {
     color: var(--color-text-3);
     margin-bottom: 4px;
   `,
+  base: css`
+    background-color: var(--color-input-background);
+  `,
 };
