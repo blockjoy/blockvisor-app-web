@@ -1,6 +1,6 @@
 import { MultiSelect } from '@shared/components';
 import { withRHF } from '@shared/index';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentStory } from '@storybook/react';
 
 export default {
   title: 'Components/MultiSelect',
