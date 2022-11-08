@@ -60,3 +60,4 @@ export * from './IpAddressInput/IpAddressInput';
 export * from './TableGrid/TableGrid';
 export * from './TableGrid/TableGridCell';
 export * from './BlockchainIcon/BlockchainIcon';
+export * from './Modal/Modal';

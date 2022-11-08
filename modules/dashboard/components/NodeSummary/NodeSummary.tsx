@@ -3,7 +3,8 @@ import { layoutState } from '@modules/layout/store/layoutAtoms';
 import IconNode from '@public/assets/icons/box-12.svg';
 import IconNodeOffline from '@public/assets/icons/node-offline-12.svg';
 import IconNodeOnline from '@public/assets/icons/node-online-12.svg';
-import { Button, PageHeader, Skeleton } from '@shared/components';
+import { Button, Modal, PageHeader, Skeleton } from '@shared/components';
+import { useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { dashboardNodeStyles as styles } from '../Dashboard/Dashboard.styles';
@@ -11,20 +12,23 @@ import { dashboardNodeStyles as styles } from '../Dashboard/Dashboard.styles';
 const icons = [<IconNode />, <IconNodeOnline />, <IconNodeOffline />];
 
 export const NodeSummary = () => {
-  const setLayoutState = useSetRecoilState(layoutState);
+  const [isOpen, setIsOpen] = useState(false);
   const { dashboard, dashboardLoading } = useRecoilValue(appState);
   const { nodeMetrics } = dashboard;
   const loading =
     dashboardLoading === 'loading' || dashboardLoading === 'initializing';
+
+  const handleAddNode = () => setIsOpen(true);
   return (
     <>
+      <Modal isOpen={isOpen} />
       <PageHeader>
         Your Nodes
         <Button
           disabled={loading}
           size="small"
           style="secondary"
-          onClick={() => setLayoutState('nodes')}
+          onClick={handleAddNode}
         >
           Add Node
         </Button>
