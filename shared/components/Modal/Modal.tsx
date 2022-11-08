@@ -1,21 +1,28 @@
 import { styles } from './Modal.styles';
-import { ReactNode } from 'react';
-import { Input } from '../Input/Input';
+import { ReactNode, useRef } from 'react';
+import { useModal } from '@shared/hooks/useModal';
+import { useClickOutside } from '@shared/hooks/useClickOutside';
 
 type Props = {
   isOpen?: boolean;
   children?: ReactNode;
 };
-export function Modal({ isOpen }: Props) {
+export const Modal = ({ isOpen, children }: Props) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { closeModal } = useModal();
+  useClickOutside(ref, () => {
+    closeModal();
+  });
+
   if (!isOpen) {
     return null;
   }
+
   return (
-    <div css={[styles.modal]}>
-      <div css={[styles.base]}>
-        <p>Hello From Modal</p>
-        <div>Kurac</div>
+    <div css={[isOpen && styles.modal]}>
+      <div ref={ref} css={[isOpen && styles.base]}>
+        {children}
       </div>
     </div>
   );
-}
+};

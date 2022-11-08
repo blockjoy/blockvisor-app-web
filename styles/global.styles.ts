@@ -198,6 +198,16 @@ export const globalStyles = css`
     scroll-behavior: smooth;
   }
 
+  #__next {
+    isolation: isolate;
+  }
+
+  .scroll-locked {
+    @media ${breakpoints.toLrg} {
+      overflow: hidden;
+    }
+  }
+
   body {
     min-height: 100vh;
     color: var(--color-text);
