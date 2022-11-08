@@ -74,6 +74,10 @@ export const NodeFilters = ({
     nodeAtoms.filtersStatus,
   );
 
+  const [filtersHealth, setFiltersHealth] = useRecoilState(
+    nodeAtoms.filtersHealth,
+  );
+
   const [showMoreBlockchains, setShowMoreBlockchains] =
     useState<boolean>(false);
 
@@ -125,7 +129,13 @@ export const NodeFilters = ({
       node_status: statusFilters,
     };
 
+    console.log('params', params);
+
     loadNodes(params);
+  };
+
+  const handleHealthChanged = (health: string) => {
+    setFiltersHealth(filtersHealth === health ? null : health);
   };
 
   const blockchainFilterCount = filtersBlockchain.filter(
@@ -141,7 +151,8 @@ export const NodeFilters = ({
   const totalFilterCount =
     Number(blockchainFilterCount > 0) +
     Number(typeFilterCount > 0) +
-    Number(statusFilterCount > 0);
+    Number(statusFilterCount > 0) +
+    Number(!filtersHealth ? 0 : 1);
 
   return (
     <div css={styles.wrapper}>
@@ -150,6 +161,39 @@ export const NodeFilters = ({
         Filters ({totalFilterCount})
       </header>
       <div css={styles.filters}>
+        <label css={styles.label}>Health</label>
+        <div css={[styles.checkboxList]}>
+          <div css={styles.checkboxRow}>
+            <Checkbox
+              onChange={() => handleHealthChanged('online')}
+              name="healthOnline"
+              checked={filtersHealth === 'online'}
+            >
+              Online
+            </Checkbox>
+          </div>
+          <div css={styles.checkboxRow}>
+            <Checkbox
+              onChange={() => handleHealthChanged('offline')}
+              name="healthOffline"
+              checked={filtersHealth === 'offline'}
+            >
+              Offline
+            </Checkbox>
+          </div>
+        </div>
+        <FiltersBlock
+          name="Status"
+          filterCount={statusFilterCount}
+          filterList={filtersStatus}
+          setFilterList={setFiltersStatus}
+          setShowMore={setShowMoreStatus}
+          onFilterChanged={handleFilterChanged}
+          onShowMoreClicked={() =>
+            handleShowMoreClicked(showMoreStatus, setShowMoreStatus)
+          }
+          showMore={showMoreStatus}
+        />
         <FiltersBlock
           name="Blockchain"
           filterCount={blockchainFilterCount}
@@ -174,18 +218,7 @@ export const NodeFilters = ({
           }
           showMore={showMoreTypes}
         />
-        <FiltersBlock
-          name="Status"
-          filterCount={statusFilterCount}
-          filterList={filtersStatus}
-          setFilterList={setFiltersStatus}
-          setShowMore={setShowMoreStatus}
-          onFilterChanged={handleFilterChanged}
-          onShowMoreClicked={() =>
-            handleShowMoreClicked(showMoreStatus, setShowMoreStatus)
-          }
-          showMore={showMoreStatus}
-        />
+
         <Button onClick={handleUpdateClicked} size="small" display="block">
           Update
         </Button>

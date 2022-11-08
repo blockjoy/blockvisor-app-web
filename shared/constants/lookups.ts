@@ -1,5 +1,4 @@
 export const nodeTypeList = [
-  { id: 0, name: 'Undefined' },
   { id: 1, name: 'Miner' },
   { id: 2, name: 'ETL' },
   { id: 3, name: 'Validator' },
