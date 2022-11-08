@@ -52,10 +52,6 @@ const Verified: NextPage = () => {
       if (response.code === 20) {
         setServerError('Error verifying your account, please contact support.');
       }
-
-      console.log('verified', response);
-
-      console.log(query.token);
     })();
   }, []);
 

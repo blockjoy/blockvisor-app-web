@@ -9,8 +9,8 @@ import {
   PageTitle,
   Table,
   TableGrid,
-  TableFilters,
 } from '@shared/components';
+import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
 import { ListTypeToggle } from '@shared/components/ListTypeToggle/ListTypeToggle';
 import { styles } from './nodeList.styles';
@@ -72,7 +72,7 @@ export const NodeList = () => {
               activeListType={activeListType}
               onTypeChanged={handleListTypeChanged}
             />
-            <TableFilters />
+            <NodeFilters loadNodes={loadNodes} />
             {activeListType === 'table' ? (
               <Table
                 isLoading={loading}

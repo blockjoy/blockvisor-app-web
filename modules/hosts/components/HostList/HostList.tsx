@@ -65,8 +65,6 @@ export function Hosts() {
   }, []);
 
   const rows = hostsToRows(hosts);
-  console.log('rows', rows);
-
   return (
     <PageSection bottomBorder={false}>
       <PageHeader>

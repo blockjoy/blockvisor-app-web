@@ -3,8 +3,6 @@ import { NodeStatus } from '../components/NodeStatus/NodeStatus';
 import { formatDistanceToNow } from 'date-fns';
 
 export const toRows = (nodeList: BlockjoyNode[] | null) => {
-  console.log('nodeList', nodeList);
-
   return nodeList?.map((node: any) => ({
     key: node.id,
     cells: [

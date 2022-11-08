@@ -33,8 +33,6 @@ export const useHosts = () => {
       undefined,
     );
 
-    console.log('hosts', hosts);
-
     if (hostsResponse?.code !== 6) {
       hosts = hostsResponse;
     }
@@ -122,8 +120,6 @@ export const useHosts = () => {
       callback('');
       return;
     }
-
-    console.log('response', response);
 
     const hostProvisionKey = response?.messagesList[0];
     const hostProvisionKeysCopy = [...hostProvisionKeys];
