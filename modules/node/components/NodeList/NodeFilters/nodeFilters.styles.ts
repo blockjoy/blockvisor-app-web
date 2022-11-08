@@ -5,8 +5,8 @@ export const styles = {
   wrapper: css`
     position: sticky;
     top: 0;
-    flex: 0 0 160px;
-    width: 160px;
+    flex: 0 0 200px;
+    width: 200px;
     height: 400px;
     padding-right: 20px;
   `,
