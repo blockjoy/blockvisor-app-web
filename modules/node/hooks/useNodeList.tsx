@@ -47,7 +47,7 @@ export const useNodeList = (): Hook => {
 
     const nodes: any = await apiClient.listNodes(org_id, undefined, filters);
 
-    setNodeList(nodes);
+    setNodeList([...nodes, ...nodes, ...nodes, ...nodes, ...nodes, ...nodes]);
 
     await delay(env.loadingDuration);
 

@@ -1,19 +1,25 @@
 import { FC } from 'react';
-import { styles } from './listTypeToggle.styles';
+import { styles } from './nodeListHeader.styles';
 import IconTable from '@public/assets/icons/table-12.svg';
 import IconGrid from '@public/assets/icons/grid-12.svg';
 
 type Props = {
   activeListType: string | 'table' | 'grid';
   onTypeChanged: (type: string) => void;
+  totalRows: number;
 };
 
-export const ListTypeToggle: FC<Props> = ({
+export const NodeListHeader: FC<Props> = ({
   activeListType,
   onTypeChanged,
-}) => {
-  return (
-    <div css={[styles.wrapper]}>
+  totalRows,
+}) => (
+  <div css={styles.wrapper}>
+    <span css={styles.total}>
+      Showing <span css={styles.totalValue}>{totalRows} </span>
+      {totalRows === 1 ? 'node' : 'nodes'}
+    </span>
+    <div css={[styles.listTypePicker]}>
       <button
         onClick={() => onTypeChanged('table')}
         css={[
@@ -33,5 +39,5 @@ export const ListTypeToggle: FC<Props> = ({
         <IconGrid />
       </button>
     </div>
-  );
-};
+  </div>
+);
