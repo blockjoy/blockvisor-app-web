@@ -22,25 +22,8 @@ export const TableGrid: FC<Props> = ({
   return isLoading ? (
     <TableSkeleton />
   ) : (
-    <>
-      <header css={styles.gridHeader}>
-        <button css={styles.gridHeaderSortBy}>
-          <SizedIcon size="10px">
-            <IconSort />
-          </SizedIcon>
-          Sort By
-          <SizedIcon size="10px">
-            <IconDown />
-          </SizedIcon>
-        </button>
-        <span css={styles.gridHeaderTotal}>
-          Showing {totalCells}{' '}
-          {totalCells === 1 ? entityName : `${entityName}s`}
-        </span>
-      </header>
-      <div css={styles.grid}>
-        {cells?.map(({ component: Component }) => Component)}
-      </div>
-    </>
+    <div css={styles.grid}>
+      {cells?.map(({ component: Component }) => Component)}
+    </div>
   );
 };

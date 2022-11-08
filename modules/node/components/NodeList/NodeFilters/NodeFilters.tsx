@@ -31,7 +31,7 @@ const FiltersBlock: FC<FilterBlock> = ({
   setFilterList,
 }) => {
   return (
-    <>
+    <div css={styles.filterBlock}>
       <label css={styles.label}>
         {name} {filterCount ? `(${filterCount})` : ''}
       </label>
@@ -55,7 +55,7 @@ const FiltersBlock: FC<FilterBlock> = ({
       >
         Show {showMore ? 'Less' : 'More'}
       </button>
-    </>
+    </div>
   );
 };
 
@@ -161,25 +161,27 @@ export const NodeFilters = ({
         Filters ({totalFilterCount})
       </header>
       <div css={styles.filters}>
-        <label css={styles.label}>Health</label>
-        <div css={[styles.checkboxList]}>
-          <div css={styles.checkboxRow}>
-            <Checkbox
-              onChange={() => handleHealthChanged('online')}
-              name="healthOnline"
-              checked={filtersHealth === 'online'}
-            >
-              Online
-            </Checkbox>
-          </div>
-          <div css={styles.checkboxRow}>
-            <Checkbox
-              onChange={() => handleHealthChanged('offline')}
-              name="healthOffline"
-              checked={filtersHealth === 'offline'}
-            >
-              Offline
-            </Checkbox>
+        <div css={styles.filterBlock}>
+          <label css={styles.label}>Health</label>
+          <div css={[styles.checkboxList]}>
+            <div css={styles.checkboxRow}>
+              <Checkbox
+                onChange={() => handleHealthChanged('online')}
+                name="healthOnline"
+                checked={filtersHealth === 'online'}
+              >
+                Online
+              </Checkbox>
+            </div>
+            <div css={styles.checkboxRow}>
+              <Checkbox
+                onChange={() => handleHealthChanged('offline')}
+                name="healthOffline"
+                checked={filtersHealth === 'offline'}
+              >
+                Offline
+              </Checkbox>
+            </div>
           </div>
         </div>
         <FiltersBlock

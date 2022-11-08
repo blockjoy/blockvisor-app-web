@@ -18,7 +18,7 @@ export const styles = {
     color: rgba(255, 255, 255, 0.3);
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 10px;
+    font-size: 11px;
     margin-bottom: 10px;
 
     & path {
@@ -33,6 +33,9 @@ export const styles = {
     text-transform: uppercase;
     letter-spacing: 1px;
   `,
+  filterBlock: (theme: ITheme) => css`
+    margin-bottom: 24px;
+  `,
   filters: css`
     padding: 10px 10px 0 0;
   `,
@@ -46,6 +49,7 @@ export const styles = {
   `,
   checkboxListShowAll: css`
     max-height: 20000px;
+    padding-bottom: 0;
   `,
   checkboxRow: (theme: ITheme) => css`
     display: flex;
@@ -62,7 +66,6 @@ export const styles = {
     color: ${theme.colorLabel};
     text-decoration: underline;
     font-size: 13px;
-    margin-bottom: 20px;
 
     :hover {
       color: ${theme.colorDefault};
