@@ -3,8 +3,11 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
+    position: sticky;
+    top: 0;
     flex: 0 0 160px;
     width: 160px;
+    height: 400px;
     padding-right: 20px;
   `,
   header: css`
@@ -37,7 +40,8 @@ export const styles = {
     display: grid;
     gap: 8px;
     margin-bottom: 10px;
-    max-height: 80px;
+    padding-bottom: 16px;
+    max-height: 106px;
     overflow: hidden;
   `,
   checkboxListShowAll: css`
@@ -55,10 +59,10 @@ export const styles = {
     border: 0;
     cursor: pointer;
     display: block;
-    margin-bottom: 20px;
     color: ${theme.colorLabel};
     text-decoration: underline;
     font-size: 13px;
+    margin-bottom: 20px;
 
     :hover {
       color: ${theme.colorDefault};

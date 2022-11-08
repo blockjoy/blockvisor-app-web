@@ -64,8 +64,8 @@ const filtersStatus = atom<FilterItem[]>({
   })),
 });
 
-const filterOnlineOffline = atom<string | 'online' | 'offline' | null>({
-  key: 'node.filtersOnlineOffline',
+const filtersHealth = atom<string | 'online' | 'offline' | null>({
+  key: 'node.filtersHealth',
   default: null,
 });
 
@@ -75,7 +75,7 @@ export const nodeAtoms = {
   nodeCells,
   isLoading,
   activeListType,
-  filterOnlineOffline,
+  filtersHealth,
   filtersBlockchain,
   filtersStatus,
   filtersType,
