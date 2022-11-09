@@ -12,7 +12,6 @@ import {
 } from '@shared/components';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
-import { ListTypeToggle } from '@shared/components/ListTypeToggle/ListTypeToggle';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
 
