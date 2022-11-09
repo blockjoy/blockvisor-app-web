@@ -241,7 +241,7 @@ export class GrpcClient {
     this.token = JSON.parse(
       window.localStorage.getItem('identity') || '{}',
     ).accessToken;
-    return Buffer.from(this.token).toString('base64');
+    return this.token
   }
 
   getAuthHeader(): AuthHeader {
