@@ -7,3 +7,4 @@ export * from './hooks/useClickOutside';
 export * from './hooks/useModal';
 export * from './hooks/useTabs';
 export * from './utils/storybook';
+export * from './hooks/useArrowNavigation';

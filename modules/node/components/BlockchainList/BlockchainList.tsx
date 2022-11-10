@@ -4,14 +4,16 @@ import { typo } from 'styles/typo.styles';
 import { BlockchainIcon } from '../BlockchainIcon/BlockchainIcon';
 import IconEnter from '@public/assets/icons/enter.svg';
 import { flex } from 'styles/utils.flex.styles';
+import { useArrowNavigation } from '@shared/index';
 
 type Props = {
   blockchains: string[];
 };
 
 export function BlockchainList({ blockchains }: Props) {
+  const { elementRef } = useArrowNavigation<HTMLUListElement>();
   return (
-    <ul tabIndex={0} css={[reset.list, styles.list]}>
+    <ul ref={elementRef} tabIndex={0} css={[reset.list, styles.list]}>
       {blockchains.map((blockchain) => (
         <li tabIndex={0} css={[styles.listItem]}>
           <div css={[styles.blockchain, typo.body2]}>

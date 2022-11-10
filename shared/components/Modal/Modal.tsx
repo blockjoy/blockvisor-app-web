@@ -1,5 +1,5 @@
 import { styles } from './Modal.styles';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { useModal } from '@shared/hooks/useModal';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 
@@ -13,6 +13,10 @@ export const Modal = ({ isOpen, children }: Props) => {
   useClickOutside(ref, () => {
     closeModal();
   });
+
+  useEffect(() => {
+    isOpen && ref.current && ref.current.focus();
+  }, [isOpen]);
 
   if (!isOpen) {
     return null;

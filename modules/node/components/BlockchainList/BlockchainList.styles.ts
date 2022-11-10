@@ -20,7 +20,8 @@ export const styles = {
     cursor: pointer;
 
     &:hover,
-    &:active {
+    &:active,
+    &:focus {
       border-radius: 4px;
       border: 1px solid var(--color-primary);
       color: var(--color-primary);
