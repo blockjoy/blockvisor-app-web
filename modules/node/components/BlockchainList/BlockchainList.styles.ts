@@ -7,8 +7,33 @@ export const styles = {
     overflow-y: auto;
   `,
   listItem: css`
-    padding: 8px 0px;
+    padding: 10px 8px 10px 8px;
+    margin-top: 8px;
+    border: 0.5px solid transparent;
     border-bottom: 1px solid var(--color-border-5-o10);
+
+    &:hover,
+    &:active,
+    &:focus {
+      border-radius: 4px;
+      border: 0.5px solid var(--color-primary);
+      color: var(--color-primary);
+      outline: none;
+      box-shadow: 0 0 0 0.5px var(--color-primary);
+
+      & > svg {
+        opacity: 1;
+      }
+    }
+
+    & > svg {
+      margin-left: auto;
+      opacity: 0;
+      transition: opacity 0.5s;
+      path {
+        fill: var(--color-border-3);
+      }
+    }
   `,
 
   blockchain: css`
@@ -32,6 +57,7 @@ export const styles = {
     }
 
     & > svg {
+      margin-left: auto;
       opacity: 0;
       transition: opacity 0.5s;
       path {

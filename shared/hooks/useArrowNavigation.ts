@@ -45,7 +45,6 @@ function focusNext(target: Element) {
   const nextSibling = target.nextSibling;
 
   if (nextSibling) {
-    console.log('next', nextSibling.firstChild);
     const nextTarget = nextSibling as HTMLElement;
     nextTarget.focus();
   }
