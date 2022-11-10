@@ -20,16 +20,16 @@ export const styles = {
   `,
   base: css`
     position: relative;
-
+    width: 100%;
     background-color: var(--color-overlay-background-1);
     max-width: 760px;
     margin: 0 auto;
 
-    @media ${breakpoints.toSml} {
+    @media ${breakpoints.toMed} {
       height: 100vh;
     }
 
-    @media ${breakpoints.fromSml} {
+    @media ${breakpoints.fromMed} {
       border-radius: 8px;
     }
   `,

@@ -19,7 +19,7 @@ export const Modal = ({ isOpen, children }: Props) => {
   }
 
   return (
-    <div css={[isOpen && styles.modal]}>
+    <div css={[isOpen && styles.modal]} id="js-auth-layout">
       <div ref={ref} css={[isOpen && styles.base]}>
         {children}
       </div>
