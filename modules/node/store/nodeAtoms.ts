@@ -37,6 +37,11 @@ const isLoading = atom<LoadingState>({
   default: 'initializing',
 });
 
+const isFiltersOpen = atom<boolean>({
+  key: 'node.isFiltersOpen',
+  default: false,
+});
+
 const filtersBlockchain = atom<FilterItem[]>({
   key: 'node.filtersBlockchain',
   default: blockchainList.map((item) => ({
@@ -74,6 +79,7 @@ export const nodeAtoms = {
   nodeRows,
   nodeCells,
   isLoading,
+  isFiltersOpen,
   activeListType,
   filtersHealth,
   filtersBlockchain,

@@ -8,6 +8,7 @@ const spinKeyframes = keyframes`
 export const styles = {
   wrapper: css`
     position: absolute;
+    overflow: hidden;
     top: -5%;
     left: -5%;
     display: grid;

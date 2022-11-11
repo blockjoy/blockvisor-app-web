@@ -41,6 +41,10 @@ export const NodeList = () => {
       duration: 400,
     });
 
+  // useEffect(() => {
+  //   setActiveListType('grid');
+  // }, []);
+
   useEffect(() => {
     animateEntry();
   }, []);
@@ -70,7 +74,7 @@ export const NodeList = () => {
           <div css={styles.wrapper}>
             <NodeFilters loadNodes={loadNodes} />
 
-            <div style={{ flex: '1 1 auto' }}>
+            <div css={styles.nodeListWrapper}>
               <NodeListHeader
                 totalRows={nodeRows?.length || 0}
                 activeListType={activeListType}
@@ -81,18 +85,25 @@ export const NodeList = () => {
                   isLoading={loading}
                   headers={[
                     {
-                      name: 'Name',
+                      name: '',
                       key: '1',
+                      width: '30px',
+                      minWidth: '30px',
+                      maxWidth: '30px',
+                    },
+                    {
+                      name: 'Name',
+                      key: '2',
                       width: '300px',
                     },
                     {
                       name: 'Added',
-                      key: '2',
+                      key: '3',
                       width: '200px',
                     },
                     {
                       name: 'Status',
-                      key: '3',
+                      key: '4',
                       width: '200px',
                     },
                   ]}

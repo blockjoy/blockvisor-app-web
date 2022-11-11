@@ -21,10 +21,25 @@ export const styles = {
       grid-template-columns: repeat(4, 1fr);
     }
   `,
+
+  cellIcon: (theme: ITheme) => css`
+    width: 30px;
+    min-width: 30px;
+    flex: 0 0 30px;
+    align-self: flex-start;
+    margin-top: 16px;
+
+    > svg {
+    }
+
+    > svg > path {
+      fill: ${theme.colorLabel};
+    }
+  `,
   cell: css`
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;
     border-radius: 4px;
     min-width: 0;
     padding: 20px;
@@ -32,11 +47,17 @@ export const styles = {
     cursor: pointer;
   `,
   cellHeader: css`
+    min-width: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
     margin-bottom: 16px;
+  `,
+
+  cellRight: css`
+    flex: 1 1 auto;
+    min-width: 0;
   `,
   cellMoreIcon: css`
     width: 16px;
@@ -65,5 +86,6 @@ export const styles = {
     align-items: center;
     color: ${theme.colorLabel};
     margin-bottom: 16px;
+    font-size: 13px;
   `,
 };

@@ -196,11 +196,6 @@ export const globalStyles = css`
   html {
     box-sizing: border-box;
     scroll-behavior: smooth;
-    overflow-x: hidden;
-
-    @media (--screen-medium-large) {
-      overflow: hidden;
-    }
   }
 
   body {
@@ -210,25 +205,6 @@ export const globalStyles = css`
 
     background-color: var(--color-foreground-secondary);
     color: var(--color-text-5);
-    overflow-x: hidden;
-
-    @media ${breakpoints.fromLrg} {
-      overflow: hidden;
-    }
-
-    .no-scroll & {
-      max-width: 100%;
-      max-height: 100%;
-      overflow: hidden;
-    }
-
-    .no-scroll--mobile & {
-      @media (--screen-medium-max) {
-        max-width: 100%;
-        max-height: 100%;
-        overflow: hidden;
-      }
-    }
 
     *::-webkit-scrollbar,
     *::-webkit-scrollbar-track {

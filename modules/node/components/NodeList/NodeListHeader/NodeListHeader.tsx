@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { styles } from './nodeListHeader.styles';
 import IconTable from '@public/assets/icons/table-12.svg';
 import IconGrid from '@public/assets/icons/grid-12.svg';
+import { NodeFiltersHeader } from '../NodeFilters/NodeFiltersHeader';
 
 type Props = {
   activeListType: string | 'table' | 'grid';
@@ -15,11 +16,14 @@ export const NodeListHeader: FC<Props> = ({
   totalRows,
 }) => (
   <div css={styles.wrapper}>
+    {/* <div css={[styles.filterToggle, styles.endBlock]}>
+      <NodeFiltersHeader />
+    </div> */}
     <span css={styles.total}>
       Showing <span css={styles.totalValue}>{totalRows} </span>
       {totalRows === 1 ? 'node' : 'nodes'}
     </span>
-    <div css={[styles.listTypePicker]}>
+    <div css={[styles.listTypePicker, styles.endBlock]}>
       <button
         onClick={() => onTypeChanged('table')}
         css={[

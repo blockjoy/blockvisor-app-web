@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
+import { rgba } from 'polished';
 
 export const tableStyles = {
   wrapper: css`
@@ -45,12 +46,16 @@ export const tableStyles = {
     }
 
     & td {
-      padding: 20px 0 30px;
+      padding: 20px 0;
       vertical-align: top;
     }
 
     & tr:hover .has-hover-color {
       color: ${theme.colorPrimary};
+    }
+
+    & tbody tr {
+      position: relative;
     }
 
     & tbody tr td {
@@ -60,6 +65,29 @@ export const tableStyles = {
     & .danger span,
     & tr:hover.danger .has-hover-color {
       color: ${theme.colorDanger};
+    }
+
+    & td:first-of-type::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      transform: scaleX(0);
+      opacity: 0;
+      background: linear-gradient(
+        90deg,
+        ${rgba(theme.colorPrimary || '#000', 0)},
+        ${theme.colorPrimary},
+        ${rgba(theme.colorPrimary || '#000', 0)}
+      );
+      transition: 0.4s;
+    }
+
+    tr:hover ::after {
+      transform: scaleX(1);
+      opacity: 1;
     }
   `,
   tableSkeleton: css`
