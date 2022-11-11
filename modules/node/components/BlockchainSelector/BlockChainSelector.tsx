@@ -28,7 +28,7 @@ export function BlockchainSelector() {
 
   const form = useForm<BlockchainForm>();
   return (
-    <div id="#js-auth-layout">
+    <div>
       <div css={[styles.inputWrapper]}>
         <FormProvider {...form}>
           <form>

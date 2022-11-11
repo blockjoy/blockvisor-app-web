@@ -18,28 +18,26 @@ export function BlockchainList({ blockchains }: Props) {
   return (
     <ul ref={elementRef} tabIndex={0} css={[reset.list, styles.list]}>
       {blockchains.map((blockchain, idx) => (
-        <>
-          <li
-            onClick={() => selectBlockchain(blockchain)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                selectBlockchain(blockchain);
-              }
-            }}
-            key={idx}
-            tabIndex={0}
-            css={[
-              styles.listItem,
-              typo.body2,
-              flex.display.flex,
-              flex.align.center,
-            ]}
-          >
-            <BlockchainIcon blockchain={blockchain} />
-            <span css={[styles.blockchainText]}>{blockchain}</span>
-            <IconEnter />
-          </li>
-        </>
+        <li
+          onClick={() => selectBlockchain(blockchain)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              selectBlockchain(blockchain);
+            }
+          }}
+          key={idx}
+          tabIndex={0}
+          css={[
+            styles.listItem,
+            typo.body2,
+            flex.display.flex,
+            flex.align.center,
+          ]}
+        >
+          <BlockchainIcon blockchain={blockchain} />
+          <span css={[styles.blockchainText]}>{blockchain}</span>
+          <IconEnter />
+        </li>
       ))}
     </ul>
   );

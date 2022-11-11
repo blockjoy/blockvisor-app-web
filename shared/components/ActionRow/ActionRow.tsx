@@ -5,7 +5,7 @@ import { styles } from './ActionRow.styles';
 type Props = {
   title: ReactNode;
   description: ReactNode;
-  action: ReactNode;
+  action?: ReactNode;
 };
 export function ActionRow({ title, description, action }: Props) {
   return (

@@ -7,7 +7,7 @@ export const styles = {
     overflow-y: auto;
   `,
   listItem: css`
-    padding: 10px 8px 10px 8px;
+    padding: 10px 8px 12px 8px;
     margin-top: 8px;
     border: 0.5px solid transparent;
     border-bottom: 1px solid var(--color-border-5-o10);

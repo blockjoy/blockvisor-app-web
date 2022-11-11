@@ -1,3 +1,4 @@
+import { AddNode } from '@modules/node';
 import { useNodeWizard } from '@modules/node/hooks/useNodeWizard';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { Portal } from '@shared/components';
@@ -8,11 +9,12 @@ import { BlockchainSelector } from '../BlockchainSelector/BlockChainSelector';
 export function NodeWizard() {
   const { isFirstStep, isSecondStep } = useNodeWizard();
   const isActive = useRecoilValue(nodeAtoms.nodeWizardActive);
+
   return (
     <Portal wrapperId="node-wizard">
       <Modal isOpen={isActive}>
         {isFirstStep() ? <BlockchainSelector /> : null}
-        {isSecondStep() ? <div>FORM</div> : null}
+        {isSecondStep() ? <AddNode /> : null}
       </Modal>
     </Portal>
   );

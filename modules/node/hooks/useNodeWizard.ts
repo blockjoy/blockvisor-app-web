@@ -5,7 +5,7 @@ export function useNodeWizard() {
   const [currentStep, setCurrentStep] = useRecoilState(
     nodeWizardAtoms.currentStep,
   );
-  const [selectedBlockChain, setSelectedBlockchain] = useRecoilState(
+  const [selectedBlockchain, setSelectedBlockchain] = useRecoilState(
     nodeWizardAtoms.selectedBlockchain,
   );
 
@@ -20,7 +20,7 @@ export function useNodeWizard() {
 
   return {
     currentStep,
-    selectedBlockChain,
+    selectedBlockchain,
     selectBlockchain,
     isFirstStep,
     isSecondStep,

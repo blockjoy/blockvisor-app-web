@@ -9,3 +9,4 @@ export * from './hooks/useNodeView';
 export * from './store/nodeAtoms';
 export * from './store/nodeWizard';
 export * from './hooks/useNodeWizard';
+export * from './components/AddNode/AddNode';
