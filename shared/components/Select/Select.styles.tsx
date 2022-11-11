@@ -53,7 +53,7 @@ export const styles = {
     padding: 10px 48px 10px 12px;
   `,
   large: css`
-    ${typo.base}
+    ${typo.small}
     padding: 16px 48px 16px 12px;
   `,
   fieldWithLeftIcon: css`

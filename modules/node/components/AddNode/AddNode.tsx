@@ -8,7 +8,7 @@ import {
   Toggle,
   useModal,
 } from '@shared/index';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Controller } from 'react-hook-form';
 import { reset } from 'styles/utils.reset.styles';
 import { styles } from './AddNode.styles';
 import { typo as typ } from 'styles/typo.styles';
@@ -18,21 +18,31 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
+import { useState } from 'react';
 
 type AddNodeForm = {
   blockchain: string;
   nodeType: string;
   managedNodes: boolean;
   noOfValidators: number;
+  mevboost: boolean;
 };
 export function AddNode() {
   const { selectedBlockchain } = useNodeWizard();
   const { closeModal } = useModal();
+  const [disabled, setDisabled] = useState(true);
   const form = useForm<AddNodeForm>({
     defaultValues: {
       blockchain: selectedBlockchain ?? '',
       noOfValidators: 1,
+      mevboost: false,
+      managedNodes: false,
     },
+  });
+  const { handleSubmit } = form;
+
+  const onSubmit = handleSubmit(async ({ mevboost }) => {
+    console.log('form', { mevboost });
   });
 
   return (
@@ -49,8 +59,29 @@ export function AddNode() {
           <h1 css={[typo.medium]}>Add Node</h1>
           <IconClose css={[styles.close]} onClick={closeModal} />
         </div>
-        <form css={[styles.content]}>
+        <form css={[styles.content]} onSubmit={onSubmit}>
           <ul css={[reset.list]}>
+            <li css={[styles.spacing]}>
+              <Select
+                name="blockchain"
+                inputStyle="outline"
+                inputSize="large"
+                rightIcon={
+                  <Button
+                    size="small"
+                    display="block"
+                    style="outline"
+                    onClick={() => setDisabled(false)}
+                  >
+                    Change
+                  </Button>
+                }
+                options={[
+                  { label: 'val1', value: 'val1' },
+                  { label: 'val2', value: 'val2' },
+                ]}
+              />
+            </li>
             <li css={[styles.spacing]}>
               <label
                 css={[spacing.bottom.mediumSmall, typo.button, display.block]}
@@ -86,6 +117,7 @@ export function AddNode() {
                 <Input
                   label="No of Validators"
                   name="noOfValidators"
+                  inputSize="large"
                   inputStyles={[styles.validatorsInput]}
                   labelStyles={[
                     typo.button,
@@ -110,7 +142,7 @@ export function AddNode() {
                 <Select
                   name="Host"
                   inputStyle="outline"
-                  inputSize="medium"
+                  inputSize="large"
                   options={[]}
                 />
               </div>
@@ -127,7 +159,7 @@ export function AddNode() {
               <Select
                 name="beaconNode"
                 inputStyle="outline"
-                inputSize="medium"
+                inputSize="large"
                 options={[]}
               />
             </li>
@@ -143,7 +175,7 @@ export function AddNode() {
               <FileUpload files={[]} placeholder="Upload validator keys" />
             </li>
             <li css={[styles.spacing, flex.display.flex]}>
-              <Toggle name="mevboost" onClick={() => console.log()} />{' '}
+              <Toggle name="mevboost" onClick={() => console.log('change')} />
               <div>
                 <label css={[typ.body2]} htmlFor="mevboost">
                   Mevboost

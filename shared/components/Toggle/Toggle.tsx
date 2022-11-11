@@ -2,6 +2,7 @@ import { MouseEventHandler, ReactNode } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './Toggle.styles';
+import { RegisterOptions, useFormContext } from 'react-hook-form';
 
 type Props = {
   name: string;
@@ -9,6 +10,7 @@ type Props = {
   description?: ReactNode;
   active?: boolean;
   onClick: MouseEventHandler<HTMLLabelElement>;
+  validationOptions?: RegisterOptions;
 };
 
 export function Toggle({
@@ -17,11 +19,22 @@ export function Toggle({
   active,
   onClick,
   name,
+  validationOptions,
 }: Props) {
+  const { register } = useFormContext();
+
+  const handle: MouseEventHandler<HTMLLabelElement> = (e) => {
+    console.log('execute');
+    onClick(e);
+  };
   return (
     <>
-      <input name={name} css={[display.visuallyHidden]} />
-      <label onClick={onClick} css={[styles.base, active && styles.active]}>
+      <input css={[display.visuallyHidden]} />
+      <label
+        {...register(name, validationOptions)}
+        onClick={handle}
+        css={[styles.base, active && styles.active]}
+      >
         <div css={[styles.label]}>
           {children}
           {description && (

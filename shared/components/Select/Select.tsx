@@ -16,6 +16,7 @@ type Props = {
   name: string;
   disabled?: boolean;
   leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
   labelClass?: SerializedStyles[];
   inputClass?: SerializedStyles[];
   validationOptions?: RegisterOptions;
@@ -29,7 +30,9 @@ export function Select({
   inputStyle,
   options,
   labelClass,
+  inputClass,
   leftIcon,
+  rightIcon,
   disabled,
   validationOptions,
 }: Props) {
@@ -44,6 +47,8 @@ export function Select({
     disabled,
     Boolean(errors[name]),
     Boolean(leftIcon),
+    inputClass,
+    Boolean(rightIcon),
   );
 
   return (
@@ -71,6 +76,7 @@ export function Select({
             </option>
           ))}
         </select>
+        {rightIcon && <InputUtil position="right">{rightIcon}</InputUtil>}
       </div>
       <ErrorMessage
         name={name}
@@ -88,10 +94,11 @@ function setInputStyles(
   hasError?: boolean,
   leftIcon?: boolean,
   inputStyles?: SerializedStyles[],
+  rightIcon?: boolean,
 ) {
   const fieldClasses = [
     styles.field,
-    styles.fieldArrow,
+    !rightIcon && styles.fieldArrow,
     styles[inputSize],
     styles[inputStyle],
   ];
