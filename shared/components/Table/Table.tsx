@@ -25,7 +25,7 @@ export const Table: React.FC<Props> = ({
 
   return (
     <div css={tableStyles.wrapper}>
-      <TableLoader isLoading={isSorting} />
+      {/* <TableLoader isLoading={isSorting} /> */}
       {!isLoading ? (
         <table
           css={[tableStyles.table, !!onRowClick && tableStyles.hasHoverRows]}
@@ -37,7 +37,11 @@ export const Table: React.FC<Props> = ({
                   <th
                     className={th.isHiddenOnMobile ? 'hidden-on-mobile' : ''}
                     key={th.key}
-                    style={{ width: th.width }}
+                    style={{
+                      width: th.width,
+                      minWidth: th.minWidth,
+                      maxWidth: th.maxWidth,
+                    }}
                   >
                     {th.component || th.name}
                   </th>
