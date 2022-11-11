@@ -9,22 +9,6 @@ export default {
 };
 
 const Template: ComponentStory<typeof Tabs> = (args) => {
-  const items = useMemo(
-    () => [
-      {
-        label: 'Personal Information',
-        value: '1',
-        component: <p>First tab</p>,
-      },
-      {
-        label: 'Account',
-        value: '2',
-        component: <p>Second</p>,
-      },
-    ],
-    [],
-  );
-
   const { activeTab, setActiveTab } = useTabs(2);
 
   const handleClick = (tabValue: string) => {
@@ -34,7 +18,7 @@ const Template: ComponentStory<typeof Tabs> = (args) => {
     <div style={{ maxWidth: '500px' }}>
       <Tabs
         {...args}
-        tabItems={items}
+        tabItems={args.tabItems}
         activeTab={activeTab}
         onTabClick={handleClick}
       />
@@ -44,4 +28,27 @@ const Template: ComponentStory<typeof Tabs> = (args) => {
 
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  tabItems: [
+    {
+      label: 'Personal Information',
+      value: '1',
+      component: <p>First tab</p>,
+    },
+    {
+      label: 'Account',
+      value: '2',
+      component: <p>Second</p>,
+    },
+  ],
+};
+
+Default.parameters = {
+  nextRouter: {
+    path: '/',
+    asPath: '/',
+    query: {
+      tab: '1',
+    },
+  },
+};
