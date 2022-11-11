@@ -6,6 +6,7 @@ import IconEnter from '@public/assets/icons/enter.svg';
 import { flex } from 'styles/utils.flex.styles';
 import { useArrowNavigation } from '@shared/index';
 import { useNodeWizard } from '@modules/node';
+import { useEffect } from 'react';
 
 type Props = {
   blockchains: string[];
@@ -14,6 +15,13 @@ type Props = {
 export function BlockchainList({ blockchains }: Props) {
   const { selectBlockchain } = useNodeWizard();
   const { elementRef } = useArrowNavigation<HTMLUListElement>();
+
+  useEffect(() => {
+    const firstChild = elementRef.current?.firstChild as HTMLElement;
+    if (firstChild) {
+      firstChild.focus();
+    }
+  }, []);
 
   return (
     <ul ref={elementRef} tabIndex={0} css={[reset.list, styles.list]}>
