@@ -85,6 +85,7 @@ import {
   StatusResponseFactory,
 } from '@modules/client/status_response';
 import Status = ResponseMeta.Status;
+import Keyfile = Node.Keyfile;
 
 export type UIUser = {
   first_name: string;
@@ -129,10 +130,11 @@ export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
 
 export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
   return {
-    ...node?.toObject(),
     groupsList: node?.getGroupsList() || [],
+    ...node?.toObject(),
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
+    keyFilesList: node?.getKeyFilesList().map((f) => { f.toObject() }) || [],
   };
 }
 
@@ -684,6 +686,7 @@ export class GrpcClient {
 
   async createNode(
     node: Node,
+    key_files?: FileList,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -691,6 +694,26 @@ export class GrpcClient {
     node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
+
+    if (key_files) {
+      for (let idx = 0; idx < key_files.length; idx++) {
+        let file = key_files.item(idx);
+        let reader = new FileReader();
+
+        reader.readAsText(file);
+
+        let t_file = new Node.Keyfile();
+
+        t_file.setName(file?.name || "");
+
+        reader.onload = function() {
+          t_file.setContent(reader.result?.toString() || "");
+          let list = node.getKeyFilesList();
+          list.push(t_file);
+          node.setKeyFilesList(list);
+        };
+      }
+    }
 
     let request = new CreateNodeRequest();
     request.setMeta(request_meta);
