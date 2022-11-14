@@ -56,7 +56,6 @@ export const NodeAdd: FC = () => {
     },
   });
   const { getValues, setValue } = form;
-  console.log('block', blockchainList);
 
   const [layout] = useRecoilState(layoutState);
 
