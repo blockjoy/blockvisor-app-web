@@ -79,9 +79,9 @@ export const NodeAdd: FC = () => {
       host,
       nodeType,
       blockchain,
+      keys: validatorKeys,
     };
 
-    console.log('keys', validatorKeys);
     createNode(params, (nodeId: string) => {
       form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
@@ -147,9 +147,7 @@ export const NodeAdd: FC = () => {
   if (!hasMounted) {
     return null;
   }
-  {
-    console.log('active', activeNodeType);
-  }
+
   return (
     <Drawer isOpen={layout === 'nodes'}>
       <FormProvider {...form}>
