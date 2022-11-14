@@ -59,4 +59,3 @@ export * from './FileUpload/FileUpload';
 export * from './IpAddressInput/IpAddressInput';
 export * from './TableGrid/TableGrid';
 export * from './TableGrid/TableGridCell';
-export * from './TableFilters/TableFilters';

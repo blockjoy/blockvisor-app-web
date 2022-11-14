@@ -1,4 +1,5 @@
 import {
+  ChangeEvent,
   ChangeEventHandler,
   InputHTMLAttributes,
   MouseEventHandler,
@@ -13,9 +14,9 @@ type Props = {
   description?: string;
   formTouched?: boolean;
   checked?: boolean;
-  onChange: MouseEventHandler<HTMLLabelElement>;
+  onChange: ChangeEventHandler<HTMLInputElement>;
   children?: ReactNode;
-} & InputHTMLAttributes<HTMLInputElement>;
+};
 
 export function Checkbox({
   label,
@@ -35,12 +36,9 @@ export function Checkbox({
         defaultChecked={checked}
         type="checkbox"
         {...rest}
+        onChange={onChange}
       />
-      <label
-        onClick={onChange}
-        css={[styles.base, checked ? styles.input : '']}
-        htmlFor={name}
-      >
+      <label css={[styles.base, checked ? styles.input : '']} htmlFor={name}>
         {children}
       </label>
     </>

@@ -19,8 +19,6 @@ export function ForgotPasswordForm() {
 
   const onSubmit = form.handleSubmit(async ({ email }) => {
     setIsLoading(true);
-    console.log({ email });
-
     await apiClient.resetPassword(email);
 
     toast.success('Email sent');
