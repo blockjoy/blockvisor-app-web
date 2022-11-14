@@ -18,7 +18,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
-import { MouseEventHandler, useState } from 'react';
+import { MouseEventHandler, useRef, useState } from 'react';
 
 type AddNodeForm = {
   blockchain: string;
@@ -31,10 +31,9 @@ type AddNodeForm = {
 export function AddNode() {
   const { selectedBlockchain } = useNodeWizard();
   const { closeModal } = useModal();
-  const [disabled, setDisabled] = useState(true);
   const form = useForm<AddNodeForm>({
     defaultValues: {
-      blockchain: selectedBlockchain ?? '',
+      blockchain: selectedBlockchain?.name ?? '',
       noOfValidators: 1,
       mevboost: false,
       managedNodes: false,
@@ -94,16 +93,6 @@ export function AddNode() {
                 name="blockchain"
                 inputStyle="outline"
                 inputSize="large"
-                rightIcon={
-                  <Button
-                    size="small"
-                    display="block"
-                    style="outline"
-                    onClick={() => setDisabled(false)}
-                  >
-                    Change
-                  </Button>
-                }
                 options={[
                   { label: 'val1', value: 'val1' },
                   { label: 'val2', value: 'val2' },

@@ -5,7 +5,7 @@ const currentStep = atom<'1' | '2' | '3'>({
   default: '1',
 });
 
-const selectedBlockchain = atom<string | null>({
+const selectedBlockchain = atom<{ name: string; id: string } | null>({
   key: 'nodeWizard.selectedBlockchain',
   default: null,
 });

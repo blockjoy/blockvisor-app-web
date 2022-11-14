@@ -9,7 +9,7 @@ import { useNodeWizard } from '@modules/node';
 import { useEffect } from 'react';
 
 type Props = {
-  blockchains: string[];
+  blockchains: { name: string; id: string }[];
 };
 
 export function BlockchainList({ blockchains }: Props) {
@@ -27,10 +27,10 @@ export function BlockchainList({ blockchains }: Props) {
     <ul ref={elementRef} tabIndex={0} css={[reset.list, styles.list]}>
       {blockchains.map((blockchain, idx) => (
         <li
-          onClick={() => selectBlockchain(blockchain)}
+          onClick={() => selectBlockchain(blockchain.name, blockchain.id)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              selectBlockchain(blockchain);
+              selectBlockchain(blockchain.name, blockchain.id);
             }
           }}
           key={idx}
@@ -42,8 +42,8 @@ export function BlockchainList({ blockchains }: Props) {
             flex.align.center,
           ]}
         >
-          <BlockchainIcon blockchain={blockchain} />
-          <span css={[styles.blockchainText]}>{blockchain}</span>
+          <BlockchainIcon blockchain={blockchain.name} />
+          <span css={[styles.blockchainText]}>{blockchain.name}</span>
           <IconEnter />
         </li>
       ))}

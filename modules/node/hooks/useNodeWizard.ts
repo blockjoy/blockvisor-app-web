@@ -9,8 +9,8 @@ export function useNodeWizard() {
     nodeWizardAtoms.selectedBlockchain,
   );
 
-  const selectBlockchain = (blockchain: string) => {
-    setSelectedBlockchain(blockchain);
+  const selectBlockchain = (name: string, id: string) => {
+    setSelectedBlockchain({ name, id });
     setCurrentStep('2');
   };
 

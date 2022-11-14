@@ -24,6 +24,8 @@ export function BlockchainIcon({ blockchain }: Props) {
       );
 
     default:
-      return null;
+      return (
+        <Image src={'/assets/images/EthereumX2.png'} width={32} height={32} />
+      );
   }
 }
