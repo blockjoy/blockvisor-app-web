@@ -61,8 +61,8 @@ const options = {
 export const HostCharts = () => {
   return (
     <div css={styles.wrapper}>
-      {charts.map((chart) => (
-        <div css={styles.block}>
+      {charts.map((chart, idx) => (
+        <div key={idx} css={styles.block}>
           <Chart
             width="120px"
             height="120px"
