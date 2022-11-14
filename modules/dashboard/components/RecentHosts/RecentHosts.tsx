@@ -1,5 +1,4 @@
 import { appState } from '@modules/dashboard/store';
-import { useHosts } from '@modules/hosts';
 import { Button, PageHeader, Table } from '@shared/components';
 
 import { useRouter } from 'next/router';

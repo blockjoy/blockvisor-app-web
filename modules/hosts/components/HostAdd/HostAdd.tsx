@@ -3,10 +3,12 @@ import { PageHeader, PageSection, Button } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { useHosts } from '@modules/hosts';
+import { useCreateHostProvision } from '@modules/hosts';
 import { useRouter } from 'next/router';
 import { IpAddressInput } from '@shared/components';
 import { useState } from 'react';
+import { ApplicationError } from '@modules/auth/utils/Errors';
+import { toast } from 'react-toastify';
 
 type Form = {
   ipAddressFrom: string;
@@ -38,29 +40,27 @@ export const HostAdd = () => {
 
   const { setValue } = form;
 
-  const { createHostProvision } = useHosts();
+  const { createHostProvision, loading } = useCreateHostProvision();
 
-  const onSubmit: SubmitHandler<Form> = ({
+  const onSubmit: SubmitHandler<Form> = async ({
     ipAddressFrom,
     ipAddressTo,
     gatewayIpAddress,
   }) => {
-    setServerError('');
-    createHostProvision(
-      ipAddressFrom,
-      ipAddressTo,
-      gatewayIpAddress,
-      (key: string) => {
-        // if no key show error message
-        if (key) {
-          router.push(`/hosts/install/${key}`);
-        } else {
-          setServerError(
-            'Host could not be created, please check the details entered and try again.',
-          );
-        }
-      },
-    );
+    try {
+      const key = await createHostProvision(
+        ipAddressFrom,
+        ipAddressTo,
+        gatewayIpAddress,
+      );
+
+      toast.success('Provisioning Host');
+      router.push(`/hosts/install/${key}`);
+    } catch (error) {
+      if (error instanceof ApplicationError) {
+        setServerError(error.message);
+      }
+    }
   };
 
   const handleAllChanged = () => {

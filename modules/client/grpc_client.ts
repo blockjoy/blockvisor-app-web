@@ -186,7 +186,10 @@ export type GrpcBlockchainObject = Blockchain.AsObject &
 export type GrpcHostObject = Host.AsObject &
   ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
 export type GrpcNodeObject = Node.AsObject &
-  ConvenienceConversion & { updated_at_datetime: Date | undefined, keyFilesList: Array<Node.Keyfile.AsObject> };
+  ConvenienceConversion & {
+    updated_at_datetime: Date | undefined;
+    keyFilesList: Array<Node.Keyfile.AsObject>;
+  };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
 export class GrpcClient {
@@ -707,10 +710,10 @@ export class GrpcClient {
 
         let t_file = new Node.Keyfile();
 
-        t_file.setName(file?.name || "");
+        t_file.setName(file?.name || '');
 
-        reader.onload = function() {
-          t_file.setContent(reader.result?.toString() || "");
+        reader.onload = function () {
+          t_file.setContent(reader.result?.toString() || '');
           let list = node.getKeyFilesList();
           list.push(t_file);
           node.setKeyFilesList(list);

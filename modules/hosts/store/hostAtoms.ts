@@ -1,19 +1,20 @@
+import { GrpcHostObject } from '@modules/client/grpc_client';
 import { atom } from 'recoil';
 
 export const bla = '';
 
-const host = atom<Host | null>({
+const host = atom<GrpcHostObject | null>({
   key: 'host.single',
   default: null,
 });
-const hostLoading = atom<boolean | null>({
+const hostLoading = atom<LoadingState>({
   key: 'host.loading',
-  default: null,
+  default: 'initializing',
 });
 
-const hosts = atom<Host[] | null>({
+const hosts = atom<Host[]>({
   key: 'hosts.list',
-  default: null,
+  default: [],
 });
 
 const hostsLoading = atom<LoadingState>({

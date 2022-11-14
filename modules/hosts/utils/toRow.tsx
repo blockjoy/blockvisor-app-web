@@ -8,6 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { MouseEventHandler } from 'react';
 import { styles as detailsHeaderStyles } from '@shared/components/DetailsHeader/DetailsHeader.styles';
 import { NodeStatus } from '@modules/node';
+import { GrpcHostObject } from '@modules/client/grpc_client';
 
 export function hostsToRows(hosts: Host[] | null) {
   return hosts?.map((host: any) => ({
@@ -44,7 +45,7 @@ export function hostsToRows(hosts: Host[] | null) {
 }
 
 export function nodeListToRow(
-  host: Host | null,
+  host: GrpcHostObject | null,
   stopNode: MouseEventHandler<HTMLButtonElement>,
   restartNode: MouseEventHandler<HTMLButtonElement>,
 ) {
@@ -72,7 +73,7 @@ export function nodeListToRow(
         component: (
           <span className="show-on-hover" css={detailsHeaderStyles.actions}>
             <Button
-              id={host.id.value}
+              id={host.id}
               onClick={stopNode}
               type="button"
               size="small"
@@ -81,7 +82,7 @@ export function nodeListToRow(
               Stop
             </Button>
             <Button
-              id={host.id.value}
+              id={host.id}
               onClick={restartNode}
               type="button"
               size="small"
