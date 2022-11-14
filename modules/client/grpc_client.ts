@@ -107,6 +107,15 @@ export type NewPassword = {
   new_pwd: string;
   new_pwd_confirmation: string;
 };
+export type FilterCriteria = {
+  blockchain?: string,
+  node_type?: string,
+  node_status?: number,
+  version?: string,
+};
+export type SortingCriteria = {
+  name?: "asc" | "desc",
+};
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
   if (ts !== undefined) {
@@ -206,17 +215,21 @@ export class GrpcClient {
    * Initialize all gRPC clients
    */
   private initClients(host: string) {
-    this.authentication = new AuthenticationServiceClient(host, null, null);
-    this.host = new HostServiceClient(host, null, null);
-    this.blockchain = new BlockchainServiceClient(host, null, null);
-    this.node = new NodeServiceClient(host, null, null);
-    this.host_provision = new HostProvisionServiceClient(host, null, null);
-    this.dashboard = new DashboardServiceClient(host, null, null);
-    this.command = new CommandServiceClient(host, null, null);
-    this.organization = new OrganizationServiceClient(host, null, null);
-    this.billing = new BillingServiceClient(host, null, null);
-    this.update = new UpdateServiceClient(host, null, null);
-    this.user = new UserServiceClient(host, null, null);
+    let opts = {
+      'withCredentials': true
+    };
+
+    this.authentication = new AuthenticationServiceClient(host, null, opts);
+    this.host = new HostServiceClient(host, null, opts);
+    this.blockchain = new BlockchainServiceClient(host, null, opts);
+    this.node = new NodeServiceClient(host, null, opts);
+    this.host_provision = new HostProvisionServiceClient(host, null, opts);
+    this.dashboard = new DashboardServiceClient(host, null, opts);
+    this.command = new CommandServiceClient(host, null, opts);
+    this.organization = new OrganizationServiceClient(host, null, opts);
+    this.billing = new BillingServiceClient(host, null, opts);
+    this.update = new UpdateServiceClient(host, null, opts);
+    this.user = new UserServiceClient(host, null, opts);
   }
 
   getApiToken() {
@@ -228,7 +241,7 @@ export class GrpcClient {
     this.token = JSON.parse(
       window.localStorage.getItem('identity') || '{}',
     ).accessToken;
-    return Buffer.from(this.token).toString('base64');
+    return this.token
   }
 
   getAuthHeader(): AuthHeader {
@@ -617,6 +630,8 @@ export class GrpcClient {
 
   async listNodes(
     org_id: string,
+    sorting_criteria?: SortingCriteria,
+    filter_criteria?: FilterCriteria,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
