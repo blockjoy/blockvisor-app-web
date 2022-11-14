@@ -134,7 +134,7 @@ export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
     ...node?.toObject(),
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
-    keyFilesList: node?.getKeyFilesList().map((f) => { f.toObject() }) || [],
+    keyFilesList: [],
   };
 }
 
@@ -186,7 +186,7 @@ export type GrpcBlockchainObject = Blockchain.AsObject &
 export type GrpcHostObject = Host.AsObject &
   ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
 export type GrpcNodeObject = Node.AsObject &
-  ConvenienceConversion & { updated_at_datetime: Date | undefined };
+  ConvenienceConversion & { updated_at_datetime: Date | undefined, keyFilesList: Array<Node.Keyfile.AsObject> };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
 export class GrpcClient {
@@ -698,6 +698,9 @@ export class GrpcClient {
     if (key_files) {
       for (let idx = 0; idx < key_files.length; idx++) {
         let file = key_files.item(idx);
+
+        if (file === null) continue;
+
         let reader = new FileReader();
 
         reader.readAsText(file);
