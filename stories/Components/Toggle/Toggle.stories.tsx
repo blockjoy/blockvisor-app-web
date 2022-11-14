@@ -1,10 +1,12 @@
 import { Toggle } from '@shared/components';
+import { withRHF } from '@shared/index';
 import { ComponentStory } from '@storybook/react';
 import { useState } from 'react';
 
 export default {
   title: 'Components/Toggle',
   component: Toggle,
+  decorators: [withRHF()],
 };
 
 const Template: ComponentStory<typeof Toggle> = (args) => {
@@ -22,4 +24,6 @@ const Template: ComponentStory<typeof Toggle> = (args) => {
 
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  name: 'toggle',
+};

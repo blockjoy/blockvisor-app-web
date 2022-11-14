@@ -22,17 +22,16 @@ export function Toggle({
   validationOptions,
 }: Props) {
   const { register } = useFormContext();
-
-  const handle: MouseEventHandler<HTMLLabelElement> = (e) => {
-    console.log('execute');
-    onClick(e);
-  };
   return (
     <>
-      <input css={[display.visuallyHidden]} />
-      <label
+      <input
         {...register(name, validationOptions)}
-        onClick={handle}
+        type="checkbox"
+        css={[display.visuallyHidden]}
+      />
+      <label
+        htmlFor={name}
+        onClick={onClick}
         css={[styles.base, active && styles.active]}
       >
         <div css={[styles.label]}>

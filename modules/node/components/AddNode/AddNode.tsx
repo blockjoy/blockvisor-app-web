@@ -8,7 +8,7 @@ import {
   Toggle,
   useModal,
 } from '@shared/index';
-import { FormProvider, useForm, Controller } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { reset } from 'styles/utils.reset.styles';
 import { styles } from './AddNode.styles';
 import { typo as typ } from 'styles/typo.styles';
@@ -18,7 +18,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 
 type AddNodeForm = {
   blockchain: string;
@@ -26,6 +26,7 @@ type AddNodeForm = {
   managedNodes: boolean;
   noOfValidators: number;
   mevboost: boolean;
+  validatorKeys: File[];
 };
 export function AddNode() {
   const { selectedBlockchain } = useNodeWizard();
@@ -37,13 +38,40 @@ export function AddNode() {
       noOfValidators: 1,
       mevboost: false,
       managedNodes: false,
+      validatorKeys: [],
     },
   });
-  const { handleSubmit } = form;
+  const { handleSubmit, setValue, getValues, watch } = form;
 
-  const onSubmit = handleSubmit(async ({ mevboost }) => {
-    console.log('form', { mevboost });
-  });
+  const toggleNode = () => {
+    const value = getValues('managedNodes');
+    setValue('managedNodes', !value);
+  };
+
+  const toggleMevboost = () => {
+    const value = getValues('mevboost');
+    setValue('mevboost', !value);
+  };
+
+  const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { itemUrl } = e.currentTarget.dataset;
+    const validatorKeys = getValues('validatorKeys');
+    const newKeys = validatorKeys.filter((key) => key.name !== itemUrl);
+    setValue('validatorKeys', newKeys);
+  };
+
+  const onSubmit = handleSubmit(
+    async ({ mevboost, managedNodes, noOfValidators, validatorKeys }) => {
+      console.log('form', {
+        mevboost,
+        managedNodes,
+        noOfValidators,
+        validatorKeys,
+      });
+    },
+  );
 
   return (
     <div>
@@ -100,8 +128,13 @@ export function AddNode() {
                 Set the number of validator nodes to run, and where will the
                 validator(s) run.
               </p>
+
               <div css={[flex.display.flex]}>
-                <Toggle name="managedNodes" onClick={() => console.log()} />{' '}
+                <Toggle
+                  active={watch('managedNodes')}
+                  name="managedNodes"
+                  onClick={toggleNode}
+                />{' '}
                 <div>
                   <label css={[typ.body2]} htmlFor="mevboost">
                     Let BlockJoy Manage these nodes
@@ -172,10 +205,28 @@ export function AddNode() {
               <p css={[typo.small, colors.text4, spacing.bottom.mediumSmall]}>
                 Upload your validator keys
               </p>
-              <FileUpload files={[]} placeholder="Upload validator keys" />
+              <Controller
+                name="validatorKeys"
+                rules={{
+                  required: 'Field Required',
+                }}
+                render={({ field: { onChange, name } }) => (
+                  <FileUpload
+                    multiple={true}
+                    onChange={(e) => onChange(e)}
+                    name={name}
+                    remove={handleRemove}
+                    placeholder="Upload validator keys"
+                  />
+                )}
+              />
             </li>
             <li css={[styles.spacing, flex.display.flex]}>
-              <Toggle name="mevboost" onClick={() => console.log('change')} />
+              <Toggle
+                name="mevboost"
+                onClick={toggleMevboost}
+                active={watch('mevboost')}
+              />
               <div>
                 <label css={[typ.body2]} htmlFor="mevboost">
                   Mevboost

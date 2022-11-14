@@ -1,29 +1,32 @@
 import { FileUpload } from '@shared/components';
+import { withRHF } from '@shared/index';
 import { ComponentStory } from '@storybook/react';
 import { MouseEventHandler, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 export default {
   title: 'Components/FileUpload',
   component: FileUpload,
+  decorators: [withRHF()],
 };
 
+type StorybookFileUpload = {
+  validatorKeys: File[];
+};
 const Template: ComponentStory<typeof FileUpload> = (args) => {
-  const [files, setFiles] = useState<File[]>([]);
-  const handleChange = (files: File[]) => {
-    setFiles((prev) => [...prev, ...files]);
-  };
+  const form = useForm<StorybookFileUpload>({
+    defaultValues: {
+      validatorKeys: [],
+    },
+  });
+  const { setValue } = form;
 
-  const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setFiles([]);
-  };
   return (
-    <FileUpload
-      {...args}
-      files={files}
-      onChange={handleChange}
-      remove={handleRemove}
+    <Controller
+      name="validatorKeys"
+      render={({ field: { onChange } }) => {
+        return <FileUpload multiple={true} {...args} onChange={onChange} />;
+      }}
     />
   );
 };
