@@ -58,7 +58,7 @@ export function FileUpload({
       />
       {Boolean(files.length) ? (
         files.map((file) => (
-          <Fragment key={file.name}>
+          <div css={styles.file} key={file.name}>
             <Image
               src="/assets/icons/checkmark-24.svg"
               layout="fixed"
@@ -73,7 +73,7 @@ export function FileUpload({
             >
               <IconClose />
             </button>
-          </Fragment>
+          </div>
         ))
       ) : (
         <>

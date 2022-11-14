@@ -2,7 +2,7 @@ import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
 import { Button, Select, Input, FileUpload } from '@shared/components';
 import { useRouter } from 'next/router';
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, MouseEventHandler } from 'react';
 import {
   Controller,
   FormProvider,
@@ -55,20 +55,33 @@ export const NodeAdd: FC = () => {
       validatorKeys: [],
     },
   });
-
+  const { getValues, setValue } = form;
   console.log('block', blockchainList);
+
   const [layout] = useRecoilState(layoutState);
+
+  const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const { itemUrl } = e.currentTarget.dataset;
+    const validatorKeys = getValues('validatorKeys');
+    const newKeys = validatorKeys.filter((key) => key.name !== itemUrl);
+    setValue('validatorKeys', newKeys);
+  };
 
   const onSubmit: SubmitHandler<NodeAddForm> = ({
     host,
     nodeType,
     blockchain,
+    validatorKeys,
   }) => {
     const params: CreateNodeParams = {
       host,
       nodeType,
       blockchain,
     };
+
+    console.log('keys', validatorKeys);
     createNode(params, (nodeId: string) => {
       form.setValue('blockchain', blockchainList[0]?.value);
       form.setValue('nodeType', blockchainList[0].supportedNodeTypes[0]?.id);
@@ -134,7 +147,9 @@ export const NodeAdd: FC = () => {
   if (!hasMounted) {
     return null;
   }
-
+  {
+    console.log('active', activeNodeType);
+  }
   return (
     <Drawer isOpen={layout === 'nodes'}>
       <FormProvider {...form}>
@@ -180,20 +195,22 @@ export const NodeAdd: FC = () => {
                     <FormSlider label="Batch Create" name="batchCreate" />
                   </div>
                 )}
-                <div css={spacing.bottom.medium}>
-                  <Controller
-                    name="validatorKeys"
-                    render={({ field: { onChange, name } }) => (
-                      <FileUpload
-                        multiple={true}
-                        onChange={(e) => onChange(e)}
-                        name={name}
-                        remove={() => console.log('remove')}
-                        placeholder="Upload validator keys"
-                      />
-                    )}
-                  />
-                </div>
+                {property.type === 'multifileupload' ? (
+                  <div css={spacing.bottom.medium}>
+                    <Controller
+                      name="validatorKeys"
+                      render={({ field: { onChange, name } }) => (
+                        <FileUpload
+                          multiple={true}
+                          onChange={(e) => onChange(e)}
+                          name={name}
+                          remove={handleRemove}
+                          placeholder="Upload validator keys"
+                        />
+                      )}
+                    />
+                  </div>
+                ) : null}
               </div>
             ))}
 

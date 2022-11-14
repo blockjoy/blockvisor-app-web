@@ -4,8 +4,9 @@ export const styles = {
   base: css`
     position: relative;
     display: inline-flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
+    flex-wrap: wrap;
     padding: 15px 22px;
     border: 1px dashed var(--color-border-2);
     border-radius: 4px;
@@ -45,5 +46,9 @@ export const styles = {
         }
       }
     }
+  `,
+  file: css`
+    display: flex;
+    align-items: center;
   `,
 };
