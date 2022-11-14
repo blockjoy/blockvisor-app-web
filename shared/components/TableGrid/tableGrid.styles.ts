@@ -8,7 +8,6 @@ export const styles = {
     gap: 16px;
     grid-template-columns: 1fr;
     grid-auto-rows: 160px;
-    padding-top: 36px;
 
     @media ${breakpoints.fromSml} {
       grid-template-columns: repeat(2, 1fr);
@@ -22,40 +21,25 @@ export const styles = {
       grid-template-columns: repeat(4, 1fr);
     }
   `,
-  gridHeader: css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 120px;
-  `,
-  gridHeaderSortBy: css`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 120px;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 10px;
-    border: 0;
-    cursor: pointer;
 
-    & path {
-      fill: rgba(255, 255, 255, 0.3);
+  cellIcon: (theme: ITheme) => css`
+    width: 30px;
+    min-width: 30px;
+    flex: 0 0 30px;
+    align-self: flex-start;
+    margin-top: 16px;
+
+    > svg {
     }
-  `,
-  gridHeaderTotal: (theme: ITheme) => css`
-    color: ${theme.colorText};
-    flex: 1;
-    text-align: center;
-    font-size: 13px;
-    white-space: nowrap;
+
+    > svg > path {
+      fill: ${theme.colorLabel};
+    }
   `,
   cell: css`
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;
     border-radius: 4px;
     min-width: 0;
     padding: 20px;
@@ -63,11 +47,17 @@ export const styles = {
     cursor: pointer;
   `,
   cellHeader: css`
+    min-width: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
     margin-bottom: 16px;
+  `,
+
+  cellRight: css`
+    flex: 1 1 auto;
+    min-width: 0;
   `,
   cellMoreIcon: css`
     width: 16px;
@@ -96,5 +86,6 @@ export const styles = {
     align-items: center;
     color: ${theme.colorLabel};
     margin-bottom: 16px;
+    font-size: 13px;
   `,
 };

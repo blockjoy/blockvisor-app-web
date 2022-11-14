@@ -63,7 +63,6 @@ export function Hosts() {
   }, []);
 
   const rows = hostsToRows(hosts);
-
   return (
     <PageSection bottomBorder={false}>
       <PageHeader>

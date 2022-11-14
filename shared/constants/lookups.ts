@@ -1,17 +1,16 @@
 export const nodeTypeList = [
-  { id: 0, name: 'Undefined' },
-  { id: 1, name: 'Miner' },
-  { id: 2, name: 'ETL' },
-  { id: 3, name: 'Validator' },
   { id: 4, name: 'API' },
-  { id: 5, name: 'Oracle' },
-  { id: 6, name: 'Relay' },
-  { id: 7, name: 'Execution' },
   { id: 8, name: 'Beacon' },
-  { id: 9, name: 'MEV Boost' },
-  { id: 10, name: 'Node' },
+  { id: 2, name: 'ETL' },
+  { id: 7, name: 'Execution' },
   { id: 11, name: 'Full Node' },
   { id: 12, name: 'Light Node' },
+  { id: 9, name: 'MEV Boost' },
+  { id: 1, name: 'Miner' },
+  { id: 10, name: 'Node' },
+  { id: 5, name: 'Oracle' },
+  { id: 6, name: 'Relay' },
+  { id: 3, name: 'Validator' },
 ];
 /*
 Unknown = 0,
@@ -42,7 +41,6 @@ export const blockchainList = [
 ];
 
 export const nodeStatusList = [
-  { id: 0, name: 'Undefined' },
   { id: 1, name: 'Broadcasting' },
   { id: 2, name: 'Cancelled' },
   { id: 3, name: 'Delegating' },
@@ -59,6 +57,7 @@ export const nodeStatusList = [
   { id: 14, name: 'Relaying' },
   { id: 15, name: 'Removed' },
   { id: 16, name: 'Removing' },
+  { id: 0, name: 'Undefined' },
 ];
 
 export const hostStatusList = [

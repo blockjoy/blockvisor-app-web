@@ -10,9 +10,10 @@ import { env } from '@shared/constants/env';
 import { authAtoms } from '@modules/auth';
 import { toRows } from '../utils/toRows';
 import { toGrid } from '../utils/toGrid';
+import { FilterCriteria } from '@modules/client/grpc_client';
 
 interface Hook {
-  loadNodes: () => void;
+  loadNodes: (filters?: FilterCriteria) => void;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
 }
@@ -36,18 +37,32 @@ export const useNodeList = (): Hook => {
   };
 
   const handleNodeClick = (args: any) => {
-    console.log('args', args);
     router.push(`${router.pathname}/${args.key}`);
   };
 
-  const loadNodes = async () => {
+  const loadNodes = async (filters?: FilterCriteria) => {
     setIsLoading('loading');
     // TODO: Org ID needs be set here
     let org_id = user?.defaultOrganization?.id || '';
 
-    const nodes: any = await apiClient.listNodes(org_id);
+    const nodes: any = await apiClient.listNodes(org_id, undefined, filters);
 
-    setNodeList(nodes);
+    console.log('nodes', nodes);
+
+    setNodeList([
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+      ...nodes,
+    ]);
 
     await delay(env.loadingDuration);
 
@@ -61,7 +76,6 @@ export const useNodeList = (): Hook => {
         setNodeRows(rows!);
       } else {
         const cells = toGrid(nodeList, handleNodeClick);
-        console.log('cells', cells);
         setNodeCells(cells!);
       }
     }

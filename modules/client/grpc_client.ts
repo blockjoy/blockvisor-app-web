@@ -55,15 +55,20 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
   CreateOrganizationRequest,
-  CreateOrganizationResponse, DeleteOrganizationRequest,
+  CreateOrganizationResponse,
+  DeleteOrganizationRequest,
   DeleteOrganizationResponse,
-  GetOrganizationsRequest, RestoreOrganizationRequest, UpdateOrganizationRequest,
+  GetOrganizationsRequest,
+  RestoreOrganizationRequest,
+  UpdateOrganizationRequest,
   UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
-  GetConfigurationResponse, GetUserRequest,
-  GetUserResponse, UpdateUserRequest,
+  GetConfigurationResponse,
+  GetUserRequest,
+  GetUserResponse,
+  UpdateUserRequest,
   UpdateUserResponse,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
@@ -80,6 +85,7 @@ import {
   StatusResponseFactory,
 } from '@modules/client/status_response';
 import Status = ResponseMeta.Status;
+import Keyfile = Node.Keyfile;
 
 export type UIUser = {
   first_name: string;
@@ -108,13 +114,12 @@ export type NewPassword = {
   new_pwd_confirmation: string;
 };
 export type FilterCriteria = {
-  blockchain?: string,
-  node_type?: string,
-  node_status?: number,
-  version?: string,
+  blockchain?: string[];
+  node_type?: string[];
+  node_status?: string[];
 };
 export type SortingCriteria = {
-  name?: "asc" | "desc",
+  name?: 'asc' | 'desc';
 };
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
@@ -125,10 +130,11 @@ export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
 
 export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
   return {
-    ...node?.toObject(),
     groupsList: node?.getGroupsList() || [],
+    ...node?.toObject(),
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
+    keyFilesList: [],
   };
 }
 
@@ -180,7 +186,10 @@ export type GrpcBlockchainObject = Blockchain.AsObject &
 export type GrpcHostObject = Host.AsObject &
   ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
 export type GrpcNodeObject = Node.AsObject &
-  ConvenienceConversion & { updated_at_datetime: Date | undefined };
+  ConvenienceConversion & {
+    updated_at_datetime: Date | undefined;
+    keyFilesList: Array<Node.Keyfile.AsObject>;
+  };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
 export class GrpcClient {
@@ -216,7 +225,7 @@ export class GrpcClient {
    */
   private initClients(host: string) {
     let opts = {
-      'withCredentials': true
+      withCredentials: true,
     };
 
     this.authentication = new AuthenticationServiceClient(host, null, opts);
@@ -241,7 +250,7 @@ export class GrpcClient {
     this.token = JSON.parse(
       window.localStorage.getItem('identity') || '{}',
     ).accessToken;
-    return this.token
+    return this.token;
   }
 
   getAuthHeader(): AuthHeader {
@@ -343,7 +352,9 @@ export class GrpcClient {
       });
   }
 
-  async registration_confirmation(token: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+  async registration_confirmation(
+    token: string,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -353,11 +364,17 @@ export class GrpcClient {
     let request = new ConfirmRegistrationRequest();
     request.setMeta(request_meta);
 
-    return this.authentication?.confirm(request, header).then((response) => {
-      return response.getToken()?.toObject();
-    }).catch((err) => {
-      return StatusResponseFactory.registrationConfirmation(err, "grpcClient");
-    });
+    return this.authentication
+      ?.confirm(request, header)
+      .then((response) => {
+        return response.getToken()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.registrationConfirmation(
+          err,
+          'grpcClient',
+        );
+      });
   }
 
   async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
@@ -672,6 +689,7 @@ export class GrpcClient {
 
   async createNode(
     node: Node,
+    key_files?: FileList,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -679,6 +697,29 @@ export class GrpcClient {
     node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
+
+    if (key_files) {
+      for (let idx = 0; idx < key_files.length; idx++) {
+        let file = key_files.item(idx);
+
+        if (file === null) continue;
+
+        let reader = new FileReader();
+
+        reader.readAsText(file);
+
+        let t_file = new Node.Keyfile();
+
+        t_file.setName(file?.name || '');
+
+        reader.onload = function () {
+          t_file.setContent(reader.result?.toString() || '');
+          let list = node.getKeyFilesList();
+          list.push(t_file);
+          node.setKeyFilesList(list);
+        };
+      }
+    }
 
     let request = new CreateNodeRequest();
     request.setMeta(request_meta);
@@ -737,11 +778,17 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setOrganization(organization);
 
-    return this.organization?.create(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta()?.toObject()
-    }).catch((err) => {
-      return StatusResponseFactory.deleteOrganizationResponse(err, "grpcClient")
-    });
+    return this.organization
+      ?.create(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getMeta()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.deleteOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
   }
 
   async updateOrganization(
@@ -754,11 +801,17 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setOrganization(organization);
 
-    return this.organization?.update(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta()?.toObject()
-    }).catch((err) => {
-      return StatusResponseFactory.deleteOrganizationResponse(err, "grpcClient")
-    });
+    return this.organization
+      ?.update(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getMeta()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.deleteOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
   }
 
   async deleteOrganization(
@@ -771,14 +824,22 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setId(organization_id);
 
-    return this.organization?.delete(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta()?.toObject()
-    }).catch((err) => {
-      return StatusResponseFactory.deleteOrganizationResponse(err, "grpcClient")
-    });
+    return this.organization
+      ?.delete(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getMeta()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.deleteOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
   }
 
-  async restoreOrganization(organization_id: string,): Promise<Organization.AsObject | StatusResponse | undefined> {
+  async restoreOrganization(
+    organization_id: string,
+  ): Promise<Organization.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -786,11 +847,17 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setId(organization_id);
 
-    return this.organization?.restore(request, this.getAuthHeader()).then((response) => {
-      return response.getOrganization()?.toObject()
-    }).catch((err) => {
-      return StatusResponseFactory.restoreOrganizationResponse(err, "grpcClient")
-    });
+    return this.organization
+      ?.restore(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getOrganization()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.restoreOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
   }
 
   /* User service */
@@ -802,12 +869,14 @@ export class GrpcClient {
     let request = new GetUserRequest();
     request.setMeta(request_meta);
 
-    return this.user?.get(request, this.getAuthHeader()).then((response) => {
-      return user_to_grpc_user(response.getUser());
-    }).catch((err) => {
-      return StatusResponseFactory.getUserResponse(err, "grpcClient");
-    });
-
+    return this.user
+      ?.get(request, this.getAuthHeader())
+      .then((response) => {
+        return user_to_grpc_user(response.getUser());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getUserResponse(err, 'grpcClient');
+      });
   }
 
   async createUser(
@@ -846,11 +915,14 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setUser(user);
 
-    return this.user?.update(request, this.getAuthHeader()).then((response) => {
-      return response.getUser()?.toObject();
-    }).catch((err) => {
-      return StatusResponseFactory.updateUserResponse(err, "grpcClient");
-    });
+    return this.user
+      ?.update(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getUser()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.updateUserResponse(err, 'grpcClient');
+      });
   }
 
   async upsertConfiguration(

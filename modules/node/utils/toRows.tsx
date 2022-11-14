@@ -1,15 +1,22 @@
 import { TableBlockNodes } from '@shared/components';
 import { NodeStatus } from '../components/NodeStatus/NodeStatus';
 import { formatDistanceToNow } from 'date-fns';
+import { BlockchainIcon } from '@shared/components';
 
 export const toRows = (nodeList: BlockjoyNode[] | null) => {
-  console.log('nodeList', nodeList);
-
   return nodeList?.map((node: any) => ({
     key: node.id,
     cells: [
       {
         key: '1',
+        component: (
+          <div style={{ marginTop: '4px' }}>
+            <BlockchainIcon />
+          </div>
+        ),
+      },
+      {
+        key: '2',
         component: (
           <>
             <TableBlockNodes id={node.id} name={node.name} address={node.ip} />
@@ -17,7 +24,7 @@ export const toRows = (nodeList: BlockjoyNode[] | null) => {
         ),
       },
       {
-        key: '2',
+        key: '3',
         component: (
           <span style={{ fontSize: '14px' }}>
             {formatDistanceToNow(new Date(node.created_at_datetime), {
@@ -27,7 +34,7 @@ export const toRows = (nodeList: BlockjoyNode[] | null) => {
         ),
       },
       {
-        key: '3',
+        key: '4',
         component: <NodeStatus status={node.status} />,
       },
     ],

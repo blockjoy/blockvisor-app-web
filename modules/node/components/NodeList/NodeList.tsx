@@ -10,8 +10,10 @@ import {
   Table,
   TableGrid,
 } from '@shared/components';
+import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
-import { ListTypeToggle } from '@shared/components/ListTypeToggle/ListTypeToggle';
+import { styles } from './nodeList.styles';
+import { NodeListHeader } from './NodeListHeader/NodeListHeader';
 
 export const NodeList = () => {
   const { loadNodes, handleNodeClick, handleAddNode } = useNodeList();
@@ -39,6 +41,10 @@ export const NodeList = () => {
       duration: 400,
     });
 
+  // useEffect(() => {
+  //   setActiveListType('grid');
+  // }, []);
+
   useEffect(() => {
     animateEntry();
   }, []);
@@ -65,37 +71,51 @@ export const NodeList = () => {
             />
           </>
         ) : (
-          <div style={{ position: 'relative', marginTop: '20px' }}>
-            <ListTypeToggle
-              activeListType={activeListType}
-              onTypeChanged={handleListTypeChanged}
-            />
-            {activeListType === 'table' ? (
-              <Table
-                isLoading={loading}
-                headers={[
-                  {
-                    name: 'Name',
-                    key: '1',
-                    width: '300px',
-                  },
-                  {
-                    name: 'Added',
-                    key: '2',
-                    width: '200px',
-                  },
-                  {
-                    name: 'Status',
-                    key: '3',
-                    width: '200px',
-                  },
-                ]}
-                rows={nodeRows || []}
-                onRowClick={handleNodeClick}
+          <div css={styles.wrapper}>
+            <NodeFilters loadNodes={loadNodes} />
+
+            <div css={styles.nodeListWrapper}>
+              <NodeListHeader
+                totalRows={nodeRows?.length || 0}
+                activeListType={activeListType}
+                onTypeChanged={handleListTypeChanged}
               />
-            ) : (
-              <TableGrid isLoading={loading} cells={nodeCells} />
-            )}
+              {activeListType === 'table' ? (
+                <Table
+                  isLoading={loading}
+                  headers={[
+                    {
+                      name: '',
+                      key: '1',
+                      width: '30px',
+                      minWidth: '30px',
+                      maxWidth: '30px',
+                    },
+                    {
+                      name: 'Name',
+                      key: '2',
+                      width: '300px',
+                    },
+                    {
+                      name: 'Added',
+                      key: '3',
+                      width: '200px',
+                    },
+                    {
+                      name: 'Status',
+                      key: '4',
+                      width: '200px',
+                    },
+                  ]}
+                  rows={nodeRows || []}
+                  onRowClick={handleNodeClick}
+                />
+              ) : (
+                <div css={styles.gridWrapper}>
+                  <TableGrid isLoading={loading} cells={nodeCells} />
+                </div>
+              )}
+            </div>
           </div>
         )}
       </PageSection>
