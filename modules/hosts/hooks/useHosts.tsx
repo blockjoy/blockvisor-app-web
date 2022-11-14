@@ -82,7 +82,7 @@ export const useHosts = () => {
   };
 
   const loadHost = async (id: string) => {
-    setHostLoading(true);
+    setHostLoading('loading');
 
     const uuid = id!;
     // revisit this once types are consolidated
@@ -97,7 +97,7 @@ export const useHosts = () => {
 
     setHost(host);
     await delay(env.loadingDuration);
-    setHostLoading(false);
+    setHostLoading('finished');
   };
 
   const createHostProvision = async (
