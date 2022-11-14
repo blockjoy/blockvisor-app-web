@@ -1,9 +1,14 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
-import { Button, Select, Input } from '@shared/components';
+import { Button, Select, Input, FileUpload } from '@shared/components';
 import { useRouter } from 'next/router';
 import { FC, useState, useEffect } from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   Drawer,
@@ -24,6 +29,7 @@ type NodeAddForm = {
   ip?: string;
   batchCreate: number;
   selfManaged: boolean;
+  validatorKeys: File[];
 };
 
 type NodeTypeConfigProperty = {
@@ -44,8 +50,13 @@ export const NodeAdd: FC = () => {
   const { createNode, loadLookups, isLoading, blockchainList, hostList } =
     useNodeAdd();
 
-  const form = useForm<NodeAddForm>();
+  const form = useForm<NodeAddForm>({
+    defaultValues: {
+      validatorKeys: [],
+    },
+  });
 
+  console.log('block', blockchainList);
   const [layout] = useRecoilState(layoutState);
 
   const onSubmit: SubmitHandler<NodeAddForm> = ({
@@ -169,6 +180,20 @@ export const NodeAdd: FC = () => {
                     <FormSlider label="Batch Create" name="batchCreate" />
                   </div>
                 )}
+                <div css={spacing.bottom.medium}>
+                  <Controller
+                    name="validatorKeys"
+                    render={({ field: { onChange, name } }) => (
+                      <FileUpload
+                        multiple={true}
+                        onChange={(e) => onChange(e)}
+                        name={name}
+                        remove={() => console.log('remove')}
+                        placeholder="Upload validator keys"
+                      />
+                    )}
+                  />
+                </div>
               </div>
             ))}
 
