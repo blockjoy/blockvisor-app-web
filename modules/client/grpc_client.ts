@@ -134,7 +134,7 @@ export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
     ...node?.toObject(),
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
-    keyFilesList: [],
+    keyFilesList: node?.getKeyFilesList().map(f => f.toObject()) || [],
   };
 }
 
