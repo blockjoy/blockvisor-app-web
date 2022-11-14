@@ -6,30 +6,23 @@ import { breakpoints } from 'styles/variables.styles';
 export const styles = {
   base: css`
     display: flex;
-    flex-direction: column;
+    align-items: baseline;
     gap: 28px;
     margin-bottom: 12px;
-
-    @media ${breakpoints.fromMed} {
-      align-items: baseline;
-      flex-direction: row;
-    }
   `,
   title: css`
     ${typo.large}
     padding-right: 36px;
     position: relative;
     word-break: break-all;
+    cursor: pointer;
 
     @media ${breakpoints.fromMed} {
       padding-right: 0;
     }
   `,
-  editable: css`
-    width: 40px;
-  `,
-  contentEditableFocused: css`
-    outline: white;
+  formInput: css`
+    max-width: fit-content;
   `,
   summary: css`
     margin-top: 20px;
