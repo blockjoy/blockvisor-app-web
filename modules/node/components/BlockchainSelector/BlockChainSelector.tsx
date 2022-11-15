@@ -15,6 +15,7 @@ type BlockchainForm = {
 
 export function BlockchainSelector() {
   const { getBlockchains, blockchains, loading } = useGetBlockchains();
+
   const animateEntry = () =>
     anime({
       targets: `#js-auth-layout`,

@@ -12,6 +12,7 @@ export const nodeTypeList = [
   { id: 6, name: 'Relay' },
   { id: 3, name: 'Validator' },
 ];
+
 /*
 Unknown = 0,
     Miner = 1,

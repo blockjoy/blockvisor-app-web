@@ -1,4 +1,4 @@
-import { useNodeWizard } from '@modules/node';
+import { useGetBlockchains, useNodeWizard } from '@modules/node';
 import {
   Button,
   FileUpload,
@@ -29,6 +29,7 @@ type AddNodeForm = {
   validatorKeys: File[];
 };
 export function AddNode() {
+  const { blockchains } = useGetBlockchains();
   const { selectedBlockchain } = useNodeWizard();
   const { closeModal } = useModal();
   const form = useForm<AddNodeForm>({
@@ -72,6 +73,11 @@ export function AddNode() {
     },
   );
 
+  const blockchainOptions = blockchains.map((b) => ({
+    label: b.name ?? '',
+    value: b.name ?? '',
+  }));
+
   return (
     <div>
       <FormProvider {...form}>
@@ -93,10 +99,7 @@ export function AddNode() {
                 name="blockchain"
                 inputStyle="outline"
                 inputSize="large"
-                options={[
-                  { label: 'val1', value: 'val1' },
-                  { label: 'val2', value: 'val2' },
-                ]}
+                options={blockchainOptions}
               />
             </li>
             <li css={[styles.spacing]}>
