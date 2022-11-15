@@ -1,4 +1,4 @@
-import { useGetBlockchains, useNodeWizard } from '@modules/node';
+import { useGetBlockchains, useNodeAdd, useNodeWizard } from '@modules/node';
 import {
   Button,
   FileUpload,
@@ -26,6 +26,10 @@ type AddNodeForm = {
     label: string;
     value: string;
   };
+  host?: {
+    label: string;
+    value: string;
+  };
   nodeType?: number;
   managedNodes: boolean;
   noOfValidators: number;
@@ -37,6 +41,7 @@ export function AddNode() {
   const { blockchains } = useGetBlockchains();
   const { selectedBlockchain, supportedNodeTypes, updateSelected } =
     useNodeWizard();
+  const { createNode, hostList, loadLookups } = useNodeAdd();
   const { closeModal } = useModal();
   const form = useForm<AddNodeForm>({
     defaultValues: {
@@ -47,12 +52,18 @@ export function AddNode() {
       noOfValidators: 1,
       mevboost: false,
       managedNodes: false,
+      nodeType: 2,
       validatorKeys: [],
     },
   });
   const { handleSubmit, setValue, getValues, watch } = form;
 
   const selectedNodeType = watch('nodeType');
+
+  console.log('host', hostList);
+  useEffect(() => {
+    loadLookups();
+  }, []);
 
   useEffect(() => {
     const sub = watch((value, { name }) => {
@@ -96,6 +107,7 @@ export function AddNode() {
       validatorKeys,
       blockchain,
       nodeType,
+      host,
     }) => {
       console.log('form', {
         blockchain,
@@ -104,6 +116,7 @@ export function AddNode() {
         managedNodes,
         noOfValidators,
         validatorKeys,
+        host,
       });
     },
   );
@@ -201,11 +214,13 @@ export function AddNode() {
                   Host
                 </label>
                 <Select
-                  name="Host"
+                  name="host"
+                  defaultValue={hostList[0]}
                   inputStyle="outline"
                   inputSize="large"
-                  options={[]}
+                  options={hostList}
                 />
+                {/*  <MultiSelect isMulti={false} name="host" options={hostList} /> */}
               </div>
             </li>
             <li css={[styles.spacing]}>

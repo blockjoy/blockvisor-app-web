@@ -21,6 +21,7 @@ type Props = {
   inputClass?: SerializedStyles[];
   validationOptions?: RegisterOptions;
   options: { label: string; value: string }[];
+  defaultValue?: any;
 };
 
 export function Select({
@@ -35,6 +36,7 @@ export function Select({
   rightIcon,
   disabled,
   validationOptions,
+  defaultValue,
 }: Props) {
   const {
     register,
@@ -67,6 +69,7 @@ export function Select({
         {leftIcon && <InputUtil position="left">{leftIcon}</InputUtil>}
         <select
           css={[selectStyles]}
+          defaultValue={defaultValue}
           id={name}
           {...register(name, validationOptions)}
         >
