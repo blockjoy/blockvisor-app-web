@@ -26,10 +26,7 @@ type AddNodeForm = {
     label: string;
     value: string;
   };
-  nodeType?: {
-    name: string;
-    id: string;
-  };
+  nodeType?: number;
   managedNodes: boolean;
   noOfValidators: number;
   mevboost: boolean;
@@ -54,6 +51,8 @@ export function AddNode() {
     },
   });
   const { handleSubmit, setValue, getValues, watch } = form;
+
+  const selectedNodeType = watch('nodeType');
 
   useEffect(() => {
     const sub = watch((value, { name }) => {
@@ -84,11 +83,24 @@ export function AddNode() {
     setValue('validatorKeys', newKeys);
   };
 
+  const handleSelectNodeType = (arg: number) => {
+    console.log('arg', arg);
+    setValue('nodeType', arg);
+  };
+
   const onSubmit = handleSubmit(
-    ({ mevboost, managedNodes, noOfValidators, validatorKeys, blockchain }) => {
+    ({
+      mevboost,
+      managedNodes,
+      noOfValidators,
+      validatorKeys,
+      blockchain,
+      nodeType,
+    }) => {
       console.log('form', {
         blockchain,
         mevboost,
+        nodeType,
         managedNodes,
         noOfValidators,
         validatorKeys,
@@ -134,8 +146,8 @@ export function AddNode() {
               </label>
               <NodeTypePicker
                 supportedNodeTypes={nodeTypes}
-                activeNodeType={1}
-                onChange={() => console.log('bla')}
+                activeNodeType={selectedNodeType || 2}
+                onChange={handleSelectNodeType}
               />
             </li>
             <li css={[styles.spacing]}>
