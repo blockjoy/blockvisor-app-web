@@ -85,7 +85,7 @@ import {
   StatusResponseFactory,
 } from '@modules/client/status_response';
 import Status = ResponseMeta.Status;
-import Keyfile = Node.Keyfile;
+import { KeyFilesClient } from '@blockjoy/blockjoy-grpc/dist/out/Key_file_serviceServiceClientPb';
 
 export type UIUser = {
   first_name: string;
@@ -134,7 +134,6 @@ export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
     ...node?.toObject(),
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
-    keyFilesList: node?.getKeyFilesList().map(f => f.toObject()) || [],
   };
 }
 
@@ -188,7 +187,6 @@ export type GrpcHostObject = Host.AsObject &
 export type GrpcNodeObject = Node.AsObject &
   ConvenienceConversion & {
     updated_at_datetime: Date | undefined;
-    keyFilesList: Array<Node.Keyfile.AsObject>;
   };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
@@ -204,6 +202,7 @@ export class GrpcClient {
   private user: UserServiceClient | undefined;
   private blockchain: BlockchainServiceClient | undefined;
   private command: CommandServiceClient | undefined;
+  private key_files: KeyFilesClient | undefined;
 
   private token: string;
 
@@ -239,6 +238,7 @@ export class GrpcClient {
     this.billing = new BillingServiceClient(host, null, opts);
     this.update = new UpdateServiceClient(host, null, opts);
     this.user = new UserServiceClient(host, null, opts);
+    this.key_files = new KeyFilesClient(host, null, opts);
   }
 
   getApiToken() {
@@ -697,29 +697,6 @@ export class GrpcClient {
     node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
-
-    if (key_files) {
-      for (let idx = 0; idx < key_files.length; idx++) {
-        let file = key_files.item(idx);
-
-        if (file === null) continue;
-
-        let reader = new FileReader();
-
-        reader.readAsText(file);
-
-        let t_file = new Node.Keyfile();
-
-        t_file.setName(file?.name || '');
-
-        reader.onload = function () {
-          t_file.setContent(reader.result?.toString() || '');
-          let list = node.getKeyFilesList();
-          list.push(t_file);
-          node.setKeyFilesList(list);
-        };
-      }
-    }
 
     let request = new CreateNodeRequest();
     request.setMeta(request_meta);
