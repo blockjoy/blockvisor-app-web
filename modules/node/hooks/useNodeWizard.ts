@@ -18,8 +18,14 @@ export function useNodeWizard() {
   );
 
   const selectBlockchain = (name: string, id: string) => {
-    setSelectedBlockchain({ name, id });
+    setSelectedBlockchain(name);
     setCurrentStep('2');
+  };
+
+  const updateSelected = (name?: string) => {
+    if (name) {
+      setSelectedBlockchain(name);
+    }
   };
 
   const isFirstStep = () => currentStep === '1';
@@ -31,6 +37,7 @@ export function useNodeWizard() {
     selectedBlockchain: selectedWithNodeTypes,
     supportedNodeTypes,
     selectBlockchain,
+    updateSelected,
     isFirstStep,
     isSecondStep,
     isThirdStep,

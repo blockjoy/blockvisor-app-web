@@ -3,6 +3,7 @@ import {
   Button,
   FileUpload,
   Input,
+  MultiSelect,
   NodeTypePicker,
   Select,
   Toggle,
@@ -21,21 +22,31 @@ import IconClose from '@public/assets/icons/close-12.svg';
 import { MouseEventHandler, useEffect } from 'react';
 
 type AddNodeForm = {
-  blockchain: string;
-  nodeType: string;
+  blockchain?: {
+    label: string;
+    value: string;
+  };
+  nodeType?: {
+    name: string;
+    id: string;
+  };
   managedNodes: boolean;
   noOfValidators: number;
   mevboost: boolean;
   validatorKeys: File[];
 };
+
 export function AddNode() {
   const { blockchains } = useGetBlockchains();
-  const { selectedBlockchain, supportedNodeTypes, selectBlockchain } =
+  const { selectedBlockchain, supportedNodeTypes, updateSelected } =
     useNodeWizard();
   const { closeModal } = useModal();
   const form = useForm<AddNodeForm>({
     defaultValues: {
-      blockchain: selectedBlockchain?.name ?? '',
+      blockchain: {
+        label: selectedBlockchain?.name,
+        value: selectedBlockchain?.id,
+      },
       noOfValidators: 1,
       mevboost: false,
       managedNodes: false,
@@ -45,9 +56,14 @@ export function AddNode() {
   const { handleSubmit, setValue, getValues, watch } = form;
 
   useEffect(() => {
-    const blockchain = watch('blockchain');
-    console.log('bl', blockchain);
-  }, [form.watch('blockchain')]);
+    const sub = watch((value, { name }) => {
+      if (name === 'blockchain') {
+        updateSelected(value.blockchain?.label);
+      }
+    });
+
+    return () => sub.unsubscribe();
+  }, [watch]);
 
   const toggleNode = () => {
     const value = getValues('managedNodes');
@@ -82,10 +98,10 @@ export function AddNode() {
 
   const blockchainOptions = blockchains.map((b) => ({
     label: b.name ?? '',
-    value: b.name ?? '',
+    value: b.id ?? '',
   }));
 
-  const nodeTypes = supportedNodeTypes.map((type: any) => type.id);
+  const nodeTypes = supportedNodeTypes?.map((type: any) => type.id);
 
   return (
     <div>
@@ -104,10 +120,9 @@ export function AddNode() {
         <form css={[styles.content]} onSubmit={onSubmit}>
           <ul css={[reset.list]}>
             <li css={[styles.spacing]}>
-              <Select
+              <MultiSelect
+                isMulti={false}
                 name="blockchain"
-                inputStyle="outline"
-                inputSize="large"
                 options={blockchainOptions}
               />
             </li>

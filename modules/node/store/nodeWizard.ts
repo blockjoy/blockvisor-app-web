@@ -6,7 +6,7 @@ const currentStep = atom<'1' | '2' | '3'>({
   default: '1',
 });
 
-const selectedBlockchain = atom<{ name: string; id: string } | null>({
+const selectedBlockchain = atom<string | null>({
   key: 'nodeWizard.selectedBlockchain',
   default: null,
 });
@@ -19,9 +19,7 @@ const selectedBlockchainWithNodeTypes = selector({
       blockchainSelectors.blockchainsWithNodeTypes,
     );
 
-    return blockchainsWithNodeTypes.find(
-      (block) => block.name === selected?.name,
-    );
+    return blockchainsWithNodeTypes.find((block) => block.name === selected);
   },
 });
 
@@ -33,9 +31,8 @@ const selectedBlockchainSupportedNodeTypes = selector({
       blockchainSelectors.blockchainsWithNodeTypes,
     );
 
-    return blockchainsWithNodeTypes.find(
-      (block) => block.name === selected?.name,
-    )?.supported_node_types;
+    return blockchainsWithNodeTypes.find((block) => block.name === selected)
+      ?.supported_node_types;
   },
 });
 
