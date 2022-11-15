@@ -86,6 +86,7 @@ import {
 } from '@modules/client/status_response';
 import Status = ResponseMeta.Status;
 import { KeyFilesClient } from '@blockjoy/blockjoy-grpc/dist/out/Key_file_serviceServiceClientPb';
+import { Keyfile, KeyFilesSaveRequest } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 
 export type UIUser = {
   first_name: string;
@@ -702,7 +703,7 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setNode(node);
 
-    return this.node
+    let node_meta = await this.node
       ?.create(request, this.getAuthHeader())
       .then((response) => {
         return response.getMeta()?.toObject();
@@ -710,6 +711,54 @@ export class GrpcClient {
       .catch((err) => {
         return StatusResponseFactory.createNodeResponse(err, 'grpcClient');
       });
+
+    if (node_meta instanceof ResponseMeta) {
+      // Node creation was successful, trying to upload keys, if existent
+      if (key_files !== undefined && key_files?.length > 0) {
+        let node_id = node_meta.getMessagesList().pop() || "";
+        let request = new KeyFilesSaveRequest();
+        let files: Array<Keyfile> = [];
+
+        request.setRequestId(this.getDummyUuid());
+        request.setNodeId(node_id);
+
+        for (let i=0; i < key_files.length; i++) {
+        //for (let file of key_files) {
+          let file = key_files.item(i);
+          let reader = new FileReader();
+
+          reader.addEventListener("load", () => {
+            let f = new Keyfile();
+            f.setName(file?.name || "");
+            f.setContent(reader.result + "");
+
+            files.push(f);
+          }, false);
+
+          if (file) {
+            reader.readAsText(file, "UTF-8");
+            request.setKeyFilesList(files);
+          }
+        }
+
+        return this.key_files?.save(request, this.getAuthHeader()).then((response) => {
+          let meta = new ResponseMeta();
+          meta.setOriginRequestId(response.getOriginRequestId());
+          meta.setMessagesList(response.getMessagesList());
+
+          return meta.toObject();
+        }).catch((err) => {
+          return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
+        })
+      }
+      else {
+        return node_meta;
+      }
+    }
+    else {
+      /// Node creation failed
+      return node_meta;
+    }
   }
 
   async updateNode(
