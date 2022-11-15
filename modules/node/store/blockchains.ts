@@ -16,24 +16,26 @@ const blockchainsWithNodeTypes = selector({
   key: 'blockchains.listWithNodeTypes',
   get: ({ get }) => {
     const blockchainList = get(blockchains);
-    blockchainList.map((block) => {
+    return blockchainList.map((block) => {
       return {
         ...block,
-        supported_node_types: block.supported_node_types.map((s: any) => {
-          return nodeTypeList
-            .map((f) => {
-              if (f.id === s.id) {
-                const a = [...s.properties];
+        supported_node_types: block.supported_node_types
+          .map((s: any) => {
+            return nodeTypeList
+              .map((f) => {
+                if (f.id === s.id) {
+                  const a = [...s.properties];
 
-                const b = {
-                  ...f,
-                  properties: a,
-                };
-                return b;
-              }
-            })
-            .filter((e) => e);
-        }),
+                  const b = {
+                    ...f,
+                    properties: a,
+                  };
+                  return b;
+                }
+              })
+              .filter((e) => e);
+          })
+          .flat(),
       };
     });
   },

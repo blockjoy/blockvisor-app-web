@@ -18,7 +18,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
-import { MouseEventHandler, useRef, useState } from 'react';
+import { MouseEventHandler, useEffect } from 'react';
 
 type AddNodeForm = {
   blockchain: string;
@@ -30,7 +30,8 @@ type AddNodeForm = {
 };
 export function AddNode() {
   const { blockchains } = useGetBlockchains();
-  const { selectedBlockchain } = useNodeWizard();
+  const { selectedBlockchain, supportedNodeTypes, selectBlockchain } =
+    useNodeWizard();
   const { closeModal } = useModal();
   const form = useForm<AddNodeForm>({
     defaultValues: {
@@ -42,6 +43,11 @@ export function AddNode() {
     },
   });
   const { handleSubmit, setValue, getValues, watch } = form;
+
+  useEffect(() => {
+    const blockchain = watch('blockchain');
+    console.log('bl', blockchain);
+  }, [form.watch('blockchain')]);
 
   const toggleNode = () => {
     const value = getValues('managedNodes');
@@ -63,8 +69,9 @@ export function AddNode() {
   };
 
   const onSubmit = handleSubmit(
-    async ({ mevboost, managedNodes, noOfValidators, validatorKeys }) => {
+    ({ mevboost, managedNodes, noOfValidators, validatorKeys, blockchain }) => {
       console.log('form', {
+        blockchain,
         mevboost,
         managedNodes,
         noOfValidators,
@@ -77,6 +84,8 @@ export function AddNode() {
     label: b.name ?? '',
     value: b.name ?? '',
   }));
+
+  const nodeTypes = supportedNodeTypes.map((type: any) => type.id);
 
   return (
     <div>
@@ -109,7 +118,7 @@ export function AddNode() {
                 Node type
               </label>
               <NodeTypePicker
-                supportedNodeTypes={[1, 2]}
+                supportedNodeTypes={nodeTypes}
                 activeNodeType={1}
                 onChange={() => console.log('bla')}
               />
@@ -199,9 +208,6 @@ export function AddNode() {
               </p>
               <Controller
                 name="validatorKeys"
-                rules={{
-                  required: 'Field Required',
-                }}
                 render={({ field: { onChange, name } }) => (
                   <FileUpload
                     multiple={true}

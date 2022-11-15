@@ -1,12 +1,20 @@
-import { useRecoilState } from 'recoil';
-import { nodeWizardAtoms } from '../store/nodeWizard';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { nodeWizardAtoms, nodeWizardSelectors } from '../store/nodeWizard';
 
 export function useNodeWizard() {
   const [currentStep, setCurrentStep] = useRecoilState(
     nodeWizardAtoms.currentStep,
   );
-  const [selectedBlockchain, setSelectedBlockchain] = useRecoilState(
+  const [, setSelectedBlockchain] = useRecoilState(
     nodeWizardAtoms.selectedBlockchain,
+  );
+
+  const selectedWithNodeTypes = useRecoilValue(
+    nodeWizardSelectors.selectedBlockchainWithNodeTypes,
+  );
+
+  const supportedNodeTypes = useRecoilValue(
+    nodeWizardSelectors.selectedBlockchainSupportedNodeTypes,
   );
 
   const selectBlockchain = (name: string, id: string) => {
@@ -20,7 +28,8 @@ export function useNodeWizard() {
 
   return {
     currentStep,
-    selectedBlockchain,
+    selectedBlockchain: selectedWithNodeTypes,
+    supportedNodeTypes,
     selectBlockchain,
     isFirstStep,
     isSecondStep,
