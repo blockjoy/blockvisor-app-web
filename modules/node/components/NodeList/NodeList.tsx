@@ -14,9 +14,11 @@ import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
+import { useModal } from '@shared/index';
 
 export const NodeList = () => {
-  const { loadNodes, handleNodeClick, handleAddNode } = useNodeList();
+  const { loadNodes, handleNodeClick } = useNodeList();
+  const { openModal } = useModal();
 
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
@@ -58,7 +60,7 @@ export const NodeList = () => {
     <>
       <PageTitle
         title="All Nodes"
-        actionOnClick={handleAddNode}
+        actionOnClick={openModal}
         actionText="Add Node"
       ></PageTitle>
       <PageSection bottomBorder={false}>
