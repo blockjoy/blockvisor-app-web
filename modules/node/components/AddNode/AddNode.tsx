@@ -20,6 +20,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
 import { MouseEventHandler, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 type AddNodeForm = {
   blockchain?: {
@@ -38,6 +39,7 @@ type AddNodeForm = {
 };
 
 export function AddNode() {
+  const router = useRouter();
   const { blockchains } = useGetBlockchains();
   const { selectedBlockchain, supportedNodeTypes, updateSelected } =
     useNodeWizard();
@@ -111,13 +113,13 @@ export function AddNode() {
       nodeType,
       host,
     }) => {
-      console.log('form', {
-        blockchain,
+      console.log('submit', {
         mevboost,
-        nodeType,
         managedNodes,
         noOfValidators,
         validatorKeys,
+        blockchain,
+        nodeType,
         host,
       });
       const params: CreateNodeParams = {
@@ -126,6 +128,11 @@ export function AddNode() {
         validatorKeys: validatorKeys,
         host: host?.value ?? '',
       };
+
+      createNode(params, (nodeId: string) => {
+        closeModal();
+        router.push(`/nodes/${nodeId}`);
+      });
     },
   );
 
