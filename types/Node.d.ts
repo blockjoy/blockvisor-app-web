@@ -12,4 +12,5 @@ type CreateNodeParams = {
   nodeType: number;
   host: string;
   blockchain: string;
+  validatorKeys: File[];
 };

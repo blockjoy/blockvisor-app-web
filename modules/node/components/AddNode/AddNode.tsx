@@ -41,7 +41,7 @@ export function AddNode() {
   const { blockchains } = useGetBlockchains();
   const { selectedBlockchain, supportedNodeTypes, updateSelected } =
     useNodeWizard();
-  const { createNode, hostList, loadLookups } = useNodeAdd();
+  const { createNode, hostList, loadLookups, isLoading } = useNodeAdd();
   const { closeModal } = useModal();
   const form = useForm<AddNodeForm>({
     defaultValues: {
@@ -60,10 +60,12 @@ export function AddNode() {
 
   const selectedNodeType = watch('nodeType');
 
-  console.log('host', hostList);
   useEffect(() => {
     loadLookups();
-  }, []);
+    if (hostList) {
+      setValue('host', hostList[0]);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     const sub = watch((value, { name }) => {
@@ -118,6 +120,12 @@ export function AddNode() {
         validatorKeys,
         host,
       });
+      const params: CreateNodeParams = {
+        nodeType: nodeType ?? 0,
+        blockchain: blockchain?.value ?? '',
+        validatorKeys: validatorKeys,
+        host: host?.value ?? '',
+      };
     },
   );
 
@@ -213,14 +221,19 @@ export function AddNode() {
                 >
                   Host
                 </label>
-                <Select
+                {/*    <Select
                   name="host"
                   defaultValue={hostList[0]}
                   inputStyle="outline"
                   inputSize="large"
                   options={hostList}
+                /> */}
+                <MultiSelect
+                  isMulti={false}
+                  name="host"
+                  options={hostList}
+                  placeholder=""
                 />
-                {/*  <MultiSelect isMulti={false} name="host" options={hostList} /> */}
               </div>
             </li>
             <li css={[styles.spacing]}>
