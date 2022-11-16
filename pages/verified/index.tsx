@@ -60,9 +60,15 @@ const Verified: NextPage = () => {
       <div css={styles.loaderRail}>
         <div css={styles.loaderBar}></div>
       </div>
-      <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
-        You will be redirected to the dashboard once complete.
-      </p>
+      {serverError ? (
+        <p css={[typo.small, colors.warning, spacing.bottom.medium]}>
+          There was an error verifying your account, please try again.
+        </p>
+      ) : (
+        <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
+          You will be redirected to the dashboard once complete.
+        </p>
+      )}
     </Layout>
   );
 };

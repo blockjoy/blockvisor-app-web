@@ -49,20 +49,7 @@ export const useNodeList = (): Hook => {
 
     console.log('nodes', nodes);
 
-    setNodeList([
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-      ...nodes,
-    ]);
+    setNodeList(nodes);
 
     await delay(env.loadingDuration);
 
