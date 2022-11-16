@@ -33,6 +33,7 @@ export enum StatusResponseCode {
   DeleteOrganization,
   UpdateOrganization,
   RestoreOrganization,
+  SaveKeyFiles,
 }
 
 export class StatusResponseFactory {
@@ -168,6 +169,15 @@ export class StatusResponseFactory {
       'Error creating node',
       err,
       source,
+    );
+  }
+
+  static saveKeyfileResponse(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.SaveKeyFiles,
+        'Error saving key files',
+        err,
+        source,
     );
   }
 

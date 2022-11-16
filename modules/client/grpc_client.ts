@@ -22,7 +22,7 @@ import {
   ResponseMeta,
   UpdateNotification,
   User,
-  UserConfigurationParameter,
+  UserConfigurationParameter, Pagination,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -48,28 +48,23 @@ import {
   GetHostProvisionRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
-  CreateNodeRequest,
+  CreateNodeRequest, FilterCriteria,
   GetNodeRequest,
   ListNodesRequest,
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
   CreateOrganizationRequest,
-  CreateOrganizationResponse,
   DeleteOrganizationRequest,
-  DeleteOrganizationResponse,
   GetOrganizationsRequest,
   RestoreOrganizationRequest,
   UpdateOrganizationRequest,
-  UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
   GetConfigurationResponse,
   GetUserRequest,
-  GetUserResponse,
   UpdateUserRequest,
-  UpdateUserResponse,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
@@ -84,8 +79,8 @@ import {
   StatusResponse,
   StatusResponseFactory,
 } from '@modules/client/status_response';
-import Status = ResponseMeta.Status;
 import { KeyFilesClient } from '@blockjoy/blockjoy-grpc/dist/out/Key_file_serviceServiceClientPb';
+import { Keyfile, KeyFilesSaveRequest } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 
 export type UIUser = {
   first_name: string;
@@ -113,13 +108,14 @@ export type NewPassword = {
   new_pwd: string;
   new_pwd_confirmation: string;
 };
-export type FilterCriteria = {
+export type UIFilterCriteria = {
   blockchain?: string[];
   node_type?: string[];
   node_status?: string[];
 };
-export type SortingCriteria = {
-  name?: 'asc' | 'desc';
+export type UIPagination = {
+  current_page: number,
+  items_per_page: number,
 };
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
@@ -647,8 +643,8 @@ export class GrpcClient {
 
   async listNodes(
     org_id: string,
-    sorting_criteria?: SortingCriteria,
-    filter_criteria?: FilterCriteria,
+    filter_criteria?: UIFilterCriteria,
+    pagination?: UIPagination,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -656,6 +652,27 @@ export class GrpcClient {
     let request = new ListNodesRequest();
     request.setMeta(request_meta);
     request.setOrgId(org_id);
+
+    let meta_pagination = new Pagination();
+
+    if (pagination) {
+      meta_pagination.setItemsPerPage(pagination.items_per_page);
+      meta_pagination.setCurrentPage(pagination.current_page);
+    } else {
+      meta_pagination.setItemsPerPage(100);
+      meta_pagination.setCurrentPage(1);
+    }
+
+    request_meta.setPagination(meta_pagination);
+
+    if (filter_criteria) {
+      let criteria = new FilterCriteria();
+
+      criteria.setBlockchainsList(filter_criteria.blockchain || []);
+      criteria.setStatusList(filter_criteria.node_status || []);
+
+      request.setFilter(criteria);
+    }
 
     return this.node
       ?.list(request, this.getAuthHeader())
@@ -702,7 +719,7 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setNode(node);
 
-    return this.node
+    let node_meta = await this.node
       ?.create(request, this.getAuthHeader())
       .then((response) => {
         return response.getMeta()?.toObject();
@@ -710,6 +727,54 @@ export class GrpcClient {
       .catch((err) => {
         return StatusResponseFactory.createNodeResponse(err, 'grpcClient');
       });
+
+    if (node_meta instanceof ResponseMeta) {
+      // Node creation was successful, trying to upload keys, if existent
+      if (key_files !== undefined && key_files?.length > 0) {
+        let node_id = node_meta.getMessagesList().pop() || "";
+        let request = new KeyFilesSaveRequest();
+        let files: Array<Keyfile> = [];
+
+        request.setRequestId(this.getDummyUuid());
+        request.setNodeId(node_id);
+
+        for (let i=0; i < key_files.length; i++) {
+        //for (let file of key_files) {
+          let file = key_files.item(i);
+          let reader = new FileReader();
+
+          reader.addEventListener("load", () => {
+            let f = new Keyfile();
+            f.setName(file?.name || "");
+            f.setContent(reader.result + "");
+
+            files.push(f);
+          }, false);
+
+          if (file) {
+            reader.readAsText(file, "UTF-8");
+            request.setKeyFilesList(files);
+          }
+        }
+
+        return this.key_files?.save(request, this.getAuthHeader()).then((response) => {
+          let meta = new ResponseMeta();
+          meta.setOriginRequestId(response.getOriginRequestId());
+          meta.setMessagesList(response.getMessagesList());
+
+          return meta.toObject();
+        }).catch((err) => {
+          return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
+        })
+      }
+      else {
+        return node_meta;
+      }
+    }
+    else {
+      /// Node creation failed
+      return node_meta;
+    }
   }
 
   async updateNode(

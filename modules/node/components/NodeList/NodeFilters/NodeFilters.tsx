@@ -4,7 +4,7 @@ import { Checkbox, Button } from '@shared/components';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
-import { FilterCriteria } from '@modules/client/grpc_client';
+import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 
