@@ -668,8 +668,8 @@ export class GrpcClient {
     if (filter_criteria) {
       let criteria = new FilterCriteria();
 
-      criteria.setBlockchainsList(filter_criteria.blockchain || []);
-      criteria.setStatusList(filter_criteria.node_status || []);
+      criteria.setBlockchainIdsList(filter_criteria.blockchain || []);
+      criteria.setStatesList(filter_criteria.node_status || []);
 
       request.setFilter(criteria);
     }
