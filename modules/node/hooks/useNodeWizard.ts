@@ -25,7 +25,7 @@ export function useNodeWizard() {
     nodeWizardSelectors.selectedBlockchainSupportedNodeTypes,
   );
 
-  const selectBlockchain = (name: string, id: string) => {
+  const selectBlockchain = (name: string) => {
     setSelectedBlockchain(name);
     setCurrentStep('2');
   };

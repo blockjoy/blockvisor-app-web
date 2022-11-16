@@ -106,12 +106,13 @@ export function AddNode() {
   };
 
   const onSubmit = handleSubmit((data) => {
-    const { nodeType, blockchain, validatorKeys, host } = data;
+    const { nodeType, blockchain, validatorKeys, host, ...rest } = data;
     const params: CreateNodeParams = {
       nodeType: nodeType ?? 0,
       blockchain: blockchain?.value ?? '',
       validatorKeys: validatorKeys,
       host: host?.value ?? data['ip'],
+      ...rest,
     };
 
     createNode(params, (nodeId: string) => {
@@ -126,7 +127,6 @@ export function AddNode() {
   }));
 
   const nodeTypes = supportedNodeTypes?.map((type: any) => type.id);
-  console.log('nodeTypes', nodeTypeProperties);
 
   return (
     <div>

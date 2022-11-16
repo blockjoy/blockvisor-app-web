@@ -51,11 +51,13 @@ const selectedNodeTypeProperties = selector({
       .properties;
   },
 });
+
 export const nodeWizardSelectors = {
   selectedBlockchainWithNodeTypes,
   selectedBlockchainSupportedNodeTypes,
   selectedNodeTypeProperties,
 };
+
 export const nodeWizardAtoms = {
   currentStep,
   selectedBlockchain,
