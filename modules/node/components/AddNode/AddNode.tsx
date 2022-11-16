@@ -19,7 +19,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { MouseEventHandler, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 type AddNodeForm = {
@@ -46,6 +46,8 @@ export function AddNode() {
     supportedNodeTypes,
     updateSelected,
     resetWizard,
+    selectNodeType,
+    nodeTypeProperties,
   } = useNodeWizard();
   const { createNode, hostList, loadLookups, isLoading } = useNodeAdd();
   const { closeModal } = useModal();
@@ -113,6 +115,7 @@ export function AddNode() {
 
   const handleSelectNodeType = (arg: number) => {
     setValue('nodeType', arg);
+    selectNodeType(arg);
   };
 
   const onSubmit = handleSubmit(
@@ -145,6 +148,7 @@ export function AddNode() {
   }));
 
   const nodeTypes = supportedNodeTypes?.map((type: any) => type.id);
+  console.log('nodeTypes', nodeTypeProperties);
 
   return (
     <div>

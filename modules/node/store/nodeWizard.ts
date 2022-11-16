@@ -11,6 +11,11 @@ const selectedBlockchain = atom<string | null>({
   default: null,
 });
 
+const selectedNodeType = atom<number | null>({
+  key: 'nodeWizard.nodeType',
+  default: 2,
+});
+
 const selectedBlockchainWithNodeTypes = selector({
   key: 'nodeWizard.selectedBlockchainWithNodeTypes',
   get: ({ get }) => {
@@ -36,11 +41,23 @@ const selectedBlockchainSupportedNodeTypes = selector({
   },
 });
 
+const selectedNodeTypeProperties = selector({
+  key: 'nodeWizard.selectedNodeTypeProperties',
+  get: ({ get }) => {
+    const nodeType = get(selectedNodeType);
+    const blockchainsWithNodeTypes = get(selectedBlockchainSupportedNodeTypes);
+
+    return blockchainsWithNodeTypes?.find((n: any) => n.id === nodeType)
+      .properties;
+  },
+});
 export const nodeWizardSelectors = {
   selectedBlockchainWithNodeTypes,
   selectedBlockchainSupportedNodeTypes,
+  selectedNodeTypeProperties,
 };
 export const nodeWizardAtoms = {
   currentStep,
   selectedBlockchain,
+  selectedNodeType,
 };

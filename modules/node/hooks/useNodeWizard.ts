@@ -13,6 +13,14 @@ export function useNodeWizard() {
     nodeWizardSelectors.selectedBlockchainWithNodeTypes,
   );
 
+  const [, setSelectedNodeType] = useRecoilState(
+    nodeWizardAtoms.selectedNodeType,
+  );
+
+  const selectedNodeTypeProperties = useRecoilValue(
+    nodeWizardSelectors.selectedNodeTypeProperties,
+  );
+
   const supportedNodeTypes = useRecoilValue(
     nodeWizardSelectors.selectedBlockchainSupportedNodeTypes,
   );
@@ -28,6 +36,10 @@ export function useNodeWizard() {
     }
   };
 
+  const selectNodeType = (id: number) => {
+    setSelectedNodeType(id);
+  };
+
   const resetWizard = () => {
     setCurrentStep('1');
   };
@@ -40,6 +52,8 @@ export function useNodeWizard() {
     currentStep,
     selectedBlockchain: selectedWithNodeTypes,
     supportedNodeTypes,
+    nodeTypeProperties: selectedNodeTypeProperties,
+    selectNodeType,
     resetWizard,
     selectBlockchain,
     updateSelected,
