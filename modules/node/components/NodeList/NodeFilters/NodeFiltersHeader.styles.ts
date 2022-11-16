@@ -8,11 +8,14 @@ export const styles = {
     align-items: center;
     gap: 12px;
     height: 40px;
+    cursor: pointer;
+    border-bottom: 1px solid ${theme.colorBorder};
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       display: flex;
       width: 100%;
-      border-bottom: 1px solid ${theme.colorBorder};
+
+      cursor: default;
     }
 
     & path {
@@ -29,13 +32,12 @@ export const styles = {
     font-size: 11px;
   `,
   dropdownIcon: css`
-    display: block;
+    display: grid;
+    place-items: center;
     width: 8px;
     height: 8px;
-    rotate: -90deg;
-    translate: 0 -1px;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       display: none;
     }
 
