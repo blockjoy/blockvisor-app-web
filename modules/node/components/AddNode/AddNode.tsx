@@ -19,7 +19,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
-import { MouseEventHandler, useEffect } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 type AddNodeForm = {
@@ -68,7 +68,10 @@ export function AddNode() {
 
   useEffect(() => {
     loadLookups();
-    if (hostList) {
+  }, []);
+
+  useEffect(() => {
+    if (hostList.length) {
       setValue('host', hostList[0]);
     }
   }, [isLoading]);
@@ -228,13 +231,6 @@ export function AddNode() {
                 >
                   Host
                 </label>
-                {/*    <Select
-                  name="host"
-                  defaultValue={hostList[0]}
-                  inputStyle="outline"
-                  inputSize="large"
-                  options={hostList}
-                /> */}
                 <MultiSelect
                   isMulti={false}
                   name="host"
