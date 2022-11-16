@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { apiClient } from '@modules/client';
 import { css, keyframes } from '@emotion/react';
 import { ITheme } from 'types/theme';
+import { delay } from '@shared/utils/delay';
 
 const loaderKeyframes = keyframes`
   0% { 
@@ -40,10 +41,10 @@ const styles = {
 
 const Verified: NextPage = () => {
   const [serverError, setServerError] = useState<string>('');
-  const { query } = useRouter();
+  const router = useRouter();
   useEffect(() => {
     (async () => {
-      const { token } = query;
+      const { token } = router.query;
 
       const response: any = await apiClient.registration_confirmation(
         token?.toString()!,
@@ -51,7 +52,12 @@ const Verified: NextPage = () => {
 
       if (response.code === 20) {
         setServerError('Error verifying your account, please contact support.');
+        return;
       }
+
+      await delay(3000);
+
+      router.push('/');
     })();
   }, []);
 
