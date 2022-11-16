@@ -22,7 +22,8 @@ import {
   ResponseMeta,
   UpdateNotification,
   User,
-  UserConfigurationParameter, Pagination,
+  UserConfigurationParameter,
+  Pagination,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -48,7 +49,8 @@ import {
   GetHostProvisionRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
-  CreateNodeRequest, FilterCriteria,
+  CreateNodeRequest,
+  FilterCriteria,
   GetNodeRequest,
   ListNodesRequest,
   UpdateNodeResponse,
@@ -80,7 +82,10 @@ import {
   StatusResponseFactory,
 } from '@modules/client/status_response';
 import { KeyFilesClient } from '@blockjoy/blockjoy-grpc/dist/out/Key_file_serviceServiceClientPb';
-import { Keyfile, KeyFilesSaveRequest } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
+import {
+  Keyfile,
+  KeyFilesSaveRequest,
+} from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 
 export type UIUser = {
   first_name: string;
@@ -114,8 +119,8 @@ export type UIFilterCriteria = {
   node_status?: string[];
 };
 export type UIPagination = {
-  current_page: number,
-  items_per_page: number,
+  current_page: number;
+  items_per_page: number;
 };
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
@@ -401,6 +406,7 @@ export class GrpcClient {
   }
 
   async updateResetPassword(
+    token: string,
     pwd: string,
     pwd_confirmation: string,
   ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
@@ -731,47 +737,52 @@ export class GrpcClient {
     if (node_meta instanceof ResponseMeta) {
       // Node creation was successful, trying to upload keys, if existent
       if (key_files !== undefined && key_files?.length > 0) {
-        let node_id = node_meta.getMessagesList().pop() || "";
+        let node_id = node_meta.getMessagesList().pop() || '';
         let request = new KeyFilesSaveRequest();
         let files: Array<Keyfile> = [];
 
         request.setRequestId(this.getDummyUuid());
         request.setNodeId(node_id);
 
-        for (let i=0; i < key_files.length; i++) {
-        //for (let file of key_files) {
+        for (let i = 0; i < key_files.length; i++) {
+          //for (let file of key_files) {
           let file = key_files.item(i);
           let reader = new FileReader();
 
-          reader.addEventListener("load", () => {
-            let f = new Keyfile();
-            f.setName(file?.name || "");
-            f.setContent(reader.result + "");
+          reader.addEventListener(
+            'load',
+            () => {
+              let f = new Keyfile();
+              f.setName(file?.name || '');
+              f.setContent(reader.result + '');
 
-            files.push(f);
-          }, false);
+              files.push(f);
+            },
+            false,
+          );
 
           if (file) {
-            reader.readAsText(file, "UTF-8");
+            reader.readAsText(file, 'UTF-8');
             request.setKeyFilesList(files);
           }
         }
 
-        return this.key_files?.save(request, this.getAuthHeader()).then((response) => {
-          let meta = new ResponseMeta();
-          meta.setOriginRequestId(response.getOriginRequestId());
-          meta.setMessagesList(response.getMessagesList());
+        return this.key_files
+          ?.save(request, this.getAuthHeader())
+          .then((response) => {
+            let meta = new ResponseMeta();
+            meta.setOriginRequestId(response.getOriginRequestId());
+            meta.setMessagesList(response.getMessagesList());
 
-          return meta.toObject();
-        }).catch((err) => {
-          return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
-        })
-      }
-      else {
+            return meta.toObject();
+          })
+          .catch((err) => {
+            return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
+          });
+      } else {
         return node_meta;
       }
-    }
-    else {
+    } else {
       /// Node creation failed
       return node_meta;
     }
