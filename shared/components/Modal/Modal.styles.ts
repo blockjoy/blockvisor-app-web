@@ -23,7 +23,6 @@ export const styles = {
     width: 100%;
     background-color: var(--color-overlay-background-1);
     max-width: 760px;
-    max-height: 95%;
     overflow: auto;
     margin: 0 auto;
 
@@ -33,6 +32,7 @@ export const styles = {
 
     @media ${breakpoints.fromMed} {
       border-radius: 8px;
+      max-height: 95%;
     }
   `,
   isLocked: css`
