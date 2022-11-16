@@ -15,6 +15,7 @@ export const styles = {
     &:hover,
     &:active,
     &:focus {
+      cursor: pointer;
       border-radius: 4px;
       border: 0.5px solid var(--color-primary);
       color: var(--color-primary);
