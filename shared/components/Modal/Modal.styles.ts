@@ -23,7 +23,7 @@ export const styles = {
     width: 100%;
     background-color: var(--color-overlay-background-1);
     max-width: 760px;
-    max-height: 100%;
+    max-height: 95%;
     overflow: auto;
     margin: 0 auto;
 
