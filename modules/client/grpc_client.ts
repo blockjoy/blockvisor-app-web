@@ -22,7 +22,7 @@ import {
   ResponseMeta,
   UpdateNotification,
   User,
-  UserConfigurationParameter,
+  UserConfigurationParameter, Pagination,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -112,6 +112,10 @@ export type UIFilterCriteria = {
   blockchain?: string[];
   node_type?: string[];
   node_status?: string[];
+};
+export type UIPagination = {
+  current_page: number,
+  items_per_page: number,
 };
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
@@ -640,6 +644,7 @@ export class GrpcClient {
   async listNodes(
     org_id: string,
     filter_criteria?: UIFilterCriteria,
+    pagination?: UIPagination,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -647,6 +652,18 @@ export class GrpcClient {
     let request = new ListNodesRequest();
     request.setMeta(request_meta);
     request.setOrgId(org_id);
+
+    let meta_pagination = new Pagination();
+
+    if (pagination) {
+      meta_pagination.setItemsPerPage(pagination.items_per_page);
+      meta_pagination.setCurrentPage(pagination.current_page);
+    } else {
+      meta_pagination.setItemsPerPage(100);
+      meta_pagination.setCurrentPage(1);
+    }
+
+    request_meta.setPagination(meta_pagination);
 
     if (filter_criteria) {
       let criteria = new FilterCriteria();
