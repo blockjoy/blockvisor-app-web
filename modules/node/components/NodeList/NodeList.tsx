@@ -75,7 +75,6 @@ export const NodeList = () => {
         ) : (
           <div css={styles.wrapper}>
             <NodeFilters loadNodes={loadNodes} />
-
             <div css={styles.nodeListWrapper}>
               <NodeListHeader
                 totalRows={nodeRows?.length || 0}
