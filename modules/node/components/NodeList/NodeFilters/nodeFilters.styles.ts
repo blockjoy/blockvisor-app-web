@@ -7,18 +7,8 @@ export const styles = {
     @media ${breakpoints.fromLrg} {
       padding-right: 20px;
     }
-  `,
-  wrapper: css`
-    flex: 0 0 auto;
-    transition-property: height;
-    transition-duration: 0.3s;
 
-    @media ${breakpoints.toXlrg} {
-      height: 0;
-      overflow: hidden;
-    }
-
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       top: 56px;
       position: sticky;
       overflow: auto;
@@ -28,13 +18,22 @@ export const styles = {
       height: 1000px;
     }
   `,
+  wrapper: css`
+    transition-property: height;
+    transition-duration: 0.3s;
+
+    @media ${breakpoints.toXlrg} {
+      height: 0;
+      overflow: hidden;
+    }
+  `,
   filters: css`
     padding-top: 20px;
   `,
   wrapperOpen: css`
     margin-bottom: 40px;
 
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       height: auto;
     }
   `,
