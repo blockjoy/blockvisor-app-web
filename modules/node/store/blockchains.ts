@@ -2,9 +2,28 @@ import { GrpcBlockchainObject } from '@modules/client/grpc_client';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { atom, selector } from 'recoil';
 
+const blockchainSearch = atom<string | null>({
+  key: 'blockchains.search',
+  default: null,
+});
+
 const blockchains = atom<GrpcBlockchainObject[]>({
   key: 'blockchains.list',
   default: [],
+});
+
+const filteredBySearchTermBlockchains = selector({
+  key: 'blockchains.filtered',
+  get: ({ get }) => {
+    const filter = get(blockchainSearch);
+    const list = get(blockchains);
+
+    if (filter && filter.length) {
+      return list.filter((item) => item.name?.includes(filter));
+    } else {
+      return list;
+    }
+  },
 });
 
 const blockchainsLoadingState = atom<LoadingState>({
@@ -24,13 +43,10 @@ const blockchainsWithNodeTypes = selector({
             return nodeTypeList
               .map((f) => {
                 if (f.id === s.id) {
-                  const a = [...s.properties];
-
-                  const b = {
+                  return {
                     ...f,
-                    properties: a,
+                    properties: [...s.properties],
                   };
-                  return b;
                 }
               })
               .filter((e) => e);
@@ -43,8 +59,10 @@ const blockchainsWithNodeTypes = selector({
 
 export const blockchainSelectors = {
   blockchainsWithNodeTypes,
+  filteredBySearchTermBlockchains,
 };
 export const blockchainsAtoms = {
   blockchains,
   blockchainsLoadingState,
+  blockchainSearch,
 };

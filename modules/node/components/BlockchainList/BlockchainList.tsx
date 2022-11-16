@@ -5,7 +5,7 @@ import { BlockchainIcon } from '../BlockchainIcon/BlockchainIcon';
 import IconEnter from '@public/assets/icons/enter.svg';
 import { flex } from 'styles/utils.flex.styles';
 import { useArrowNavigation } from '@shared/index';
-import { useNodeWizard } from '@modules/node';
+import { useNodeWizard, useSearchBlockchains } from '@modules/node';
 import { useEffect } from 'react';
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 
 export function BlockchainList({ blockchains }: Props) {
   const { selectBlockchain } = useNodeWizard();
+  const { resetSearch } = useSearchBlockchains();
   const { elementRef } = useArrowNavigation<HTMLUListElement>();
 
   useEffect(() => {
@@ -27,9 +28,13 @@ export function BlockchainList({ blockchains }: Props) {
     <ul ref={elementRef} tabIndex={0} css={[reset.list, styles.list]}>
       {blockchains.map((blockchain, idx) => (
         <li
-          onClick={() => selectBlockchain(blockchain.name, blockchain.id)}
+          onClick={() => {
+            resetSearch();
+            selectBlockchain(blockchain.name, blockchain.id);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
+              resetSearch();
               selectBlockchain(blockchain.name, blockchain.id);
             }
           }}

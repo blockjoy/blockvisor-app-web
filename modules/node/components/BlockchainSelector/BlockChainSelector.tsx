@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import { useEffect } from 'react';
+import { ChangeEventHandler, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { Input, Skeleton, SkeletonGrid } from '@shared/components';
@@ -8,13 +8,16 @@ import { display } from 'styles/utils.display.styles';
 import { BlockchainList } from '../BlockchainList/BlockchainList';
 import { BlockchainSelectorFooter } from './BlockchainSelectorFooter';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
+import { useSearchBlockchains } from '@modules/node/hooks/useSearchBlockchains';
 
 type BlockchainForm = {
   blockchain: string;
 };
 
 export function BlockchainSelector() {
-  const { getBlockchains, blockchains, loading } = useGetBlockchains();
+  const { getBlockchains, loading } = useGetBlockchains();
+  const { searchBlockchains, blockchains } = useSearchBlockchains();
+  const form = useForm<BlockchainForm>();
 
   const animateEntry = () =>
     anime({
@@ -33,11 +36,16 @@ export function BlockchainSelector() {
     animateEntry();
   }, []);
 
-  const form = useForm<BlockchainForm>();
   const mapped = blockchains.map((b) => ({
     id: b.id ?? '',
     name: b.name ?? '',
   }));
+
+  const handleSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const searchTerm = e.target.value;
+    searchBlockchains(searchTerm);
+  };
+
   return (
     <div>
       <div css={[styles.inputWrapper]}>
@@ -47,6 +55,7 @@ export function BlockchainSelector() {
               labelStyles={[display.visuallyHidden]}
               inputStyles={[styles.searchInput]}
               name="blockchain"
+              onChange={handleSearch}
               placeholder="Search..."
               inputSize="large"
               leftIcon={
