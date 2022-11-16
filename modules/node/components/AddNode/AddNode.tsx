@@ -102,6 +102,12 @@ export function AddNode() {
     setValue('validatorKeys', newKeys);
   };
 
+  const handleCloseModal = () => {
+    closeModal();
+    form.reset();
+    resetWizard();
+  };
+
   const handleSelectNodeType = (arg: number) => {
     setValue('nodeType', arg);
   };
@@ -124,9 +130,7 @@ export function AddNode() {
       };
 
       createNode(params, (nodeId: string) => {
-        form.reset();
-        closeModal();
-        resetWizard();
+        handleCloseModal();
         router.push(`/nodes/${nodeId}`);
       });
     },
@@ -151,7 +155,7 @@ export function AddNode() {
           ]}
         >
           <h1 css={[typo.medium]}>Add Node</h1>
-          <IconClose css={[styles.close]} onClick={closeModal} />
+          <IconClose css={[styles.close]} onClick={handleCloseModal} />
         </div>
         <form css={[styles.content]} onSubmit={onSubmit}>
           <ul css={[reset.list]}>
