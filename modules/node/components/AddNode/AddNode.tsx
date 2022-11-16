@@ -21,20 +21,15 @@ import { display } from 'styles/utils.display.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
 import { MouseEventHandler, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { nodeTypeProps } from '@shared/constants/lookups';
 
 type AddNodeForm = {
+  [key: string]: any;
   blockchain?: {
     label: string;
     value: string;
   };
-  host?: {
-    label: string;
-    value: string;
-  };
   nodeType?: number;
-  managedNodes: boolean;
-  noOfValidators: number;
-  mevboost: boolean;
   validatorKeys: File[];
 };
 
@@ -57,9 +52,6 @@ export function AddNode() {
         label: selectedBlockchain?.name,
         value: selectedBlockchain?.id,
       },
-      noOfValidators: 1,
-      mevboost: false,
-      managedNodes: false,
       nodeType: 2,
       validatorKeys: [],
     },
@@ -88,14 +80,9 @@ export function AddNode() {
     return () => sub.unsubscribe();
   }, [watch]);
 
-  const toggleNode = () => {
-    const value = getValues('managedNodes');
-    setValue('managedNodes', !value);
-  };
-
-  const toggleMevboost = () => {
-    const value = getValues('mevboost');
-    setValue('mevboost', !value);
+  const toggle = (name: string) => {
+    const value = getValues(name);
+    setValue(name, !value);
   };
 
   const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -118,29 +105,20 @@ export function AddNode() {
     selectNodeType(arg);
   };
 
-  const onSubmit = handleSubmit(
-    ({
-      mevboost,
-      managedNodes,
-      noOfValidators,
-      validatorKeys,
-      blockchain,
-      nodeType,
-      host,
-    }) => {
-      const params: CreateNodeParams = {
-        nodeType: nodeType ?? 0,
-        blockchain: blockchain?.value ?? '',
-        validatorKeys: validatorKeys,
-        host: host?.value ?? '',
-      };
+  const onSubmit = handleSubmit((data) => {
+    const { nodeType, blockchain, validatorKeys, host } = data;
+    const params: CreateNodeParams = {
+      nodeType: nodeType ?? 0,
+      blockchain: blockchain?.value ?? '',
+      validatorKeys: validatorKeys,
+      host: host?.value ?? data['ip'],
+    };
 
-      createNode(params, (nodeId: string) => {
-        handleCloseModal();
-        router.push(`/nodes/${nodeId}`);
-      });
-    },
-  );
+    createNode(params, (nodeId: string) => {
+      handleCloseModal();
+      router.push(`/nodes/${nodeId}`);
+    });
+  });
 
   const blockchainOptions = blockchains.map((b) => ({
     label: b.name ?? '',
@@ -185,118 +163,163 @@ export function AddNode() {
                 onChange={handleSelectNodeType}
               />
             </li>
-            <li css={[styles.spacing]}>
-              <p css={[typ.body2, spacing.bottom.mediumSmall]}>Host Details</p>
-              <p css={[typ.body3, colors.text4, spacing.bottom.medium]}>
-                Set the number of validator nodes to run, and where will the
-                validator(s) run.
-              </p>
+            {nodeTypeProperties.map((property: any) => {
+              if (property.type === nodeTypeProps.boolean) {
+                return (
+                  <li key={property.name} css={[styles.spacing]}>
+                    <div css={[flex.display.flex]}>
+                      <Toggle
+                        active={watch(property.name)}
+                        name={property.name}
+                        onClick={() => toggle(property.name)}
+                      />{' '}
+                      <div>
+                        <label css={[typ.body2]} htmlFor={property.name}>
+                          {property.label}
+                        </label>
+                      </div>
+                    </div>
+                  </li>
+                );
+              }
 
-              <div css={[flex.display.flex]}>
-                <Toggle
-                  active={watch('managedNodes')}
-                  name="managedNodes"
-                  onClick={toggleNode}
-                />{' '}
-                <div>
-                  <label css={[typ.body2]} htmlFor="mevboost">
-                    Let BlockJoy Manage these nodes
-                  </label>
-                  <p css={[typ.body3, colors.text3, styles.description]}>
-                    Enable this option to use BlockVisor as a host.
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li css={[styles.spacing, display.flex, flex.align.center]}>
-              <div css={[styles.noOfValidators]}>
-                <Input
-                  label="No of Validators"
-                  name="noOfValidators"
-                  inputSize="large"
-                  inputStyles={[styles.validatorsInput]}
-                  labelStyles={[
-                    typo.button,
-                    colors.text3,
-                    display.block,
-                    spacing.bottom.micro,
-                  ]}
-                />
-              </div>
-              <div css={[styles.hostSelect]}>
-                <label
-                  css={[
-                    typo.button,
-                    colors.text3,
-                    display.block,
-                    spacing.bottom.micro,
-                  ]}
-                  htmlFor="Host"
-                >
-                  Host
-                </label>
-                <MultiSelect
-                  isMulti={false}
-                  name="host"
-                  options={hostList}
-                  placeholder=""
-                />
-              </div>
-            </li>
-            <li css={[styles.spacing]}>
-              <label
-                css={[spacing.bottom.mediumSmall, typo.button, display.block]}
-              >
-                Beacon Node
-              </label>
-              <p css={[typo.small, colors.text4, spacing.bottom.mediumSmall]}>
-                Choose a beacon node cluster for your ETH validators.
-              </p>
-              <Select
-                name="beaconNode"
-                inputStyle="outline"
-                inputSize="large"
-                options={[]}
-              />
-            </li>
-            <li css={[styles.spacing]}>
-              <label
-                css={[spacing.bottom.mediumSmall, typo.button, display.block]}
-              >
-                Validator
-              </label>
-              <p css={[typo.small, colors.text4, spacing.bottom.mediumSmall]}>
-                Upload your validator keys
-              </p>
-              <Controller
-                name="validatorKeys"
-                render={({ field: { onChange, name } }) => (
-                  <FileUpload
-                    multiple={true}
-                    onChange={(e) => onChange(e)}
-                    name={name}
-                    remove={handleRemove}
-                    placeholder="Upload validator keys"
-                  />
-                )}
-              />
-            </li>
-            <li css={[styles.spacing, flex.display.flex]}>
-              <Toggle
-                name="mevboost"
-                onClick={toggleMevboost}
-                active={watch('mevboost')}
-              />
-              <div>
-                <label css={[typ.body2]} htmlFor="mevboost">
-                  Mevboost
-                </label>
-                <p css={[typ.body3, colors.text3, styles.description]}>
-                  This is an option to enable Mevboost that does something
-                  mevboosting
-                </p>
-              </div>
-            </li>
+              if (property.type === nodeTypeProps.number) {
+                return (
+                  <li key={property.name} css={[styles.spacing]}>
+                    <div>
+                      <Input
+                        label={property.label}
+                        name={property.name}
+                        inputSize="large"
+                        inputStyles={[styles.validatorsInput]}
+                        labelStyles={[
+                          typo.button,
+                          colors.text3,
+                          display.block,
+                          spacing.bottom.micro,
+                        ]}
+                      />
+                    </div>
+                  </li>
+                );
+              }
+
+              if (property.type === nodeTypeProps.text) {
+                return (
+                  <li key={property.name} css={[styles.spacing]}>
+                    <div>
+                      <Input
+                        label={property.label}
+                        name={property.name}
+                        inputSize="large"
+                        inputStyles={[styles.validatorsInput]}
+                        labelStyles={[
+                          typo.button,
+                          colors.text3,
+                          display.block,
+                          spacing.bottom.micro,
+                        ]}
+                      />
+                    </div>
+                  </li>
+                );
+              }
+
+              if (property.type === nodeTypeProps.hostSelector) {
+                return (
+                  <li key={property.name} css={[styles.spacing]}>
+                    <div css={[styles.hostSelect]}>
+                      <label
+                        css={[
+                          typo.button,
+                          colors.text3,
+                          display.block,
+                          spacing.bottom.micro,
+                        ]}
+                        htmlFor={property.name}
+                      >
+                        {property.label}
+                      </label>
+                      <MultiSelect
+                        isMulti={false}
+                        name={property.name}
+                        options={hostList}
+                        placeholder=""
+                      />
+                    </div>
+                  </li>
+                );
+              }
+
+              if (property.type === nodeTypeProps.fileUpload) {
+                return (
+                  <li key={property.name} css={[styles.spacing]}>
+                    <label
+                      css={[
+                        spacing.bottom.mediumSmall,
+                        typo.button,
+                        display.block,
+                      ]}
+                    >
+                      {property.label}
+                    </label>
+                    <p
+                      css={[
+                        typo.small,
+                        colors.text4,
+                        spacing.bottom.mediumSmall,
+                      ]}
+                    >
+                      Upload your validator keys
+                    </p>
+                    <Controller
+                      name="validatorKeys"
+                      render={({ field: { onChange, name } }) => (
+                        <FileUpload
+                          multiple={true}
+                          onChange={(e) => onChange(e)}
+                          name={name}
+                          remove={handleRemove}
+                          placeholder="Upload validator keys"
+                        />
+                      )}
+                    />
+                  </li>
+                );
+              }
+
+              if (property.type === nodeTypeProps.nodeSelector) {
+                return (
+                  <li key={property.name} css={[styles.spacing]}>
+                    <label
+                      css={[
+                        spacing.bottom.mediumSmall,
+                        typo.button,
+                        display.block,
+                      ]}
+                    >
+                      {property.label}
+                    </label>
+                    <p
+                      css={[
+                        typo.small,
+                        colors.text4,
+                        spacing.bottom.mediumSmall,
+                      ]}
+                    >
+                      Choose a beacon node cluster for your ETH validators.
+                    </p>
+                    <Select
+                      name={property.name}
+                      inputStyle="outline"
+                      inputSize="large"
+                      options={[]}
+                    />
+                  </li>
+                );
+              }
+            })}
+
             <li css={[styles.buttonWrapper]}>
               <Button size="small" style="primary" type="submit">
                 Create Node
