@@ -6,7 +6,7 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     position: sticky;
     z-index: 2;
-    top: 56px;
+    top: 55px;
     flex: 1 1 auto;
     display: flex;
     align-items: center;
