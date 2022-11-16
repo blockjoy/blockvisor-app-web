@@ -48,28 +48,23 @@ import {
   GetHostProvisionRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
-  CreateNodeRequest,
+  CreateNodeRequest, FilterCriteria,
   GetNodeRequest,
   ListNodesRequest,
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
   CreateOrganizationRequest,
-  CreateOrganizationResponse,
   DeleteOrganizationRequest,
-  DeleteOrganizationResponse,
   GetOrganizationsRequest,
   RestoreOrganizationRequest,
   UpdateOrganizationRequest,
-  UpdateOrganizationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
   GetConfigurationResponse,
   GetUserRequest,
-  GetUserResponse,
   UpdateUserRequest,
-  UpdateUserResponse,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
@@ -84,7 +79,6 @@ import {
   StatusResponse,
   StatusResponseFactory,
 } from '@modules/client/status_response';
-import Status = ResponseMeta.Status;
 import { KeyFilesClient } from '@blockjoy/blockjoy-grpc/dist/out/Key_file_serviceServiceClientPb';
 import { Keyfile, KeyFilesSaveRequest } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 
@@ -114,13 +108,10 @@ export type NewPassword = {
   new_pwd: string;
   new_pwd_confirmation: string;
 };
-export type FilterCriteria = {
+export type UIFilterCriteria = {
   blockchain?: string[];
   node_type?: string[];
   node_status?: string[];
-};
-export type SortingCriteria = {
-  name?: 'asc' | 'desc';
 };
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
@@ -648,8 +639,7 @@ export class GrpcClient {
 
   async listNodes(
     org_id: string,
-    sorting_criteria?: SortingCriteria,
-    filter_criteria?: FilterCriteria,
+    filter_criteria?: UIFilterCriteria,
   ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
@@ -657,6 +647,15 @@ export class GrpcClient {
     let request = new ListNodesRequest();
     request.setMeta(request_meta);
     request.setOrgId(org_id);
+
+    if (filter_criteria) {
+      let criteria = new FilterCriteria();
+
+      criteria.setBlockchainsList(filter_criteria.blockchain || []);
+      criteria.setStatusList(filter_criteria.node_status || []);
+
+      request.setFilter(criteria);
+    }
 
     return this.node
       ?.list(request, this.getAuthHeader())

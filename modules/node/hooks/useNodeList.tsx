@@ -10,7 +10,7 @@ import { env } from '@shared/constants/env';
 import { authAtoms } from '@modules/auth';
 import { toRows } from '../utils/toRows';
 import { toGrid } from '../utils/toGrid';
-import { FilterCriteria } from '@modules/client/grpc_client';
+import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 
 interface Hook {
   loadNodes: (filters?: FilterCriteria) => void;
@@ -45,7 +45,7 @@ export const useNodeList = (): Hook => {
     // TODO: Org ID needs be set here
     let org_id = user?.defaultOrganization?.id || '';
 
-    const nodes: any = await apiClient.listNodes(org_id, undefined, filters);
+    const nodes: any = await apiClient.listNodes(org_id, filters);
 
     console.log('nodes', nodes);
 
