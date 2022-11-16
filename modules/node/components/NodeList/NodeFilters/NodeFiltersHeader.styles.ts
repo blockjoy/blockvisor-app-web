@@ -37,7 +37,7 @@ export const styles = {
     width: 8px;
     height: 8px;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       display: none;
     }
 

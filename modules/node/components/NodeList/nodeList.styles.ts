@@ -7,7 +7,7 @@ export const styles = {
     display: flex;
     flex-direction: column;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       flex-direction: row;
     }
   `,
