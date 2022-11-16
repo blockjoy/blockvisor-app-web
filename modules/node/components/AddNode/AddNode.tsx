@@ -99,7 +99,6 @@ export function AddNode() {
   };
 
   const handleSelectNodeType = (arg: number) => {
-    console.log('arg', arg);
     setValue('nodeType', arg);
   };
 
@@ -113,15 +112,6 @@ export function AddNode() {
       nodeType,
       host,
     }) => {
-      console.log('submit', {
-        mevboost,
-        managedNodes,
-        noOfValidators,
-        validatorKeys,
-        blockchain,
-        nodeType,
-        host,
-      });
       const params: CreateNodeParams = {
         nodeType: nodeType ?? 0,
         blockchain: blockchain?.value ?? '',
@@ -130,6 +120,7 @@ export function AddNode() {
       };
 
       createNode(params, (nodeId: string) => {
+        form.reset();
         closeModal();
         router.push(`/nodes/${nodeId}`);
       });
