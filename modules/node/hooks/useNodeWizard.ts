@@ -28,6 +28,10 @@ export function useNodeWizard() {
     }
   };
 
+  const resetWizard = () => {
+    setCurrentStep('1');
+  };
+
   const isFirstStep = () => currentStep === '1';
   const isSecondStep = () => currentStep === '2';
   const isThirdStep = () => currentStep === '3';
@@ -36,6 +40,7 @@ export function useNodeWizard() {
     currentStep,
     selectedBlockchain: selectedWithNodeTypes,
     supportedNodeTypes,
+    resetWizard,
     selectBlockchain,
     updateSelected,
     isFirstStep,

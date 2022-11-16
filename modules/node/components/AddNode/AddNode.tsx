@@ -41,8 +41,12 @@ type AddNodeForm = {
 export function AddNode() {
   const router = useRouter();
   const { blockchains } = useGetBlockchains();
-  const { selectedBlockchain, supportedNodeTypes, updateSelected } =
-    useNodeWizard();
+  const {
+    selectedBlockchain,
+    supportedNodeTypes,
+    updateSelected,
+    resetWizard,
+  } = useNodeWizard();
   const { createNode, hostList, loadLookups, isLoading } = useNodeAdd();
   const { closeModal } = useModal();
   const form = useForm<AddNodeForm>({
@@ -122,6 +126,7 @@ export function AddNode() {
       createNode(params, (nodeId: string) => {
         form.reset();
         closeModal();
+        resetWizard();
         router.push(`/nodes/${nodeId}`);
       });
     },
