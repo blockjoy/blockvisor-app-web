@@ -359,14 +359,13 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    let header = this.getAuthHeader();
-    header.authorization = `Bearer ${token}`;
+    let auth_header = { authorization: `Bearer ${Buffer.from(token, 'binary').toString('base64')}` };
 
     let request = new ConfirmRegistrationRequest();
     request.setMeta(request_meta);
 
     return this.authentication
-      ?.confirm(request, header)
+      ?.confirm(request, auth_header)
       .then((response) => {
         return response.getToken()?.toObject();
       })
