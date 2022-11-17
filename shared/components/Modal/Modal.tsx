@@ -28,7 +28,6 @@ export const Modal = ({ isOpen, children, portalId }: Props) => {
   }, [isOpen]);
 
   useEffect(() => {
-    ref.current?.focus();
     window.addEventListener('keydown', handleEsc, false);
 
     return () => {
