@@ -11,7 +11,7 @@ export const toRows = (nodeList: BlockjoyNode[] | null) => {
         key: '1',
         component: (
           <div style={{ marginTop: '4px' }}>
-            <BlockchainIcon />
+            <BlockchainIcon blockchainId={node.blockchainId} />
           </div>
         ),
       },

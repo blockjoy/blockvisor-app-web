@@ -200,7 +200,12 @@ export const NodeFilters = ({
               showMore={item.showMore}
             />
           ))}
-          <Button onClick={handleUpdateClicked} size="small">
+          <Button
+            display="block"
+            style="outline"
+            onClick={handleUpdateClicked}
+            size="small"
+          >
             Update
           </Button>
         </div>
