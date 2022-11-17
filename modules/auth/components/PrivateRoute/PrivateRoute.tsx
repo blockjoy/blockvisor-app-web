@@ -28,7 +28,7 @@ export function PrivateRoute({ children }: Props) {
     return <LoadingSpinner size="page" />;
   }
 
-  if (isVerified && isLoggedIn) {
+  if (isLoggedIn) {
     return <>{children}</>;
   }
 
