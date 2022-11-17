@@ -30,12 +30,12 @@ export function BlockchainList({ blockchains }: Props) {
         <li
           onClick={() => {
             resetSearch();
-            selectBlockchain(blockchain.name, blockchain.id);
+            selectBlockchain(blockchain.name);
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               resetSearch();
-              selectBlockchain(blockchain.name, blockchain.id);
+              selectBlockchain(blockchain.name);
             }
           }}
           key={idx}
