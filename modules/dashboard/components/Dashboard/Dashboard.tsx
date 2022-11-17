@@ -55,11 +55,11 @@ export function Dashboard() {
       <PageSection>
         <RecentHosts />
       </PageSection>
-      {dashboardLoading === 'finished' && (
+      {/* {dashboardLoading === 'finished' && (
         <PageSection>
           <NodeEarnings />
         </PageSection>
-      )}
+      )} */}
     </>
   );
 }
