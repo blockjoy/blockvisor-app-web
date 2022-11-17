@@ -17,17 +17,18 @@ export function PrivateRoute({ children }: Props) {
       return;
     }
 
-    if (isDone && !isVerified) {
+    // disabled for now
+    /*  if (isDone && !isVerified) {
       router.push(Routes.verify);
       return;
-    }
+    } */
   }, [router.pathname, state]);
 
   if (isLoading) {
     return <LoadingSpinner size="page" />;
   }
 
-  if (isVerified && isLoggedIn) {
+  if (isLoggedIn) {
     return <>{children}</>;
   }
 
