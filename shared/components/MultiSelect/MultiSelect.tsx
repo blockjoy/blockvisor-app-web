@@ -10,7 +10,8 @@ type Props = {
   label?: string;
   name: string;
   placeholder?: string;
-  control: Control;
+  isMulti?: boolean;
+  control?: Control;
   options: Options<{ label: string; value: string }>;
   rules?: Pick<
     RegisterOptions,
@@ -46,6 +47,7 @@ const customStyles: StylesConfig = {
       backgroundColor: 'var(--color-text-5-o3)',
     },
   }),
+  singleValue: (base) => ({ ...base, color: 'white' }),
   multiValue: () => ({
     alignItems: 'center',
     backgroundColor: 'var(--color-text-5-o10)',
@@ -81,6 +83,7 @@ export function MultiSelect({
   options,
   rules,
   placeholder,
+  isMulti = true,
 }: Props) {
   return (
     <>
@@ -102,7 +105,7 @@ export function MultiSelect({
                 IndicatorSeparator: () => null,
                 ClearIndicator: () => null,
               }}
-              isMulti={true}
+              isMulti={isMulti}
               {...field}
               options={options}
             />

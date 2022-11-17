@@ -56,6 +56,7 @@ export const globalStyles = css`
     --color-border-3: hsl(0, 0%, 73%);
     --color-border-4: hsl(0, 0%, 83%);
     --color-border-5: hsl(90, 29%, 97%);
+    --color-border-5-o10: hsl(90, 29%, 97%, 0.1);
 
     /* --- INPUT --- */
     --color-input-background: hsl(165, 4%, 20%);
@@ -196,6 +197,21 @@ export const globalStyles = css`
   html {
     box-sizing: border-box;
     scroll-behavior: smooth;
+    overflow-x: hidden;
+
+    @media ${breakpoints.toLrg} {
+      overflow: hidden;
+    }
+  }
+
+  #__next {
+    isolation: isolate;
+  }
+
+  .scroll-locked {
+    @media ${breakpoints.toLrg} {
+      overflow: hidden;
+    }
   }
 
   body {

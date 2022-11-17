@@ -74,6 +74,11 @@ const filtersHealth = atom<string | 'online' | 'offline' | null>({
   default: null,
 });
 
+const nodeWizardActive = atom<boolean>({
+  key: 'nodeWizard.active',
+  default: false,
+});
+
 export const nodeAtoms = {
   activeNode,
   nodeRows,
@@ -85,4 +90,5 @@ export const nodeAtoms = {
   filtersBlockchain,
   filtersStatus,
   filtersType,
+  nodeWizardActive,
 };

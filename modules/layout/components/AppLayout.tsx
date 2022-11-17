@@ -5,7 +5,7 @@ import Page from './page/Page';
 import Breadcrumb from './breadcrumb/Breadcrumb';
 import { PrivateRoute } from '@modules/auth';
 import { OrganizationAdd } from '@modules/organizations';
-import { NodeAdd } from '@modules/node';
+import { NodeWizard } from '@modules/node';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
         <Sidebar />
         <Overlay />
         <Topbar />
-        <NodeAdd />
+        <NodeWizard />
         <OrganizationAdd />
         <Breadcrumb breadcrumb={breadcrumb} />
         <Page>{children}</Page>

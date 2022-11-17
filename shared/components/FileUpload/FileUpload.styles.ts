@@ -6,10 +6,12 @@ export const styles = {
     display: inline-flex;
     gap: 8px;
     align-items: center;
+    justify-content: center;
     padding: 15px 22px;
     border: 1px dashed var(--color-border-2);
     border-radius: 4px;
     cursor: pointer;
+    width: 100%;
   `,
   text: css`
     color: var(--color-text-3);

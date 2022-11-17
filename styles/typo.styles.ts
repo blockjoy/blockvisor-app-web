@@ -54,7 +54,7 @@ export const typo = {
   `,
   body3: css`
     font-family: var(--font-family-primary);
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 12px;
+    line-height: 16px;
   `,
 };

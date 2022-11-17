@@ -26,6 +26,7 @@ type InputProps = {
   hints?: ReactNode;
   label?: string;
   labelStyles?: SerializedStyles[];
+  inputStyles?: SerializedStyles[];
   inputSize?: InputSize;
   validationOptions?: RegisterOptions;
 } & InputHTMLAttributes<HTMLInputElement>;
@@ -39,6 +40,7 @@ export function Input({
   label,
   labelStyles,
   validationOptions,
+  inputStyles,
   value,
   ...rest
 }: InputProps) {
@@ -53,6 +55,7 @@ export function Input({
     !!errors[name],
     !!leftIcon,
     !!rightIcon,
+    inputStyles,
   );
 
   return (
@@ -90,6 +93,7 @@ function setInputStyles(
   isValid?: boolean,
   leftIcon?: boolean,
   rightIcon?: boolean,
+  inputStyles?: SerializedStyles[],
 ) {
   const fieldClasses = [
     inputField,
@@ -111,6 +115,10 @@ function setInputStyles(
 
   if (rightIcon) {
     fieldClasses.push(inputFieldWithUtilRight);
+  }
+
+  if (inputStyles) {
+    fieldClasses.push(...inputStyles);
   }
 
   return fieldClasses;

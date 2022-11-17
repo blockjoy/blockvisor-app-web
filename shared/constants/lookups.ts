@@ -12,6 +12,7 @@ export const nodeTypeList = [
   { id: 6, name: 'Relay' },
   { id: 3, name: 'Validator' },
 ];
+
 /*
 Unknown = 0,
     Miner = 1,
@@ -74,3 +75,12 @@ export const hostStatusList = [
   { id: 10, name: 'Installing' },
   { id: 11, name: 'Snaphotting' },
 ];
+
+export const nodeTypeProps = {
+  number: 'number',
+  text: 'string',
+  boolean: 'boolean',
+  fileUpload: 'file-upload',
+  hostSelector: 'host-selector',
+  nodeSelector: 'node-selector',
+};

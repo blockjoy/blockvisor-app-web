@@ -1,26 +1,48 @@
 import Image from 'next/image';
-import { MouseEventHandler, useCallback } from 'react';
+import { Fragment, MouseEventHandler, useCallback } from 'react';
 import { useDropzone, FileWithPath } from 'react-dropzone';
 import { styles } from './FileUpload.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import IconClose from 'public/assets/icons/close-12.svg';
+import { useFormContext } from 'react-hook-form';
 
 type Props = {
-  files: FileWithPath[];
-  onChange: (files: File[]) => void;
+  name: string;
+  multiple?: boolean;
+  onChange: (value: any) => void;
   remove: MouseEventHandler<HTMLButtonElement>;
   placeholder: string;
 };
 
-export function FileUpload({ files, onChange, placeholder, remove }: Props) {
-  const onDrop = useCallback(async (droppedFiles: File[]) => {
-    const newFiles = [...files, ...Array.from(droppedFiles)];
-    onChange(newFiles);
-  }, []);
+export function FileUpload({
+  onChange,
+  placeholder,
+  remove,
+  name,
+  multiple = false,
+}: Props) {
+  const {
+    formState: { errors },
+    watch,
+    setValue,
+    getValues,
+  } = useFormContext();
+
+  const files: FileWithPath[] = watch(name);
+  const currentFiles = getValues(name);
+  const filesArray = (currentFiles && Array.from(currentFiles)) || [];
+
+  const onDrop = useCallback(
+    async (droppedFiles: File[]) => {
+      const newFiles = [...filesArray, ...Array.from(droppedFiles)];
+      setValue(name, newFiles);
+    },
+    [files, name, setValue],
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
-    multiple: false,
+    multiple,
     onDrop,
   });
 
@@ -32,23 +54,27 @@ export function FileUpload({ files, onChange, placeholder, remove }: Props) {
       <input
         disabled={Boolean(files.length)}
         className="file-upload__input"
-        {...getInputProps()}
+        {...getInputProps({ onChange })}
       />
       {Boolean(files.length) ? (
-        <>
-          <Image
-            src="/assets/icons/checkmark-24.svg"
-            layout="fixed"
-            width={24}
-            height={24}
-          />
-          <span css={[styles.label, styles.text]}>
-            {files.map(({ name }) => name).join(', ')}
-          </span>
-          <button onClick={remove} css={[reset.button, styles.remove]}>
-            <IconClose />
-          </button>
-        </>
+        files.map((file) => (
+          <Fragment key={file.name}>
+            <Image
+              src="/assets/icons/checkmark-24.svg"
+              layout="fixed"
+              width={24}
+              height={24}
+            />
+            <span css={[styles.label, styles.text]}>{file.name}</span>
+            <button
+              data-item-url={file.name}
+              onClick={remove}
+              css={[reset.button, styles.remove]}
+            >
+              <IconClose />
+            </button>
+          </Fragment>
+        ))
       ) : (
         <>
           <Image
