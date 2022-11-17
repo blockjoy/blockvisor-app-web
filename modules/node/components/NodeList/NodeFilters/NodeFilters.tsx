@@ -4,7 +4,7 @@ import { Checkbox, Button } from '@shared/components';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
-import { FilterCriteria } from '@modules/client/grpc_client';
+import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 
@@ -150,58 +150,65 @@ export const NodeFilters = ({
   ];
 
   return (
-    <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
+    <div css={styles.outerWrapper}>
       <NodeFiltersHeader totalFilterCount={totalFilterCount} />
-      <div css={styles.filters}>
-        <div
-          css={blockStyles.filterBlock}
-          onClick={() => setOpenFilterName('')}
-        >
-          <label css={blockStyles.labelHeader}>
-            <span css={blockStyles.labelText}>Health</span>
-          </label>
-          <div css={[blockStyles.checkboxList]}>
-            <div css={blockStyles.checkboxRow}>
-              <Checkbox
-                onChange={() => handleHealthChanged('online')}
-                name="healthOnline"
-                checked={filtersHealth === 'online'}
-              >
-                Online
-              </Checkbox>
-            </div>
-            <div css={blockStyles.checkboxRow}>
-              <Checkbox
-                onChange={() => handleHealthChanged('offline')}
-                name="healthOffline"
-                checked={filtersHealth === 'offline'}
-              >
-                Offline
-              </Checkbox>
+      <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
+        <div css={styles.filters}>
+          <div
+            css={blockStyles.filterBlock}
+            onClick={() => setOpenFilterName('')}
+          >
+            <label css={blockStyles.labelHeader}>
+              <span css={blockStyles.labelText}>Health</span>
+            </label>
+            <div css={[blockStyles.checkboxList]}>
+              <div css={blockStyles.checkboxRow}>
+                <Checkbox
+                  onChange={() => handleHealthChanged('online')}
+                  name="healthOnline"
+                  checked={filtersHealth === 'online'}
+                >
+                  Online
+                </Checkbox>
+              </div>
+              <div css={blockStyles.checkboxRow}>
+                <Checkbox
+                  onChange={() => handleHealthChanged('offline')}
+                  name="healthOffline"
+                  checked={filtersHealth === 'offline'}
+                >
+                  Offline
+                </Checkbox>
+              </div>
             </div>
           </div>
+          {filters.map((item) => (
+            <NodeFiltersBlock
+              isOpen={item.name === openFilterName}
+              onPlusMinusClicked={handlePlusMinusClicked}
+              onFilterBlockClicked={handleFilterBlockClicked}
+              key={item.name}
+              name={item.name}
+              filterCount={item.filterCount}
+              filterList={item.filterList}
+              setFilterList={item.setFilterList}
+              setShowMore={item.setShowMore}
+              onFilterChanged={handleFilterChanged}
+              onShowMoreClicked={() =>
+                handleShowMoreClicked(item.showMore, item.setShowMore)
+              }
+              showMore={item.showMore}
+            />
+          ))}
+          <Button
+            display="block"
+            style="outline"
+            onClick={handleUpdateClicked}
+            size="small"
+          >
+            Update
+          </Button>
         </div>
-        {filters.map((item) => (
-          <NodeFiltersBlock
-            isOpen={item.name === openFilterName}
-            onPlusMinusClicked={handlePlusMinusClicked}
-            onFilterBlockClicked={handleFilterBlockClicked}
-            key={item.name}
-            name={item.name}
-            filterCount={item.filterCount}
-            filterList={item.filterList}
-            setFilterList={item.setFilterList}
-            setShowMore={item.setShowMore}
-            onFilterChanged={handleFilterChanged}
-            onShowMoreClicked={() =>
-              handleShowMoreClicked(item.showMore, item.setShowMore)
-            }
-            showMore={item.showMore}
-          />
-        ))}
-        <Button onClick={handleUpdateClicked} size="small">
-          Update
-        </Button>
       </div>
     </div>
   );

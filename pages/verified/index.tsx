@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { apiClient } from '@modules/client';
 import { css, keyframes } from '@emotion/react';
 import { ITheme } from 'types/theme';
+import { delay } from '@shared/utils/delay';
 
 const loaderKeyframes = keyframes`
   0% { 
@@ -40,29 +41,52 @@ const styles = {
 
 const Verified: NextPage = () => {
   const [serverError, setServerError] = useState<string>('');
-  const { query } = useRouter();
+  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const router = useRouter();
+
   useEffect(() => {
-    (async () => {
-      const { token } = query;
+    if (router.isReady && !isVerified) {
+      const { token } = router.query;
 
-      const response: any = await apiClient.registration_confirmation(
-        token?.toString()!,
-      );
+      (async () => {
+        console.log('token', token);
 
-      if (response.code === 20) {
-        setServerError('Error verifying your account, please contact support.');
-      }
-    })();
-  }, []);
+        const response: any = await apiClient.registration_confirmation(
+          token?.toString()!,
+        );
+
+        console.log('verified', response);
+
+        if (response.code === 20) {
+          setServerError(
+            'Error verifying your account, please contact support.',
+          );
+          return;
+        }
+
+        await delay(3000);
+
+        setIsVerified(true);
+
+        router.push('/');
+      })();
+    }
+  }, [router.isReady]);
 
   return (
     <Layout title="Email being verified.">
       <div css={styles.loaderRail}>
         <div css={styles.loaderBar}></div>
       </div>
-      <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
-        You will be redirected to the dashboard once complete.
-      </p>
+      {serverError ? (
+        <p css={[typo.small, colors.warning, spacing.bottom.medium]}>
+          There was an error verifying your account, please try again.
+        </p>
+      ) : (
+        <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
+          You will be redirected to the dashboard once complete.
+        </p>
+      )}
     </Layout>
   );
 };

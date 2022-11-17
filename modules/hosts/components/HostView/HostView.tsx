@@ -157,7 +157,7 @@ export function Host() {
               handleRestart={handleRestartHost}
               handleStop={handleStopHost}
             />
-            <HostCharts />
+            {/* <HostCharts /> */}
             <DetailsTable bodyElements={hostDetails ?? []} />
           </>
         ) : (

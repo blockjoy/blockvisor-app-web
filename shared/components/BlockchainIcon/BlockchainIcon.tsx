@@ -16,13 +16,15 @@ function getRandomInt(min: number, max: number) {
 }
 
 export const BlockchainIcon: FC<Props> = ({ blockchainId }) => {
-  return getRandomInt(0, 1) === 0 ? (
-    <div css={styles.icon}>
-      <IconBitcoin />
-    </div>
-  ) : (
-    <div css={styles.icon}>
-      <IconEthereum />
-    </div>
-  );
+  return <>{blockchainId}</>;
+
+  // return getRandomInt(0, 1) === 0 ? (
+  //   <div css={styles.icon}>
+  //     <IconBitcoin />
+  //   </div>
+  // ) : (
+  //   <div css={styles.icon}>
+  //     <IconEthereum />
+  //   </div>
+  // );
 };

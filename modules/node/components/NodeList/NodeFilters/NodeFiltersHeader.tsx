@@ -1,6 +1,7 @@
 import { styles } from './NodeFiltersHeader.styles';
 import IconFilter from '@public/assets/icons/filter-1-12.svg';
-import IconArrow from '@public/assets/icons/plus-12.svg';
+import IconPlus from '@public/assets/icons/plus-12.svg';
+import IconMinus from '@public/assets/icons/minus-12.svg';
 import { FC } from 'react';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
@@ -10,11 +11,13 @@ type Props = {
 };
 
 export const NodeFiltersHeader: FC<Props> = ({ totalFilterCount }) => {
-  const [, setFiltersOpen] = useRecoilState(nodeAtoms.isFiltersOpen);
+  const [isFiltersOpen, setFiltersOpen] = useRecoilState(
+    nodeAtoms.isFiltersOpen,
+  );
 
   const handleClick = () => {
     console.log('handleClick');
-    setFiltersOpen(true);
+    setFiltersOpen(!isFiltersOpen);
   };
 
   return (
@@ -24,7 +27,7 @@ export const NodeFiltersHeader: FC<Props> = ({ totalFilterCount }) => {
         Filters {totalFilterCount !== undefined ? `(${totalFilterCount})` : ''}
       </span>
       <span css={styles.dropdownIcon}>
-        <IconArrow />
+        {isFiltersOpen ? <IconMinus /> : <IconPlus />}
       </span>
     </header>
   );

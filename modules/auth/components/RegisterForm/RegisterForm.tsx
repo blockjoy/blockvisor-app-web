@@ -45,6 +45,8 @@ export function RegisterForm() {
         password_confirmation: confirmPassword,
       });
 
+      console.log('signup', response);
+
       if (isResponeMetaObject(response)) {
         if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
           setIsLoading(false);
