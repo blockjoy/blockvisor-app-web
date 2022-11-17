@@ -42,24 +42,33 @@ const styles = {
 const Verified: NextPage = () => {
   const [serverError, setServerError] = useState<string>('');
   const router = useRouter();
+
   useEffect(() => {
-    (async () => {
+    if (router.isReady) {
       const { token } = router.query;
 
-      const response: any = await apiClient.registration_confirmation(
-        token?.toString()!,
-      );
+      (async () => {
+        console.log('token', token);
 
-      if (response.code === 20) {
-        setServerError('Error verifying your account, please contact support.');
-        return;
-      }
+        const response: any = await apiClient.registration_confirmation(
+          token?.toString()!,
+        );
 
-      await delay(3000);
+        console.log('verified', response);
 
-      router.push('/');
-    })();
-  }, []);
+        if (response.code === 20) {
+          setServerError(
+            'Error verifying your account, please contact support.',
+          );
+          return;
+        }
+
+        await delay(3000);
+
+        router.push('/');
+      })();
+    }
+  }, [router.isReady]);
 
   return (
     <Layout title="Email being verified.">
