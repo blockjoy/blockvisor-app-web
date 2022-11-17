@@ -418,8 +418,10 @@ export class GrpcClient {
       request.setMeta(request_meta);
       request.setPassword(pwd);
 
+      let auth_header = { authorization: `Bearer ${Buffer.from(token, 'binary').toString('base64')}` };
+
       return this.authentication
-        ?.updatePassword(request, this.getAuthHeader())
+        ?.updatePassword(request, auth_header)
         .then((response) => {
           return response.getToken()?.toObject();
         })
