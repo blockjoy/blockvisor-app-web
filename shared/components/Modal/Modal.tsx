@@ -14,9 +14,28 @@ export const Modal = ({ isOpen, children }: Props) => {
     closeModal();
   });
 
+  const handleEsc = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  };
   useEffect(() => {
-    isOpen && ref.current && ref.current.focus();
+    if (ref.current && isOpen) {
+      ref.current.focus();
+    }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.focus();
+
+      window.addEventListener('keydown', handleEsc, false);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc, false);
+    };
+  });
 
   if (!isOpen) {
     return null;
