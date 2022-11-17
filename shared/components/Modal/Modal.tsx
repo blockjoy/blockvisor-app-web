@@ -1,13 +1,15 @@
 import { styles } from './Modal.styles';
 import { ReactNode, useEffect, useRef } from 'react';
 import { useModal } from '@shared/hooks/useModal';
+import { Portal } from '@shared/components';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 
 type Props = {
   isOpen?: boolean;
   children?: ReactNode;
+  portalId: string;
 };
-export const Modal = ({ isOpen, children }: Props) => {
+export const Modal = ({ isOpen, children, portalId }: Props) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const { closeModal } = useModal();
   useClickOutside(ref, () => {
@@ -26,11 +28,8 @@ export const Modal = ({ isOpen, children }: Props) => {
   }, [isOpen]);
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.focus();
-
-      window.addEventListener('keydown', handleEsc, false);
-    }
+    ref.current?.focus();
+    window.addEventListener('keydown', handleEsc, false);
 
     return () => {
       window.removeEventListener('keydown', handleEsc, false);
@@ -42,10 +41,12 @@ export const Modal = ({ isOpen, children }: Props) => {
   }
 
   return (
-    <div css={[isOpen && styles.modal]} id="js-auth-layout">
-      <div ref={ref} css={[isOpen && styles.base]}>
-        {children}
+    <Portal wrapperId={portalId}>
+      <div css={[isOpen && styles.modal]} id="js-auth-layout">
+        <div ref={ref} css={[isOpen && styles.base]}>
+          {children}
+        </div>
       </div>
-    </div>
+    </Portal>
   );
 };
