@@ -17,10 +17,11 @@ export function PrivateRoute({ children }: Props) {
       return;
     }
 
-    if (isDone && !isVerified) {
+    // disabled for now
+    /*  if (isDone && !isVerified) {
       router.push(Routes.verify);
       return;
-    }
+    } */
   }, [router.pathname, state]);
 
   if (isLoading) {
