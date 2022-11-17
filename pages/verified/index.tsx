@@ -41,10 +41,11 @@ const styles = {
 
 const Verified: NextPage = () => {
   const [serverError, setServerError] = useState<string>('');
+  const [isVerified, setIsVerified] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady && !isVerified) {
       const { token } = router.query;
 
       (async () => {
@@ -64,6 +65,8 @@ const Verified: NextPage = () => {
         }
 
         await delay(3000);
+
+        setIsVerified(true);
 
         router.push('/');
       })();
