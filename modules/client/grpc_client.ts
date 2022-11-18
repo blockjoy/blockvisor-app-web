@@ -735,12 +735,18 @@ export class GrpcClient {
         return StatusResponseFactory.createNodeResponse(err, 'grpcClient');
       });
 
-    if (node_meta instanceof ResponseMeta) {
+    console.log("node_meta: ", typeof node_meta);
+
+    try {
+      console.log("got key files: ", key_files);
+
       // Node creation was successful, trying to upload keys, if existent
       if (key_files !== undefined && key_files?.length > 0) {
-        let node_id = node_meta.getMessagesList().pop() || '';
+        let node_id = (node_meta as ResponseMeta.AsObject).messagesList.pop() || '';
         let request = new KeyFilesSaveRequest();
         let files: Array<Keyfile> = [];
+
+        console.log("got node id: ", node_id);
 
         request.setRequestId(this.getDummyUuid());
         request.setNodeId(node_id);
@@ -751,15 +757,15 @@ export class GrpcClient {
           let reader = new FileReader();
 
           reader.addEventListener(
-            'load',
-            () => {
-              let f = new Keyfile();
-              f.setName(file?.name || '');
-              f.setContent(reader.result + '');
+              'load',
+              () => {
+                let f = new Keyfile();
+                f.setName(file?.name || '');
+                f.setContent(reader.result + '');
 
-              files.push(f);
-            },
-            false,
+                files.push(f);
+              },
+              false,
           );
 
           if (file) {
@@ -769,24 +775,26 @@ export class GrpcClient {
         }
 
         return this.key_files
-          ?.save(request, this.getAuthHeader())
-          .then((response) => {
-            let meta = new ResponseMeta();
-            meta.setOriginRequestId(response.getOriginRequestId());
-            meta.setMessagesList(response.getMessagesList());
+            ?.save(request, this.getAuthHeader())
+            .then((response) => {
+              let meta = new ResponseMeta();
+              meta.setOriginRequestId(response.getOriginRequestId());
+              meta.setMessagesList(response.getMessagesList());
 
-            return meta.toObject();
-          })
-          .catch((err) => {
-            return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
-          });
+              return meta.toObject();
+            })
+            .catch((err) => {
+              return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
+            });
       } else {
         return node_meta;
       }
-    } else {
+    } catch (e) {
+      console.log("node creation error: ", e);
       /// Node creation failed
       return node_meta;
     }
+
   }
 
   async updateNode(
