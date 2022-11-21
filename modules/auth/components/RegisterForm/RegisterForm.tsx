@@ -50,7 +50,7 @@ export function RegisterForm() {
       if (isResponeMetaObject(response)) {
         if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
           setIsLoading(false);
-          Router.push(Routes.login);
+          Router.push(Routes.verify);
         } else {
           setIsLoading(false);
           setRegisterError('Error creating account, please try again.');
