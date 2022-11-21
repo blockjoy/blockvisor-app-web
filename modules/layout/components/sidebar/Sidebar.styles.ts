@@ -22,15 +22,15 @@ export const styles = {
     transition-property: transform;
     transition-duration: 0.4s;
 
-    @media only screen and (min-width: ${theme.screenSm}) {
-      transform: translateX(0);
-      z-index: 5;
-    }
+    transform: translateX(0);
+    z-index: 5;
   `,
   sidebarOpen: css`
     transform: translateX(0);
   `,
   sidebarClosed: css`
     transform: translateX(-100%);
+    transform: translateX(0);
+    z-index: 5;
   `,
 };

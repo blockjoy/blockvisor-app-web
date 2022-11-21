@@ -28,6 +28,7 @@ export const NodeFilters = ({
   );
 
   const isFiltersOpen = useRecoilValue(nodeAtoms.isFiltersOpen);
+  const isFiltersCollapsed = useRecoilValue(nodeAtoms.isFiltersCollapsed);
 
   console.log('isFiltersOpen', isFiltersOpen);
 
@@ -150,7 +151,12 @@ export const NodeFilters = ({
   ];
 
   return (
-    <div css={styles.outerWrapper}>
+    <div
+      css={[
+        styles.outerWrapper,
+        isFiltersCollapsed && styles.outerWrapperCollapsed,
+      ]}
+    >
       <NodeFiltersHeader totalFilterCount={totalFilterCount} />
       <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
         <div css={styles.filters}>

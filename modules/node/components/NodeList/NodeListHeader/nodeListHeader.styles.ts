@@ -21,7 +21,17 @@ export const styles = {
     justify-content: flex-end;
   `,
   filterToggle: css`
-    @media ${breakpoints.fromLrg} {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    padding: 0;
+
+    path {
+      fill: rgba(255, 255, 255, 0.3);
+    }
+
+    @media ${breakpoints.toXlrg} {
       display: none;
     }
   `,
