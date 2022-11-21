@@ -1,0 +1,27 @@
+import { styles } from './NodeFiltersHeader.styles';
+import IconFilter from '@public/assets/icons/filter-1-12.svg';
+import { nodeAtoms } from '@modules/node/store/nodeAtoms';
+import { useRecoilValue } from 'recoil';
+
+export const NodeFiltersHeaderIconText = () => {
+  const filtersBlockchain = useRecoilValue(nodeAtoms.filtersBlockchain);
+
+  const filtersType = useRecoilValue(nodeAtoms.filtersType);
+
+  const filtersStatus = useRecoilValue(nodeAtoms.filtersStatus);
+
+  const filtersHealth = useRecoilValue(nodeAtoms.filtersHealth);
+
+  const totalFilterCount =
+    Number(filtersBlockchain?.length > 0) +
+    Number(filtersType?.length > 0) +
+    Number(filtersStatus?.length > 0) +
+    Number(!filtersHealth ? 0 : 1);
+
+  return (
+    <span css={styles.title}>
+      <IconFilter />
+      Filters {totalFilterCount !== undefined ? `(${totalFilterCount})` : ''}
+    </span>
+  );
+};

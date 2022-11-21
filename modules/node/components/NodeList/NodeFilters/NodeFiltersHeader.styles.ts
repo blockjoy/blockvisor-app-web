@@ -3,10 +3,18 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  collapseButton: css`
+    margin-left: auto;
+    display: none;
+
+    @media ${breakpoints.fromXLrg} {
+      display: block;
+    }
+  `,
   header: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
     height: 40px;
     cursor: pointer;
     border-bottom: 1px solid ${theme.colorBorder};
@@ -14,8 +22,6 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       display: flex;
       width: 100%;
-
-      cursor: default;
     }
 
     & path {
@@ -27,9 +33,7 @@ export const styles = {
     align-items: center;
     gap: 8px;
     color: rgba(255, 255, 255, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 11px;
+    font-size: 13px;
   `,
   dropdownIcon: css`
     display: grid;

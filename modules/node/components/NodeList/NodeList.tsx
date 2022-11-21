@@ -64,7 +64,9 @@ export const NodeList = () => {
         actionText="Add Node"
       ></PageTitle>
       <PageSection bottomBorder={false}>
-        {!Boolean(nodeRows?.length) && finished ? (
+        {!Boolean(nodeRows?.length) &&
+        !Boolean(nodeCells?.length) &&
+        finished ? (
           <>
             <EmptyColumn
               id="js-nodes-empty"
@@ -77,7 +79,7 @@ export const NodeList = () => {
             <NodeFilters loadNodes={loadNodes} />
             <div css={styles.nodeListWrapper}>
               <NodeListHeader
-                totalRows={nodeRows?.length || 0}
+                totalRows={nodeRows?.length || nodeCells?.length || 0}
                 activeListType={activeListType}
                 onTypeChanged={handleListTypeChanged}
               />
