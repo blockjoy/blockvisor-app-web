@@ -1,14 +1,14 @@
 import { styles } from './SidebarHeader.styles';
 import { OrganizationDropdown } from '@modules/organizations';
-import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
+import { TopbarBurger } from '../topbar/TopbarBurger';
 
 export const SidebarHeader = () => {
   return (
     <header css={[styles.wrapper]}>
-      <OrganizationDropdown />
-      <span css={styles.logoWrapper}>
-        <LogoSmall css={[styles.logo]} />
+      <span css={styles.burgerWrapper}>
+        <TopbarBurger />
       </span>
+      <OrganizationDropdown />
     </header>
   );
 };

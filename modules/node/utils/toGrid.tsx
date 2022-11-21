@@ -7,6 +7,8 @@ export const toGrid = (
   nodeList: BlockjoyNode[] | null,
   onCellClick: (args0: any) => void,
 ) => {
+  console.log('toGrid', nodeList);
+
   return nodeList?.map((node: any) => {
     return {
       key: node.id,

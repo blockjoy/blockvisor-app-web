@@ -16,7 +16,7 @@ export const styles = {
     background: transparent;
     border: 0;
     cursor: pointer;
-    padding: 8px 20px;
+    padding: 8px 16px 8px 6px;
     border-radius: 4px;
     transition: all 0.1s ease-out;
 

@@ -19,7 +19,7 @@ export const styles = {
     border-bottom: 1px solid ${theme.colorBorder};
 
     @media only screen and (min-width: ${theme.screenSm}) {
-      padding-left: 300px;
+      padding-left: 260px;
       z-index: 4;
     }
   `,

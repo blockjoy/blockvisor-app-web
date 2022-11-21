@@ -56,13 +56,20 @@ export const useNodeList = (): Hook => {
     setIsLoading('finished');
   };
 
+  console.log('nodeList', nodeList.length);
+
   useEffect(() => {
+    console.log('WTF');
+
     if (nodeList?.length) {
+      console.log('TEST!!', activeListType);
+
       if (activeListType === 'table') {
         const rows = toRows(nodeList);
         setNodeRows(rows!);
       } else {
         const cells = toGrid(nodeList, handleNodeClick);
+        console.log('cells', cells);
         setNodeCells(cells!);
       }
     }

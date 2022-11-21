@@ -7,18 +7,18 @@ export const styles = {
     display: grid;
     gap: 16px;
     grid-template-columns: 1fr;
-    grid-auto-rows: 160px;
+    grid-auto-rows: 140px;
 
     @media ${breakpoints.fromSml} {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media ${breakpoints.fromXLrg} {
       grid-template-columns: repeat(3, 1fr);
     }
 
-    @media ${breakpoints.fromHuge} {
+    @media ${breakpoints.fromXLrg} {
       grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media ${breakpoints.fromHuge} {
+      grid-template-columns: repeat(6, 1fr);
     }
   `,
 
@@ -42,7 +42,7 @@ export const styles = {
     align-items: center;
     border-radius: 4px;
     min-width: 0;
-    padding: 20px;
+    padding: 16px;
     background: rgba(248, 250, 246, 0.03);
     cursor: pointer;
   `,

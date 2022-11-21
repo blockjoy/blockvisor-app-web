@@ -19,7 +19,7 @@ const activeNode = atom<BlockjoyNode | null>({
 
 const activeListType = atom<string | 'table' | 'grid'>({
   key: 'node.activeListType',
-  default: 'table',
+  default: 'grid',
 });
 
 const nodeRows = atom<Row[] | null>({
@@ -40,6 +40,11 @@ const isLoading = atom<LoadingState>({
 const isFiltersOpen = atom<boolean>({
   key: 'node.isFiltersOpen',
   default: false,
+});
+
+const isFiltersCollapsed = atom<boolean>({
+  key: 'node.isFiltersCollapsed',
+  default: true,
 });
 
 const filtersBlockchain = atom<FilterItem[]>({
@@ -85,6 +90,7 @@ export const nodeAtoms = {
   nodeCells,
   isLoading,
   isFiltersOpen,
+  isFiltersCollapsed,
   activeListType,
   filtersHealth,
   filtersBlockchain,
