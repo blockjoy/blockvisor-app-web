@@ -26,14 +26,6 @@ export const styles = {
       overflow: hidden;
     }
   `,
-  outerWrapperCollapsed: css`
-    @media ${breakpoints.fromXLrg} {
-      max-width: 0;
-      min-width: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-  `,
   wrapper: css`
     transition-property: height;
     transition-duration: 0.3s;
