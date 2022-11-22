@@ -81,9 +81,9 @@ export const NodeFilters = ({
       .map((item) => item.id!);
 
     const params: FilterCriteria = {
-      blockchain: blockchainFilters,
-      node_type: typeFilters,
-      node_status: statusFilters,
+      blockchain: blockchainFilters?.length ? blockchainFilters : undefined,
+      node_type: typeFilters?.length ? typeFilters : undefined,
+      node_status: statusFilters?.length ? statusFilters : undefined,
     };
 
     console.log('params', params);
