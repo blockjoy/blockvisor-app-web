@@ -23,7 +23,7 @@ export const TableGridCell: FC<Props> = ({
   cellEarningsDirection = '-',
 }) => (
   <div onClick={onCellClick} css={styles.cell}>
-    {/* <div css={styles.cellIcon}>{cellIcon}</div> */}
+    <div css={styles.cellIcon}>{cellIcon}</div>
     <div css={styles.cellRight}>
       <header css={styles.cellHeader}>
         <h2 css={styles.cellTitle}>{cellTitle}</h2>
