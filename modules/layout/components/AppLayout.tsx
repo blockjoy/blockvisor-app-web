@@ -7,6 +7,8 @@ import Breadcrumb from './breadcrumb/Breadcrumb';
 import { PrivateRoute } from '@modules/auth';
 import { OrganizationAdd } from '@modules/organizations';
 import { NodeWizard } from '@modules/node';
+import { useRecoilValue } from 'recoil';
+import { layoutState } from '../store/layoutAtoms';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -14,6 +16,8 @@ type LayoutType = {
 };
 
 export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
+  const layout = useRecoilValue(layoutState);
+
   return (
     <>
       <PrivateRoute>
