@@ -19,7 +19,9 @@ const filteredBySearchTermBlockchains = selector({
     const list = get(blockchains);
 
     if (filter && filter.length) {
-      return list.filter((item) => item.name?.includes(filter));
+      return list.filter((item) =>
+        item.name?.toUpperCase().includes(filter.toUpperCase()),
+      );
     } else {
       return list;
     }
