@@ -27,6 +27,7 @@
     "rc-slider": "^10.0.1",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.0",
+    "react-arrow-key-navigation-hook": "^1.0.2",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.2",
     "react-hook-form": "^7.34.2",
