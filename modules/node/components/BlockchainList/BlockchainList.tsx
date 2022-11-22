@@ -4,28 +4,18 @@ import { typo } from 'styles/typo.styles';
 import { BlockchainIcon } from '../BlockchainIcon/BlockchainIcon';
 import IconEnter from '@public/assets/icons/enter.svg';
 import { flex } from 'styles/utils.flex.styles';
-import { useArrowNavigation } from '@shared/index';
 import { useNodeWizard, useSearchBlockchains } from '@modules/node';
-import { useEffect } from 'react';
 
 type Props = {
   blockchains: { name: string; id: string }[];
 };
 
-export function BlockchainList({ blockchains }: Props) {
+export const BlockchainList = ({ blockchains }: Props) => {
   const { selectBlockchain } = useNodeWizard();
   const { resetSearch } = useSearchBlockchains();
-  const { elementRef } = useArrowNavigation<HTMLUListElement>();
-
-  useEffect(() => {
-    const firstChild = elementRef.current?.firstChild as HTMLElement;
-    if (firstChild) {
-      firstChild.focus();
-    }
-  }, []);
 
   return (
-    <ul ref={elementRef} tabIndex={0} css={[reset.list, styles.list]}>
+    <ul tabIndex={0} css={[reset.list, styles.list]}>
       {blockchains.map((blockchain, idx) => (
         <li
           onClick={() => {
@@ -54,4 +44,4 @@ export function BlockchainList({ blockchains }: Props) {
       ))}
     </ul>
   );
-}
+};

@@ -7,8 +7,17 @@ export const styles = {
   spacing: css`
     margin-bottom: 28px;
   `,
-  close: css`
+  closeButton: css`
     cursor: pointer;
+    background-color: transparent;
+    border-width: 0;
+    padding: 0;
+
+    & > svg {
+      path {
+        fill: var(--color-text-5);
+      }
+    }
   `,
   noOfValidators: css`
     max-width: 140px;

@@ -140,7 +140,9 @@ export function AddNode() {
           ]}
         >
           <h1 css={[typo.medium]}>Add Node</h1>
-          <IconClose css={[styles.close]} onClick={handleCloseModal} />
+          <button css={[styles.closeButton]} onClick={handleCloseModal}>
+            <IconClose />
+          </button>
         </div>
         <form css={[styles.content]} onSubmit={onSubmit}>
           <ul css={[reset.list]}>

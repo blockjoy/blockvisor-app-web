@@ -1,10 +1,15 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   list: css`
     padding: 30px 12px;
-    max-height: 360px;
+    height: auto;
     overflow-y: auto;
+
+    @media ${breakpoints.fromLrg} {
+      height: 360px;
+    }
   `,
   listItem: css`
     padding: 10px 8px 12px 8px;

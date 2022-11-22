@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import { ChangeEventHandler, useEffect } from 'react';
+import { ChangeEventHandler, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { Input, Skeleton, SkeletonGrid } from '@shared/components';
@@ -9,12 +9,18 @@ import { BlockchainList } from '../BlockchainList/BlockchainList';
 import { BlockchainSelectorFooter } from './BlockchainSelectorFooter';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useSearchBlockchains } from '@modules/node/hooks/useSearchBlockchains';
+import IconClose from '@public/assets/icons/close-12.svg';
+import useArrowKeyNavigationHook from 'react-arrow-key-navigation-hook';
+import { useModal } from '@shared/index';
 
 type BlockchainForm = {
   blockchain: string;
 };
 
 export function BlockchainSelector() {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { closeModal } = useModal();
+  const elementRef = useArrowKeyNavigationHook({ selectors: 'input,li' });
   const { getBlockchains, loading } = useGetBlockchains();
   const { searchBlockchains, blockchains } = useSearchBlockchains();
   const form = useForm<BlockchainForm>();
@@ -27,6 +33,10 @@ export function BlockchainSelector() {
       easing: 'easeInOutQuad',
       duration: 400,
     });
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     getBlockchains();
@@ -47,13 +57,20 @@ export function BlockchainSelector() {
   };
 
   return (
-    <div>
+    <div ref={elementRef}>
+      <div css={[styles.closeWrapper]}>
+        <button css={[styles.closeButton]} onClick={() => closeModal()}>
+          <IconClose />
+        </button>
+      </div>
       <div css={[styles.inputWrapper]}>
         <FormProvider {...form}>
           <form>
             <Input
+              key="input"
               labelStyles={[display.visuallyHidden]}
               inputStyles={[styles.searchInput]}
+              ref={inputRef}
               name="blockchain"
               onChange={handleSearch}
               placeholder="Search..."
