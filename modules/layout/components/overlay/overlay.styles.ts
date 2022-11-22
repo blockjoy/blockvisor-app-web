@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 type OverlayProps = {
@@ -31,6 +32,13 @@ export const overlayStyles = {
     ({ isSidebarOpen, isOthersOpen }: OverlayProps) =>
     (theme: ITheme) =>
       css`
-        /*  */
+        @media ${breakpoints.fromXLrg} {
+          ${isSidebarOpen &&
+          !isOthersOpen &&
+          css`
+            opacity: 0;
+            visibility: hidden;
+          `}
+        }
       `,
 };

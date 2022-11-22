@@ -9,12 +9,13 @@ export const styles = {
     left: 0;
     width: 100%;
     height: 56px;
-    /* padding-left: 260px; */
     display: grid;
     place-items: center;
     pointer-events: none;
   `,
-
+  iconWrapperSidebarOpen: css`
+    padding-left: 260px;
+  `,
   icon: (theme: ITheme) => css`
     @media ${breakpoints.toMed} {
       position: absolute;
