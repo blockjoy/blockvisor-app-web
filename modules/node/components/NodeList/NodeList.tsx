@@ -142,7 +142,7 @@ export const NodeList = () => {
               />
             ) : (
               <div css={styles.gridWrapper}>
-                <TableGrid isLoading={loading} cells={nodeCells} />
+                <TableGrid isLoading={loading} cells={nodeCells!} />
               </div>
             )}
           </div>
