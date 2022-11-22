@@ -23,6 +23,9 @@ export const styles = {
       z-index: 4;
     } */
   `,
+  wrapperSidebarOpen: css`
+    padding-left: 260px;
+  `,
   actionsLeft: (theme: ITheme) => css`
     position: absolute;
     top: 0;
