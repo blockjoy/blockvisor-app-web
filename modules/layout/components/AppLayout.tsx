@@ -21,7 +21,7 @@ export const AppLayout: React.FC<LayoutType> = ({ children, breadcrumb }) => {
         <Topbar />
         <NodeWizard />
         <OrganizationAdd />
-        <Breadcrumb breadcrumb={breadcrumb} />
+        {/* <Breadcrumb breadcrumb={breadcrumb} /> */}
         <Page>{children}</Page>
       </PrivateRoute>
     </>

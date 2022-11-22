@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -27,10 +28,10 @@ export const styles = {
   `,
   sidebarOpen: css`
     transform: translateX(0);
+    z-index: 10;
   `,
   sidebarClosed: css`
     transform: translateX(-100%);
-    transform: translateX(0);
     z-index: 5;
   `,
 };

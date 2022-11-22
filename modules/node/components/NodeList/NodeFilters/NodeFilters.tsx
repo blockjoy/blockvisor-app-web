@@ -117,12 +117,6 @@ export const NodeFilters = ({
     (item) => item.isChecked,
   ).length;
 
-  const totalFilterCount =
-    Number(blockchainFilterCount > 0) +
-    Number(typeFilterCount > 0) +
-    Number(statusFilterCount > 0) +
-    Number(!filtersHealth ? 0 : 1);
-
   const filters = [
     {
       name: 'Blockchain',
@@ -157,7 +151,7 @@ export const NodeFilters = ({
         isFiltersCollapsed && styles.outerWrapperCollapsed,
       ]}
     >
-      <NodeFiltersHeader totalFilterCount={totalFilterCount} />
+      <NodeFiltersHeader />
       <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
         <div css={styles.filters}>
           <div

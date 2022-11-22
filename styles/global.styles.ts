@@ -198,10 +198,6 @@ export const globalStyles = css`
     box-sizing: border-box;
     scroll-behavior: smooth;
     overflow-x: hidden;
-
-    @media ${breakpoints.toLrg} {
-      overflow: hidden;
-    }
   }
 
   #__next {

@@ -8,11 +8,11 @@ import { apiClient } from '@modules/client';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { authAtoms } from '@modules/auth';
-import { toRows } from '../utils/toRows';
-import { toGrid } from '../utils/toGrid';
+
 import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 
 interface Hook {
+  nodeList: BlockjoyNode[];
   loadNodes: (filters?: FilterCriteria) => void;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
@@ -22,15 +22,11 @@ export const useNodeList = (): Hook => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
 
-  const activeListType = useRecoilValue(nodeAtoms.activeListType);
-
-  const [, setNodeRows] = useRecoilState(nodeAtoms.nodeRows);
-  const [, setNodeCells] = useRecoilState(nodeAtoms.nodeCells);
   const [, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
 
-  const setLayout = useSetRecoilState(layoutState);
+  const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
 
-  const [nodeList, setNodeList] = useState<BlockjoyNode[]>([]);
+  const setLayout = useSetRecoilState(layoutState);
 
   const handleAddNode = () => {
     setLayout('nodes');
@@ -41,6 +37,8 @@ export const useNodeList = (): Hook => {
   };
 
   const loadNodes = async (filters?: FilterCriteria) => {
+    console.log('loadNodes');
+
     setIsLoading('loading');
     // TODO: Org ID needs be set here
     let org_id = user?.defaultOrganization?.id || '';
@@ -56,26 +54,8 @@ export const useNodeList = (): Hook => {
     setIsLoading('finished');
   };
 
-  console.log('nodeList', nodeList.length);
-
-  useEffect(() => {
-    console.log('WTF');
-
-    if (nodeList?.length) {
-      console.log('TEST!!', activeListType);
-
-      if (activeListType === 'table') {
-        const rows = toRows(nodeList);
-        setNodeRows(rows!);
-      } else {
-        const cells = toGrid(nodeList, handleNodeClick);
-        console.log('cells', cells);
-        setNodeCells(cells!);
-      }
-    }
-  }, [nodeList?.length, activeListType]);
-
   return {
+    nodeList,
     loadNodes,
     handleAddNode,
     handleNodeClick,

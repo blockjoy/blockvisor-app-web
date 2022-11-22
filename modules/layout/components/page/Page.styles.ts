@@ -1,16 +1,16 @@
 import { css } from '@emotion/react';
-import { ITheme } from 'types/theme';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
-  wrapper: (theme: ITheme) => css`
+  wrapper: css`
     position: relative;
     z-index: 3;
     padding: 56px 0 16px;
     transition: margin 0.4s;
-
-    @media only screen and (min-width: ${theme.screenSm}) {
+  `,
+  wrapperSidebarOpen: css`
+    @media ${breakpoints.toMed} {
       margin-left: 260px;
-      z-index: 3;
     }
   `,
 };
