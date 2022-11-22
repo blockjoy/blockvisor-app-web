@@ -15,7 +15,7 @@ export const styles = {
       flex: 0 0 200px;
       min-width: 200px;
       max-width: 200px;
-      height: 700px;
+      height: 800px;
     }
   `,
   outerWrapperCollapsed: css`

@@ -9,7 +9,7 @@ export const styles = {
     left: 0;
     width: 100%;
     height: 56px;
-    padding-left: 260px;
+    /* padding-left: 260px; */
     display: grid;
     place-items: center;
     pointer-events: none;

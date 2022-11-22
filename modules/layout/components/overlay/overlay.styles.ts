@@ -31,13 +31,6 @@ export const overlayStyles = {
     ({ isSidebarOpen, isOthersOpen }: OverlayProps) =>
     (theme: ITheme) =>
       css`
-        @media only screen and (min-width: ${theme.screenMd}) {
-          ${isSidebarOpen &&
-          !isOthersOpen &&
-          css`
-            opacity: 0;
-            visibility: hidden;
-          `}
-        }
+        /*  */
       `,
 };
