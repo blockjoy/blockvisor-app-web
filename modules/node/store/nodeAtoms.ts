@@ -22,15 +22,20 @@ const activeListType = atom<string | 'table' | 'grid'>({
   default: 'grid',
 });
 
-const nodeRows = atom<Row[] | null>({
-  key: 'node.nodeRows',
-  default: null,
+const nodeList = atom<BlockjoyNode[]>({
+  key: 'node.nodeList',
+  default: [],
 });
 
-const nodeCells = atom<GridCell[] | null>({
-  key: 'node.nodeCells',
-  default: null,
-});
+// const nodeRows = atom<Row[] | null>({
+//   key: 'node.nodeRows',
+//   default: null,
+// });
+
+// const nodeCells = atom<GridCell[] | null>({
+//   key: 'node.nodeCells',
+//   default: null,
+// });
 
 const isLoading = atom<LoadingState>({
   key: 'node.loading',
@@ -69,7 +74,8 @@ const filtersStatus = atom<FilterItem[]>({
   key: 'node.filtersStatus',
   default: nodeStatusList.map((item) => ({
     name: item.name,
-    id: item.id.toString()!,
+    // id: item.id.toString()!,
+    id: item.name.toLocaleLowerCase(),
     isChecked: false,
   })),
 });
@@ -86,8 +92,7 @@ const nodeWizardActive = atom<boolean>({
 
 export const nodeAtoms = {
   activeNode,
-  nodeRows,
-  nodeCells,
+  nodeList,
   isLoading,
   isFiltersOpen,
   isFiltersCollapsed,
