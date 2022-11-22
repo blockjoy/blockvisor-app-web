@@ -20,8 +20,10 @@ export const styles = {
     background: ${theme.colorSidebar};
     transform: translateX(-100%);
 
-    transition-property: transform;
-    transition-duration: 0.4s;
+    @media ${breakpoints.toXlrg} {
+      transition-property: transform;
+      transition-duration: 0.4s;
+    }
 
     transform: translateX(0);
     z-index: 5;

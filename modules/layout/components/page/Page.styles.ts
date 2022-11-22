@@ -6,10 +6,9 @@ export const styles = {
     position: relative;
     z-index: 3;
     padding: 56px 0 16px;
-    transition: margin 0.4s;
   `,
   wrapperSidebarOpen: css`
-    @media ${breakpoints.toMed} {
+    @media ${breakpoints.fromXLrg} {
       margin-left: 260px;
     }
   `,
