@@ -18,7 +18,6 @@ type BlockchainForm = {
 };
 
 export function BlockchainSelector() {
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const { closeModal } = useModal();
   const elementRef = useArrowKeyNavigationHook({ selectors: 'input,li' });
   const { getBlockchains, loading } = useGetBlockchains();
@@ -35,7 +34,7 @@ export function BlockchainSelector() {
     });
 
   useEffect(() => {
-    inputRef.current?.focus();
+    form.setFocus('blockchain');
   }, []);
 
   useEffect(() => {
@@ -70,7 +69,6 @@ export function BlockchainSelector() {
               key="input"
               labelStyles={[display.visuallyHidden]}
               inputStyles={[styles.searchInput]}
-              ref={inputRef}
               name="blockchain"
               onChange={handleSearch}
               placeholder="Search..."

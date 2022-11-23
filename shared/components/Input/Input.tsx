@@ -31,67 +31,61 @@ type InputProps = {
   validationOptions?: RegisterOptions;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      name,
-      inputSize = 'medium',
-      leftIcon,
-      rightIcon,
-      disabled,
-      label,
-      labelStyles,
-      validationOptions,
-      inputStyles,
-      value,
-      ...rest
-    }: InputProps,
-    ref,
-  ) => {
-    const {
-      register,
-      formState: { errors },
-    } = useFormContext();
+export const Input = ({
+  name,
+  inputSize = 'medium',
+  leftIcon,
+  rightIcon,
+  disabled,
+  label,
+  labelStyles,
+  validationOptions,
+  inputStyles,
+  value,
+  ...rest
+}: InputProps) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
-    const inputClasses = setInputStyles(
-      inputSize,
-      disabled,
-      !!errors[name],
-      !!leftIcon,
-      !!rightIcon,
-      inputStyles,
-    );
+  const inputClasses = setInputStyles(
+    inputSize,
+    disabled,
+    !!errors[name],
+    !!leftIcon,
+    !!rightIcon,
+    inputStyles,
+  );
 
-    return (
-      <>
-        <label
-          htmlFor={name}
-          css={[inputLabel, inputLabelSize.small, labelStyles]}
-        >
-          {label}
-        </label>
-        <div css={[inputWrapper]}>
-          <InputUtil position="left">{leftIcon}</InputUtil>
-          <input
-            {...register(name, validationOptions)}
-            css={[inputClasses]}
-            disabled={disabled}
-            value={value}
-            {...rest}
-            ref={ref}
-            name={name}
-          />
-          <InputUtil position="right">{rightIcon}</InputUtil>
-        </div>
-        <ErrorMessage
+  return (
+    <>
+      <label
+        htmlFor={name}
+        css={[inputLabel, inputLabelSize.small, labelStyles]}
+      >
+        {label}
+      </label>
+      <div css={[inputWrapper]}>
+        <InputUtil position="left">{leftIcon}</InputUtil>
+        <input
+          {...register(name, validationOptions)}
+          css={[inputClasses]}
+          disabled={disabled}
+          value={value}
+          {...rest}
           name={name}
-          errors={errors}
-          as={<p css={[typo.smaller, colors.warning, spacing.top.small]} />}
         />
-      </>
-    );
-  },
-);
+        <InputUtil position="right">{rightIcon}</InputUtil>
+      </div>
+      <ErrorMessage
+        name={name}
+        errors={errors}
+        as={<p css={[typo.smaller, colors.warning, spacing.top.small]} />}
+      />
+    </>
+  );
+};
 
 function setInputStyles(
   version: InputSize,
