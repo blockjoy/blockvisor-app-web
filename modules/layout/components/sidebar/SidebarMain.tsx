@@ -7,6 +7,8 @@ import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
 import ChatIcon from '@public/assets/icons/chat-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
+import { useRecoilState } from 'recoil';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 const blocks = [
   {
@@ -37,6 +39,16 @@ const blocks = [
 ];
 
 export default () => {
+  const [layout, setLayout] = useRecoilState(layoutState);
+
+  const handleLinkClicked = () => {
+    console.log('handleLinkClick');
+
+    if (document.body.clientWidth < 768) {
+      setLayout(undefined);
+    }
+  };
+
   const router = useRouter();
   return (
     <main css={[styles.wrapper]}>
@@ -49,6 +61,7 @@ export default () => {
                 <li key={item.name}>
                   <Link href={item.path}>
                     <a
+                      onClick={handleLinkClicked}
                       css={[styles.link]}
                       className={
                         router.pathname.includes(item.path) ? 'active' : ''
