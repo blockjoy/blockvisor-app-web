@@ -11,15 +11,19 @@ import { authAtoms } from '@modules/auth';
 
 type Props = {
   hideName?: boolean;
+  hiddenOnDesktop?: boolean;
 };
 
-export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
+export const OrganizationDropdown: React.FC<Props> = ({
+  hideName,
+  hiddenOnDesktop,
+}) => {
   const [isOpen, setOpen] = useState(false);
   const setLayout = useSetRecoilState(layoutState);
   const user = useRecoilValue(authAtoms.user);
 
   return (
-    <div css={styles.base}>
+    <div css={[styles.base, hiddenOnDesktop && styles.hiddenOnDesktop]}>
       <button
         css={styles.button}
         style={{ padding: hideName ? '0' : '' }}
@@ -29,7 +33,7 @@ export const OrganizationDropdown: React.FC<Props> = ({ hideName }) => {
           {user?.defaultOrganization?.name?.substring(0, 1)?.toUpperCase()}
         </span>
         {!hideName && (
-          <p css={styles.orgName}>{user?.defaultOrganization?.name}</p>
+          <p css={[styles.orgName]}>{user?.defaultOrganization?.name}</p>
         )}
         {/* <SizedIcon additionalStyles={[styles.rotateIcon]} size="10px">
           <IconArrow />

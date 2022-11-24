@@ -22,11 +22,10 @@ export const OrganizationsPage: NextPage = () => {
   return (
     <>
       <PageTitle
-        title="Organization Management"
+        title="Organizations"
         actionOnClick={handleCreateClicked}
       ></PageTitle>
       <PageSection>
-        <h2 css={spacing.top.large}>Organizations</h2>
         <small
           css={[
             spacing.top.mediumSmall,

@@ -42,7 +42,7 @@ export function LoginForm() {
 
       await delay(1000);
       setIsLoading(false);
-      router.push(Routes.dashboard);
+      router.push('/nodes');
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');

@@ -2,12 +2,10 @@ import { useRouter } from 'next/router';
 import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useEffect, useState } from 'react';
-
 import { apiClient } from '@modules/client';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { authAtoms } from '@modules/auth';
+import { authAtoms, useIdentityRepository } from '@modules/auth';
 
 import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 
@@ -21,6 +19,7 @@ interface Hook {
 export const useNodeList = (): Hook => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
+  const repository = useIdentityRepository();
 
   const [, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
 
@@ -41,11 +40,14 @@ export const useNodeList = (): Hook => {
 
     setIsLoading('loading');
     // TODO: Org ID needs be set here
-    let org_id = user?.defaultOrganization?.id || '';
 
-    const nodes: any = await apiClient.listNodes(org_id, filters);
+    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
 
-    console.log('nodes', nodes);
+    // let org_id = user?.defaultOrganization?.id || '';
+
+    const nodes: any = await apiClient.listNodes(org_id!, filters);
+
+    console.log('nodes', user?.defaultOrganization);
 
     setNodeList(nodes);
 

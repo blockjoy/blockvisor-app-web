@@ -6,6 +6,11 @@ export const styles = {
     position: relative;
     min-width: 0;
   `,
+  hiddenOnDesktop: css`
+    @media ${breakpoints.fromXLrg} {
+      display: none;
+    }
+  `,
   button: css`
     position: relative;
     z-index: 2;

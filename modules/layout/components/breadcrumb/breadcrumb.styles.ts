@@ -19,6 +19,9 @@ export const breadcrumbStyles = {
       display: flex;
     }
   `,
+  wrapperSidebarOpen: css`
+    left: 60px;
+  `,
   item: (theme: ITheme) => css`
     display: flex;
     align-items: center;

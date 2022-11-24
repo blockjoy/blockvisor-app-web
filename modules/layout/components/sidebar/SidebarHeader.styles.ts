@@ -5,7 +5,6 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    justify-content: space-between;
     height: 56px;
     border-bottom: 1px solid ${theme.colorBorder};
     box-sizing: border-box;
