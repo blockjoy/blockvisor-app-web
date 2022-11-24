@@ -4,6 +4,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     color: var(--color-text-5);
+    padding: 16px 60px 16px 20px;
   `,
   copy: css``,
   support: css`

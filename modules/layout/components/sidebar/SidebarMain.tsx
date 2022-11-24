@@ -14,10 +14,15 @@ const blocks = [
   {
     title: 'BLOCKVISOR',
     items: [
-      { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
-      { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
       { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
       { name: 'Support', path: '/support', icon: <ChatIcon /> },
+      // { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
+      { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
+      {
+        name: 'Organizations',
+        path: '/organizations',
+        icon: <IconOrganizations />,
+      },
     ],
   },
   // {
@@ -26,16 +31,12 @@ const blocks = [
   //     { name: "Automation", path: "/automation", icon: "sync" },
   //   ]
   // },
-  {
-    title: 'ADMIN',
-    items: [
-      {
-        name: 'Organizations',
-        path: '/organizations',
-        icon: <IconOrganizations />,
-      },
-    ],
-  },
+  // {
+  //   title: 'ADMIN',
+  //   items: [
+
+  //   ],
+  // },
 ];
 
 export default () => {
@@ -55,20 +56,44 @@ export default () => {
       <div>
         {blocks.map((block) => (
           <div key={block.title}>
-            <header css={[styles.header]}>{block.title}</header>
+            {/* {layout === 'sidebar' && (
+              <header css={[styles.header]}>{block.title}</header>
+            )} */}
             <ul css={[styles.list]}>
               {block.items.map((item) => (
                 <li key={item.name}>
                   <Link href={item.path}>
                     <a
                       onClick={handleLinkClicked}
-                      css={[styles.link]}
-                      className={
-                        router.pathname.includes(item.path) ? 'active' : ''
-                      }
+                      css={[
+                        styles.link,
+                        layout !== 'sidebar' && styles.linkSidebarCollapsed,
+                      ]}
                     >
-                      {item.icon}
-                      {item.name}
+                      <span
+                        css={styles.linkInner}
+                        className={
+                          router.pathname.includes(item.path) ? 'active' : ''
+                        }
+                      >
+                        <span
+                          css={[
+                            styles.linkIcon,
+                            layout !== 'sidebar' && styles.linkIconSidebarOpen,
+                          ]}
+                        >
+                          {item.icon}
+                        </span>
+                        <span
+                          className="link-text"
+                          css={[
+                            styles.linkText,
+                            layout !== 'sidebar' && styles.linkTextHidden,
+                          ]}
+                        >
+                          {item.name}
+                        </span>
+                      </span>
                     </a>
                   </Link>
                 </li>
@@ -77,7 +102,7 @@ export default () => {
           </div>
         ))}
       </div>
-      <SidebarFooter />
+      {layout === 'sidebar' && <SidebarFooter />}
     </main>
   );
 };

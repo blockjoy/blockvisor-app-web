@@ -15,8 +15,8 @@ export const Topbar = () => {
       css={[styles.wrapper, layout === 'sidebar' && styles.wrapperSidebarOpen]}
     >
       <div css={[styles.actionsLeft]}>
-        <TopbarBurger />
-        <OrganizationDropdown hideName />
+        {/* <TopbarBurger /> */}
+        <OrganizationDropdown hideName hiddenOnDesktop />
       </div>
       <TopbarBlockvisor />
       {/* <TopbarSearch /> */}

@@ -86,7 +86,7 @@ export const NodeList = () => {
   return (
     <>
       <PageTitle
-        title="All Nodes"
+        title="Nodes"
         actionOnClick={openModal}
         actionText="Add Node"
       ></PageTitle>
