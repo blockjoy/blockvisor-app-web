@@ -69,11 +69,11 @@ export function NodeView() {
         )}
       </PageSection>
 
-      {!isLoading && (
+      {/* {!isLoading && (
         <PageSection>
           <NodeEarnings />
         </PageSection>
-      )}
+      )} */}
 
       <PageSection>
         <DangerZone
