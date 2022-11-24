@@ -12,6 +12,10 @@ export const styles = {
     display: grid;
     place-items: center;
     pointer-events: none;
+
+    @media ${breakpoints.fromXLrg} {
+      padding-left: 64px;
+    }
   `,
   iconWrapperSidebarOpen: css`
     padding-left: 260px;

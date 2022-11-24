@@ -33,7 +33,13 @@ export const styles = {
     z-index: 10;
   `,
   sidebarClosed: css`
-    transform: translateX(-100%);
-    z-index: 5;
+    @media ${breakpoints.toXlrg} {
+      transform: translateX(-100%);
+      z-index: 5;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      width: 64px;
+    }
   `,
 };
