@@ -675,8 +675,14 @@ export class GrpcClient {
     if (filter_criteria) {
       let criteria = new FilterCriteria();
 
+      console.log("Setting blockchain filter: ", filter_criteria.blockchain);
+      console.log("Setting node status filter: ", filter_criteria.node_status);
+      console.log("Setting node type filter: ", filter_criteria.node_type);
+
+
       criteria.setBlockchainIdsList(filter_criteria.blockchain || []);
       criteria.setStatesList(filter_criteria.node_status || []);
+      criteria.setNodeTypesList(filter_criteria.node_type || []);
 
       request.setFilter(criteria);
     }
