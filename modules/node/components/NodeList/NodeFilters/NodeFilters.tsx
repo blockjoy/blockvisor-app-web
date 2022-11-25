@@ -2,17 +2,27 @@ import { styles } from './nodeFilters.styles';
 import { styles as blockStyles } from './NodeFiltersBlock.styles';
 import { Checkbox, Button } from '@shared/components';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
-import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
 import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
+import { apiClient } from '@modules/client';
 
 export const NodeFilters = ({
   loadNodes,
 }: {
   loadNodes: (filters?: FilterCriteria) => void;
 }) => {
+  const [blockchainList, setBlockchainList] = useState([]);
+
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
@@ -47,6 +57,18 @@ export const NodeFilters = ({
     setter: Dispatch<SetStateAction<boolean>>,
   ) => {
     setter(!value);
+  };
+
+  const loadLookups = async () => {
+    const blockchains: any = await apiClient.getBlockchains();
+
+    const mappedBlockchains: FilterItem[] = blockchains.map((b: any) => ({
+      id: b.id,
+      name: b.name,
+      isChecked: false,
+    }));
+
+    setFiltersBlockchain(mappedBlockchains);
   };
 
   const handleFilterChanged = (
@@ -143,6 +165,10 @@ export const NodeFilters = ({
       showMore: showMoreTypes,
     },
   ];
+
+  useEffect(() => {
+    loadLookups();
+  }, []);
 
   return (
     <div

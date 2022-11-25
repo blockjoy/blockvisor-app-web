@@ -18,7 +18,9 @@ export const styles = {
     }
   `,
   iconWrapperSidebarOpen: css`
-    padding-left: 260px;
+    @media ${breakpoints.fromXLrg} {
+      padding-left: 260px;
+    }
   `,
   icon: (theme: ITheme) => css`
     @media ${breakpoints.toMed} {

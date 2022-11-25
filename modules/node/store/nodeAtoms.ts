@@ -54,11 +54,7 @@ const isFiltersCollapsed = atom<boolean>({
 
 const filtersBlockchain = atom<FilterItem[]>({
   key: 'node.filtersBlockchain',
-  default: blockchainList.map((item) => ({
-    name: item.label,
-    id: item.value,
-    isChecked: false,
-  })),
+  default: [],
 });
 
 const filtersType = atom<FilterItem[]>({
