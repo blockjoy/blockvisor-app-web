@@ -62,7 +62,7 @@ export const NodeFilters = ({
   const loadLookups = async () => {
     const blockchains: any = await apiClient.getBlockchains();
 
-    const mappedBlockchains: FilterItem[] = blockchains.map((b: any) => ({
+    const mappedBlockchains: FilterItem[] = blockchains?.map((b: any) => ({
       id: b.id,
       name: b.name,
       isChecked: false,
