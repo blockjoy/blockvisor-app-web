@@ -4,7 +4,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { BlockchainIcon } from '@shared/components';
 
 export const toGrid = (
-  nodeList: BlockjoyNode[] | null,
+  nodeList: BlockjoyNode[],
   onCellClick: (args0: any) => void,
 ) => {
   console.log('toGrid', nodeList);
