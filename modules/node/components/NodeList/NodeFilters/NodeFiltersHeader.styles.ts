@@ -4,7 +4,6 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   collapseButton: css`
-    margin-left: auto;
     display: none;
 
     @media ${breakpoints.fromXLrg} {
@@ -15,7 +14,7 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 6px;
-    height: 40px;
+    height: 50px;
     cursor: pointer;
     border-bottom: 1px solid ${theme.colorBorder};
 
@@ -34,6 +33,25 @@ export const styles = {
     gap: 8px;
     color: rgba(255, 255, 255, 0.3);
     font-size: 13px;
+  `,
+  filterIcon: css`
+    position: relative;
+    height: 12px;
+  `,
+  badge: (theme: ITheme) => css`
+    position: absolute;
+    top: -12px;
+    right: -11px;
+    border: 3px solid ${theme.colorBackground};
+    display: grid;
+    place-items: center;
+    font-size: 7px;
+    font-weight: 600;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    color: ${theme.colorPrimaryText};
+    background: ${theme.colorPrimary};
   `,
   dropdownIcon: css`
     display: grid;

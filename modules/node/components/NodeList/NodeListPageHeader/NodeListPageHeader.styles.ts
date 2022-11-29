@@ -3,6 +3,9 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  endBlock: css`
+    flex: 0 0 100px;
+  `,
   listTypePicker: css`
     display: flex;
     justify-content: flex-end;
