@@ -6,6 +6,11 @@ export const Burger = () => {
   const [app, setApp] = useRecoilState(layoutState);
 
   const handleClick = () => {
+    if (app !== 'sidebar') {
+      localStorage.setItem('sidebarOpen', 'true');
+    } else {
+      localStorage.removeItem('sidebarOpen');
+    }
     setApp(app === 'sidebar' ? undefined : 'sidebar');
   };
 

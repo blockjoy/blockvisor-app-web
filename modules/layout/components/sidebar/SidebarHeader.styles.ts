@@ -5,7 +5,10 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    height: 56px;
+    justify-content: space-between;
+    height: 72px;
+    padding-left: 56px;
+    padding-right: 16px;
     border-bottom: 1px solid ${theme.colorBorder};
     box-sizing: border-box;
   `,

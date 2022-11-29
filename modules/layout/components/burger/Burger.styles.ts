@@ -8,7 +8,7 @@ export const styles = {
     place-items: center;
     background: transparent;
     width: 64px;
-    height: 56px;
+    height: 72px;
     border: 0;
     padding: 0;
     cursor: pointer;
