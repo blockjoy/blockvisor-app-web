@@ -46,7 +46,8 @@ export const styles = {
   linkInner: (theme: ITheme) => css`
     flex: 1 1 auto;
     width: 100%;
-    padding: 12px 10px;
+    padding: 0 10px;
+    height: 44px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -87,11 +88,9 @@ export const styles = {
     }
   `,
   linkIcon: css`
+    display: grid;
+    place-items: center;
     min-width: 20px;
-
-    svg {
-      translate: 2px 2px;
-    }
   `,
   linkIconSidebarOpen: css`
     @media ${breakpoints.fromXLrg} {

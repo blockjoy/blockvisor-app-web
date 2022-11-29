@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { styles } from './nodeListHeader.styles';
-import IconTable from '@public/assets/icons/table-12.svg';
-import IconGrid from '@public/assets/icons/grid-12.svg';
+
 import { NodeFiltersHeader } from '../NodeFilters/NodeFiltersHeader';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
@@ -42,26 +41,6 @@ export const NodeListHeader: FC<Props> = ({
         Showing <span css={styles.totalValue}>{totalRows} </span>
         {totalRows === 1 ? 'node' : 'nodes'}
       </span>
-      <div css={[styles.listTypePicker, styles.endBlock]}>
-        <button
-          onClick={() => onTypeChanged('table')}
-          css={[
-            styles.iconButton,
-            activeListType === 'table' && styles.iconButtonActive,
-          ]}
-        >
-          <IconTable />
-        </button>
-        <button
-          onClick={() => onTypeChanged('grid')}
-          css={[
-            styles.iconButton,
-            activeListType === 'grid' && styles.iconButtonActive,
-          ]}
-        >
-          <IconGrid />
-        </button>
-      </div>
     </div>
   );
 };

@@ -17,6 +17,7 @@ import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
 import { useModal } from '@shared/index';
 import { GridCell } from '@shared/components/TableGrid/types/GridCell';
+import { NodeListPageHeader } from './NodeListPageHeader/NodeListPageHeader';
 
 export const NodeList = () => {
   const { loadNodes, handleNodeClick } = useNodeList();
@@ -85,11 +86,12 @@ export const NodeList = () => {
 
   return (
     <>
-      <PageTitle
-        title="Nodes"
-        actionOnClick={openModal}
-        actionText="Add Node"
-      ></PageTitle>
+      <PageTitle title="Nodes" actionOnClick={openModal} actionText="Add Node">
+        <NodeListPageHeader
+          activeListType={activeListType}
+          onTypeChanged={handleListTypeChanged}
+        />
+      </PageTitle>
       <PageSection bottomBorder={false}>
         {/* {!Boolean(nodeRows?.length) &&
         !Boolean(nodeCells?.length) &&
