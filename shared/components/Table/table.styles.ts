@@ -6,6 +6,7 @@ export const tableStyles = {
   wrapper: css`
     position: relative;
     width: 100%;
+    margin-top: 24px;
   `,
   table: (theme: ITheme) => css`
     width: 100%;

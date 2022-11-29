@@ -7,7 +7,7 @@ export const styles = {
   `,
   section: css`
     position: relative;
-    padding: 24px 0px;
+    padding: 0 0 24px;
     margin: 0 auto;
   `,
 };

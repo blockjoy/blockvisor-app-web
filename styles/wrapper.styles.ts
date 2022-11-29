@@ -9,7 +9,7 @@ const base = css`
 
 const main = css`
   ${base}
-  max-width: 1376px;
+  max-width: 1676px;
 `;
 
 export const wrapper = {

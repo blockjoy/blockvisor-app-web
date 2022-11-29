@@ -9,9 +9,9 @@ export const styles = {
     top: 71px;
     flex: 1 1 auto;
     display: flex;
+    gap: 28px;
     align-items: center;
-    justify-content: space-between;
-    height: 40px;
+    height: 50px;
     margin-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${theme.colorBackground};
@@ -36,12 +36,11 @@ export const styles = {
     }
   `,
 
-  endBlock: css`
-    width: 100px;
-  `,
+  endBlock: css``,
   total: (theme: ITheme) => css`
     color: ${theme.colorLabel};
-    text-align: center;
+    margin-left: auto;
+    text-align: right;
     font-size: 13px;
     white-space: nowrap;
   `,

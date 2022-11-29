@@ -5,6 +5,7 @@ import { NodeFiltersHeader } from '../NodeFilters/NodeFiltersHeader';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { NodeFiltersHeaderIconText } from '../NodeFilters/NodeFiltersHeaderIconText';
+import { NodeMetrics } from '@modules/node/components/NodeList/NodeMetrics/NodeMetrics';
 
 type Props = {
   activeListType: string | 'table' | 'grid';
@@ -32,12 +33,17 @@ export const NodeListHeader: FC<Props> = ({
     </div> */}
 
       {isFiltersCollapsed && (
-        <button onClick={handleClick} css={styles.filterToggle}>
+        <button
+          onClick={handleClick}
+          css={[styles.filterToggle, styles.endBlock]}
+        >
           <NodeFiltersHeaderIconText />
         </button>
       )}
 
-      <span css={styles.total}>
+      <NodeMetrics />
+
+      <span css={[styles.total, styles.endBlock]}>
         Showing <span css={styles.totalValue}>{totalRows} </span>
         {totalRows === 1 ? 'node' : 'nodes'}
       </span>

@@ -17,12 +17,12 @@ function getRandomInt(min: number, max: number) {
 
 export const BlockchainIcon: FC<Props> = ({ blockchainId }) => {
   return getRandomInt(0, 1) === 0 ? (
-    <div css={styles.icon}>
+    <span css={styles.icon}>
       <IconBitcoin />
-    </div>
+    </span>
   ) : (
-    <div css={styles.icon}>
+    <span css={styles.icon}>
       <IconEthereum />
-    </div>
+    </span>
   );
 };

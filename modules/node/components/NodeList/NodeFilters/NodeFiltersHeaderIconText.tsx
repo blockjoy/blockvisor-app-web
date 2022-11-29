@@ -13,15 +13,20 @@ export const NodeFiltersHeaderIconText = () => {
   const filtersHealth = useRecoilValue(nodeAtoms.filtersHealth);
 
   const totalFilterCount =
-    Number(filtersBlockchain?.length > 0) +
-    Number(filtersType?.length > 0) +
-    Number(filtersStatus?.length > 0) +
+    Number(filtersBlockchain.filter((s) => s.isChecked)?.length > 0) +
+    Number(filtersType.filter((s) => s.isChecked)?.length > 0) +
+    Number(filtersStatus.filter((s) => s.isChecked)?.length > 0) +
     Number(!filtersHealth ? 0 : 1);
 
   return (
     <span css={styles.title}>
-      <IconFilter />
-      Filters {totalFilterCount !== undefined ? `(${totalFilterCount})` : ''}
+      <span css={styles.filterIcon}>
+        <IconFilter />
+        {totalFilterCount ? (
+          <span css={styles.badge}>{totalFilterCount}</span>
+        ) : null}
+      </span>
+      Filters
     </span>
   );
 };
