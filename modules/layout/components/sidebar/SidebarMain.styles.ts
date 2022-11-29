@@ -48,6 +48,7 @@ export const styles = {
     width: 100%;
     padding: 12px 10px;
     display: flex;
+    align-items: center;
     gap: 10px;
     color: ${theme.colorText};
     font-size: 13px;
@@ -61,12 +62,18 @@ export const styles = {
       fill: ${theme.colorLabel};
     }
 
+    &.active span {
+      border-color: ${theme.colorPrimary};
+    }
+
     &.active path {
       fill: ${theme.colorPrimary};
     }
   `,
 
-  linkText: css``,
+  linkText: css`
+    line-height: 1;
+  `,
   linkTextHidden: css`
     @media ${breakpoints.fromXLrg} {
       position: absolute;
@@ -79,7 +86,13 @@ export const styles = {
       visibility: hidden;
     }
   `,
-  linkIcon: css``,
+  linkIcon: css`
+    min-width: 20px;
+
+    svg {
+      translate: 2px 2px;
+    }
+  `,
   linkIconSidebarOpen: css`
     @media ${breakpoints.fromXLrg} {
       scale: 1.15;

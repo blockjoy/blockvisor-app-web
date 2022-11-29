@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { styles } from './SidebarMain.styles';
-import IconDashboard from '@public/assets/icons/grid-12.svg';
+import { ProfileBubble } from '@shared/components';
 import IconHosts from '@public/assets/icons/host-12.svg';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
@@ -22,6 +22,11 @@ const blocks = [
         name: 'Organizations',
         path: '/organizations',
         icon: <IconOrganizations />,
+      },
+      {
+        name: 'Profile',
+        path: '/profile',
+        icon: <ProfileBubble />,
       },
     ],
   },

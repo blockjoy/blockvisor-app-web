@@ -9,7 +9,7 @@ export const styles = {
     }
 
     @media ${breakpoints.fromXLrg} {
-      top: 56px;
+      top: 72px;
       position: sticky;
       overflow: auto;
       flex: 0 0 200px;
