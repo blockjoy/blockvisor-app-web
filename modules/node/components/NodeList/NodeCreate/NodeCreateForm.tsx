@@ -62,7 +62,7 @@ export const NodeCreateForm: FC<Props> = ({ blockchain, onCloseClicked }) => {
         label: blockchain?.name,
         value: blockchain?.id,
       },
-      nodeType: 2,
+      nodeType: undefined,
       validatorKeys: [],
     },
   });
@@ -117,6 +117,7 @@ export const NodeCreateForm: FC<Props> = ({ blockchain, onCloseClicked }) => {
 
     createNode(params, (nodeId: string) => {
       onCloseClicked();
+      localStorage.setItem('nodeCreateBlockchain', JSON.stringify(blockchain));
       router.push(`/nodes/${nodeId}`);
     });
   });
@@ -335,7 +336,7 @@ export const NodeCreateForm: FC<Props> = ({ blockchain, onCloseClicked }) => {
               <li css={[styles.buttonWrapper]}>
                 <Button
                   display="block"
-                  size="medium"
+                  size="small"
                   style="primary"
                   type="submit"
                 >

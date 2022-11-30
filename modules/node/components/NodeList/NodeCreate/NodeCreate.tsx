@@ -27,9 +27,14 @@ export const NodeCreate = () => {
     name: '',
   });
 
-  const handleCloseClicked = () => {
-    setInputValue('');
+  const handleOverlayClicked = () => {
     setIsBlockchainsOpen(false);
+    setIsFormOpen(false);
+  };
+
+  const handleCloseClicked = () => {
+    setIsBlockchainsOpen(false);
+    setInputValue('');
 
     if (isFormOpen) {
       setIsBlockchainsOpen(true);
@@ -50,6 +55,10 @@ export const NodeCreate = () => {
   };
 
   const handleBlockchainClicked = (id: string, name: string) => {
+    localStorage.setItem(
+      'nodeCreateBlockchain',
+      JSON.stringify({ label: name, value: id }),
+    );
     setIsBlockchainsOpen(false);
     setInputValue(name);
     setBlockchain({
@@ -67,12 +76,26 @@ export const NodeCreate = () => {
 
   useEffect(() => {
     getBlockchains();
+
+    if (localStorage.getItem('nodeCreateBlockchain')) {
+      const localStorageBlockchain = JSON.parse(
+        localStorage.getItem('nodeCreateBlockchain')!,
+      );
+
+      if (localStorageBlockchain.label) {
+        setInputValue(localStorageBlockchain.label);
+        setBlockchain({
+          id: localStorageBlockchain.value,
+          name: localStorageBlockchain.label,
+        });
+      }
+    }
   }, []);
 
   return (
     <>
       <div
-        onClick={handleCloseClicked}
+        onClick={handleOverlayClicked}
         css={[
           styles.overlay,
           isBlockchainsOpen || isFormOpen ? styles.overlayVisible : null,

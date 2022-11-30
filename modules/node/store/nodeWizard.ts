@@ -48,7 +48,7 @@ const selectedNodeTypeProperties = selector({
     const blockchainsWithNodeTypes = get(selectedBlockchainSupportedNodeTypes);
 
     return blockchainsWithNodeTypes?.find((n: any) => n.id === nodeType)
-      .properties;
+      ?.properties;
   },
 });
 

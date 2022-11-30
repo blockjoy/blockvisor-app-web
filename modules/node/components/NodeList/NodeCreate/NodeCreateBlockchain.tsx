@@ -16,7 +16,9 @@ export const NodeCreateBlockchain: FC<Props> = ({
   return (
     <div css={styles.wrapper}>
       {blockchains
-        .filter((b) => b.name?.toLowerCase().includes(inputValue.toLowerCase()))
+        .filter((b) =>
+          b.name?.toLowerCase().includes(inputValue?.toLowerCase()),
+        )
         .map((b) => (
           <button
             css={styles.button}

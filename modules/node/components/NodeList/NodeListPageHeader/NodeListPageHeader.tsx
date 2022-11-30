@@ -13,8 +13,8 @@ export const NodeListPageHeader: FC<Props> = ({
   activeListType,
   onTypeChanged,
 }) => (
-  <>
-    <h1 css={styles.endBlock}>Nodes</h1>
+  <div css={styles.nodeListPageHeader}>
+    <h1 css={[styles.endBlock, styles.pageTitle]}>Nodes</h1>
     <NodeCreate />
     <div css={[styles.listTypePicker, styles.endBlock]}>
       <button
@@ -36,5 +36,5 @@ export const NodeListPageHeader: FC<Props> = ({
         <IconGrid />
       </button>
     </div>
-  </>
+  </div>
 );

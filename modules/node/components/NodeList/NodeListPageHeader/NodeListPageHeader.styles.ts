@@ -6,9 +6,24 @@ export const styles = {
   endBlock: css`
     flex: 0 0 100px;
   `,
+  pageTitle: css`
+    @media ${breakpoints.toMed} {
+      display: none;
+    }
+  `,
   listTypePicker: css`
     display: flex;
     justify-content: flex-end;
+
+    @media ${breakpoints.toMed} {
+      display: none;
+    }
+  `,
+  nodeListPageHeader: css`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   `,
   iconButton: (theme: ITheme) => css`
     display: block;

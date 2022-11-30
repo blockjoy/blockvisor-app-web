@@ -31,7 +31,7 @@ export const NodeMetrics = () => {
     })();
   }, []);
 
-  return (
+  return !data?.statusText ? null : (
     <div css={styles.wrapper}>
       <span
         css={[styles.badge, data.offline ? styles.badgeBad : styles.badgeGood]}
