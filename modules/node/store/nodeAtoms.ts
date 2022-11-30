@@ -68,12 +68,14 @@ const filtersType = atom<FilterItem[]>({
 
 const filtersStatus = atom<FilterItem[]>({
   key: 'node.filtersStatus',
-  default: nodeStatusList.map((item) => ({
-    name: item.name,
-    // id: item.id.toString()!,
-    id: item.name.toLocaleLowerCase(),
-    isChecked: false,
-  })),
+  default: nodeStatusList
+    .filter((item) => item.id !== 0)
+    .map((item) => ({
+      name: item.name,
+      // id: item.id.toString()!,
+      id: item.id.toString()!,
+      isChecked: false,
+    })),
 });
 
 const filtersHealth = atom<string | 'online' | 'offline' | null>({

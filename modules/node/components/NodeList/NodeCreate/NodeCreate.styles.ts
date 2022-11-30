@@ -23,7 +23,7 @@ export const styles = {
     background: rgba(0, 0, 0, 0.5);
     visibility: hidden;
     opacity: 0;
-    transition: 0.3s;
+    transition: 0.2s;
   `,
   overlayVisible: css`
     visibility: visible;
