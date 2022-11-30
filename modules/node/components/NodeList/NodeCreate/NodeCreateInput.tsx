@@ -41,11 +41,15 @@ export const NodeCreateInput: FC<Props> = ({
       />
 
       {isBlockchainsOpen ? (
-        <button onClick={onCloseClicked} css={styles.createButton}>
+        <button onClick={onCloseClicked} css={styles.closeButton}>
           <IconClose />
         </button>
       ) : (
-        <button onClick={onStartClicked} css={styles.createButton}>
+        <button
+          disabled={!inputValue}
+          onClick={onStartClicked}
+          css={styles.createButton}
+        >
           <IconBuild />
         </button>
       )}

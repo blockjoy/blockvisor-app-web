@@ -20,6 +20,14 @@ export const styles = {
     margin-bottom: 28px;
   `,
   closeButton: css`
+    position: absolute;
+    background: red;
+    top: 0;
+    right: 0;
+    width: 42px;
+    height: 44px;
+    display: grid;
+    place-items: center;
     cursor: pointer;
     background-color: transparent;
     border-width: 0;

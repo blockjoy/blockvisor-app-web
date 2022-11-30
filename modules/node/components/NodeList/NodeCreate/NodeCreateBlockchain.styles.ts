@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -11,8 +12,16 @@ export const styles = {
     width: 360px;
     max-width: 360px;
     min-width: 360px;
-    min-height: 200px;
     background: #3b403e;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    overflow: hidden;
+
+    @media ${breakpoints.toMed} {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+    }
   `,
   button: (theme: ITheme) => css`
     background: transparent;
