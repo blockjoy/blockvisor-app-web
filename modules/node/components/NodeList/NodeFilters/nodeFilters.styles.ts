@@ -45,4 +45,27 @@ export const styles = {
       height: auto;
     }
   `,
+  resetButton: (theme: ITheme) => css`
+    background: transparent;
+    border: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: ${theme.colorDefault};
+    font-size: 14px;
+    height: 56px;
+    cursor: pointer;
+
+    path {
+      fill: ${theme.colorDefault};
+    }
+
+    :hover {
+      color: ${theme.colorText};
+
+      & path {
+        fill: ${theme.colorText};
+      }
+    }
+  `,
 };

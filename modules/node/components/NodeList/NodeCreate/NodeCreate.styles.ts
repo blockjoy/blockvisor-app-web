@@ -1,47 +1,27 @@
 import { css } from '@emotion/react';
-import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  `,
-  blockchainInput: (theme: ITheme) => css`
-    flex: 1 1 auto;
+    z-index: 5;
+    display: grid;
+    place-items: center;
     width: 360px;
-    height: 44px;
-    padding-left: 40px;
-    color: ${theme.colorText};
-    border: 2px solid transparent;
-    outline: none;
-    border-radius: 6px;
-    background: #3b403e;
-
-    :focus {
-      border-color: ${theme.colorPrimary};
-    }
   `,
-  blockchainIcon: css`
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    translate: 0 -50%;
-    height: 20px;
-
-    & path {
-      fill: #7e827a;
-    }
+  overlay: css`
+    position: fixed;
+    z-index: 4;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s;
   `,
-  createButton: (theme: ITheme) => css`
-    position: absolute;
-    top: 6px;
-    right: 5px;
-    width: 32px;
-    height: 32px;
-    border: 0;
-    border-radius: 4px;
-    background: ${theme.colorPrimary};
+  overlayVisible: css`
+    visibility: visible;
+    opacity: 1;
   `,
 };

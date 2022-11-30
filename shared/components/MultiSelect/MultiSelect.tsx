@@ -22,7 +22,7 @@ type Props = {
 const customStyles: StylesConfig = {
   control: (base) => ({
     ...base,
-    minHeight: '60px',
+    minHeight: '36px',
     backgroundColor: 'var(--color-input-background)',
     border: '1px solid var(--color-text-5-o10)',
     boxShadow: 'none',
