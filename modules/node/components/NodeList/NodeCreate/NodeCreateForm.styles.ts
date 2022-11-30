@@ -1,9 +1,18 @@
 import { css } from '@emotion/react';
-import { ITheme } from 'types/theme';
 
 export const styles = {
-  header: (theme: ITheme) => css`
-    padding: 16px 0 16px;
+  wrapper: css`
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 200px;
+    background: #3b403e;
+    border-radius: 6px;
+  `,
+  header: css`
+    padding: 12px 0 16px;
     margin: 0 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   `,

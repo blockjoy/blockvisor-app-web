@@ -1,5 +1,6 @@
 import { tableStyles } from './table.styles';
 import { TableLoader } from './TableLoader';
+import { styles } from './TableLoader.styles';
 import { TableSkeleton } from './TableSkeleton';
 
 type Props = {
@@ -66,6 +67,9 @@ export const Table: React.FC<Props> = ({
                     }
                   >
                     {td.component}
+                    {index === 0 && (
+                      <span className="underline" css={tableStyles.underline} />
+                    )}
                   </td>
                 ))}
               </tr>

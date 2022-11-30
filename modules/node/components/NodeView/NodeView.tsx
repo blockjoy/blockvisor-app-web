@@ -9,11 +9,14 @@ import {
   NodeEarnings,
   PageHeader,
   PageSection,
+  PageTitle,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
 import { NodeStatus } from '../NodeStatus/NodeStatus';
+import { spacing } from 'styles/utils.spacing.styles';
+import { NodeViewPageHeader } from './NodeViewPageHeader';
 
 export function NodeView() {
   const [isMounted, setMounted] = useState<boolean>(false);
@@ -40,10 +43,13 @@ export function NodeView() {
 
   return (
     <>
+      <NodeViewPageHeader />
       <PageSection>
-        <PageHeader>
-          <BackButton />
-        </PageHeader>
+        <div css={spacing.top.medium}>
+          <PageHeader>
+            <BackButton />
+          </PageHeader>
+        </div>
 
         {!isLoading ? (
           <>

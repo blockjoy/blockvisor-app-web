@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   button: css`
@@ -18,13 +19,16 @@ export const styles = {
     span::before,
     span::after {
       border-radius: 1px;
-      transition: 0.3s;
+
+      @media ${breakpoints.toXlrg} {
+        transition: 0.3s;
+      }
     }
 
     span {
       position: relative;
       display: block;
-      width: 24px;
+      width: 20px;
       height: 1.5px;
       background: #f9f9f9;
     }

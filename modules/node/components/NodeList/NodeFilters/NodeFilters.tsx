@@ -15,6 +15,7 @@ import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client'
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 import { apiClient } from '@modules/client';
+import IconClose from '@public/assets/icons/close-12.svg';
 
 export const NodeFilters = ({
   loadNodes,
@@ -87,6 +88,33 @@ export const NodeFilters = ({
     listCopy.splice(itemIndex, 1, itemFound);
 
     setter(listCopy);
+  };
+
+  const handleResetClicked = async () => {
+    setFiltersHealth(null);
+
+    let filtersBlockchainCopy = filtersBlockchain.map((item) => ({
+      id: item.id,
+      name: item.name,
+      isChecked: false,
+    }));
+    setFiltersBlockchain(filtersBlockchainCopy);
+
+    let filtersStatusCopy = filtersStatus.map((item) => ({
+      id: item.id,
+      name: item.name,
+      isChecked: false,
+    }));
+    setFiltersStatus(filtersStatusCopy);
+
+    let filtersTypeCopy = filtersType.map((item) => ({
+      id: item.id,
+      name: item.name,
+      isChecked: false,
+    }));
+    setFiltersType(filtersTypeCopy);
+
+    handleUpdateClicked();
   };
 
   const handleUpdateClicked = () => {
@@ -234,6 +262,14 @@ export const NodeFilters = ({
           >
             Update
           </Button>
+          <button
+            css={styles.resetButton}
+            type="button"
+            onClick={handleResetClicked}
+          >
+            <IconClose />
+            Reset Filters
+          </button>
         </div>
       </div>
     </div>
