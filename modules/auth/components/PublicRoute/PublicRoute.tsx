@@ -13,7 +13,7 @@ export function PublicRoute({ children }: Props) {
 
   useEffect(() => {
     if (isDone && isLoggedIn) {
-      router.push(Routes.dashboard);
+      router.push('/nodes');
     }
   }, [state]);
 

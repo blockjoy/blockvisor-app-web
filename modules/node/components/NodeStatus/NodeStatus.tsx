@@ -43,7 +43,13 @@ type Props = {
 };
 
 export const NodeStatus: FC<Props> = ({ status, hasBorder }) => {
+  console.log('status', status);
+
   const statusInfo = nodeStatusList.find((s) => s.id === status);
+
+  if (status === 14) {
+    console.log('statusInfo', statusInfo?.name);
+  }
 
   return (
     <span css={[styles.status, hasBorder && styles.statusBorder]}>
