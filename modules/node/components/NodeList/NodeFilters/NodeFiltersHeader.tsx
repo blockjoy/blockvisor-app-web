@@ -17,7 +17,6 @@ export const NodeFiltersHeader = () => {
   );
 
   const handleClick = () => {
-    console.log('handleClick');
     setFiltersOpen(!isFiltersOpen);
     setFiltersCollapsed(!isFiltersCollapsed);
   };

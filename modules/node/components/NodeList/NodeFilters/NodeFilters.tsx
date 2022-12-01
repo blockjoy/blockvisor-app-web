@@ -41,8 +41,6 @@ export const NodeFilters = ({
   const isFiltersOpen = useRecoilValue(nodeAtoms.isFiltersOpen);
   const isFiltersCollapsed = useRecoilValue(nodeAtoms.isFiltersCollapsed);
 
-  console.log('isFiltersOpen', isFiltersOpen);
-
   const [showMoreBlockchains, setShowMoreBlockchains] =
     useState<boolean>(false);
 
@@ -135,9 +133,6 @@ export const NodeFilters = ({
       node_type: typeFilters?.length ? typeFilters : undefined,
       node_status: statusFilters?.length ? statusFilters : undefined,
     };
-
-    console.log('params', params);
-
     loadNodes(params);
   };
 

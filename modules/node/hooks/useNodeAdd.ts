@@ -86,7 +86,6 @@ export const useNodeAdd = (): Hook => {
 
     const createdNode: any = await apiClient.createNode(node, dT.files);
 
-    console.log('res', createdNode);
     const nodeId = createdNode.messagesList[0];
 
     toast.success('Node Created');

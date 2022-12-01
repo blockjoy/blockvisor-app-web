@@ -7,8 +7,6 @@ export const toGrid = (
   nodeList: BlockjoyNode[],
   onCellClick: (args0: any) => void,
 ) => {
-  console.log('toGrid', nodeList);
-
   return nodeList?.map((node: any) => {
     return {
       key: node.id,
@@ -17,7 +15,7 @@ export const toGrid = (
           key={node.id}
           onCellClick={() => onCellClick({ key: node.id })}
           cellTitle={node.name}
-          cellIcon={<BlockchainIcon />}
+          cellIcon={<BlockchainIcon blockchainId={node.blockchainId} />}
           cellStatus={<NodeStatus hasBorder status={node.status} />}
           cellType={
             nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)?.name

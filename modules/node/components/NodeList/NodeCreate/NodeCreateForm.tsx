@@ -81,8 +81,6 @@ export const NodeCreateForm: FC<Props> = ({ blockchain, onCloseClicked }) => {
   }, [isLoading]);
 
   useEffect(() => {
-    console.log('blockchain changed');
-
     updateSelected(blockchain.name);
   }, [blockchain.id]);
 

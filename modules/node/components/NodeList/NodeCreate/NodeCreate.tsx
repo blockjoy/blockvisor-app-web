@@ -6,8 +6,6 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { NodeCreateForm } from './NodeCreateForm';
 import { NodeCreateInput } from './NodeCreateInput';
 import { NodeCreateBlockchain } from './NodeCreateBlockchain';
-import { useRecoilState } from 'recoil';
-import { nodeWizardSelectors } from '@modules/node/store/nodeWizard';
 
 type Blockchain = {
   id: string;
@@ -47,7 +45,6 @@ export const NodeCreate = () => {
   };
 
   const handleInputChanged = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log('e', event);
     if (!isBlockchainsOpen) {
       setIsBlockchainsOpen(true);
     }
@@ -69,7 +66,6 @@ export const NodeCreate = () => {
   };
 
   const handleStartClicked = () => {
-    console.log('create');
     setIsBlockchainsOpen(false);
     setIsFormOpen(true);
   };
