@@ -49,13 +49,9 @@ const Verified: NextPage = () => {
       const { token } = router.query;
 
       (async () => {
-        console.log('token', token);
-
         const response: any = await apiClient.registration_confirmation(
           token?.toString()!,
         );
-
-        console.log('verified', response);
 
         if (response.code === 20) {
           setServerError(

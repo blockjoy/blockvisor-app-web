@@ -36,8 +36,6 @@ export const useNodeList = (): Hook => {
   };
 
   const loadNodes = async (filters?: FilterCriteria) => {
-    console.log('loadNodes');
-
     setIsLoading('loading');
     // TODO: Org ID needs be set here
 

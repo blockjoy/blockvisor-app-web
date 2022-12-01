@@ -28,8 +28,9 @@ export const styles = {
     width: 100%;
     display: flex;
     align-items: center;
+    gap: 10px;
     height: 44px;
-    padding: 0 16px;
+    padding: 0 12px;
     text-align: left;
     border: 0;
     color: ${theme.colorText};
@@ -43,6 +44,10 @@ export const styles = {
     &:hover {
       background: ${theme.colorPrimary};
       color: ${theme.colorPrimaryText};
+
+      path {
+        fill: ${theme.colorPrimaryText};
+      }
     }
   `,
 };

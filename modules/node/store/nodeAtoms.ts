@@ -73,7 +73,7 @@ const filtersStatus = atom<FilterItem[]>({
     .map((item) => ({
       name: item.name,
       // id: item.id.toString()!,
-      id: item.id.toString()!,
+      id: item.name.toString().toLowerCase()!,
       isChecked: false,
     })),
 });

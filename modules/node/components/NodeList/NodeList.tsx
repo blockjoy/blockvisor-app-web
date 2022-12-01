@@ -54,14 +54,12 @@ export const NodeList = () => {
   // }, []);
 
   const buildNodeList = (type: string) => {
-    console.log('nodeList', nodeList);
     if (type === 'table') {
       const rows = toRows(nodeList);
       setNodeRows(rows!);
       setNodeCells(undefined);
     } else {
       const cells = toGrid(nodeList, handleNodeClick);
-      console.log('cells', cells);
       setNodeCells(cells!);
       setNodeRows(undefined);
     }

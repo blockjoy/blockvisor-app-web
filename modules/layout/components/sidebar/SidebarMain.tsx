@@ -46,8 +46,6 @@ export default () => {
   const [layout, setLayout] = useRecoilState(layoutState);
 
   const handleLinkClicked = () => {
-    console.log('handleLinkClick');
-
     if (document.body.clientWidth < 768) {
       setLayout(undefined);
     }
