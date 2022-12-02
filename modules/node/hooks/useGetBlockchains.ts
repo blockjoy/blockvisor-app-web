@@ -23,6 +23,8 @@ export function useGetBlockchains() {
     } else {
       await delay(1000);
       setBlockchains(response ?? []);
+
+      console.log('blockchains', response);
       setLoadingState('finished');
     }
   };

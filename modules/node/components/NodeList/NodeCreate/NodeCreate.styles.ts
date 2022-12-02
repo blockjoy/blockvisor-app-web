@@ -9,7 +9,7 @@ export const styles = {
     display: grid;
     place-items: center;
     @media ${breakpoints.fromMed} {
-      width: 360px;
+      width: 580px;
       flex: 0 0 auto;
     }
   `,

@@ -52,7 +52,7 @@ const Profile = () => {
   };
   return (
     <>
-      <PageTitle title="Settings" />
+      <PageTitle title="Profile" />
       <PageSection>
         <Tabs
           activeTab={activeTab}

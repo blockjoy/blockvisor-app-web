@@ -5,6 +5,7 @@ import { ProfileBubble } from '@shared/components';
 import IconHosts from '@public/assets/icons/host-12.svg';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import IconSupport from '@public/assets/icons/chat-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
@@ -25,6 +26,11 @@ const blocks = [
         name: 'Profile',
         path: '/profile',
         icon: <ProfileBubble />,
+      },
+      {
+        name: 'Support',
+        path: '/support',
+        icon: <IconSupport />,
       },
     ],
   },

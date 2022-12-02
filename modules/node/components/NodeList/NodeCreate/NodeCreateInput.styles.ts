@@ -25,9 +25,9 @@ export const styles = {
     background: #3b403e;
 
     @media ${breakpoints.fromMed} {
-      flex: 1 1 360px;
-      min-width: 360px;
-      max-width: 360px;
+      flex: 1 1 580px;
+      min-width: 580px;
+      max-width: 580px;
     }
 
     /* :focus {
@@ -55,8 +55,11 @@ export const styles = {
     right: 5px;
     width: 32px;
     height: 32px;
+    padding: 7px;
     border: 0;
     border-radius: 4px;
+    display: grid;
+    place-items: center;
     background: ${theme.colorPrimary};
     cursor: pointer;
 

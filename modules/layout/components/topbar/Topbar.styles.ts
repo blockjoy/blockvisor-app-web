@@ -37,7 +37,7 @@ export const styles = {
     position: absolute;
     top: 0;
     left: 0;
-    width: 360px;
+    width: 580px;
     height: 100%;
     display: flex;
     gap: 10px;
