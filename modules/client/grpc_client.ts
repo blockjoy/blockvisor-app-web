@@ -52,7 +52,7 @@ import {
   CreateNodeRequest,
   FilterCriteria,
   GetNodeRequest,
-  ListNodesRequest,
+  ListNodesRequest, UpdateNodeRequest,
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
@@ -747,7 +747,20 @@ export class GrpcClient {
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpdateNodeResponse();
     response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
+    let request = new UpdateNodeRequest();
+    request.setMeta(request_meta);
+    request.setNode(node);
+
+    let response_meta = await this.node?.update(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta();
+    }).catch((err) => {
+      return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
+    });
+
+    console.log("updated node: ", response_meta);
     console.log("got key files: ", key_files);
 
     // Node creation was successful, trying to upload keys, if existent
