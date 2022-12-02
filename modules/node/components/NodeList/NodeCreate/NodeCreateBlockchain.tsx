@@ -34,7 +34,7 @@ export const NodeCreateBlockchain: FC<Props> = ({
                 <div css={styles.buttonsGrid}>
                   {b.supported_node_types.map((type: any) => (
                     <button
-                      onClick={() => onNodeTypeClicked(type.id, b.id)}
+                      onClick={() => onNodeTypeClicked(type.id, b.id!)}
                       type="button"
                       css={styles.createButton}
                     >

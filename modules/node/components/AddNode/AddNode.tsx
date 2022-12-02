@@ -115,7 +115,6 @@ export function AddNode() {
     const params: CreateNodeParams = {
       nodeType: nodeType ?? 0,
       blockchain: blockchain?.value ?? '',
-      validatorKeys: validatorKeys,
       host: host?.value ?? data['ip'],
       ...rest,
     };
