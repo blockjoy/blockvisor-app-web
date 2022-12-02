@@ -6,9 +6,13 @@ import { nodeTypeList } from '@shared/constants/lookups';
 
 type Props = {
   inputValue: string;
+  onNodeTypeClicked: (type: string, blockchainId: string) => void;
 };
 
-export const NodeCreateBlockchain: FC<Props> = ({ inputValue }) => {
+export const NodeCreateBlockchain: FC<Props> = ({
+  inputValue,
+  onNodeTypeClicked,
+}) => {
   const { blockchains } = useGetBlockchains();
 
   return (
@@ -19,7 +23,7 @@ export const NodeCreateBlockchain: FC<Props> = ({ inputValue }) => {
             b.name?.toLowerCase().includes(inputValue?.toLowerCase()),
           )
           .map((b) => (
-            <div css={styles.row}>
+            <div key={b.id} css={styles.row}>
               <div css={styles.header} key={b.id}>
                 <span css={styles.iconWrapper}>
                   <BlockchainIcon hideTooltip blockchainId={b.id} />
@@ -29,7 +33,11 @@ export const NodeCreateBlockchain: FC<Props> = ({ inputValue }) => {
               <div className="buttons" css={styles.buttons}>
                 <div css={styles.buttonsGrid}>
                   {b.supported_node_types.map((type: any) => (
-                    <button type="button" css={styles.createButton}>
+                    <button
+                      onClick={() => onNodeTypeClicked(type.id, b.id)}
+                      type="button"
+                      css={styles.createButton}
+                    >
                       {nodeTypeList.find((n) => n.id === type.id)?.name}
                     </button>
                   ))}
