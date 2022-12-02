@@ -23,9 +23,9 @@ export const styles = {
   `,
 
   cellIcon: (theme: ITheme) => css`
-    width: 30px;
-    min-width: 30px;
-    flex: 0 0 30px;
+    width: 36px;
+    min-width: 36px;
+    flex: 0 0 36px;
     align-self: flex-start;
     margin-top: 16px;
 

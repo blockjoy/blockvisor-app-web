@@ -8,6 +8,10 @@ export const styles = {
       fill: ${theme.colorLabel};
     }
 
+    display: block;
+    width: 28px;
+    height: 28px;
+
     :hover .tooltip {
       opacity: 1;
       visibility: visible;
