@@ -108,7 +108,6 @@ export const NodeCreateForm: FC<Props> = ({ blockchain, onCloseClicked }) => {
     const params: CreateNodeParams = {
       nodeType: nodeType ?? 0,
       blockchain: blockchain?.value ?? '',
-      validatorKeys: validatorKeys,
       host: host?.value ?? data['ip'],
       ...rest,
     };
