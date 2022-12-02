@@ -64,6 +64,8 @@ export const useNodeAdd = (): Hook => {
     params: CreateNodeParams,
     onSuccess: (args0?: string) => void,
   ) => {
+    console.log('params', params);
+
     setIsLoading(true);
 
     const hostId = params.host;
@@ -79,13 +81,15 @@ export const useNodeAdd = (): Hook => {
     node.setHostId(hostId);
 
     // TODO: MOVE THIS TO UPDATE NODE
-    const dT = new DataTransfer();
-    params.validatorKeys.forEach(async (key) => {
-      const data = await key.text();
-      dT.items.add(data, key.type);
-    });
+    // const dT = new DataTransfer();
+    // params.validatorKeys.forEach(async (key) => {
+    //   const data = await key.text();
+    //   dT.items.add(data, key.type);
+    // });
 
     const createdNode: any = await apiClient.createNode(node);
+
+    console.log('createdNode', createNode);
 
     const nodeId = createdNode.messagesList[0];
 

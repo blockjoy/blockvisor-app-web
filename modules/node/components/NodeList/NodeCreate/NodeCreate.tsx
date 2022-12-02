@@ -3,9 +3,10 @@ import { styles } from './NodeCreate.styles';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 
-import { NodeCreateForm } from './NodeCreateForm';
 import { NodeCreateInput } from './NodeCreateInput';
 import { NodeCreateBlockchain } from './NodeCreateBlockchain';
+import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
+import { useRouter } from 'next/router';
 
 type Blockchain = {
   id: string;
@@ -13,7 +14,11 @@ type Blockchain = {
 };
 
 export const NodeCreate = () => {
-  const { getBlockchains, blockchains, loading } = useGetBlockchains();
+  const { getBlockchains } = useGetBlockchains();
+
+  const { createNode, hostList, loadLookups } = useNodeAdd();
+
+  const router = useRouter();
 
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -37,6 +42,18 @@ export const NodeCreate = () => {
     setIsBlockchainsOpen(true);
   };
 
+  const handleNodeTypeClicked = (type: string, blockchainId: string) => {
+    const params: CreateNodeParams = {
+      nodeType: +type ?? 0,
+      blockchain: blockchainId ?? '',
+      host: hostList[0].value,
+    };
+
+    createNode(params, (nodeId: string) => {
+      router.push(`/nodes/${nodeId}`);
+    });
+  };
+
   const handleInputHovered = () => {
     setIsBlockchainsOpen(true);
   };
@@ -54,6 +71,7 @@ export const NodeCreate = () => {
 
   useEffect(() => {
     getBlockchains();
+    loadLookups();
   }, []);
 
   return (
@@ -72,7 +90,12 @@ export const NodeCreate = () => {
           onCloseClicked={handleCloseClicked}
           onStartClicked={handleStartClicked}
         />
-        {isBlockchainsOpen && <NodeCreateBlockchain inputValue={inputValue} />}
+        {isBlockchainsOpen && (
+          <NodeCreateBlockchain
+            onNodeTypeClicked={handleNodeTypeClicked}
+            inputValue={inputValue}
+          />
+        )}
       </div>
     </>
   );
