@@ -78,13 +78,14 @@ export const useNodeAdd = (): Hook => {
     node.setType(`{ "id": ${params.nodeType.toString()}, "properties": [] }`);
     node.setHostId(hostId);
 
+    // TODO: MOVE THIS TO UPDATE NODE
     const dT = new DataTransfer();
     params.validatorKeys.forEach(async (key) => {
       const data = await key.text();
       dT.items.add(data, key.type);
     });
 
-    const createdNode: any = await apiClient.createNode(node, dT.files);
+    const createdNode: any = await apiClient.createNode(node);
 
     const nodeId = createdNode.messagesList[0];
 
