@@ -9,6 +9,7 @@ export const tableStyles = {
   `,
   table: (theme: ITheme) => css`
     width: 100%;
+    border-collapse: collapse;
 
     & th {
       padding: 0 0 10px;
@@ -56,10 +57,8 @@ export const tableStyles = {
 
     & tbody tr {
       position: relative;
-    }
-
-    & tbody tr td {
       border-bottom: 1px solid ${theme.colorBorder};
+      transition: border 0.8s ease-out;
     }
 
     & .danger span,
@@ -67,27 +66,8 @@ export const tableStyles = {
       color: ${theme.colorDanger};
     }
 
-    & td:first-of-type::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 1px;
-      transform: scaleX(0);
-      opacity: 0;
-      background: linear-gradient(
-        90deg,
-        ${rgba(theme.colorPrimary || '#000', 0)},
-        ${theme.colorPrimary},
-        ${rgba(theme.colorPrimary || '#000', 0)}
-      );
-      transition: 0.4s;
-    }
-
-    tr:hover ::after {
-      transform: scaleX(1);
-      opacity: 1;
+    tr:hover {
+      border-color: var(--color-primary);
     }
   `,
   tableSkeleton: css`
