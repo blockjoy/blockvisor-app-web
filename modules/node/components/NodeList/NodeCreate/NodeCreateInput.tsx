@@ -6,20 +6,16 @@ import { ChangeEvent, FC } from 'react';
 
 type Props = {
   onInputChanged: (args0: ChangeEvent<HTMLInputElement>) => void;
-  onInputClicked: VoidFunction;
-  onInputHovered: VoidFunction;
-  onCloseClicked: VoidFunction;
-  onStartClicked: VoidFunction;
+  onInputMouseEnter: VoidFunction;
+  onInputMouseLeave: VoidFunction;
   inputValue: string;
   isBlockchainsOpen: boolean;
 };
 
 export const NodeCreateInput: FC<Props> = ({
   onInputChanged,
-  onInputClicked,
-  onInputHovered,
-  onCloseClicked,
-  onStartClicked,
+  onInputMouseEnter,
+  onInputMouseLeave,
   isBlockchainsOpen,
   inputValue,
 }) => {
@@ -30,8 +26,8 @@ export const NodeCreateInput: FC<Props> = ({
       </span> */}
       <input
         placeholder="Launch a Node"
-        onMouseEnter={onInputHovered}
-        onClick={onInputClicked}
+        onMouseEnter={onInputMouseEnter}
+        onMouseLeave={onInputMouseLeave}
         onChange={onInputChanged}
         spellCheck={false}
         value={inputValue}

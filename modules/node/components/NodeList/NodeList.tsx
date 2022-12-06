@@ -90,7 +90,7 @@ export const NodeList = () => {
           onTypeChanged={handleListTypeChanged}
         />
       </PageTitle>
-      <PageSection bottomBorder={false}>
+      <PageSection bottomBorder={false} topPadding={false}>
         {/* {!Boolean(nodeRows?.length) &&
         !Boolean(nodeCells?.length) &&
         finished ? (

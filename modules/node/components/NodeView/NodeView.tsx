@@ -44,7 +44,7 @@ export function NodeView() {
   return (
     <>
       <NodeViewPageHeader />
-      <PageSection>
+      <PageSection topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>
             <BackButton />

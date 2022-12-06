@@ -60,6 +60,7 @@ export const styles = {
     border-radius: 4px;
     display: grid;
     place-items: center;
+    pointer-events: none;
     background: ${theme.colorPrimary};
     cursor: pointer;
 

@@ -11,7 +11,7 @@ export const styles = {
     height: 20px;
     padding: 0;
     font-size: 7px;
-    border: 1px solid ${theme.colorLabel};
+    background: ${theme.colorLabel};
     border-radius: 50%;
     color: #f9f9f9;
     cursor: pointer;
