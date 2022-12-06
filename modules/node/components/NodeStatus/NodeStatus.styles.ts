@@ -4,7 +4,8 @@ import { ITheme } from 'types/theme';
 export const styles = {
   status: (theme: ITheme) => css`
     display: inline-flex;
-    gap: 10px;
+    align-items: center;
+    gap: 6px;
     color: ${theme.colorPrimary};
     font-size: 11px;
     line-height: 1;
@@ -18,7 +19,7 @@ export const styles = {
   statusText: css``,
   statusBorder: (theme: ITheme) => css`
     border: 1px solid ${theme.colorPrimary};
-    padding: 8px;
+    padding: 8px 10px;
     font-size: 9px;
     border-radius: 3px;
   `,
