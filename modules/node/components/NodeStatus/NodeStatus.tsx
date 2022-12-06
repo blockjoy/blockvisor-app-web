@@ -16,6 +16,17 @@ const getIcon = (name: string = '') => {
   return icons[name];
 };
 
+const getColor = (name: string) => {
+  switch (name) {
+    case 'Earning':
+      return styles.statusColorGreen;
+    case 'Undefined':
+      return styles.statusColorRed;
+    default:
+      return styles.statusColorDefault;
+  }
+};
+
 type Props = {
   status: number;
   hasBorder?: boolean;
@@ -25,7 +36,13 @@ export const NodeStatus: FC<Props> = ({ status, hasBorder }) => {
   const statusInfo = nodeStatusList.find((s) => s.id === status);
 
   return (
-    <span css={[styles.status, hasBorder && styles.statusBorder]}>
+    <span
+      css={[
+        styles.status,
+        hasBorder && styles.statusBorder,
+        getColor(statusInfo?.name!),
+      ]}
+    >
       {getIcon(statusInfo?.name)}
       <span css={styles.statusText}>{statusInfo?.name || 'Unknown'}</span>
     </span>
