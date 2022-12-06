@@ -56,7 +56,7 @@ export function NodeView() {
             <DetailsHeader
               handleStop={handleStop}
               handleRestart={handleRestart}
-              status={<NodeStatus status={node.status} />}
+              status={<NodeStatus status={node.status} hasBorder />}
               title={node.name}
               ip={node.ip}
               date={node.created}
