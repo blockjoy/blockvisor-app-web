@@ -30,6 +30,14 @@ export const styles = {
     gap: 8px;
     padding: 16px;
   `,
+  miniIconWrapper: css`
+    > span {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+    }
+  `,
   iconWrapper: (theme: ITheme) => css`
     display: grid;
     place-items: center;
@@ -89,6 +97,16 @@ export const styles = {
       translate: 0;
     }
   `,
+  miniHeader: (theme: ITheme) => css`
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font-size: 14px;
+
+    path {
+      fill: ${theme.colorText};
+    }
+  `,
   buttons: css`
     position: absolute;
     z-index: 1;
@@ -98,8 +116,11 @@ export const styles = {
     height: 100%;
     opacity: 0;
     visibility: hidden;
-    display: grid;
-    place-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
     /* transition: 0.3s; */
     /* background: #191b1a; */
     background: rgba(28, 31, 30, 0.9);

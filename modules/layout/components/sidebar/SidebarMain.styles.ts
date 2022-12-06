@@ -63,8 +63,14 @@ export const styles = {
       fill: ${theme.colorLabel};
     }
 
-    &.active span {
-      border-color: ${theme.colorPrimary};
+    .link-icon > span {
+      color: ${theme.colorPrimaryText};
+      font-weight: 600;
+    }
+
+    &.active .link-icon > span {
+      background: ${theme.colorPrimary};
+      color: ${theme.colorPrimaryText};
     }
 
     &.active path {

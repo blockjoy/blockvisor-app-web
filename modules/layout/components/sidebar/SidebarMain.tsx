@@ -16,7 +16,7 @@ const blocks = [
     items: [
       { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
       // { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
-      { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
+      // { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
       {
         name: 'Organizations',
         path: '/organizations',
@@ -84,6 +84,7 @@ export default () => {
                         }
                       >
                         <span
+                          className="link-icon"
                           css={[
                             styles.linkIcon,
                             layout !== 'sidebar' && styles.linkIconSidebarOpen,

@@ -7,16 +7,24 @@ import { nodeTypeList } from '@shared/constants/lookups';
 type Props = {
   inputValue: string;
   onNodeTypeClicked: (type: string, blockchainId: string) => void;
+  onInputMouseEnter: VoidFunction;
+  onInputMouseLeave: VoidFunction;
 };
 
 export const NodeCreateBlockchain: FC<Props> = ({
   inputValue,
   onNodeTypeClicked,
+  onInputMouseEnter,
+  onInputMouseLeave,
 }) => {
   const { blockchains } = useGetBlockchains();
 
   return (
-    <div css={styles.wrapper}>
+    <div
+      css={styles.wrapper}
+      onMouseEnter={onInputMouseEnter}
+      onMouseLeave={onInputMouseLeave}
+    >
       <div css={styles.grid}>
         {blockchains
           .filter((b) =>
@@ -31,6 +39,12 @@ export const NodeCreateBlockchain: FC<Props> = ({
                 <span css={styles.name}>{b.name}</span>
               </div>
               <div className="buttons" css={styles.buttons}>
+                <div css={styles.miniHeader} key={b.id}>
+                  <span css={styles.miniIconWrapper}>
+                    <BlockchainIcon hideTooltip blockchainId={b.id} />
+                  </span>
+                  <span>{b.name}</span>
+                </div>
                 <div css={styles.buttonsGrid}>
                   {b.supported_node_types.map((type: any) => (
                     <button
