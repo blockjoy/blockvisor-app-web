@@ -9,7 +9,7 @@ import { styles } from './PageTitle.styles';
 interface Props {
   title: string;
   actionText?: string;
-  actionOnClick: VoidFunction;
+  actionOnClick?: VoidFunction;
 }
 
 export const PageTitle: FC<Props> = ({
@@ -21,9 +21,11 @@ export const PageTitle: FC<Props> = ({
     <header css={styles.base}>
       <div css={[wrapper.main, styles.actions]}>
         <h1 css={typo.large}>{title}</h1>
-        <Button onClick={actionOnClick} size="small">
-          {actionText}
-        </Button>
+        {actionOnClick && (
+          <Button onClick={actionOnClick} size="small">
+            {actionText}
+          </Button>
+        )}
       </div>
     </header>
   );
