@@ -5,13 +5,15 @@ export const styles = {
   wrapper: css`
     position: relative;
     cursor: not-allowed;
+    display: inline-block;
 
-    :hover > div > div {
+    :hover .tooltip {
       opacity: 1;
       visibility: visible;
     }
   `,
   switch: (theme: ITheme) => css`
+    position: relative;
     display: flex;
     justify-content: flex-end;
     width: 50px;
@@ -19,13 +21,24 @@ export const styles = {
     padding: 2px;
     border-radius: 15px;
     border: 1px solid ${theme.colorPrimary};
-    opacity: 0.2;
+    opacity: 0.3;
   `,
   handle: (theme: ITheme) => css`
     width: 18px;
     height: 18px;
     border-radius: inherit;
     background: ${theme.colorPrimary};
+    display: grid;
+    place-items: center;
+
+    svg {
+      width: 60%;
+      height: 60%;
+    }
+
+    path {
+      fill: ${theme.colorPrimaryText};
+    }
   `,
   badge: (theme: ITheme) => css`
     position: absolute;
@@ -39,17 +52,7 @@ export const styles = {
     border-radius: 50%;
     background: ${theme.colorLabel};
     border: 3px solid ${theme.colorBackground};
-
-    svg {
-      width: 70%;
-      height: 70%;
-    }
-
-    path {
-      fill: ${theme.colorText};
-    }
   `,
-
   tooltip: css`
     position: absolute;
     top: -48px;
