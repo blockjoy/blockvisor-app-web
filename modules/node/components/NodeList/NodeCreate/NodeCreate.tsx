@@ -33,6 +33,7 @@ export const NodeCreate = () => {
     };
 
     createNode(params, (nodeId: string) => {
+      setIsBlockchainsOpen(false);
       router.push(`/nodes/${nodeId}`);
     });
   };

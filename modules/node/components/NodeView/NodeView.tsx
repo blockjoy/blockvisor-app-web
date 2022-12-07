@@ -4,19 +4,17 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import {
   DangerZone,
-  DetailsHeader,
   DetailsTable,
-  NodeEarnings,
   PageHeader,
   PageSection,
-  PageTitle,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
-import { NodeStatus } from '../NodeStatus/NodeStatus';
 import { spacing } from 'styles/utils.spacing.styles';
 import { NodeViewPageHeader } from './NodeViewPageHeader';
+import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
+import { NodeViewConfig } from './NodeViewConfig';
 
 export function NodeView() {
   const [isMounted, setMounted] = useState<boolean>(false);
@@ -53,16 +51,17 @@ export function NodeView() {
 
         {!isLoading ? (
           <>
-            <DetailsHeader
+            <NodeViewDetailsHeader
               handleStop={handleStop}
               handleRestart={handleRestart}
-              status={<NodeStatus status={node.status} hasBorder />}
-              title={node.name}
-              ip={node.ip}
-              date={node.created}
-              id={node.id}
+              status={node?.status!}
+              blockchainId={node?.blockchainId!}
+              title={node?.name!}
+              ip={node?.ip!}
+              date={node?.created!}
+              id={node?.id!}
             />
-            <DetailsTable bodyElements={node.details} />
+            <DetailsTable bodyElements={node?.details!} />
           </>
         ) : (
           <>
@@ -75,18 +74,23 @@ export function NodeView() {
         )}
       </PageSection>
 
+      {node?.nodeTypeConfig && !isLoading && <NodeViewConfig />}
+
       {/* {!isLoading && (
         <PageSection>
           <NodeEarnings />
         </PageSection>
       )} */}
-
       <PageSection>
-        <DangerZone
-          elementName="Node"
-          elementNameToCompare={node.name}
-          handleDelete={handleDelete}
-        ></DangerZone>
+        {isLoading ? (
+          <TableSkeleton />
+        ) : (
+          <DangerZone
+            elementName="Node"
+            elementNameToCompare={node?.name!}
+            handleDelete={handleDelete}
+          ></DangerZone>
+        )}
       </PageSection>
     </>
   );
