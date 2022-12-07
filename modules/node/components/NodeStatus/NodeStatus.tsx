@@ -32,7 +32,7 @@ type Props = {
   hasBorder?: boolean;
 };
 
-export const NodeStatus: FC<Props> = ({ status, hasBorder }) => {
+export const NodeStatus: FC<Props> = ({ status, hasBorder = true }) => {
   const statusInfo = nodeStatusList.find((s) => s.id === status);
 
   return (
