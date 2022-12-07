@@ -7,7 +7,7 @@ import CopyIcon from '@public/assets/icons/copy-12.svg';
 import { toast } from 'react-toastify';
 
 export const SupportView = () => {
-  const email = 'support@blockjoy.com';
+  const email = process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? '';
   const handleButtonClick = () => window.open(`mailto:<${email}>`);
 
   function handleCopy(value: string) {
