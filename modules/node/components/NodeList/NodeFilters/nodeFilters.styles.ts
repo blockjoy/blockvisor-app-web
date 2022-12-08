@@ -7,10 +7,6 @@ export const styles = {
     display: flex;
     flex-direction: column;
 
-    @media ${breakpoints.fromLrg} {
-      padding-right: 20px;
-    }
-
     @media ${breakpoints.fromXLrg} {
       top: 72px;
       position: sticky;
@@ -41,11 +37,29 @@ export const styles = {
       overflow: hidden;
     }
   `,
-  filters: css`
-    padding-top: 20px;
+  filters: (theme: ITheme) => css`
     overflow: auto;
     flex: 1 1 auto;
     min-height: 0;
+    margin: 16px 0 0;
+    display: grid;
+    grid-auto-rows: max-content;
+    gap: 16px;
+
+    .ps .ps__rail-x:hover,
+    .ps .ps__rail-y:hover,
+    .ps .ps__rail-x:focus,
+    .ps .ps__rail-y:focus,
+    .ps .ps__rail-x.ps--clicking,
+    .ps .ps__rail-y.ps--clicking {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* .ps__rail-y:hover > .ps__thumb-y,
+    .ps__rail-y:focus > .ps__thumb-y,
+    .ps__rail-y.ps--clicking .ps__thumb-y {
+      background: ${theme.colorPrimary};
+    } */
   `,
   wrapperOpen: css`
     margin-bottom: 40px;
@@ -76,5 +90,21 @@ export const styles = {
         fill: ${theme.colorText};
       }
     }
+  `,
+  updateButton: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 6px;
+    background: ${theme.colorPrimary};
+    color: ${theme.colorPrimaryText};
+    margin-right: 16px;
+    cursor: pointer;
   `,
 };

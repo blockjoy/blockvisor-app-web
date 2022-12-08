@@ -1,21 +1,16 @@
 import { styles } from './nodeFilters.styles';
 import { styles as blockStyles } from './NodeFiltersBlock.styles';
-import { Checkbox, Button } from '@shared/components';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
-import {
-  ChangeEvent,
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { Checkbox } from '@shared/components';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
 import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 import { apiClient } from '@modules/client';
 import IconClose from '@public/assets/icons/close-12.svg';
+import IconRefresh from '@public/assets/icons/refresh-12.svg';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 export const NodeFilters = ({
   loadNodes,
@@ -308,16 +303,16 @@ export const NodeFilters = ({
     >
       <NodeFiltersHeader />
       <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-        <Button
+        <button
+          css={styles.updateButton}
+          type="button"
           disabled={!isFiltersDirty()}
-          display="block"
-          style="primary"
           onClick={handleUpdateClicked}
-          size="small"
         >
+          <IconRefresh />
           Refresh
-        </Button>
-        <div css={styles.filters}>
+        </button>
+        <PerfectScrollbar css={styles.filters}>
           <div
             css={blockStyles.filterBlock}
             onClick={() => setOpenFilterName('')}
@@ -359,7 +354,7 @@ export const NodeFilters = ({
               onFilterChanged={handleFilterChanged}
             />
           ))}
-        </div>
+        </PerfectScrollbar>
         <button
           css={styles.resetButton}
           type="button"

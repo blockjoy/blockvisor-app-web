@@ -16,7 +16,7 @@ export const styles = {
     gap: 6px;
     height: 50px;
     min-height: 50px;
-    margin: 0 0 16px;
+    margin: 0 0 20px;
     cursor: pointer;
     border-bottom: 1px solid ${theme.colorBorder};
 
