@@ -15,7 +15,6 @@ const blocks = [
     title: 'BLOCKVISOR',
     items: [
       { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
-      { name: 'Support', path: '/support', icon: <IconSupport /> },
       // { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
       // { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
       {

@@ -18,6 +18,8 @@ export const NodeFiltersHeader = () => {
 
   const handleClick = () => {
     setFiltersOpen(!isFiltersOpen);
+
+    localStorage.setItem('nodeFiltersCollapsed', JSON.stringify(true));
     setFiltersCollapsed(!isFiltersCollapsed);
   };
 

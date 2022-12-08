@@ -18,11 +18,8 @@ type FilterBlock = {
   name: string;
   isOpen: boolean;
   filterCount: number;
-  showMore: boolean;
   filterList: FilterItem[];
   setFilterList: SetterOrUpdater<FilterItem[]>;
-  onShowMoreClicked: Dispatch<SetStateAction<boolean>>;
-  setShowMore: Dispatch<SetStateAction<boolean>>;
   onPlusMinusClicked: (filterName: string, args1: boolean) => void;
   onFilterBlockClicked: (args0: string) => void;
   onFilterChanged: (
@@ -36,9 +33,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
   name,
   isOpen,
   filterCount,
-  showMore,
   filterList,
-  onShowMoreClicked,
   onPlusMinusClicked,
   onFilterBlockClicked,
   onFilterChanged,
@@ -61,7 +56,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
       </label>
       <div
         style={{ padding: !isOpen && !filterCount ? '0' : '' }}
-        css={[styles.checkboxList, showMore && styles.checkboxListShowAll]}
+        css={[styles.checkboxList, styles.checkboxListShowAll]}
       >
         {isOpen
           ? filterList?.map((item) => (
@@ -87,16 +82,6 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                 </div>
               ))}
       </div>
-
-      {isOpen && (
-        <button
-          css={styles.showMore}
-          type="button"
-          onClick={() => onShowMoreClicked(showMore)}
-        >
-          Show {showMore ? 'Less' : 'More'}
-        </button>
-      )}
     </div>
   );
 };

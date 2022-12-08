@@ -12,6 +12,8 @@ export const NodeFiltersHeaderIconText = () => {
 
   const filtersHealth = useRecoilValue(nodeAtoms.filtersHealth);
 
+  console.log('filtersBlockchain', filtersBlockchain);
+
   const totalFilterCount =
     Number(filtersBlockchain.filter((s) => s.isChecked)?.length > 0) +
     Number(filtersType.filter((s) => s.isChecked)?.length > 0) +

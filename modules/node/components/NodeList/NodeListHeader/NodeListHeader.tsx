@@ -23,6 +23,7 @@ export const NodeListHeader: FC<Props> = ({
   );
 
   const handleClick = () => {
+    localStorage.setItem('nodeFiltersCollapsed', JSON.stringify(false));
     setFiltersCollapsed(!isFiltersCollapsed);
   };
 

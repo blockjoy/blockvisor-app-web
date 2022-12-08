@@ -22,8 +22,6 @@ export const NodeFilters = ({
 }: {
   loadNodes: (filters?: FilterCriteria) => void;
 }) => {
-  const [blockchainList, setBlockchainList] = useState([]);
-
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
@@ -38,25 +36,15 @@ export const NodeFilters = ({
     nodeAtoms.filtersHealth,
   );
 
-  const isFiltersOpen = useRecoilValue(nodeAtoms.isFiltersOpen);
-  const isFiltersCollapsed = useRecoilValue(nodeAtoms.isFiltersCollapsed);
-
-  const [showMoreBlockchains, setShowMoreBlockchains] =
-    useState<boolean>(false);
-
-  const [showMoreTypes, setShowMoreTypes] = useState<boolean>(false);
-
-  const [showMoreStatus, setShowMoreStatus] = useState<boolean>(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
+    nodeAtoms.isFiltersOpen,
+  );
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useRecoilState(
+    nodeAtoms.isFiltersCollapsed,
+  );
 
   const [openFilterName, setOpenFilterName] =
     useState<string | 'Blockchain' | 'Status' | 'Type'>('');
-
-  const handleShowMoreClicked = (
-    value: boolean,
-    setter: Dispatch<SetStateAction<boolean>>,
-  ) => {
-    setter(!value);
-  };
 
   const loadLookups = async () => {
     const blockchains: any = await apiClient.getBlockchains();
@@ -112,28 +100,91 @@ export const NodeFilters = ({
     }));
     setFiltersType(filtersTypeCopy);
 
-    handleUpdateClicked();
+    localStorage.removeItem('nodeFilters');
+
+    const params = buildParams([], [], []);
+
+    refreshNodeList(params);
   };
 
-  const handleUpdateClicked = () => {
-    const blockchainFilters: string[] = filtersBlockchain
+  const refreshNodeList = (params?: any) => {
+    loadNodes(params);
+  };
+
+  const buildParams = (
+    blockchain: FilterItem[],
+    type: FilterItem[],
+    status: FilterItem[],
+  ) => {
+    const blockchainFilters: string[] = blockchain
       .filter((item) => item.isChecked)
       .map((item) => item.id!);
 
-    const typeFilters: string[] = filtersType
+    const typeFilters: string[] = type
       .filter((item) => item.isChecked)
       .map((item) => item.id!);
 
-    const statusFilters: string[] = filtersStatus
+    const statusFilters: string[] = status
       .filter((item) => item.isChecked)
       .map((item) => item.id!);
+
+    console.log('statusFilters', statusFilters);
 
     const params: FilterCriteria = {
       blockchain: blockchainFilters?.length ? blockchainFilters : undefined,
       node_type: typeFilters?.length ? typeFilters : undefined,
       node_status: statusFilters?.length ? statusFilters : undefined,
     };
-    loadNodes(params);
+
+    return params;
+  };
+
+  const loadFiltersFromLocalStorage = async () => {
+    if (localStorage.getItem('nodeFilters')) {
+      const localStorageFilters = JSON.parse(
+        localStorage.getItem('nodeFilters')!,
+      );
+
+      const blockchain: FilterItem[] = localStorageFilters.blockchain;
+      const status: FilterItem[] = localStorageFilters.status;
+      const type: FilterItem[] = localStorageFilters.type;
+
+      console.log({
+        blockchain,
+        status,
+        type,
+      });
+
+      // if (blockchain?.length) {
+      //   setFiltersBlockchain(blockchain);
+      // }
+
+      return {
+        blockchain,
+        status,
+        type,
+      };
+    } else {
+      return null;
+    }
+  };
+
+  const handleUpdateClicked = () => {
+    const params = buildParams(filtersBlockchain, filtersType, filtersStatus);
+
+    console.log('params', params);
+
+    const localStorageFilters = {
+      blockchain: filtersBlockchain,
+      type: filtersType,
+      status: filtersStatus,
+    };
+
+    // console.log('test', localStorageFilters.status);
+
+    localStorage.setItem('nodeFilters', JSON.stringify(localStorageFilters));
+
+    refreshNodeList(params);
   };
 
   const handleHealthChanged = (health: string) => {
@@ -152,11 +203,11 @@ export const NodeFilters = ({
     }
   };
 
-  const blockchainFilterCount = filtersBlockchain.filter(
+  const blockchainFilterCount = filtersBlockchain?.filter(
     (item) => item.isChecked,
   ).length;
 
-  const typeFilterCount = filtersType.filter((item) => item.isChecked).length;
+  const typeFilterCount = filtersType?.filter((item) => item.isChecked).length;
 
   const statusFilterCount = filtersStatus?.filter(
     (item) => item.isChecked,
@@ -168,29 +219,84 @@ export const NodeFilters = ({
       filterCount: blockchainFilterCount,
       filterList: filtersBlockchain,
       setFilterList: setFiltersBlockchain,
-      setShowMore: setShowMoreBlockchains,
-      showMore: showMoreBlockchains,
     },
     {
       name: 'Status',
       filterCount: statusFilterCount,
       filterList: filtersStatus,
       setFilterList: setFiltersStatus,
-      setShowMore: setShowMoreStatus,
-      showMore: showMoreStatus,
     },
     {
       name: 'Type',
       filterCount: typeFilterCount,
       filterList: filtersType,
       setFilterList: setFiltersType,
-      setShowMore: setShowMoreTypes,
-      showMore: showMoreTypes,
     },
   ];
 
+  const isFiltersDirty = () => {
+    const localStorageFilters = localStorage.getItem('nodeFilters');
+
+    const currentFilters = {
+      blockchain: filtersBlockchain,
+      status: filtersStatus,
+      type: filtersType,
+    };
+
+    const currentFiltersString = JSON.stringify(currentFilters);
+
+    const parsedLocalStorageFilters = JSON.parse(localStorageFilters!);
+
+    const localStorageFiltersString = JSON.stringify(parsedLocalStorageFilters);
+
+    console.log('currentFiltersString', currentFilters);
+    console.log('localStorageFiltersString', parsedLocalStorageFilters);
+
+    console.log(
+      'isFiltersDirty',
+      JSON.stringify(parsedLocalStorageFilters) !==
+        JSON.stringify(currentFilters),
+    );
+
+    const result =
+      JSON.stringify(parsedLocalStorageFilters) !==
+      JSON.stringify(currentFilters);
+
+    return result;
+  };
+
   useEffect(() => {
-    loadLookups();
+    (async () => {
+      if (localStorage.getItem('nodeFiltersCollapsed') === 'false') {
+        setIsFiltersCollapsed(false);
+      } else {
+        setIsFiltersCollapsed(true);
+      }
+
+      if (!localStorage.getItem('nodeFilters')) {
+        loadLookups();
+        refreshNodeList();
+      } else {
+        const localStorageFilters = await loadFiltersFromLocalStorage();
+
+        setFiltersBlockchain(localStorageFilters?.blockchain!);
+        setFiltersType(localStorageFilters?.type!);
+        setFiltersStatus(localStorageFilters?.status!);
+
+        const params = buildParams(
+          localStorageFilters?.blockchain!,
+          localStorageFilters?.type!,
+          localStorageFilters?.status!,
+        );
+
+        // setFiltersStatus(status);
+        // setFiltersType(type);
+
+        console.log('params', params);
+
+        refreshNodeList(params);
+      }
+    })();
   }, []);
 
   return (
@@ -202,6 +308,15 @@ export const NodeFilters = ({
     >
       <NodeFiltersHeader />
       <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
+        <Button
+          disabled={!isFiltersDirty()}
+          display="block"
+          style="primary"
+          onClick={handleUpdateClicked}
+          size="small"
+        >
+          Refresh
+        </Button>
         <div css={styles.filters}>
           <div
             css={blockStyles.filterBlock}
@@ -241,22 +356,10 @@ export const NodeFilters = ({
               filterCount={item.filterCount}
               filterList={item.filterList}
               setFilterList={item.setFilterList}
-              setShowMore={item.setShowMore}
               onFilterChanged={handleFilterChanged}
-              onShowMoreClicked={() =>
-                handleShowMoreClicked(item.showMore, item.setShowMore)
-              }
-              showMore={item.showMore}
             />
           ))}
-          <Button
-            display="block"
-            style="outline"
-            onClick={handleUpdateClicked}
-            size="small"
-          >
-            Update
-          </Button>
+
           <button
             css={styles.resetButton}
             type="button"

@@ -75,7 +75,6 @@ export const NodeList = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    loadNodes();
   }, []);
 
   useEffect(() => {
