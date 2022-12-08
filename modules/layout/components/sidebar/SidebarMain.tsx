@@ -5,6 +5,7 @@ import IconDashboard from '@public/assets/icons/grid-12.svg';
 import IconHosts from '@public/assets/icons/host-12.svg';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import ChatIcon from '@public/assets/icons/chat-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 
 const blocks = [
@@ -14,6 +15,7 @@ const blocks = [
       { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
       { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
       { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
+      { name: 'Support', path: '/support', icon: <ChatIcon /> },
     ],
   },
   // {

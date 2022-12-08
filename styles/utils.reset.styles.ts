@@ -7,6 +7,7 @@ export const reset = {
   `,
   button: css`
     cursor: pointer;
+    color: inherit;
     background-color: transparent;
     border-width: 0;
     padding: 0;
