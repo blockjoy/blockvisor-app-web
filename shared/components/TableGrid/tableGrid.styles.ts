@@ -8,6 +8,7 @@ export const styles = {
     gap: 16px;
     grid-template-columns: 1fr;
     grid-auto-rows: 140px;
+    padding: 0 0 20px;
 
     @media ${breakpoints.fromSml} {
       grid-template-columns: repeat(3, 1fr);

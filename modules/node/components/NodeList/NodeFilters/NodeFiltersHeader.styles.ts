@@ -15,6 +15,8 @@ export const styles = {
     align-items: center;
     gap: 6px;
     height: 50px;
+    min-height: 50px;
+    margin: 0 0 16px;
     cursor: pointer;
     border-bottom: 1px solid ${theme.colorBorder};
 

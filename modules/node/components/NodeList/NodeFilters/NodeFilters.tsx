@@ -359,16 +359,15 @@ export const NodeFilters = ({
               onFilterChanged={handleFilterChanged}
             />
           ))}
-
-          <button
-            css={styles.resetButton}
-            type="button"
-            onClick={handleResetClicked}
-          >
-            <IconClose />
-            Reset Filters
-          </button>
         </div>
+        <button
+          css={styles.resetButton}
+          type="button"
+          onClick={handleResetClicked}
+        >
+          <IconClose />
+          Reset Filters
+        </button>
       </div>
     </div>
   );

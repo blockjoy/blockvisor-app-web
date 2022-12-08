@@ -89,8 +89,7 @@ export const NodeList = () => {
           onTypeChanged={handleListTypeChanged}
         />
       </PageTitle>
-      <PageSection bottomBorder={false} topPadding={false}>
-        {/* {!Boolean(nodeRows?.length) &&
+      {/* {!Boolean(nodeRows?.length) &&
         !Boolean(nodeCells?.length) &&
         finished ? (
           <>
@@ -101,53 +100,52 @@ export const NodeList = () => {
             />
           </>
         ) : ( */}
-        <div css={styles.wrapper}>
-          <NodeFilters loadNodes={loadNodes} />
-          <div css={styles.nodeListWrapper}>
-            <NodeListHeader
-              totalRows={nodeRows?.length || nodeCells?.length || 0}
-              activeListType={activeListType}
-              onTypeChanged={handleListTypeChanged}
+      <div css={styles.wrapper}>
+        <NodeFilters loadNodes={loadNodes} />
+        <div css={styles.nodeListWrapper}>
+          <NodeListHeader
+            totalRows={nodeRows?.length || nodeCells?.length || 0}
+            activeListType={activeListType}
+            onTypeChanged={handleListTypeChanged}
+          />
+          {activeListType === 'table' ? (
+            <Table
+              isLoading={loading}
+              headers={[
+                {
+                  name: '',
+                  key: '1',
+                  width: '30px',
+                  minWidth: '30px',
+                  maxWidth: '30px',
+                },
+                {
+                  name: 'Name',
+                  key: '2',
+                  width: '300px',
+                },
+                {
+                  name: 'Added',
+                  key: '3',
+                  width: '200px',
+                },
+                {
+                  name: 'Status',
+                  key: '4',
+                  width: '200px',
+                },
+              ]}
+              rows={nodeRows || []}
+              onRowClick={handleNodeClick}
             />
-            {activeListType === 'table' ? (
-              <Table
-                isLoading={loading}
-                headers={[
-                  {
-                    name: '',
-                    key: '1',
-                    width: '30px',
-                    minWidth: '30px',
-                    maxWidth: '30px',
-                  },
-                  {
-                    name: 'Name',
-                    key: '2',
-                    width: '300px',
-                  },
-                  {
-                    name: 'Added',
-                    key: '3',
-                    width: '200px',
-                  },
-                  {
-                    name: 'Status',
-                    key: '4',
-                    width: '200px',
-                  },
-                ]}
-                rows={nodeRows || []}
-                onRowClick={handleNodeClick}
-              />
-            ) : (
-              <div css={styles.gridWrapper}>
-                <TableGrid isLoading={loading} cells={nodeCells!} />
-              </div>
-            )}
-          </div>
+          ) : (
+            <div css={styles.gridWrapper}>
+              <TableGrid isLoading={loading} cells={nodeCells!} />
+            </div>
+          )}
         </div>
-        {/* )} */}
-      </PageSection>
+      </div>
+      {/* )} */}
     </>
   );
 };

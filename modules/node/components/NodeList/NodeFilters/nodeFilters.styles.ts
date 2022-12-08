@@ -4,6 +4,9 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   outerWrapper: css`
+    display: flex;
+    flex-direction: column;
+
     @media ${breakpoints.fromLrg} {
       padding-right: 20px;
     }
@@ -11,11 +14,10 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       top: 72px;
       position: sticky;
-      overflow: auto;
       flex: 0 0 200px;
       min-width: 200px;
       max-width: 200px;
-      height: calc(100vh - 172px);
+      height: calc(100vh - 72px);
     }
   `,
   outerWrapperCollapsed: css`
@@ -27,6 +29,10 @@ export const styles = {
     }
   `,
   wrapper: css`
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
     transition-property: height;
     transition-duration: 0.3s;
 
@@ -37,6 +43,9 @@ export const styles = {
   `,
   filters: css`
     padding-top: 20px;
+    overflow: auto;
+    flex: 1 1 auto;
+    min-height: 0;
   `,
   wrapperOpen: css`
     margin-bottom: 40px;
