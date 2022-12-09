@@ -31,14 +31,8 @@ export function NodeView() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setMounted(true);
     if (router.isReady) {
-      loadNode(id);
-    }
-  }, [router.isReady]);
-
-  useEffect(() => {
-    if (router.isReady) {
+      setMounted(true);
       loadNode(id);
     }
   }, [id]);
