@@ -37,6 +37,12 @@ export function NodeView() {
     }
   }, [router.isReady]);
 
+  useEffect(() => {
+    if (router.isReady) {
+      loadNode(id);
+    }
+  }, [id]);
+
   if (!isMounted) return null;
 
   return (
