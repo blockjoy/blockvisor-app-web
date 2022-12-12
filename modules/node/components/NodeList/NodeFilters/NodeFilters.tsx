@@ -22,6 +22,8 @@ export const NodeFilters = ({
     nodeAtoms.filtersBlockchain,
   );
 
+  const [isDirty, setIsDirty] = useState(false);
+
   const [filtersType, setFiltersType] = useRecoilState(nodeAtoms.filtersType);
 
   const [filtersStatus, setFiltersStatus] = useRecoilState(
@@ -59,6 +61,10 @@ export const NodeFilters = ({
     list: FilterItem[],
     setter: SetterOrUpdater<FilterItem[]>,
   ) => {
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+
     const { target } = e;
     const { id, checked } = target;
 
@@ -144,21 +150,13 @@ export const NodeFilters = ({
       const blockchain: FilterItem[] = localStorageFilters.blockchain;
       const status: FilterItem[] = localStorageFilters.status;
       const type: FilterItem[] = localStorageFilters.type;
-
-      console.log({
-        blockchain,
-        status,
-        type,
-      });
-
-      // if (blockchain?.length) {
-      //   setFiltersBlockchain(blockchain);
-      // }
+      const health = localStorageFilters.health;
 
       return {
         blockchain,
         status,
         type,
+        health,
       };
     } else {
       return null;
@@ -166,24 +164,27 @@ export const NodeFilters = ({
   };
 
   const handleUpdateClicked = () => {
-    const params = buildParams(filtersBlockchain, filtersType, filtersStatus);
+    setIsDirty(false);
 
+    const params = buildParams(filtersBlockchain, filtersType, filtersStatus);
     console.log('params', params);
 
     const localStorageFilters = {
       blockchain: filtersBlockchain,
       type: filtersType,
       status: filtersStatus,
+      health: filtersHealth,
     };
 
-    // console.log('test', localStorageFilters.status);
-
     localStorage.setItem('nodeFilters', JSON.stringify(localStorageFilters));
-
     refreshNodeList(params);
   };
 
   const handleHealthChanged = (health: string) => {
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+
     setFiltersHealth(filtersHealth === health ? null : health);
 
     const statuses = nodeStatusList
@@ -242,23 +243,6 @@ export const NodeFilters = ({
     },
   ];
 
-  const isFiltersDirty = () => {
-    const localStorageFilters = localStorage.getItem('nodeFilters');
-
-    const currentFilters = {
-      blockchain: filtersBlockchain,
-      status: filtersStatus,
-      type: filtersType,
-    };
-    const parsedLocalStorageFilters = JSON.parse(localStorageFilters!);
-
-    const result =
-      JSON.stringify(parsedLocalStorageFilters) !==
-      JSON.stringify(currentFilters);
-
-    return result;
-  };
-
   useEffect(() => {
     (async () => {
       if (localStorage.getItem('nodeFiltersCollapsed') === 'false') {
@@ -276,6 +260,7 @@ export const NodeFilters = ({
         setFiltersBlockchain(localStorageFilters?.blockchain!);
         setFiltersType(localStorageFilters?.type!);
         setFiltersStatus(localStorageFilters?.status!);
+        setFiltersHealth(localStorageFilters?.health || '');
 
         const params = buildParams(
           localStorageFilters?.blockchain!,
@@ -302,7 +287,7 @@ export const NodeFilters = ({
         <button
           css={styles.updateButton}
           type="button"
-          disabled={!isFiltersDirty()}
+          disabled={!isDirty}
           onClick={handleUpdateClicked}
         >
           <IconRefresh />

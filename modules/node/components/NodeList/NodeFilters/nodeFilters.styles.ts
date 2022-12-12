@@ -106,5 +106,10 @@ export const styles = {
     color: ${theme.colorPrimaryText};
     margin-right: 16px;
     cursor: pointer;
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
   `,
 };
