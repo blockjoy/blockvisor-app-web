@@ -32,7 +32,7 @@ export function Textarea({
     formState: { errors },
   } = useFormContext();
 
-  const textAreaStyles = setInputStyles(inputSize, disabled, !!errors[name]);
+  const textAreaStyles = setInputStyles(inputSize, disabled, !errors[name]);
   return (
     <>
       <InputLabel

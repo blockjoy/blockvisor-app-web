@@ -13,8 +13,11 @@ import Router from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { RegistrationStatus } from '../types';
+import { Routes } from '@modules/auth/utils/routes';
 
 type RegisterForm = {
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -32,37 +35,58 @@ export function RegisterForm() {
   };
 
   const onSubmit = handleSubmit(
-    async ({ email, password, confirmPassword }) => {
+    async ({ email, password, confirmPassword, first_name, last_name }) => {
       setIsLoading(true);
-      const response = await apiClient.createUser({
-        first_name: '',
-        last_name: '',
+      const response: any = await apiClient.createUser({
+        first_name,
+        last_name,
         email,
         password,
         password_confirmation: confirmPassword,
       });
 
-      // simulate async req
-      setTimeout(() => {
-        if (isResponeMetaObject(response)) {
-          if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
-            setIsLoading(false);
-            Router.push('/');
-          } else {
-            setIsLoading(false);
-            setRegisterError('something went wrong');
-          }
+      console.log('signup', response);
+
+      if (isResponeMetaObject(response)) {
+        if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
+          setIsLoading(false);
+          Router.push(Routes.verify);
         } else {
           setIsLoading(false);
-          setRegisterError(response?.message);
+          setRegisterError('Error creating account, please try again.');
         }
-      }, 1000);
+      } else {
+        setIsLoading(false);
+        setRegisterError('Error creating account, please try again.');
+      }
     },
   );
   return (
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <ul css={[reset.list]}>
+          <li css={[spacing.bottom.mediumSmall]}>
+            <Input
+              labelStyles={[display.visuallyHidden]}
+              disabled={loading}
+              name="first_name"
+              placeholder="First Name"
+              validationOptions={{
+                required: 'Your first name is required',
+              }}
+            />
+          </li>
+          <li css={[spacing.bottom.mediumSmall]}>
+            <Input
+              labelStyles={[display.visuallyHidden]}
+              disabled={loading}
+              name="last_name"
+              placeholder="Last Name"
+              validationOptions={{
+                required: 'Your last name is required',
+              }}
+            />
+          </li>
           <li css={[spacing.bottom.mediumSmall]}>
             <Input
               labelStyles={[display.visuallyHidden]}

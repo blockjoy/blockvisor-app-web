@@ -1,2 +1,1 @@
-export { AppLayout } from "./components/AppLayout";
-export { AuthLayout } from "./components/AuthLayout";
+export { AppLayout } from './components/AppLayout';

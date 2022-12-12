@@ -1,7 +1,10 @@
-import { StatusResponse } from '@modules/client/stub_client';
-import { ApiToken, ResponseMeta } from 'blockjoy-mock-grpc/dist/out/common_pb';
+import { StatusResponse } from '@modules/client/status_response';
+import {
+  ApiToken,
+  ResponseMeta,
+} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 
-function isLoginSuccess(value: unknown): value is ApiToken.AsObject {
+function isSuccess(value: unknown): value is ApiToken.AsObject {
   return (value as ApiToken.AsObject).value !== undefined;
 }
 
@@ -13,4 +16,4 @@ function isResponeMetaObject(value: unknown): value is ResponseMeta.AsObject {
   return (value as ResponseMeta.AsObject).status !== undefined;
 }
 
-export { isLoginSuccess, isLoginError, isResponeMetaObject };
+export { isSuccess, isLoginError, isResponeMetaObject };

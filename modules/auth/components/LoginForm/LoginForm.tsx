@@ -1,19 +1,18 @@
+import { Routes, useSignIn } from '@modules/auth';
+import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useDefaultOrganization } from '@modules/organizations';
+import { Button, Input } from '@shared/components';
+import { delay } from '@shared/utils/delay';
+import { isValidEmail } from '@shared/utils/validation';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
-import { Button, Input } from '@shared/components';
-import { display } from 'styles/utils.display.styles';
-import { spacing } from 'styles/utils.spacing.styles';
-import { reset } from 'styles/utils.reset.styles';
-import { PasswordToggle } from '../PasswordTogle';
-import { isValidEmail } from '@shared/utils/validation';
-import { apiClient } from '@modules/client';
-import { isLoginSuccess } from '@modules/auth/utils/authTypeGuards';
-import { saveUser } from '@shared/utils/browserStorage';
-import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { useRecoilState } from 'recoil';
-import { authAtoms } from '@modules/auth/store/atoms';
+import { display } from 'styles/utils.display.styles';
+import { reset } from 'styles/utils.reset.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { typo } from 'styles/utils.typography.styles';
+import { PasswordToggle } from '../PasswordTogle';
 
 type LoginForm = {
   email: string;
@@ -22,36 +21,34 @@ type LoginForm = {
 
 export function LoginForm() {
   const router = useRouter();
+  const signIn = useSignIn();
   const form = useForm<LoginForm>();
   const [loading, setIsLoading] = useState(false);
-  const [, setAuth] = useRecoilState(authAtoms.user);
-  const [loginError, setLoginError] = useState<string | undefined>();
+  const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+  const { getDefaultOrganization } = useDefaultOrganization();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
     setActiveType(type);
   };
 
-  // for signin use the hardcoded email in stub client: user@test.com
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
-    setLoginError(undefined);
     setIsLoading(true);
 
-    const response = await apiClient.login(email, password);
+    try {
+      await signIn(email, password);
+      await getDefaultOrganization();
 
-    if (isLoginSuccess(response)) {
-      saveUser({ accessToken: response.value });
-      setAuth({ accessToken: response.value });
-      apiClient.setTokenValue(response.value);
-      // simulate async req
-      setTimeout(() => {
-        setIsLoading(false);
-        router.push('/dashboard');
-      }, 1000);
-    } else {
+      await delay(1000);
       setIsLoading(false);
-      setLoginError(response?.message);
+      router.push('/nodes');
+    } catch (error) {
+      if (error instanceof ApplicationError) {
+        setLoginError('Invalid Credentials');
+      }
+    } finally {
+      setIsLoading(false);
     }
   });
   return (

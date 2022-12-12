@@ -4,6 +4,7 @@ import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './Pill.styles';
+import IconClose from '@public/assets/icons/close-12.svg';
 
 type Props = {
   removable?: boolean;
@@ -31,13 +32,7 @@ export function Pill({
           onClick={onClick}
         >
           <span css={[display.visuallyHidden]}>Remove</span>
-          <Image
-            src="/assets/icons/close-12.svg"
-            aria-hidden="true"
-            layout="fixed"
-            width={12}
-            height={12}
-          />
+          <IconClose />
         </button>
       )}
     </span>

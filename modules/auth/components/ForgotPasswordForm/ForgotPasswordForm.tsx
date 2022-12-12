@@ -1,9 +1,13 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { apiClient } from '@modules/client';
+
 import { Button, Input } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { isValidEmail } from '@shared/utils/validation';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 type ForgotPassword = {
   email: string;
@@ -11,9 +15,15 @@ type ForgotPassword = {
 
 export function ForgotPasswordForm() {
   const form = useForm<ForgotPassword>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onSubmit = form.handleSubmit(({ email }) => {
-    console.log({ email });
+  const onSubmit = form.handleSubmit(async ({ email }) => {
+    setIsLoading(true);
+    await apiClient.resetPassword(email);
+
+    toast.success('Email sent');
+
+    setIsLoading(false);
   });
 
   return (
@@ -34,7 +44,13 @@ export function ForgotPasswordForm() {
             />
           </li>
         </ul>
-        <Button size="medium" display="block" style="primary" type="submit">
+        <Button
+          loading={isLoading}
+          size="medium"
+          display="block"
+          style="primary"
+          type="submit"
+        >
           Reset Password
         </Button>
       </form>

@@ -1,8 +1,7 @@
-import { authAtoms } from '@modules/auth/store/atoms';
-import { getUser } from '@shared/utils/browserStorage';
+import { Routes, useIdentity } from '@modules/auth';
+import { LoadingSpinner } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
 
 interface Props {
   children?: ReactNode;
@@ -10,14 +9,28 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
-  const [user, setUser] = useRecoilState(authAtoms.user);
+  const { isLoggedIn, isVerified, isDone, isLoading, state } = useIdentity();
 
   useEffect(() => {
-    if (!getUser()) {
-      setUser(null);
-      router.push('/');
+    if (isDone && !isLoggedIn) {
+      router.push(Routes.login);
+      return;
     }
-  }, [user, router.route]);
 
-  return <>{children}</>;
+    // disabled for now
+    /*  if (isDone && !isVerified) {
+      router.push(Routes.verify);
+      return;
+    } */
+  }, [router.pathname, state]);
+
+  if (isLoading) {
+    return <LoadingSpinner size="page" />;
+  }
+
+  if (isLoggedIn) {
+    return <>{children}</>;
+  }
+
+  return null;
 }

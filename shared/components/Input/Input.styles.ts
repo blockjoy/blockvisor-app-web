@@ -56,7 +56,7 @@ const inputTypesStyle: Record<InputSize, SerializedStyles> = {
   `,
   large: css`
     ${typo.small}
-    padding: 15px 12px;
+    padding: 16px 12px;
   `,
 };
 

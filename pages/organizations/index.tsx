@@ -1,10 +1,10 @@
 import { AppLayout } from '@modules/layout';
-import Module from '@modules/app/components/organizations/Organizations';
+import { OrganizationsPage } from '@modules/organizations';
 
-const Nodes = () => <Module />;
+const Organizations = () => <OrganizationsPage />;
 
-Nodes.getLayout = function getLayout(page: any) {
+Organizations.getLayout = function getLayout(page: any) {
   return <AppLayout breadcrumb={['Organizations', 'All']}>{page}</AppLayout>;
 };
 
-export default Nodes;
+export default Organizations;

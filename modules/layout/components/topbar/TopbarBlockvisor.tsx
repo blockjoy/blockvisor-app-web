@@ -1,20 +1,19 @@
-import styled from "@emotion/styled";
+import { styles } from './TopbarBlockvisor.styles';
+import IconBlockvisor from '@public/assets/icons/blockvisor-20.svg';
+import { useRecoilValue } from 'recoil';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
-import IconBlockvisor from "@public/assets/icons/blockvisor-20.svg";
+export const TopbarBlockvisor = () => {
+  const layout = useRecoilValue(layoutState);
 
-const StyledBlockvisor = styled(IconBlockvisor)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  @media only screen and (min-width: ${p => p.theme.screenSm}) {
-    display: none;
-  }
-`;
-
-export default () => {
   return (
-    <StyledBlockvisor />
+    <div
+      css={[
+        styles.iconWrapper,
+        layout === 'sidebar' && styles.iconWrapperSidebarOpen,
+      ]}
+    >
+      <IconBlockvisor css={[styles.icon]} />
+    </div>
   );
-}
+};

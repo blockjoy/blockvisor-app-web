@@ -10,5 +10,16 @@
             }
         ]
     ],
-    "plugins": ["@emotion/babel-plugin"]
+    "plugins": [
+        "@emotion/babel-plugin",
+        [
+            "prismjs",
+            {
+                "languages": ["bash"],
+                "theme": "okaidia",
+                "css": true
+            }
+        ],
+        "react-require"
+    ]
 }

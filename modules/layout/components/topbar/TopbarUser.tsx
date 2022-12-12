@@ -1,37 +1,47 @@
-import { useRecoilState } from "recoil";
-import { layoutState } from "@modules/layout/store"
+import { styles } from './TopbarUser.styles';
+import { ButtonWithDropdown, DropdownItem } from '@shared/components';
+import { reset } from 'styles/utils.reset.styles';
+import { divider } from 'styles/utils.spacing.styles';
+import IconCog from '@public/assets/icons/cog-12.svg';
+import IconDoor from '@public/assets/icons/door-12.svg';
+import { useRouter } from 'next/router';
+import { authAtoms, useSignOut } from '@modules/auth';
+import { useRecoilValue } from 'recoil';
 
-import styled from "@emotion/styled";
+export const TopbarUser = () => {
+  const user = useRecoilValue(authAtoms.user);
 
-const StyledAvatar = styled.button`
-    display: grid;
-    place-items: center;
-    width: 30px;
-    min-width: 30px;
-    max-width: 30px;
-    height: 30px;
-    padding: 0;
-    font-size: 12px;
-    border: 0;
-    border-radius: 50%;
-    background: #8f44fd;
-    color: #f9f9f9;
-    cursor: pointer;
-`;
+  const router = useRouter();
+  const signOut = useSignOut();
 
-export default () => {
-  const [app, setApp] = useRecoilState(layoutState);
-
-  const handleClick = () => {
-    setApp({
-      ...app,
-      isProfileOpen: !app.isProfileOpen
-    });
-  }
+  const handleLogout = async () => {
+    signOut();
+    router.reload();
+  };
 
   return (
-   <StyledAvatar onClick={handleClick}>
-      JH
-   </StyledAvatar>
+    <ButtonWithDropdown
+      button={
+        <button css={[styles.button]}>
+          {user?.firstName?.substring(0, 1)}
+          {user?.lastName?.substring(0, 1)}
+        </button>
+      }
+    >
+      <ul css={[reset.list]}>
+        <li>
+          <DropdownItem href="/profile/settings">
+            <IconCog />
+            Settings
+          </DropdownItem>
+        </li>
+        <li css={[divider]}>
+          <DropdownItem onButtonClick={handleLogout}>
+            <IconDoor />
+            Logout
+          </DropdownItem>
+        </li>
+      </ul>
+    </ButtonWithDropdown>
   );
-}
+};

@@ -1,25 +1,10 @@
 import { useState } from 'react';
 import { useTheme } from '@emotion/react';
-import styled from '@emotion/styled';
+import { styles } from './NodeEarningsChart.styles';
 import { mockSeries } from './mockChartData';
 import dynamic from 'next/dynamic';
+
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
-const StyledWrapper = styled.div`
-  position: relative;
-  min-height: 400px;
-  max-height: 400px;
-  height: 400px;
-`;
-
-const StyledChartHeader = styled.header`
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: ${(p) => p.theme.colorLabel};
-  letter-spacing: 1px;
-  font-size: 14px;
-`;
 
 export const NodeEarningsChart = () => {
   const theme = useTheme();
@@ -126,8 +111,8 @@ export const NodeEarningsChart = () => {
   const [series, setSeries] = useState<any>(mockSeries);
 
   return (
-    <StyledWrapper>
-      <StyledChartHeader>NODE EARNINGS (USD)</StyledChartHeader>
+    <div css={[styles.wrapper]}>
+      <header css={[styles.header]}>NODE EARNINGS (USD)</header>
       <Chart
         options={options}
         series={series}
@@ -135,6 +120,6 @@ export const NodeEarningsChart = () => {
         height="320px"
         width="100%"
       />
-    </StyledWrapper>
+    </div>
   );
 };

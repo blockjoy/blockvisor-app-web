@@ -1,56 +1,37 @@
-import styled from '@emotion/styled';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-import IconDashboard from '@public/assets/icons/grid-12.svg';
+import { styles } from './SidebarMain.styles';
+import { ProfileBubble } from '@shared/components';
 import IconHosts from '@public/assets/icons/host-12.svg';
+import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
-
-const StyledWrapper = styled.main`
-  flex: 1 1 auto;
-  padding: 20px 16px;
-`;
-
-const StyledHeader = styled.header`
-  color: ${(p) => p.theme.colorLabel};
-  letter-spacing: 1.5px;
-  font-size: 10px;
-  margin-bottom: 16px;
-`;
-
-const StyledList = styled.ul`
-  margin-bottom: 24px;
-`;
-
-const StyledLink = styled.a`
-  display: flex;
-  gap: 10px;
-  color: ${(p) => p.theme.colorText};
-  padding: 12px 10px;
-  font-size: 13px;
-  border-radius: 8px;
-  user-select: none;
-
-  &.active {
-    background: ${(p) => p.theme.colorActive};
-  }
-
-  & path {
-    fill: ${(p) => p.theme.colorLabel};
-  }
-
-  &.active path {
-    fill: ${(p) => p.theme.colorPrimary};
-  }
-`;
+import IconSupport from '@public/assets/icons/chat-12.svg';
+import { SidebarFooter } from './SidebarFooter/SidebarFooter';
+import { useRecoilState } from 'recoil';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 const blocks = [
   {
     title: 'BLOCKVISOR',
     items: [
-      { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
-      // { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
-      { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
+      { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
+      // { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
+      // { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
+      {
+        name: 'Organizations',
+        path: '/organizations',
+        icon: <IconOrganizations />,
+      },
+      {
+        name: 'Profile',
+        path: '/profile',
+        icon: <ProfileBubble />,
+      },
+      {
+        name: 'Support',
+        path: '/support',
+        icon: <IconSupport />,
+      },
     ],
   },
   // {
@@ -59,43 +40,77 @@ const blocks = [
   //     { name: "Automation", path: "/automation", icon: "sync" },
   //   ]
   // },
-  {
-    title: 'ADMIN',
-    items: [
-      {
-        name: 'Organizations',
-        path: '/organizations',
-        icon: <IconOrganizations />,
-      },
-    ],
-  },
+  // {
+  //   title: 'ADMIN',
+  //   items: [
+
+  //   ],
+  // },
 ];
 
 export default () => {
+  const [layout, setLayout] = useRecoilState(layoutState);
+
+  const handleLinkClicked = () => {
+    if (document.body.clientWidth < 768) {
+      setLayout(undefined);
+    }
+  };
+
   const router = useRouter();
   return (
-    <StyledWrapper>
-      {blocks.map((block) => (
-        <div key={block.title}>
-          <StyledHeader>{block.title}</StyledHeader>
-          <StyledList>
-            {block.items.map((item) => (
-              <li key={item.name}>
-                <Link href={item.path}>
-                  <StyledLink
-                    className={
-                      router.pathname.includes(item.path) ? 'active' : ''
-                    }
-                  >
-                    {item.icon}
-                    {item.name}
-                  </StyledLink>
-                </Link>
-              </li>
-            ))}
-          </StyledList>
-        </div>
-      ))}
-    </StyledWrapper>
+    <main css={[styles.wrapper]}>
+      <div>
+        {blocks.map((block) => (
+          <div key={block.title}>
+            {/* {layout === 'sidebar' && (
+              <header css={[styles.header]}>{block.title}</header>
+            )} */}
+            <ul css={[styles.list]}>
+              {block.items.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.path}>
+                    <a
+                      onClick={handleLinkClicked}
+                      css={[
+                        styles.link,
+                        layout !== 'sidebar' && styles.linkSidebarCollapsed,
+                      ]}
+                    >
+                      <span
+                        css={styles.linkInner}
+                        className={
+                          router.pathname.includes(item.path) ? 'active' : ''
+                        }
+                      >
+                        <span
+                          className="link-icon"
+                          css={[
+                            styles.linkIcon,
+                            layout !== 'sidebar' && styles.linkIconSidebarOpen,
+                          ]}
+                        >
+                          {item.icon}
+                        </span>
+                        <span
+                          className="link-text"
+                          css={[
+                            styles.linkText,
+                            layout !== 'sidebar' && styles.linkTextHidden,
+                          ]}
+                        >
+                          {item.name}
+                        </span>
+                      </span>
+                    </a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <SidebarFooter />
+    </main>
   );
 };

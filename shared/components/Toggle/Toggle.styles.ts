@@ -46,4 +46,14 @@ export const styles = {
     display: block;
     color: var(--color-text-3);
   `,
+  active: css`
+    &::before {
+      border-color: var(--color-primary);
+    }
+
+    &::after {
+      background-color: var(--color-primary);
+      transform: translate3d(16px, 4px, 0);
+    }
+  `,
 };

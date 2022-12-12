@@ -1,601 +1,1181 @@
-import {AuthenticationServiceClient} from "blockjoy-mock-grpc/dist/out/Authentication_serviceServiceClientPb";
+import { AuthenticationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Authentication_serviceServiceClientPb';
 import {
-    LoginUserRequest,
-    LoginUserResponse,
-    RefreshTokenResponse,
-} from 'blockjoy-mock-grpc/dist/out/authentication_service_pb';
+  ConfirmRegistrationRequest,
+  LoginUserRequest,
+  RefreshTokenResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+  UpdatePasswordRequest,
+  UpdateUIPasswordRequest,
+} from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
-    ApiToken,
-    Bill,
-    Host,
-    HostProvision,
-    UpdateNotification,
-    Metric,
-    Node,
-    Organization,
-    ResponseMeta,
-    User, UserConfigurationParameter, Uuid, RequestMeta,
-} from 'blockjoy-mock-grpc/dist/out/common_pb';
-import {v4 as uuidv4} from 'uuid';
-import {BillingServiceClient} from "blockjoy-mock-grpc/dist/out/Billing_serviceServiceClientPb";
-import {DashboardServiceClient} from "blockjoy-mock-grpc/dist/out/Dashboard_serviceServiceClientPb";
-import {HostServiceClient} from "blockjoy-mock-grpc/dist/out/Fe_host_serviceServiceClientPb";
-import {HostProvisionServiceClient} from "blockjoy-mock-grpc/dist/out/Host_provision_serviceServiceClientPb";
-import {NodeServiceClient} from "blockjoy-mock-grpc/dist/out/Node_serviceServiceClientPb";
-import {OrganizationServiceClient} from "blockjoy-mock-grpc/dist/out/Organization_serviceServiceClientPb";
-import {UpdateServiceClient} from "blockjoy-mock-grpc/dist/out/Update_serviceServiceClientPb";
-import {UserServiceClient} from "blockjoy-mock-grpc/dist/out/User_serviceServiceClientPb";
-import {CreateBillResponse} from "blockjoy-mock-grpc/dist/out/billing_service_pb";
-import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
-import * as google_protobuf_any_pb from "google-protobuf/google/protobuf/any_pb";
-import {DashboardMetricsResponse} from "blockjoy-mock-grpc/dist/out/dashboard_service_pb";
+  ApiToken,
+  Bill,
+  Blockchain,
+  Host,
+  HostProvision,
+  Metric,
+  Node,
+  Organization,
+  Parameter,
+  RequestMeta,
+  ResponseMeta,
+  UpdateNotification,
+  User,
+  UserConfigurationParameter,
+  Pagination,
+} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { v4 as uuidv4 } from 'uuid';
+import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
+import { DashboardServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Dashboard_serviceServiceClientPb';
+import { HostServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Fe_host_serviceServiceClientPb';
+import { HostProvisionServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Host_provision_serviceServiceClientPb';
+import { NodeServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Node_serviceServiceClientPb';
+import { OrganizationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Organization_serviceServiceClientPb';
+import { UpdateServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Update_serviceServiceClientPb';
+import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_serviceServiceClientPb';
+import { CreateBillResponse } from '@blockjoy/blockjoy-grpc/dist/out/billing_service_pb';
+import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
+import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
+import { DashboardMetricsRequest } from '@blockjoy/blockjoy-grpc/dist/out/dashboard_service_pb';
 import {
-    CreateHostResponse,
-    DeleteHostResponse,
-    GetHostsResponse,
-    UpdateHostResponse
-} from "blockjoy-mock-grpc/dist/out/fe_host_service_pb";
-import Name = Metric.Name;
-import HostStatus = Host.HostStatus;
-import NodeType = Node.NodeType;
-import NodeStatus = Node.NodeStatus;
-import {CreateHostProvisionResponse, GetHostProvisionResponse} from "blockjoy-mock-grpc/dist/out/host_provision_service_pb";
-import {CreateNodeResponse, GetNodeResponse, UpdateNodeResponse} from "blockjoy-mock-grpc/dist/out/node_service_pb";
+  CreateHostRequest,
+  DeleteHostResponse,
+  GetHostsRequest,
+  UpdateHostResponse,
+} from '@blockjoy/blockjoy-grpc/dist/out/fe_host_service_pb';
 import {
-    CreateOrganizationResponse,
-    DeleteOrganizationResponse, GetOrganizationsResponse,
-    UpdateOrganizationResponse
-} from "blockjoy-mock-grpc/dist/out/organization_service_pb";
+  CreateHostProvisionRequest,
+  GetHostProvisionRequest,
+} from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
-    CreateUserResponse,
-    GetConfigurationResponse,
-    GetUserResponse,
-    UpsertConfigurationResponse
-} from "blockjoy-mock-grpc/dist/out/user_service_pb";
-import {GetUpdatesResponse} from "blockjoy-mock-grpc/dist/out/update_service_pb";
-import {CommandResponse} from "blockjoy-mock-grpc/dist/out/command_service_pb";
-import {Parameter} from "blockjoy-mock-grpc/dist/out/common_pb"
-import {Timestamp} from "google-protobuf/google/protobuf/timestamp_pb";
+  CreateNodeRequest,
+  FilterCriteria,
+  GetNodeRequest,
+  ListNodesRequest, UpdateNodeRequest,
+  UpdateNodeResponse,
+} from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
+import {
+  CreateOrganizationRequest,
+  DeleteOrganizationRequest,
+  GetOrganizationsRequest,
+  RestoreOrganizationRequest,
+  UpdateOrganizationRequest,
+} from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
+import {
+  CreateUserRequest,
+  GetConfigurationResponse,
+  GetUserRequest,
+  UpdateUserRequest,
+  UpsertConfigurationResponse,
+} from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
+import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
+import {
+  CommandRequest,
+  CommandResponse,
+} from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
+import { BlockchainServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Blockchain_serviceServiceClientPb';
+import { ListBlockchainsRequest } from '@blockjoy/blockjoy-grpc/dist/out/blockchain_service_pb';
+import { CommandServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Command_serviceServiceClientPb';
+import {
+  StatusResponse,
+  StatusResponseFactory,
+} from '@modules/client/status_response';
+import { KeyFilesClient } from '@blockjoy/blockjoy-grpc/dist/out/Key_file_serviceServiceClientPb';
+import {
+  Keyfile,
+  KeyFilesSaveRequest,
+} from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 
-export type StatusResponse = { code: string, message: string, metadata: { headers: {} }, source: string };
 export type UIUser = {
-    first_name: string,
-    last_name: string,
-    email: string,
-    password: string,
-    password_confirmation: string
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
 };
 export type UINodeCreate = {
-    host_id: Uuid,
-    node_type: NodeType,
-    blockchain_id: Uuid,
-    command: "create_node",
-    sub_cmd?: string,
+  host_id: string;
+  node_type: string;
+  blockchain_id: string;
+  command: 'create_node';
+  sub_cmd?: string;
 };
 export type UIHostCreate = {
-    name: string,
-    location?: string,
+  name: string;
+  location?: string;
+};
+export type AuthHeader = {
+  authorization: string;
+};
+export type NewPassword = {
+  old_pwd: string;
+  new_pwd: string;
+  new_pwd_confirmation: string;
+};
+export type UIFilterCriteria = {
+  blockchain?: string[];
+  node_type?: string[];
+  node_status?: string[];
+};
+export type UIPagination = {
+  current_page: number;
+  items_per_page: number;
 };
 
 export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
-    if (ts !== undefined) {
-        return new Date(ts.getSeconds() * 1000)
-    }
-}
-
-export function id_to_string(id: Uuid | undefined): string | undefined {
-    if(id !== undefined){
-        return id.getValue();
-    }
+  if (ts !== undefined) {
+    return new Date(ts.getSeconds() * 1000);
+  }
 }
 
 export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
-    return {
-        ...node?.toObject(),
-        groupsList: node?.getGroupsList() || [],
-        created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
-        id_str: id_to_string(node?.getId()),
-        updated_at_datetime: timestamp_to_date(node?.getUpdatedAt())
-    };
+  return {
+    groupsList: node?.getGroupsList() || [],
+    ...node?.toObject(),
+    created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
+    updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
+  };
 }
 
 export function host_to_grpc_host(host: Host | undefined): GrpcHostObject {
-    return {
-        ...host?.toObject(),
-        created_at_datetime: timestamp_to_date(host?.getCreatedAt()) || undefined,
-        id_str: id_to_string(host?.getId()) || "",
-        nodesList: host?.getNodesList().map((node) => node.toObject()) || [],
-        node_objects: host?.getNodesList().map((node) => node_to_grpc_node(node))
-    }
+  return {
+    ...host?.toObject(),
+    created_at_datetime: timestamp_to_date(host?.getCreatedAt()) || undefined,
+    nodesList: host?.getNodesList().map((node) => node.toObject()) || [],
+    node_objects: host?.getNodesList().map((node) => node_to_grpc_node(node)),
+  };
+}
+
+export function blockchain_to_grpc_blockchain(
+  chain: Blockchain | undefined,
+): GrpcBlockchainObject {
+  return {
+    id: chain?.getId() || '',
+    name: chain?.getName() || '',
+    status: chain?.getStatus() || Blockchain.BlockchainStatus.DEVELOPMENT,
+    supportedNodesTypes: chain?.getSupportedNodesTypes() || '',
+    supportsBroadcast: false,
+    supportsEtl: chain?.getSupportsEtl() || true,
+    supportsNode: chain?.getSupportsNode() || true,
+    supportsStaking: chain?.getSupportsStaking() || true,
+    ...chain?.toObject(),
+    created_at_datetime: timestamp_to_date(chain?.getCreatedAt()) || undefined,
+    updated_at_datetime: timestamp_to_date(chain?.getUpdatedAt()) || undefined,
+    supported_node_types:
+      JSON.parse(chain?.getSupportedNodesTypes() || '') || [],
+  };
 }
 
 export function user_to_grpc_user(user: User | undefined): GrpcUserObject {
-    return {
-        ...user?.toObject(),
-        created_at_datetime: timestamp_to_date(user?.getCreatedAt()),
-        updated_at_datetime: timestamp_to_date(user?.getUpdatedAt()),
-        id_str: id_to_string(user?.getId())
-    }
+  return {
+    ...user?.toObject(),
+    created_at_datetime: timestamp_to_date(user?.getCreatedAt()),
+    updated_at_datetime: timestamp_to_date(user?.getUpdatedAt()),
+  };
 }
 
-export type ConvenienceConversion = { created_at_datetime: Date | undefined, id_str: string | undefined };
-export type GrpcHostObject = Host.AsObject & ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
-export type GrpcNodeObject = Node.AsObject & ConvenienceConversion & { updated_at_datetime: Date | undefined };
-export type GrpcUserObject = User.AsObject & ConvenienceConversion & { updated_at_datetime: Date | undefined };
-
+export type ConvenienceConversion = {
+  created_at_datetime: Date | undefined;
+};
+export type GrpcBlockchainObject = Blockchain.AsObject &
+  ConvenienceConversion & {
+    supported_node_types: any;
+    updated_at_datetime: Date | undefined;
+  };
+export type GrpcHostObject = Host.AsObject &
+  ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };
+export type GrpcNodeObject = Node.AsObject &
+  ConvenienceConversion & {
+    updated_at_datetime: Date | undefined;
+  };
+export type GrpcUserObject = User.AsObject &
+  ConvenienceConversion & { updated_at_datetime: Date | undefined };
 export class GrpcClient {
-    private authentication: AuthenticationServiceClient | undefined;
-    private billing: BillingServiceClient | undefined;
-    private dashboard: DashboardServiceClient | undefined;
-    private host: HostServiceClient | undefined;
-    private host_provision: HostProvisionServiceClient | undefined;
-    private node: NodeServiceClient | undefined;
-    private organization: OrganizationServiceClient | undefined;
-    private update: UpdateServiceClient | undefined;
-    private user: UserServiceClient | undefined;
+  private authentication: AuthenticationServiceClient | undefined;
+  private billing: BillingServiceClient | undefined;
+  private dashboard: DashboardServiceClient | undefined;
+  private host: HostServiceClient | undefined;
+  private host_provision: HostProvisionServiceClient | undefined;
+  private node: NodeServiceClient | undefined;
+  private organization: OrganizationServiceClient | undefined;
+  private update: UpdateServiceClient | undefined;
+  private user: UserServiceClient | undefined;
+  private blockchain: BlockchainServiceClient | undefined;
+  private command: CommandServiceClient | undefined;
+  private key_files: KeyFilesClient | undefined;
 
-    private token: string;
+  private token: string;
 
-    constructor(host: string) {
-        // TODO: uncomment when backend services are available
-        this.initClients(host).then(() => console.log("Clients connected"));
+  constructor(host: string) {
+    this.initClients(host);
+    this.token = '';
+  }
 
-        this.token = "";
-    }
+  setTokenValue(token: string) {
+    this.token = token;
+  }
 
-    setTokenValue(token: string) {
-        this.token = token;
-    }
+  initStorage() {
+    return null;
+  }
 
-    /**
-     * Initialize all gRPC clients
-     */
-    private async initClients(host: string) {
-        this.authentication = new AuthenticationServiceClient(host, null, null);
-        /*
-        this.billing = new BillingServiceClient(host, null, null);
-        this.dashboard = new DashboardServiceClient(host, null, null);
-        this.host = new HostServiceClient(host, null, null);
-        this.host_provision = new HostProvisionServiceClient(host, null, null);
-        this.node = new NodeServiceClient(host, null, null);
-        this.organization = new OrganizationServiceClient(host, null, null);
-        this.update = new UpdateServiceClient(host, null, null);
-        this.user = new UserServiceClient(host, null, null);
-         */
-    }
+  /**
+   * Initialize all gRPC clients
+   */
+  private initClients(host: string) {
+    let opts = {
+      withCredentials: true,
+    };
 
-    getApiToken() {
-        let api_token = new ApiToken();
-        // TODO: base64 encode token value
-        api_token.setValue(this.token);
+    this.authentication = new AuthenticationServiceClient(host, null, opts);
+    this.host = new HostServiceClient(host, null, opts);
+    this.blockchain = new BlockchainServiceClient(host, null, opts);
+    this.node = new NodeServiceClient(host, null, opts);
+    this.host_provision = new HostProvisionServiceClient(host, null, opts);
+    this.dashboard = new DashboardServiceClient(host, null, opts);
+    this.command = new CommandServiceClient(host, null, opts);
+    this.organization = new OrganizationServiceClient(host, null, opts);
+    this.billing = new BillingServiceClient(host, null, opts);
+    this.update = new UpdateServiceClient(host, null, opts);
+    this.user = new UserServiceClient(host, null, opts);
+    this.key_files = new KeyFilesClient(host, null, opts);
+  }
 
-        return api_token
-    }
+  getApiToken() {
+    if (!window.localStorage.getItem('identity')) return;
 
-    getDummyMeta(): ResponseMeta {
-        let meta = new ResponseMeta();
-        meta.setStatus(ResponseMeta.Status.SUCCESS);
-        meta.setOriginRequestId(this.getDummyUuid());
+    let api_token = new ApiToken();
+    api_token.setValue(this.token);
 
-        return meta
-    }
+    this.token = JSON.parse(
+      window.localStorage.getItem('identity') || '{}',
+    ).accessToken;
+    return this.token;
+  }
 
-    getDummyUuid(): Uuid {
-        let uuid = new Uuid();
-        uuid.setValue(uuidv4());
+  getAuthHeader(): AuthHeader {
+    return { authorization: `Bearer ${this.getApiToken()}` };
+  }
 
-        return uuid
-    }
+  getDummyMeta(): ResponseMeta {
+    let meta = new ResponseMeta();
+    meta.setStatus(ResponseMeta.Status.SUCCESS);
+    meta.setOriginRequestId(this.getDummyUuid());
 
-    getDummyNode(): Node {
-        let node = new Node();
-        node.setHostId(this.getDummyUuid());
-        node.setId(this.getDummyUuid());
-        node.setOrgId(this.getDummyUuid());
-        node.setBlockchainId(this.getDummyUuid());
-        node.setName("lorem-node");
-        node.setGroupsList(["group-one"]);
-        node.setVersion("0.1.0");
-        node.setIp("127.0.0.1");
-        node.setType(NodeType.NODE);
-        node.setAddress("0x999999999");
-        node.setWalletAddress("0x000000001");
-        node.setBlockHeight(12_121_112);
-        node.setNodeData("some-blob");
-        node.setCreatedAt(this.getDummyTimestamp());
-        node.setUpdatedAt(this.getDummyTimestamp());
-        node.setStatus(NodeStatus.PROCESSING);
+    return meta;
+  }
 
-        return node
-    }
+  getDummyUuid(): string {
+    return uuidv4();
+  }
 
-    getDummyHost(): Host {
-        let host = new Host();
-        host.setId(this.getDummyUuid());
-        host.setOrgId(this.getDummyUuid());
-        host.setName("lorem-ipsum");
-        host.setVersion("0.1.0");
-        host.setLocation("Djibouti");
-        host.setCpuCount(8);
-        host.setMemSize(32);
-        host.setDiskSize(2048);
-        host.setOs("Darwin");
-        host.setOsVersion("21.6.0 Darwin Kernel Version 21.6.");
-        host.setIp("127.0.0.1");
-        host.addNodes(this.getDummyNode());
-        host.setStatus(HostStatus.CREATING);
-        host.setCreatedAt(this.getDummyTimestamp());
+  getDummyNode(): Node {
+    let node = new Node();
+    node.setHostId(this.getDummyUuid());
+    node.setId(this.getDummyUuid());
+    node.setOrgId(this.getDummyUuid());
+    node.setBlockchainId(this.getDummyUuid());
+    node.setName('lorem-node');
+    node.setGroupsList(['group-one']);
+    node.setVersion('0.1.0');
+    node.setIp('127.0.0.1');
+    node.setType('');
+    node.setAddress('0x999999999');
+    node.setWalletAddress('0x000000001');
+    node.setBlockHeight(12_121_112);
+    node.setNodeData('some-blob');
+    node.setCreatedAt(this.getDummyTimestamp());
+    node.setUpdatedAt(this.getDummyTimestamp());
+    node.setStatus(Node.NodeStatus.PROCESSING);
 
-        return host
-    }
+    return node;
+  }
 
-    getDummyTimestamp(): google_protobuf_timestamp_pb.Timestamp {
-        let now = new Date();
-        let fromdate = new Date();
+  getDummyHost(): Host {
+    let host = new Host();
+    host.setId(this.getDummyUuid());
+    host.setOrgId(this.getDummyUuid());
+    host.setName('lorem-ipsum');
+    host.setVersion('0.1.0');
+    host.setLocation('Djibouti');
+    host.setCpuCount(8);
+    host.setMemSize(32);
+    host.setDiskSize(2048);
+    host.setOs('Darwin');
+    host.setOsVersion('21.6.0 Darwin Kernel Version 21.6.');
+    host.setIp('127.0.0.1');
+    host.addNodes(this.getDummyNode());
+    host.setStatus(Host.HostStatus.CREATING);
+    host.setCreatedAt(this.getDummyTimestamp());
 
-        fromdate.setDate(now.getDate() - Math.floor(Math.random() * 10));
+    return host;
+  }
 
-        let timestamp = new google_protobuf_timestamp_pb.Timestamp();
+  getDummyTimestamp(): google_protobuf_timestamp_pb.Timestamp {
+    let now = new Date();
+    let fromdate = new Date();
 
-        timestamp.setSeconds(fromdate.getTime() / 1000);
-        timestamp.setNanos(0);
+    fromdate.setDate(now.getDate() - Math.floor(Math.random() * 10));
 
-        return timestamp
-    }
+    let timestamp = new google_protobuf_timestamp_pb.Timestamp();
 
-    /* Authentication service */
+    timestamp.setSeconds(fromdate.getTime() / 1000);
+    timestamp.setNanos(0);
 
-    async login(email: string, pwd: string): Promise<ApiToken.AsObject | StatusResponse | undefined> {
-        console.debug(`Using "${email}" => "${pwd}" for login`);
+    return timestamp;
+  }
 
-        let request_meta = new RequestMeta();
-        request_meta.setId(this.getDummyUuid());
+  /* Authentication service */
+  async login(
+    email: string,
+    pwd: string,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    console.debug(`Using "${email}" => "${pwd}" for login`);
 
-        let request = new LoginUserRequest();
-        request.setEmail(email);
-        request.setPassword(pwd);
-        request.setMeta(request_meta);
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-        return this.authentication?.login(request, null).then((response) => {
-            console.log(`Got login response: ${response}`);
-            return response.getToken()?.toObject();
-        }).catch((err) => {
-            return {
-                code: "Unauthenticated",
-                message: `${err}`,
-                metadata: {
-                    headers: {
-                        "content-type": "application/grpc",
-                        "date": "Fri, 26 Aug 2022 17:55:33 GMT",
-                        "content-length": "0"
-                    }
-                },
-                source: "None"
-            }
+    let request = new LoginUserRequest();
+    request.setEmail(email);
+    request.setPassword(pwd);
+    request.setMeta(request_meta);
+
+    return this.authentication
+      ?.login(request, null)
+      .then((response) => {
+        this.token = response.getToken()?.toObject().value || '';
+
+        return response.getToken()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.loginResponse(err, 'grpcClient');
+      });
+  }
+
+  async registration_confirmation(
+    token: string,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let auth_header = { authorization: `Bearer ${Buffer.from(token, 'binary').toString('base64')}` };
+
+    let request = new ConfirmRegistrationRequest();
+    request.setMeta(request_meta);
+
+    return this.authentication
+      ?.confirm(request, auth_header)
+      .then((response) => {
+        return response.getToken()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.registrationConfirmation(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    let response = new RefreshTokenResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getToken()?.toObject();
+  }
+
+  async resetPassword(
+    email: string,
+  ): Promise<ResetPasswordResponse.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ResetPasswordRequest();
+    request.setMeta(request_meta);
+    request.setEmail(email);
+
+    return this.authentication
+      ?.resetPassword(request, this.getAuthHeader())
+      .then((response) => {
+        return response.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.resetPasswordResponse(err, 'grpcClient');
+      });
+  }
+
+  async updateResetPassword(
+    token: string,
+    pwd: string,
+    pwd_confirmation: string,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    if (pwd === pwd_confirmation) {
+      let request_meta = new RequestMeta();
+      request_meta.setId(this.getDummyUuid());
+
+      let request = new UpdatePasswordRequest();
+      request.setMeta(request_meta);
+      request.setPassword(pwd);
+
+      let auth_header = { authorization: `Bearer ${Buffer.from(token, 'binary').toString('base64')}` };
+
+      return this.authentication
+        ?.updatePassword(request, auth_header)
+        .then((response) => {
+          return response.getToken()?.toObject();
+        })
+        .catch((err) => {
+          return StatusResponseFactory.updateResetPasswordResponse(
+            err,
+            'grpcClient',
+          );
         });
+    } else {
+      return StatusResponseFactory.updateResetPasswordResponse(
+        null,
+        'grpcClient',
+      );
     }
-    
-    async refresh(): Promise<ApiToken.AsObject | StatusResponse | undefined> {
-        let response = new RefreshTokenResponse();
-        response.setMeta(this.getDummyMeta());
+  }
 
-        return response.getToken()?.toObject()
-    }
+  async updatePassword(
+    pwd: NewPassword,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    if (pwd.new_pwd === pwd.new_pwd_confirmation) {
+      let request_meta = new RequestMeta();
+      request_meta.setId(this.getDummyUuid());
 
-    /* Billing service */
- 
-    async createBill(user_id: Uuid, org_id: Uuid): Promise<Bill.AsObject | StatusResponse | undefined> {
-        let bill = new Bill();
-        bill.setId("some-bill-id");
-        bill.setPdfUrl("/some/url.pdf");
-        bill.setCreatedAt(this.getDummyTimestamp());
-        bill.setTaxNumber("tax-number");
-        bill.setReceiverName("Max Mustermann");
-        bill.setReceiverAddress("Bondstreet 1a, 12312 Djibouti");
-        bill.setTaxRate(0.2);
-        bill.setNetAmount(100.0);
-        bill.setGrossAmount(120.0);
+      let request = new UpdateUIPasswordRequest();
+      request.setMeta(request_meta);
+      request.setOldPwd(pwd.old_pwd);
+      request.setNewPwd(pwd.new_pwd);
+      request.setNewPwdConfirmation(pwd.new_pwd_confirmation);
 
-        let response = new CreateBillResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getBill()?.toObject()
-    }
-
-    /* Dashboard service */
-
-    async getDashboardMetrics(): Promise<Array<Metric.AsObject> | StatusResponse> {
-        let metric = new Metric();
-        metric.setName(Name.ONLINE);
-        let value = new google_protobuf_any_pb.Any();
-        value.setValue("8");
-        metric.setValue(value);
-
-        let metric2 = new Metric();
-        metric2.setName(Name.OFFLINE);
-        let value2 = new google_protobuf_any_pb.Any();
-        value2.setValue("2");
-        metric2.setValue(value2);
-
-        let response = new DashboardMetricsResponse();
-        response.setMeta(this.getDummyMeta());
-        response.addMetrics(metric);
-        response.addMetrics(metric2);
-
-        return response.getMetricsList().map(item => item.toObject())
-    }
-
-    /* Host service */
-
-    async getHosts(host_id?: Uuid, org_id?: Uuid, token?: string): Promise<Array<GrpcHostObject> | StatusResponse> {
-        let response = new GetHostsResponse();
-        response.setMeta(this.getDummyMeta());
-        response.addHosts(this.getDummyHost());
-
-        return new Promise((resolve) => {
-            setTimeout(
-                resolve.bind(
-                    null,
-                    response.getHostsList().map((item) => {
-                        return host_to_grpc_host(item)
-                    }),
-                ),
-                1000,
-            );
+      return this.authentication
+        ?.updateUIPassword(request, this.getAuthHeader())
+        .then((response) => {
+          return response.getToken()?.toObject();
+        })
+        .catch((err) => {
+          return StatusResponseFactory.updatePasswordResponse(
+            err,
+            'grpcClient',
+          );
         });
+    } else {
+      return StatusResponseFactory.updatePasswordResponse(null, 'grpcClient');
     }
+  }
 
-    async createHost(host: Host): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CreateHostResponse();
-        response.setMeta(this.getDummyMeta());
+  /* Billing service */
 
+  async createBill(
+    user_id: string,
+    org_id: string,
+  ): Promise<Bill.AsObject | StatusResponse | undefined> {
+    let bill = new Bill();
+    bill.setId('some-bill-id');
+    bill.setPdfUrl('/some/url.pdf');
+    bill.setCreatedAt(this.getDummyTimestamp());
+    bill.setTaxNumber('tax-number');
+    bill.setReceiverName('Max Mustermann');
+    bill.setReceiverAddress('Bondstreet 1a, 12312 Djibouti');
+    bill.setTaxRate(0.2);
+    bill.setNetAmount(100.0);
+    bill.setGrossAmount(120.0);
+
+    let response = new CreateBillResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getBill()?.toObject();
+  }
+
+  /* Blockchain service */
+
+  async getBlockchains(): Promise<
+    Array<GrpcBlockchainObject> | StatusResponse | undefined
+  > {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+    let request = new ListBlockchainsRequest();
+    request.setMeta(request_meta);
+
+    return this.blockchain
+      ?.list(request, this.getAuthHeader())
+      .then((response) => {
+        return response
+          .getBlockchainsList()
+          .map((chain) => blockchain_to_grpc_blockchain(chain));
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getBlockchainsResponse(err, 'grpcClient');
+      });
+  }
+
+  /* Dashboard service */
+
+  async getDashboardMetrics(): Promise<
+    Array<Metric.AsObject> | undefined | StatusResponse
+  > {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new DashboardMetricsRequest();
+    request.setMeta(request_meta);
+
+    return this.dashboard
+      ?.metrics(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getMetricsList().map((item) => item.toObject());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getDashboardMetricsResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  /* Host service */
+
+  async getHosts(
+    host_id?: string,
+    org_id?: string,
+    token?: string,
+  ): Promise<Array<GrpcHostObject> | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+    let request = new GetHostsRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(org_id || '');
+
+    return this.host
+      ?.get(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getHostsList()?.map((host) => host_to_grpc_host(host));
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getHostsResponse(err, 'grpcClient');
+      });
+  }
+
+  async createHost(
+    host: Host,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new CreateHostRequest();
+    request.setMeta(request_meta);
+    request.setHost(host);
+
+    return this.host
+      ?.create(request, this.getAuthHeader())
+      .then((response) => response.getMeta()?.toObject())
+      .catch((err) => {
+        return StatusResponseFactory.createHostResponse(err, 'grpcClient');
+      });
+  }
+
+  async updateHost(
+    host: Host,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new UpdateHostResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  async deleteHost(
+    host_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new DeleteHostResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  /* Host provision service */
+
+  async getHostProvision(
+    otp: string,
+  ): Promise<Array<HostProvision.AsObject> | StatusResponse | undefined> {
+    let provision = new HostProvision();
+    provision.setId(otp);
+
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new GetHostProvisionRequest();
+    request.setMeta(request_meta);
+    request.setId(otp);
+
+    return this.host_provision
+      ?.get(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getHostProvisionsList().map((hp) => hp.toObject());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getHostProvisionResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  async createHostProvision(
+    host_provision: HostProvision,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new CreateHostProvisionRequest();
+    request.setMeta(request_meta);
+    request.setHostProvision(host_provision);
+
+    return this.host_provision
+      ?.create(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.createHostProvisionResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  /* Node service */
+
+  async listNodes(
+    org_id: string,
+    filter_criteria?: UIFilterCriteria,
+    pagination?: UIPagination,
+  ): Promise<Array<GrpcNodeObject> | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ListNodesRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(org_id);
+
+    let meta_pagination = new Pagination();
+
+    if (pagination) {
+      meta_pagination.setItemsPerPage(pagination.items_per_page);
+      meta_pagination.setCurrentPage(pagination.current_page);
+    } else {
+      meta_pagination.setItemsPerPage(100);
+      meta_pagination.setCurrentPage(1);
     }
 
-    async updateHost(host: Host): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new UpdateHostResponse();
-        response.setMeta(this.getDummyMeta());
+    request_meta.setPagination(meta_pagination);
 
+    if (filter_criteria) {
+      let criteria = new FilterCriteria();
+
+      console.log("Setting blockchain filter: ", filter_criteria.blockchain);
+      console.log("Setting node status filter: ", filter_criteria.node_status);
+      console.log("Setting node type filter: ", filter_criteria.node_type);
+
+
+      criteria.setBlockchainIdsList(filter_criteria.blockchain || []);
+      criteria.setStatesList(filter_criteria.node_status || []);
+      criteria.setNodeTypesList(filter_criteria.node_type || []);
+
+      request.setFilter(criteria);
+    }
+
+    return this.node
+      ?.list(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getNodesList().map((node) => node_to_grpc_node(node));
+      })
+      .catch((err) => {
+        return StatusResponseFactory.listNodesResponse(err, 'grpcClient');
+      });
+  }
+
+  async getNode(
+    node_id: string,
+  ): Promise<GrpcNodeObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new GetNodeRequest();
+    request.setMeta(request_meta);
+    request.setId(node_id);
+
+    return this.node
+      ?.get(request, this.getAuthHeader())
+      .then((response) => {
+        return node_to_grpc_node(response.getNode());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getNodeResponse(err, 'grpcClient');
+      });
+  }
+
+  async createNode(
+    node: Node,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
+    node.setWalletAddress('0x0198230123120');
+    node.setAddress('0x023848388637');
+
+    let request = new CreateNodeRequest();
+    request.setMeta(request_meta);
+    request.setNode(node);
+
+    return this.node
+      ?.create(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.createNodeResponse(err, 'grpcClient');
+      });
+  }
+
+  async updateNode(
+    node: Node,
+    key_files?: FileList,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new UpdateNodeResponse();
+    response.setMeta(this.getDummyMeta());
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new UpdateNodeRequest();
+    request.setMeta(request_meta);
+    request.setNode(node);
+
+    let response_meta = await this.node?.update(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta();
+    }).catch((err) => {
+      return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
+    });
+
+    console.log("updated node: ", response_meta);
+    console.log("got key files: ", key_files);
+
+    // Node creation was successful, trying to upload keys, if existent
+    if (key_files !== undefined && key_files?.length > 0) {
+      let node_id = node.getId();
+      let request = new KeyFilesSaveRequest();
+      let files: Array<Keyfile> = [];
+
+      console.log("got node id: ", node_id);
+
+      request.setRequestId(this.getDummyUuid());
+      request.setNodeId(node_id);
+
+      for (let i = 0; i < key_files.length; i++) {
+        //for (let file of key_files) {
+        let file = key_files.item(i);
+        let reader = new FileReader();
+
+        reader.addEventListener(
+            'load',
+            () => {
+              let f = new Keyfile();
+              f.setName(file?.name || '');
+              f.setContent(reader.result + '');
+
+              files.push(f);
+            },
+            false,
+        );
+
+        if (file) {
+          reader.readAsText(file, 'UTF-8');
+          request.setKeyFilesList(files);
+        }
+      }
+
+      return this.key_files
+          ?.save(request, this.getAuthHeader())
+          .then((response) => {
+            let meta = new ResponseMeta();
+            meta.setOriginRequestId(response.getOriginRequestId());
+            meta.setMessagesList(response.getMessagesList());
+
+            return meta.toObject();
+          })
+          .catch((err) => {
+            return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
+          });
+    } else {
+      return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
     }
 
-    async deleteHost(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new DeleteHostResponse();
-        response.setMeta(this.getDummyMeta());
+  }
 
+  /* Organization service */
+
+  async getOrganizations(): Promise<
+    Array<Organization.AsObject> | StatusResponse | undefined
+  > {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new GetOrganizationsRequest();
+    request.setMeta(request_meta);
+
+    return this.organization
+      ?.get(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getOrganizationsList().map((item) => item.toObject());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getOrganizationsResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  async createOrganization(
+    organization: Organization,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new CreateOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setOrganization(organization);
+
+    return this.organization
+      ?.create(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
-    }
+      })
+      .catch((err) => {
+        return StatusResponseFactory.deleteOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
 
-    /* Host provision service */
+  async updateOrganization(
+    organization: Organization,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    async getHostProvision(otp?: string): Promise<Array<HostProvision.AsObject> | StatusResponse | undefined> {
-        let provision = new HostProvision();
+    let request = new UpdateOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setOrganization(organization);
 
-        if (otp) provision.setId(otp);
-
-        provision.setOrgId(this.getDummyUuid());
-        provision.setHostId(this.getDummyUuid());
-        provision.setInstallCmd("install cmd");
-        provision.setCreatedAt(this.getDummyTimestamp());
-        provision.setClaimedAt(this.getDummyTimestamp());
-
-        let response = new GetHostProvisionResponse();
-        response.setMeta(this.getDummyMeta());
-        response.setHostProvisionsList([provision]);
-
-        console.debug("retrieving host provisions");
-
-        return response.getHostProvisionsList()?.map((provision) => provision.toObject())
-    }
-
-    async createHostProvision(host_provision: HostProvision): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CreateHostProvisionResponse();
-        response.setMeta(this.getDummyMeta());
-
+    return this.organization
+      ?.update(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
-    }
+      })
+      .catch((err) => {
+        return StatusResponseFactory.deleteOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
 
-    /* Node service */
+  async deleteOrganization(
+    organization_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    async getNode(node_id: Uuid): Promise<GrpcNodeObject | StatusResponse | undefined> {
-        let response = new GetNodeResponse();
-        response.setMeta(this.getDummyMeta());
-        response.setNode(this.getDummyNode());
+    let request = new DeleteOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setId(organization_id);
 
-        return new Promise((resolve) => {
-            setTimeout(
-                resolve.bind(
-                    null,
-                    node_to_grpc_node(response?.getNode()),
-                ),
-                1000,
-            );
-        });
-    }
-
-    async createNode(node: Node): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CreateNodeResponse();
-        response.setMeta(this.getDummyMeta());
-
+    return this.organization
+      ?.delete(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
-    }
+      })
+      .catch((err) => {
+        return StatusResponseFactory.deleteOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
 
-    async updateNode(node: Node): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new UpdateNodeResponse();
-        response.setMeta(this.getDummyMeta());
+  async restoreOrganization(
+    organization_id: string,
+  ): Promise<Organization.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
+    let request = new RestoreOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setId(organization_id);
+
+    return this.organization
+      ?.restore(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getOrganization()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.restoreOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  /* User service */
+
+  async getUser(): Promise<User.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new GetUserRequest();
+    request.setMeta(request_meta);
+
+    return this.user
+      ?.get(request, this.getAuthHeader())
+      .then((response) => {
+        return user_to_grpc_user(response.getUser());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getUserResponse(err, 'grpcClient');
+      });
+  }
+
+  async createUser(
+    ui_user: UIUser,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let user = new User();
+    user.setEmail(ui_user.email);
+    user.setFirstName(ui_user.first_name);
+    user.setLastName(ui_user.last_name);
+
+    let request = new CreateUserRequest();
+    request.setPassword(ui_user.password);
+    request.setPasswordConfirmation(ui_user.password_confirmation);
+    request.setUser(user);
+
+    return this.user
+      ?.create(request, null)
+      .then((response) => {
         return response.getMeta()?.toObject();
-    }
+      })
+      .catch((err) => {
+        return StatusResponseFactory.createUserResponse(err, 'grpcClient');
+      });
+  }
 
-    /* Organization service */
+  async updateUser(
+    user: User,
+  ): Promise<User.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    async getOrganizations(): Promise<Array<Organization.AsObject> | StatusResponse> {
-        let organization = new Organization();
-        organization.setId(this.getDummyUuid());
-        organization.setName("ThisGroup");
-        organization.setPersonal(true);
-        organization.setMemberCount(1);
-        organization.setCreatedAt(this.getDummyTimestamp());
-        organization.setUpdatedAt(this.getDummyTimestamp());
+    let request = new UpdateUserRequest();
+    request.setMeta(request_meta);
+    request.setUser(user);
 
-        let response = new GetOrganizationsResponse();
-        response.setMeta(this.getDummyMeta());
-        response.setOrganizationsList([organization]);
+    return this.user
+      ?.update(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getUser()?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.updateUserResponse(err, 'grpcClient');
+      });
+  }
 
-        return response.getOrganizationsList().map(item => item.toObject())
-    }
+  async upsertConfiguration(
+    params: Array<UserConfigurationParameter>,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new UpsertConfigurationResponse();
+    response.setMeta(this.getDummyMeta());
 
-    async createOrganization(organization: Organization): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CreateOrganizationResponse();
-        response.setMeta(this.getDummyMeta());
+    return response.getMeta()?.toObject();
+  }
 
+  async getConfiguration(): Promise<
+    Array<UserConfigurationParameter.AsObject> | StatusResponse | undefined
+  > {
+    let response = new GetConfigurationResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getParamsList().map((item) => item.toObject());
+  }
+
+  /* Update service */
+
+  async getUpdates(): Promise<
+    | Array<UpdateNotification.AsObject | undefined>
+    | StatusResponse
+    | Array<undefined>
+  > {
+    let update = new UpdateNotification();
+    update.setNode(this.getDummyNode());
+
+    let response = new GetUpdatesResponse();
+    response.setMeta(this.getDummyMeta());
+    response.setUpdate(update);
+
+    return [response.getUpdate()?.toObject()];
+  }
+
+  /* Command service */
+
+  async execCreateNode(
+    host_id: string,
+    node: UINodeCreate,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  async execDeleteNode(
+    host_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  async execStartNode(
+    host_id: string,
+    node_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let param = new Parameter();
+    param.setName('resource_id');
+    param.setValue(node_id);
+
+    let request = new CommandRequest();
+    request.setMeta(request_meta);
+    request.setId(host_id);
+    request.addParams(param);
+
+    return this.command
+      ?.startNode(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
-    }
+      })
+      .catch((err) => {
+        return StatusResponseFactory.execStartNodeResponse(err, 'grpcClient');
+      });
+  }
 
-    async updateOrganization(organization: Organization): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new UpdateOrganizationResponse();
-        response.setMeta(this.getDummyMeta());
+  async execStopNode(
+    host_id: string,
+    node_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
+    let param = new Parameter();
+    param.setName('resource_id');
+    param.setValue(node_id.toString());
+
+    let request = new CommandRequest();
+    request.setMeta(request_meta);
+    request.setId(host_id);
+    request.addParams(param);
+
+    return this.command
+      ?.stopNode(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
-    }
+      })
+      .catch((err) => {
+        return StatusResponseFactory.execStopNodeResponse(err, 'grpcClient');
+      });
+  }
 
-    async deleteOrganization(organization_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new DeleteOrganizationResponse();
-        response.setMeta(this.getDummyMeta());
+  async execRestartNode(
+    host_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
 
+    return response.getMeta()?.toObject();
+  }
+
+  async execCreateHost(
+    host: UIHostCreate,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  async execDeleteHost(
+    host_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  async execStartHost(
+    host_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  async execStopHost(
+    host_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
+
+    return response.getMeta()?.toObject();
+  }
+
+  async execRestartHost(
+    host_id: string,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new CommandRequest();
+    request.setMeta(request_meta);
+    request.setId(host_id);
+
+    return this.command
+      ?.restartHost(request, this.getAuthHeader())
+      .then((response) => {
         return response.getMeta()?.toObject();
-    }
+      })
+      .catch((err) => {
+        return StatusResponseFactory.execRestartHostResponse(err, 'grpcClient');
+      });
+  }
 
-    /* User service */
+  async execGeneric(
+    host_id: string,
+    params: Array<Parameter>,
+  ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let response = new CommandResponse();
+    response.setMeta(this.getDummyMeta());
 
-    async getUser(): Promise<GrpcUserObject | StatusResponse | undefined> {
-        let user = new User();
-        user.setId(this.getDummyUuid());
-        user.setFirstName("max");
-        user.setLastName("Mustermann");
-        user.setEmail("max@mustermann.at");
-        user.setCreatedAt(this.getDummyTimestamp());
-        user.setUpdatedAt(this.getDummyTimestamp());
-
-        let response = new GetUserResponse();
-        response.setMeta(this.getDummyMeta());
-        response.setUser(user);
-
-        return user_to_grpc_user(response.getUser())
-    }
-
-    async createUser(user: UIUser): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        console.log(`using user data: ${user}`);
-
-        let response = new CreateUserResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async upsertConfiguration(params: Array<UserConfigurationParameter>): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new UpsertConfigurationResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async getConfiguration(): Promise<Array<UserConfigurationParameter.AsObject> | StatusResponse | undefined> {
-        let response = new GetConfigurationResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getParamsList().map(item => item.toObject());
-    }
-
-    /* Update service */
-
-    async getUpdates(): Promise<Array<UpdateNotification.AsObject | undefined> | StatusResponse | Array<undefined>> {
-        let update = new UpdateNotification();
-        update.setNode(this.getDummyNode());
-
-        let response = new GetUpdatesResponse();
-        response.setMeta(this.getDummyMeta());
-        response.setUpdate(update);
-
-        return [response.getUpdate()?.toObject()]
-    }
-
-    /* Command service */
-
-    async execCreateNode(host_id: Uuid, node: UINodeCreate): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execDeleteNode(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execStartNode(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execStopNode(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execRestartNode(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execCreateHost(host: UIHostCreate): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execDeleteHost(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execStartHost(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execStopHost(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execRestartHost(host_id: Uuid): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
-
-    async execGeneric(host_id: Uuid, params: Array<Parameter>): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
-        let response = new CommandResponse();
-        response.setMeta(this.getDummyMeta());
-
-        return response.getMeta()?.toObject();
-    }
+    return response.getMeta()?.toObject();
+  }
 }

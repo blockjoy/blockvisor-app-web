@@ -17,7 +17,9 @@ export const styles = {
     transition: color 0.18s var(--transition-easing-cubic),
       border-color 0.2s var(--transition-easing-cubic);
 
-    &:focus {
+    &:focus,
+    &:active,
+    &:hover {
       color: var(--color-text-5);
     }
   `,
@@ -27,6 +29,7 @@ export const styles = {
     border: 1px solid var(--color-input-background);
   `,
   outline: css`
+    background-color: var(--color-input-background);
     border: 1px solid var(--color-text-2);
     border-radius: 4px;
     color: var(--color-text-5);
@@ -50,7 +53,7 @@ export const styles = {
     padding: 10px 48px 10px 12px;
   `,
   large: css`
-    ${typo.base}
+    ${typo.small}
     padding: 16px 48px 16px 12px;
   `,
   fieldWithLeftIcon: css`

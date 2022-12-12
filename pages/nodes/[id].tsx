@@ -1,7 +1,7 @@
 import { AppLayout } from '@modules/layout';
-import NodeModule from '@modules/app/components/node/Node';
+import { NodeView } from '@modules/node/';
 
-const Node = () => <NodeModule />;
+const Node = () => <NodeView />;
 
 Node.getLayout = function getLayout(page: any) {
   return <AppLayout breadcrumb={['Nodes', 'View Node']}>{page}</AppLayout>;

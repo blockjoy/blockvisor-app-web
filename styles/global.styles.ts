@@ -48,6 +48,7 @@ export const globalStyles = css`
     --color-overlay-background-1: hsl(160, 3%, 22%);
     --color-overlay-background-2: hsl(180, 4%, 15%);
     --color-overlay-background-2-o50: hsla(180, 4%, 15%, 0.5);
+    --color-background: hsla(0, 0%, 20%, 1);
 
     /* --- BORDER --- */
     --color-border-1: hsl(160, 4%, 14%);
@@ -55,6 +56,7 @@ export const globalStyles = css`
     --color-border-3: hsl(0, 0%, 73%);
     --color-border-4: hsl(0, 0%, 83%);
     --color-border-5: hsl(90, 29%, 97%);
+    --color-border-5-o10: hsl(90, 29%, 97%, 0.1);
 
     /* --- INPUT --- */
     --color-input-background: hsl(165, 4%, 20%);
@@ -196,40 +198,26 @@ export const globalStyles = css`
     box-sizing: border-box;
     scroll-behavior: smooth;
     overflow-x: hidden;
+    overflow-y: scroll;
+  }
 
-    @media (--screen-medium-large) {
+  #__next {
+    isolation: isolate;
+  }
+
+  .scroll-locked {
+    @media ${breakpoints.toLrg} {
       overflow: hidden;
     }
   }
 
   body {
     min-height: 100vh;
-    margin: 0 auto;
     color: var(--color-text);
-    max-width: 1720px;
     font-family: var(--font-family-primary);
 
     background-color: var(--color-foreground-secondary);
     color: var(--color-text-5);
-    overflow-x: hidden;
-
-    @media ${breakpoints.fromLrg} {
-      overflow: hidden;
-    }
-
-    .no-scroll & {
-      max-width: 100%;
-      max-height: 100%;
-      overflow: hidden;
-    }
-
-    .no-scroll--mobile & {
-      @media (--screen-medium-max) {
-        max-width: 100%;
-        max-height: 100%;
-        overflow: hidden;
-      }
-    }
 
     *::-webkit-scrollbar,
     *::-webkit-scrollbar-track {

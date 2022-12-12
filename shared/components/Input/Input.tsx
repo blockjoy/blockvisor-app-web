@@ -1,6 +1,6 @@
 import { SerializedStyles } from '@emotion/react';
 import { ErrorMessage } from '@hookform/error-message';
-import { InputHTMLAttributes, ReactNode } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 
 import { colors } from 'styles/utils.colors.styles';
@@ -26,11 +26,12 @@ type InputProps = {
   hints?: ReactNode;
   label?: string;
   labelStyles?: SerializedStyles[];
+  inputStyles?: SerializedStyles[];
   inputSize?: InputSize;
   validationOptions?: RegisterOptions;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export function Input({
+export const Input = ({
   name,
   inputSize = 'medium',
   leftIcon,
@@ -39,9 +40,10 @@ export function Input({
   label,
   labelStyles,
   validationOptions,
+  inputStyles,
   value,
   ...rest
-}: InputProps) {
+}: InputProps) => {
   const {
     register,
     formState: { errors },
@@ -53,6 +55,7 @@ export function Input({
     !!errors[name],
     !!leftIcon,
     !!rightIcon,
+    inputStyles,
   );
 
   return (
@@ -63,12 +66,13 @@ export function Input({
       >
         {label}
       </label>
-      <div tabIndex={0} css={[inputWrapper]}>
+      <div css={[inputWrapper]}>
         <InputUtil position="left">{leftIcon}</InputUtil>
         <input
           {...register(name, validationOptions)}
           css={[inputClasses]}
           disabled={disabled}
+          value={value}
           {...rest}
           name={name}
         />
@@ -81,7 +85,7 @@ export function Input({
       />
     </>
   );
-}
+};
 
 function setInputStyles(
   version: InputSize,
@@ -89,6 +93,7 @@ function setInputStyles(
   isValid?: boolean,
   leftIcon?: boolean,
   rightIcon?: boolean,
+  inputStyles?: SerializedStyles[],
 ) {
   const fieldClasses = [
     inputField,
@@ -110,6 +115,10 @@ function setInputStyles(
 
   if (rightIcon) {
     fieldClasses.push(inputFieldWithUtilRight);
+  }
+
+  if (inputStyles) {
+    fieldClasses.push(...inputStyles);
   }
 
   return fieldClasses;
