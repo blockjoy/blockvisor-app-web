@@ -10,6 +10,7 @@ export type FilterItem = {
   name?: string | undefined;
   id?: string | undefined;
   isChecked?: boolean | undefined;
+  isOnline?: boolean | undefined;
 };
 
 const activeNode = atom<BlockjoyNode | null>({
@@ -75,6 +76,7 @@ const filtersStatus = atom<FilterItem[]>({
       // id: item.id.toString()!,
       id: item.name.toString().toLowerCase()!,
       isChecked: false,
+      isOnline: item.isOnline,
     })),
 });
 

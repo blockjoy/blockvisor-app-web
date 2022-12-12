@@ -11,6 +11,7 @@ import { apiClient } from '@modules/client';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { nodeStatusList } from '@shared/constants/lookups';
 
 export const NodeFilters = ({
   loadNodes,
@@ -184,6 +185,18 @@ export const NodeFilters = ({
 
   const handleHealthChanged = (health: string) => {
     setFiltersHealth(filtersHealth === health ? null : health);
+
+    const statuses = nodeStatusList
+      .filter((item) => item.id !== 0)
+      .map((item) => ({
+        name: item.name,
+        // id: item.id.toString()!,
+        id: item.name.toString().toLowerCase()!,
+        isChecked: health === 'online' ? item.isOnline : !item.isOnline,
+        isOnline: item.isOnline,
+      }));
+
+    setFiltersStatus(statuses);
   };
 
   const handleFilterBlockClicked = (filterName: string) => {
@@ -237,21 +250,7 @@ export const NodeFilters = ({
       status: filtersStatus,
       type: filtersType,
     };
-
-    const currentFiltersString = JSON.stringify(currentFilters);
-
     const parsedLocalStorageFilters = JSON.parse(localStorageFilters!);
-
-    const localStorageFiltersString = JSON.stringify(parsedLocalStorageFilters);
-
-    console.log('currentFiltersString', currentFilters);
-    console.log('localStorageFiltersString', parsedLocalStorageFilters);
-
-    console.log(
-      'isFiltersDirty',
-      JSON.stringify(parsedLocalStorageFilters) !==
-        JSON.stringify(currentFilters),
-    );
 
     const result =
       JSON.stringify(parsedLocalStorageFilters) !==
@@ -283,9 +282,6 @@ export const NodeFilters = ({
           localStorageFilters?.type!,
           localStorageFilters?.status!,
         );
-
-        // setFiltersStatus(status);
-        // setFiltersType(type);
 
         console.log('params', params);
 
