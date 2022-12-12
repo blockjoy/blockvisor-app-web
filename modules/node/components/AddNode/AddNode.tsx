@@ -33,6 +33,11 @@ type AddNodeForm = {
   validatorKeys: File[];
 };
 
+type Blockchain = {
+  id: string;
+  name: string;
+};
+
 export function AddNode() {
   const router = useRouter();
   const { blockchains } = useGetBlockchains();
@@ -70,15 +75,15 @@ export function AddNode() {
     }
   }, [isLoading]);
 
-  useEffect(() => {
-    const sub = watch((value, { name }) => {
-      if (name === 'blockchain') {
-        updateSelected(value.blockchain?.label);
-      }
-    });
+  // useEffect(() => {
+  //   const sub = watch((value, { name }) => {
+  //     if (name === 'blockchain') {
+  //       updateSelected(value.blockchain?.label);
+  //     }
+  //   });
 
-    return () => sub.unsubscribe();
-  }, [watch]);
+  //   return () => sub.unsubscribe();
+  // }, [watch]);
 
   const toggle = (name: string) => {
     const value = getValues(name);
@@ -110,7 +115,6 @@ export function AddNode() {
     const params: CreateNodeParams = {
       nodeType: nodeType ?? 0,
       blockchain: blockchain?.value ?? '',
-      validatorKeys: validatorKeys,
       host: host?.value ?? data['ip'],
       ...rest,
     };
@@ -139,23 +143,29 @@ export function AddNode() {
             flex.justify.between,
           ]}
         >
-          <h1 css={[typo.medium]}>Add Node</h1>
+          <h2 css={[typo.small]}>New Node</h2>
           <button css={[styles.closeButton]} onClick={handleCloseModal}>
             <IconClose />
           </button>
         </div>
         <form css={[styles.content]} onSubmit={onSubmit}>
           <ul css={[reset.list]}>
-            <li css={[styles.spacing]}>
+            {/* <li css={[styles.spacing]}>
               <MultiSelect
+                label="Blockchain"
                 isMulti={false}
                 name="blockchain"
                 options={blockchainOptions}
               />
-            </li>
+            </li> */}
             <li css={[styles.spacing]}>
               <label
-                css={[spacing.bottom.mediumSmall, typo.button, display.block]}
+                css={[
+                  spacing.bottom.mediumSmall,
+                  typo.smaller,
+                  colors.text3,
+                  display.block,
+                ]}
               >
                 Node type
               </label>
@@ -165,7 +175,7 @@ export function AddNode() {
                 onChange={handleSelectNodeType}
               />
             </li>
-            {nodeTypeProperties.map((property: any) => {
+            {nodeTypeProperties?.map((property: any) => {
               if (property.type === nodeTypeProps.boolean) {
                 return (
                   <li key={property.name} css={[styles.spacing]}>
@@ -323,7 +333,12 @@ export function AddNode() {
             })}
 
             <li css={[styles.buttonWrapper]}>
-              <Button size="small" style="primary" type="submit">
+              <Button
+                display="block"
+                size="small"
+                style="primary"
+                type="submit"
+              >
                 Create Node
               </Button>
             </li>

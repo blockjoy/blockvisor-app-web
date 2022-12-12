@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const breadcrumbStyles = {
@@ -14,9 +15,12 @@ export const breadcrumbStyles = {
     padding: 0 24px;
     font-size: 13px;
 
-    @media only screen and (min-width: ${theme.screenSm}) {
+    @media ${breakpoints.fromXLrg} {
       display: flex;
     }
+  `,
+  wrapperSidebarOpen: css`
+    left: 60px;
   `,
   item: (theme: ITheme) => css`
     display: flex;

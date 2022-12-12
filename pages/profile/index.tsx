@@ -1,7 +1,7 @@
 import { authAtoms } from '@modules/auth';
 import { AppLayout } from '@modules/layout';
-import { ChangePassword, EditUser, PageTitle } from '@modules/profile';
-import { PageSection, Tabs } from '@shared/components';
+import { ChangePassword, EditUser } from '@modules/profile';
+import { PageTitle, PageSection, Tabs } from '@shared/components';
 import { useTabs } from '@shared/index';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
@@ -14,7 +14,7 @@ const Profile = () => {
   const tabItems = useMemo(
     () => [
       {
-        label: 'Personal Information',
+        label: 'Personal',
         value: '1',
         component: (
           <EditUser
@@ -43,7 +43,7 @@ const Profile = () => {
     setActiveTab(tabValue);
     push(
       {
-        pathname: '/profile/settings',
+        pathname: '/profile',
         query: { tab: tabValue },
       },
       undefined,
@@ -52,7 +52,7 @@ const Profile = () => {
   };
   return (
     <>
-      <PageTitle title="Settings" />
+      <PageTitle title="Profile" />
       <PageSection>
         <Tabs
           activeTab={activeTab}

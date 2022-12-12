@@ -4,7 +4,7 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   filterBlock: (theme: ITheme) => css`
-    margin-bottom: 24px;
+    margin-right: 16px;
     padding: 12px;
     border-radius: 4px;
     border: 1px solid ${theme.colorBorder};

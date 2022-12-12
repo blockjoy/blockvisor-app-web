@@ -1,8 +1,11 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export const styles = {
-  header: css`
-    padding: 24px 40px 28px 40px;
+  header: (theme: ITheme) => css`
+    padding: 16px 0 16px;
+    margin: 0 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   `,
   spacing: css`
     margin-bottom: 28px;
@@ -30,7 +33,7 @@ export const styles = {
     flex: 1;
   `,
   content: css`
-    padding: 0 40px 40px 40px;
+    padding: 16px;
   `,
   description: css`
     max-width: 280px;

@@ -10,6 +10,7 @@ export type FilterItem = {
   name?: string | undefined;
   id?: string | undefined;
   isChecked?: boolean | undefined;
+  isOnline?: boolean | undefined;
 };
 
 const activeNode = atom<BlockjoyNode | null>({
@@ -19,18 +20,23 @@ const activeNode = atom<BlockjoyNode | null>({
 
 const activeListType = atom<string | 'table' | 'grid'>({
   key: 'node.activeListType',
-  default: 'table',
+  default: 'grid',
 });
 
-const nodeRows = atom<Row[] | null>({
-  key: 'node.nodeRows',
-  default: null,
+const nodeList = atom<BlockjoyNode[]>({
+  key: 'node.nodeList',
+  default: [],
 });
 
-const nodeCells = atom<GridCell[] | null>({
-  key: 'node.nodeCells',
-  default: null,
-});
+// const nodeRows = atom<Row[] | null>({
+//   key: 'node.nodeRows',
+//   default: null,
+// });
+
+// const nodeCells = atom<GridCell[] | null>({
+//   key: 'node.nodeCells',
+//   default: null,
+// });
 
 const isLoading = atom<LoadingState>({
   key: 'node.loading',
@@ -42,13 +48,14 @@ const isFiltersOpen = atom<boolean>({
   default: false,
 });
 
+const isFiltersCollapsed = atom<boolean>({
+  key: 'node.isFiltersCollapsed',
+  default: true,
+});
+
 const filtersBlockchain = atom<FilterItem[]>({
   key: 'node.filtersBlockchain',
-  default: blockchainList.map((item) => ({
-    name: item.label,
-    id: item.value,
-    isChecked: false,
-  })),
+  default: [],
 });
 
 const filtersType = atom<FilterItem[]>({
@@ -62,11 +69,15 @@ const filtersType = atom<FilterItem[]>({
 
 const filtersStatus = atom<FilterItem[]>({
   key: 'node.filtersStatus',
-  default: nodeStatusList.map((item) => ({
-    name: item.name,
-    id: item.id.toString()!,
-    isChecked: false,
-  })),
+  default: nodeStatusList
+    .filter((item) => item.id !== 0)
+    .map((item) => ({
+      name: item.name,
+      // id: item.id.toString()!,
+      id: item.name.toString().toLowerCase()!,
+      isChecked: false,
+      isOnline: item.isOnline,
+    })),
 });
 
 const filtersHealth = atom<string | 'online' | 'offline' | null>({
@@ -81,10 +92,10 @@ const nodeWizardActive = atom<boolean>({
 
 export const nodeAtoms = {
   activeNode,
-  nodeRows,
-  nodeCells,
+  nodeList,
   isLoading,
   isFiltersOpen,
+  isFiltersCollapsed,
   activeListType,
   filtersHealth,
   filtersBlockchain,

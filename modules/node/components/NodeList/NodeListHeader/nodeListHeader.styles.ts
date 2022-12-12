@@ -6,12 +6,12 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     position: sticky;
     z-index: 2;
-    top: 55px;
+    top: 71px;
     flex: 1 1 auto;
     display: flex;
+    gap: 28px;
     align-items: center;
-    justify-content: space-between;
-    height: 40px;
+    height: 50px;
     margin-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${theme.colorBackground};
@@ -21,17 +21,26 @@ export const styles = {
     justify-content: flex-end;
   `,
   filterToggle: css`
-    @media ${breakpoints.fromLrg} {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    padding: 0;
+
+    path {
+      fill: rgba(255, 255, 255, 0.3);
+    }
+
+    @media ${breakpoints.toXlrg} {
       display: none;
     }
   `,
 
-  endBlock: css`
-    width: 100px;
-  `,
+  endBlock: css``,
   total: (theme: ITheme) => css`
     color: ${theme.colorLabel};
-    text-align: center;
+    margin-left: auto;
+    text-align: right;
     font-size: 13px;
     white-space: nowrap;
   `,

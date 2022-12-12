@@ -1,10 +1,4 @@
-import {
-  Button,
-  EmptyColumn,
-  PageHeader,
-  PageSection,
-  Table,
-} from '@shared/components';
+import { EmptyColumn, PageSection, PageTitle, Table } from '@shared/components';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { hostsToRows } from '../../utils/toRow';
@@ -64,37 +58,30 @@ export function Hosts() {
 
   const rows = hostsToRows(hosts);
   return (
-    <PageSection bottomBorder={false}>
-      <PageHeader>
-        Hosts
-        <Button
-          style="secondary"
-          onClick={handleCreateClicked}
-          size="small"
-          css={css`
-            min-width: 100px;
-            width: 100px;
-          `}
-        >
-          Add Host
-        </Button>
-      </PageHeader>
-      {Boolean(rows?.length) || !finished ? (
-        <Table
-          isLoading={loading}
-          headers={headers}
-          rows={rows}
-          onRowClick={handleRowClick}
-        />
-      ) : (
-        <EmptyColumn
-          id="js-host-empty"
-          title="No Hosts."
-          description="Add your nodes and hosts to get started with BlockVisor."
-        />
-      )}
+    <>
+      <PageTitle
+        title="Hosts"
+        actionOnClick={handleCreateClicked}
+        actionText="Add Host"
+      ></PageTitle>
+      <PageSection bottomBorder={false}>
+        {Boolean(rows?.length) || !finished ? (
+          <Table
+            isLoading={loading}
+            headers={headers}
+            rows={rows}
+            onRowClick={handleRowClick}
+          />
+        ) : (
+          <EmptyColumn
+            id="js-host-empty"
+            title="No Hosts."
+            description="Add your nodes and hosts to get started with BlockVisor."
+          />
+        )}
 
-      {/* <Pagination numberOfItems={10} itemsPerPage={1} /> */}
-    </PageSection>
+        {/* <Pagination numberOfItems={10} itemsPerPage={1} /> */}
+      </PageSection>
+    </>
   );
 }

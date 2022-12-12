@@ -9,29 +9,29 @@ export const styles = {
     border-bottom: 1px solid var(--color-text-5-o10);
 
     @media ${breakpoints.toXlrg} {
-      display: block;
+      th {
+        width: 160px;
+      }
     }
   `,
   column: css`
     padding-top: 28px;
     padding-bottom: 8px;
 
-    @media ${breakpoints.toXlrg} {
+    /* @media ${breakpoints.toXlrg} {
       padding-top: 8px;
       padding-bottom: 8px;
       display: block;
-    }
+    } */
   `,
   heading: css`
     padding-right: 28px;
     font-weight: var(--font-weight-normal);
     ${typo.uppercase}
     ${typo.microlabel}
-    ${colors.text3}
-
-    @media ${breakpoints.toXlrg} {
+    ${colors.text3} /* @media ${breakpoints.toXlrg} {
       padding-top: 28px;
       padding-bottom: 0;
-    }
+    } */
   `,
 };

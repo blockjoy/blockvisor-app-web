@@ -9,9 +9,12 @@ export const styles = {
     border: 0;
     cursor: pointer;
     padding: 0;
+    width: 30px;
+    height: 30px;
 
+    /* 
     @media only screen and (min-width: ${theme.screenSm}) {
       display: none;
-    }
+    } */
   `,
 };

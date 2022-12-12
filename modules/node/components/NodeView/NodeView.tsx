@@ -4,16 +4,17 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import {
   DangerZone,
-  DetailsHeader,
   DetailsTable,
-  NodeEarnings,
   PageHeader,
   PageSection,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
-import { NodeStatus } from '../NodeStatus/NodeStatus';
+import { spacing } from 'styles/utils.spacing.styles';
+import { NodeViewPageHeader } from './NodeViewPageHeader';
+import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
+import { NodeViewConfig } from './NodeViewConfig';
 
 export function NodeView() {
   const [isMounted, setMounted] = useState<boolean>(false);
@@ -30,33 +31,37 @@ export function NodeView() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setMounted(true);
     if (router.isReady) {
+      setMounted(true);
       loadNode(id);
     }
-  }, [router.isReady]);
+  }, [id]);
 
   if (!isMounted) return null;
 
   return (
     <>
-      <PageSection>
-        <PageHeader>
-          <BackButton />
-        </PageHeader>
+      <NodeViewPageHeader />
+      <PageSection topPadding={false}>
+        <div css={spacing.top.medium}>
+          <PageHeader>
+            <BackButton />
+          </PageHeader>
+        </div>
 
         {!isLoading ? (
           <>
-            <DetailsHeader
+            <NodeViewDetailsHeader
               handleStop={handleStop}
               handleRestart={handleRestart}
-              status={<NodeStatus status={node.status} />}
-              title={node.name}
-              ip={node.ip}
-              date={node.created}
-              id={node.id}
+              status={node?.status!}
+              blockchainId={node?.blockchainId!}
+              title={node?.name!}
+              ip={node?.ip!}
+              date={node?.created!}
+              id={node?.id!}
             />
-            <DetailsTable bodyElements={node.details} />
+            <DetailsTable bodyElements={node?.details!} />
           </>
         ) : (
           <>
@@ -69,18 +74,23 @@ export function NodeView() {
         )}
       </PageSection>
 
-      {!isLoading && (
+      {node?.nodeTypeConfig && !isLoading && <NodeViewConfig />}
+
+      {/* {!isLoading && (
         <PageSection>
           <NodeEarnings />
         </PageSection>
-      )}
-
+      )} */}
       <PageSection>
-        <DangerZone
-          elementName="Node"
-          elementNameToCompare={node.name}
-          handleDelete={handleDelete}
-        ></DangerZone>
+        {isLoading ? (
+          <TableSkeleton />
+        ) : (
+          <DangerZone
+            elementName="Node"
+            elementNameToCompare={node?.name!}
+            handleDelete={handleDelete}
+          ></DangerZone>
+        )}
       </PageSection>
     </>
   );

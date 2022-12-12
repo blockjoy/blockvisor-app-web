@@ -8,8 +8,11 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './SidebarFooter.styles';
 import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
 import { spacing } from 'styles/utils.spacing.styles';
+import { useRecoilState } from 'recoil';
+import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 export function SidebarFooter() {
+  const [layout, setLayout] = useRecoilState(layoutState);
   const router = useRouter();
   const signOut = useSignOut();
 
@@ -19,25 +22,32 @@ export function SidebarFooter() {
   };
 
   return (
-    <footer css={[styles.wrapper]}>
+    <footer
+      css={[styles.wrapper, layout !== 'sidebar' && styles.wrapperCollapsed]}
+    >
       <div css={[styles.support, typo.smaller]}>
         <button
           onClick={handleLogout}
           css={[
             reset.button,
-            styles.button,
+            styles.button(layout !== 'sidebar'),
             flex.display.flex,
             flex.align.center,
           ]}
         >
           <IconDoor css={[styles.icon]} />
-          <span css={[styles.buttonText]}>Sign Out</span>
+          <span
+            className="signout-text"
+            css={[styles.buttonText, layout !== 'sidebar' && styles.tooltip]}
+          >
+            Sign Out
+          </span>
         </button>
       </div>
-      <div css={[styles.separator]} />
+      <div css={[styles.separator(layout !== 'sidebar')]} />
       <div
         css={[
-          styles.copy,
+          styles.copy(layout !== 'sidebar'),
           flex.display.flex,
           flex.align.center,
           spacing.top.medium,
@@ -47,8 +57,13 @@ export function SidebarFooter() {
           <LogoSmall />
         </span>
         <p
-          css={[typo.micro, opacity.o30, styles.copy, spacing.left.medium]}
-          className="sidenav__copy u-o-30 t-micro"
+          css={[
+            typo.micro,
+            opacity.o30,
+            spacing.left.medium,
+            layout !== 'sidebar' && styles.tooltip,
+          ]}
+          className="sidebar-copy"
         >
           BlockVisor is a Blockjoy product. All rights reserved.
         </p>

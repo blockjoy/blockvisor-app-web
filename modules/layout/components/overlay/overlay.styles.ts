@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 type OverlayProps = {
@@ -31,7 +32,7 @@ export const overlayStyles = {
     ({ isSidebarOpen, isOthersOpen }: OverlayProps) =>
     (theme: ITheme) =>
       css`
-        @media only screen and (min-width: ${theme.screenMd}) {
+        @media ${breakpoints.fromXLrg} {
           ${isSidebarOpen &&
           !isOthersOpen &&
           css`

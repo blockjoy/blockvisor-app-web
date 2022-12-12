@@ -6,17 +6,16 @@ export const styles = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 56px;
+    height: 72px;
+    padding-left: 50px;
+    padding-right: 16px;
     border-bottom: 1px solid ${theme.colorBorder};
     box-sizing: border-box;
   `,
-  logo: css`
-    & path {
-      fill: #4c4f4d;
-    }
-  `,
-  logoWrapper: css`
-    flex: 0 0 28px;
-    margin-right: 20px;
+  burgerWrapper: css`
+    display: grid;
+    padding: 0 16px;
+    place-items: center;
+    width: 50px;
   `,
 };

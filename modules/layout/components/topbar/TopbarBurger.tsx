@@ -1,18 +1,18 @@
 import { useRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { styles } from './TopbarBurger.styles';
-import IconBlockvisor from '@public/assets/icons/menu-32.svg';
+import IconBurger from '@public/assets/icons/menu-32.svg';
 
 export const TopbarBurger = () => {
-  const [, setApp] = useRecoilState(layoutState);
+  const [app, setApp] = useRecoilState(layoutState);
 
   const handleClick = () => {
-    setApp('sidebar');
+    setApp(app === 'sidebar' ? undefined : 'sidebar');
   };
 
   return (
     <button css={[styles.button]} onClick={handleClick}>
-      <IconBlockvisor />
+      <IconBurger />
     </button>
   );
 };

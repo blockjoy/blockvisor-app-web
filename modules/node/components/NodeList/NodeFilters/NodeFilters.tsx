@@ -1,12 +1,17 @@
 import { styles } from './nodeFilters.styles';
 import { styles as blockStyles } from './NodeFiltersBlock.styles';
-import { Checkbox, Button } from '@shared/components';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
-import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from 'react';
+import { Checkbox } from '@shared/components';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
 import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
+import { apiClient } from '@modules/client';
+import IconClose from '@public/assets/icons/close-12.svg';
+import IconRefresh from '@public/assets/icons/refresh-12.svg';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { nodeStatusList } from '@shared/constants/lookups';
 
 export const NodeFilters = ({
   loadNodes,
@@ -16,6 +21,8 @@ export const NodeFilters = ({
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
+
+  const [isDirty, setIsDirty] = useState(false);
 
   const [filtersType, setFiltersType] = useRecoilState(nodeAtoms.filtersType);
 
@@ -27,25 +34,26 @@ export const NodeFilters = ({
     nodeAtoms.filtersHealth,
   );
 
-  const isFiltersOpen = useRecoilValue(nodeAtoms.isFiltersOpen);
-
-  console.log('isFiltersOpen', isFiltersOpen);
-
-  const [showMoreBlockchains, setShowMoreBlockchains] =
-    useState<boolean>(false);
-
-  const [showMoreTypes, setShowMoreTypes] = useState<boolean>(false);
-
-  const [showMoreStatus, setShowMoreStatus] = useState<boolean>(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
+    nodeAtoms.isFiltersOpen,
+  );
+  const [isFiltersCollapsed, setIsFiltersCollapsed] = useRecoilState(
+    nodeAtoms.isFiltersCollapsed,
+  );
 
   const [openFilterName, setOpenFilterName] =
     useState<string | 'Blockchain' | 'Status' | 'Type'>('');
 
-  const handleShowMoreClicked = (
-    value: boolean,
-    setter: Dispatch<SetStateAction<boolean>>,
-  ) => {
-    setter(!value);
+  const loadLookups = async () => {
+    const blockchains: any = await apiClient.getBlockchains();
+
+    const mappedBlockchains: FilterItem[] = blockchains?.map((b: any) => ({
+      id: b.id,
+      name: b.name,
+      isChecked: false,
+    }));
+
+    setFiltersBlockchain(mappedBlockchains);
   };
 
   const handleFilterChanged = (
@@ -53,6 +61,10 @@ export const NodeFilters = ({
     list: FilterItem[],
     setter: SetterOrUpdater<FilterItem[]>,
   ) => {
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+
     const { target } = e;
     const { id, checked } = target;
 
@@ -66,32 +78,126 @@ export const NodeFilters = ({
     setter(listCopy);
   };
 
-  const handleUpdateClicked = () => {
-    const blockchainFilters: string[] = filtersBlockchain
-      .filter((item) => item.isChecked)
-      .map((item) => item.id!);
+  const handleResetClicked = async () => {
+    setFiltersHealth(null);
 
-    const typeFilters: string[] = filtersType
-      .filter((item) => item.isChecked)
-      .map((item) => item.id!);
+    let filtersBlockchainCopy = filtersBlockchain.map((item) => ({
+      id: item.id,
+      name: item.name,
+      isChecked: false,
+    }));
+    setFiltersBlockchain(filtersBlockchainCopy);
 
-    const statusFilters: string[] = filtersStatus
-      .filter((item) => item.isChecked)
-      .map((item) => item.id!);
+    let filtersStatusCopy = filtersStatus.map((item) => ({
+      id: item.id,
+      name: item.name,
+      isChecked: false,
+    }));
+    setFiltersStatus(filtersStatusCopy);
 
-    const params: FilterCriteria = {
-      blockchain: blockchainFilters,
-      node_type: typeFilters,
-      node_status: statusFilters,
-    };
+    let filtersTypeCopy = filtersType.map((item) => ({
+      id: item.id,
+      name: item.name,
+      isChecked: false,
+    }));
+    setFiltersType(filtersTypeCopy);
 
-    console.log('params', params);
+    localStorage.removeItem('nodeFilters');
 
+    const params = buildParams([], [], []);
+
+    refreshNodeList(params);
+  };
+
+  const refreshNodeList = (params?: any) => {
     loadNodes(params);
   };
 
+  const buildParams = (
+    blockchain: FilterItem[],
+    type: FilterItem[],
+    status: FilterItem[],
+  ) => {
+    const blockchainFilters: string[] = blockchain
+      .filter((item) => item.isChecked)
+      .map((item) => item.id!);
+
+    const typeFilters: string[] = type
+      .filter((item) => item.isChecked)
+      .map((item) => item.id!);
+
+    const statusFilters: string[] = status
+      .filter((item) => item.isChecked)
+      .map((item) => item.id!);
+
+    console.log('statusFilters', statusFilters);
+
+    const params: FilterCriteria = {
+      blockchain: blockchainFilters?.length ? blockchainFilters : undefined,
+      node_type: typeFilters?.length ? typeFilters : undefined,
+      node_status: statusFilters?.length ? statusFilters : undefined,
+    };
+
+    return params;
+  };
+
+  const loadFiltersFromLocalStorage = async () => {
+    if (localStorage.getItem('nodeFilters')) {
+      const localStorageFilters = JSON.parse(
+        localStorage.getItem('nodeFilters')!,
+      );
+
+      const blockchain: FilterItem[] = localStorageFilters.blockchain;
+      const status: FilterItem[] = localStorageFilters.status;
+      const type: FilterItem[] = localStorageFilters.type;
+      const health = localStorageFilters.health;
+
+      return {
+        blockchain,
+        status,
+        type,
+        health,
+      };
+    } else {
+      return null;
+    }
+  };
+
+  const handleUpdateClicked = () => {
+    setIsDirty(false);
+
+    const params = buildParams(filtersBlockchain, filtersType, filtersStatus);
+    console.log('params', params);
+
+    const localStorageFilters = {
+      blockchain: filtersBlockchain,
+      type: filtersType,
+      status: filtersStatus,
+      health: filtersHealth,
+    };
+
+    localStorage.setItem('nodeFilters', JSON.stringify(localStorageFilters));
+    refreshNodeList(params);
+  };
+
   const handleHealthChanged = (health: string) => {
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+
     setFiltersHealth(filtersHealth === health ? null : health);
+
+    const statuses = nodeStatusList
+      .filter((item) => item.id !== 0)
+      .map((item) => ({
+        name: item.name,
+        // id: item.id.toString()!,
+        id: item.name.toString().toLowerCase()!,
+        isChecked: health === 'online' ? item.isOnline : !item.isOnline,
+        isOnline: item.isOnline,
+      }));
+
+    setFiltersStatus(statuses);
   };
 
   const handleFilterBlockClicked = (filterName: string) => {
@@ -106,21 +212,15 @@ export const NodeFilters = ({
     }
   };
 
-  const blockchainFilterCount = filtersBlockchain.filter(
+  const blockchainFilterCount = filtersBlockchain?.filter(
     (item) => item.isChecked,
   ).length;
 
-  const typeFilterCount = filtersType.filter((item) => item.isChecked).length;
+  const typeFilterCount = filtersType?.filter((item) => item.isChecked).length;
 
   const statusFilterCount = filtersStatus?.filter(
     (item) => item.isChecked,
   ).length;
-
-  const totalFilterCount =
-    Number(blockchainFilterCount > 0) +
-    Number(typeFilterCount > 0) +
-    Number(statusFilterCount > 0) +
-    Number(!filtersHealth ? 0 : 1);
 
   const filters = [
     {
@@ -128,32 +228,72 @@ export const NodeFilters = ({
       filterCount: blockchainFilterCount,
       filterList: filtersBlockchain,
       setFilterList: setFiltersBlockchain,
-      setShowMore: setShowMoreBlockchains,
-      showMore: showMoreBlockchains,
     },
     {
       name: 'Status',
       filterCount: statusFilterCount,
       filterList: filtersStatus,
       setFilterList: setFiltersStatus,
-      setShowMore: setShowMoreStatus,
-      showMore: showMoreStatus,
     },
     {
       name: 'Type',
       filterCount: typeFilterCount,
       filterList: filtersType,
       setFilterList: setFiltersType,
-      setShowMore: setShowMoreTypes,
-      showMore: showMoreTypes,
     },
   ];
 
+  useEffect(() => {
+    (async () => {
+      if (localStorage.getItem('nodeFiltersCollapsed') === 'false') {
+        setIsFiltersCollapsed(false);
+      } else {
+        setIsFiltersCollapsed(true);
+      }
+
+      if (!localStorage.getItem('nodeFilters')) {
+        loadLookups();
+        refreshNodeList();
+      } else {
+        const localStorageFilters = await loadFiltersFromLocalStorage();
+
+        setFiltersBlockchain(localStorageFilters?.blockchain!);
+        setFiltersType(localStorageFilters?.type!);
+        setFiltersStatus(localStorageFilters?.status!);
+        setFiltersHealth(localStorageFilters?.health || '');
+
+        const params = buildParams(
+          localStorageFilters?.blockchain!,
+          localStorageFilters?.type!,
+          localStorageFilters?.status!,
+        );
+
+        console.log('params', params);
+
+        refreshNodeList(params);
+      }
+    })();
+  }, []);
+
   return (
-    <div css={styles.outerWrapper}>
-      <NodeFiltersHeader totalFilterCount={totalFilterCount} />
+    <div
+      css={[
+        styles.outerWrapper,
+        isFiltersCollapsed && styles.outerWrapperCollapsed,
+      ]}
+    >
+      <NodeFiltersHeader />
       <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-        <div css={styles.filters}>
+        <button
+          css={styles.updateButton}
+          type="button"
+          disabled={!isDirty}
+          onClick={handleUpdateClicked}
+        >
+          <IconRefresh />
+          Apply
+        </button>
+        <PerfectScrollbar css={styles.filters}>
           <div
             css={blockStyles.filterBlock}
             onClick={() => setOpenFilterName('')}
@@ -192,23 +332,18 @@ export const NodeFilters = ({
               filterCount={item.filterCount}
               filterList={item.filterList}
               setFilterList={item.setFilterList}
-              setShowMore={item.setShowMore}
               onFilterChanged={handleFilterChanged}
-              onShowMoreClicked={() =>
-                handleShowMoreClicked(item.showMore, item.setShowMore)
-              }
-              showMore={item.showMore}
             />
           ))}
-          <Button
-            display="block"
-            style="outline"
-            onClick={handleUpdateClicked}
-            size="small"
-          >
-            Update
-          </Button>
-        </div>
+        </PerfectScrollbar>
+        <button
+          css={styles.resetButton}
+          type="button"
+          onClick={handleResetClicked}
+        >
+          <IconClose />
+          Reset Filters
+        </button>
       </div>
     </div>
   );

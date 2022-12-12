@@ -6,6 +6,7 @@ export const styles = {
     position: relative;
     display: flex;
     flex-direction: column;
+    padding: 0 16px;
 
     @media ${breakpoints.fromXLrg} {
       flex-direction: row;

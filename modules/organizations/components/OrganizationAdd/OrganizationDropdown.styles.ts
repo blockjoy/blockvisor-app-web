@@ -6,6 +6,11 @@ export const styles = {
     position: relative;
     min-width: 0;
   `,
+  hiddenOnDesktop: css`
+    @media ${breakpoints.fromXLrg} {
+      display: none;
+    }
+  `,
   button: css`
     position: relative;
     z-index: 2;
@@ -16,7 +21,7 @@ export const styles = {
     background: transparent;
     border: 0;
     cursor: pointer;
-    padding: 8px 20px;
+    padding: 8px 16px 8px 6px;
     border-radius: 4px;
     transition: all 0.1s ease-out;
 

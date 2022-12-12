@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -18,26 +19,38 @@ export const styles = {
     background: ${theme.colorBackground};
     border-bottom: 1px solid ${theme.colorBorder};
 
-    @media only screen and (min-width: ${theme.screenSm}) {
-      padding-left: 300px;
+    @media ${breakpoints.fromLrg} {
+      padding-left: 64px;
+    }
+
+    /* @media only screen and (min-width: ${theme.screenSm}) {
+      padding-left: 260px;
       z-index: 4;
+    } */
+  `,
+  wrapperSidebarOpen: css`
+    @media ${breakpoints.fromLrg} {
+      padding-left: 260px;
     }
   `,
   actionsLeft: (theme: ITheme) => css`
     position: absolute;
     top: 0;
     left: 0;
-    width: 160px;
+    width: 580px;
     height: 100%;
     display: flex;
     gap: 10px;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 16px 0 64px;
     transition: all 0.3s;
 
-    @media only screen and (min-width: ${theme.screenSm}) {
+    /* @media only screen and (min-width: ${theme.screenSm}) {
       opacity: 0;
       visibility: hidden;
-    }
+    } */
+  `,
+  topbarEnd: css`
+    width: 200px;
   `,
 };

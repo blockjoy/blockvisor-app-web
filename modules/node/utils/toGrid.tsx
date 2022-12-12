@@ -4,7 +4,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { BlockchainIcon } from '@shared/components';
 
 export const toGrid = (
-  nodeList: BlockjoyNode[] | null,
+  nodeList: BlockjoyNode[],
   onCellClick: (args0: any) => void,
 ) => {
   return nodeList?.map((node: any) => {
@@ -15,7 +15,7 @@ export const toGrid = (
           key={node.id}
           onCellClick={() => onCellClick({ key: node.id })}
           cellTitle={node.name}
-          cellIcon={<BlockchainIcon />}
+          cellIcon={<BlockchainIcon blockchainId={node.blockchainId} />}
           cellStatus={<NodeStatus hasBorder status={node.status} />}
           cellType={
             nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)?.name

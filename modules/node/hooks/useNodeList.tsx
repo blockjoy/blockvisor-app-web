@@ -2,17 +2,15 @@ import { useRouter } from 'next/router';
 import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useEffect, useState } from 'react';
-
 import { apiClient } from '@modules/client';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { authAtoms } from '@modules/auth';
-import { toRows } from '../utils/toRows';
-import { toGrid } from '../utils/toGrid';
+import { authAtoms, useIdentityRepository } from '@modules/auth';
+
 import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 
 interface Hook {
+  nodeList: BlockjoyNode[];
   loadNodes: (filters?: FilterCriteria) => void;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
@@ -21,16 +19,13 @@ interface Hook {
 export const useNodeList = (): Hook => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
+  const repository = useIdentityRepository();
 
-  const activeListType = useRecoilValue(nodeAtoms.activeListType);
-
-  const [, setNodeRows] = useRecoilState(nodeAtoms.nodeRows);
-  const [, setNodeCells] = useRecoilState(nodeAtoms.nodeCells);
   const [, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
 
-  const setLayout = useSetRecoilState(layoutState);
+  const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
 
-  const [nodeList, setNodeList] = useState<BlockjoyNode[]>([]);
+  const setLayout = useSetRecoilState(layoutState);
 
   const handleAddNode = () => {
     setLayout('nodes');
@@ -43,9 +38,12 @@ export const useNodeList = (): Hook => {
   const loadNodes = async (filters?: FilterCriteria) => {
     setIsLoading('loading');
     // TODO: Org ID needs be set here
-    let org_id = user?.defaultOrganization?.id || '';
 
-    const nodes: any = await apiClient.listNodes(org_id, filters);
+    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
+
+    // let org_id = user?.defaultOrganization?.id || '';
+
+    const nodes: any = await apiClient.listNodes(org_id!, filters);
 
     console.log('nodes', nodes);
 
@@ -56,19 +54,8 @@ export const useNodeList = (): Hook => {
     setIsLoading('finished');
   };
 
-  useEffect(() => {
-    if (nodeList?.length) {
-      if (activeListType === 'table') {
-        const rows = toRows(nodeList);
-        setNodeRows(rows!);
-      } else {
-        const cells = toGrid(nodeList, handleNodeClick);
-        setNodeCells(cells!);
-      }
-    }
-  }, [nodeList?.length, activeListType]);
-
   return {
+    nodeList,
     loadNodes,
     handleAddNode,
     handleNodeClick,

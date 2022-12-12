@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -19,18 +20,26 @@ export const styles = {
     background: ${theme.colorSidebar};
     transform: translateX(-100%);
 
-    transition-property: transform;
-    transition-duration: 0.4s;
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      transform: translateX(0);
-      z-index: 5;
+    @media ${breakpoints.toXlrg} {
+      transition-property: transform;
+      transition-duration: 0.4s;
     }
+
+    transform: translateX(0);
+    z-index: 5;
   `,
   sidebarOpen: css`
     transform: translateX(0);
+    z-index: 10;
   `,
   sidebarClosed: css`
-    transform: translateX(-100%);
+    @media ${breakpoints.toXlrg} {
+      transform: translateX(-100%);
+      z-index: 5;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      width: 64px;
+    }
   `,
 };
