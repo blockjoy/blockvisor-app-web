@@ -67,7 +67,7 @@ export const NodeCreate = () => {
           onInputMouseEnter={handleMouseEnter}
           onInputMouseLeave={handleMouseLeave}
         />
-        {true && (
+        {isBlockchainsOpen && (
           <NodeCreateBlockchain
             onInputMouseEnter={handleMouseEnter}
             onInputMouseLeave={handleMouseLeave}
