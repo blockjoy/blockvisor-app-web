@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { styles } from './NodeCreateBlockchain.styles';
 import { BlockchainIcon } from '@shared/components';
 import { nodeTypeList } from '@shared/constants/lookups';
+import { NodeCreateBlockchainMobile } from './NodeCreateBlockchainMobile';
 
 type Props = {
   inputValue: string;
@@ -19,6 +20,12 @@ export const NodeCreateBlockchain: FC<Props> = ({
 }) => {
   const { blockchains } = useGetBlockchains();
 
+  const filteredBlockchains = blockchains.filter((b) =>
+    b.name?.toLowerCase().includes(inputValue?.toLowerCase()),
+  );
+
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <div
       css={styles.wrapper}
@@ -26,11 +33,13 @@ export const NodeCreateBlockchain: FC<Props> = ({
       onMouseLeave={onInputMouseLeave}
     >
       <div css={styles.grid}>
-        {blockchains
-          .filter((b) =>
-            b.name?.toLowerCase().includes(inputValue?.toLowerCase()),
-          )
-          .map((b) => (
+        {filteredBlockchains.map((b) =>
+          isMobile ? (
+            <NodeCreateBlockchainMobile
+              blockchain={b}
+              onNodeTypeClicked={onNodeTypeClicked}
+            />
+          ) : (
             <div key={b.id} css={styles.row}>
               <div css={styles.header} key={b.id}>
                 <span css={styles.iconWrapper}>
@@ -58,7 +67,8 @@ export const NodeCreateBlockchain: FC<Props> = ({
                 </div>
               </div>
             </div>
-          ))}
+          ),
+        )}
       </div>
     </div>
   );

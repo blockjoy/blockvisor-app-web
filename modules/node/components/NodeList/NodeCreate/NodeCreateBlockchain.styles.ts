@@ -29,6 +29,13 @@ export const styles = {
     grid-auto-rows: 140px;
     gap: 8px;
     padding: 16px;
+
+    @media ${breakpoints.toMed} {
+      grid-template-columns: 1fr;
+      grid-auto-rows: max-content;
+      gap: 0;
+      padding: 10px 0 8px;
+    }
   `,
   miniIconWrapper: css`
     > span {

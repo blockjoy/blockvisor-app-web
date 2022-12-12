@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   wrapper: css`
@@ -9,9 +10,17 @@ export const styles = {
 
     h1 {
       width: 100px;
+
+      @media ${breakpoints.toLrg} {
+        display: none;
+      }
     }
   `,
   spacer: css`
     width: 100px;
+
+    @media ${breakpoints.toLrg} {
+      display: none;
+    }
   `,
 };
