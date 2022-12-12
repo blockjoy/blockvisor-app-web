@@ -17,7 +17,7 @@ export const styles = {
     flex: 1 1 auto;
     height: 44px;
     /* padding-left: 40px; */
-    padding-left: 16px;
+    padding-left: 56px;
     color: ${theme.colorText};
     border: 2px solid transparent;
     outline: none;
@@ -51,26 +51,21 @@ export const styles = {
   `,
   createButton: (theme: ITheme) => css`
     position: absolute;
-    top: 6px;
-    right: 5px;
-    width: 32px;
-    height: 32px;
-    padding: 7px;
+    top: 50%;
+    left: 5px;
+    translate: 0 -50%;
+    width: 42px;
+    height: 24px;
+    padding: 12px;
     border: 0;
-    border-radius: 4px;
+    border-right: 1px solid ${theme.colorLabel};
     display: grid;
     place-items: center;
     pointer-events: none;
-    background: ${theme.colorPrimary};
-    cursor: pointer;
+    background: transparent;
 
-    :disabled {
-      background: rgba(0, 0, 0, 0.2);
-      cursor: not-allowed;
-
-      & path {
-        fill: rgba(255, 255, 255, 0.2);
-      }
+    & path {
+      fill: ${theme.colorPrimary};
     }
   `,
   closeButton: (theme: ITheme) => css`

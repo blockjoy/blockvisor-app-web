@@ -2,7 +2,7 @@ import { styles } from './NodeCreateInput.styles';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
 import { BlockchainIcon } from '@shared/components';
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 
 type Props = {
   onInputChanged: (args0: ChangeEvent<HTMLInputElement>) => void;
@@ -19,13 +19,30 @@ export const NodeCreateInput: FC<Props> = ({
   isBlockchainsOpen,
   inputValue,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  console.log('isBlockchainsOpen', isBlockchainsOpen);
+
+  useEffect(() => {
+    if (isBlockchainsOpen && inputRef && inputRef?.current) {
+      inputRef.current.focus();
+      setIsFocused(true);
+    } else {
+      inputRef.current?.blur();
+      setIsFocused(false);
+    }
+  }, [isBlockchainsOpen]);
+
   return (
     <div css={styles.inputWrapper}>
       {/* <span css={styles.blockchainIcon}>
         <BlockchainIcon />
       </span> */}
       <input
-        placeholder="Launch a Node"
+        ref={inputRef}
+        placeholder={isFocused ? 'Find a Protocol' : 'Launch a Node'}
         onMouseEnter={onInputMouseEnter}
         onMouseLeave={onInputMouseLeave}
         onChange={onInputChanged}
