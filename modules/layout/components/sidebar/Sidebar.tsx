@@ -8,13 +8,7 @@ import SidebarMain from './SidebarMain';
 import { useEffect } from 'react';
 
 export default () => {
-  const [layout, setLayout] = useRecoilState(layoutState);
-
-  useEffect(() => {
-    if (localStorage.getItem('sidebarOpen')) {
-      setLayout('sidebar');
-    }
-  }, []);
+  const [layout] = useRecoilState(layoutState);
 
   return (
     <div
