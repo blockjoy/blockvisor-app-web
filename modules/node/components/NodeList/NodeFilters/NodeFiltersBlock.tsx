@@ -59,20 +59,22 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
         css={[styles.checkboxList, styles.checkboxListShowAll]}
       >
         {isOpen
-          ? filterList?.map((item) => (
-              <div css={styles.checkboxRow}>
-                <Checkbox
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    e.stopPropagation();
-                    onFilterChanged(e, filterList, setFilterList);
-                  }}
-                  name={item.name!}
-                  checked={item.isChecked}
-                >
-                  {item.name}
-                </Checkbox>
-              </div>
-            ))
+          ? filterList
+              ?.filter((item) => item.id)
+              ?.map((item) => (
+                <div css={styles.checkboxRow}>
+                  <Checkbox
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      e.stopPropagation();
+                      onFilterChanged(e, filterList, setFilterList);
+                    }}
+                    name={item.name!}
+                    checked={item.isChecked}
+                  >
+                    {item.name}
+                  </Checkbox>
+                </div>
+              ))
           : filterList
               .filter((item) => item.isChecked)
               .map((item) => (
