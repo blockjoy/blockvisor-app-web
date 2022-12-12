@@ -110,7 +110,7 @@ export default () => {
           </div>
         ))}
       </div>
-      {layout === 'sidebar' && <SidebarFooter />}
+      <SidebarFooter />
     </main>
   );
 };
