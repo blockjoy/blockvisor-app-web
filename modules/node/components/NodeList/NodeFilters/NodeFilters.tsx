@@ -310,7 +310,7 @@ export const NodeFilters = ({
           onClick={handleUpdateClicked}
         >
           <IconRefresh />
-          Refresh
+          Apply
         </button>
         <PerfectScrollbar css={styles.filters}>
           <div
