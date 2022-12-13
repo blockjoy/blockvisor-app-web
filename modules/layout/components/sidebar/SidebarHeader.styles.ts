@@ -11,6 +11,10 @@ export const styles = {
     padding-right: 16px;
     border-bottom: 1px solid ${theme.colorBorder};
     box-sizing: border-box;
+
+    & path {
+      fill: ${theme.colorLabel};
+    }
   `,
   burgerWrapper: css`
     display: grid;
