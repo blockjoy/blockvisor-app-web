@@ -10,6 +10,10 @@ export const styles = {
     border: 1px solid ${theme.colorBorder};
     cursor: pointer;
   `,
+  filterBlockDisabled: css`
+    opacity: 0.4;
+    cursor: not-allowed;
+  `,
   labelHeader: (theme: ITheme) => css`
     display: flex;
     align-items: center;

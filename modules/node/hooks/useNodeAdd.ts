@@ -64,8 +64,6 @@ export const useNodeAdd = (): Hook => {
     params: CreateNodeParams,
     onSuccess: (args0?: string) => void,
   ) => {
-    console.log('params', params);
-
     setIsLoading(true);
 
     const hostId = params.host;
@@ -88,8 +86,6 @@ export const useNodeAdd = (): Hook => {
     // });
 
     const createdNode: any = await apiClient.createNode(node);
-
-    console.log('createdNode', createNode);
 
     const nodeId = createdNode.messagesList[0];
 

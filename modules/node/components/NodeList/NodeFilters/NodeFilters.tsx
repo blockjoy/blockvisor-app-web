@@ -130,8 +130,6 @@ export const NodeFilters = ({
       .filter((item) => item.isChecked)
       .map((item) => item.id!);
 
-    console.log('statusFilters', statusFilters);
-
     const params: FilterCriteria = {
       blockchain: blockchainFilters?.length ? blockchainFilters : undefined,
       node_type: typeFilters?.length ? typeFilters : undefined,
@@ -167,7 +165,6 @@ export const NodeFilters = ({
     setIsDirty(false);
 
     const params = buildParams(filtersBlockchain, filtersType, filtersStatus);
-    console.log('params', params);
 
     const localStorageFilters = {
       blockchain: filtersBlockchain,
@@ -193,7 +190,12 @@ export const NodeFilters = ({
         name: item.name,
         // id: item.id.toString()!,
         id: item.name.toString().toLowerCase()!,
-        isChecked: health === 'online' ? item.isOnline : !item.isOnline,
+        isChecked:
+          filtersHealth === health
+            ? false
+            : health === 'online'
+            ? item.isOnline
+            : !item.isOnline,
         isOnline: item.isOnline,
       }));
 
@@ -225,18 +227,21 @@ export const NodeFilters = ({
   const filters = [
     {
       name: 'Blockchain',
+      isDisabled: false,
       filterCount: blockchainFilterCount,
       filterList: filtersBlockchain,
       setFilterList: setFiltersBlockchain,
     },
     {
       name: 'Status',
+      isDisabled: !!filtersHealth,
       filterCount: statusFilterCount,
       filterList: filtersStatus,
       setFilterList: setFiltersStatus,
     },
     {
       name: 'Type',
+      isDisabled: false,
       filterCount: typeFilterCount,
       filterList: filtersType,
       setFilterList: setFiltersType,
@@ -267,8 +272,6 @@ export const NodeFilters = ({
           localStorageFilters?.type!,
           localStorageFilters?.status!,
         );
-
-        console.log('params', params);
 
         refreshNodeList(params);
       }
@@ -324,6 +327,7 @@ export const NodeFilters = ({
           </div>
           {filters.map((item) => (
             <NodeFiltersBlock
+              isDisabled={item.isDisabled}
               isOpen={item.name === openFilterName}
               onPlusMinusClicked={handlePlusMinusClicked}
               onFilterBlockClicked={handleFilterBlockClicked}
