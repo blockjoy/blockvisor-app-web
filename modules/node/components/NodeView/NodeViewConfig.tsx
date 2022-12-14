@@ -51,8 +51,6 @@ export const NodeViewConfig = () => {
     setValue('validatorKeys', newKeys);
   };
 
-  console.log('node', node);
-
   // mocked node type config
 
   return (
