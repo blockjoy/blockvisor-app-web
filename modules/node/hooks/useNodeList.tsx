@@ -7,11 +7,19 @@ import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { authAtoms, useIdentityRepository } from '@modules/auth';
 
-import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
+import {
+  UIFilterCriteria as FilterCriteria,
+  UIPagination,
+} from '@modules/client/grpc_client';
 
+export type LoadNodeParams = {
+  filters?: FilterCriteria;
+  pagination?: UIPagination;
+};
 interface Hook {
   nodeList: BlockjoyNode[];
-  loadNodes: (filters?: FilterCriteria) => void;
+  loadNodes: (params?: LoadNodeParams) => void;
+  loadNodesPaginated: (params?: LoadNodeParams) => void;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
 }
@@ -35,7 +43,23 @@ export const useNodeList = (): Hook => {
     router.push(`${router.pathname}/${args.key}`);
   };
 
-  const loadNodes = async (filters?: FilterCriteria) => {
+  const loadNodesPaginated = async (params?: LoadNodeParams) => {
+    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
+
+    // let org_id = user?.defaultOrganization?.id || '';
+
+    const nodes: any = await apiClient.listNodes(
+      org_id!,
+      params?.filters,
+      params?.pagination,
+    );
+
+    console.log('paginated nodes', nodes);
+
+    setNodeList((prev) => [...prev, ...nodes]);
+  };
+
+  const loadNodes = async (params?: LoadNodeParams) => {
     setIsLoading('loading');
     // TODO: Org ID needs be set here
 
@@ -43,7 +67,11 @@ export const useNodeList = (): Hook => {
 
     // let org_id = user?.defaultOrganization?.id || '';
 
-    const nodes: any = await apiClient.listNodes(org_id!, filters);
+    const nodes: any = await apiClient.listNodes(
+      org_id!,
+      params?.filters,
+      params?.pagination,
+    );
 
     setNodeList(nodes);
 
@@ -57,5 +85,6 @@ export const useNodeList = (): Hook => {
     loadNodes,
     handleAddNode,
     handleNodeClick,
+    loadNodesPaginated,
   };
 };

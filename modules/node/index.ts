@@ -13,3 +13,4 @@ export * from './components/AddNode/AddNode';
 export * from './store/blockchains';
 export * from './hooks/useGetBlockchains';
 export * from './hooks/useSearchBlockchains';
+export * from './components/LazyNodesTable/LazyNodesTable';

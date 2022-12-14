@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { hostsAtoms } from '@modules/hosts/store/hostAtoms';
-import {
-  EmptyColumn,
-  PageSection,
-  PageTitle,
-  Table,
-  TableGrid,
-} from '@shared/components';
+import { PageTitle, TableGrid } from '@shared/components';
 import { toRows, toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
@@ -18,12 +12,18 @@ import { NodeListHeader } from './NodeListHeader/NodeListHeader';
 import { useModal } from '@shared/index';
 import { GridCell } from '@shared/components/TableGrid/types/GridCell';
 import { NodeListPageHeader } from './NodeListPageHeader/NodeListPageHeader';
+import { InView } from 'react-intersection-observer';
+import { LazyNodesTable } from '@modules/node';
+
+const NUM_OF_ITEMS = 50;
 
 export const NodeList = () => {
-  const { loadNodes, handleNodeClick } = useNodeList();
+  const { loadNodes, handleNodeClick, loadNodesPaginated } = useNodeList();
   const { openModal } = useModal();
 
   const nodeList = useRecoilValue(nodeAtoms.nodeList);
+  const [currentPage, setCurrentPage] = useState(0);
+  const initialRender = useRef(true);
 
   const [nodeRows, setNodeRows] = useState<Row[]>();
   const [nodeCells, setNodeCells] = useState<GridCell[]>();
@@ -78,8 +78,33 @@ export const NodeList = () => {
   }, []);
 
   useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      if (currentPage > 1) {
+        loadNodesPaginated({
+          pagination: {
+            current_page: currentPage,
+            items_per_page: NUM_OF_ITEMS,
+          },
+        });
+      }
+    }
+  }, [currentPage]);
+
+  useEffect(() => {
     buildNodeList(activeListType);
   }, [nodeList?.length]);
+
+  /* const handleIntersectionChange = async (
+    inView: boolean,
+    entry: IntersectionObserverEntry,
+  ) => {
+    const { isIntersecting, intersectionRatio } = entry;
+    if (isIntersecting && intersectionRatio > 0.02) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  }; */
 
   return (
     <>
@@ -109,7 +134,7 @@ export const NodeList = () => {
             onTypeChanged={handleListTypeChanged}
           />
           {activeListType === 'table' ? (
-            <Table
+            <LazyNodesTable
               isLoading={loading}
               headers={[
                 {
@@ -140,12 +165,18 @@ export const NodeList = () => {
             />
           ) : (
             <div css={styles.gridWrapper}>
-              <TableGrid isLoading={loading} cells={nodeCells!} />
+              <TableGrid
+                numberOfItems={NUM_OF_ITEMS}
+                isLoading={loading}
+                cells={nodeCells!}
+              />
             </div>
           )}
+          {/* <InView initialInView={false} onChange={handleIntersectionChange}>
+            <div style={{ height: '20px' }} id="js-intersection-trigger" />
+          </InView> */}
         </div>
       </div>
-      {/* )} */}
     </>
   );
 };

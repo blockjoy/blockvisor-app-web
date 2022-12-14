@@ -89,4 +89,9 @@ export const styles = {
     margin-bottom: 16px;
     font-size: 13px;
   `,
+  lazyLoadGridItemPlaceholder: css`
+    background-color: rgba(248, 250, 246, 0.03);
+    height: 100%;
+    border-radius: 4px;
+  `,
 };

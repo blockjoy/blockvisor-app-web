@@ -16,7 +16,7 @@ import { nodeStatusList } from '@shared/constants/lookups';
 export const NodeFilters = ({
   loadNodes,
 }: {
-  loadNodes: (filters?: FilterCriteria) => void;
+  loadNodes: (filters?: any) => void;
 }) => {
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
@@ -110,7 +110,9 @@ export const NodeFilters = ({
   };
 
   const refreshNodeList = (params?: any) => {
-    loadNodes(params);
+    loadNodes({
+      filters: params,
+    });
   };
 
   const buildParams = (
