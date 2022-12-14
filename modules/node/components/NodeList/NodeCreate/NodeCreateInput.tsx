@@ -20,10 +20,7 @@ export const NodeCreateInput: FC<Props> = ({
   inputValue,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-
   const [isFocused, setIsFocused] = useState<boolean>(false);
-
-  console.log('isBlockchainsOpen', isBlockchainsOpen);
 
   useEffect(() => {
     if (isBlockchainsOpen && inputRef && inputRef?.current) {
