@@ -11,6 +11,7 @@ import {
   UIFilterCriteria as FilterCriteria,
   UIPagination,
 } from '@modules/client/grpc_client';
+import { useEffect, useRef } from 'react';
 
 export type LoadNodeParams = {
   filters?: FilterCriteria;
@@ -18,18 +19,24 @@ export type LoadNodeParams = {
 };
 interface Hook {
   nodeList: BlockjoyNode[];
+  currentPage: number;
   loadNodes: (params?: LoadNodeParams) => void;
   loadNodesPaginated: (params?: LoadNodeParams) => void;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
+  loadNextPage: () => void;
 }
+
+const NUM_OF_ITEMS = 50;
 
 export const useNodeList = (): Hook => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
   const repository = useIdentityRepository();
+  const currentPageRef = useRef(1);
 
   const [, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
+  const [currentPage, setCurrentPage] = useRecoilState(nodeAtoms.currentPage);
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
 
@@ -59,6 +66,19 @@ export const useNodeList = (): Hook => {
     setNodeList((prev) => [...prev, ...nodes]);
   };
 
+  const loadNextPage = () => {
+    currentPageRef.current = currentPageRef.current + 1;
+    console.log('cur', currentPageRef.current);
+    if (currentPageRef.current > 1) {
+      loadNodesPaginated({
+        pagination: {
+          current_page: currentPageRef.current,
+          items_per_page: 50,
+        },
+      });
+    }
+  };
+
   const loadNodes = async (params?: LoadNodeParams) => {
     setIsLoading('loading');
     // TODO: Org ID needs be set here
@@ -82,9 +102,11 @@ export const useNodeList = (): Hook => {
 
   return {
     nodeList,
+    currentPage,
     loadNodes,
     handleAddNode,
     handleNodeClick,
     loadNodesPaginated,
+    loadNextPage,
   };
 };

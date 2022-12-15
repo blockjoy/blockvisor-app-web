@@ -90,6 +90,11 @@ const nodeWizardActive = atom<boolean>({
   default: false,
 });
 
+const currentPage = atom<number>({
+  key: 'nodes.currentPage',
+  default: 0,
+});
+
 export const nodeAtoms = {
   activeNode,
   nodeList,
@@ -102,4 +107,5 @@ export const nodeAtoms = {
   filtersStatus,
   filtersType,
   nodeWizardActive,
+  currentPage,
 };

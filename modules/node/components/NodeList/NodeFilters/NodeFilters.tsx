@@ -12,11 +12,12 @@ import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { nodeStatusList } from '@shared/constants/lookups';
+import { LoadNodeParams } from '@modules/node';
 
 export const NodeFilters = ({
   loadNodes,
 }: {
-  loadNodes: (filters?: any) => void;
+  loadNodes: (params: LoadNodeParams) => void;
 }) => {
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
@@ -109,9 +110,10 @@ export const NodeFilters = ({
     refreshNodeList(params);
   };
 
-  const refreshNodeList = (params?: any) => {
+  const refreshNodeList = (params?: FilterCriteria) => {
     loadNodes({
       filters: params,
+      pagination: { current_page: 1, items_per_page: 50 },
     });
   };
 
