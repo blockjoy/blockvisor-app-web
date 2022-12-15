@@ -42,11 +42,13 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
   setFilterList,
 }) => {
   const handleMinusClicked = (e: MouseEvent<HTMLLabelElement>) => {
-    e.stopPropagation();
-    onPlusMinusClicked(name, isOpen);
+    if (!isDisabled) {
+      e.stopPropagation();
+      onPlusMinusClicked(name, isOpen);
+    }
   };
 
-  const handleFilterBlockClicked = (name: string, isDisabled: boolean) => {
+  const handleFilterBlockClicked = (name: string) => {
     if (!isDisabled) {
       onFilterBlockClicked(name);
     }
@@ -55,7 +57,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
   return (
     <div
       css={[styles.filterBlock, isDisabled && styles.filterBlockDisabled]}
-      onClick={() => handleFilterBlockClicked(name, isDisabled)}
+      onClick={() => handleFilterBlockClicked(name)}
     >
       <label css={styles.labelHeader} onClick={handleMinusClicked}>
         <span css={styles.labelText}>

@@ -11,8 +11,11 @@ export const styles = {
     cursor: pointer;
   `,
   filterBlockDisabled: css`
-    opacity: 0.4;
     cursor: not-allowed;
+
+    label {
+      cursor: not-allowed;
+    }
   `,
   labelHeader: (theme: ITheme) => css`
     display: flex;
