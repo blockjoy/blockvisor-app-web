@@ -27,6 +27,8 @@ export const NodeFilters = ({
 
   const [filtersType, setFiltersType] = useRecoilState(nodeAtoms.filtersType);
 
+  console.log(filtersType);
+
   const [filtersStatus, setFiltersStatus] = useRecoilState(
     nodeAtoms.filtersStatus,
   );
