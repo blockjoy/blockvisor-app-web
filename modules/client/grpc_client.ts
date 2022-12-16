@@ -1074,7 +1074,7 @@ export class GrpcClient {
 
   getUpdates(stateObject: StateObject): void {
     let retry_count = 3;
-    let should_break = false;
+    let should_run = true;
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -1083,9 +1083,7 @@ export class GrpcClient {
 
     let update_stream = this.update?.updates(request, this.getAuthHeader());
 
-    while (true) {
-      if (should_break) break;
-
+    while (should_run) {
       update_stream?.on('data', (response) => {
         if (response.getUpdate()?.getNotificationCase() === UpdateNotification.NotificationCase.HOST) {
           const host = response.getUpdate()?.getHost();
@@ -1106,7 +1104,7 @@ export class GrpcClient {
           update_stream = this.update?.updates(request, this.getAuthHeader());
           retry_count--;
         } else {
-          should_break = true;
+          should_run = false;
         }
       });
 
