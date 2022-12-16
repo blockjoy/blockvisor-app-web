@@ -69,7 +69,7 @@ import {
   UpdateUserRequest,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
-import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
+import { GetUpdatesRequest, GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
 import {
   CommandRequest,
   CommandResponse,
@@ -204,7 +204,6 @@ export class GrpcClient {
   private blockchain: BlockchainServiceClient | undefined;
   private command: CommandServiceClient | undefined;
   private key_files: KeyFilesClient | undefined;
-
   private token: string;
 
   constructor(host: string) {
@@ -1066,19 +1065,21 @@ export class GrpcClient {
 
   /* Update service */
 
-  async getUpdates(): Promise<
-    | Array<UpdateNotification.AsObject | undefined>
-    | StatusResponse
-    | Array<undefined>
-  > {
-    let update = new UpdateNotification();
-    update.setNode(this.getDummyNode());
+  getUpdates(stateObject: any): void {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    let response = new GetUpdatesResponse();
-    response.setMeta(this.getDummyMeta());
-    response.setUpdate(update);
+    let request = new GetUpdatesRequest();
+    request.setMeta(request_meta);
 
-    return [response.getUpdate()?.toObject()];
+    let update_stream = this.update?.updates(request, this.getAuthHeader());
+
+    update_stream?.on('data', (data) => {
+      console.log(`got data from server: `, data);
+    });
+    update_stream?.on('error', (err) => {
+      console.error(`update stream closed unexpectedly: `, err);
+    });
   }
 
   /* Command service */
