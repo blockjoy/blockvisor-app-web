@@ -191,6 +191,13 @@ export type GrpcNodeObject = Node.AsObject &
   };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
+
+export interface StateObject {
+  processHostUpdate: (host: Host | undefined) => boolean;
+
+  processNodeUpdate: (node: Node | undefined) => boolean;
+}
+
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
@@ -1065,7 +1072,9 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject: any): void {
+  getUpdates(stateObject: StateObject): void {
+    let retry_count = 3;
+    let should_break = false;
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -1074,12 +1083,35 @@ export class GrpcClient {
 
     let update_stream = this.update?.updates(request, this.getAuthHeader());
 
-    update_stream?.on('data', (data) => {
-      console.log(`got data from server: `, data);
-    });
-    update_stream?.on('error', (err) => {
-      console.error(`update stream closed unexpectedly: `, err);
-    });
+    while (true) {
+      if (should_break) break;
+
+      update_stream?.on('data', (response) => {
+        if (response.getUpdate()?.getNotificationCase() === UpdateNotification.NotificationCase.HOST) {
+          const host = response.getUpdate()?.getHost();
+
+          console.log(`got host update from server: `, host);
+          stateObject.processHostUpdate(host);
+        } else if (response.getUpdate()?.getNotificationCase() === UpdateNotification.NotificationCase.NODE) {
+          const node = response.getUpdate()?.getNode();
+
+          console.log(`got node update from server: `, node);
+          stateObject.processNodeUpdate(node);
+        }
+      });
+      update_stream?.on('error', (err) => {
+        console.error(`update stream closed unexpectedly: `, err);
+        if (retry_count > 0) {
+          console.info('Trying to reinitialize the update connection');
+          update_stream = this.update?.updates(request, this.getAuthHeader());
+          retry_count--;
+        } else {
+          should_break = true;
+        }
+      });
+
+      window.setTimeout(() => { console.debug("Waiting 1000ms for next update")}, 1000);
+    }
   }
 
   /* Command service */
