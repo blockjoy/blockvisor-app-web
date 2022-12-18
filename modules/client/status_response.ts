@@ -22,6 +22,7 @@ export enum StatusResponseCode {
   GetNode,
   CreateNode,
   UpdateNode,
+  DeleteNode,
   GetOrganizations,
   CreateUser,
   GetUser,
@@ -177,6 +178,15 @@ export class StatusResponseFactory {
     return StatusResponseFactory.createResponse(
         StatusResponseCode.UpdateNode,
         'Error updating node',
+        err,
+        source,
+    );
+  }
+
+  static deleteNodeResponse(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.DeleteNode,
+        'Error deleting node',
         err,
         source,
     );
