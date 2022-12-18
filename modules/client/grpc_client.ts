@@ -49,7 +49,7 @@ import {
   GetHostProvisionRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
-  CreateNodeRequest,
+  CreateNodeRequest, DeleteNodeRequest,
   FilterCriteria,
   GetNodeRequest,
   ListNodesRequest, UpdateNodeRequest,
@@ -86,6 +86,7 @@ import {
   Keyfile,
   KeyFilesSaveRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
+import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 
 export type UIUser = {
   first_name: string;
@@ -869,6 +870,21 @@ export class GrpcClient {
       return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
     }
 
+  }
+
+  async deleteNode(node_id: string): Promise<Empty.AsObject | undefined | StatusResponse> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new DeleteNodeRequest();
+    request.setId(node_id);
+    request.setMeta(request_meta);
+
+    return this.node?.delete(request, this.getAuthHeader()).then((response) => {
+      return response.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.deleteNodeResponse(err, 'grpcClient');
+    });
   }
 
   /* Organization service */
