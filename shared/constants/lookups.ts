@@ -21,6 +21,7 @@ export const nodeTypeConfigLabels = [
   { name: 'voting-pwd', value: 'Voting Password' },
   { name: 'fee-recipient', value: 'Fee Recipient' },
   { name: 'mev-boost', value: 'MEV Boost' },
+  { name: 'self-hosted', value: 'Self Hosted' },
 ];
 
 /*
