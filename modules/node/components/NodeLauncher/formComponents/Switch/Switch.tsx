@@ -8,11 +8,14 @@ type Props = {
 
 export const Switch: FC<Props> = ({ onPropertyChanged, name }) => {
   return (
-    <input
-      name={name}
-      type="checkbox"
-      css={styles.input}
-      onChange={(e: any) => onPropertyChanged(e)}
-    />
+    <label>
+      <input
+        name={name}
+        type="checkbox"
+        css={styles.input}
+        onChange={(e: any) => onPropertyChanged(e)}
+      />
+      <span className="switch" css={styles.switch}></span>
+    </label>
   );
 };

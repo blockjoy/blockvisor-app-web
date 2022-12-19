@@ -6,8 +6,8 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 15px;
     width: 650px;
-    max-width: 650px;
-    min-width: 650px;
+    max-width: 500px;
+    min-width: 500px;
     border-right: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {
