@@ -1,4 +1,4 @@
-import { Button } from '@shared/components';
+import { Button, NodeTypeConfigLabel } from '@shared/components';
 import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
@@ -53,30 +53,36 @@ export const NodeLauncherSummary: FC<Props> = ({
               </span>
             </div>
           </li>
-          {nodeTypeProperties?.map((type) => (
-            <li key={type.name}>
-              {type.value ? (
-                <div css={styles.summaryIconClose}>
-                  <IconClose />
-                </div>
-              ) : (
-                <span css={styles.summaryIcon}>
-                  <IconCheck />
-                </span>
-              )}
+          {nodeTypeProperties?.map((type) => {
+            console.log('type', type);
 
-              <div>
-                <label>{type.label}</label>
-                <span>
-                  {type.name === 'keys'
-                    ? type.value
-                      ? 'Keys Added'
-                      : 'Not Added'
-                    : type.value || 'Not Selected'}
-                </span>
-              </div>
-            </li>
-          ))}
+            return (
+              <li key={type.name}>
+                {type.value === null ? (
+                  <div css={styles.summaryIconClose}>
+                    <IconClose />
+                  </div>
+                ) : (
+                  <span css={styles.summaryIcon}>
+                    <IconCheck />
+                  </span>
+                )}
+
+                <div>
+                  <label>
+                    <NodeTypeConfigLabel>{type.name}</NodeTypeConfigLabel>
+                  </label>
+                  <span>
+                    {type.name === 'keys'
+                      ? type.value
+                        ? 'Keys Added'
+                        : 'Not Added'
+                      : type.value || 'Not Selected'}
+                  </span>
+                </div>
+              </li>
+            );
+          })}
         </ul>
         <div css={styles.buttons}>
           <button

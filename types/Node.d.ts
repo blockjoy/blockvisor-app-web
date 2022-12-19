@@ -1,9 +1,9 @@
 type NodeTypeConfig = {
   name: string;
-  label: string;
   default: string;
-  type: string;
+  ui_type: string;
   value?: any;
+  disabled?: boolean;
 };
 
 type BlockjoyNode = {
