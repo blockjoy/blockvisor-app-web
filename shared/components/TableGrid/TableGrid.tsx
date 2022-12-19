@@ -26,7 +26,7 @@ export const TableGrid: FC<Props> = ({
 }) => {
   const { loadNextPage } = useNodeList();
 
-  const handleIntersectionChange = async (
+  /* const handleIntersectionChange = async (
     _inView: boolean,
     entry: IntersectionObserverEntry,
   ) => {
@@ -34,7 +34,7 @@ export const TableGrid: FC<Props> = ({
     if (isIntersecting && intersectionRatio > 0) {
       loadNextPage();
     }
-  };
+  }; */
 
   return isLoading ? (
     <TableGridSkeleton numOfItems={numberOfItems} />
@@ -44,25 +44,23 @@ export const TableGrid: FC<Props> = ({
         const lastIndex = cells.length - 1;
 
         return lastIndex === idx ? (
-          <InView
+          /*    <InView
             key={idx}
             initialInView={false}
             onChange={handleIntersectionChange}
+          > */
+          <LazyLoad
+            unmountIfInvisible={true}
+            placeholder={<div css={[styles.lazyLoadGridItemPlaceholder]} />}
+            style={{ minWidth: '100%', maxWidth: '210px' }}
           >
-            <LazyLoad
-              unmountIfInvisible={true}
-              debounce={true}
-              placeholder={<div css={[styles.lazyLoadGridItemPlaceholder]} />}
-              style={{ minWidth: '100%', maxWidth: '210px' }}
-            >
-              {Component}
-            </LazyLoad>
-          </InView>
+            {Component}
+          </LazyLoad>
         ) : (
+          /*     </InView> */
           <LazyLoad
             key={idx}
             unmountIfInvisible={true}
-            debounce={true}
             placeholder={<div css={[styles.lazyLoadGridItemPlaceholder]} />}
             style={{ minWidth: '100%', maxWidth: '210px' }}
           >

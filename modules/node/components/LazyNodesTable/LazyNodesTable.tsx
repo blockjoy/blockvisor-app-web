@@ -2,7 +2,7 @@ import { Skeleton, TableSkeleton } from '@shared/components';
 import { tableStyles } from './LazyNodesTable.styles';
 import LazyLoad from 'react-lazyload';
 import { useNodeList } from '@modules/node';
-import { InView } from 'react-intersection-observer';
+//import { InView } from 'react-intersection-observer';
 
 type Props = {
   headers?: TableHeader[];
@@ -21,7 +21,7 @@ export const LazyNodesTable: React.FC<Props> = ({
 }) => {
   const { loadNextPage } = useNodeList();
 
-  const handleIntersectionChange = async (
+  /* const handleIntersectionChange = async (
     _inView: boolean,
     entry: IntersectionObserverEntry,
   ) => {
@@ -29,7 +29,7 @@ export const LazyNodesTable: React.FC<Props> = ({
     if (isIntersecting && intersectionRatio > 0) {
       loadNextPage();
     }
-  };
+  }; */
   const handleRowClick = (tr: any) => {
     if (onRowClick) {
       onRowClick(tr);
@@ -64,7 +64,7 @@ export const LazyNodesTable: React.FC<Props> = ({
           )}
           <tbody>
             {rows?.map((tr, index) => {
-              const lastElementIndex = rows.length - 1;
+              /*  const lastElementIndex = rows.length - 1;
 
               if (lastElementIndex === index) {
                 return (
@@ -87,7 +87,6 @@ export const LazyNodesTable: React.FC<Props> = ({
                       >
                         <LazyLoad
                           unmountIfInvisible={true}
-                          debounce={true}
                           placeholder={
                             index === 1 ? (
                               <>
@@ -113,7 +112,7 @@ export const LazyNodesTable: React.FC<Props> = ({
                     ))}
                   </InView>
                 );
-              }
+              } */
               return (
                 <tr
                   key={tr.key}

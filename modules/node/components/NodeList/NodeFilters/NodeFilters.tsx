@@ -115,7 +115,6 @@ export const NodeFilters = ({
   const refreshNodeList = (params?: FilterCriteria) => {
     loadNodes({
       filters: params,
-      pagination: { current_page: 1, items_per_page: 50 },
     });
   };
 
