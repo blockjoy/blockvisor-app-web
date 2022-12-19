@@ -7,9 +7,9 @@ export const Burger = () => {
 
   const handleClick = () => {
     if (app !== 'sidebar') {
-      localStorage.setItem('sidebarOpen', 'true');
+      localStorage.setItem('sidebarCollapsed', 'true');
     } else {
-      localStorage.removeItem('sidebarOpen');
+      localStorage.removeItem('sidebarCollapsed');
     }
     setApp(app === 'sidebar' ? undefined : 'sidebar');
   };

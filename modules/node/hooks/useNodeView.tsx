@@ -51,22 +51,6 @@ export const useNodeView = (): Hook => {
     const node: any = await apiClient.getNode(nodeId);
     const nodeTypeId = JSON.parse(node.type).id;
 
-    // mocked nodeTypeConfig
-    const nodeTypeConfig: NodeTypeConfig[] = [
-      {
-        name: 'validatorKeys',
-        label: 'Validator Keys',
-        default: '',
-        type: 'file-upload',
-      },
-      {
-        name: 'mevBoost',
-        label: 'MEV Boost',
-        default: 'false',
-        type: 'boolean',
-      },
-    ];
-
     const details = [
       {
         label: 'TYPE',
@@ -89,7 +73,6 @@ export const useNodeView = (): Hook => {
         addSuffix: true,
       }),
       details,
-      nodeTypeConfig,
     };
 
     setNode(activeNode);
