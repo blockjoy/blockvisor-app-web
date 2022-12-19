@@ -54,11 +54,9 @@ export const NodeLauncherSummary: FC<Props> = ({
             </div>
           </li>
           {nodeTypeProperties?.map((type) => {
-            console.log('type', type);
-
             return (
               <li key={type.name}>
-                {type.value === null ? (
+                {type.value === null && !type.disabled ? (
                   <div css={styles.summaryIconClose}>
                     <IconClose />
                   </div>
@@ -73,11 +71,9 @@ export const NodeLauncherSummary: FC<Props> = ({
                     <NodeTypeConfigLabel>{type.name}</NodeTypeConfigLabel>
                   </label>
                   <span>
-                    {type.name === 'keys'
-                      ? type.value
-                        ? 'Keys Added'
-                        : 'Not Added'
-                      : type.value || 'Not Selected'}
+                    {type.value || !!type.default?.length
+                      ? 'Added'
+                      : 'Not Added'}
                   </span>
                 </div>
               </li>

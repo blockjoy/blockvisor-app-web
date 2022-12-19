@@ -23,13 +23,20 @@ export function FileUpload({
   multiple = false,
   currentFiles,
 }: Props) {
+  console.log('currentFiles', currentFiles);
+
   const files: FileWithPath[] = [];
   const filesArray = (currentFiles && Array.from(currentFiles)) || [];
+
+  console.log('filesArray', filesArray);
 
   const onDrop = useCallback(
     async (droppedFiles: File[]) => {
       const newFiles = [...filesArray, ...Array.from(droppedFiles)];
-      onChange(newFiles);
+
+      console.log('onDrop', newFiles);
+
+      onChange({ target: { name, value: newFiles } });
     },
     [files, name],
   );
@@ -45,6 +52,7 @@ export function FileUpload({
       {...getRootProps()}
     >
       <input
+        name={name}
         disabled={Boolean(files.length)}
         className="file-upload__input"
         onChange={onChange}
