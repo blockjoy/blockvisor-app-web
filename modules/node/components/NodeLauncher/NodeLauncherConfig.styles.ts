@@ -53,6 +53,8 @@ export const styles = {
   `,
   nodeTypeProperties: css`
     padding: 0 30px;
+    display: grid;
+    gap: 20px;
   `,
   buttons: (theme: ITheme) => css`
     padding: 20px 30px;

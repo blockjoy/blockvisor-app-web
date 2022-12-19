@@ -1,6 +1,8 @@
 import { Button, Toggle } from '@shared/components';
 import { FC } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
+import { Textbox } from './formComponents/Textbox/Textbox';
+import { Switch } from './formComponents/Switch/Switch';
 import { Controller } from 'react-hook-form';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
@@ -13,11 +15,13 @@ type Props = {
   keys: any;
   nodeTypeProperties?: NodeTypeConfig[];
   onFileUploaded: (e: any) => void;
+  onPropertyChanged: (e: any) => void;
 };
 
 export const NodeLauncherConfig: FC<Props> = ({
   nodeTypeProperties,
   onFileUploaded,
+  onPropertyChanged,
   keys,
 }) => {
   // const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -45,7 +49,7 @@ export const NodeLauncherConfig: FC<Props> = ({
       {nodeTypeProperties?.map((property: NodeTypeConfig) => (
         <div css={styles.nodeTypeProperties}>
           {property.type === 'file-upload' && (
-            <>
+            <div>
               <label
                 css={[
                   spacing.bottom.mediumSmall,
@@ -67,7 +71,43 @@ export const NodeLauncherConfig: FC<Props> = ({
                 remove={() => console.log('shit')}
                 placeholder="Upload validator keys"
               />
-            </>
+            </div>
+          )}
+          {property.type === 'string' && (
+            <div>
+              <label
+                css={[
+                  spacing.bottom.mediumSmall,
+                  typo.button,
+                  display.block,
+                  colors.text2,
+                ]}
+              >
+                {property.label}
+              </label>
+              <Textbox
+                name={property.name}
+                onPropertyChanged={onPropertyChanged}
+              />
+            </div>
+          )}
+          {property.type === 'boolean' && (
+            <div>
+              <label
+                css={[
+                  spacing.bottom.mediumSmall,
+                  typo.button,
+                  display.block,
+                  colors.text2,
+                ]}
+              >
+                {property.label}
+              </label>
+              <Switch
+                name={property.name}
+                onPropertyChanged={onPropertyChanged}
+              />
+            </div>
           )}
         </div>
       ))}
