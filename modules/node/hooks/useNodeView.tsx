@@ -49,6 +49,9 @@ export const useNodeView = (): Hook => {
 
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
+
+    console.log('loadNode', node);
+
     const nodeTypeId = JSON.parse(node.type).id;
 
     const details = [

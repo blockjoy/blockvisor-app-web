@@ -81,7 +81,11 @@ export const useNodeAdd = (): Hook => {
     node.setOrgId(orgId);
     // TODO: Create type data based on the type definitions in
     // https://github.com/blockjoy/blockvisor-api/blob/24c83705064a2331f5f2c4643f34553cbffedea3/conf/node_types.schema.ts#L98
-    node.setType(`{ "id": ${params.nodeType.toString()}, "properties": [] }`);
+    node.setType(
+      `{ "id": ${params.nodeType.toString()}, "properties": ${JSON.stringify(
+        params.nodeTypeProperties,
+      )} }`,
+    );
     node.setHostId(hostId);
 
     // TODO: MOVE THIS TO UPDATE NODE

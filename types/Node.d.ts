@@ -22,6 +22,7 @@ type CreateNodeParams = {
   nodeType: number;
   host: string;
   blockchain: string;
+  nodeTypeProperties: NodeTypeConfig[];
 };
 
 type UpdateNodeParams = {

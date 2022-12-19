@@ -12,7 +12,6 @@ type NodeState = {
   blockchainId: string;
   nodeTypeId: string;
   nodeTypeProperties: NodeTypeConfig[];
-  keys: File[];
 };
 
 export const NodeLauncher = () => {
@@ -24,7 +23,6 @@ export const NodeLauncher = () => {
     blockchainId: '',
     nodeTypeId: '',
     nodeTypeProperties: [],
-    keys: [],
   });
 
   const handleProtocolSelected = (
@@ -49,7 +47,7 @@ export const NodeLauncher = () => {
     !!(
       node.blockchainId &&
       node.nodeTypeId &&
-      node.nodeTypeProperties.every((type) => type.value)
+      node.nodeTypeProperties.every((type) => type.value || type.disabled)
     );
 
   const handlePropertyChanged = (e: any) => {
@@ -73,34 +71,35 @@ export const NodeLauncher = () => {
   };
 
   const handleFileUploaded = (e: any) => {
-    console.log('handleFileUploaded', e);
+    console.log('values', e.target.values);
+    console.log('name', e.target.name);
 
     const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
 
     let foundProperty = nodeTypePropertiesCopy.find(
-      (property) => property.name === 'keys',
+      (property) => property.name === e.target.name,
     );
 
     console.log('nodeTypePropertiesCopy', nodeTypePropertiesCopy);
 
     if (!foundProperty) return;
 
-    foundProperty.value = e;
+    foundProperty.value = e.target.value;
 
     setNode({
       ...node,
-      keys: e,
       nodeTypeProperties: nodeTypePropertiesCopy,
     });
   };
 
   const handleCreateNodeClicked = () => {
-    console.log('handleCreateNodeClicked');
+    console.log('handleCreateNodeClicked', node);
 
     const params: CreateNodeParams = {
       nodeType: +node.nodeTypeId ?? 0,
       blockchain: node.blockchainId ?? '',
       host: hostList[0].value,
+      nodeTypeProperties: node.nodeTypeProperties,
     };
 
     createNode(params, (nodeId: string) => {
@@ -148,7 +147,6 @@ export const NodeLauncher = () => {
         />
         {!!node.nodeTypeProperties?.length && (
           <NodeLauncherConfig
-            keys={node.keys}
             onFileUploaded={handleFileUploaded}
             onPropertyChanged={handlePropertyChanged}
             nodeTypeProperties={node.nodeTypeProperties}

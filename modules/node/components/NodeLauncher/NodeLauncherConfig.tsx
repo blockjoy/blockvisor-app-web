@@ -12,7 +12,6 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeLauncherConfig.styles';
 
 type Props = {
-  keys: any;
   nodeTypeProperties?: NodeTypeConfig[];
   onFileUploaded: (e: any) => void;
   onPropertyChanged: (e: any) => void;
@@ -22,7 +21,6 @@ export const NodeLauncherConfig: FC<Props> = ({
   nodeTypeProperties,
   onFileUploaded,
   onPropertyChanged,
-  keys,
 }) => {
   // const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
   //   e.preventDefault();
@@ -47,53 +45,55 @@ export const NodeLauncherConfig: FC<Props> = ({
         Node requires configuration information.
       </div>
       <div css={styles.nodeTypeProperties}>
-        {nodeTypeProperties?.map((property: NodeTypeConfig) => (
-          <>
-            <label
-              css={[
-                spacing.bottom.mediumSmall,
-                typo.button,
-                display.block,
-                colors.text2,
-              ]}
-            >
-              <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
-            </label>
+        {nodeTypeProperties?.map((property: NodeTypeConfig) => {
+          console.log('property', property);
 
-            {property.ui_type === 'key-upload' && (
-              <div>
-                <FileUpload
-                  currentFiles={keys}
-                  multiple={true}
-                  onChange={(e) => onFileUploaded(e)}
-                  name={property.name}
-                  remove={() => console.log('shit')}
-                  placeholder="Upload validator keys"
-                />
-              </div>
-            )}
-            {property.ui_type === 'string' && (
-              <div>
-                <Textbox
-                  name={property.name}
-                  onPropertyChanged={onPropertyChanged}
-                />
-              </div>
-            )}
-            {property.ui_type === 'switch' && (
-              <div>
-                {property.disabled ? (
-                  <LockedSwitch tooltip="You will be able to edit this setting soon" />
-                ) : (
-                  <Switch
+          return (
+            <>
+              <label
+                css={[
+                  spacing.bottom.mediumSmall,
+                  typo.button,
+                  display.block,
+                  colors.text2,
+                ]}
+              >
+                <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
+              </label>
+
+              {property.ui_type === 'key-upload' && (
+                <div>
+                  <FileUpload
+                    currentFiles={property.value}
+                    multiple={true}
+                    onChange={onFileUploaded}
+                    name={property.name}
+                    remove={() => console.log('shit')}
+                    placeholder="Upload validator keys"
+                  />
+                </div>
+              )}
+              {property.ui_type === 'string' && (
+                <div>
+                  <Textbox
                     name={property.name}
                     onPropertyChanged={onPropertyChanged}
                   />
-                )}
-              </div>
-            )}
-          </>
-        ))}
+                </div>
+              )}
+              {property.ui_type === 'switch' && (
+                <div>
+                  <Switch
+                    disabled={!!property.disabled}
+                    tooltip="You will be able to edit this setting soon"
+                    name={property.name}
+                    onPropertyChanged={onPropertyChanged}
+                  />
+                </div>
+              )}
+            </>
+          );
+        })}
       </div>
     </div>
   );
