@@ -1,9 +1,9 @@
-import { Button, Toggle } from '@shared/components';
+import { NodeTypeConfigLabel } from '@shared/components';
 import { FC } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
 import { Switch } from './formComponents/Switch/Switch';
-import { Controller } from 'react-hook-form';
+import { LockedSwitch } from './formComponents/LockedSwitch/LockedSwitch';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
 import { flex } from 'styles/utils.flex.styles';
@@ -46,71 +46,55 @@ export const NodeLauncherConfig: FC<Props> = ({
       >
         Node requires configuration information.
       </div>
-      {nodeTypeProperties?.map((property: NodeTypeConfig) => (
-        <div css={styles.nodeTypeProperties}>
-          {property.type === 'file-upload' && (
-            <div>
-              <label
-                css={[
-                  spacing.bottom.mediumSmall,
-                  typo.button,
-                  display.block,
-                  colors.text2,
-                ]}
-              >
-                {property.label}
-              </label>
-              <p css={[typo.small, colors.text4, spacing.bottom.mediumSmall]}>
-                Upload your validator keys
-              </p>
-              <FileUpload
-                currentFiles={keys}
-                multiple={true}
-                onChange={(e) => onFileUploaded(e)}
-                name={property.name}
-                remove={() => console.log('shit')}
-                placeholder="Upload validator keys"
-              />
-            </div>
-          )}
-          {property.type === 'string' && (
-            <div>
-              <label
-                css={[
-                  spacing.bottom.mediumSmall,
-                  typo.button,
-                  display.block,
-                  colors.text2,
-                ]}
-              >
-                {property.label}
-              </label>
-              <Textbox
-                name={property.name}
-                onPropertyChanged={onPropertyChanged}
-              />
-            </div>
-          )}
-          {property.type === 'boolean' && (
-            <div>
-              <label
-                css={[
-                  spacing.bottom.mediumSmall,
-                  typo.button,
-                  display.block,
-                  colors.text2,
-                ]}
-              >
-                {property.label}
-              </label>
-              <Switch
-                name={property.name}
-                onPropertyChanged={onPropertyChanged}
-              />
-            </div>
-          )}
-        </div>
-      ))}
+      <div css={styles.nodeTypeProperties}>
+        {nodeTypeProperties?.map((property: NodeTypeConfig) => (
+          <>
+            <label
+              css={[
+                spacing.bottom.mediumSmall,
+                typo.button,
+                display.block,
+                colors.text2,
+              ]}
+            >
+              <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
+            </label>
+
+            {property.ui_type === 'key-upload' && (
+              <div>
+                <FileUpload
+                  currentFiles={keys}
+                  multiple={true}
+                  onChange={(e) => onFileUploaded(e)}
+                  name={property.name}
+                  remove={() => console.log('shit')}
+                  placeholder="Upload validator keys"
+                />
+              </div>
+            )}
+            {property.ui_type === 'string' && (
+              <div>
+                <Textbox
+                  name={property.name}
+                  onPropertyChanged={onPropertyChanged}
+                />
+              </div>
+            )}
+            {property.ui_type === 'switch' && (
+              <div>
+                {property.disabled ? (
+                  <LockedSwitch tooltip="You will be able to edit this setting soon" />
+                ) : (
+                  <Switch
+                    name={property.name}
+                    onPropertyChanged={onPropertyChanged}
+                  />
+                )}
+              </div>
+            )}
+          </>
+        ))}
+      </div>
     </div>
   );
 };

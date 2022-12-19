@@ -13,6 +13,16 @@ export const nodeTypeList = [
   { id: 3, name: 'Validator' },
 ];
 
+export const nodeTypeConfigLabels = [
+  { name: 'keystore-file', value: 'Key Upload' },
+  { name: 'keystore-file-1', value: 'Key Upload 1' },
+  { name: 'keystore-file-2', value: 'Key Upload 2' },
+  { name: 'keystore-file-3', value: 'Key Upload 3' },
+  { name: 'voting-pwd', value: 'Voting Password' },
+  { name: 'fee-recipient', value: 'Fee Recipient' },
+  { name: 'mev-boost', value: 'MEV Boost' },
+];
+
 /*
 Unknown = 0,
     Miner = 1,
