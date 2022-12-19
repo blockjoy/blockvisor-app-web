@@ -49,6 +49,7 @@ export const TableGrid: FC<Props> = ({
             initialInView={false}
             onChange={handleIntersectionChange}
           > */
+          /*     </InView> */
           <LazyLoad
             unmountIfInvisible={true}
             placeholder={<div css={[styles.lazyLoadGridItemPlaceholder]} />}
@@ -57,7 +58,6 @@ export const TableGrid: FC<Props> = ({
             {Component}
           </LazyLoad>
         ) : (
-          /*     </InView> */
           <LazyLoad
             key={idx}
             unmountIfInvisible={true}
