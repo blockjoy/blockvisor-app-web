@@ -49,7 +49,7 @@ import {
   GetHostProvisionRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
-  CreateNodeRequest,
+  CreateNodeRequest, DeleteNodeRequest,
   FilterCriteria,
   GetNodeRequest,
   ListNodesRequest, UpdateNodeRequest,
@@ -69,7 +69,7 @@ import {
   UpdateUserRequest,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
-import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
+import { GetUpdatesRequest, GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
 import {
   CommandRequest,
   CommandResponse,
@@ -86,6 +86,7 @@ import {
   Keyfile,
   KeyFilesSaveRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
+import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 
 export type UIUser = {
   first_name: string;
@@ -191,6 +192,13 @@ export type GrpcNodeObject = Node.AsObject &
   };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
+
+export interface StateObject {
+  processHostUpdate: (host: Host | undefined) => boolean;
+
+  processNodeUpdate: (node: Node | undefined) => boolean;
+}
+
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
@@ -204,7 +212,6 @@ export class GrpcClient {
   private blockchain: BlockchainServiceClient | undefined;
   private command: CommandServiceClient | undefined;
   private key_files: KeyFilesClient | undefined;
-
   private token: string;
 
   constructor(host: string) {
@@ -724,7 +731,7 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
+    node.setStatus(Node.NodeStatus.PROVISIONING);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
 
@@ -732,8 +739,8 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setNode(node);
 
-    let response_meta = await this.node?.update(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta();
+    let response_meta = await this.node?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject();
     }).catch((err) => {
       return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
     });
@@ -774,7 +781,7 @@ export class GrpcClient {
         }
       }
 
-      return this.key_files
+      let response_key_files = this.key_files
           ?.save(request, this.getAuthHeader())
           .then((response) => {
             let meta = new ResponseMeta();
@@ -786,8 +793,11 @@ export class GrpcClient {
           .catch((err) => {
             return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
           });
+
+      console.log("key files response: ", response_key_files);
     } else {
-      return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
+      return response_meta;
+      // return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
     }
   }
 
@@ -863,6 +873,21 @@ export class GrpcClient {
       return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
     }
 
+  }
+
+  async deleteNode(node_id: string): Promise<Empty.AsObject | undefined | StatusResponse> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new DeleteNodeRequest();
+    request.setId(node_id);
+    request.setMeta(request_meta);
+
+    return this.node?.delete(request, this.getAuthHeader()).then((response) => {
+      return response.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.deleteNodeResponse(err, 'grpcClient');
+    });
   }
 
   /* Organization service */
@@ -1066,19 +1091,44 @@ export class GrpcClient {
 
   /* Update service */
 
-  async getUpdates(): Promise<
-    | Array<UpdateNotification.AsObject | undefined>
-    | StatusResponse
-    | Array<undefined>
-  > {
-    let update = new UpdateNotification();
-    update.setNode(this.getDummyNode());
+  getUpdates(stateObject: StateObject): void {
+    let retry_count = 3;
+    let should_run = true;
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    let response = new GetUpdatesResponse();
-    response.setMeta(this.getDummyMeta());
-    response.setUpdate(update);
+    let request = new GetUpdatesRequest();
+    request.setMeta(request_meta);
 
-    return [response.getUpdate()?.toObject()];
+    let update_stream = this.update?.updates(request, this.getAuthHeader());
+
+    while (should_run) {
+      update_stream?.on('data', (response) => {
+        if (response.getUpdate()?.getNotificationCase() === UpdateNotification.NotificationCase.HOST) {
+          const host = response.getUpdate()?.getHost();
+
+          console.log(`got host update from server: `, host);
+          stateObject.processHostUpdate(host);
+        } else if (response.getUpdate()?.getNotificationCase() === UpdateNotification.NotificationCase.NODE) {
+          const node = response.getUpdate()?.getNode();
+
+          console.log(`got node update from server: `, node);
+          stateObject.processNodeUpdate(node);
+        }
+      });
+      update_stream?.on('error', (err) => {
+        console.error(`update stream closed unexpectedly: `, err);
+        if (retry_count > 0) {
+          console.info('Trying to reinitialize the update connection');
+          update_stream = this.update?.updates(request, this.getAuthHeader());
+          retry_count--;
+        } else {
+          should_run = false;
+        }
+      });
+
+      window.setTimeout(() => { console.debug("Waiting 1000ms for next update")}, 1000);
+    }
   }
 
   /* Command service */
