@@ -731,7 +731,7 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
+    node.setStatus(Node.NodeStatus.PROVISIONING);
     node.setWalletAddress('0x0198230123120');
     node.setAddress('0x023848388637');
 
