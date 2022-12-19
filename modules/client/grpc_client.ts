@@ -739,8 +739,8 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setNode(node);
 
-    let response_meta = await this.node?.update(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta();
+    let response_meta = await this.node?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject();
     }).catch((err) => {
       return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
     });
@@ -781,7 +781,7 @@ export class GrpcClient {
         }
       }
 
-      return this.key_files
+      let response_key_files = this.key_files
           ?.save(request, this.getAuthHeader())
           .then((response) => {
             let meta = new ResponseMeta();
@@ -793,8 +793,11 @@ export class GrpcClient {
           .catch((err) => {
             return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
           });
+
+      console.log("key files response: ", response_key_files);
     } else {
-      return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
+      return response_meta;
+      // return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
     }
   }
 
