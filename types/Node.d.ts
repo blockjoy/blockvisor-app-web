@@ -3,6 +3,7 @@ type NodeTypeConfig = {
   label: string;
   default: string;
   type: string;
+  value?: any;
 };
 
 type BlockjoyNode = {

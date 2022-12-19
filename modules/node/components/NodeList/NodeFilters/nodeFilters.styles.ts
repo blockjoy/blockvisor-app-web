@@ -79,13 +79,16 @@ export const styles = {
     height: 56px;
     cursor: pointer;
 
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
     path {
       fill: ${theme.colorDefault};
     }
 
     :hover {
-      color: ${theme.colorText};
-
       & path {
         fill: ${theme.colorText};
       }
@@ -106,6 +109,14 @@ export const styles = {
     color: ${theme.colorPrimaryText};
     margin-right: 16px;
     cursor: pointer;
+
+    path {
+      fill: ${theme.colorPrimaryText};
+    }
+
+    &:hover {
+      color: ${theme.colorPrimaryText};
+    }
 
     &:disabled {
       opacity: 0.3;

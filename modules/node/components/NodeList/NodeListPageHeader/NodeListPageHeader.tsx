@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { styles } from './NodeListPageHeader.styles';
 import IconTable from '@public/assets/icons/table-12.svg';
 import IconGrid from '@public/assets/icons/grid-12.svg';
-import { NodeCreate } from '@modules/node/components/NodeList/NodeCreate/NodeCreate';
+import { LaunchNodeButton } from '@modules/node';
 
 type Props = {
   activeListType: string | 'table' | 'grid';
@@ -15,7 +15,8 @@ export const NodeListPageHeader: FC<Props> = ({
 }) => (
   <div css={styles.nodeListPageHeader}>
     <h1 css={[styles.endBlock, styles.pageTitle]}>Nodes</h1>
-    <NodeCreate />
+    {/* <NodeCreate /> */}
+    <LaunchNodeButton />
     <div css={[styles.listTypePicker, styles.endBlock]}>
       <button
         onClick={() => onTypeChanged('table')}
