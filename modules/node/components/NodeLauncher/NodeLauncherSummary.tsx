@@ -55,7 +55,7 @@ export const NodeLauncherSummary: FC<Props> = ({
           </li>
           {nodeTypeProperties?.map((type) => (
             <li key={type.name}>
-              {!type.value ? (
+              {type.value ? (
                 <div css={styles.summaryIconClose}>
                   <IconClose />
                 </div>

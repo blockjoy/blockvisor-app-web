@@ -52,6 +52,26 @@ export const NodeLauncher = () => {
       node.nodeTypeProperties.every((type) => type.value)
     );
 
+  const handlePropertyChanged = (e: any) => {
+    const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
+
+    let foundProperty = nodeTypePropertiesCopy.find(
+      (property) => property.name === e.target.name,
+    );
+
+    console.log('handlePropertyChanged', foundProperty);
+
+    if (!foundProperty) return;
+
+    foundProperty.value =
+      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+    setNode({
+      ...node,
+      nodeTypeProperties: nodeTypePropertiesCopy,
+    });
+  };
+
   const handleFileUploaded = (e: any) => {
     console.log('handleFileUploaded', e);
 
@@ -72,8 +92,6 @@ export const NodeLauncher = () => {
       keys: e,
       nodeTypeProperties: nodeTypePropertiesCopy,
     });
-
-    console.log('');
   };
 
   const handleCreateNodeClicked = () => {
@@ -132,6 +150,7 @@ export const NodeLauncher = () => {
           <NodeLauncherConfig
             keys={node.keys}
             onFileUploaded={handleFileUploaded}
+            onPropertyChanged={handlePropertyChanged}
             nodeTypeProperties={node.nodeTypeProperties}
           />
         )}
