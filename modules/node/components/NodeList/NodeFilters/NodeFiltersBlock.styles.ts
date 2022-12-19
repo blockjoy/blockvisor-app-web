@@ -73,20 +73,8 @@ export const styles = {
       fill: ${theme.colorPrimary};
     }
   `,
-  showMore: (theme: ITheme) => css`
-    background: transparent;
-    padding: 0;
-    border: 0;
-    cursor: pointer;
-    display: block;
-    color: ${theme.colorLabel};
-    text-decoration: underline;
-    font-size: 13px;
-    margin-top: 10px;
-    display: block;
-
-    :hover {
-      color: ${theme.colorDefault};
-    }
+  checkedIcon: css`
+    width: 18px;
+    height: 18px;
   `,
 };
