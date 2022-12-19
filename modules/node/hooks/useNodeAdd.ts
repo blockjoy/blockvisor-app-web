@@ -66,6 +66,8 @@ export const useNodeAdd = (): Hook => {
   ) => {
     setIsLoading(true);
 
+    console.log('params', params);
+
     const hostId = params.host;
 
     const node = new Node();
@@ -87,7 +89,11 @@ export const useNodeAdd = (): Hook => {
     //   dT.items.add(data, key.type);
     // });
 
+    console.log('node', node);
+
     const createdNode: any = await apiClient.createNode(node);
+
+    console.log('createNode', createdNode);
 
     const nodeId = createdNode.messagesList[0];
 
