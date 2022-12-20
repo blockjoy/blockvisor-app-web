@@ -748,10 +748,13 @@ export class GrpcClient {
       return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
     });
 
+    console.log("node response, ", response_meta);
+
     // @ts-ignore
     let node_id = response_meta?.messagesList[0];
 
     console.log("got key files: ", key_files);
+    console.log("got node id: ", node_id);
 
     // Node creation was successful, trying to upload keys, if existent
     if (key_files !== undefined && key_files?.length > 0) {

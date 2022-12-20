@@ -8,22 +8,6 @@ export const toGrid = (
   onCellClick: (args0: any) => void,
 ) => {
   return nodeList?.map((node: any) => {
-    // TODO: delete the replace ASAP!!!
-    // const node_type = node.type.replace('}{', '},{');
-
-    let error = '';
-
-    try {
-      JSON.parse(node.type);
-    } catch (e) {
-      console.log('JSON', node.type.toString());
-      console.log('e', e);
-    }
-
-    const parsedJSON = JSON.parse(node.type);
-
-    console.log('parsedJSON', parsedJSON);
-
     return {
       key: node.id,
       component: (
