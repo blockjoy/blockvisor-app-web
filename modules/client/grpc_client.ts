@@ -804,7 +804,7 @@ export class GrpcClient {
         }
       }
 
-      let response_key_files = this.key_files
+      let response_key_files = await this.key_files
         ?.save(request, this.getAuthHeader())
         .then((response) => {
           let meta = new ResponseMeta();
