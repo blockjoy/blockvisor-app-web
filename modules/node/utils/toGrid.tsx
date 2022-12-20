@@ -9,7 +9,21 @@ export const toGrid = (
 ) => {
   return nodeList?.map((node: any) => {
     // TODO: delete the replace ASAP!!!
-    const node_type = node.type.replace("}{", "},{");
+    // const node_type = node.type.replace('}{', '},{');
+
+    let error = '';
+
+    try {
+      JSON.parse(node.type);
+    } catch (e) {
+      console.log('JSON', node.type.toString());
+      console.log('e', e);
+    }
+
+    const parsedJSON = JSON.parse(node.type);
+
+    console.log('parsedJSON', parsedJSON);
+
     return {
       key: node.id,
       component: (
@@ -20,7 +34,7 @@ export const toGrid = (
           cellIcon={<BlockchainIcon blockchainId={node.blockchainId} />}
           cellStatus={<NodeStatus hasBorder status={node.status} />}
           cellType={
-            nodeTypeList.find((n) => n.id === JSON.parse(node_type).id)?.name
+            nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)?.name
           }
         />
       ),
