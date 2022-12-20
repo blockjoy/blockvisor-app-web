@@ -18,14 +18,9 @@ type Hook = {
 };
 
 export const useNodeAdd = (): Hook => {
-  const [layout, setLayout] = useRecoilState(layoutState);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [blockchainList, setBlockchainList] = useState([]);
-
   const [hostList, setHostList] = useState([]);
-
   const repository = useIdentityRepository();
 
   const loadLookups = async () => {
@@ -58,7 +53,6 @@ export const useNodeAdd = (): Hook => {
     }));
 
     setBlockchainList(mappedBlockchains);
-
     setIsLoading(false);
   };
 
@@ -68,7 +62,7 @@ export const useNodeAdd = (): Hook => {
   ) => {
     setIsLoading(true);
 
-    console.log('params', params);
+    console.log('createNode', params);
 
     const hostId = params.host;
 
@@ -92,31 +86,15 @@ export const useNodeAdd = (): Hook => {
     });
 
     node.setType(nodeTypeString);
-
-    console.log('nodeTypeString', nodeTypeString);
-
     node.setHostId(hostId);
 
-    // TODO: MOVE THIS TO UPDATE NODE
-    // const dT = new DataTransfer();
-
-    // dT.items.add(params.key_files, '.svg');
-
-    // params.key_files?.forEach(async (key) => {
-    //   const data = await key.text();
-    //   dT.items.add(data, key.type);
-    // });
-
-    const createdNode: any = await apiClient.createNode(node, params.key_files);
-
-    console.log('createNode', createdNode);
-
-    const nodeId = createdNode.messagesList[0];
+    //const createdNode: any = await apiClient.createNode(node, params.key_files);
+    // console.log('createNode', createdNode);
+    // const nodeId = createdNode.messagesList[0];
 
     toast.success('Node Created');
     setIsLoading(false);
-    setLayout(undefined);
-    onSuccess(nodeId);
+    //onSuccess(nodeId);
   };
 
   return {
