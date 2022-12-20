@@ -8,11 +8,16 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
 
+type NodeFiles = {
+  name: string;
+  files: File[];
+};
+
 type NodeState = {
   blockchainId: string;
   nodeTypeId: string;
   nodeTypeProperties: NodeTypeConfig[];
-  key_files?: File[];
+  nodeFiles?: NodeFiles[];
 };
 
 export const NodeLauncher = () => {
@@ -39,13 +44,17 @@ export const NodeLauncher = () => {
     });
   };
 
-  const isNodeValid = () =>
+  const isNodeValid = () => !!(node.blockchainId && node.nodeTypeId);
+
+  const isConfigValid = () =>
     !!(
-      node.key_files &&
-      node.blockchainId &&
-      node.nodeTypeId &&
-      node.nodeTypeProperties.every((type) => type.value || type.disabled)
+      node.nodeFiles?.every((f) => f.files?.length) &&
+      node.nodeTypeProperties
+        .filter((type) => type.ui_type !== 'key-upload')
+        .every((type) => type.value || type.disabled)
     );
+
+  console.log('isConfigValid', isConfigValid());
 
   const handlePropertyChanged = (e: any) => {
     const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
@@ -68,33 +77,38 @@ export const NodeLauncher = () => {
   const handleFileUploaded = (e: any) => {
     console.log('handleFileUploaded', e.target.value);
 
-    // const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
+    const nodeFilesCopy = [...node.nodeFiles!];
 
-    // let foundProperty = nodeTypePropertiesCopy.find(
-    //   (property) => property.name === e.target.name,
-    // );
+    let foundNodeFiles = nodeFilesCopy.find(
+      (files) => files.name === e.target.name,
+    );
 
-    // console.log('nodeTypePropertiesCopy', nodeTypePropertiesCopy);
+    if (!foundNodeFiles) return;
 
-    // if (!foundProperty) return;
-
-    // foundProperty.value = e.target.value;
+    foundNodeFiles?.files.push(e?.target?.value);
 
     setNode({
       ...node,
-      key_files: e.target.value,
+      nodeFiles: nodeFilesCopy,
     });
   };
 
   const handleCreateNodeClicked = () => {
     console.log('handleCreateNodeClicked', node);
 
+    const mergedFiles: File[] = [];
+
+    // build merged file array
+    for (let f of node.nodeFiles!) {
+      mergedFiles.push(...f.files!);
+    }
+
     const params: CreateNodeParams = {
       nodeType: +node.nodeTypeId ?? 0,
       blockchain: node.blockchainId ?? '',
       host: hostList[0].value,
       nodeTypeProperties: node.nodeTypeProperties,
-      key_files: node.key_files,
+      key_files: mergedFiles,
     };
 
     createNode(params, (nodeId: string) => {
@@ -103,8 +117,6 @@ export const NodeLauncher = () => {
   };
 
   useEffect(() => {
-    loadLookups();
-
     const activeBlockchain = blockchains.find(
       (b) => b.id === node.blockchainId,
     );
@@ -122,12 +134,25 @@ export const NodeLauncher = () => {
       value: null,
     }));
 
+    const fileProperties: NodeFiles[] = propertiesWithValue
+      .filter((p) => p.ui_type === 'key-upload')
+      .map((p) => ({
+        name: p.name,
+        files: [],
+      }));
+
     setNode({
       ...node,
       nodeTypeProperties: propertiesWithValue,
+      nodeFiles: fileProperties,
     });
-    // foundProperty.value = e;
+
+    console.log('node', node);
   }, [node.blockchainId, node.nodeTypeId]);
+
+  useEffect(() => {
+    loadLookups();
+  }, []);
 
   return (
     <>
@@ -148,7 +173,7 @@ export const NodeLauncher = () => {
         {node.blockchainId && node.nodeTypeId && (
           <NodeLauncherSummary
             isNodeValid={isNodeValid()}
-            nodeTypeProperties={node.nodeTypeProperties}
+            isConfigValid={isConfigValid()}
             blockchainId={node.blockchainId}
             nodeTypeId={node.nodeTypeId}
             onCreateNodeClicked={handleCreateNodeClicked}

@@ -9,17 +9,17 @@ import IconRocket from '@public/assets/icons/rocket-12.svg';
 
 type Props = {
   isNodeValid: boolean;
+  isConfigValid: boolean;
   blockchainId: string;
   nodeTypeId: string;
-  nodeTypeProperties: NodeTypeConfig[];
   onCreateNodeClicked: VoidFunction;
 };
 
 export const NodeLauncherSummary: FC<Props> = ({
   isNodeValid,
+  isConfigValid,
   blockchainId,
   nodeTypeId,
-  nodeTypeProperties,
   onCreateNodeClicked,
 }) => {
   const { blockchains } = useGetBlockchains();
@@ -53,37 +53,27 @@ export const NodeLauncherSummary: FC<Props> = ({
               </span>
             </div>
           </li>
-          {nodeTypeProperties?.map((type) => {
-            return (
-              <li key={type.name}>
-                {type.value === null && !type.disabled ? (
-                  <div css={styles.summaryIconClose}>
-                    <IconClose />
-                  </div>
-                ) : (
-                  <span css={styles.summaryIcon}>
-                    <IconCheck />
-                  </span>
-                )}
+          <li>
+            {isConfigValid ? (
+              <span css={styles.summaryIcon}>
+                <IconCheck />
+              </span>
+            ) : (
+              <span css={styles.summaryIconClose}>
+                <IconClose />
+              </span>
+            )}
 
-                <div>
-                  <label>
-                    <NodeTypeConfigLabel>{type.name}</NodeTypeConfigLabel>
-                  </label>
-                  <span>
-                    {!type.value || !!type.default?.length
-                      ? 'Not Added'
-                      : 'Added'}
-                  </span>
-                </div>
-              </li>
-            );
-          })}
+            <div>
+              <label>Configuration</label>
+              <span>{isConfigValid ? 'Looks Good' : 'Needs Work'}</span>
+            </div>
+          </li>
         </ul>
         <div css={styles.buttons}>
           <button
             onClick={onCreateNodeClicked}
-            // disabled={!isNodeValid}
+            disabled={!isNodeValid || !isConfigValid}
             css={styles.createButton}
           >
             <IconRocket />
