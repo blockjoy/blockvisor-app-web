@@ -784,25 +784,18 @@ export class GrpcClient {
       for (let i = 0; i < key_files.length; i++) {
         //for (let file of key_files) {
         let file = key_files[i];
-        let reader = new FileReader();
 
-        reader.addEventListener(
-          'load',
-          () => {
-            let f = new Keyfile();
-            f.setName(file?.name || '');
-            f.setContent(reader.result + '');
+        let fileContent = await file.text();
 
-            files.push(f);
-          },
-          false,
-        );
-
-        if (file) {
-          reader.readAsText(file, 'UTF-8');
-          request.setKeyFilesList(files);
-        }
+        let keyfile = new Keyfile();
+        keyfile.setName(file?.name || '');
+        keyfile.setContent(fileContent);
+        files.push(keyfile);
       }
+
+      console.log('files', files);
+
+      request.setKeyFilesList(files);
 
       let response_key_files = await this.key_files
         ?.save(request, this.getAuthHeader())
@@ -810,6 +803,8 @@ export class GrpcClient {
           let meta = new ResponseMeta();
           meta.setOriginRequestId(response.getOriginRequestId());
           meta.setMessagesList(response.getMessagesList());
+
+          console.log('got_response', meta.toObject());
 
           return meta.toObject();
         })
