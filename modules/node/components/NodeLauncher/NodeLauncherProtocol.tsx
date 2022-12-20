@@ -3,7 +3,7 @@ import { BlockchainIcon, Table, TableSkeleton } from '@shared/components';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import IconSearch from '@public/assets/icons/search-16.svg';
-import { nodeTypeList } from '@shared/constants/lookups';
+import { nodeTypeList, blockchainList } from '@shared/constants/lookups';
 
 type Props = {
   onProtocolSelected: (
@@ -71,36 +71,54 @@ export const NodeLauncherProtocol: FC<Props> = ({
             <TableSkeleton />
           </div>
         ) : (
-          filteredBlockchains?.map((b) => (
-            <div
-              key={b.id}
-              css={styles.row}
-              className={b.id === activeBlockchainId ? 'active row' : 'row'}
-            >
-              <span css={styles.iconWrapper}>
-                <BlockchainIcon hideTooltip blockchainId={b.id} />
-              </span>
-              <span css={styles.name}>{b.name}</span>
-              <div css={styles.nodeTypeButtons}>
-                {b.supported_node_types.map((type: any) => (
-                  <button
-                    className={
-                      type.id === activeNodeTypeId &&
-                      b.id === activeBlockchainId
-                        ? 'active'
-                        : ''
-                    }
-                    key={type.id}
-                    onClick={() => handleProtocolSelected(b.id!, type.id)}
-                    type="button"
-                    css={styles.createButton}
-                  >
-                    {nodeTypeList.find((n) => n.id === type.id)?.name}
-                  </button>
-                ))}
+          <>
+            {filteredBlockchains?.map((b) => (
+              <div
+                key={b.id}
+                css={styles.row}
+                className={b.id === activeBlockchainId ? 'active row' : 'row'}
+              >
+                <span css={styles.iconWrapper}>
+                  <BlockchainIcon hideTooltip blockchainId={b.id} />
+                </span>
+                <span css={styles.name}>{b.name}</span>
+                <div css={styles.nodeTypeButtons}>
+                  {b.supported_node_types.map((type: any) => (
+                    <button
+                      className={
+                        type.id === activeNodeTypeId &&
+                        b.id === activeBlockchainId
+                          ? 'active'
+                          : ''
+                      }
+                      key={type.id}
+                      onClick={() => handleProtocolSelected(b.id!, type.id)}
+                      type="button"
+                      css={styles.createButton}
+                    >
+                      {nodeTypeList.find((n) => n.id === type.id)?.name}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+            {blockchainList
+              ?.filter(
+                (b) => b.label !== 'Ethereum PoS' && b.label !== 'Helium',
+              )
+              ?.map((b: any) => (
+                <div
+                  key={b.id}
+                  css={[styles.row, styles.rowDisabled]}
+                  className={b.id === activeBlockchainId ? 'active row' : 'row'}
+                >
+                  <span css={styles.iconWrapper}>
+                    <BlockchainIcon hideTooltip blockchainId={b.value} />
+                  </span>
+                  <span css={styles.name}>{b.label}</span>
+                </div>
+              ))}
+          </>
         )}
       </div>
     </div>

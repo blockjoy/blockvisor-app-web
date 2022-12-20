@@ -88,13 +88,13 @@ export const useNodeAdd = (): Hook => {
     node.setType(nodeTypeString);
     node.setHostId(hostId);
 
-    //const createdNode: any = await apiClient.createNode(node, params.key_files);
-    // console.log('createNode', createdNode);
-    // const nodeId = createdNode.messagesList[0];
+    const createdNode: any = await apiClient.createNode(node, params.key_files);
+    console.log('createNode', createdNode);
+    const nodeId = createdNode.messagesList[0];
 
     toast.success('Node Created');
     setIsLoading(false);
-    //onSuccess(nodeId);
+    onSuccess(nodeId);
   };
 
   return {
