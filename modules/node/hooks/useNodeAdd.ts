@@ -83,7 +83,7 @@ export const useNodeAdd = (): Hook => {
     // https://github.com/blockjoy/blockvisor-api/blob/24c83705064a2331f5f2c4643f34553cbffedea3/conf/node_types.schema.ts#L98
 
     const nodeTypeString = JSON.stringify({
-      id: params.nodeType.toString(),
+      id: params.nodeType,
       properties: params.nodeTypeProperties.map((property) => ({
         ...property,
         default: property.default === null ? 'null' : property.default,
