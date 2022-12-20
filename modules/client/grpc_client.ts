@@ -739,17 +739,22 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setNode(node);
 
+    console.log("creating node: ", node);
+    console.log("got files: ", key_files);
+
     let response_meta = await this.node?.create(request, this.getAuthHeader()).then((response) => {
       return response.getMeta()?.toObject();
     }).catch((err) => {
       return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
     });
 
+    // @ts-ignore
+    let node_id = response_meta?.messagesList[0];
+
     console.log("got key files: ", key_files);
 
     // Node creation was successful, trying to upload keys, if existent
     if (key_files !== undefined && key_files?.length > 0) {
-      let node_id = node.getId();
       let request = new KeyFilesSaveRequest();
       let files: Array<Keyfile> = [];
 
