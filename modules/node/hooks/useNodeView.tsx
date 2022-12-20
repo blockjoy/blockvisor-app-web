@@ -51,8 +51,7 @@ export const useNodeView = (): Hook => {
     const node: any = await apiClient.getNode(nodeId);
 
     console.log('loadNode', node);
-    // TODO: delete the replace ASAP!!!
-    const nodeTypeId = JSON.parse(node.type.replace("}{", "},{")).id;
+    const nodeTypeId = JSON.parse(node.type).id;
 
     const details = [
       {
