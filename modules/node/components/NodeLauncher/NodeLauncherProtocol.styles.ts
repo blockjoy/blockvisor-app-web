@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 15px;
-    width: 650px;
+    width: 500px;
     max-width: 500px;
     min-width: 500px;
     border-right: 1px solid ${theme.colorBorder};
@@ -99,7 +99,7 @@ export const styles = {
     background: transparent;
     border: 0;
     cursor: pointer;
-    opacity: 0.5;
+    opacity: 0.7;
 
     :nth-child(even) {
       background: rgba(255, 255, 255, 0.02);
@@ -122,6 +122,10 @@ export const styles = {
     :is(:hover, .active) path {
       fill: ${theme.colorPrimary};
     }
+  `,
+  rowDisabled: css`
+    opacity: 0.2;
+    cursor: not-allowed;
   `,
   createButton: (theme: ITheme) => css`
     border: 0;

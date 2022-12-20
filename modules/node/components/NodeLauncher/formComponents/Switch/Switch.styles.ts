@@ -5,6 +5,7 @@ export const styles = {
   wrapper: css`
     position: relative;
     display: inline-block;
+    margin-bottom: 20px;
 
     :hover .tooltip {
       opacity: 1;
@@ -31,6 +32,7 @@ export const styles = {
     padding: 3px;
     border-radius: 15px;
     border: 1px solid ${theme.colorLightGrey};
+    cursor: pointer;
     transition: 0.3s;
   `,
   handle: (theme: ITheme) => css`

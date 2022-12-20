@@ -6,7 +6,9 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 0;
     flex: 1 1 auto;
-    max-width: 420px;
+    width: 500px;
+    max-width: 500px;
+    min-width: 500px;
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {

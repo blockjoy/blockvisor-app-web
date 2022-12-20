@@ -8,11 +8,6 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
 
-type NodeFiles = {
-  name: string;
-  files: File[];
-};
-
 type NodeState = {
   blockchainId: string;
   nodeTypeId: string;
@@ -44,17 +39,17 @@ export const NodeLauncher = () => {
     });
   };
 
-  const isNodeValid = () => !!(node.blockchainId && node.nodeTypeId);
+  const isNodeValid = () => Boolean(node.blockchainId && node.nodeTypeId);
 
   const isConfigValid = () =>
-    !!(
+    Boolean(
       node.nodeFiles?.every((f) => f.files?.length) &&
-      node.nodeTypeProperties
-        .filter((type) => type.ui_type !== 'key-upload')
-        .every((type) => type.value || type.disabled)
+        node.nodeTypeProperties
+          .filter((type) => type.ui_type !== 'key-upload')
+          .every(
+            (type) => type.value || type.disabled || type.ui_type === 'switch',
+          ),
     );
-
-  console.log('isConfigValid', isConfigValid());
 
   const handlePropertyChanged = (e: any) => {
     const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
@@ -91,6 +86,8 @@ export const NodeLauncher = () => {
       ...node,
       nodeFiles: nodeFilesCopy,
     });
+
+    console.log('node', node);
   };
 
   const handleCreateNodeClicked = () => {
@@ -100,7 +97,9 @@ export const NodeLauncher = () => {
 
     // build merged file array
     for (let f of node.nodeFiles!) {
-      mergedFiles.push(...f.files!);
+      for (let nf of f.files) {
+        mergedFiles.push(nf);
+      }
     }
 
     const params: CreateNodeParams = {
@@ -108,7 +107,7 @@ export const NodeLauncher = () => {
       blockchain: node.blockchainId ?? '',
       host: hostList[0].value,
       nodeTypeProperties: node.nodeTypeProperties,
-      key_files: mergedFiles,
+      key_files: mergedFiles.flat(),
     };
 
     createNode(params, (nodeId: string) => {
@@ -168,6 +167,7 @@ export const NodeLauncher = () => {
             onFileUploaded={handleFileUploaded}
             onPropertyChanged={handlePropertyChanged}
             nodeTypeProperties={node.nodeTypeProperties}
+            nodeFiles={node.nodeFiles}
           />
         )}
         {node.blockchainId && node.nodeTypeId && (

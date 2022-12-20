@@ -12,12 +12,49 @@ import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 
 type Props = {
   nodeTypeProperties?: NodeTypeConfig[];
+  nodeFiles?: NodeFiles[];
   onFileUploaded: (e: any) => void;
   onPropertyChanged: (e: any) => void;
 };
 
+export const renderControls = (
+  property: any,
+  nodeFiles: NodeFiles[],
+  onFileUploaded: (e: any) => void,
+  onPropertyChanged: (e: any) => void,
+) => {
+  switch (property.ui_type) {
+    case 'key-upload':
+      return (
+        <FileUpload
+          currentFiles={nodeFiles?.find((f) => f.name === property.name)?.files}
+          multiple={true}
+          onChange={onFileUploaded}
+          name={property.name}
+          remove={() => console.log('shit')}
+          placeholder="Upload validator keys"
+        />
+      );
+    case 'voting_key_pwd':
+    case 'wallet_address':
+      return (
+        <Textbox name={property.name} onPropertyChanged={onPropertyChanged} />
+      );
+    case 'switch':
+      return (
+        <Switch
+          disabled={!!property.disabled}
+          tooltip="You will be able to edit this setting soon"
+          name={property.name}
+          onPropertyChanged={onPropertyChanged}
+        />
+      );
+  }
+};
+
 export const NodeLauncherConfig: FC<Props> = ({
   nodeTypeProperties,
+  nodeFiles,
   onFileUploaded,
   onPropertyChanged,
 }) => {
@@ -58,29 +95,12 @@ export const NodeLauncherConfig: FC<Props> = ({
                 >
                   <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
                 </label>
-                {property.ui_type === 'key-upload' && (
-                  <FileUpload
-                    currentFiles={property.value}
-                    multiple={true}
-                    onChange={onFileUploaded}
-                    name={property.name}
-                    remove={() => console.log('shit')}
-                    placeholder="Upload validator keys"
-                  />
-                )}
-                {property.ui_type === 'string' && (
-                  <Textbox
-                    name={property.name}
-                    onPropertyChanged={onPropertyChanged}
-                  />
-                )}
-                {property.ui_type === 'switch' && (
-                  <Switch
-                    disabled={!!property.disabled}
-                    tooltip="You will be able to edit this setting soon"
-                    name={property.name}
-                    onPropertyChanged={onPropertyChanged}
-                  />
+
+                {renderControls(
+                  property,
+                  nodeFiles!,
+                  onFileUploaded,
+                  onPropertyChanged,
                 )}
               </>
             );

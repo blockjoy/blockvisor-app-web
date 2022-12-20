@@ -12,6 +12,7 @@ export const Textbox: FC<Props> = ({ onPropertyChanged, name }) => {
       name={name}
       type="text"
       css={styles.input}
+      placeholder="Enter a value"
       onChange={(e: any) => onPropertyChanged(e)}
     />
   );
