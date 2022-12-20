@@ -12,6 +12,7 @@ type NodeState = {
   blockchainId: string;
   nodeTypeId: string;
   nodeTypeProperties: NodeTypeConfig[];
+  key_files?: File[];
 };
 
 export const NodeLauncher = () => {
@@ -36,15 +37,11 @@ export const NodeLauncher = () => {
       nodeTypeId,
       nodeTypeProperties,
     });
-    console.log('handleBlockchainClicked', {
-      blockchainId,
-      nodeTypeId,
-      nodeTypeProperties,
-    });
   };
 
   const isNodeValid = () =>
     !!(
+      node.key_files &&
       node.blockchainId &&
       node.nodeTypeId &&
       node.nodeTypeProperties.every((type) => type.value || type.disabled)
@@ -56,8 +53,6 @@ export const NodeLauncher = () => {
     let foundProperty = nodeTypePropertiesCopy.find(
       (property) => property.name === e.target.name,
     );
-
-    console.log('handlePropertyChanged', foundProperty);
 
     if (!foundProperty) return;
 
@@ -71,24 +66,23 @@ export const NodeLauncher = () => {
   };
 
   const handleFileUploaded = (e: any) => {
-    console.log('values', e.target.values);
-    console.log('name', e.target.name);
+    console.log('handleFileUploaded', e.target.value);
 
-    const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
+    // const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
 
-    let foundProperty = nodeTypePropertiesCopy.find(
-      (property) => property.name === e.target.name,
-    );
+    // let foundProperty = nodeTypePropertiesCopy.find(
+    //   (property) => property.name === e.target.name,
+    // );
 
-    console.log('nodeTypePropertiesCopy', nodeTypePropertiesCopy);
+    // console.log('nodeTypePropertiesCopy', nodeTypePropertiesCopy);
 
-    if (!foundProperty) return;
+    // if (!foundProperty) return;
 
-    foundProperty.value = e.target.value;
+    // foundProperty.value = e.target.value;
 
     setNode({
       ...node,
-      nodeTypeProperties: nodeTypePropertiesCopy,
+      key_files: e.target.value,
     });
   };
 
@@ -100,6 +94,7 @@ export const NodeLauncher = () => {
       blockchain: node.blockchainId ?? '',
       host: hostList[0].value,
       nodeTypeProperties: node.nodeTypeProperties,
+      key_files: node.key_files,
     };
 
     createNode(params, (nodeId: string) => {
@@ -126,8 +121,6 @@ export const NodeLauncher = () => {
       ...property,
       value: null,
     }));
-
-    console.log('hitting this', propertiesWithValue);
 
     setNode({
       ...node,

@@ -23,6 +23,7 @@ type CreateNodeParams = {
   host: string;
   blockchain: string;
   nodeTypeProperties: NodeTypeConfig[];
+  key_files?: File[];
 };
 
 type UpdateNodeParams = {

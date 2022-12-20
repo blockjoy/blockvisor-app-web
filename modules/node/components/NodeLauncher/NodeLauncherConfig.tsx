@@ -58,36 +58,29 @@ export const NodeLauncherConfig: FC<Props> = ({
                 >
                   <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
                 </label>
-
                 {property.ui_type === 'key-upload' && (
-                  <div>
-                    <FileUpload
-                      currentFiles={property.value}
-                      multiple={true}
-                      onChange={onFileUploaded}
-                      name={property.name}
-                      remove={() => console.log('shit')}
-                      placeholder="Upload validator keys"
-                    />
-                  </div>
+                  <FileUpload
+                    currentFiles={property.value}
+                    multiple={true}
+                    onChange={onFileUploaded}
+                    name={property.name}
+                    remove={() => console.log('shit')}
+                    placeholder="Upload validator keys"
+                  />
                 )}
                 {property.ui_type === 'string' && (
-                  <div>
-                    <Textbox
-                      name={property.name}
-                      onPropertyChanged={onPropertyChanged}
-                    />
-                  </div>
+                  <Textbox
+                    name={property.name}
+                    onPropertyChanged={onPropertyChanged}
+                  />
                 )}
                 {property.ui_type === 'switch' && (
-                  <div>
-                    <Switch
-                      disabled={!!property.disabled}
-                      tooltip="You will be able to edit this setting soon"
-                      name={property.name}
-                      onPropertyChanged={onPropertyChanged}
-                    />
-                  </div>
+                  <Switch
+                    disabled={!!property.disabled}
+                    tooltip="You will be able to edit this setting soon"
+                    name={property.name}
+                    onPropertyChanged={onPropertyChanged}
+                  />
                 )}
               </>
             );
