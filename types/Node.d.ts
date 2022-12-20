@@ -6,6 +6,11 @@ type NodeTypeConfig = {
   disabled?: boolean;
 };
 
+type NodeFiles = {
+  name: string;
+  files: File[];
+};
+
 type BlockjoyNode = {
   id: string;
   hostId: string;

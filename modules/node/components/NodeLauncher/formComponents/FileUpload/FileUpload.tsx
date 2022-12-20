@@ -52,8 +52,8 @@ export function FileUpload({
         className="file-upload__input"
         onChange={onChange}
       />
-      {Boolean(files.length) ? (
-        files.map((file) => (
+      {Boolean(currentFiles?.length) ? (
+        currentFiles[0].map((file: any) => (
           <Fragment key={file.name}>
             <Image
               src="/assets/icons/checkmark-24.svg"
