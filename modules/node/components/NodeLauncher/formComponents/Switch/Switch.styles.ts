@@ -4,6 +4,12 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     position: relative;
+    display: inline-block;
+
+    :hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
   `,
   input: (theme: ITheme) => css`
     position: absolute;
@@ -26,11 +32,6 @@ export const styles = {
     border-radius: 15px;
     border: 1px solid ${theme.colorLightGrey};
     transition: 0.3s;
-
-    :hover ~ .tooltip {
-      opacity: 1;
-      visibility: visible;
-    }
   `,
   handle: (theme: ITheme) => css`
     content: '';
@@ -53,10 +54,9 @@ export const styles = {
   `,
   tooltip: css`
     position: absolute;
-    top: -48px;
-    left: 50%;
+    top: -6px;
+    left: 120%;
     width: 190px;
-    translate: -50% 0;
     background: #0c0c02;
     padding: 6px 10px;
     font-size: 12px;

@@ -71,9 +71,9 @@ export const NodeLauncherSummary: FC<Props> = ({
                     <NodeTypeConfigLabel>{type.name}</NodeTypeConfigLabel>
                   </label>
                   <span>
-                    {type.value || !!type.default?.length
-                      ? 'Added'
-                      : 'Not Added'}
+                    {!type.value || !!type.default?.length
+                      ? 'Not Added'
+                      : 'Added'}
                   </span>
                 </div>
               </li>
@@ -83,7 +83,7 @@ export const NodeLauncherSummary: FC<Props> = ({
         <div css={styles.buttons}>
           <button
             onClick={onCreateNodeClicked}
-            disabled={!isNodeValid}
+            // disabled={!isNodeValid}
             css={styles.createButton}
           >
             <IconRocket />

@@ -23,13 +23,8 @@ export function FileUpload({
   multiple = false,
   currentFiles,
 }: Props) {
-  console.log('currentFiles', currentFiles);
-
   const files: FileWithPath[] = [];
   const filesArray = (currentFiles && Array.from(currentFiles)) || [];
-
-  console.log('filesArray', filesArray);
-
   const onDrop = useCallback(
     async (droppedFiles: File[]) => {
       const newFiles = [...filesArray, ...Array.from(droppedFiles)];

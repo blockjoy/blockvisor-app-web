@@ -87,6 +87,7 @@ export const useNodeAdd = (): Hook => {
       properties: params.nodeTypeProperties.map((property) => ({
         ...property,
         default: property.default === null ? 'null' : property.default,
+        value: property.value === null ? 'null' : property.value,
       })),
     });
 
@@ -98,14 +99,15 @@ export const useNodeAdd = (): Hook => {
 
     // TODO: MOVE THIS TO UPDATE NODE
     // const dT = new DataTransfer();
-    // params.validatorKeys.forEach(async (key) => {
+
+    // dT.items.add(params.key_files, '.svg');
+
+    // params.key_files?.forEach(async (key) => {
     //   const data = await key.text();
     //   dT.items.add(data, key.type);
     // });
 
-    console.log('node', node);
-
-    const createdNode: any = await apiClient.createNode(node);
+    const createdNode: any = await apiClient.createNode(node, params.key_files);
 
     console.log('createNode', createdNode);
 
@@ -114,7 +116,7 @@ export const useNodeAdd = (): Hook => {
     toast.success('Node Created');
     setIsLoading(false);
     setLayout(undefined);
-    // onSuccess(nodeId);
+    onSuccess(nodeId);
   };
 
   return {
