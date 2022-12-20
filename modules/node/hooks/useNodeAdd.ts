@@ -86,6 +86,9 @@ export const useNodeAdd = (): Hook => {
         params.nodeTypeProperties,
       )} }`,
     );
+
+    console.log('nodeTypeProperties', params.nodeTypeProperties);
+
     node.setHostId(hostId);
 
     // TODO: MOVE THIS TO UPDATE NODE
