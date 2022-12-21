@@ -11,6 +11,7 @@ import { styles } from './NodeLauncherConfig.styles';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 
 type Props = {
+  isConfigValid: boolean;
   nodeTypeProperties?: NodeTypeConfig[];
   nodeFiles?: NodeFiles[];
   onFileUploaded: (e: any) => void;
@@ -53,6 +54,7 @@ export const renderControls = (
 };
 
 export const NodeLauncherConfig: FC<Props> = ({
+  isConfigValid,
   nodeTypeProperties,
   nodeFiles,
   onFileUploaded,
@@ -74,12 +76,12 @@ export const NodeLauncherConfig: FC<Props> = ({
         <div
           css={[
             styles.alert,
-            nodeTypeProperties?.length === 0
-              ? styles.alertSuccess
-              : styles.alertDanger,
+            isConfigValid ? styles.alertSuccess : styles.alertDanger,
           ]}
         >
-          Node requires configuration information.
+          {isConfigValid
+            ? 'All configuration information entered.'
+            : 'Node requires configuration information.'}
         </div>
         <div css={styles.nodeTypeProperties}>
           {nodeTypeProperties?.map((property: NodeTypeConfig) => {
