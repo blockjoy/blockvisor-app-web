@@ -8,6 +8,7 @@ import IconClose from '@public/assets/icons/close-12.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 
 type Props = {
+  hasServerError: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean;
   blockchainId: string;
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export const NodeLauncherSummary: FC<Props> = ({
+  hasServerError,
   isNodeValid,
   isConfigValid,
   blockchainId,
@@ -73,7 +75,7 @@ export const NodeLauncherSummary: FC<Props> = ({
         <div css={styles.buttons}>
           <button
             onClick={onCreateNodeClicked}
-            disabled={!isNodeValid || !isConfigValid}
+            disabled={!isNodeValid || !isConfigValid || hasServerError}
             css={styles.createButton}
           >
             <IconRocket />
@@ -83,6 +85,11 @@ export const NodeLauncherSummary: FC<Props> = ({
             Start Again
           </Button> */}
         </div>
+        {hasServerError && (
+          <div css={styles.serverError}>
+            Error creating node, please contact Thomas Tha Hobo Engine.
+          </div>
+        )}
       </div>
     </div>
   );

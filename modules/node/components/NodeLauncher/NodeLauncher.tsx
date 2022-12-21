@@ -20,6 +20,8 @@ export const NodeLauncher = () => {
   const { createNode, loadLookups, hostList } = useNodeAdd();
   const router = useRouter();
 
+  const [hasServerError, setHasServerError] = useState<boolean>(false);
+
   const [node, setNode] = useState<NodeState>({
     blockchainId: '',
     nodeTypeId: '',
@@ -52,6 +54,8 @@ export const NodeLauncher = () => {
     );
 
   const handlePropertyChanged = (e: any) => {
+    setHasServerError(false);
+
     const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
 
     let foundProperty = nodeTypePropertiesCopy.find(
@@ -70,6 +74,7 @@ export const NodeLauncher = () => {
   };
 
   const handleFileUploaded = (e: any) => {
+    setHasServerError(false);
     console.log('handleFileUploaded', e.target.value);
 
     const nodeFilesCopy = [...node.nodeFiles!];
@@ -110,9 +115,13 @@ export const NodeLauncher = () => {
       key_files: mergedFiles.flat(),
     };
 
-    createNode(params, (nodeId: string) => {
-      router.push(`/nodes/${nodeId}`);
-    });
+    createNode(
+      params,
+      (nodeId: string) => {
+        router.push(`/nodes/${nodeId}`);
+      },
+      () => setHasServerError(true),
+    );
   };
 
   useEffect(() => {
@@ -172,6 +181,7 @@ export const NodeLauncher = () => {
         )}
         {node.blockchainId && node.nodeTypeId && (
           <NodeLauncherSummary
+            hasServerError={hasServerError}
             isNodeValid={isNodeValid()}
             isConfigValid={isConfigValid()}
             blockchainId={node.blockchainId}

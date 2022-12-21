@@ -116,13 +116,19 @@ export function AddNode() {
       nodeType: nodeType ?? 0,
       blockchain: blockchain?.value ?? '',
       host: host?.value ?? data['ip'],
+      nodeTypeProperties: [],
+      key_files: [],
       ...rest,
     };
 
-    createNode(params, (nodeId: string) => {
-      handleCloseModal();
-      router.push(`/nodes/${nodeId}`);
-    });
+    createNode(
+      params,
+      (nodeId: string) => {
+        handleCloseModal();
+        router.push(`/nodes/${nodeId}`);
+      },
+      () => null,
+    );
   });
 
   const blockchainOptions = blockchains.map((b) => ({
@@ -288,6 +294,7 @@ export function AddNode() {
                       name="validatorKeys"
                       render={({ field: { onChange, name } }) => (
                         <FileUpload
+                          currentFiles={[]}
                           multiple={true}
                           onChange={(e) => onChange(e)}
                           name={name}

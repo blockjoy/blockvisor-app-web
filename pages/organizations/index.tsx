@@ -4,7 +4,7 @@ import { OrganizationsPage } from '@modules/organizations';
 const Organizations = () => <OrganizationsPage />;
 
 Organizations.getLayout = function getLayout(page: any) {
-  return <AppLayout breadcrumb={['Organizations', 'All']}>{page}</AppLayout>;
+  return <AppLayout>{page}</AppLayout>;
 };
 
 export default Organizations;

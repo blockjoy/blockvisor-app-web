@@ -30,12 +30,18 @@ export const NodeCreate = () => {
       nodeType: +type ?? 0,
       blockchain: blockchainId ?? '',
       host: hostList[0].value,
+      nodeTypeProperties: [],
+      key_files: [],
     };
 
-    createNode(params, (nodeId: string) => {
-      setIsBlockchainsOpen(false);
-      router.push(`/nodes/${nodeId}`);
-    });
+    createNode(
+      params,
+      (nodeId: string) => {
+        setIsBlockchainsOpen(false);
+        router.push(`/nodes/${nodeId}`);
+      },
+      () => null,
+    );
   };
 
   const handleInputChanged = (event: ChangeEvent<HTMLInputElement>) => {
