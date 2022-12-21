@@ -105,4 +105,14 @@ export const styles = {
       cursor: not-allowed;
     }
   `,
+  serverError: (theme: ITheme) => css`
+    margin-top: 20px;
+    margin-bottom: 4px;
+    padding: 16px;
+    line-height: 1.45;
+    border-radius: 4px;
+    font-weight: 600;
+    background: ${theme.colorDanger};
+    color: ${theme.colorPrimaryText};
+  `,
 };

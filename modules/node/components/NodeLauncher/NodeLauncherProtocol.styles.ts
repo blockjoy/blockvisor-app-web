@@ -7,7 +7,6 @@ export const styles = {
     padding: 10px 15px;
     width: 500px;
     max-width: 500px;
-    min-width: 500px;
     border-right: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {

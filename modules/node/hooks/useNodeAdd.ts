@@ -11,6 +11,7 @@ type Hook = {
   createNode: (
     args: CreateNodeParams,
     onSuccess: (args0?: any) => void,
+    onError: () => void,
   ) => void;
   isLoading: boolean;
   blockchainList: any[];
@@ -59,6 +60,7 @@ export const useNodeAdd = (): Hook => {
   const createNode = async (
     params: CreateNodeParams,
     onSuccess: (args0?: string) => void,
+    onError: () => void,
   ) => {
     setIsLoading(true);
 
@@ -88,13 +90,20 @@ export const useNodeAdd = (): Hook => {
     node.setType(nodeTypeString);
     node.setHostId(hostId);
 
-    const createdNode: any = await apiClient.createNode(node, params.key_files);
-    console.log('createNode', createdNode);
-    const nodeId = createdNode.messagesList[0];
+    try {
+      const createdNode: any = await apiClient.createNode(
+        node,
+        params.key_files,
+      );
+      console.log('createNode', createdNode);
+      const nodeId = createdNode.messagesList[0];
 
-    toast.success('Node Created');
-    setIsLoading(false);
-    onSuccess(nodeId);
+      toast.success('Node Created');
+      setIsLoading(false);
+      onSuccess(nodeId);
+    } catch (err) {
+      onError();
+    }
   };
 
   return {

@@ -11,7 +11,7 @@ const Support = () => {
 };
 
 Support.getLayout = function getLayout(page: any) {
-  return <AppLayout breadcrumb={['Support']}>{page}</AppLayout>;
+  return <AppLayout>{page}</AppLayout>;
 };
 
 export default Support;
