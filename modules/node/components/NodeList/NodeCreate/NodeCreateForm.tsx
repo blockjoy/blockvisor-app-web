@@ -109,14 +109,23 @@ export const NodeCreateForm: FC<Props> = ({ blockchain, onCloseClicked }) => {
       nodeType: nodeType ?? 0,
       blockchain: blockchain?.value ?? '',
       host: host?.value ?? data['ip'],
+      nodeTypeProperties: [],
+      key_files: [],
       ...rest,
     };
 
-    createNode(params, (nodeId: string) => {
-      onCloseClicked();
-      localStorage.setItem('nodeCreateBlockchain', JSON.stringify(blockchain));
-      router.push(`/nodes/${nodeId}`);
-    });
+    createNode(
+      params,
+      (nodeId: string) => {
+        onCloseClicked();
+        localStorage.setItem(
+          'nodeCreateBlockchain',
+          JSON.stringify(blockchain),
+        );
+        router.push(`/nodes/${nodeId}`);
+      },
+      () => null,
+    );
   });
 
   const blockchainOptions = blockchains.map((b) => ({
@@ -286,6 +295,7 @@ export const NodeCreateForm: FC<Props> = ({ blockchain, onCloseClicked }) => {
                         name="validatorKeys"
                         render={({ field: { onChange, name } }) => (
                           <FileUpload
+                            currentFiles={[]}
                             multiple={true}
                             onChange={(e) => onChange(e)}
                             name={name}

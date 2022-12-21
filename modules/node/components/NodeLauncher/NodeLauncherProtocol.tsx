@@ -102,22 +102,25 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 </div>
               </div>
             ))}
-            {blockchainList
-              ?.filter(
-                (b) => b.label !== 'Ethereum PoS' && b.label !== 'Helium',
-              )
-              ?.map((b: any) => (
-                <div
-                  key={b.id}
-                  css={[styles.row, styles.rowDisabled]}
-                  className={b.id === activeBlockchainId ? 'active row' : 'row'}
-                >
-                  <span css={styles.iconWrapper}>
-                    <BlockchainIcon hideTooltip blockchainId={b.value} />
-                  </span>
-                  <span css={styles.name}>{b.label}</span>
-                </div>
-              ))}
+            {!keyword &&
+              blockchainList
+                ?.filter(
+                  (b) => b.label !== 'Ethereum PoS' && b.label !== 'Helium',
+                )
+                ?.map((b: any) => (
+                  <div
+                    key={b.id}
+                    css={[styles.row, styles.rowDisabled]}
+                    className={
+                      b.id === activeBlockchainId ? 'active row' : 'row'
+                    }
+                  >
+                    <span css={styles.iconWrapper}>
+                      <BlockchainIcon hideTooltip blockchainId={b.value} />
+                    </span>
+                    <span css={styles.name}>{b.label}</span>
+                  </div>
+                ))}
           </>
         )}
       </div>
