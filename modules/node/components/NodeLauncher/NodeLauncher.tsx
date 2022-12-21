@@ -173,6 +173,7 @@ export const NodeLauncher = () => {
         />
         {!!node.nodeTypeProperties?.length && (
           <NodeLauncherConfig
+            isConfigValid={isConfigValid()}
             onFileUploaded={handleFileUploaded}
             onPropertyChanged={handlePropertyChanged}
             nodeTypeProperties={node.nodeTypeProperties}

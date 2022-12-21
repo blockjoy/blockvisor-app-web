@@ -16,7 +16,7 @@ export const NodeListPageHeader: FC<Props> = ({
   <div css={styles.nodeListPageHeader}>
     <h1 css={[styles.endBlock, styles.pageTitle]}>Nodes</h1>
     {/* <NodeCreate /> */}
-    <LaunchNodeButton />
+    {/* <LaunchNodeButton /> */}
     <div css={[styles.listTypePicker, styles.endBlock]}>
       <button
         onClick={() => onTypeChanged('table')}

@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 export const NodeLauncherFab = () => {
   const router = useRouter();
 
-  return (
+  return !router.pathname.includes('launch-node') ? (
     <button css={styles.button} onClick={() => router.push('/launch-node')}>
       <IconRocket />
+      <span css={styles.buttonText}>Launch Node</span>
     </button>
-  );
+  ) : null;
 };
