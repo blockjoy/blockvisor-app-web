@@ -18,6 +18,7 @@ export const styles = {
 
     :disabled ~ .switch {
       opacity: 0.4;
+      cursor: not-allowed;
     }
 
     :checked ~ .switch {
