@@ -31,9 +31,11 @@ export const Switch: FC<Props> = ({
           </span>
         </span>
       </label>
-      <div className="tooltip" css={styles.tooltip}>
-        {tooltip}
-      </div>
+      {disabled && (
+        <div className="tooltip" css={styles.tooltip}>
+          {tooltip}
+        </div>
+      )}
     </div>
   );
 };
