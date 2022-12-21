@@ -50,6 +50,7 @@ export const blockchainList = [
 ];
 
 export const nodeStatusList = [
+  { id: 1, name: 'Provisioning', isOnline: true },
   { id: 2, name: 'Broadcasting', isOnline: true },
   { id: 3, name: 'Cancelled', isOnline: true },
   { id: 4, name: 'Delegating', isOnline: true },

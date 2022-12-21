@@ -51,12 +51,12 @@ export const useNodeView = (): Hook => {
     const node: any = await apiClient.getNode(nodeId);
 
     console.log('loadNode', node);
-    const nodeTypeId = JSON.parse(node.type).id;
+    const nodeType = JSON.parse(node.type);
 
     const details = [
       {
         label: 'TYPE',
-        data: nodeTypeList.find((n) => n.id === nodeTypeId)?.name,
+        data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
       },
       { label: 'WALLET ADDRESS', data: node.walletAddress },
       { label: 'VERSION', data: node.version || 'Latest' },
@@ -75,6 +75,7 @@ export const useNodeView = (): Hook => {
         addSuffix: true,
       }),
       details,
+      nodeTypeConfig: nodeType.properties,
     };
 
     setNode(activeNode);

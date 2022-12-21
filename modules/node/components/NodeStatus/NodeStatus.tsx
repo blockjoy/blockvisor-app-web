@@ -10,6 +10,7 @@ const icons = {
   Undefined: <IconUndefined />,
   Earning: <IconEarning />,
   Processing: <IconProcessing />,
+  Provisioning: <IconProcessing />,
 };
 
 const getIcon = (name: string = '') => {
