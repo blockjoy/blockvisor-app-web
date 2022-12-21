@@ -11,17 +11,9 @@ export const styles = {
     h1 {
       width: 100px;
       white-space: nowrap;
-
-      @media ${breakpoints.toLrg} {
-        display: none;
-      }
     }
   `,
   spacer: css`
     width: 100px;
-
-    @media ${breakpoints.toLrg} {
-      display: none;
-    }
   `,
 };
