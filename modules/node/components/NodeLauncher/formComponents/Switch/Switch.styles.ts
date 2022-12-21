@@ -16,6 +16,10 @@ export const styles = {
     position: absolute;
     scale: 0;
 
+    :disabled ~ .switch {
+      opacity: 0.4;
+    }
+
     :checked ~ .switch {
       border-color: ${theme.colorPrimary};
     }
@@ -31,7 +35,7 @@ export const styles = {
     height: 30px;
     padding: 3px;
     border-radius: 15px;
-    border: 1px solid ${theme.colorLightGrey};
+    border: 1px solid ${theme.colorDefault};
     cursor: pointer;
     transition: 0.3s;
   `,
@@ -42,7 +46,7 @@ export const styles = {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: ${theme.colorLightGrey};
+    background: ${theme.colorDefault};
     transition: translate 0.3s;
 
     svg {
