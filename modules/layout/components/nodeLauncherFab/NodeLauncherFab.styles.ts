@@ -7,11 +7,12 @@ export const styles = {
     z-index: 10;
     right: 20px;
     bottom: 20px;
-    display: grid;
-    place-items: center;
-    width: 64px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 32px 0 24px;
     height: 64px;
-    border-radius: 50%;
+    border-radius: 32px;
     background: ${theme.colorPrimary};
     color: ${theme.colorPrimaryText};
     border: 0;
@@ -23,7 +24,12 @@ export const styles = {
 
     svg {
       transition: 0.3s;
-      height: 44%;
+      height: 40%;
     }
+  `,
+  buttonText: (theme: ITheme) => css`
+    color: ${theme.colorPrimaryText};
+    font-weight: 600;
+    font-size: 17px;
   `,
 };
