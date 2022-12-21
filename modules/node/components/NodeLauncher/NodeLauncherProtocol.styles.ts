@@ -103,7 +103,8 @@ export const styles = {
     :nth-child(even) {
       background: rgba(255, 255, 255, 0.02);
     }
-
+  `,
+  rowHover: (theme: ITheme) => css`
     :is(:hover, .active) {
       background: ${theme.colorLightGrey};
       opacity: 1;

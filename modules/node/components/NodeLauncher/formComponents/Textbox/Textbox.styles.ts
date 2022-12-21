@@ -9,7 +9,7 @@ export const styles = {
     outline: none;
     color: ${theme.colorText};
     height: 44px;
-    min-width: 400px;
+    min-width: 40 0px;
     border-radius: 6px;
     padding: 0 16px;
     margin-bottom: 20px;

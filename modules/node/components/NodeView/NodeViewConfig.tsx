@@ -7,6 +7,8 @@ import { styles } from './NodeViewConfig.styles';
 export const NodeViewConfig = () => {
   const { node } = useNodeView();
 
+  console.log('nodeViewConfig', node);
+
   return (
     <>
       <PageSection>
