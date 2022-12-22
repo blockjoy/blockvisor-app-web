@@ -78,6 +78,18 @@ export const useNodeAdd = (): Hook => {
     // TODO: Create type data based on the type definitions in
     // https://github.com/blockjoy/blockvisor-api/blob/24c83705064a2331f5f2c4643f34553cbffedea3/conf/node_types.schema.ts#L98
 
+    // TODO: @joe/@dragan: JSON format has changed, plz use the following:
+    /**
+     * pub struct NodePropertyValue {
+     *     name: String,
+     *     label: String,
+     *     description: String,
+     *     ui_type: String,
+     *     disabled: bool,
+     *     required: bool,
+     *     value: Option<String>,
+     * }
+     */
     const nodeTypeString = JSON.stringify({
       id: params.nodeType,
       properties: params.nodeTypeProperties.map((property) => ({
