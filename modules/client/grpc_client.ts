@@ -786,10 +786,11 @@ export class GrpcClient {
         let file = key_files[i];
 
         let fileContent = await file.text();
+        const encoder = new TextEncoder();
 
         let keyfile = new Keyfile();
         keyfile.setName(file?.name || '');
-        keyfile.setContent(fileContent);
+        keyfile.setContent(encoder.encode(fileContent));
         files.push(keyfile);
       }
 
