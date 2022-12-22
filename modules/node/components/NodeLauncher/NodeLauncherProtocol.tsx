@@ -82,7 +82,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 className={b.id === activeBlockchainId ? 'active row' : 'row'}
               >
                 <span css={styles.iconWrapper}>
-                  <BlockchainIcon hideTooltip blockchainId={b.id} />
+                  <BlockchainIcon hideTooltip blockchainName={b.name} />
                 </span>
                 <span css={styles.name}>{b.name}</span>
                 <div css={styles.nodeTypeButtons}>
@@ -113,7 +113,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 ?.map((b: any) => (
                   <div key={b.id} css={[styles.row, styles.rowDisabled]}>
                     <span css={styles.iconWrapper}>
-                      <BlockchainIcon hideTooltip blockchainId={b.id} />
+                      <BlockchainIcon hideTooltip blockchainName={b.name} />
                     </span>
                     <span css={styles.name}>{b.name}</span>
                   </div>
