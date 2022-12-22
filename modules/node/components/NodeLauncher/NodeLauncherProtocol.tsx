@@ -85,13 +85,13 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 <div css={styles.nodeTypeButtons}>
                   {b.supported_node_types.map((type: any) => (
                     <button
+                      key={type.id}
                       className={
                         type.id === activeNodeTypeId &&
                         b.id === activeBlockchainId
                           ? 'active'
                           : ''
                       }
-                      key={type.id}
                       onClick={() => handleProtocolSelected(b.id!, type.id)}
                       type="button"
                       css={styles.createButton}
