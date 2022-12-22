@@ -37,6 +37,14 @@ export const renderControls = (
         />
       );
     case 'voting_key_pwd':
+      return (
+        <Textbox
+          type="password"
+          isRequired={property?.required && !property.value}
+          name={property.name}
+          onPropertyChanged={onPropertyChanged}
+        />
+      );
     case 'wallet_address':
       return (
         <Textbox
