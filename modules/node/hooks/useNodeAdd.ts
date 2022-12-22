@@ -96,6 +96,19 @@ export const useNodeAdd = (): Hook => {
         ...property,
         default: property.default === null ? 'null' : property.default,
         value: property.value === null ? 'null' : property.value,
+        description: '',
+        label: '',
+      })),
+    });
+
+    console.log({
+      id: params.nodeType,
+      properties: params.nodeTypeProperties.map((property) => ({
+        ...property,
+        default: property.default === null ? 'null' : property.default,
+        value: property.value === null ? 'null' : property.value,
+        description: '',
+        label: '',
       })),
     });
 
