@@ -14,7 +14,7 @@ export const nodeTypeList = [
 ];
 
 export const nodeTypeConfigLabels = [
-  { name: 'keystore-file', value: 'Key Upload' },
+  { name: 'keystore-file', value: 'Validator Key Upload' },
   { name: 'keystore-file-1', value: 'Key Upload 1' },
   { name: 'keystore-file-2', value: 'Key Upload 2' },
   { name: 'keystore-file-3', value: 'Key Upload 3' },

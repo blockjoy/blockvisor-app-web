@@ -59,14 +59,18 @@ export const useNodeView = (): Hook => {
         label: 'TYPE',
         data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
       },
-      { label: 'WALLET ADDRESS', data: node.walletAddress },
+      { label: 'NODE ADDRESS', data: node.walletAddress },
       { label: 'VERSION', data: node.version || 'Latest' },
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
       { label: 'AUTO UPDATES', data: <LockedSwitch /> },
     ];
 
     const nodeTypeConfigDetails = nodeType.properties
-      ?.filter((property: any) => property.ui_type !== 'key-upload')
+      ?.filter(
+        (property: any) =>
+          property.ui_type !== 'key-upload' &&
+          !property.ui_type.includes('pwd'),
+      )
       .map((property: any) => ({
         label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
         data: property.value === 'null' ? '' : property.value,

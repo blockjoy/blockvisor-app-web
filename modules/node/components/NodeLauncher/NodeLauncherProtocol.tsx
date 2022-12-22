@@ -24,9 +24,12 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
   const [keyword, setKeyword] = useState<string>('');
 
-  const filteredBlockchains = blockchains?.filter((b) =>
-    b.name?.toLowerCase().includes(keyword.toLowerCase()),
+  const filteredBlockchains = blockchains?.filter(
+    (b) =>
+      b.status !== 0 && b.name?.toLowerCase().includes(keyword.toLowerCase()),
   );
+
+  const disabledBlockchains = blockchains?.filter((b) => b.status === 0);
 
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
@@ -103,16 +106,16 @@ export const NodeLauncherProtocol: FC<Props> = ({
               </div>
             ))}
             {!keyword &&
-              blockchainList
+              disabledBlockchains
                 ?.filter(
-                  (b) => b.label !== 'Ethereum PoS' && b.label !== 'Helium',
+                  (b) => b.name !== 'Ethereum PoS' && b.name !== 'Helium',
                 )
                 ?.map((b: any) => (
                   <div key={b.id} css={[styles.row, styles.rowDisabled]}>
                     <span css={styles.iconWrapper}>
-                      <BlockchainIcon hideTooltip blockchainId={b.value} />
+                      <BlockchainIcon hideTooltip blockchainId={b.id} />
                     </span>
-                    <span css={styles.name}>{b.label}</span>
+                    <span css={styles.name}>{b.name}</span>
                   </div>
                 ))}
           </>
