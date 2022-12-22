@@ -39,7 +39,11 @@ export const renderControls = (
     case 'voting_key_pwd':
     case 'wallet_address':
       return (
-        <Textbox name={property.name} onPropertyChanged={onPropertyChanged} />
+        <Textbox
+          isRequired={property?.required && !property.value}
+          name={property.name}
+          onPropertyChanged={onPropertyChanged}
+        />
       );
     case 'switch':
       return (
@@ -96,6 +100,9 @@ export const NodeLauncherConfig: FC<Props> = ({
                   ]}
                 >
                   <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
+                  {property.required && !property.disabled && (
+                    <span css={styles.requiredAsterix}>*</span>
+                  )}
                 </label>
 
                 {renderControls(

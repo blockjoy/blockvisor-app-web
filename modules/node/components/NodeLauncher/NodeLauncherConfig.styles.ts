@@ -58,4 +58,11 @@ export const styles = {
     padding: 20px 30px;
     border-top: 1px solid ${theme.colorBorder};
   `,
+  requiredAsterix: (theme: ITheme) => css`
+    display: inline-block;
+    color: ${theme.colorDanger};
+    margin-left: 10px;
+    translate: 0 5px;
+    font-size: 20px;
+  `,
 };
