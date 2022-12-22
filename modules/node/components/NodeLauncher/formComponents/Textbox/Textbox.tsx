@@ -17,7 +17,8 @@ export const Textbox: FC<Props> = ({
   return (
     <input
       name={name}
-      type={'text'}
+      type={type}
+      autoComplete={type === 'password' ? 'new-password' : 'off'}
       css={[styles.input, isRequired && styles.inputRequired]}
       placeholder="Enter a value"
       onChange={(e: any) => onPropertyChanged(e)}

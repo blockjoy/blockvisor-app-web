@@ -74,7 +74,7 @@ export const NodeLauncherSummary: FC<Props> = ({
 
             <div>
               <label>Configuration</label>
-              <span>{isConfigValid ? 'Looks Good' : 'Needs Work'}</span>
+              <span>{isConfigValid ? 'Ready For Liftoff' : 'Needs Work'}</span>
             </div>
           </li>
         </ul>

@@ -18,7 +18,7 @@ type Props = {
   onPropertyChanged: (e: any) => void;
 };
 
-export const renderControls = (
+const renderControls = (
   property: any,
   nodeFiles: NodeFiles[],
   onFileUploaded: (e: any) => void,
@@ -48,6 +48,7 @@ export const renderControls = (
     case 'wallet_address':
       return (
         <Textbox
+          type="text"
           isRequired={property?.required && !property.value}
           name={property.name}
           onPropertyChanged={onPropertyChanged}
@@ -57,7 +58,7 @@ export const renderControls = (
       return (
         <Switch
           disabled={!!property.disabled}
-          tooltip="You will be able to edit this setting soon"
+          tooltip="Self hosting will be available after BETA."
           name={property.name}
           onPropertyChanged={onPropertyChanged}
         />
@@ -92,7 +93,7 @@ export const NodeLauncherConfig: FC<Props> = ({
           ]}
         >
           {isConfigValid
-            ? 'All configuration information entered.'
+            ? 'All systems GO!'
             : 'Node requires configuration information.'}
         </div>
         <div css={styles.nodeTypeProperties}>
@@ -112,7 +113,6 @@ export const NodeLauncherConfig: FC<Props> = ({
                     <span css={styles.requiredAsterix}>*</span>
                   )}
                 </label>
-
                 {renderControls(
                   property,
                   nodeFiles!,
