@@ -14,8 +14,6 @@ type LayoutType = {
 };
 
 export const AppLayout: React.FC<LayoutType> = ({ children, isPageFlex }) => {
-  console.log('isPageFlex', isPageFlex);
-
   return (
     <>
       <PrivateRoute>
