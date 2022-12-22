@@ -47,11 +47,20 @@ export const NodeLauncher = () => {
     Boolean(
       node.nodeFiles?.every((f) => f.files?.length) &&
         node.nodeTypeProperties
-          .filter((type) => type.ui_type !== 'key-upload')
+          .filter((type) => type.required && type.ui_type !== 'key-upload')
           .every(
             (type) => type.value || type.disabled || type.ui_type === 'switch',
           ),
     );
+
+  // hack that needs removing
+  const hasAddedFiles = () => {
+    const activeNodeFiles = node.nodeFiles?.find((f, i) => i === 0);
+
+    if (!activeNodeFiles) return true;
+
+    return !!activeNodeFiles?.files?.length;
+  };
 
   const handlePropertyChanged = (e: any) => {
     setHasServerError(false);
@@ -139,7 +148,12 @@ export const NodeLauncher = () => {
 
     const propertiesWithValue = nodeTypePropertiesCopy.map((property) => ({
       ...property,
-      value: null,
+      value:
+        property.ui_type === 'switch'
+          ? property.default === 'true'
+            ? true
+            : false
+          : null,
     }));
 
     const fileProperties: NodeFiles[] = propertiesWithValue
@@ -171,7 +185,9 @@ export const NodeLauncher = () => {
           activeBlockchainId={node.blockchainId}
           activeNodeTypeId={node.nodeTypeId}
         />
-        {!!node.nodeTypeProperties?.length && (
+        {!!node.nodeTypeProperties?.filter(
+          (property) => property.name !== 'self-hostedd',
+        )?.length && (
           <NodeLauncherConfig
             isConfigValid={isConfigValid()}
             onFileUploaded={handleFileUploaded}
@@ -183,10 +199,12 @@ export const NodeLauncher = () => {
         {node.blockchainId && node.nodeTypeId && (
           <NodeLauncherSummary
             hasServerError={hasServerError}
+            hasAddedFiles={hasAddedFiles()}
             isNodeValid={isNodeValid()}
             isConfigValid={isConfigValid()}
             blockchainId={node.blockchainId}
             nodeTypeId={node.nodeTypeId}
+            nodeTypeProperties={node.nodeTypeProperties}
             onCreateNodeClicked={handleCreateNodeClicked}
           />
         )}

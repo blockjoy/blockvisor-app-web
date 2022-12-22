@@ -16,11 +16,14 @@ export const styles = {
 
     :focus,
     :active {
-      border-color: ${theme.colorPrimary};
+      border-color: rgba(255, 255, 255, 0.7);
     }
 
     @media ${breakpoints.fromXLrg} {
       min-width: 100%;
     }
+  `,
+  inputRequired: (theme: ITheme) => css`
+    border-color: ${theme.colorDanger};
   `,
 };

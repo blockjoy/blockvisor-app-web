@@ -1,4 +1,4 @@
-import { Button, NodeTypeConfigLabel } from '@shared/components';
+import { NodeTypeConfigLabel } from '@shared/components';
 import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
@@ -9,22 +9,28 @@ import IconRocket from '@public/assets/icons/rocket-12.svg';
 
 type Props = {
   hasServerError: boolean;
+  hasAddedFiles: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean;
   blockchainId: string;
   nodeTypeId: string;
+  nodeTypeProperties: NodeTypeConfig[];
   onCreateNodeClicked: VoidFunction;
 };
 
 export const NodeLauncherSummary: FC<Props> = ({
   hasServerError,
+  hasAddedFiles,
   isNodeValid,
   isConfigValid,
   blockchainId,
   nodeTypeId,
+  nodeTypeProperties,
   onCreateNodeClicked,
 }) => {
   const { blockchains } = useGetBlockchains();
+
+  console.log('hasAddedFiles', hasAddedFiles);
 
   return (
     <div css={styles.wrapper}>
@@ -72,6 +78,30 @@ export const NodeLauncherSummary: FC<Props> = ({
             </div>
           </li>
         </ul>
+        {!isConfigValid && (
+          <>
+            <h2 css={styles.missingFieldsTitle}>
+              The following information needs to be added:
+            </h2>
+            <div css={styles.missingFields}>
+              {nodeTypeProperties
+                ?.filter(
+                  (property) =>
+                    (property.ui_type !== 'key-upload' &&
+                      property.required &&
+                      !property.disabled &&
+                      !property.value) ||
+                    (property.ui_type === 'key-upload' && !hasAddedFiles),
+                )
+                .map((property) => (
+                  <div>
+                    <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
+                  </div>
+                ))}
+            </div>
+          </>
+        )}
+
         <div css={styles.buttons}>
           <button
             onClick={onCreateNodeClicked}

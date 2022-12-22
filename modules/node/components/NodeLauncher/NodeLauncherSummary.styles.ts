@@ -115,4 +115,26 @@ export const styles = {
     background: ${theme.colorDanger};
     color: ${theme.colorPrimaryText};
   `,
+  missingFieldsTitle: (theme: ITheme) => css`
+    color: ${theme.colorLabel};
+    font-size: 13px;
+    margin-bottom: 8px;
+    padding-left: 38px;
+  `,
+  missingFields: css`
+    display: grid;
+    grid-auto-rows: 36px;
+    margin-bottom: 20px;
+
+    div {
+      display: flex;
+      align-items: center;
+      padding-left: 38px;
+      font-size: 14px;
+    }
+
+    div:nth-child(odd) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  `,
 };
