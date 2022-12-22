@@ -814,10 +814,9 @@ export class GrpcClient {
         });
 
       console.log('key files response: ', response_key_files);
-    } else {
-      return response_meta;
-      // return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
     }
+
+    return response_meta;
   }
 
   async updateNode(
