@@ -14,7 +14,7 @@ export const NodeViewConfig = () => {
   return (
     <>
       <PageSection>
-        <h2 css={[typo.large, spacing.bottom.large]}>Configuration</h2>
+        <h2 css={typo.large}>Configuration</h2>
         <DetailsTable bodyElements={node?.nodeTypeConfigDetails!} />
       </PageSection>
     </>
