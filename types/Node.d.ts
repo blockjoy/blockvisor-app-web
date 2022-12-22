@@ -4,6 +4,7 @@ type NodeTypeConfig = {
   ui_type: string;
   value?: any;
   disabled?: boolean;
+  required: boolean;
 };
 
 type NodeFiles = {
@@ -20,6 +21,7 @@ type BlockjoyNode = {
   status: number;
   blockchainId: string;
   details: { label: string; data: string }[];
+  nodeTypeConfigDetails: { label: string; data: string }[];
   nodeTypeConfig?: NodeTypeConfig[];
 };
 

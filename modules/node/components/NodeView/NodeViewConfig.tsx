@@ -1,5 +1,5 @@
 import { useNodeView } from '@modules/node/hooks/useNodeView';
-import { PageSection } from '@shared/components';
+import { DetailsTable, PageSection } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewConfig.styles';
@@ -9,10 +9,13 @@ export const NodeViewConfig = () => {
 
   console.log('nodeViewConfig', node);
 
+  const config = [];
+
   return (
     <>
       <PageSection>
         <h2 css={[typo.large, spacing.bottom.large]}>Configuration</h2>
+        <DetailsTable bodyElements={node?.nodeTypeConfigDetails!} />
       </PageSection>
     </>
   );

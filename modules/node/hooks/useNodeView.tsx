@@ -8,6 +8,7 @@ import { env } from '@shared/constants/env';
 import { LockedSwitch } from '@modules/node/components/LockedSwitch/LockedSwitch';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
+import { NodeTypeConfigLabel } from '@shared/components';
 
 type Args = string | string[] | undefined;
 
@@ -64,6 +65,13 @@ export const useNodeView = (): Hook => {
       { label: 'AUTO UPDATES', data: <LockedSwitch /> },
     ];
 
+    const nodeTypeConfigDetails = nodeType.properties
+      ?.filter((property: any) => property.ui_type !== 'key-upload')
+      .map((property: any) => ({
+        label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
+        data: property.value === 'null' ? '' : property.value,
+      }));
+
     const activeNode: BlockjoyNode = {
       id: node.id,
       hostId: node.hostId.value,
@@ -76,6 +84,7 @@ export const useNodeView = (): Hook => {
       }),
       details,
       nodeTypeConfig: nodeType.properties,
+      nodeTypeConfigDetails,
     };
 
     setNode(activeNode);
