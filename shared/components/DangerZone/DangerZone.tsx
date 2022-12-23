@@ -18,7 +18,7 @@ type DeleteForm = {
 };
 
 const redirects = {
-  Node: '/dashboard',
+  Node: '/nodes',
   Host: '/hosts',
   Organization: '/organizations',
 };
