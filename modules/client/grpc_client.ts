@@ -114,9 +114,9 @@ export type NewPassword = {
   new_pwd_confirmation: string;
 };
 export type UIFilterCriteria = {
-  blockchain?: string[];
-  node_type?: string[];
-  node_status?: string[];
+  blockchain: string[];
+  node_type: string[];
+  node_status: string[];
 };
 export type UIPagination = {
   current_page: number;

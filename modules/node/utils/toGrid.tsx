@@ -18,7 +18,7 @@ export const toGrid = (
           cellIcon={<BlockchainIcon blockchainId={node.blockchainId} />}
           cellStatus={<NodeStatus hasBorder status={node.status} />}
           cellType={
-            nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)?.name
+            nodeTypeList.find((n) => n.id === JSON.parse(node.type.replace('}{', '},{')).id)?.name
           }
         />
       ),
