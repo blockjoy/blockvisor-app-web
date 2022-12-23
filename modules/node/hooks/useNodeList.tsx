@@ -45,8 +45,8 @@ export const useNodeList = (): Hook => {
     // let org_id = user?.defaultOrganization?.id || '';
 
     console.log('-------------nodeUIProps-------------', queryParams);
-
     const nodes: any = await apiClient.listNodes(org_id!, queryParams.filter, queryParams.pagination);
+    console.log('nodes', nodes);
 
     if (nodes.length) {
       if (queryParams.pagination.current_page === 1) {

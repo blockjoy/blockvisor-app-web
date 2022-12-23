@@ -80,8 +80,8 @@ const nodeWizardActive = atom<boolean>({
   default: false,
 });
 
-const hasMoreNodes= atom<any>({
-  key:'node.hasMore',
+const hasMoreNodes= atom<boolean>({
+  key: 'node.hasMore',
   default: false
 });
 

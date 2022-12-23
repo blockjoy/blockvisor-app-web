@@ -23,9 +23,15 @@ const getInitialQueryParams = () => {
   const { blockchain, type, status } = persistedNodeFilters;
   const params = buildParams(blockchain, type, status);
 
+  const itemsPerPage = window.innerWidth < 568 ? initialQueryParams.pagination.items_per_page / 2 : initialQueryParams.pagination.items_per_page;
+
   return {
     ...initialQueryParams,
-    filter: params
+    filter: params,
+    pagination: {
+      ...initialQueryParams.pagination,
+      items_per_page: itemsPerPage
+    }
   };
 };
 
