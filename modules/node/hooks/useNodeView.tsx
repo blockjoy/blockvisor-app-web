@@ -31,7 +31,7 @@ export const useNodeView = (): Hook => {
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
 
   const deleteNode = async (id: Args) => {
-    await apiClient.execDeleteNode(createUuid(id));
+    await apiClient.deleteNode(createUuid(id));
     toast.success(`Node Deleted`);
   };
 
