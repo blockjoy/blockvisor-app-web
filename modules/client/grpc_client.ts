@@ -50,9 +50,11 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/host_provision_service_pb';
 import {
   CreateNodeRequest,
+  DeleteNodeRequest,
   FilterCriteria,
   GetNodeRequest,
-  ListNodesRequest, UpdateNodeRequest,
+  ListNodesRequest,
+  UpdateNodeRequest,
   UpdateNodeResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
 import {
@@ -69,7 +71,10 @@ import {
   UpdateUserRequest,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
-import { GetUpdatesResponse } from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
+import {
+  GetUpdatesRequest,
+  GetUpdatesResponse,
+} from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
 import {
   CommandRequest,
   CommandResponse,
@@ -86,6 +91,7 @@ import {
   Keyfile,
   KeyFilesSaveRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
+import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 
 export type UIUser = {
   first_name: string;
@@ -191,6 +197,13 @@ export type GrpcNodeObject = Node.AsObject &
   };
 export type GrpcUserObject = User.AsObject &
   ConvenienceConversion & { updated_at_datetime: Date | undefined };
+
+export interface StateObject {
+  processHostUpdate: (host: Host | undefined) => boolean;
+
+  processNodeUpdate: (node: Node | undefined) => boolean;
+}
+
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
@@ -204,7 +217,6 @@ export class GrpcClient {
   private blockchain: BlockchainServiceClient | undefined;
   private command: CommandServiceClient | undefined;
   private key_files: KeyFilesClient | undefined;
-
   private token: string;
 
   constructor(host: string) {
@@ -359,7 +371,11 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    let auth_header = { authorization: `Bearer ${Buffer.from(token, 'binary').toString('base64')}` };
+    let auth_header = {
+      authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+        'base64',
+      )}`,
+    };
 
     let request = new ConfirmRegistrationRequest();
     request.setMeta(request_meta);
@@ -417,7 +433,11 @@ export class GrpcClient {
       request.setMeta(request_meta);
       request.setPassword(pwd);
 
-      let auth_header = { authorization: `Bearer ${Buffer.from(token, 'binary').toString('base64')}` };
+      let auth_header = {
+        authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+        )}`,
+      };
 
       return this.authentication
         ?.updatePassword(request, auth_header)
@@ -675,10 +695,9 @@ export class GrpcClient {
     if (filter_criteria) {
       let criteria = new FilterCriteria();
 
-      console.log("Setting blockchain filter: ", filter_criteria.blockchain);
-      console.log("Setting node status filter: ", filter_criteria.node_status);
-      console.log("Setting node type filter: ", filter_criteria.node_type);
-
+      console.log('Setting blockchain filter: ', filter_criteria.blockchain);
+      console.log('Setting node status filter: ', filter_criteria.node_status);
+      console.log('Setting node type filter: ', filter_criteria.node_type);
 
       criteria.setBlockchainIdsList(filter_criteria.blockchain || []);
       criteria.setStatesList(filter_criteria.node_status || []);
@@ -719,26 +738,85 @@ export class GrpcClient {
 
   async createNode(
     node: Node,
+    key_files?: File[],
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    node.setStatus(Node.NodeStatus.UNDEFINEDAPPLICATIONSTATUS);
-    node.setWalletAddress('0x0198230123120');
-    node.setAddress('0x023848388637');
+    node.setStatus(Node.NodeStatus.PROVISIONING);
+    node.setWalletAddress('-');
+    node.setAddress('-');
 
     let request = new CreateNodeRequest();
     request.setMeta(request_meta);
     request.setNode(node);
 
-    return this.node
+    console.log('creating node: ', node);
+    console.log('got files: ', key_files);
+
+    let response_meta = await this.node
       ?.create(request, this.getAuthHeader())
       .then((response) => {
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
-        return StatusResponseFactory.createNodeResponse(err, 'grpcClient');
+        return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
       });
+
+    console.log('node response, ', response_meta);
+
+    // @ts-ignore
+    let node_id = response_meta?.messagesList[0];
+
+    console.log('got key files: ', key_files);
+    console.log('got node id: ', node_id);
+
+    // Node creation was successful, trying to upload keys, if existent
+    if (key_files !== undefined && key_files?.length > 0) {
+      let request = new KeyFilesSaveRequest();
+      let files: Array<Keyfile> = [];
+
+      console.log('got node id: ', node_id);
+
+      request.setRequestId(this.getDummyUuid());
+      request.setNodeId(node_id);
+
+      for (let i = 0; i < key_files.length; i++) {
+        //for (let file of key_files) {
+        let file = key_files[i];
+
+        let fileContent = await file.text();
+        const encoder = new TextEncoder();
+
+        let keyfile = new Keyfile();
+        keyfile.setName(file?.name || '');
+        keyfile.setContent(encoder.encode(fileContent));
+        files.push(keyfile);
+      }
+
+      console.log('files', files);
+
+      request.setKeyFilesList(files);
+
+      let response_key_files = await this.key_files
+        ?.save(request, this.getAuthHeader())
+        .then((response) => {
+          let meta = new ResponseMeta();
+          meta.setOriginRequestId(response.getOriginRequestId());
+          meta.setMessagesList(response.getMessagesList());
+
+          console.log('got_response', meta.toObject());
+
+          return meta.toObject();
+        })
+        .catch((err) => {
+          return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
+        });
+
+      console.log('key files response: ', response_key_files);
+    }
+
+    return response_meta;
   }
 
   async updateNode(
@@ -754,14 +832,17 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setNode(node);
 
-    let response_meta = await this.node?.update(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta();
-    }).catch((err) => {
-      return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
-    });
+    let response_meta = await this.node
+      ?.update(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getMeta();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.updateNodeResponse(err, 'grpcClient');
+      });
 
-    console.log("updated node: ", response_meta);
-    console.log("got key files: ", key_files);
+    console.log('updated node: ', response_meta);
+    console.log('got key files: ', key_files);
 
     // Node creation was successful, trying to upload keys, if existent
     if (key_files !== undefined && key_files?.length > 0) {
@@ -769,7 +850,7 @@ export class GrpcClient {
       let request = new KeyFilesSaveRequest();
       let files: Array<Keyfile> = [];
 
-      console.log("got node id: ", node_id);
+      console.log('got node id: ', node_id);
 
       request.setRequestId(this.getDummyUuid());
       request.setNodeId(node_id);
@@ -780,15 +861,15 @@ export class GrpcClient {
         let reader = new FileReader();
 
         reader.addEventListener(
-            'load',
-            () => {
-              let f = new Keyfile();
-              f.setName(file?.name || '');
-              f.setContent(reader.result + '');
+          'load',
+          () => {
+            let f = new Keyfile();
+            f.setName(file?.name || '');
+            f.setContent(reader.result + '');
 
-              files.push(f);
-            },
-            false,
+            files.push(f);
+          },
+          false,
         );
 
         if (file) {
@@ -798,21 +879,40 @@ export class GrpcClient {
       }
 
       return this.key_files
-          ?.save(request, this.getAuthHeader())
-          .then((response) => {
-            let meta = new ResponseMeta();
-            meta.setOriginRequestId(response.getOriginRequestId());
-            meta.setMessagesList(response.getMessagesList());
+        ?.save(request, this.getAuthHeader())
+        .then((response) => {
+          let meta = new ResponseMeta();
+          meta.setOriginRequestId(response.getOriginRequestId());
+          meta.setMessagesList(response.getMessagesList());
 
-            return meta.toObject();
-          })
-          .catch((err) => {
-            return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
-          });
+          return meta.toObject();
+        })
+        .catch((err) => {
+          return StatusResponseFactory.saveKeyfileResponse(err, 'grpcClient');
+        });
     } else {
       return StatusResponseFactory.updateNodeResponse(null, 'grpcClient');
     }
+  }
 
+  async deleteNode(
+    node_id: string,
+  ): Promise<Empty.AsObject | undefined | StatusResponse> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new DeleteNodeRequest();
+    request.setId(node_id);
+    request.setMeta(request_meta);
+
+    return this.node
+      ?.delete(request, this.getAuthHeader())
+      .then((response) => {
+        return response.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.deleteNodeResponse(err, 'grpcClient');
+      });
   }
 
   /* Organization service */
@@ -1016,19 +1116,52 @@ export class GrpcClient {
 
   /* Update service */
 
-  async getUpdates(): Promise<
-    | Array<UpdateNotification.AsObject | undefined>
-    | StatusResponse
-    | Array<undefined>
-  > {
-    let update = new UpdateNotification();
-    update.setNode(this.getDummyNode());
+  getUpdates(stateObject: StateObject): void {
+    let retry_count = 3;
+    let should_run = true;
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    let response = new GetUpdatesResponse();
-    response.setMeta(this.getDummyMeta());
-    response.setUpdate(update);
+    let request = new GetUpdatesRequest();
+    request.setMeta(request_meta);
 
-    return [response.getUpdate()?.toObject()];
+    let update_stream = this.update?.updates(request, this.getAuthHeader());
+
+    while (should_run) {
+      update_stream?.on('data', (response) => {
+        if (
+          response.getUpdate()?.getNotificationCase() ===
+          UpdateNotification.NotificationCase.HOST
+        ) {
+          const host = response.getUpdate()?.getHost();
+
+          console.log(`got host update from server: `, host);
+          stateObject.processHostUpdate(host);
+        } else if (
+          response.getUpdate()?.getNotificationCase() ===
+          UpdateNotification.NotificationCase.NODE
+        ) {
+          const node = response.getUpdate()?.getNode();
+
+          console.log(`got node update from server: `, node);
+          stateObject.processNodeUpdate(node);
+        }
+      });
+      update_stream?.on('error', (err) => {
+        console.error(`update stream closed unexpectedly: `, err);
+        if (retry_count > 0) {
+          console.info('Trying to reinitialize the update connection');
+          update_stream = this.update?.updates(request, this.getAuthHeader());
+          retry_count--;
+        } else {
+          should_run = false;
+        }
+      });
+
+      window.setTimeout(() => {
+        console.debug('Waiting 1000ms for next update');
+      }, 1000);
+    }
   }
 
   /* Command service */

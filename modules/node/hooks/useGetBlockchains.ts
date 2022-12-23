@@ -15,6 +15,9 @@ export function useGetBlockchains() {
   const getBlockchains = async () => {
     setLoadingState('loading');
     const response = await apiClient.getBlockchains();
+
+    console.log('blockchains', response);
+
     if (response && isStatusResponse(response)) {
       setLoadingState('finished');
       setBlockchains([]);

@@ -9,7 +9,7 @@ const Nodes = () => (
 );
 
 Nodes.getLayout = function getLayout(page: any) {
-  return <AppLayout breadcrumb={['Nodes', 'All']}>{page}</AppLayout>;
+  return <AppLayout>{page}</AppLayout>;
 };
 
 export default Nodes;

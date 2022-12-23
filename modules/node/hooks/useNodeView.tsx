@@ -8,6 +8,7 @@ import { env } from '@shared/constants/env';
 import { LockedSwitch } from '@modules/node/components/LockedSwitch/LockedSwitch';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
+import { NodeTypeConfigLabel } from '@shared/components';
 
 type Args = string | string[] | undefined;
 
@@ -30,7 +31,7 @@ export const useNodeView = (): Hook => {
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
 
   const deleteNode = async (id: Args) => {
-    await apiClient.execDeleteNode(createUuid(id));
+    await apiClient.deleteNode(createUuid(id));
     toast.success(`Node Deleted`);
   };
 
@@ -49,34 +50,31 @@ export const useNodeView = (): Hook => {
 
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
-    const nodeTypeId = JSON.parse(node.type).id;
 
-    // mocked nodeTypeConfig
-    const nodeTypeConfig: NodeTypeConfig[] = [
-      {
-        name: 'validatorKeys',
-        label: 'Validator Keys',
-        default: '',
-        type: 'file-upload',
-      },
-      {
-        name: 'mevBoost',
-        label: 'MEV Boost',
-        default: 'false',
-        type: 'boolean',
-      },
-    ];
+    console.log('loadNode', node);
+    const nodeType = JSON.parse(node.type);
 
     const details = [
       {
         label: 'TYPE',
-        data: nodeTypeList.find((n) => n.id === nodeTypeId)?.name,
+        data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
       },
-      { label: 'WALLET ADDRESS', data: node.walletAddress },
+      { label: 'NODE ADDRESS', data: node.walletAddress },
       { label: 'VERSION', data: node.version || 'Latest' },
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
       { label: 'AUTO UPDATES', data: <LockedSwitch /> },
     ];
+
+    const nodeTypeConfigDetails = nodeType.properties
+      ?.filter(
+        (property: any) =>
+          property.ui_type !== 'key-upload' &&
+          !property.ui_type.includes('pwd'),
+      )
+      .map((property: any) => ({
+        label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
+        data: property.value === 'null' ? '' : property.value,
+      }));
 
     const activeNode: BlockjoyNode = {
       id: node.id,
@@ -89,7 +87,8 @@ export const useNodeView = (): Hook => {
         addSuffix: true,
       }),
       details,
-      nodeTypeConfig,
+      nodeTypeConfig: nodeType.properties,
+      nodeTypeConfigDetails,
     };
 
     setNode(activeNode);
