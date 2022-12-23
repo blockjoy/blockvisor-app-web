@@ -20,11 +20,11 @@ const blocks = [
         path: '/launch-node',
         icon: <IconRocket />,
       },
-      {
-        name: 'Organizations',
-        path: '/organizations',
-        icon: <IconOrganizations />,
-      },
+      // {
+      //   name: 'Organizations',
+      //   path: '/organizations',
+      //   icon: <IconOrganizations />,
+      // },
       {
         name: 'Profile',
         path: '/profile',
