@@ -15,11 +15,7 @@ function MyApp({ Component, pageProps }: any) {
       <Global styles={globalStyles} />
       <ThemeProvider>
         {getLayout(<Component {...pageProps} />)}
-        <ToastContainer
-          hideProgressBar
-          autoClose={3000}
-          position="bottom-right"
-        />
+        <ToastContainer hideProgressBar autoClose={3000} position="top-right" />
       </ThemeProvider>
     </RecoilRoot>
   );
