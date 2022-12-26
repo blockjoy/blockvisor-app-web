@@ -3,25 +3,22 @@ import { useRecoilState } from 'recoil';
 import { organisationAtoms } from '../store/organizationAtoms';
 
 export function useGetOrganizationById() {
-  const [selectedOrganization, setSelectedOrganization] = useRecoilState(
-    organisationAtoms.selectedOrganization,
-  );
-
-  const [loadingState, setLoadingState] = useRecoilState(
-    organisationAtoms.organizationLoadingState,
-  );
+  const [organization, setOrganization] = useRecoilState(organisationAtoms.selectedOrganization);
+  const [isLoading, setIsLoading] = useRecoilState(organisationAtoms.organizationLoadingState);
 
   const getOrganization = async (id: string) => {
-    setLoadingState('loading');
-    // mocked part
-    const res: any = await apiClient.getOrganizations();
-    setSelectedOrganization(res.find((org: any) => org.id === id));
-    setLoadingState('finished');
+    setIsLoading('initializing');
+
+    const organizations: any = await apiClient.getOrganizations();
+    const organization = organizations.find((org: any) => org.id === id);
+
+    setOrganization(organization);
+    setIsLoading('finished');
   };
 
   return {
-    organization: selectedOrganization,
-    loading: loadingState === 'initializing' || loadingState === 'loading',
+    organization,
     getOrganization,
+    isLoading,
   };
 }
