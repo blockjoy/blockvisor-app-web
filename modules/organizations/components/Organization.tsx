@@ -18,22 +18,14 @@ import {
 } from '@shared/components';
 import { useDeleteOrganization } from '../hooks/useDeleteOrganization';
 import { useGetOrganizationById } from '../hooks/useGetOrganizationById';
-import { toast } from 'react-toastify';
 
 const Organization: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { getOrganization, organization, loading } = useGetOrganizationById();
+  const { getOrganization, organization, isLoading } = useGetOrganizationById();
   const { deleteOrganization } = useDeleteOrganization();
 
-  const handleDeleteOrganisation = async (id: string) => {
-    try {
-      await deleteOrganization(id);
-      toast.success('Deleted successfully');
-    } catch (error) {
-      toast.error('Delete failed');
-    }
-  };
+  const handleDelete = async () => deleteOrganization(queryAsString(id));
 
   useEffect(() => {
     getOrganization(queryAsString(id));
@@ -48,7 +40,7 @@ const Organization: NextPage = () => {
           Organization Details
           <BackButton />
         </PageHeader>
-        {loading ? (
+        {isLoading === 'initializing' ? (
           <>
             <SkeletonGrid padding="10px 0 70px">
               <Skeleton width="260px" />
@@ -65,7 +57,7 @@ const Organization: NextPage = () => {
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <h2 css={[spacing.bottom.large]}>Members</h2>
-            <MembersTable isLoading={loading} />
+            <MembersTable isLoading={isLoading} />
           </>
         )}
       </PageSection>
@@ -73,7 +65,7 @@ const Organization: NextPage = () => {
         <DangerZone
           elementName="Organization"
           elementNameToCompare={organization?.name ?? ''}
-          handleDelete={() => handleDeleteOrganisation(queryAsString(id))}
+          handleDelete={handleDelete}
         ></DangerZone>
       </PageSection>
     </>

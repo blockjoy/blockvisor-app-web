@@ -1,7 +1,7 @@
 import { Table } from '@shared/components';
 
 type Props = {
-  isLoading: boolean;
+  isLoading: LoadingState;
   rows?: Row[];
 };
 

@@ -67,12 +67,12 @@ export const mapOrganizationsToRows = (
 };
 
 export const AllOrganizationsTable: FC = () => {
-  const { getOrganizations, loading, organizations } = useGetOrganizations();
+  const { getOrganizations, organizations, isLoading } = useGetOrganizations();
 
   useEffect(() => {
     getOrganizations();
   }, []);
 
   const rows = mapOrganizationsToRows(organizations);
-  return <Table isLoading={loading} headers={headers} rows={rows} />;
+  return <Table isLoading={isLoading} headers={headers} rows={rows} />;
 };
