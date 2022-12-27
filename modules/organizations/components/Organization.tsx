@@ -28,8 +28,10 @@ const Organization: NextPage = () => {
   const handleDelete = async () => deleteOrganization(queryAsString(id));
 
   useEffect(() => {
-    getOrganization(queryAsString(id));
-  }, []);
+    if (router.isReady) {
+      getOrganization(queryAsString(id));
+    }
+  }, [router.isReady]);
 
   const details = getOrganizationDetails(organization);
 
@@ -57,16 +59,15 @@ const Organization: NextPage = () => {
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <h2 css={[spacing.bottom.large]}>Members</h2>
-            <MembersTable isLoading={isLoading} />
+            <MembersTable organizationId={organization?.id} />
+            <div css={[spacing.top.xLarge]} />
+            <DangerZone
+              elementName="Organization"
+              elementNameToCompare={organization?.name ?? ''}
+              handleDelete={handleDelete}
+            ></DangerZone>
           </>
         )}
-      </PageSection>
-      <PageSection>
-        <DangerZone
-          elementName="Organization"
-          elementNameToCompare={organization?.name ?? ''}
-          handleDelete={handleDelete}
-        ></DangerZone>
       </PageSection>
     </>
   );
