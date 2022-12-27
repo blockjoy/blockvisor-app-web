@@ -63,6 +63,7 @@ import {
   GetOrganizationsRequest,
   RestoreOrganizationRequest,
   UpdateOrganizationRequest,
+  OrganizationMemberRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
@@ -1029,6 +1030,31 @@ export class GrpcClient {
           'grpcClient',
         );
       });
+  }
+
+  async getOrganizationMembers(
+    org_id: string
+  ): Promise<
+    Array<User.AsObject> | StatusResponse | undefined
+  > {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new OrganizationMemberRequest();
+    request.setMeta(request_meta);
+    request.setId(org_id);
+
+    return this.organization
+      ?.members(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getUsersList().map((item) => item.toObject());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getOrganizationMembersResponse(
+          err,
+          'grpcClient',
+        );
+      });;
   }
 
   /* User service */
