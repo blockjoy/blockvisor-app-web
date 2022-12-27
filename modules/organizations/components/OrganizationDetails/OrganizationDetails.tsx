@@ -39,10 +39,10 @@ export function OrganizationDetails({ name, id }: Props) {
     const id = e?.target.id;
 
     try {
-      updateOrganization(id, name);
+      await updateOrganization(id, name);
       toast.success('Organisation renamed');
       setIsSubmitting(true);
-      getOrganization(queryAsString(router.query.id));
+      await getOrganization(queryAsString(router.query.id));
     } catch (error) {
       setIsSubmitting(true);
       toast.error('Rename failed');
