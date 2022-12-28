@@ -48,20 +48,20 @@ export const useNodeList = (): Hook => {
     const nodes: any = await apiClient.listNodes(org_id!, queryParams.filter, queryParams.pagination);
     console.log('nodes', nodes);
 
-    if (nodes.length) {
-      if (queryParams.pagination.current_page === 1) {
-        setNodeList(nodes);
-      } else {
-        const newNodes = [
-          ...nodeList,
-          ...nodes
-        ];
-        setNodeList(newNodes);
-      }
+    if (queryParams.pagination.current_page === 1) {
+      setNodeList(nodes);
+    } else {
+      const newNodes = [
+        ...nodeList,
+        ...nodes
+      ];
+      setNodeList(newNodes);
+    }
 
+    // TODO: has to be improved once the total nodes count is received
+    if (nodes.length) {
       setHasMore(true);
     } else {
-      setNodeList(nodes);
       setHasMore(false);
     }
 

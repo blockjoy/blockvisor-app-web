@@ -141,7 +141,7 @@ export const NodeList = () => {
             next={updateQueryParams}
             hasMore={hasMoreNodes}
             style={{ overflow: 'hidden' }}
-            scrollThreshold={1}
+            scrollThreshold={0.7}
             loader={isLoading === 'finished' && <div css={styles.loader}><Button size="small" onClick={updateQueryParams} style="outline">Show More</Button></div>}
             endMessage={isLoading !== 'initializing' && <div css={styles.endMessage}>- No more nodes -</div>}
           >
