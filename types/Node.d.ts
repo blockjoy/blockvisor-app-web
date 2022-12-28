@@ -38,3 +38,8 @@ type UpdateNodeParams = {
   mevBoost?: boolean | undefined;
   validatorKeys?: File[] | undefined;
 };
+
+type NodeMetrics = {
+  name: number;
+  value: string;
+};

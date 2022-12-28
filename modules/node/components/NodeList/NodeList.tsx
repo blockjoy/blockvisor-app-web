@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
+import { useNodeMetrics } from '@modules/node/hooks/useNodeMetrics';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { hostsAtoms } from '@modules/hosts/store/hostAtoms';
 import {
@@ -34,6 +35,7 @@ export const NodeList = () => {
   const hasMoreNodes = useRecoilValue(nodeAtoms.hasMoreNodes);
 
   const { loadNodes, handleNodeClick } = useNodeList();
+  const { loadMetrics } = useNodeMetrics();
 
   const { openModal } = useModal();
 
@@ -74,6 +76,10 @@ export const NodeList = () => {
       setNodeRows(undefined);
     }
   };
+
+  useEffect(() => {
+    loadMetrics();
+  }, []);
 
   useEffect(() => {
     loadNodes(nodeUIProps.queryParams);
