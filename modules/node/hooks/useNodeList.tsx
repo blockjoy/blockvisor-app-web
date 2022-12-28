@@ -28,6 +28,8 @@ export const useNodeList = (): Hook => {
 
   const setLayout = useSetRecoilState(layoutState);
 
+  const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
+
   const handleAddNode = () => {
     setLayout('nodes');
   };
@@ -60,12 +62,10 @@ export const useNodeList = (): Hook => {
       setNodeList(newNodes);
     }
 
-    // TODO: has to be improved once the total nodes count is received
-    if (nodes.length) {
-      setHasMore(true);
-    } else {
-      setHasMore(false);
-    }
+    // TODO: has to be improved once the total nodes count is received (doesn't work with filtering)
+    const hasMoreNodes = queryParams.pagination.current_page * queryParams.pagination.items_per_page < (totalNodes ?? Infinity);
+
+    setHasMore(hasMoreNodes);
 
     await delay(env.loadingDuration);
 
