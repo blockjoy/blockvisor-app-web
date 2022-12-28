@@ -61,6 +61,7 @@ export const useNodeList = (): Hook => {
 
       setHasMore(true);
     } else {
+      setNodeList(nodes);
       setHasMore(false);
     }
 
