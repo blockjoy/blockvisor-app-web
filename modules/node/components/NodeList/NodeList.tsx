@@ -101,7 +101,10 @@ export const NodeList = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const updateQueryParams = () => {
+  const updateQueryParams = async () => {
+    // sleep 300ms for better UX/UI (maybe should be removed)
+    await new Promise(r => setTimeout(r, 300));
+
     const newCurrentPage = nodeUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
       ...nodeUIProps.queryParams,
@@ -147,8 +150,9 @@ export const NodeList = () => {
             next={updateQueryParams}
             hasMore={hasMoreNodes}
             style={{ overflow: 'hidden' }}
-            scrollThreshold={0.7}
-            loader={isLoading === 'finished' && <div css={styles.loader}><Button size="small" onClick={updateQueryParams} style="outline">Show More</Button></div>}
+            scrollThreshold={1}
+            loader={''}
+            // loader={isLoading === 'finished' && <div css={styles.loader}><Button size="small" onClick={updateQueryParams} style="outline">Show More</Button></div>}
             endMessage={isLoading !== 'initializing' && <div css={styles.endMessage}>- No more nodes -</div>}
           >
             {activeListType === 'table' ? (
