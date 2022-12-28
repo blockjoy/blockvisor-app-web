@@ -80,9 +80,19 @@ const nodeWizardActive = atom<boolean>({
   default: false,
 });
 
-const hasMoreNodes= atom<boolean>({
+const hasMoreNodes = atom<boolean>({
   key: 'node.hasMore',
   default: false
+});
+
+const nodeMetrics = atom<any>({
+  key: 'node.metrics',
+  default: {}
+});
+
+const totalNodes = atom<number | null>({
+  key: 'node.total',
+  default: null
 });
 
 export const nodeAtoms = {
@@ -97,5 +107,7 @@ export const nodeAtoms = {
   filtersStatus,
   filtersType,
   nodeWizardActive,
-  hasMoreNodes
+  hasMoreNodes,
+  nodeMetrics,
+  totalNodes,
 };

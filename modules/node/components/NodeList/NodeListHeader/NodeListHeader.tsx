@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { styles } from './nodeListHeader.styles';
 
 import { NodeFiltersHeader } from '../NodeFilters/NodeFiltersHeader';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { NodeFiltersHeaderIconText } from '../NodeFilters/NodeFiltersHeaderIconText';
 import { NodeMetrics } from '@modules/node/components/NodeList/NodeMetrics/NodeMetrics';
@@ -18,6 +18,7 @@ export const NodeListHeader: FC<Props> = ({
   onTypeChanged,
   totalRows,
 }) => {
+  const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
   const [isFiltersCollapsed, setFiltersCollapsed] = useRecoilState(
     nodeAtoms.isFiltersCollapsed,
   );
@@ -44,10 +45,12 @@ export const NodeListHeader: FC<Props> = ({
 
       <NodeMetrics />
 
-      <span css={[styles.total, styles.endBlock]}>
-        Showing <span css={styles.totalValue}>{totalRows} </span>
-        {totalRows === 1 ? 'node' : 'nodes'}
-      </span>
+     {totalNodes && (
+        <span css={[styles.total, styles.endBlock]}>
+          Total: <span css={styles.totalValue}>{totalNodes} </span>
+          {totalNodes === 1 ? 'node' : 'nodes'}
+        </span>
+      )}
     </div>
   );
 };
