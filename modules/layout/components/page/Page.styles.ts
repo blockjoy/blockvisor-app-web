@@ -5,6 +5,7 @@ export const styles = {
   wrapper: css`
     position: relative;
     z-index: 3;
+    min-height: 100vh;
 
     @media ${breakpoints.fromXLrg} {
       margin-left: 64px;
@@ -14,5 +15,9 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       margin-left: 260px;
     }
+  `,
+  wrapperFlex: css`
+    display: flex;
+    flex-direction: column;
   `,
 };

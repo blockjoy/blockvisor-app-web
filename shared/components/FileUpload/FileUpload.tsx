@@ -5,7 +5,6 @@ import { styles } from './FileUpload.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import IconClose from 'public/assets/icons/close-12.svg';
-import { useFormContext } from 'react-hook-form';
 
 type Props = {
   name: string;
@@ -13,6 +12,7 @@ type Props = {
   onChange: (value: any) => void;
   remove: MouseEventHandler<HTMLButtonElement>;
   placeholder: string;
+  currentFiles: any;
 };
 
 export function FileUpload({
@@ -21,27 +21,20 @@ export function FileUpload({
   remove,
   name,
   multiple = false,
+  currentFiles,
 }: Props) {
-  const {
-    formState: { errors },
-    watch,
-    setValue,
-    getValues,
-  } = useFormContext();
-
-  const files: FileWithPath[] = watch(name);
-  const currentFiles = getValues(name);
+  const files: FileWithPath[] = [];
   const filesArray = (currentFiles && Array.from(currentFiles)) || [];
 
   const onDrop = useCallback(
     async (droppedFiles: File[]) => {
       const newFiles = [...filesArray, ...Array.from(droppedFiles)];
-      setValue(name, newFiles);
+      onChange(newFiles);
     },
-    [files, name, setValue],
+    [files, name],
   );
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps } = useDropzone({
     multiple,
     onDrop,
   });
@@ -54,7 +47,7 @@ export function FileUpload({
       <input
         disabled={Boolean(files.length)}
         className="file-upload__input"
-        {...getInputProps({ onChange })}
+        onChange={onChange}
       />
       {Boolean(files.length) ? (
         files.map((file) => (
