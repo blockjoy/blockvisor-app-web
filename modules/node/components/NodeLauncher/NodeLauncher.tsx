@@ -7,6 +7,7 @@ import { NodeLauncherSummary } from './NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
+import { AnimatedGraphic } from '@shared/components';
 
 type NodeState = {
   blockchainId: string;
@@ -21,6 +22,8 @@ export const NodeLauncher = () => {
   const router = useRouter();
 
   const [hasServerError, setHasServerError] = useState<boolean>(false);
+
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const [node, setNode] = useState<NodeState>({
     blockchainId: '',
@@ -105,6 +108,8 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
+    setIsCreating(true);
+
     console.log('handleCreateNodeClicked', node);
 
     const mergedFiles: File[] = [];
@@ -127,6 +132,7 @@ export const NodeLauncher = () => {
     createNode(
       params,
       (nodeId: string) => {
+        setIsCreating(false);
         router.push(`/nodes/${nodeId}`);
       },
       () => setHasServerError(true),
@@ -196,10 +202,20 @@ export const NodeLauncher = () => {
             nodeFiles={node.nodeFiles}
           />
         )}
+        {!node.blockchainId && !node.nodeTypeId && (
+          <div css={styles.empty}>
+            <AnimatedGraphic />
+            <div>
+              <h2>Launch a Node</h2>
+              <h3>Select a protocol to get started</h3>
+            </div>
+          </div>
+        )}
         {node.blockchainId && node.nodeTypeId && (
           <NodeLauncherSummary
             hasServerError={hasServerError}
             hasAddedFiles={hasAddedFiles()}
+            isCreating={isCreating}
             isNodeValid={isNodeValid()}
             isConfigValid={isConfigValid()}
             blockchainId={node.blockchainId}

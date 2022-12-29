@@ -6,11 +6,7 @@ export const styles = {
   endBlock: css`
     flex: 0 0 100px;
   `,
-  pageTitle: css`
-    @media ${breakpoints.toMed} {
-      display: none;
-    }
-  `,
+  pageTitle: css``,
   listTypePicker: css`
     display: flex;
     justify-content: flex-end;

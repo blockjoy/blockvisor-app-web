@@ -101,7 +101,6 @@ export const styles = {
     }
 
     :disabled {
-      opacity: 0.2;
       cursor: not-allowed;
     }
   `,
