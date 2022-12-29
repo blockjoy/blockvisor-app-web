@@ -89,7 +89,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
           : filterList
               .filter((item) => item.isChecked)
               .map((item) => (
-                <div css={styles.selectedFilterRow}>
+                <div key={item.id} css={styles.selectedFilterRow}>
                   <div css={styles.checkedIcon}>
                     <IconCheck />
                   </div>

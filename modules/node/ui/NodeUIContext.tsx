@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { isEqual, isFunction } from "lodash";
 import { InitialQueryParams, initialQueryParams } from "./NodeUIHelpers";
-import { buildParams, loadPersistedFilters } from "../helpers/NodeHelpers";
+import { buildParams, loadPersistedFilters, numOfItemsPerPage } from "../helpers/NodeHelpers";
 
 type NodeUIContext = {
   queryParams: InitialQueryParams,
@@ -23,7 +23,7 @@ const getInitialQueryParams = () => {
   const { blockchain, type, status } = persistedNodeFilters;
   const params = buildParams(blockchain, type, status);
 
-  const itemsPerPage = window.innerWidth < 568 ? initialQueryParams.pagination.items_per_page / 2 : initialQueryParams.pagination.items_per_page;
+  const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,

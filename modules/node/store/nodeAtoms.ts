@@ -95,6 +95,11 @@ const totalNodes = atom<number | null>({
   default: null
 });
 
+const preloadNodes = atom<number>({
+  key: 'node.loadingTotal',
+  default: 0
+});
+
 export const nodeAtoms = {
   activeNode,
   nodeList,
@@ -110,4 +115,5 @@ export const nodeAtoms = {
   hasMoreNodes,
   nodeMetrics,
   totalNodes,
+  preloadNodes,
 };
