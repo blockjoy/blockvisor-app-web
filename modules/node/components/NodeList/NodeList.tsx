@@ -127,9 +127,7 @@ export const NodeList = () => {
               style={{ overflow: 'hidden' }}
               scrollThreshold={1}
               loader={''}
-              // loader={isLoading === 'finished' && <div css={styles.loader}><Button size="small" onClick={updateQueryParams} style="outline">Show More</Button></div>}
               endMessage={''}
-              // endMessage={isLoading !== 'initializing' && <div css={styles.endMessage}>- No more nodes -</div>}
             >
               {activeListType === 'table' ? (
                 <Table
