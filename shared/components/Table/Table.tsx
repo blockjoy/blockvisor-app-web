@@ -1,6 +1,7 @@
 import { tableStyles } from './table.styles';
 import { TableLoader } from './TableLoader';
 import { styles } from './TableLoader.styles';
+import TableRowLoader from './TableRowLoader';
 import { TableSkeleton } from './TableSkeleton';
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
   rows?: Row[];
   onRowClick?: (arg0: any) => void;
   isLoading: LoadingState;
+  preload?: number;
   isSorting?: boolean;
 };
 
@@ -16,6 +18,7 @@ export const Table: React.FC<Props> = ({
   rows = [],
   onRowClick,
   isLoading,
+  preload,
   isSorting = false,
 }) => {
   const handleRowClick = (tr: any) => {
@@ -26,13 +29,10 @@ export const Table: React.FC<Props> = ({
 
   return (
     <div css={tableStyles.wrapper}>
-      {isLoading === 'initializing' ? (
-        <TableSkeleton />
-      ) : (
         <table
           css={[tableStyles.table, !!onRowClick && tableStyles.hasHoverRows]}
         >
-          {headers && (
+          {headers && rows?.length > 0 && (
             <thead>
               <tr>
                 {headers.map((th) => (
@@ -52,32 +52,36 @@ export const Table: React.FC<Props> = ({
             </thead>
           )}
           <tbody>
-            {rows?.map((tr) => (
-              <tr
-                key={tr.key}
-                className={tr.isDanger ? 'danger' : ''}
-                onClick={() => handleRowClick(tr)}
-              >
-                {tr.cells?.map((td, index) => (
-                  <td
-                    key={td.key}
-                    className={
-                      headers && headers[index]?.isHiddenOnMobile
-                        ? 'hidden-on-mobile'
-                        : ''
-                    }
-                  >
-                    {td.component}
-                    {index === 0 && (
-                      <span className="underline" css={tableStyles.underline} />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {isLoading === 'initializing' ? (
+              <TableRowLoader length={preload} />
+            ) : (
+              rows?.map((tr) => (
+                <tr
+                  key={tr.key}
+                  className={tr.isDanger ? 'danger' : ''}
+                  onClick={() => handleRowClick(tr)}
+                >
+                  {tr.cells?.map((td, index) => (
+                    <td
+                      key={td.key}
+                      className={
+                        headers && headers[index]?.isHiddenOnMobile
+                          ? 'hidden-on-mobile'
+                          : ''
+                      }
+                    >
+                      {td.component}
+                      {index === 0 && (
+                        <span className="underline" css={tableStyles.underline} />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
+            { isLoading === 'loading' && preload ? <TableRowLoader length={preload} /> : null }
           </tbody>
         </table>
-      )}
     </div>
   );
 };
