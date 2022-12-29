@@ -10,10 +10,6 @@ export const styles = {
 
     h1 {
       width: 100px;
-
-      @media ${breakpoints.toLrg} {
-        display: none;
-      }
     }
   `,
   spacer: css`

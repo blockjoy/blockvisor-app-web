@@ -12,22 +12,31 @@ export const styles = {
       visibility: visible;
     }
   `,
+  isChecked: (theme: ITheme) => css`
+    > div {
+      border-color: ${theme.colorPrimary};
+    }
+
+    > div > div {
+      translate: 26px 0;
+      background: ${theme.colorPrimary};
+    }
+  `,
   switch: (theme: ITheme) => css`
     position: relative;
     display: flex;
-    justify-content: flex-end;
     width: 50px;
     height: 24px;
     padding: 2px;
     border-radius: 15px;
-    border: 1px solid ${theme.colorPrimary};
+    border: 1px solid ${theme.colorDefault};
     opacity: 0.3;
   `,
   handle: (theme: ITheme) => css`
     width: 18px;
     height: 18px;
     border-radius: inherit;
-    background: ${theme.colorPrimary};
+    background: ${theme.colorDefault};
     display: grid;
     place-items: center;
 

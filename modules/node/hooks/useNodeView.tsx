@@ -73,7 +73,17 @@ export const useNodeView = (): Hook => {
       )
       .map((property: any) => ({
         label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
-        data: property.value === 'null' ? '' : property.value,
+        data:
+          property.value === 'null' ? (
+            '-'
+          ) : property.ui_type === 'switch' ? (
+            <LockedSwitch
+              tooltip="You will be able to edit this setting after BETA."
+              isChecked={property.value === 'true' ? true : false}
+            />
+          ) : (
+            property.value
+          ),
       }));
 
     const activeNode: BlockjoyNode = {

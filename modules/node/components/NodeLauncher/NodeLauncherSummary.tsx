@@ -12,6 +12,7 @@ type Props = {
   hasAddedFiles: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean;
+  isCreating: boolean;
   blockchainId: string;
   nodeTypeId: string;
   nodeTypeProperties: NodeTypeConfig[];
@@ -23,6 +24,7 @@ export const NodeLauncherSummary: FC<Props> = ({
   hasAddedFiles,
   isNodeValid,
   isConfigValid,
+  isCreating,
   blockchainId,
   nodeTypeId,
   nodeTypeProperties,
@@ -105,7 +107,9 @@ export const NodeLauncherSummary: FC<Props> = ({
         <div css={styles.buttons}>
           <button
             onClick={onCreateNodeClicked}
-            disabled={!isNodeValid || !isConfigValid || hasServerError}
+            disabled={
+              !isNodeValid || !isConfigValid || hasServerError || isCreating
+            }
             css={styles.createButton}
           >
             <IconRocket />
