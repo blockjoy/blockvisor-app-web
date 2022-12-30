@@ -1,45 +1,44 @@
 import { useRouter } from 'next/router';
-import { NextPage } from 'next';
 import { useEffect } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { OrganizationDetails } from './OrganizationDetails/OrganizationDetails';
-import { getOrganizationDetails } from '../utils/organizationDetails';
+import { getOrganizationDetails } from '@modules/organization/utils/organizationDetails';
 import { spacing } from 'styles/utils.spacing.styles';
-import { MembersTable } from './MembersTable/MembersTable';
 import {
   DangerZone,
   DetailsTable,
-  PageHeader,
+  PageTitle,
   PageSection,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
-import { useDeleteOrganization } from '../hooks/useDeleteOrganization';
-import { useGetOrganizationById } from '../hooks/useGetOrganizationById';
+import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
+import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
+import { Members } from './OrganizationMembers/OrganizationMembers';
 
-const Organization: NextPage = () => {
+export const OrganizationView = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { getOrganization, organization, isLoading } = useGetOrganizationById();
+  const { getOrganization, organization, isLoading } = useGetOrganization();
   const { deleteOrganization } = useDeleteOrganization();
 
   const handleDelete = async () => deleteOrganization(queryAsString(id));
 
   useEffect(() => {
-    getOrganization(queryAsString(id));
-  }, []);
+    if (router.isReady) {
+      getOrganization(queryAsString(id));
+    }
+  }, [router.isReady]);
 
   const details = getOrganizationDetails(organization);
 
   return (
     <>
+      <PageTitle title="Organization Details"></PageTitle>
       <PageSection>
-        <PageHeader>
-          Organization Details
-          <BackButton />
-        </PageHeader>
+        <BackButton />
         {isLoading === 'initializing' ? (
           <>
             <SkeletonGrid padding="10px 0 70px">
@@ -56,20 +55,20 @@ const Organization: NextPage = () => {
             />
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
-            <h2 css={[spacing.bottom.large]}>Members</h2>
-            <MembersTable isLoading={isLoading} />
+            <Members id={queryAsString(id)} />
+            <div css={[spacing.top.xLarge]} />
           </>
         )}
       </PageSection>
-      <PageSection>
-        <DangerZone
-          elementName="Organization"
-          elementNameToCompare={organization?.name ?? ''}
-          handleDelete={handleDelete}
-        ></DangerZone>
-      </PageSection>
+      {isLoading === 'finished' && (
+        <PageSection>
+          <DangerZone
+            elementName="Organization"
+            elementNameToCompare={organization?.name ?? ''}
+            handleDelete={handleDelete}
+          ></DangerZone>
+        </PageSection>
+      )}
     </>
   );
 };
-
-export default Organization;

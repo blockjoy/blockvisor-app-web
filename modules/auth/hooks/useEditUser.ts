@@ -3,7 +3,7 @@ import { User as ApiUser } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { authAtoms } from '../store/authAtoms';
 import { useIdentityRepository } from './useIdentityRepository';
 import { apiClient } from '@modules/client';
-import { isStatusResponse } from '@modules/organizations';
+import { isStatusResponse } from '@modules/organization';
 import { ApplicationError } from '../utils/Errors';
 
 export function useEditUser() {

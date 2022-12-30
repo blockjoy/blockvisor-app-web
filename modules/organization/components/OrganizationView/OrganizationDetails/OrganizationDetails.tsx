@@ -2,12 +2,12 @@ import { styles } from './OrganizationDetails.styles';
 import { useEffect, useState } from 'react';
 import { Button, Input } from '@shared/components';
 import { toast } from 'react-toastify';
-import { useGetOrganizationById } from '@modules/organizations/hooks/useGetOrganizationById';
 import { useRouter } from 'next/router';
 import { queryAsString } from '@shared/utils/query';
-import { useUpdateOrganization } from '@modules/organizations/hooks/useUpdateOrganization';
+import { useUpdateOrganization } from '@modules/organization/hooks/useUpdateOrganization';
 import { FormProvider, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
+import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 
 type Props = {
   name?: string;
@@ -23,14 +23,10 @@ export function OrganizationDetails({ name, id }: Props) {
   const [isSubmiting, setIsSubmitting] = useState(false);
   const form = useForm<OrganizationDetailsForm>();
   const { handleSubmit, setValue } = form;
-  const { getOrganization } = useGetOrganizationById();
+  const { getOrganization } = useGetOrganization();
   const { updateOrganization } = useUpdateOrganization();
 
   useEffect(() => {
-    if (!id) {
-      getOrganization(queryAsString(router.query.id));
-    }
-
     setValue('name', name ?? '');
   }, [id, name]);
 
@@ -39,10 +35,10 @@ export function OrganizationDetails({ name, id }: Props) {
     const id = e?.target.id;
 
     try {
-      updateOrganization(id, name);
-      toast.success('Organisation renamed');
+      await updateOrganization(id, name);
+      toast.success('Organization renamed');
       setIsSubmitting(true);
-      getOrganization(queryAsString(router.query.id));
+      await getOrganization(queryAsString(router.query.id));
     } catch (error) {
       setIsSubmitting(true);
       toast.error('Rename failed');

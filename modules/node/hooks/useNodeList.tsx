@@ -37,7 +37,8 @@ export const useNodeList = (): Hook => {
   };
 
   const loadNodes = async (queryParams: InitialQueryParams) => {
-    const loadingState = queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
+    const loadingState =
+      queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
 
     // TODO: Org ID needs be set here
@@ -45,22 +46,24 @@ export const useNodeList = (): Hook => {
     // let org_id = user?.defaultOrganization?.id || '';
 
     console.log('-------------nodeUIProps-------------', queryParams);
-    const nodes: any = await apiClient.listNodes(org_id!, queryParams.filter, queryParams.pagination);
-    console.log('nodes', nodes);
+
+    const nodes: any = await apiClient.listNodes(
+      org_id!,
+      queryParams.filter,
+      queryParams.pagination,
+    );
 
     if (nodes.length) {
       if (queryParams.pagination.current_page === 1) {
         setNodeList(nodes);
       } else {
-        const newNodes = [
-          ...nodeList,
-          ...nodes
-        ];
+        const newNodes = [...nodeList, ...nodes];
         setNodeList(newNodes);
       }
 
       setHasMore(true);
     } else {
+      setNodeList(nodes);
       setHasMore(false);
     }
 

@@ -3,13 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { hostsAtoms } from '@modules/hosts/store/hostAtoms';
-import {
-  EmptyColumn,
-  PageSection,
-  PageTitle,
-  Table,
-  TableGrid,
-} from '@shared/components';
+import { PageTitle, Table, TableGrid } from '@shared/components';
 import { toRows, toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
@@ -82,7 +76,7 @@ export const NodeList = () => {
   useEffect(() => {
     buildNodeList(activeListType);
   }, [nodeList]);
-  
+
   useEffect(() => {
     buildNodeList(activeListType);
   }, [activeListType]);
@@ -103,11 +97,11 @@ export const NodeList = () => {
       pagination: {
         ...nodeUIProps.queryParams.pagination,
         current_page: newCurrentPage,
-      }
+      },
     };
-    
+
     nodeUIProps.setQueryParams(newQueryParams);
-  }
+  };
 
   return (
     <>
@@ -142,8 +136,24 @@ export const NodeList = () => {
             hasMore={hasMoreNodes}
             style={{ overflow: 'hidden' }}
             scrollThreshold={1}
-            loader={isLoading === 'finished' && <div css={styles.loader}><Button size="small" onClick={updateQueryParams} style="outline">Show More</Button></div>}
-            endMessage={isLoading !== 'initializing' && <div css={styles.endMessage}>- No more nodes -</div>}
+            loader={
+              isLoading === 'finished' && (
+                <div css={styles.loader}>
+                  <Button
+                    size="small"
+                    onClick={updateQueryParams}
+                    style="outline"
+                  >
+                    Show More
+                  </Button>
+                </div>
+              )
+            }
+            endMessage={
+              isLoading !== 'initializing' && (
+                <div css={styles.endMessage}>- No more nodes -</div>
+              )
+            }
           >
             {activeListType === 'table' ? (
               <Table
@@ -176,8 +186,8 @@ export const NodeList = () => {
                 onRowClick={handleNodeClick}
               />
             ) : (
-                <div css={styles.gridWrapper}>
-                  <TableGrid isLoading={isLoading} cells={nodeCells!} />
+              <div css={styles.gridWrapper}>
+                <TableGrid isLoading={isLoading} cells={nodeCells!} />
               </div>
             )}
           </InfiniteScroll>

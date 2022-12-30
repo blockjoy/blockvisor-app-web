@@ -24,6 +24,7 @@ export enum StatusResponseCode {
   UpdateNode,
   DeleteNode,
   GetOrganizations,
+  GetOrganizationMembers,
   CreateUser,
   GetUser,
   UpdateUser,
@@ -186,28 +187,28 @@ export class StatusResponseFactory {
 
   static updateNodeResponse(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.UpdateNode,
-        'Error updating node',
-        err,
-        source,
+      StatusResponseCode.UpdateNode,
+      'Error updating node',
+      err,
+      source,
     );
   }
 
   static deleteNodeResponse(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.DeleteNode,
-        'Error deleting node',
-        err,
-        source,
+      StatusResponseCode.DeleteNode,
+      'Error deleting node',
+      err,
+      source,
     );
   }
 
   static saveKeyfileResponse(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.SaveKeyFiles,
-        'Error saving key files',
-        err,
-        source,
+      StatusResponseCode.SaveKeyFiles,
+      'Error saving key files',
+      err,
+      source,
     );
   }
 
@@ -218,6 +219,18 @@ export class StatusResponseFactory {
     return StatusResponseFactory.createResponse(
       StatusResponseCode.GetOrganizations,
       'Error retrieving organizations',
+      err,
+      source,
+    );
+  }
+
+  static getOrganizationMembersResponse(
+    err: any,
+    source: StatusSource,
+  ): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.GetOrganizationMembers,
+      'Error retrieving organization members',
       err,
       source,
     );

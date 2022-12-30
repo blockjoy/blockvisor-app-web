@@ -63,6 +63,7 @@ import {
   GetOrganizationsRequest,
   RestoreOrganizationRequest,
   UpdateOrganizationRequest,
+  OrganizationMemberRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
@@ -122,9 +123,9 @@ export type NewPassword = {
   new_pwd_confirmation: string;
 };
 export type UIFilterCriteria = {
-  blockchain: string[];
-  node_type: string[];
-  node_status: string[];
+  blockchain?: string[];
+  node_type?: string[];
+  node_status?: string[];
 };
 export type UIPagination = {
   current_page: number;
@@ -921,7 +922,9 @@ export class GrpcClient {
 
   /* Organization service */
 
-  async getOrganizations(): Promise<
+  async getOrganizations(
+    org_id?: string
+  ): Promise<
     Array<Organization.AsObject> | StatusResponse | undefined
   > {
     let request_meta = new RequestMeta();
@@ -929,7 +932,9 @@ export class GrpcClient {
 
     let request = new GetOrganizationsRequest();
     request.setMeta(request_meta);
-
+      
+    if (org_id) request.setOrgId(org_id);
+  
     return this.organization
       ?.get(request, this.getAuthHeader())
       .then((response) => {
@@ -1033,6 +1038,31 @@ export class GrpcClient {
           'grpcClient',
         );
       });
+  }
+
+  async getOrganizationMembers(
+    org_id: string
+  ): Promise<
+    Array<User.AsObject> | StatusResponse | undefined
+  > {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new OrganizationMemberRequest();
+    request.setMeta(request_meta);
+    request.setId(org_id);
+
+    return this.organization
+      ?.members(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getUsersList().map((item) => item.toObject());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getOrganizationMembersResponse(
+          err,
+          'grpcClient',
+        );
+      });;
   }
 
   /* User service */

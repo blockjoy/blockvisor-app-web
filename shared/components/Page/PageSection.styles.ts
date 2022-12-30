@@ -9,6 +9,8 @@ export const styles = {
     position: relative;
     padding: 24px 0;
     margin: 0 auto;
+    flex: 1 1 auto;
+    min-width: 100%;
   `,
   sectionNoTopPadding: css`
     padding-top: 0;

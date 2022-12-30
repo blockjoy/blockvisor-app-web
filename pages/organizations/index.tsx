@@ -1,10 +1,15 @@
 import { AppLayout } from '@modules/layout';
-import { OrganizationsPage } from '@modules/organizations';
+import { OrganizationManagement } from '@modules/organization';
+import { OrganizationsUIProvider } from '@modules/organization/ui/OrganizationsUIContext';
 
-const Organizations = () => <OrganizationsPage />;
+const Organizations = () => (
+  <OrganizationsUIProvider>
+    <OrganizationManagement />
+  </OrganizationsUIProvider>
+);
 
 Organizations.getLayout = function getLayout(page: any) {
-  return <AppLayout>{page}</AppLayout>;
+  return <AppLayout isPageFlex>{page}</AppLayout>;
 };
 
 export default Organizations;

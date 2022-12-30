@@ -1,4 +1,4 @@
-import { mapOrganizationsToRows } from '../../../modules/organizations/components/AllOrganizationsTable';
+import { mapOrganizationsToRows } from '../../../modules/organization/components/AllOrganizationsTable';
 import { Table } from '@shared/components';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 

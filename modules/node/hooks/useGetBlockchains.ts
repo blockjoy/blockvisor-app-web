@@ -1,5 +1,5 @@
 import { apiClient } from '@modules/client';
-import { isStatusResponse } from '@modules/organizations';
+import { isStatusResponse } from '@modules/organization';
 import { delay } from '@shared/utils/delay';
 import { useRecoilState } from 'recoil';
 import { blockchainsAtoms } from '../store/blockchains';
