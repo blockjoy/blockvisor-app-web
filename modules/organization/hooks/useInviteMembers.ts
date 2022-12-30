@@ -5,13 +5,12 @@ import { apiClient } from '@modules/client';
 
 export const useInviteMembers = () => {
   const inviteMembers = async (emails: string[]) => {
-    const response = await apiClient.updateOrganization(organisation);
-
-    if (isResponeMetaObject(response)) {
-      return;
-    } else {
-      throw new ApplicationError('UpdateOrganization', 'Update failed');
-    }
+    // const response = await apiClient.inviteMembers();
+    // if (isResponeMetaObject(response)) {
+    //   return;
+    // } else {
+    //   throw new ApplicationError('UpdateOrganization', 'Update failed');
+    // }
   };
 
   return {

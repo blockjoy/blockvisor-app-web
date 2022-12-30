@@ -1,6 +1,6 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import PersonIcon from '@public/assets/icons/person-12.svg';
@@ -62,6 +62,17 @@ export const Members = ({ id }: MembersProps) => {
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
 
+  const [emails, setEmails] = useState<string[]>();
+
+  const handleTextareaChanged = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    var arrayOfLines = e.target.value.split('\n');
+    setEmails(arrayOfLines);
+  };
+
+  const handleInviteClicked = () => {
+    console.log('emails', emails);
+  };
+
   useEffect(() => {
     if (id) getOrganizationMembers(id);
   }, [id]);
@@ -81,7 +92,13 @@ export const Members = ({ id }: MembersProps) => {
           Add Members
         </Button>
       </h2>
-      {activeView === 'invite' && <OrganizationInvite />}
+      {activeView === 'invite' && (
+        <OrganizationInvite
+          onInviteClicked={handleInviteClicked}
+          onCancelClicked={() => setActiveView('list')}
+          onTextareaChanged={handleTextareaChanged}
+        />
+      )}
       {activeView === 'list' && (
         <Table
           isLoading={isLoading}

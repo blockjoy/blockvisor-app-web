@@ -1,15 +1,36 @@
 import { Button } from '@shared/components';
+import { ChangeEvent, FC } from 'react';
 import { styles } from './OrganizationInvite.styles';
 
-export const OrganizationInvite = () => {
+type Props = {
+  onInviteClicked: VoidFunction;
+  onCancelClicked: VoidFunction;
+  onTextareaChanged: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+};
+
+export const OrganizationInvite: FC<Props> = ({
+  onInviteClicked,
+  onCancelClicked,
+  onTextareaChanged,
+}) => {
   return (
     <>
-      <textarea rows={10} />
+      <textarea
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onTextareaChanged(e)}
+        placeholder="Insert new member email addresses here"
+        css={styles.textarea}
+        rows={10}
+      />
       <div css={styles.buttons}>
-        <Button display="block" size="small">
+        <Button onClick={onInviteClicked} display="block" size="small">
           Add Members
         </Button>
-        <Button display="block" size="small" style="outline">
+        <Button
+          onClick={onCancelClicked}
+          display="block"
+          size="small"
+          style="outline"
+        >
           Cancel
         </Button>
       </div>

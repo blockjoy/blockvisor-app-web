@@ -919,18 +919,16 @@ export class GrpcClient {
   /* Organization service */
 
   async getOrganizations(
-    org_id?: string
-  ): Promise<
-    Array<Organization.AsObject> | StatusResponse | undefined
-  > {
+    org_id?: string,
+  ): Promise<Array<Organization.AsObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new GetOrganizationsRequest();
     request.setMeta(request_meta);
-      
+
     if (org_id) request.setOrgId(org_id);
-  
+
     return this.organization
       ?.get(request, this.getAuthHeader())
       .then((response) => {
@@ -1037,10 +1035,8 @@ export class GrpcClient {
   }
 
   async getOrganizationMembers(
-    org_id: string
-  ): Promise<
-    Array<User.AsObject> | StatusResponse | undefined
-  > {
+    org_id: string,
+  ): Promise<Array<User.AsObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -1058,7 +1054,7 @@ export class GrpcClient {
           err,
           'grpcClient',
         );
-      });;
+      });
   }
 
   /* User service */
