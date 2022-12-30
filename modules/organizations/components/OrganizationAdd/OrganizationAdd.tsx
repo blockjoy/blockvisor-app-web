@@ -19,6 +19,7 @@ import {
 import { toast } from 'react-toastify';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 
 type OrganisationAddForm = {
   name: string;
@@ -33,13 +34,19 @@ export const OrganizationAdd: FC = () => {
 
   const onSubmit: SubmitHandler<OrganisationAddForm> = async ({ name }) => {
     setLoading(true);
-    await createOrganization(name);
-    await getOrganizations();
-    await delay(env.loadingDuration);
+
+    try {
+      await createOrganization(name);
+      await getOrganizations();
+      await delay(env.loadingDuration);
+      toast.success('Organization created');
+    } catch (error) {
+      if (error instanceof ApplicationError) toast.error(error.message);
+    }
+
     form.reset();
     setLoading(false);
     setLayout(undefined);
-    toast.success('Organisation created');
   };
 
   return (
