@@ -1,5 +1,5 @@
 import { Button, Table } from '@shared/components';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { flex } from 'styles/utils.flex.styles';
 import { useGetOrganizations } from '../hooks/useGetOrganizations';
 
@@ -67,11 +67,7 @@ export const mapOrganizationsToRows = (
 };
 
 export const AllOrganizationsTable: FC = () => {
-  const { getOrganizations, organizations, isLoading } = useGetOrganizations();
-
-  useEffect(() => {
-    getOrganizations();
-  }, []);
+  const { organizations, isLoading } = useGetOrganizations();
 
   const rows = mapOrganizationsToRows(organizations);
   return <Table isLoading={isLoading} headers={headers} rows={rows} />;
