@@ -93,6 +93,8 @@ import {
   KeyFilesSaveRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
+import { InvitationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Invitation_serviceServiceClientPb';
+import { CreateInvitationRequest } from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
 
 export type UIUser = {
   first_name: string;
@@ -218,6 +220,7 @@ export class GrpcClient {
   private blockchain: BlockchainServiceClient | undefined;
   private command: CommandServiceClient | undefined;
   private key_files: KeyFilesClient | undefined;
+  private invitation: InvitationServiceClient | undefined;
   private token: string;
 
   constructor(host: string) {
@@ -253,6 +256,7 @@ export class GrpcClient {
     this.update = new UpdateServiceClient(host, null, opts);
     this.user = new UserServiceClient(host, null, opts);
     this.key_files = new KeyFilesClient(host, null, opts);
+    this.invitation = new InvitationServiceClient(host, null, opts);
   }
 
   getApiToken() {
@@ -1337,4 +1341,23 @@ export class GrpcClient {
 
     return response.getMeta()?.toObject();
   }
+
+  /* Invitation service */
+  async inviteOrgMember(invitee_email: string, for_org: string): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new CreateInvitationRequest();
+    request.setMeta(request_meta);
+    request.setCreatedForOrgId(for_org);
+    request.setInviteeEmail(invitee_email);
+
+    return this.invitation?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.inviteOrgMember(err, 'grpcClient');
+    });
+
+  }
+
 }
