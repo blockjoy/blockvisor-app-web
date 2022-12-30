@@ -1,6 +1,6 @@
 import { Routes, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { useDefaultOrganization } from '@modules/organizations';
+import { useDefaultOrganization } from '@modules/organization';
 import { Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';

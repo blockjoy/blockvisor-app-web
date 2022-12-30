@@ -10,12 +10,12 @@ import {
   DrawerAction,
   DrawerContent,
   DrawerHeader,
-} from '../../../layout/components';
+} from '../../../../../layout/components';
 import { width } from 'styles/utils.width.styles';
 import {
   useCreateOrganization,
   useGetOrganizations,
-} from '@modules/organizations';
+} from '@modules/organization';
 import { toast } from 'react-toastify';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';

@@ -1,7 +1,7 @@
 import { Button, Table } from '@shared/components';
 import { FC } from 'react';
 import { flex } from 'styles/utils.flex.styles';
-import { useGetOrganizations } from '../hooks/useGetOrganizations';
+import { useGetOrganizations } from '@modules/organization';
 
 const headers: TableHeader[] = [
   {

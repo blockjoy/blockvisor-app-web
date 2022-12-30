@@ -4,10 +4,10 @@ import { Button, Input } from '@shared/components';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { queryAsString } from '@shared/utils/query';
-import { useUpdateOrganization } from '@modules/organizations/hooks/useUpdateOrganization';
+import { useUpdateOrganization } from '@modules/organization/hooks/useUpdateOrganization';
 import { FormProvider, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useGetOrganization } from '@modules/organizations/hooks/useGetOrganization';
+import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 
 type Props = {
   name?: string;

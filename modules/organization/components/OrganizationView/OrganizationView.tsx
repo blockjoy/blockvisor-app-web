@@ -1,25 +1,24 @@
 import { useRouter } from 'next/router';
-import { NextPage } from 'next';
 import { useEffect } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { OrganizationDetails } from './OrganizationDetails/OrganizationDetails';
-import { getOrganizationDetails } from '../utils/organizationDetails';
+import { getOrganizationDetails } from '@modules/organization/utils/organizationDetails';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   DangerZone,
   DetailsTable,
-  PageHeader,
+  PageTitle,
   PageSection,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
-import { useDeleteOrganization } from '../hooks/useDeleteOrganization';
-import { useGetOrganization } from '../hooks/useGetOrganization';
-import { Members } from './Members/Members';
+import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
+import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
+import { Members } from './OrganizationMembers/OrganizationMembers';
 
-const Organization: NextPage = () => {
+export const OrganizationView = () => {
   const router = useRouter();
   const { id } = router.query;
   const { getOrganization, organization, isLoading } = useGetOrganization();
@@ -37,11 +36,9 @@ const Organization: NextPage = () => {
 
   return (
     <>
+      <PageTitle title="Organization Details"></PageTitle>
       <PageSection>
-        <PageHeader>
-          Organization Details
-          <BackButton />
-        </PageHeader>
+        <BackButton />
         {isLoading === 'initializing' ? (
           <>
             <SkeletonGrid padding="10px 0 70px">
@@ -75,5 +72,3 @@ const Organization: NextPage = () => {
     </>
   );
 };
-
-export default Organization;
