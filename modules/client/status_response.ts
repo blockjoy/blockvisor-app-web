@@ -24,7 +24,7 @@ export enum StatusResponseCode {
   UpdateNode,
   DeleteNode,
   GetOrganizations,
-  getOrganizationMembers,
+  GetOrganizationMembers,
   CreateUser,
   GetUser,
   UpdateUser,
@@ -219,8 +219,8 @@ export class StatusResponseFactory {
     source: StatusSource,
   ): StatusResponse {
     return StatusResponseFactory.createResponse(
-      StatusResponseCode.getOrganizationMembers,
-      'Error retrieving organizations',
+      StatusResponseCode.GetOrganizationMembers,
+      'Error retrieving organization members',
       err,
       source,
     );

@@ -9,15 +9,23 @@ import { organisationAtoms } from '../store/organizationAtoms';
 import { NextPage } from 'next';
 import { PageSection, PageTitle } from '@shared/components';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useEffect } from 'react';
+import { useGetOrganizations } from '../hooks/useGetOrganizations';
 
 export const OrganizationsPage: NextPage = () => {
   const memberCount = useRecoilValue(organisationAtoms.organizationMemberCount);
   const orgCount = useRecoilValue(organisationAtoms.organisationCount);
   const setLayout = useSetRecoilState(layoutState);
 
+  const { getOrganizations } = useGetOrganizations();
+
   const handleCreateClicked = () => {
     setLayout('organization');
   };
+
+  useEffect(() => {
+    getOrganizations();
+  }, []);
 
   return (
     <>

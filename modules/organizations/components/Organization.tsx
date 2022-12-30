@@ -6,7 +6,6 @@ import { queryAsString } from '@shared/utils/query';
 import { OrganizationDetails } from './OrganizationDetails/OrganizationDetails';
 import { getOrganizationDetails } from '../utils/organizationDetails';
 import { spacing } from 'styles/utils.spacing.styles';
-import { MembersTable } from './MembersTable/MembersTable';
 import {
   DangerZone,
   DetailsTable,
@@ -17,12 +16,13 @@ import {
   TableSkeleton,
 } from '@shared/components';
 import { useDeleteOrganization } from '../hooks/useDeleteOrganization';
-import { useGetOrganizationById } from '../hooks/useGetOrganizationById';
+import { useGetOrganization } from '../hooks/useGetOrganization';
+import { Members } from './Members/Members';
 
 const Organization: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { getOrganization, organization, isLoading } = useGetOrganizationById();
+  const { getOrganization, organization, isLoading } = useGetOrganization();
   const { deleteOrganization } = useDeleteOrganization();
 
   const handleDelete = async () => deleteOrganization(queryAsString(id));
@@ -58,17 +58,20 @@ const Organization: NextPage = () => {
             />
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
-            <h2 css={[spacing.bottom.large]}>Members</h2>
-            <MembersTable organizationId={organization?.id} />
+            <Members id={queryAsString(id)} />
             <div css={[spacing.top.xLarge]} />
-            <DangerZone
-              elementName="Organization"
-              elementNameToCompare={organization?.name ?? ''}
-              handleDelete={handleDelete}
-            ></DangerZone>
           </>
         )}
       </PageSection>
+      {isLoading === 'finished' && (
+        <PageSection>
+          <DangerZone
+            elementName="Organization"
+            elementNameToCompare={organization?.name ?? ''}
+            handleDelete={handleDelete}
+          ></DangerZone>
+        </PageSection>
+      )}
     </>
   );
 };

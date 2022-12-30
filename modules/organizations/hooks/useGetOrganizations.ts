@@ -8,9 +8,10 @@ export function useGetOrganizations() {
 
   const getOrganizations = async () => {
     setIsLoading('initializing');
-    const organizations: any = await apiClient.getOrganizations();
 
+    const organizations: any = await apiClient.getOrganizations();
     setOrganizations(organizations);
+
     setIsLoading('finished');
   };
 
