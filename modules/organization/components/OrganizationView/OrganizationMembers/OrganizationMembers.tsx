@@ -6,6 +6,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import PersonIcon from '@public/assets/icons/person-12.svg';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
+import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 
 export const mapOrganizationMembersToRows = (
   organizationMembers?: ClientOrganizationMember[],
@@ -56,6 +57,8 @@ export type MembersProps = {
 };
 
 export const Members = ({ id }: MembersProps) => {
+  const { inviteMembers } = useInviteMembers();
+
   const { getOrganizationMembers, organizationMembers, isLoading } =
     useGetOrganizationMembers();
 
@@ -71,6 +74,8 @@ export const Members = ({ id }: MembersProps) => {
 
   const handleInviteClicked = () => {
     console.log('emails', emails);
+
+    inviteMembers(emails!);
   };
 
   useEffect(() => {

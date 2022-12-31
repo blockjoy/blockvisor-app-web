@@ -15,3 +15,4 @@ export * from './hooks/useGetOrganization';
 export * from './hooks/useDeleteOrganization';
 export * from './hooks/useDefaultOrganization';
 export * from './hooks/useUpdateOrganization';
+export * from './hooks/useInviteMembers';
