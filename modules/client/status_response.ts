@@ -37,7 +37,9 @@ export enum StatusResponseCode {
   UpdateOrganization,
   RestoreOrganization,
   SaveKeyFiles,
-  InviteOrgMember
+  InviteOrgMember,
+  AcceptInvitation,
+  DeclineInvitation
 }
 
 export class StatusResponseFactory {
@@ -45,6 +47,24 @@ export class StatusResponseFactory {
     return StatusResponseFactory.createResponse(
         StatusResponseCode.InviteOrgMember,
         'Invite org member error',
+        err,
+        source,
+    );
+  }
+
+  static acceptInvitation(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.AcceptInvitation,
+        'accept invitation error',
+        err,
+        source,
+    );
+  }
+
+  static declineInvitation(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.DeclineInvitation,
+        'decline invitation error',
         err,
         source,
     );
