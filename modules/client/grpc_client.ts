@@ -94,7 +94,11 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 import { InvitationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Invitation_serviceServiceClientPb';
-import { CreateInvitationRequest } from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
+import {
+  CreateInvitationRequest,
+  InvitationRequest, ListPendingInvitationRequest,
+  ListReceivedInvitationRequest,
+} from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
 
 export type UIUser = {
   first_name: string;
@@ -1357,7 +1361,76 @@ export class GrpcClient {
     }).catch((err) => {
       return StatusResponseFactory.inviteOrgMember(err, 'grpcClient');
     });
+  }
 
+  async acceptInvitation(token: string): Promise<Empty.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new InvitationRequest();
+    request.setMeta(request_meta);
+
+    let auth_header = {
+      authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+      )}`,
+    };
+
+    return this.invitation?.accept(request, auth_header).then((response) => {
+      return response.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.acceptInvitation(err, 'grpcClient');
+    });
+  }
+
+  async declineInvitation(token: string): Promise<Empty.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new InvitationRequest();
+    request.setMeta(request_meta);
+
+    let auth_header = {
+      authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+      )}`,
+    };
+
+    return this.invitation?.accept(request, auth_header).then((response) => {
+      return response.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.declineInvitation(err, 'grpcClient');
+    });
+  }
+
+  async receivedInvitations(user_id: string): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ListReceivedInvitationRequest();
+    request.setMeta(request_meta);
+    request.setUserId(user_id);
+
+    return this.invitation?.listReceived(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.receivedInvitations(err, 'grpcClient');
+    });
+  }
+
+  async pendingInvitations(org_id: string): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ListPendingInvitationRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(org_id);
+
+    return this.invitation?.listPending(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.pendingInvitations(err, 'grpcClient');
+    });
   }
 
 }

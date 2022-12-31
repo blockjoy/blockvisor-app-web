@@ -37,14 +37,54 @@ export enum StatusResponseCode {
   UpdateOrganization,
   RestoreOrganization,
   SaveKeyFiles,
-  InviteOrgMember
+  InviteOrgMember,
+  AcceptInvitation,
+  DeclineInvitation,
+  ReceivedInvites,
+  PendingInvites,
 }
 
 export class StatusResponseFactory {
+  static pendingInvitations(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.PendingInvites,
+        'Pending invites error',
+        err,
+        source,
+    );
+  }
+
+  static receivedInvitations(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.ReceivedInvites,
+        'Received invites error',
+        err,
+        source,
+    );
+  }
+
   static inviteOrgMember(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
         StatusResponseCode.InviteOrgMember,
         'Invite org member error',
+        err,
+        source,
+    );
+  }
+
+  static acceptInvitation(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.AcceptInvitation,
+        'accept invitation error',
+        err,
+        source,
+    );
+  }
+
+  static declineInvitation(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.DeclineInvitation,
+        'decline invitation error',
         err,
         source,
     );
