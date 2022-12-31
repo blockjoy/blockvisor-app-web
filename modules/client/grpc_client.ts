@@ -23,7 +23,7 @@ import {
   UpdateNotification,
   User,
   UserConfigurationParameter,
-  Pagination,
+  Pagination, Invitation,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -1407,7 +1407,7 @@ export class GrpcClient {
     });
   }
 
-  async receivedInvitations(user_id: string): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+  async receivedInvitations(user_id: string): Promise<Array<Invitation.AsObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -1416,13 +1416,13 @@ export class GrpcClient {
     request.setUserId(user_id);
 
     return this.invitation?.listReceived(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta()?.toObject()
+      return response.getInvitationsList().map((item) => item.toObject())
     }).catch((err) => {
       return StatusResponseFactory.receivedInvitations(err, 'grpcClient');
     });
   }
 
-  async pendingInvitations(org_id: string): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+  async pendingInvitations(org_id: string): Promise<Array<Invitation.AsObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -1431,7 +1431,7 @@ export class GrpcClient {
     request.setOrgId(org_id);
 
     return this.invitation?.listPending(request, this.getAuthHeader()).then((response) => {
-      return response.getMeta()?.toObject()
+      return response.getInvitationsList().map((item) => item.toObject())
     }).catch((err) => {
       return StatusResponseFactory.pendingInvitations(err, 'grpcClient');
     });
