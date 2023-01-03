@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
+import { useNodeMetrics } from '@modules/node/hooks/useNodeMetrics';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { hostsAtoms } from '@modules/hosts/store/hostAtoms';
 import { PageTitle, Table, TableGrid } from '@shared/components';
@@ -28,6 +29,7 @@ export const NodeList = () => {
   const hasMoreNodes = useRecoilValue(nodeAtoms.hasMoreNodes);
 
   const { loadNodes, handleNodeClick } = useNodeList();
+  const { loadMetrics } = useNodeMetrics();
 
   const { openModal } = useModal();
 
@@ -70,6 +72,10 @@ export const NodeList = () => {
   };
 
   useEffect(() => {
+    loadMetrics();
+  }, []);
+
+  useEffect(() => {
     loadNodes(nodeUIProps.queryParams);
   }, [nodeUIProps.queryParams]);
 
@@ -89,7 +95,10 @@ export const NodeList = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const updateQueryParams = () => {
+  const updateQueryParams = async () => {
+    // sleep 300ms for better UX/UI (maybe should be removed)
+    await new Promise((r) => setTimeout(r, 300));
+
     const newCurrentPage = nodeUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
       ...nodeUIProps.queryParams,
@@ -136,19 +145,8 @@ export const NodeList = () => {
             hasMore={hasMoreNodes}
             style={{ overflow: 'hidden' }}
             scrollThreshold={1}
-            loader={
-              isLoading === 'finished' && (
-                <div css={styles.loader}>
-                  <Button
-                    size="small"
-                    onClick={updateQueryParams}
-                    style="outline"
-                  >
-                    Show More
-                  </Button>
-                </div>
-              )
-            }
+            loader={''}
+            // loader={isLoading === 'finished' && <div css={styles.loader}><Button size="small" onClick={updateQueryParams} style="outline">Show More</Button></div>}
             endMessage={
               isLoading !== 'initializing' && (
                 <div css={styles.endMessage}>- No more nodes -</div>

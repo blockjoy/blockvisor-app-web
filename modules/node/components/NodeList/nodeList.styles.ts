@@ -22,14 +22,4 @@ export const styles = {
       margin-left: 0;
     }
   `,
-  loader: css`
-    display: flex;
-    justify-content: center;
-  `,
-  endMessage: css`
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
-  `
 };
