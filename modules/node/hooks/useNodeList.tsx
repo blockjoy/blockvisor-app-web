@@ -49,33 +49,37 @@ export const useNodeList = (): Hook => {
     // let org_id = user?.defaultOrganization?.id || '';
 
     console.log('-------------nodeUIProps-------------', queryParams);
-
     const nodes: any = await apiClient.listNodes(
       org_id!,
       queryParams.filter,
       queryParams.pagination,
     );
+    console.log('nodes', nodes);
 
     setPreloadNodes(nodes.length);
 
     // TODO: (maybe) remove - added for better UI
-    if (!(nodes.length === 0 || queryParams.pagination.current_page === 1)) await new Promise(r => setTimeout(r, 600));
-    
+    if (!(nodes.length === 0 || queryParams.pagination.current_page === 1))
+      await new Promise((r) => setTimeout(r, 600));
+
     if (queryParams.pagination.current_page === 1) {
       setNodeList(nodes);
     } else {
       const newNodes = [...nodeList, ...nodes];
       setNodeList(newNodes);
     }
-    
+
     // TODO: has to be improved once the total nodes count is received (doesn't work with filtering)
-    const hasMoreNodes = queryParams.pagination.current_page * queryParams.pagination.items_per_page < (totalNodes ?? Infinity);
-    
+    const hasMoreNodes =
+      queryParams.pagination.current_page *
+        queryParams.pagination.items_per_page <
+      (totalNodes ?? Infinity);
+
     setHasMore(hasMoreNodes);
-    
+
     await delay(env.loadingDuration);
     setPreloadNodes(0);
-    
+
     setIsLoading('finished');
   };
 
