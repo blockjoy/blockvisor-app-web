@@ -32,6 +32,7 @@ export const OrganizationPicker: React.FC<Props> = ({
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     console.log('handleChange', e.target.value, e.target.selectedIndex);
+    localStorage.removeItem('nodeFilters');
     setValue(e.target.value);
     setDefaultOrganization(
       e.target.value,
