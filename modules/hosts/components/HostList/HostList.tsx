@@ -67,7 +67,7 @@ export function Hosts() {
       <PageSection bottomBorder={false}>
         {Boolean(rows?.length) || !finished ? (
           <Table
-            isLoading={loading}
+            isLoading={'loading'}
             headers={headers}
             rows={rows}
             onRowClick={handleRowClick}

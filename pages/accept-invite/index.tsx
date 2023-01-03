@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { apiClient } from '@modules/client';
 import { delay } from '@shared/utils/delay';
 
-export const AcceptInvite: NextPage = () => {
+const AcceptInvite: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -29,3 +29,5 @@ export const AcceptInvite: NextPage = () => {
 
   return null;
 };
+
+export default AcceptInvite;

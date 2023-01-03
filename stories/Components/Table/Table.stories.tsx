@@ -1,4 +1,4 @@
-import { mapOrganizationsToRows } from '../../../modules/organization/components/AllOrganizationsTable';
+import { mapOrganizationsToRows } from '../../../modules/organization/components/OrganizationManagement/OrganizationList/OrganizationListTable';
 import { Table } from '@shared/components';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
@@ -52,7 +52,7 @@ const headers: TableHeader[] = [
 const Template: ComponentStory<typeof Table> = (args) => {
   const rows = mapOrganizationsToRows(mockdata);
 
-  return <Table {...args} isLoading={false} />;
+  return <Table {...args} isLoading={'loading'} />;
 };
 
 export const Default = Template.bind({});
