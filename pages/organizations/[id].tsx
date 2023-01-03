@@ -1,7 +1,7 @@
 import { AppLayout } from '@modules/layout';
-import Organization from '@modules/organizations/components/Organization';
+import { OrganizationView } from '@modules/organization';
 
-const OrganizationPage = () => <Organization />;
+const OrganizationPage = () => <OrganizationView />;
 
 OrganizationPage.getLayout = function getLayout(page: any) {
   return <AppLayout>{page}</AppLayout>;

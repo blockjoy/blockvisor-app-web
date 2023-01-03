@@ -7,7 +7,7 @@ type Props = {
   headers?: TableHeader[];
   rows?: Row[];
   onRowClick?: (arg0: any) => void;
-  isLoading: boolean;
+  isLoading: LoadingState;
   isSorting?: boolean;
 };
 
@@ -26,8 +26,9 @@ export const Table: React.FC<Props> = ({
 
   return (
     <div css={tableStyles.wrapper}>
-      {/* <TableLoader isLoading={isSorting} /> */}
-      {!isLoading ? (
+      {isLoading === 'initializing' ? (
+        <TableSkeleton />
+      ) : (
         <table
           css={[tableStyles.table, !!onRowClick && tableStyles.hasHoverRows]}
         >
@@ -76,8 +77,6 @@ export const Table: React.FC<Props> = ({
             ))}
           </tbody>
         </table>
-      ) : (
-        <TableSkeleton />
       )}
     </div>
   );

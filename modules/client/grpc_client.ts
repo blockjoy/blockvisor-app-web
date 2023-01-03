@@ -23,7 +23,7 @@ import {
   UpdateNotification,
   User,
   UserConfigurationParameter,
-  Pagination,
+  Pagination, Invitation,
 } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { v4 as uuidv4 } from 'uuid';
 import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_serviceServiceClientPb';
@@ -63,6 +63,7 @@ import {
   GetOrganizationsRequest,
   RestoreOrganizationRequest,
   UpdateOrganizationRequest,
+  OrganizationMemberRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
@@ -92,6 +93,12 @@ import {
   KeyFilesSaveRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/key_file_service_pb';
 import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
+import { InvitationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Invitation_serviceServiceClientPb';
+import {
+  CreateInvitationRequest,
+  InvitationRequest, ListPendingInvitationRequest,
+  ListReceivedInvitationRequest,
+} from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
 
 export type UIUser = {
   first_name: string;
@@ -217,6 +224,7 @@ export class GrpcClient {
   private blockchain: BlockchainServiceClient | undefined;
   private command: CommandServiceClient | undefined;
   private key_files: KeyFilesClient | undefined;
+  private invitation: InvitationServiceClient | undefined;
   private token: string;
 
   constructor(host: string) {
@@ -252,6 +260,7 @@ export class GrpcClient {
     this.update = new UpdateServiceClient(host, null, opts);
     this.user = new UserServiceClient(host, null, opts);
     this.key_files = new KeyFilesClient(host, null, opts);
+    this.invitation = new InvitationServiceClient(host, null, opts);
   }
 
   getApiToken() {
@@ -917,14 +926,16 @@ export class GrpcClient {
 
   /* Organization service */
 
-  async getOrganizations(): Promise<
-    Array<Organization.AsObject> | StatusResponse | undefined
-  > {
+  async getOrganizations(
+    org_id?: string,
+  ): Promise<Array<Organization.AsObject> | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new GetOrganizationsRequest();
     request.setMeta(request_meta);
+
+    if (org_id) request.setOrgId(org_id);
 
     return this.organization
       ?.get(request, this.getAuthHeader())
@@ -1025,6 +1036,29 @@ export class GrpcClient {
       })
       .catch((err) => {
         return StatusResponseFactory.restoreOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  async getOrganizationMembers(
+    org_id: string,
+  ): Promise<Array<User.AsObject> | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new OrganizationMemberRequest();
+    request.setMeta(request_meta);
+    request.setId(org_id);
+
+    return this.organization
+      ?.members(request, this.getAuthHeader())
+      .then((response) => {
+        return response.getUsersList().map((item) => item.toObject());
+      })
+      .catch((err) => {
+        return StatusResponseFactory.getOrganizationMembersResponse(
           err,
           'grpcClient',
         );
@@ -1311,4 +1345,92 @@ export class GrpcClient {
 
     return response.getMeta()?.toObject();
   }
+
+  /* Invitation service */
+  async inviteOrgMember(invitee_email: string, for_org: string): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new CreateInvitationRequest();
+    request.setMeta(request_meta);
+    request.setCreatedForOrgId(for_org);
+    request.setInviteeEmail(invitee_email);
+
+    return this.invitation?.create(request, this.getAuthHeader()).then((response) => {
+      return response.getMeta()?.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.inviteOrgMember(err, 'grpcClient');
+    });
+  }
+
+  async acceptInvitation(token: string): Promise<Empty.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new InvitationRequest();
+    request.setMeta(request_meta);
+
+    let auth_header = {
+      authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+      )}`,
+    };
+
+    return this.invitation?.accept(request, auth_header).then((response) => {
+      return response.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.acceptInvitation(err, 'grpcClient');
+    });
+  }
+
+  async declineInvitation(token: string): Promise<Empty.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new InvitationRequest();
+    request.setMeta(request_meta);
+
+    let auth_header = {
+      authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+      )}`,
+    };
+
+    return this.invitation?.accept(request, auth_header).then((response) => {
+      return response.toObject()
+    }).catch((err) => {
+      return StatusResponseFactory.declineInvitation(err, 'grpcClient');
+    });
+  }
+
+  async receivedInvitations(user_id: string): Promise<Array<Invitation.AsObject> | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ListReceivedInvitationRequest();
+    request.setMeta(request_meta);
+    request.setUserId(user_id);
+
+    return this.invitation?.listReceived(request, this.getAuthHeader()).then((response) => {
+      return response.getInvitationsList().map((item) => item.toObject())
+    }).catch((err) => {
+      return StatusResponseFactory.receivedInvitations(err, 'grpcClient');
+    });
+  }
+
+  async pendingInvitations(org_id: string): Promise<Array<Invitation.AsObject> | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new ListPendingInvitationRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(org_id);
+
+    return this.invitation?.listPending(request, this.getAuthHeader()).then((response) => {
+      return response.getInvitationsList().map((item) => item.toObject())
+    }).catch((err) => {
+      return StatusResponseFactory.pendingInvitations(err, 'grpcClient');
+    });
+  }
+
 }

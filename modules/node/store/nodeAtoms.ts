@@ -28,16 +28,6 @@ const nodeList = atom<BlockjoyNode[]>({
   default: [],
 });
 
-// const nodeRows = atom<Row[] | null>({
-//   key: 'node.nodeRows',
-//   default: null,
-// });
-
-// const nodeCells = atom<GridCell[] | null>({
-//   key: 'node.nodeCells',
-//   default: null,
-// });
-
 const isLoading = atom<LoadingState>({
   key: 'node.loading',
   default: 'initializing',
@@ -90,6 +80,11 @@ const nodeWizardActive = atom<boolean>({
   default: false,
 });
 
+const hasMoreNodes= atom<boolean>({
+  key: 'node.hasMore',
+  default: false
+});
+
 export const nodeAtoms = {
   activeNode,
   nodeList,
@@ -102,4 +97,5 @@ export const nodeAtoms = {
   filtersStatus,
   filtersType,
   nodeWizardActive,
+  hasMoreNodes
 };

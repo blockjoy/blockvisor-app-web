@@ -14,7 +14,7 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@blockjoy/blockjoy-grpc": "^1.1.42",
+    "@blockjoy/blockjoy-grpc": "^1.1.46",
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "animejs": "^3.2.1",
@@ -31,6 +31,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.2",
     "react-hook-form": "^7.34.2",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-intersection-observer": "^9.4.0",
     "react-perfect-scrollbar": "^1.5.8",
     "react-select": "^5.4.0",

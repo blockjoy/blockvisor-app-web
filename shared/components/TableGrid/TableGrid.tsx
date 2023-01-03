@@ -10,7 +10,7 @@ type Props = {
   cells: GridCell[] | null;
   totalCells?: number;
   entityName?: string;
-  isLoading?: boolean;
+  isLoading?: LoadingState;
 };
 
 export const TableGrid: FC<Props> = ({
@@ -19,7 +19,7 @@ export const TableGrid: FC<Props> = ({
   entityName = 'node',
   isLoading,
 }) => {
-  return isLoading ? (
+  return isLoading === 'initializing' ? (
     <TableSkeleton />
   ) : (
     <div css={styles.grid}>

@@ -1,7 +1,7 @@
 import { Button, Table } from '@shared/components';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { flex } from 'styles/utils.flex.styles';
-import { useGetOrganizations } from '../hooks/useGetOrganizations';
+import { useGetOrganizations } from '@modules/organization';
 
 const headers: TableHeader[] = [
   {
@@ -67,12 +67,8 @@ export const mapOrganizationsToRows = (
 };
 
 export const AllOrganizationsTable: FC = () => {
-  const { getOrganizations, loading, organizations } = useGetOrganizations();
-
-  useEffect(() => {
-    getOrganizations();
-  }, []);
+  const { organizations, isLoading } = useGetOrganizations();
 
   const rows = mapOrganizationsToRows(organizations);
-  return <Table isLoading={loading} headers={headers} rows={rows} />;
+  return <Table isLoading={isLoading} headers={headers} rows={rows} />;
 };

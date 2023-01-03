@@ -24,6 +24,7 @@ export enum StatusResponseCode {
   UpdateNode,
   DeleteNode,
   GetOrganizations,
+  GetOrganizationMembers,
   CreateUser,
   GetUser,
   UpdateUser,
@@ -36,9 +37,59 @@ export enum StatusResponseCode {
   UpdateOrganization,
   RestoreOrganization,
   SaveKeyFiles,
+  InviteOrgMember,
+  AcceptInvitation,
+  DeclineInvitation,
+  ReceivedInvites,
+  PendingInvites,
 }
 
 export class StatusResponseFactory {
+  static pendingInvitations(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.PendingInvites,
+        'Pending invites error',
+        err,
+        source,
+    );
+  }
+
+  static receivedInvitations(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.ReceivedInvites,
+        'Received invites error',
+        err,
+        source,
+    );
+  }
+
+  static inviteOrgMember(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.InviteOrgMember,
+        'Invite org member error',
+        err,
+        source,
+    );
+  }
+
+  static acceptInvitation(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.AcceptInvitation,
+        'accept invitation error',
+        err,
+        source,
+    );
+  }
+
+  static declineInvitation(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+        StatusResponseCode.DeclineInvitation,
+        'decline invitation error',
+        err,
+        source,
+    );
+  }
+
   static loginResponse(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
       StatusResponseCode.Login,
@@ -176,28 +227,28 @@ export class StatusResponseFactory {
 
   static updateNodeResponse(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.UpdateNode,
-        'Error updating node',
-        err,
-        source,
+      StatusResponseCode.UpdateNode,
+      'Error updating node',
+      err,
+      source,
     );
   }
 
   static deleteNodeResponse(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.DeleteNode,
-        'Error deleting node',
-        err,
-        source,
+      StatusResponseCode.DeleteNode,
+      'Error deleting node',
+      err,
+      source,
     );
   }
 
   static saveKeyfileResponse(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.SaveKeyFiles,
-        'Error saving key files',
-        err,
-        source,
+      StatusResponseCode.SaveKeyFiles,
+      'Error saving key files',
+      err,
+      source,
     );
   }
 
@@ -208,6 +259,18 @@ export class StatusResponseFactory {
     return StatusResponseFactory.createResponse(
       StatusResponseCode.GetOrganizations,
       'Error retrieving organizations',
+      err,
+      source,
+    );
+  }
+
+  static getOrganizationMembersResponse(
+    err: any,
+    source: StatusSource,
+  ): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.GetOrganizationMembers,
+      'Error retrieving organization members',
       err,
       source,
     );

@@ -1,6 +1,6 @@
 import { useIdentityRepository } from '@modules/auth';
 import { apiClient } from '@modules/client';
-import { isStatusResponse } from '@modules/organizations';
+import { isStatusResponse } from '@modules/organization';
 import { useRecoilState } from 'recoil';
 import { hostsAtoms } from '../store/hostAtoms';
 import { useProvisionKeysRepository } from './useProvisionKeysRepository';

@@ -1,6 +1,6 @@
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
-import { isStatusResponse } from '@modules/organizations';
+import { isStatusResponse } from '@modules/organization';
 import { useRecoilState } from 'recoil';
 import { hostsAtoms } from '../store/hostAtoms';
 
