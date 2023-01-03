@@ -58,7 +58,7 @@ const organizationInvitations = atom<any[]>({
   default: [],
 });
 
-export const organisationAtoms = {
+export const organizationAtoms = {
   selectedOrganization,
   organizationLoadingState,
   organizationsLoadingState,

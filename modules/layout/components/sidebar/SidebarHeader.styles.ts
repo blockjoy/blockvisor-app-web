@@ -22,4 +22,7 @@ export const styles = {
     place-items: center;
     width: 50px;
   `,
+  logo: css`
+    min-width: 26px;
+  `,
 };

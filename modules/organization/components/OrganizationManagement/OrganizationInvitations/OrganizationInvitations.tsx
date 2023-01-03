@@ -1,5 +1,5 @@
 import { useIdentityRepository } from '@modules/auth';
-import { organisationAtoms, useInvitations } from '@modules/organization';
+import { organizationAtoms, useInvitations } from '@modules/organization';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './OrganizationInvitations.styles';
@@ -9,7 +9,7 @@ export const OrganizationInvitations = () => {
   const userId = repository?.getIdentity()?.id;
 
   const organizationInvitations = useRecoilValue(
-    organisationAtoms.organizationInvitations,
+    organizationAtoms.organizationInvitations,
   );
 
   const { getInvitations } = useInvitations();

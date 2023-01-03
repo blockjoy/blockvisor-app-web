@@ -1,13 +1,13 @@
 import { apiClient } from '@modules/client';
 import { useRecoilState } from 'recoil';
-import { organisationAtoms } from '../store/organizationAtoms';
+import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
-    organisationAtoms.allOrganizations,
+    organizationAtoms.allOrganizations,
   );
   const [isLoading, setIsLoading] = useRecoilState(
-    organisationAtoms.organizationsLoadingState,
+    organizationAtoms.organizationsLoadingState,
   );
 
   const getOrganizations = async () => {

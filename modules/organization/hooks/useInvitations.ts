@@ -1,10 +1,10 @@
 import { apiClient } from '@modules/client';
 import { useRecoilState } from 'recoil';
-import { organisationAtoms } from '../store/organizationAtoms';
+import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useInvitations() {
   const [, setInvitations] = useRecoilState(
-    organisationAtoms.organizationInvitations,
+    organizationAtoms.organizationInvitations,
   );
 
   const getInvitations = async (id: string) => {

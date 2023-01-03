@@ -3,11 +3,11 @@ import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
 import { useRecoilState } from 'recoil';
-import { organisationAtoms } from '../store/organizationAtoms';
+import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useUpdateOrganization() {
   const [loadingState, setLoadingState] = useRecoilState(
-    organisationAtoms.organizationLoadingState,
+    organizationAtoms.organizationLoadingState,
   );
 
   const updateOrganization = async (id: string, name: string) => {

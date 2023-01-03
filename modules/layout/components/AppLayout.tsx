@@ -4,9 +4,10 @@ import { Burger } from './burger/Burger';
 import { NodeLauncherFab } from './nodeLauncherFab/NodeLauncherFab';
 import Page from './page/Page';
 import { PrivateRoute } from '@modules/auth';
-import { OrganizationAdd } from '@modules/organization';
+import { OrganizationAdd, useGetOrganizations } from '@modules/organization';
 import { NodeWizard } from '@modules/node';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import { useEffect } from 'react';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -14,6 +15,12 @@ type LayoutType = {
 };
 
 export const AppLayout: React.FC<LayoutType> = ({ children, isPageFlex }) => {
+  const { getOrganizations } = useGetOrganizations();
+
+  useEffect(() => {
+    getOrganizations();
+  }, []);
+
   return (
     <>
       <PrivateRoute>
