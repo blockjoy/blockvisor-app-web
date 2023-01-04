@@ -36,7 +36,7 @@ export const OrganizationView = () => {
 
   return (
     <>
-      <PageTitle title="Organization Details"></PageTitle>
+      <PageTitle title="Organization Management"></PageTitle>
       <PageSection>
         <BackButton />
         {isLoading === 'initializing' ? (
