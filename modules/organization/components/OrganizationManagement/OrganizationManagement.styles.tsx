@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   wrapper: css`
@@ -10,5 +11,9 @@ export const styles = {
     flex: 1 1 auto;
     display: flex;
     padding: 20px 30px;
+
+    @media ${breakpoints.toXlrg} {
+      flex-direction: column;
+    }
   `,
 };

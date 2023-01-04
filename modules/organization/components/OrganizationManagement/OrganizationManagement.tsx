@@ -14,7 +14,7 @@ export const OrganizationManagement = () => {
   return (
     <div css={styles.wrapper}>
       <PageTitle
-        title="Organizations"
+        title="Organization Management"
         actionOnClick={handleCreateClicked}
       ></PageTitle>
       <div css={styles.contentWrapper}>

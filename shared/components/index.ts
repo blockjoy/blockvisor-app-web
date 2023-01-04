@@ -65,3 +65,4 @@ export * from './Portal/Portal';
 export * from './ProfileBubble/ProfileBubble';
 export * from './NodeTypeConfigLabel/NodeTypeConfigLabel';
 export * from './OrganizationPicker/OrganizationPicker';
+export * from './Badge/Badge';

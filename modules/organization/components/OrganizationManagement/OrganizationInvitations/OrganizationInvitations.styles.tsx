@@ -3,49 +3,22 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
-    padding: 20px;
-    min-width: 480px;
+    padding: 20px 0;
   `,
-  tabHeader: (theme: ITheme) => css`
+  header: (theme: ITheme) => css`
     display: flex;
+    gap: 10px;
+    padding: 0 20px;
+    margin-bottom: 30px;
+    color: ${theme.colorDefault};
+  `,
+  item: (theme: ITheme) => css`
+    padding: 0 20px 20px;
     border-bottom: 1px solid ${theme.colorBorder};
-    margin-bottom: 20px;
   `,
-  tabButton: (theme: ITheme) => css`
-    display: flex;
-    height: 44px;
-    background: transparent;
-    color: ${theme.colorLabel};
-    border: 0;
-    padding: 4px 20px 0;
-    border-bottom: 4px solid transparent;
-    cursor: pointer;
-
-    :hover {
-      color: ${theme.colorDefault};
-    }
-  `,
-  tabButtonActive: (theme: ITheme) => css`
-    color: ${theme.colorText};
-    border-bottom-color: ${theme.colorDefault};
-    cursor: default;
-
-    :hover {
-      color: ${theme.colorText};
-      border-bottom-color: ${theme.colorDefault};
-    }
-  `,
-  tabWrapper: css`
-    position: relative;
-    overflow: hidden;
-    height: 400px;
-  `,
-  tabInner: css`
-    position: absolute;
-    display: flex;
-    transition: 0.5s;
-  `,
-  tab: css`
-    width: 440px;
+  buttons: css`
+    display: grid;
+    grid-template-columns: repeat(2, 90px);
+    gap: 8px;
   `,
 };

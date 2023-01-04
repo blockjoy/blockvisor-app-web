@@ -79,6 +79,11 @@ export const styles = {
   `,
 
   linkText: css`
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     line-height: 1;
   `,
   linkTextHidden: css`

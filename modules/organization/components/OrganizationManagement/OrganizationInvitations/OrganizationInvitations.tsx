@@ -1,7 +1,9 @@
 import { useIdentityRepository } from '@modules/auth';
 import { organizationAtoms, useInvitations } from '@modules/organization';
+import { Badge, Button } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvitations.styles';
 
 const tabs = [
@@ -16,57 +18,32 @@ const tabs = [
 ];
 
 export const OrganizationInvitations = () => {
-  const repository = useIdentityRepository();
-  const userId = repository?.getIdentity()?.id;
-
-  const [activeTab, setActiveTab] = useState<number>(0);
-
-  const organizationSentInvitations = useRecoilValue(
-    organizationAtoms.organizationSentInvitations,
-  );
-
-  const organizationReceivedInvitations = useRecoilValue(
+  const invitations = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
 
-  const { getReceivedInvitations, getSentInvitations } = useInvitations();
-
-  const handleTabClicked = (index: number) => {
-    setActiveTab(index);
-  };
-
-  useEffect(() => {
-    getSentInvitations(userId!);
-    getReceivedInvitations(userId!);
-  }, []);
-
   return (
     <div css={styles.wrapper}>
-      <div css={styles.tabHeader}>
-        {tabs?.map((tab, index) => (
-          <button
-            key={tab.name}
-            onClick={() => handleTabClicked(index)}
-            css={[
-              styles.tabButton,
-              index === activeTab && styles.tabButtonActive,
-            ]}
-          >
-            {tab.name}
-          </button>
+      <header css={styles.header}>
+        Invitations
+        {invitations?.length && <Badge>{invitations?.length}</Badge>}
+      </header>
+      <ul>
+        {invitations?.map((invite) => (
+          <li css={styles.item}>
+            <div css={[spacing.bottom.medium]}>
+              <b>{invite.inviterName || 'Unknown'}</b> invited you to join{' '}
+              <b>{invite.inviterOrganization || 'Unknown'} organization</b>
+            </div>
+            <div css={styles.buttons}>
+              <Button size="medium">Accept</Button>
+              <Button size="medium" style="outline">
+                Decline
+              </Button>
+            </div>
+          </li>
         ))}
-      </div>
-      <div css={styles.tabWrapper}>
-        <div
-          css={styles.tabInner}
-          style={{
-            translate: `${activeTab === 0 ? 0 : `-${activeTab * 440}px`}`,
-          }}
-        >
-          <div css={styles.tab}>Sent</div>
-          <div css={styles.tab}>Received</div>
-        </div>
-      </div>
+      </ul>
     </div>
   );
 };

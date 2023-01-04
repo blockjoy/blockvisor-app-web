@@ -20,15 +20,15 @@ export const OrganizationsList = () => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={[spacing.bottom.large]}>Organizations</div>
-      <small css={[spacing.top.mediumSmall, typo.microlabel, typo.uppercase]}>
+      <header css={[styles.header, spacing.bottom.large]}>Organizations</header>
+      {/* <small css={[spacing.top.mediumSmall, typo.microlabel, typo.uppercase]}>
         <span css={colors.text2}>
           <PersonIcon />{' '}
         </span>
         <span css={[spacing.left.small, colors.text4]}>
           {memberCount} users in {orgCount} organizations
         </span>
-      </small>
+      </small> */}
       <section css={spacing.top.large}>
         <AllOrganizationsTable />
       </section>
