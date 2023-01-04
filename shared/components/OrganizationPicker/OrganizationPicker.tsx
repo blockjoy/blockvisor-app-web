@@ -61,7 +61,7 @@ export const OrganizationPicker: React.FC<Props> = ({
         value={value}
         onChange={handleChange}
       >
-        {allOrganizations.map((org) => (
+        {allOrganizations?.map((org) => (
           <option key={org.id} value={org.id}>
             {org.name}
           </option>
