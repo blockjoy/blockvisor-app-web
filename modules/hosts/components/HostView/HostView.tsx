@@ -174,7 +174,7 @@ export function Host() {
         <h2 css={[typo.large, spacing.bottom.large]}>Nodes</h2>
         <Table
           isSorting={false}
-          isLoading={loading}
+          isLoading={'loading'}
           headers={[
             {
               name: 'Name',

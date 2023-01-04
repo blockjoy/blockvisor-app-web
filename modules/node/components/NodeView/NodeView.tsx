@@ -27,7 +27,7 @@ export function NodeView() {
 
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id);
-  const handleDelete = () => deleteNode(id);
+  const handleDelete = async () => deleteNode(id);
 
   useEffect(() => {
     window.scrollTo(0, 0);

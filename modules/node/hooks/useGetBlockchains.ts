@@ -1,5 +1,5 @@
 import { apiClient } from '@modules/client';
-import { isStatusResponse } from '@modules/organizations';
+import { isStatusResponse } from '@modules/organization';
 import { delay } from '@shared/utils/delay';
 import { useRecoilState } from 'recoil';
 import { blockchainsAtoms } from '../store/blockchains';
@@ -15,6 +15,9 @@ export function useGetBlockchains() {
   const getBlockchains = async () => {
     setLoadingState('loading');
     const response = await apiClient.getBlockchains();
+
+    console.log('blockchains', response);
+
     if (response && isStatusResponse(response)) {
       setLoadingState('finished');
       setBlockchains([]);
@@ -23,8 +26,6 @@ export function useGetBlockchains() {
     } else {
       await delay(1000);
       setBlockchains(response ?? []);
-
-      console.log('blockchains', response);
       setLoadingState('finished');
     }
   };

@@ -11,6 +11,7 @@ type Hook = {
   createNode: (
     args: CreateNodeParams,
     onSuccess: (args0?: any) => void,
+    onError: () => void,
   ) => void;
   isLoading: boolean;
   blockchainList: any[];
@@ -18,14 +19,9 @@ type Hook = {
 };
 
 export const useNodeAdd = (): Hook => {
-  const [layout, setLayout] = useRecoilState(layoutState);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [blockchainList, setBlockchainList] = useState([]);
-
   const [hostList, setHostList] = useState([]);
-
   const repository = useIdentityRepository();
 
   const loadLookups = async () => {
@@ -49,6 +45,8 @@ export const useNodeAdd = (): Hook => {
 
     const blockchains: any = await apiClient.getBlockchains();
 
+    console.log('blockchains', blockchains);
+
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id,
       label: b.name,
@@ -56,17 +54,17 @@ export const useNodeAdd = (): Hook => {
     }));
 
     setBlockchainList(mappedBlockchains);
-
     setIsLoading(false);
   };
 
   const createNode = async (
     params: CreateNodeParams,
     onSuccess: (args0?: string) => void,
+    onError: () => void,
   ) => {
-    console.log('params', params);
-
     setIsLoading(true);
+
+    console.log('createNode', params);
 
     const hostId = params.host;
 
@@ -77,26 +75,60 @@ export const useNodeAdd = (): Hook => {
 
     node.setBlockchainId(blockchain_id);
     node.setOrgId(orgId);
-    node.setType(`{ "id": ${params.nodeType.toString()}, "properties": [] }`);
+    // TODO: Create type data based on the type definitions in
+    // https://github.com/blockjoy/blockvisor-api/blob/24c83705064a2331f5f2c4643f34553cbffedea3/conf/node_types.schema.ts#L98
+
+    // TODO: @joe/@dragan: JSON format has changed, plz use the following:
+    /**
+     * pub struct NodePropertyValue {
+     *     name: String,
+     *     label: String,
+     *     description: String,
+     *     ui_type: String,
+     *     disabled: bool,
+     *     required: bool,
+     *     value: Option<String>,
+     * }
+     */
+    const nodeTypeString = JSON.stringify({
+      id: params.nodeType,
+      properties: params.nodeTypeProperties.map((property) => ({
+        ...property,
+        default: property.default === null ? 'null' : property.default,
+        value: property.value?.toString() || 'null',
+        description: '',
+        label: '',
+      })),
+    });
+
+    console.log({
+      id: params.nodeType,
+      properties: params.nodeTypeProperties.map((property) => ({
+        ...property,
+        default: property.default === null ? 'null' : property.default,
+        value: property.value === null ? 'null' : property.value,
+        description: '',
+        label: '',
+      })),
+    });
+
+    node.setType(nodeTypeString);
     node.setHostId(hostId);
 
-    // TODO: MOVE THIS TO UPDATE NODE
-    // const dT = new DataTransfer();
-    // params.validatorKeys.forEach(async (key) => {
-    //   const data = await key.text();
-    //   dT.items.add(data, key.type);
-    // });
+    try {
+      const createdNode: any = await apiClient.createNode(
+        node,
+        params.key_files,
+      );
+      console.log('createNode', createdNode);
+      const nodeId = createdNode.messagesList[0];
 
-    const createdNode: any = await apiClient.createNode(node);
-
-    console.log('createdNode', createNode);
-
-    const nodeId = createdNode.messagesList[0];
-
-    toast.success('Node Created');
-    setIsLoading(false);
-    setLayout(undefined);
-    onSuccess(nodeId);
+      toast.success('Node Created');
+      setIsLoading(false);
+      onSuccess(nodeId);
+    } catch (err) {
+      onError();
+    }
   };
 
   return {

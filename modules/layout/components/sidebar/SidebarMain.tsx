@@ -1,26 +1,31 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { styles } from './SidebarMain.styles';
-import { ProfileBubble } from '@shared/components';
-import IconHosts from '@public/assets/icons/host-12.svg';
+import { Badge, ProfileBubble } from '@shared/components';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
 import IconSupport from '@public/assets/icons/chat-12.svg';
+import IconRocket from '@public/assets/icons/rocket-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { organizationAtoms } from '@modules/organization';
 
 const blocks = [
   {
     title: 'BLOCKVISOR',
     items: [
       { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
-      // { name: 'Dashboard', path: '/dashboard', icon: <IconDashboard /> },
-      // { name: 'Hosts', path: '/hosts', icon: <IconHosts /> },
+      {
+        name: 'Launch Node',
+        path: '/launch-node',
+        icon: <IconRocket />,
+      },
       {
         name: 'Organizations',
         path: '/organizations',
         icon: <IconOrganizations />,
+        isOrganizations: true,
       },
       {
         name: 'Profile',
@@ -34,22 +39,14 @@ const blocks = [
       },
     ],
   },
-  // {
-  //   title: "BROADCASTS",
-  //   items: [
-  //     { name: "Automation", path: "/automation", icon: "sync" },
-  //   ]
-  // },
-  // {
-  //   title: 'ADMIN',
-  //   items: [
-
-  //   ],
-  // },
 ];
 
 export default () => {
   const [layout, setLayout] = useRecoilState(layoutState);
+
+  const invitationCount = useRecoilValue(
+    organizationAtoms.organizationReceivedInvitations,
+  )?.length;
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
@@ -63,9 +60,6 @@ export default () => {
       <div>
         {blocks.map((block) => (
           <div key={block.title}>
-            {/* {layout === 'sidebar' && (
-              <header css={[styles.header]}>{block.title}</header>
-            )} */}
             <ul css={[styles.list]}>
               {block.items.map((item) => (
                 <li key={item.name}>
@@ -100,6 +94,10 @@ export default () => {
                           ]}
                         >
                           {item.name}
+
+                          {Boolean(invitationCount) && item.isOrganizations && (
+                            <Badge>{invitationCount}</Badge>
+                          )}
                         </span>
                       </span>
                     </a>

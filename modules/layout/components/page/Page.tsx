@@ -5,14 +5,19 @@ import { styles } from './Page.styles';
 
 type LayoutType = {
   children: React.ReactNode;
+  isFlex?: boolean;
 };
 
-const Page: React.FC<LayoutType> = ({ children }) => {
+const Page: React.FC<LayoutType> = ({ children, isFlex }) => {
   const layout = useRecoilValue(layoutState);
 
   return (
     <div
-      css={[styles.wrapper, layout === 'sidebar' && styles.wrapperSidebarOpen]}
+      css={[
+        styles.wrapper,
+        isFlex && styles.wrapperFlex,
+        layout === 'sidebar' && styles.wrapperSidebarOpen,
+      ]}
     >
       {children}
     </div>

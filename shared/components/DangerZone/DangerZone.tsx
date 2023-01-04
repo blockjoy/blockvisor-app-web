@@ -8,7 +8,7 @@ import { styles } from './DangerZone.styles';
 import { FormProvider, useForm } from 'react-hook-form';
 
 interface Props {
-  handleDelete: VoidFunction;
+  handleDelete: () => Promise<void>;
   elementName: string | 'Node' | 'Host';
   elementNameToCompare: string;
 }
@@ -18,7 +18,7 @@ type DeleteForm = {
 };
 
 const redirects = {
-  Node: '/dashboard',
+  Node: '/nodes',
   Host: '/hosts',
   Organization: '/organizations',
 };
@@ -41,9 +41,9 @@ export const DangerZone: FC<Props> = ({
 
   const handleRedirect = () => router.push(redirects[elementName]);
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
-    handleDelete();
+    await handleDelete();
     handleRedirect();
   };
 

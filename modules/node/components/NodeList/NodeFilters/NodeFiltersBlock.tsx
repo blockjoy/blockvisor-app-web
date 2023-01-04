@@ -17,11 +17,12 @@ import IconMinus from '@public/assets/icons/minus-12.svg';
 type FilterBlock = {
   name: string;
   isOpen: boolean;
+  isDisabled: boolean;
   filterCount: number;
   filterList: FilterItem[];
   setFilterList: SetterOrUpdater<FilterItem[]>;
   onPlusMinusClicked: (filterName: string, args1: boolean) => void;
-  onFilterBlockClicked: (args0: string) => void;
+  onFilterBlockClicked: (name: string) => void;
   onFilterChanged: (
     e: ChangeEvent<HTMLInputElement>,
     list: FilterItem[],
@@ -32,6 +33,7 @@ type FilterBlock = {
 export const NodeFiltersBlock: FC<FilterBlock> = ({
   name,
   isOpen,
+  isDisabled,
   filterCount,
   filterList,
   onPlusMinusClicked,
@@ -39,20 +41,29 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
   onFilterChanged,
   setFilterList,
 }) => {
-  const handleMinusClicked = (e: MouseEvent<HTMLAnchorElement>) => {
-    e.stopPropagation();
-    onPlusMinusClicked(name, isOpen);
+  const handleMinusClicked = (e: MouseEvent<HTMLLabelElement>) => {
+    if (!isDisabled) {
+      e.stopPropagation();
+      onPlusMinusClicked(name, isOpen);
+    }
+  };
+
+  const handleFilterBlockClicked = (name: string) => {
+    if (!isDisabled) {
+      onFilterBlockClicked(name);
+    }
   };
 
   return (
-    <div css={styles.filterBlock} onClick={() => onFilterBlockClicked(name)}>
-      <label css={styles.labelHeader}>
+    <div
+      css={[styles.filterBlock, isDisabled && styles.filterBlockDisabled]}
+      onClick={() => handleFilterBlockClicked(name)}
+    >
+      <label css={styles.labelHeader} onClick={handleMinusClicked}>
         <span css={styles.labelText}>
           {name} {filterCount ? `(${filterCount})` : ''}
         </span>
-        <a css={styles.labelIcon} onClick={handleMinusClicked}>
-          {isOpen ? <IconMinus /> : <IconPlus />}
-        </a>
+        <a css={styles.labelIcon}>{isOpen ? <IconMinus /> : <IconPlus />}</a>
       </label>
       <div
         style={{ padding: !isOpen && !filterCount ? '0' : '' }}
@@ -62,7 +73,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
           ? filterList
               ?.filter((item) => item.id)
               ?.map((item) => (
-                <div css={styles.checkboxRow}>
+                <div key={item.id} css={styles.checkboxRow}>
                   <Checkbox
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       e.stopPropagation();
@@ -78,8 +89,10 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
           : filterList
               .filter((item) => item.isChecked)
               .map((item) => (
-                <div css={styles.selectedFilterRow}>
-                  <IconCheck />
+                <div key={item.id} css={styles.selectedFilterRow}>
+                  <div css={styles.checkedIcon}>
+                    <IconCheck />
+                  </div>
                   {item.name}
                 </div>
               ))}

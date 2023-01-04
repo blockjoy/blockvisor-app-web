@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 
 const base = css`
   margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
   width: 100%;
 `;
 

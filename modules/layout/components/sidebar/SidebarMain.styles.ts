@@ -46,11 +46,11 @@ export const styles = {
   linkInner: (theme: ITheme) => css`
     flex: 1 1 auto;
     width: 100%;
-    padding: 0 10px;
+    padding: 0 8px;
     height: 44px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     color: ${theme.colorText};
     font-size: 13px;
     border-radius: 8px;
@@ -79,6 +79,11 @@ export const styles = {
   `,
 
   linkText: css`
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     line-height: 1;
   `,
   linkTextHidden: css`
@@ -89,6 +94,7 @@ export const styles = {
       padding: 6px 10px;
       font-size: 12px;
       border-radius: 4px;
+      white-space: nowrap;
       opacity: 0;
       visibility: hidden;
     }
@@ -96,11 +102,15 @@ export const styles = {
   linkIcon: css`
     display: grid;
     place-items: center;
-    min-width: 20px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   `,
   linkIconSidebarOpen: css`
     @media ${breakpoints.fromXLrg} {
-      scale: 1.15;
+      scale: 1.05;
     }
   `,
 };

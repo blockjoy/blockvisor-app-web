@@ -10,6 +10,13 @@ export const styles = {
     border: 1px solid ${theme.colorBorder};
     cursor: pointer;
   `,
+  filterBlockDisabled: css`
+    cursor: not-allowed;
+
+    label {
+      cursor: not-allowed;
+    }
+  `,
   labelHeader: (theme: ITheme) => css`
     display: flex;
     align-items: center;
@@ -66,20 +73,8 @@ export const styles = {
       fill: ${theme.colorPrimary};
     }
   `,
-  showMore: (theme: ITheme) => css`
-    background: transparent;
-    padding: 0;
-    border: 0;
-    cursor: pointer;
-    display: block;
-    color: ${theme.colorLabel};
-    text-decoration: underline;
-    font-size: 13px;
-    margin-top: 10px;
-    display: block;
-
-    :hover {
-      color: ${theme.colorDefault};
-    }
+  checkedIcon: css`
+    width: 18px;
+    height: 18px;
   `,
 };

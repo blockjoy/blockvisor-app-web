@@ -212,7 +212,6 @@ export const globalStyles = css`
   }
 
   body {
-    min-height: 100vh;
     color: var(--color-text);
     font-family: var(--font-family-primary);
 
@@ -230,6 +229,11 @@ export const globalStyles = css`
     box-sizing: inherit;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  body,
+  #__next {
+    min-height: 100vh;
   }
 
   a {

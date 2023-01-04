@@ -65,7 +65,7 @@ export function SidebarFooter() {
           ]}
           className="sidebar-copy"
         >
-          BlockVisor is a Blockjoy product. All rights reserved.
+          Dashboard created by BlockJoy. All rights reserved.
         </p>
       </div>
     </footer>

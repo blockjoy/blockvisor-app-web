@@ -1,6 +1,9 @@
 import { Routes, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { useDefaultOrganization } from '@modules/organizations';
+import {
+  useDefaultOrganization,
+  useGetOrganizations,
+} from '@modules/organization';
 import { Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
@@ -20,10 +23,13 @@ type LoginForm = {
 };
 
 export function LoginForm() {
+  const { getOrganizations } = useGetOrganizations();
+
   const router = useRouter();
   const signIn = useSignIn();
   const form = useForm<LoginForm>();
   const [loading, setIsLoading] = useState(false);
+
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getDefaultOrganization } = useDefaultOrganization();
@@ -39,9 +45,11 @@ export function LoginForm() {
     try {
       await signIn(email, password);
       await getDefaultOrganization();
-
+      await getOrganizations();
       await delay(1000);
+
       setIsLoading(false);
+
       router.push('/nodes');
     } catch (error) {
       if (error instanceof ApplicationError) {

@@ -1,10 +1,10 @@
+import { isEqual } from 'lodash';
 import { styles } from './nodeFilters.styles';
 import { styles as blockStyles } from './NodeFiltersBlock.styles';
 import { Checkbox } from '@shared/components';
 import { SetterOrUpdater, useRecoilState } from 'recoil';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
-import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 import { apiClient } from '@modules/client';
@@ -13,11 +13,45 @@ import IconRefresh from '@public/assets/icons/refresh-12.svg';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { nodeStatusList } from '@shared/constants/lookups';
 
-export const NodeFilters = ({
-  loadNodes,
-}: {
-  loadNodes: (filters?: FilterCriteria) => void;
-}) => {
+import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
+import { InitialFilter, InitialQueryParams } from '@modules/node/ui/NodeUIHelpers';
+import { buildParams, loadPersistedFilters } from '@modules/node/helpers/NodeHelpers';
+
+export const NodeFilters = () => {
+  const nodeUIContext = useNodeUIContext();
+  const nodeUIProps = useMemo(() => {
+    return {
+      setQueryParams: nodeUIContext.setQueryParams,
+      queryParams: nodeUIContext.queryParams,
+    };
+  }, [nodeUIContext]);
+
+  const prepareFilter = (queryParams: InitialQueryParams, values: InitialFilter) => {
+    const { blockchain, node_status, node_type } = values;
+    const newQueryParams = { ...queryParams };
+
+    const filter : InitialFilter = {
+      blockchain: [],
+      node_type: [],
+      node_status: [],
+    }
+
+    filter.blockchain = blockchain !== undefined ? blockchain : [];
+    filter.node_type = node_type !== undefined ? node_type : [];
+    filter.node_status = node_status !== undefined ? node_status : [];
+
+    newQueryParams.filter = filter;
+    return newQueryParams;
+  };
+
+  const applyFilter = (values: any) => {
+    const newQueryParams = prepareFilter(nodeUIProps.queryParams, values);
+    if (!isEqual(newQueryParams, nodeUIProps.queryParams)) {
+      newQueryParams.pagination.current_page = 1;
+      nodeUIProps.setQueryParams(newQueryParams);
+    }
+  };
+
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
@@ -82,22 +116,19 @@ export const NodeFilters = ({
     setFiltersHealth(null);
 
     let filtersBlockchainCopy = filtersBlockchain.map((item) => ({
-      id: item.id,
-      name: item.name,
+      ...item,
       isChecked: false,
     }));
     setFiltersBlockchain(filtersBlockchainCopy);
 
     let filtersStatusCopy = filtersStatus.map((item) => ({
-      id: item.id,
-      name: item.name,
+      ...item,
       isChecked: false,
     }));
     setFiltersStatus(filtersStatusCopy);
 
     let filtersTypeCopy = filtersType.map((item) => ({
-      id: item.id,
-      name: item.name,
+      ...item,
       isChecked: false,
     }));
     setFiltersType(filtersTypeCopy);
@@ -105,69 +136,14 @@ export const NodeFilters = ({
     localStorage.removeItem('nodeFilters');
 
     const params = buildParams([], [], []);
-
-    refreshNodeList(params);
-  };
-
-  const refreshNodeList = (params?: any) => {
-    loadNodes(params);
-  };
-
-  const buildParams = (
-    blockchain: FilterItem[],
-    type: FilterItem[],
-    status: FilterItem[],
-  ) => {
-    const blockchainFilters: string[] = blockchain
-      .filter((item) => item.isChecked)
-      .map((item) => item.id!);
-
-    const typeFilters: string[] = type
-      .filter((item) => item.isChecked)
-      .map((item) => item.id!);
-
-    const statusFilters: string[] = status
-      .filter((item) => item.isChecked)
-      .map((item) => item.id!);
-
-    console.log('statusFilters', statusFilters);
-
-    const params: FilterCriteria = {
-      blockchain: blockchainFilters?.length ? blockchainFilters : undefined,
-      node_type: typeFilters?.length ? typeFilters : undefined,
-      node_status: statusFilters?.length ? statusFilters : undefined,
-    };
-
-    return params;
-  };
-
-  const loadFiltersFromLocalStorage = async () => {
-    if (localStorage.getItem('nodeFilters')) {
-      const localStorageFilters = JSON.parse(
-        localStorage.getItem('nodeFilters')!,
-      );
-
-      const blockchain: FilterItem[] = localStorageFilters.blockchain;
-      const status: FilterItem[] = localStorageFilters.status;
-      const type: FilterItem[] = localStorageFilters.type;
-      const health = localStorageFilters.health;
-
-      return {
-        blockchain,
-        status,
-        type,
-        health,
-      };
-    } else {
-      return null;
-    }
+    applyFilter(params);
   };
 
   const handleUpdateClicked = () => {
-    setIsDirty(false);
-
     const params = buildParams(filtersBlockchain, filtersType, filtersStatus);
-    console.log('params', params);
+    applyFilter(params);
+
+    setIsDirty(false);
 
     const localStorageFilters = {
       blockchain: filtersBlockchain,
@@ -177,7 +153,6 @@ export const NodeFilters = ({
     };
 
     localStorage.setItem('nodeFilters', JSON.stringify(localStorageFilters));
-    refreshNodeList(params);
   };
 
   const handleHealthChanged = (health: string) => {
@@ -193,7 +168,12 @@ export const NodeFilters = ({
         name: item.name,
         // id: item.id.toString()!,
         id: item.name.toString().toLowerCase()!,
-        isChecked: health === 'online' ? item.isOnline : !item.isOnline,
+        isChecked:
+          filtersHealth === health
+            ? false
+            : health === 'online'
+            ? item.isOnline
+            : !item.isOnline,
         isOnline: item.isOnline,
       }));
 
@@ -225,18 +205,21 @@ export const NodeFilters = ({
   const filters = [
     {
       name: 'Blockchain',
+      isDisabled: false,
       filterCount: blockchainFilterCount,
       filterList: filtersBlockchain,
       setFilterList: setFiltersBlockchain,
     },
     {
       name: 'Status',
+      isDisabled: !!filtersHealth,
       filterCount: statusFilterCount,
       filterList: filtersStatus,
       setFilterList: setFiltersStatus,
     },
     {
       name: 'Type',
+      isDisabled: false,
       filterCount: typeFilterCount,
       filterList: filtersType,
       setFilterList: setFiltersType,
@@ -244,7 +227,7 @@ export const NodeFilters = ({
   ];
 
   useEffect(() => {
-    (async () => {
+    (() => {
       if (localStorage.getItem('nodeFiltersCollapsed') === 'false') {
         setIsFiltersCollapsed(false);
       } else {
@@ -253,24 +236,13 @@ export const NodeFilters = ({
 
       if (!localStorage.getItem('nodeFilters')) {
         loadLookups();
-        refreshNodeList();
       } else {
-        const localStorageFilters = await loadFiltersFromLocalStorage();
+        const localStorageFilters = loadPersistedFilters();
 
         setFiltersBlockchain(localStorageFilters?.blockchain!);
         setFiltersType(localStorageFilters?.type!);
         setFiltersStatus(localStorageFilters?.status!);
         setFiltersHealth(localStorageFilters?.health || '');
-
-        const params = buildParams(
-          localStorageFilters?.blockchain!,
-          localStorageFilters?.type!,
-          localStorageFilters?.status!,
-        );
-
-        console.log('params', params);
-
-        refreshNodeList(params);
       }
     })();
   }, []);
@@ -324,6 +296,7 @@ export const NodeFilters = ({
           </div>
           {filters.map((item) => (
             <NodeFiltersBlock
+              isDisabled={item.isDisabled}
               isOpen={item.name === openFilterName}
               onPlusMinusClicked={handlePlusMinusClicked}
               onFilterBlockClicked={handleFilterBlockClicked}

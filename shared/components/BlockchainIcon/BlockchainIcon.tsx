@@ -8,6 +8,7 @@ import { blockchainList } from '@shared/constants/lookups';
 
 type Props = {
   blockchainId?: string;
+  blockchainName?: string;
   hideTooltip?: boolean;
 };
 
@@ -41,14 +42,18 @@ const IconPocket = dynamic(
   () => import(`@public/assets/icons/blockchain-pocket-24.svg`),
 );
 
-export const BlockchainIcon: FC<Props> = ({ blockchainId, hideTooltip }) => {
-  const blockchainName = blockchainList.find(
-    (b) => b.value === blockchainId,
-  )?.label;
+export const BlockchainIcon: FC<Props> = ({
+  blockchainId,
+  blockchainName,
+  hideTooltip,
+}) => {
+  let name =
+    blockchainName ||
+    blockchainList.find((b) => b.value === blockchainId)?.label;
 
   let Component;
 
-  switch (blockchainName?.toLowerCase()) {
+  switch (name?.toLowerCase()) {
     case 'algorand':
       Component = IconAlgorand;
       break;
@@ -77,7 +82,7 @@ export const BlockchainIcon: FC<Props> = ({ blockchainId, hideTooltip }) => {
     <span css={styles.icon}>
       {!hideTooltip && (
         <span className="tooltip" css={styles.tooltip}>
-          {blockchainName}
+          {name}
         </span>
       )}
 

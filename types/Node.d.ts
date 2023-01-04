@@ -1,8 +1,15 @@
 type NodeTypeConfig = {
   name: string;
-  label: string;
   default: string;
-  type: string;
+  ui_type: string;
+  value?: any;
+  disabled?: boolean;
+  required: boolean;
+};
+
+type NodeFiles = {
+  name: string;
+  files: File[];
 };
 
 type BlockjoyNode = {
@@ -14,6 +21,7 @@ type BlockjoyNode = {
   status: number;
   blockchainId: string;
   details: { label: string; data: string }[];
+  nodeTypeConfigDetails: { label: string; data: string }[];
   nodeTypeConfig?: NodeTypeConfig[];
 };
 
@@ -21,10 +29,17 @@ type CreateNodeParams = {
   nodeType: number;
   host: string;
   blockchain: string;
+  nodeTypeProperties: NodeTypeConfig[];
+  key_files?: File[];
 };
 
 type UpdateNodeParams = {
   nodeId: string;
   mevBoost?: boolean | undefined;
   validatorKeys?: File[] | undefined;
+};
+
+type NodeMetrics = {
+  name: number;
+  value: string;
 };

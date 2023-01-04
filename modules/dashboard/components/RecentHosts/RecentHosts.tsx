@@ -50,7 +50,7 @@ export const RecentHosts = () => {
           },
         ]}
         rows={recentHosts}
-        isLoading={loading}
+        isLoading={'loading'}
         onRowClick={handleHostClicked}
       />
     </>

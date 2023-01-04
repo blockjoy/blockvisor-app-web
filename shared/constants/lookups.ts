@@ -13,6 +13,17 @@ export const nodeTypeList = [
   { id: 3, name: 'Validator' },
 ];
 
+export const nodeTypeConfigLabels = [
+  { name: 'keystore-file', value: 'Validator Key Upload' },
+  { name: 'keystore-file-1', value: 'Key Upload 1' },
+  { name: 'keystore-file-2', value: 'Key Upload 2' },
+  { name: 'keystore-file-3', value: 'Key Upload 3' },
+  { name: 'voting-pwd', value: 'Voting Password' },
+  { name: 'fee-recipient', value: 'Fee Recipient' },
+  { name: 'mev-boost', value: 'MEV Boost' },
+  { name: 'self-hosted', value: 'Self Hosted' },
+];
+
 /*
 Unknown = 0,
     Miner = 1,
@@ -39,6 +50,7 @@ export const blockchainList = [
 ];
 
 export const nodeStatusList = [
+  { id: 1, name: 'Provisioning', isOnline: true },
   { id: 2, name: 'Broadcasting', isOnline: true },
   { id: 3, name: 'Cancelled', isOnline: true },
   { id: 4, name: 'Delegating', isOnline: true },
