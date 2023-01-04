@@ -7,6 +7,7 @@ import PersonIcon from '@public/assets/icons/person-12.svg';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
+import { OrganizationPendingInvitations } from './OrganizationPendingInvitations/OrganizationPendingInvitations';
 
 export const mapOrganizationMembersToRows = (
   organizationMembers?: ClientOrganizationMember[],
@@ -131,6 +132,7 @@ export const Members = ({ id }: MembersProps) => {
           rows={rows}
         />
       )}
+      <OrganizationPendingInvitations orgId={id!} />
     </>
   );
 };
