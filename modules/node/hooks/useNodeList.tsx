@@ -77,7 +77,6 @@ export const useNodeList = (): Hook => {
 
     setHasMore(hasMoreNodes);
 
-    await delay(env.loadingDuration);
     setPreloadNodes(0);
 
     setIsLoading('finished');
