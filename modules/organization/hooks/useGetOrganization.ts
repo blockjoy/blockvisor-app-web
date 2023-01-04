@@ -1,6 +1,8 @@
 import { apiClient } from '@modules/client';
+import { delay } from '@shared/utils/delay';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
+import { env } from '@shared/constants/env';
 
 export function useGetOrganization() {
   const [organization, setOrganization] = useRecoilState(
@@ -18,6 +20,9 @@ export function useGetOrganization() {
       organizations.length > 0 ? organizations[0] : null;
 
     setOrganization(organization);
+
+    await delay(env.loadingDuration);
+
     setIsLoading('finished');
   };
 

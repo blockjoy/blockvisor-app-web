@@ -16,7 +16,7 @@ export const styles = {
     color: ${theme.colorText};
     height: 64px;
     padding-left: 8px;
-    padding-right: 10px;
+    padding-right: 24px;
     border: 0;
     width: 100%;
     overflow: hidden;
