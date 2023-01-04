@@ -41,7 +41,7 @@ export const OrganizationView = () => {
     try {
       await updateOrganization(organization?.id!, newOrganizationName);
       setIsSavingOrganization(false);
-      // await getOrganization(queryAsString(router.query.id));
+      await getOrganization(queryAsString(router.query.id));
       toast.success('Organization Updated');
     } catch (error) {
       setIsSavingOrganization(false);
