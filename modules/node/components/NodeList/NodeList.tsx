@@ -1,20 +1,24 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { useNodeMetrics } from '@modules/node/hooks/useNodeMetrics';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import { hostsAtoms } from '@modules/hosts/store/hostAtoms';
-import { PageTitle, Table, TableGrid } from '@shared/components';
+import {
+  EmptyColumn,
+  PageTitle,
+  Table,
+  TableGrid,
+} from '@shared/components';
 import { toRows, toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
-import { Button, useModal } from '@shared/index';
-import { GridCell } from '@shared/components/TableGrid/types/GridCell';
+import { useModal } from '@shared/index';
 import { NodeListPageHeader } from './NodeListPageHeader/NodeListPageHeader';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { resultsStatus } from '@modules/node/helpers/NodeHelpers';
 
 export const NodeList = () => {
   const nodeUIContext = useNodeUIContext();
@@ -33,14 +37,11 @@ export const NodeList = () => {
 
   const { openModal } = useModal();
 
-  const [nodeRows, setNodeRows] = useState<Row[]>();
-  const [nodeCells, setNodeCells] = useState<GridCell[]>();
-
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
   );
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
-  const hasHosts = !!useRecoilValue(hostsAtoms.hosts)?.length;
+  const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
 
   const handleListTypeChanged = (type: string) => {
     setActiveListType(type);
@@ -55,37 +56,9 @@ export const NodeList = () => {
       duration: 400,
     });
 
-  // useEffect(() => {
-  //   setActiveListType('grid');
-  // }, []);
-
-  const buildNodeList = (type: string) => {
-    if (type === 'table') {
-      const rows = toRows(nodeList);
-      setNodeRows(rows!);
-      setNodeCells(undefined);
-    } else {
-      const cells = toGrid(nodeList, handleNodeClick);
-      setNodeCells(cells!);
-      setNodeRows(undefined);
-    }
-  };
-
   useEffect(() => {
     loadMetrics();
   }, []);
-
-  useEffect(() => {
-    loadNodes(nodeUIProps.queryParams);
-  }, [nodeUIProps.queryParams]);
-
-  useEffect(() => {
-    buildNodeList(activeListType);
-  }, [nodeList]);
-
-  useEffect(() => {
-    buildNodeList(activeListType);
-  }, [activeListType]);
 
   useEffect(() => {
     animateEntry();
@@ -95,9 +68,13 @@ export const NodeList = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    loadNodes(nodeUIProps.queryParams);
+  }, [nodeUIProps.queryParams]);
+
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 300));
 
     const newCurrentPage = nodeUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
@@ -106,11 +83,15 @@ export const NodeList = () => {
       pagination: {
         ...nodeUIProps.queryParams.pagination,
         current_page: newCurrentPage,
-      },
+      }
     };
-
+    
     nodeUIProps.setQueryParams(newQueryParams);
-  };
+  }
+
+  const cells = toGrid(nodeList, handleNodeClick);
+  const rows = toRows(nodeList);
+  const { isFiltered, isEmpty } = resultsStatus(nodeList.length, nodeUIProps.queryParams.filter);
 
   return (
     <>
@@ -120,78 +101,71 @@ export const NodeList = () => {
           onTypeChanged={handleListTypeChanged}
         />
       </PageTitle>
-      {/* {!Boolean(nodeRows?.length) &&
-        !Boolean(nodeCells?.length) &&
-        finished ? (
-          <>
-            <EmptyColumn
-              id="js-nodes-empty"
-              title="No Nodes."
-              description="Add your nodes and hosts to get started with BlockVisor."
-            />
-          </>
-        ) : ( */}
       <div css={styles.wrapper}>
         <NodeFilters />
         <div css={styles.nodeListWrapper}>
           <NodeListHeader
-            totalRows={nodeRows?.length || nodeCells?.length || 0}
+            totalRows={nodeList?.length || 0}
             activeListType={activeListType}
             onTypeChanged={handleListTypeChanged}
           />
-          <InfiniteScroll
-            dataLength={nodeList.length}
-            next={updateQueryParams}
-            hasMore={hasMoreNodes}
-            style={{ overflow: 'hidden' }}
-            scrollThreshold={1}
-            loader={''}
-            // loader={isLoading === 'finished' && <div css={styles.loader}><Button size="small" onClick={updateQueryParams} style="outline">Show More</Button></div>}
-            endMessage={
-              isLoading !== 'initializing' && (
-                <div css={styles.endMessage}>- No more nodes -</div>
-              )
-            }
-          >
-            {activeListType === 'table' ? (
-              <Table
-                isLoading={isLoading}
-                headers={[
-                  {
-                    name: '',
-                    key: '1',
-                    width: '30px',
-                    minWidth: '30px',
-                    maxWidth: '30px',
-                  },
-                  {
-                    name: 'Name',
-                    key: '2',
-                    width: '300px',
-                  },
-                  {
-                    name: 'Added',
-                    key: '3',
-                    width: '200px',
-                  },
-                  {
-                    name: 'Status',
-                    key: '4',
-                    width: '200px',
-                  },
-                ]}
-                rows={nodeRows || []}
-                onRowClick={handleNodeClick}
+          {!Boolean(nodeList?.length) &&
+            isLoading === 'finished' ? (
+              <EmptyColumn
+                id="js-nodes-empty"
+                title="No Nodes."
+                description={isFiltered && isEmpty ? "Reset filters." : "Add your nodes and hosts to get started with BlockVisor"}
               />
-            ) : (
-              <div css={styles.gridWrapper}>
-                <TableGrid isLoading={isLoading} cells={nodeCells!} />
-              </div>
-            )}
-          </InfiniteScroll>
+          ) : (
+            <InfiniteScroll
+              dataLength={nodeList.length}
+              next={updateQueryParams}
+              hasMore={hasMoreNodes}
+              style={{ overflow: 'hidden' }}
+              scrollThreshold={1}
+              loader={''}
+              endMessage={''}
+            >
+              {activeListType === 'table' ? (
+                <Table
+                  isLoading={isLoading}
+                  headers={[
+                    {
+                      name: '',
+                      key: '1',
+                      width: '30px',
+                      minWidth: '30px',
+                      maxWidth: '30px',
+                    },
+                    {
+                      name: 'Name',
+                      key: '2',
+                      width: '300px',
+                    },
+                    {
+                      name: 'Added',
+                      key: '3',
+                      width: '200px',
+                    },
+                    {
+                      name: 'Status',
+                      key: '4',
+                      width: '200px',
+                    },
+                  ]}
+                  preload={preloadNodes}
+                  rows={rows}
+                  onRowClick={handleNodeClick}
+                />
+              ) : (
+                <div css={styles.gridWrapper}>
+                  <TableGrid isLoading={isLoading} cells={cells!} preload={preloadNodes} />
+                </div>
+              )}
+            </InfiniteScroll>
+          )}
         </div>
       </div>
-      {/* )} */}
     </>
   );
 };
