@@ -7,4 +7,7 @@ export const styles = {
     flex: 1 1 auto;
     border-right: 1px solid ${theme.colorBorder};
   `,
+  header: (theme: ITheme) => css`
+    color: ${theme.colorDefault};
+  `,
 };

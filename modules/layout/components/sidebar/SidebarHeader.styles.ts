@@ -8,7 +8,6 @@ export const styles = {
     justify-content: space-between;
     height: 72px;
     padding-left: 50px;
-    padding-right: 16px;
     border-bottom: 1px solid ${theme.colorBorder};
     box-sizing: border-box;
 
@@ -21,5 +20,8 @@ export const styles = {
     padding: 0 16px;
     place-items: center;
     width: 50px;
+  `,
+  logo: css`
+    min-width: 26px;
   `,
 };

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { organisationAtoms } from '../store/organizationAtoms';
 import {
   Organization,
   ResponseMeta,

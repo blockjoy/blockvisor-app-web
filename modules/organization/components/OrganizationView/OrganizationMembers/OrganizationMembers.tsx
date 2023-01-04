@@ -68,6 +68,11 @@ export const Members = ({ id }: MembersProps) => {
   const [emails, setEmails] = useState<string[]>();
 
   const handleTextareaChanged = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    if (!e.target.value) {
+      setEmails([]);
+      return;
+    }
+
     var arrayOfLines = e.target.value.split('\n');
     setEmails(arrayOfLines);
   };
@@ -76,6 +81,10 @@ export const Members = ({ id }: MembersProps) => {
     console.log('emails', emails);
 
     inviteMembers(emails!);
+  };
+
+  const handleAddMembersClicked = () => {
+    setActiveView('invite');
   };
 
   useEffect(() => {
@@ -88,17 +97,15 @@ export const Members = ({ id }: MembersProps) => {
     <>
       <h2 css={[styles.h2, spacing.bottom.large]}>
         Members
-        <Button
-          onClick={() => setActiveView('invite')}
-          style="outline"
-          size="small"
-        >
+        <Button onClick={handleAddMembersClicked} style="outline" size="small">
           <PersonIcon />
           Add Members
         </Button>
       </h2>
       {activeView === 'invite' && (
         <OrganizationInvite
+          hasTextareaValue={Boolean(emails?.length)}
+          onAddMembersClicked={handleAddMembersClicked}
           onInviteClicked={handleInviteClicked}
           onCancelClicked={() => setActiveView('list')}
           onTextareaChanged={handleTextareaChanged}

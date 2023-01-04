@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { styles } from './SidebarMain.styles';
-import { ProfileBubble } from '@shared/components';
+import { Badge, ProfileBubble } from '@shared/components';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
 import IconSupport from '@public/assets/icons/chat-12.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { organizationAtoms } from '@modules/organization';
 
 const blocks = [
   {
@@ -24,6 +25,7 @@ const blocks = [
         name: 'Organizations',
         path: '/organizations',
         icon: <IconOrganizations />,
+        isOrganizations: true,
       },
       {
         name: 'Profile',
@@ -41,6 +43,10 @@ const blocks = [
 
 export default () => {
   const [layout, setLayout] = useRecoilState(layoutState);
+
+  const invitationCount = useRecoilValue(
+    organizationAtoms.organizationReceivedInvitations,
+  )?.length;
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
@@ -88,6 +94,10 @@ export default () => {
                           ]}
                         >
                           {item.name}
+
+                          {Boolean(invitationCount) && item.isOrganizations && (
+                            <Badge>{invitationCount}</Badge>
+                          )}
                         </span>
                       </span>
                     </a>

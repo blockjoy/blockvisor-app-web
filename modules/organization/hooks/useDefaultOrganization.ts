@@ -3,15 +3,15 @@ import { apiClient } from '@modules/client';
 import { env } from '@shared/constants/env';
 import { delay } from '@shared/utils/delay';
 import { useRecoilState } from 'recoil';
-import { organisationAtoms } from '../store/organizationAtoms';
+import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useDefaultOrganization() {
   const repository = useIdentityRepository();
   const [loadingState, setLoadingState] = useRecoilState(
-    organisationAtoms.organizationLoadingState,
+    organizationAtoms.organizationLoadingState,
   );
   const [defaultOrganization, setDefaultOrganization] = useRecoilState(
-    organisationAtoms.defaultOrganization,
+    organizationAtoms.defaultOrganization,
   );
 
   const getDefaultOrganization = async () => {
