@@ -103,17 +103,18 @@ export const NodeFilters = () => {
       setIsDirty(true);
     }
 
-    const { target } = e;
-    const { id, checked } = target;
+    const filtersList = list.map(item => {
+      if (item.name === e.target.id) {
+        return {
+          ...item,
+          isChecked: !item.isChecked
+        }
+      }
 
-    let listCopy = Array.from(list);
-    let itemFound = { ...listCopy?.find((item) => item.name === id) };
-    let itemIndex = listCopy.findIndex((item) => item.name === id);
+      return item;
+    });
 
-    itemFound.isChecked = checked;
-    listCopy.splice(itemIndex, 1, itemFound);
-
-    setter(listCopy);
+    setter(filtersList);
   };
 
   const resetFilters = () => {
