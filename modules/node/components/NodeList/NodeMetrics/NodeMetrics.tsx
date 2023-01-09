@@ -1,42 +1,18 @@
-import { apiClient } from '@modules/client';
-import { useEffect, useState } from 'react';
+import { nodeAtoms } from '@modules/node/store/nodeAtoms';
+import { useRecoilValue } from 'recoil';
 import { styles } from './NodeMetrics.styles';
 
-type State = {
-  offline: number;
-  statusText: string;
-};
-
 export const NodeMetrics = () => {
-  const [data, setData] = useState<State>({
-    offline: 0,
-    statusText: '',
-  });
+  // TODO: re-add back api call here (atm moved to useNodeList becase we don't have total nodes amount returned)
+  const metrics = useRecoilValue(nodeAtoms.nodeMetrics);
+  const offline = metrics && metrics.length > 0 ? metrics.find((metric: NodeMetrics) => metric.name === 4)['value'] : null;
 
-  const loadMetrics = async () => {
-    const metrics: any = await apiClient.getDashboardMetrics();
-
-    const offline = +metrics[1]?.value;
-
-    return {
-      statusText: offline === 0 ? '0 Offline' : `${offline} Offline`,
-      offline,
-    };
-  };
-
-  useEffect(() => {
-    (async () => {
-      const status = await loadMetrics();
-      setData(status);
-    })();
-  }, []);
-
-  return !data?.statusText ? null : (
+  return offline && (
     <div css={styles.wrapper}>
       <span
-        css={[styles.badge, data.offline ? styles.badgeBad : styles.badgeGood]}
+        css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
       />
-      <span>{data.statusText}</span>
+      <span>{offline} Offline</span>
     </div>
   );
 };

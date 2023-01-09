@@ -1,7 +1,5 @@
 import { useIdentityRepository } from '@modules/auth';
 import { apiClient } from '@modules/client';
-import { env } from '@shared/constants/env';
-import { delay } from '@shared/utils/delay';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 
@@ -21,8 +19,6 @@ export function useDefaultOrganization() {
 
     if (!defaultOrg) {
       const res: any = await apiClient.getOrganizations();
-
-      await delay(env.loadingDuration);
 
       // mocked
       const { name, id } = res[0];

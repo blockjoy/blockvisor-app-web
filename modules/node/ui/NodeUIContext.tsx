@@ -45,7 +45,7 @@ export function NodeUIProvider({ children }: NodeUIProvider) {
   const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
 
   const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(initialQueryParamsValue);
-  const setQueryParams = useCallback((nextQueryParams: any) => {
+  const setQueryParams = useCallback((nextQueryParams: InitialQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
         nextQueryParams = nextQueryParams(prevQueryParams);

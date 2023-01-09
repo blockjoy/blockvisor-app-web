@@ -1,7 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
-import { useNodeMetrics } from '@modules/node/hooks/useNodeMetrics';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import {
   EmptyColumn,
@@ -19,6 +18,8 @@ import { NodeListPageHeader } from './NodeListPageHeader/NodeListPageHeader';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { resultsStatus } from '@modules/node/helpers/NodeHelpers';
+import { organizationAtoms } from '@modules/organization';
+import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 
 export const NodeList = () => {
   const nodeUIContext = useNodeUIContext();
@@ -33,7 +34,6 @@ export const NodeList = () => {
   const hasMoreNodes = useRecoilValue(nodeAtoms.hasMoreNodes);
 
   const { loadNodes, handleNodeClick } = useNodeList();
-  const { loadMetrics } = useNodeMetrics();
 
   const { openModal } = useModal();
 
@@ -42,6 +42,9 @@ export const NodeList = () => {
   );
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
   const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
+
+  const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
+  const loadedOrganization = useRef(defaultOrganization);
 
   const handleListTypeChanged = (type: string) => {
     setActiveListType(type);
@@ -57,20 +60,23 @@ export const NodeList = () => {
     });
 
   useEffect(() => {
-    loadMetrics();
-  }, []);
-
-  useEffect(() => {
-    animateEntry();
-  }, []);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
+    animateEntry();
   }, []);
 
   useEffect(() => {
     loadNodes(nodeUIProps.queryParams);
   }, [nodeUIProps.queryParams]);
+
+  useEffect(() => {
+    if (loadedOrganization.current?.id !== defaultOrganization?.id) {
+      // TODO: remove/move reloadQueryParams to avoid double-render
+      reloadQueryParams();
+      loadNodes(initialQueryParams);
+
+      loadedOrganization.current = defaultOrganization; 
+    }
+  }, [defaultOrganization?.id]);
 
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
@@ -87,6 +93,10 @@ export const NodeList = () => {
     };
     
     nodeUIProps.setQueryParams(newQueryParams);
+  }
+
+  const reloadQueryParams = async () => {
+    nodeUIProps.setQueryParams(initialQueryParams);
   }
 
   const cells = toGrid(nodeList, handleNodeClick);

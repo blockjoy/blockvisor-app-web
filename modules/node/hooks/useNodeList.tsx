@@ -3,8 +3,6 @@ import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { apiClient } from '@modules/client';
-import { delay } from '@shared/utils/delay';
-import { env } from '@shared/constants/env';
 import { authAtoms, useIdentityRepository } from '@modules/auth';
 
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
@@ -29,7 +27,10 @@ export const useNodeList = (): Hook => {
 
   const setLayout = useSetRecoilState(layoutState);
 
-  const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
+  const setNodeMetrics = useSetRecoilState(nodeAtoms.nodeMetrics)
+  const [totalNodes, setTotalNodes] = useRecoilState(nodeAtoms.totalNodes);
+
+  let total = totalNodes || 0;
 
   const handleAddNode = () => {
     setLayout('nodes');
@@ -43,6 +44,8 @@ export const useNodeList = (): Hook => {
     const loadingState =
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
+    
+    setHasMore(false);
 
     // TODO: Org ID needs be set here
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
@@ -57,6 +60,22 @@ export const useNodeList = (): Hook => {
     console.log('nodes', nodes);
 
     setPreloadNodes(nodes.length);
+
+    if (queryParams.pagination.current_page === 1) {
+      // TODO: get total nodes from listNodes API and move metrics to separate component
+      const metrics: any = await apiClient.getDashboardMetrics(org_id);
+      setNodeMetrics(metrics);
+
+      const _total: number = metrics.reduce(
+        (accumulator: number, metric: NodeMetrics) => {
+          const currentValue = parseInt(metric.value) ?? 0;
+          return accumulator + currentValue
+        }, 0
+      );
+
+      setTotalNodes(_total);
+      total = _total;
+    }
 
     // TODO: (maybe) remove - added for better UI
     if (!(nodes.length === 0 || queryParams.pagination.current_page === 1))
@@ -73,7 +92,7 @@ export const useNodeList = (): Hook => {
     const hasMoreNodes =
       queryParams.pagination.current_page *
         queryParams.pagination.items_per_page <
-      (totalNodes ?? Infinity);
+      (total ?? Infinity);
 
     setHasMore(hasMoreNodes);
 
