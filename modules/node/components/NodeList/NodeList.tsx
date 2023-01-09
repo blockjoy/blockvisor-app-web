@@ -44,7 +44,7 @@ export const NodeList = () => {
   const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
 
   const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
-  const loadedOrganization = useRef(defaultOrganization);
+  const currentOrganization = useRef(defaultOrganization);
 
   const handleListTypeChanged = (type: string) => {
     setActiveListType(type);
@@ -69,12 +69,12 @@ export const NodeList = () => {
   }, [nodeUIProps.queryParams]);
 
   useEffect(() => {
-    if (loadedOrganization.current?.id !== defaultOrganization?.id) {
+    if (currentOrganization.current?.id !== defaultOrganization?.id) {
       // TODO: remove/move reloadQueryParams to avoid double-render
       reloadQueryParams();
       loadNodes(initialQueryParams);
 
-      loadedOrganization.current = defaultOrganization; 
+      currentOrganization.current = defaultOrganization; 
     }
   }, [defaultOrganization?.id]);
 

@@ -57,8 +57,8 @@ export const NodeFilters = () => {
     nodeAtoms.filtersBlockchain,
   );
 
-  const org_id = useRecoilValue(organizationAtoms.defaultOrganization);
-  const loadedOrganization = useRef(org_id);
+  const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
+  const currentOrganization = useRef(defaultOrganization);
 
   const [isDirty, setIsDirty] = useState(false);
 
@@ -238,11 +238,11 @@ export const NodeFilters = () => {
   ];
 
   useEffect(() => {
-    if (loadedOrganization.current?.id !== org_id?.id) {
+    if (currentOrganization.current?.id !== defaultOrganization?.id) {
       removeFilters();
-      loadedOrganization.current = org_id;
+      currentOrganization.current = defaultOrganization;
     }
-  }, [org_id?.id]);
+  }, [defaultOrganization?.id]);
 
   useEffect(() => {
     (() => {
