@@ -23,6 +23,8 @@ export const OrganizationPendingInvitations: FC<Props> = ({ orgId }) => {
     }
   }, [orgId]);
 
+  if (!invitations?.length) return null;
+
   return (
     <>
       <h2 css={styles.header}>

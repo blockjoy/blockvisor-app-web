@@ -26,5 +26,9 @@ export const styles = {
       padding-left: 56px;
     }
   `,
-  actions: css``,
+  actions: css`
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
+  `,
 };

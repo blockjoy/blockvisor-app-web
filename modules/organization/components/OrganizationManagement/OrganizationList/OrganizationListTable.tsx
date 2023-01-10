@@ -16,6 +16,10 @@ const headers: TableHeader[] = [
     name: 'Type',
     key: '3',
   },
+  {
+    name: '',
+    key: '4',
+  },
 ];
 
 export const mapOrganizationsToRows = (

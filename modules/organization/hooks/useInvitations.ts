@@ -1,4 +1,5 @@
 import { apiClient } from '@modules/client';
+import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 
@@ -13,26 +14,48 @@ export function useInvitations() {
 
   const getReceivedInvitations = async (id: string) => {
     const response: any = await apiClient.receivedInvitations(id);
-
     setReceivedInvitations(response);
-
-    console.log('getReceivedInvitations', response);
   };
 
   const getSentInvitations = async (id: string) => {
     const response: any = await apiClient.pendingInvitations(id);
-
     setSentInvitations(response);
-
-    console.log('getSentInvitations', response);
   };
 
-  // const respondInvitation = (accepted: boolean) => {
-  //   const response: any = await apiClient.acceptInvitation()
-  // }
+  const acceptInvitation = async ({
+    token,
+    invitationId,
+  }: {
+    token?: string;
+    invitationId?: string;
+  }) => {
+    const response = await apiClient.acceptInvitation({
+      token,
+      invitationId,
+    });
+    toast.success('Invite Accepted');
+    console.log('ui response', response);
+  };
+
+  const declineInvitation = async ({
+    token,
+    invitationId,
+  }: {
+    token?: string;
+    invitationId?: string;
+  }) => {
+    const response = await apiClient.declineInvitation({
+      token,
+      invitationId,
+    });
+    toast.success('Invite Declined');
+    console.log('ui response', response);
+  };
 
   return {
     getReceivedInvitations,
     getSentInvitations,
+    acceptInvitation,
+    declineInvitation,
   };
 }
