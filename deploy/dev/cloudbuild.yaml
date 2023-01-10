@@ -13,20 +13,20 @@ steps:
   - 'NEXT_PUBLIC_ORG_ID=${_NEXT_PUBLIC_ORG_ID}'
   - 'NEXT_PUBLIC_LOADING_DURATION=${_NEXT_PUBLIC_LOADING_DURATION}'
 
-# - name: 'google/cloud-sdk:latest'
-#   entrypoint: 'sh'
-#   args:
-#   - -xe
-#   - -c
-#   - |
-#     gcloud config set deploy/region us-east1
-#     gcloud deploy apply --file deploy/dev/clouddeploy.yaml
-#     gcloud deploy releases create rel-${SHORT_SHA} \
-#                         --delivery-pipeline blockvisor-api-dev \
-#                         --description "$(git log -1  --pretty='%s')" \
-#                         --build-artifacts /workspace/artifacts.json \
-#                         --skaffold-file deploy/skaffold.yaml \
-#                         --annotations "commit_ui=https://source.cloud.google.com/blockjoy-deployer/blockvisor-api/+/$COMMIT_SHA"
+- name: 'google/cloud-sdk:latest'
+  entrypoint: 'sh'
+  args:
+  - -xe
+  - -c
+  - |
+    gcloud config set deploy/region us-east1
+    gcloud deploy apply --file deploy/dev/clouddeploy.yaml
+    gcloud deploy releases create rel-${SHORT_SHA} \
+                        --delivery-pipeline blockvisor-ui-dev \
+                        --description "$(git log -1  --pretty='%s')" \
+                        --build-artifacts /workspace/artifacts.json \
+                        --skaffold-file deploy/skaffold.yaml \
+                        --annotations "commit_ui=https://source.cloud.google.com/blockjoy-deployer/blockvisor-ui/+/$COMMIT_SHA"
 artifacts:
   objects:
     location: 'gs://blockvisor-ui-artifacts/'
