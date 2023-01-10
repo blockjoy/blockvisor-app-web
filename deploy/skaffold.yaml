@@ -19,20 +19,20 @@ build:
   local: 
     push: true
     useDockerCLI: true
-# profiles:
-# - name: dev
-#   deploy:
-#     kustomize:
-#       paths:
-#         - ./kubernetes/dev
-# - name: staging
-#   deploy:
-#     kustomize:
-#       paths:
-#         - ./kubernetes/staging
-# - name: production
-#   deploy:
-#     kustomize:
-#       paths:
-#         - ./kubernetes/production
+profiles:
+- name: dev
+  deploy:
+    kustomize:
+      paths:
+        - ./kubernetes/dev
+- name: staging
+  deploy:
+    kustomize:
+      paths:
+        - ./kubernetes/staging
+- name: production
+  deploy:
+    kustomize:
+      paths:
+        - ./kubernetes/production
 

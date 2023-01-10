@@ -4,7 +4,7 @@ steps:
   args:
   - -xe
   - -c
-  - skaffold build --filename='deploy/dev/skaffold.yaml' --file-output=/workspace/artifacts.json
+  - skaffold build --filename='deploy/skaffold.yaml' --file-output=/workspace/artifacts.json
   env:
   - 'NPM_TOKEN=${_NPM_TOKEN}'
   - 'NEXT_PUBLIC_VERCEL_ENV=${_NEXT_PUBLIC_VERCEL_ENV}'
