@@ -22,7 +22,7 @@ export const styles = {
 
     @media ${breakpoints.fromXLrg} {
       display: flex;
-      width: 100%;
+      width: calc(100% - 16px);
     }
 
     & path {

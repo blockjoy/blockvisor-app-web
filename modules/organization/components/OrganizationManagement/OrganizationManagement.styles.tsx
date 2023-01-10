@@ -10,7 +10,6 @@ export const styles = {
   contentWrapper: css`
     flex: 1 1 auto;
     display: flex;
-    padding-left: 30px;
 
     @media ${breakpoints.toXlrg} {
       flex-direction: column;

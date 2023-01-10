@@ -4,10 +4,11 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
-    padding: 20px 0;
+    padding: 20px 0 20px 24px;
     border-top: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromXLrg} {
+      padding-left: 0;
       margin-left: 30px;
       border-top: 0;
       border-left: 1px solid ${theme.colorBorder};
