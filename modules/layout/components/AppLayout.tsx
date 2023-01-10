@@ -9,7 +9,7 @@ import {
   useGetOrganizations,
   useInvitations,
 } from '@modules/organization';
-import { BetaBanner } from './betaBanner/BetaBanner';
+// import { BetaBanner } from './betaBanner/BetaBanner';
 import { NodeWizard } from '@modules/node';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
@@ -43,7 +43,7 @@ export const AppLayout: React.FC<LayoutType> = ({ children, isPageFlex }) => {
         <Overlay />
         <NodeWizard />
         <OrganizationAdd />
-        <BetaBanner />
+        {/* <BetaBanner /> */}
         <Page isFlex={isPageFlex}>{children}</Page>
       </PrivateRoute>
     </>

@@ -6,7 +6,6 @@ export const styles = {
     position: relative;
     z-index: 3;
     min-height: 100vh;
-    padding-top: 30px;
 
     @media ${breakpoints.fromXLrg} {
       margin-left: 64px;

@@ -1,4 +1,5 @@
 import { apiClient } from '@modules/client';
+import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 
@@ -32,6 +33,7 @@ export function useInvitations() {
       token,
       invitationId,
     });
+    toast.success('Invite Accepted');
     console.log('ui response', response);
   };
 
@@ -46,6 +48,7 @@ export function useInvitations() {
       token,
       invitationId,
     });
+    toast.success('Invite Declined');
     console.log('ui response', response);
   };
 
