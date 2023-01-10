@@ -9,7 +9,7 @@ type Props = {
   id?: string;
   href?: string;
   children?: ReactNode;
-  size?: 'large' | 'small';
+  size?: 'large' | 'medium' | 'small';
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
 };
 export function DropdownItem({
