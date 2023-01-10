@@ -47,4 +47,7 @@ export const styles = {
       fill: ${theme.colorLabel};
     }
   `,
+  iconActive: css`
+    rotate: -90deg;
+  `
 };

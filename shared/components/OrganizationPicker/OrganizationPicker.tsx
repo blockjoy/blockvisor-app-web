@@ -43,7 +43,7 @@ export const OrganizationPicker = () => {
       {
         allOrganizations?.map((org) => (
           <li key={org.id}>
-            <DropdownItem onButtonClick={() => handleChange(org.id, org.name)}>
+            <DropdownItem size="medium" onButtonClick={() => handleChange(org.id, org.name)}>
               {org.name}
             </DropdownItem>
           </li>
@@ -53,16 +53,14 @@ export const OrganizationPicker = () => {
   );
 
   return (
-    <div css={[styles.wrapper]}>
+    <div css={[styles.wrapper]} ref={dropdownRef}>
       <button css={styles.button} onClick={handleClick}>
         { defaultOrganization?.name }
       </button>
 
-      <div ref={dropdownRef}>
-        <Dropdown isOpen={isOpen} children={children} additionalStyles={styles.dropdown}/>
-      </div>
+      <Dropdown isOpen={isOpen} children={children} additionalStyles={styles.dropdown}/>
 
-      <span css={styles.icon}>
+      <span css={[styles.icon, isOpen && styles.iconActive]}>
         <IconArrow />
       </span>
     </div>
