@@ -77,7 +77,13 @@ export const styles = {
     gap: 8px;
     opacity: 0;
     visibility: hidden;
-    overflow: auto;
+    scale: 0;
+    position: absolute;
+  `,
+  blockchainWrapper: css`
+    display: flex;
+    align-items: center;
+    gap: 10px;
   `,
   name: (theme: ITheme) => css`
     color: ${theme.colorText};
@@ -91,7 +97,8 @@ export const styles = {
     text-align: center;
     gap: 10px;
     width: 100%;
-    height: 48px;
+    height: 56px;
+    min-height: 56px;
     padding: 0 15px;
     font-size: 16px;
     align-items: center;
@@ -103,11 +110,29 @@ export const styles = {
     :nth-child(even) {
       background: rgba(255, 255, 255, 0.02);
     }
+
+    @media ${breakpoints.toXlrg} {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 16px;
+      padding: 10px 15px;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      max-height: 56px;
+      min-height: 56px;
+    }
   `,
   rowHover: (theme: ITheme) => css`
     :is(:hover, .active) {
       background: ${theme.colorLightGrey};
       opacity: 1;
+
+      @media ${breakpoints.toXlrg} {
+        max-height: 1000px;
+        height: 90px;
+      }
     }
 
     :is(:hover, .active) div {
@@ -121,6 +146,11 @@ export const styles = {
 
     :is(:hover, .active) path {
       fill: ${theme.colorPrimary};
+    }
+
+    :is(:hover, .active) .node-type-buttons {
+      scale: 1;
+      position: relative;
     }
   `,
   rowDisabled: css`

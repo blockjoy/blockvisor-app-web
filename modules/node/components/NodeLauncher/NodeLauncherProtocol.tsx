@@ -81,11 +81,13 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 css={[styles.row, styles.rowHover]}
                 className={b.id === activeBlockchainId ? 'active row' : 'row'}
               >
-                <span css={styles.iconWrapper}>
-                  <BlockchainIcon hideTooltip blockchainName={b.name} />
+                <span css={styles.blockchainWrapper}>
+                  <span css={styles.iconWrapper}>
+                    <BlockchainIcon hideTooltip blockchainName={b.name} />
+                  </span>
+                  <span css={styles.name}>{b.name}</span>
                 </span>
-                <span css={styles.name}>{b.name}</span>
-                <div css={styles.nodeTypeButtons}>
+                <div css={styles.nodeTypeButtons} className="node-type-buttons">
                   {b.supported_node_types.map((type: any) => (
                     <button
                       key={type.id}
@@ -112,10 +114,12 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 )
                 ?.map((b: any) => (
                   <div key={b.id} css={[styles.row, styles.rowDisabled]}>
-                    <span css={styles.iconWrapper}>
-                      <BlockchainIcon hideTooltip blockchainName={b.name} />
+                    <span css={styles.blockchainWrapper}>
+                      <span css={styles.iconWrapper}>
+                        <BlockchainIcon hideTooltip blockchainName={b.name} />
+                      </span>
+                      <span css={styles.name}>{b.name}</span>
                     </span>
-                    <span css={styles.name}>{b.name}</span>
                   </div>
                 ))}
           </>
