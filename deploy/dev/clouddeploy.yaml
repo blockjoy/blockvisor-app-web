@@ -1,0 +1,37 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: blockvisor-ui-dev
+  labels:
+    app: blockvisor-ui-dev
+description: Blockvisor UI Dev delivery pipeline
+serialPipeline:
+  stages:
+  - targetId: dev
+    profiles:
+    - dev
+  - targetId: staging
+    profiles:
+    - staging
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: dev
+  annotations: {}
+  labels: {}
+description: dev
+requireApproval: false
+gke:
+  cluster: projects/blockjoy-dev/locations/us-east1-b/clusters/blockjoy-dev
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: staging
+  annotations: {}
+  labels: {}
+description: staging
+requireApproval: true
+gke:
+  cluster: projects/blockjoy-staging/locations/us-east1-b/clusters/blockjoy-staging
