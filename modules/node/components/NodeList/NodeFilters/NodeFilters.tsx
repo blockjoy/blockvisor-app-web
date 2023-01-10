@@ -2,8 +2,8 @@ import { isEqual } from 'lodash';
 import { styles } from './nodeFilters.styles';
 import { styles as blockStyles } from './NodeFiltersBlock.styles';
 import { Checkbox } from '@shared/components';
-import { SetterOrUpdater, useRecoilState } from 'recoil';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
@@ -16,6 +16,7 @@ import { nodeStatusList } from '@shared/constants/lookups';
 import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
 import { InitialFilter, InitialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 import { buildParams, loadPersistedFilters } from '@modules/node/helpers/NodeHelpers';
+import { organizationAtoms } from '@modules/organization';
 
 export const NodeFilters = () => {
   const nodeUIContext = useNodeUIContext();
@@ -55,6 +56,9 @@ export const NodeFilters = () => {
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
+
+  const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
+  const currentOrganization = useRef(defaultOrganization);
 
   const [isDirty, setIsDirty] = useState(false);
 
@@ -99,20 +103,26 @@ export const NodeFilters = () => {
       setIsDirty(true);
     }
 
-    const { target } = e;
-    const { id, checked } = target;
+    const filtersList = list.map(item => {
+      if (item.name === e.target.id) {
+        return {
+          ...item,
+          isChecked: !item.isChecked
+        }
+      }
 
-    let listCopy = Array.from(list);
-    let itemFound = { ...listCopy?.find((item) => item.name === id) };
-    let itemIndex = listCopy.findIndex((item) => item.name === id);
+      return item;
+    });
 
-    itemFound.isChecked = checked;
-    listCopy.splice(itemIndex, 1, itemFound);
-
-    setter(listCopy);
+    setter(filtersList);
   };
 
-  const handleResetClicked = async () => {
+  const resetFilters = () => {
+    const params = buildParams([], [], []);
+    applyFilter(params);
+  };
+
+  const removeFilters = () => {
     setFiltersHealth(null);
 
     let filtersBlockchainCopy = filtersBlockchain.map((item) => ({
@@ -134,9 +144,11 @@ export const NodeFilters = () => {
     setFiltersType(filtersTypeCopy);
 
     localStorage.removeItem('nodeFilters');
+  }
 
-    const params = buildParams([], [], []);
-    applyFilter(params);
+  const handleResetFilters = () => {
+    resetFilters();
+    removeFilters();
   };
 
   const handleUpdateClicked = () => {
@@ -227,6 +239,13 @@ export const NodeFilters = () => {
   ];
 
   useEffect(() => {
+    if (currentOrganization.current?.id !== defaultOrganization?.id) {
+      removeFilters();
+      currentOrganization.current = defaultOrganization;
+    }
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
     (() => {
       if (localStorage.getItem('nodeFiltersCollapsed') === 'false') {
         setIsFiltersCollapsed(false);
@@ -312,7 +331,7 @@ export const NodeFilters = () => {
         <button
           css={styles.resetButton}
           type="button"
-          onClick={handleResetClicked}
+          onClick={handleResetFilters}
         >
           <IconClose />
           Reset Filters

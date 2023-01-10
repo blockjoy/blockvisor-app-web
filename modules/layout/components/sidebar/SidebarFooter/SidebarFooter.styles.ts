@@ -42,6 +42,7 @@ export const styles = {
       border-top: 1px solid ${theme.colorBorder};
     `,
   logo: css`
+    position: relative;
     & path {
       fill: #4c4f4d;
     }
@@ -102,5 +103,20 @@ export const styles = {
       }
     }
     cursor: pointer;
+  `,
+  betaBage: (theme: ITheme) => css`
+    position: absolute;
+    top: -11px;
+    right: -16px;
+    scale: 0.8;
+    display: grid;
+    place-items: center;
+    height: 14px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: ${theme.colorPrimary};
+    color: ${theme.colorPrimaryText};
+    font-size: 8px;
+    font-weight: 600;
   `,
 };

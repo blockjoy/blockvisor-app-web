@@ -45,12 +45,10 @@ export const NodeListHeader: FC<Props> = ({
 
       <NodeMetrics />
 
-     {totalNodes && (
-        <span css={[styles.total, styles.endBlock]}>
-          Total: <span css={styles.totalValue}>{totalNodes} </span>
-          {totalNodes === 1 ? 'node' : 'nodes'}
-        </span>
-      )}
+      {totalNodes !== null && <span css={[styles.total, styles.endBlock]}>
+        Total: <span css={styles.totalValue}>{totalNodes} </span>
+        {totalNodes === 1 ? 'node' : 'nodes'}
+      </span>}
     </div>
   );
 };

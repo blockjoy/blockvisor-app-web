@@ -8,12 +8,12 @@ export const styles = {
     flex-direction: column;
 
     @media ${breakpoints.fromXLrg} {
-      top: 71px;
+      top: 101px;
       position: sticky;
       flex: 0 0 200px;
       min-width: 200px;
       max-width: 200px;
-      height: calc(100vh - 72px);
+      height: calc(100vh - 82px);
     }
   `,
   outerWrapperCollapsed: css`
