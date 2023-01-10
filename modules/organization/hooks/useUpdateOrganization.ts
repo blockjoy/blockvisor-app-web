@@ -6,7 +6,9 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useUpdateOrganization() {
-  const [selectedOrganization, setSelectedOrganization] =  useRecoilState(organizationAtoms.selectedOrganization);
+  const selectedOrganization =  useRecoilValue(organizationAtoms.selectedOrganization);
+  const [allOrganizations, setAllOrganizations] = useRecoilState(organizationAtoms.allOrganizations);
+
   const [loadingState, setLoadingState] = useRecoilState(
     organizationAtoms.organizationLoadingState,
   );
@@ -20,11 +22,17 @@ export function useUpdateOrganization() {
     const response = await apiClient.updateOrganization(organization);
 
     if (isResponeMetaObject(response)) {
-      const newOrg = {
-        ...selectedOrganization,
-        name,
-      };
-      setSelectedOrganization(newOrg);
+      const updatedAllOrgs = allOrganizations.map(org => {
+        if (org.id === selectedOrganization?.id) 
+          return {
+            ...org,
+            name,
+          };
+
+        return org;
+      });
+
+      setAllOrganizations(updatedAllOrgs);
 
       setLoadingState('finished');
       return;
