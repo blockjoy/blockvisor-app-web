@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
 import SizedIcon from '@modules/layout/components/shared/SizedIcon';
@@ -23,42 +23,26 @@ export const OrganizationPicker: React.FC<Props> = ({
 }) => {
   const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
 
-  const { getDefaultOrganization, defaultOrganization } =
-    useDefaultOrganization();
-
-  const [value, setValue] = useState<string>(defaultOrganization?.id!);
-
+  const { getDefaultOrganization, defaultOrganization } = useDefaultOrganization();
   const { setDefaultOrganization } = useSetDefaultOrganization();
-
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log('handleChange', e.target.value, e.target.selectedIndex);
-    localStorage.removeItem('nodeFilters');
-    setValue(e.target.value);
-    setDefaultOrganization(
-      e.target.value,
-      allOrganizations[e.target.selectedIndex].name!,
-    );
-    window.location.reload();
-  };
 
   useEffect(() => {
     getDefaultOrganization();
   }, []);
 
-  useEffect(() => {
-    if (defaultOrganization?.id) {
-      setValue(defaultOrganization.id);
-    }
-  }, [defaultOrganization?.id]);
-
-  console.log('value', value);
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    console.log('handleChange', e.target.value, e.target.selectedIndex);
+    setDefaultOrganization(
+      e.target.value,
+      allOrganizations[e.target.selectedIndex].name!,
+    );
+  };
 
   return (
     <div css={[styles.wrapper]}>
       <select
         css={styles.select}
-        defaultValue={value}
-        value={value}
+        value={defaultOrganization?.id}
         onChange={handleChange}
       >
         {allOrganizations?.map((org) => (

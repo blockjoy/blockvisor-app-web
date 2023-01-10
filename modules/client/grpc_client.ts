@@ -545,7 +545,9 @@ export class GrpcClient {
 
   /* Dashboard service */
 
-  async getDashboardMetrics(): Promise<
+  async getDashboardMetrics(
+    org_id?: string
+  ): Promise<
     Array<Metric.AsObject> | undefined | StatusResponse
   > {
     let request_meta = new RequestMeta();
@@ -553,6 +555,7 @@ export class GrpcClient {
 
     let request = new DashboardMetricsRequest();
     request.setMeta(request_meta);
+    request.setOrgId(org_id || '');
 
     return this.dashboard
       ?.metrics(request, this.getAuthHeader())

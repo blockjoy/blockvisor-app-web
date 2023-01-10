@@ -1,6 +1,7 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { apiClient } from '@modules/client';
+import { organizationAtoms } from '@modules/organization';
 
 interface Hook {
   totalNodes: number | null,
@@ -11,9 +12,10 @@ interface Hook {
 export const useNodeMetrics = (): Hook => {
   const [nodeMetrics, setNodeMetrics] = useRecoilState(nodeAtoms.nodeMetrics);
   const [totalNodes, setTotalNodes] = useRecoilState(nodeAtoms.totalNodes);
+  const orgId = useRecoilValue(organizationAtoms.defaultOrganization);
 
   const loadMetrics = async () => {
-    const metrics: any = await apiClient.getDashboardMetrics();
+    const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
     setNodeMetrics(metrics);
 
     // TODO: move total to recoil selector
