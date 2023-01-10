@@ -4,8 +4,8 @@ import { apiClient } from '@modules/client';
 import { organizationAtoms } from '@modules/organization';
 
 interface Hook {
-  totalNodes: number | null,
-  nodeMetrics: NodeMetrics[],
+  totalNodes: number | null;
+  nodeMetrics: NodeMetrics[];
   loadMetrics: () => void;
 }
 
@@ -18,13 +18,18 @@ export const useNodeMetrics = (): Hook => {
     const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
     setNodeMetrics(metrics);
 
+    console.log('loadMetrics', metrics);
+
+    if (metrics.code) {
+      setTotalNodes(100);
+      return;
+    }
+
     // TODO: move total to recoil selector
-    const total: number = metrics.reduce(
-      (accumulator: number, metric: any) => {
-        const currentValue = parseInt(metric.value) ?? 0;
-        return accumulator + currentValue
-      }, 0
-    );
+    const total: number = metrics.reduce((accumulator: number, metric: any) => {
+      const currentValue = parseInt(metric.value) ?? 0;
+      return accumulator + currentValue;
+    }, 0);
 
     setTotalNodes(total);
   };

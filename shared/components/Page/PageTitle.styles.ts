@@ -6,7 +6,7 @@ export const styles = {
   base: (theme: ITheme) => css`
     position: sticky;
     z-index: 3;
-    top: 0;
+    top: 30px;
     display: flex;
     align-items: center;
     background: #2a2c2b;

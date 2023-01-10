@@ -10,17 +10,20 @@ export const styles = {
   sidebar: (theme: ITheme) => css`
     position: fixed;
     z-index: 8;
-    top: 0;
+    top: 30px;
     left: 0;
     display: flex;
     flex-direction: column;
     width: 260px;
-    height: 100%;
+    height: calc(100% - 30px);
     border-right: 1px solid ${theme.colorBorder};
     background: ${theme.colorSidebar};
     transform: translateX(-100%);
 
     @media ${breakpoints.toXlrg} {
+      top: 0;
+      padding-top: 30px;
+      height: 100%;
       transition-property: transform;
       transition-duration: 0.4s;
     }
