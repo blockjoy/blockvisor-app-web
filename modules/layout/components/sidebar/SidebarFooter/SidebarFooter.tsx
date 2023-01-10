@@ -55,6 +55,7 @@ export function SidebarFooter() {
       >
         <span css={[styles.logo]}>
           <LogoSmall />
+          <span css={styles.betaBage}>BETA</span>
         </span>
         <p
           css={[
