@@ -11,7 +11,7 @@ export const styles = {
     display: flex;
     align-items: center;
   `,
-  select: (theme: ITheme) => css`
+  button: (theme: ITheme) => css`
     background: transparent;
     color: ${theme.colorText};
     height: 64px;
@@ -20,6 +20,7 @@ export const styles = {
     border: 0;
     width: 100%;
     overflow: hidden;
+    text-align: left;
     text-overflow: ellipsis;
     cursor: pointer;
 
@@ -28,6 +29,11 @@ export const styles = {
     :focus {
       box-shadow: none;
     }
+  `,
+  dropdown: css`
+    top: 54px;
+    right: 5px;
+    left: 0;
   `,
   icon: (theme: ITheme) => css`
     position: absolute;

@@ -1,56 +1,67 @@
-import { ChangeEvent, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
-import SizedIcon from '@modules/layout/components/shared/SizedIcon';
-
-import { Button } from '@shared/components';
+import { Dropdown, DropdownItem } from '@shared/components';
 import { styles } from './OrganizationPicker.styles';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { authAtoms } from '@modules/auth';
+import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import { useSetDefaultOrganization } from '@modules/organization/hooks/useSetDefaultOrganization';
 import { useDefaultOrganization } from '@modules/organization';
+import { useClickOutside } from '@shared/hooks/useClickOutside';
 
-type Props = {
-  hideName?: boolean;
-  hiddenOnDesktop?: boolean;
-};
+export const OrganizationPicker = () => {
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-export const OrganizationPicker: React.FC<Props> = ({
-  hideName,
-  hiddenOnDesktop,
-}) => {
   const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { getDefaultOrganization, defaultOrganization } = useDefaultOrganization();
   const { setDefaultOrganization } = useSetDefaultOrganization();
+
+  const handleClick = () => setIsOpen(!isOpen);
+  const handleClickOutside = () => setIsOpen(false);
+
+  const handleChange = (orgId?: string, orgName?: string) => {
+    if (orgId && orgName) {
+      setDefaultOrganization(
+        orgId,
+        orgName,
+      );
+  
+      setIsOpen(false);
+    }
+  };
+
+  useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   useEffect(() => {
     getDefaultOrganization();
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log('handleChange', e.target.value, e.target.selectedIndex);
-    setDefaultOrganization(
-      e.target.value,
-      allOrganizations[e.target.selectedIndex].name!,
-    );
-  };
+  const children = (
+    <ul>
+      {
+        allOrganizations?.map((org) => (
+          <li key={org.id}>
+            <DropdownItem onButtonClick={() => handleChange(org.id, org.name)}>
+              {org.name}
+            </DropdownItem>
+          </li>
+        ))
+      }
+    </ul>
+  );
 
   return (
     <div css={[styles.wrapper]}>
-      <select
-        css={styles.select}
-        value={defaultOrganization?.id}
-        onChange={handleChange}
-      >
-        {allOrganizations?.map((org) => (
-          <option key={org.id} value={org.id}>
-            {org.name}
-          </option>
-        ))}
-      </select>
+      <button css={styles.button} onClick={handleClick}>
+        { defaultOrganization?.name }
+      </button>
+
+      <div ref={dropdownRef}>
+        <Dropdown isOpen={isOpen} children={children} additionalStyles={styles.dropdown}/>
+      </div>
+
       <span css={styles.icon}>
         <IconArrow />
       </span>
