@@ -8,6 +8,15 @@ const selectedOrganization = atom<ClientOrganization | null>({
 const defaultOrganization = atom<{ name: string; id: string } | null>({
   key: 'organization.default',
   default: null,
+  effects: [
+    ({ setSelf }) => {
+      const savedIdentity = localStorage.getItem('identity');
+      if (savedIdentity) {
+        const defaultOrg = JSON.parse(savedIdentity)['defaultOrganization']
+        if (defaultOrg) setSelf(defaultOrg);
+      }
+    }
+  ],
 });
 
 const allOrganizations = atom<ClientOrganization[]>({
