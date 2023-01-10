@@ -1,6 +1,6 @@
 import { styles } from './NodeLauncher.styles';
 import { NodeLauncherPageHeader } from './NodeLauncherPageHeader';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NodeLauncherConfig } from './NodeLauncherConfig';
 import { NodeLauncherProtocol } from './NodeLauncherProtocol';
 import { NodeLauncherSummary } from './NodeLauncherSummary';
@@ -8,6 +8,8 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
 import { AnimatedGraphic } from '@shared/components';
+import { useRecoilValue } from 'recoil';
+import { organizationAtoms } from '@modules/organization';
 
 type NodeState = {
   blockchainId: string;
@@ -24,6 +26,9 @@ export const NodeLauncher = () => {
   const [hasServerError, setHasServerError] = useState<boolean>(false);
 
   const [isCreating, setIsCreating] = useState<boolean>(false);
+
+  const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
+  const currentOrganization = useRef(defaultOrganization);
 
   const [node, setNode] = useState<NodeState>({
     blockchainId: '',
@@ -181,6 +186,17 @@ export const NodeLauncher = () => {
   useEffect(() => {
     loadLookups();
   }, []);
+
+  useEffect(() => {
+    if (currentOrganization.current?.id !== defaultOrganization?.id) {
+      setNode({
+        blockchainId: '',
+        nodeTypeId: '',
+        nodeTypeProperties: []
+      });
+      currentOrganization.current = defaultOrganization;
+    }
+  }, [defaultOrganization]);
 
   return (
     <>
