@@ -1,10 +1,13 @@
 FROM node:16-alpine AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-USER node
 WORKDIR /app
-COPY package.json yarn.lock .npmrc ./
-RUN yarn install --frozen-lockfile
+ARG NPM_TOKEN
+COPY package.json yarn.lock ./
+RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
+RUN yarn install
+RUN rm -f ./.npmrc
+USER node
 
 
 FROM node:16-alpine AS builder
