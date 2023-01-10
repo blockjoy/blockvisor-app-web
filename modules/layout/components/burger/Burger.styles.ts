@@ -10,6 +10,7 @@ export const styles = {
     background: transparent;
     width: 64px;
     height: 72px;
+    top: 30px;
     border: 0;
     padding: 0;
     cursor: pointer;

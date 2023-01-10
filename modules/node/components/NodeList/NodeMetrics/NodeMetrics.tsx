@@ -16,7 +16,7 @@ export const NodeMetrics = () => {
   const loadMetrics = async () => {
     const metrics: any = await apiClient.getDashboardMetrics();
 
-    const offline = +metrics[1]?.value;
+    const offline = !metrics?.length ? 0 : +metrics[1]?.value;
 
     return {
       statusText: offline === 0 ? '0 Offline' : `${offline} Offline`,

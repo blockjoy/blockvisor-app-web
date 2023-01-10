@@ -6,7 +6,7 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     position: sticky;
     z-index: 2;
-    top: 71px;
+    top: 101px;
     flex: 1 1 auto;
     display: flex;
     gap: 28px;

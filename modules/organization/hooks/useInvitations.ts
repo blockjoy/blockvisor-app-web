@@ -13,26 +13,46 @@ export function useInvitations() {
 
   const getReceivedInvitations = async (id: string) => {
     const response: any = await apiClient.receivedInvitations(id);
-
     setReceivedInvitations(response);
-
-    console.log('getReceivedInvitations', response);
   };
 
   const getSentInvitations = async (id: string) => {
     const response: any = await apiClient.pendingInvitations(id);
-
     setSentInvitations(response);
-
-    console.log('getSentInvitations', response);
   };
 
-  // const respondInvitation = (accepted: boolean) => {
-  //   const response: any = await apiClient.acceptInvitation()
-  // }
+  const acceptInvitation = async ({
+    token,
+    invitationId,
+  }: {
+    token?: string;
+    invitationId?: string;
+  }) => {
+    const response = await apiClient.acceptInvitation({
+      token,
+      invitationId,
+    });
+    console.log('ui response', response);
+  };
+
+  const declineInvitation = async ({
+    token,
+    invitationId,
+  }: {
+    token?: string;
+    invitationId?: string;
+  }) => {
+    const response = await apiClient.declineInvitation({
+      token,
+      invitationId,
+    });
+    console.log('ui response', response);
+  };
 
   return {
     getReceivedInvitations,
     getSentInvitations,
+    acceptInvitation,
+    declineInvitation,
   };
 }
