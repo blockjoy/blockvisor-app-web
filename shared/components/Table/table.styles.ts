@@ -1,12 +1,14 @@
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 import { rgba } from 'polished';
+import { breakpoints } from 'styles/variables.styles';
 
 export const tableStyles = {
   wrapper: css`
     position: relative;
     width: 100%;
     margin-top: 24px;
+    overflow: auto;
   `,
   table: (theme: ITheme) => css`
     width: 100%;
@@ -20,6 +22,10 @@ export const tableStyles = {
       text-transform: uppercase;
       text-align: left;
       cursor: default;
+
+      @media ${breakpoints.toXlrg} {
+        padding: 0 16px 10px 0;
+      }
     }
 
     @media only screen and (max-width: ${theme.screenSm}) {
@@ -49,6 +55,10 @@ export const tableStyles = {
     & td {
       padding: 20px 0;
       vertical-align: top;
+
+      @media ${breakpoints.toXlrg} {
+        padding: 20px 16px 20px 0;
+      }
     }
 
     & tr:hover .has-hover-color {

@@ -6,7 +6,7 @@ export const styles = {
   base: (theme: ITheme) => css`
     position: sticky;
     z-index: 3;
-    top: 30px;
+    top: 0;
     display: flex;
     align-items: center;
     background: #2a2c2b;
@@ -26,5 +26,9 @@ export const styles = {
       padding-left: 56px;
     }
   `,
-  actions: css``,
+  actions: css`
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
+  `,
 };
