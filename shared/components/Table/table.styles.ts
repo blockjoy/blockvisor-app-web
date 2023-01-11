@@ -11,6 +11,7 @@ export const tableStyles = {
   `,
   table: (theme: ITheme) => css`
     width: 100%;
+    border-collapse: collapse;
 
     & th {
       padding: 0 0 10px;
@@ -21,6 +22,7 @@ export const tableStyles = {
       text-transform: uppercase;
       text-align: left;
       cursor: default;
+      white-space: nowrap;
 
       @media ${breakpoints.toXlrg} {
         padding: 0 16px 10px 0;
@@ -28,11 +30,6 @@ export const tableStyles = {
     }
 
     @media only screen and (max-width: ${theme.screenSm}) {
-      & tr th:last-of-type,
-      & tr td:last-of-type {
-        text-align: right;
-      }
-
       .hidden-on-mobile {
         display: none;
       }
@@ -54,6 +51,7 @@ export const tableStyles = {
     & td {
       padding: 20px 0;
       vertical-align: top;
+      white-space: nowrap;
 
       @media ${breakpoints.toXlrg} {
         padding: 20px 16px 20px 0;

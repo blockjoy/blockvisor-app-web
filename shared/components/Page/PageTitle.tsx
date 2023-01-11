@@ -6,7 +6,7 @@ import { styles } from './PageTitle.styles';
 
 interface Props {
   children?: ReactNode;
-  title: string;
+  title?: string;
   actionText?: string;
   actionOnClick?: VoidFunction;
 }

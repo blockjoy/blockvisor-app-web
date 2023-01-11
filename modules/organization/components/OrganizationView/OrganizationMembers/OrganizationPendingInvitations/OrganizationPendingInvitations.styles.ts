@@ -6,7 +6,7 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 16px;
-    color: ${theme.colorText};
+    color: ${theme.colorDefault};
     margin-bottom: 40px;
     margin-top: 40px;
     font-size: 19px;
