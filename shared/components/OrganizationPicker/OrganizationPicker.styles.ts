@@ -62,5 +62,5 @@ export const styles = {
   `,
   iconActive: css`
     rotate: -90deg;
-  `
+  `,
 };
