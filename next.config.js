@@ -3,7 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
   experimental: {
-    appDir: true
+    appDir: true,
+    forceSwcTransforms: true
+  },
+  compiler: {
+    emotion: true
   },
   webpack(config) {
     config.module.rules.push({
