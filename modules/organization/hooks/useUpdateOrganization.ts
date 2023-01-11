@@ -4,10 +4,14 @@ import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
+import { useDefaultOrganization } from './useDefaultOrganization';
+import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
 export function useUpdateOrganization() {
   const selectedOrganization =  useRecoilValue(organizationAtoms.selectedOrganization);
   const [allOrganizations, setAllOrganizations] = useRecoilState(organizationAtoms.allOrganizations);
+  const { defaultOrganization } = useDefaultOrganization();
+  const { setDefaultOrganization } = useSetDefaultOrganization();
 
   const [loadingState, setLoadingState] = useRecoilState(
     organizationAtoms.organizationLoadingState,
@@ -33,6 +37,13 @@ export function useUpdateOrganization() {
       });
 
       setAllOrganizations(updatedAllOrgs);
+
+      if (defaultOrganization?.id === selectedOrganization?.id) {
+        setDefaultOrganization(
+          selectedOrganization?.id ?? '',
+          name
+        );
+      }
 
       setLoadingState('finished');
       return;
