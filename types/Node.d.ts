@@ -27,7 +27,6 @@ type BlockjoyNode = {
 
 type CreateNodeParams = {
   nodeType: number;
-  host: string;
   blockchain: string;
   nodeTypeProperties: NodeTypeConfig[];
   key_files?: File[];

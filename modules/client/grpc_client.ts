@@ -318,7 +318,6 @@ export class GrpcClient {
   getDummyHost(): Host {
     let host = new Host();
     host.setId(this.getDummyUuid());
-    host.setOrgId(this.getDummyUuid());
     host.setName('lorem-ipsum');
     host.setVersion('0.1.0');
     host.setLocation('Djibouti');

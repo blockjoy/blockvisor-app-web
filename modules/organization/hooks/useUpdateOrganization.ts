@@ -8,8 +8,12 @@ import { useDefaultOrganization } from './useDefaultOrganization';
 import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
 export function useUpdateOrganization() {
-  const selectedOrganization =  useRecoilValue(organizationAtoms.selectedOrganization);
-  const [allOrganizations, setAllOrganizations] = useRecoilState(organizationAtoms.allOrganizations);
+  const selectedOrganization = useRecoilValue(
+    organizationAtoms.selectedOrganization,
+  );
+  const [allOrganizations, setAllOrganizations] = useRecoilState(
+    organizationAtoms.allOrganizations,
+  );
   const { defaultOrganization } = useDefaultOrganization();
   const { setDefaultOrganization } = useSetDefaultOrganization();
 
@@ -17,17 +21,17 @@ export function useUpdateOrganization() {
     organizationAtoms.organizationLoadingState,
   );
 
-  const updateOrganization = async (name: string) => {
+  const updateOrganization = async (id: string, name: string) => {
     setLoadingState('loading');
 
     const organization = new Organization();
     organization.setName(name);
-    organization.setId(selectedOrganization?.id ?? '');
+    organization.setId(id);
     const response = await apiClient.updateOrganization(organization);
 
     if (isResponeMetaObject(response)) {
-      const updatedAllOrgs = allOrganizations.map(org => {
-        if (org.id === selectedOrganization?.id) 
+      const updatedAllOrgs = allOrganizations.map((org) => {
+        if (org.id === selectedOrganization?.id)
           return {
             ...org,
             name,
@@ -39,10 +43,7 @@ export function useUpdateOrganization() {
       setAllOrganizations(updatedAllOrgs);
 
       if (defaultOrganization?.id === selectedOrganization?.id) {
-        setDefaultOrganization(
-          selectedOrganization?.id ?? '',
-          name
-        );
+        setDefaultOrganization(selectedOrganization?.id ?? '', name);
       }
 
       setLoadingState('finished');

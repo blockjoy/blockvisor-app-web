@@ -20,14 +20,16 @@ type NodeState = {
 
 export const NodeLauncher = () => {
   const { blockchains } = useGetBlockchains();
-  const { createNode, loadLookups, hostList } = useNodeAdd();
+  const { createNode, loadLookups } = useNodeAdd();
   const router = useRouter();
 
   const [hasServerError, setHasServerError] = useState<boolean>(false);
 
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
-  const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const currentOrganization = useRef(defaultOrganization);
 
   const [node, setNode] = useState<NodeState>({
@@ -129,7 +131,6 @@ export const NodeLauncher = () => {
     const params: CreateNodeParams = {
       nodeType: +node.nodeTypeId ?? 0,
       blockchain: node.blockchainId ?? '',
-      host: hostList[0].value,
       nodeTypeProperties: node.nodeTypeProperties,
       key_files: mergedFiles.flat(),
     };
@@ -192,7 +193,7 @@ export const NodeLauncher = () => {
       setNode({
         blockchainId: '',
         nodeTypeId: '',
-        nodeTypeProperties: []
+        nodeTypeProperties: [],
       });
       currentOrganization.current = defaultOrganization;
     }
@@ -208,7 +209,7 @@ export const NodeLauncher = () => {
           activeNodeTypeId={node.nodeTypeId}
         />
         {!!node.nodeTypeProperties?.filter(
-          (property) => property.name !== 'self-hostedd',
+          (property) => property.name !== 'self-hosted',
         )?.length && (
           <NodeLauncherConfig
             isConfigValid={isConfigValid()}
