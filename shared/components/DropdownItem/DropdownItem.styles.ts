@@ -9,8 +9,6 @@ export const styles = {
     gap: 12px;
     align-items: center;
     min-width: 160px;
-
-    transition: background-color 0.18s var(--transition-easing-cubic);
     cursor: pointer;
 
     &,
@@ -29,7 +27,8 @@ export const styles = {
     &:active,
     &:focus {
       text-decoration: none;
-      background-color: var(--color-text-5-o3);
+      background-color: var(--color-primary);
+      color: var(--color-text-1);
 
       & :global(svg) {
         color: var(--color-text-5);
@@ -38,6 +37,9 @@ export const styles = {
   `,
   small: css`
     padding: 8px 12px;
+  `,
+  medium: css`
+    padding: 12px;
   `,
   large: css`
     padding: 16px 12px;
