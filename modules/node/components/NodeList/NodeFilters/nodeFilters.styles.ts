@@ -8,7 +8,7 @@ export const styles = {
     flex-direction: column;
 
     @media ${breakpoints.fromXLrg} {
-      top: 101px;
+      top: 71px;
       position: sticky;
       flex: 0 0 200px;
       min-width: 200px;
