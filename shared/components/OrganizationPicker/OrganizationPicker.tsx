@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
 import { Dropdown, DropdownItem } from '@shared/components';
@@ -32,6 +32,13 @@ export const OrganizationPicker = () => {
     }
   };
 
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    setDefaultOrganization(
+      e.target.value,
+      allOrganizations[e.target.selectedIndex].name!,
+    );
+  };
+
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   useEffect(() => {
@@ -54,7 +61,19 @@ export const OrganizationPicker = () => {
 
   return (
     <div css={[styles.wrapper]} ref={dropdownRef}>
-      <button css={styles.button} onClick={handleClick}>
+      <select
+        css={[styles.select, styles.nativeSelect]}
+        value={defaultOrganization?.id}
+        onChange={handleSelect}
+      >
+        {allOrganizations?.map((org) => (
+          <option key={org.id} value={org.id}>
+            {org.name}
+          </option>
+        ))}
+      </select>
+
+      <button css={[styles.select, styles.customSelect]} onClick={handleClick}>
         { defaultOrganization?.name }
       </button>
 

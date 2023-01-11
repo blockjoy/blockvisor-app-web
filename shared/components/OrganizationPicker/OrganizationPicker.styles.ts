@@ -11,7 +11,7 @@ export const styles = {
     display: flex;
     align-items: center;
   `,
-  button: (theme: ITheme) => css`
+  select: (theme: ITheme) => css`
     background: transparent;
     color: ${theme.colorText};
     height: 64px;
@@ -30,10 +30,23 @@ export const styles = {
       box-shadow: none;
     }
   `,
+  nativeSelect: css`
+    @media ${breakpoints.fromMed} {
+      display: none;
+    }
+  `,
+  customSelect: css`
+    @media ${breakpoints.toMed} {
+      display: none;
+    }
+  `,
   dropdown: css`
     top: 54px;
     right: 5px;
     left: 0;
+    @media ${breakpoints.toMed} {
+      display: none;
+    }
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
