@@ -1,8 +1,9 @@
+'use client';
+
 import { LoginFooter, LoginForm, PublicRoute } from '@modules/auth';
 import { Layout } from '@shared/components';
-import type { NextPage } from 'next';
 
-const Login: NextPage = () => {
+export default function Login() {
   return (
     <PublicRoute>
       <Layout title="Login">
@@ -11,6 +12,4 @@ const Login: NextPage = () => {
       </Layout>
     </PublicRoute>
   );
-};
-
-export default Login;
+}

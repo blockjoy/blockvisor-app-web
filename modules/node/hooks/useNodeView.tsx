@@ -8,7 +8,7 @@ import { env } from '@shared/constants/env';
 import { LockedSwitch } from '@modules/node/components/LockedSwitch/LockedSwitch';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-import { NodeTypeConfigLabel } from '@shared/components';
+import { NodeTypeConfigLabel } from '@shared/components/NodeTypeConfigLabel/NodeTypeConfigLabel';
 
 type Args = string | string[] | undefined;
 

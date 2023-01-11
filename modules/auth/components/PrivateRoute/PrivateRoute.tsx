@@ -1,6 +1,9 @@
-import { Routes, useIdentity } from '@modules/auth';
+'use client';
+
+import { useIdentity } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
-import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/index';
+import { useRouter, usePathname } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 
 interface Props {
@@ -9,11 +12,12 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoggedIn, isVerified, isDone, isLoading, state } = useIdentity();
+  const pathname = usePathname();
+  const { isLoggedIn, isDone, state } = useIdentity();
 
   useEffect(() => {
     if (isDone && !isLoggedIn) {
-      router.push(Routes.login);
+      router.push(ROUTES.LOGIN);
       return;
     }
 
@@ -22,15 +26,11 @@ export function PrivateRoute({ children }: Props) {
       router.push(Routes.verify);
       return;
     } */
-  }, [router.pathname, state]);
+  }, [pathname, state]);
 
-  if (isLoading) {
-    return <LoadingSpinner size="page" />;
-  }
-
-  if (isLoggedIn) {
+  if (isDone && isLoggedIn) {
     return <>{children}</>;
   }
 
-  return null;
+  return <LoadingSpinner size="page" />;
 }

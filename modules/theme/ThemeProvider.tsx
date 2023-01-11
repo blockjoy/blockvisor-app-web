@@ -1,3 +1,4 @@
+'use client';
 import { atom, useRecoilValue } from 'recoil';
 // import { ThemeProvider as StyledThemeProvider, Global } from '@emotion/react';
 import {

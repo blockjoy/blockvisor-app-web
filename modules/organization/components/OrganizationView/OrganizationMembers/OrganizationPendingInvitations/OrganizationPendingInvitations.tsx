@@ -3,8 +3,8 @@ import { organizationAtoms } from '@modules/organization/store/organizationAtoms
 import { FC, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './OrganizationPendingInvitations.styles';
-import { formatDistanceToNow } from 'date-fns';
-import { Badge, Table } from '@shared/components';
+import { Badge } from '@shared/components/Badge/Badge';
+import { Table } from '@shared/components';
 import { mapInvitesToRows } from '@modules/organization/utils/toRow';
 
 type Props = {

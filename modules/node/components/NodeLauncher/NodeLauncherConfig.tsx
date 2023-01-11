@@ -1,4 +1,3 @@
-import { NodeTypeConfigLabel } from '@shared/components';
 import { FC } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
@@ -9,6 +8,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeLauncherConfig.styles';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
+import { NodeTypeConfigLabel } from '@shared/components/NodeTypeConfigLabel/NodeTypeConfigLabel';
 
 type Props = {
   isConfigValid: boolean;

@@ -13,7 +13,7 @@ import Router from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { RegistrationStatus } from '../types';
-import { Routes } from '@modules/auth/utils/routes';
+import { ROUTES } from '@shared/index';
 
 type RegisterForm = {
   first_name: string;
@@ -50,7 +50,7 @@ export function RegisterForm() {
       if (isResponeMetaObject(response)) {
         if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
           setIsLoading(false);
-          Router.push(Routes.verify);
+          Router.push(ROUTES.VERIFY);
         } else {
           setIsLoading(false);
           setRegisterError('Error creating account, please try again.');

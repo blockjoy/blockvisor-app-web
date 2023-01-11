@@ -3,7 +3,7 @@ import { BrowserStorage } from '../utils/BrowserStorage';
 import { IdentityRepository } from '../utils/IdentityRepository';
 
 export function useIdentityRepository() {
-  const isBrowser = () => typeof window !== 'undefined';
+  const isBrowser = () => typeof window === 'object';
 
   const repository = useMemo(() => {
     if (isBrowser()) {

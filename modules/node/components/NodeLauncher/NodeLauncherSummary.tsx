@@ -1,4 +1,3 @@
-import { NodeTypeConfigLabel } from '@shared/components';
 import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
@@ -6,6 +5,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import IconCheck from '@public/assets/icons/check-16.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
+import { NodeTypeConfigLabel } from '@shared/components/NodeTypeConfigLabel/NodeTypeConfigLabel';
 
 type Props = {
   hasServerError: boolean;

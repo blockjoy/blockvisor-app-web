@@ -13,14 +13,17 @@ export function LoginFooter() {
   return (
     <footer css={[footerLogin, typo.tiny]}>
       <div css={[tAlign.right]}>
-        <Link href={ROUTES.FORGOT_PASSWORD} passHref>
-          <a css={[link, footerLoginLink, linkUnderline]}>Forgot password?</a>
+        <Link
+          href={ROUTES.FORGOT_PASSWORD}
+          css={[link, footerLoginLink, linkUnderline]}
+        >
+          Forgot password?
         </Link>
       </div>
       <div css={[footerLoginAccount]}>
         <p css={[colors.text2]}>Don't have a BlockVisor account?</p>
-        <Link href={ROUTES.REGISTER} passHref>
-          <a css={[link, linkPrimary, linkUnderline]}>Create an Account</a>
+        <Link href={ROUTES.REGISTER} css={[link, linkPrimary, linkUnderline]}>
+          Create an Account
         </Link>
       </div>
     </footer>

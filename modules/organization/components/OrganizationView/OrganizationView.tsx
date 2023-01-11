@@ -14,12 +14,12 @@ import {
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
-  EditableTitle,
 } from '@shared/components';
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import { Members } from './OrganizationMembers/OrganizationMembers';
 import { useUpdateOrganization } from '@modules/organization';
+import { EditableTitle } from '@shared/components/EditableTitle/EditableTitle';
 
 export const OrganizationView = () => {
   const router = useRouter();

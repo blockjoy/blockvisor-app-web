@@ -10,12 +10,13 @@ const defaultOrganization = atom<{ name: string; id: string } | null>({
   default: null,
   effects: [
     ({ setSelf }) => {
-      const savedIdentity = localStorage.getItem('identity');
+      const savedIdentity =
+        typeof window === 'object' && localStorage.getItem('identity');
       if (savedIdentity) {
-        const defaultOrg = JSON.parse(savedIdentity)['defaultOrganization']
+        const defaultOrg = JSON.parse(savedIdentity)['defaultOrganization'];
         if (defaultOrg) setSelf(defaultOrg);
       }
-    }
+    },
   ],
 });
 

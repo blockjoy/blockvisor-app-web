@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
   experimental: {
-    appDir: true
+    appDir: true,
   },
   webpack(config) {
     config.module.rules.push({

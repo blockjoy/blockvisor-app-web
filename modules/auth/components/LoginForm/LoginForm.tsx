@@ -1,4 +1,7 @@
-import { Routes, useSignIn } from '@modules/auth';
+'use client';
+
+import { useSignIn } from '@modules/auth';
+import { ROUTES } from '@shared/constants/routes';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import {
   useDefaultOrganization,
@@ -7,7 +10,7 @@ import {
 import { Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { colors } from 'styles/utils.colors.styles';
@@ -50,7 +53,7 @@ export function LoginForm() {
 
       setIsLoading(false);
 
-      router.push('/nodes');
+      router.push(ROUTES.NODES);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');

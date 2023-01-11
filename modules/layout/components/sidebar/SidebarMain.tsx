@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import { styles } from './SidebarMain.styles';
-import { Badge, ProfileBubble } from '@shared/components';
+import { ProfileBubble } from '@shared/components';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
 import IconSupport from '@public/assets/icons/chat-12.svg';
@@ -10,6 +10,7 @@ import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { organizationAtoms } from '@modules/organization';
+import { Badge } from '@shared/components/Badge/Badge';
 
 const blocks = [
   {
@@ -41,7 +42,7 @@ const blocks = [
   },
 ];
 
-export default () => {
+export default function SidebarMain() {
   const [layout, setLayout] = useRecoilState(layoutState);
 
   const invitationCount = useRecoilValue(
@@ -54,7 +55,7 @@ export default () => {
     }
   };
 
-  const router = useRouter();
+  const pathname = usePathname();
   return (
     <main css={[styles.wrapper]}>
       <div>
@@ -63,44 +64,41 @@ export default () => {
             <ul css={[styles.list]}>
               {block.items.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.path}>
-                    <a
-                      onClick={handleLinkClicked}
-                      css={[
-                        styles.link,
-                        layout !== 'sidebar' && styles.linkSidebarCollapsed,
-                      ]}
+                  <Link
+                    href={item.path}
+                    onClick={handleLinkClicked}
+                    css={[
+                      styles.link,
+                      layout !== 'sidebar' && styles.linkSidebarCollapsed,
+                    ]}
+                  >
+                    <span
+                      css={styles.linkInner}
+                      className={pathname?.includes(item.path) ? 'active' : ''}
                     >
                       <span
-                        css={styles.linkInner}
-                        className={
-                          router.pathname.includes(item.path) ? 'active' : ''
-                        }
+                        className="link-icon"
+                        css={[
+                          styles.linkIcon,
+                          layout !== 'sidebar' && styles.linkIconSidebarOpen,
+                        ]}
                       >
-                        <span
-                          className="link-icon"
-                          css={[
-                            styles.linkIcon,
-                            layout !== 'sidebar' && styles.linkIconSidebarOpen,
-                          ]}
-                        >
-                          {item.icon}
-                        </span>
-                        <span
-                          className="link-text"
-                          css={[
-                            styles.linkText,
-                            layout !== 'sidebar' && styles.linkTextHidden,
-                          ]}
-                        >
-                          {item.name}
-
-                          {Boolean(invitationCount) && item.isOrganizations && (
-                            <Badge>{invitationCount}</Badge>
-                          )}
-                        </span>
+                        {item.icon}
                       </span>
-                    </a>
+                      <span
+                        className="link-text"
+                        css={[
+                          styles.linkText,
+                          layout !== 'sidebar' && styles.linkTextHidden,
+                        ]}
+                      >
+                        {item.name}
+
+                        {Boolean(invitationCount) && item.isOrganizations && (
+                          <Badge>{invitationCount}</Badge>
+                        )}
+                      </span>
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -111,4 +109,4 @@ export default () => {
       <SidebarFooter />
     </main>
   );
-};
+}

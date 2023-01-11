@@ -1,6 +1,7 @@
 import { useIdentityRepository } from '@modules/auth';
 import { organizationAtoms, useInvitations } from '@modules/organization';
-import { Badge, Button } from '@shared/components';
+import { Button } from '@shared/components';
+import { Badge } from '@shared/components/Badge/Badge';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
