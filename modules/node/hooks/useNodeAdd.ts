@@ -69,6 +69,7 @@ export const useNodeAdd = (): Hook => {
      */
     const nodeTypeString = JSON.stringify({
       id: params.nodeType,
+      version: params.version,
       properties: params.nodeTypeProperties.map((property) => ({
         ...property,
         default: property.default === null ? 'null' : property.default,
@@ -80,6 +81,7 @@ export const useNodeAdd = (): Hook => {
 
     console.log({
       id: params.nodeType,
+      version: params.version,
       properties: params.nodeTypeProperties.map((property) => ({
         ...property,
         default: property.default === null ? 'null' : property.default,

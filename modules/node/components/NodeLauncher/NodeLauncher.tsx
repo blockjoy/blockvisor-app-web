@@ -13,6 +13,7 @@ import { organizationAtoms } from '@modules/organization';
 
 type NodeState = {
   blockchainId: string;
+  nodeVersion: string;
   nodeTypeId: string;
   nodeTypeProperties: NodeTypeConfig[];
   nodeFiles?: NodeFiles[];
@@ -36,18 +37,21 @@ export const NodeLauncher = () => {
     blockchainId: '',
     nodeTypeId: '',
     nodeTypeProperties: [],
+    nodeVersion: '',
   });
 
   const handleProtocolSelected = (
     blockchainId: string,
     nodeTypeId: string,
     nodeTypeProperties: NodeTypeConfig[],
+    nodeVersion: string,
   ) => {
     setNode({
       ...node,
       blockchainId,
       nodeTypeId,
       nodeTypeProperties,
+      nodeVersion,
     });
   };
 
@@ -129,6 +133,7 @@ export const NodeLauncher = () => {
     }
 
     const params: CreateNodeParams = {
+      version: node.nodeVersion,
       nodeType: +node.nodeTypeId ?? 0,
       blockchain: node.blockchainId ?? '',
       nodeTypeProperties: node.nodeTypeProperties,

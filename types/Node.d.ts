@@ -26,6 +26,7 @@ type BlockjoyNode = {
 };
 
 type CreateNodeParams = {
+  version: string;
   nodeType: number;
   blockchain: string;
   nodeTypeProperties: NodeTypeConfig[];
