@@ -14,22 +14,22 @@ export function useDefaultOrganization() {
 
   const getDefaultOrganization = async () => {
     setLoadingState('loading');
+    let defaultOrg = repository?.getDefaultOrganization();
 
-    const defaultOrg = repository?.getDefaultOrganization();
-
+    // mocked
     if (!defaultOrg) {
-      const res: any = await apiClient.getOrganizations();
-
-      // mocked
-      const { name, id } = res[0];
-      repository?.saveDefaultOrganization(name, id);
-      setDefaultOrganization({ name, id });
-      return;
+      const allOrganizations: any = await apiClient.getOrganizations();
+      defaultOrg = allOrganizations[0];
     }
 
+    repository?.saveDefaultOrganization(
+      defaultOrg?.name ?? '',
+      defaultOrg?.id ?? ''
+    );
+
     setDefaultOrganization({
-      name: defaultOrg.name ?? '',
-      id: defaultOrg.id ?? '',
+      name: defaultOrg?.name ?? '',
+      id: defaultOrg?.id ?? '',
     });
 
     setLoadingState('finished');
