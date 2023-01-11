@@ -56,6 +56,7 @@ export function FileUpload({
         currentFiles[0].map((file: any) => (
           <Fragment key={file.name}>
             <Image
+              alt="Check icon"
               src="/assets/icons/checkmark-24.svg"
               layout="fixed"
               width={24}
@@ -75,6 +76,7 @@ export function FileUpload({
         <>
           <Image
             src="/assets/icons/upload-24.svg"
+            alt="Upload icon"
             layout="fixed"
             width={24}
             height={24}
