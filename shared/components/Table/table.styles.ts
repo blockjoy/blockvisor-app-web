@@ -7,7 +7,6 @@ export const tableStyles = {
   wrapper: css`
     position: relative;
     width: 100%;
-    margin-top: 24px;
     overflow: auto;
   `,
   table: (theme: ITheme) => css`
