@@ -44,9 +44,13 @@ export const styles = {
     top: 54px;
     right: 5px;
     left: 0;
+    overflow: hidden;
     @media ${breakpoints.toMed} {
       display: none;
     }
+  `,
+  dropdownInner: (items: number) => css`
+    max-height: ${items * 40}px;
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
@@ -62,5 +66,35 @@ export const styles = {
   `,
   iconActive: css`
     rotate: -90deg;
+  `,
+  createButton: (theme: ITheme) => css`
+    background: transparent;
+    border: 0;
+    border-top: 1px solid ${theme.colorBorderGrey};
+    border-bottom: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    gap: 12px;
+    color: ${theme.colorDefault};
+    font-size: 12px;
+    cursor: pointer;
+
+    svg {
+      width: 8px;
+      height: 8px;
+    }
+
+    :hover {
+      background: ${theme.colorPrimary};
+      color: ${theme.colorPrimaryText};
+      border-color: ${theme.colorPrimary};
+
+      & path {
+        fill: ${theme.colorPrimaryText};
+      }
+    }
   `
 };

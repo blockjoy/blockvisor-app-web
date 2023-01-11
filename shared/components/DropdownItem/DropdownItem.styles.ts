@@ -27,8 +27,7 @@ export const styles = {
     &:active,
     &:focus {
       text-decoration: none;
-      background-color: var(--color-primary);
-      color: var(--color-text-1);
+      background-color: var(--color-border-2);
 
       & :global(svg) {
         color: var(--color-text-5);
