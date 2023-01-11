@@ -58,7 +58,7 @@ export const OrganizationView = () => {
 
   return (
     <>
-      <PageTitle title="Organization Management"></PageTitle>
+      <PageTitle title="Organizations" />
       <PageSection>
         <BackButton />
         {isLoading === 'initializing' ? (
@@ -83,7 +83,6 @@ export const OrganizationView = () => {
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <Members id={queryAsString(id)} />
-            <div css={[spacing.top.xLarge]} />
           </div>
         )}
       </PageSection>

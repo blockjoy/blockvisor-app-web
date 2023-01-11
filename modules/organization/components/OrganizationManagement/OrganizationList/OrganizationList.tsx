@@ -20,7 +20,9 @@ export const OrganizationsList = () => {
 
   return (
     <div css={styles.wrapper}>
-      <header css={[styles.header, spacing.bottom.large]}>Organizations</header>
+      <header css={[styles.header, spacing.bottom.large]}>
+        All Organizations
+      </header>
       {/* <small css={[spacing.top.mediumSmall, typo.microlabel, typo.uppercase]}>
         <span css={colors.text2}>
           <PersonIcon />{' '}

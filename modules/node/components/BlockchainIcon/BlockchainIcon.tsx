@@ -7,25 +7,50 @@ export function BlockchainIcon({ blockchain }: Props) {
   switch (blockchain) {
     case 'Ethereum 2.0':
       return (
-        <Image src={'/assets/images/EthereumX2.png'} width={32} height={32} />
+        <Image
+          alt="Ethereum icon"
+          src={'/assets/images/EthereumX2.png'}
+          width={32}
+          height={32}
+        />
       );
     case 'Avalanche':
       return (
-        <Image src={'/assets/images/AvalancheX2.png'} width={32} height={32} />
+        <Image
+          alt="Avalanche icon"
+          src={'/assets/images/AvalancheX2.png'}
+          width={32}
+          height={32}
+        />
       );
     case 'Solana':
       return (
-        <Image src={'/assets/images/SolanaX2.png'} width={32} height={32} />
+        <Image
+          alt="Solana icon"
+          src={'/assets/images/SolanaX2.png'}
+          width={32}
+          height={32}
+        />
       );
 
     case 'Algorand':
       return (
-        <Image src={'/assets/images/AlgorandX2.png'} width={32} height={32} />
+        <Image
+          alt="Algorand icon"
+          src={'/assets/images/AlgorandX2.png'}
+          width={32}
+          height={32}
+        />
       );
 
     default:
       return (
-        <Image src={'/assets/images/EthereumX2.png'} width={32} height={32} />
+        <Image
+          alt="Ethereum icon"
+          src={'/assets/images/EthereumX2.png'}
+          width={32}
+          height={32}
+        />
       );
   }
 }
