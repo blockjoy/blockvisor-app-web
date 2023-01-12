@@ -14,6 +14,7 @@ export const styles = {
     @media ${breakpoints.toXlrg} {
       max-width: 100%;
       width: 100%;
+      min-width: 100%;
       border-left: 0;
       border-top: 1px solid ${theme.colorBorder};
     }
@@ -39,7 +40,7 @@ export const styles = {
     margin: 0 30px 16px;
 
     @media ${breakpoints.toXlrg} {
-      max-width: 400px;
+      max-width: 100%;
     }
   `,
   summaryList: (theme: ITheme) => css`
@@ -122,7 +123,7 @@ export const styles = {
   `,
   missingFields: css`
     display: grid;
-    grid-auto-rows: 36px;
+    grid-auto-rows: 26px;
     margin-bottom: 20px;
 
     div {
@@ -130,10 +131,6 @@ export const styles = {
       align-items: center;
       padding-left: 38px;
       font-size: 14px;
-    }
-
-    div:nth-child(odd) {
-      background: rgba(255, 255, 255, 0.05);
     }
   `,
 };

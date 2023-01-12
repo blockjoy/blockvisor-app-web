@@ -18,6 +18,8 @@ const tabs = [
 ];
 
 export const OrganizationInvitations = () => {
+  const { acceptInvitation, declineInvitation } = useInvitations();
+
   const invitations = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
@@ -36,8 +38,17 @@ export const OrganizationInvitations = () => {
               <b>{invite.inviterOrganization || 'Unknown'} organization</b>
             </div>
             <div css={styles.buttons}>
-              <Button size="medium">Accept</Button>
-              <Button size="medium" style="outline">
+              <Button
+                size="small"
+                onClick={() => acceptInvitation({ invitationId: invite.id })}
+              >
+                Accept
+              </Button>
+              <Button
+                size="small"
+                onClick={() => declineInvitation({ invitationId: invite.id })}
+                style="outline"
+              >
                 Decline
               </Button>
             </div>

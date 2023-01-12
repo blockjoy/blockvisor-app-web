@@ -21,6 +21,8 @@ export const styles = {
     transform: translateX(-100%);
 
     @media ${breakpoints.toXlrg} {
+      top: 0;
+      height: 100%;
       transition-property: transform;
       transition-duration: 0.4s;
     }

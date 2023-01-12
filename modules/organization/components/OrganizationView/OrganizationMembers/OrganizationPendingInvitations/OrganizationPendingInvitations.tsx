@@ -4,7 +4,8 @@ import { FC, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './OrganizationPendingInvitations.styles';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from '@shared/components';
+import { Badge, Table } from '@shared/components';
+import { mapInvitesToRows } from '@modules/organization/utils/toRow';
 
 type Props = {
   orgId: string;
@@ -23,24 +24,25 @@ export const OrganizationPendingInvitations: FC<Props> = ({ orgId }) => {
     }
   }, [orgId]);
 
+  if (!invitations?.length) return null;
+
+  const rows = mapInvitesToRows(invitations);
+
   return (
     <>
       <h2 css={styles.header}>
-        Pending Member Invitations{' '}
+        Pending Invitations{' '}
         {Boolean(invitations?.length) && <Badge>{invitations?.length}</Badge>}
       </h2>
-      <ul css={styles.list}>
-        {invitations?.map((invite) => (
-          <li key={invite.inviteeEmail}>
-            <span css={styles.email}>{invite.inviteeEmail}</span>
-            <span css={styles.created}>
-              {formatDistanceToNow(new Date(invite.createdAtString), {
-                addSuffix: true,
-              })}
-            </span>
-          </li>
-        ))}
-      </ul>
+
+      <Table
+        headers={[
+          { key: '1', name: 'Email' },
+          { key: '2', name: 'Created' },
+        ]}
+        rows={rows}
+        isLoading="finished"
+      />
     </>
   );
 };

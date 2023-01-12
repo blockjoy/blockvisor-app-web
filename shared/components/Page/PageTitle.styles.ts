@@ -24,7 +24,12 @@ export const styles = {
 
     @media ${breakpoints.toXlrg} {
       padding-left: 56px;
+      justify-content: center;
     }
   `,
-  actions: css``,
+  actions: css`
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
+  `,
 };

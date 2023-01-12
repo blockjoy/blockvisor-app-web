@@ -75,6 +75,7 @@ export function BlockchainSelector() {
               inputSize="large"
               leftIcon={
                 <Image
+                  alt="Search icon"
                   src="/assets/icons/search-12.svg"
                   width={12}
                   height={12}

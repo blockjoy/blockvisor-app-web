@@ -20,6 +20,7 @@ export const styles = {
     border: 0;
     width: 100%;
     overflow: hidden;
+    text-align: left;
     text-overflow: ellipsis;
     cursor: pointer;
 
@@ -27,6 +28,24 @@ export const styles = {
     :active,
     :focus {
       box-shadow: none;
+    }
+  `,
+  nativeSelect: css`
+    @media ${breakpoints.fromMed} {
+      display: none;
+    }
+  `,
+  customSelect: css`
+    @media ${breakpoints.toMed} {
+      display: none;
+    }
+  `,
+  dropdown: css`
+    top: 54px;
+    right: 5px;
+    left: 0;
+    @media ${breakpoints.toMed} {
+      display: none;
     }
   `,
   icon: (theme: ITheme) => css`
@@ -40,5 +59,8 @@ export const styles = {
     path {
       fill: ${theme.colorLabel};
     }
+  `,
+  iconActive: css`
+    rotate: -90deg;
   `,
 };

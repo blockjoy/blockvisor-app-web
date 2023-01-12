@@ -39,11 +39,10 @@ export const OrganizationView = () => {
     setIsSavingOrganization(true);
 
     try {
-      await updateOrganization(organization?.id!, newOrganizationName);
+      await updateOrganization(newOrganizationName);
       setIsSavingOrganization(false);
-      await getOrganization(queryAsString(router.query.id));
       toast.success('Organization Updated');
-    } catch (error) {
+    } catch (err: any) {
       setIsSavingOrganization(false);
     }
   };
@@ -58,7 +57,7 @@ export const OrganizationView = () => {
 
   return (
     <>
-      <PageTitle title="Organization Management"></PageTitle>
+      <PageTitle title="Organizations" />
       <PageSection>
         <BackButton />
         {isLoading === 'initializing' ? (
@@ -83,7 +82,6 @@ export const OrganizationView = () => {
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <Members id={queryAsString(id)} />
-            <div css={[spacing.top.xLarge]} />
           </div>
         )}
       </PageSection>

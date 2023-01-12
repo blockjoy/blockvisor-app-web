@@ -1374,24 +1374,40 @@ export class GrpcClient {
       });
   }
 
-  async acceptInvitation(
-    token: string,
-  ): Promise<Empty.AsObject | StatusResponse | undefined> {
+  async acceptInvitation({
+    token,
+    invitationId,
+  }: {
+    token?: string;
+    invitationId?: string;
+  }): Promise<Empty.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new InvitationRequest();
     request.setMeta(request_meta);
 
-    let auth_header = {
-      authorization: `Bearer ${Buffer.from(token, 'binary').toString(
-        'base64',
-      )}`,
-    };
+    let auth_header;
+
+    if (token) {
+      auth_header = {
+        authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+        )}`,
+      };
+    } else {
+      auth_header = this.getAuthHeader();
+
+      const invitation = new Invitation();
+      invitation.setId(invitationId!);
+
+      request.setInvitation(invitation);
+    }
 
     return this.invitation
       ?.accept(request, auth_header)
       .then((response) => {
+        console.log('acceptInvitationResponse', response.toObject());
         return response.toObject();
       })
       .catch((err) => {
@@ -1399,24 +1415,40 @@ export class GrpcClient {
       });
   }
 
-  async declineInvitation(
-    token: string,
-  ): Promise<Empty.AsObject | StatusResponse | undefined> {
+  async declineInvitation({
+    token,
+    invitationId,
+  }: {
+    token?: string;
+    invitationId?: string;
+  }): Promise<Empty.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new InvitationRequest();
     request.setMeta(request_meta);
 
-    let auth_header = {
-      authorization: `Bearer ${Buffer.from(token, 'binary').toString(
-        'base64',
-      )}`,
-    };
+    let auth_header;
+
+    if (token) {
+      auth_header = {
+        authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+        )}`,
+      };
+    } else {
+      auth_header = this.getAuthHeader();
+
+      const invitation = new Invitation();
+      invitation.setId(invitationId!);
+
+      request.setInvitation(invitation);
+    }
 
     return this.invitation
-      ?.accept(request, auth_header)
+      ?.decline(request, auth_header)
       .then((response) => {
+        console.log('declineInvitationResponse', response.toObject());
         return response.toObject();
       })
       .catch((err) => {
@@ -1437,6 +1469,11 @@ export class GrpcClient {
     return this.invitation
       ?.listReceived(request, this.getAuthHeader())
       .then((response) => {
+        console.log(
+          'pendingInvitations',
+          response.getInvitationsList().map((item) => item.toObject()),
+        );
+
         return response.getInvitationsList().map((item) => item.toObject());
       })
       .catch((err) => {
