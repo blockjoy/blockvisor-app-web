@@ -15,6 +15,8 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { NodeViewPageHeader } from './NodeViewPageHeader';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
+import { useRecoilValue } from 'recoil';
+import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 
 export function NodeView() {
   const [isMounted, setMounted] = useState<boolean>(false);
@@ -22,11 +24,11 @@ export function NodeView() {
   const router = useRouter();
   const { id } = router.query;
 
-  const { loadNode, deleteNode, stopNode, restartNode, isLoading, node } =
+  const { node, loadNode, deleteNode, stopNode, restartNode, isLoading } =
     useNodeView();
 
-  const handleStop = () => stopNode(id);
-  const handleRestart = () => restartNode(id);
+  const handleStop = () => stopNode(id, node?.hostId);
+  const handleRestart = () => restartNode(id!, node?.hostId);
   const handleDelete = async () => deleteNode(id);
 
   useEffect(() => {
