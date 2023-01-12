@@ -12,17 +12,19 @@ const AcceptInvite: NextPage = () => {
       const { token } = router.query;
 
       (async () => {
-        const response: any = await apiClient.registration_confirmation(
-          token?.toString()!,
-        );
+        const response: any = await apiClient.declineInvitation({
+          token: token?.toString()!,
+        });
+
+        console.log('declineInvitation', response);
 
         if (response.code === 20) {
           return;
         }
 
-        await delay(3000);
+        // await delay(3000);
 
-        router.push('/');
+        // router.push('/');
       })();
     }
   }, [router.isReady]);
