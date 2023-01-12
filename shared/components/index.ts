@@ -61,4 +61,3 @@ export * from './TableGrid/TableGrid';
 export * from './TableGrid/TableGridCell';
 export * from './BlockchainIcon/BlockchainIcon';
 export * from './Portal/Portal';
-export * from './ProfileBubble/ProfileBubble';

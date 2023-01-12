@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { styles } from './SidebarMain.styles';
-import { ProfileBubble } from '@shared/components';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
 import IconSupport from '@public/assets/icons/chat-12.svg';
@@ -11,6 +10,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { organizationAtoms } from '@modules/organization';
 import { Badge } from '@shared/components/Badge/Badge';
+import { ProfileBubble } from '@shared/components/ProfileBubble/ProfileBubble';
 
 const blocks = [
   {
