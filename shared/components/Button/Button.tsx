@@ -55,8 +55,8 @@ export function Button({
 
   if (href) {
     return (
-      <Link href={href} passHref>
-        <a css={[buttonStyles]}>{children}</a>
+      <Link css={[buttonStyles]} href={href} passHref>
+        {children}
       </Link>
     );
   }

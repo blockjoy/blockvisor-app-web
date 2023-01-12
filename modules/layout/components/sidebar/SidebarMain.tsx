@@ -63,44 +63,43 @@ export default () => {
             <ul css={[styles.list]}>
               {block.items.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.path}>
-                    <a
-                      onClick={handleLinkClicked}
-                      css={[
-                        styles.link,
-                        layout !== 'sidebar' && styles.linkSidebarCollapsed,
-                      ]}
+                  <Link
+                    href={item.path}
+                    onClick={handleLinkClicked}
+                    css={[
+                      styles.link,
+                      layout !== 'sidebar' && styles.linkSidebarCollapsed,
+                    ]}
+                  >
+                    <span
+                      css={styles.linkInner}
+                      className={
+                        router.pathname.includes(item.path) ? 'active' : ''
+                      }
                     >
                       <span
-                        css={styles.linkInner}
-                        className={
-                          router.pathname.includes(item.path) ? 'active' : ''
-                        }
+                        className="link-icon"
+                        css={[
+                          styles.linkIcon,
+                          layout !== 'sidebar' && styles.linkIconSidebarOpen,
+                        ]}
                       >
-                        <span
-                          className="link-icon"
-                          css={[
-                            styles.linkIcon,
-                            layout !== 'sidebar' && styles.linkIconSidebarOpen,
-                          ]}
-                        >
-                          {item.icon}
-                        </span>
-                        <span
-                          className="link-text"
-                          css={[
-                            styles.linkText,
-                            layout !== 'sidebar' && styles.linkTextHidden,
-                          ]}
-                        >
-                          {item.name}
-
-                          {Boolean(invitationCount) && item.isOrganizations && (
-                            <Badge>{invitationCount}</Badge>
-                          )}
-                        </span>
+                        {item.icon}
                       </span>
-                    </a>
+                      <span
+                        className="link-text"
+                        css={[
+                          styles.linkText,
+                          layout !== 'sidebar' && styles.linkTextHidden,
+                        ]}
+                      >
+                        {item.name}
+
+                        {Boolean(invitationCount) && item.isOrganizations && (
+                          <Badge>{invitationCount}</Badge>
+                        )}
+                      </span>
+                    </span>
                   </Link>
                 </li>
               ))}

@@ -67,3 +67,4 @@ export * from './NodeTypeConfigLabel/NodeTypeConfigLabel';
 export * from './OrganizationPicker/OrganizationPicker';
 export * from './Badge/Badge';
 export * from './EditableTitle/EditableTitle';
+export * from './BlockjoyLogo/BlockjoyLogo';

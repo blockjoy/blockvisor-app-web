@@ -80,7 +80,6 @@ export const Members = ({ id }: MembersProps) => {
 
   const handleInviteClicked = () => {
     console.log('emails', emails);
-
     inviteMembers(emails!);
   };
 
@@ -98,15 +97,20 @@ export const Members = ({ id }: MembersProps) => {
     <>
       <h2 css={[styles.h2, spacing.bottom.large]}>
         Members
-        <Button onClick={handleAddMembersClicked} style="outline" size="small">
-          <PersonIcon />
-          Add Members
-        </Button>
+        {activeView === 'list' && (
+          <Button
+            onClick={handleAddMembersClicked}
+            style="outline"
+            size="small"
+          >
+            <PersonIcon />
+            Add Members
+          </Button>
+        )}
       </h2>
       {activeView === 'invite' && (
         <OrganizationInvite
           hasTextareaValue={Boolean(emails?.length)}
-          onAddMembersClicked={handleAddMembersClicked}
           onInviteClicked={handleInviteClicked}
           onCancelClicked={() => setActiveView('list')}
           onTextareaChanged={handleTextareaChanged}
