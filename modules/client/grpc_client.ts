@@ -318,7 +318,6 @@ export class GrpcClient {
   getDummyHost(): Host {
     let host = new Host();
     host.setId(this.getDummyUuid());
-    host.setOrgId(this.getDummyUuid());
     host.setName('lorem-ipsum');
     host.setVersion('0.1.0');
     host.setLocation('Djibouti');
@@ -546,10 +545,8 @@ export class GrpcClient {
   /* Dashboard service */
 
   async getDashboardMetrics(
-    org_id?: string
-  ): Promise<
-    Array<Metric.AsObject> | undefined | StatusResponse
-  > {
+    org_id?: string,
+  ): Promise<Array<Metric.AsObject> | undefined | StatusResponse> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -581,7 +578,6 @@ export class GrpcClient {
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
     request.setMeta(request_meta);
-    request.setOrgId(org_id || '');
 
     return this.host
       ?.get(request, this.getAuthHeader())

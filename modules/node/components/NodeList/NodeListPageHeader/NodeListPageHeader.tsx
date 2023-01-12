@@ -14,7 +14,7 @@ export const NodeListPageHeader: FC<Props> = ({
   activeListType,
   onTypeChanged,
 }) => (
-  <PageTitle>
+  <>
     <h1 css={[styles.pageTitle]}>Nodes</h1>
     {/* <NodeCreate /> */}
     {/* <LaunchNodeButton /> */}
@@ -38,5 +38,5 @@ export const NodeListPageHeader: FC<Props> = ({
         <IconGrid />
       </button>
     </div>
-  </PageTitle>
+  </>
 );
