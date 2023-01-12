@@ -16,6 +16,11 @@ export const styles = {
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${theme.colorBackground};
   `,
+  wrapperInner: css`
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
+  `,
   listTypePicker: css`
     display: flex;
     justify-content: flex-end;
@@ -29,10 +34,6 @@ export const styles = {
 
     path {
       fill: rgba(255, 255, 255, 0.3);
-    }
-
-    @media ${breakpoints.toXlrg} {
-      display: none;
     }
   `,
 
