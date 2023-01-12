@@ -199,6 +199,7 @@ export const NodeLauncher = () => {
         blockchainId: '',
         nodeTypeId: '',
         nodeTypeProperties: [],
+        nodeVersion: '',
       });
       currentOrganization.current = defaultOrganization;
     }
