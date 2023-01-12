@@ -1,9 +1,9 @@
-import { Layout } from '@shared/components';
-import type { NextPage } from 'next';
+'use client';
+
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { apiClient } from '@modules/client';
 import { css, keyframes } from '@emotion/react';
@@ -39,14 +39,15 @@ const styles = {
   `,
 };
 
-const Verified: NextPage = () => {
+export default function Verified() {
   const [serverError, setServerError] = useState<string>('');
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const router = useRouter();
+  const params = useSearchParams();
 
   useEffect(() => {
-    if (router.isReady && !isVerified) {
-      const { token } = router.query;
+    if (!isVerified) {
+      const token = params.get('token');
 
       (async () => {
         const response: any = await apiClient.registration_confirmation(
@@ -67,10 +68,10 @@ const Verified: NextPage = () => {
         router.push('/');
       })();
     }
-  }, [router.isReady]);
+  }, []);
 
   return (
-    <Layout title="Email being verified.">
+    <>
       <div css={styles.loaderRail}>
         <div css={styles.loaderBar}></div>
       </div>
@@ -83,8 +84,6 @@ const Verified: NextPage = () => {
           You will be redirected to the dashboard once complete.
         </p>
       )}
-    </Layout>
+    </>
   );
-};
-
-export default Verified;
+}
