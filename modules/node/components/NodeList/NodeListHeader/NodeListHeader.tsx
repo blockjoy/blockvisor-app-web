@@ -33,7 +33,7 @@ export const NodeListHeader: FC<Props> = ({
       {isFiltersCollapsed && (
         <div css={styles.wrapperInner}>
           {totalNodes === null ? (
-            <Skeleton />
+            <Skeleton width="65px" />
           ) : (
             <button
               onClick={handleClick}
@@ -49,7 +49,7 @@ export const NodeListHeader: FC<Props> = ({
 
       <span css={[styles.total, styles.endBlock]}>
         {totalNodes === null ? (
-          <Skeleton width="100" />
+          <Skeleton />
         ) : (
           <>
             Total: <span css={styles.totalValue}>{totalNodes} </span>

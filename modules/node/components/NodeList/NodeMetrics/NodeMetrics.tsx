@@ -11,16 +11,14 @@ export const NodeMetrics = () => {
       ? metrics.find((metric: NodeMetrics) => metric.name === 4)['value']
       : null;
 
-  return (
-    offline === null ? (
-      <Skeleton width='100' />
-    ) : (
-      <div css={styles.wrapper}>
-        <span
-          css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
-        />
-        <span>{offline} Offline</span>
-      </div>
-    )
+  return offline === null ? (
+    <Skeleton />
+  ) : (
+    <div css={styles.wrapper}>
+      <span
+        css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
+      />
+      <span>{offline} Offline</span>
+    </div>
   );
 };
