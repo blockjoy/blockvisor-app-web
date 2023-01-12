@@ -72,7 +72,7 @@ export const useNodeAdd = (): Hook => {
       properties: params.nodeTypeProperties.map((property) => ({
         ...property,
         default: property.default === null ? 'null' : property.default,
-        value: property.value?.toString() || 'null',
+        value: property?.value?.toString() || 'null',
         description: '',
         label: '',
       })),
