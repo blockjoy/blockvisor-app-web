@@ -2,12 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import {
-  EmptyColumn,
-  PageTitle,
-  Table,
-  TableGrid,
-} from '@shared/components';
+import { EmptyColumn, PageTitle, Table, TableGrid } from '@shared/components';
 import { toRows, toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
@@ -43,7 +38,9 @@ export const NodeList = () => {
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
   const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
 
-  const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const currentOrganization = useRef(defaultOrganization);
 
   const handleListTypeChanged = (type: string) => {
@@ -74,13 +71,13 @@ export const NodeList = () => {
       reloadQueryParams();
       loadNodes(initialQueryParams);
 
-      currentOrganization.current = defaultOrganization; 
+      currentOrganization.current = defaultOrganization;
     }
   }, [defaultOrganization?.id]);
 
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 300));
 
     const newCurrentPage = nodeUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
@@ -89,19 +86,22 @@ export const NodeList = () => {
       pagination: {
         ...nodeUIProps.queryParams.pagination,
         current_page: newCurrentPage,
-      }
+      },
     };
-    
+
     nodeUIProps.setQueryParams(newQueryParams);
-  }
+  };
 
   const reloadQueryParams = async () => {
     nodeUIProps.setQueryParams(initialQueryParams);
-  }
+  };
 
   const cells = toGrid(nodeList, handleNodeClick);
   const rows = toRows(nodeList);
-  const { isFiltered, isEmpty } = resultsStatus(nodeList.length, nodeUIProps.queryParams.filter);
+  const { isFiltered, isEmpty } = resultsStatus(
+    nodeList.length,
+    nodeUIProps.queryParams.filter,
+  );
 
   return (
     <>

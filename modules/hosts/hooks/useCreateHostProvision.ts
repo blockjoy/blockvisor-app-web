@@ -1,5 +1,5 @@
 import { HostProvision } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-import { isResponeMetaObject, useIdentityRepository } from '@modules/auth';
+import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
 import { useEffect } from 'react';
@@ -15,7 +15,6 @@ export function useCreateHostProvision() {
     hostsAtoms.hostsLoading,
   );
   const provisionKeyRepository = useProvisionKeysRepository();
-  const repository = useIdentityRepository();
 
   useEffect(() => {
     const keys = provisionKeyRepository?.getHostProvisionKeys();
@@ -31,10 +30,8 @@ export function useCreateHostProvision() {
   ) => {
     setLoadingHosts('loading');
 
-    const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';
     const hostProvision = new HostProvision();
 
-    hostProvision.setOrgId(orgId);
     hostProvision.setIpGateway(gatewayIpAddress);
     hostProvision.setIpRangeFrom(ipAddressFrom);
     hostProvision.setIpRangeTo(ipAddressTo);

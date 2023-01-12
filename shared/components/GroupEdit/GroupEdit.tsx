@@ -29,6 +29,7 @@ export function GroupEdit({ value, handleConfirm }: Props) {
     <div css={[styles.base]}>
       <span css={[styles.icon]}>
         <Image
+          alt="Folder icon"
           src="/assets/icons/folder-12.svg"
           layout="fixed"
           width={12}

@@ -15,6 +15,14 @@ export const styles = {
 
     h1 {
       font-size: 18px;
+
+      @media ${breakpoints.fromMed} {
+        padding-left: 32px;
+      }
+
+      @media ${breakpoints.fromXLrg} {
+        padding-left: 0;
+      }
     }
   `,
   wrapper: css`
@@ -22,7 +30,8 @@ export const styles = {
     justify-content: space-between;
     align-items: center;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toMed} {
+      justify-content: center;
       padding-left: 56px;
     }
   `,

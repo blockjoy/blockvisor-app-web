@@ -15,38 +15,17 @@ type Hook = {
   ) => void;
   isLoading: boolean;
   blockchainList: any[];
-  hostList: any[];
 };
 
 export const useNodeAdd = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [blockchainList, setBlockchainList] = useState([]);
-  const [hostList, setHostList] = useState([]);
   const repository = useIdentityRepository();
 
   const loadLookups = async () => {
     setIsLoading(true);
-    const orgId = repository?.getIdentity()?.defaultOrganization?.id;
-    const hosts: any = await apiClient.getHosts(
-      undefined,
-      orgId || '',
-      undefined,
-    );
-
-    let mappedHosts = [];
-
-    if (hosts?.code !== 6) {
-      mappedHosts = hosts?.map((host: any) => ({
-        value: host.id,
-        label: host.name,
-      }));
-      setHostList(mappedHosts);
-    }
 
     const blockchains: any = await apiClient.getBlockchains();
-
-    console.log('blockchains', blockchains);
-
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id,
       label: b.name,
@@ -65,8 +44,6 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(true);
 
     console.log('createNode', params);
-
-    const hostId = params.host;
 
     const node = new Node();
 
@@ -95,7 +72,7 @@ export const useNodeAdd = (): Hook => {
       properties: params.nodeTypeProperties.map((property) => ({
         ...property,
         default: property.default === null ? 'null' : property.default,
-        value: property.value?.toString() || 'null',
+        value: property?.value?.toString() || 'null',
         description: '',
         label: '',
       })),
@@ -113,7 +90,7 @@ export const useNodeAdd = (): Hook => {
     });
 
     node.setType(nodeTypeString);
-    node.setHostId(hostId);
+    node.setVersion(params.version);
 
     try {
       const createdNode: any = await apiClient.createNode(
@@ -136,6 +113,5 @@ export const useNodeAdd = (): Hook => {
     createNode,
     isLoading,
     blockchainList,
-    hostList,
   };
 };

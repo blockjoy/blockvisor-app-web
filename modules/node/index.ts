@@ -1,6 +1,5 @@
 export * from './components/NodeStatus/NodeStatus';
 export * from './components/NodeList/NodeList';
-export * from './components/NodeWizard/NodeWizard';
 export * from './components/NodeView/NodeView';
 export * from './components/NodeLauncher/NodeLauncher';
 export * from './components/BlockchainSelector/BlockChainSelector';
@@ -11,7 +10,6 @@ export * from './hooks/useNodeView';
 export * from './store/nodeAtoms';
 export * from './store/nodeWizard';
 export * from './hooks/useNodeWizard';
-export * from './components/AddNode/AddNode';
 export * from './store/blockchains';
 export * from './hooks/useGetBlockchains';
 export * from './hooks/useSearchBlockchains';

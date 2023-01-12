@@ -10,6 +10,7 @@ type Props = {
     blockchainId: string,
     nodeTypeId: string,
     nodeTypeProperties: NodeTypeConfig[],
+    nodeVersion: string,
   ) => void;
   activeBlockchainId: string;
   activeNodeTypeId: string;
@@ -50,6 +51,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
       blockchainId,
       nodeTypeId,
       foundActiveNodeType.properties,
+      foundActiveNodeType.version,
     );
   };
 

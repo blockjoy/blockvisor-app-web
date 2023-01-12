@@ -3,6 +3,7 @@ import { styles } from './NodeListPageHeader.styles';
 import IconTable from '@public/assets/icons/table-12.svg';
 import IconGrid from '@public/assets/icons/grid-12.svg';
 import { LaunchNodeButton } from '@modules/node';
+import { PageTitle } from '@shared/components';
 
 type Props = {
   activeListType: string | 'table' | 'grid';
@@ -13,8 +14,8 @@ export const NodeListPageHeader: FC<Props> = ({
   activeListType,
   onTypeChanged,
 }) => (
-  <div css={styles.nodeListPageHeader}>
-    <h1 css={[styles.endBlock, styles.pageTitle]}>Nodes</h1>
+  <>
+    <h1 css={[styles.pageTitle]}>Nodes</h1>
     {/* <NodeCreate /> */}
     {/* <LaunchNodeButton /> */}
     <div css={[styles.listTypePicker, styles.endBlock]}>
@@ -37,5 +38,5 @@ export const NodeListPageHeader: FC<Props> = ({
         <IconGrid />
       </button>
     </div>
-  </div>
+  </>
 );

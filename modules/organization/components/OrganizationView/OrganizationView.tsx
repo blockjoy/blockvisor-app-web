@@ -39,7 +39,7 @@ export const OrganizationView = () => {
     setIsSavingOrganization(true);
 
     try {
-      await updateOrganization(newOrganizationName);
+      await updateOrganization(id?.toString()!, newOrganizationName);
       setIsSavingOrganization(false);
       toast.success('Organization Updated');
     } catch (err: any) {
@@ -57,7 +57,7 @@ export const OrganizationView = () => {
 
   return (
     <>
-      <PageTitle title="Organization Management"></PageTitle>
+      <PageTitle title="Organizations" />
       <PageSection>
         <BackButton />
         {isLoading === 'initializing' ? (
@@ -82,7 +82,6 @@ export const OrganizationView = () => {
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <Members id={queryAsString(id)} />
-            <div css={[spacing.top.xLarge]} />
           </div>
         )}
       </PageSection>
