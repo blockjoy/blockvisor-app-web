@@ -6,10 +6,10 @@ import { opacity } from 'styles/utils.opacity.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './SidebarFooter.styles';
-import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilState } from 'recoil';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { BlockjoyLogo } from '@shared/components';
 
 export function SidebarFooter() {
   const [layout, setLayout] = useRecoilState(layoutState);
@@ -53,10 +53,7 @@ export function SidebarFooter() {
           spacing.top.medium,
         ]}
       >
-        <span css={[styles.logo]}>
-          <LogoSmall />
-          <span css={styles.betaBage}>BETA</span>
-        </span>
+        <BlockjoyLogo />
         <p
           css={[
             typo.micro,

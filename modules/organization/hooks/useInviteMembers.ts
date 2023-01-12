@@ -1,4 +1,3 @@
-import { Organization } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { isResponeMetaObject, useIdentityRepository } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
@@ -9,7 +8,6 @@ export const useInviteMembers = () => {
 
   const inviteMembers = async (emails: string[]) => {
     const response = await apiClient.inviteOrgMember(emails[0], org_id!);
-
     console.log('inviteMembers', response);
 
     if (isResponeMetaObject(response)) {
