@@ -21,8 +21,12 @@ export function DropdownItem({
 }: Props) {
   if (href) {
     return (
-      <Link id={id} href={href} passHref>
-        <a css={[typo.tiny, link, styles.base, styles[size]]}>{children}</a>
+      <Link
+        id={id}
+        href={href}
+        css={[typo.tiny, link, styles.base, styles[size]]}
+      >
+        {children}
       </Link>
     );
   }
