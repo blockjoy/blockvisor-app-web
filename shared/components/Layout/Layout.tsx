@@ -1,6 +1,6 @@
 import anime from 'animejs';
 import { ReactNode, useEffect } from 'react';
-import { Logo } from '..';
+import { BlockjoyLogo } from '@shared/components';
 import { layout, layoutTitle, layoutWrapper } from './Layout.styles';
 
 type Props = {
@@ -25,7 +25,7 @@ export function Layout({ children, title }: Props) {
     <main tabIndex={0} id="content" css={[layout]}>
       <section css={[layoutWrapper]} id="js-auth-layout">
         <header>
-          <Logo />
+          <BlockjoyLogo scale={1} />
           <h1 css={[layoutTitle]}>{title}</h1>
         </header>
         {children}
