@@ -7,6 +7,7 @@ export const themeDefault: Theme = {
   colorPrimaryText: '#222524',
   colorAccent: '#e9c09c',
   colorBorder: '#363938',
+  colorBorderGrey: '#5e605c',
   colorLabel: '#5F615D',
   colorDefault: '#5F615D',
   colorActive: '#363938',

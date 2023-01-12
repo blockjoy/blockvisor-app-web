@@ -9,6 +9,7 @@ interface ITheme {
     colorDefault: string;
     colorCard: string;
     colorBorder: string;
+    colorBorderGrey: string;
     colorLabel: string;
     colorPlaceholder: string;
     colorActive: string;

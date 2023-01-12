@@ -6,10 +6,11 @@ export const styles = {
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 0 30px;
+    padding: 0 24px;
 
     @media ${breakpoints.fromXLrg} {
       flex-direction: row;
+      padding: 0 30px;
     }
   `,
   gridWrapper: css`

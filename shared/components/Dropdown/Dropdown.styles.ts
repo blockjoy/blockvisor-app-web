@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export const styles = {
   base: css`
@@ -8,7 +9,7 @@ export const styles = {
     left: auto;
     right: 0;
   `,
-  menu: css`
+  menu: (theme: ITheme) => css`
     position: absolute;
     z-index: 1;
     top: 40px;
@@ -20,7 +21,7 @@ export const styles = {
     border-radius: 4px;
     min-width: max-content;
     transition: all 0.4s;
-    background-color: var(--color-overlay-background-1);
+    background-color: ${theme.colorLightGrey};
   `,
   isOpen: css`
     opacity: 1;

@@ -1,6 +1,6 @@
 import { styles } from './NodeLauncher.styles';
 import { NodeLauncherPageHeader } from './NodeLauncherPageHeader';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NodeLauncherConfig } from './NodeLauncherConfig';
 import { NodeLauncherProtocol } from './NodeLauncherProtocol';
 import { NodeLauncherSummary } from './NodeLauncherSummary';
@@ -8,9 +8,12 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
 import { AnimatedGraphic } from '@shared/components';
+import { useRecoilValue } from 'recoil';
+import { organizationAtoms } from '@modules/organization';
 
 type NodeState = {
   blockchainId: string;
+  nodeVersion: string;
   nodeTypeId: string;
   nodeTypeProperties: NodeTypeConfig[];
   nodeFiles?: NodeFiles[];
@@ -18,29 +21,37 @@ type NodeState = {
 
 export const NodeLauncher = () => {
   const { blockchains } = useGetBlockchains();
-  const { createNode, loadLookups, hostList } = useNodeAdd();
+  const { createNode, loadLookups } = useNodeAdd();
   const router = useRouter();
 
   const [hasServerError, setHasServerError] = useState<boolean>(false);
 
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
+  const currentOrganization = useRef(defaultOrganization);
+
   const [node, setNode] = useState<NodeState>({
     blockchainId: '',
     nodeTypeId: '',
     nodeTypeProperties: [],
+    nodeVersion: '',
   });
 
   const handleProtocolSelected = (
     blockchainId: string,
     nodeTypeId: string,
     nodeTypeProperties: NodeTypeConfig[],
+    nodeVersion: string,
   ) => {
     setNode({
       ...node,
       blockchainId,
       nodeTypeId,
       nodeTypeProperties,
+      nodeVersion,
     });
   };
 
@@ -122,9 +133,9 @@ export const NodeLauncher = () => {
     }
 
     const params: CreateNodeParams = {
+      version: node.nodeVersion,
       nodeType: +node.nodeTypeId ?? 0,
       blockchain: node.blockchainId ?? '',
-      host: hostList[0].value,
       nodeTypeProperties: node.nodeTypeProperties,
       key_files: mergedFiles.flat(),
     };
@@ -182,6 +193,18 @@ export const NodeLauncher = () => {
     loadLookups();
   }, []);
 
+  useEffect(() => {
+    if (currentOrganization.current?.id !== defaultOrganization?.id) {
+      setNode({
+        blockchainId: '',
+        nodeTypeId: '',
+        nodeTypeProperties: [],
+        nodeVersion: '',
+      });
+      currentOrganization.current = defaultOrganization;
+    }
+  }, [defaultOrganization]);
+
   return (
     <>
       <NodeLauncherPageHeader />
@@ -192,7 +215,7 @@ export const NodeLauncher = () => {
           activeNodeTypeId={node.nodeTypeId}
         />
         {!!node.nodeTypeProperties?.filter(
-          (property) => property.name !== 'self-hostedd',
+          (property) => property.name !== 'self-hosted',
         )?.length && (
           <NodeLauncherConfig
             isConfigValid={isConfigValid()}
