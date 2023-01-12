@@ -27,8 +27,8 @@ export function NodeView() {
   const { node, loadNode, deleteNode, stopNode, restartNode, isLoading } =
     useNodeView();
 
-  const handleStop = () => stopNode(id, node?.hostId);
-  const handleRestart = () => restartNode(id!, node?.hostId);
+  const handleStop = () => stopNode(id);
+  const handleRestart = () => restartNode(id!);
   const handleDelete = async () => deleteNode(id);
 
   useEffect(() => {
