@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -9,11 +11,11 @@ import { PasswordToggle } from '../PasswordTogle';
 import { isValidEmail } from '@shared/utils/validation';
 import { apiClient } from '@modules/client';
 import { isResponeMetaObject } from '@modules/auth/utils/authTypeGuards';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { RegistrationStatus } from '../types';
-import { ROUTES } from '@shared/index';
+import { ROUTES } from '@shared/constants/routes';
 
 type RegisterForm = {
   first_name: string;
@@ -24,6 +26,7 @@ type RegisterForm = {
 };
 
 export function RegisterForm() {
+  const router = useRouter();
   const form = useForm<RegisterForm>();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const [registerError, setRegisterError] = useState<string | undefined>();
@@ -50,7 +53,7 @@ export function RegisterForm() {
       if (isResponeMetaObject(response)) {
         if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
           setIsLoading(false);
-          Router.push(ROUTES.VERIFY);
+          router.push(ROUTES.VERIFY);
         } else {
           setIsLoading(false);
           setRegisterError('Error creating account, please try again.');

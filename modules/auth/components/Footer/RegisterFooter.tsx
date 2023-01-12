@@ -1,3 +1,5 @@
+'use client';
+
 import { ROUTES } from '@shared/constants/routes';
 import { footerLogin, footerLoginAccount } from './LoginFooter.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -10,8 +12,8 @@ export function RegisterFooter() {
     <footer css={[footerLogin, typo.tiny]}>
       <div css={[footerLoginAccount]}>
         <p css={[colors.text2]}>Already have a BlockVisor account?</p>
-        <Link href={ROUTES.LOGIN} passHref>
-          <a css={[link, linkPrimary, linkUnderline]}>Log In</a>
+        <Link css={[link, linkPrimary, linkUnderline]} href={ROUTES.LOGIN}>
+          Log In
         </Link>
       </div>
     </footer>
