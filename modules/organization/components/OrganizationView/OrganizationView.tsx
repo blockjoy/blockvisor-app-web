@@ -39,7 +39,7 @@ export const OrganizationView = () => {
     setIsSavingOrganization(true);
 
     try {
-      await updateOrganization(newOrganizationName);
+      await updateOrganization(id?.toString()!, newOrganizationName);
       setIsSavingOrganization(false);
       toast.success('Organization Updated');
     } catch (err: any) {
