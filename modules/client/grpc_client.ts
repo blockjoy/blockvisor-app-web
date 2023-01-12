@@ -1253,6 +1253,11 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
+    console.log('execStopNode', {
+      host_id,
+      node_id,
+    });
+
     let param = new Parameter();
     param.setName('resource_id');
     param.setValue(node_id.toString());
