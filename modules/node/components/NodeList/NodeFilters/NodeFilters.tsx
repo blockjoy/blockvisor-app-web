@@ -27,15 +27,18 @@ export const NodeFilters = () => {
     };
   }, [nodeUIContext]);
 
-  const prepareFilter = (queryParams: InitialQueryParams, values: InitialFilter) => {
+  const prepareFilter = (
+    queryParams: InitialQueryParams,
+    values: InitialFilter,
+  ) => {
     const { blockchain, node_status, node_type } = values;
     const newQueryParams = { ...queryParams };
 
-    const filter : InitialFilter = {
+    const filter: InitialFilter = {
       blockchain: [],
       node_type: [],
       node_status: [],
-    }
+    };
 
     filter.blockchain = blockchain !== undefined ? blockchain : [];
     filter.node_type = node_type !== undefined ? node_type : [];
@@ -107,7 +110,7 @@ export const NodeFilters = () => {
       if (item.name === e.target.id) {
         return {
           ...item,
-          isChecked: !item.isChecked
+          isChecked: !item.isChecked,
         }
       }
 
@@ -144,7 +147,7 @@ export const NodeFilters = () => {
     setFiltersType(filtersTypeCopy);
 
     localStorage.removeItem('nodeFilters');
-  }
+  };
 
   const handleResetFilters = () => {
     resetFilters();
