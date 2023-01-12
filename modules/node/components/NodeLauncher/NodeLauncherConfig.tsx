@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
 import { Switch } from './formComponents/Switch/Switch';
@@ -97,9 +97,9 @@ export const NodeLauncherConfig: FC<Props> = ({
             : 'Node requires configuration information.'}
         </div>
         <div css={styles.nodeTypeProperties}>
-          {nodeTypeProperties?.map((property: NodeTypeConfig) => {
+          {nodeTypeProperties?.map((property: NodeTypeConfig, idx) => {
             return (
-              <>
+              <Fragment key={idx}>
                 <label
                   css={[
                     spacing.bottom.mediumSmall,
@@ -119,7 +119,7 @@ export const NodeLauncherConfig: FC<Props> = ({
                   onFileUploaded,
                   onPropertyChanged,
                 )}
-              </>
+              </Fragment>
             );
           })}
         </div>

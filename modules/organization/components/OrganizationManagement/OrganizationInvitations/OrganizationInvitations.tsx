@@ -32,8 +32,8 @@ export const OrganizationInvitations = () => {
         {invitations?.length && <Badge>{invitations?.length}</Badge>}
       </header>
       <ul>
-        {invitations?.map((invite) => (
-          <li css={styles.item}>
+        {invitations?.map((invite, idx) => (
+          <li css={styles.item} key={idx}>
             <div css={[spacing.bottom.medium]}>
               <b>{invite.inviterName || 'Unknown'}</b> invited you to join{' '}
               <b>{invite.inviterOrganization || 'Unknown'} organization</b>
