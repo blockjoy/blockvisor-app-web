@@ -1,14 +1,15 @@
-import type { NextPage } from 'next';
-import { ForgotPasswordForm } from '@modules/auth';
-import { Button, Layout } from '@shared/components';
+'use client';
+
+import { Button } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
+import { ForgotPasswordForm } from '@modules/auth';
 
-const Register: NextPage = () => {
+export default function ForgotPassword() {
   return (
-    <Layout title="Forgot Your Password?">
+    <>
       <p
         css={[typo.small, colors.text3, spacing.bottom.medium]}
         className="t-small t-color-text-3 s-bottom--medium forgot-password__description"
@@ -22,8 +23,6 @@ const Register: NextPage = () => {
       <Button href={ROUTES.LOGIN} display="block" size="small" style="ghost">
         Cancel
       </Button>
-    </Layout>
+    </>
   );
-};
-
-export default Register;
+}
