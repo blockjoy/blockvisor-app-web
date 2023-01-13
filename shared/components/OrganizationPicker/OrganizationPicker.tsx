@@ -19,7 +19,8 @@ export const OrganizationPicker = () => {
   const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { getDefaultOrganization, defaultOrganization } = useDefaultOrganization();
+  const { getDefaultOrganization, defaultOrganization } =
+    useDefaultOrganization();
   const { setDefaultOrganization } = useSetDefaultOrganization();
 
   const handleClick = () => setIsOpen(!isOpen);
@@ -27,11 +28,8 @@ export const OrganizationPicker = () => {
 
   const handleChange = (orgId?: string, orgName?: string) => {
     if (orgId && orgName) {
-      setDefaultOrganization(
-        orgId,
-        orgName,
-      );
-  
+      setDefaultOrganization(orgId, orgName);
+
       setIsOpen(false);
     }
   };
@@ -68,26 +66,26 @@ export const OrganizationPicker = () => {
       </select>
 
       <button css={[styles.select, styles.customSelect]} onClick={handleClick}>
-        { defaultOrganization?.name }
+        {defaultOrganization?.name}
       </button>
 
       <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
         <PerfectScrollbar css={styles.dropdownInner(10)}>
           <ul>
-            {
-              allOrganizations?.map((org) => (
-                <li key={org.id}>
-                  <DropdownItem size="medium" onButtonClick={() => handleChange(org.id, org.name)}>
-                    {org.name}
-                  </DropdownItem>
-                </li>
-              ))
-            }
+            {allOrganizations?.map((org) => (
+              <li key={org.id}>
+                <DropdownItem
+                  size="medium"
+                  onButtonClick={() => handleChange(org.id, org.name)}
+                >
+                  {org.name}
+                </DropdownItem>
+              </li>
+            ))}
           </ul>
-          <button
-            css={[styles.createButton]}
-            onClick={handleCreateClicked}
-          ><IconPlus /> Add organization</button>
+          <button css={[styles.createButton]} onClick={handleCreateClicked}>
+            <IconPlus /> Add organization
+          </button>
         </PerfectScrollbar>
       </Dropdown>
 

@@ -6,7 +6,7 @@ export const styles = {
   button: (theme: ITheme) => css`
     position: fixed;
     z-index: 10;
-    right: 20px;
+    right: 100px;
     bottom: 20px;
     display: flex;
     align-items: center;
