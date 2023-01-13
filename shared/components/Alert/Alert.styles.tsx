@@ -12,6 +12,7 @@ export const styles = {
     color: ${theme.colorText};
     font-size: 13px;
     margin: 0 0 24px;
+    width: 100%;
 
     ::after {
       content: '';

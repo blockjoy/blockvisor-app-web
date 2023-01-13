@@ -60,13 +60,13 @@ export const OrganizationView = () => {
       <PageSection>
         <BackButton />
         {isLoading === 'initializing' ? (
-          <>
+          <div css={spacing.top.medium}>
             <SkeletonGrid padding="10px 0 70px">
               <Skeleton width="260px" />
               <Skeleton width="180px" />
             </SkeletonGrid>
             <TableSkeleton />
-          </>
+          </div>
         ) : (
           <div css={spacing.top.medium}>
             <EditableTitle
