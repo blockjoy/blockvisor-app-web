@@ -1,22 +1,27 @@
-import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useRecoilState } from 'recoil';
+import { sidebarOpen, layoutState } from '@modules/layout/store/layoutAtoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { styles } from './Burger.styles';
 
 export const Burger = () => {
-  const [app, setApp] = useRecoilState(layoutState);
+  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+  const layout = useRecoilValue(layoutState);
 
   const handleClick = () => {
-    if (app !== 'sidebar') {
+    if (isSidebarOpen) {
       localStorage.setItem('sidebarCollapsed', 'true');
     } else {
       localStorage.removeItem('sidebarCollapsed');
     }
-    setApp(app === 'sidebar' ? undefined : 'sidebar');
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <button
-      css={[styles.button, app === 'sidebar' && styles.buttonClosed]}
+      css={[
+        styles.button,
+        isSidebarOpen && styles.buttonClosed,
+        !!layout && styles.overlayOpen,
+      ]}
       onClick={handleClick}
     >
       <span></span>
