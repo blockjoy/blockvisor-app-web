@@ -1,28 +1,38 @@
 import { useIdentityRepository } from '@modules/auth';
-import { organizationAtoms, useInvitations } from '@modules/organization';
+import {
+  organizationAtoms,
+  useGetOrganizations,
+  useInvitations,
+} from '@modules/organization';
 import { Badge, Button } from '@shared/components';
-import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvitations.styles';
 
-const tabs = [
-  {
-    name: 'Sent',
-    alerts: 0,
-  },
-  {
-    name: 'Received',
-    alerts: 0,
-  },
-];
-
 export const OrganizationInvitations = () => {
-  const { acceptInvitation, declineInvitation } = useInvitations();
+  const { acceptInvitation, declineInvitation, getReceivedInvitations } =
+    useInvitations();
+  const { getOrganizations } = useGetOrganizations();
+
+  const repository = useIdentityRepository();
+  const userId = repository?.getIdentity()?.id;
 
   const invitations = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
+
+  const handleAcceptInvitation = (invitationId: string) => {
+    acceptInvitation({ invitationId: invitationId }, () => {
+      getOrganizations();
+      getReceivedInvitations(userId!);
+    });
+  };
+
+  const handleDeclineInvitation = (invitationId: string) => {
+    declineInvitation({ invitationId: invitationId }, () =>
+      getReceivedInvitations(userId!),
+    );
+  };
 
   return (
     <div css={styles.wrapper}>
@@ -40,13 +50,13 @@ export const OrganizationInvitations = () => {
             <div css={styles.buttons}>
               <Button
                 size="small"
-                onClick={() => acceptInvitation({ invitationId: invite.id })}
+                onClick={() => handleAcceptInvitation(invite.id)}
               >
                 Accept
               </Button>
               <Button
                 size="small"
-                onClick={() => declineInvitation({ invitationId: invite.id })}
+                onClick={() => handleDeclineInvitation(invite.id)}
                 style="outline"
               >
                 Decline
