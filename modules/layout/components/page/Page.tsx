@@ -1,4 +1,4 @@
-import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './Page.styles';
@@ -9,14 +9,14 @@ type LayoutType = {
 };
 
 const Page: React.FC<LayoutType> = ({ children, isFlex }) => {
-  const layout = useRecoilValue(layoutState);
+  const isSidebarOpen = useRecoilValue(sidebarOpen);
 
   return (
     <div
       css={[
         styles.wrapper,
         isFlex && styles.wrapperFlex,
-        layout === 'sidebar' && styles.wrapperSidebarOpen,
+        isSidebarOpen && styles.wrapperSidebarOpen,
       ]}
     >
       {children}

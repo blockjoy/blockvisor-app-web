@@ -66,4 +66,7 @@ export const styles = {
       width: 16px;
     }
   `,
+  overlayOpen: css`
+    z-index: 6;
+  `,
 };

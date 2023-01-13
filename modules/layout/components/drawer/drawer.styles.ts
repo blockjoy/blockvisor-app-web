@@ -47,6 +47,8 @@ export const styles = {
     padding: 24px;
   `,
   closeButton: (theme: ITheme) => css`
+    display: grid;
+    place-items: center;
     position: absolute;
     right: 0;
     top: 50%;
@@ -60,5 +62,9 @@ export const styles = {
     path {
       fill: ${theme.colorText};
     }
+  `,
+  iconWrapper: css`
+    width: 18px;
+    height: 18px;
   `,
 };
