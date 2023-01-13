@@ -20,6 +20,7 @@ export const styles = {
     padding: 0 20px;
     margin-bottom: 20px;
     color: ${theme.colorDefault};
+    height: 38px;
 
     @media ${breakpoints.toXlrg} {
       padding-left: 0;

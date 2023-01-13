@@ -83,6 +83,7 @@ export const Members = ({ id }: MembersProps) => {
   const handleInviteClicked = () => {
     console.log('emails', emails);
     inviteMembers(emails!, () => {
+      setActiveView('list');
       getSentInvitations(id!);
     });
   };

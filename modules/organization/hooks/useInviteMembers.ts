@@ -1,6 +1,7 @@
 import { isResponeMetaObject, useIdentityRepository } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
+import { toast } from 'react-toastify';
 
 export const useInviteMembers = () => {
   const repository = useIdentityRepository();
@@ -11,6 +12,7 @@ export const useInviteMembers = () => {
     console.log('inviteMembers', response);
 
     if (isResponeMetaObject(response)) {
+      toast.success('Members Invited');
       onComplete();
     } else {
       throw new ApplicationError('UpdateOrganization', 'Update failed');
