@@ -27,7 +27,7 @@ export function LoginForm() {
 
   const router = useRouter();
 
-  const { invited, redirect } = router.query;
+  const { invited, verified, redirect } = router.query;
 
   const signIn = useSignIn();
   const form = useForm<LoginForm>();
@@ -64,7 +64,16 @@ export function LoginForm() {
   });
   return (
     <>
-      {invited && <Alert isSuccess>You've been invited please login.</Alert>}
+      {invited && (
+        <Alert isSuccess>
+          You've been invited, <br /> please login.
+        </Alert>
+      )}
+      {verified && (
+        <Alert isSuccess>
+          Account verified, <br /> please login.
+        </Alert>
+      )}
       <FormProvider {...form}>
         <form onSubmit={onSubmit}>
           <ul css={[reset.list]}>
