@@ -18,9 +18,14 @@ export const styles = {
     margin: 0 16px 16px;
   `,
   list: css`
-    margin-bottom: 24px;
-    display: grid;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
     gap: 6px;
+
+    li:last-child {
+      margin-top: auto;
+    }
   `,
   link: (theme: ITheme) => css`
     user-select: none;

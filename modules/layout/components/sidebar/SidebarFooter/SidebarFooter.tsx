@@ -23,25 +23,6 @@ export function SidebarFooter() {
 
   return (
     <footer css={[styles.wrapper, !isSidebarOpen && styles.wrapperCollapsed]}>
-      <div css={[styles.support, typo.smaller]}>
-        <button
-          onClick={handleLogout}
-          css={[
-            reset.button,
-            styles.button(!sidebarOpen),
-            flex.display.flex,
-            flex.align.center,
-          ]}
-        >
-          <IconDoor css={[styles.icon]} />
-          <span
-            className="signout-text"
-            css={[styles.buttonText, !isSidebarOpen && styles.tooltip]}
-          >
-            Sign Out
-          </span>
-        </button>
-      </div>
       <div css={[styles.separator(!isSidebarOpen)]} />
       <div
         css={[

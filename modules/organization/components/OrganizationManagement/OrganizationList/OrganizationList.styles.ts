@@ -12,6 +12,14 @@ export const styles = {
     }
   `,
   header: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: ${theme.colorDefault};
+  `,
+  mobileCreateButton: css`
+    @media ${breakpoints.fromXLrg} {
+      display: none;
+    }
   `,
 };
