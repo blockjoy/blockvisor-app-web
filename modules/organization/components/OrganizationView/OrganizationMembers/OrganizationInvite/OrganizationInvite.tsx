@@ -5,7 +5,6 @@ import { styles } from './OrganizationInvite.styles';
 
 type Props = {
   hasTextareaValue: boolean;
-  onAddMembersClicked: VoidFunction;
   onInviteClicked: VoidFunction;
   onCancelClicked: VoidFunction;
   onTextareaChanged: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -13,7 +12,6 @@ type Props = {
 
 export const OrganizationInvite: FC<Props> = ({
   hasTextareaValue,
-  onAddMembersClicked,
   onInviteClicked,
   onCancelClicked,
   onTextareaChanged,
@@ -25,16 +23,12 @@ export const OrganizationInvite: FC<Props> = ({
     onInviteClicked();
   };
 
-  const handleAddMembersClicked = () => {
-    setHasInvited(false);
-    onAddMembersClicked();
-  };
-
   return (
     <>
       {!hasInvited && (
         <>
           <textarea
+            autoFocus
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
               onTextareaChanged(e)
             }
@@ -70,14 +64,6 @@ export const OrganizationInvite: FC<Props> = ({
             get started.
           </p>
           <div css={styles.buttons}>
-            <Button
-              disabled={!hasTextareaValue}
-              onClick={handleAddMembersClicked}
-              display="block"
-              size="small"
-            >
-              Add Members
-            </Button>
             <Button
               onClick={onCancelClicked}
               display="block"

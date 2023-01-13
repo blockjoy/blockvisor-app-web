@@ -10,8 +10,8 @@ export function RegisterFooter() {
     <footer css={[footerLogin, typo.tiny]}>
       <div css={[footerLoginAccount]}>
         <p css={[colors.text2]}>Already have a BlockVisor account?</p>
-        <Link href={ROUTES.LOGIN} passHref>
-          <a css={[link, linkPrimary, linkUnderline]}>Log In</a>
+        <Link href={ROUTES.LOGIN} css={[link, linkPrimary, linkUnderline]}>
+          Log In
         </Link>
       </div>
     </footer>

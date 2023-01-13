@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: blockvisor-ui-staging
+resources:
+  - ../base
+patches:
+  - patch: |-
+      apiVersion: networking.gke.io/v1
+      kind: ManagedCertificate
+      metadata:
+        name: blockvisor-ui
+      spec:
+        domains:
+          - app.staging.blockjoy.com
+  - patch: |-
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: blockvisor-ui
+        annotations:
+          kubernetes.io/ingress.global-static-ip-name: blockvisor-ui-staging
