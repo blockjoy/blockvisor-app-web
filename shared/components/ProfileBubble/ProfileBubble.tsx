@@ -7,8 +7,8 @@ export const ProfileBubble = () => {
 
   return (
     <span css={[styles.bubble]}>
-      {user?.firstName?.substring(0, 1)}
-      {user?.lastName?.substring(0, 1)}
+      {user?.firstName?.substring(0, 1)?.toUpperCase()}
+      {user?.lastName?.substring(0, 1)?.toUpperCase()}
     </span>
   );
 };
