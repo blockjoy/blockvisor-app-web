@@ -8,7 +8,7 @@ import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
-import { useModal } from '@shared/index';
+import { TableSkeleton, useModal } from '@shared/index';
 import { NodeListPageHeader } from './NodeListPageHeader/NodeListPageHeader';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -119,7 +119,9 @@ export const NodeList = () => {
             activeListType={activeListType}
             onTypeChanged={handleListTypeChanged}
           />
-          {!Boolean(nodeList?.length) && isLoading === 'finished' ? (
+          {isLoading === 'initializing' ? (
+            <TableSkeleton />
+          ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
             <EmptyColumn
               id="js-nodes-empty"
               title="No Nodes."

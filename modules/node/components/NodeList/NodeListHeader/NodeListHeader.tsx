@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { styles } from './nodeListHeader.styles';
 
-import { NodeFiltersHeader } from '../NodeFilters/NodeFiltersHeader';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { NodeFiltersHeaderIconText } from '../NodeFilters/NodeFiltersHeaderIconText';
 import { NodeMetrics } from '@modules/node/components/NodeList/NodeMetrics/NodeMetrics';
+import { Skeleton } from '@shared/index';
 
 type Props = {
   activeListType: string | 'table' | 'grid';
@@ -30,25 +30,33 @@ export const NodeListHeader: FC<Props> = ({
 
   return (
     <div css={styles.wrapper}>
-      {/* <div css={[styles.filterToggle, styles.endBlock]}>
-      <NodeFiltersHeader />
-    </div> */}
-
       {isFiltersCollapsed && (
-        <button
-          onClick={handleClick}
-          css={[styles.filterToggle, styles.endBlock]}
-        >
-          <NodeFiltersHeaderIconText />
-        </button>
+        <div css={styles.wrapperInner}>
+          {totalNodes === null ? (
+            <Skeleton width="65px" />
+          ) : (
+            <button
+              onClick={handleClick}
+              css={[styles.filterToggle, styles.endBlock]}
+            >
+              <NodeFiltersHeaderIconText />
+            </button>
+          )}
+        </div>
       )}
 
       <NodeMetrics />
 
-      {totalNodes !== null && <span css={[styles.total, styles.endBlock]}>
-        Total: <span css={styles.totalValue}>{totalNodes} </span>
-        {totalNodes === 1 ? 'node' : 'nodes'}
-      </span>}
+      <span css={[styles.total, styles.endBlock]}>
+        {totalNodes === null ? (
+          <Skeleton />
+        ) : (
+          <>
+            Total: <span css={styles.totalValue}>{totalNodes} </span>
+            {totalNodes === 1 ? 'node' : 'nodes'}
+          </>
+        )}
+      </span>
     </div>
   );
 };

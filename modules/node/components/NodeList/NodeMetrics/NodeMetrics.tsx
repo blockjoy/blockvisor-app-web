@@ -1,4 +1,5 @@
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
+import { Skeleton } from '@shared/index';
 import { useRecoilValue } from 'recoil';
 import { styles } from './NodeMetrics.styles';
 
@@ -10,14 +11,14 @@ export const NodeMetrics = () => {
       ? metrics.find((metric: NodeMetrics) => metric.name === 4)['value']
       : null;
 
-  return (
-    offline && (
-      <div css={styles.wrapper}>
-        <span
-          css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
-        />
-        <span>{offline} Offline</span>
-      </div>
-    )
+  return offline === null ? (
+    <Skeleton />
+  ) : (
+    <div css={styles.wrapper}>
+      <span
+        css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
+      />
+      <span>{offline} Offline</span>
+    </div>
   );
 };

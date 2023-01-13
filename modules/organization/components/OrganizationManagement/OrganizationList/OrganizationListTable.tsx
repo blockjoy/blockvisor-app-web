@@ -1,4 +1,4 @@
-import { Button, Table } from '@shared/components';
+import { Button, EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import { FC } from 'react';
 import { flex } from 'styles/utils.flex.styles';
 import { useGetOrganizations } from '@modules/organization';
@@ -7,6 +7,11 @@ const headers: TableHeader[] = [
   {
     name: 'Org. Name',
     key: '1',
+    width: '300px',
+  },
+  {
+    name: 'Members',
+    key: '2',
     width: '300px',
   },
   {
@@ -31,6 +36,14 @@ export const mapOrganizationsToRows = (
         component: (
           <>
             <p>{org.name}</p>
+          </>
+        ),
+      },
+      {
+        key: '2',
+        component: (
+          <>
+            <p>{org.memberCount}</p>
           </>
         ),
       },
@@ -64,5 +77,16 @@ export const AllOrganizationsTable: FC = () => {
   const { organizations, isLoading } = useGetOrganizations();
 
   const rows = mapOrganizationsToRows(organizations);
-  return <Table isLoading={isLoading} headers={headers} rows={rows} />;
+
+  return isLoading === 'initializing' ? (
+    <TableSkeleton />
+  ) : !Boolean(rows?.length) && isLoading === 'finished' ? (
+    <EmptyColumn
+      id="js-nodes-empty"
+      title="No organizations"
+      description={'Add your first organization'}
+    />
+  ) : (
+    <Table isLoading={isLoading} headers={headers} rows={rows} />
+  );
 };
