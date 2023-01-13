@@ -10,8 +10,10 @@ export default () => {
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
 
   useEffect(() => {
-    if (localStorage.getItem('sidebarCollapsed') && window.innerWidth >= 768) {
+    if (localStorage.getItem('sidebarCollapsed') && window.innerWidth >= 1200) {
       setIsSidebarOpen(false);
+    } else {
+      setIsSidebarOpen(true);
     }
   }, []);
 
