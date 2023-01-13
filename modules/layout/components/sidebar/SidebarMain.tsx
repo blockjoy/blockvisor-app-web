@@ -10,6 +10,7 @@ import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { organizationAtoms } from '@modules/organization';
+import { useSignOut } from '@modules/auth';
 
 const blocks = [
   {
@@ -37,11 +38,19 @@ const blocks = [
 ];
 
 export default () => {
+  const router = useRouter();
+  const signOut = useSignOut();
+
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
 
   const invitationCount = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   )?.length;
+
+  const handleLogout = async () => {
+    signOut();
+    router.reload();
+  };
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
@@ -49,7 +58,6 @@ export default () => {
     }
   };
 
-  const router = useRouter();
   return (
     <main css={[styles.wrapper]}>
       {blocks.map((block) => (
@@ -98,6 +106,7 @@ export default () => {
           ))}
           <li>
             <a
+              onClick={handleLogout}
               css={[styles.link, !isSidebarOpen && styles.linkSidebarCollapsed]}
             >
               <span css={styles.linkInner}>
