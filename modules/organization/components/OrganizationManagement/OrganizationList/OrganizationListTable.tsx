@@ -10,6 +10,11 @@ const headers: TableHeader[] = [
     width: '300px',
   },
   {
+    name: 'Members',
+    key: '2',
+    width: '300px',
+  },
+  {
     name: 'Type',
     key: '3',
     width: '300px',
@@ -31,6 +36,14 @@ export const mapOrganizationsToRows = (
         component: (
           <>
             <p>{org.name}</p>
+          </>
+        ),
+      },
+      {
+        key: '2',
+        component: (
+          <>
+            <p>{org.memberCount}</p>
           </>
         ),
       },
