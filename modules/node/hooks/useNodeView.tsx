@@ -15,8 +15,8 @@ type Args = string | string[] | undefined;
 type Hook = {
   loadNode: (args1: Args) => void;
   deleteNode: (args1: Args) => void;
-  stopNode: (nodeId: Args, hostId: Args) => void;
-  restartNode: (nodeId: Args, hostId: Args) => void;
+  stopNode: (nodeId: Args) => void;
+  restartNode: (nodeId: Args) => void;
   isLoading: boolean;
   node: BlockjoyNode | null;
 };
