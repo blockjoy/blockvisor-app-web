@@ -8,7 +8,7 @@ import { useDefaultOrganization } from './useDefaultOrganization';
 import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
 export function useUpdateOrganization() {
-  const selectedOrganization = useRecoilValue(
+  const [selectedOrganization, setSelectedOrganization] = useRecoilState(
     organizationAtoms.selectedOrganization,
   );
   const [allOrganizations, setAllOrganizations] = useRecoilState(
@@ -30,6 +30,13 @@ export function useUpdateOrganization() {
     const response = await apiClient.updateOrganization(organization);
 
     if (isResponeMetaObject(response)) {
+      const newOrg = {
+        ...selectedOrganization,
+        name,
+      };
+
+      setSelectedOrganization(newOrg);
+
       const updatedAllOrgs = allOrganizations.map((org) => {
         if (org.id === selectedOrganization?.id)
           return {
