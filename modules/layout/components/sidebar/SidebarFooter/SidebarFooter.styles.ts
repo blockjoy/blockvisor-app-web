@@ -14,7 +14,6 @@ export const styles = {
     ${isSidebar &&
     `
   &:hover {
-    cursor: pointer;
     @media ${breakpoints.fromXLrg} {
       :hover .sidebar-copy {
         opacity: 1;
@@ -102,7 +101,6 @@ export const styles = {
         fill: var(--color-text-5);
       }
     }
-    cursor: pointer;
   `,
   betaBage: (theme: ITheme) => css`
     position: absolute;
