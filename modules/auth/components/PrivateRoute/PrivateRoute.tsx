@@ -9,11 +9,14 @@ interface Props {
 
 export function PrivateRoute({ children }: Props) {
   const router = useRouter();
+
+  const gotoPath = router.pathname;
+
   const { isLoggedIn, isVerified, isDone, isLoading, state } = useIdentity();
 
   useEffect(() => {
     if (isDone && !isLoggedIn) {
-      router.push(Routes.login);
+      router.push(`${Routes.login}?redirect=${gotoPath}`);
       return;
     }
 

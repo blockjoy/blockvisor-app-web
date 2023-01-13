@@ -4,7 +4,7 @@ import {
   useDefaultOrganization,
   useGetOrganizations,
 } from '@modules/organization';
-import { Button, Input } from '@shared/components';
+import { Alert, Button, Input } from '@shared/components';
 import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
@@ -26,6 +26,9 @@ export function LoginForm() {
   const { getOrganizations } = useGetOrganizations();
 
   const router = useRouter();
+
+  const { invited, redirect } = router.query;
+
   const signIn = useSignIn();
   const form = useForm<LoginForm>();
   const [loading, setIsLoading] = useState(false);
@@ -50,7 +53,7 @@ export function LoginForm() {
 
       setIsLoading(false);
 
-      router.push('/nodes');
+      router.push(`/${redirect?.toString() || 'nodes'}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
@@ -60,60 +63,63 @@ export function LoginForm() {
     }
   });
   return (
-    <FormProvider {...form}>
-      <form onSubmit={onSubmit}>
-        <ul css={[reset.list]}>
-          <li css={[spacing.bottom.mediumSmall]}>
-            <Input
-              labelStyles={[display.visuallyHidden]}
-              disabled={loading}
-              name="email"
-              placeholder="Email"
-              validationOptions={{
-                required: 'Your e-mail address is required',
-                pattern: {
-                  value: isValidEmail(),
-                  message: 'Email format is not correct',
-                },
-              }}
-            />
-          </li>
-          <li css={[spacing.bottom.medium]}>
-            <Input
-              labelStyles={[display.visuallyHidden]}
-              disabled={loading}
-              name="password"
-              placeholder="Password"
-              type={activeType}
-              validationOptions={{
-                required: 'This is a mandatory field',
-                minLength: { value: 6, message: 'Password too short' },
-              }}
-              rightIcon={
-                <PasswordToggle
-                  activeType={activeType}
-                  onClick={handleIconClick}
-                />
-              }
-            />
-          </li>
-        </ul>
-        <Button
-          loading={loading}
-          disabled={loading}
-          size="medium"
-          display="block"
-          style="primary"
-          type="submit"
-        >
-          Login
-        </Button>
-        {loginError && (
-          <p css={[typo.smaller, colors.warning, spacing.top.small]}>
-            {loginError}
-          </p>
-        )}
-      </form>
-    </FormProvider>
+    <>
+      {invited && <Alert isSuccess>You've been invited please login.</Alert>}
+      <FormProvider {...form}>
+        <form onSubmit={onSubmit}>
+          <ul css={[reset.list]}>
+            <li css={[spacing.bottom.mediumSmall]}>
+              <Input
+                labelStyles={[display.visuallyHidden]}
+                disabled={loading}
+                name="email"
+                placeholder="Email"
+                validationOptions={{
+                  required: 'Your e-mail address is required',
+                  pattern: {
+                    value: isValidEmail(),
+                    message: 'Email format is not correct',
+                  },
+                }}
+              />
+            </li>
+            <li css={[spacing.bottom.medium]}>
+              <Input
+                labelStyles={[display.visuallyHidden]}
+                disabled={loading}
+                name="password"
+                placeholder="Password"
+                type={activeType}
+                validationOptions={{
+                  required: 'This is a mandatory field',
+                  minLength: { value: 6, message: 'Password too short' },
+                }}
+                rightIcon={
+                  <PasswordToggle
+                    activeType={activeType}
+                    onClick={handleIconClick}
+                  />
+                }
+              />
+            </li>
+          </ul>
+          <Button
+            loading={loading}
+            disabled={loading}
+            size="medium"
+            display="block"
+            style="primary"
+            type="submit"
+          >
+            Login
+          </Button>
+          {loginError && (
+            <p css={[typo.smaller, colors.warning, spacing.top.small]}>
+              {loginError}
+            </p>
+          )}
+        </form>
+      </FormProvider>
+    </>
   );
 }

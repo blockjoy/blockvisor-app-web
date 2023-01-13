@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { apiClient } from '@modules/client';
 import { delay } from '@shared/utils/delay';
+import { Layout } from '@shared/components';
 
 const AcceptInvite: NextPage = () => {
   const router = useRouter();
@@ -21,15 +22,15 @@ const AcceptInvite: NextPage = () => {
         if (response.code === 20) {
           return;
         }
-
-        // await delay(3000);
-
-        // router.push('/');
       })();
     }
   }, [router.isReady]);
 
-  return null;
+  return (
+    <Layout title="Invitation Declined">
+      <p>You have declined this invitation</p>
+    </Layout>
+  );
 };
 
 export default AcceptInvite;
