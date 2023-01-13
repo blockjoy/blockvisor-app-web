@@ -1,4 +1,4 @@
-import { NodeTypeConfigLabel } from '@shared/components';
+import { NodeTypeConfigLabel, Alert } from '@shared/components';
 import { FC } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
@@ -86,15 +86,12 @@ export const NodeLauncherConfig: FC<Props> = ({
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>
         <h2 css={styles.h2}>Configure</h2>
-        <div
-          css={[
-            styles.alert,
-            isConfigValid ? styles.alertSuccess : styles.alertDanger,
-          ]}
-        >
-          {isConfigValid
-            ? 'All systems GO!'
-            : 'Node requires configuration information.'}
+        <div css={styles.alertWrapper}>
+          <Alert isSuccess={isConfigValid}>
+            {isConfigValid
+              ? 'All systems GO!'
+              : 'Node requires configuration information.'}
+          </Alert>
         </div>
         <div css={styles.nodeTypeProperties}>
           {nodeTypeProperties?.map((property: NodeTypeConfig) => {

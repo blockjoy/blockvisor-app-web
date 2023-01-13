@@ -17,39 +17,8 @@ export const styles = {
     color: ${theme.colorLabel};
     padding: 0 30px;
   `,
-  alert: (theme: ITheme) => css`
-    position: relative;
-    display: inline-block;
-    line-height: 1.35;
-    border-radius: 60px;
-    padding: 10px 24px 10px 36px;
-    background: ${theme.colorLightGrey};
-    color: ${theme.colorText};
-    font-size: 13px;
-    margin: 0 30px 24px;
-
-    ::after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 16px;
-      translate: 0 -50%;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: ${theme.colorDanger};
-    }
-  `,
-  alertSuccess: (theme: ITheme) => css`
-    ::after {
-      background: ${theme.colorPrimary};
-    }
-  `,
-  alertDanger: (theme: ITheme) => css`
-    ::after {
-      background: ${theme.colorDanger};
-    }
+  alertWrapper: css`
+    margin: 0 30px;
   `,
   nodeTypeProperties: css`
     padding: 0 30px;
