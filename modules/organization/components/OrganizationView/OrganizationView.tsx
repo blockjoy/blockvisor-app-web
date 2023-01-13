@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
-import { OrganizationDetails } from './OrganizationDetails/OrganizationDetails';
 import { toast } from 'react-toastify';
 import { getOrganizationDetails } from '@modules/organization/utils/organizationDetails';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -75,10 +74,6 @@ export const OrganizationView = () => {
               initialValue={organization?.name!}
               onSaveClicked={handleSaveClicked}
             />
-            {/* <OrganizationDetails
-              id={organization?.id}
-              name={organization?.name}
-            /> */}
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <Members id={queryAsString(id)} />

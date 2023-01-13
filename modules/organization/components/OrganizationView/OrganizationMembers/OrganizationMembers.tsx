@@ -8,6 +8,7 @@ import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import { OrganizationPendingInvitations } from './OrganizationPendingInvitations/OrganizationPendingInvitations';
+import { useInvitations } from '@modules/organization';
 
 export const mapOrganizationMembersToRows = (
   organizationMembers?: ClientOrganizationMember[],
@@ -39,16 +40,16 @@ export const mapOrganizationMembersToRows = (
           </>
         ),
       },
-      {
-        key: '4',
-        component: (
-          <div css={[flex.display.flex]}>
-            <Button style="outline" size="small">
-              Remove
-            </Button>
-          </div>
-        ),
-      },
+      // {
+      //   key: '4',
+      //   component: (
+      //     <div css={[flex.display.flex]}>
+      //       <Button style="outline" size="small">
+      //         Remove
+      //       </Button>
+      //     </div>
+      //   ),
+      // },
     ],
   }));
 };
@@ -59,6 +60,7 @@ export type MembersProps = {
 
 export const Members = ({ id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
+  const { getSentInvitations } = useInvitations();
 
   const { getOrganizationMembers, organizationMembers, isLoading } =
     useGetOrganizationMembers();
@@ -80,7 +82,9 @@ export const Members = ({ id }: MembersProps) => {
 
   const handleInviteClicked = () => {
     console.log('emails', emails);
-    inviteMembers(emails!);
+    inviteMembers(emails!, () => {
+      getSentInvitations(id!);
+    });
   };
 
   const handleAddMembersClicked = () => {
