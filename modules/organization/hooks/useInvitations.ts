@@ -22,34 +22,42 @@ export function useInvitations() {
     setSentInvitations(response);
   };
 
-  const acceptInvitation = async ({
-    token,
-    invitationId,
-  }: {
-    token?: string;
-    invitationId?: string;
-  }) => {
+  const acceptInvitation = async (
+    {
+      token,
+      invitationId,
+    }: {
+      token?: string;
+      invitationId?: string;
+    },
+    onSuccess: VoidFunction,
+  ) => {
     const response = await apiClient.acceptInvitation({
       token,
       invitationId,
     });
     toast.success('Invite Accepted');
-    console.log('ui response', response);
+    onSuccess();
+    console.log('acceptInvitation response', response);
   };
 
-  const declineInvitation = async ({
-    token,
-    invitationId,
-  }: {
-    token?: string;
-    invitationId?: string;
-  }) => {
+  const declineInvitation = async (
+    {
+      token,
+      invitationId,
+    }: {
+      token?: string;
+      invitationId?: string;
+    },
+    onSuccess: VoidFunction,
+  ) => {
     const response = await apiClient.declineInvitation({
       token,
       invitationId,
     });
     toast.success('Invite Declined');
-    console.log('ui response', response);
+    onSuccess();
+    console.log('declineInvitation response', response);
   };
 
   return {
