@@ -68,8 +68,7 @@ export function RegisterForm() {
     <>
       {invited && (
         <Alert isSuccess>
-          You've been invited to Unknown organization, please create an account
-          to accept.
+          You've been invited, please create an account to accept.
         </Alert>
       )}
       <FormProvider {...form}>
