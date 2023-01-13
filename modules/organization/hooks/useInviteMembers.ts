@@ -6,12 +6,12 @@ export const useInviteMembers = () => {
   const repository = useIdentityRepository();
   const org_id = repository?.getIdentity()?.defaultOrganization?.id;
 
-  const inviteMembers = async (emails: string[]) => {
+  const inviteMembers = async (emails: string[], onComplete: VoidFunction) => {
     const response = await apiClient.inviteOrgMember(emails[0], org_id!);
     console.log('inviteMembers', response);
 
     if (isResponeMetaObject(response)) {
-      return;
+      onComplete();
     } else {
       throw new ApplicationError('UpdateOrganization', 'Update failed');
     }
