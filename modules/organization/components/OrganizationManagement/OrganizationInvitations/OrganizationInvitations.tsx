@@ -45,7 +45,7 @@ export const OrganizationInvitations = () => {
           <li css={styles.item}>
             <div css={[spacing.bottom.medium]}>
               <b>{invite.createdByUserName || 'Unknown'}</b> invited you to join{' '}
-              <b>{invite.createdForOrgName || 'Unknown'} organization</b>
+              <b>{invite.createdForOrgName || 'Unknown'}</b> organization
             </div>
             <div css={styles.buttons}>
               <Button
