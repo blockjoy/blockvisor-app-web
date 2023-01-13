@@ -4,8 +4,8 @@ import { styles } from './SidebarMain.styles';
 import { Badge, ProfileBubble } from '@shared/components';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
-import IconSupport from '@public/assets/icons/chat-12.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
+import IconDoor from '@public/assets/icons/door-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
@@ -32,11 +32,6 @@ const blocks = [
         path: '/profile',
         icon: <ProfileBubble />,
       },
-      {
-        name: 'Support',
-        path: '/support',
-        icon: <IconSupport />,
-      },
     ],
   },
 ];
@@ -57,56 +52,78 @@ export default () => {
   const router = useRouter();
   return (
     <main css={[styles.wrapper]}>
-      <div>
-        {blocks.map((block) => (
-          <div key={block.title}>
-            <ul css={[styles.list]}>
-              {block.items.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.path}
-                    onClick={handleLinkClicked}
+      {blocks.map((block) => (
+        <ul key={block.title} css={[styles.list]}>
+          {block.items.map((item) => (
+            <li key={item.name}>
+              <Link
+                href={item.path}
+                onClick={handleLinkClicked}
+                css={[
+                  styles.link,
+                  !isSidebarOpen && styles.linkSidebarCollapsed,
+                ]}
+              >
+                <span
+                  css={styles.linkInner}
+                  className={
+                    router.pathname.includes(item.path) ? 'active' : ''
+                  }
+                >
+                  <span
+                    className="link-icon"
                     css={[
-                      styles.link,
-                      !isSidebarOpen && styles.linkSidebarCollapsed,
+                      styles.linkIcon,
+                      !isSidebarOpen && styles.linkIconSidebarOpen,
                     ]}
                   >
-                    <span
-                      css={styles.linkInner}
-                      className={
-                        router.pathname.includes(item.path) ? 'active' : ''
-                      }
-                    >
-                      <span
-                        className="link-icon"
-                        css={[
-                          styles.linkIcon,
-                          !isSidebarOpen && styles.linkIconSidebarOpen,
-                        ]}
-                      >
-                        {item.icon}
-                      </span>
-                      <span
-                        className="link-text"
-                        css={[
-                          styles.linkText,
-                          !isSidebarOpen && styles.linkTextHidden,
-                        ]}
-                      >
-                        {item.name}
+                    {item.icon}
+                  </span>
+                  <span
+                    className="link-text"
+                    css={[
+                      styles.linkText,
+                      !isSidebarOpen && styles.linkTextHidden,
+                    ]}
+                  >
+                    {item.name}
 
-                        {Boolean(invitationCount) && item.isOrganizations && (
-                          <Badge>{invitationCount}</Badge>
-                        )}
-                      </span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+                    {Boolean(invitationCount) && item.isOrganizations && (
+                      <Badge>{invitationCount}</Badge>
+                    )}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+          <li>
+            <a
+              css={[styles.link, !isSidebarOpen && styles.linkSidebarCollapsed]}
+            >
+              <span css={styles.linkInner}>
+                <span
+                  className="link-icon"
+                  css={[
+                    styles.linkIcon,
+                    !isSidebarOpen && styles.linkIconSidebarOpen,
+                  ]}
+                >
+                  <IconDoor />
+                </span>
+                <span
+                  className="link-text"
+                  css={[
+                    styles.linkText,
+                    !isSidebarOpen && styles.linkTextHidden,
+                  ]}
+                >
+                  Sign Out
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      ))}
       <SidebarFooter />
     </main>
   );
