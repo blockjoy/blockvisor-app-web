@@ -10,7 +10,7 @@ import {
   DrawerAction,
   DrawerContent,
   DrawerHeader,
-} from '../../../../../layout/components';
+} from '../../../layout/components';
 import { width } from 'styles/utils.width.styles';
 import {
   useCreateOrganization,
