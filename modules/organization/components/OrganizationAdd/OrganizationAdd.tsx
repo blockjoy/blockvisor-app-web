@@ -20,12 +20,14 @@ import { toast } from 'react-toastify';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useRouter } from 'next/router';
 
 type OrganisationAddForm = {
   name: string;
 };
 
 export const OrganizationAdd: FC = () => {
+  const router = useRouter();
   const form = useForm<OrganisationAddForm>();
   const [layout, setLayout] = useRecoilState(layoutState);
   const createOrganization = useCreateOrganization();
@@ -40,6 +42,7 @@ export const OrganizationAdd: FC = () => {
       await getOrganizations();
       await delay(env.loadingDuration);
       toast.success('Organization created');
+      router.push('/organizations');
     } catch (error) {
       if (error instanceof ApplicationError) toast.error(error.message);
     }
