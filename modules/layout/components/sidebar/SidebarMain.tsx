@@ -49,7 +49,7 @@ export default () => {
 
   const handleLogout = async () => {
     signOut();
-    router.reload();
+    window.location.href = '/';
   };
 
   const handleLinkClicked = () => {

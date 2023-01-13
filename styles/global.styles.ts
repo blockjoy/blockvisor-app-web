@@ -8,6 +8,7 @@ import { breakpoints } from './variables.styles';
 
 export const globalStyles = css`
   ${normalize}
+
   :root {
     /* --- PRIMARY --- */
     --color-primary: hsl(90, 84%, 75%);
@@ -192,6 +193,16 @@ export const globalStyles = css`
     to {
       opacity: 0;
     }
+  }
+
+  #crisp-chatbox,
+  #crisp-chatbox span,
+  #crisp-chatbox div,
+  #crisp-chatbox textarea,
+  #crisp-chatbox textarea::placeholder {
+    font-family: 'Styrene A LC', -apple-system, BlinkMacSystemFont, avenir next,
+      avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
+      sans-serif !important;
   }
 
   html {
