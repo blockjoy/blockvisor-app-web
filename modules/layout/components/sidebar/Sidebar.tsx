@@ -1,5 +1,5 @@
-import { useRecoilState } from 'recoil';
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { layoutState, sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { styles } from './Sidebar.styles';
 
 import { SidebarHeader } from './SidebarHeader';
@@ -8,10 +8,13 @@ import { useEffect } from 'react';
 
 export default () => {
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+  const layout = useRecoilValue(layoutState);
 
   useEffect(() => {
-    if (localStorage.getItem('sidebarCollapsed') && window.innerWidth >= 768) {
+    if (localStorage.getItem('sidebarCollapsed') && window.innerWidth >= 1200) {
       setIsSidebarOpen(false);
+    } else {
+      setIsSidebarOpen(true);
     }
   }, []);
 
@@ -20,6 +23,7 @@ export default () => {
       css={[
         styles.sidebar,
         isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed,
+        Boolean(layout) && styles.sidebarDrawerOpen,
       ]}
     >
       <SidebarHeader />
