@@ -12,3 +12,8 @@ export const layoutState = atom<LayoutStates | undefined>({
   key: 'layoutState',
   default: undefined,
 });
+
+export const sidebarOpen = atom<boolean>({
+  key: 'sidebarOpen',
+  default: false,
+});

@@ -8,11 +8,11 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './SidebarFooter.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilState } from 'recoil';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { BlockjoyLogo } from '@shared/components';
 
 export function SidebarFooter() {
-  const [layout, setLayout] = useRecoilState(layoutState);
+  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
   const router = useRouter();
   const signOut = useSignOut();
 
@@ -22,15 +22,13 @@ export function SidebarFooter() {
   };
 
   return (
-    <footer
-      css={[styles.wrapper, layout !== 'sidebar' && styles.wrapperCollapsed]}
-    >
+    <footer css={[styles.wrapper, !isSidebarOpen && styles.wrapperCollapsed]}>
       <div css={[styles.support, typo.smaller]}>
         <button
           onClick={handleLogout}
           css={[
             reset.button,
-            styles.button(layout !== 'sidebar'),
+            styles.button(!sidebarOpen),
             flex.display.flex,
             flex.align.center,
           ]}
@@ -38,16 +36,16 @@ export function SidebarFooter() {
           <IconDoor css={[styles.icon]} />
           <span
             className="signout-text"
-            css={[styles.buttonText, layout !== 'sidebar' && styles.tooltip]}
+            css={[styles.buttonText, !isSidebarOpen && styles.tooltip]}
           >
             Sign Out
           </span>
         </button>
       </div>
-      <div css={[styles.separator(layout !== 'sidebar')]} />
+      <div css={[styles.separator(!isSidebarOpen)]} />
       <div
         css={[
-          styles.copy(layout !== 'sidebar'),
+          styles.copy(!isSidebarOpen),
           flex.display.flex,
           flex.align.center,
           spacing.top.medium,
@@ -59,7 +57,7 @@ export function SidebarFooter() {
             typo.micro,
             opacity.o30,
             spacing.left.medium,
-            layout !== 'sidebar' && styles.tooltip,
+            !isSidebarOpen && styles.tooltip,
           ]}
           className="sidebar-copy"
         >
