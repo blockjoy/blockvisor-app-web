@@ -15,8 +15,8 @@ type Args = string | string[] | undefined;
 type Hook = {
   loadNode: (args1: Args) => void;
   deleteNode: (args1: Args) => void;
-  stopNode: (args1: Args) => void;
-  restartNode: (args1: Args) => void;
+  stopNode: (nodeId: Args) => void;
+  restartNode: (nodeId: Args) => void;
   isLoading: boolean;
   node: BlockjoyNode | null;
 };
@@ -35,13 +35,13 @@ export const useNodeView = (): Hook => {
     toast.success(`Node Deleted`);
   };
 
-  const stopNode = async (id: Args) => {
-    await apiClient.execStopNode(createUuid(node?.hostId), createUuid(id));
+  const stopNode = async (nodeId: Args) => {
+    await apiClient.execStopNode(createUuid(node?.hostId), createUuid(nodeId));
     toast.success(`Node Stopped`);
   };
 
-  const restartNode = async (id: Args) => {
-    await apiClient.execStartNode(createUuid(node?.hostId), createUuid(id));
+  const restartNode = async (nodeId: Args) => {
+    await apiClient.execStartNode(createUuid(node?.hostId), createUuid(nodeId));
     toast.success(`Node Started`);
   };
 
@@ -88,7 +88,7 @@ export const useNodeView = (): Hook => {
 
     const activeNode: BlockjoyNode = {
       id: node.id,
-      hostId: node.hostId.value,
+      hostId: node.hostId,
       status: node.status,
       name: node.name,
       ip: node.ip,

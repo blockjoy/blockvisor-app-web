@@ -27,7 +27,9 @@ export const DrawerHeader: React.FC<Props> = ({ children, onCloseClicked }) => {
         onClick={handleCloseClicked}
         css={styles.closeButton}
       >
-        <IconClose />
+        <span css={styles.iconWrapper}>
+          <IconClose />
+        </span>
       </button>
     </header>
   );
