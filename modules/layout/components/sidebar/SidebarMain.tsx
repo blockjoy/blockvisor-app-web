@@ -8,7 +8,7 @@ import IconSupport from '@public/assets/icons/chat-12.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { organizationAtoms } from '@modules/organization';
 
 const blocks = [
@@ -42,7 +42,7 @@ const blocks = [
 ];
 
 export default () => {
-  const [layout, setLayout] = useRecoilState(layoutState);
+  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
 
   const invitationCount = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
@@ -50,7 +50,7 @@ export default () => {
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
-      setLayout(undefined);
+      setIsSidebarOpen(false);
     }
   };
 
@@ -68,7 +68,7 @@ export default () => {
                     onClick={handleLinkClicked}
                     css={[
                       styles.link,
-                      layout !== 'sidebar' && styles.linkSidebarCollapsed,
+                      !isSidebarOpen && styles.linkSidebarCollapsed,
                     ]}
                   >
                     <span
@@ -81,7 +81,7 @@ export default () => {
                         className="link-icon"
                         css={[
                           styles.linkIcon,
-                          layout !== 'sidebar' && styles.linkIconSidebarOpen,
+                          !isSidebarOpen && styles.linkIconSidebarOpen,
                         ]}
                       >
                         {item.icon}
@@ -90,7 +90,7 @@ export default () => {
                         className="link-text"
                         css={[
                           styles.linkText,
-                          layout !== 'sidebar' && styles.linkTextHidden,
+                          !isSidebarOpen && styles.linkTextHidden,
                         ]}
                       >
                         {item.name}
