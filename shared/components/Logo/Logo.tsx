@@ -43,10 +43,6 @@ export function Logo({ type = 'blockvisor-small', centered = false }: Props) {
     }
   };
   return (
-    <h1 css={[logo, centered ? logoLinkCentered : '']}>
-      <a href="#" css={[logoLink]}>
-        {renderIcon(type)}
-      </a>
-    </h1>
+    <h1 css={[logo, centered ? logoLinkCentered : '']}>{renderIcon(type)}</h1>
   );
 }
