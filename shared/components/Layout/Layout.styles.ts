@@ -1,12 +1,18 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 const layout = css`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 24px 12px;
+  padding: 4px 12px;
+  min-height: auto;
+
+  @media ${breakpoints.fromSml} {
+    min-height: 100vh;
+    padding: 24px 12px;
+  }
 `;
 
 const layoutWrapper = css`
@@ -16,7 +22,7 @@ const layoutWrapper = css`
   padding: 30px;
   overflow: hidden;
 
-  @media (min-width: 35.5rem) {
+  @media ${breakpoints.fromSml} {
     padding: 60px;
     width: 380px;
   }
@@ -24,8 +30,12 @@ const layoutWrapper = css`
 
 const layoutTitle = css`
   font-size: 20px;
-  margin-top: 40px;
+  margin-top: 20px;
   margin-bottom: 24px;
+
+  @media ${breakpoints.fromSml} {
+    margin-top: 40px;
+  }
 `;
 
 export { layout, layoutTitle, layoutWrapper };

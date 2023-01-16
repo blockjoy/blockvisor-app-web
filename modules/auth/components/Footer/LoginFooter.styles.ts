@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 const footerLoginLink = css`
   color: var(--color-text-2);

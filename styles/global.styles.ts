@@ -242,10 +242,10 @@ export const globalStyles = css`
     -moz-osx-font-smoothing: grayscale;
   }
 
-  body,
+  /*  body,
   #__next {
     min-height: 100vh;
-  }
+  } */
 
   a {
     text-decoration: none;
