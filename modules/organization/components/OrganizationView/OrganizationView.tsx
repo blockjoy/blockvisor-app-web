@@ -33,10 +33,7 @@ export const OrganizationView = () => {
     useState<boolean>(false);
 
   const handleSaveClicked = async (newOrganizationName: string) => {
-    console.log('handleSaveClicked', newOrganizationName);
-
     setIsSavingOrganization(true);
-
     try {
       await updateOrganization(id?.toString()!, newOrganizationName);
       setIsSavingOrganization(false);

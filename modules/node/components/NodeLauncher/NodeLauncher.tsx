@@ -99,8 +99,6 @@ export const NodeLauncher = () => {
 
   const handleFileUploaded = (e: any) => {
     setHasServerError(false);
-    console.log('handleFileUploaded', e.target.value);
-
     const nodeFilesCopy = [...node.nodeFiles!];
 
     let foundNodeFiles = nodeFilesCopy.find(
@@ -115,8 +113,6 @@ export const NodeLauncher = () => {
       ...node,
       nodeFiles: nodeFilesCopy,
     });
-
-    console.log('node', node);
   };
 
   const handleCreateNodeClicked = () => {
@@ -186,8 +182,6 @@ export const NodeLauncher = () => {
       nodeTypeProperties: propertiesWithValue,
       nodeFiles: fileProperties,
     });
-
-    console.log('node', node);
   }, [node.blockchainId, node.nodeTypeId]);
 
   useEffect(() => {

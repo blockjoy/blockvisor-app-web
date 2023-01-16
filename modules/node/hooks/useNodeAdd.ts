@@ -42,9 +42,6 @@ export const useNodeAdd = (): Hook => {
     onError: () => void,
   ) => {
     setIsLoading(true);
-
-    console.log('createNode', params);
-
     const node = new Node();
 
     const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';

@@ -21,6 +21,10 @@ export const styles = {
     div:hover .row:hover {
       opacity: 1;
     }
+
+    @media ${breakpoints.fromXHuge} {
+      margin-left: -16px;
+    }
   `,
   iconWrapper: (theme: ITheme) => css`
     display: grid;
