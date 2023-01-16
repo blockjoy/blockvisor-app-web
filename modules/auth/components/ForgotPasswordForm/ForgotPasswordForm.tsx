@@ -32,6 +32,7 @@ export function ForgotPasswordForm() {
         <ul css={[reset.list]}>
           <li css={[spacing.bottom.medium]}>
             <Input
+              tabIndex={1}
               name="email"
               placeholder="Your e-mail"
               validationOptions={{
@@ -45,6 +46,7 @@ export function ForgotPasswordForm() {
           </li>
         </ul>
         <Button
+          tabIndex={2}
           loading={isLoading}
           size="medium"
           display="block"
