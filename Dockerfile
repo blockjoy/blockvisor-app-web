@@ -32,7 +32,6 @@ WORKDIR /app
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
-ARG NEXT_PUBLIC_SHORT_SHA=develop
 
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
