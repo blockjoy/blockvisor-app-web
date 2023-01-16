@@ -6,11 +6,11 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 32px;
+    height: 36px;
     padding: 0 20px;
-    border-radius: 16px;
+    border-radius: 18px;
     background: #373a39;
-    font-size: 12px;
+    font-size: 13px;
   `,
   badge: css`
     display: block;

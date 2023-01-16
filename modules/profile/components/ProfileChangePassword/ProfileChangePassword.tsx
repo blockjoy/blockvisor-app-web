@@ -8,7 +8,7 @@ import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { PasswordToggle, useChangePassword } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
-import { styles } from './ChangePassword.styles';
+import { styles } from './ProfileChangePassword.styles';
 import { toast } from 'react-toastify';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 
@@ -18,7 +18,7 @@ type ChangePasswordForm = {
   confirmPassword: string;
 };
 
-export function ChangePassword() {
+export function ProfileChangePassword() {
   const form = useForm<ChangePasswordForm>();
   const changePassword = useChangePassword();
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
@@ -54,37 +54,15 @@ export function ChangePassword() {
     <FormProvider {...form}>
       <form css={[containers.small]} onSubmit={onSubmit}>
         <ul css={[reset.list]}>
-          <li css={[spacing.bottom.large]}>
+          <li css={[spacing.bottom.medium]}>
             <Input
               disabled={loading}
               label="Current Password"
               name="currentPassword"
               placeholder="Current Password"
+              labelStyles={[typo.base]}
               type={activeType}
-              inputSize="large"
-              validationOptions={{
-                required: 'This is a mandatory field',
-                minLength: {
-                  value: 8,
-                  message: 'Password should be at least 8 characters long',
-                },
-              }}
-              rightIcon={
-                <PasswordToggle
-                  activeType={activeType}
-                  onClick={handleIconClick}
-                />
-              }
-            />
-          </li>
-          <li css={[spacing.bottom.mediumSmall]}>
-            <Input
-              label="New Password"
-              disabled={loading}
-              name="newPassword"
-              placeholder="New Password"
-              type={activeType}
-              inputSize="large"
+              inputSize="medium"
               validationOptions={{
                 required: 'This is a mandatory field',
                 minLength: {
@@ -102,11 +80,36 @@ export function ChangePassword() {
           </li>
           <li css={[spacing.bottom.medium]}>
             <Input
+              label="New Password"
+              disabled={loading}
+              name="newPassword"
+              placeholder="New Password"
+              type={activeType}
+              inputSize="medium"
+              labelStyles={[typo.base]}
+              validationOptions={{
+                required: 'This is a mandatory field',
+                minLength: {
+                  value: 8,
+                  message: 'Password should be at least 8 characters long',
+                },
+              }}
+              rightIcon={
+                <PasswordToggle
+                  activeType={activeType}
+                  onClick={handleIconClick}
+                />
+              }
+            />
+          </li>
+          <li css={[spacing.bottom.large]}>
+            <Input
               label="Confirm new password"
               disabled={loading}
               name="confirmPassword"
               placeholder="Confirm Password"
-              inputSize="large"
+              inputSize="medium"
+              labelStyles={[typo.base]}
               type={activeType}
               validationOptions={{
                 required: 'This is a mandatory field',
@@ -131,7 +134,7 @@ export function ChangePassword() {
           disabled={loading}
           size="medium"
           display="inline"
-          style="primary"
+          style="secondary"
           type="submit"
         >
           Change Password

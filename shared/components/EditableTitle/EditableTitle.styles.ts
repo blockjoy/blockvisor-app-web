@@ -13,6 +13,7 @@ export const styles = {
     font-size: 24px;
     outline: none;
     height: 50px;
+    min-width: 0;
     color: ${theme.colorText};
     border: 0;
     border-bottom: 1px solid transparent;
@@ -21,6 +22,7 @@ export const styles = {
     border-color: ${theme.colorBorder};
   `,
   editToggle: (theme: ITheme) => css`
+    flex: 0 0 50px;
     display: grid;
     place-items: center;
     width: 50px;

@@ -1,7 +1,6 @@
 import { TableBlockNodes } from '@shared/components';
-import { NodeStatus } from '../components/NodeStatus/NodeStatus';
 import { formatDistanceToNow } from 'date-fns';
-import { BlockchainIcon } from '@shared/components';
+import { BlockchainIcon, NodeStatus } from '@shared/components';
 
 export const toRows = (nodeList: BlockjoyNode[] | null) => {
   return nodeList?.map((node: any) => ({

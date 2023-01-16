@@ -1,5 +1,4 @@
-import { NodeStatus } from '../components/NodeStatus/NodeStatus';
-import { TableGridCell } from '@shared/components';
+import { TableGridCell, NodeStatus } from '@shared/components';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { BlockchainIcon } from '@shared/components';
 

@@ -2,6 +2,7 @@ import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { Skeleton } from '@shared/index';
 import { useRecoilValue } from 'recoil';
 import { styles } from './NodeMetrics.styles';
+import { colors } from 'styles/utils.colors.styles';
 
 export const NodeMetrics = () => {
   // TODO: re-add back api call here (atm moved to useNodeList becase we don't have total nodes amount returned)
@@ -11,6 +12,8 @@ export const NodeMetrics = () => {
       ? metrics.find((metric: NodeMetrics) => metric.name === 4)['value']
       : null;
 
+  const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
+
   return offline === null ? (
     <Skeleton />
   ) : (
@@ -18,7 +21,11 @@ export const NodeMetrics = () => {
       <span
         css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
       />
-      <span>{offline} Offline</span>
+      <span>
+        {offline}
+        <span css={colors.text3}> / </span>
+        {totalNodes} Offline
+      </span>
     </div>
   );
 };

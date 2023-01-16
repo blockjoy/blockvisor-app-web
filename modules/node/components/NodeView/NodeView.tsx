@@ -15,8 +15,6 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { NodeViewPageHeader } from './NodeViewPageHeader';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
-import { useRecoilValue } from 'recoil';
-import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 
 export function NodeView() {
   const [isMounted, setMounted] = useState<boolean>(false);
@@ -75,14 +73,7 @@ export function NodeView() {
           </>
         )}
       </PageSection>
-
       {node?.nodeTypeConfig && !isLoading && <NodeViewConfig />}
-
-      {/* {!isLoading && (
-        <PageSection>
-          <NodeEarnings />
-        </PageSection>
-      )} */}
       <PageSection>
         {isLoading ? (
           <TableSkeleton />

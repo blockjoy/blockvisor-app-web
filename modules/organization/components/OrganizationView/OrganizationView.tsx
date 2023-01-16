@@ -58,7 +58,9 @@ export const OrganizationView = () => {
     <>
       <PageTitle title="Organizations" />
       <PageSection>
-        <BackButton />
+        <div css={spacing.top.medium}>
+          <BackButton />
+        </div>
         {isLoading === 'initializing' ? (
           <div css={spacing.top.medium}>
             <SkeletonGrid padding="10px 0 70px">

@@ -5,10 +5,9 @@ import { apiClient } from '@modules/client';
 import { useState } from 'react';
 import { delay } from '@shared/utils/delay';
 import { env } from '@shared/constants/env';
-import { LockedSwitch } from '@modules/node/components/LockedSwitch/LockedSwitch';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-import { NodeTypeConfigLabel } from '@shared/components';
+import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 
 type Args = string | string[] | undefined;
 

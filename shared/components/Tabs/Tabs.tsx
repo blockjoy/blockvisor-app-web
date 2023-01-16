@@ -17,12 +17,8 @@ export function Tabs({ tabItems, activeTab, onTabClick }: Props) {
           {tabItems.map((item, index) => (
             <li key={index}>
               <button
-                css={[
-                  reset.button,
-                  styles.tabsButton,
-                  typo.medium,
-                  activeTab === item.value && styles.activeButton,
-                ]}
+                css={[reset.button, styles.tabsButton]}
+                className={activeTab === item.value ? 'active' : ''}
                 onClick={() => onTabClick(item.value)}
               >
                 {item.label}
