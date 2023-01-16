@@ -5,6 +5,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 0;
+    margin-left: -16px;
     width: 500px;
     max-width: 500px;
     border-right: 1px solid ${theme.colorBorder};
@@ -20,10 +21,6 @@ export const styles = {
 
     div:hover .row:hover {
       opacity: 1;
-    }
-
-    @media ${breakpoints.fromXHuge} {
-      margin-left: -16px;
     }
   `,
   iconWrapper: (theme: ITheme) => css`

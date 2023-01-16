@@ -22,6 +22,10 @@ type RegisterForm = {
   confirmPassword: string;
 };
 
+const errors = {
+  'RpcError: Duplicate resource conflict.': 'Email address already registered',
+};
+
 export function RegisterForm() {
   const router = useRouter();
   const { invited } = router.query;
@@ -49,18 +53,17 @@ export function RegisterForm() {
 
       console.log('signup', response);
 
-      if (isResponeMetaObject(response)) {
-        if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
-          setIsLoading(false);
-          Router.push(Routes.verify);
-        } else {
-          setIsLoading(false);
-          setRegisterError('Error creating account, please try again.');
-        }
-      } else {
+      if (response.message) {
+        setRegisterError(
+          errors[response?.message] ||
+            'Error creating account, invalid values.',
+        );
         setIsLoading(false);
-        setRegisterError('Error creating account, please try again.');
+        return;
       }
+
+      setIsLoading(false);
+      Router.push(Routes.verify);
     },
   );
   return (
