@@ -50,7 +50,6 @@ export const tableStyles = {
 
     & td {
       padding: 20px 0;
-      vertical-align: top;
       white-space: nowrap;
 
       @media ${breakpoints.toXlrg} {
@@ -110,5 +109,16 @@ export const tableStyles = {
       ${rgba(theme.colorPrimary || '#000', 0)}
     );
     transition: 0.4s;
+  `,
+  hiddenOnMobile: (theme: ITheme) => css`
+    @media only screen and (max-width: ${theme.screenSm}) {
+      display: none;
+    }
+  `,
+  top: css`
+    vertical-align: top;
+  `,
+  middle: css`
+    vertical-align: middle;
   `,
 };

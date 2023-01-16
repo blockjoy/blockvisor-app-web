@@ -1056,7 +1056,10 @@ export class GrpcClient {
     return this.organization
       ?.members(request, this.getAuthHeader())
       .then((response) => {
-        return response.getUsersList().map((item) => item.toObject());
+        return response.getUsersList().map((item) => ({
+          ...item.toObject(),
+          createdAtString: timestamp_to_date(item?.getCreatedAt()) || undefined,
+        }));
       })
       .catch((err) => {
         return StatusResponseFactory.getOrganizationMembersResponse(

@@ -18,6 +18,7 @@ export const themeDefault: Theme = {
   colorSidebar: '#222524',
   colorLightGrey: '#e7e7e7',
   colorDanger: '#EE7070',
+  colorNote: '#e9af3a',
   screenXs: '500px',
   screenSm: '768px',
   screenMd: '980px',
