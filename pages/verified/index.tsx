@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { apiClient } from '@modules/client';
+import { toast } from 'react-toastify';
 
 const Verified: NextPage = () => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const Verified: NextPage = () => {
 
           await apiClient.registration_confirmation(token?.toString()!);
         } catch (err: any) {
-          console.log('error', err);
+          toast.error('Error Verifying');
           return;
         }
       })();

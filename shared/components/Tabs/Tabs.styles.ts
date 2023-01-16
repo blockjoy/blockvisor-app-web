@@ -5,7 +5,7 @@ export const styles = {
     box-shadow: inset 0 -1px 0 0 var(--color-text-5-o10);
     position: relative;
     overflow: hidden;
-    max-width: 100wv;
+    padding-top: 10px;
   `,
   tabList: css`
     overflow: auto;
@@ -18,18 +18,26 @@ export const styles = {
     }
   `,
   tabsButton: css`
+    height: 60px;
     white-space: nowrap;
-    padding: 20px 0;
+    padding: 0;
+    font-size: 16px;
     color: var(--color-text-2);
     border-bottom: 1px solid transparent;
     transition: color 0.15s var(--transition-easing-cubic),
       border-color 0.15s var(--transition-easing-cubic);
-  `,
-  activeButton: css`
-    color: var(--color-text-5);
-    border-bottom: 1px solid var(--color-text-5);
+
+    :hover {
+      border-bottom: 1px solid var(--color-text-2);
+      color: var(--color-text-3);
+    }
+
+    &.active {
+      color: var(--color-text-5);
+      border-bottom: 1px solid var(--color-text-5);
+    }
   `,
   tabComponent: css`
-    margin-top: 60px;
+    padding-top: 30px;
   `,
 };

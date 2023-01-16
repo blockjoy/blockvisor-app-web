@@ -33,10 +33,7 @@ export const OrganizationView = () => {
     useState<boolean>(false);
 
   const handleSaveClicked = async (newOrganizationName: string) => {
-    console.log('handleSaveClicked', newOrganizationName);
-
     setIsSavingOrganization(true);
-
     try {
       await updateOrganization(id?.toString()!, newOrganizationName);
       setIsSavingOrganization(false);
@@ -58,7 +55,9 @@ export const OrganizationView = () => {
     <>
       <PageTitle title="Organizations" />
       <PageSection>
-        <BackButton />
+        <div css={spacing.top.medium}>
+          <BackButton />
+        </div>
         {isLoading === 'initializing' ? (
           <div css={spacing.top.medium}>
             <SkeletonGrid padding="10px 0 70px">

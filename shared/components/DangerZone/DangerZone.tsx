@@ -48,7 +48,7 @@ export const DangerZone: FC<Props> = ({
   };
 
   return (
-    <section>
+    <section css={[spacing.top.large, spacing.bottom.xLarge]}>
       <h2 css={[typo.large, spacing.bottom.large]}>Danger Zone</h2>
       {step === 1 && (
         <>

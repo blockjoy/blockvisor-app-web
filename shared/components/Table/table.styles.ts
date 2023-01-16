@@ -29,12 +29,6 @@ export const tableStyles = {
       }
     }
 
-    @media only screen and (max-width: ${theme.screenSm}) {
-      .hidden-on-mobile {
-        display: none;
-      }
-    }
-
     & .show-on-hover {
       opacity: 0;
       transition: opacity 0.3s;

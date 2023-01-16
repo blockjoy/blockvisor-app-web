@@ -15,25 +15,16 @@ export const styles = {
 
     h1 {
       font-size: 18px;
+    }
 
-      @media ${breakpoints.fromMed} {
-        padding-left: 32px;
-      }
-
-      @media ${breakpoints.fromXLrg} {
-        padding-left: 0;
-      }
+    @media ${breakpoints.toXlrg} {
+      padding-left: 36px;
     }
   `,
   wrapper: css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    @media ${breakpoints.toMed} {
-      justify-content: center;
-      padding-left: 56px;
-    }
   `,
   actions: css`
     @media ${breakpoints.toXlrg} {

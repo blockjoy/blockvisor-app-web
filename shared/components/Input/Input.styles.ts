@@ -10,6 +10,7 @@ const inputField = css`
   border-radius: 4px;
   width: 100%;
   font-weight: var(--font-weight-normal);
+  font-size: 16px;
   color: inherit;
   transition: color 0.18s var(--transition-easing-cubic),
     background-color 0.18s var(--transition-easing-cubic),
@@ -47,15 +48,12 @@ const inputFieldError = css`
 
 const inputTypesStyle: Record<InputSize, SerializedStyles> = {
   small: css`
-    ${typo.small}
-    padding: 5px 12px;
+    padding: 8px 12px;
   `,
   medium: css`
-    ${typo.small}
-    padding: 9px 12px;
+    padding: 12px 12px;
   `,
   large: css`
-    ${typo.small}
     padding: 16px 12px;
   `,
 };

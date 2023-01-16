@@ -11,7 +11,7 @@ export const styles = {
     padding: 0 0 20px;
 
     @media ${breakpoints.fromSml} {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
 
     @media ${breakpoints.fromXLrg} {
@@ -19,6 +19,10 @@ export const styles = {
     }
 
     @media ${breakpoints.fromHuge} {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    @media ${breakpoints.fromXHuge} {
       grid-template-columns: repeat(6, 1fr);
     }
   `,
@@ -37,15 +41,21 @@ export const styles = {
       fill: ${theme.colorLabel};
     }
   `,
-  cell: css`
+  cell: (theme: ITheme) => css`
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
+    border: 1px solid transparent;
     min-width: 0;
     padding: 16px;
     background: rgba(248, 250, 246, 0.03);
     cursor: pointer;
+
+    :hover,
+    :active {
+      border-color: ${theme.colorBorderGrey};
+    }
   `,
   cellHeader: css`
     min-width: 0;

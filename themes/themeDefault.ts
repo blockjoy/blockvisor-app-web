@@ -1,6 +1,6 @@
-import { Theme } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
-export const themeDefault: Theme = {
+export const themeDefault: ITheme = {
   fontPrimary:
     "'Styrene A LC',-apple-system,BlinkMacSystemFont,avenir next,avenir,segoe ui,helvetica neue,helvetica,Ubuntu,roboto,noto,arial,sans-serif;",
   colorPrimary: '#bff589',
@@ -11,6 +11,7 @@ export const themeDefault: Theme = {
   colorLabel: '#5F615D',
   colorDefault: '#5F615D',
   colorActive: '#363938',
+  colorHover: '#292b2a',
   colorText: '#f9f9f9',
   colorCard: '#272a29',
   colorPlaceholder: '#A5A8A3',
@@ -18,10 +19,4 @@ export const themeDefault: Theme = {
   colorSidebar: '#222524',
   colorLightGrey: '#e7e7e7',
   colorDanger: '#EE7070',
-  screenXs: '500px',
-  screenSm: '768px',
-  screenMd: '980px',
-  screenLg: '1160px',
-  screenXl: '1400px',
-  screenXxl: '1800px',
 };

@@ -2,7 +2,6 @@ import { styles } from './NodeFiltersHeader.styles';
 import IconPlus from '@public/assets/icons/plus-12.svg';
 import IconMinus from '@public/assets/icons/minus-12.svg';
 import IconClose from '@public/assets/icons/arrow-left-12.svg';
-import { FC } from 'react';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { NodeFiltersHeaderIconText } from './NodeFiltersHeaderIconText';

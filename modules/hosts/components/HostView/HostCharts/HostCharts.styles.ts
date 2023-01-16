@@ -8,15 +8,6 @@ export const styles = {
     align-items: center;
     margin-bottom: 20px;
     display: none;
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    @media only screen and (min-width: ${theme.screenLg}) {
-      min-height: 122px;
-    }
   `,
   label: (theme: ITheme) => css`
     letter-spacing: 1px;
@@ -37,10 +28,5 @@ export const styles = {
     flex-direction: column;
     align-items: center;
     gap: 20px;
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      text-align: left;
-      flex-direction: row;
-    }
   `,
 };
