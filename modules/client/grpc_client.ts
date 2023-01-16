@@ -65,6 +65,8 @@ import {
   RestoreOrganizationRequest,
   UpdateOrganizationRequest,
   OrganizationMemberRequest,
+  RemoveMemberRequest,
+  LeaveOrganizationRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/organization_service_pb';
 import {
   CreateUserRequest,
@@ -1063,6 +1065,52 @@ export class GrpcClient {
       })
       .catch((err) => {
         return StatusResponseFactory.getOrganizationMembersResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  async removeOrganizationMember(
+    user_id: string,
+    org_id: string,
+  ): Promise<Empty.AsObject | undefined | StatusResponse> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new RemoveMemberRequest();
+    request.setMeta(request_meta);
+    request.setUserId(user_id);
+    request.setOrgId(org_id);
+
+    return this.organization?.removeMember(request, this.getAuthHeader())
+      .then((response) => {
+        return response?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.removeOrganizationMemberResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  async leaveOrganization(
+    org_id: string,
+  ): Promise<Empty.AsObject | undefined | StatusResponse>{
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new LeaveOrganizationRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(org_id);
+
+    return this.organization?.leave(request, this.getAuthHeader())
+      .then((response) => {
+        return response?.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.leaveOrganizationResponse(
           err,
           'grpcClient',
         );

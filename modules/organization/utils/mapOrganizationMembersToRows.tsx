@@ -1,12 +1,25 @@
+import { useIdentityRepository } from '@modules/auth';
 import { Badge, Button } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
+import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
+import { useRemoveMember } from '../hooks/useRemoveMember';
+import { organizationAtoms } from '../store/organizationAtoms';
 
 export const mapOrganizationMembersToRows = (
   members?: ClientOrganizationMember[],
   invitations?: ClientOrganizationInvitation[],
 ) => {
+  const repository = useIdentityRepository();
+  const userId = repository?.getIdentity()?.id;
+
+  const selectedOrganization = useRecoilValue(
+    organizationAtoms.selectedOrganization,
+  );
+
+  const { removeMemberFromOrganization } = useRemoveMember();
+
   console.log('members', members);
   console.log('invitations', invitations);
   const membersMap =
@@ -30,6 +43,13 @@ export const mapOrganizationMembersToRows = (
     })) ?? [];
 
   const allMembers = [...membersMap, ...invitationsMap];
+
+  const handleRemoveMember = async (
+    user_id: string,
+    org_id: string,
+  ) => {
+    await removeMemberFromOrganization(user_id, org_id);
+  };
 
   const headers = [
     {
@@ -80,16 +100,18 @@ export const mapOrganizationMembersToRows = (
         key: '3',
         component: (
           <div css={[flex.display.flex]}>
-            <Button style="outline" size="small">
-              Remove
-            </Button>
+            {
+              member.active && member.id !== userId && (
+                <Button style="outline" size="small" onClick={() => handleRemoveMember(member?.id!, selectedOrganization?.id!)}>
+                  Remove
+                </Button>
+              )
+            }
           </div>
         ),
       },
     ],
   }));
-
-  console.log('rows', rows);
 
   return {
     rows,

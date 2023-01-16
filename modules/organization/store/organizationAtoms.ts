@@ -62,6 +62,11 @@ const organizationMembers = atom<ClientOrganizationMember[]>({
   default: [],
 });
 
+const organizationMemberLoadingState = atom<LoadingState>({
+  key: 'organization.member.loadingState',
+  default: 'initializing',
+});
+
 const organizationMembersLoadingState = atom<LoadingState>({
   key: 'organization.members.loadingState',
   default: 'initializing',
@@ -87,6 +92,7 @@ export const organizationAtoms = {
   organisationCount,
   defaultOrganization,
   organizationMembers,
+  organizationMemberLoadingState,
   organizationMembersLoadingState,
   organizationSentInvitations,
   organizationReceivedInvitations,

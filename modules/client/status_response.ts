@@ -25,6 +25,8 @@ export enum StatusResponseCode {
   DeleteNode,
   GetOrganizations,
   GetOrganizationMembers,
+  RemoveOrganizationMember,
+  LeaveOrganization,
   CreateUser,
   GetUser,
   UpdateUser,
@@ -271,6 +273,30 @@ export class StatusResponseFactory {
     return StatusResponseFactory.createResponse(
       StatusResponseCode.GetOrganizationMembers,
       'Error retrieving organization members',
+      err,
+      source,
+    );
+  }
+
+  static removeOrganizationMemberResponse(
+    err: any,
+    source: StatusSource,
+  ): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.RemoveOrganizationMember,
+      'Remove organization member error',
+      err,
+      source,
+    );
+  }
+
+  static leaveOrganizationResponse(
+    err: any,
+    source: StatusSource,
+  ): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.LeaveOrganization,
+      'Leave organization error',
       err,
       source,
     );
