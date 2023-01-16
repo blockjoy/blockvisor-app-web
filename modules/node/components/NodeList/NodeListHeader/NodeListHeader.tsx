@@ -1,31 +1,33 @@
 import { FC } from 'react';
-import { styles } from './nodeListHeader.styles';
+import { styles } from './NodeListHeader.styles';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { NodeFiltersHeaderIconText } from '../NodeFilters/NodeFiltersHeaderIconText';
 import { NodeMetrics } from '@modules/node/components/NodeList/NodeMetrics/NodeMetrics';
-import { Skeleton } from '@shared/index';
+import { Skeleton, GridTableViewPicker } from '@shared/components';
 
 type Props = {
-  activeListType: string | 'table' | 'grid';
-  onTypeChanged: (type: string) => void;
   totalRows: number;
 };
 
-export const NodeListHeader: FC<Props> = ({
-  activeListType,
-  onTypeChanged,
-  totalRows,
-}) => {
+export const NodeListHeader: FC<Props> = ({ totalRows }) => {
   const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
   const [isFiltersCollapsed, setFiltersCollapsed] = useRecoilState(
     nodeAtoms.isFiltersCollapsed,
   );
 
-  const handleClick = () => {
+  const [activeListType, setActiveListType] = useRecoilState(
+    nodeAtoms.activeListType,
+  );
+
+  const handleFilterCollapseToggled = () => {
     localStorage.setItem('nodeFiltersCollapsed', JSON.stringify(false));
     setFiltersCollapsed(!isFiltersCollapsed);
+  };
+
+  const handleGridTableViewChanged = (type: string) => {
+    setActiveListType(type);
   };
 
   return (
@@ -36,7 +38,7 @@ export const NodeListHeader: FC<Props> = ({
             <Skeleton width="65px" />
           ) : (
             <button
-              onClick={handleClick}
+              onClick={handleFilterCollapseToggled}
               css={[styles.filterToggle, styles.endBlock]}
             >
               <NodeFiltersHeaderIconText />
@@ -45,9 +47,11 @@ export const NodeListHeader: FC<Props> = ({
         </div>
       )}
 
-      <NodeMetrics />
+      <div css={styles.endBlock}>
+        <NodeMetrics />
+      </div>
 
-      <span css={[styles.total, styles.endBlock]}>
+      <span css={styles.total}>
         {totalNodes === null ? (
           <Skeleton />
         ) : (
@@ -57,6 +61,13 @@ export const NodeListHeader: FC<Props> = ({
           </>
         )}
       </span>
+
+      <div css={[styles.endBlock, styles.listTypePicker]}>
+        <GridTableViewPicker
+          onChange={handleGridTableViewChanged}
+          activeListType={activeListType}
+        />
+      </div>
     </div>
   );
 };

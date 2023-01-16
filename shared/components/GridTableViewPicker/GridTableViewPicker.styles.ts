@@ -3,23 +3,14 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  endBlock: css`
-    flex: 0 0 100px;
-  `,
-  pageTitle: css``,
   listTypePicker: css`
     display: flex;
+    gap: 4px;
     justify-content: flex-end;
 
     @media ${breakpoints.toMed} {
       display: none;
     }
-  `,
-  nodeListPageHeader: css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
   `,
   iconButton: (theme: ITheme) => css`
     display: block;
@@ -31,14 +22,25 @@ export const styles = {
     width: 44px;
     border-radius: 6px;
 
-    & path {
+    path {
       fill: ${theme.colorLabel};
     }
-  `,
-  iconButtonActive: (theme: ITheme) => css`
-    background: #3b403e;
-    & path {
-      fill: ${theme.colorText};
+
+    :hover:not(.active),
+    :active:not(.active) {
+      background: ${theme.colorActive};
+      opacity: 0.4;
+
+      path {
+        fill: ${theme.colorText};
+      }
+    }
+
+    &.active {
+      background: ${theme.colorActive};
+      & path {
+        fill: ${theme.colorText};
+      }
     }
   `,
 };

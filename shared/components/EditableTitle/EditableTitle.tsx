@@ -75,7 +75,8 @@ export const EditableTitle: FC<Props> = ({
             disabled={isSaving}
             loading={isSaving}
             onClick={handleSaveClicked}
-            size="medium"
+            size="small"
+            style="secondary"
           >
             Save
           </Button>

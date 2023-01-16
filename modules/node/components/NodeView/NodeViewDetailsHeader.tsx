@@ -1,12 +1,10 @@
-import { css } from '@emotion/react';
 import { Button } from '@shared/components';
 import { CopyNode } from '@shared/components/CopyNode/CopyNode';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewDetailsHeader.styles';
-import { BlockchainIcon } from '@shared/components';
-import { NodeStatus } from '../NodeStatus/NodeStatus';
+import { BlockchainIcon, NodeStatus } from '@shared/components';
 
 interface Props {
   title: string;

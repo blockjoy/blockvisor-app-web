@@ -11,28 +11,21 @@ export const styles = {
     align-items: center;
     background: #2a2c2b;
     height: 72px;
+    padding-left: 32px;
     border-bottom: 1px solid ${theme.colorBorder};
 
     h1 {
       font-size: 18px;
-
-      @media ${breakpoints.fromMed} {
-        padding-left: 32px;
-      }
-
-      @media ${breakpoints.fromXLrg} {
-        padding-left: 0;
-      }
     }
   `,
   wrapper: css`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-left: 56px;
 
-    @media ${breakpoints.toMed} {
-      justify-content: center;
-      padding-left: 56px;
+    @media ${breakpoints.fromXLrg} {
+      padding-left: 0;
     }
   `,
   actions: css`

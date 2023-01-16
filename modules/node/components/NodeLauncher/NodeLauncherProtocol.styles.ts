@@ -56,7 +56,7 @@ export const styles = {
     background: transparent;
     border: 0;
     border-bottom: 1px solid ${theme.colorBorder};
-    height: 58px;
+    height: 54px;
     padding-left: 29px;
     width: 100%;
     outline: none;
@@ -107,9 +107,9 @@ export const styles = {
     cursor: pointer;
     opacity: 0.7;
 
-    :nth-child(even) {
+    /* :nth-child(even) {
       background: rgba(255, 255, 255, 0.02);
-    }
+    } */
 
     @media ${breakpoints.toXlrg} {
       flex-direction: column;

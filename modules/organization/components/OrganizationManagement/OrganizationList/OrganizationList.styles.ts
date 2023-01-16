@@ -13,14 +13,15 @@ export const styles = {
   `,
   header: (theme: ITheme) => css`
     display: flex;
+    gap: 16px;
     align-items: center;
     justify-content: space-between;
     color: ${theme.colorDefault};
     height: 38px;
-  `,
-  mobileCreateButton: css`
+
     @media ${breakpoints.fromXLrg} {
-      display: none;
+      justify-content: flex-start;
     }
   `,
+  createButton: css``,
 };

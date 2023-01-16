@@ -4,7 +4,6 @@ import IconDoor from '@public/assets/icons/door-12.svg';
 import { ComponentStory } from '@storybook/react';
 import { reset } from 'styles/utils.reset.styles';
 import { divider } from 'styles/utils.spacing.styles';
-import { styles } from '@modules/layout/components/topbar/TopbarUser.styles';
 
 export default {
   title: 'Components/ButtonWithDropdown',
@@ -37,5 +36,5 @@ const Template: ComponentStory<typeof ButtonWithDropdown> = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
-  button: <button css={[styles.button]}>FG</button>,
+  button: <button>FG</button>,
 };

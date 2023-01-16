@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css``,
   alert: (theme: ITheme) => css`
     position: relative;
     display: inline-block;
