@@ -19,6 +19,7 @@ export const styles = {
     color: ${theme.colorPrimaryText};
     border: 0;
     cursor: pointer;
+    white-space: nowrap;
 
     :hover svg {
       scale: 1.1;
