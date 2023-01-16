@@ -20,7 +20,7 @@ steps:
     gcloud config set deploy/region us-east1
     gcloud deploy apply --file deploy/prod/clouddeploy.yaml
     gcloud deploy releases create prod-rel-${SHORT_SHA} \
-                        --delivery-pipeline blockvisor-ui-dev \
+                        --delivery-pipeline blockvisor-ui-prod \
                         --description "$(git log -1  --pretty='%s')" \
                         --build-artifacts /workspace/artifacts.json \
                         --skaffold-file deploy/prod/skaffold.yaml \
