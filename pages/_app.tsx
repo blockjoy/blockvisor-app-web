@@ -10,7 +10,6 @@ import ThemeProvider from '@modules/theme/ThemeProvider';
 // todo extend AppProps type to include getLayout
 function MyApp({ Component, pageProps }: any) {
   const getLayout = Component?.getLayout || ((page: any) => page);
-
   return (
     <RecoilRoot>
       <Global styles={globalStyles} />
