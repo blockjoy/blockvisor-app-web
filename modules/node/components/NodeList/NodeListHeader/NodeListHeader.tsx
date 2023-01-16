@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { styles } from './NodeListHeader.styles';
+import { styles } from './styles';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
