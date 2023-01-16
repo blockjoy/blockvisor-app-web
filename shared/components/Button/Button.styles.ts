@@ -8,8 +8,9 @@ const buttonStyle = {
     box-shadow: 0px 0px 0px 3px var(--color-primary-o0);
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
-    &:hover,
-    &:active {
+    :hover,
+    :active,
+    :focus {
       box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
     }
   `,
@@ -19,8 +20,9 @@ const buttonStyle = {
     box-shadow: 0px 0px 0px 3px var(--color-secondary-o0);
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
-    &:hover,
-    &:active {
+    :hover,
+    :active,
+    :focus {
       box-shadow: 0px 0px 0px 3px var(--color-secondary-o30);
     }
   `,
@@ -30,8 +32,9 @@ const buttonStyle = {
     background-color: transparent;
     transition: background-color 0.18s var(--transition-easing-cubic);
 
-    &:hover,
-    &:active {
+    :hover,
+    :active,
+    :focus {
       background-color: var(--color-text-5-o10);
     }
   `,
@@ -39,9 +42,9 @@ const buttonStyle = {
     color: var(--color-text-5);
     transition: background-color 0.18s var(--transition-easing-cubic);
 
-    &:hover,
-    &:active,
-    &:focus {
+    :hover,
+    :active,
+    :focus {
       background-color: var(--color-text-5-o3);
     }
   `,
@@ -51,8 +54,9 @@ const buttonStyle = {
     box-shadow: 0px 0px 0px 3px var(--color-utility-warning-o0);
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
-    &:hover,
-    &:active {
+    :hover,
+    :active,
+    :focus {
       box-shadow: 0px 0px 0px 3px var(--color-utility-warning-o30);
     }
   `,

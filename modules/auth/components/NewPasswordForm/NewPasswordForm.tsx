@@ -80,6 +80,7 @@ export function NewPasswordForm() {
             <ul css={[reset.list]}>
               <li css={[spacing.bottom.mediumSmall]}>
                 <Input
+                  tabIndex={1}
                   labelStyles={[display.visuallyHidden]}
                   name="password"
                   placeholder="Password"
@@ -93,6 +94,7 @@ export function NewPasswordForm() {
                   }}
                   rightIcon={
                     <PasswordToggle
+                      tabIndex={4}
                       activeType={activeType}
                       onClick={handleIconClick}
                     />
@@ -101,6 +103,7 @@ export function NewPasswordForm() {
               </li>
               <li css={[spacing.bottom.medium]}>
                 <Input
+                  tabIndex={2}
                   labelStyles={[display.visuallyHidden]}
                   name="confirmPassword"
                   placeholder="Confirm Password"
@@ -115,6 +118,7 @@ export function NewPasswordForm() {
                   }}
                   rightIcon={
                     <PasswordToggle
+                      tabIndex={5}
                       activeType={activeType}
                       onClick={handleIconClick}
                     />
@@ -122,7 +126,13 @@ export function NewPasswordForm() {
                 />
               </li>
             </ul>
-            <Button size="medium" display="block" style="primary" type="submit">
+            <Button
+              tabIndex={3}
+              size="medium"
+              display="block"
+              style="primary"
+              type="submit"
+            >
               Set New Password
             </Button>
           </form>

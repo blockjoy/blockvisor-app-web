@@ -79,6 +79,7 @@ export function LoginForm() {
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={1}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="email"
@@ -94,6 +95,7 @@ export function LoginForm() {
             </li>
             <li css={[spacing.bottom.medium]}>
               <Input
+                tabIndex={2}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="password"
@@ -105,6 +107,7 @@ export function LoginForm() {
                 }}
                 rightIcon={
                   <PasswordToggle
+                    tabIndex={4}
                     activeType={activeType}
                     onClick={handleIconClick}
                   />
@@ -113,6 +116,7 @@ export function LoginForm() {
             </li>
           </ul>
           <Button
+            tabIndex={3}
             loading={loading}
             disabled={loading}
             size="medium"
