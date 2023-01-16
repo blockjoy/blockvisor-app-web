@@ -22,7 +22,7 @@ export function Layout({ children, title }: Props) {
   }, []);
 
   return (
-    <main tabIndex={0} id="content" css={[layout]}>
+    <main id="content" css={[layout]}>
       <section css={[layoutWrapper]} id="js-auth-layout">
         <header>
           <BlockjoyLogo scale={1} />
