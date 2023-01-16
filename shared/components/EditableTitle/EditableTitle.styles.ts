@@ -15,8 +15,17 @@ export const styles = {
     height: 50px;
     min-width: 0;
     color: ${theme.colorText};
+    -webkit-text-fill-color: ${theme.colorText};
+    opacity: 1; /* required on iOS */
     border: 0;
+    padding: 0;
+    border-radius: 0;
     border-bottom: 1px solid transparent;
+
+    :disabled {
+      -webkit-text-fill-color: ${theme.colorText};
+      opacity: 1; /* required on iOS */
+    }
   `,
   inputEditable: (theme: ITheme) => css`
     border-color: ${theme.colorBorder};

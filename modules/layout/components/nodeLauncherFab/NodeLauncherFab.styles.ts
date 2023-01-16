@@ -4,7 +4,7 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   button: (theme: ITheme) => css`
-    position: absolute;
+    position: fixed;
     z-index: 8;
     right: 24px;
     top: 13px;
@@ -19,6 +19,7 @@ export const styles = {
     color: ${theme.colorPrimaryText};
     border: 0;
     cursor: pointer;
+    white-space: nowrap;
 
     :hover svg {
       scale: 1.1;
