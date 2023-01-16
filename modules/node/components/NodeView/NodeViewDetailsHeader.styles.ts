@@ -57,7 +57,6 @@ export const styles = {
   blockchainIcon: (theme: ITheme) => css`
     display: grid;
     place-items: center;
-    padding: 8px;
     border-radius: 50%;
 
     > span {

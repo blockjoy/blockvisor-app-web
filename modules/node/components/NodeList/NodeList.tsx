@@ -14,6 +14,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { resultsStatus } from '@modules/node/helpers/NodeHelpers';
 import { organizationAtoms } from '@modules/organization';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
+import { wrapper } from 'styles/wrapper.styles';
 
 const tableHeaders = [
   {
@@ -122,7 +123,7 @@ export const NodeList = () => {
   return (
     <>
       <PageTitle title="Nodes" />
-      <div css={styles.wrapper}>
+      <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters />
         <div css={styles.nodeListWrapper}>
           <NodeListHeader totalRows={nodeList?.length || 0} />
