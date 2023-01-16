@@ -28,10 +28,10 @@ export const CopyNode: FC<Props> = ({ disabled, children, value }) => {
   function handleCopy() {
     if (isClipboardApiSupported()) {
       navigator.clipboard.writeText(value);
-      toast.success('Copied');
+      toast.success('Node ID Copied');
     } else {
       fallbackCopyToClipboard(value);
-      toast.success('Copied');
+      toast.success('Node ID Copied');
     }
   }
 
