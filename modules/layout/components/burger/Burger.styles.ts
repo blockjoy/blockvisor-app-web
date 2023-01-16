@@ -67,6 +67,6 @@ export const styles = {
     }
   `,
   overlayOpen: css`
-    z-index: 6;
+    z-index: 7;
   `,
 };

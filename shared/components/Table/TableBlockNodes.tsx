@@ -20,29 +20,12 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: 8px;
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      flex-direction: row;
-      gap: 0;
-    }
   `,
   id: (theme: ITheme) => css`
     color: ${theme.colorDefault};
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 130px;
-    }
   `,
   address: (theme: ITheme) => css`
     color: ${theme.colorLabel};
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      flex-direction: row;
-      gap: 0;
-    }
   `,
 };
 

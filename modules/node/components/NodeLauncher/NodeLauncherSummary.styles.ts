@@ -5,10 +5,8 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 0;
-    flex: 1 1 auto;
-    width: 500px;
+    flex: 1 1 400px;
     max-width: 500px;
-    min-width: 500px;
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {
@@ -103,6 +101,15 @@ export const styles = {
 
     :disabled {
       cursor: not-allowed;
+      opacity: 0.2;
+    }
+
+    @media ${breakpoints.fromSml} {
+      width: 300px;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      width: 100%;
     }
   `,
   serverError: (theme: ITheme) => css`

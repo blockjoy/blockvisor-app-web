@@ -14,31 +14,47 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 6px;
-    height: 50px;
-    min-height: 50px;
-    margin: 0 0 20px;
+    height: 72px;
+    min-height: 72px;
+
     cursor: pointer;
     border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromXLrg} {
+      margin: 0 0 20px;
       display: flex;
       width: calc(100% - 16px);
     }
 
-    & path {
+    path {
       fill: rgba(255, 255, 255, 0.3);
+    }
+
+    path,
+    span {
+      transition: 0.3s;
+    }
+
+    :hover {
+      > span {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      path {
+        fill: rgba(255, 255, 255, 0.7);
+      }
     }
   `,
   title: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     color: rgba(255, 255, 255, 0.3);
-    font-size: 13px;
+    font-size: 16px;
   `,
   filterIcon: css`
     position: relative;
-    height: 12px;
+    height: 14px;
+    width: 14px;
   `,
   badge: (theme: ITheme) => css`
     position: absolute;

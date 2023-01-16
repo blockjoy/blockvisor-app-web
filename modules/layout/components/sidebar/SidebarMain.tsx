@@ -74,9 +74,9 @@ export default () => {
               >
                 <span
                   css={styles.linkInner}
-                  className={
+                  className={`link-inner ${
                     router.pathname.includes(item.path) ? 'active' : ''
-                  }
+                  }`}
                 >
                   <span
                     className="link-icon"

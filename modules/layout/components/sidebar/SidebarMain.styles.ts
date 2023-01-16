@@ -32,6 +32,20 @@ export const styles = {
     padding: 0 16px;
     display: flex;
 
+    :hover .link-inner:not(.active) {
+      background: ${theme.colorHover};
+
+      path {
+        fill: ${theme.colorPrimary};
+        opacity: 0.6;
+      }
+
+      span:first-child span {
+        background: ${theme.colorPrimary};
+        opacity: 0.6;
+      }
+    }
+
     @media ${breakpoints.fromXLrg} {
       :hover .link-text {
         opacity: 1;
@@ -62,6 +76,7 @@ export const styles = {
 
     &.active {
       background: ${theme.colorActive};
+      cursor: default;
     }
 
     & path {

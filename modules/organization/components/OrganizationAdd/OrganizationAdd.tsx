@@ -72,6 +72,7 @@ export const OrganizationAdd: FC = () => {
           </DrawerContent>
           <DrawerAction>
             <Button
+              style="secondary"
               size="small"
               type="submit"
               loading={loading}

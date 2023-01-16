@@ -8,13 +8,37 @@ import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
-import { TableSkeleton, useModal } from '@shared/index';
-import { NodeListPageHeader } from './NodeListPageHeader/NodeListPageHeader';
+import { TableSkeleton } from '@shared/index';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { resultsStatus } from '@modules/node/helpers/NodeHelpers';
 import { organizationAtoms } from '@modules/organization';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
+
+const tableHeaders = [
+  {
+    name: '',
+    key: '1',
+    width: '30px',
+    minWidth: '30px',
+    maxWidth: '30px',
+  },
+  {
+    name: 'Name',
+    key: '2',
+    width: '300px',
+  },
+  {
+    name: 'Added',
+    key: '3',
+    width: '200px',
+  },
+  {
+    name: 'Status',
+    key: '4',
+    width: '200px',
+  },
+];
 
 export const NodeList = () => {
   const nodeUIContext = useNodeUIContext();
@@ -30,22 +54,14 @@ export const NodeList = () => {
 
   const { loadNodes, handleNodeClick } = useNodeList();
 
-  const { openModal } = useModal();
-
-  const [activeListType, setActiveListType] = useRecoilState(
-    nodeAtoms.activeListType,
-  );
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
   const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
+  const activeListType = useRecoilValue(nodeAtoms.activeListType);
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
   const currentOrganization = useRef(defaultOrganization);
-
-  const handleListTypeChanged = (type: string) => {
-    setActiveListType(type);
-  };
 
   const animateEntry = () =>
     anime({
@@ -105,20 +121,11 @@ export const NodeList = () => {
 
   return (
     <>
-      <PageTitle title="Nodes" actionOnClick={openModal} actionText="Add Node">
-        <NodeListPageHeader
-          activeListType={activeListType}
-          onTypeChanged={handleListTypeChanged}
-        />
-      </PageTitle>
+      <PageTitle title="Nodes" />
       <div css={styles.wrapper}>
         <NodeFilters />
         <div css={styles.nodeListWrapper}>
-          <NodeListHeader
-            totalRows={nodeList?.length || 0}
-            activeListType={activeListType}
-            onTypeChanged={handleListTypeChanged}
-          />
+          <NodeListHeader totalRows={nodeList?.length || 0} />
           {isLoading === 'initializing' ? (
             <TableSkeleton />
           ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
@@ -144,30 +151,7 @@ export const NodeList = () => {
               {activeListType === 'table' ? (
                 <Table
                   isLoading={isLoading}
-                  headers={[
-                    {
-                      name: '',
-                      key: '1',
-                      width: '30px',
-                      minWidth: '30px',
-                      maxWidth: '30px',
-                    },
-                    {
-                      name: 'Name',
-                      key: '2',
-                      width: '300px',
-                    },
-                    {
-                      name: 'Added',
-                      key: '3',
-                      width: '200px',
-                    },
-                    {
-                      name: 'Status',
-                      key: '4',
-                      width: '200px',
-                    },
-                  ]}
+                  headers={tableHeaders}
                   preload={preloadNodes}
                   rows={rows}
                   onRowClick={handleNodeClick}

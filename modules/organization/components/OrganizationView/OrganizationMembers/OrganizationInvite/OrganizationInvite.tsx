@@ -35,6 +35,7 @@ export const OrganizationInvite: FC<Props> = ({
           onClick={handleInviteClicked}
           display="block"
           size="small"
+          style="secondary"
         >
           Add Members
         </Button>

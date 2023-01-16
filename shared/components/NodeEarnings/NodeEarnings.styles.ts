@@ -7,11 +7,6 @@ export const dashboardEarningsStyles = {
     gap: 30px;
     margin-bottom: 50px;
     flex-wrap: wrap;
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      flex-wrap: nowrap;
-      gap: 50px;
-    }
   `,
   itemHeader: (theme: ITheme) => css`
     display: block;
@@ -31,9 +26,5 @@ export const dashboardEarningsStyles = {
   itemValue: (theme: ITheme) => css`
     font-size: 24px;
     line-height: 1;
-
-    @media only screen and (min-width: ${theme.screenSm}) {
-      font-size: 36px;
-    }
   `,
 };
