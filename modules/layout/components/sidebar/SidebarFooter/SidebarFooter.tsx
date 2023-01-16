@@ -32,6 +32,8 @@ export function SidebarFooter() {
           className="sidebar-copy"
         >
           Dashboard created by BlockJoy. All rights reserved.
+          <br />
+          Version: {process.env.BUILD_VERSION || 'ed9626d'}
         </p>
       </div>
     </footer>
