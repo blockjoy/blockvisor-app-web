@@ -11,8 +11,7 @@
     "export": "next build && next export",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "serve-storybook": "serve storybook-static",
-    "serve": "npm run dev -- -H 192.168.1.101"
+    "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
     "@blockjoy/blockjoy-grpc": "^1.1.50",
