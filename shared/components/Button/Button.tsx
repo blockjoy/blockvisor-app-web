@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from 'react';
+import { ButtonHTMLAttributes, MouseEventHandler, ReactNode } from 'react';
 import {
   buttonBorder,
   buttonSize,
@@ -24,7 +24,7 @@ type Props = {
   loading?: boolean;
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
-};
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function Button({
   children,
@@ -39,6 +39,7 @@ export function Button({
   href,
   customCss,
   loading,
+  ...rest
 }: Props) {
   const buttonStyles = [
     reset.button,
@@ -63,6 +64,7 @@ export function Button({
 
   return (
     <button
+      {...rest}
       id={id}
       disabled={disabled}
       type={type}

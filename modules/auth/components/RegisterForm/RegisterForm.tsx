@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-
 import { Alert, Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -76,6 +75,7 @@ export function RegisterForm() {
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={1}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="first_name"
@@ -87,6 +87,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={2}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="last_name"
@@ -98,6 +99,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={3}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="email"
@@ -113,6 +115,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={4}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="password"
@@ -127,6 +130,7 @@ export function RegisterForm() {
                 }}
                 rightIcon={
                   <PasswordToggle
+                    tabIndex={0}
                     activeType={activeType}
                     onClick={handleIconClick}
                   />
@@ -135,6 +139,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.medium]}>
               <Input
+                tabIndex={5}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="confirmPassword"
@@ -150,6 +155,7 @@ export function RegisterForm() {
                 }}
                 rightIcon={
                   <PasswordToggle
+                    tabIndex={0}
                     activeType={activeType}
                     onClick={handleIconClick}
                   />
@@ -158,6 +164,7 @@ export function RegisterForm() {
             </li>
           </ul>
           <Button
+            tabIndex={5}
             loading={loading}
             disabled={loading}
             size="medium"
