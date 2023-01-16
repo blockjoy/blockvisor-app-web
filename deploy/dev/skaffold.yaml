@@ -1,48 +1,50 @@
 apiVersion: skaffold/v2beta7
 kind: Config
 metadata:
-  name: blockvisor-ui
+    name: blockvisor-ui
 build:
-  tagPolicy:
-    gitCommit: {}
-  artifacts:
-  - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-dev
-    context: ./
-    docker:
-      buildArgs:
-        NEXT_PUBLIC_VERCEL_ENV: "production"
-        NEXT_PUBLIC_SUPPORT_EMAIL: "support@blockjoy.com"
-        NEXT_PUBLIC_API_URL: "https://api.dev.blockjoy.com"
-        NEXT_PUBLIC_ORG_ID: "9e127189-edad-44b2-9d0d-0a5e4be81b48"
-        NEXT_PUBLIC_LOADING_DURATION: "200"
-        NPM_TOKEN : "{{.NPM_TOKEN}}"
-  - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-staging
-    context: ./
-    docker:
-      buildArgs:
-        NEXT_PUBLIC_VERCEL_ENV: "production"
-        NEXT_PUBLIC_SUPPORT_EMAIL: "support@blockjoy.com"
-        NEXT_PUBLIC_API_URL: "https://api.staging.blockjoy.com"
-        NEXT_PUBLIC_ORG_ID: "9e127189-edad-44b2-9d0d-0a5e4be81b48"
-        NEXT_PUBLIC_LOADING_DURATION: "200"
-        NPM_TOKEN : "{{.NPM_TOKEN}}"
-  local: 
-    push: true
-    useDockerCLI: true
-    concurrency: 0
+    tagPolicy:
+        gitCommit: {}
+    artifacts:
+        - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-dev
+          context: ./
+          docker:
+              buildArgs:
+                  NEXT_PUBLIC_VERCEL_ENV: 'production'
+                  NEXT_PUBLIC_SUPPORT_EMAIL: 'support@blockjoy.com'
+                  NEXT_PUBLIC_API_URL: 'https://api.dev.blockjoy.com'
+                  NEXT_PUBLIC_ORG_ID: '9e127189-edad-44b2-9d0d-0a5e4be81b48'
+                  NEXT_PUBLIC_LOADING_DURATION: '200'
+                  NPM_TOKEN: '{{.NPM_TOKEN}}'
+                  SHORT_SHA: '{{.SHORT_SHA}}'
+        - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-staging
+          context: ./
+          docker:
+              buildArgs:
+                  NEXT_PUBLIC_VERCEL_ENV: 'production'
+                  NEXT_PUBLIC_SUPPORT_EMAIL: 'support@blockjoy.com'
+                  NEXT_PUBLIC_API_URL: 'https://api.staging.blockjoy.com'
+                  NEXT_PUBLIC_ORG_ID: '9e127189-edad-44b2-9d0d-0a5e4be81b48'
+                  NEXT_PUBLIC_LOADING_DURATION: '200'
+                  NPM_TOKEN: '{{.NPM_TOKEN}}'
+                  SHORT_SHA: '{{.SHORT_SHA}}'
+    local:
+        push: true
+        useDockerCLI: true
+        concurrency: 0
 profiles:
-- name: dev
-  deploy:
-    kustomize:
-      paths:
-        - ../kubernetes/dev
-- name: staging
-  deploy:
-    kustomize:
-      paths:
-        - ../kubernetes/staging
-- name: production
-  deploy:
-    kustomize:
-      paths:
-        - ../kubernetes/production
+    - name: dev
+      deploy:
+          kustomize:
+              paths:
+                  - ../kubernetes/dev
+    - name: staging
+      deploy:
+          kustomize:
+              paths:
+                  - ../kubernetes/staging
+    - name: production
+      deploy:
+          kustomize:
+              paths:
+                  - ../kubernetes/production
