@@ -1,7 +1,6 @@
 import Sidebar from './sidebar/Sidebar';
 import Overlay from './overlay/Overlay';
 import { Burger } from './burger/Burger';
-import { NodeLauncherFab } from './nodeLauncherFab/NodeLauncherFab';
 import Page from './page/Page';
 import { PrivateRoute, useIdentityRepository } from '@modules/auth';
 import {
@@ -35,7 +34,6 @@ export const AppLayout: React.FC<LayoutType> = ({ children, isPageFlex }) => {
   return (
     <>
       <PrivateRoute>
-        {/* <NodeLauncherFab /> */}
         <Burger />
         <Sidebar />
         <Overlay />
