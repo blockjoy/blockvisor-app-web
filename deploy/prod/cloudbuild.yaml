@@ -1,29 +1,29 @@
 steps:
 - name: 'gcr.io/k8s-skaffold/skaffold'
   entrypoint: 'sh'
-  id: 'dev-build'
+  id: 'prod-build'
   waitFor: ['-']
   args:
   - -xe
   - -c
-  - skaffold build --filename='deploy/dev/skaffold.yaml' --file-output=/workspace/artifacts.json
+  - skaffold build --filename='deploy/prod/skaffold.yaml' --file-output=/workspace/artifacts.json
   env:
   - 'NPM_TOKEN=${_NPM_TOKEN}'
 
 - name: 'google/cloud-sdk:latest'
   entrypoint: 'sh'
-  waitFor: ['dev-build']
+  waitFor: ['prod-build']
   args:
   - -xe
   - -c
   - |
     gcloud config set deploy/region us-east1
-    gcloud deploy apply --file deploy/dev/clouddeploy.yaml
+    gcloud deploy apply --file deploy/prod/clouddeploy.yaml
     gcloud deploy releases create rel-${SHORT_SHA} \
                         --delivery-pipeline blockvisor-ui-dev \
                         --description "$(git log -1  --pretty='%s')" \
                         --build-artifacts /workspace/artifacts.json \
-                        --skaffold-file deploy/dev/skaffold.yaml \
+                        --skaffold-file deploy/prod/skaffold.yaml \
                         --annotations "commit_ui=https://source.cloud.google.com/blockjoy-deployer/blockvisor-ui/+/$COMMIT_SHA"
 artifacts:
   objects:
