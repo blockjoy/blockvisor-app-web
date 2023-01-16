@@ -9,7 +9,11 @@ const Organizations = () => (
 );
 
 Organizations.getLayout = function getLayout(page: any) {
-  return <AppLayout isPageFlex>{page}</AppLayout>;
+  return (
+    <AppLayout pageTitle="Organizations" isPageFlex>
+      {page}
+    </AppLayout>
+  );
 };
 
 export default Organizations;

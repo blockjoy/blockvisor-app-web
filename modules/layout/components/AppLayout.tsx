@@ -10,13 +10,19 @@ import {
 } from '@modules/organization';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
+import Head from 'next/head';
 
 type LayoutType = {
   children: React.ReactNode;
   isPageFlex?: boolean;
+  pageTitle: string;
 };
 
-export const AppLayout: React.FC<LayoutType> = ({ children, isPageFlex }) => {
+export const AppLayout: React.FC<LayoutType> = ({
+  children,
+  isPageFlex,
+  pageTitle,
+}) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
@@ -33,6 +39,9 @@ export const AppLayout: React.FC<LayoutType> = ({ children, isPageFlex }) => {
 
   return (
     <>
+      <Head>
+        <title>{pageTitle}</title>
+      </Head>
       <PrivateRoute>
         <Burger />
         <Sidebar />

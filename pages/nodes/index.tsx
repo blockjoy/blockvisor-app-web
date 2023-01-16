@@ -9,7 +9,7 @@ const Nodes = () => (
 );
 
 Nodes.getLayout = function getLayout(page: any) {
-  return <AppLayout>{page}</AppLayout>;
+  return <AppLayout pageTitle="Nodes">{page}</AppLayout>;
 };
 
 export default Nodes;
