@@ -6,9 +6,7 @@ const link = css`
 `;
 
 const linkPrimary = css`
-  &:visited {
-    color: var(--color-primary);
-  }
+  color: var(--color-primary);
 `;
 
 const linkUnderline = css`

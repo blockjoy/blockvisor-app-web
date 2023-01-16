@@ -5,19 +5,21 @@ import { useEffect, useState } from 'react';
 import {
   DangerZone,
   DetailsTable,
+  EmptyColumn,
   PageHeader,
   PageSection,
+  PageTitle,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
-import { NodeViewPageHeader } from './NodeViewPageHeader';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
 
 export function NodeView() {
   const [isMounted, setMounted] = useState<boolean>(false);
+  const [nodeError, setNodeError] = useState<boolean>(false);
 
   const router = useRouter();
   const { id } = router.query;
@@ -28,12 +30,13 @@ export function NodeView() {
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id!);
   const handleDelete = async () => deleteNode(id);
+  const handleNodeError = () => setNodeError(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (router.isReady) {
       setMounted(true);
-      loadNode(id);
+      loadNode(id, handleNodeError);
     }
   }, [id]);
 
@@ -41,7 +44,7 @@ export function NodeView() {
 
   return (
     <>
-      <NodeViewPageHeader />
+      <PageTitle title="Nodes" />
       <PageSection topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>
@@ -51,17 +54,26 @@ export function NodeView() {
 
         {!isLoading ? (
           <>
-            <NodeViewDetailsHeader
-              handleStop={handleStop}
-              handleRestart={handleRestart}
-              status={node?.status!}
-              blockchainId={node?.blockchainId!}
-              title={node?.name!}
-              ip={node?.ip!}
-              date={node?.created!}
-              id={node?.id!}
-            />
-            <DetailsTable bodyElements={node?.details!} />
+            {!nodeError ? (
+              <>
+                <NodeViewDetailsHeader
+                  handleStop={handleStop}
+                  handleRestart={handleRestart}
+                  status={node?.status!}
+                  blockchainId={node?.blockchainId!}
+                  title={node?.name!}
+                  ip={node?.ip!}
+                  date={node?.created!}
+                  id={node?.id!}
+                />
+                <DetailsTable bodyElements={node?.details!} />
+              </>
+            ) : (
+              <EmptyColumn
+                title="Node Not Found"
+                description="No node exists with this ID"
+              />
+            )}
           </>
         ) : (
           <>
@@ -73,18 +85,20 @@ export function NodeView() {
           </>
         )}
       </PageSection>
-      {node?.nodeTypeConfig && !isLoading && <NodeViewConfig />}
-      <PageSection>
-        {isLoading ? (
-          <TableSkeleton />
-        ) : (
-          <DangerZone
-            elementName="Node"
-            elementNameToCompare={node?.name!}
-            handleDelete={handleDelete}
-          ></DangerZone>
-        )}
-      </PageSection>
+      {node?.nodeTypeConfig && !isLoading && !nodeError && <NodeViewConfig />}
+      {!nodeError && (
+        <PageSection>
+          {isLoading ? (
+            <TableSkeleton />
+          ) : (
+            <DangerZone
+              elementName="Node"
+              elementNameToCompare={node?.name!}
+              handleDelete={handleDelete}
+            ></DangerZone>
+          )}
+        </PageSection>
+      )}
     </>
   );
 }

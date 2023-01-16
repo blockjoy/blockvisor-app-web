@@ -26,6 +26,10 @@ export function ProfileChangePassword() {
     useState<string | undefined>();
   const [loading, setIsLoading] = useState(false);
   const { handleSubmit, watch } = form;
+  const {
+    formState: { isDirty },
+  } = form;
+
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
     setActiveType(type);
@@ -131,7 +135,7 @@ export function ProfileChangePassword() {
         <Button
           loading={loading}
           customCss={[styles.loadingButton]}
-          disabled={loading}
+          disabled={!isDirty || loading}
           size="medium"
           display="inline"
           style="secondary"

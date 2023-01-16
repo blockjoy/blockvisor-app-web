@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { ProfileForm } from './ProfileForm/ProfileForm';
 import { ProfileChangePassword } from './ProfileChangePassword/ProfileChangePassword';
-import { spacing } from 'styles/utils.spacing.styles';
 
 export const Profile = () => {
   const user = useRecoilValue(authAtoms.user);

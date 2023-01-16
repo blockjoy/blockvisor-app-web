@@ -1,8 +1,8 @@
-import { styles } from './NodeLauncherFab.styles';
+import { styles } from './PageTitleLaunchNode.styles';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 import { useRouter } from 'next/router';
 
-export const NodeLauncherFab = () => {
+export const PageTitleLaunchNode = () => {
   const router = useRouter();
 
   return !router.pathname.includes('launch-node') ? (
