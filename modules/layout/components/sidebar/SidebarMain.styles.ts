@@ -32,7 +32,7 @@ export const styles = {
     padding: 0 16px;
     display: flex;
 
-    :hover .link-inner:not(.active) {
+    :is(:hover, :focus, :active) .link-inner:not(.active) {
       background: ${theme.colorHover};
 
       path {
