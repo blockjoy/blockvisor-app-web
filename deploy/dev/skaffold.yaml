@@ -43,8 +43,8 @@ profiles:
           kustomize:
               paths:
                   - ../kubernetes/staging
-    - name: production
+    - name: prod
       deploy:
           kustomize:
               paths:
-                  - ../kubernetes/production
+                  - ../kubernetes/prod
