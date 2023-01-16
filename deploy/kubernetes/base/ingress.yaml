@@ -15,10 +15,19 @@ metadata:
     kubernetes.io/ingress.global-static-ip-name: blockvisor-ui
     networking.gke.io/managed-certificates: blockvisor-ui
     kubernetes.io/ingress.class: gce
+    networking.gke.io/v1beta1.FrontendConfig: blockvisor-ui
 spec:
   defaultBackend:
     service:
       name: blockvisor-ui
       port:
         number: 3000
+---
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: blockvisor-ui
+spec:
+  redirectToHttps:
+    enabled: true
 ---
