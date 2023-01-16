@@ -4,7 +4,7 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
-    padding: 10px 15px;
+    padding: 10px 0;
     width: 500px;
     max-width: 500px;
     border-right: 1px solid ${theme.colorBorder};

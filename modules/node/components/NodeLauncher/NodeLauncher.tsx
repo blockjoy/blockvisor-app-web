@@ -7,9 +7,10 @@ import { NodeLauncherSummary } from './NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
-import { AnimatedGraphic } from '@shared/components';
+import { AnimatedGraphic, EmptyColumn } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
+import { wrapper } from 'styles/wrapper.styles';
 
 type NodeState = {
   blockchainId: string;
@@ -208,7 +209,7 @@ export const NodeLauncher = () => {
   return (
     <>
       <NodeLauncherPageHeader />
-      <div css={styles.wrapper}>
+      <div css={[styles.wrapper, wrapper.main]}>
         <NodeLauncherProtocol
           onProtocolSelected={handleProtocolSelected}
           activeBlockchainId={node.blockchainId}
@@ -227,11 +228,10 @@ export const NodeLauncher = () => {
         )}
         {!node.blockchainId && !node.nodeTypeId && (
           <div css={styles.empty}>
-            <AnimatedGraphic />
-            <div>
-              <h2>Launch a Node</h2>
-              <h3>Select a protocol to get started</h3>
-            </div>
+            <EmptyColumn
+              title="Launch a Node"
+              description="Select a protocol to get started"
+            />
           </div>
         )}
         {node.blockchainId && node.nodeTypeId && (
