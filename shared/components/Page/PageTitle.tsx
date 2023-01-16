@@ -3,6 +3,7 @@ import { FC, ReactNode } from 'react';
 import { typo } from 'styles/utils.typography.styles';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './PageTitle.styles';
+import { PageTitleLaunchNode } from './PageTitleLaunchNode';
 
 interface Props {
   children?: ReactNode;
@@ -32,6 +33,7 @@ export const PageTitle: FC<Props> = ({
                 </Button>
               </div>
             )}
+            <PageTitleLaunchNode />
           </>
         )}
       </div>

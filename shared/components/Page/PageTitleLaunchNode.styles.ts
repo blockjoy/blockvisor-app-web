@@ -4,10 +4,6 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   button: (theme: ITheme) => css`
-    position: fixed;
-    z-index: 8;
-    right: 24px;
-    top: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -20,6 +16,13 @@ export const styles = {
     border: 0;
     cursor: pointer;
     white-space: nowrap;
+
+    transition: box-shadow 0.18s var(--transition-easing-cubic);
+
+    &:hover,
+    &:active {
+      box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
+    }
 
     :hover svg {
       scale: 1.1;

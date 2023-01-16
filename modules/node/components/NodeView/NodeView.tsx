@@ -7,12 +7,12 @@ import {
   DetailsTable,
   PageHeader,
   PageSection,
+  PageTitle,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
-import { NodeViewPageHeader } from './NodeViewPageHeader';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
 
@@ -41,7 +41,7 @@ export function NodeView() {
 
   return (
     <>
-      <NodeViewPageHeader />
+      <PageTitle title="Nodes" />
       <PageSection topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>
