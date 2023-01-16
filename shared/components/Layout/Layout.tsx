@@ -1,6 +1,7 @@
 import anime from 'animejs';
 import { ReactNode, useEffect } from 'react';
 import { BlockjoyLogo } from '@shared/components';
+import Head from 'next/head';
 import { layout, layoutTitle, layoutWrapper } from './Layout.styles';
 
 type Props = {
@@ -22,14 +23,19 @@ export function Layout({ children, title }: Props) {
   }, []);
 
   return (
-    <main tabIndex={0} id="content" css={[layout]}>
-      <section css={[layoutWrapper]} id="js-auth-layout">
-        <header>
-          <BlockjoyLogo scale={1} />
-          <h1 css={[layoutTitle]}>{title}</h1>
-        </header>
-        {children}
-      </section>
-    </main>
+    <>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <main tabIndex={0} id="content" css={[layout]}>
+        <section css={[layoutWrapper]} id="js-auth-layout">
+          <header>
+            <BlockjoyLogo scale={1} />
+            <h1 css={[layoutTitle]}>{title}</h1>
+          </header>
+          {children}
+        </section>
+      </main>
+    </>
   );
 }
