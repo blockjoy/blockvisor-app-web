@@ -10,7 +10,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { styles } from './EditUserForm.styles';
+import { styles } from './ProfileForm.styles';
 
 type EditUserForm = {
   firstName: string;
@@ -23,11 +23,14 @@ type Props = {
   lastName?: string;
 };
 
-export function EditUser({ firstName, lastName, id }: Props) {
+export function ProfileForm({ firstName, lastName, id }: Props) {
   const form = useForm<EditUserForm>();
   const editUser = useEditUser();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
+  const {
+    formState: { isDirty },
+  } = form;
 
   useEffect(() => {
     form.setValue('firstName', firstName ?? '');
@@ -59,7 +62,7 @@ export function EditUser({ firstName, lastName, id }: Props) {
             <Input
               disabled={loading}
               labelStyles={[typo.base]}
-              inputSize="large"
+              inputSize="medium"
               label="First Name"
               name="firstName"
               validationOptions={{
@@ -70,7 +73,7 @@ export function EditUser({ firstName, lastName, id }: Props) {
           <li css={[styles.formItem]}>
             <Input
               disabled={loading}
-              inputSize="large"
+              inputSize="medium"
               labelStyles={[typo.base]}
               label="Last Name"
               name="lastName"
@@ -83,7 +86,7 @@ export function EditUser({ firstName, lastName, id }: Props) {
         <Button
           loading={loading}
           customCss={[styles.loadingButton]}
-          disabled={loading}
+          disabled={!isDirty || loading}
           size="medium"
           display="inline"
           style="secondary"

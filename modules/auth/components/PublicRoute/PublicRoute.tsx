@@ -1,7 +1,8 @@
 import { Routes, useIdentity } from '@modules/auth';
-import { LoadingSpinner } from '@shared/components';
+import { EmptyColumn, LoadingSpinner } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
+import { spacing } from 'styles/utils.spacing.styles';
 
 interface Props {
   children?: ReactNode;
@@ -21,5 +22,18 @@ export function PublicRoute({ children }: Props) {
     return <LoadingSpinner size="page" />;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      {window.navigator.onLine ? (
+        children
+      ) : (
+        <div css={[spacing.left.large, spacing.top.xxxLarge]}>
+          <EmptyColumn
+            title="No Internet Connection"
+            description="Once connected please refresh the app."
+          />
+        </div>
+      )}
+    </>
+  );
 }

@@ -31,9 +31,6 @@ export const NodeLauncherSummary: FC<Props> = ({
   onCreateNodeClicked,
 }) => {
   const { blockchains } = useGetBlockchains();
-
-  console.log('hasAddedFiles', hasAddedFiles);
-
   return (
     <div css={styles.wrapper}>
       <h2 css={styles.h2}>Launch</h2>
@@ -121,7 +118,7 @@ export const NodeLauncherSummary: FC<Props> = ({
         </div>
         {hasServerError && (
           <div css={styles.serverError}>
-            Error creating node, please contact Thomas Tha Hobo Engine.
+            Error creating node, please contact our support team.
           </div>
         )}
       </div>

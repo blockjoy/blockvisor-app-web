@@ -9,8 +9,6 @@ export const useInviteMembers = () => {
 
   const inviteMembers = async (emails: string[], onComplete: VoidFunction) => {
     const response = await apiClient.inviteOrgMember(emails[0], org_id!);
-    console.log('inviteMembers', response);
-
     if (isResponeMetaObject(response)) {
       toast.success('Members Invited');
       onComplete();

@@ -17,9 +17,6 @@ export const useNodeMetrics = (): Hook => {
   const loadMetrics = async () => {
     const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
     setNodeMetrics(metrics);
-
-    console.log('loadMetrics', metrics);
-
     if (metrics.code) {
       setTotalNodes(100);
       return;

@@ -28,9 +28,6 @@ export function FileUpload({
   const onDrop = useCallback(
     async (droppedFiles: File[]) => {
       const newFiles = [...filesArray, ...Array.from(droppedFiles)];
-
-      console.log('onDrop', newFiles);
-
       onChange({ target: { name, value: newFiles } });
     },
     [files, name],

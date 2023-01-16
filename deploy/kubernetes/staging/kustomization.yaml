@@ -19,3 +19,6 @@ patches:
         name: blockvisor-ui
         annotations:
           kubernetes.io/ingress.global-static-ip-name: blockvisor-ui-staging
+images:
+  - name: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui
+    newName: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-staging

@@ -1,14 +1,13 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import PersonIcon from '@public/assets/icons/person-12.svg';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import { OrganizationPendingInvitations } from './OrganizationPendingInvitations/OrganizationPendingInvitations';
 import { useInvitations } from '@modules/organization';
+import PersonIcon from '@public/assets/icons/person-12.svg';
 
 export const mapOrganizationMembersToRows = (
   organizationMembers?: ClientOrganizationMember[],
