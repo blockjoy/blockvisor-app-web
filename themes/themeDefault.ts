@@ -19,4 +19,11 @@ export const themeDefault: ITheme = {
   colorSidebar: '#222524',
   colorLightGrey: '#e7e7e7',
   colorDanger: '#EE7070',
+  colorNote: '#e9af3a',
+  screenXs: '500px',
+  screenSm: '768px',
+  screenMd: '980px',
+  screenLg: '1160px',
+  screenXl: '1400px',
+  screenXxl: '1800px',
 };

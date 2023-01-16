@@ -7,51 +7,8 @@ import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import { OrganizationPendingInvitations } from './OrganizationPendingInvitations/OrganizationPendingInvitations';
 import { useInvitations } from '@modules/organization';
+import { mapOrganizationMembersToRows } from '@modules/organization/utils/mapOrganizationMembersToRows';
 import PersonIcon from '@public/assets/icons/person-12.svg';
-
-export const mapOrganizationMembersToRows = (
-  organizationMembers?: ClientOrganizationMember[],
-) => {
-  return organizationMembers?.map((member, idx) => ({
-    key: member.id ?? `${idx}`,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p>{member.firstName}</p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>{member.lastName}</p>
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <>
-            <p>{member.email}</p>
-          </>
-        ),
-      },
-      // {
-      //   key: '4',
-      //   component: (
-      //     <div css={[flex.display.flex]}>
-      //       <Button style="outline" size="small">
-      //         Remove
-      //       </Button>
-      //     </div>
-      //   ),
-      // },
-    ],
-  }));
-};
 
 export type MembersProps = {
   id?: string;
@@ -59,10 +16,11 @@ export type MembersProps = {
 
 export const Members = ({ id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
-  const { getSentInvitations } = useInvitations();
 
   const { getOrganizationMembers, organizationMembers, isLoading } =
     useGetOrganizationMembers();
+
+  const { getSentInvitations, sentInvitations } = useInvitations();
 
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
@@ -80,10 +38,10 @@ export const Members = ({ id }: MembersProps) => {
   };
 
   const handleInviteClicked = () => {
-    console.log('emails', emails);
     inviteMembers(emails!, () => {
       setActiveView('list');
       getSentInvitations(id!);
+      setActiveView('list');
     });
   };
 
@@ -92,10 +50,16 @@ export const Members = ({ id }: MembersProps) => {
   };
 
   useEffect(() => {
-    if (id) getOrganizationMembers(id);
+    if (id) {
+      getOrganizationMembers(id);
+      getSentInvitations(id);
+    }
   }, [id]);
 
-  const rows = mapOrganizationMembersToRows(organizationMembers);
+  const { headers, rows } = mapOrganizationMembersToRows(
+    organizationMembers,
+    sentInvitations,
+  );
 
   return (
     <>
@@ -120,27 +84,12 @@ export const Members = ({ id }: MembersProps) => {
           onTextareaChanged={handleTextareaChanged}
         />
       )}
-      {activeView === 'list' && (
-        <Table
-          isLoading={isLoading}
-          headers={[
-            {
-              name: 'First name',
-              key: '1',
-            },
-            {
-              name: 'Last name',
-              key: '2',
-            },
-            {
-              name: 'Email',
-              key: '3',
-            },
-          ]}
-          rows={rows}
-        />
-      )}
-      <OrganizationPendingInvitations orgId={id!} />
+      <Table
+        isLoading={isLoading}
+        headers={headers}
+        rows={rows}
+        verticalAlign="middle"
+      />
     </>
   );
 };

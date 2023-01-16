@@ -21,10 +21,12 @@ export const OrganizationInvite: FC<Props> = ({
   };
 
   return (
-    <>
+    <div css={spacing.bottom.large}>
       <textarea
         autoFocus
-        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onTextareaChanged(e)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+          onTextareaChanged(e)
+        }
         placeholder="Insert new member email addresses here"
         css={styles.textarea}
         rows={10}
@@ -48,6 +50,6 @@ export const OrganizationInvite: FC<Props> = ({
           Cancel
         </Button>
       </div>
-    </>
+    </div>
   );
 };
