@@ -9,7 +9,7 @@ export const styles = {
     align-items: center;
     margin-bottom: 16px;
 
-    @media ${breakpoints.toSml} {
+    @media ${breakpoints.toLrg} {
       flex-direction: column;
       align-items: flex-start;
     }
@@ -19,7 +19,7 @@ export const styles = {
     gap: 20px;
     margin-bottom: 8px;
 
-    @media ${breakpoints.toMed} {
+    @media ${breakpoints.toXlrg} {
       flex-direction: column;
     }
   `,
@@ -28,7 +28,7 @@ export const styles = {
     gap: 16px;
     white-space: nowrap;
 
-    @media ${breakpoints.toSml} {
+    @media ${breakpoints.toLrg} {
       gap: 8px;
     }
   `,
@@ -41,11 +41,11 @@ export const styles = {
       width: 86px;
     }
 
-    @media ${breakpoints.toMed} {
+    @media ${breakpoints.toXlrg} {
       margin-left: 52px;
     }
 
-    @media ${breakpoints.toSml} {
+    @media ${breakpoints.toLrg} {
       margin-left: 0;
     }
   `,
@@ -57,18 +57,12 @@ export const styles = {
   blockchainIcon: (theme: ITheme) => css`
     display: grid;
     place-items: center;
-
     padding: 8px;
     border-radius: 50%;
-    background: ${theme.colorLabel};
 
     > span {
-      width: 24px;
-      height: 24px;
-    }
-
-    > span path {
-      fill: ${theme.colorBackground};
+      width: 40px;
+      height: 40px;
     }
   `,
 };

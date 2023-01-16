@@ -35,7 +35,7 @@ export const AppLayout: React.FC<LayoutType> = ({ children, isPageFlex }) => {
   return (
     <>
       <PrivateRoute>
-        <NodeLauncherFab />
+        {/* <NodeLauncherFab /> */}
         <Burger />
         <Sidebar />
         <Overlay />
