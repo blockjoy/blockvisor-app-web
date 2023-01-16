@@ -28,6 +28,9 @@ export function ProfileForm({ firstName, lastName, id }: Props) {
   const editUser = useEditUser();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
+  const {
+    formState: { isDirty },
+  } = form;
 
   useEffect(() => {
     form.setValue('firstName', firstName ?? '');
@@ -83,7 +86,7 @@ export function ProfileForm({ firstName, lastName, id }: Props) {
         <Button
           loading={loading}
           customCss={[styles.loadingButton]}
-          disabled={loading}
+          disabled={!isDirty || loading}
           size="medium"
           display="inline"
           style="secondary"
