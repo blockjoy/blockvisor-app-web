@@ -18,7 +18,7 @@ export const styles = {
     }
 
     @media ${breakpoints.toXlrg} {
-      padding-left: 44px;
+      padding-left: 36px;
     }
   `,
   wrapper: css`

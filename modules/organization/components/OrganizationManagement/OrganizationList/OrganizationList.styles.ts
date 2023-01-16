@@ -8,7 +8,7 @@ export const styles = {
     flex: 1 1 auto;
 
     @media ${breakpoints.toXlrg} {
-      padding: 20px 24px 30px;
+      padding: 20px 0 30px;
     }
   `,
   header: (theme: ITheme) => css`
