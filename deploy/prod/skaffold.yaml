@@ -16,6 +16,7 @@ build:
         NEXT_PUBLIC_ORG_ID: "9e127189-edad-44b2-9d0d-0a5e4be81b48"
         NEXT_PUBLIC_LOADING_DURATION: "200"
         NPM_TOKEN : "{{.NPM_TOKEN}}"
+        NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
   - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-prod
     context: ./
     docker:
@@ -26,6 +27,7 @@ build:
         NEXT_PUBLIC_ORG_ID: "9e127189-edad-44b2-9d0d-0a5e4be81b48"
         NEXT_PUBLIC_LOADING_DURATION: "200"
         NPM_TOKEN : "{{.NPM_TOKEN}}"
+        NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
   local: 
     push: true
     useDockerCLI: true
