@@ -33,7 +33,7 @@ export function SidebarFooter() {
         >
           Dashboard created by BlockJoy. All rights reserved.
           <br />
-          Version: {process.env.NEXT_PUBLIC_BUILD_VERSION || 'dev'}
+          Version: {process.env.NEXT_PUBLIC_SHORT_SHA || 'dev'}
         </p>
       </div>
     </footer>
