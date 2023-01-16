@@ -12,7 +12,7 @@ import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 type Args = string | string[] | undefined;
 
 type Hook = {
-  loadNode: (args1: Args) => void;
+  loadNode: (id: Args, onError: VoidFunction) => void;
   deleteNode: (args1: Args) => void;
   stopNode: (nodeId: Args) => void;
   restartNode: (nodeId: Args) => void;
@@ -44,14 +44,23 @@ export const useNodeView = (): Hook => {
     toast.success(`Node Started`);
   };
 
-  const loadNode = async (id: Args) => {
+  const loadNode = async (id: Args, onError: VoidFunction) => {
     setIsLoading(true);
 
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
 
     console.log('loadNode', node);
-    const nodeType = JSON.parse(node.type);
+
+    let nodeType: any;
+
+    try {
+      nodeType = JSON.parse(node.type);
+    } catch (error) {
+      setIsLoading(false);
+      onError();
+      return;
+    }
 
     const details = [
       {
