@@ -65,11 +65,34 @@ export function useInvitations() {
     console.log('declineInvitation response', response);
   };
 
+  const revokeInvitation = async (
+    {
+      token,
+      invitationId,
+      email,
+    }: {
+      token?: string;
+      invitationId?: string;
+      email?: string;
+    },
+    onSuccess?: VoidFunction,
+  ) => {
+    const response = await apiClient.revokeInvitation({
+      token,
+      invitationId,
+      email,
+    });
+    toast.success('Invitation Revoked');
+    if (onSuccess) onSuccess();
+    console.log('revokeInvitation response', response);
+  };
+
   return {
     getReceivedInvitations,
     sentInvitations,
     getSentInvitations,
     acceptInvitation,
     declineInvitation,
+    revokeInvitation,
   };
 }

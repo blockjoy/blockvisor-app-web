@@ -1083,7 +1083,8 @@ export class GrpcClient {
     request.setUserId(user_id);
     request.setOrgId(org_id);
 
-    return this.organization?.removeMember(request, this.getAuthHeader())
+    return this.organization
+      ?.removeMember(request, this.getAuthHeader())
       .then((response) => {
         return response?.toObject();
       })
@@ -1097,7 +1098,7 @@ export class GrpcClient {
 
   async leaveOrganization(
     org_id: string,
-  ): Promise<Empty.AsObject | undefined | StatusResponse>{
+  ): Promise<Empty.AsObject | undefined | StatusResponse> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
@@ -1105,7 +1106,8 @@ export class GrpcClient {
     request.setMeta(request_meta);
     request.setOrgId(org_id);
 
-    return this.organization?.leave(request, this.getAuthHeader())
+    return this.organization
+      ?.leave(request, this.getAuthHeader())
       .then((response) => {
         return response?.toObject();
       })
@@ -1505,6 +1507,50 @@ export class GrpcClient {
       })
       .catch((err) => {
         return StatusResponseFactory.declineInvitation(err, 'grpcClient');
+      });
+  }
+
+  async revokeInvitation({
+    token,
+    invitationId,
+    email,
+  }: {
+    token?: string;
+    invitationId?: string;
+    email?: string;
+  }): Promise<Empty.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new InvitationRequest();
+    request.setMeta(request_meta);
+
+    let auth_header;
+
+    if (token) {
+      auth_header = {
+        authorization: `Bearer ${Buffer.from(token, 'binary').toString(
+          'base64',
+        )}`,
+      };
+    } else {
+      auth_header = this.getAuthHeader();
+
+      const invitation = new Invitation();
+      invitation.setId(invitationId!);
+      if (email) invitation.setInviteeEmail(email);
+
+      request.setInvitation(invitation);
+    }
+
+    return this.invitation
+      ?.revoke(request, auth_header)
+      .then((response) => {
+        console.log('revokeInvitationResponse', response.toObject());
+        return response.toObject();
+      })
+      .catch((err) => {
+        return StatusResponseFactory.revokeInvitation(err, 'grpcClient');
       });
   }
 
