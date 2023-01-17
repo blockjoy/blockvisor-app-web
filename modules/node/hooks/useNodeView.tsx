@@ -99,6 +99,11 @@ export const useNodeView = (): Hook => {
       data: <LockedSwitch />,
     });
 
+    nodeTypeConfigDetails.unshift({
+      label: 'NETWORK',
+      data: node.network || '-',
+    });
+
     const activeNode: BlockjoyNode = {
       id: node.id,
       hostId: node.hostId,
