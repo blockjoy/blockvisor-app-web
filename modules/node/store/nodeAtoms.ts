@@ -1,10 +1,5 @@
-import { GridCell } from '@shared/components/TableGrid/types/GridCell';
 import { atom } from 'recoil';
-import {
-  blockchainList,
-  nodeStatusList,
-  nodeTypeList,
-} from '@shared/constants/lookups';
+import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
 
 export type FilterItem = {
   name?: string | undefined;
@@ -82,22 +77,22 @@ const nodeWizardActive = atom<boolean>({
 
 const hasMoreNodes = atom<boolean>({
   key: 'node.hasMore',
-  default: false
+  default: false,
 });
 
 const nodeMetrics = atom<any>({
   key: 'node.metrics',
-  default: {}
+  default: {},
 });
 
 const totalNodes = atom<number | null>({
   key: 'node.total',
-  default: null
+  default: null,
 });
 
 const preloadNodes = atom<number>({
   key: 'node.loadingTotal',
-  default: 0
+  default: 0,
 });
 
 export const nodeAtoms = {

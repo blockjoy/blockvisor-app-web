@@ -60,7 +60,7 @@ export function NodeView() {
                   handleStop={handleStop}
                   handleRestart={handleRestart}
                   status={node?.status!}
-                  blockchainId={node?.blockchainId!}
+                  blockchainName={node?.blockchainName!}
                   title={node?.name!}
                   ip={node?.ip!}
                   date={node?.created!}
