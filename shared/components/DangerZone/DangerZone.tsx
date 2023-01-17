@@ -86,7 +86,6 @@ export const DangerZone: FC<Props> = ({
                   type="submit"
                   size="small"
                   style="warning"
-                  css={spacing.right.large}
                 >
                   Confirm
                 </Button>
