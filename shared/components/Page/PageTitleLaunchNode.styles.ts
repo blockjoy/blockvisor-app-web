@@ -35,6 +35,10 @@ export const styles = {
       flex: 0 0 16px;
     }
 
+    @media ${breakpoints.toSml} {
+      width: 44px;
+    }
+
     @media ${breakpoints.toLrg} {
       gap: 8px;
       padding: 0 10px;
@@ -48,8 +52,13 @@ export const styles = {
     }
   `,
   buttonText: (theme: ITheme) => css`
-    color: ${theme.colorPrimaryText};
-    font-weight: 600;
-    font-size: 16px;
+    display: none;
+
+    @media ${breakpoints.fromSml} {
+      display: block;
+      color: ${theme.colorPrimaryText};
+      font-weight: 600;
+      font-size: 16px;
+    }
   `,
 };
