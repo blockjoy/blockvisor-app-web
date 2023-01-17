@@ -44,14 +44,15 @@ const getIcon = (name: string = '') => {
   return icons[name];
 };
 
-const getColor = (name: string) => {
-  switch (name) {
-    case 'Earning':
-      return styles.statusColorGreen;
-    case 'Undefined':
-      return styles.statusColorRed;
-    default:
-      return styles.statusColorDefault;
+const getColor = (name: string, isOnline: boolean) => {
+  if (name === 'Processing') {
+    return styles.statusColorDefault;
+  }
+
+  if (isOnline) {
+    return styles.statusColorGreen;
+  } else {
+    return styles.statusColorRed;
   }
 };
 
@@ -68,7 +69,7 @@ export const NodeStatus: FC<Props> = ({ status, hasBorder = true }) => {
       css={[
         styles.status,
         hasBorder && styles.statusBorder,
-        getColor(statusInfo?.name!),
+        getColor(statusInfo?.name!, statusInfo?.isOnline!),
       ]}
     >
       {getIcon(statusInfo?.name)}
