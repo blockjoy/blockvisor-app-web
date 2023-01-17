@@ -1,7 +1,6 @@
 import { FC, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { styles } from './styles';
-import { blockchainList } from '@shared/constants/lookups';
 
 type Props = {
   blockchainId?: string;
@@ -57,18 +56,9 @@ const IconSolana = dynamic(
   () => import(`@public/assets/icons/blockchain-solana-24.svg`),
 );
 
-export const BlockchainIcon: FC<Props> = ({
-  blockchainId,
-  blockchainName,
-  hideTooltip,
-}) => {
-  let name =
-    blockchainName ||
-    blockchainList.find((b) => b.value === blockchainId)?.label;
-
+export const BlockchainIcon: FC<Props> = ({ blockchainName, hideTooltip }) => {
   let Component;
-
-  switch (name?.toLowerCase()) {
+  switch (blockchainName?.toLowerCase()) {
     case 'aptos':
       Component = IconAptos;
       break;

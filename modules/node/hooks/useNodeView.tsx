@@ -104,6 +104,15 @@ export const useNodeView = (): Hook => {
       data: node.network || '-',
     });
 
+    // temp fix to get blockchain name from ID
+    let blockchainName = '';
+    const blockchains: any = await apiClient.getBlockchains();
+    if (blockchains?.length) {
+      blockchainName = blockchains?.find(
+        (b: any) => b.id === node.blockchainId,
+      )?.name;
+    }
+
     const activeNode: BlockjoyNode = {
       id: node.id,
       hostId: node.hostId,
@@ -111,6 +120,7 @@ export const useNodeView = (): Hook => {
       name: node.name,
       ip: node.ip,
       blockchainId: node.blockchainId,
+      blockchainName,
       created: formatDistanceToNow(new Date(node.created_at_datetime), {
         addSuffix: true,
       }),
