@@ -35,7 +35,7 @@ export function NewPasswordForm() {
 
     console.log({ password, confirmPassword, token });
 
-    const response: any = apiClient.updateResetPassword(
+    const response: any = await apiClient.updateResetPassword(
       token?.toString()!,
       password,
       confirmPassword,
