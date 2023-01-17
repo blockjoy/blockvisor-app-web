@@ -67,10 +67,10 @@ export const useNodeView = (): Hook => {
         label: 'TYPE',
         data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
       },
+      { label: 'HOST', data: node.hostName || 'Unknown' },
       { label: 'NODE ADDRESS', data: node.walletAddress },
       { label: 'VERSION', data: node.version || 'Latest' },
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
-      { label: 'AUTO UPDATES', data: <LockedSwitch /> },
     ];
 
     const nodeTypeConfigDetails = nodeType.properties
@@ -93,6 +93,11 @@ export const useNodeView = (): Hook => {
             property.value
           ),
       }));
+
+    nodeTypeConfigDetails.unshift({
+      label: 'AUTO UPDATES',
+      data: <LockedSwitch />,
+    });
 
     const activeNode: BlockjoyNode = {
       id: node.id,
