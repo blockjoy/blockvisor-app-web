@@ -179,6 +179,7 @@ export function blockchain_to_grpc_blockchain(
     updated_at_datetime: timestamp_to_date(chain?.getUpdatedAt()) || undefined,
     supported_node_types:
       JSON.parse(chain?.getSupportedNodesTypes() || '') || [],
+    networksList: chain?.getNetworksList().map((c) => c.toObject()) || [],
   };
 }
 
@@ -197,6 +198,7 @@ export type GrpcBlockchainObject = Blockchain.AsObject &
   ConvenienceConversion & {
     supported_node_types: any;
     updated_at_datetime: Date | undefined;
+    networksList: any;
   };
 export type GrpcHostObject = Host.AsObject &
   ConvenienceConversion & { node_objects: Array<GrpcNodeObject> | undefined };

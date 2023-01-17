@@ -14,8 +14,14 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { nodeStatusList } from '@shared/constants/lookups';
 
 import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
-import { InitialFilter, InitialQueryParams } from '@modules/node/ui/NodeUIHelpers';
-import { buildParams, loadPersistedFilters } from '@modules/node/helpers/NodeHelpers';
+import {
+  InitialFilter,
+  InitialQueryParams,
+} from '@modules/node/ui/NodeUIHelpers';
+import {
+  buildParams,
+  loadPersistedFilters,
+} from '@modules/node/helpers/NodeHelpers';
 import { organizationAtoms } from '@modules/organization';
 
 export const NodeFilters = () => {
@@ -60,10 +66,14 @@ export const NodeFilters = () => {
     nodeAtoms.filtersBlockchain,
   );
 
-  const defaultOrganization = useRecoilValue(organizationAtoms.defaultOrganization);
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const currentOrganization = useRef(defaultOrganization);
 
   const [isDirty, setIsDirty] = useState(false);
+
+  const [hasBlockchainError, setHasBlockchainError] = useState(false);
 
   const [filtersType, setFiltersType] = useRecoilState(nodeAtoms.filtersType);
 
@@ -88,6 +98,12 @@ export const NodeFilters = () => {
   const loadLookups = async () => {
     const blockchains: any = await apiClient.getBlockchains();
 
+    if (!blockchains?.length) {
+      setFiltersBlockchain([]);
+      setHasBlockchainError(true);
+      return;
+    }
+
     const mappedBlockchains: FilterItem[] = blockchains?.map((b: any) => ({
       id: b.id,
       name: b.name,
@@ -106,12 +122,12 @@ export const NodeFilters = () => {
       setIsDirty(true);
     }
 
-    const filtersList = list.map(item => {
+    const filtersList = list.map((item) => {
       if (item.name === e.target.id) {
         return {
           ...item,
           isChecked: !item.isChecked,
-        }
+        };
       }
 
       return item;
@@ -318,6 +334,7 @@ export const NodeFilters = () => {
           </div>
           {filters.map((item) => (
             <NodeFiltersBlock
+              hasError={item.name === 'Blockchain' && hasBlockchainError}
               isDisabled={item.isDisabled}
               isOpen={item.name === openFilterName}
               onPlusMinusClicked={handlePlusMinusClicked}

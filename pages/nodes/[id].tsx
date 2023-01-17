@@ -4,7 +4,7 @@ import { NodeView } from '@modules/node/';
 const Node = () => <NodeView />;
 
 Node.getLayout = function getLayout(page: any) {
-  return <AppLayout>{page}</AppLayout>;
+  return <AppLayout pageTitle="Node">{page}</AppLayout>;
 };
 
 export default Node;
