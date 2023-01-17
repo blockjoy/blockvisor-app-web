@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-
 import { Alert, Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -21,6 +20,10 @@ type RegisterForm = {
   email: string;
   password: string;
   confirmPassword: string;
+};
+
+const errors = {
+  'RpcError: Duplicate resource conflict.': 'Email address already registered',
 };
 
 export function RegisterForm() {
@@ -50,18 +53,17 @@ export function RegisterForm() {
 
       console.log('signup', response);
 
-      if (isResponeMetaObject(response)) {
-        if (response.status === RegistrationStatus.SUCCESS.valueOf()) {
-          setIsLoading(false);
-          Router.push(Routes.verify);
-        } else {
-          setIsLoading(false);
-          setRegisterError('Error creating account, please try again.');
-        }
-      } else {
+      if (response.message) {
+        setRegisterError(
+          errors[response?.message] ||
+            'Error creating account, invalid values.',
+        );
         setIsLoading(false);
-        setRegisterError('Error creating account, please try again.');
+        return;
       }
+
+      setIsLoading(false);
+      Router.push(Routes.verify);
     },
   );
   return (
@@ -76,6 +78,7 @@ export function RegisterForm() {
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={1}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="first_name"
@@ -87,6 +90,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={2}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="last_name"
@@ -98,6 +102,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={3}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="email"
@@ -113,6 +118,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                tabIndex={4}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="password"
@@ -127,6 +133,7 @@ export function RegisterForm() {
                 }}
                 rightIcon={
                   <PasswordToggle
+                    tabIndex={0}
                     activeType={activeType}
                     onClick={handleIconClick}
                   />
@@ -135,6 +142,7 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.medium]}>
               <Input
+                tabIndex={5}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="confirmPassword"
@@ -150,6 +158,7 @@ export function RegisterForm() {
                 }}
                 rightIcon={
                   <PasswordToggle
+                    tabIndex={0}
                     activeType={activeType}
                     onClick={handleIconClick}
                   />
@@ -158,6 +167,7 @@ export function RegisterForm() {
             </li>
           </ul>
           <Button
+            tabIndex={5}
             loading={loading}
             disabled={loading}
             size="medium"

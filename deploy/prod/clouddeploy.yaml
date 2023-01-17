@@ -1,0 +1,37 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: blockvisor-ui-prod
+  labels:
+    app: blockvisor-ui-prod
+description: Blockvisor UI Prod delivery pipeline
+serialPipeline:
+  stages:
+  - targetId: staging
+    profiles:
+    - staging
+  - targetId: prod
+    profiles:
+    - prod
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: staging
+  annotations: {}
+  labels: {}
+description: staging
+requireApproval: false
+gke:
+  cluster: projects/blockjoy-staging/locations/us-east1-b/clusters/blockjoy-staging
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: prod
+  annotations: {}
+  labels: {}
+description: prod
+requireApproval: true
+gke:
+  cluster: projects/blockjoy-prod/locations/us-east1-b/clusters/blockjoy-prod

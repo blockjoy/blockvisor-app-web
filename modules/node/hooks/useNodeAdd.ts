@@ -26,6 +26,15 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(true);
 
     const blockchains: any = await apiClient.getBlockchains();
+
+    console.log('loadLookups', !blockchains?.length);
+
+    // if (!blockchains?.length) {
+    //   setBlockchainList([]);
+    //   setIsLoading(false);
+    //   return;
+    // }
+
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id,
       label: b.name,
@@ -42,9 +51,6 @@ export const useNodeAdd = (): Hook => {
     onError: () => void,
   ) => {
     setIsLoading(true);
-
-    console.log('createNode', params);
-
     const node = new Node();
 
     const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';

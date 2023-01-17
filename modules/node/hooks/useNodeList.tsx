@@ -27,7 +27,7 @@ export const useNodeList = (): Hook => {
 
   const setLayout = useSetRecoilState(layoutState);
 
-  const setNodeMetrics = useSetRecoilState(nodeAtoms.nodeMetrics)
+  const setNodeMetrics = useSetRecoilState(nodeAtoms.nodeMetrics);
   const [totalNodes, setTotalNodes] = useRecoilState(nodeAtoms.totalNodes);
 
   let total = totalNodes || 0;
@@ -44,7 +44,7 @@ export const useNodeList = (): Hook => {
     const loadingState =
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
-    
+
     setHasMore(false);
 
     // TODO: Org ID needs be set here
@@ -57,7 +57,8 @@ export const useNodeList = (): Hook => {
       queryParams.filter,
       queryParams.pagination,
     );
-    console.log('nodes', nodes);
+
+    console.log('listNodes', nodes);
 
     setPreloadNodes(nodes.length);
 
@@ -69,8 +70,9 @@ export const useNodeList = (): Hook => {
       const _total: number = metrics.reduce(
         (accumulator: number, metric: NodeMetrics) => {
           const currentValue = parseInt(metric.value) ?? 0;
-          return accumulator + currentValue
-        }, 0
+          return accumulator + currentValue;
+        },
+        0,
       );
 
       setTotalNodes(_total);

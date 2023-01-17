@@ -30,13 +30,21 @@ export const styles = {
 
     svg {
       transition: 0.3s;
-      height: 35%;
+      height: 16px;
+      width: 16px;
+      flex: 0 0 16px;
     }
 
     @media ${breakpoints.toLrg} {
-      padding: 0 20px 0 16px;
-      scale: 0.8;
+      gap: 8px;
+      padding: 0 10px;
       transform-origin: 100% 50%;
+      min-width: 0;
+
+      svg {
+        width: 14px;
+        flex: 0 0 14px;
+      }
     }
   `,
   buttonText: (theme: ITheme) => css`

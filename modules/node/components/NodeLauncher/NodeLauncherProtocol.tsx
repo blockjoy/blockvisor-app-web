@@ -4,6 +4,8 @@ import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import IconSearch from '@public/assets/icons/search-16.svg';
 import { nodeTypeList, blockchainList } from '@shared/constants/lookups';
+import { typo } from 'styles/utils.typography.styles';
+import { colors } from 'styles/utils.colors.styles';
 
 type Props = {
   onProtocolSelected: (
@@ -74,6 +76,13 @@ export const NodeLauncherProtocol: FC<Props> = ({
         {loading ? (
           <div css={styles.skeletonWrapper}>
             <TableSkeleton />
+          </div>
+        ) : !Boolean(blockchainList?.length) ? (
+          <div
+            css={[typo.small, colors.warning]}
+            style={{ marginLeft: '16px' }}
+          >
+            Error loading data, please contact our support team.
           </div>
         ) : (
           <>

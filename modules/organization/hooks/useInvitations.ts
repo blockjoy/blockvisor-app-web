@@ -43,7 +43,6 @@ export function useInvitations() {
     });
     toast.success('Invite Accepted');
     onSuccess();
-    console.log('acceptInvitation response', response);
   };
 
   const declineInvitation = async (
@@ -62,7 +61,6 @@ export function useInvitations() {
     });
     toast.success('Invite Declined');
     onSuccess();
-    console.log('declineInvitation response', response);
   };
 
   const revokeInvitation = async (

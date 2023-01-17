@@ -4,11 +4,11 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
-    padding: 20px 30px;
+    padding: 20px 0;
     flex: 1 1 auto;
 
     @media ${breakpoints.toXlrg} {
-      padding: 20px 24px 30px;
+      padding: 20px 0 30px;
     }
   `,
   header: (theme: ITheme) => css`

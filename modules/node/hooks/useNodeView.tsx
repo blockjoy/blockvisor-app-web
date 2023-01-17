@@ -12,7 +12,7 @@ import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 type Args = string | string[] | undefined;
 
 type Hook = {
-  loadNode: (args1: Args) => void;
+  loadNode: (id: Args, onError: VoidFunction) => void;
   deleteNode: (args1: Args) => void;
   stopNode: (nodeId: Args) => void;
   restartNode: (nodeId: Args) => void;
@@ -44,24 +44,33 @@ export const useNodeView = (): Hook => {
     toast.success(`Node Started`);
   };
 
-  const loadNode = async (id: Args) => {
+  const loadNode = async (id: Args, onError: VoidFunction) => {
     setIsLoading(true);
 
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
 
     console.log('loadNode', node);
-    const nodeType = JSON.parse(node.type);
+
+    let nodeType: any;
+
+    try {
+      nodeType = JSON.parse(node.type);
+    } catch (error) {
+      setIsLoading(false);
+      onError();
+      return;
+    }
 
     const details = [
       {
         label: 'TYPE',
         data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
       },
+      { label: 'HOST', data: node.hostName || 'Unknown' },
       { label: 'NODE ADDRESS', data: node.walletAddress },
       { label: 'VERSION', data: node.version || 'Latest' },
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
-      { label: 'AUTO UPDATES', data: <LockedSwitch /> },
     ];
 
     const nodeTypeConfigDetails = nodeType.properties
@@ -84,6 +93,11 @@ export const useNodeView = (): Hook => {
             property.value
           ),
       }));
+
+    nodeTypeConfigDetails.unshift({
+      label: 'AUTO UPDATES',
+      data: <LockedSwitch />,
+    });
 
     const activeNode: BlockjoyNode = {
       id: node.id,
