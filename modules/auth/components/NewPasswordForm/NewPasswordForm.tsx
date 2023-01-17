@@ -40,7 +40,7 @@ export function NewPasswordForm() {
       password,
       confirmPassword,
     );
-    console.log('res', response);
+
     if (response.code) {
       setServerError('Error setting new password, please contact support.');
     } else {
