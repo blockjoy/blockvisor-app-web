@@ -49,6 +49,14 @@ const IconPocket = dynamic(
   () => import(`@public/assets/icons/blockchain-pocket-24.svg`),
 );
 
+const IconPolygon = dynamic(
+  () => import(`@public/assets/icons/blockchain-polygon-24.svg`),
+);
+
+const IconSolana = dynamic(
+  () => import(`@public/assets/icons/blockchain-solana-24.svg`),
+);
+
 export const BlockchainIcon: FC<Props> = ({
   blockchainId,
   blockchainName,
@@ -91,6 +99,12 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'pocket':
       Component = IconPocket;
+      break;
+    case 'polygon':
+      Component = IconPolygon;
+      break;
+    case 'solana':
+      Component = IconSolana;
       break;
     default:
       Component = IconAlgorand;
