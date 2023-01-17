@@ -77,7 +77,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
           <div css={styles.skeletonWrapper}>
             <TableSkeleton />
           </div>
-        ) : !!blockchainList?.length ? (
+        ) : !Boolean(blockchainList?.length) ? (
           <div
             css={[typo.small, colors.warning]}
             style={{ marginLeft: '16px' }}
