@@ -26,6 +26,13 @@ export const useNodeAdd = (): Hook => {
     setIsLoading(true);
 
     const blockchains: any = await apiClient.getBlockchains();
+
+    if (!blockchains?.length) {
+      setBlockchainList([]);
+      setIsLoading(false);
+      return;
+    }
+
     const mappedBlockchains = blockchains.map((b: any) => ({
       value: b.id,
       label: b.name,

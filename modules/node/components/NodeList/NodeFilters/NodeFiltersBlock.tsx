@@ -13,9 +13,12 @@ import { styles } from './NodeFiltersBlock.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';
 import IconPlus from '@public/assets/icons/plus-12.svg';
 import IconMinus from '@public/assets/icons/minus-12.svg';
+import { typo } from 'styles/utils.typography.styles';
+import { colors } from 'styles/utils.colors.styles';
 
 type FilterBlock = {
   name: string;
+  hasError: boolean;
   isOpen: boolean;
   isDisabled: boolean;
   filterCount: number;
@@ -32,6 +35,7 @@ type FilterBlock = {
 
 export const NodeFiltersBlock: FC<FilterBlock> = ({
   name,
+  hasError,
   isOpen,
   isDisabled,
   filterCount,
@@ -69,8 +73,11 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
         style={{ padding: !isOpen && !filterCount ? '0' : '' }}
         css={[styles.checkboxList, styles.checkboxListShowAll]}
       >
-        {isOpen
-          ? filterList
+        {isOpen ? (
+          hasError ? (
+            <div css={[typo.smaller, colors.warning]}>Error loading data</div>
+          ) : (
+            filterList
               ?.filter((item) => item.id)
               ?.map((item) => (
                 <div key={item.id} css={styles.checkboxRow}>
@@ -86,16 +93,19 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                   </Checkbox>
                 </div>
               ))
-          : filterList
-              .filter((item) => item.isChecked)
-              .map((item) => (
-                <div key={item.id} css={styles.selectedFilterRow}>
-                  <div css={styles.checkedIcon}>
-                    <IconCheck />
-                  </div>
-                  {item.name}
+          )
+        ) : (
+          filterList
+            .filter((item) => item.isChecked)
+            .map((item) => (
+              <div key={item.id} css={styles.selectedFilterRow}>
+                <div css={styles.checkedIcon}>
+                  <IconCheck />
                 </div>
-              ))}
+                {item.name}
+              </div>
+            ))
+        )}
       </div>
     </div>
   );
