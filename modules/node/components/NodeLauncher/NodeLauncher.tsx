@@ -18,6 +18,7 @@ type NodeState = {
   nodeTypeId: string;
   nodeTypeProperties: NodeTypeConfig[];
   nodeFiles?: NodeFiles[];
+  network: string;
 };
 
 export const NodeLauncher = () => {
@@ -29,6 +30,8 @@ export const NodeLauncher = () => {
 
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
+  const [networkList, setNetworkList] = useState<string[]>([]);
+
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -39,6 +42,7 @@ export const NodeLauncher = () => {
     nodeTypeId: '',
     nodeTypeProperties: [],
     nodeVersion: '',
+    network: '',
   });
 
   const handleProtocolSelected = (
@@ -75,6 +79,13 @@ export const NodeLauncher = () => {
     if (!activeNodeFiles) return true;
 
     return !!activeNodeFiles?.files?.length;
+  };
+
+  const handleNetworkChanged = (network: string) => {
+    setNode({
+      ...node,
+      network,
+    });
   };
 
   const handlePropertyChanged = (e: any) => {
@@ -135,6 +146,7 @@ export const NodeLauncher = () => {
       blockchain: node.blockchainId ?? '',
       nodeTypeProperties: node.nodeTypeProperties,
       key_files: mergedFiles.flat(),
+      network: node.network,
     };
 
     createNode(
@@ -153,6 +165,8 @@ export const NodeLauncher = () => {
     );
 
     if (!activeBlockchain) return;
+
+    setNetworkList(activeBlockchain.networksList.map((n: any) => n.name));
 
     const activeNodeType = activeBlockchain.supported_node_types.find(
       (type: any) => type.id === +node.nodeTypeId,
@@ -181,6 +195,7 @@ export const NodeLauncher = () => {
       ...node,
       nodeTypeProperties: propertiesWithValue,
       nodeFiles: fileProperties,
+      network: activeBlockchain.networksList[0].name,
     });
   }, [node.blockchainId, node.nodeTypeId]);
 
@@ -195,6 +210,7 @@ export const NodeLauncher = () => {
         nodeTypeId: '',
         nodeTypeProperties: [],
         nodeVersion: '',
+        network: '',
       });
       currentOrganization.current = defaultOrganization;
     }
@@ -209,17 +225,22 @@ export const NodeLauncher = () => {
           activeBlockchainId={node.blockchainId}
           activeNodeTypeId={node.nodeTypeId}
         />
-        {!!node.nodeTypeProperties?.filter(
+        {/* {!!node.nodeTypeProperties?.filter(
           (property) => property.name !== 'self-hosted',
-        )?.length && (
+        )?.length && ( */}
+        {node.blockchainId && node.nodeTypeId && (
           <NodeLauncherConfig
             isConfigValid={isConfigValid()}
             onFileUploaded={handleFileUploaded}
             onPropertyChanged={handlePropertyChanged}
+            onNetworkChanged={handleNetworkChanged}
             nodeTypeProperties={node.nodeTypeProperties}
             nodeFiles={node.nodeFiles}
+            networkList={networkList}
           />
         )}
+
+        {/* )} */}
         {!node.blockchainId && !node.nodeTypeId && (
           <div css={styles.empty}>
             <EmptyColumn

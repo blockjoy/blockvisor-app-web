@@ -1,11 +1,12 @@
 import { useGetBlockchains } from '@modules/node';
-import { BlockchainIcon, Table, TableSkeleton } from '@shared/components';
+import { BlockchainIcon, TableSkeleton } from '@shared/components';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import IconSearch from '@public/assets/icons/search-16.svg';
-import { nodeTypeList, blockchainList } from '@shared/constants/lookups';
+import { nodeTypeList } from '@shared/constants/lookups';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
+import { blockchainsDisabled } from '@shared/constants/lookups';
 
 type Props = {
   onProtocolSelected: (
@@ -77,7 +78,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
           <div css={styles.skeletonWrapper}>
             <TableSkeleton />
           </div>
-        ) : !Boolean(blockchainList?.length) ? (
+        ) : !Boolean(blockchains?.length) ? (
           <div
             css={[typo.small, colors.warning]}
             style={{ marginLeft: '16px' }}
@@ -96,7 +97,12 @@ export const NodeLauncherProtocol: FC<Props> = ({
                   <span css={styles.iconWrapper}>
                     <BlockchainIcon hideTooltip blockchainName={b.name} />
                   </span>
-                  <span css={styles.name}>{b.name}</span>
+                  <span css={styles.name}>
+                    <span className="beta-badge" css={styles.betaBadge}>
+                      BETA
+                    </span>
+                    {b.name}
+                  </span>
                 </span>
                 <div css={styles.nodeTypeButtons} className="node-type-buttons">
                   {b.supported_node_types.map((type: any) => (
@@ -119,6 +125,23 @@ export const NodeLauncherProtocol: FC<Props> = ({
               </div>
             ))}
             {!keyword &&
+              blockchainsDisabled?.map((b: any) => (
+                <div key={b} css={[styles.row, styles.rowDisabled]}>
+                  <span css={styles.blockchainWrapper}>
+                    <span css={styles.iconWrapper}>
+                      <BlockchainIcon hideTooltip blockchainName={b} />
+                    </span>
+                    <span css={styles.name}>{b}</span>
+                    <span
+                      className="coming-soon-badge"
+                      css={styles.comingSoonBadge}
+                    >
+                      Coming Soon
+                    </span>
+                  </span>
+                </div>
+              ))}
+            {/* {!keyword &&
               disabledBlockchains
                 ?.filter(
                   (b) => b.name !== 'Ethereum PoS' && b.name !== 'Helium',
@@ -132,7 +155,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                       <span css={styles.name}>{b.name}</span>
                     </span>
                   </div>
-                ))}
+                ))} */}
           </>
         )}
       </div>

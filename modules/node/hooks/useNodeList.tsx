@@ -51,12 +51,21 @@ export const useNodeList = (): Hook => {
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
     // let org_id = user?.defaultOrganization?.id || '';
 
+    // temp fix to get blockchain name from ID
+    const blockchains: any = await apiClient.getBlockchains();
+
     console.log('-------------nodeUIProps-------------', queryParams);
-    const nodes: any = await apiClient.listNodes(
+    const nodesResponse: any = await apiClient.listNodes(
       org_id!,
       queryParams.filter,
       queryParams.pagination,
     );
+
+    const nodes = nodesResponse?.map((n: any) => ({
+      ...n,
+      blockchainName:
+        blockchains?.find((b: any) => b.id === n.blockchainId)?.name || '-',
+    }));
 
     console.log('listNodes', nodes);
 

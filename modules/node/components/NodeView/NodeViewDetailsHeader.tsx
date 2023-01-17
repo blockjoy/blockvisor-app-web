@@ -11,9 +11,8 @@ interface Props {
   ip: string;
   id?: string;
   date?: string;
-  location?: string;
   status: number;
-  blockchainId: string;
+  blockchainName: string;
   handleStop?: VoidFunction;
   handleRestart?: VoidFunction;
 }
@@ -24,15 +23,14 @@ export const NodeViewDetailsHeader: FC<Props> = ({
   id,
   date,
   status,
-  location,
-  blockchainId,
+  blockchainName,
   handleStop,
   handleRestart,
 }) => {
   return (
     <header css={styles.header}>
       <div css={styles.blockchainIcon}>
-        <BlockchainIcon blockchainId={blockchainId} />
+        <BlockchainIcon blockchainName={blockchainName} />
       </div>
       <div>
         <div css={styles.detailsHeader}>
