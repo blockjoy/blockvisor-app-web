@@ -39,14 +39,18 @@ Unknown = 0,
     FullNode = 11,
     LightNode = 12,
  */
-export const blockchainList = [
-  { value: 'a307e884-9621-47e6-a18c-326a484f3aed', label: 'Algorand' },
-  { value: '90405525-a6c8-43bf-888e-351d888de079', label: 'Cosmos' },
-  { value: 'c27e539f-f098-40d2-8971-3d30fa41bc0d', label: 'Ethereum' },
-  { value: '1fdbf4c3-ff16-489a-8d3d-87c8620b963c', label: 'Helium' },
-  { value: '0f2b5687-d896-4908-ac47-0629a4ffe9da', label: 'Lightning' },
-  { value: '3124d59b-d7e0-4028-8f76-aa69842a9397', label: 'Pocket' },
-  { value: 'e02fcdf0-a325-40b3-8ac5-0e4ff15ccb85', label: 'Ethereum PoS' },
+
+export const blockchainsDisabled = [
+  'Algorand',
+  'Aptos',
+  'Avalanche',
+  'Cardano',
+  'Cosmos',
+  'Lightning',
+  'Near',
+  'Pocket',
+  'Polygon',
+  'Solana',
 ];
 
 export const nodeStatusList = [

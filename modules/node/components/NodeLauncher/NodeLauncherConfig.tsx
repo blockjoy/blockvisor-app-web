@@ -1,7 +1,8 @@
-import { NodeTypeConfigLabel, Alert } from '@shared/components';
-import { FC } from 'react';
+import { NodeTypeConfigLabel, Alert, NodeTypePicker } from '@shared/components';
+import { ChangeEvent, FC } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
+import { Select } from './formComponents/Select/Select';
 import { Switch } from './formComponents/Switch/Switch';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
@@ -14,8 +15,10 @@ type Props = {
   isConfigValid: boolean;
   nodeTypeProperties?: NodeTypeConfig[];
   nodeFiles?: NodeFiles[];
+  networkList: string[];
   onFileUploaded: (e: any) => void;
   onPropertyChanged: (e: any) => void;
+  onNetworkChanged: (network: string) => void;
 };
 
 const renderControls = (
@@ -70,8 +73,10 @@ export const NodeLauncherConfig: FC<Props> = ({
   isConfigValid,
   nodeTypeProperties,
   nodeFiles,
+  networkList,
   onFileUploaded,
   onPropertyChanged,
+  onNetworkChanged,
 }) => {
   // const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
   //   e.preventDefault();
@@ -94,6 +99,20 @@ export const NodeLauncherConfig: FC<Props> = ({
           </Alert>
         </div>
         <div css={styles.nodeTypeProperties}>
+          <label
+            css={[
+              spacing.bottom.mediumSmall,
+              typo.button,
+              display.block,
+              colors.text2,
+            ]}
+          >
+            Network
+          </label>
+          <Select
+            items={networkList}
+            onPropertyChanged={(e: any) => onNetworkChanged(e.target.value)}
+          />
           {nodeTypeProperties?.map((property: NodeTypeConfig) => {
             return (
               <>
