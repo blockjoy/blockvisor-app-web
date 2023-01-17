@@ -136,7 +136,7 @@ export const NodeList = () => {
               description={
                 isFiltered && isEmpty
                   ? 'Reset filters.'
-                  : 'Add your nodes and hosts to get started with BlockVisor'
+                  : 'Launch a Node to get started'
               }
             />
           ) : (
