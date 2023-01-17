@@ -14,20 +14,23 @@ export function useGetBlockchains() {
 
   const getBlockchains = async () => {
     setLoadingState('loading');
-    const response = await apiClient.getBlockchains();
+    const response: any = await apiClient.getBlockchains();
 
     console.log('blockchains', response);
+    await delay(1000);
+    setBlockchains(response);
+    setLoadingState('finished');
 
-    if (response && isStatusResponse(response)) {
-      setLoadingState('finished');
-      setBlockchains([]);
-      // add some error handling
-      //throw new ApplicationError('GetBlockchains', response.message);
-    } else {
-      await delay(1000);
-      setBlockchains(response ?? []);
-      setLoadingState('finished');
-    }
+    // if (response && isStatusResponse(response)) {
+    //   setLoadingState('finished');
+    //   setBlockchains([]);
+    //   // add some error handling
+    //   //throw new ApplicationError('GetBlockchains', response.message);
+    // } else {
+    //   await delay(1000);
+    //   setBlockchains(response ?? []);
+    //   setLoadingState('finished');
+    // }
   };
 
   return {
