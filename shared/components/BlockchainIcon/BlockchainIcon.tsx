@@ -105,7 +105,7 @@ export const BlockchainIcon: FC<Props> = ({ blockchainName, hideTooltip }) => {
     <span css={styles.icon}>
       {!hideTooltip && (
         <span className="tooltip" css={styles.tooltip}>
-          {name}
+          {blockchainName}
         </span>
       )}
       <Suspense fallback={null}>
