@@ -1,6 +1,8 @@
 import { sidebarOpen, layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { styles } from './Burger.styles';
+import BurgerOpen from '@public/assets/icons/burger-open.svg';
+import BurgerClosed from '@public/assets/icons/burger-closed.svg';
 
 export const Burger = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
@@ -24,7 +26,7 @@ export const Burger = () => {
       ]}
       onClick={handleClick}
     >
-      <span></span>
+      {!isSidebarOpen ? <BurgerClosed /> : <BurgerOpen />}
     </button>
   );
 };
