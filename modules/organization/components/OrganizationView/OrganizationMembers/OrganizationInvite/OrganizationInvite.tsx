@@ -1,5 +1,5 @@
 import { Button } from '@shared/components';
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvite.styles';
 
@@ -7,7 +7,7 @@ type Props = {
   hasTextareaValue: boolean;
   onInviteClicked: VoidFunction;
   onCancelClicked: VoidFunction;
-  onTextareaChanged: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  onTextareaChanged: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const OrganizationInvite: FC<Props> = ({
@@ -22,14 +22,12 @@ export const OrganizationInvite: FC<Props> = ({
 
   return (
     <div css={spacing.bottom.large}>
-      <textarea
-        autoFocus
-        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+      <input 
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
           onTextareaChanged(e)
         }
-        placeholder="Insert new member email addresses here"
+        placeholder="Insert new member email address here"
         css={styles.textarea}
-        rows={10}
       />
       <div css={styles.buttons}>
         <Button
@@ -39,7 +37,7 @@ export const OrganizationInvite: FC<Props> = ({
           size="small"
           style="secondary"
         >
-          Add Members
+          Add Member
         </Button>
         <Button
           onClick={onCancelClicked}

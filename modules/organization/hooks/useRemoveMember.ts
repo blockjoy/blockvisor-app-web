@@ -19,12 +19,18 @@ export function useRemoveMember() {
 
   const removeMemberFromOrganization = async (user_id: string, org_id: string) => {
     setIsLoading('loading');
-    await apiClient.removeOrganizationMember(user_id, org_id);
-    
-    removeMemberFromList(user_id);
 
+    try {
+      await apiClient.removeOrganizationMember(user_id, org_id);
+
+      removeMemberFromList(user_id);
+
+      toast.success('Removed successfully');
+    } catch (err) {
+      toast.error('Error while removing');
+    }
+    
     setIsLoading('finished');
-    toast.success('Removed successfully');
   };
 
   return {
