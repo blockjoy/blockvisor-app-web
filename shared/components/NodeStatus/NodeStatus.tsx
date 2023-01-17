@@ -45,7 +45,7 @@ const getIcon = (name: string = '') => {
 };
 
 const getColor = (name: string, isOnline: boolean) => {
-  if (name === 'Processing') {
+  if (name === 'Processing' || name === 'Provisioning') {
     return styles.statusColorDefault;
   }
 
