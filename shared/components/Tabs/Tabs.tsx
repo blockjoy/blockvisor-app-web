@@ -1,6 +1,5 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { reset } from 'styles/utils.reset.styles';
-import { typo } from 'styles/utils.typography.styles';
 import { styles } from './Tabs.styles';
 
 type Props = {

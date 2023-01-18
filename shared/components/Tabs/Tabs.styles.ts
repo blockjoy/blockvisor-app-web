@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   tabs: css`
@@ -10,8 +11,12 @@ export const styles = {
   tabList: css`
     overflow: auto;
     display: flex;
-    gap: 32px;
+    gap: 12px;
     max-width: 100%;
+
+    @media ${breakpoints.fromSml} {
+      gap: 32px;
+    }
 
     &::-webkit-scrollbar-track {
       border-top: 1px solid var(--color-text-5-o10);
