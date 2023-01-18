@@ -1,6 +1,25 @@
-import { FC, PropsWithChildren } from 'react';
+import { SerializedStyles } from '@emotion/serialize';
+import { ReactNode } from 'react';
 import { styles } from './Badge.styles';
 
-export const Badge: FC<PropsWithChildren> = ({ children }) => {
-  return <span css={styles.badge}>{children}</span>;
+type Props = {
+  children?: ReactNode;
+  color?: 'primary' | 'secondary' | 'note';
+  style?: 'standard' | 'outline';
+  customCss?: SerializedStyles[];
 };
+
+export function Badge({ children, color, style, customCss }: Props) {
+  return (
+    <span
+      css={[
+        styles.badge,
+        styles[color ?? 'primary'],
+        styles[style ?? 'standard'],
+        customCss && customCss,
+      ]}
+    >
+      {children}
+    </span>
+  );
+}

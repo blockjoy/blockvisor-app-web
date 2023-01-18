@@ -34,6 +34,11 @@ const organizationLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const organizationDefaultLoadingState = atom<LoadingState>({
+  key: 'organization.defaultOrgloadingState',
+  default: 'initializing',
+});
+
 const organizationMemberCount = selector({
   key: 'organization.memberCount',
   get: ({ get }) => {
@@ -57,6 +62,11 @@ const organizationMembers = atom<ClientOrganizationMember[]>({
   default: [],
 });
 
+const organizationMemberLoadingState = atom<LoadingState>({
+  key: 'organization.member.loadingState',
+  default: 'initializing',
+});
+
 const organizationMembersLoadingState = atom<LoadingState>({
   key: 'organization.members.loadingState',
   default: 'initializing',
@@ -75,12 +85,14 @@ const organizationReceivedInvitations = atom<any[]>({
 export const organizationAtoms = {
   selectedOrganization,
   organizationLoadingState,
+  organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,
   organizationMemberCount,
   organisationCount,
   defaultOrganization,
   organizationMembers,
+  organizationMemberLoadingState,
   organizationMembersLoadingState,
   organizationSentInvitations,
   organizationReceivedInvitations,

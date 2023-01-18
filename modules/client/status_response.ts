@@ -25,6 +25,8 @@ export enum StatusResponseCode {
   DeleteNode,
   GetOrganizations,
   GetOrganizationMembers,
+  RemoveOrganizationMember,
+  LeaveOrganization,
   CreateUser,
   GetUser,
   UpdateUser,
@@ -40,6 +42,7 @@ export enum StatusResponseCode {
   InviteOrgMember,
   AcceptInvitation,
   DeclineInvitation,
+  RevokeInvitation,
   ReceivedInvites,
   PendingInvites,
 }
@@ -47,46 +50,55 @@ export enum StatusResponseCode {
 export class StatusResponseFactory {
   static pendingInvitations(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.PendingInvites,
-        'Pending invites error',
-        err,
-        source,
+      StatusResponseCode.PendingInvites,
+      'Pending invites error',
+      err,
+      source,
     );
   }
 
   static receivedInvitations(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.ReceivedInvites,
-        'Received invites error',
-        err,
-        source,
+      StatusResponseCode.ReceivedInvites,
+      'Received invites error',
+      err,
+      source,
     );
   }
 
   static inviteOrgMember(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.InviteOrgMember,
-        'Invite org member error',
-        err,
-        source,
+      StatusResponseCode.InviteOrgMember,
+      'Invite org member error',
+      err,
+      source,
     );
   }
 
   static acceptInvitation(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.AcceptInvitation,
-        'accept invitation error',
-        err,
-        source,
+      StatusResponseCode.AcceptInvitation,
+      'accept invitation error',
+      err,
+      source,
     );
   }
 
   static declineInvitation(err: any, source: StatusSource): StatusResponse {
     return StatusResponseFactory.createResponse(
-        StatusResponseCode.DeclineInvitation,
-        'decline invitation error',
-        err,
-        source,
+      StatusResponseCode.DeclineInvitation,
+      'decline invitation error',
+      err,
+      source,
+    );
+  }
+
+  static revokeInvitation(err: any, source: StatusSource): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.RevokeInvitation,
+      'revoke invitation error',
+      err,
+      source,
     );
   }
 
@@ -271,6 +283,30 @@ export class StatusResponseFactory {
     return StatusResponseFactory.createResponse(
       StatusResponseCode.GetOrganizationMembers,
       'Error retrieving organization members',
+      err,
+      source,
+    );
+  }
+
+  static removeOrganizationMemberResponse(
+    err: any,
+    source: StatusSource,
+  ): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.RemoveOrganizationMember,
+      'Remove organization member error',
+      err,
+      source,
+    );
+  }
+
+  static leaveOrganizationResponse(
+    err: any,
+    source: StatusSource,
+  ): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.LeaveOrganization,
+      'Leave organization error',
       err,
       source,
     );

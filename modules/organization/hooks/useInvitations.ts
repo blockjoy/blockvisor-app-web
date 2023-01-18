@@ -1,14 +1,15 @@
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
+import { isStatusResponse } from '../utils/typeGuards';
 
 export function useInvitations() {
-  const [, setSentInvitations] = useRecoilState(
+  const [sentInvitations, setSentInvitations] = useRecoilState(
     organizationAtoms.organizationSentInvitations,
   );
 
-  const [, setReceivedInvitations] = useRecoilState(
+  const setReceivedInvitations = useSetRecoilState(
     organizationAtoms.organizationReceivedInvitations,
   );
 
@@ -19,7 +20,11 @@ export function useInvitations() {
 
   const getSentInvitations = async (id: string) => {
     const response: any = await apiClient.pendingInvitations(id);
-    setSentInvitations(response);
+    if (isStatusResponse(response)) {
+      setSentInvitations([]);
+    } else {
+      setSentInvitations(response);
+    }
   };
 
   const acceptInvitation = async (
@@ -58,10 +63,34 @@ export function useInvitations() {
     onSuccess();
   };
 
+  const revokeInvitation = async (
+    {
+      token,
+      invitationId,
+      email,
+    }: {
+      token?: string;
+      invitationId?: string;
+      email?: string;
+    },
+    onSuccess?: VoidFunction,
+  ) => {
+    const response = await apiClient.revokeInvitation({
+      token,
+      invitationId,
+      email,
+    });
+    toast.success('Invitation Revoked');
+    if (onSuccess) onSuccess();
+    console.log('revokeInvitation response', response);
+  };
+
   return {
     getReceivedInvitations,
+    sentInvitations,
     getSentInvitations,
     acceptInvitation,
     declineInvitation,
+    revokeInvitation,
   };
 }
