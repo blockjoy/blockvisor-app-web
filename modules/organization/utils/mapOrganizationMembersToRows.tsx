@@ -1,12 +1,12 @@
 import { useIdentityRepository } from '@modules/auth';
 import { Badge, Button } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useInvitations } from '../hooks/useInvitations';
 import { useRemoveMember } from '../hooks/useRemoveMember';
 import { organizationAtoms } from '../store/organizationAtoms';
+import IconClose from '@public/assets/icons/burger-hide.svg';
 
 export type Member = { invitation_id?: string; email?: string };
 
@@ -71,8 +71,9 @@ export const mapOrganizationMembersToRows = (
       key: '2',
     },
     {
-      name: 'Actions',
+      name: 'Action',
       key: '3',
+      width: '80px',
     },
   ];
 
@@ -109,31 +110,31 @@ export const mapOrganizationMembersToRows = (
       {
         key: '3',
         component: (
-          <div css={[flex.display.flex]}>
+          <>
             {member.active ? (
               member.id !== userId && (
                 <Button
-                  style="basic"
+                  style="icon"
                   size="medium"
                   onClick={() =>
                     handleRemoveMember(member?.id!, selectedOrganization?.id!)
                   }
                 >
-                  X
+                  <IconClose />
                 </Button>
               )
             ) : (
               <Button
-                style="basic"
+                style="icon"
                 size="medium"
                 onClick={() =>
                   handleRevokeInvitation(member?.invitationId!, member?.email!)
                 }
               >
-                X
+                <IconClose />
               </Button>
             )}
-          </div>
+          </>
         ),
       },
     ],

@@ -1,8 +1,6 @@
 import { tableStyles } from './table.styles';
-import { TableLoader } from './TableLoader';
-import { styles } from './TableLoader.styles';
+import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
-import { TableSkeleton } from './TableSkeleton';
 
 type Props = {
   headers?: TableHeader[];
@@ -10,18 +8,18 @@ type Props = {
   onRowClick?: (arg0: any) => void;
   isLoading: LoadingState;
   preload?: number;
-  isSorting?: boolean;
   verticalAlign?: 'top' | 'middle';
+  fixedRowHeight?: string;
 };
 
 export const Table: React.FC<Props> = ({
-  headers,
+  headers = [],
   rows = [],
   onRowClick,
   isLoading,
   preload,
-  isSorting = false,
   verticalAlign,
+  fixedRowHeight,
 }) => {
   const handleRowClick = (tr: any) => {
     if (onRowClick) {
@@ -32,24 +30,40 @@ export const Table: React.FC<Props> = ({
   return (
     <div css={tableStyles.wrapper}>
       <table
-        css={[tableStyles.table, !!onRowClick && tableStyles.hasHoverRows]}
+        css={[
+          tableStyles.table,
+          !!onRowClick && tableStyles.hasHoverRows,
+          fixedRowHeight && tableStyles.fixedRowHeight(fixedRowHeight),
+        ]}
       >
         {headers && rows?.length > 0 && (
           <thead>
             <tr>
-              {headers.map((th) => (
-                <th
-                  className={th.isHiddenOnMobile ? 'hidden-on-mobile' : ''}
-                  key={th.key}
-                  style={{
-                    width: th.width,
-                    minWidth: th.minWidth,
-                    maxWidth: th.maxWidth,
-                  }}
-                >
-                  {th.component || th.name}
-                </th>
-              ))}
+              {headers.map(
+                ({
+                  isHiddenOnMobile,
+                  key,
+                  width,
+                  minWidth,
+                  maxWidth,
+                  textAlign,
+                  name,
+                  component,
+                }) => (
+                  <th
+                    className={isHiddenOnMobile ? 'hidden-on-mobile' : ''}
+                    key={key}
+                    css={css`
+                      width: ${width};
+                      min-width: ${minWidth};
+                      max-width: ${maxWidth};
+                      text-align: ${textAlign || 'left'};
+                    `}
+                  >
+                    {component || name}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
         )}
@@ -73,6 +87,8 @@ export const Table: React.FC<Props> = ({
                       verticalAlign
                         ? tableStyles[verticalAlign]
                         : tableStyles.middle,
+
+                      tableStyles.textAlign(headers[index].textAlign || 'left'),
                     ]}
                   >
                     {td.component}
