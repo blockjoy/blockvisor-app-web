@@ -123,7 +123,7 @@ export const Members = ({ id }: MembersProps) => {
         headers={headers}
         rows={rows}
         verticalAlign="middle"
-        fixedRowHeight="90px"
+        fixedRowHeight="70px"
       />
       {activeView === 'action' && (
         <OrganizationDialog
