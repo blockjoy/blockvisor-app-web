@@ -237,6 +237,7 @@ export const NodeLauncher = () => {
             nodeTypeProperties={node.nodeTypeProperties}
             nodeFiles={node.nodeFiles}
             networkList={networkList}
+            nodeNetwork={node.network}
           />
         )}
 
