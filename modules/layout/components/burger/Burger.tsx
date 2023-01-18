@@ -26,7 +26,7 @@ export const Burger = () => {
       ]}
       onClick={handleClick}
     >
-      {!isSidebarOpen ? <BurgerClosed /> : <BurgerOpen />}
+      <BurgerClosed />
     </button>
   );
 };
