@@ -4,7 +4,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 0;
-    flex: 1 1 auto;
+    flex: 1 1 400px;
   `,
   h2: (theme: ITheme) => css`
     display: flex;

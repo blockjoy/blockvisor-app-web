@@ -214,11 +214,11 @@ export const styles = {
   createButton: (theme: ITheme) => css`
     border: 0;
     font-size: 11px;
-    height: 28px;
-    padding: 0 16px;
+    height: 32px;
+    padding: 0 10px;
     background: #181a19;
     color: #f9f9f9;
-    border-radius: 16px;
+    border-radius: 4px;
     cursor: pointer;
 
     :is(:hover, .active) {
