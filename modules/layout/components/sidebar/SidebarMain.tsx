@@ -6,6 +6,7 @@ import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 import IconDoor from '@public/assets/icons/door-12.svg';
+import IconChat from '@public/assets/icons/chat-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
@@ -32,6 +33,11 @@ const blocks = [
         name: 'Profile',
         path: '/profile',
         icon: <ProfileBubble />,
+      },
+      {
+        name: 'FAQ',
+        path: '/faq',
+        icon: <IconChat />,
       },
     ],
   },
