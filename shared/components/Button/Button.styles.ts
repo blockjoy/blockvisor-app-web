@@ -68,8 +68,8 @@ const buttonStyle = {
   icon: (theme: ITheme) => css`
     display: inline-grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     background: transparent;
     border: 0;

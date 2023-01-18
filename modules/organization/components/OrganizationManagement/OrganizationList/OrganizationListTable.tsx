@@ -95,6 +95,7 @@ export const AllOrganizationsTable: FC = () => {
       onRowClick={handleRowClicked}
       headers={headers}
       rows={rows}
+      fixedRowHeight="74px"
     />
   );
 };

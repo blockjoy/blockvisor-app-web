@@ -73,7 +73,7 @@ export const mapOrganizationMembersToRows = (
       width: '55%',
     },
     {
-      name: 'Action',
+      name: '',
       key: '3',
       width: '5%',
     },
