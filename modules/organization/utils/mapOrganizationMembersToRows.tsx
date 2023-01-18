@@ -65,15 +65,17 @@ export const mapOrganizationMembersToRows = (
     {
       name: 'Email',
       key: '1',
+      width: '40%',
     },
     {
       name: 'Added',
       key: '2',
+      width: '55%',
     },
     {
       name: 'Action',
       key: '3',
-      width: '80px',
+      width: '5%',
     },
   ];
 
