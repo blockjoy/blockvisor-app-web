@@ -6,6 +6,7 @@ import { apiClient } from '@modules/client';
 import { authAtoms, useIdentityRepository } from '@modules/auth';
 
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
+import { useGetBlockchains } from './useGetBlockchains';
 
 interface Hook {
   nodeList: BlockjoyNode[];
@@ -21,6 +22,8 @@ export const useNodeList = (): Hook => {
 
   const setIsLoading = useSetRecoilState(nodeAtoms.isLoading);
   const setPreloadNodes = useSetRecoilState(nodeAtoms.preloadNodes);
+
+  const { blockchains, getBlockchains } = useGetBlockchains();
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
@@ -45,14 +48,20 @@ export const useNodeList = (): Hook => {
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
 
+    console.log('loadNodes blockchains', blockchains);
+
+    let blockchainList: any;
+    if (!blockchains?.length) {
+      blockchainList = await apiClient.getBlockchains();
+    } else {
+      blockchainList = blockchains;
+    }
+
     setHasMore(false);
 
     // TODO: Org ID needs be set here
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
     // let org_id = user?.defaultOrganization?.id || '';
-
-    // temp fix to get blockchain name from ID
-    const blockchains: any = await apiClient.getBlockchains();
 
     console.log('-------------nodeUIProps-------------', queryParams);
     const nodesResponse: any = await apiClient.listNodes(
@@ -64,7 +73,7 @@ export const useNodeList = (): Hook => {
     const nodes = nodesResponse?.map((n: any) => ({
       ...n,
       blockchainName:
-        blockchains?.find((b: any) => b.id === n.blockchainId)?.name || '-',
+        blockchainList?.find((b: any) => b.id === n.blockchainId)?.name || '-',
     }));
 
     console.log('listNodes', nodes);

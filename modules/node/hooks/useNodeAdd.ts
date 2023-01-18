@@ -5,9 +5,10 @@ import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
+import { useGetBlockchains } from './useGetBlockchains';
+import { GrpcBlockchainObject } from '@modules/client/grpc_client';
 
 type Hook = {
-  loadLookups: VoidFunction;
   createNode: (
     args: CreateNodeParams,
     onSuccess: (args0?: any) => void,
@@ -19,15 +20,14 @@ type Hook = {
 
 export const useNodeAdd = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [blockchainList, setBlockchainList] = useState([]);
+  const [blockchainList, setBlockchainList] = useState<GrpcBlockchainObject[]>(
+    [],
+  );
   const repository = useIdentityRepository();
+  const { blockchains } = useGetBlockchains();
 
   const loadLookups = async () => {
     setIsLoading(true);
-
-    const blockchains: any = await apiClient.getBlockchains();
-
-    console.log('loadLookups', !blockchains?.length);
 
     // if (!blockchains?.length) {
     //   setBlockchainList([]);
@@ -35,13 +35,13 @@ export const useNodeAdd = (): Hook => {
     //   return;
     // }
 
-    const mappedBlockchains = blockchains.map((b: any) => ({
-      value: b.id,
-      label: b.name,
-      supportedNodeTypes: b.supported_node_types,
-    }));
+    // const mappedBlockchains = blockchains?.map((b: any) => ({
+    //   value: b.id,
+    //   label: b.name,
+    //   supportedNodeTypes: b.supported_node_types,
+    // }));
 
-    setBlockchainList(mappedBlockchains);
+    setBlockchainList(blockchains);
     setIsLoading(false);
   };
 
@@ -116,7 +116,6 @@ export const useNodeAdd = (): Hook => {
   };
 
   return {
-    loadLookups,
     createNode,
     isLoading,
     blockchainList,

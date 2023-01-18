@@ -8,6 +8,7 @@ import { env } from '@shared/constants/env';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
+import { useGetBlockchains } from './useGetBlockchains';
 
 type Args = string | string[] | undefined;
 
@@ -28,6 +29,7 @@ const createUuid = (id: Args) => {
 export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
+  const { blockchains } = useGetBlockchains();
 
   const deleteNode = async (id: Args) => {
     await apiClient.deleteNode(createUuid(id));
@@ -105,12 +107,18 @@ export const useNodeView = (): Hook => {
     });
 
     // temp fix to get blockchain name from ID
+    let blockchainList: any;
+    if (!blockchains?.length) {
+      blockchainList = await apiClient.getBlockchains();
+    } else {
+      blockchainList = blockchains;
+    }
+
     let blockchainName = '';
-    const blockchains: any = await apiClient.getBlockchains();
-    if (blockchains?.length) {
-      blockchainName = blockchains?.find(
+    if (blockchainList?.length) {
+      blockchainName = blockchainList?.find(
         (b: any) => b.id === node.blockchainId,
-      )?.name;
+      )?.name!;
     }
 
     const activeNode: BlockjoyNode = {
