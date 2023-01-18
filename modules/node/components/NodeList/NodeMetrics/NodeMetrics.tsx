@@ -21,11 +21,7 @@ export const NodeMetrics = () => {
       <span
         css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
       />
-      <span>
-        {offline}
-        <span css={colors.text3}> / </span>
-        {totalNodes} Offline
-      </span>
+      <span>{offline > 0 ? `${offline} Offline` : `${totalNodes} Online`}</span>
     </div>
   );
 };

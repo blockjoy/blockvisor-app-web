@@ -1,4 +1,9 @@
-import { NodeTypeConfigLabel, Alert, NodeTypePicker } from '@shared/components';
+import {
+  NodeTypeConfigLabel,
+  Alert,
+  NodeTypePicker,
+  PillPicker,
+} from '@shared/components';
 import { ChangeEvent, FC } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
@@ -16,6 +21,7 @@ type Props = {
   nodeTypeProperties?: NodeTypeConfig[];
   nodeFiles?: NodeFiles[];
   networkList: string[];
+  nodeNetwork: string;
   onFileUploaded: (e: any) => void;
   onPropertyChanged: (e: any) => void;
   onNetworkChanged: (network: string) => void;
@@ -73,6 +79,7 @@ export const NodeLauncherConfig: FC<Props> = ({
   isConfigValid,
   nodeTypeProperties,
   nodeFiles,
+  nodeNetwork,
   networkList,
   onFileUploaded,
   onPropertyChanged,
@@ -109,10 +116,15 @@ export const NodeLauncherConfig: FC<Props> = ({
           >
             Network
           </label>
-          <Select
+          <PillPicker
+            items={networkList}
+            selectedItem={nodeNetwork}
+            onChange={onNetworkChanged}
+          />
+          {/* <Select
             items={networkList}
             onPropertyChanged={(e: any) => onNetworkChanged(e.target.value)}
-          />
+          /> */}
           {nodeTypeProperties?.map((property: NodeTypeConfig) => {
             return (
               <>
