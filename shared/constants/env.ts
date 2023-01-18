@@ -1,5 +1,5 @@
 export const env = {
   // loadingDuration: +(process.env.NEXT_PUBLIC_LOADING_DURATION || 300),
-  loadingDuration: 100,
+  loadingDuration: 0,
   orgId: process.env.NEXT_PUBLIC_ORG_ID,
 };
