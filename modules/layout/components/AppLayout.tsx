@@ -11,6 +11,7 @@ import {
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
 import Head from 'next/head';
+import { useGetBlockchains } from '@modules/node';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export const AppLayout: React.FC<LayoutType> = ({
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations } = useGetOrganizations();
+  const { getBlockchains, blockchains } = useGetBlockchains();
 
   useEffect(() => {
     getReceivedInvitations(userId!);
@@ -35,6 +37,13 @@ export const AppLayout: React.FC<LayoutType> = ({
 
   useEffect(() => {
     getOrganizations();
+  }, []);
+
+  useEffect(() => {
+    if (!blockchains?.length) {
+      getBlockchains();
+      console.log('getting blockchains in layout');
+    }
   }, []);
 
   return (
