@@ -8,12 +8,14 @@ import { Button } from '@shared/components';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 
 export const OrganizationsList = () => {
-  const { getOrganizations } = useGetOrganizations();
+  const { getOrganizations, organizations } = useGetOrganizations();
 
   const [, setLayout] = useRecoilState(layoutState);
 
   useEffect(() => {
-    getOrganizations();
+    if (!organizations?.length) {
+      getOrganizations();
+    }
   }, []);
 
   return (
