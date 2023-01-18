@@ -23,7 +23,7 @@ type NodeState = {
 
 export const NodeLauncher = () => {
   const { blockchains } = useGetBlockchains();
-  const { createNode, loadLookups } = useNodeAdd();
+  const { createNode } = useNodeAdd();
   const router = useRouter();
 
   const [hasServerError, setHasServerError] = useState<boolean>(false);
@@ -200,7 +200,7 @@ export const NodeLauncher = () => {
   }, [node.blockchainId, node.nodeTypeId]);
 
   useEffect(() => {
-    loadLookups();
+    // loadLookups();
   }, []);
 
   useEffect(() => {

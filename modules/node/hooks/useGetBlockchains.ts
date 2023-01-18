@@ -1,5 +1,6 @@
 import { apiClient } from '@modules/client';
 import { isStatusResponse } from '@modules/organization';
+import { env } from '@shared/constants/env';
 import { delay } from '@shared/utils/delay';
 import { useRecoilState } from 'recoil';
 import { blockchainsAtoms } from '../store/blockchains';
@@ -17,7 +18,7 @@ export function useGetBlockchains() {
     const response: any = await apiClient.getBlockchains();
 
     console.log('blockchains', response);
-    await delay(1000);
+    await delay(env.loadingDuration);
     setBlockchains(response);
     setLoadingState('finished');
 

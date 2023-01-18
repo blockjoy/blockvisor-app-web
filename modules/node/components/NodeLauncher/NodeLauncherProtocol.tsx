@@ -39,10 +39,6 @@ export const NodeLauncherProtocol: FC<Props> = ({
     setKeyword(e.target.value);
   };
 
-  useEffect(() => {
-    getBlockchains();
-  }, []);
-
   const handleProtocolSelected = (blockchainId: string, nodeTypeId: string) => {
     const blockchainsCopy = [...blockchains];
 

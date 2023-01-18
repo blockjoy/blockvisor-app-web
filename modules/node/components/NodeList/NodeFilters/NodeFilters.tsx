@@ -23,6 +23,7 @@ import {
   loadPersistedFilters,
 } from '@modules/node/helpers/NodeHelpers';
 import { organizationAtoms } from '@modules/organization';
+import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 
 export const NodeFilters = () => {
   const nodeUIContext = useNodeUIContext();
@@ -62,6 +63,8 @@ export const NodeFilters = () => {
     }
   };
 
+  const { blockchains } = useGetBlockchains();
+
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
@@ -96,8 +99,6 @@ export const NodeFilters = () => {
     useState<string | 'Blockchain' | 'Status' | 'Type'>('');
 
   const loadLookups = async () => {
-    const blockchains: any = await apiClient.getBlockchains();
-
     if (!blockchains?.length) {
       setFiltersBlockchain([]);
       setHasBlockchainError(true);

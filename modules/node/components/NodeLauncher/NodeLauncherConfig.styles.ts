@@ -5,7 +5,6 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 0;
     flex: 1 1 auto;
-    border-left: 1px solid ${theme.colorBorder};
   `,
   h2: (theme: ITheme) => css`
     display: flex;
