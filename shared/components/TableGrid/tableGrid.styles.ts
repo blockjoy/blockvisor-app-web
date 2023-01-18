@@ -63,7 +63,7 @@ export const styles = {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   `,
 
   cellRight: css`

@@ -50,7 +50,7 @@ export const tableStyles = {
     }
 
     & td {
-      padding: 20px 0;
+      padding: 16px 0;
       white-space: nowrap;
 
       @media ${breakpoints.toXlrg} {
