@@ -19,6 +19,15 @@ interface ITheme {
   colorLightGrey: string;
   colorDanger: string;
   colorSidebar: string;
+  colorNote: string;
+  colorOverlay: string;
+  colorDark: string;
+  screenXs: string;
+  screenSm: string;
+  screenMd: string;
+  screenLg: string;
+  screenXl: string;
+  screenXxl: string;
 }
 
 declare module '@emotion/react' {

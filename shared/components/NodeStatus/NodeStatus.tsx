@@ -1,24 +1,59 @@
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import { styles } from './NodeStatus.styles';
 import { nodeStatusList } from '@shared/constants/lookups';
+import dynamic from 'next/dynamic';
 
-import IconUndefined from 'public/assets/icons/nodeStatusIcons/Undefined.svg';
-import IconEarning from 'public/assets/icons/nodeStatusIcons/Earning.svg';
-import IconProcessing from 'public/assets/icons/nodeStatusIcons/Processing.svg';
-import IconBroadcasting from 'public/assets/icons/nodeStatusIcons/Broadcasting.svg';
-import IconCancelled from 'public/assets/icons/nodeStatusIcons/Cancelled.svg';
-import IconDelegating from 'public/assets/icons/nodeStatusIcons/Delegating.svg';
-import IconDelinquent from 'public/assets/icons/nodeStatusIcons/Delinquent.svg';
-import IconDisabled from 'public/assets/icons/nodeStatusIcons/Disabled.svg';
-import IconElected from 'public/assets/icons/nodeStatusIcons/Elected.svg';
-import IconElecting from 'public/assets/icons/nodeStatusIcons/Electing.svg';
-import IconExporting from 'public/assets/icons/nodeStatusIcons/Exporting.svg';
-import IconIngesting from 'public/assets/icons/nodeStatusIcons/Ingesting.svg';
-import IconMining from 'public/assets/icons/nodeStatusIcons/Mining.svg';
-import IconMinting from 'public/assets/icons/nodeStatusIcons/Minting.svg';
-import IconRelaying from 'public/assets/icons/nodeStatusIcons/Relaying.svg';
-import IconRemoved from 'public/assets/icons/nodeStatusIcons/Removed.svg';
-import IconRemoving from 'public/assets/icons/nodeStatusIcons/Removing.svg';
+const IconUndefined = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Undefined.svg'),
+);
+const IconEarning = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Earning.svg'),
+);
+const IconProcessing = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Processing.svg'),
+);
+const IconBroadcasting = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Broadcasting.svg'),
+);
+const IconCancelled = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Cancelled.svg'),
+);
+const IconDelegating = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Delegating.svg'),
+);
+const IconDelinquent = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Delinquent.svg'),
+);
+const IconDisabled = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Disabled.svg'),
+);
+const IconElected = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Elected.svg'),
+);
+const IconElecting = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Electing.svg'),
+);
+const IconExporting = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Exporting.svg'),
+);
+const IconIngesting = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Ingesting.svg'),
+);
+const IconMining = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Mining.svg'),
+);
+const IconMinting = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Minting.svg'),
+);
+const IconRelaying = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Relaying.svg'),
+);
+const IconRemoved = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Removed.svg'),
+);
+const IconRemoving = dynamic(
+  () => import('@public/assets/icons/nodeStatusIcons/Removing.svg'),
+);
 
 const icons = {
   Undefined: <IconUndefined />,
@@ -72,7 +107,7 @@ export const NodeStatus: FC<Props> = ({ status, hasBorder = true }) => {
         getColor(statusInfo?.name!, statusInfo?.isOnline!),
       ]}
     >
-      {getIcon(statusInfo?.name)}
+      <Suspense fallback={null}>{getIcon(statusInfo?.name)}</Suspense>
       <span css={styles.statusText}>{statusInfo?.name || 'Unknown'}</span>
     </span>
   );

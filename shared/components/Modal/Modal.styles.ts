@@ -1,41 +1,53 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
+import { rgba } from 'polished';
+import { ITheme } from 'types/theme';
 
 export const styles = {
-  modal: css`
+  modal: (theme: ITheme) => css`
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: ${rgba(theme.colorDark, 0.5)};
     backdrop-filter: blur(6px);
-
-    @media ${breakpoints.fromSml} {
-      display: flex;
-      justify-items: center;
-      align-items: center;
-    }
+    display: flex;
+    justify-items: center;
+    align-items: center;
   `,
-  base: css`
+  base: (theme: ITheme) => css`
     position: relative;
-    width: 100%;
-    background-color: var(--color-overlay-background-1);
+    width: 90%;
+    background-color: ${theme.colorOverlay};
     max-width: 760px;
     overflow: auto;
     margin: 0 auto;
-
-    @media ${breakpoints.toMed} {
-      height: 100vh;
-    }
-
-    @media ${breakpoints.fromMed} {
-      border-radius: 8px;
-      max-height: 95%;
-    }
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 90vh;
   `,
   isLocked: css`
     overflow: hidden;
+  `,
+  closeButton: (theme: ITheme) => css`
+    display: grid;
+    place-items: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    path {
+      fill: ${theme.colorText};
+    }
+  `,
+  iconWrapper: css`
+    width: 18px;
+    height: 18px;
   `,
 };

@@ -6,7 +6,7 @@ import { organizationAtoms } from '../store/organizationAtoms';
 export function useDefaultOrganization() {
   const repository = useIdentityRepository();
   const [loadingState, setLoadingState] = useRecoilState(
-    organizationAtoms.organizationLoadingState,
+    organizationAtoms.organizationDefaultLoadingState,
   );
   const [defaultOrganization, setDefaultOrganization] = useRecoilState(
     organizationAtoms.defaultOrganization,

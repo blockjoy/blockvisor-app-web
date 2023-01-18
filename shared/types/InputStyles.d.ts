@@ -6,7 +6,8 @@ type ButtonStyle =
   | 'outline'
   | 'ghost'
   | 'warning'
-  | 'basic';
+  | 'basic'
+  | 'icon';
 
 type ButtonBorder = 'rounded' | 'round';
 

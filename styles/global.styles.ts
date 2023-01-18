@@ -273,6 +273,10 @@ export const globalStyles = css`
     font-weight: var(--font-weight-normal);
   }
 
+  h2 {
+    height: 40px;
+  }
+
   ul,
   ol,
   dl {
