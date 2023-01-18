@@ -2,7 +2,13 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import { EmptyColumn, PageTitle, Table, TableGrid } from '@shared/components';
+import {
+  EmptyColumn,
+  PageTitle,
+  Table,
+  TableGrid,
+  Button,
+} from '@shared/components';
 import { toRows, toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import anime from 'animejs';
@@ -15,6 +21,8 @@ import { resultsStatus } from '@modules/node/helpers/NodeHelpers';
 import { organizationAtoms } from '@modules/organization';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 import { wrapper } from 'styles/wrapper.styles';
+import { useRouter } from 'next/router';
+import { spacing } from 'styles/utils.spacing.styles';
 
 const tableHeaders = [
   {
@@ -42,6 +50,8 @@ const tableHeaders = [
 ];
 
 export const NodeList = () => {
+  const router = useRouter();
+
   const nodeUIContext = useNodeUIContext();
   const nodeUIProps = useMemo(() => {
     return {
@@ -134,9 +144,21 @@ export const NodeList = () => {
               id="js-nodes-empty"
               title="No Nodes."
               description={
-                isFiltered && isEmpty
-                  ? 'Reset filters.'
-                  : 'Launch a Node to get started'
+                isFiltered && isEmpty ? (
+                  'Reset filters.'
+                ) : (
+                  <div>
+                    <h3 css={spacing.bottom.mediumSmall}>
+                      Here is where your nodes will show, once you have some.
+                    </h3>
+                    <a
+                      css={styles.launchNodeLink}
+                      onClick={() => router.push('/launch-node')}
+                    >
+                      Launch a node to get started
+                    </a>
+                  </div>
+                )
               }
             />
           ) : (
