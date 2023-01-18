@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { typo } from 'styles/utils.typography.styles';
+import { ITheme } from 'types/theme';
 
 const buttonStyle = {
   primary: css`
@@ -63,6 +64,29 @@ const buttonStyle = {
   basic: css`
     color: var(--color-text-5);
     padding: 0;
+  `,
+  icon: (theme: ITheme) => css`
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    transition: none;
+
+    rect {
+      fill: ${theme.colorDefault};
+    }
+
+    :hover {
+      background: ${theme.colorLightGrey};
+
+      rect {
+        fill: ${theme.colorText};
+      }
+    }
   `,
 };
 

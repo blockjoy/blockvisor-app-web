@@ -4,6 +4,7 @@ type TableHeader = {
   width?: string;
   minWidth?: string;
   maxWidth?: string;
+  textAlign?: string;
   isHiddenOnMobile?: boolean;
   component?: EmotionJSX.Element;
 };

@@ -9,6 +9,14 @@ export const tableStyles = {
     width: 100%;
     overflow: auto;
   `,
+  fixedRowHeight: (rowHeight: string) => css`
+    tbody tr {
+      height: ${rowHeight};
+    }
+  `,
+  textAlign: (textAlign: string) => css`
+    text-align: ${textAlign};
+  `,
   table: (theme: ITheme) => css`
     width: 100%;
     border-collapse: collapse;
@@ -20,7 +28,6 @@ export const tableStyles = {
       font-size: 10px;
       font-weight: 500;
       text-transform: uppercase;
-      text-align: left;
       cursor: default;
       white-space: nowrap;
 
