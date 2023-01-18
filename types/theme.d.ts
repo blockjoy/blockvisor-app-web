@@ -20,6 +20,8 @@ interface ITheme {
   colorDanger: string;
   colorSidebar: string;
   colorNote: string;
+  colorOverlay: string;
+  colorDark: string;
   screenXs: string;
   screenSm: string;
   screenMd: string;
@@ -29,5 +31,5 @@ interface ITheme {
 }
 
 declare module '@emotion/react' {
-    export interface Theme extends ITheme extends ThemeProvider {}
+  export interface Theme extends ITheme, ThemeProvider {}
 }

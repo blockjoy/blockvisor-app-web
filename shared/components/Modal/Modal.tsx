@@ -1,24 +1,25 @@
 import { styles } from './Modal.styles';
 import { ReactNode, useEffect, useRef } from 'react';
-import { useModal } from '@shared/hooks/useModal';
 import { Portal } from '@shared/components';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
+import IconClose from '@public/assets/icons/close-12.svg';
 
 type Props = {
   isOpen?: boolean;
   children?: ReactNode;
   portalId: string;
+  handleClose?: any;
 };
-export const Modal = ({ isOpen, children, portalId }: Props) => {
+
+export function Modal({ isOpen, children, portalId, handleClose }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const { closeModal } = useModal();
   useClickOutside(ref, () => {
-    closeModal();
+    handleClose();
   });
 
   const handleEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      closeModal();
+      handleClose();
     }
   };
   useEffect(() => {
@@ -44,8 +45,13 @@ export const Modal = ({ isOpen, children, portalId }: Props) => {
       <div css={[isOpen && styles.modal]} id="js-auth-layout">
         <div ref={ref} css={[isOpen && styles.base]}>
           {children}
+          <button type="button" onClick={handleClose} css={styles.closeButton}>
+            <span css={styles.iconWrapper}>
+              <IconClose />
+            </span>
+          </button>
         </div>
       </div>
     </Portal>
   );
-};
+}

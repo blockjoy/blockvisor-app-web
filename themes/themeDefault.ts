@@ -20,6 +20,8 @@ export const themeDefault: ITheme = {
   colorLightGrey: '#e7e7e7',
   colorDanger: '#EE7070',
   colorNote: '#e9af3a',
+  colorOverlay: '#363a39',
+  colorDark: '#000000',
   screenXs: '500px',
   screenSm: '768px',
   screenMd: '980px',

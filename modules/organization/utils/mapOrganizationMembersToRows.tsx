@@ -8,9 +8,17 @@ import { useInvitations } from '../hooks/useInvitations';
 import { useRemoveMember } from '../hooks/useRemoveMember';
 import { organizationAtoms } from '../store/organizationAtoms';
 
+export type Member = { invitation_id?: string; email?: string };
+
+export type Methods = {
+  action: (member: Member) => void;
+  reset: VoidFunction;
+};
+
 export const mapOrganizationMembersToRows = (
   members?: ClientOrganizationMember[],
   invitations?: ClientOrganizationInvitation[],
+  methods?: Methods,
 ) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
@@ -18,15 +26,9 @@ export const mapOrganizationMembersToRows = (
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
-  const [sentInvitations, setSentInvitations] = useRecoilState(
-    organizationAtoms.organizationSentInvitations,
-  );
 
   const { removeMemberFromOrganization } = useRemoveMember();
-  const { revokeInvitation } = useInvitations();
 
-  console.log('members', members);
-  console.log('invitations', invitations);
   const membersMap =
     members?.map((member) => ({
       id: member.id,
@@ -55,20 +57,8 @@ export const mapOrganizationMembersToRows = (
     await removeMemberFromOrganization(user_id, org_id);
   };
 
-  const handleRevokeInvitation = async (
-    invitation_id: string,
-    email: string,
-  ) => {
-    await revokeInvitation({ invitationId: invitation_id, email }, () =>
-      updateInvitations(invitation_id),
-    );
-  };
-
-  const updateInvitations = (invitation_id: string) => {
-    const newSentInvitations = sentInvitations.filter(
-      (invitation) => invitation.id !== invitation_id,
-    );
-    setSentInvitations(newSentInvitations);
+  const handleRevokeInvitation = (invitation_id: string, email: string) => {
+    methods?.action({ invitation_id, email });
   };
 
   const headers = [

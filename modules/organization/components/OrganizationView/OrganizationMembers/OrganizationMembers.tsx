@@ -1,16 +1,19 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
-import { Button, isValidEmail, Table } from '@shared/index';
+import { Button, checkIfValidEmail, Table } from '@shared/index';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
-import { OrganizationPendingInvitations } from './OrganizationPendingInvitations/OrganizationPendingInvitations';
 import { useInvitations } from '@modules/organization';
-import { mapOrganizationMembersToRows } from '@modules/organization/utils/mapOrganizationMembersToRows';
+import {
+  mapOrganizationMembersToRows,
+  Member,
+} from '@modules/organization/utils/mapOrganizationMembersToRows';
 import PersonIcon from '@public/assets/icons/person-12.svg';
 import { toast } from 'react-toastify';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
+import { OrganizationDialog } from './OrganizationDialog/OrganizationDialog';
 
 export type MembersProps = {
   id?: string;
@@ -31,7 +34,7 @@ export const Members = ({ id }: MembersProps) => {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const handleTextareaChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    const isValid = isValidEmail(e.target.value);
+    const isValid = checkIfValidEmail(e.target.value);
 
     if (isValid) {
       setIsDisabled(false);
@@ -42,7 +45,11 @@ export const Members = ({ id }: MembersProps) => {
   };
 
   const handleInviteClicked = () => {
-    const isMemberOrInvited = checkIfExists(organizationMembers, sentInvitations, emails![0]);
+    const isMemberOrInvited = checkIfExists(
+      organizationMembers,
+      sentInvitations,
+      emails![0],
+    );
 
     if (!isMemberOrInvited) {
       inviteMembers(emails!, () => {
@@ -51,9 +58,9 @@ export const Members = ({ id }: MembersProps) => {
       });
     } else {
       if (isMemberOrInvited === 'member') {
-        toast.error('Already a member')
+        toast.error('Already a member');
       } else {
-        toast.error('Already invited')
+        toast.error('Already invited');
       }
     }
   };
@@ -62,6 +69,8 @@ export const Members = ({ id }: MembersProps) => {
     setActiveView('invite');
   };
 
+  const [activeMember, setActiveMember] = useState<Member | null>(null);
+
   useEffect(() => {
     if (id) {
       getOrganizationMembers(id);
@@ -69,9 +78,21 @@ export const Members = ({ id }: MembersProps) => {
     }
   }, [id]);
 
+  const methods = {
+    action: (member: Member) => {
+      setActiveView('action');
+      setActiveMember(member);
+    },
+    reset: () => {
+      setActiveView('list');
+      setActiveMember(null);
+    },
+  };
+
   const { headers, rows } = mapOrganizationMembersToRows(
     organizationMembers,
     sentInvitations,
+    methods,
   );
 
   return (
@@ -103,6 +124,12 @@ export const Members = ({ id }: MembersProps) => {
         rows={rows}
         verticalAlign="middle"
       />
+      {activeView === 'action' && (
+        <OrganizationDialog
+          activeMember={activeMember!}
+          onHide={methods.reset}
+        />
+      )}
     </>
   );
 };
