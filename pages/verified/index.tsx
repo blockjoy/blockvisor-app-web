@@ -12,9 +12,8 @@ const Verified: NextPage = () => {
       const { token } = router.query;
       (async () => {
         try {
-          router.push('/?verified=true');
-
           await apiClient.registration_confirmation(token?.toString()!);
+          router.push('/?verified=true');
         } catch (err: any) {
           toast.error('Error Verifying');
           return;

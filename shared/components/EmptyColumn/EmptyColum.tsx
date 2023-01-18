@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { typo } from 'styles/utils.typography.styles';
 import { AnimatedGraphic } from './AnimatedGraphic';
 import { styles } from './EmptyColumn.styles';
@@ -5,7 +6,7 @@ import { styles } from './EmptyColumn.styles';
 type Props = {
   id?: string;
   title: string;
-  description: string;
+  description: string | ReactNode;
 };
 
 export function EmptyColumn({ id, title, description }: Props) {
