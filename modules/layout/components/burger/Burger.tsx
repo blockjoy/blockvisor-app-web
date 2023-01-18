@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { styles } from './Burger.styles';
 import BurgerOpen from '@public/assets/icons/burger-open.svg';
 import BurgerClosed from '@public/assets/icons/burger-closed.svg';
+import BurgerHide from '@public/assets/icons/burger-hide.svg';
 
 export const Burger = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
@@ -17,6 +18,8 @@ export const Burger = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const isMobile = window.innerWidth < 1200;
+
   return (
     <button
       css={[
@@ -26,7 +29,15 @@ export const Burger = () => {
       ]}
       onClick={handleClick}
     >
-      <BurgerClosed />
+      {isMobile ? (
+        isSidebarOpen ? (
+          <BurgerHide />
+        ) : (
+          <BurgerClosed />
+        )
+      ) : (
+        <BurgerClosed />
+      )}
     </button>
   );
 };
