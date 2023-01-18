@@ -19,6 +19,7 @@ type ClientOrganizationMember = {
     nanos: number;
     seconds: number;
   };
+  createdAtString?: string;
 
   id?: string;
   email?: string;
@@ -28,4 +29,30 @@ type ClientOrganizationMember = {
     nanos: number;
     seconds: number;
   };
+};
+
+type ClientOrganizationInvitation = {
+  acceptedAt?: {
+    nanos: number;
+    seconds: number;
+  };
+  createdAt?: {
+    nanos: number;
+    seconds: number;
+  };
+  createdAtString?: string;
+
+  declinedAt?: {
+    nanos: number;
+    seconds: number;
+  };
+
+  createdById?: string;
+  createdByUserName?: string;
+
+  createdForOrgId?: string;
+  createdForOrgName?: string;
+
+  id?: string;
+  inviteeEmail?: string;
 };

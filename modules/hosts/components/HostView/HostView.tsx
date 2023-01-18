@@ -173,7 +173,6 @@ export function Host() {
       <PageSection>
         <h2 css={[typo.large, spacing.bottom.large]}>Nodes</h2>
         <Table
-          isSorting={false}
           isLoading={'loading'}
           headers={[
             {

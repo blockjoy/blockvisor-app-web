@@ -1,8 +1,6 @@
 import { tableStyles } from './table.styles';
-import { TableLoader } from './TableLoader';
-import { styles } from './TableLoader.styles';
+import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
-import { TableSkeleton } from './TableSkeleton';
 
 type Props = {
   headers?: TableHeader[];
@@ -10,16 +8,18 @@ type Props = {
   onRowClick?: (arg0: any) => void;
   isLoading: LoadingState;
   preload?: number;
-  isSorting?: boolean;
+  verticalAlign?: 'top' | 'middle';
+  fixedRowHeight?: string;
 };
 
 export const Table: React.FC<Props> = ({
-  headers,
+  headers = [],
   rows = [],
   onRowClick,
   isLoading,
   preload,
-  isSorting = false,
+  verticalAlign,
+  fixedRowHeight,
 }) => {
   const handleRowClick = (tr: any) => {
     if (onRowClick) {
@@ -29,59 +29,82 @@ export const Table: React.FC<Props> = ({
 
   return (
     <div css={tableStyles.wrapper}>
-        <table
-          css={[tableStyles.table, !!onRowClick && tableStyles.hasHoverRows]}
-        >
-          {headers && rows?.length > 0 && (
-            <thead>
-              <tr>
-                {headers.map((th) => (
+      <table
+        css={[
+          tableStyles.table,
+          !!onRowClick && tableStyles.hasHoverRows,
+          fixedRowHeight && tableStyles.fixedRowHeight(fixedRowHeight),
+        ]}
+      >
+        {headers && rows?.length > 0 && (
+          <thead>
+            <tr>
+              {headers.map(
+                ({
+                  isHiddenOnMobile,
+                  key,
+                  width,
+                  minWidth,
+                  maxWidth,
+                  textAlign,
+                  name,
+                  component,
+                }) => (
                   <th
-                    className={th.isHiddenOnMobile ? 'hidden-on-mobile' : ''}
-                    key={th.key}
-                    style={{
-                      width: th.width,
-                      minWidth: th.minWidth,
-                      maxWidth: th.maxWidth,
-                    }}
+                    className={isHiddenOnMobile ? 'hidden-on-mobile' : ''}
+                    key={key}
+                    css={css`
+                      width: ${width};
+                      min-width: ${minWidth};
+                      max-width: ${maxWidth};
+                      text-align: ${textAlign || 'left'};
+                    `}
                   >
-                    {th.component || th.name}
+                    {component || name}
                   </th>
+                ),
+              )}
+            </tr>
+          </thead>
+        )}
+        <tbody>
+          {isLoading === 'initializing' ? (
+            <TableRowLoader length={preload} />
+          ) : (
+            rows?.map((tr) => (
+              <tr
+                key={tr.key}
+                className={tr.isDanger ? 'danger' : ''}
+                onClick={() => handleRowClick(tr)}
+              >
+                {tr.cells?.map((td, index) => (
+                  <td
+                    key={td.key}
+                    css={[
+                      headers &&
+                        headers[index]?.isHiddenOnMobile &&
+                        tableStyles.hiddenOnMobile,
+                      verticalAlign
+                        ? tableStyles[verticalAlign]
+                        : tableStyles.middle,
+
+                      tableStyles.textAlign(headers[index].textAlign || 'left'),
+                    ]}
+                  >
+                    {td.component}
+                    {index === 0 && (
+                      <span className="underline" css={tableStyles.underline} />
+                    )}
+                  </td>
                 ))}
               </tr>
-            </thead>
+            ))
           )}
-          <tbody>
-            {isLoading === 'initializing' ? (
-              <TableRowLoader length={preload} />
-            ) : (
-              rows?.map((tr) => (
-                <tr
-                  key={tr.key}
-                  className={tr.isDanger ? 'danger' : ''}
-                  onClick={() => handleRowClick(tr)}
-                >
-                  {tr.cells?.map((td, index) => (
-                    <td
-                      key={td.key}
-                      className={
-                        headers && headers[index]?.isHiddenOnMobile
-                          ? 'hidden-on-mobile'
-                          : ''
-                      }
-                    >
-                      {td.component}
-                      {index === 0 && (
-                        <span className="underline" css={tableStyles.underline} />
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))
-            )}
-            { isLoading === 'loading' && preload ? <TableRowLoader length={preload} /> : null }
-          </tbody>
-        </table>
+          {isLoading === 'loading' && preload ? (
+            <TableRowLoader length={preload} />
+          ) : null}
+        </tbody>
+      </table>
     </div>
   );
 };

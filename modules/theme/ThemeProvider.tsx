@@ -54,6 +54,11 @@ const globalStyles = (theme: ITheme) => css`
       font-weight: 600;
     }
 
+    & .Toastify__toast-container.Toastify__toast-container--bottom-right {
+      right: 100px !important;
+      bottom: 0 !important;
+    }
+
     & .Toastify__toast-icon {
       display: none;
     }
@@ -61,6 +66,15 @@ const globalStyles = (theme: ITheme) => css`
     & .Toastify__toast--success {
       background: ${theme.colorPrimary};
       color: ${theme.colorPrimaryText};
+    }
+
+    & .Toastify__toast--error {
+      background: ${theme.colorDanger};
+      color: ${theme.colorText};
+
+      .Toastify__close-button path {
+        fill: ${theme.colorText};
+      }
     }
 
     & .Toastify__close-button {
