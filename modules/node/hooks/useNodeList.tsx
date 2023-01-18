@@ -64,21 +64,13 @@ export const useNodeList = (): Hook => {
     // let org_id = user?.defaultOrganization?.id || '';
 
     console.log('-------------nodeUIProps-------------', queryParams);
-    const nodesResponse: any = await apiClient.listNodes(
+    const nodes: any = await apiClient.listNodes(
       org_id!,
       queryParams.filter,
       queryParams.pagination,
     );
 
-    console.log('nodesResponse', nodesResponse);
-
-    const nodes = nodesResponse?.map((n: any) => ({
-      ...n,
-      blockchainName:
-        blockchainList?.find((b: any) => b.id === n.blockchainId)?.name || '-',
-    }));
-
-    console.log('listNodes', nodes);
+    console.log('listNodesResponse', nodes);
 
     setPreloadNodes(nodes.length);
 
@@ -100,8 +92,8 @@ export const useNodeList = (): Hook => {
     }
 
     // TODO: (maybe) remove - added for better UI
-    if (!(nodes.length === 0 || queryParams.pagination.current_page === 1))
-      await new Promise((r) => setTimeout(r, 600));
+    // if (!(nodes.length === 0 || queryParams.pagination.current_page === 1))
+    //   await new Promise((r) => setTimeout(r, 600));
 
     if (queryParams.pagination.current_page === 1) {
       setNodeList(nodes);
