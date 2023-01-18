@@ -70,6 +70,8 @@ export const useNodeList = (): Hook => {
       queryParams.pagination,
     );
 
+    console.log('nodesResponse', nodesResponse);
+
     const nodes = nodesResponse?.map((n: any) => ({
       ...n,
       blockchainName:
