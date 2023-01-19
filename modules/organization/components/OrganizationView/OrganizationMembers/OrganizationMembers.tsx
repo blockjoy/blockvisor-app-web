@@ -7,6 +7,7 @@ import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import { useInvitations } from '@modules/organization';
 import {
+  Action,
   mapOrganizationMembersToRows,
   Member,
 } from '@modules/organization/utils/mapOrganizationMembersToRows';
@@ -70,6 +71,7 @@ export const Members = ({ id }: MembersProps) => {
   };
 
   const [activeMember, setActiveMember] = useState<Member | null>(null);
+  const [activeAction, setActiveAction] = useState<Action | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -79,12 +81,14 @@ export const Members = ({ id }: MembersProps) => {
   }, [id]);
 
   const methods = {
-    action: (member: Member) => {
+    action: (action: Action, orgMember: Member) => {
       setActiveView('action');
-      setActiveMember(member);
+      setActiveAction(action);
+      setActiveMember(orgMember);
     },
     reset: () => {
       setActiveView('list');
+      setActiveAction(null);
       setActiveMember(null);
     },
   };
@@ -128,6 +132,7 @@ export const Members = ({ id }: MembersProps) => {
       {activeView === 'action' && (
         <OrganizationDialog
           activeMember={activeMember!}
+          activeAction={activeAction!}
           onHide={methods.reset}
         />
       )}

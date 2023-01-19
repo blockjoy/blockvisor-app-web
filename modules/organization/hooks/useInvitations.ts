@@ -63,26 +63,32 @@ export function useInvitations() {
     onSuccess();
   };
 
-  const revokeInvitation = async (
-    {
-      token,
-      invitationId,
-      email,
-    }: {
-      token?: string;
-      invitationId?: string;
-      email?: string;
-    },
-    onSuccess?: VoidFunction,
-  ) => {
+  const revokeInvitation = async ({
+    token,
+    invitationId,
+    email,
+  }: {
+    token?: string;
+    invitationId?: string;
+    email?: string;
+  }) => {
     const response = await apiClient.revokeInvitation({
       token,
       invitationId,
       email,
     });
+
+    updateInvitations(invitationId!);
+
     toast.success('Invitation Revoked');
-    if (onSuccess) onSuccess();
     console.log('revokeInvitation response', response);
+  };
+
+  const updateInvitations = (invitation_id: string) => {
+    const newSentInvitations = sentInvitations.filter(
+      (invitation) => invitation.id !== invitation_id,
+    );
+    setSentInvitations(newSentInvitations);
   };
 
   return {

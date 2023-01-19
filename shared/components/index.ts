@@ -73,3 +73,4 @@ export * from './LockedSwitch/LockedSwitch';
 export * from './NodeStatus/NodeStatus';
 export * from './GridTableViewPicker/GridTableViewPicker';
 export * from './PillPicker/PillPicker';
+export * from './Tooltip/Tooltip';
