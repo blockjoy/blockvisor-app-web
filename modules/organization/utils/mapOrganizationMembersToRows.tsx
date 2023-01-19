@@ -8,10 +8,20 @@ import { useRemoveMember } from '../hooks/useRemoveMember';
 import { organizationAtoms } from '../store/organizationAtoms';
 import IconClose from '@public/assets/icons/burger-hide.svg';
 
-export type Member = { invitation_id?: string; email?: string };
+export enum Action {
+  revoke = 'revoke',
+  remove = 'remove ',
+}
+
+export type Member = {
+  user_id?: string | undefined;
+  org_id?: string | undefined;
+  email?: string;
+  invitation_id?: string | undefined;
+};
 
 export type Methods = {
-  action: (member: Member) => void;
+  action: (action: Action, orgMember: Member) => void;
   reset: VoidFunction;
 };
 
@@ -26,8 +36,6 @@ export const mapOrganizationMembersToRows = (
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
-
-  const { removeMemberFromOrganization } = useRemoveMember();
 
   const membersMap =
     members?.map((member) => ({
@@ -53,12 +61,16 @@ export const mapOrganizationMembersToRows = (
 
   const allMembers = [...membersMap, ...invitationsMap];
 
-  const handleRemoveMember = async (user_id: string, org_id: string) => {
-    await removeMemberFromOrganization(user_id, org_id);
+  const handleRemoveMember = async (
+    user_id: string,
+    org_id: string,
+    email: string,
+  ) => {
+    methods?.action(Action.remove, { user_id, org_id, email });
   };
 
   const handleRevokeInvitation = (invitation_id: string, email: string) => {
-    methods?.action({ invitation_id, email });
+    methods?.action(Action.revoke, { invitation_id, email });
   };
 
   const headers = [
@@ -119,7 +131,11 @@ export const mapOrganizationMembersToRows = (
                   style="icon"
                   size="medium"
                   onClick={() =>
-                    handleRemoveMember(member?.id!, selectedOrganization?.id!)
+                    handleRemoveMember(
+                      member?.id!,
+                      selectedOrganization?.id!,
+                      member?.email!,
+                    )
                   }
                 >
                   <IconClose />
