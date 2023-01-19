@@ -7,7 +7,9 @@ export const tableStyles = {
   wrapper: css`
     position: relative;
     width: 100%;
-    overflow: auto;
+    @media ${breakpoints.toXlrg} {
+      overflow: auto;
+    }
   `,
   fixedRowHeight: (rowHeight: string) => css`
     tbody tr {

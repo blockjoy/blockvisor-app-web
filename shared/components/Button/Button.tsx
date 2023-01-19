@@ -10,6 +10,7 @@ import { reset } from 'styles/utils.reset.styles';
 import { SerializedStyles } from '@emotion/serialize';
 import Link from 'next/link';
 import { LoadingSpinner } from '../LoadingSpinner';
+import { Tooltip } from '@shared/components';
 
 type Props = {
   id?: string;
@@ -23,6 +24,7 @@ type Props = {
   href?: string;
   loading?: boolean;
   disabled?: boolean;
+  tooltip?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -35,6 +37,7 @@ export function Button({
   display = 'inline',
   type = 'button',
   disabled = false,
+  tooltip,
   id,
   href,
   customCss,
@@ -72,6 +75,7 @@ export function Button({
       onClick={onClick}
     >
       {loading ? <LoadingSpinner size="medium" /> : children}
+      {tooltip && <Tooltip hideOnMobile top="-18px" tooltip={tooltip} />}
     </button>
   );
 }
