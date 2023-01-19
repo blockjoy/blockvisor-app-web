@@ -19,7 +19,10 @@ export const NodeMetrics = () => {
   ) : (
     <div css={styles.wrapper}>
       <span
-        css={[styles.badge, offline > 0 ? styles.badgeBad : styles.badgeGood]}
+        css={[
+          styles.badge,
+          offline > 0 || totalNodes === 0 ? styles.badgeBad : styles.badgeGood,
+        ]}
       />
       <span>{offline > 0 ? `${offline} Offline` : `${totalNodes} Online`}</span>
     </div>

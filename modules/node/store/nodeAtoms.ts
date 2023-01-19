@@ -18,9 +18,9 @@ const activeListType = atom<string | 'table' | 'grid'>({
   default: 'grid',
 });
 
-const nodeList = atom<BlockjoyNode[]>({
+const nodeList = atom<BlockjoyNode[] | null>({
   key: 'node.nodeList',
-  default: [],
+  default: null,
 });
 
 const isLoading = atom<LoadingState>({

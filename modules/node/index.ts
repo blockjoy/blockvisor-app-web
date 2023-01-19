@@ -4,6 +4,7 @@ export * from './components/NodeLauncher/NodeLauncher';
 export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeList';
 export * from './hooks/useNodeView';
+export * from './hooks/useNodeMetrics';
 export * from './store/nodeAtoms';
 export * from './store/nodeWizard';
 export * from './store/blockchains';

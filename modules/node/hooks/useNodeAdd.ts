@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 import { useGetBlockchains } from './useGetBlockchains';
 import { GrpcBlockchainObject } from '@modules/client/grpc_client';
+import { useNodeList } from './useNodeList';
+import { initialQueryParams } from '../ui/NodeUIHelpers';
 
 type Hook = {
   createNode: (
@@ -25,25 +27,7 @@ export const useNodeAdd = (): Hook => {
   );
   const repository = useIdentityRepository();
   const { blockchains } = useGetBlockchains();
-
-  const loadLookups = async () => {
-    setIsLoading(true);
-
-    // if (!blockchains?.length) {
-    //   setBlockchainList([]);
-    //   setIsLoading(false);
-    //   return;
-    // }
-
-    // const mappedBlockchains = blockchains?.map((b: any) => ({
-    //   value: b.id,
-    //   label: b.name,
-    //   supportedNodeTypes: b.supported_node_types,
-    // }));
-
-    setBlockchainList(blockchains);
-    setIsLoading(false);
-  };
+  const { loadNodes } = useNodeList();
 
   const createNode = async (
     params: CreateNodeParams,
@@ -109,6 +93,7 @@ export const useNodeAdd = (): Hook => {
 
       toast.success('Node Created');
       setIsLoading(false);
+      loadNodes(initialQueryParams);
       onSuccess(nodeId);
     } catch (err) {
       onError();

@@ -89,7 +89,9 @@ export const NodeList = () => {
   }, []);
 
   useEffect(() => {
-    loadNodes(nodeUIProps.queryParams);
+    if (nodeList === null) {
+      loadNodes(nodeUIProps.queryParams);
+    }
   }, [nodeUIProps.queryParams]);
 
   useEffect(() => {
@@ -123,10 +125,10 @@ export const NodeList = () => {
     nodeUIProps.setQueryParams(initialQueryParams);
   };
 
-  const cells = toGrid(nodeList, handleNodeClick);
+  const cells = toGrid(nodeList!, handleNodeClick);
   const rows = toRows(nodeList);
   const { isFiltered, isEmpty } = resultsStatus(
-    nodeList.length,
+    nodeList?.length!,
     nodeUIProps.queryParams.filter,
   );
 
@@ -163,7 +165,7 @@ export const NodeList = () => {
             />
           ) : (
             <InfiniteScroll
-              dataLength={nodeList.length}
+              dataLength={nodeList?.length!}
               next={updateQueryParams}
               hasMore={hasMoreNodes}
               style={{ overflow: 'hidden' }}

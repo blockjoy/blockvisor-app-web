@@ -1,5 +1,6 @@
 import { Routes, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useNodeList, useNodeMetrics } from '@modules/node';
 import {
   useDefaultOrganization,
   useGetOrganizations,
@@ -16,6 +17,7 @@ import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { PasswordToggle } from '../PasswordTogle';
+import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 
 type LoginForm = {
   email: string;
@@ -24,6 +26,8 @@ type LoginForm = {
 
 export function LoginForm() {
   const { getOrganizations } = useGetOrganizations();
+  const { loadNodes } = useNodeList();
+  const { loadMetrics } = useNodeMetrics();
 
   const router = useRouter();
 
@@ -48,10 +52,11 @@ export function LoginForm() {
     try {
       await signIn(email, password);
       await getDefaultOrganization();
-      await getOrganizations();
-      await delay(1000);
 
-      setIsLoading(false);
+      loadNodes(initialQueryParams, Boolean(invited || verified));
+      loadMetrics(Boolean(invited || verified));
+
+      await getOrganizations();
 
       router.push(`/${redirect?.toString() || 'nodes'}`);
     } catch (error) {
@@ -62,6 +67,7 @@ export function LoginForm() {
       setIsLoading(false);
     }
   });
+
   return (
     <>
       {invited && (

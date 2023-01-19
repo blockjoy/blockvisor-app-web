@@ -9,21 +9,20 @@ import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { useGetBlockchains } from './useGetBlockchains';
 
 interface Hook {
-  nodeList: BlockjoyNode[];
-  loadNodes: (queryParams: InitialQueryParams) => void;
+  nodeList: BlockjoyNode[] | null;
+  loadNodes: (queryParams: InitialQueryParams, isNewUser?: boolean) => void;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
 }
 
 export const useNodeList = (): Hook => {
   const router = useRouter();
-  const user = useRecoilValue(authAtoms.user);
   const repository = useIdentityRepository();
 
   const setIsLoading = useSetRecoilState(nodeAtoms.isLoading);
   const setPreloadNodes = useSetRecoilState(nodeAtoms.preloadNodes);
 
-  const { blockchains, getBlockchains } = useGetBlockchains();
+  const { blockchains } = useGetBlockchains();
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
@@ -43,7 +42,21 @@ export const useNodeList = (): Hook => {
     router.push(`${router.pathname}/${args.key}`);
   };
 
-  const loadNodes = async (queryParams: InitialQueryParams) => {
+  const loadNodes = async (
+    queryParams: InitialQueryParams,
+    isNewUser?: boolean,
+  ) => {
+    if (isNewUser) {
+      setIsLoading('finished');
+      setNodeMetrics([
+        { name: 3, value: '0' },
+        { name: 4, value: '0' },
+      ]);
+      setTotalNodes(0);
+      setNodeList([]);
+      return;
+    }
+
     const loadingState =
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
@@ -98,7 +111,7 @@ export const useNodeList = (): Hook => {
     if (queryParams.pagination.current_page === 1) {
       setNodeList(nodes);
     } else {
-      const newNodes = [...nodeList, ...nodes];
+      const newNodes = [...nodeList!, ...nodes];
       setNodeList(newNodes);
     }
 

@@ -6,7 +6,7 @@ import { organizationAtoms } from '@modules/organization';
 interface Hook {
   totalNodes: number | null;
   nodeMetrics: NodeMetrics[];
-  loadMetrics: () => void;
+  loadMetrics: (isNewUser?: boolean) => void;
 }
 
 export const useNodeMetrics = (): Hook => {
@@ -14,11 +14,16 @@ export const useNodeMetrics = (): Hook => {
   const [totalNodes, setTotalNodes] = useRecoilState(nodeAtoms.totalNodes);
   const orgId = useRecoilValue(organizationAtoms.defaultOrganization);
 
-  const loadMetrics = async () => {
+  const loadMetrics = async (isNewUser?: boolean) => {
+    if (isNewUser) {
+      setTotalNodes(0);
+      return;
+    }
+
     const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
     setNodeMetrics(metrics);
     if (metrics.code) {
-      setTotalNodes(100);
+      setTotalNodes(0);
       return;
     }
 

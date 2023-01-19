@@ -8,7 +8,7 @@ import { env } from '@shared/constants/env';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
-import { useGetBlockchains } from './useGetBlockchains';
+import { useNodeMetrics } from './useNodeMetrics';
 
 type Args = string | string[] | undefined;
 
@@ -29,10 +29,16 @@ const createUuid = (id: Args) => {
 export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-  const { blockchains } = useGetBlockchains();
+  const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
+  const { loadMetrics } = useNodeMetrics();
 
   const deleteNode = async (id: Args) => {
     await apiClient.deleteNode(createUuid(id));
+    loadMetrics();
+    const nodeListCopy = [...nodeList!];
+    const foundNodeIndex = nodeListCopy.findIndex((n) => n.id === id);
+    nodeListCopy.splice(foundNodeIndex, 1);
+    setNodeList(nodeListCopy);
     toast.success(`Node Deleted`);
   };
 
