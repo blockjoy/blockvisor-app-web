@@ -17,6 +17,7 @@ build:
         NEXT_PUBLIC_LOADING_DURATION: "200"
         NPM_TOKEN : "{{.NPM_TOKEN}}"
         NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
+        NEXT_PUBLIC_PLAUSIBLE_DATA_DOMAIN: 'app.staging.blockjoy.com'
   - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-prod
     context: ./
     docker:
@@ -28,6 +29,7 @@ build:
         NEXT_PUBLIC_LOADING_DURATION: "200"
         NPM_TOKEN : "{{.NPM_TOKEN}}"
         NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
+        NEXT_PUBLIC_PLAUSIBLE_DATA_DOMAIN: 'app.prod.blockjoy.com'
   local: 
     push: true
     useDockerCLI: true
