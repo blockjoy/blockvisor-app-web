@@ -16,13 +16,9 @@ export function useDeleteOrganization() {
   const deleteOrganization = async (id: string) => {
     setLoadingState('loading');
     const response = await apiClient.deleteOrganization(id);
+    console.log('response', response);
 
-    /* TODO: temporary fix - API for node deletion doesn't return success response, but instead code 27 (Record not found) */
-    if (
-      isResponeMetaObject(response) ||
-      response?.message === 'RpcError: Record not found.' ||
-      response?.code === 27
-    ) {
+    if (isResponeMetaObject(response)) {
       updateOrganizations(id);
 
       setLoadingState('finished');
