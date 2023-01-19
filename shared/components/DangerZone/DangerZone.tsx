@@ -7,10 +7,16 @@ import { display } from 'styles/utils.display.styles';
 import { styles } from './DangerZone.styles';
 import { FormProvider, useForm } from 'react-hook-form';
 
+export enum Action {
+  leave = 'leave',
+  delete = 'delete',
+}
+
 interface Props {
-  handleDelete: () => Promise<void>;
+  handleAction: () => Promise<void>;
   elementName: string | 'Node' | 'Host';
   elementNameToCompare: string;
+  activeAction?: string | 'delete' | 'leave';
 }
 
 type DeleteForm = {
@@ -24,9 +30,10 @@ const redirects = {
 };
 
 export const DangerZone: FC<Props> = ({
-  handleDelete,
+  handleAction,
   elementName = 'Node',
   elementNameToCompare,
+  activeAction = 'delete',
 }) => {
   const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
@@ -43,8 +50,17 @@ export const DangerZone: FC<Props> = ({
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    await handleDelete();
+    const response = await handleAction();
     handleRedirect();
+  };
+
+  const messages = {
+    [Action.leave]: {
+      btn: 'Leave',
+    },
+    [Action.delete]: {
+      btn: 'Delete',
+    },
   };
 
   return (
@@ -53,19 +69,19 @@ export const DangerZone: FC<Props> = ({
       {step === 1 && (
         <>
           <div css={spacing.bottom.medium}>
-            <p>No longer need this {elementName}?</p>
-            <small>Click the button below to delete it.</small>
+            <p>No longer need this ${elementName}</p>
+            <small>'Click the button below to {activeAction} it?'</small>
           </div>
           <Button size="small" style="warning" onClick={() => gotoStep(2)}>
-            Delete
+            {messages[activeAction].btn}
           </Button>
         </>
       )}
       {step === 2 && (
         <div css={spacing.bottom.medium}>
           <p css={spacing.bottom.medium}>
-            To delete, type the name of your {elementName} and then click
-            "confirm".
+            To {activeAction}, type the name of your {elementName} and then
+            click "confirm".
           </p>
           <FormProvider {...form}>
             <form onSubmit={(e) => onSubmit(e)}>
