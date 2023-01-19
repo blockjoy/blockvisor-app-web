@@ -69,8 +69,8 @@ export const DangerZone: FC<Props> = ({
       {step === 1 && (
         <>
           <div css={spacing.bottom.medium}>
-            <p>No longer need this ${elementName}</p>
-            <small>'Click the button below to {activeAction} it?'</small>
+            <p>No longer need this {elementName}</p>
+            <small>Click the button below to {activeAction} it?</small>
           </div>
           <Button size="small" style="warning" onClick={() => gotoStep(2)}>
             {messages[activeAction].btn}
