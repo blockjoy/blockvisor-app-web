@@ -40,7 +40,7 @@ export const styles = {
         opacity: 0.6;
       }
 
-      span:first-child span {
+      span:first-of-type span {
         background: ${theme.colorPrimary};
         opacity: 0.6;
       }

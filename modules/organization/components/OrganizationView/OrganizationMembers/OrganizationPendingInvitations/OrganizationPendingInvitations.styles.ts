@@ -23,7 +23,7 @@ export const styles = {
       padding-bottom: 12px;
       border-bottom: 1px solid ${theme.colorBorder};
 
-      &:hover > span:first-child {
+      &:hover > span:first-of-type {
         color: ${theme.colorText};
       }
     }
