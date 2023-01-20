@@ -36,7 +36,8 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-select": "^5.4.0",
     "react-toastify": "^9.0.7",
-    "recoil": "^0.7.4",
+    "recoil": "0.7.6",
+    "recoil-persist": "^4.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
