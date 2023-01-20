@@ -1,5 +1,23 @@
 import { atom } from 'recoil';
 import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom: persistNodeList } = recoilPersist({ key: 'node.list' });
+const { persistAtom: persistFiltersType } = recoilPersist({
+  key: 'filters.type',
+});
+
+const { persistAtom: persistBlockchainFilter } = recoilPersist({
+  key: 'filters.blockchain',
+});
+
+const { persistAtom: persistStatusFilter } = recoilPersist({
+  key: 'filters.status',
+});
+
+const { persistAtom: persistHealthFilter } = recoilPersist({
+  key: 'filters.health',
+});
 
 export type FilterItem = {
   name?: string | undefined;
@@ -21,6 +39,7 @@ const activeListType = atom<string | 'table' | 'grid'>({
 const nodeList = atom<BlockjoyNode[]>({
   key: 'node.nodeList',
   default: [],
+  effects_UNSTABLE: [persistNodeList],
 });
 
 const isLoading = atom<LoadingState>({
@@ -41,6 +60,7 @@ const isFiltersCollapsed = atom<boolean>({
 const filtersBlockchain = atom<FilterItem[]>({
   key: 'node.filtersBlockchain',
   default: [],
+  effects_UNSTABLE: [persistBlockchainFilter],
 });
 
 const filtersType = atom<FilterItem[]>({
@@ -50,6 +70,7 @@ const filtersType = atom<FilterItem[]>({
     id: item.id.toString()!,
     isChecked: false,
   })),
+  effects_UNSTABLE: [persistFiltersType],
 });
 
 const filtersStatus = atom<FilterItem[]>({
@@ -63,11 +84,13 @@ const filtersStatus = atom<FilterItem[]>({
       isChecked: false,
       isOnline: item.isOnline,
     })),
+  effects_UNSTABLE: [persistStatusFilter],
 });
 
 const filtersHealth = atom<string | 'online' | 'offline' | null>({
   key: 'node.filtersHealth',
   default: null,
+  effects_UNSTABLE: [persistHealthFilter],
 });
 
 const nodeWizardActive = atom<boolean>({
