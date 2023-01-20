@@ -6,6 +6,7 @@ const AcceptInvite: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    localStorage.removeItem('identity');
     router.push('/?invited=true&redirect=/organizations');
   }, []);
 
