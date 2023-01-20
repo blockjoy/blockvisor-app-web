@@ -6,7 +6,7 @@ const AcceptInvite: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/?invited=true');
+    router.push('/?invited=true&redirect=/organizations');
   }, []);
 
   return null;
