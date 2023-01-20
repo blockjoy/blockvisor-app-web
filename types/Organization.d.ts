@@ -1,3 +1,8 @@
+type ClientDefaultOrganization = {
+  name?: string;
+  id?: string;
+};
+
 type ClientOrganization = {
   createdAt?: {
     nanos: number;
