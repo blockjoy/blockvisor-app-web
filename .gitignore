@@ -39,3 +39,6 @@ yarn-error.log*
 /.idea
 
 /.npmrc
+
+#npm lock
+package-lock.json
