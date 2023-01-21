@@ -8,7 +8,6 @@ import { styles } from './OrganizationPicker.styles';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import { useSetDefaultOrganization } from '@modules/organization/hooks/useSetDefaultOrganization';
-import { useDefaultOrganization } from '@modules/organization';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 
@@ -19,8 +18,9 @@ export const OrganizationPicker = () => {
   const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { getDefaultOrganization, defaultOrganization } =
-    useDefaultOrganization();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const { setDefaultOrganization } = useSetDefaultOrganization();
 
   const handleClick = () => setIsOpen(!isOpen);
@@ -46,10 +46,6 @@ export const OrganizationPicker = () => {
   const handleCreateClicked = () => {
     setLayout('organization');
   };
-
-  useEffect(() => {
-    getDefaultOrganization();
-  }, []);
 
   return (
     <div css={[styles.wrapper]} ref={dropdownRef}>
