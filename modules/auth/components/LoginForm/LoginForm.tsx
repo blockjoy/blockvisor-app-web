@@ -47,8 +47,7 @@ export function LoginForm() {
 
     try {
       await signIn(email, password);
-      await getDefaultOrganization();
-      await getOrganizations();
+      await getOrganizations(true);
       await delay(1000);
 
       setIsLoading(false);
