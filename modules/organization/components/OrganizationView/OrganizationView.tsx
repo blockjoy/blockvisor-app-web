@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { toast } from 'react-toastify';
@@ -37,7 +37,7 @@ export const OrganizationView = () => {
   const { id } = router.query;
   const { organization, isLoading } = useGetOrganization(queryAsString(id));
   const { deleteOrganization } = useDeleteOrganization();
-  const { updateOrganization } = useUpdateOrganization();
+  const { updateOrganization, loading } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
 
   const sentInvitationsLoadingState = useRecoilValue(
@@ -47,17 +47,15 @@ export const OrganizationView = () => {
     organizationAtoms.organizationMembersLoadingState,
   );
 
-  const [isSavingOrganization, setIsSavingOrganization] =
-    useState<boolean>(false);
-
   const handleSaveClicked = async (newOrganizationName: string) => {
-    setIsSavingOrganization(true);
     try {
-      await updateOrganization(id?.toString()!, newOrganizationName);
-      setIsSavingOrganization(false);
+      await updateOrganization({
+        id: queryAsString(id),
+        name: newOrganizationName,
+      });
       toast.success('Organization Updated');
     } catch (err: any) {
-      setIsSavingOrganization(false);
+      toast.success('Update failed');
     }
   };
 
@@ -114,7 +112,7 @@ export const OrganizationView = () => {
         ) : (
           <div css={spacing.top.medium}>
             <EditableTitle
-              isSaving={isSavingOrganization}
+              isSaving={loading}
               initialValue={organization?.name!}
               onSaveClicked={handleSaveClicked}
               canUpdate={canUpdateOrganization && !organization?.personal}

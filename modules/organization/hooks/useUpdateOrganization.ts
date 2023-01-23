@@ -2,69 +2,49 @@ import { Organization } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useSetDefaultOrganization } from './useSetDefaultOrganization';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDefaultOrganization } from './useDefaultOrganization';
+
+const updateOrg = async (id: string, name: string) => {
+  const organization = new Organization();
+  organization.setName(name);
+  organization.setId(id);
+  const response = await apiClient.updateOrganization(organization);
+
+  if (isResponeMetaObject(response)) {
+    return;
+  } else {
+    throw new ApplicationError('UpdateOrganization', 'Update failed');
+  }
+};
 
 export function useUpdateOrganization() {
   const [selectedOrganization, setSelectedOrganization] = useRecoilState(
     organizationAtoms.selectedOrganization,
   );
-  const [allOrganizations, setAllOrganizations] = useRecoilState(
-    organizationAtoms.allOrganizations,
-  );
+  const { defaultOrganization } = useDefaultOrganization();
   const { setDefaultOrganization } = useSetDefaultOrganization();
+  const client = useQueryClient();
 
-  const [loadingState, setLoadingState] = useRecoilState(
-    organizationAtoms.organizationLoadingState,
-  );
-
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
-
-  const updateOrganization = async (id: string, name: string) => {
-    setLoadingState('loading');
-
-    const organization = new Organization();
-    organization.setName(name);
-    organization.setId(id);
-    const response = await apiClient.updateOrganization(organization);
-
-    if (isResponeMetaObject(response)) {
-      const newOrg = {
-        ...selectedOrganization,
-        name,
-      };
-
-      setSelectedOrganization(newOrg);
-
-      const updatedAllOrgs = allOrganizations.map((org) => {
-        if (org.id === selectedOrganization?.id)
-          return {
-            ...org,
-            name,
-          };
-
-        return org;
-      });
-
-      setAllOrganizations(updatedAllOrgs);
+  const { mutateAsync, isLoading } = useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) =>
+      updateOrg(id, name),
+    onSuccess(_, variables) {
+      const { id, name } = variables;
+      client.invalidateQueries({ queryKey: ['organization', id] });
+      setSelectedOrganization({ id, name });
 
       if (defaultOrganization?.id === selectedOrganization?.id) {
         setDefaultOrganization(selectedOrganization?.id ?? '', name);
       }
-
-      setLoadingState('finished');
-      return;
-    } else {
-      setLoadingState('finished');
-      throw new ApplicationError('UpdateOrganization', 'Update failed');
-    }
-  };
+    },
+  });
 
   return {
-    updateOrganization,
-    loading: loadingState === 'initializing' || loadingState === 'loading',
+    updateOrganization: mutateAsync,
+    loading: isLoading,
   };
 }
