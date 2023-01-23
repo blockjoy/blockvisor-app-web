@@ -1,5 +1,6 @@
 import { Routes, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useGetBlockchains } from '@modules/node';
 import {
   useDefaultOrganization,
   useGetOrganizations,
@@ -37,6 +38,7 @@ export function LoginForm() {
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getDefaultOrganization } = useDefaultOrganization();
+  const { getBlockchains } = useGetBlockchains();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -49,6 +51,7 @@ export function LoginForm() {
     try {
       await signIn(email, password);
       await getOrganizations();
+      await getBlockchains();
       await delay(env.loadingDuration);
 
       setIsLoading(false);
