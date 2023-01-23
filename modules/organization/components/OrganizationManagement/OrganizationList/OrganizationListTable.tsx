@@ -93,6 +93,7 @@ export const AllOrganizationsTable: FC = () => {
     <Table
       isLoading={isLoading}
       onRowClick={handleRowClicked}
+      pageSize={8}
       headers={headers}
       rows={rows}
       fixedRowHeight="74px"

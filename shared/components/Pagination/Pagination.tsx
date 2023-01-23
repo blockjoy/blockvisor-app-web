@@ -1,121 +1,90 @@
-import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
-import { styles } from './Pagination.styles';
-import { PaginationItem } from './PaginationItem';
 
-interface Props {
-  numberOfItems: number;
-  itemsPerPage: number;
-}
+import { styles } from './Pagination.styles';
+
+import IconPageFirst from '@public/assets/icons/page-first.svg';
+import IconPageLast from '@public/assets/icons/page-last.svg';
+
+type Props = {
+  pagesToDisplay?: number;
+  pageCount?: number;
+  onPageClicked: (pageIndex: number) => void;
+};
 
 export const Pagination: FC<Props> = ({
-  numberOfItems = 0,
-  itemsPerPage = 1,
+  pagesToDisplay = 5,
+  pageCount = 10,
+  onPageClicked,
 }) => {
-  const { query, replace } = useRouter();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>();
-  const [pagesToRender, setPagesToRender] = useState<number[]>();
+  const [pages, setPages] = useState<number[]>([]);
+  const [activePage, setActivePage] = useState<number>();
+
+  const buildPagination = (pageIndex: number) => {
+    onPageClicked(pageIndex);
+    setActivePage(pageIndex);
+    let newPages = [];
+    let start = 0;
+    let end = pagesToDisplay;
+
+    if (pageIndex > (pagesToDisplay - 1) / 2) {
+      start = pageIndex - (pagesToDisplay - 1) / 2;
+      end = start + pagesToDisplay;
+    }
+
+    if (pageIndex > pageCount - (pagesToDisplay + 1) / 2) {
+      start = pageCount - pagesToDisplay;
+      end = pageCount;
+    }
+
+    for (let i = start; i < end; i++) {
+      newPages.push(i);
+    }
+
+    setPages(newPages);
+  };
+
+  const handlePageClicked = (pageIndex: number) => {
+    onPageClicked(pageIndex);
+    buildPagination(pageIndex);
+  };
 
   useEffect(() => {
-    setTotalPages(Math.ceil(numberOfItems / itemsPerPage));
-  }, [numberOfItems, itemsPerPage]);
-
-  useEffect(() => {
-    if (query.page && typeof query.page === 'string') {
-      setCurrentPage(parseInt(query.page));
-    }
-  }, [query.page]);
-
-  useEffect(() => {
-    if (!query.page) {
-      replace({
-        query: { ...query, page: 1 },
-      });
-    }
-  }, [query.page]);
-
-  /** A bit ugly, but straightforward for this case. */
-  useEffect(() => {
-    if (currentPage === 1) {
-      return setPagesToRender([
-        currentPage,
-        currentPage + 1,
-        currentPage + 2,
-        currentPage + 3,
-        currentPage + 4,
-      ]);
-    }
-
-    if (currentPage === 2) {
-      return setPagesToRender([
-        currentPage - 1,
-        currentPage,
-        currentPage + 1,
-        currentPage + 2,
-        currentPage + 3,
-      ]);
-    }
-
-    if (totalPages && currentPage === totalPages - 1) {
-      return setPagesToRender([
-        currentPage - 3,
-        currentPage - 2,
-        currentPage - 1,
-        currentPage,
-        currentPage + 1,
-      ]);
-    }
-
-    if (totalPages && currentPage === totalPages) {
-      return setPagesToRender([
-        currentPage - 4,
-        currentPage - 3,
-        currentPage - 2,
-        currentPage - 1,
-        currentPage,
-      ]);
-    }
-
-    setPagesToRender([
-      currentPage - 2,
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      currentPage + 2,
-    ]);
-  }, [currentPage]);
-
-  function renderPages() {
-    return pagesToRender?.map((item, idx) => {
-      return (
-        <PaginationItem
-          key={idx}
-          type="page"
-          active={item === currentPage}
-          number={item}
-        />
-      );
-    });
-  }
-
-  if (!query.page) {
-    return null;
-  }
+    buildPagination(0);
+  }, []);
 
   return (
-    <div css={styles.base}>
-      <PaginationItem
-        type="first"
-        disabled={currentPage === 1}
-        totalPages={totalPages}
-      />
-      {renderPages()}
-      <PaginationItem
-        type="last"
-        disabled={currentPage === totalPages}
-        totalPages={totalPages}
-      />
+    <div css={styles.pagination}>
+      <button
+        disabled={activePage === 0}
+        onClick={() => handlePageClicked(0)}
+        type="button"
+        css={styles.item}
+      >
+        <span css={styles.icon}>
+          <IconPageFirst />
+        </span>
+      </button>
+      {pages.map((page: number) => (
+        <button
+          css={[styles.item, page === activePage && styles.active]}
+          className={page === activePage ? 'active' : ''}
+          onClick={() => handlePageClicked(page)}
+          key={page}
+          type="button"
+        >
+          {page + 1}
+        </button>
+      ))}
+      <button
+        css={styles.item}
+        disabled={activePage === pageCount - 1}
+        onClick={() => handlePageClicked(pageCount - 1)}
+        type="button"
+      >
+        <span css={styles.icon}>
+          <IconPageLast />
+        </span>
+      </button>
     </div>
   );
 };
