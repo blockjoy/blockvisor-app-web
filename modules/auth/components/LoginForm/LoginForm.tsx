@@ -84,6 +84,7 @@ export function LoginForm() {
                 disabled={loading}
                 name="email"
                 placeholder="Email"
+                type="email"
                 validationOptions={{
                   required: 'Your e-mail address is required',
                   pattern: {
