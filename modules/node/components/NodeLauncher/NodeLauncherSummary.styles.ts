@@ -114,7 +114,7 @@ export const styles = {
   `,
   serverError: (theme: ITheme) => css`
     margin-top: 20px;
-    margin-bottom: 4px;
+    margin-bottom: 20px;
     padding: 16px;
     line-height: 1.45;
     border-radius: 4px;
