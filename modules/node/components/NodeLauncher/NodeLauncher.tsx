@@ -254,6 +254,7 @@ export const NodeLauncher = () => {
         )}
         {node.blockchainId && node.nodeTypeId && (
           <NodeLauncherSummary
+            hasNetworkList={Boolean(networkList?.length)}
             hasServerError={hasServerError}
             hasAddedFiles={hasAddedFiles()}
             isCreating={isCreating}

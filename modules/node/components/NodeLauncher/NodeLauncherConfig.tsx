@@ -100,50 +100,53 @@ export const NodeLauncherConfig: FC<Props> = ({
           </Alert>
         </div>
         <div css={styles.nodeTypeProperties}>
-          {Boolean(networkList?.length) && (
-            <>
-              <label
-                css={[
-                  spacing.bottom.mediumSmall,
-                  typo.button,
-                  display.block,
-                  colors.text2,
-                ]}
-              >
-                Network
-              </label>
-              <PillPicker
-                items={networkList}
-                selectedItem={nodeNetwork}
-                onChange={onNetworkChanged}
-              />
-            </>
+          <label
+            css={[
+              spacing.bottom.mediumSmall,
+              typo.button,
+              display.block,
+              colors.text2,
+            ]}
+          >
+            Network
+          </label>
+          {Boolean(networkList?.length) ? (
+            <PillPicker
+              items={networkList}
+              selectedItem={nodeNetwork}
+              onChange={onNetworkChanged}
+            />
+          ) : (
+            <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
+              Missing Network Configuration
+            </div>
           )}
-          {nodeTypeProperties?.map((property: NodeTypeConfig) => {
-            return (
-              <>
-                <label
-                  css={[
-                    spacing.bottom.mediumSmall,
-                    typo.button,
-                    display.block,
-                    colors.text2,
-                  ]}
-                >
-                  <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
-                  {property.required && !property.disabled && (
-                    <span css={styles.requiredAsterix}>*</span>
+          {Boolean(networkList?.length) &&
+            nodeTypeProperties?.map((property: NodeTypeConfig) => {
+              return (
+                <>
+                  <label
+                    css={[
+                      spacing.bottom.mediumSmall,
+                      typo.button,
+                      display.block,
+                      colors.text2,
+                    ]}
+                  >
+                    <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
+                    {property.required && !property.disabled && (
+                      <span css={styles.requiredAsterix}>*</span>
+                    )}
+                  </label>
+                  {renderControls(
+                    property,
+                    nodeFiles!,
+                    onFileUploaded,
+                    onPropertyChanged,
                   )}
-                </label>
-                {renderControls(
-                  property,
-                  nodeFiles!,
-                  onFileUploaded,
-                  onPropertyChanged,
-                )}
-              </>
-            );
-          })}
+                </>
+              );
+            })}
         </div>
       </div>
     </NodeLauncherConfigWrapper>
