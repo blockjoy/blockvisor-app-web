@@ -20,9 +20,9 @@ export const AllOrganizationsTable: FC = () => {
     setPageIndex(index);
   };
 
-  return isLoading === 'initializing' ? (
+  return isLoading ? (
     <TableSkeleton />
-  ) : !Boolean(rows?.length) && isLoading === 'finished' ? (
+  ) : !Boolean(rows?.length) ? (
     <EmptyColumn
       id="js-nodes-empty"
       title="No organizations"

@@ -10,7 +10,7 @@ type Props = {
   rows?: Row[];
   onRowClick?: (arg0: any) => void;
   onPageClicked?: (pageIndex: number) => void;
-  isLoading: LoadingState;
+  isLoading: boolean;
   preload?: number;
   verticalAlign?: 'top' | 'middle';
   fixedRowHeight?: string;
@@ -114,7 +114,7 @@ export const Table: React.FC<Props> = ({
           </thead>
         )}
         <tbody>
-          {isLoading === 'initializing' ? (
+          {isLoading ? (
             <TableRowLoader length={preload} />
           ) : (
             activeRows?.map((tr) => (
@@ -146,12 +146,10 @@ export const Table: React.FC<Props> = ({
               </tr>
             ))
           )}
-          {isLoading === 'loading' && preload ? (
-            <TableRowLoader length={preload} />
-          ) : null}
+          {isLoading && preload ? <TableRowLoader length={preload} /> : null}
         </tbody>
       </table>
-      {Boolean(pageSize) && isLoading === 'finished' && pageTotal > 1 && (
+      {Boolean(pageSize) && !isLoading && pageTotal > 1 && (
         <Pagination
           onPageClicked={handlePageClicked}
           pagesToDisplay={pageTotal < 5 ? pageTotal : 5}

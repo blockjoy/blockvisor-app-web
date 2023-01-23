@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useRouter } from 'next/router';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
+import { queryAsString } from '@shared/utils/query';
 
 type OrganisationAddForm = {
   name: string;
@@ -31,7 +32,9 @@ export const OrganizationAdd: FC = () => {
   const { getOrganizations, setPageIndex: setOrganizationsPageIndex } =
     useGetOrganizations();
 
-  const { setPageIndex: setMembersPageIndex } = useGetOrganizationMembers();
+  const { setPageIndex: setMembersPageIndex } = useGetOrganizationMembers(
+    queryAsString(router.query.id),
+  );
 
   const [loading, setLoading] = useState(false);
 

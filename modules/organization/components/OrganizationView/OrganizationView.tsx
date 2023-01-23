@@ -35,7 +35,7 @@ import { ROUTES } from '@shared/index';
 export const OrganizationView = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { getOrganization, organization, isLoading } = useGetOrganization();
+  const { organization, isLoading } = useGetOrganization(queryAsString(id));
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
@@ -80,22 +80,19 @@ export const OrganizationView = () => {
     }
   };
 
-  const { getOrganizationMembers, organizationMembers } =
-    useGetOrganizationMembers();
+  const { organizationMembers } = useGetOrganizationMembers(queryAsString(id));
 
   const { getSentInvitations, sentInvitations } = useInvitations();
 
   useEffect(() => {
     if (router.isReady) {
-      getOrganization(queryAsString(id));
-      getOrganizationMembers(queryAsString(id));
       getSentInvitations(queryAsString(id));
     }
   }, [router.isReady]);
 
   const details = getOrganizationDetails(organization);
   const isLoadingOrg =
-    isLoading !== 'finished' ||
+    isLoading ||
     membersLoadingState !== 'finished' ||
     sentInvitationsLoadingState !== 'finished';
 

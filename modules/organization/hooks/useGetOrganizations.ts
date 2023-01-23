@@ -1,31 +1,35 @@
+import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
+import { useQuery } from '@tanstack/react-query';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { useDefaultOrganization } from './useDefaultOrganization';
+import { isStatusResponse } from '../utils/typeGuards';
+
+const fetchOrganizations = async () => {
+  const response = await apiClient.getOrganizations();
+  if (response && isStatusResponse(response)) {
+    throw new ApplicationError('GetOrganizations', response.message);
+  } else {
+    return response ?? [];
+  }
+};
 
 export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
     organizationAtoms.allOrganizations,
-  );
-  const [isLoading, setIsLoading] = useRecoilState(
-    organizationAtoms.organizationsLoadingState,
   );
 
   const [pageIndex, setPageIndex] = useRecoilState(
     organizationAtoms.organizationsPageIndex,
   );
 
-  const { getDefaultOrganization } = useDefaultOrganization();
-
-  const getOrganizations = async (init?: boolean) => {
-    setIsLoading('initializing');
-    const organizations: any = await apiClient.getOrganizations();
-    setOrganizations(organizations);
-
-    if (init) getDefaultOrganization(organizations);
-
-    setIsLoading('finished');
-  };
+  const { isError, isLoading } = useQuery({
+    queryKey: ['organizations'],
+    queryFn: fetchOrganizations,
+    onSuccess(data) {
+      setOrganizations(data);
+    },
+  });
 
   const updateOrganizations = (org_id: string) => {
     const newOrganizations = organizations.filter(
@@ -42,9 +46,9 @@ export function useGetOrganizations() {
 
   return {
     organizations,
-    getOrganizations,
     updateOrganizations,
     addToOrganizations,
+    isError,
     isLoading,
     pageIndex,
     setPageIndex,

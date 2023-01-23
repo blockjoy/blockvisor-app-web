@@ -33,10 +33,11 @@ export type MembersProps = {
 
 export const Members = ({ members, invitations, id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
-
   const { resendInvitation } = useResendInvitation();
 
-  const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers();
+  const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers(
+    id ?? '',
+  );
 
   // TOOD: remove after fixed bug in API (return org the invitation's id in response)
   const { getSentInvitations } = useInvitations();
@@ -99,6 +100,13 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
 
   const [activeMember, setActiveMember] = useState<Member | null>(null);
   const [activeAction, setActiveAction] = useState<Action | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      getSentInvitations(id);
+    }
+    return () => setPageIndex(0);
+  }, [id]);
 
   const methods = {
     action: (action: Action, orgMember: Member) => {

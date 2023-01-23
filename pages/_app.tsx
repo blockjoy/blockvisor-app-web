@@ -7,25 +7,30 @@ import { globalStyles } from 'styles/global.styles';
 import ThemeProvider from '@modules/theme/ThemeProvider';
 import { PrivateRoute } from '@modules/auth';
 import { Chat } from '@shared/components/Chat/Chat';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps, router }: any) {
   const getLayout = Component?.getLayout || ((page: any) => page);
   return (
-    <RecoilRoot>
-      <Global styles={globalStyles} />
-      <ThemeProvider>
-        <PrivateRoute router={router}>
-          {getLayout(<Component {...pageProps} />)}
-        </PrivateRoute>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Global styles={globalStyles} />
+        <ThemeProvider>
+          <PrivateRoute router={router}>
+            {getLayout(<Component {...pageProps} />)}
+          </PrivateRoute>
 
-        <Chat />
-        <ToastContainer
-          hideProgressBar
-          autoClose={3000}
-          position="bottom-right"
-        />
-      </ThemeProvider>
-    </RecoilRoot>
+          <Chat />
+          <ToastContainer
+            hideProgressBar
+            autoClose={3000}
+            position="bottom-right"
+          />
+        </ThemeProvider>
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 }
 

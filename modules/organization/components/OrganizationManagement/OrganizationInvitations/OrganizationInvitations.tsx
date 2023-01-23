@@ -1,18 +1,15 @@
 import { useIdentityRepository } from '@modules/auth';
-import {
-  organizationAtoms,
-  useGetOrganizations,
-  useInvitations,
-} from '@modules/organization';
+import { organizationAtoms, useInvitations } from '@modules/organization';
 import { Badge, Button } from '@shared/components';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvitations.styles';
 
 export const OrganizationInvitations = () => {
+  const client = useQueryClient();
   const { acceptInvitation, declineInvitation, getReceivedInvitations } =
     useInvitations();
-  const { getOrganizations } = useGetOrganizations();
 
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
@@ -23,7 +20,7 @@ export const OrganizationInvitations = () => {
 
   const handleAcceptInvitation = (invitationId: string) => {
     acceptInvitation({ invitationId: invitationId }, () => {
-      getOrganizations();
+      client.invalidateQueries({ queryKey: ['organizations'] });
       getReceivedInvitations(userId!);
     });
   };

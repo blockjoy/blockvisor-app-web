@@ -22,7 +22,8 @@ type LoginForm = {
 };
 
 export function LoginForm() {
-  const { getOrganizations } = useGetOrganizations();
+  const { organizations } = useGetOrganizations();
+
   const router = useRouter();
   const { invited, verified, redirect, token } = router.query;
   const signIn = useSignIn();
@@ -57,7 +58,6 @@ export function LoginForm() {
 
     try {
       await signIn(email, password);
-      await getOrganizations(true);
       await getBlockchains();
 
       handleRedirect();
