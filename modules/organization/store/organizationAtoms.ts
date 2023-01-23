@@ -12,11 +12,16 @@ const defaultOrganization = atom<{ name: string; id: string } | null>({
     ({ setSelf }) => {
       const savedIdentity = localStorage.getItem('identity');
       if (savedIdentity) {
-        const defaultOrg = JSON.parse(savedIdentity)['defaultOrganization']
+        const defaultOrg = JSON.parse(savedIdentity)['defaultOrganization'];
         if (defaultOrg) setSelf(defaultOrg);
       }
-    }
+    },
   ],
+});
+
+const organizationsPageIndex = atom<number>({
+  key: 'organization.pageIndex',
+  default: 0,
 });
 
 const allOrganizations = atom<ClientOrganization[]>({
@@ -62,6 +67,11 @@ const organizationMembers = atom<ClientOrganizationMember[]>({
   default: [],
 });
 
+const organizationMembersPageIndex = atom<number>({
+  key: 'organization.member.pageIndex',
+  default: 0,
+});
+
 const organizationMemberLoadingState = atom<LoadingState>({
   key: 'organization.member.loadingState',
   default: 'initializing',
@@ -84,6 +94,7 @@ const organizationReceivedInvitations = atom<any[]>({
 
 export const organizationAtoms = {
   selectedOrganization,
+  organizationsPageIndex,
   organizationLoadingState,
   organizationDefaultLoadingState,
   organizationsLoadingState,
@@ -94,6 +105,7 @@ export const organizationAtoms = {
   organizationMembers,
   organizationMemberLoadingState,
   organizationMembersLoadingState,
+  organizationMembersPageIndex,
   organizationSentInvitations,
   organizationReceivedInvitations,
 };
