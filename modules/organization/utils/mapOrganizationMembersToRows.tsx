@@ -141,7 +141,24 @@ export const mapOrganizationMembersToRows = (
       },
       {
         key: '3',
-        component: !member.createdAt ? <Button>Resend</Button> : null,
+        component: member.isPending ? (
+          <span css={spacing.right.medium}>
+            <Button
+              type="button"
+              onClick={() =>
+                handleResendInvitation(
+                  member.invitationId!,
+                  member.email!,
+                  selectedOrganization?.id!,
+                )
+              }
+              style="outline"
+              size="small"
+            >
+              Resend
+            </Button>
+          </span>
+        ) : null,
       },
       {
         key: '4',
