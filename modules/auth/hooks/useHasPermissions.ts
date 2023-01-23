@@ -7,7 +7,14 @@ export enum OrgRole {
 
 export enum Permissions {
   READ_ORGANIZATION,
+  CREATE_ORGANIZATION,
+  UPDATE_ORGANIZATION,
   DELETE_ORGANIZATION,
+
+  READ_MEMBER,
+  CREATE_MEMBER,
+  UPDATE_MEMBER,
+  DELETE_MEMBER,
 };
 
 export const PERMISSIONS: {
@@ -19,14 +26,28 @@ export const PERMISSIONS: {
   [OrgRole.UndefinedOrgRole]: [],
   [OrgRole.Owner]: [
     Permissions.READ_ORGANIZATION,
-    Permissions.DELETE_ORGANIZATION
+    Permissions.CREATE_ORGANIZATION,
+    Permissions.UPDATE_ORGANIZATION,
+    Permissions.DELETE_ORGANIZATION,
+
+    Permissions.READ_MEMBER,
+    Permissions.CREATE_MEMBER,
+    Permissions.UPDATE_MEMBER,
+    Permissions.DELETE_MEMBER,
   ],
   [OrgRole.Member]: [
-    Permissions.READ_ORGANIZATION
+    Permissions.READ_ORGANIZATION,
+
+    Permissions.READ_MEMBER,
   ],
   [OrgRole.Admin]: [
     Permissions.READ_ORGANIZATION,
-    Permissions.DELETE_ORGANIZATION
+    Permissions.CREATE_ORGANIZATION,
+    Permissions.UPDATE_ORGANIZATION,
+
+    Permissions.READ_MEMBER,
+    Permissions.CREATE_MEMBER,
+    Permissions.UPDATE_MEMBER,
   ],
 };
 

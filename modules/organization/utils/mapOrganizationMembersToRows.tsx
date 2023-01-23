@@ -5,7 +5,8 @@ import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
-import IconClose from '@public/assets/icons/close-12.svg';
+import IconClose from '@public/assets/icons/burger-hide.svg';
+import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
 
 export enum Action {
   revoke = 'revoke',
@@ -38,6 +39,8 @@ export const mapOrganizationMembersToRows = (
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
+
+  const canRemoveUser: boolean = useHasPermissions(selectedOrganization?.currentUser.role!, Permissions.DELETE_MEMBER);
 
   const membersMap =
     members?.map((member) => ({
@@ -163,37 +166,49 @@ export const mapOrganizationMembersToRows = (
         key: '4',
         component: (
           <>
-            {member.active ? (
-              member.id !== userId && (
+            {canRemoveUser ?
+              member.active ? (
+                member.id !== userId && (
+                  <Button
+                    tooltip="Remove"
+                    style="icon"
+                    size="medium"
+                    onClick={() =>
+                      handleRemoveMember(
+                        member?.id!,
+                        selectedOrganization?.id!,
+                        member?.email!,
+                      )
+                    }
+                  >
+                    <IconClose />
+                  </Button>
+                )
+              ) : (
                 <Button
                   type="button"
                   tooltip="Remove"
                   style="icon"
                   size="medium"
                   onClick={() =>
-                    handleRemoveMember(
-                      member?.id!,
-                      selectedOrganization?.id!,
-                      member?.email!,
-                    )
+                    handleRevokeInvitation(member?.invitationId!, member?.email!)
                   }
                 >
                   <IconClose />
                 </Button>
-              )
-            ) : (
-              <Button
-                type="button"
-                tooltip="Revoke"
-                style="icon"
-                size="medium"
-                onClick={() =>
-                  handleRevokeInvitation(member?.invitationId!, member?.email!)
-                }
-              >
-                <IconClose />
-              </Button>
-            )}
+              ) : (
+                <Button
+                  type="button"
+                  tooltip="Revoke"
+                  style="icon"
+                  size="medium"
+                  onClick={() =>
+                    handleRevokeInvitation(member?.invitationId!, member?.email!)
+                  }
+                >
+                  <IconClose />
+                </Button>
+              )}
           </>
         ),
       },
