@@ -1,17 +1,25 @@
 import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import { FC } from 'react';
-import { useGetOrganizations } from '@modules/organization';
+import { organizationAtoms, useGetOrganizations } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
 
 export const AllOrganizationsTable: FC = () => {
   const router = useRouter();
 
   const { organizations, isLoading } = useGetOrganizations();
   const { headers, rows } = mapOrganizationsToRows(organizations);
+  const [pageIndex, setPageIndex] = useRecoilState(
+    organizationAtoms.organizationsPageIndex,
+  );
 
   const handleRowClicked = (id: any) => {
     router.push(`organizations/${id.key}`);
+  };
+
+  const handlePageClicked = (index: number) => {
+    setPageIndex(index);
   };
 
   return isLoading === 'initializing' ? (
@@ -27,6 +35,8 @@ export const AllOrganizationsTable: FC = () => {
       isLoading={isLoading}
       onRowClick={handleRowClicked}
       pageSize={8}
+      pageIndex={pageIndex}
+      onPageClicked={handlePageClicked}
       headers={headers}
       rows={rows}
       fixedRowHeight="74px"
