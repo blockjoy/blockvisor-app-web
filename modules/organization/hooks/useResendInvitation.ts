@@ -14,9 +14,9 @@ export const useResendInvitation = () => {
     try {
       await apiClient.revokeInvitation({ invitationId, email });
       await apiClient.inviteOrgMember(email, selectedOrganization?.id!);
-      toast.success('Invitation Resent');
+      toast.success('Invitation Sent');
     } catch (error) {
-      toast.error('Error Resending');
+      toast.error('Error Sending');
     }
   };
 

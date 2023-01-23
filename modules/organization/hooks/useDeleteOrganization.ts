@@ -18,8 +18,10 @@ export function useDeleteOrganization() {
     const response = await apiClient.deleteOrganization(id);
     console.log('response', response);
 
-    if (isResponeMetaObject(response)) {
-      updateOrganizations(id);
+    console.log('deleteOrganization', response);
+
+    /* TODO: temporary fix - API for node deletion doesn't return success response, but instead code 25 (Record not found) */
+    if (isResponeMetaObject(response) || response?.code === 25) {
       setLoadingState('finished');
       toast.success('Deleted successfully');
     } else {
