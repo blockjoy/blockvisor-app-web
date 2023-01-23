@@ -1,43 +1,39 @@
 import { css } from '@emotion/react';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { ITheme } from 'types/theme';
 
 export const styles = {
-  base: css`
+  pagination: css`
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 6px;
+    gap: 4px;
     margin-top: 20px;
   `,
-  item: css`
-    width: 26px;
-    height: 26px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    ${typo.small};
-    background: #313131;
-    color: var(--color-text-4);
-    transition: all 0.1s ease-out;
+  item: (theme: ITheme) => css`
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 3px;
+    background: ${theme.colorLightGrey};
+    color: ${theme.colorText};
+    font-size: 14px;
+    cursor: pointer;
 
-    &:hover,
-    &:focus {
-      background: #616161;
-    }
-
-    &[disabled] {
-      cursor: not-allowed;
-      opacity: 0.4;
+    :disabled {
+      opacity: 0.25;
     }
   `,
-  active: css`
-    color: #212423;
-    background: var(--color-primary);
-
-    &:hover,
-    &:focus {
-      background: var(--color-primary);
-    }
+  active: (theme: ITheme) => css`
+    background: ${theme.colorAccent};
+    color: ${theme.colorPrimaryText};
+  `,
+  icon: css`
+    display: grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
   `,
 };

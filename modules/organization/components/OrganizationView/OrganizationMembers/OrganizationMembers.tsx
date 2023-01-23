@@ -123,6 +123,7 @@ export const Members = ({ id }: MembersProps) => {
         />
       )}
       <Table
+        pageSize={6}
         isLoading={isLoading}
         headers={headers}
         rows={rows}
