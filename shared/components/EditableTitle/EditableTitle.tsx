@@ -16,6 +16,7 @@ export const EditableTitle: FC<Props> = ({
   onSaveClicked,
 }) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isValid, setIsValid] = useState<boolean>(true);
   const [characterCount, setCharacterCount] = useState<number>(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,15 +26,18 @@ export const EditableTitle: FC<Props> = ({
     if (isEditMode && inputRef.current) {
       inputRef.current.value = initialValue;
       inputValue.current = initialValue;
-      setCharacterCount(initialValue?.length);
+      setCharacterCount(initialValue?.length + 1);
     }
 
     setIsEditMode(!isEditMode);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    inputValue.current = e.target.value;
-    setCharacterCount(e.target.value?.length);
+    const { value } = e.target;
+
+    inputValue.current = value;
+    setCharacterCount(value?.length + 1);
+    setIsValid(value?.length > 0);
   };
 
   const handleSaveClicked = () => {
@@ -43,7 +47,7 @@ export const EditableTitle: FC<Props> = ({
 
   useEffect(() => {
     inputValue.current = initialValue;
-    setCharacterCount(initialValue?.length);
+    setCharacterCount(initialValue?.length + 1);
   }, []);
 
   useEffect(() => {
@@ -59,7 +63,7 @@ export const EditableTitle: FC<Props> = ({
         spellCheck={false}
         ref={inputRef}
         disabled={!isEditMode}
-        placeholder="Organization Name"
+        placeholder=""
         size={characterCount}
         css={[styles.input, isEditMode && styles.inputEditable]}
         defaultValue={initialValue}
@@ -72,7 +76,7 @@ export const EditableTitle: FC<Props> = ({
       {isEditMode && (
         <>
           <Button
-            disabled={isSaving}
+            disabled={isSaving || !isValid}
             loading={isSaving}
             onClick={handleSaveClicked}
             size="small"
