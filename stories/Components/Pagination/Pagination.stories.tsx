@@ -13,8 +13,8 @@ const Template: ComponentStory<typeof Pagination> = (args) => (
 export const Default = Template.bind({});
 
 Default.args = {
-  numberOfItems: 10,
-  itemsPerPage: 5,
+  pageCount: 10,
+  pagesToDisplay: 5,
 };
 
 Default.parameters = {
