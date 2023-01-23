@@ -10,7 +10,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 
 type Props = {
-  hasServerError: boolean;
+  serverError: string;
   hasAddedFiles: boolean;
   hasNetworkList: boolean;
   isNodeValid: boolean;
@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const NodeLauncherSummary: FC<Props> = ({
-  hasServerError,
+  serverError,
   hasAddedFiles,
   hasNetworkList,
   isNodeValid,
@@ -115,11 +115,7 @@ export const NodeLauncherSummary: FC<Props> = ({
               </>
             )}
 
-            {hasServerError && (
-              <div css={styles.serverError}>
-                Error creating node, please contact our support team.
-              </div>
-            )}
+            {serverError && <div css={styles.serverError}>{serverError}</div>}
           </>
         )}
 
@@ -130,7 +126,7 @@ export const NodeLauncherSummary: FC<Props> = ({
               !hasNetworkList ||
               !isNodeValid ||
               !isConfigValid ||
-              hasServerError ||
+              Boolean(serverError) ||
               isCreating
             }
             css={styles.createButton}
@@ -138,9 +134,6 @@ export const NodeLauncherSummary: FC<Props> = ({
             <IconRocket />
             <span>Launch Your Node</span>
           </button>
-          {/* <Button display="block" style="outline">
-            Start Again
-          </Button> */}
         </div>
       </div>
     </div>

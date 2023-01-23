@@ -26,7 +26,7 @@ export const NodeLauncher = () => {
   const { createNode } = useNodeAdd();
   const router = useRouter();
 
-  const [hasServerError, setHasServerError] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<string>();
 
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
@@ -89,7 +89,7 @@ export const NodeLauncher = () => {
   };
 
   const handlePropertyChanged = (e: any) => {
-    setHasServerError(false);
+    setServerError('');
 
     const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
 
@@ -109,7 +109,7 @@ export const NodeLauncher = () => {
   };
 
   const handleFileUploaded = (e: any) => {
-    setHasServerError(false);
+    setServerError(undefined);
     const nodeFilesCopy = [...node.nodeFiles!];
 
     let foundNodeFiles = nodeFilesCopy.find(
@@ -155,7 +155,7 @@ export const NodeLauncher = () => {
         setIsCreating(false);
         router.push(`/nodes/${nodeId}`);
       },
-      () => setHasServerError(true),
+      (error: string) => setServerError(error),
     );
   };
 
@@ -255,7 +255,7 @@ export const NodeLauncher = () => {
         {node.blockchainId && node.nodeTypeId && (
           <NodeLauncherSummary
             hasNetworkList={Boolean(networkList?.length)}
-            hasServerError={hasServerError}
+            serverError={serverError!}
             hasAddedFiles={hasAddedFiles()}
             isCreating={isCreating}
             isNodeValid={isNodeValid()}
