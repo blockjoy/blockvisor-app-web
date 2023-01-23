@@ -200,7 +200,7 @@ export function Host() {
         <DangerZone
           elementName="Host"
           elementNameToCompare={host?.name ?? ''}
-          handleDelete={handleDelete}
+          handleAction={handleDelete}
         />
       </PageSection>
     </>

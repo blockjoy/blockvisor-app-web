@@ -1,6 +1,8 @@
 import { tableStyles } from './table.styles';
 import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
+import { useEffect, useState } from 'react';
+import { Pagination } from '@shared/components';
 
 type Props = {
   headers?: TableHeader[];
@@ -10,6 +12,7 @@ type Props = {
   preload?: number;
   verticalAlign?: 'top' | 'middle';
   fixedRowHeight?: string;
+  pageSize?: number;
 };
 
 export const Table: React.FC<Props> = ({
@@ -20,12 +23,40 @@ export const Table: React.FC<Props> = ({
   preload,
   verticalAlign,
   fixedRowHeight,
+  pageSize,
 }) => {
+  const [activeRows, setActiveRows] = useState<Row[]>(rows);
+  const [pageIndex, setPageIndex] = useState<number>(0);
+
+  const pageTotal =
+    rows?.length < pageSize! ? 1 : Math.ceil(rows?.length / pageSize!);
+
+  const handlePageClicked = (pageIndex: number) => {
+    setPageIndex(pageIndex);
+  };
+
   const handleRowClick = (tr: any) => {
     if (onRowClick) {
       onRowClick(tr);
     }
   };
+
+  useEffect(() => {
+    if (pageSize) {
+      setActiveRows(
+        rows.slice(
+          pageIndex === 0 ? 0 : pageIndex * pageSize!,
+          pageIndex === 0 ? pageSize : pageIndex * pageSize! + pageSize!,
+        ),
+      );
+    }
+  }, [pageIndex]);
+
+  useEffect(() => {
+    if (rows?.length && pageSize) {
+      setActiveRows(rows.slice(pageIndex, pageSize));
+    }
+  }, [rows]);
 
   return (
     <div css={tableStyles.wrapper}>
@@ -71,7 +102,7 @@ export const Table: React.FC<Props> = ({
           {isLoading === 'initializing' ? (
             <TableRowLoader length={preload} />
           ) : (
-            rows?.map((tr) => (
+            activeRows?.map((tr) => (
               <tr
                 key={tr.key}
                 className={tr.isDanger ? 'danger' : ''}
@@ -105,6 +136,13 @@ export const Table: React.FC<Props> = ({
           ) : null}
         </tbody>
       </table>
+      {Boolean(pageSize) && isLoading === 'finished' && (
+        <Pagination
+          onPageClicked={handlePageClicked}
+          pagesToDisplay={pageTotal < 5 ? pageTotal : 5}
+          pageTotal={pageTotal}
+        />
+      )}
     </div>
   );
 };

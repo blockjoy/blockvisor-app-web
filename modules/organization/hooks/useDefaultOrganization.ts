@@ -1,6 +1,6 @@
 import { useIdentityRepository } from '@modules/auth';
-import { apiClient } from '@modules/client';
-import { useRecoilState } from 'recoil';
+import { readToken } from '@shared/utils/readToken';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useDefaultOrganization() {
@@ -12,24 +12,28 @@ export function useDefaultOrganization() {
     organizationAtoms.defaultOrganization,
   );
 
+  const organizations = useRecoilValue(organizationAtoms.allOrganizations);
+
   const getDefaultOrganization = async () => {
     setLoadingState('loading');
-    let defaultOrg = repository?.getDefaultOrganization();
 
-    // mocked
-    if (!defaultOrg) {
-      const allOrganizations: any = await apiClient.getOrganizations();
-      defaultOrg = allOrganizations[0];
-    }
+    const identity = repository?.getIdentity();
+    const user: any = readToken(identity?.accessToken!);
+    const userData: any = user?.data;
+    const orgId = userData.org_id ?? '';
+
+    const organization = organizations.find(org => org.id === orgId);
+
+    const orgName = organization?.name ?? '';
 
     repository?.saveDefaultOrganization(
-      defaultOrg?.name ?? '',
-      defaultOrg?.id ?? ''
+      orgName,
+      orgId
     );
 
     setDefaultOrganization({
-      name: defaultOrg?.name ?? '',
-      id: defaultOrg?.id ?? '',
+      name: orgName,
+      id: orgId,
     });
 
     setLoadingState('finished');

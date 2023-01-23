@@ -4,7 +4,6 @@ import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { useDefaultOrganization } from './useDefaultOrganization';
 import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
 export function useUpdateOrganization() {
@@ -14,11 +13,14 @@ export function useUpdateOrganization() {
   const [allOrganizations, setAllOrganizations] = useRecoilState(
     organizationAtoms.allOrganizations,
   );
-  const { defaultOrganization } = useDefaultOrganization();
   const { setDefaultOrganization } = useSetDefaultOrganization();
 
   const [loadingState, setLoadingState] = useRecoilState(
     organizationAtoms.organizationLoadingState,
+  );
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
   );
 
   const updateOrganization = async (id: string, name: string) => {

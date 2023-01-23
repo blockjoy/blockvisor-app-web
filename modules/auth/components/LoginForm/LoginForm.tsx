@@ -1,14 +1,16 @@
 import { Routes, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useGetBlockchains } from '@modules/node';
 import {
   useDefaultOrganization,
   useGetOrganizations,
 } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
+import { env } from '@shared/constants/env';
 import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
@@ -23,7 +25,7 @@ type LoginForm = {
 };
 
 export function LoginForm() {
-  const { getOrganizations } = useGetOrganizations();
+  const { organizations, getOrganizations } = useGetOrganizations();
 
   const router = useRouter();
 
@@ -36,6 +38,7 @@ export function LoginForm() {
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getDefaultOrganization } = useDefaultOrganization();
+  const { getBlockchains } = useGetBlockchains();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -47,9 +50,9 @@ export function LoginForm() {
 
     try {
       await signIn(email, password);
-      await getDefaultOrganization();
       await getOrganizations();
-      await delay(1000);
+      await getBlockchains();
+      await delay(env.loadingDuration);
 
       setIsLoading(false);
 
@@ -62,6 +65,13 @@ export function LoginForm() {
       setIsLoading(false);
     }
   });
+
+  useEffect(() => {
+    if (organizations.length) {
+      getDefaultOrganization();
+    }
+  }, [organizations]);
+
   return (
     <>
       {invited && (
