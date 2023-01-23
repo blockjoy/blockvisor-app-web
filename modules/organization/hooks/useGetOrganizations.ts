@@ -23,9 +23,17 @@ export function useGetOrganizations() {
     setIsLoading('finished');
   };
 
+  const updateOrganizations = (org_id: string) => {
+    const newOrganizations = organizations.filter(
+      (organization) => organization.id !== org_id,
+    );
+    setOrganizations(newOrganizations);
+  };
+
   return {
     organizations,
     getOrganizations,
+    updateOrganizations,
     isLoading,
   };
 }
