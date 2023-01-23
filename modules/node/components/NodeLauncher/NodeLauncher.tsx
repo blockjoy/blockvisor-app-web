@@ -51,6 +51,8 @@ export const NodeLauncher = () => {
     nodeTypeProperties: NodeTypeConfig[],
     nodeVersion: string,
   ) => {
+    setServerError(undefined);
+    setIsCreating(false);
     setNode({
       ...node,
       blockchainId,
