@@ -87,6 +87,11 @@ export const mapOrganizationMembersToRows = (
     {
       name: '',
       key: '3',
+      width: '10%',
+    },
+    {
+      name: '',
+      key: '4',
       width: '5%',
     },
   ];
@@ -123,6 +128,10 @@ export const mapOrganizationMembersToRows = (
       },
       {
         key: '3',
+        component: !member.createdAt ? <Button>Resend</Button> : null,
+      },
+      {
+        key: '4',
         component: (
           <>
             {member.active ? (

@@ -20,9 +20,7 @@ export function useDeleteOrganization() {
 
     if (isResponeMetaObject(response)) {
       updateOrganizations(id);
-
       setLoadingState('finished');
-
       toast.success('Deleted successfully');
     } else {
       setLoadingState('finished');
