@@ -19,19 +19,11 @@ export function useGetBlockchains() {
 
     console.log('blockchains', response);
     await delay(env.loadingDuration);
-    setBlockchains(response);
-    setLoadingState('finished');
 
-    // if (response && isStatusResponse(response)) {
-    //   setLoadingState('finished');
-    //   setBlockchains([]);
-    //   // add some error handling
-    //   //throw new ApplicationError('GetBlockchains', response.message);
-    // } else {
-    //   await delay(1000);
-    //   setBlockchains(response ?? []);
-    //   setLoadingState('finished');
-    // }
+    if (response?.length) {
+      setBlockchains(response);
+      setLoadingState('finished');
+    }
   };
 
   return {

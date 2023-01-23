@@ -272,7 +272,11 @@ export const NodeFilters = () => {
       } else {
         setIsFiltersCollapsed(true);
       }
+    })();
+  }, []);
 
+  useEffect(() => {
+    if (blockchains?.length) {
       if (!localStorage.getItem('nodeFilters')) {
         loadLookups();
       } else {
@@ -283,8 +287,8 @@ export const NodeFilters = () => {
         setFiltersStatus(localStorageFilters?.status!);
         setFiltersHealth(localStorageFilters?.health || '');
       }
-    })();
-  }, []);
+    }
+  }, [blockchains?.length]);
 
   return (
     <div
