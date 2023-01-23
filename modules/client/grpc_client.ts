@@ -779,8 +779,13 @@ export class GrpcClient {
 
     console.log('node response, ', response_meta);
 
-    // @ts-ignore
-    let node_id = response_meta?.messagesList[0];
+    let node_id;
+    try {
+      // @ts-ignore
+      node_id = response_meta?.messagesList[0];
+    } catch (error) {
+      console.log('node response meta error: ', error);
+    }
 
     console.log('got key files: ', key_files);
     console.log('got node id: ', node_id);

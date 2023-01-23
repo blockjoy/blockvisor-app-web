@@ -1,54 +1,18 @@
-import { layoutState } from '@modules/layout/store/layoutAtoms';
-import { useRecoilState } from 'recoil';
 import { apiClient } from '@modules/client';
 import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
-import { useGetBlockchains } from './useGetBlockchains';
-import { GrpcBlockchainObject } from '@modules/client/grpc_client';
 
-type Hook = {
-  createNode: (
-    args: CreateNodeParams,
-    onSuccess: (args0?: any) => void,
-    onError: () => void,
-  ) => void;
-  isLoading: boolean;
-  blockchainList: any[];
-};
-
-export const useNodeAdd = (): Hook => {
+export const useNodeAdd = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [blockchainList, setBlockchainList] = useState<GrpcBlockchainObject[]>(
-    [],
-  );
+
   const repository = useIdentityRepository();
-  const { blockchains } = useGetBlockchains();
-
-  const loadLookups = async () => {
-    setIsLoading(true);
-
-    // if (!blockchains?.length) {
-    //   setBlockchainList([]);
-    //   setIsLoading(false);
-    //   return;
-    // }
-
-    // const mappedBlockchains = blockchains?.map((b: any) => ({
-    //   value: b.id,
-    //   label: b.name,
-    //   supportedNodeTypes: b.supported_node_types,
-    // }));
-
-    setBlockchainList(blockchains);
-    setIsLoading(false);
-  };
 
   const createNode = async (
     params: CreateNodeParams,
-    onSuccess: (args0?: string) => void,
-    onError: () => void,
+    onSuccess: (nodeId: string) => void,
+    onError: (errorMessage: string) => void,
   ) => {
     setIsLoading(true);
     const node = new Node();
@@ -99,25 +63,27 @@ export const useNodeAdd = (): Hook => {
     node.setType(nodeTypeString);
     node.setVersion(params.version);
 
-    try {
-      const createdNode: any = await apiClient.createNode(
-        node,
-        params.key_files,
-      );
-      console.log('createNode', createdNode);
-      const nodeId = createdNode.messagesList[0];
+    const response: any = await apiClient.createNode(node, params.key_files);
+    console.log('createNode', response);
 
+    try {
+      const nodeId = response.messagesList[0];
       toast.success('Node Created');
-      setIsLoading(false);
       onSuccess(nodeId);
     } catch (err) {
-      onError();
+      let errorMessage =
+        'Error launching node, please contact our support team.';
+      if (response?.message?.includes('No free IP available')) {
+        errorMessage = 'Error launching node, no free IP address available.';
+      }
+      onError(errorMessage);
     }
+
+    setIsLoading(false);
   };
 
   return {
     createNode,
     isLoading,
-    blockchainList,
   };
 };
