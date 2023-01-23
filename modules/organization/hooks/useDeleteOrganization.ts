@@ -16,8 +16,6 @@ export function useDeleteOrganization() {
   const deleteOrganization = async (id: string) => {
     setLoadingState('loading');
     const response = await apiClient.deleteOrganization(id);
-    console.log('response', response);
-
     console.log('deleteOrganization', response);
 
     console.log('deleteOrganization', response);
