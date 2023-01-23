@@ -16,6 +16,8 @@ export function useGetOrganizationMembers() {
     const members: any = await apiClient.getOrganizationMembers(id);
     setOrganizationMembers(members);
 
+    console.log('getMembers', members);
+
     setIsLoading('finished');
   };
 
