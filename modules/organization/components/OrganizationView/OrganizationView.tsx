@@ -19,7 +19,8 @@ import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrga
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import { Members } from './OrganizationMembers/OrganizationMembers';
 import { useUpdateOrganization } from '@modules/organization';
-// import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
+import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ export const OrganizationView = () => {
   const { getOrganization, organization, isLoading } = useGetOrganization();
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
-  // const { leaveOrganization } = useLeaveOrganization();
+  const { leaveOrganization } = useLeaveOrganization();
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean>(false);
@@ -43,12 +44,16 @@ export const OrganizationView = () => {
     }
   };
 
+  const canDeleteOrganization: boolean = useHasPermissions(organization?.currentUser?.role!, Permissions.DELETE_ORGANIZATION);
+
+  const action = canDeleteOrganization ? 'delete' : 'leave';
+
   const handleAction = async () => {
-    // if () {
-    //   await leaveOrganization(queryAsString(id));
-    // } else {
-    await deleteOrganization(queryAsString(id));
-    // }
+    if (canDeleteOrganization) {
+      await deleteOrganization(queryAsString(id));
+    } else {
+      await leaveOrganization(queryAsString(id));
+    }
   };
 
   useEffect(() => {
@@ -87,12 +92,12 @@ export const OrganizationView = () => {
           </div>
         )}
       </PageSection>
-      {isLoading === 'finished' && (
+      {isLoading === 'finished' && !organization?.personal && (
         <PageSection>
           <DangerZone
             elementName="Organization"
             elementNameToCompare={organization?.name ?? ''}
-            activeAction="delete"
+            activeAction={action}
             handleAction={handleAction}
           ></DangerZone>
         </PageSection>
