@@ -31,21 +31,6 @@ export const Table: React.FC<Props> = ({
   const pageCount =
     rows?.length < pageSize! ? 1 : Math.ceil(rows?.length / pageSize!);
 
-  useEffect(() => {
-    if (rows?.length && pageSize) {
-      setActiveRows(rows.slice(pageIndex, pageSize));
-    }
-  }, [rows]);
-
-  useEffect(() => {
-    setActiveRows(
-      rows.slice(
-        pageIndex === 0 ? 0 : pageIndex * pageSize!,
-        pageIndex === 0 ? pageSize : pageIndex * pageSize! + pageSize!,
-      ),
-    );
-  }, [pageIndex]);
-
   const handlePageClicked = (pageIndex: number) => {
     setPageIndex(pageIndex);
   };
@@ -55,6 +40,23 @@ export const Table: React.FC<Props> = ({
       onRowClick(tr);
     }
   };
+
+  useEffect(() => {
+    if (pageSize) {
+      setActiveRows(
+        rows.slice(
+          pageIndex === 0 ? 0 : pageIndex * pageSize!,
+          pageIndex === 0 ? pageSize : pageIndex * pageSize! + pageSize!,
+        ),
+      );
+    }
+  }, [pageIndex]);
+
+  useEffect(() => {
+    if (rows?.length && pageSize) {
+      setActiveRows(rows.slice(pageIndex, pageSize));
+    }
+  }, [rows]);
 
   return (
     <div css={tableStyles.wrapper}>

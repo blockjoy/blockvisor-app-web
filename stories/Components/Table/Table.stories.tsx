@@ -1,4 +1,4 @@
-import { mapOrganizationsToRows } from '../../../modules/organization/components/OrganizationManagement/OrganizationList/OrganizationListTable';
+import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { Table } from '@shared/components';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
@@ -58,6 +58,6 @@ const Template: ComponentStory<typeof Table> = (args) => {
 export const Default = Template.bind({});
 
 Default.args = {
-  rows: mapOrganizationsToRows(mockdata),
+  rows: [],
   headers: headers,
 };
