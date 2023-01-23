@@ -7,13 +7,13 @@ import IconPageLast from '@public/assets/icons/page-last.svg';
 
 type Props = {
   pagesToDisplay?: number;
-  pageCount?: number;
+  pageTotal?: number;
   onPageClicked: (pageIndex: number) => void;
 };
 
 export const Pagination: FC<Props> = ({
   pagesToDisplay = 5,
-  pageCount = 10,
+  pageTotal = 10,
   onPageClicked,
 }) => {
   const [pages, setPages] = useState<number[]>([]);
@@ -31,9 +31,9 @@ export const Pagination: FC<Props> = ({
       end = start + pagesToDisplay;
     }
 
-    if (pageIndex > pageCount - (pagesToDisplay + 1) / 2) {
-      start = pageCount - pagesToDisplay;
-      end = pageCount;
+    if (pageIndex > pageTotal - (pagesToDisplay + 1) / 2) {
+      start = pageTotal - pagesToDisplay;
+      end = pageTotal;
     }
 
     for (let i = start; i < end; i++) {
@@ -77,8 +77,8 @@ export const Pagination: FC<Props> = ({
       ))}
       <button
         css={styles.item}
-        disabled={activePage === pageCount - 1}
-        onClick={() => handlePageClicked(pageCount - 1)}
+        disabled={activePage === pageTotal - 1}
+        onClick={() => handlePageClicked(pageTotal - 1)}
         type="button"
       >
         <span css={styles.icon}>

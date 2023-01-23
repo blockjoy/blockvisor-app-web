@@ -28,7 +28,7 @@ export const Table: React.FC<Props> = ({
   const [activeRows, setActiveRows] = useState<Row[]>(rows);
   const [pageIndex, setPageIndex] = useState<number>(0);
 
-  const pageCount =
+  const pageTotal =
     rows?.length < pageSize! ? 1 : Math.ceil(rows?.length / pageSize!);
 
   const handlePageClicked = (pageIndex: number) => {
@@ -139,8 +139,8 @@ export const Table: React.FC<Props> = ({
       {Boolean(pageSize) && isLoading === 'finished' && (
         <Pagination
           onPageClicked={handlePageClicked}
-          pagesToDisplay={pageCount < 5 ? pageCount : 5}
-          pageCount={pageCount}
+          pagesToDisplay={pageTotal < 5 ? pageTotal : 5}
+          pageTotal={pageTotal}
         />
       )}
     </div>
