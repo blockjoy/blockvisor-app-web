@@ -39,8 +39,6 @@ export const OrganizationAdd: FC = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<OrganisationAddForm> = async ({ name }) => {
-    setLoading(true);
-
     try {
       await createOrganization(name, async (org: any) => {
         router.push(`/organizations/${org.id}`);
@@ -55,6 +53,10 @@ export const OrganizationAdd: FC = () => {
       setLoading(false);
       if (error instanceof ApplicationError) toast.error(error.message);
     }
+
+    form.reset();
+
+    setLayout(undefined);
   };
 
   return (
