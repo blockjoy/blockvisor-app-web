@@ -3,7 +3,6 @@ import { env } from '@shared/constants/env';
 import { delay } from '@shared/utils/delay';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
 export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
@@ -12,24 +11,12 @@ export function useGetOrganizations() {
   const [isLoading, setIsLoading] = useRecoilState(
     organizationAtoms.organizationsLoadingState,
   );
-  const { setDefaultOrganization } = useSetDefaultOrganization();
 
-  const getOrganizations = async (init?: boolean) => {
+  const getOrganizations = async () => {
     setIsLoading('initializing');
 
     const organizations: any = await apiClient.getOrganizations();
     setOrganizations(organizations);
-
-    if (init) {
-      const organization = organizations.find((org: any) => org.personal);
-
-      if (organization) {
-        setDefaultOrganization(
-          organization.id,
-          organization.name,
-        );
-      }
-    }
 
     await delay(env.loadingDuration);
 

@@ -5,10 +5,11 @@ import {
   useGetOrganizations,
 } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
+import { env } from '@shared/constants/env';
 import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
@@ -23,7 +24,7 @@ type LoginForm = {
 };
 
 export function LoginForm() {
-  const { getOrganizations } = useGetOrganizations();
+  const { organizations, getOrganizations } = useGetOrganizations();
 
   const router = useRouter();
 
@@ -47,8 +48,8 @@ export function LoginForm() {
 
     try {
       await signIn(email, password);
-      await getOrganizations(true);
-      await delay(1000);
+      await getOrganizations();
+      await delay(env.loadingDuration);
 
       setIsLoading(false);
 
@@ -61,6 +62,13 @@ export function LoginForm() {
       setIsLoading(false);
     }
   });
+
+  useEffect(() => {
+    if (organizations.length) {
+      getDefaultOrganization();
+    }
+  }, [organizations]);
+
   return (
     <>
       {invited && (
