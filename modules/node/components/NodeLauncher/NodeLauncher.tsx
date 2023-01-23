@@ -195,7 +195,9 @@ export const NodeLauncher = () => {
       ...node,
       nodeTypeProperties: propertiesWithValue,
       nodeFiles: fileProperties,
-      network: activeBlockchain.networksList[0].name,
+      network: activeBlockchain?.networksList?.length
+        ? activeBlockchain?.networksList[0]?.name
+        : '',
     });
   }, [node.blockchainId, node.nodeTypeId]);
 

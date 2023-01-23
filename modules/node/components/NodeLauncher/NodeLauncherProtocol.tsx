@@ -24,7 +24,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
   activeBlockchainId,
   activeNodeTypeId,
 }) => {
-  const { getBlockchains, blockchains, loading } = useGetBlockchains();
+  const { blockchains, loading } = useGetBlockchains();
 
   const [keyword, setKeyword] = useState<string>('');
 
@@ -38,6 +38,8 @@ export const NodeLauncherProtocol: FC<Props> = ({
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
+
+  console.log('loading', loading);
 
   const handleProtocolSelected = (blockchainId: string, nodeTypeId: string) => {
     const blockchainsCopy = [...blockchains];

@@ -1,13 +1,7 @@
-import {
-  NodeTypeConfigLabel,
-  Alert,
-  NodeTypePicker,
-  PillPicker,
-} from '@shared/components';
-import { ChangeEvent, FC } from 'react';
+import { NodeTypeConfigLabel, Alert, PillPicker } from '@shared/components';
+import { FC } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
-import { Select } from './formComponents/Select/Select';
 import { Switch } from './formComponents/Switch/Switch';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
@@ -106,25 +100,25 @@ export const NodeLauncherConfig: FC<Props> = ({
           </Alert>
         </div>
         <div css={styles.nodeTypeProperties}>
-          <label
-            css={[
-              spacing.bottom.mediumSmall,
-              typo.button,
-              display.block,
-              colors.text2,
-            ]}
-          >
-            Network
-          </label>
-          <PillPicker
-            items={networkList}
-            selectedItem={nodeNetwork}
-            onChange={onNetworkChanged}
-          />
-          {/* <Select
-            items={networkList}
-            onPropertyChanged={(e: any) => onNetworkChanged(e.target.value)}
-          /> */}
+          {Boolean(networkList?.length) && (
+            <>
+              <label
+                css={[
+                  spacing.bottom.mediumSmall,
+                  typo.button,
+                  display.block,
+                  colors.text2,
+                ]}
+              >
+                Network
+              </label>
+              <PillPicker
+                items={networkList}
+                selectedItem={nodeNetwork}
+                onChange={onNetworkChanged}
+              />
+            </>
+          )}
           {nodeTypeProperties?.map((property: NodeTypeConfig) => {
             return (
               <>
