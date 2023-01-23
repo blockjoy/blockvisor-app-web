@@ -6,10 +6,13 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import IconCheck from '@public/assets/icons/check-16.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
+import { colors } from 'styles/utils.colors.styles';
+import { spacing } from 'styles/utils.spacing.styles';
 
 type Props = {
   hasServerError: boolean;
   hasAddedFiles: boolean;
+  hasNetworkList: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean;
   isCreating: boolean;
@@ -22,6 +25,7 @@ type Props = {
 export const NodeLauncherSummary: FC<Props> = ({
   hasServerError,
   hasAddedFiles,
+  hasNetworkList,
   isNodeValid,
   isConfigValid,
   isCreating,
@@ -35,69 +39,87 @@ export const NodeLauncherSummary: FC<Props> = ({
     <div css={styles.wrapper}>
       <h2 css={styles.h2}>Launch</h2>
       <div css={styles.summary}>
-        <ul css={styles.summaryList}>
-          <li>
-            <span css={styles.summaryIcon}>
-              <IconCheck />
-            </span>
-            <div>
-              <label>Blockchain</label>
-              <span>
-                {blockchains?.find((b) => b.id === blockchainId)?.name ||
-                  'Not Selected'}
-              </span>
-            </div>
-          </li>
-          <li>
-            <span css={styles.summaryIcon}>
-              <IconCheck />
-            </span>
-            <div>
-              <label>Type</label>
-              <span>
-                {nodeTypeList?.find((n) => n.id === +nodeTypeId)?.name ||
-                  'Not Selected'}
-              </span>
-            </div>
-          </li>
-          <li>
-            {isConfigValid ? (
-              <span css={styles.summaryIcon}>
-                <IconCheck />
-              </span>
-            ) : (
-              <span css={styles.summaryIconClose}>
-                <IconClose />
-              </span>
+        {!hasNetworkList ? (
+          <div css={[colors.warning, spacing.bottom.medium]}>
+            Cannot launch node, missing network configuration.{' '}
+          </div>
+        ) : (
+          <>
+            <ul css={styles.summaryList}>
+              <li>
+                <span css={styles.summaryIcon}>
+                  <IconCheck />
+                </span>
+                <div>
+                  <label>Blockchain</label>
+                  <span>
+                    {blockchains?.find((b) => b.id === blockchainId)?.name ||
+                      'Not Selected'}
+                  </span>
+                </div>
+              </li>
+              <li>
+                <span css={styles.summaryIcon}>
+                  <IconCheck />
+                </span>
+                <div>
+                  <label>Type</label>
+                  <span>
+                    {nodeTypeList?.find((n) => n.id === +nodeTypeId)?.name ||
+                      'Not Selected'}
+                  </span>
+                </div>
+              </li>
+              <li>
+                {isConfigValid ? (
+                  <span css={styles.summaryIcon}>
+                    <IconCheck />
+                  </span>
+                ) : (
+                  <span css={styles.summaryIconClose}>
+                    <IconClose />
+                  </span>
+                )}
+
+                <div>
+                  <label>Configuration</label>
+                  <span>
+                    {isConfigValid ? 'Ready For Liftoff' : 'Needs Work'}
+                  </span>
+                </div>
+              </li>
+            </ul>
+            {!isConfigValid && (
+              <>
+                <h2 css={styles.missingFieldsTitle}>
+                  The following information needs to be added:
+                </h2>
+                <div css={styles.missingFields}>
+                  {nodeTypeProperties
+                    ?.filter(
+                      (property) =>
+                        (property.ui_type !== 'key-upload' &&
+                          property.required &&
+                          !property.disabled &&
+                          !property.value) ||
+                        (property.ui_type === 'key-upload' && !hasAddedFiles),
+                    )
+                    .map((property) => (
+                      <div>
+                        <NodeTypeConfigLabel>
+                          {property.name}
+                        </NodeTypeConfigLabel>
+                      </div>
+                    ))}
+                </div>
+              </>
             )}
 
-            <div>
-              <label>Configuration</label>
-              <span>{isConfigValid ? 'Ready For Liftoff' : 'Needs Work'}</span>
-            </div>
-          </li>
-        </ul>
-        {!isConfigValid && (
-          <>
-            <h2 css={styles.missingFieldsTitle}>
-              The following information needs to be added:
-            </h2>
-            <div css={styles.missingFields}>
-              {nodeTypeProperties
-                ?.filter(
-                  (property) =>
-                    (property.ui_type !== 'key-upload' &&
-                      property.required &&
-                      !property.disabled &&
-                      !property.value) ||
-                    (property.ui_type === 'key-upload' && !hasAddedFiles),
-                )
-                .map((property) => (
-                  <div>
-                    <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
-                  </div>
-                ))}
-            </div>
+            {hasServerError && (
+              <div css={styles.serverError}>
+                Error creating node, please contact our support team.
+              </div>
+            )}
           </>
         )}
 
@@ -105,7 +127,11 @@ export const NodeLauncherSummary: FC<Props> = ({
           <button
             onClick={onCreateNodeClicked}
             disabled={
-              !isNodeValid || !isConfigValid || hasServerError || isCreating
+              !hasNetworkList ||
+              !isNodeValid ||
+              !isConfigValid ||
+              hasServerError ||
+              isCreating
             }
             css={styles.createButton}
           >
@@ -116,11 +142,6 @@ export const NodeLauncherSummary: FC<Props> = ({
             Start Again
           </Button> */}
         </div>
-        {hasServerError && (
-          <div css={styles.serverError}>
-            Error creating node, please contact our support team.
-          </div>
-        )}
       </div>
     </div>
   );
