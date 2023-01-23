@@ -31,18 +31,18 @@ export const OrganizationAdd: FC = () => {
   const form = useForm<OrganisationAddForm>();
   const [layout, setLayout] = useRecoilState(layoutState);
   const createOrganization = useCreateOrganization();
-  const { getOrganizations } = useGetOrganizations();
+  const { addToOrganizations } = useGetOrganizations();
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<OrganisationAddForm> = async ({ name }) => {
     setLoading(true);
 
     try {
-      await createOrganization(name);
-      await getOrganizations();
-      await delay(env.loadingDuration);
-      toast.success('Organization created');
-      router.push('/organizations');
+      await createOrganization(name, (org: any) => {
+        addToOrganizations(org);
+        toast.success('Organization created');
+        router.push(`/organizations/${org.id}`);
+      });
     } catch (error) {
       if (error instanceof ApplicationError) toast.error(error.message);
     }

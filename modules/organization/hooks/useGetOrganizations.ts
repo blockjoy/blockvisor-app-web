@@ -32,10 +32,17 @@ export function useGetOrganizations() {
     setOrganizations(newOrganizations);
   };
 
+  const addToOrganizations = (org: any) => {
+    const organizationsCopy = [...organizations];
+    organizationsCopy.push(org);
+    setOrganizations(organizationsCopy);
+  };
+
   return {
     organizations,
     getOrganizations,
     updateOrganizations,
+    addToOrganizations,
     isLoading,
   };
 }

@@ -5,7 +5,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
-import { useInvitations, useResendInvitation } from '@modules/organization';
+import {
+  organizationAtoms,
+  useInvitations,
+  useResendInvitation,
+} from '@modules/organization';
 import {
   Action,
   mapOrganizationMembersToRows,
@@ -15,12 +19,17 @@ import PersonIcon from '@public/assets/icons/person-12.svg';
 import { toast } from 'react-toastify';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { OrganizationDialog } from './OrganizationDialog/OrganizationDialog';
+import { useRecoilState } from 'recoil';
 
 export type MembersProps = {
   id?: string;
 };
 
 export const Members = ({ id }: MembersProps) => {
+  const [pageIndex, setPageIndex] = useRecoilState(
+    organizationAtoms.organizationMembersPageIndex,
+  );
+
   const { inviteMembers } = useInviteMembers();
 
   const { resendInvitation } = useResendInvitation();
@@ -45,6 +54,10 @@ export const Members = ({ id }: MembersProps) => {
     } else {
       setIsDisabled(true);
     }
+  };
+
+  const handlePageClicked = (index: number) => {
+    setPageIndex(index);
   };
 
   const handleInviteClicked = () => {
@@ -80,6 +93,7 @@ export const Members = ({ id }: MembersProps) => {
       getOrganizationMembers(id);
       getSentInvitations(id);
     }
+    return () => setPageIndex(0);
   }, [id]);
 
   const methods = {
@@ -127,12 +141,14 @@ export const Members = ({ id }: MembersProps) => {
         />
       )}
       <Table
-        pageSize={6}
+        pageSize={4}
+        pageIndex={pageIndex}
+        onPageClicked={handlePageClicked}
         isLoading={isLoading}
         headers={headers}
         rows={rows}
         verticalAlign="middle"
-        fixedRowHeight="70px"
+        fixedRowHeight="74px"
       />
       {activeView === 'action' && (
         <OrganizationDialog
