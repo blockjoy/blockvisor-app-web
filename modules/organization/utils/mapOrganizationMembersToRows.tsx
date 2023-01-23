@@ -11,6 +11,7 @@ import IconClose from '@public/assets/icons/burger-hide.svg';
 export enum Action {
   revoke = 'revoke',
   remove = 'remove ',
+  resend = 'resend ',
 }
 
 export type Member = {
@@ -18,11 +19,13 @@ export type Member = {
   org_id?: string | undefined;
   email?: string;
   invitation_id?: string | undefined;
+  isPending?: boolean;
 };
 
 export type Methods = {
   action: (action: Action, orgMember: Member) => void;
   reset: VoidFunction;
+  resend: (orgMember: Member) => void;
 };
 
 export const mapOrganizationMembersToRows = (
@@ -46,6 +49,7 @@ export const mapOrganizationMembersToRows = (
       firstName: member.firstName,
       lastName: member.lastName,
       invitationId: null,
+      isPending: false,
     })) ?? [];
 
   const invitationsMap =
@@ -57,6 +61,7 @@ export const mapOrganizationMembersToRows = (
       firstName: '',
       lastName: '',
       invitationId: invitation.id,
+      isPending: true,
     })) ?? [];
 
   const allMembers = [...membersMap, ...invitationsMap];
@@ -73,6 +78,14 @@ export const mapOrganizationMembersToRows = (
     methods?.action(Action.revoke, { invitation_id, email });
   };
 
+  const handleResendInvitation = (
+    invitation_id: string,
+    email: string,
+    org_id: string,
+  ) => {
+    methods?.resend({ invitation_id, email, org_id });
+  };
+
   const headers = [
     {
       name: 'Email',
@@ -87,6 +100,11 @@ export const mapOrganizationMembersToRows = (
     {
       name: '',
       key: '3',
+      width: '10%',
+    },
+    {
+      name: '',
+      key: '4',
       width: '5%',
     },
   ];
@@ -123,11 +141,33 @@ export const mapOrganizationMembersToRows = (
       },
       {
         key: '3',
+        component: member.isPending ? (
+          <span css={spacing.right.medium}>
+            <Button
+              type="button"
+              onClick={() =>
+                handleResendInvitation(
+                  member.invitationId!,
+                  member.email!,
+                  selectedOrganization?.id!,
+                )
+              }
+              style="outline"
+              size="small"
+            >
+              Resend
+            </Button>
+          </span>
+        ) : null,
+      },
+      {
+        key: '4',
         component: (
           <>
             {member.active ? (
               member.id !== userId && (
                 <Button
+                  type="button"
                   tooltip="Remove"
                   style="icon"
                   size="medium"
@@ -144,6 +184,7 @@ export const mapOrganizationMembersToRows = (
               )
             ) : (
               <Button
+                type="button"
                 tooltip="Revoke"
                 style="icon"
                 size="medium"

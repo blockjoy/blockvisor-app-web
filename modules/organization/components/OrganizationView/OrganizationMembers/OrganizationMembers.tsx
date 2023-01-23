@@ -5,7 +5,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
-import { useInvitations } from '@modules/organization';
+import { useInvitations, useResendInvitation } from '@modules/organization';
 import {
   Action,
   mapOrganizationMembersToRows,
@@ -22,6 +22,8 @@ export type MembersProps = {
 
 export const Members = ({ id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
+
+  const { resendInvitation } = useResendInvitation();
 
   const { getOrganizationMembers, organizationMembers, isLoading } =
     useGetOrganizationMembers();
@@ -91,6 +93,8 @@ export const Members = ({ id }: MembersProps) => {
       setActiveAction(null);
       setActiveMember(null);
     },
+    resend: (orgMember: Member) =>
+      resendInvitation(orgMember.email!, orgMember.invitation_id!),
   };
 
   const { headers, rows } = mapOrganizationMembersToRows(
