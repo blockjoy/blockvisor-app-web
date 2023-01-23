@@ -18,6 +18,8 @@ export function useGetOrganizations() {
     const organizations: any = await apiClient.getOrganizations();
     setOrganizations(organizations);
 
+    console.log('getOrganizations', organizations);
+
     await delay(env.loadingDuration);
 
     setIsLoading('finished');
