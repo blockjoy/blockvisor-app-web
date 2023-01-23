@@ -23,6 +23,10 @@ export function useGetBlockchains() {
     if (response?.length) {
       setBlockchains(response);
       setLoadingState('finished');
+    } else {
+      // something went wrong
+      localStorage.clear();
+      window.location.href = '/';
     }
   };
 
