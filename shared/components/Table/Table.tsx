@@ -8,31 +8,36 @@ type Props = {
   headers?: TableHeader[];
   rows?: Row[];
   onRowClick?: (arg0: any) => void;
+  onPageClicked?: (pageIndex: number) => void;
   isLoading: LoadingState;
   preload?: number;
   verticalAlign?: 'top' | 'middle';
   fixedRowHeight?: string;
   pageSize?: number;
+  pageIndex?: number;
 };
 
 export const Table: React.FC<Props> = ({
   headers = [],
   rows = [],
   onRowClick,
+  onPageClicked,
   isLoading,
   preload,
   verticalAlign,
   fixedRowHeight,
   pageSize,
+  pageIndex,
 }) => {
   const [activeRows, setActiveRows] = useState<Row[]>(rows);
-  const [pageIndex, setPageIndex] = useState<number>(0);
 
   const pageTotal =
     rows?.length < pageSize! ? 1 : Math.ceil(rows?.length / pageSize!);
 
-  const handlePageClicked = (pageIndex: number) => {
-    setPageIndex(pageIndex);
+  const handlePageClicked = (index: number) => {
+    if (onPageClicked) {
+      onPageClicked(index);
+    }
   };
 
   const handleRowClick = (tr: any) => {
@@ -45,18 +50,18 @@ export const Table: React.FC<Props> = ({
     if (pageSize) {
       setActiveRows(
         rows.slice(
-          pageIndex === 0 ? 0 : pageIndex * pageSize!,
-          pageIndex === 0 ? pageSize : pageIndex * pageSize! + pageSize!,
+          pageIndex === 0 ? 0 : pageIndex! * pageSize!,
+          pageIndex === 0 ? pageSize : pageIndex! * pageSize! + pageSize!,
         ),
       );
     }
   }, [pageIndex]);
 
   useEffect(() => {
-    if (rows?.length && pageSize) {
+    if (rows?.length && pageSize && !activeRows?.length) {
       setActiveRows(rows.slice(pageIndex, pageSize));
     }
-  }, [rows]);
+  }, [rows?.length]);
 
   return (
     <div css={tableStyles.wrapper}>
@@ -136,11 +141,12 @@ export const Table: React.FC<Props> = ({
           ) : null}
         </tbody>
       </table>
-      {Boolean(pageSize) && isLoading === 'finished' && (
+      {Boolean(pageSize) && isLoading === 'finished' && pageTotal > 1 && (
         <Pagination
           onPageClicked={handlePageClicked}
           pagesToDisplay={pageTotal < 5 ? pageTotal : 5}
           pageTotal={pageTotal}
+          pageIndex={pageIndex!}
         />
       )}
     </div>

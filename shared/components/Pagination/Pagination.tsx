@@ -9,29 +9,28 @@ type Props = {
   pagesToDisplay?: number;
   pageTotal?: number;
   onPageClicked: (pageIndex: number) => void;
+  pageIndex: number;
 };
 
 export const Pagination: FC<Props> = ({
   pagesToDisplay = 5,
   pageTotal = 10,
   onPageClicked,
+  pageIndex,
 }) => {
   const [pages, setPages] = useState<number[]>([]);
-  const [activePage, setActivePage] = useState<number>();
 
-  const buildPagination = (pageIndex: number) => {
-    onPageClicked(pageIndex);
-    setActivePage(pageIndex);
+  const buildPagination = (index: number) => {
     let newPages = [];
     let start = 0;
     let end = pagesToDisplay;
 
-    if (pageIndex > (pagesToDisplay - 1) / 2) {
-      start = pageIndex - (pagesToDisplay - 1) / 2;
+    if (index > (pagesToDisplay - 1) / 2) {
+      start = index - (pagesToDisplay - 1) / 2;
       end = start + pagesToDisplay;
     }
 
-    if (pageIndex > pageTotal - (pagesToDisplay + 1) / 2) {
+    if (index > pageTotal - (pagesToDisplay + 1) / 2) {
       start = pageTotal - pagesToDisplay;
       end = pageTotal;
     }
@@ -41,21 +40,22 @@ export const Pagination: FC<Props> = ({
     }
 
     setPages(newPages);
+    onPageClicked(index);
   };
 
-  const handlePageClicked = (pageIndex: number) => {
-    onPageClicked(pageIndex);
-    buildPagination(pageIndex);
+  const handlePageClicked = (index: number) => {
+    buildPagination(index);
+    onPageClicked(index);
   };
 
   useEffect(() => {
-    buildPagination(0);
+    buildPagination(pageIndex);
   }, []);
 
   return (
     <div css={styles.pagination}>
       <button
-        disabled={activePage === 0}
+        disabled={pageIndex === 0}
         onClick={() => handlePageClicked(0)}
         type="button"
         css={styles.item}
@@ -66,8 +66,8 @@ export const Pagination: FC<Props> = ({
       </button>
       {pages.map((page: number) => (
         <button
-          css={[styles.item, page === activePage && styles.active]}
-          className={page === activePage ? 'active' : ''}
+          css={[styles.item, page === pageIndex && styles.active]}
+          className={page === pageIndex ? 'active' : ''}
           onClick={() => handlePageClicked(page)}
           key={page}
           type="button"
@@ -77,7 +77,7 @@ export const Pagination: FC<Props> = ({
       ))}
       <button
         css={styles.item}
-        disabled={activePage === pageTotal - 1}
+        disabled={pageIndex === pageTotal - 1}
         onClick={() => handlePageClicked(pageTotal - 1)}
         type="button"
       >
