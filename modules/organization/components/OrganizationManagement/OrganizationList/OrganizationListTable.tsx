@@ -1,81 +1,14 @@
-import { Button, EmptyColumn, Table, TableSkeleton } from '@shared/components';
+import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import { FC } from 'react';
-import { flex } from 'styles/utils.flex.styles';
 import { useGetOrganizations } from '@modules/organization';
+import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
-
-const headers: TableHeader[] = [
-  {
-    name: 'Org. Name',
-    key: '1',
-    width: '300px',
-  },
-  {
-    name: 'Members',
-    key: '2',
-    width: '300px',
-  },
-  {
-    name: 'Type',
-    key: '3',
-    width: '300px',
-  },
-  {
-    name: '',
-    key: '4',
-  },
-];
-
-export const mapOrganizationsToRows = (
-  organizations?: ClientOrganization[],
-) => {
-  return organizations?.map((org, idx) => ({
-    key: org.id ?? `${idx}`,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p>{org.name}</p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>{org.memberCount}</p>
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <>
-            <p>{org.personal ? 'Personal' : 'Other'}</p>
-          </>
-        ),
-      },
-      {
-        key: '4',
-        component: (
-          <div css={[flex.display.flex]}>
-            <Button style="outline" size="small">
-              Manage
-            </Button>
-          </div>
-        ),
-      },
-    ],
-  }));
-};
 
 export const AllOrganizationsTable: FC = () => {
   const router = useRouter();
 
   const { organizations, isLoading } = useGetOrganizations();
-
-  const rows = mapOrganizationsToRows(organizations);
+  const { headers, rows } = mapOrganizationsToRows(organizations);
 
   const handleRowClicked = (id: any) => {
     router.push(`organizations/${id.key}`);

@@ -42,6 +42,7 @@ export const GridTableViewPicker: FC<Props> = ({
   <div css={[styles.listTypePicker]}>
     {gridTableTypes.map((type) => (
       <IconButton
+        key={type.name}
         name={type.name}
         onClick={() => onChange(type.name)}
         icon={type.icon}

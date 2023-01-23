@@ -19,6 +19,7 @@ import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrga
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import { Members } from './OrganizationMembers/OrganizationMembers';
 import { useUpdateOrganization } from '@modules/organization';
+// import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -26,8 +27,7 @@ export const OrganizationView = () => {
   const { getOrganization, organization, isLoading } = useGetOrganization();
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
-
-  const handleDelete = async () => deleteOrganization(queryAsString(id));
+  // const { leaveOrganization } = useLeaveOrganization();
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean>(false);
@@ -41,6 +41,14 @@ export const OrganizationView = () => {
     } catch (err: any) {
       setIsSavingOrganization(false);
     }
+  };
+
+  const handleAction = async () => {
+    // if () {
+    //   await leaveOrganization(queryAsString(id));
+    // } else {
+    await deleteOrganization(queryAsString(id));
+    // }
   };
 
   useEffect(() => {
@@ -84,7 +92,8 @@ export const OrganizationView = () => {
           <DangerZone
             elementName="Organization"
             elementNameToCompare={organization?.name ?? ''}
-            handleDelete={handleDelete}
+            activeAction="delete"
+            handleAction={handleAction}
           ></DangerZone>
         </PageSection>
       )}

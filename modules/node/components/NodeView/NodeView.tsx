@@ -94,7 +94,7 @@ export function NodeView() {
             <DangerZone
               elementName="Node"
               elementNameToCompare={node?.name!}
-              handleDelete={handleDelete}
+              handleAction={handleDelete}
             ></DangerZone>
           )}
         </PageSection>

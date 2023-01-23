@@ -14,13 +14,14 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@blockjoy/blockjoy-grpc": "^1.1.55",
+    "@blockjoy/blockjoy-grpc": "^1.1.57",
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "animejs": "^3.2.1",
     "apexcharts": "^3.35.5",
     "date-fns": "^2.29.2",
     "google-protobuf": "^3.21.0",
+    "jwt-decode": "^3.1.2",
     "next": "13.1.2-canary.4",
     "polished": "^4.2.2",
     "prismjs": "^1.29.0",
