@@ -5,38 +5,55 @@ import {
 import { apiClient } from '@modules/client';
 import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-
-// used for generating mock member count
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 function isSuccess(response: ResponseMeta.AsObject) {
   return response.status === ResponseMeta.Status.SUCCESS;
 }
 
-export function useCreateOrganization() {
-  const createOrganization = async (
-    name: string,
-    onSuccess: (org: any) => void,
-  ) => {
-    const organization = new Organization();
-    const uuid = Math.random().toString();
-    organization.setId(uuid);
-    organization.setName(name);
+async function createOrganization({ name }: { name: string }) {
+  const organization = new Organization();
+  const uuid = Math.random().toString();
+  organization.setId(uuid);
+  organization.setName(name);
 
-    const response = await apiClient.createOrganization(organization);
+  const response = await apiClient.createOrganization(organization);
 
-    if (
-      isResponeMetaObject(response) &&
-      isSuccess(response) &&
-      response?.messagesList?.length
-    ) {
-      const orgId = response?.messagesList[0];
-      const org: any = await apiClient.getOrganizations(orgId);
-      console.log('found Org', org);
-      onSuccess(org[0]);
-    } else {
-      throw new ApplicationError('CreateOrganization', 'Creation failed');
+  if (
+    isResponeMetaObject(response) &&
+    isSuccess(response) &&
+    response?.messagesList?.length
+  ) {
+    const orgId = response?.messagesList[0];
+    const org = await apiClient.getOrganizations(orgId);
+
+    if (org) {
+      return org as Organization.AsObject[];
     }
-  };
+  } else {
+    throw new ApplicationError('CreateOrganization', 'Creation failed');
+  }
+}
 
-  return createOrganization;
+export function useCreateOrganization() {
+  const router = useRouter();
+  const client = useQueryClient();
+
+  const { mutateAsync, isSuccess, isLoading } = useMutation({
+    mutationFn: createOrganization,
+    onSuccess: async (data) => {
+      toast.success('Organization created');
+      if (data) {
+        await client.cancelQueries({ queryKey: ['organizations'] });
+        client.setQueryData<any[]>(['organizations'], (old) =>
+          old ? [...old, ...data] : [...data],
+        );
+        router.push(`/organizations/${data[0].id}`);
+      }
+    },
+  });
+
+  return { createOrganization: mutateAsync, success: isSuccess, isLoading };
 }
