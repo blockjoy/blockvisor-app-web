@@ -68,22 +68,26 @@ const buttonStyle = {
   icon: (theme: ITheme) => css`
     display: inline-grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     padding: 0;
     background: transparent;
     border: 0;
     border-radius: 4px;
     transition: none;
 
-    rect {
+    rect,
+    path,
+    circle {
       fill: ${theme.colorDefault};
     }
 
     :hover {
       background: ${theme.colorLightGrey};
 
-      rect {
+      rect,
+      path,
+      circle {
         fill: ${theme.colorText};
       }
     }

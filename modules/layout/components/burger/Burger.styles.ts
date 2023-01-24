@@ -20,4 +20,8 @@ export const styles = {
   overlayOpen: css`
     z-index: 7;
   `,
+  icon: css`
+    width: 24px;
+    height: 24px;
+  `,
 };

@@ -4,9 +4,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useRemoveMember } from '../hooks/useRemoveMember';
 import { organizationAtoms } from '../store/organizationAtoms';
-import IconClose from '@public/assets/icons/burger-hide.svg';
+import IconClose from '@public/assets/icons/close-12.svg';
 
 export enum Action {
   revoke = 'revoke',
