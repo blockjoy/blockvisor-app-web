@@ -173,7 +173,7 @@ export const NodeList = () => {
             >
               {activeListType === 'table' ? (
                 <Table
-                  isLoading={isLoading}
+                  isLoading={isLoading === 'loading'}
                   headers={tableHeaders}
                   preload={preloadNodes}
                   rows={rows}
