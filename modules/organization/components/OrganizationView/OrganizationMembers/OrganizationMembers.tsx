@@ -48,6 +48,8 @@ export const Members = ({ id }: MembersProps) => {
 
   const selectedOrganization = useRecoilValue(organizationAtoms.selectedOrganization);
 
+  const canCreateMember: boolean = useHasPermissions(selectedOrganization?.currentUser?.role!, Permissions.CREATE_MEMBER);
+
   const handleTextareaChanged = (e: ChangeEvent<HTMLInputElement>) => {
     const isValid = checkIfValidEmail(e.target.value);
 
@@ -91,12 +93,10 @@ export const Members = ({ id }: MembersProps) => {
   const [activeMember, setActiveMember] = useState<Member | null>(null);
   const [activeAction, setActiveAction] = useState<Action | null>(null);
 
-  const canCreateMember: boolean = useHasPermissions(selectedOrganization?.currentUser?.role!, Permissions.CREATE_MEMBER);
-
   useEffect(() => {
     if (id) {
       getOrganizationMembers(id);
-      getSentInvitations(id);
+      canCreateMember && getSentInvitations(id);
     }
     return () => setPageIndex(0);
   }, [id]);
@@ -146,7 +146,7 @@ export const Members = ({ id }: MembersProps) => {
         />
       )}
       <Table
-        pageSize={4}
+        pageSize={10}
         pageIndex={pageIndex}
         onPageClicked={handlePageClicked}
         isLoading={isLoading}
