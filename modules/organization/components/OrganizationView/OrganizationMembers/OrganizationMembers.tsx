@@ -26,16 +26,17 @@ export type MembersProps = {
 };
 
 export const Members = ({ id }: MembersProps) => {
-  const [pageIndex, setPageIndex] = useRecoilState(
-    organizationAtoms.organizationMembersPageIndex,
-  );
-
   const { inviteMembers } = useInviteMembers();
 
   const { resendInvitation } = useResendInvitation();
 
-  const { getOrganizationMembers, organizationMembers, isLoading } =
-    useGetOrganizationMembers();
+  const {
+    getOrganizationMembers,
+    organizationMembers,
+    isLoading,
+    pageIndex,
+    setPageIndex,
+  } = useGetOrganizationMembers();
 
   const { getSentInvitations, sentInvitations } = useInvitations();
 
@@ -71,6 +72,7 @@ export const Members = ({ id }: MembersProps) => {
       inviteMembers(emails!, () => {
         getSentInvitations(id!);
         setActiveView('list');
+        setPageIndex(0);
       });
     } else {
       if (isMemberOrInvited === 'member') {

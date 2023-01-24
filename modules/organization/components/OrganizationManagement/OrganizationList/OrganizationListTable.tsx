@@ -1,18 +1,16 @@
 import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import { FC } from 'react';
-import { organizationAtoms, useGetOrganizations } from '@modules/organization';
+import { useGetOrganizations } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
 
 export const AllOrganizationsTable: FC = () => {
   const router = useRouter();
 
-  const { organizations, isLoading } = useGetOrganizations();
+  const { organizations, isLoading, pageIndex, setPageIndex } =
+    useGetOrganizations();
+
   const { headers, rows } = mapOrganizationsToRows(organizations);
-  const [pageIndex, setPageIndex] = useRecoilState(
-    organizationAtoms.organizationsPageIndex,
-  );
 
   const handleRowClicked = (id: any) => {
     router.push(`organizations/${id.key}`);
