@@ -69,9 +69,15 @@ export const EditableTitle: FC<Props> = ({
         defaultValue={initialValue}
         onChange={handleChange}
       />
-      <button onClick={handleEditToggled} css={styles.editToggle}>
-        {isEditMode ? <IconClose /> : <IconPencil />}
-      </button>
+      <Button
+        style="icon"
+        onClick={handleEditToggled}
+        tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
+      >
+        <span css={styles.iconWrapper}>
+          {isEditMode ? <IconClose /> : <IconPencil />}
+        </span>
+      </Button>
 
       {isEditMode && (
         <>
