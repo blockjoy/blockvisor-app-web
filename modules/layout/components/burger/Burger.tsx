@@ -29,15 +29,17 @@ export const Burger = () => {
       ]}
       onClick={handleClick}
     >
-      {isMobile ? (
-        isSidebarOpen ? (
-          <BurgerHide />
+      <span css={styles.icon}>
+        {isMobile ? (
+          isSidebarOpen ? (
+            <BurgerHide />
+          ) : (
+            <BurgerClosed />
+          )
         ) : (
           <BurgerClosed />
-        )
-      ) : (
-        <BurgerClosed />
-      )}
+        )}
+      </span>
     </button>
   );
 };
