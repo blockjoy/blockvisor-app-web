@@ -1,5 +1,6 @@
 import { Button } from '@shared/components';
 import { flex } from 'styles/utils.flex.styles';
+import { USER_ROLES } from '@modules/auth/hooks/useHasPermissions';
 
 export const mapOrganizationsToRows = (
   organizations?: ClientOrganization[],
@@ -16,7 +17,7 @@ export const mapOrganizationsToRows = (
       width: '300px',
     },
     {
-      name: 'Type',
+      name: 'Role',
       key: '3',
       width: '300px',
     },
@@ -49,7 +50,7 @@ export const mapOrganizationsToRows = (
         key: '3',
         component: (
           <>
-            <p>{org.personal ? 'Personal' : 'Other'}</p>
+            <p>{USER_ROLES[org.currentUser.role]}</p>
           </>
         ),
       },

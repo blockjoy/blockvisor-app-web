@@ -17,6 +17,18 @@ export enum Permissions {
   DELETE_MEMBER,
 };
 
+export const USER_ROLES: {
+  [OrgRole.UndefinedOrgRole]: string,
+  [OrgRole.Owner]: string,
+  [OrgRole.Member]: string,
+  [OrgRole.Admin]: string,
+} = {
+  [OrgRole.UndefinedOrgRole]: 'Undefined',
+  [OrgRole.Owner]: 'Owner',
+  [OrgRole.Member]: 'Member',
+  [OrgRole.Admin]: 'Admin'
+}
+
 export const PERMISSIONS: {
   [OrgRole.UndefinedOrgRole]: Permissions[],
   [OrgRole.Owner]: Permissions[],
