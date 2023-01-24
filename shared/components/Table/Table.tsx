@@ -46,19 +46,21 @@ export const Table: React.FC<Props> = ({
     }
   };
 
+  const getPageOfRows = () => {
+    const start = pageIndex === 0 ? 0 : pageIndex! * pageSize!;
+    const end = pageIndex === 0 ? pageSize : pageIndex! * pageSize! + pageSize!;
+    const newRows = rows.slice(start, end);
+    return newRows;
+  };
+
   useEffect(() => {
     if (pageSize) {
-      setActiveRows(
-        rows.slice(
-          pageIndex === 0 ? 0 : pageIndex! * pageSize!,
-          pageIndex === 0 ? pageSize : pageIndex! * pageSize! + pageSize!,
-        ),
-      );
+      setActiveRows(getPageOfRows());
     }
   }, [pageIndex]);
 
   useEffect(() => {
-    if (rows?.length && pageSize && !activeRows?.length) {
+    if (rows?.length && pageSize && (pageIndex === 0 || !activeRows.length)) {
       setActiveRows(rows.slice(pageIndex, pageSize));
     }
   }, [rows?.length]);
@@ -147,6 +149,7 @@ export const Table: React.FC<Props> = ({
           pagesToDisplay={pageTotal < 5 ? pageTotal : 5}
           pageTotal={pageTotal}
           pageIndex={pageIndex!}
+          itemTotal={rows?.length}
         />
       )}
     </div>

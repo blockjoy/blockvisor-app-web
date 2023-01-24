@@ -37,6 +37,7 @@ export const DangerZone: FC<Props> = ({
 }) => {
   const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const form = useForm<DeleteForm>({ mode: 'onChange' });
   const { isValid } = form.formState;
 
@@ -49,8 +50,9 @@ export const DangerZone: FC<Props> = ({
   const handleRedirect = () => router.push(redirects[elementName]);
 
   const onSubmit = async (e: any) => {
+    setIsSubmitted(true);
     e.preventDefault();
-    const response = await handleAction();
+    await handleAction();
     handleRedirect();
   };
 
@@ -98,7 +100,7 @@ export const DangerZone: FC<Props> = ({
               />
               <div css={[styles.actions, spacing.top.medium]}>
                 <Button
-                  disabled={!isValid}
+                  disabled={!isValid || isSubmitted}
                   type="submit"
                   size="small"
                   style="warning"

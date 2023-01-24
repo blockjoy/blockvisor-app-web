@@ -27,7 +27,6 @@ export const OrganizationView = () => {
   const { getOrganization, organization, isLoading } = useGetOrganization();
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
-  // const { leaveOrganization } = useLeaveOrganization();
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean>(false);

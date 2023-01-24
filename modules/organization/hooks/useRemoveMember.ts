@@ -13,6 +13,10 @@ export function useRemoveMember() {
     organizationAtoms.organizationMembers,
   );
 
+  const [, setPageIndex] = useRecoilState(
+    organizationAtoms.organizationMembersPageIndex,
+  );
+
   const removeMemberFromList = (user_id: string) => {
     const newOrganizationMembers = organizationMembers.filter(
       (member) => member.id !== user_id,
@@ -30,6 +34,7 @@ export function useRemoveMember() {
 
     if (!isStatusResponse(response)) {
       removeMemberFromList(user_id);
+      setPageIndex(0);
       toast.success('Removed successfully');
     } else {
       toast.error('Error while removing');
