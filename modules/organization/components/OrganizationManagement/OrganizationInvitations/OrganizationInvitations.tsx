@@ -50,6 +50,7 @@ export const OrganizationInvitations = () => {
             <div css={styles.buttons}>
               <Button
                 size="small"
+                style="secondary"
                 onClick={() => handleAcceptInvitation(invite.id)}
               >
                 Accept
