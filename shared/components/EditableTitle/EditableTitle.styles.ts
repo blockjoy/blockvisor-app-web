@@ -30,23 +30,8 @@ export const styles = {
   inputEditable: (theme: ITheme) => css`
     border-color: ${theme.colorBorder};
   `,
-  editToggle: (theme: ITheme) => css`
-    flex: 0 0 50px;
-    display: grid;
-    place-items: center;
-    width: 50px;
-    height: 50px;
-    background: transparent;
-    border: 0;
-    padding: 16px;
-    cursor: pointer;
-
-    path {
-      fill: ${theme.colorLabel};
-    }
-
-    :hover path {
-      fill: ${theme.colorText};
-    }
+  iconWrapper: css`
+    width: 24px;
+    height: 24px;
   `,
 };
