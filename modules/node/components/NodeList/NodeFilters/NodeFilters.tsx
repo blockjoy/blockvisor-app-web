@@ -99,6 +99,8 @@ export const NodeFilters = () => {
     useState<string | 'Blockchain' | 'Status' | 'Type'>('');
 
   const loadLookups = async () => {
+    console.log('blockchains', blockchains);
+
     if (!blockchains?.length) {
       setFiltersBlockchain([]);
       setHasBlockchainError(true);
