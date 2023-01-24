@@ -40,7 +40,8 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  const canRemoveUser: boolean = useHasPermissions(selectedOrganization?.currentUser.role!, Permissions.DELETE_MEMBER);
+  const canCreateMember: boolean = useHasPermissions(selectedOrganization?.currentUser.role!, Permissions.CREATE_MEMBER);
+  const canRemoveMember: boolean = useHasPermissions(selectedOrganization?.currentUser.role!, Permissions.DELETE_MEMBER);
 
   const membersMap =
     members?.map((member) => ({
@@ -143,7 +144,7 @@ export const mapOrganizationMembersToRows = (
       },
       {
         key: '3',
-        component: member.isPending ? (
+        component: member.isPending && canCreateMember ? (
           <span css={spacing.right.medium}>
             <Button
               type="button"
@@ -166,7 +167,7 @@ export const mapOrganizationMembersToRows = (
         key: '4',
         component: (
           <>
-            {canRemoveUser ?
+            {canRemoveMember ?
               member.active ? (
                 member.id !== userId && (
                   <Button
@@ -196,19 +197,7 @@ export const mapOrganizationMembersToRows = (
                 >
                   <IconClose />
                 </Button>
-              ) : (
-                <Button
-                  type="button"
-                  tooltip="Revoke"
-                  style="icon"
-                  size="medium"
-                  onClick={() =>
-                    handleRevokeInvitation(member?.invitationId!, member?.email!)
-                  }
-                >
-                  <IconClose />
-                </Button>
-              )}
+              ) : null}
           </>
         ),
       },
