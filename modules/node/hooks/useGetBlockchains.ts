@@ -20,13 +20,17 @@ export function useGetBlockchains() {
     console.log('blockchains', response);
     await delay(env.loadingDuration);
 
-    if (response?.length) {
+    if (!isStatusResponse(response)) {
       setBlockchains(response);
       setLoadingState('finished');
-    } else {
-      // something went wrong
+    } else if (response?.message.includes('token')) {
+      // token has expired
       localStorage.clear();
       window.location.href = '/';
+    } else {
+      console.log('getting in here');
+      setBlockchains([]);
+      setLoadingState('finished');
     }
   };
 
