@@ -1,3 +1,4 @@
+import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { useInvitations } from '@modules/organization/hooks/useInvitations';
 import { useRemoveMember } from '@modules/organization/hooks/useRemoveMember';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
@@ -29,12 +30,16 @@ export function OrganizationDialog({
   const { revokeInvitation } = useInvitations();
   const { removeMemberFromOrganization } = useRemoveMember();
 
+  const { setPageIndex } = useGetOrganizationMembers();
+
   const handleRevokeInvitation = async () => {
     await revokeInvitation({ invitationId: invitation_id, email });
+    setPageIndex(0);
   };
 
   const handleRemoveMember = async () => {
     await removeMemberFromOrganization(user_id!, org_id!);
+    setPageIndex(0);
   };
 
   const handleSubmit = () => {

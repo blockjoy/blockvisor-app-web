@@ -7,7 +7,7 @@ import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganizations } from './useGetOrganizations';
 
 export function useDeleteOrganization() {
-  const { updateOrganizations } = useGetOrganizations();
+  const { updateOrganizations, setPageIndex } = useGetOrganizations();
 
   const [loadingState, setLoadingState] = useRecoilState(
     organizationAtoms.organizationLoadingState,
@@ -16,14 +16,12 @@ export function useDeleteOrganization() {
   const deleteOrganization = async (id: string) => {
     setLoadingState('loading');
     const response = await apiClient.deleteOrganization(id);
-    console.log('deleteOrganization', response);
-
-    console.log('deleteOrganization', response);
 
     /* TODO: temporary fix - API for node deletion doesn't return success response, but instead code 25 (Record not found) */
     if (isResponeMetaObject(response) || response?.code === 25) {
       setLoadingState('finished');
       updateOrganizations(id);
+      setPageIndex(0);
       toast.success('Deleted successfully');
     } else {
       setLoadingState('finished');

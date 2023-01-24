@@ -1,6 +1,5 @@
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState } from 'recoil';
-
 import { Button, Input } from '@shared/components';
 import { FC, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
@@ -17,10 +16,9 @@ import {
   useGetOrganizations,
 } from '@modules/organization';
 import { toast } from 'react-toastify';
-import { delay } from '@shared/utils/delay';
-import { env } from '@shared/constants/env';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useRouter } from 'next/router';
+import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 
 type OrganisationAddForm = {
   name: string;
@@ -31,25 +29,30 @@ export const OrganizationAdd: FC = () => {
   const form = useForm<OrganisationAddForm>();
   const [layout, setLayout] = useRecoilState(layoutState);
   const createOrganization = useCreateOrganization();
-  const { addToOrganizations } = useGetOrganizations();
+  const { getOrganizations, setPageIndex: setOrganizationsPageIndex } =
+    useGetOrganizations();
+
+  const { setPageIndex: setMembersPageIndex } = useGetOrganizationMembers();
+
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<OrganisationAddForm> = async ({ name }) => {
     setLoading(true);
 
     try {
-      await createOrganization(name, (org: any) => {
-        addToOrganizations(org);
-        toast.success('Organization created');
+      await createOrganization(name, async (org: any) => {
         router.push(`/organizations/${org.id}`);
+        setOrganizationsPageIndex(0);
+        setMembersPageIndex(0);
+        await getOrganizations();
+        form.reset();
+        setLoading(false);
+        setLayout(undefined);
       });
     } catch (error) {
+      setLoading(false);
       if (error instanceof ApplicationError) toast.error(error.message);
     }
-
-    form.reset();
-    setLoading(false);
-    setLayout(undefined);
   };
 
   return (
