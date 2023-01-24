@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { isStatusResponse } from '../utils/typeGuards';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 const fetchOrganizationById = async (id: string) => {
   const response = await apiClient.getOrganizations(id);
@@ -21,6 +21,7 @@ const fetchOrganizationById = async (id: string) => {
 };
 
 export function useGetOrganization(id: string) {
+  const client = useQueryClient();
   const [organization, setOrganization] = useRecoilState(
     organizationAtoms.selectedOrganization,
   );
@@ -29,6 +30,7 @@ export function useGetOrganization(id: string) {
     queryKey: ['organization', id],
     queryFn: async () => fetchOrganizationById(id),
     onSuccess(data) {
+      client.invalidateQueries({ queryKey: ['organizationMembers'] });
       setOrganization(data);
     },
   });

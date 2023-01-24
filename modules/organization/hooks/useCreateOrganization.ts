@@ -46,7 +46,6 @@ export function useCreateOrganization() {
     onSuccess: async (data) => {
       toast.success('Organization created');
       if (data) {
-        await client.cancelQueries({ queryKey: ['organizations'] });
         client.setQueryData<any[]>(['organizations'], (old) =>
           old ? [...old, ...data] : [...data],
         );

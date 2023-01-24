@@ -35,6 +35,7 @@ export function useUpdateOrganization() {
     onSuccess(_, variables) {
       const { id, name } = variables;
       client.invalidateQueries({ queryKey: ['organization', id] });
+      client.invalidateQueries({ queryKey: ['organizations'] });
       setSelectedOrganization({ id, name });
 
       if (defaultOrganization?.id === selectedOrganization?.id) {
