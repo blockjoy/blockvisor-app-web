@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
-import IconClose from '@public/assets/icons/burger-hide.svg';
+import IconClose from '@public/assets/icons/close-12.svg';
 import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
 
 export enum Action {
