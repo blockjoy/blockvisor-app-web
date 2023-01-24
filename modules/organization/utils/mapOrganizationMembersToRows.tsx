@@ -171,6 +171,7 @@ export const mapOrganizationMembersToRows = (
               member.active ? (
                 member.id !== userId && (
                   <Button
+                    type="button"
                     tooltip="Remove"
                     style="icon"
                     size="medium"
@@ -188,7 +189,7 @@ export const mapOrganizationMembersToRows = (
               ) : (
                 <Button
                   type="button"
-                  tooltip="Remove"
+                  tooltip="Revoke"
                   style="icon"
                   size="medium"
                   onClick={() =>

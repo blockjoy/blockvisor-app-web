@@ -44,6 +44,7 @@ export const OrganizationView = () => {
     }
   };
 
+  const canUpdateOrganization: boolean = useHasPermissions(organization?.currentUser?.role!, Permissions.UPDATE_ORGANIZATION);
   const canDeleteOrganization: boolean = useHasPermissions(organization?.currentUser?.role!, Permissions.DELETE_ORGANIZATION);
 
   const action = canDeleteOrganization ? 'delete' : 'leave';
@@ -85,6 +86,7 @@ export const OrganizationView = () => {
               isSaving={isSavingOrganization}
               initialValue={organization?.name!}
               onSaveClicked={handleSaveClicked}
+              canUpdate={canUpdateOrganization && !organization?.personal}
             />
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />

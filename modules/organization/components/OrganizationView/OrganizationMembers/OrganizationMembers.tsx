@@ -126,7 +126,7 @@ export const Members = ({ id }: MembersProps) => {
     <>
       <h2 css={[styles.h2, spacing.bottom.large]}>
         Members
-        {activeView === 'list' && canCreateMember && (
+        {activeView === 'list' && canCreateMember && !selectedOrganization?.personal && (
           <Button
             onClick={handleAddMembersClicked}
             style="outline"

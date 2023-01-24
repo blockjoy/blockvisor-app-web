@@ -56,11 +56,13 @@ export const mapOrganizationsToRows = (
       {
         key: '4',
         component: (
-          <div css={[flex.display.flex]}>
-            <Button style="outline" size="small">
-              Manage
-            </Button>
-          </div>
+          <>
+            {!org.personal && (<div css={[flex.display.flex]}>
+              <Button style="outline" size="small">
+                Manage
+              </Button>
+            </div>)}
+          </>
         ),
       },
     ],
