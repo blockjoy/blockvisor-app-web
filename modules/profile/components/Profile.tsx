@@ -13,7 +13,7 @@ export const Profile = () => {
   const tabItems = useMemo(
     () => [
       {
-        label: 'Personal Details',
+        label: 'Personal',
         value: '1',
         component: (
           <ProfileForm
@@ -24,7 +24,7 @@ export const Profile = () => {
         ),
       },
       {
-        label: 'Change Password',
+        label: 'Account',
         value: '2',
         component: <ProfileChangePassword />,
       },

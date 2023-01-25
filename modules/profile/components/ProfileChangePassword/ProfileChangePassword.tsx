@@ -62,9 +62,9 @@ export function ProfileChangePassword() {
             <Input
               tabIndex={1}
               disabled={loading}
-              label="Current Password"
+              label="Current password"
               name="currentPassword"
-              placeholder="Current Password"
+              placeholder="Current password"
               labelStyles={[typo.base]}
               type={activeType}
               inputSize="medium"
@@ -86,10 +86,10 @@ export function ProfileChangePassword() {
           <li css={[spacing.bottom.medium]}>
             <Input
               tabIndex={2}
-              label="New Password"
+              label="New password"
               disabled={loading}
               name="newPassword"
-              placeholder="New Password"
+              placeholder="New password"
               type={activeType}
               inputSize="medium"
               labelStyles={[typo.base]}
@@ -115,7 +115,7 @@ export function ProfileChangePassword() {
               label="Confirm new password"
               disabled={loading}
               name="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder="Confirm new password"
               inputSize="medium"
               labelStyles={[typo.base]}
               type={activeType}
