@@ -7,12 +7,11 @@ import { reset } from 'styles/utils.reset.styles';
 import { PasswordToggle } from '../PasswordTogle';
 import { isValidEmail } from '@shared/utils/validation';
 import { apiClient } from '@modules/client';
-import { isResponeMetaObject } from '@modules/auth/utils/authTypeGuards';
 import Router, { useRouter } from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { RegistrationStatus } from '../types';
 import { Routes } from '@modules/auth/utils/routes';
+import { isStatusResponse } from '@modules/organization';
 
 type RegisterForm = {
   first_name: string;
@@ -22,8 +21,13 @@ type RegisterForm = {
   confirmPassword: string;
 };
 
-const errors = {
-  'RpcError: Duplicate resource conflict.': 'Email address already registered',
+const getError = (message: string) => {
+  // temporary getError method based on message
+  if (message?.toLowerCase()?.includes('duplicate')) {
+    return 'Email address already registered';
+  } else {
+    return 'Error creating account, please contact our support team.';
+  }
 };
 
 export function RegisterForm() {
@@ -53,11 +57,8 @@ export function RegisterForm() {
 
       console.log('signup', response);
 
-      if (response.message) {
-        setRegisterError(
-          errors[response?.message] ||
-            'Error creating account, invalid values.',
-        );
+      if (isStatusResponse(response)) {
+        setRegisterError(getError(response.message));
         setIsLoading(false);
         return;
       }
@@ -178,7 +179,7 @@ export function RegisterForm() {
             Create Account
           </Button>
           {registerError && (
-            <p css={[typo.smaller, colors.warning, spacing.top.small]}>
+            <p css={[typo.smaller, colors.warning, spacing.top.medium]}>
               {registerError}
             </p>
           )}
