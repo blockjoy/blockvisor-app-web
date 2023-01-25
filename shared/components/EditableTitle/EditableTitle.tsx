@@ -8,12 +8,14 @@ type Props = {
   isSaving?: boolean;
   initialValue: string;
   onSaveClicked: (value: string) => void;
+  canUpdate: boolean;
 };
 
 export const EditableTitle: FC<Props> = ({
   isSaving,
   initialValue,
   onSaveClicked,
+  canUpdate
 }) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -69,7 +71,8 @@ export const EditableTitle: FC<Props> = ({
         defaultValue={initialValue}
         onChange={handleChange}
       />
-      <Button
+
+      {canUpdate && (<Button
         style="icon"
         onClick={handleEditToggled}
         tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
@@ -77,9 +80,9 @@ export const EditableTitle: FC<Props> = ({
         <span css={styles.iconWrapper}>
           {isEditMode ? <IconClose /> : <IconPencil />}
         </span>
-      </Button>
+      </Button>)}
 
-      {isEditMode && (
+      {isEditMode && canUpdate && (
         <>
           <Button
             disabled={isSaving || !isValid}
