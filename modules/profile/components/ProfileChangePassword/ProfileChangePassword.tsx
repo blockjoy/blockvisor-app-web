@@ -63,109 +63,114 @@ export function ProfileChangePassword() {
     },
   );
   return (
-    <FormProvider {...form}>
-      <form css={[containers.small]} onSubmit={onSubmit}>
-        <ul css={[reset.list]}>
-          <li css={[spacing.bottom.medium]}>
-            <Input
-              tabIndex={1}
-              disabled={loading}
-              label="Current password"
-              name="currentPassword"
-              placeholder="Current password"
-              labelStyles={[typo.base]}
-              type={activeType['currentPassword']}
-              inputSize="medium"
-              validationOptions={{
-                required: 'This is a mandatory field',
-                minLength: {
-                  value: 8,
-                  message: 'Password should be at least 8 characters long',
-                },
-              }}
-              rightIcon={
-                <PasswordToggle
-                  name="currentPassword"
-                  activeType={activeType['currentPassword']}
-                  onClick={handleIconClick}
-                />
-              }
-            />
-          </li>
-          <li css={[spacing.bottom.medium]}>
-            <Input
-              tabIndex={2}
-              label="New password"
-              disabled={loading}
-              name="newPassword"
-              placeholder="New password"
-              type={activeType['newPassword']}
-              inputSize="medium"
-              labelStyles={[typo.base]}
-              validationOptions={{
-                required: 'This is a mandatory field',
-                minLength: {
-                  value: 8,
-                  message: 'Password should be at least 8 characters long',
-                },
-              }}
-              rightIcon={
-                <PasswordToggle
-                  tabIndex={5}
-                  name="newPassword"
-                  activeType={activeType['newPassword']}
-                  onClick={handleIconClick}
-                />
-              }
-            />
-          </li>
-          <li css={[spacing.bottom.large]}>
-            <Input
-              tabIndex={3}
-              label="Confirm new password"
-              disabled={loading}
-              name="confirmPassword"
-              placeholder="Confirm new password"
-              inputSize="medium"
-              labelStyles={[typo.base]}
-              type={activeType['confirmPassword']}
-              validationOptions={{
-                required: 'This is a mandatory field',
-                validate: (value) => {
-                  if (watch('newPassword') != value) {
-                    return 'Passwords do not match';
-                  }
-                },
-              }}
-              rightIcon={
-                <PasswordToggle
-                  tabIndex={6}
-                  name="confirmPassword"
-                  activeType={activeType['confirmPassword']}
-                  onClick={handleIconClick}
-                />
-              }
-            />
-          </li>
-        </ul>
-        <Button
-          tabIndex={4}
-          loading={loading}
-          customCss={[styles.loadingButton]}
-          disabled={!isDirty || loading}
-          size="medium"
-          display="inline"
-          style="secondary"
-          type="submit"
-        >
-          Change Password
-        </Button>
-        {changePasswordError && (
-          <p css={[typo.smaller, colors.warning, spacing.top.small]}>
-            {changePasswordError}
-          </p>
-        )}
-      </form>
-    </FormProvider>
+    <>
+      <header css={[styles.header, spacing.bottom.large]}>
+        Change Password
+      </header>
+      <FormProvider {...form}>
+        <form css={[containers.small]} onSubmit={onSubmit}>
+          <ul css={[reset.list]}>
+            <li css={[spacing.bottom.medium]}>
+              <Input
+                tabIndex={1}
+                disabled={loading}
+                label="Current password"
+                name="currentPassword"
+                placeholder="Current password"
+                labelStyles={[typo.base]}
+                type={activeType['currentPassword']}
+                inputSize="medium"
+                validationOptions={{
+                  required: 'This is a mandatory field',
+                  minLength: {
+                    value: 8,
+                    message: 'Password should be at least 8 characters long',
+                  },
+                }}
+                rightIcon={
+                  <PasswordToggle
+                    name="currentPassword"
+                    activeType={activeType['currentPassword']}
+                    onClick={handleIconClick}
+                  />
+                }
+              />
+            </li>
+            <li css={[spacing.bottom.medium]}>
+              <Input
+                tabIndex={2}
+                label="New password"
+                disabled={loading}
+                name="newPassword"
+                placeholder="New password"
+                type={activeType['newPassword']}
+                inputSize="medium"
+                labelStyles={[typo.base]}
+                validationOptions={{
+                  required: 'This is a mandatory field',
+                  minLength: {
+                    value: 8,
+                    message: 'Password should be at least 8 characters long',
+                  },
+                }}
+                rightIcon={
+                  <PasswordToggle
+                    tabIndex={5}
+                    name="newPassword"
+                    activeType={activeType['newPassword']}
+                    onClick={handleIconClick}
+                  />
+                }
+              />
+            </li>
+            <li css={[spacing.bottom.large]}>
+              <Input
+                tabIndex={3}
+                label="Confirm new password"
+                disabled={loading}
+                name="confirmPassword"
+                placeholder="Confirm new password"
+                inputSize="medium"
+                labelStyles={[typo.base]}
+                type={activeType['confirmPassword']}
+                validationOptions={{
+                  required: 'This is a mandatory field',
+                  validate: (value) => {
+                    if (watch('newPassword') != value) {
+                      return 'Passwords do not match';
+                    }
+                  },
+                }}
+                rightIcon={
+                  <PasswordToggle
+                    tabIndex={6}
+                    name="confirmPassword"
+                    activeType={activeType['confirmPassword']}
+                    onClick={handleIconClick}
+                  />
+                }
+              />
+            </li>
+          </ul>
+          <Button
+            tabIndex={4}
+            loading={loading}
+            customCss={[styles.loadingButton]}
+            disabled={!isDirty || loading}
+            size="medium"
+            display="inline"
+            style="secondary"
+            type="submit"
+          >
+            Change Password
+          </Button>
+          {changePasswordError && (
+            <p css={[typo.smaller, colors.warning, spacing.top.small]}>
+              {changePasswordError}
+            </p>
+          )}
+        </form>
+      </FormProvider>
+    </>
   );
 }
