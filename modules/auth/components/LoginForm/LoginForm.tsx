@@ -52,16 +52,12 @@ export function LoginForm() {
       await signIn(email, password);
       await getOrganizations();
       await getBlockchains();
-      await delay(env.loadingDuration);
-
-      setIsLoading(false);
 
       router.push(`/${redirect?.toString() || 'nodes'}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
       }
-    } finally {
       setIsLoading(false);
     }
   });
