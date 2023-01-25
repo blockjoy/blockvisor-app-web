@@ -75,20 +75,19 @@ export const styles = {
     align-items: center;
     gap: 10px;
     color: ${theme.colorDefault};
-    font-size: 14px;
+    font-size: 16px;
     height: 56px;
     cursor: pointer;
-
-    svg {
-      width: 18px;
-      height: 18px;
-    }
+    transition: 0.3s;
 
     path {
       fill: ${theme.colorDefault};
+      transition: 0.3s;
     }
 
     :hover {
+      color: ${theme.colorText};
+
       & path {
         fill: ${theme.colorText};
       }
