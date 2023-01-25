@@ -1,5 +1,4 @@
 import { css, SerializedStyles } from '@emotion/react';
-import { typo } from 'styles/utils.typography.styles';
 
 const inputWrapper = css`
   position: relative;
@@ -67,7 +66,8 @@ const inputFieldWithUtilRight = css`
 `;
 
 const inputFieldDisabled = css`
-  opacity: 0.4;
+  -webkit-text-fill-color: inherit;
+  opacity: 1;
   cursor: not-allowed;
   user-select: none;
 `;
