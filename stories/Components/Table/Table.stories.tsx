@@ -52,7 +52,7 @@ const headers: TableHeader[] = [
 const Template: ComponentStory<typeof Table> = (args) => {
   const rows = mapOrganizationsToRows(mockdata);
 
-  return <Table {...args} isLoading={'loading'} />;
+  return <Table {...args} isLoading={true} />;
 };
 
 export const Default = Template.bind({});

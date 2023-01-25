@@ -30,7 +30,7 @@ export function OrganizationDialog({
   const { revokeInvitation } = useInvitations();
   const { removeMemberFromOrganization } = useRemoveMember();
 
-  const { setPageIndex } = useGetOrganizationMembers();
+  const { setPageIndex } = useGetOrganizationMembers(org_id ?? '');
 
   const handleRevokeInvitation = async () => {
     await revokeInvitation({ invitationId: invitation_id, email });

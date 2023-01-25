@@ -41,7 +41,7 @@ export const OrganizationPendingInvitations: FC<Props> = ({ orgId }) => {
           { key: '2', name: 'Created' },
         ]}
         rows={rows}
-        isLoading="finished"
+        isLoading={false}
       />
     </>
   );
