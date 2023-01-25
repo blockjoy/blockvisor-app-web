@@ -115,7 +115,7 @@ export default () => {
               onClick={handleLogout}
               css={[styles.link, !isSidebarOpen && styles.linkSidebarCollapsed]}
             >
-              <span css={styles.linkInner}>
+              <span className="link-inner" css={styles.linkInner}>
                 <span
                   className="link-icon"
                   css={[
@@ -128,6 +128,7 @@ export default () => {
                 <span
                   className="link-text"
                   css={[
+                    styles.linkIcon,
                     styles.linkText,
                     !isSidebarOpen && styles.linkTextHidden,
                   ]}

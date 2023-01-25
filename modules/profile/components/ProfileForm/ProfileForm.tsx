@@ -21,9 +21,10 @@ type Props = {
   id?: string;
   firstName?: string;
   lastName?: string;
+  email?: string;
 };
 
-export function ProfileForm({ firstName, lastName, id }: Props) {
+export function ProfileForm({ firstName, lastName, id, email }: Props) {
   const form = useForm<EditUserForm>();
   const editUser = useEditUser();
   const [loading, setIsLoading] = useState(false);
@@ -58,6 +59,16 @@ export function ProfileForm({ firstName, lastName, id }: Props) {
     <FormProvider {...form}>
       <form css={[containers.small]} onSubmit={onSubmit}>
         <ul css={[reset.list]}>
+          <li css={[styles.formItem]}>
+            <Input
+              disabled={true}
+              inputSize="medium"
+              labelStyles={[typo.base]}
+              label="Email"
+              name="email"
+              value={email}
+            />
+          </li>
           <li css={[styles.formItem]}>
             <Input
               disabled={loading}

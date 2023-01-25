@@ -34,12 +34,10 @@ export function OrganizationDialog({
 
   const handleRevokeInvitation = async () => {
     await revokeInvitation({ invitationId: invitation_id, email });
-    setPageIndex(0);
   };
 
   const handleRemoveMember = async () => {
     await removeMemberFromOrganization(user_id!, org_id!);
-    setPageIndex(0);
   };
 
   const handleSubmit = () => {

@@ -87,6 +87,11 @@ const organizationSentInvitations = atom<any[]>({
   default: [],
 });
 
+const organizationSentInvitationsLoadingState = atom<LoadingState>({
+  key: 'organizationSentInvitations.loadingState',
+  default: 'initializing',
+});
+
 const organizationReceivedInvitations = atom<any[]>({
   key: 'organizationReceivedInvitations',
   default: [],
@@ -107,5 +112,6 @@ export const organizationAtoms = {
   organizationMembersLoadingState,
   organizationMembersPageIndex,
   organizationSentInvitations,
+  organizationSentInvitationsLoadingState,
   organizationReceivedInvitations,
 };
