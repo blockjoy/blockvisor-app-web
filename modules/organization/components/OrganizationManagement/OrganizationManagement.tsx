@@ -10,7 +10,6 @@ export const OrganizationManagement = () => {
   const invititations = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
-
   return (
     <>
       <PageTitle title="Organizations" />

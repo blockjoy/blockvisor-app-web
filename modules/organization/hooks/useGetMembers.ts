@@ -10,14 +10,14 @@ export function useGetOrganizationMembers() {
     organizationAtoms.organizationMembersLoadingState,
   );
 
+  const [pageIndex, setPageIndex] = useRecoilState(
+    organizationAtoms.organizationMembersPageIndex,
+  );
+
   const getOrganizationMembers = async (id: string) => {
     setIsLoading('initializing');
-
     const members: any = await apiClient.getOrganizationMembers(id);
     setOrganizationMembers(members);
-
-    console.log('getMembers', members);
-
     setIsLoading('finished');
   };
 
@@ -25,5 +25,7 @@ export function useGetOrganizationMembers() {
     organizationMembers,
     getOrganizationMembers,
     isLoading,
+    pageIndex,
+    setPageIndex,
   };
 }

@@ -10,6 +10,7 @@ type Props = {
   pageTotal?: number;
   onPageClicked: (pageIndex: number) => void;
   pageIndex: number;
+  itemTotal: number;
 };
 
 export const Pagination: FC<Props> = ({
@@ -17,6 +18,7 @@ export const Pagination: FC<Props> = ({
   pageTotal = 10,
   onPageClicked,
   pageIndex,
+  itemTotal,
 }) => {
   const [pages, setPages] = useState<number[]>([]);
 
@@ -49,8 +51,10 @@ export const Pagination: FC<Props> = ({
   };
 
   useEffect(() => {
-    buildPagination(pageIndex);
-  }, []);
+    if (itemTotal) {
+      buildPagination(pageIndex);
+    }
+  }, [itemTotal]);
 
   return (
     <div css={styles.pagination}>
