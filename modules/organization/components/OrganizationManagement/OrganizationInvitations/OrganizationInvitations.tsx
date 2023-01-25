@@ -38,8 +38,8 @@ export const OrganizationInvitations = () => {
         {invitations?.length && <Badge>{invitations?.length}</Badge>}
       </header>
       <ul>
-        {invitations?.map((invite) => (
-          <li key={invite.id} css={styles.item}>
+        {invitations?.map((invite, idx) => (
+          <li css={styles.item} key={idx}>
             <div css={[spacing.bottom.medium]}>
               <b>{invite.createdByUserName || 'Unknown'}</b> invited you to join{' '}
               <b>{invite.createdForOrgName || 'Unknown'}</b> organization

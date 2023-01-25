@@ -37,7 +37,8 @@ export function OrganizationDialog({
   };
 
   const handleRemoveMember = async () => {
-    await removeMemberFromOrganization(user_id!, org_id!);
+    await removeMemberFromOrganization({ user_id: user_id!, org_id: org_id! });
+    setPageIndex(0);
   };
 
   const handleSubmit = () => {
