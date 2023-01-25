@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Button, Input } from '@shared/components';
@@ -21,7 +21,13 @@ type ChangePasswordForm = {
 export function ProfileChangePassword() {
   const form = useForm<ChangePasswordForm>();
   const changePassword = useChangePassword();
-  const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+  const [activeType, setActiveType] = useState<
+    Record<keyof ChangePasswordForm, 'password' | 'text'>
+  >({
+    confirmPassword: 'password',
+    newPassword: 'password',
+    currentPassword: 'password',
+  });
   const [changePasswordError, setChangePasswordError] =
     useState<string | undefined>();
   const [loading, setIsLoading] = useState(false);
@@ -30,9 +36,11 @@ export function ProfileChangePassword() {
     formState: { isDirty },
   } = form;
 
-  const handleIconClick = () => {
-    const type = activeType === 'password' ? 'text' : 'password';
-    setActiveType(type);
+  const handleIconClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const name = e.currentTarget.name as keyof ChangePasswordForm;
+
+    const type = activeType[name] === 'password' ? 'text' : 'password';
+    setActiveType((prev) => ({ ...prev, [name]: type }));
   };
 
   const onSubmit = handleSubmit(
@@ -66,7 +74,7 @@ export function ProfileChangePassword() {
               name="currentPassword"
               placeholder="Current password"
               labelStyles={[typo.base]}
-              type={activeType}
+              type={activeType['currentPassword']}
               inputSize="medium"
               validationOptions={{
                 required: 'This is a mandatory field',
@@ -77,7 +85,8 @@ export function ProfileChangePassword() {
               }}
               rightIcon={
                 <PasswordToggle
-                  activeType={activeType}
+                  name="currentPassword"
+                  activeType={activeType['currentPassword']}
                   onClick={handleIconClick}
                 />
               }
@@ -90,7 +99,7 @@ export function ProfileChangePassword() {
               disabled={loading}
               name="newPassword"
               placeholder="New password"
-              type={activeType}
+              type={activeType['newPassword']}
               inputSize="medium"
               labelStyles={[typo.base]}
               validationOptions={{
@@ -103,7 +112,8 @@ export function ProfileChangePassword() {
               rightIcon={
                 <PasswordToggle
                   tabIndex={5}
-                  activeType={activeType}
+                  name="newPassword"
+                  activeType={activeType['newPassword']}
                   onClick={handleIconClick}
                 />
               }
@@ -118,7 +128,7 @@ export function ProfileChangePassword() {
               placeholder="Confirm new password"
               inputSize="medium"
               labelStyles={[typo.base]}
-              type={activeType}
+              type={activeType['confirmPassword']}
               validationOptions={{
                 required: 'This is a mandatory field',
                 validate: (value) => {
@@ -130,7 +140,8 @@ export function ProfileChangePassword() {
               rightIcon={
                 <PasswordToggle
                   tabIndex={6}
-                  activeType={activeType}
+                  name="confirmPassword"
+                  activeType={activeType['confirmPassword']}
                   onClick={handleIconClick}
                 />
               }
