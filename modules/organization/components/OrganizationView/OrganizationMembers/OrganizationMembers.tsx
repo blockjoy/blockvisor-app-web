@@ -143,7 +143,7 @@ export const Members = ({ id }: MembersProps) => {
         />
       )}
       <Table
-        pageSize={4}
+        pageSize={8}
         pageIndex={pageIndex}
         onPageClicked={handlePageClicked}
         isLoading={isLoading}
