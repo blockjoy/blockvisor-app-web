@@ -11,14 +11,16 @@ export const useInviteMembers = () => {
   );
 
   const inviteMembers = async (emails: string[], onComplete: VoidFunction) => {
+    const formattedEmail = emails[0]?.toLowerCase();
+
     const response = await apiClient.inviteOrgMember(
-      emails[0],
+      formattedEmail,
       selectedOrganization?.id!,
     );
 
     if (isResponeMetaObject(response)) {
       toast.success(
-        `You've invited ${emails[0]} to ${selectedOrganization?.name}! They'll be receiving an email shortly.`,
+        `You've invited ${formattedEmail} to ${selectedOrganization?.name}! They'll be receiving an email shortly.`,
       );
       onComplete();
     } else {
