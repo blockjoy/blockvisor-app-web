@@ -19,27 +19,27 @@ import PersonIcon from '@public/assets/icons/person-12.svg';
 import { toast } from 'react-toastify';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { OrganizationDialog } from './OrganizationDialog/OrganizationDialog';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import { useRecoilValue } from 'recoil';
+import {
+  Permissions,
+  useHasPermissions,
+} from '@modules/auth/hooks/useHasPermissions';
 
 export type MembersProps = {
+  members?: ClientOrganizationMember[];
+  invitations?: ClientOrganizationInvitation[];
   id?: string;
 };
 
-export const Members = ({ id }: MembersProps) => {
+export const Members = ({ members, invitations, id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
 
   const { resendInvitation } = useResendInvitation();
 
-  const {
-    getOrganizationMembers,
-    organizationMembers,
-    isLoading,
-    pageIndex,
-    setPageIndex,
-  } = useGetOrganizationMembers();
+  const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers();
 
-  const { getSentInvitations, sentInvitations } = useInvitations();
+  // TOOD: remove after fixed bug in API (return org the invitation's id in response)
+  const { getSentInvitations } = useInvitations();
 
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
@@ -47,9 +47,14 @@ export const Members = ({ id }: MembersProps) => {
   const [emails, setEmails] = useState<string[]>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
-  const selectedOrganization = useRecoilValue(organizationAtoms.selectedOrganization);
+  const selectedOrganization = useRecoilValue(
+    organizationAtoms.selectedOrganization,
+  );
 
-  const canCreateMember: boolean = useHasPermissions(selectedOrganization?.currentUser?.role!, Permissions.CREATE_MEMBER);
+  const canCreateMember: boolean = useHasPermissions(
+    selectedOrganization?.currentUser?.role!,
+    Permissions.CREATE_MEMBER,
+  );
 
   const handleTextareaChanged = (e: ChangeEvent<HTMLInputElement>) => {
     const isValid = checkIfValidEmail(e.target.value);
@@ -67,11 +72,7 @@ export const Members = ({ id }: MembersProps) => {
   };
 
   const handleInviteClicked = () => {
-    const isMemberOrInvited = checkIfExists(
-      organizationMembers,
-      sentInvitations,
-      emails![0],
-    );
+    const isMemberOrInvited = checkIfExists(members!, invitations!, emails![0]);
 
     if (!isMemberOrInvited) {
       inviteMembers(emails!, () => {
@@ -95,14 +96,6 @@ export const Members = ({ id }: MembersProps) => {
   const [activeMember, setActiveMember] = useState<Member | null>(null);
   const [activeAction, setActiveAction] = useState<Action | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      getOrganizationMembers(id);
-      canCreateMember && getSentInvitations(id);
-    }
-    return () => setPageIndex(0);
-  }, [id]);
-
   const methods = {
     action: (action: Action, orgMember: Member) => {
       setActiveView('action');
@@ -119,8 +112,8 @@ export const Members = ({ id }: MembersProps) => {
   };
 
   const { headers, rows } = mapOrganizationMembersToRows(
-    organizationMembers,
-    sentInvitations,
+    members,
+    invitations,
     methods,
   );
 
@@ -128,16 +121,18 @@ export const Members = ({ id }: MembersProps) => {
     <>
       <h2 css={[styles.h2, spacing.bottom.large]}>
         Members
-        {activeView === 'list' && canCreateMember && !selectedOrganization?.personal && (
-          <Button
-            onClick={handleAddMembersClicked}
-            style="outline"
-            size="small"
-          >
-            <PersonIcon />
-            Add Member
-          </Button>
-        )}
+        {activeView === 'list' &&
+          canCreateMember &&
+          !selectedOrganization?.personal && (
+            <Button
+              onClick={handleAddMembersClicked}
+              style="outline"
+              size="small"
+            >
+              <PersonIcon />
+              Add Member
+            </Button>
+          )}
       </h2>
       {activeView === 'invite' && (
         <OrganizationInvite
@@ -156,6 +151,7 @@ export const Members = ({ id }: MembersProps) => {
         rows={rows}
         verticalAlign="middle"
         fixedRowHeight="74px"
+        setPageIndex={setPageIndex}
       />
       {activeView === 'action' && (
         <OrganizationDialog

@@ -1,32 +1,71 @@
 import { useTabs } from '@shared/hooks/useTabs';
-import { PageSection, PageTitle, Tabs } from '@shared/components';
+import { Button, PageSection, PageTitle, Tabs } from '@shared/components';
 import { useRecoilValue } from 'recoil';
-import { authAtoms } from '@modules/auth';
+import { authAtoms, useSignOut } from '@modules/auth';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import IconDoor from '@public/assets/icons/door-12.svg';
 import { ProfileForm } from './ProfileForm/ProfileForm';
 import { ProfileChangePassword } from './ProfileChangePassword/ProfileChangePassword';
+import { styles } from './Profile.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { colors } from 'styles/utils.colors.styles';
+import { typo } from 'styles/utils.typography.styles';
 
 export const Profile = () => {
   const user = useRecoilValue(authAtoms.user);
+  const signOut = useSignOut();
   const { push } = useRouter();
+
+  const handleSignout = async () => {
+    signOut();
+    window.location.href = '/';
+  };
+
   const tabItems = useMemo(
     () => [
       {
-        label: 'Personal Details',
+        label: 'Personal',
         value: '1',
         component: (
-          <ProfileForm
-            firstName={user?.firstName}
-            lastName={user?.lastName}
-            id={user?.id}
-          />
+          <PageSection>
+            <ProfileForm
+              firstName={user?.firstName}
+              lastName={user?.lastName}
+              id={user?.id}
+              email={user?.email}
+            />
+          </PageSection>
         ),
       },
       {
-        label: 'Change Password',
+        label: 'Account',
         value: '2',
-        component: <ProfileChangePassword />,
+        component: (
+          <>
+            <PageSection>
+              <ProfileChangePassword />
+            </PageSection>
+
+            <div css={[styles.buttonWrapper]}>
+              <header css={[colors.text3, typo.medium, spacing.bottom.medium]}>
+                Danger Zone
+              </header>
+              <p css={[colors.text4, typo.small, spacing.bottom.medium]}>
+                Click the button below to sign out.
+              </p>
+              <Button
+                customCss={[styles.button]}
+                style="warning"
+                size="medium"
+                onClick={handleSignout}
+              >
+                <IconDoor />
+                Sign out
+              </Button>
+            </div>
+          </>
+        ),
       },
     ],
     [user?.firstName, user?.lastName],
@@ -47,13 +86,11 @@ export const Profile = () => {
   return (
     <>
       <PageTitle title="Profile" />
-      <PageSection>
-        <Tabs
-          activeTab={activeTab}
-          onTabClick={handleClick}
-          tabItems={tabItems}
-        />
-      </PageSection>
+      <Tabs
+        activeTab={activeTab}
+        onTabClick={handleClick}
+        tabItems={tabItems}
+      />
     </>
   );
 };

@@ -1,6 +1,6 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { reset } from 'styles/utils.reset.styles';
-import { typo } from 'styles/utils.typography.styles';
+import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './Tabs.styles';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 export function Tabs({ tabItems, activeTab, onTabClick }: Props) {
   return (
     <>
-      <nav css={[styles.tabs]}>
+      <nav css={[styles.tabs, wrapper.main]}>
         <ul css={[reset.list, styles.tabList]}>
           {tabItems.map((item, index) => (
             <li key={index}>

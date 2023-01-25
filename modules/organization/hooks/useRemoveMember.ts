@@ -1,6 +1,6 @@
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { isStatusResponse } from '../utils/typeGuards';
 
@@ -11,10 +11,6 @@ export function useRemoveMember() {
 
   const [organizationMembers, setOrganizationMembers] = useRecoilState(
     organizationAtoms.organizationMembers,
-  );
-
-  const [, setPageIndex] = useRecoilState(
-    organizationAtoms.organizationMembersPageIndex,
   );
 
   const removeMemberFromList = (user_id: string) => {
@@ -34,7 +30,6 @@ export function useRemoveMember() {
 
     if (!isStatusResponse(response)) {
       removeMemberFromList(user_id);
-      setPageIndex(0);
       toast.success('Removed successfully');
     } else {
       toast.error('Error while removing');
