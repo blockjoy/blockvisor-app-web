@@ -3,6 +3,12 @@ type ClientDefaultOrganization = {
   id?: string;
 };
 
+type ClientOrganizationUser = {
+  orgId: string;
+  role: number;
+  userId: string;
+};
+
 type ClientOrganization = {
   createdAt?: {
     nanos: number;
@@ -10,6 +16,7 @@ type ClientOrganization = {
   };
 
   id?: string;
+  currentUser?: ClientOrganizationUser;
   memberCount?: number;
   name?: string;
   personal?: boolean;

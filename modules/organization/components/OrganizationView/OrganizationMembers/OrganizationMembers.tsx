@@ -19,7 +19,8 @@ import PersonIcon from '@public/assets/icons/person-12.svg';
 import { toast } from 'react-toastify';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { OrganizationDialog } from './OrganizationDialog/OrganizationDialog';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
 
 export type MembersProps = {
   id?: string;
@@ -45,6 +46,10 @@ export const Members = ({ id }: MembersProps) => {
 
   const [emails, setEmails] = useState<string[]>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
+  const selectedOrganization = useRecoilValue(organizationAtoms.selectedOrganization);
+
+  const canCreateMember: boolean = useHasPermissions(selectedOrganization?.currentUser?.role!, Permissions.CREATE_MEMBER);
 
   const handleTextareaChanged = (e: ChangeEvent<HTMLInputElement>) => {
     const isValid = checkIfValidEmail(e.target.value);
@@ -93,7 +98,7 @@ export const Members = ({ id }: MembersProps) => {
   useEffect(() => {
     if (id) {
       getOrganizationMembers(id);
-      getSentInvitations(id);
+      canCreateMember && getSentInvitations(id);
     }
     return () => setPageIndex(0);
   }, [id]);
@@ -123,7 +128,7 @@ export const Members = ({ id }: MembersProps) => {
     <>
       <h2 css={[styles.h2, spacing.bottom.large]}>
         Members
-        {activeView === 'list' && (
+        {activeView === 'list' && canCreateMember && !selectedOrganization?.personal && (
           <Button
             onClick={handleAddMembersClicked}
             style="outline"
