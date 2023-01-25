@@ -8,6 +8,9 @@ import IconDoor from '@public/assets/icons/door-12.svg';
 import { ProfileForm } from './ProfileForm/ProfileForm';
 import { ProfileChangePassword } from './ProfileChangePassword/ProfileChangePassword';
 import { styles } from './Profile.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { colors } from 'styles/utils.colors.styles';
+import { typo } from 'styles/utils.typography.styles';
 
 export const Profile = () => {
   const user = useRecoilValue(authAtoms.user);
@@ -43,10 +46,18 @@ export const Profile = () => {
             <PageSection>
               <ProfileChangePassword />
             </PageSection>
+
             <div css={[styles.buttonWrapper]}>
+              <header css={[colors.text3, typo.medium, spacing.bottom.medium]}>
+                Danger Zone
+              </header>
+              <p css={[colors.text4, typo.small, spacing.bottom.medium]}>
+                Click the button below to sign out.
+              </p>
               <Button
                 customCss={[styles.button]}
-                style="outline"
+                style="warning"
+                size="medium"
                 onClick={handleSignout}
               >
                 <IconDoor />

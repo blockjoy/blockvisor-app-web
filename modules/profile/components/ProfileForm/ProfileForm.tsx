@@ -61,6 +61,16 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
         <ul css={[reset.list]}>
           <li css={[styles.formItem]}>
             <Input
+              disabled={true}
+              inputSize="medium"
+              labelStyles={[typo.base]}
+              label="Email"
+              name="email"
+              value={email}
+            />
+          </li>
+          <li css={[styles.formItem]}>
+            <Input
               disabled={loading}
               labelStyles={[typo.base]}
               inputSize="medium"
@@ -81,16 +91,6 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               validationOptions={{
                 required: 'Your last name is required',
               }}
-            />
-          </li>
-          <li css={[styles.formItem]}>
-            <Input
-              disabled={true}
-              inputSize="medium"
-              labelStyles={[typo.base]}
-              label="Email"
-              name="email"
-              value={email}
             />
           </li>
         </ul>

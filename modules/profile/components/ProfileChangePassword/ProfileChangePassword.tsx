@@ -64,7 +64,7 @@ export function ProfileChangePassword() {
   );
   return (
     <>
-      <header css={[styles.header, spacing.bottom.large]}>
+      <header css={[colors.text3, typo.medium, spacing.bottom.large]}>
         Change Password
       </header>
       <FormProvider {...form}>
