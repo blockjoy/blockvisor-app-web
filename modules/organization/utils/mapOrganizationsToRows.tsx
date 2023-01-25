@@ -50,7 +50,7 @@ export const mapOrganizationsToRows = (
         key: '3',
         component: (
           <>
-            <p>{USER_ROLES[org.currentUser.role]}</p>
+            <p>{USER_ROLES[org?.currentUser?.role!]}</p>
           </>
         ),
       },
@@ -58,11 +58,13 @@ export const mapOrganizationsToRows = (
         key: '4',
         component: (
           <>
-            {!org.personal && (<div css={[flex.display.flex]}>
-              <Button style="outline" size="small">
-                Manage
-              </Button>
-            </div>)}
+            {!org.personal && (
+              <div css={[flex.display.flex]}>
+                <Button style="outline" size="small">
+                  Manage
+                </Button>
+              </div>
+            )}
           </>
         ),
       },

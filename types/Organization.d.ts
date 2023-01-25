@@ -16,7 +16,7 @@ type ClientOrganization = {
   };
 
   id?: string;
-  currentUser: ClientOrganizationUser;
+  currentUser?: ClientOrganizationUser;
   memberCount?: number;
   name?: string;
   personal?: boolean;

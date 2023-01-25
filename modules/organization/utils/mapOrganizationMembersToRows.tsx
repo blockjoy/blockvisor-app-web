@@ -6,7 +6,10 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
 import IconClose from '@public/assets/icons/close-12.svg';
-import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import {
+  Permissions,
+  useHasPermissions,
+} from '@modules/auth/hooks/useHasPermissions';
 
 export enum Action {
   revoke = 'revoke',
@@ -40,8 +43,14 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  const canCreateMember: boolean = useHasPermissions(selectedOrganization?.currentUser.role!, Permissions.CREATE_MEMBER);
-  const canRemoveMember: boolean = useHasPermissions(selectedOrganization?.currentUser.role!, Permissions.DELETE_MEMBER);
+  const canCreateMember: boolean = useHasPermissions(
+    selectedOrganization?.currentUser?.role!,
+    Permissions.CREATE_MEMBER,
+  );
+  const canRemoveMember: boolean = useHasPermissions(
+    selectedOrganization?.currentUser?.role!,
+    Permissions.DELETE_MEMBER,
+  );
 
   const membersMap =
     members?.map((member) => ({
@@ -144,30 +153,31 @@ export const mapOrganizationMembersToRows = (
       },
       {
         key: '3',
-        component: member.isPending && canCreateMember ? (
-          <span css={spacing.right.medium}>
-            <Button
-              type="button"
-              onClick={() =>
-                handleResendInvitation(
-                  member.invitationId!,
-                  member.email!,
-                  selectedOrganization?.id!,
-                )
-              }
-              style="outline"
-              size="small"
-            >
-              Resend
-            </Button>
-          </span>
-        ) : null,
+        component:
+          member.isPending && canCreateMember ? (
+            <span css={spacing.right.medium}>
+              <Button
+                type="button"
+                onClick={() =>
+                  handleResendInvitation(
+                    member.invitationId!,
+                    member.email!,
+                    selectedOrganization?.id!,
+                  )
+                }
+                style="outline"
+                size="small"
+              >
+                Resend
+              </Button>
+            </span>
+          ) : null,
       },
       {
         key: '4',
         component: (
           <>
-            {canRemoveMember ?
+            {canRemoveMember ? (
               member.active ? (
                 member.id !== userId && (
                   <Button
@@ -193,12 +203,16 @@ export const mapOrganizationMembersToRows = (
                   style="icon"
                   size="medium"
                   onClick={() =>
-                    handleRevokeInvitation(member?.invitationId!, member?.email!)
+                    handleRevokeInvitation(
+                      member?.invitationId!,
+                      member?.email!,
+                    )
                   }
                 >
                   <IconClose />
                 </Button>
-              ) : null}
+              )
+            ) : null}
           </>
         ),
       },
