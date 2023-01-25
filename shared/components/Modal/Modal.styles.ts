@@ -34,8 +34,8 @@ export const styles = {
     display: grid;
     place-items: center;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 16px;
+    top: 10px;
     width: 40px;
     height: 40px;
     background: transparent;

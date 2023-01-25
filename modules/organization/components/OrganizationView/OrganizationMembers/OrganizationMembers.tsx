@@ -20,7 +20,10 @@ import { toast } from 'react-toastify';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { OrganizationDialog } from './OrganizationDialog/OrganizationDialog';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import {
+  Permissions,
+  useHasPermissions,
+} from '@modules/auth/hooks/useHasPermissions';
 
 export type MembersProps = {
   id?: string;
@@ -47,9 +50,14 @@ export const Members = ({ id }: MembersProps) => {
   const [emails, setEmails] = useState<string[]>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
-  const selectedOrganization = useRecoilValue(organizationAtoms.selectedOrganization);
+  const selectedOrganization = useRecoilValue(
+    organizationAtoms.selectedOrganization,
+  );
 
-  const canCreateMember: boolean = useHasPermissions(selectedOrganization?.currentUser?.role!, Permissions.CREATE_MEMBER);
+  const canCreateMember: boolean = useHasPermissions(
+    selectedOrganization?.currentUser?.role!,
+    Permissions.CREATE_MEMBER,
+  );
 
   const handleTextareaChanged = (e: ChangeEvent<HTMLInputElement>) => {
     const isValid = checkIfValidEmail(e.target.value);
@@ -128,16 +136,18 @@ export const Members = ({ id }: MembersProps) => {
     <>
       <h2 css={[styles.h2, spacing.bottom.large]}>
         Members
-        {activeView === 'list' && canCreateMember && !selectedOrganization?.personal && (
-          <Button
-            onClick={handleAddMembersClicked}
-            style="outline"
-            size="small"
-          >
-            <PersonIcon />
-            Add Member
-          </Button>
-        )}
+        {activeView === 'list' &&
+          canCreateMember &&
+          !selectedOrganization?.personal && (
+            <Button
+              onClick={handleAddMembersClicked}
+              style="outline"
+              size="small"
+            >
+              <PersonIcon />
+              Add Member
+            </Button>
+          )}
       </h2>
       {activeView === 'invite' && (
         <OrganizationInvite
@@ -156,6 +166,7 @@ export const Members = ({ id }: MembersProps) => {
         rows={rows}
         verticalAlign="middle"
         fixedRowHeight="74px"
+        setPageIndex={setPageIndex}
       />
       {activeView === 'action' && (
         <OrganizationDialog

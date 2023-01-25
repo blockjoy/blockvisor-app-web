@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
 import { useEffect, useState } from 'react';
 import { Pagination } from '@shared/components';
+import { SetterOrUpdater } from 'recoil';
 
 type Props = {
   headers?: TableHeader[];
@@ -15,6 +16,7 @@ type Props = {
   fixedRowHeight?: string;
   pageSize?: number;
   pageIndex?: number;
+  setPageIndex?: SetterOrUpdater<number>;
 };
 
 export const Table: React.FC<Props> = ({
@@ -28,6 +30,7 @@ export const Table: React.FC<Props> = ({
   fixedRowHeight,
   pageSize,
   pageIndex,
+  setPageIndex,
 }) => {
   const [activeRows, setActiveRows] = useState<Row[]>(rows);
 
@@ -60,8 +63,13 @@ export const Table: React.FC<Props> = ({
   }, [pageIndex]);
 
   useEffect(() => {
-    if (rows?.length && pageSize && (pageIndex === 0 || !activeRows.length)) {
-      setActiveRows(rows.slice(pageIndex, pageSize));
+    if (pageSize) {
+      if (rows?.length) {
+        setActiveRows(getPageOfRows());
+      }
+      if (pageIndex! > pageTotal - 1 && setPageIndex) {
+        setPageIndex(pageTotal - 1);
+      }
     }
   }, [rows?.length]);
 
