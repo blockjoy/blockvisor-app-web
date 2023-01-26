@@ -6,7 +6,10 @@ const AcceptInvite: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/register?invited=true');
+    if (router.isReady) {
+      const { token } = router.query;
+      router.push(`/register?invited=true&token=${token}`);
+    }
   }, []);
 
   return null;
