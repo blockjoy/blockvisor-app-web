@@ -72,7 +72,11 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   };
 
   const handleInviteClicked = () => {
-    const isMemberOrInvited = checkIfExists(members!, invitations!, emails![0]);
+    const isMemberOrInvited = checkIfExists(
+      members!,
+      invitations!,
+      emails![0]?.toLowerCase(),
+    );
 
     if (!isMemberOrInvited) {
       inviteMembers(emails!, () => {
