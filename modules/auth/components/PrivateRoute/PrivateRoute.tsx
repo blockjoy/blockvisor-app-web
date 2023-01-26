@@ -1,4 +1,5 @@
 import { useIdentity } from '@modules/auth';
+import { ROUTES } from '@shared/index';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -30,7 +31,7 @@ export function PrivateRoute({ router, children }: Props) {
     if (!loggedIn && !publicPaths.includes(path)) {
       setAuthorized(false);
       router.push({
-        pathname: '/login',
+        pathname: ROUTES.LOGIN,
         query: { redirect: router.asPath },
       });
     } else {

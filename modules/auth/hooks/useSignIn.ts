@@ -12,8 +12,6 @@ export function useSignIn() {
   const signIn = async (email: string, password: string) => {
     const response = await apiClient.login(email, password);
 
-    console.log('loginResponse', response);
-
     if (isSuccess(response)) {
       apiClient.setTokenValue(response.value);
       repository?.saveIdentity({

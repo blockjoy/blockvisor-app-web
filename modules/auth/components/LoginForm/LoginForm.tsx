@@ -6,6 +6,7 @@ import {
   useGetOrganizations,
 } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
+import { ROUTES } from '@shared/index';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -51,7 +52,7 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      router.push(`${redirect?.toString() || '/nodes'}`);
+      router.push(`${redirect?.toString() || ROUTES.NODES}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
