@@ -35,7 +35,6 @@ const renderControls = (
           multiple={true}
           onChange={onFileUploaded}
           name={property.name}
-          remove={() => console.log('shit')}
           placeholder="Upload validator keys"
         />
       );
