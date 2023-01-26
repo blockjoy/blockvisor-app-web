@@ -7,7 +7,7 @@ import { NodeLauncherSummary } from './NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
-import { AnimatedGraphic, EmptyColumn } from '@shared/components';
+import { EmptyColumn } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
@@ -120,7 +120,9 @@ export const NodeLauncher = () => {
 
     if (!foundNodeFiles) return;
 
-    foundNodeFiles?.files.push(e?.target?.value);
+    for (let file of e?.target?.files) {
+      foundNodeFiles?.files.push(file);
+    }
 
     setNode({
       ...node,
@@ -202,10 +204,6 @@ export const NodeLauncher = () => {
         : '',
     });
   }, [node.blockchainId, node.nodeTypeId]);
-
-  useEffect(() => {
-    // loadLookups();
-  }, []);
 
   useEffect(() => {
     if (currentOrganization.current?.id !== defaultOrganization?.id) {
