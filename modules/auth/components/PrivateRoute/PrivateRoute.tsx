@@ -1,48 +1,42 @@
-import { Routes, useIdentity } from '@modules/auth';
-import { EmptyColumn, LoadingSpinner } from '@shared/components';
-import { useRouter } from 'next/router';
-import { ReactNode, useEffect } from 'react';
-import { spacing } from 'styles/utils.spacing.styles';
+import { useIdentity } from '@modules/auth';
+import { useEffect, useState } from 'react';
 
 interface Props {
-  children?: ReactNode;
+  router: any;
+  children?: any;
 }
 
-export function PrivateRoute({ children }: Props) {
-  const router = useRouter();
-
-  const gotoPath = router.pathname;
-
-  const { isLoggedIn, isVerified, isDone, isLoading, state } = useIdentity();
+export function PrivateRoute({ router, children }: Props) {
+  const { isLoggedIn } = useIdentity();
+  const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    if (isDone && !isLoggedIn) {
-      router.push(`${Routes.login}?redirect=${gotoPath}`);
-      return;
+    authCheck(router.asPath, isLoggedIn);
+
+    const hideContent = () => setAuthorized(false);
+    router.events.on('routeChangeStart', hideContent);
+
+    router.events.on('routeChangeComplete', authCheck);
+
+    return () => {
+      router.events.off('routeChangeStart', hideContent);
+      router.events.off('routeChangeComplete', authCheck);
+    };
+  }, []);
+
+  function authCheck(url: any, loggedIn: boolean): any {
+    const publicPaths = ['/login'];
+    const path = url.split('?')[0];
+    if (!loggedIn && !publicPaths.includes(path)) {
+      setAuthorized(false);
+      router.push({
+        pathname: '/login',
+        query: { redirect: router.asPath },
+      });
+    } else {
+      setAuthorized(true);
     }
-  }, [router.pathname, state]);
-
-  if (isLoading) {
-    return <LoadingSpinner size="page" />;
   }
 
-  if (isLoggedIn) {
-    return (
-      <>
-        {' '}
-        {window.navigator.onLine ? (
-          children
-        ) : (
-          <div css={[spacing.left.large, spacing.top.xxxLarge]}>
-            <EmptyColumn
-              title="No Internet Connection"
-              description="Once connected please refresh the app."
-            />
-          </div>
-        )}
-      </>
-    );
-  }
-
-  return null;
+  return authorized && children;
 }

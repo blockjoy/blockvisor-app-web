@@ -1,4 +1,4 @@
-import { Routes, useSignIn } from '@modules/auth';
+import { useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetBlockchains } from '@modules/node';
 import {
@@ -6,8 +6,6 @@ import {
   useGetOrganizations,
 } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
-import { env } from '@shared/constants/env';
-import { delay } from '@shared/utils/delay';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -53,7 +51,7 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      router.push(`/${redirect?.toString() || 'nodes'}`);
+      router.push(`${redirect?.toString() || '/nodes'}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');

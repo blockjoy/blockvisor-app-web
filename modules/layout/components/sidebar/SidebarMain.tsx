@@ -55,7 +55,7 @@ export default () => {
 
   const handleLogout = async () => {
     signOut();
-    window.location.href = '/';
+    window.location.href = '/login';
   };
 
   const handleLinkClicked = () => {
