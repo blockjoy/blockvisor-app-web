@@ -1,6 +1,6 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, checkIfValidEmail, Table } from '@shared/index';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
@@ -34,7 +34,7 @@ export type MembersProps = {
 export const Members = ({ members, invitations, id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
   const { resendInvitation } = useResendInvitation();
-  const { sentInvitations, getSentInvitations } = useSentInvitations(id ?? '');
+  const { sentInvitations } = useSentInvitations(id ?? '');
 
   const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers(
     id ?? '',
@@ -78,10 +78,12 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     );
 
     if (!isMemberOrInvited) {
-      inviteMembers(emails!, () => {
-        getSentInvitations();
-        setActiveView('list');
-        setPageIndex(0);
+      inviteMembers({
+        emails: emails!,
+        onComplete: () => {
+          setActiveView('list');
+          setPageIndex(0);
+        },
       });
     } else {
       if (isMemberOrInvited === 'member') {
@@ -98,13 +100,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
 
   const [activeMember, setActiveMember] = useState<Member | null>(null);
   const [activeAction, setActiveAction] = useState<Action | null>(null);
-
-  useEffect(() => {
-    if (id) {
-      getSentInvitations();
-    }
-    return () => setPageIndex(0);
-  }, [id]);
 
   const methods = {
     action: (action: Action, orgMember: Member) => {

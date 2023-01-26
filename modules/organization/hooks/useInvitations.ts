@@ -53,7 +53,6 @@ export function useSentInvitations(orgId: string) {
     onError() {
       setSentInvitations([]);
     },
-    enabled: false, // disable from automatically running and use refetch to run manually
   });
 
   return { isLoading, sentInvitations, getSentInvitations: refetch };
@@ -189,6 +188,7 @@ export function useAcceptInvitation() {
     }) => acceptInvitation({ token, invitationId }),
     onSuccess() {
       client.invalidateQueries({ queryKey: ['receivedInvitations'] });
+      client.invalidateQueries({ queryKey: ['organizations'] });
       toast.success('Invite Accepted');
     },
   });
