@@ -1,10 +1,16 @@
 export const checkIfExists = (
   members: ClientOrganizationMember[],
   invitations: ClientOrganizationInvitation[],
-  email: string
+  email: string,
 ) => {
-  if (members.some(member => member.email === email)) return 'member';
-  if (invitations.some(invitation => invitation.inviteeEmail === email)) return 'invited';
+  if (members.some((member) => member.email?.toLowerCase() === email))
+    return 'member';
+  if (
+    invitations.some(
+      (invitation) => invitation.inviteeEmail?.toLowerCase() === email,
+    )
+  )
+    return 'invited';
 
   return;
 };
