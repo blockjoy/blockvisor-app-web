@@ -28,7 +28,7 @@ export function useGetOrganization(id: string) {
 
   const { isLoading } = useQuery({
     queryKey: ['organization', id],
-    queryFn: async () => fetchOrganizationById(id),
+    queryFn: () => fetchOrganizationById(id),
     onSuccess(data) {
       client.invalidateQueries({ queryKey: ['organizationMembers'] });
       setOrganization(data);

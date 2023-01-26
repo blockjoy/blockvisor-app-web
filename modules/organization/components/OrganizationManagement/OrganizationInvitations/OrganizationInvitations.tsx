@@ -1,5 +1,10 @@
 import { useIdentityRepository } from '@modules/auth';
-import { organizationAtoms, useInvitations } from '@modules/organization';
+import {
+  organizationAtoms,
+  useAcceptInvitation,
+  useDeclineInvitations,
+  useReceivedInvitations,
+} from '@modules/organization';
 import { Badge, Button } from '@shared/components';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
@@ -8,27 +13,23 @@ import { styles } from './OrganizationInvitations.styles';
 
 export const OrganizationInvitations = () => {
   const client = useQueryClient();
-  const { acceptInvitation, declineInvitation, getReceivedInvitations } =
-    useInvitations();
+  const { declineInvitation } = useDeclineInvitations();
+  const { acceptInvitation } = useAcceptInvitation();
 
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
+  useReceivedInvitations(userId ?? '');
 
   const invitations: ClientOrganizationInvitation[] = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
 
   const handleAcceptInvitation = (invitationId: string) => {
-    acceptInvitation({ invitationId: invitationId }, () => {
-      client.invalidateQueries({ queryKey: ['organizations'] });
-      getReceivedInvitations(userId!);
-    });
+    acceptInvitation({ invitationId: invitationId });
   };
 
   const handleDeclineInvitation = (invitationId: string) => {
-    declineInvitation({ invitationId: invitationId }, () =>
-      getReceivedInvitations(userId!),
-    );
+    declineInvitation({ invitationId: invitationId });
   };
 
   return (

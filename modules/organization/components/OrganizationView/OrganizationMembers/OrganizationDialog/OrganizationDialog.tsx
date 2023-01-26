@@ -1,5 +1,5 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
-import { useInvitations } from '@modules/organization/hooks/useInvitations';
+import { useRevokeInvitation } from '@modules/organization/hooks/useInvitations';
 import { useRemoveMember } from '@modules/organization/hooks/useRemoveMember';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import {
@@ -27,7 +27,7 @@ export function OrganizationDialog({
     organizationAtoms.selectedOrganization,
   );
 
-  const { revokeInvitation } = useInvitations();
+  const { revokeInvitation } = useRevokeInvitation();
   const { removeMemberFromOrganization } = useRemoveMember();
 
   const { setPageIndex } = useGetOrganizationMembers(org_id ?? '');

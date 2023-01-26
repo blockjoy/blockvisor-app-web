@@ -1,9 +1,6 @@
-import { useInvitations } from '@modules/organization/hooks/useInvitations';
-import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
-import { FC, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useSentInvitations } from '@modules/organization/hooks/useInvitations';
+import { FC } from 'react';
 import { styles } from './OrganizationPendingInvitations.styles';
-import { formatDistanceToNow } from 'date-fns';
 import { Badge, Table } from '@shared/components';
 import { mapInvitesToRows } from '@modules/organization/utils/toRow';
 
@@ -12,27 +9,19 @@ type Props = {
 };
 
 export const OrganizationPendingInvitations: FC<Props> = ({ orgId }) => {
-  const { getSentInvitations } = useInvitations();
+  const { sentInvitations } = useSentInvitations(orgId);
 
-  const invitations = useRecoilValue(
-    organizationAtoms.organizationSentInvitations,
-  );
+  if (!sentInvitations?.length) return null;
 
-  useEffect(() => {
-    if (orgId) {
-      getSentInvitations(orgId);
-    }
-  }, [orgId]);
-
-  if (!invitations?.length) return null;
-
-  const rows = mapInvitesToRows(invitations);
+  const rows = mapInvitesToRows(sentInvitations);
 
   return (
     <>
       <h2 css={styles.header}>
         Pending Invitations{' '}
-        {Boolean(invitations?.length) && <Badge>{invitations?.length}</Badge>}
+        {Boolean(sentInvitations?.length) && (
+          <Badge>{sentInvitations?.length}</Badge>
+        )}
       </h2>
 
       <Table

@@ -3,7 +3,7 @@ import Overlay from './overlay/Overlay';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
 import { PrivateRoute, useIdentityRepository } from '@modules/auth';
-import { OrganizationAdd, useInvitations } from '@modules/organization';
+import { OrganizationAdd, useReceivedInvitations } from '@modules/organization';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
 import Head from 'next/head';
@@ -22,12 +22,8 @@ export const AppLayout: React.FC<LayoutType> = ({
 }) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
-  const { getReceivedInvitations } = useInvitations();
+  useReceivedInvitations(userId ?? '');
   const { getBlockchains, blockchains } = useGetBlockchains();
-
-  useEffect(() => {
-    getReceivedInvitations(userId!);
-  }, []);
 
   useEffect(() => {
     if (!blockchains?.length) {

@@ -7,8 +7,8 @@ import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import {
   organizationAtoms,
-  useInvitations,
   useResendInvitation,
+  useSentInvitations,
 } from '@modules/organization';
 import {
   Action,
@@ -34,13 +34,11 @@ export type MembersProps = {
 export const Members = ({ members, invitations, id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
   const { resendInvitation } = useResendInvitation();
+  const { sentInvitations, getSentInvitations } = useSentInvitations(id ?? '');
 
   const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers(
     id ?? '',
   );
-
-  // TOOD: remove after fixed bug in API (return org the invitation's id in response)
-  const { getSentInvitations } = useInvitations();
 
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
@@ -81,7 +79,7 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
 
     if (!isMemberOrInvited) {
       inviteMembers(emails!, () => {
-        getSentInvitations(id!);
+        getSentInvitations();
         setActiveView('list');
         setPageIndex(0);
       });
@@ -103,7 +101,7 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
 
   useEffect(() => {
     if (id) {
-      getSentInvitations(id);
+      getSentInvitations();
     }
     return () => setPageIndex(0);
   }, [id]);
