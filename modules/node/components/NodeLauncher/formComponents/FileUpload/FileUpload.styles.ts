@@ -7,6 +7,7 @@ export const styles = {
     gap: 8px;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     padding: 15px 22px;
     min-height: 300px;
     max-width: 700px;
@@ -15,10 +16,6 @@ export const styles = {
     cursor: pointer;
     width: 100%;
     margin-bottom: 20px;
-
-    input {
-      display: none;
-    }
   `,
   text: css`
     color: var(--color-text-3);
