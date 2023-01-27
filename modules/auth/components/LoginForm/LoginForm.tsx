@@ -6,10 +6,7 @@ import {
   useGetOrganizations,
 } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
-<<<<<<< HEAD
 import { ROUTES } from '@shared/index';
-=======
->>>>>>> f932251 (auto populate fields from email token)
 import { readToken } from '@shared/utils/readToken';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
@@ -53,19 +50,13 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      // temp fix until we put something in token
+      // temp localStorage fix until we get something in token
       const getRedirect =
         localStorage.getItem('redirect') || redirect?.toString()!;
 
-<<<<<<< HEAD
+      localStorage.removeItem('redirect');
+
       router.push(`${getRedirect?.toString() || ROUTES.NODES}`);
-=======
-      // temp fix until we put something in token
-      const getRedirect =
-        localStorage.getItem('redirect') || redirect?.toString()!;
-
-      router.push(`/${getRedirect || 'nodes'}`);
->>>>>>> f932251 (auto populate fields from email token)
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
