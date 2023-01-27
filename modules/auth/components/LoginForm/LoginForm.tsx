@@ -1,4 +1,4 @@
-import { useSignIn, removeTokenFromUrl } from '@modules/auth';
+import { useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { useGetBlockchains } from '@modules/node';
@@ -74,7 +74,6 @@ export function LoginForm() {
 
   useEffect(() => {
     if (router.isReady) {
-      console.log('token', token);
       if (token) {
         handleTokenFromQueryString(token?.toString()!, setValue);
       }

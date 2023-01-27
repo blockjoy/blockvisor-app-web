@@ -4,9 +4,10 @@ import { removeTokenFromUrl } from './removeTokenFromUrl';
 
 export const handleTokenFromQueryString = async (
   token: string,
-  setValue: UseFormSetValue<{ email: string }>,
+  setValue: UseFormSetValue<any>,
 ) => {
   try {
+    console.log('token', token);
     const tokenObject: any = readToken(
       Buffer.from(token?.toString(), 'binary').toString('base64'),
     );
