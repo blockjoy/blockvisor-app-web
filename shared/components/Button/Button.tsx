@@ -9,7 +9,7 @@ import {
 import { reset } from 'styles/utils.reset.styles';
 import { SerializedStyles } from '@emotion/serialize';
 import Link from 'next/link';
-import { LoadingSpinner } from '../LoadingSpinner';
+import { LightSpinner } from '../LoadingSpinner';
 import { Tooltip } from '@shared/components';
 
 type Props = {
@@ -67,14 +67,14 @@ export function Button({
 
   return (
     <button
+      disabled={disabled}
       {...rest}
       id={id}
-      disabled={disabled}
       type={type}
       css={buttonStyles}
       onClick={onClick}
     >
-      {loading ? <LoadingSpinner size="medium" /> : children}
+      {loading ? <LightSpinner size="medium" /> : children}
       {tooltip && <Tooltip hideOnMobile top="-18px" tooltip={tooltip} />}
     </button>
   );
