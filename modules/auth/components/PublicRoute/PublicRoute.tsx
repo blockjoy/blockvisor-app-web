@@ -15,7 +15,7 @@ export function PublicRoute({ children }: Props) {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.push(ROUTES.NODES);
+      router.push(ROUTES.DEFAULT);
     }
   }, []);
 

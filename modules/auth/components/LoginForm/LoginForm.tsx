@@ -52,7 +52,7 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      router.push(`${redirect?.toString() || ROUTES.NODES}`);
+      router.push(`${redirect?.toString() || ROUTES.DEFAULT}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
