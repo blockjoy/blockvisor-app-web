@@ -51,7 +51,9 @@ export function LoginForm() {
     const loginRedirect = /^\/$|\/login/.test(getRedirect?.toString()!)
       ? ROUTES.DEFAULT
       : getRedirect;
-    router.push(`${loginRedirect || ROUTES.DEFAULT}`);
+    router.push(`${loginRedirect || ROUTES.DEFAULT}`, undefined, {
+      shallow: true,
+    });
   };
 
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
