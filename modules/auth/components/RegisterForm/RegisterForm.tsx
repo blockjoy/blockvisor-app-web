@@ -14,6 +14,7 @@ import { Routes } from '@modules/auth/utils/routes';
 import { isStatusResponse } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
 import { removeTokenFromUrl } from '@modules/auth';
+import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 
 type RegisterForm = {
   first_name: string;
@@ -73,19 +74,7 @@ export function RegisterForm() {
   useEffect(() => {
     if (router.isReady) {
       if (token) {
-        try {
-          const tokenObject: any = readToken(
-            Buffer.from(token?.toString(), 'binary').toString('base64'),
-          );
-          console.log('tokenObject', tokenObject);
-          const email = tokenObject?.email || tokenObject?.invitee_email;
-          if (tokenObject?.email) {
-            setValue('email', email);
-          }
-        } catch (error) {
-          console.log('error reading token', error);
-        }
-        removeTokenFromUrl();
+        handleTokenFromQueryString(token?.toString()!, setValue);
       }
     }
   }, [router.isReady]);
