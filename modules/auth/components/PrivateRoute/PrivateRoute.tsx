@@ -12,17 +12,21 @@ export function PrivateRoute({ router, children }: Props) {
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    authCheck(router.asPath, isLoggedIn);
+    if (!isLoggedIn) {
+      authCheck(router.asPath, isLoggedIn);
 
-    const hideContent = () => setAuthorized(false);
-    router.events.on('routeChangeStart', hideContent);
+      const hideContent = () => setAuthorized(false);
+      router.events.on('routeChangeStart', hideContent);
 
-    router.events.on('routeChangeComplete', authCheck);
+      router.events.on('routeChangeComplete', authCheck);
 
-    return () => {
-      router.events.off('routeChangeStart', hideContent);
-      router.events.off('routeChangeComplete', authCheck);
-    };
+      return () => {
+        router.events.off('routeChangeStart', hideContent);
+        router.events.off('routeChangeComplete', authCheck);
+      };
+    } else {
+      setAuthorized(true);
+    }
   }, []);
 
   function authCheck(url: any, loggedIn: boolean): any {
@@ -39,5 +43,5 @@ export function PrivateRoute({ router, children }: Props) {
     }
   }
 
-  return authorized && children;
+  return <>{authorized && children}</>;
 }
