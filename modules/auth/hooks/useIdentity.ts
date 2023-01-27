@@ -1,31 +1,19 @@
 import { authAtoms } from '@modules/auth/store/authAtoms';
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { useIdentityRepository } from './useIdentityRepository';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 export const useIdentity = () => {
-  const [user, setUser] = useRecoilState(authAtoms.user);
-  const [loading, setLoading] = useRecoilState(authAtoms.loading);
-  const repository = useIdentityRepository();
-
-  const checkUser = () => {
-    setLoading('loading');
-    const user = repository?.getIdentity();
-
-    if (user) {
-      setUser(user);
-    }
-    setLoading('finished');
-  };
+  const user = useRecoilValue(authAtoms.user);
+  const [loading, setLoading] = useState<string>('initializing');
 
   useEffect(() => {
-    checkUser();
+    setLoading('finished');
   }, []);
 
   return {
-    isLoggedIn: Boolean(repository?.getIdentity()?.accessToken),
-    isVerified: Boolean(repository?.getIdentity()?.verified),
-    isLoading: loading === 'initializing' || loading === 'loading',
+    isLoggedIn: Boolean(user?.accessToken),
+    isVerified: Boolean(user?.verified),
+    isLoading: loading === 'initializing',
     isDone: loading === 'finished',
     user,
     state: loading,

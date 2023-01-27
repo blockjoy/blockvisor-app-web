@@ -1,5 +1,6 @@
-import { Routes, useIdentity } from '@modules/auth';
+import { useIdentity } from '@modules/auth';
 import { EmptyColumn, LoadingSpinner } from '@shared/components';
+import { ROUTES } from '@shared/index';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -10,17 +11,19 @@ interface Props {
 
 export function PublicRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoggedIn, state, isDone, isLoading } = useIdentity();
+  const { isLoading, isLoggedIn } = useIdentity();
 
   useEffect(() => {
-    if (isDone && isLoggedIn) {
-      router.push('/nodes');
+    if (isLoggedIn) {
+      router.push(ROUTES.NODES);
     }
-  }, [state]);
+  }, []);
 
   if (isLoading) {
     return <LoadingSpinner size="page" />;
   }
+
+  if (isLoggedIn) return null;
 
   return (
     <>

@@ -17,7 +17,7 @@ export const OrganizationInvitations = () => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
-  const invitations = useRecoilValue(
+  const invitations: ClientOrganizationInvitation[] = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
 
@@ -42,7 +42,7 @@ export const OrganizationInvitations = () => {
       </header>
       <ul>
         {invitations?.map((invite) => (
-          <li css={styles.item}>
+          <li key={invite.id} css={styles.item}>
             <div css={[spacing.bottom.medium]}>
               <b>{invite.createdByUserName || 'Unknown'}</b> invited you to join{' '}
               <b>{invite.createdForOrgName || 'Unknown'}</b> organization
@@ -51,13 +51,13 @@ export const OrganizationInvitations = () => {
               <Button
                 size="small"
                 style="secondary"
-                onClick={() => handleAcceptInvitation(invite.id)}
+                onClick={() => handleAcceptInvitation(invite.id!)}
               >
                 Accept
               </Button>
               <Button
                 size="small"
-                onClick={() => handleDeclineInvitation(invite.id)}
+                onClick={() => handleDeclineInvitation(invite.id!)}
                 style="outline"
               >
                 Decline
