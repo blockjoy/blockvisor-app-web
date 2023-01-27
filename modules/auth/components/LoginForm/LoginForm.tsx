@@ -45,9 +45,14 @@ export function LoginForm() {
   };
 
   const handleRedirect = () => {
-    const loginRedirect = /^\/$|\/login/.test(redirect?.toString()!)
+    // temp localStorage fix until we get something in token
+    const getRedirect =
+      localStorage.getItem('redirect') || redirect?.toString()!;
+    localStorage.removeItem('redirect');
+
+    const loginRedirect = /^\/$|\/login/.test(getRedirect?.toString()!)
       ? ROUTES.DEFAULT
-      : redirect;
+      : getRedirect;
     router.push(`${loginRedirect || ROUTES.DEFAULT}`);
   };
 
