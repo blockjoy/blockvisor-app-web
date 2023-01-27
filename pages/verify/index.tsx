@@ -8,7 +8,7 @@ const Verify: NextPage = () => {
   return (
     <Layout title="We have Sent a Link to Your Email Address.">
       <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
-        Check your e-mail and start using BlockVisor!
+        Check your e-mail and start using the app!
       </p>
     </Layout>
   );
