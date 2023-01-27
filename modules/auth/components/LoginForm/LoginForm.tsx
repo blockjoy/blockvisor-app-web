@@ -1,4 +1,4 @@
-import { useSignIn } from '@modules/auth';
+import { useSignIn, removeTokenFromUrl } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetBlockchains } from '@modules/node';
 import {
@@ -7,6 +7,7 @@ import {
 } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
 import { ROUTES } from '@shared/index';
+import { readToken } from '@shared/utils/readToken';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -25,15 +26,12 @@ type LoginForm = {
 
 export function LoginForm() {
   const { organizations, getOrganizations } = useGetOrganizations();
-
   const router = useRouter();
-
-  const { invited, verified, redirect } = router.query;
-
+  const { invited, verified, redirect, token } = router.query;
   const signIn = useSignIn();
   const form = useForm<LoginForm>();
+  const { setValue } = form;
   const [loading, setIsLoading] = useState(false);
-
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getDefaultOrganization } = useDefaultOrganization();
@@ -52,7 +50,11 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      router.push(`${redirect?.toString() || ROUTES.NODES}`);
+      // temp fix until we put something in token
+      const getRedirect =
+        localStorage.getItem('redirect') || redirect?.toString()!;
+
+      router.push(`${getRedirect?.toString() || ROUTES.NODES}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
@@ -66,6 +68,27 @@ export function LoginForm() {
       getDefaultOrganization();
     }
   }, [organizations]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      console.log('token', token);
+      if (token) {
+        try {
+          const tokenObject: any = readToken(
+            Buffer.from(token?.toString(), 'binary').toString('base64'),
+          );
+          console.log('tokenObject', tokenObject);
+          const email = tokenObject?.email || tokenObject?.invitee_email;
+          if (email) {
+            setValue('email', email);
+          }
+        } catch (error) {
+          console.log('error reading token', error);
+        }
+        removeTokenFromUrl();
+      }
+    }
+  }, [router.isReady]);
 
   return (
     <>
