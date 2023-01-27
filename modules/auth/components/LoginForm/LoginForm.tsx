@@ -1,5 +1,6 @@
 import { useSignIn, removeTokenFromUrl } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { useGetBlockchains } from '@modules/node';
 import {
   useDefaultOrganization,
@@ -75,19 +76,7 @@ export function LoginForm() {
     if (router.isReady) {
       console.log('token', token);
       if (token) {
-        try {
-          const tokenObject: any = readToken(
-            Buffer.from(token?.toString(), 'binary').toString('base64'),
-          );
-          console.log('tokenObject', tokenObject);
-          const email = tokenObject?.email || tokenObject?.invitee_email;
-          if (email) {
-            setValue('email', email);
-          }
-        } catch (error) {
-          console.log('error reading token', error);
-        }
-        removeTokenFromUrl();
+        handleTokenFromQueryString(token?.toString()!, setValue);
       }
     }
   }, [router.isReady]);
