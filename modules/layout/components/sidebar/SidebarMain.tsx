@@ -34,11 +34,6 @@ const blocks = [
         path: '/profile',
         icon: <ProfileBubble />,
       },
-      {
-        name: 'FAQ',
-        path: '/faq',
-        icon: <IconChat />,
-      },
     ],
   },
 ];
@@ -62,6 +57,10 @@ export default () => {
     if (document.body.clientWidth < 768) {
       setIsSidebarOpen(false);
     }
+  };
+
+  const handleFAQClicked = () => {
+    $crisp.push(['do', 'helpdesk:search']);
   };
 
   return (
@@ -110,6 +109,34 @@ export default () => {
               </Link>
             </li>
           ))}
+          <li>
+            <a
+              onClick={handleFAQClicked}
+              css={[styles.link, !isSidebarOpen && styles.linkSidebarCollapsed]}
+            >
+              <span className="link-inner" css={styles.linkInner}>
+                <span
+                  className="link-icon"
+                  css={[
+                    styles.linkIcon,
+                    !isSidebarOpen && styles.linkIconSidebarOpen,
+                  ]}
+                >
+                  <IconChat />
+                </span>
+                <span
+                  className="link-text"
+                  css={[
+                    styles.linkIcon,
+                    styles.linkText,
+                    !isSidebarOpen && styles.linkTextHidden,
+                  ]}
+                >
+                  FAQ
+                </span>
+              </span>
+            </a>
+          </li>
           <li>
             <a
               onClick={handleLogout}
