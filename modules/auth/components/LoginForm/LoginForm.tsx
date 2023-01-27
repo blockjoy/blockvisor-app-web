@@ -44,6 +44,13 @@ export function LoginForm() {
     setActiveType(type);
   };
 
+  const handleRedirect = () => {
+    const loginRedirect = /^\/$|\/login/.test(redirect?.toString()!)
+      ? ROUTES.DEFAULT
+      : redirect;
+    router.push(`${loginRedirect || ROUTES.DEFAULT}`);
+  };
+
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
     setIsLoading(true);
 
@@ -52,7 +59,7 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      router.push(`${redirect?.toString() || ROUTES.DEFAULT}`);
+      handleRedirect();
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
