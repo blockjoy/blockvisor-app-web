@@ -50,9 +50,11 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      // temp fix until we put something in token
+      // temp localStorage fix until we get something in token
       const getRedirect =
         localStorage.getItem('redirect') || redirect?.toString()!;
+
+      localStorage.removeItem('redirect');
 
       router.push(`${getRedirect?.toString() || ROUTES.NODES}`);
     } catch (error) {
