@@ -1,9 +1,10 @@
-import { tableStyles } from './table.styles';
+import { styles } from './table.styles';
 import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
 import { useEffect, useState } from 'react';
 import { Pagination } from '@shared/components';
 import { SetterOrUpdater } from 'recoil';
+import { isSafari } from 'react-device-detect';
 
 type Props = {
   headers?: TableHeader[];
@@ -74,12 +75,12 @@ export const Table: React.FC<Props> = ({
   }, [rows?.length]);
 
   return (
-    <div css={tableStyles.wrapper}>
+    <div css={styles.wrapper}>
       <table
         css={[
-          tableStyles.table,
-          !!onRowClick && tableStyles.hasHoverRows,
-          fixedRowHeight && tableStyles.fixedRowHeight(fixedRowHeight),
+          styles.table,
+          !!onRowClick && styles.hasHoverRows,
+          fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
         ]}
       >
         {headers && rows?.length > 0 && (
@@ -121,6 +122,11 @@ export const Table: React.FC<Props> = ({
               <tr
                 key={tr.key}
                 className={tr.isDanger ? 'danger' : ''}
+                css={[
+                  !isSafari
+                    ? styles.rowFancyUnderlineHover
+                    : styles.rowBasicUnderlineHover,
+                ]}
                 onClick={() => handleRowClick(tr)}
               >
                 {tr.cells?.map((td, index) => (
@@ -129,17 +135,14 @@ export const Table: React.FC<Props> = ({
                     css={[
                       headers &&
                         headers[index]?.isHiddenOnMobile &&
-                        tableStyles.hiddenOnMobile,
-                      verticalAlign
-                        ? tableStyles[verticalAlign]
-                        : tableStyles.middle,
-
-                      tableStyles.textAlign(headers[index].textAlign || 'left'),
+                        styles.hiddenOnMobile,
+                      verticalAlign ? styles[verticalAlign] : styles.middle,
+                      styles.textAlign(headers[index].textAlign || 'left'),
                     ]}
                   >
                     {td.component}
-                    {index === 0 && (
-                      <span className="underline" css={tableStyles.underline} />
+                    {index === 0 && !isSafari && (
+                      <span className="underline" css={styles.underline} />
                     )}
                   </td>
                 ))}
