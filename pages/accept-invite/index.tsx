@@ -6,8 +6,12 @@ const AcceptInvite: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    localStorage.removeItem('identity');
     if (router.isReady) {
       const { token } = router.query;
+
+      // temp fix to redirect to organizations once verified
+      localStorage.setItem('redirect', 'organizations');
       router.push(`/register?invited=true&token=${token}`);
     }
   }, []);
