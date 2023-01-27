@@ -1,5 +1,6 @@
 import { useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { useGetBlockchains } from '@modules/node';
 import {
   useDefaultOrganization,
@@ -25,15 +26,12 @@ type LoginForm = {
 
 export function LoginForm() {
   const { organizations, getOrganizations } = useGetOrganizations();
-
   const router = useRouter();
-
-  const { invited, verified, redirect } = router.query;
-
+  const { invited, verified, redirect, token } = router.query;
   const signIn = useSignIn();
   const form = useForm<LoginForm>();
+  const { setValue } = form;
   const [loading, setIsLoading] = useState(false);
-
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getDefaultOrganization } = useDefaultOrganization();
@@ -52,7 +50,13 @@ export function LoginForm() {
       await getOrganizations();
       await getBlockchains();
 
-      router.push(`${redirect?.toString() || ROUTES.NODES}`);
+      // temp localStorage fix until we get something in token
+      const getRedirect =
+        localStorage.getItem('redirect') || redirect?.toString()!;
+
+      localStorage.removeItem('redirect');
+
+      router.push(`${getRedirect?.toString() || ROUTES.NODES}`);
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
@@ -66,6 +70,14 @@ export function LoginForm() {
       getDefaultOrganization();
     }
   }, [organizations]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (token) {
+        handleTokenFromQueryString(token?.toString()!, setValue);
+      }
+    }
+  }, [router.isReady]);
 
   return (
     <>
