@@ -1,4 +1,5 @@
 export const ROUTES = {
+  DEFAULT: '/nodes',
   DASHBOARD: '/dashboard',
   HOSTS: '/hosts',
   HOST_GROUP: (id: string) => `/hosts/group/${id}`,
