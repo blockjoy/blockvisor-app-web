@@ -56,7 +56,7 @@ export const NodeViewDetailsHeader: FC<Props> = ({
           Stop
         </Button>
         <Button onClick={handleRestart} style="secondary" size="small">
-          Restart
+          Start
         </Button>
       </form>
     </header>
