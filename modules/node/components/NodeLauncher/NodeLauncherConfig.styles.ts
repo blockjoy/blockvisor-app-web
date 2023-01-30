@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -14,13 +15,20 @@ export const styles = {
     margin: 0;
     font-weight: 400;
     color: ${theme.colorLabel};
-    padding: 0 30px;
+
+    @media ${breakpoints.fromXLrg} {
+      padding: 0 24px;
+    }
   `,
   alertWrapper: css`
-    margin: 0 30px;
+    @media ${breakpoints.fromXLrg} {
+      padding: 0 24px;
+    }
   `,
   nodeTypeProperties: css`
-    padding: 0 30px;
+    @media ${breakpoints.fromXLrg} {
+      padding: 0 24px;
+    }
   `,
   buttons: (theme: ITheme) => css`
     padding: 20px 30px;

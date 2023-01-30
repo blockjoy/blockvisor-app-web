@@ -19,6 +19,10 @@ export const styles = {
       border-color: rgba(255, 255, 255, 0.7);
     }
 
+    @media ${breakpoints.toMed} {
+      min-width: 100%;
+    }
+
     @media ${breakpoints.fromXLrg} {
       min-width: 100%;
     }

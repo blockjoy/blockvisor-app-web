@@ -11,16 +11,22 @@ export const styles = {
     border-right: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {
-      width: 100%;
-      max-width: 100%;
-      min-width: 100%;
+      width: calc(100% + 24px);
+      max-width: calc(100% + 24px);
+      min-width: calc(100% + 24px);
+      margin-right: -16px;
       border-right: none;
       border-bottom: 1px solid ${theme.colorBorder};
-      padding-bottom: 20px;
+      padding: 10px 0 20px;
     }
 
     div:hover .row:hover {
       opacity: 1;
+    }
+  `,
+  disabledBlockchains: css`
+    @media ${breakpoints.toXlrg} {
+      display: none;
     }
   `,
   iconWrapper: (theme: ITheme) => css`
@@ -51,7 +57,7 @@ export const styles = {
   `,
   searchWrapper: css`
     position: relative;
-    margin: 0 16px 16px;
+    margin: 0 0 16px 16px;
   `,
   searchBox: (theme: ITheme) => css`
     background: transparent;
@@ -154,11 +160,11 @@ export const styles = {
     } */
 
     @media ${breakpoints.toXlrg} {
-      flex-direction: column;
+      /* flex-direction: column;
       align-items: flex-start;
       justify-content: center;
       gap: 16px;
-      padding: 10px 15px;
+      padding: 10px 15px; */
     }
 
     @media ${breakpoints.fromXLrg} {
@@ -171,10 +177,10 @@ export const styles = {
       background: ${theme.colorLightGrey};
       opacity: 1;
 
-      @media ${breakpoints.toXlrg} {
+      /* @media ${breakpoints.toXlrg} {
         max-height: 1000px;
         height: 90px;
-      }
+      } */
 
       .beta-badge {
         opacity: 1;
