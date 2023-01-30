@@ -37,7 +37,7 @@ export const OrganizationView = () => {
   const router = useRouter();
   const { id } = router.query;
   const { getOrganization, organization, isLoading } = useGetOrganization();
-  const { deleteOrganization } = useDeleteOrganization();
+  const { deleteOrganization, loading: isDeleting } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
 
@@ -145,6 +145,7 @@ export const OrganizationView = () => {
             elementNameToCompare={organization?.name ?? ''}
             activeAction={action}
             handleAction={handleAction}
+            isLoading={isDeleting}
           ></DangerZone>
         </PageSection>
       )}
