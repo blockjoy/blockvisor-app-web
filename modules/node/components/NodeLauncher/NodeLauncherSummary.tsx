@@ -105,7 +105,7 @@ export const NodeLauncherSummary: FC<Props> = ({
                         (property.ui_type === 'key-upload' && !hasAddedFiles),
                     )
                     .map((property) => (
-                      <div>
+                      <div key={property.name}>
                         <NodeTypeConfigLabel>
                           {property.name}
                         </NodeTypeConfigLabel>
