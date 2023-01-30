@@ -11,9 +11,8 @@ import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
-import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
-import { apiClient } from '@modules/client';
 import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
+import { apiClient } from '@modules/client';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -47,6 +46,10 @@ export const AppLayout: React.FC<LayoutType> = ({
     if (!blockchains?.length) getBlockchains();
     getReceivedInvitations(userId!);
     loadNodes();
+  }, []);
+
+  useEffect(() => {
+    apiClient.getUpdates();
   }, []);
 
   useEffect(() => {
