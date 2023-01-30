@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
+import { ROUTES } from '@shared/constants/routes';
 
 const Verified: NextPage = () => {
   const router = useRouter();
@@ -13,7 +14,10 @@ const Verified: NextPage = () => {
       (async () => {
         try {
           await apiClient.registration_confirmation(token?.toString()!);
-          router.push(`/?verified=true&token=${token}`);
+          router.push({
+            pathname: ROUTES.LOGIN,
+            query: { verified: true, token },
+          });
         } catch (err: any) {
           toast.error('Error Verifying');
           return;
