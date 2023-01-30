@@ -1265,50 +1265,6 @@ export class GrpcClient {
     return response.getParamsList().map((item) => item.toObject());
   }
 
-  /* Update service */
-
-  getUpdates(stateObject: StateObject): void {
-    let retry_count = 3;
-    let should_run = true;
-    let request_meta = new RequestMeta();
-    request_meta.setId(this.getDummyUuid());
-
-    let request = new GetUpdatesRequest();
-    request.setMeta(request_meta);
-
-    let update_stream = this.update?.updates(request, this.getAuthHeader());
-
-    while (should_run) {
-      update_stream?.on('data', (response) => {
-        // if (
-        //   response.getUpdate()?.getNotificationCase() ===
-        //   UpdateNotification.NotificationCase.HOST
-        // ) {
-        //   const host = response.getUpdate()?.getHost();
-        //   console.log(`got host update from server: `, host);
-        //   stateObject.processHostUpdate(host);
-        // } else if (
-        //   response.getUpdate()?.getNotificationCase() ===
-        //   UpdateNotification.NotificationCase.NODE
-        // ) {
-        //   const node = response.getUpdate()?.getNode();
-        //   console.log(`got node update from server: `, node);
-        //   stateObject.processNodeUpdate(node);
-        // }
-      });
-      update_stream?.on('error', (err) => {
-        console.error(`update stream closed unexpectedly: `, err);
-        if (retry_count > 0) {
-          console.info('Trying to reinitialize the update connection');
-          update_stream = this.update?.updates(request, this.getAuthHeader());
-          retry_count--;
-        } else {
-          should_run = false;
-        }
-      });
-
-  /* Command service */
-
   async execCreateNode(
     host_id: string,
     node: UINodeCreate,
