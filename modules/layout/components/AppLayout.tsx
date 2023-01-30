@@ -41,7 +41,7 @@ export const AppLayout: React.FC<LayoutType> = ({
   }, []);
 
   useEffect(() => {
-    apiClient.getUpdates();
+    apiClient.getUpdates((data: any) => console.log('client callback', data));
   }, []);
 
   useEffect(() => {
