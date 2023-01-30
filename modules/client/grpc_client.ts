@@ -1310,7 +1310,9 @@ export class GrpcClient {
     let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 
-    const data = JSON.parse(Buffer.from(token?.split('.')[1], 'base64').toString('binary'));
+    const data = JSON.parse(
+      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
+    );
     const channel = `/orgs/${data.data.org_id}/nodes`;
 
     console.log('using token for mqtt auth: ', data);
@@ -1344,7 +1346,9 @@ export class GrpcClient {
 
     mqtt_client.on('message', (topic, payload) => {
       // let tmp = new TextDecoder().decode(payload);
-      let msg = NodeMessage.deserializeBinary(new Uint8Array(payload)).toObject();
+      let msg = NodeMessage.deserializeBinary(
+        new Uint8Array(payload),
+      ).toObject();
       console.log('MQTT topic: ', topic);
       console.log('MQTT payload: ', msg.deleted);
       callback(payload);
