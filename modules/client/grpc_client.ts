@@ -1305,7 +1305,7 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(): void {
+  getUpdates(stateObject: StateObject): void {
     let retry_count = 3;
     let should_run = true;
     let request_meta = new RequestMeta();
@@ -1316,26 +1316,23 @@ export class GrpcClient {
 
     let update_stream = this.update?.updates(request, this.getAuthHeader());
 
-    while (should_run) {
-      update_stream?.on('data', (response) => {
-        if (
+    update_stream?.on('data', (response) => {
+      if (
           response.getUpdate()?.getNotificationCase() ===
           UpdateNotification.NotificationCase.HOST
-        ) {
-          const host = response.getUpdate()?.getHost();
+      ) {
+        const host = response.getUpdate()?.getHost();
 
           console.log(`got host update from server: `, host);
-          // stateObject.processHostUpdate(host);
+          stateObject.processHostUpdate(host);
         } else if (
           response.getUpdate()?.getNotificationCase() ===
           UpdateNotification.NotificationCase.NODE
         ) {
           const node = response.getUpdate()?.getNode();
 
-          // callback(node);
-
           console.log(`got node update from server: `, node);
-          // stateObject.processNodeUpdate(node);
+          stateObject.processNodeUpdate(node);
         }
       });
       update_stream?.on('error', (err) => {
@@ -1345,22 +1342,14 @@ export class GrpcClient {
           update_stream = this.update?.updates(request, this.getAuthHeader());
           retry_count--;
         } else {
-          console.log(`MQTT subscribed to ${channel}`);
+          should_run = false;
         }
       });
-    });
 
-    mqtt_client.on('message', (topic, payload) => {
-      // let tmp = new TextDecoder().decode(payload);
-      let msg = NodeMessage.deserializeBinary(new Uint8Array(payload)).toObject();
-      console.log('MQTT topic: ', topic);
-      console.log('MQTT payload: ', msg.deleted);
-      callback(payload);
-    });
-
-    mqtt_client.on('error', (err) => {
-      console.log('MQTT connection error: ', err);
-    });
+      window.setTimeout(() => {
+        console.debug('Waiting 1000ms for next update');
+      }, 1000);
+    }
   }
 
   /* Command service */
