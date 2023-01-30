@@ -66,8 +66,8 @@ const inputFieldWithUtilRight = css`
   padding-right: 36px;
 `;
 
-const inputFieldDisabled = (theme: ITheme) => css`
-  -webkit-text-fill-color: ${theme.colorDefault};
+const inputFieldDisabled = css`
+  -webkit-text-fill-color: var(--color-text-3);
   opacity: 1;
   cursor: not-allowed;
   user-select: none;
