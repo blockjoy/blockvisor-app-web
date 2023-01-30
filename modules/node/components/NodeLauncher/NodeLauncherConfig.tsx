@@ -1,5 +1,5 @@
 import { NodeTypeConfigLabel, Alert, PillPicker } from '@shared/components';
-import { FC } from 'react';
+import { FC, Fragment } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
 import { Switch } from './formComponents/Switch/Switch';
@@ -123,7 +123,7 @@ export const NodeLauncherConfig: FC<Props> = ({
           {Boolean(networkList?.length) &&
             nodeTypeProperties?.map((property: NodeTypeConfig) => {
               return (
-                <>
+                <Fragment key={property.name}>
                   <label
                     css={[
                       spacing.bottom.mediumSmall,
@@ -143,7 +143,7 @@ export const NodeLauncherConfig: FC<Props> = ({
                     onFileUploaded,
                     onPropertyChanged,
                   )}
-                </>
+                </Fragment>
               );
             })}
         </div>

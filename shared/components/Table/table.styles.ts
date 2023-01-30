@@ -3,7 +3,7 @@ import { ITheme } from 'types/theme';
 import { rgba } from 'polished';
 import { breakpoints } from 'styles/variables.styles';
 
-export const tableStyles = {
+export const styles = {
   wrapper: css`
     position: relative;
     width: 100%;
@@ -66,25 +66,28 @@ export const tableStyles = {
 
     & tbody tr {
       position: relative;
-    }
-
-    & tbody tr td {
-      border-bottom: 1px solid ${theme.colorBorder};
+      border-bottom: 2px solid ${theme.colorBorder};
+      transition: 0.3s;
     }
 
     & .danger span,
     & tr:hover.danger .has-hover-color {
       color: ${theme.colorDanger};
     }
-
-    /* & td:first-of-type::after {
-      content: '';
-      
-    } */
-
-    tr:hover .underline {
-      transform: scaleX(1);
-      opacity: 1;
+  `,
+  rowFancyUnderlineHover: css`
+    @media ${breakpoints.fromXLrg} {
+      :hover .underline {
+        transform: scaleX(1);
+        opacity: 1;
+      }
+    }
+  `,
+  rowBasicUnderlineHover: (theme: ITheme) => css`
+    @media ${breakpoints.fromXLrg} {
+      :hover {
+        border-bottom-color: ${theme.colorLabel};
+      }
     }
   `,
   tableSkeleton: css`
