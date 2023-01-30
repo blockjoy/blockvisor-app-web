@@ -1267,6 +1267,43 @@ export class GrpcClient {
     return response.getParamsList().map((item) => item.toObject());
   }
 
+  /* Update service */
+
+  getUpdates(callback: (data: any) => void): void {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new GetUpdatesRequest();
+    request.setMeta(request_meta);
+
+    let update_stream = this.update?.updates(request, this.getAuthHeader());
+
+    update_stream?.on('data', (response) => {
+      if (
+        response.getUpdate()?.getNotificationCase() ===
+        UpdateNotification.NotificationCase.HOST
+      ) {
+        const host = response.getUpdate()?.getHost();
+
+        console.log(`got host update from server: `, host);
+        callback(host);
+      } else if (
+        response.getUpdate()?.getNotificationCase() ===
+        UpdateNotification.NotificationCase.NODE
+      ) {
+        const node = response.getUpdate()?.getNode();
+
+        console.log(`got node update from server: `, node);
+        callback(node);
+      }
+    });
+    update_stream?.on('error', (err) => {
+      console.error(`update stream closed unexpectedly: `, err);
+    });
+  }
+
+  /* Command service */
+
   async execCreateNode(
     host_id: string,
     node: UINodeCreate,
