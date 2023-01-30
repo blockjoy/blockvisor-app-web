@@ -14,6 +14,7 @@ import {
   SkeletonGrid,
   TableSkeleton,
   EditableTitle,
+  EmptyColumn,
 } from '@shared/components';
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
@@ -114,6 +115,11 @@ export const OrganizationView = () => {
             </SkeletonGrid>
             <TableSkeleton />
           </div>
+        ) : organization === null ? (
+          <EmptyColumn
+            title="Organization Not Found"
+            description="No organization exists with this ID"
+          />
         ) : (
           <div css={spacing.top.medium}>
             <EditableTitle
@@ -132,7 +138,7 @@ export const OrganizationView = () => {
           </div>
         )}
       </PageSection>
-      {!isLoadingOrg && !organization?.personal && (
+      {!isLoadingOrg && organization && !organization?.personal && (
         <PageSection>
           <DangerZone
             elementName="Organization"
