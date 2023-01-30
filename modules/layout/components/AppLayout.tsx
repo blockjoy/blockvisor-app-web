@@ -12,6 +12,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains } from '@modules/node';
+import { apiClient } from '@modules/client';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -37,6 +38,10 @@ export const AppLayout: React.FC<LayoutType> = ({
 
   useEffect(() => {
     getOrganizations();
+  }, []);
+
+  useEffect(() => {
+    apiClient.getUpdates();
   }, []);
 
   useEffect(() => {
