@@ -74,7 +74,7 @@ export function Button({
       css={buttonStyles}
       onClick={onClick}
     >
-      {loading ? <LightSpinner size="medium" /> : children}
+      {loading ? <LightSpinner size={size} /> : children}
       {tooltip && <Tooltip hideOnMobile top="-18px" tooltip={tooltip} />}
     </button>
   );
