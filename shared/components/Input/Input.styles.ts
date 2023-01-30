@@ -1,4 +1,5 @@
 import { css, SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 const inputWrapper = css`
   position: relative;
@@ -65,8 +66,8 @@ const inputFieldWithUtilRight = css`
   padding-right: 36px;
 `;
 
-const inputFieldDisabled = css`
-  -webkit-text-fill-color: inherit;
+const inputFieldDisabled = (theme: ITheme) => css`
+  -webkit-text-fill-color: ${theme.colorDefault};
   opacity: 1;
   cursor: not-allowed;
   user-select: none;
