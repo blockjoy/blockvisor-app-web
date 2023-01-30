@@ -1,16 +1,12 @@
 import { styles } from './Faq.styles';
-import { PageSection, PageTitle } from '@shared/components';
+import { EmptyColumn, PageSection, PageTitle } from '@shared/components';
 import { Fragment } from 'react';
 
-const faq = [
-  {
-    title: 'How do I launch a Node?',
-    answer:
-      'You can easily create a new node by clicking the Launch Node button in the top right corner. You then just need to select a protocol, enter any configuration settings and click Launch Node.',
-  },
-];
+export type FaqProps = {
+  faqs: FAQ[];
+};
 
-export const Faq = () => {
+export const Faq = ({ faqs }: FaqProps) => {
   return (
     <>
       <PageTitle title="FAQ" />
@@ -18,14 +14,21 @@ export const Faq = () => {
         <div css={styles.wrapper}>
           <header css={styles.header}>Frequently Asked Questions</header>
         </div>
-        <div css={styles.questionList}>
-          {faq?.map((question) => (
-            <Fragment key={question.title}>
-              <h3 css={styles.questionTitle}>{question.title}</h3>
-              <p css={styles.questionAnswer}>{question.answer}</p>
-            </Fragment>
-          ))}
-        </div>
+        {!faqs || !faqs.length ? (
+          <EmptyColumn
+            title="FAQs Not Found"
+            description="Error encountered while retrieving FAQs. Please refresh the page."
+          />
+        ) : (
+          <div css={styles.questionList}>
+            {faqs?.map((faq: any) => (
+              <Fragment key={faq.article_id}>
+                <h3 css={styles.questionTitle}>{faq.title}</h3>
+                <p css={styles.questionAnswer}>{faq.content}</p>
+              </Fragment>
+            ))}
+          </div>
+        )}
       </PageSection>
     </>
   );
