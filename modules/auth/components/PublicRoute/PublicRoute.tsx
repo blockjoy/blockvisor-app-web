@@ -19,12 +19,6 @@ export function PublicRoute({ children }: Props) {
     }
   }, []);
 
-  if (isLoading) {
-    return <LoadingSpinner size="page" />;
-  }
-
-  if (isLoggedIn) return null;
-
   return (
     <>
       {window.navigator.onLine ? (

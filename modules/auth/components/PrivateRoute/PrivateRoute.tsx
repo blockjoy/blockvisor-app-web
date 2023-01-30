@@ -1,5 +1,5 @@
 import { useIdentity } from '@modules/auth';
-import { ROUTES } from '@shared/index';
+import { LoadingSpinner, PUBLIC_ROUTES, ROUTES } from '@shared/index';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -8,14 +8,17 @@ interface Props {
 }
 
 export function PrivateRoute({ router, children }: Props) {
-  const { isLoggedIn } = useIdentity();
+  const { isLoggedIn, isLoading } = useIdentity();
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      authCheck(router.asPath, isLoggedIn);
+    authCheck(router.asPath, isLoggedIn);
 
-      const hideContent = () => setAuthorized(false);
+    const hideContent = () => {
+      setAuthorized(false);
+    };
+
+    if (!isLoggedIn && !PUBLIC_ROUTES.includes(router.asPath)) {
       router.events.on('routeChangeStart', hideContent);
 
       router.events.on('routeChangeComplete', authCheck);
@@ -24,15 +27,12 @@ export function PrivateRoute({ router, children }: Props) {
         router.events.off('routeChangeStart', hideContent);
         router.events.off('routeChangeComplete', authCheck);
       };
-    } else {
-      setAuthorized(true);
     }
-  }, []);
+  }, [isLoggedIn]);
 
   function authCheck(url: any, loggedIn: boolean): any {
-    const publicPaths = ['/login'];
     const path = url.split('?')[0];
-    if (!loggedIn && !publicPaths.includes(path)) {
+    if (!loggedIn && !PUBLIC_ROUTES.includes(path)) {
       setAuthorized(false);
       router.push({
         pathname: ROUTES.LOGIN,
@@ -43,5 +43,7 @@ export function PrivateRoute({ router, children }: Props) {
     }
   }
 
-  return <>{authorized && children}</>;
+  return (
+    <>{isLoading || !authorized ? <LoadingSpinner size="page" /> : children}</>
+  );
 }

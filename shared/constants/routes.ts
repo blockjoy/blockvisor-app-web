@@ -6,6 +6,9 @@ export const ROUTES = {
   NODES: '/nodes',
   NODE_GROUP: (id: string) => `/nodes/group/${id}`,
   LOGIN: '/login',
+  ORGANIZATIONS: '/organizations',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
 };
+
+export const PUBLIC_ROUTES = ['/login'];

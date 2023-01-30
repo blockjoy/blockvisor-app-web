@@ -2,10 +2,7 @@ import { useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { useGetBlockchains } from '@modules/node';
-import {
-  useDefaultOrganization,
-  useGetOrganizations,
-} from '@modules/organization';
+import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
 import { ROUTES } from '@shared/index';
 import { isValidEmail } from '@shared/utils/validation';
@@ -25,7 +22,7 @@ type LoginForm = {
 };
 
 export function LoginForm() {
-  const { organizations, getOrganizations } = useGetOrganizations();
+  const { getOrganizations } = useGetOrganizations();
   const router = useRouter();
   const { invited, verified, redirect, token } = router.query;
   const signIn = useSignIn();
@@ -34,7 +31,6 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-  const { getDefaultOrganization } = useDefaultOrganization();
   const { getBlockchains } = useGetBlockchains();
 
   const handleIconClick = () => {
@@ -61,7 +57,7 @@ export function LoginForm() {
 
     try {
       await signIn(email, password);
-      await getOrganizations();
+      await getOrganizations(true);
       await getBlockchains();
 
       handleRedirect();
@@ -72,12 +68,6 @@ export function LoginForm() {
       setIsLoading(false);
     }
   });
-
-  useEffect(() => {
-    if (organizations.length) {
-      getDefaultOrganization();
-    }
-  }, [organizations]);
 
   useEffect(() => {
     if (router.isReady) {

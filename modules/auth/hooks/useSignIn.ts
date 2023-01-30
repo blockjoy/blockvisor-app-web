@@ -1,12 +1,12 @@
 import { apiClient } from '@modules/client';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
 import { isSuccess } from '../utils/authTypeGuards';
 import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
 
 export function useSignIn() {
-  const [, setUser] = useRecoilState(authAtoms.user);
+  const setUser = useSetRecoilState(authAtoms.user);
   const repository = useIdentityRepository();
 
   const signIn = async (email: string, password: string) => {
@@ -22,7 +22,11 @@ export function useSignIn() {
 
       const userData: any = await apiClient.getUser();
       repository?.updateIdentity(userData);
-      setUser((current) => ({ ...current, ...userData }));
+      setUser((current) => ({
+        ...current,
+        ...userData,
+        accessToken: response.value,
+      }));
     } else {
       throw new ApplicationError('LoginError', response?.message ?? '');
     }
