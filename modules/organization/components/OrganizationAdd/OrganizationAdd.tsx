@@ -6,7 +6,6 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   Drawer,
-  DrawerAction,
   DrawerContent,
   DrawerHeader,
 } from '../../../layout/components';
@@ -72,18 +71,16 @@ export const OrganizationAdd: FC = () => {
                 }}
               />
             </div>
-          </DrawerContent>
-          <DrawerAction>
             <Button
               style="secondary"
-              size="small"
+              size="medium"
               type="submit"
               loading={loading}
               customCss={[width.full]}
             >
-              Create
+              Add
             </Button>
-          </DrawerAction>
+          </DrawerContent>
         </form>
       </FormProvider>
     </Drawer>
