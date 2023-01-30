@@ -51,13 +51,11 @@ export const AppLayout: React.FC<LayoutType> = ({
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <PrivateRoute>
-        <Burger />
-        <Sidebar />
-        <Overlay />
-        <OrganizationAdd />
-        <Page isFlex={isPageFlex}>{children}</Page>
-      </PrivateRoute>
+      <Burger />
+      <Sidebar />
+      <Overlay />
+      <OrganizationAdd />
+      <Page isFlex={isPageFlex}>{children}</Page>
     </>
   );
 };

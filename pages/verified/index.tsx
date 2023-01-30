@@ -13,7 +13,7 @@ const Verified: NextPage = () => {
       (async () => {
         try {
           await apiClient.registration_confirmation(token?.toString()!);
-          router.push('/?verified=true');
+          router.push(`/?verified=true&token=${token}`);
         } catch (err: any) {
           toast.error('Error Verifying');
           return;

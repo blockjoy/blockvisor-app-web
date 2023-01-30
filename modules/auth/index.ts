@@ -10,3 +10,4 @@ export * from './hooks/useChangePassword';
 export * from './hooks/useEditUser';
 export * from './hooks/useSignOut';
 export * from './utils/BrowserStorage';
+export * from './utils/removeTokenFromUrl';

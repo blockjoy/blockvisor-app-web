@@ -3,6 +3,17 @@ import { atom } from 'recoil';
 const user = atom<User | null>({
   key: 'authentication.user',
   default: null,
+  effects: [
+    ({ setSelf }) => {
+      const savedIdentity =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('identity')
+          : null;
+      if (savedIdentity) {
+        setSelf(JSON.parse(savedIdentity));
+      }
+    },
+  ],
 });
 
 const loading = atom<LoadingState>({

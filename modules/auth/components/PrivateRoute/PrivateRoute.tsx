@@ -1,48 +1,49 @@
-import { Routes, useIdentity } from '@modules/auth';
-import { EmptyColumn, LoadingSpinner } from '@shared/components';
-import { useRouter } from 'next/router';
-import { ReactNode, useEffect } from 'react';
-import { spacing } from 'styles/utils.spacing.styles';
+import { useIdentity } from '@modules/auth';
+import { LoadingSpinner, PUBLIC_ROUTES, ROUTES } from '@shared/index';
+import { useEffect, useState } from 'react';
 
 interface Props {
-  children?: ReactNode;
+  router: any;
+  children?: any;
 }
 
-export function PrivateRoute({ children }: Props) {
-  const router = useRouter();
-
-  const gotoPath = router.pathname;
-
-  const { isLoggedIn, isVerified, isDone, isLoading, state } = useIdentity();
+export function PrivateRoute({ router, children }: Props) {
+  const { isLoggedIn, isLoading } = useIdentity();
+  const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    if (isDone && !isLoggedIn) {
-      router.push(`${Routes.login}?redirect=${gotoPath}`);
-      return;
+    authCheck(router.asPath, isLoggedIn);
+
+    const hideContent = () => {
+      setAuthorized(false);
+    };
+
+    if (!isLoggedIn && !PUBLIC_ROUTES.includes(router.asPath)) {
+      router.events.on('routeChangeStart', hideContent);
+
+      router.events.on('routeChangeComplete', authCheck);
+
+      return () => {
+        router.events.off('routeChangeStart', hideContent);
+        router.events.off('routeChangeComplete', authCheck);
+      };
     }
-  }, [router.pathname, state]);
+  }, [isLoggedIn]);
 
-  if (isLoading) {
-    return <LoadingSpinner size="page" />;
+  function authCheck(url: any, loggedIn: boolean): any {
+    const path = url.split('?')[0];
+    if (!loggedIn && !PUBLIC_ROUTES.includes(path)) {
+      setAuthorized(false);
+      router.push({
+        pathname: ROUTES.LOGIN,
+        query: { redirect: router.asPath },
+      });
+    } else {
+      setAuthorized(true);
+    }
   }
 
-  if (isLoggedIn) {
-    return (
-      <>
-        {' '}
-        {window.navigator.onLine ? (
-          children
-        ) : (
-          <div css={[spacing.left.large, spacing.top.xxxLarge]}>
-            <EmptyColumn
-              title="No Internet Connection"
-              description="Once connected please refresh the app."
-            />
-          </div>
-        )}
-      </>
-    );
-  }
-
-  return null;
+  return (
+    <>{isLoading || !authorized ? <LoadingSpinner size="page" /> : children}</>
+  );
 }
