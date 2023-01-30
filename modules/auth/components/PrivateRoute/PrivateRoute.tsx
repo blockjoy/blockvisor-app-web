@@ -11,6 +11,8 @@ export function PrivateRoute({ router, children }: Props) {
   const { isLoggedIn, isLoading } = useIdentity();
   const [authorized, setAuthorized] = useState(false);
 
+  const isPrivateRoute = !PUBLIC_ROUTES.some((r) => router.asPath.includes(r));
+
   useEffect(() => {
     authCheck(router.asPath, isLoggedIn);
 
@@ -18,7 +20,7 @@ export function PrivateRoute({ router, children }: Props) {
       setAuthorized(false);
     };
 
-    if (!isLoggedIn && !PUBLIC_ROUTES.includes(router.asPath)) {
+    if (!isLoggedIn && isPrivateRoute) {
       router.events.on('routeChangeStart', hideContent);
 
       router.events.on('routeChangeComplete', authCheck);
@@ -32,7 +34,7 @@ export function PrivateRoute({ router, children }: Props) {
 
   function authCheck(url: any, loggedIn: boolean): any {
     const path = url.split('?')[0];
-    if (!loggedIn && !PUBLIC_ROUTES.includes(path)) {
+    if (!loggedIn && isPrivateRoute) {
       setAuthorized(false);
       router.push({
         pathname: ROUTES.LOGIN,
