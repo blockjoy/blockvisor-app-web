@@ -1,6 +1,7 @@
 import { apiClient } from '@modules/client';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
+import { useDefaultOrganization } from './useDefaultOrganization';
 
 export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
@@ -14,10 +15,15 @@ export function useGetOrganizations() {
     organizationAtoms.organizationsPageIndex,
   );
 
-  const getOrganizations = async () => {
+  const { getDefaultOrganization } = useDefaultOrganization();
+
+  const getOrganizations = async (init: boolean) => {
     setIsLoading('initializing');
     const organizations: any = await apiClient.getOrganizations();
     setOrganizations(organizations);
+
+    if (init) getDefaultOrganization(organizations);
+
     setIsLoading('finished');
   };
 

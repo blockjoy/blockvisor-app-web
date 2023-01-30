@@ -12,9 +12,9 @@ export function useDefaultOrganization() {
     organizationAtoms.defaultOrganization,
   );
 
-  const organizations = useRecoilValue(organizationAtoms.allOrganizations);
-
-  const getDefaultOrganization = async () => {
+  const getDefaultOrganization = async (
+    organizations: ClientOrganization[],
+  ) => {
     setLoadingState('loading');
 
     const identity = repository?.getIdentity();
@@ -22,14 +22,11 @@ export function useDefaultOrganization() {
     const userData: any = user?.data;
     const orgId = userData.org_id ?? '';
 
-    const organization = organizations.find(org => org.id === orgId);
+    const organization = organizations.find((org) => org.id === orgId);
 
     const orgName = organization?.name ?? '';
 
-    repository?.saveDefaultOrganization(
-      orgName,
-      orgId
-    );
+    repository?.saveDefaultOrganization(orgName, orgId);
 
     setDefaultOrganization({
       name: orgName,
