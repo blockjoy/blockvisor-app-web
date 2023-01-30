@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   base: css`
@@ -10,12 +11,16 @@ export const styles = {
     flex-direction: column;
     padding: 15px 22px;
     min-height: 300px;
-    max-width: 700px;
+
     border: 2px dashed var(--color-border-2);
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
     margin-bottom: 20px;
+
+    @media ${breakpoints.fromXLrg} {
+      max-width: 700px;
+    }
   `,
   text: css`
     color: var(--color-text-3);

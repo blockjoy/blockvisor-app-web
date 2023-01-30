@@ -33,8 +33,6 @@ export const NodeLauncherProtocol: FC<Props> = ({
       b.status !== 0 && b.name?.toLowerCase().includes(keyword.toLowerCase()),
   );
 
-  const disabledBlockchains = blockchains?.filter((b) => b.status === 0);
-
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
@@ -62,6 +60,8 @@ export const NodeLauncherProtocol: FC<Props> = ({
         <div css={styles.searchWrapper}>
           <input
             autoFocus
+            autoComplete="off"
+            autoCorrect="off"
             css={styles.searchBox}
             type="text"
             placeholder="Find a Protocol"
@@ -122,23 +122,25 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 </div>
               </div>
             ))}
-            {!keyword &&
-              blockchainsDisabled?.map((b: any) => (
-                <div key={b} css={[styles.row, styles.rowDisabled]}>
-                  <span css={styles.blockchainWrapper}>
-                    <span css={styles.iconWrapper}>
-                      <BlockchainIcon hideTooltip blockchainName={b} />
+            <div css={styles.disabledBlockchains}>
+              {!keyword &&
+                blockchainsDisabled?.map((b: any) => (
+                  <div key={b} css={[styles.row, styles.rowDisabled]}>
+                    <span css={styles.blockchainWrapper}>
+                      <span css={styles.iconWrapper}>
+                        <BlockchainIcon hideTooltip blockchainName={b} />
+                      </span>
+                      <span css={styles.name}>{b}</span>
+                      <span
+                        className="coming-soon-badge"
+                        css={styles.comingSoonBadge}
+                      >
+                        Coming Soon
+                      </span>
                     </span>
-                    <span css={styles.name}>{b}</span>
-                    <span
-                      className="coming-soon-badge"
-                      css={styles.comingSoonBadge}
-                    >
-                      Coming Soon
-                    </span>
-                  </span>
-                </div>
-              ))}
+                  </div>
+                ))}
+            </div>
             {/* {!keyword &&
               disabledBlockchains
                 ?.filter(

@@ -25,7 +25,10 @@ export const styles = {
     margin: 0;
     font-weight: 400;
     color: ${theme.colorLabel};
-    padding: 0 30px;
+
+    @media ${breakpoints.fromXLrg} {
+      padding: 0 24px;
+    }
   `,
   buttons: css`
     display: flex;
@@ -35,10 +38,15 @@ export const styles = {
     border: 1px solid ${theme.colorBorder};
     border-radius: 6px;
     padding: 16px;
-    margin: 0 30px 16px;
+    margin: 0 0 16px;
 
     @media ${breakpoints.toXlrg} {
       max-width: 100%;
+      margin-bottom: 100px;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      margin: 0 24px;
     }
   `,
   summaryList: (theme: ITheme) => css`
@@ -62,16 +70,16 @@ export const styles = {
     }
   `,
   summaryIcon: (theme: ITheme) => css`
-    height: 24px;
-    width: 24px;
+    height: 30px;
+    width: 30px;
     path {
       fill: ${theme.colorPrimary};
     }
   `,
   summaryIconClose: (theme: ITheme) => css`
-    width: 24px;
-    height: 24px;
-    padding: 4px;
+    width: 30px;
+    height: 30px;
+    padding: 3px;
     display: grid;
     place-items: center;
 
@@ -104,7 +112,7 @@ export const styles = {
       opacity: 0.2;
     }
 
-    @media ${breakpoints.fromSml} {
+    @media ${breakpoints.fromLrg} {
       width: 300px;
     }
 
