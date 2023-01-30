@@ -11,4 +11,13 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/forgot-password',
 };
 
-export const PUBLIC_ROUTES = ['/login'];
+export const PUBLIC_ROUTES = [
+  '/login',
+  '/password_reset',
+  '/register',
+  '/accept-invite',
+  '/invite-registered',
+  '/decline-invite',
+  '/verified',
+  '/verify',
+];
