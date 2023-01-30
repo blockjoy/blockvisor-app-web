@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { toast } from 'react-toastify';
@@ -19,16 +18,14 @@ import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrga
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import { Members } from './OrganizationMembers/OrganizationMembers';
 import {
-  organizationAtoms,
-  useInvitations,
   useUpdateOrganization,
+  useSentInvitations,
 } from '@modules/organization';
 import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
 
@@ -39,13 +36,6 @@ export const OrganizationView = () => {
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization, loading } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
-
-  const sentInvitationsLoadingState = useRecoilValue(
-    organizationAtoms.organizationSentInvitationsLoadingState,
-  );
-  const membersLoadingState = useRecoilValue(
-    organizationAtoms.organizationMembersLoadingState,
-  );
 
   const handleSaveClicked = async (newOrganizationName: string) => {
     try {
@@ -74,26 +64,14 @@ export const OrganizationView = () => {
     if (canDeleteOrganization) {
       await deleteOrganization(queryAsString(id));
     } else {
-      await leaveOrganization(queryAsString(id));
+      await leaveOrganization({ orgId: queryAsString(id) });
     }
   };
 
   const { organizationMembers } = useGetOrganizationMembers(queryAsString(id));
-
-  const { getSentInvitations, sentInvitations } = useInvitations();
-
-  useEffect(() => {
-    if (router.isReady) {
-      getSentInvitations(queryAsString(id));
-    }
-  }, [router.isReady]);
+  const { sentInvitations } = useSentInvitations(queryAsString(id));
 
   const details = getOrganizationDetails(organization);
-  const isLoadingOrg =
-    isLoading ||
-    membersLoadingState !== 'finished' ||
-    sentInvitationsLoadingState !== 'finished';
-
   return (
     <>
       <PageTitle title="Organizations" />
@@ -101,7 +79,7 @@ export const OrganizationView = () => {
         <div css={spacing.top.medium}>
           <BackButton backUrl={ROUTES.ORGANIZATIONS} />
         </div>
-        {isLoadingOrg ? (
+        {isLoading ? (
           <div css={spacing.top.medium}>
             <SkeletonGrid padding="10px 0 70px">
               <Skeleton width="260px" />
@@ -127,7 +105,7 @@ export const OrganizationView = () => {
           </div>
         )}
       </PageSection>
-      {!isLoadingOrg && !organization?.personal && (
+      {!isLoading && !organization?.personal && (
         <PageSection>
           <DangerZone
             elementName="Organization"

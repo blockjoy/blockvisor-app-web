@@ -32,16 +32,6 @@ const allOrganizations = atom<ClientOrganization[]>({
   default: [],
 });
 
-const organizationsLoadingState = atom<LoadingState>({
-  key: 'organizations.loadingState',
-  default: 'initializing',
-});
-
-const organizationLoadingState = atom<LoadingState>({
-  key: 'organization.loadingState',
-  default: 'initializing',
-});
-
 const organizationDefaultLoadingState = atom<LoadingState>({
   key: 'organization.defaultOrgloadingState',
   default: 'initializing',
@@ -75,24 +65,9 @@ const organizationMembersPageIndex = atom<number>({
   default: 0,
 });
 
-const organizationMemberLoadingState = atom<LoadingState>({
-  key: 'organization.member.loadingState',
-  default: 'initializing',
-});
-
-const organizationMembersLoadingState = atom<LoadingState>({
-  key: 'organization.members.loadingState',
-  default: 'initializing',
-});
-
 const organizationSentInvitations = atom<any[]>({
   key: 'organizationSentInvitations',
   default: [],
-});
-
-const organizationSentInvitationsLoadingState = atom<LoadingState>({
-  key: 'organizationSentInvitations.loadingState',
-  default: 'initializing',
 });
 
 const organizationReceivedInvitations = atom<any[]>({
@@ -103,18 +78,13 @@ const organizationReceivedInvitations = atom<any[]>({
 export const organizationAtoms = {
   selectedOrganization,
   organizationsPageIndex,
-  organizationLoadingState,
   organizationDefaultLoadingState,
-  organizationsLoadingState,
   allOrganizations,
   organizationMemberCount,
   organisationCount,
   defaultOrganization,
   organizationMembers,
-  organizationMemberLoadingState,
-  organizationMembersLoadingState,
   organizationMembersPageIndex,
   organizationSentInvitations,
-  organizationSentInvitationsLoadingState,
   organizationReceivedInvitations,
 };
