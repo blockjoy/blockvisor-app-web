@@ -75,6 +75,8 @@ export const useNodeAdd = () => {
         'Error launching node, please contact our support team.';
       if (response?.message?.includes('No free IP available')) {
         errorMessage = 'Error launching node, no free IP address available.';
+      } else if (response?.message?.includes('User node quota exceeded')) {
+        errorMessage = 'Unable to launch, node quota exceeded.';
       }
       onError(errorMessage);
     }
