@@ -6,7 +6,7 @@ import { styles as lightSpinnerStyles } from './LightSpinner.styles';
 import { styles as defaulSpinnerStyles } from './spinner.styles';
 
 interface Props {
-  size: 'small' | 'medium' | 'large' | 'page';
+  size: 'small' | 'medium' | 'large' | 'page' | 'normal';
 }
 
 export const LightSpinner: FC<Props> = ({ size }) => {
