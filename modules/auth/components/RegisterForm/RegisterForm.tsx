@@ -12,8 +12,6 @@ import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { Routes } from '@modules/auth/utils/routes';
 import { isStatusResponse } from '@modules/organization';
-import { readToken } from '@shared/utils/readToken';
-import { removeTokenFromUrl } from '@modules/auth';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 
 type RegisterForm = {

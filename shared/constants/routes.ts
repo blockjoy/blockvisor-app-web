@@ -20,4 +20,5 @@ export const PUBLIC_ROUTES = [
   '/decline-invite',
   '/verified',
   '/verify',
+  '/forgot-password',
 ];

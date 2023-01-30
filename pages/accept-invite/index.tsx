@@ -1,3 +1,4 @@
+import { ROUTES } from '@shared/constants/routes';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -12,9 +13,12 @@ const AcceptInvite: NextPage = () => {
 
       // temp fix to redirect to organizations once verified
       localStorage.setItem('redirect', 'organizations');
-      router.push(`/register?invited=true&token=${token}`);
+      router.push({
+        pathname: ROUTES.LOGIN,
+        query: { token },
+      });
     }
-  }, []);
+  }, [router.isReady]);
 
   return null;
 };
