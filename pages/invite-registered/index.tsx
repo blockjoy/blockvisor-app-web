@@ -1,3 +1,4 @@
+import { ROUTES } from '@shared/constants/routes';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -8,7 +9,11 @@ const AcceptInvite: NextPage = () => {
   useEffect(() => {
     localStorage.removeItem('identity');
     if (router.isReady) {
-      router.push(`/?invited=true&redirect=organizations`);
+      const { token } = router.query;
+      router.push({
+        pathname: ROUTES.LOGIN,
+        query: { token },
+      });
     }
   }, [router.isReady]);
 
