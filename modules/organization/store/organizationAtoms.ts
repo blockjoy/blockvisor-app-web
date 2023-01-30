@@ -47,6 +47,11 @@ const organizationDefaultLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const organizationDeleteLoadingState = atom<LoadingState>({
+  key: 'organization.organizationDeleteLoadingState',
+  default: 'finished',
+});
+
 const organizationMemberCount = selector({
   key: 'organization.memberCount',
   get: ({ get }) => {
@@ -104,6 +109,7 @@ export const organizationAtoms = {
   selectedOrganization,
   organizationsPageIndex,
   organizationLoadingState,
+  organizationDeleteLoadingState,
   organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,

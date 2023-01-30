@@ -28,10 +28,7 @@ export const OrganizationAdd: FC = () => {
   const form = useForm<OrganisationAddForm>();
   const [layout, setLayout] = useRecoilState(layoutState);
   const createOrganization = useCreateOrganization();
-  const { getOrganizations, setPageIndex: setOrganizationsPageIndex } =
-    useGetOrganizations();
-
-  const { setPageIndex: setMembersPageIndex } = useGetOrganizationMembers();
+  const { getOrganizations } = useGetOrganizations();
 
   const [loading, setLoading] = useState(false);
 
@@ -41,8 +38,6 @@ export const OrganizationAdd: FC = () => {
     try {
       await createOrganization(name, async (org: any) => {
         router.push(`/organizations/${org.id}`);
-        setOrganizationsPageIndex(0);
-        setMembersPageIndex(0);
         await getOrganizations();
         form.reset();
         setLoading(false);

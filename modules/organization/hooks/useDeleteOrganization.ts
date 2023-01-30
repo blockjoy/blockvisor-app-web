@@ -7,10 +7,10 @@ import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganizations } from './useGetOrganizations';
 
 export function useDeleteOrganization() {
-  const { updateOrganizations, setPageIndex } = useGetOrganizations();
+  const { updateOrganizations } = useGetOrganizations();
 
   const [loadingState, setLoadingState] = useRecoilState(
-    organizationAtoms.organizationLoadingState,
+    organizationAtoms.organizationDeleteLoadingState,
   );
 
   const deleteOrganization = async (id: string) => {
@@ -19,9 +19,8 @@ export function useDeleteOrganization() {
 
     /* TODO: temporary fix - API for node deletion doesn't return success response, but instead code 25 (Record not found) */
     if (isResponeMetaObject(response) || response?.code === 25) {
-      setLoadingState('finished');
       updateOrganizations(id);
-      setPageIndex(0);
+      setLoadingState('finished');
       toast.success('Deleted successfully');
     } else {
       setLoadingState('finished');

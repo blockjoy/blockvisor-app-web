@@ -34,6 +34,7 @@ export const AllOrganizationsTable: FC = () => {
       onRowClick={handleRowClicked}
       pageSize={8}
       pageIndex={pageIndex}
+      setPageIndex={setPageIndex}
       onPageClicked={handlePageClicked}
       headers={headers}
       rows={rows}

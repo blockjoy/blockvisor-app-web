@@ -6,6 +6,7 @@ import { typo } from 'styles/utils.typography.styles';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './DangerZone.styles';
 import { FormProvider, useForm } from 'react-hook-form';
+import { css } from '@emotion/react';
 
 export enum Action {
   leave = 'leave',
@@ -17,6 +18,7 @@ interface Props {
   elementName: string | 'Node' | 'Host';
   elementNameToCompare: string;
   activeAction?: string | 'delete' | 'leave';
+  isLoading?: boolean;
 }
 
 type DeleteForm = {
@@ -34,6 +36,7 @@ export const DangerZone: FC<Props> = ({
   elementName = 'Node',
   elementNameToCompare,
   activeAction = 'delete',
+  isLoading = false,
 }) => {
   const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
@@ -104,6 +107,12 @@ export const DangerZone: FC<Props> = ({
                   type="submit"
                   size="small"
                   style="warning"
+                  loading={isLoading}
+                  customCss={[
+                    css`
+                      min-width: 84px;
+                    `,
+                  ]}
                 >
                   Confirm
                 </Button>
@@ -112,6 +121,11 @@ export const DangerZone: FC<Props> = ({
                   onClick={() => gotoStep(1)}
                   size="small"
                   style="outline"
+                  customCss={[
+                    css`
+                      min-width: 84px;
+                    `,
+                  ]}
                 >
                   Cancel
                 </Button>
