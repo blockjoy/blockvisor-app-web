@@ -1267,9 +1267,7 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(): void {
-    let retry_count = 3;
-    let should_run = true;
+  getUpdates(callback: (data: any) => void): void {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
