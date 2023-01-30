@@ -5,6 +5,8 @@ import { Button } from '../Button/Button';
 
 export type BackButtonProps = {
   backUrl?: string;
+  style?: string;
+  disabled?: boolean;
 };
 
 export const BackButton = ({ backUrl }: BackButtonProps) => {

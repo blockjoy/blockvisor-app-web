@@ -17,7 +17,7 @@ export function useGetOrganizations() {
 
   const { getDefaultOrganization } = useDefaultOrganization();
 
-  const getOrganizations = async (init: boolean) => {
+  const getOrganizations = async (init?: boolean) => {
     setIsLoading('initializing');
     const organizations: any = await apiClient.getOrganizations();
     setOrganizations(organizations);
