@@ -18,11 +18,19 @@ import {
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import { Members } from './OrganizationMembers/OrganizationMembers';
-import { organizationAtoms, useInvitations, useUpdateOrganization } from '@modules/organization';
-import { Permissions, useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import {
+  organizationAtoms,
+  useInvitations,
+  useUpdateOrganization,
+} from '@modules/organization';
+import {
+  Permissions,
+  useHasPermissions,
+} from '@modules/auth/hooks/useHasPermissions';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
 import { useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
+import { ROUTES } from '@shared/index';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -32,8 +40,12 @@ export const OrganizationView = () => {
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
 
-  const sentInvitationsLoadingState = useRecoilValue(organizationAtoms.organizationSentInvitationsLoadingState);
-  const membersLoadingState = useRecoilValue(organizationAtoms.organizationMembersLoadingState);
+  const sentInvitationsLoadingState = useRecoilValue(
+    organizationAtoms.organizationSentInvitationsLoadingState,
+  );
+  const membersLoadingState = useRecoilValue(
+    organizationAtoms.organizationMembersLoadingState,
+  );
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean>(false);
@@ -49,8 +61,14 @@ export const OrganizationView = () => {
     }
   };
 
-  const canUpdateOrganization: boolean = useHasPermissions(organization?.currentUser?.role!, Permissions.UPDATE_ORGANIZATION);
-  const canDeleteOrganization: boolean = useHasPermissions(organization?.currentUser?.role!, Permissions.DELETE_ORGANIZATION);
+  const canUpdateOrganization: boolean = useHasPermissions(
+    organization?.currentUser?.role!,
+    Permissions.UPDATE_ORGANIZATION,
+  );
+  const canDeleteOrganization: boolean = useHasPermissions(
+    organization?.currentUser?.role!,
+    Permissions.DELETE_ORGANIZATION,
+  );
 
   const action = canDeleteOrganization ? 'delete' : 'leave';
 
@@ -62,10 +80,8 @@ export const OrganizationView = () => {
     }
   };
 
-  const {
-    getOrganizationMembers,
-    organizationMembers,
-  } = useGetOrganizationMembers();
+  const { getOrganizationMembers, organizationMembers } =
+    useGetOrganizationMembers();
 
   const { getSentInvitations, sentInvitations } = useInvitations();
 
@@ -78,14 +94,17 @@ export const OrganizationView = () => {
   }, [router.isReady]);
 
   const details = getOrganizationDetails(organization);
-  const isLoadingOrg = isLoading !== 'finished' || membersLoadingState !== 'finished' || sentInvitationsLoadingState !== 'finished';
+  const isLoadingOrg =
+    isLoading !== 'finished' ||
+    membersLoadingState !== 'finished' ||
+    sentInvitationsLoadingState !== 'finished';
 
   return (
     <>
       <PageTitle title="Organizations" />
       <PageSection>
         <div css={spacing.top.medium}>
-          <BackButton />
+          <BackButton backUrl={ROUTES.ORGANIZATIONS} />
         </div>
         {isLoadingOrg ? (
           <div css={spacing.top.medium}>
@@ -105,7 +124,11 @@ export const OrganizationView = () => {
             />
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
-            <Members members={organizationMembers} invitations={sentInvitations} id={queryAsString(id)} />
+            <Members
+              members={organizationMembers}
+              invitations={sentInvitations}
+              id={queryAsString(id)}
+            />
           </div>
         )}
       </PageSection>

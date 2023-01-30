@@ -1,13 +1,10 @@
-import { Routes, useSignIn } from '@modules/auth';
+import { useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { useGetBlockchains } from '@modules/node';
-import {
-  useDefaultOrganization,
-  useGetOrganizations,
-} from '@modules/organization';
+import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
-import { env } from '@shared/constants/env';
-import { delay } from '@shared/utils/delay';
+import { ROUTES } from '@shared/index';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -25,19 +22,15 @@ type LoginForm = {
 };
 
 export function LoginForm() {
-  const { organizations, getOrganizations } = useGetOrganizations();
-
+  const { getOrganizations } = useGetOrganizations();
   const router = useRouter();
-
-  const { invited, verified, redirect } = router.query;
-
+  const { invited, verified, redirect, token } = router.query;
   const signIn = useSignIn();
   const form = useForm<LoginForm>();
+  const { setValue } = form;
   const [loading, setIsLoading] = useState(false);
-
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-  const { getDefaultOrganization } = useDefaultOrganization();
   const { getBlockchains } = useGetBlockchains();
 
   const handleIconClick = () => {
@@ -45,32 +38,44 @@ export function LoginForm() {
     setActiveType(type);
   };
 
+  const handleRedirect = () => {
+    // temp localStorage fix until we get something in token
+    const getRedirect =
+      localStorage.getItem('redirect') || redirect?.toString()!;
+    localStorage.removeItem('redirect');
+
+    const loginRedirect = /^\/$|\/login/.test(getRedirect?.toString()!)
+      ? ROUTES.DEFAULT
+      : getRedirect;
+    router.push(`${loginRedirect || ROUTES.DEFAULT}`, undefined, {
+      shallow: true,
+    });
+  };
+
   const onSubmit = form.handleSubmit(async ({ email, password }) => {
     setIsLoading(true);
 
     try {
       await signIn(email, password);
-      await getOrganizations();
+      await getOrganizations(true);
       await getBlockchains();
-      await delay(env.loadingDuration);
 
-      setIsLoading(false);
-
-      router.push(`/${redirect?.toString() || 'nodes'}`);
+      handleRedirect();
     } catch (error) {
       if (error instanceof ApplicationError) {
         setLoginError('Invalid Credentials');
       }
-    } finally {
       setIsLoading(false);
     }
   });
 
   useEffect(() => {
-    if (organizations.length) {
-      getDefaultOrganization();
+    if (router.isReady) {
+      if (token) {
+        handleTokenFromQueryString(token?.toString()!, setValue);
+      }
     }
-  }, [organizations]);
+  }, [router.isReady]);
 
   return (
     <>

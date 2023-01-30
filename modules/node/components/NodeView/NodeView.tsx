@@ -16,6 +16,7 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
+import { ROUTES } from '@shared/index';
 
 export function NodeView() {
   const [isMounted, setMounted] = useState<boolean>(false);
@@ -48,7 +49,7 @@ export function NodeView() {
       <PageSection topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>
-            <BackButton />
+            <BackButton backUrl={ROUTES.NODES} />
           </PageHeader>
         </div>
 
