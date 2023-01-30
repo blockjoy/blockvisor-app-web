@@ -1237,7 +1237,7 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject: StateObject): void {
+  getUpdates(): void {
     let retry_count = 3;
     let should_run = true;
     let request_meta = new RequestMeta();
@@ -1257,15 +1257,17 @@ export class GrpcClient {
           const host = response.getUpdate()?.getHost();
 
           console.log(`got host update from server: `, host);
-          stateObject.processHostUpdate(host);
+          // stateObject.processHostUpdate(host);
         } else if (
           response.getUpdate()?.getNotificationCase() ===
           UpdateNotification.NotificationCase.NODE
         ) {
           const node = response.getUpdate()?.getNode();
 
+          // callback(node);
+
           console.log(`got node update from server: `, node);
-          stateObject.processNodeUpdate(node);
+          // stateObject.processNodeUpdate(node);
         }
       });
       update_stream?.on('error', (err) => {

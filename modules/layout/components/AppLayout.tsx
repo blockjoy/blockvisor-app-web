@@ -12,6 +12,7 @@ import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
+import { apiClient } from '@modules/client';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -46,9 +47,13 @@ export const AppLayout: React.FC<LayoutType> = ({
   }, []);
 
   useEffect(() => {
-    if (currentOrganization.current?.id !== defaultOrganization?.id) {
-      currentOrganization.current = defaultOrganization;
-      loadNodes(initialQueryParams);
+    apiClient.getUpdates();
+  }, []);
+
+  useEffect(() => {
+    if (!blockchains?.length) {
+      getBlockchains();
+      console.log('getting blockchains in layout');
     }
   }, [defaultOrganization?.id]);
 
