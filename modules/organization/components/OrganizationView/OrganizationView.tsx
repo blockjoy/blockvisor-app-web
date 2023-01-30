@@ -138,7 +138,7 @@ export const OrganizationView = () => {
           </div>
         )}
       </PageSection>
-      {!isLoadingOrg && organization && !organization?.personal && (
+      {!isLoadingOrg && organization !== null && !organization?.personal && (
         <PageSection>
           <DangerZone
             elementName="Organization"
