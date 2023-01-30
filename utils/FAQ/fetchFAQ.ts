@@ -1,37 +1,40 @@
-export async function fetchFAQ(): Promise<any> {
-  const API_ENDPOINTS = {
-    articles: '/articles',
-    article: '/article',
-  };
+const API_ENDPOINTS = {
+  articles: '/articles',
+  article: '/article',
+};
 
+type ResponseData = {
+  data: FAQ[];
+};
+
+export async function fetchFAQ(): Promise<ResponseData> {
   let data: FAQ[] = [];
 
-  const baseURL = `${process.env.CRISP_API_URL}/website/${process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID}/helpdesk/locale/en`;
+  const baseURL: string = `${process.env.CRISP_API_URL}/website/${process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID}/helpdesk/locale/en`;
 
   // localStorage.user_session inside CRISP admin
-  const token = Buffer.from(
+  const token: string = Buffer.from(
     `${process.env.CRISP_TOKEN_IDENTIFIER}:${process.env.CRISP_TOKEN_KEY}`,
   ).toString('base64');
 
-  const headers = new Headers();
+  const headers: HeadersInit = new Headers();
   headers.append('Content-Type', 'application/json');
   headers.append('X-Crisp-Tier', 'user');
   headers.append('Authorization', `Basic ${token}`);
 
-  const requestOptions: any = {
+  const requestOptions: RequestInit = {
     method: 'GET',
     headers: headers,
     redirect: 'follow',
   };
 
-  const requestParams: any = {
-    filter_category_id: process.env.CRISP_FAQ_CATEGORY_ID,
-  };
+  const requestParams = new URLSearchParams();
+  requestParams.set('filter_category_id', process.env.CRISP_FAQ_CATEGORY_ID!);
 
-  const articlesRequest = await fetch(`${baseURL}${API_ENDPOINTS.articles}/`, {
-    ...requestOptions,
-    ...requestParams,
-  });
+  const articlesRequest = await fetch(
+    `${baseURL}${API_ENDPOINTS.articles}/?${requestParams}`,
+    requestOptions,
+  );
 
   if (!articlesRequest.ok) {
     throw new Error(
@@ -51,7 +54,7 @@ export async function fetchFAQ(): Promise<any> {
     const responses = await Promise.all(requests);
     const responsesData = await Promise.all(responses.map((res) => res.json()));
 
-    const filteredData = responsesData.filter((rd) => !rd.error);
+    const filteredData = responsesData.filter((rd) => rd.data && !rd.error);
 
     data = filteredData.map((fd: any) => fd.data);
   } catch (error) {
