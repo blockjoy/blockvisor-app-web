@@ -1267,7 +1267,7 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject: StateObject): void {
+  getUpdates(): void {
     let retry_count = 3;
     let should_run = true;
     let request_meta = new RequestMeta();
