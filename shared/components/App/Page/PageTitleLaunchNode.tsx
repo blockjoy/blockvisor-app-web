@@ -7,7 +7,11 @@ export const PageTitleLaunchNode = () => {
   const router = useRouter();
 
   return !router.pathname.includes('launch-node') ? (
-    <button css={styles.button} onClick={() => router.push('/launch-node')}>
+    <button
+      data-cy="nodes-launchNode-button"
+      css={styles.button}
+      onClick={() => router.push('/launch-node')}
+    >
       <SvgIcon size="20px">
         <IconRocket />
       </SvgIcon>
