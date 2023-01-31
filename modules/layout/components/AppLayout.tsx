@@ -13,7 +13,6 @@ import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
 import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
-import { apiClient } from '@modules/client';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -49,10 +48,6 @@ export const AppLayout: React.FC<LayoutType> = ({
     if (!blockchains?.length) getBlockchains();
     getReceivedInvitations(userId!);
     loadNodes();
-  }, []);
-
-  useEffect(() => {
-    apiClient.getUpdates((data: any) => console.log('client callback', data));
   }, []);
 
   useEffect(() => {
