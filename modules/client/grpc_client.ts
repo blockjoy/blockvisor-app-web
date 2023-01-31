@@ -1259,10 +1259,12 @@ export class GrpcClient {
         response.getUpdate()?.getNotificationCase() ===
         UpdateNotification.NotificationCase.NODE
       ) {
-        const node = response.getUpdate()?.getNode();
+        const node = response.getUpdate()?.getNode()?.toObject();
 
         console.log(`got node update from server: `, node);
         callback(node);
+      } else {
+        console.error("unsupported notification type");
       }
     });
     update_stream?.on('error', (err) => {
