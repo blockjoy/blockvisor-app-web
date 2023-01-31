@@ -22,6 +22,13 @@ export const styles = {
         padding-top: 6px;
         padding-bottom: 16px;
       }
+
+      td {
+        padding-top: 0;
+      }
+
+      display: flex;
+      flex-direction: column;
     }
   `,
   column: css`

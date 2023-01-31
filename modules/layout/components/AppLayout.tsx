@@ -13,6 +13,7 @@ import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 import { apiClient } from '@modules/client';
+import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -27,6 +28,8 @@ export const AppLayout: React.FC<LayoutType> = ({
 }) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
+
+  useNodeUpdates();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -44,10 +47,6 @@ export const AppLayout: React.FC<LayoutType> = ({
     if (!blockchains?.length) getBlockchains();
     getReceivedInvitations(userId!);
     loadNodes();
-  }, []);
-
-  useEffect(() => {
-    apiClient.getUpdates((data: any) => console.log('client callback', data));
   }, []);
 
   useEffect(() => {
