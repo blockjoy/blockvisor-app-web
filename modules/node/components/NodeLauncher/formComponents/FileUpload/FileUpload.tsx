@@ -6,6 +6,7 @@ import { typo } from 'styles/utils.typography.styles';
 
 type Props = {
   name: string;
+  tabIndex?: number;
   multiple?: boolean;
   onChange: (value: any) => void;
   placeholder: string;
@@ -18,6 +19,7 @@ export function FileUpload({
   name,
   multiple = false,
   currentFiles,
+  tabIndex,
 }: Props) {
   let inputRef: HTMLInputElement;
   const files: FileWithPath[] = [];
@@ -43,6 +45,7 @@ export function FileUpload({
     <div
       css={[styles.base, !!files.length ? styles.hasFiles : styles.noFiles]}
       {...getRootProps()}
+      tabIndex={tabIndex}
       onClick={handleClick}
     >
       <input

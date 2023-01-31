@@ -12,11 +12,16 @@ export const styles = {
     min-width: 80px;
   `,
   input: (theme: ITheme) => css`
-    display: none;
+    position: absolute;
+    scale: 0;
 
-    :checked ~ span {
+    :checked + label span {
       background: ${theme.colorPrimary};
       color: ${theme.colorPrimaryText};
+    }
+
+    :is(:focus, :hover, :active) + label span {
+      box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
     }
   `,
   button: (theme: ITheme) => css`

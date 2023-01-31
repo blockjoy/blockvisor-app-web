@@ -31,6 +31,7 @@ const renderControls = (
     case 'key-upload':
       return (
         <FileUpload
+          tabIndex={5}
           currentFiles={nodeFiles?.find((f) => f.name === property.name)?.files}
           multiple={true}
           onChange={onFileUploaded}
@@ -41,6 +42,7 @@ const renderControls = (
     case 'voting_key_pwd':
       return (
         <Textbox
+          tabIndex={5}
           type="password"
           isRequired={property?.required && !property.value}
           name={property.name}
@@ -50,6 +52,7 @@ const renderControls = (
     case 'wallet_address':
       return (
         <Textbox
+          tabIndex={5}
           type="text"
           isRequired={property?.required && !property.value}
           name={property.name}
@@ -59,6 +62,7 @@ const renderControls = (
     case 'switch':
       return (
         <Switch
+          tabIndex={!!property.disabled ? -1 : 5}
           disabled={!!property.disabled}
           tooltip="Self hosting will be available after BETA."
           name={property.name}
@@ -114,6 +118,7 @@ export const NodeLauncherConfig: FC<Props> = ({
               items={networkList}
               selectedItem={nodeNetwork}
               onChange={onNetworkChanged}
+              tabIndexStart={3}
             />
           ) : (
             <div css={[spacing.bottom.medium, colors.warning, typo.small]}>

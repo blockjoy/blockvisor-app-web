@@ -154,6 +154,7 @@ export const styles = {
     border: 0;
     cursor: pointer;
     opacity: 0.7;
+    outline: none;
 
     /* :nth-child(even) {
       background: rgba(255, 255, 255, 0.02);
@@ -173,7 +174,7 @@ export const styles = {
     }
   `,
   rowHover: (theme: ITheme) => css`
-    :is(:hover, .active) {
+    :is(:hover, :focus, .active) {
       background: ${theme.colorLightGrey};
       opacity: 1;
 
@@ -187,20 +188,20 @@ export const styles = {
       }
     }
 
-    :is(:hover, .active) div {
+    :is(:hover, :focus, .active) div {
       opacity: 1;
       visibility: visible;
     }
 
-    :is(:hover, .active) span {
+    :is(:hover, :focus, .active) span {
       opacity: 1;
     }
 
-    :is(:hover, .active) path {
+    :is(:hover, :focus, .active) path {
       fill: ${theme.colorPrimary};
     }
 
-    :is(:hover, .active) .node-type-buttons {
+    :is(:hover, :focus, .active) .node-type-buttons {
       scale: 1;
       position: relative;
     }
@@ -227,7 +228,7 @@ export const styles = {
     border-radius: 4px;
     cursor: pointer;
 
-    :is(:hover, .active) {
+    :is(:hover, :focus, .active) {
       background: ${theme.colorPrimary};
       color: ${theme.colorPrimaryText};
     }
