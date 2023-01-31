@@ -12,6 +12,13 @@ export const styles = {
       th {
         width: 160px;
       }
+
+      td {
+        padding-top: 0;
+      }
+
+      display: flex;
+      flex-direction: column;
     }
   `,
   column: css`

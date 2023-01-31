@@ -2,7 +2,7 @@ import Sidebar from './sidebar/Sidebar';
 import Overlay from './overlay/Overlay';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import { PrivateRoute, useIdentityRepository } from '@modules/auth';
+import { useIdentityRepository } from '@modules/auth';
 import {
   OrganizationAdd,
   useGetOrganizations,
@@ -12,7 +12,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains } from '@modules/node';
-import { apiClient } from '@modules/client';
+import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -28,6 +28,8 @@ export const AppLayout: React.FC<LayoutType> = ({
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
+  useNodeUpdates();
+
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
@@ -38,10 +40,6 @@ export const AppLayout: React.FC<LayoutType> = ({
 
   useEffect(() => {
     getOrganizations();
-  }, []);
-
-  useEffect(() => {
-    apiClient.getUpdates((data: any) => console.log('client callback', data));
   }, []);
 
   useEffect(() => {

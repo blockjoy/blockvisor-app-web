@@ -41,10 +41,6 @@ export const styles = {
       width: 86px;
     }
 
-    @media ${breakpoints.toXlrg} {
-      margin-left: 52px;
-    }
-
     @media ${breakpoints.toLrg} {
       margin-left: 0;
     }
