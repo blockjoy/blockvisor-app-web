@@ -18,6 +18,7 @@ export function LoginFooter() {
           href={ROUTES.FORGOT_PASSWORD}
           passHref
           shallow
+          data-cy="login-forgot-password-link"
         >
           Forgot password?
         </Link>
@@ -29,6 +30,7 @@ export function LoginFooter() {
           href={ROUTES.REGISTER}
           passHref
           shallow
+          data-cy="login-create-account-link"
         >
           Create an account
         </Link>

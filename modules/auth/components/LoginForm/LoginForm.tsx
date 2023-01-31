@@ -90,6 +90,7 @@ export function LoginForm() {
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="email"
+                data-cy="login-email-input"
                 placeholder="Email"
                 type="email"
                 validationOptions={{
@@ -108,6 +109,7 @@ export function LoginForm() {
                 disabled={loading}
                 name="password"
                 placeholder="Password"
+                data-cy="login-password-input"
                 type={activeType}
                 validationOptions={{
                   required: 'This is a mandatory field',
@@ -131,11 +133,15 @@ export function LoginForm() {
             display="block"
             style="primary"
             type="submit"
+            data-cy="login-submit-button"
           >
             Login
           </Button>
           {loginError && (
-            <p css={[typo.smaller, colors.warning, spacing.top.small]}>
+            <p
+              data-cy="login-error-field"
+              css={[typo.smaller, colors.warning, spacing.top.small]}
+            >
               {loginError}
             </p>
           )}
