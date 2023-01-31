@@ -19,12 +19,8 @@ export const styles = {
       }
 
       td {
-        padding-top: 6px;
-        padding-bottom: 16px;
-      }
-
-      td {
         padding-top: 0;
+        padding-bottom: 16px;
       }
 
       display: flex;
