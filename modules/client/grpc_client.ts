@@ -1311,45 +1311,37 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    const data = JSON.parse(Buffer.from(token?.split('.')[1], 'base64').toString('binary'));
+    const data = JSON.parse(
+      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
+    );
     const channel = `/orgs/${data.data.org_id}/nodes`;
 
     let update_stream = this.update?.updates(request, this.getAuthHeader());
 
     update_stream?.on('data', (response) => {
       if (
-          response.getUpdate()?.getNotificationCase() ===
-          UpdateNotification.NotificationCase.HOST
+        response.getUpdate()?.getNotificationCase() ===
+        UpdateNotification.NotificationCase.HOST
       ) {
         const host = response.getUpdate()?.getHost();
 
-          console.log(`got host update from server: `, host);
-          stateObject.processHostUpdate(host);
-        } else if (
-          response.getUpdate()?.getNotificationCase() ===
-          UpdateNotification.NotificationCase.NODE
-        ) {
-          const node = response.getUpdate()?.getNode();
+        console.log(`got host update from server: `, host);
+        callback(host);
+      } else if (
+        response.getUpdate()?.getNotificationCase() ===
+        UpdateNotification.NotificationCase.NODE
+      ) {
+        const node = response.getUpdate()?.getNode()?.toObject();
 
-          console.log(`got node update from server: `, node);
-          stateObject.processNodeUpdate(node);
-        }
-      });
-      update_stream?.on('error', (err) => {
-        console.error(`update stream closed unexpectedly: `, err);
-        if (retry_count > 0) {
-          console.info('Trying to reinitialize the update connection');
-          update_stream = this.update?.updates(request, this.getAuthHeader());
-          retry_count--;
-        } else {
-          should_run = false;
-        }
-      });
-
-      window.setTimeout(() => {
-        console.debug('Waiting 1000ms for next update');
-      }, 1000);
-    }
+        console.log(`got node update from server: `, node);
+        callback(node);
+      } else {
+        console.error('unsupported notification type');
+      }
+    });
+    update_stream?.on('error', (err) => {
+      console.error(`update stream closed unexpectedly: `, err);
+    });
   }
 
   /* Command service */
