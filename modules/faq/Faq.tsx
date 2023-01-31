@@ -21,7 +21,7 @@ export const Faq = ({ faqs }: FaqProps) => {
           />
         ) : (
           <div css={styles.questionList}>
-            {faqs?.map((faq: any) => (
+            {faqs?.map((faq: FAQ) => (
               <Fragment key={faq.article_id}>
                 <h3 css={styles.questionTitle}>{faq.title}</h3>
                 <p css={styles.questionAnswer}>{faq.content}</p>
