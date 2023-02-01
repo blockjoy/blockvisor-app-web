@@ -7,6 +7,7 @@ import {
   ResetPasswordResponse,
   UpdatePasswordRequest,
   UpdateUIPasswordRequest,
+  SwitchOrgRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/authentication_service_pb';
 import {
   ApiToken,
@@ -1023,6 +1024,31 @@ export class GrpcClient {
       })
       .catch((err) => {
         return StatusResponseFactory.deleteOrganizationResponse(
+          err,
+          'grpcClient',
+        );
+      });
+  }
+
+  async switchOrganization(
+    org_id: string,
+  ): Promise<ApiToken.AsObject | StatusResponse | undefined> {
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
+
+    let request = new SwitchOrgRequest();
+    request.setMeta(request_meta);
+    request.setOrgId(org_id);
+
+    return this.authentication
+      ?.switchOrganization(request, this.getAuthHeader())
+      .then((response: any) => {
+        this.token = response.getToken()?.toObject().value || '';
+
+        return response.getToken()?.toObject();
+      })
+      .catch((err: any) => {
+        return StatusResponseFactory.switchOrganizationResponse(
           err,
           'grpcClient',
         );

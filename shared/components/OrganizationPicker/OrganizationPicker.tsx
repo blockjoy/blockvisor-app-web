@@ -10,6 +10,7 @@ import { organizationAtoms } from '@modules/organization/store/organizationAtoms
 import { useSetDefaultOrganization } from '@modules/organization/hooks/useSetDefaultOrganization';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 
 export const OrganizationPicker = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -21,15 +22,15 @@ export const OrganizationPicker = () => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
+  const { switchOrganization } = useSwitchOrganization();
   const { setDefaultOrganization } = useSetDefaultOrganization();
 
   const handleClick = () => setIsOpen(!isOpen);
   const handleClickOutside = () => setIsOpen(false);
 
-  const handleChange = (orgId?: string, orgName?: string) => {
+  const handleChange = async (orgId?: string, orgName?: string) => {
     if (orgId && orgName) {
-      setDefaultOrganization(orgId, orgName);
-
+      await switchOrganization(orgId, orgName);
       setIsOpen(false);
     }
   };
