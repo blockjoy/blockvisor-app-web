@@ -14,7 +14,7 @@ const AcceptInvite: NextPage = () => {
       // temp fix to redirect to organizations once verified
       localStorage.setItem('redirect', 'organizations');
       router.push({
-        pathname: ROUTES.LOGIN,
+        pathname: ROUTES.REGISTER,
         query: { token },
       });
     }
