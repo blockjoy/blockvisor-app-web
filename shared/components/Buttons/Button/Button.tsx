@@ -26,6 +26,7 @@ type Props = {
   loading?: boolean;
   disabled?: boolean;
   tooltip?: string;
+  dataCy?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -38,6 +39,7 @@ export function Button({
   display = 'inline',
   type = 'button',
   disabled = false,
+  dataCy,
   tooltip,
   id,
   href,
@@ -60,7 +62,7 @@ export function Button({
 
   if (href) {
     return (
-      <Link css={[buttonStyles]} href={href} passHref shallow>
+      <Link data-cy={dataCy} css={[buttonStyles]} href={href} passHref shallow>
         {children}
       </Link>
     );
@@ -70,6 +72,7 @@ export function Button({
     <button
       disabled={disabled}
       {...rest}
+      data-cy={dataCy}
       id={id}
       type={type}
       css={buttonStyles}

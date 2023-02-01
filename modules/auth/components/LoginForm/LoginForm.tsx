@@ -133,7 +133,7 @@ export function LoginForm() {
             display="block"
             style="primary"
             type="submit"
-            data-cy="login-submit-button"
+            dataCy="login-submit-button"
           >
             Login
           </Button>

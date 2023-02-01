@@ -7,17 +7,25 @@ describe('Organizations page tests', () => {
       cy.viewport(1920, 1080);
     });
 
+    afterEach(() => {
+      cy.clearLocalStorage();
+    });
+
     it('Should go to organizations page when clicked on the main sidebar link', () => {
-      cy.visit('/login');
-      Authenticate('comimet108@tohup.com', 'test1234');
+      Authenticate(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
 
       cy.url().should('be.equal', `${Cypress.config('baseUrl')}/organizations`);
     });
 
     it('Should open a drawer when clicked on create new organization', () => {
-      cy.visit('/login');
-      Authenticate('comimet108@tohup.com', 'test1234');
+      Authenticate(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
       cy.get('[data-cy="organizations-create-button"]').click();
 
@@ -25,8 +33,10 @@ describe('Organizations page tests', () => {
     });
 
     it('Should display an error when creating organization without a name', () => {
-      cy.visit('/login');
-      Authenticate('comimet108@tohup.com', 'test1234');
+      Authenticate(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
       cy.get('[data-cy="organizations-create-button"]').click();
       cy.get('[data-cy="organization-drawer-submit-button"]').click();
@@ -35,8 +45,10 @@ describe('Organizations page tests', () => {
     });
 
     it('Should redirect to created organization page', () => {
-      cy.visit('/login');
-      Authenticate('comimet108@tohup.com', 'test1234');
+      Authenticate(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
       cy.get('[data-cy="organizations-create-button"]').click();
       const org = generateOrganizationName();
