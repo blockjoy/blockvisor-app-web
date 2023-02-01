@@ -1,4 +1,6 @@
-describe('Login Page', () => {
+import { Authenticate } from 'cypress/support/utils';
+
+describe('Login Page tests', () => {
   beforeEach(() => cy.clearLocalStorage());
 
   it('Goes to register page when the user click on Create Account', () => {
@@ -17,25 +19,22 @@ describe('Login Page', () => {
 
   it('Shows password validation error when password is too short', () => {
     cy.visit('/login');
-    cy.get('[data-cy="login-email-input"]').type('test@test.com');
-    cy.get('[data-cy="login-password-input"]').type('1234');
-    cy.get('[data-cy="login-submit-button"]').click();
+    Authenticate('test@test.com', '1234');
     cy.get('[data-cy="input-error-field"]').should('exist');
   });
 
   it('Shows error message when the credentials are invalid', () => {
     cy.visit('/login');
-    cy.get('[data-cy="login-email-input"]').type('someone@somewhere.com');
-    cy.get('[data-cy="login-password-input"]').type('test123456');
-    cy.get('[data-cy="login-submit-button"]').click();
+    Authenticate('someone@somewhere.com', 'test123456');
     cy.get('[data-cy="login-error-field"]').should('exist');
   });
 
   it('Redirects to nodes route when authentication is successfull', () => {
     cy.visit('/login');
-    cy.get('[data-cy="login-email-input"]').type('comimet108@tohup.com');
-    cy.get('[data-cy="login-password-input"]').type('test1234');
-    cy.get('[data-cy="login-submit-button"]').click();
+    Authenticate(
+      Cypress.env('TEST_USER_EMAIL'),
+      Cypress.env('TEST_USER_PASSWORD'),
+    );
 
     cy.url().should('be.equal', `${Cypress.config('baseUrl')}/nodes`);
   });

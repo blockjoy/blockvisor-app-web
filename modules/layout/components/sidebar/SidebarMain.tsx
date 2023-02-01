@@ -69,6 +69,7 @@ export default () => {
           {block.items.map((item) => (
             <li key={item.name}>
               <Link
+                data-cy={item.name}
                 href={item.path}
                 onClick={handleLinkClicked}
                 css={[

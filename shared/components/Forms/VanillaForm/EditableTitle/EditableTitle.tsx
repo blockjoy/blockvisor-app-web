@@ -123,6 +123,7 @@ export const EditableTitle: FC<Props> = ({
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
           suppressContentEditableWarning
+          data-cy="organization-title-input"
         >
           {initialValue}
         </div>
