@@ -38,5 +38,13 @@ export const styles = {
     color: ${theme.colorDefault};
     margin: 0 0 40px;
     line-height: 1.4;
+
+    img {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
   `,
 };
