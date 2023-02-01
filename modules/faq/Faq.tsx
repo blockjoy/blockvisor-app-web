@@ -1,6 +1,7 @@
 import { styles } from './Faq.styles';
 import { EmptyColumn, PageSection, PageTitle } from '@shared/components';
 import { Fragment } from 'react';
+import { readMarkdown } from 'utils/readMarkdown';
 
 export type FaqProps = {
   faqs: FAQ[];
@@ -21,12 +22,19 @@ export const Faq = ({ faqs }: FaqProps) => {
           />
         ) : (
           <div css={styles.questionList}>
-            {faqs?.map((faq: FAQ) => (
-              <Fragment key={faq.article_id}>
-                <h3 css={styles.questionTitle}>{faq.title}</h3>
-                <p css={styles.questionAnswer}>{faq.content}</p>
-              </Fragment>
-            ))}
+            {faqs?.map((faq: FAQ) => {
+              const content = readMarkdown(faq.content!);
+
+              return (
+                <Fragment key={faq.article_id}>
+                  <h3 css={styles.questionTitle}>{faq.title}</h3>
+                  <div
+                    css={styles.questionAnswer}
+                    dangerouslySetInnerHTML={{ __html: content }}
+                  />
+                </Fragment>
+              );
+            })}
           </div>
         )}
       </PageSection>
