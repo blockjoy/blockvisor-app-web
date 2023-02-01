@@ -6,7 +6,6 @@ describe('Nodes Page tests', () => {
   });
 
   it('Should go to launch-node when clicked on Launch Node', () => {
-    cy.visit('/login');
     Authenticate(
       Cypress.env('TEST_USER_EMAIL'),
       Cypress.env('TEST_USER_PASSWORD'),

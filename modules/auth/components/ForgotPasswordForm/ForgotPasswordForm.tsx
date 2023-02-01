@@ -46,6 +46,7 @@ export function ForgotPasswordForm() {
               shouldAutoFocus
               tabIndex={1}
               type="email"
+              data-cy="forgot-password-email-input"
               name="email"
               placeholder="Your email"
               validationOptions={{
@@ -63,6 +64,7 @@ export function ForgotPasswordForm() {
           loading={isLoading}
           disabled={!isValid}
           size="medium"
+          dataCy="forgot-password-submit"
           display="block"
           style="primary"
           type="submit"

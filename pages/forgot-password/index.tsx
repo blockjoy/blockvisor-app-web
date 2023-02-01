@@ -19,7 +19,13 @@ const Register: NextPage = () => {
       <div css={[spacing.bottom.mediumSmall]}>
         <ForgotPasswordForm />
       </div>
-      <Button href={ROUTES.LOGIN} display="block" size="small" style="ghost">
+      <Button
+        dataCy="forgot-password-cancel"
+        href={ROUTES.LOGIN}
+        display="block"
+        size="small"
+        style="ghost"
+      >
         Cancel
       </Button>
     </Layout>

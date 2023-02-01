@@ -43,7 +43,7 @@ export const OrganizationsList = () => {
         All Organizations
         {!isAdding && (
           <Button
-            data-cy="organizations-create-button"
+            dataCy="organizations-create-button"
             size="small"
             style="outline"
             onClick={() => setIsAdding(true)}
