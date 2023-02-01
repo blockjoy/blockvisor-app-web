@@ -1127,10 +1127,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@blockjoy/blockjoy-grpc@^1.1.57":
-  version "1.1.57"
-  resolved "https://registry.yarnpkg.com/@blockjoy/blockjoy-grpc/-/blockjoy-grpc-1.1.57.tgz#f712978ac41c4c784447319a45b13c4bc71d34bc"
-  integrity sha512-EHVyJFOCQoIgfhVZlIM5ZS2mFPhYWKDCc8zCteTOu0MVbC2l7BGkvz7l8WLYGVLyK9z1D+Ag0W1m3wIK1szNoA==
+"@blockjoy/blockjoy-grpc@^1.1.58":
+  version "1.1.58"
+  resolved "https://registry.yarnpkg.com/@blockjoy/blockjoy-grpc/-/blockjoy-grpc-1.1.58.tgz#ee8673a80d2574014204662ad98837ed228bb571"
+  integrity sha512-9N82RlAa+10xp9iDn9RM8IPwyQ4VB4CvmLWlMIVLzsUgDVhTAg17nQhTHv3nkTwUG3bcKOjFpQ78ZCOELakWQA==
   dependencies:
     google-protobuf "~3.15.8"
     grpc-web "^1.3.1"
@@ -9509,11 +9509,6 @@ react-inspector@^5.1.0:
     "@babel/runtime" "^7.0.0"
     is-dom "^1.0.0"
     prop-types "^15.0.0"
-
-react-intersection-observer@^9.4.0:
-  version "9.4.1"
-  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-9.4.1.tgz#4ccb21e16acd0b9cf5b28d275af7055bef878f6b"
-  integrity sha512-IXpIsPe6BleFOEHKzKh5UjwRUaz/JYS0lT/HPsupWEQou2hDqjhLMStc5zyE3eQVT4Fk3FufM8Fw33qW1uyeiw==
 
 react-is@17.0.2:
   version "17.0.2"

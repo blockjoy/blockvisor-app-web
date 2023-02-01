@@ -4,9 +4,10 @@ import { organizationAtoms } from '../store/organizationAtoms';
 
 export const useSetDefaultOrganization = () => {
   const repository = useIdentityRepository();
-  const setDefaultOrgState = useSetRecoilState(organizationAtoms.defaultOrganization);
-  
-  const setDefaultOrganization = (id: string, name: string) => {    
+  const setDefaultOrgState = useSetRecoilState(
+    organizationAtoms.defaultOrganization,
+  );
+  const setDefaultOrganization = (id: string, name: string) => {
     setDefaultOrgState({
       name,
       id,
