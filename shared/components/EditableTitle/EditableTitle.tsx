@@ -93,6 +93,7 @@ export const EditableTitle: FC<Props> = ({
       {isEditMode ? (
         <input
           autoComplete={'off'}
+          data-cy="organization-title-input"
           spellCheck={false}
           ref={inputRef}
           disabled={!isEditMode}

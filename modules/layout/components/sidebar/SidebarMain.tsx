@@ -26,6 +26,7 @@ const blocks = [
         path: '/organizations',
         icon: <IconOrganizations />,
         isOrganizations: true,
+        dataTagValue: 'sidebarMain-organizations-link',
       },
       {
         name: 'FAQ',
@@ -58,6 +59,7 @@ export default () => {
           {block.items.map((item) => (
             <li key={item.name}>
               <Link
+                data-cy={item.dataTagValue}
                 href={item.path}
                 onClick={handleLinkClicked}
                 css={[

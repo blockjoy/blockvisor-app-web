@@ -42,6 +42,7 @@
   "devDependencies": {
     "@emotion/babel-plugin": "^11.10.2",
     "@emotion/babel-preset-css-prop": "^11.10.0",
+    "@faker-js/faker": "^7.6.0",
     "@storybook/addon-actions": "^6.4.9",
     "@storybook/addon-essentials": "^6.4.9",
     "@storybook/addon-links": "^6.4.9",

@@ -59,7 +59,11 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
   return (
     <>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} css={styles.wrapper}>
+        <form
+          data-cy="organizations-add-drawer"
+          onSubmit={form.handleSubmit(onSubmit)}
+          css={styles.wrapper}
+        >
           <Input
             placeholder="New organization name"
             name="name"
@@ -69,6 +73,7 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
               required: 'This is a mandatory field',
             }}
             shouldAutoFocus
+            data-cy="organization-drawer-add-input"
           />
           <div css={styles.buttons}>
             <Button
@@ -76,6 +81,7 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
               style="secondary"
               size="small"
               type="submit"
+              data-cy="organization-drawer-submit-button"
             >
               Add
             </Button>
