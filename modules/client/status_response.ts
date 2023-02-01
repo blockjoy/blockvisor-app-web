@@ -37,6 +37,7 @@ export enum StatusResponseCode {
   CreateOrganization,
   DeleteOrganization,
   UpdateOrganization,
+  SwitchOrganization,
   RestoreOrganization,
   SaveKeyFiles,
   InviteOrgMember,
@@ -412,6 +413,18 @@ export class StatusResponseFactory {
     return StatusResponseFactory.createResponse(
       StatusResponseCode.DeleteOrganization,
       'Delete organization error',
+      err,
+      source,
+    );
+  }
+
+  static switchOrganizationResponse(
+    err: any,
+    source: StatusSource,
+  ): StatusResponse {
+    return StatusResponseFactory.createResponse(
+      StatusResponseCode.SwitchOrganization,
+      'Switch organization error',
       err,
       source,
     );
