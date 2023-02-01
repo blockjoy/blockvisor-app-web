@@ -31,9 +31,10 @@ export function useSwitchOrganization() {
       // update route
       updateRouteIfNodeView();
 
-      toast.success('Successfully switched the organization');
+      toast.success('Organization changed');
     } catch (error) {
-      toast.error('Error while switching the organization');
+      console.log('Error changing organization: ', error);
+      toast.error('Error changing');
     }
   };
 
