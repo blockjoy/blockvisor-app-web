@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Button, Input } from '@shared/components';
+import { Alert, Button, Input } from '@shared/components';
 import { FC, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -19,6 +19,7 @@ interface Props {
   elementNameToCompare: string;
   activeAction?: string | 'delete' | 'leave';
   isLoading?: boolean;
+  isDisabled?: boolean;
 }
 
 type DeleteForm = {
@@ -37,6 +38,7 @@ export const DangerZone: FC<Props> = ({
   elementNameToCompare,
   activeAction = 'delete',
   isLoading = false,
+  isDisabled = false,
 }) => {
   const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
@@ -77,9 +79,21 @@ export const DangerZone: FC<Props> = ({
             <p>No longer need this {elementName}</p>
             <small>Click the button below to {activeAction} it?</small>
           </div>
-          <Button size="small" style="warning" onClick={() => gotoStep(2)}>
+          <Button
+            disabled={isDisabled}
+            size="small"
+            style="warning"
+            onClick={() => gotoStep(2)}
+          >
             {messages[activeAction].btn}
           </Button>
+          {isDisabled && (
+            <div css={spacing.top.medium}>
+              <Alert width="420px">
+                You cannot delete an organization that has nodes.
+              </Alert>
+            </div>
+          )}
         </>
       )}
       {step === 2 && (

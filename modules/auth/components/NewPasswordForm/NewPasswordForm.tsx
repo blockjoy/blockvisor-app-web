@@ -61,7 +61,8 @@ export function NewPasswordForm() {
 
   return serverError ? (
     <p css={[typo.small, colors.warning, spacing.bottom.medium]}>
-      There was an error verifying your account, please try again.
+      There was an error resetting your password, please contact our support
+      team.
     </p>
   ) : (
     <>
