@@ -34,7 +34,9 @@ describe('Registration page tests', () => {
   it('Should display an error when the email address is already registered', () => {
     cy.visit('/register');
     const userData = generateUserRegistrationData();
-    cy.get('[data-cy="register-email-input"]').type('thomas@blockjoy.com');
+    cy.get('[data-cy="register-email-input"]').type(
+      Cypress.env('TEST_USER_EMAIL'),
+    );
     cy.get('[data-cy="register-firstName-input"]').type(userData.firstName);
     cy.get('[data-cy="register-lastName-input"]').type(userData.lastName);
     cy.get('[data-cy="register-password-input"]').type(userData.password);

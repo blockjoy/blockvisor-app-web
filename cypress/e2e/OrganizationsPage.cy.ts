@@ -58,6 +58,22 @@ describe('Organizations page tests', () => {
       cy.get('[data-cy="organization-title-input"]').should('have.value', org);
     });
 
-    it('Should display a toast message when the organization is renamed successfully', () => {});
+    it('Should display a toast success message when the organization is renamed successfully', () => {
+      Authenticate(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
+      cy.get('[data-cy="sidebarMain-organizations-link"]').click();
+      cy.get('[data-cy="organizations-create-button"]').click();
+      const org = generateOrganizationName();
+      cy.get('[data-cy="organization-drawer-add-input"]').type(org);
+      cy.get('[data-cy="organization-drawer-submit-button"]').click();
+
+      cy.get('[data-cy="organization-edit-title"]').click();
+      cy.get('[data-cy="organization-title-input"]').type('e2e org');
+      cy.get('[data-cy="organization-save-title"]').click();
+
+      cy.get('.Toastify__toast--success').should('be.visible');
+    });
   });
 });

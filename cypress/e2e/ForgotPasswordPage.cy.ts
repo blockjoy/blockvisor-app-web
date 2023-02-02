@@ -1,7 +1,6 @@
 describe('Forgot Password tests', () => {
   it('Should show validation error when submiting without an email', () => {
     cy.visit('/forgot-password');
-    //cy.get('[data-cy="forgot-password-email-input"]').click();
 
     cy.get('[data-cy="forgot-password-submit"]').click();
 
@@ -14,7 +13,7 @@ describe('Forgot Password tests', () => {
 
     cy.get('[data-cy="forgot-password-submit"]').click();
 
-    cy.get('toast-success');
+    cy.get('.Toastify__toast--success').should('be.visible');
   });
 
   it('Should return to login page when cancel button is pressed', () => {
