@@ -2,7 +2,6 @@ import { AppLayout } from '@modules/layout';
 import { Faq } from '@modules/faq/Faq';
 import { fetchFAQ } from 'utils/FAQ/fetchFAQ';
 import { ReactNode } from 'react';
-import { NextPageContext } from 'next';
 
 export type FaqViewProps = {
   data: FAQ[];
