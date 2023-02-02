@@ -8,6 +8,8 @@ import { reset } from 'styles/utils.reset.styles';
 import { isValidEmail } from '@shared/utils/validation';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/constants/routes';
 
 type ForgotPassword = {
   email: string;
@@ -15,11 +17,14 @@ type ForgotPassword = {
 
 export function ForgotPasswordForm() {
   const form = useForm<ForgotPassword>();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onSubmit = form.handleSubmit(async ({ email }) => {
     setIsLoading(true);
     await apiClient.resetPassword(email);
+
+    router.push(ROUTES.LOGIN);
 
     toast.success('Email sent');
 
