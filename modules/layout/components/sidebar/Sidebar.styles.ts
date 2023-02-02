@@ -17,7 +17,7 @@ export const styles = {
     width: 260px;
     height: 100%;
     border-right: 1px solid ${theme.colorBorder};
-    background: ${theme.colorSidebar};
+    background: ${theme.colorBackground};
     transform: translateX(-100%);
 
     @media ${breakpoints.toXlrg} {

@@ -10,15 +10,16 @@ interface ITheme {
   colorCard: string;
   colorBorder: string;
   colorBorderGrey: string;
+  colorDarkGrey: string;
   colorLabel: string;
   colorPlaceholder: string;
   colorActive: string;
   colorHover: string;
   colorText: string;
+  colorTextGrey: string;
   colorBackground: string;
   colorLightGrey: string;
   colorDanger: string;
-  colorSidebar: string;
   colorNote: string;
   colorOverlay: string;
   colorDark: string;

@@ -1,39 +1,52 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
+
+const handleGap = (size: string) => {
+  switch (size) {
+    case 'small':
+      return '4px';
+    case 'medium':
+      return '8px';
+    default:
+      return '12px';
+  }
+};
 
 export const styles = {
-  base: css`
-    color: var(--color-text-4);
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    gap: 12px;
-    align-items: center;
-    min-width: 160px;
-    cursor: pointer;
+  base: (size: any) => (theme: ITheme) =>
+    css`
+      color: ${theme.colorTextGrey};
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      gap: ${handleGap(size)};
+      align-items: center;
+      min-width: 160px;
+      cursor: pointer;
 
-    &,
-    &:visited {
-      color: var(--color-text-4);
-    }
-
-    & :global(svg) {
-      color: var(--color-text-5-o20);
-      flex-basis: 12px;
-      transition: color 0.18s var(--transition-easing-cubic);
-      pointer-events: none;
-    }
-
-    &:hover,
-    &:active,
-    &:focus {
-      text-decoration: none;
-      background-color: var(--color-border-2);
+      &,
+      &:visited {
+        color: ${theme.colorTextGrey};
+      }
 
       & :global(svg) {
-        color: var(--color-text-5);
+        color: var(--color-text-5-o20);
+        flex-basis: 12px;
+        transition: color 0.18s var(--transition-easing-cubic);
+        pointer-events: none;
       }
-    }
-  `,
+
+      &:hover,
+      &:active,
+      &:focus {
+        text-decoration: none;
+        background-color: ${theme.colorBorderGrey};
+
+        & :global(svg) {
+          color: var(--color-text-5);
+        }
+      }
+    `,
   small: css`
     padding: 8px 12px;
   `,
