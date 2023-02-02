@@ -199,6 +199,9 @@ export const OrganizationView = () => {
             isDisabled={
               action === 'delete' && totalNodes !== null && totalNodes! > 0
             }
+            buttonDataCy="organization-delete-button"
+            inputDataCy="organization-delete-confirm-input"
+            submitDataCy="organization-delete-submit"
           ></DangerZone>
         </PageSection>
       )}

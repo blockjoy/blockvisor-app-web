@@ -1,4 +1,8 @@
-import { Authenticate, generateOrganizationName } from 'cypress/support/utils';
+import {
+  Authenticate,
+  createOrganization,
+  generateOrganizationName,
+} from 'cypress/support/utils';
 
 describe('Organizations page tests', () => {
   context('FullHD resolution', () => {
@@ -45,35 +49,53 @@ describe('Organizations page tests', () => {
     });
 
     it('Should redirect to created organization page', () => {
-      Authenticate(
-        Cypress.env('TEST_USER_EMAIL'),
-        Cypress.env('TEST_USER_PASSWORD'),
-      );
-      cy.get('[data-cy="sidebarMain-organizations-link"]').click();
-      cy.get('[data-cy="organizations-create-button"]').click();
       const org = generateOrganizationName();
-      cy.get('[data-cy="organization-drawer-add-input"]').type(org);
-      cy.get('[data-cy="organization-drawer-submit-button"]').click();
+      createOrganization(org);
 
       cy.get('[data-cy="organization-title-input"]').should('have.value', org);
     });
 
     it('Should display a toast success message when the organization is renamed successfully', () => {
-      Authenticate(
-        Cypress.env('TEST_USER_EMAIL'),
-        Cypress.env('TEST_USER_PASSWORD'),
-      );
-      cy.get('[data-cy="sidebarMain-organizations-link"]').click();
-      cy.get('[data-cy="organizations-create-button"]').click();
-      const org = generateOrganizationName();
-      cy.get('[data-cy="organization-drawer-add-input"]').type(org);
-      cy.get('[data-cy="organization-drawer-submit-button"]').click();
+      createOrganization(generateOrganizationName());
 
       cy.get('[data-cy="organization-edit-title"]').click();
-      cy.get('[data-cy="organization-title-input"]').type('e2e org');
+      cy.get('[data-cy="organization-title-input"]').clear().type('e2e org');
       cy.get('[data-cy="organization-save-title"]').click();
 
       cy.get('.Toastify__toast--success').should('be.visible');
+    });
+
+    it('Should display a toast success message when a member has been invited', () => {
+      createOrganization(generateOrganizationName());
+
+      cy.get('[data-cy="organization-member-add-button"]').click();
+      cy.get('[data-cy="organization-member-invite-input"]').type(
+        'random@test.com',
+      );
+      cy.get('[data-cy="organization-member-invite-button"]').click();
+
+      cy.get('.Toastify__toast--success').should('be.visible');
+    });
+
+    it('Should display invited member on the list', () => {
+      const testUserEmail = 'random@test.com';
+      createOrganization(generateOrganizationName());
+
+      cy.get('[data-cy="organization-member-add-button"]').click();
+      cy.get('[data-cy="organization-member-invite-input"]').type(
+        testUserEmail,
+      );
+      cy.get('[data-cy="organization-member-invite-button"]').click();
+
+      cy.get('table').contains('td', testUserEmail);
+    });
+
+    it('Should display an input for entering organization name when deleting organization', () => {
+      createOrganization(generateOrganizationName());
+      cy.get('[data-cy="organization-delete-button"]').click();
+      cy.get('[data-cy="organization-delete-confirm-input"]').should(
+        'be.visible',
+      );
     });
   });
 });

@@ -158,6 +158,7 @@ export const Members = () => {
           !selectedOrganization?.personal && (
             <Button
               onClick={handleAddMembersClicked}
+              dataCy="organization-member-add-button"
               style="outline"
               size="small"
             >

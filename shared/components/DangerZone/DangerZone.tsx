@@ -21,6 +21,9 @@ interface Props {
   activeAction?: string | 'delete' | 'leave';
   isLoading?: boolean;
   isDisabled?: boolean;
+  buttonDataCy?: string;
+  inputDataCy?: string;
+  submitDataCy?: string;
 }
 
 type DeleteForm = {
@@ -40,6 +43,9 @@ export const DangerZone: FC<Props> = ({
   activeAction = 'delete',
   isLoading = false,
   isDisabled = false,
+  buttonDataCy,
+  inputDataCy,
+  submitDataCy,
 }) => {
   const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
@@ -81,6 +87,7 @@ export const DangerZone: FC<Props> = ({
           </div>
           <Button
             disabled={isDisabled}
+            dataCy={buttonDataCy}
             size="small"
             style="warning"
             onClick={() => gotoStep(2)}
@@ -110,6 +117,7 @@ export const DangerZone: FC<Props> = ({
                 name="elementNameToDelete"
                 placeholder={`Type ${elementName} name`}
                 type="text"
+                data-cy={inputDataCy}
                 validationOptions={{
                   required: 'This is a mandatory field',
                   validate: (name) => doNamesMatch(name),
@@ -118,6 +126,7 @@ export const DangerZone: FC<Props> = ({
               <div css={[styles.actions, spacing.top.medium]}>
                 <Button
                   disabled={!isValid || isSubmitted}
+                  dataCy={submitDataCy}
                   type="submit"
                   size="small"
                   style="warning"

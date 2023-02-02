@@ -43,6 +43,7 @@ export const OrganizationInvite: FC<Props> = ({
             name="email"
             type="text"
             inputSize="medium"
+            data-cy="organization-member-invite-input"
             validationOptions={{
               required: 'An email address is required',
               pattern: {
