@@ -121,6 +121,7 @@ export function RegisterForm() {
                 disabled={loading}
                 name="email"
                 placeholder="Email"
+                data-cy="register-email-input"
                 validationOptions={{
                   required: 'Your email address is required',
                   pattern: {
@@ -137,6 +138,7 @@ export function RegisterForm() {
                 disabled={loading}
                 name="firstName"
                 placeholder="First name"
+                data-cy="register-firstName-input"
                 validationOptions={{
                   required: 'Your first name is required',
                 }}
@@ -149,6 +151,7 @@ export function RegisterForm() {
                 disabled={loading}
                 name="lastName"
                 placeholder="Last name"
+                data-cy="register-lastName-input"
                 validationOptions={{
                   required: 'Your last name is required',
                 }}
@@ -159,6 +162,7 @@ export function RegisterForm() {
                 loading={loading}
                 tabIndex={4}
                 name="password"
+                data-cy="register-password-input"
                 placeholder="Password"
               />
             </li>
@@ -168,6 +172,7 @@ export function RegisterForm() {
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="confirmPassword"
+                data-cy="register-confirmPassword-input"
                 placeholder="Confirm Password"
                 type={activeType['confirmPassword']}
                 validationOptions={{
@@ -193,6 +198,7 @@ export function RegisterForm() {
             tabIndex={6}
             loading={loading}
             disabled={loading || !isValid}
+            dataCy="register-submit-button"
             size="medium"
             display="block"
             style="primary"
@@ -201,7 +207,10 @@ export function RegisterForm() {
             Create Account
           </Button>
           {registerError && (
-            <p css={[typo.smaller, colors.warning, spacing.top.medium]}>
+            <p
+              data-cy="register-error-message"
+              css={[typo.smaller, colors.warning, spacing.top.medium]}
+            >
               {registerError}
             </p>
           )}
