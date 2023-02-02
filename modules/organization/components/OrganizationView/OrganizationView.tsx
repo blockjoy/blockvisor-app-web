@@ -32,6 +32,8 @@ import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrgani
 import { useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
+import { useNodeList } from '@modules/node';
+import { apiClient } from '@modules/client';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -40,6 +42,7 @@ export const OrganizationView = () => {
   const { deleteOrganization, loading: isDeleting } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
+  const { loadNodes, nodeList } = useNodeList();
 
   const sentInvitationsLoadingState = useRecoilValue(
     organizationAtoms.organizationSentInvitationsLoadingState,
@@ -50,6 +53,8 @@ export const OrganizationView = () => {
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean>(false);
+
+  const [totalNodes, setTotalNodes] = useState<number | null>(null);
 
   const handleSaveClicked = async (newOrganizationName: string) => {
     setIsSavingOrganization(true);
@@ -93,6 +98,32 @@ export const OrganizationView = () => {
       getSentInvitations(queryAsString(id));
     }
   }, [router.isReady]);
+
+  const getTotalNodes = async () => {
+    const nodes: any = await apiClient.listNodes(
+      id?.toString()!,
+      {
+        blockchain: [],
+        node_status: [],
+        node_type: [],
+      },
+      {
+        current_page: 1,
+        items_per_page: 1000,
+      },
+    );
+
+    if (nodes?.code) {
+      return;
+    }
+
+    setTotalNodes(nodes?.length);
+  };
+
+  // quick win to check if org has nodes
+  useEffect(() => {
+    getTotalNodes();
+  }, []);
 
   const details = getOrganizationDetails(organization);
   const isLoadingOrg =
@@ -146,6 +177,7 @@ export const OrganizationView = () => {
             activeAction={action}
             handleAction={handleAction}
             isLoading={isDeleting}
+            isDisabled={action === 'delete' && totalNodes! > 0}
           ></DangerZone>
         </PageSection>
       )}
