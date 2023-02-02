@@ -24,7 +24,7 @@ type LoginForm = {
 export function LoginForm() {
   const { getOrganizations } = useGetOrganizations();
   const router = useRouter();
-  const { invited, verified, redirect, token } = router.query;
+  const { invited, verified, redirect, forgot, token } = router.query;
   const signIn = useSignIn();
   const form = useForm<LoginForm>();
   const { setValue } = form;
@@ -39,14 +39,9 @@ export function LoginForm() {
   };
 
   const handleRedirect = () => {
-    // temp localStorage fix until we get something in token
-    const getRedirect =
-      localStorage.getItem('redirect') || redirect?.toString()!;
-    localStorage.removeItem('redirect');
-
-    const loginRedirect = /^\/$|\/login/.test(getRedirect?.toString()!)
+    const loginRedirect = /^\/$|\/login/.test(redirect?.toString()!)
       ? ROUTES.DEFAULT
-      : getRedirect;
+      : redirect?.toString()!;
     router.push(`${loginRedirect || ROUTES.DEFAULT}`, undefined, {
       shallow: true,
     });
@@ -87,6 +82,11 @@ export function LoginForm() {
       {verified && (
         <Alert isSuccess>
           Account verified, <br /> please login.
+        </Alert>
+      )}
+      {forgot && (
+        <Alert isSuccess>
+          Password reset, <br /> please login.
         </Alert>
       )}
       <FormProvider {...form}>

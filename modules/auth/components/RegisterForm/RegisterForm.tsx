@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Alert, Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
@@ -22,6 +22,11 @@ type RegisterForm = {
   confirmPassword: string;
 };
 
+type ActiveType = {
+  password: string;
+  confirmPassword: string;
+};
+
 const getError = (message: string) => {
   // temporary getError method based on message
   if (message?.toLowerCase()?.includes('duplicate')) {
@@ -36,13 +41,19 @@ export function RegisterForm() {
   const { invited, token } = router.query;
 
   const form = useForm<RegisterForm>();
-  const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+  const [activeType, setActiveType] = useState<
+    Record<keyof ActiveType, 'password' | 'text'>
+  >({
+    confirmPassword: 'password',
+    password: 'password',
+  });
   const [registerError, setRegisterError] = useState<string | undefined>();
   const [loading, setIsLoading] = useState(false);
   const { handleSubmit, watch, setValue } = form;
-  const handleIconClick = () => {
-    const type = activeType === 'password' ? 'text' : 'password';
-    setActiveType(type);
+  const handleIconClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const name = e.currentTarget.name as keyof ActiveType;
+    const type = activeType[name] === 'password' ? 'text' : 'password';
+    setActiveType((prev) => ({ ...prev, [name]: type }));
   };
 
   const onSubmit = handleSubmit(
@@ -134,7 +145,7 @@ export function RegisterForm() {
                 disabled={loading}
                 name="password"
                 placeholder="Password"
-                type={activeType}
+                type={activeType['password']}
                 validationOptions={{
                   required: 'This is a mandatory field',
                   minLength: {
@@ -144,8 +155,9 @@ export function RegisterForm() {
                 }}
                 rightIcon={
                   <PasswordToggle
+                    name="password"
                     tabIndex={0}
-                    activeType={activeType}
+                    activeType={activeType['password']}
                     onClick={handleIconClick}
                   />
                 }
@@ -158,7 +170,7 @@ export function RegisterForm() {
                 disabled={loading}
                 name="confirmPassword"
                 placeholder="Confirm Password"
-                type={activeType}
+                type={activeType['confirmPassword']}
                 validationOptions={{
                   required: 'This is a mandatory field',
                   validate: (value) => {
@@ -170,7 +182,8 @@ export function RegisterForm() {
                 rightIcon={
                   <PasswordToggle
                     tabIndex={0}
-                    activeType={activeType}
+                    name="confirmPassword"
+                    activeType={activeType['confirmPassword']}
                     onClick={handleIconClick}
                   />
                 }
