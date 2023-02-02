@@ -5,9 +5,11 @@ import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganizations } from './useGetOrganizations';
+import { useSwitchOrganization } from './useSwitchOrganization';
 
 export function useDeleteOrganization() {
-  const { updateOrganizations } = useGetOrganizations();
+  const { organizations, updateOrganizations } = useGetOrganizations();
+  const { switchOrganization } = useSwitchOrganization();
 
   const [loadingState, setLoadingState] = useRecoilState(
     organizationAtoms.organizationDeleteLoadingState,
@@ -21,6 +23,15 @@ export function useDeleteOrganization() {
     if (isResponeMetaObject(response) || response?.code === 25) {
       updateOrganizations(id);
       setLoadingState('finished');
+      try {
+        const newActiveOrganization = organizations[0];
+        switchOrganization(
+          newActiveOrganization.id!,
+          newActiveOrganization.name!,
+        );
+      } catch (error) {
+        console.log('Error switching org: ', error);
+      }
       toast.success('Deleted successfully');
     } else {
       setLoadingState('finished');
