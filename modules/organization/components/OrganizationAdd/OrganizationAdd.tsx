@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useRouter } from 'next/router';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
+import { useSetDefaultOrganization } from '@modules/organization/hooks/useSetDefaultOrganization';
 
 type OrganisationAddForm = {
   name: string;
@@ -29,6 +30,7 @@ export const OrganizationAdd: FC = () => {
   const [layout, setLayout] = useRecoilState(layoutState);
   const createOrganization = useCreateOrganization();
   const { getOrganizations } = useGetOrganizations();
+  const { setDefaultOrganization } = useSetDefaultOrganization();
 
   const [loading, setLoading] = useState(false);
 
@@ -42,6 +44,7 @@ export const OrganizationAdd: FC = () => {
         form.reset();
         setLoading(false);
         setLayout(undefined);
+        setDefaultOrganization(org.id, name);
       });
     } catch (error) {
       setLoading(false);
