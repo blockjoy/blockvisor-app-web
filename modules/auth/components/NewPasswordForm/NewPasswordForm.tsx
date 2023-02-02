@@ -126,7 +126,7 @@ export function NewPasswordForm() {
               style="primary"
               type="submit"
             >
-              Set New Password
+              Reset Password
             </Button>
           </form>
         </FormProvider>
