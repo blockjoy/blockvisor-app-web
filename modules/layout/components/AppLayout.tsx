@@ -2,7 +2,7 @@ import Sidebar from './sidebar/Sidebar';
 import Overlay from './overlay/Overlay';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import { PrivateRoute, useIdentityRepository } from '@modules/auth';
+import { useIdentityRepository } from '@modules/auth';
 import {
   OrganizationAdd,
   useGetOrganizations,
@@ -50,6 +50,11 @@ export const AppLayout: React.FC<LayoutType> = ({
     <>
       <Head>
         <title>{pageTitle}</title>
+        <script
+          defer
+          data-domain="app.blockjoy.com"
+          src="https://plausible.io/js/script.js"
+        ></script>
       </Head>
       <Burger />
       <Sidebar />
