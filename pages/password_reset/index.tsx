@@ -4,7 +4,7 @@ import { Layout } from '@shared/components';
 
 const SetNewPassword: NextPage = () => {
   return (
-    <Layout title="Set a New Password">
+    <Layout title="Reset your password">
       <NewPasswordForm />
     </Layout>
   );

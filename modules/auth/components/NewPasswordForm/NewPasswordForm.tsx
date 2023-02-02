@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { apiClient } from '@modules/client';
 import { Button, Input } from '@shared/components';
@@ -9,6 +9,7 @@ import { PasswordToggle } from '../PasswordTogle';
 import { useRouter } from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
+import { ROUTES } from '@shared/constants/routes';
 
 type NewPassword = {
   password: string;
@@ -17,17 +18,24 @@ type NewPassword = {
 
 export function NewPasswordForm() {
   const [serverError, setServerError] = useState<string>('');
-  const [isReset, setIsReset] = useState<boolean>(false);
 
   const form = useForm<NewPassword>();
 
   const router = useRouter();
 
-  const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+  const [activeType, setActiveType] = useState<
+    Record<keyof NewPassword, 'password' | 'text'>
+  >({
+    confirmPassword: 'password',
+    password: 'password',
+  });
+
   const { handleSubmit, watch } = form;
-  const handleIconClick = () => {
-    const type = activeType === 'password' ? 'text' : 'password';
-    setActiveType(type);
+
+  const handleIconClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    const name = e.currentTarget.name as keyof NewPassword;
+    const type = activeType[name] === 'password' ? 'text' : 'password';
+    setActiveType((prev) => ({ ...prev, [name]: type }));
   };
 
   const onSubmit = async ({ password, confirmPassword }: NewPassword) => {
@@ -44,7 +52,10 @@ export function NewPasswordForm() {
     if (response.code) {
       setServerError('Error setting new password, please contact support.');
     } else {
-      setIsReset(true);
+      router.push({
+        pathname: ROUTES.LOGIN,
+        query: { forgot: true },
+      });
     }
   };
 
@@ -52,28 +63,8 @@ export function NewPasswordForm() {
     <p css={[typo.small, colors.warning, spacing.bottom.medium]}>
       There was an error verifying your account, please try again.
     </p>
-  ) : isReset ? (
-    <div css={spacing.bottom.xLarge}>
-      <p css={[typo.small, colors.text3, spacing.bottom.large]}>
-        Your password has now been reset, please login.
-      </p>
-      <Button
-        onClick={() => router.push('/')}
-        size="medium"
-        style="outline"
-        type="button"
-      >
-        Login
-      </Button>
-    </div>
   ) : (
     <>
-      <p
-        css={[typo.small, colors.text3, spacing.bottom.medium]}
-        className="t-small t-color-text-3 s-bottom--medium forgot-password__description"
-      >
-        Set up your new password and makes sure you store it in a safe place.
-      </p>
       <div css={[spacing.bottom.mediumSmall]}>
         <FormProvider {...form}>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -84,7 +75,7 @@ export function NewPasswordForm() {
                   labelStyles={[display.visuallyHidden]}
                   name="password"
                   placeholder="Password"
-                  type={activeType}
+                  type={activeType['password']}
                   validationOptions={{
                     required: 'This is a mandatory field',
                     minLength: {
@@ -95,7 +86,8 @@ export function NewPasswordForm() {
                   rightIcon={
                     <PasswordToggle
                       tabIndex={4}
-                      activeType={activeType}
+                      name="password"
+                      activeType={activeType['password']}
                       onClick={handleIconClick}
                     />
                   }
@@ -106,8 +98,8 @@ export function NewPasswordForm() {
                   tabIndex={2}
                   labelStyles={[display.visuallyHidden]}
                   name="confirmPassword"
-                  placeholder="Confirm Password"
-                  type={activeType}
+                  placeholder="Confirm password"
+                  type={activeType['confirmPassword']}
                   validationOptions={{
                     required: 'This is a mandatory field',
                     validate: (value) => {
@@ -119,7 +111,8 @@ export function NewPasswordForm() {
                   rightIcon={
                     <PasswordToggle
                       tabIndex={5}
-                      activeType={activeType}
+                      name="confirmPassword"
+                      activeType={activeType['confirmPassword']}
                       onClick={handleIconClick}
                     />
                   }
