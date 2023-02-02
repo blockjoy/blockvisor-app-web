@@ -2,7 +2,7 @@ import Sidebar from './sidebar/Sidebar';
 import Overlay from './overlay/Overlay';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import { PrivateRoute, useIdentityRepository } from '@modules/auth';
+import { useIdentityRepository } from '@modules/auth';
 import {
   OrganizationAdd,
   useGetOrganizations,
@@ -12,7 +12,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains } from '@modules/node';
-import Script from 'next/script';
 
 type LayoutType = {
   children: React.ReactNode;
