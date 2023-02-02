@@ -110,6 +110,7 @@ export const EditableTitle: FC<Props> = ({
 
       {canUpdate && !isLoading && initialValue?.length && (
         <Button
+          dataCy="organization-edit-title"
           style="icon"
           onClick={handleEditToggled}
           tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
@@ -127,6 +128,7 @@ export const EditableTitle: FC<Props> = ({
           <Button
             disabled={isSaving || !isValid || !isDirty}
             loading={isSaving !== null}
+            dataCy="organization-save-title"
             onClick={handleSaveClicked}
             size="small"
             style="secondary"
