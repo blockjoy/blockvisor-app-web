@@ -6,9 +6,9 @@ import { spacing } from 'styles/utils.spacing.styles';
 
 const Verify: NextPage = () => {
   return (
-    <Layout title="We have Sent a Link to Your Email Address.">
+    <Layout title="We have sent a link to your email address.">
       <p css={[typo.small, colors.text3, spacing.bottom.medium]}>
-        Check your e-mail and start using the app!
+        Check your email and start using BlockJoy!
       </p>
     </Layout>
   );

@@ -10,9 +10,6 @@ const AcceptInvite: NextPage = () => {
     localStorage.removeItem('identity');
     if (router.isReady) {
       const { token } = router.query;
-
-      // temp fix to redirect to organizations once verified
-      localStorage.setItem('redirect', 'organizations');
       router.push({
         pathname: ROUTES.REGISTER,
         query: { token },
