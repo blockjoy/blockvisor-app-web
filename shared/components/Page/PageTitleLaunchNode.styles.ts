@@ -9,6 +9,7 @@ export const styles = {
     justify-content: center;
     gap: 16px;
     padding: 0 32px 0 24px;
+    margin-left: auto;
     height: 44px;
     border-radius: 6px;
     background: ${theme.colorPrimary};

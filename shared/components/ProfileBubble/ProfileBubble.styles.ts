@@ -5,16 +5,15 @@ export const styles = {
   bubble: (theme: ITheme) => css`
     display: grid;
     place-items: center;
-    width: 16px;
-    min-width: 16px;
-    max-width: 16px;
-    height: 16px;
+    width: 44px;
+    height: 44px;
     padding: 0;
-    font-size: 7px;
+    font-size: 13px;
     font-weight: 600;
-    background: ${theme.colorLabel};
-    border-radius: 50%;
-    color: #f9f9f9;
+    background: ${theme.colorBackground};
+    border-radius: 6px;
+    color: ${theme.colorPrimary};
     cursor: pointer;
+    margin-left: 8px;
   `,
 };

@@ -72,6 +72,7 @@ export const OrganizationPicker = () => {
               <li key={org.id}>
                 <DropdownItem
                   size="medium"
+                  type="button"
                   onButtonClick={() => handleChange(org.id, org.name)}
                 >
                   {org.name}

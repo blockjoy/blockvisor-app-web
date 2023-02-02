@@ -16,5 +16,4 @@ export const themeLight: ITheme = {
   colorPlaceholder: '#A5A8A3',
   colorBackground: '#fafafa',
   colorLightGrey: '#f7f7f7',
-  colorSidebar: '#fafafa',
 };

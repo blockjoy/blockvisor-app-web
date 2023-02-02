@@ -2,6 +2,7 @@ import { Button } from '@shared/components';
 import { FC, ReactNode } from 'react';
 import { typo } from 'styles/utils.typography.styles';
 import { wrapper } from 'styles/wrapper.styles';
+import ProfileDropdown from '../ProfileDropdown/ProfileDropdown';
 import { styles } from './PageTitle.styles';
 import { PageTitleLaunchNode } from './PageTitleLaunchNode';
 
@@ -36,6 +37,7 @@ export const PageTitle: FC<Props> = ({
             <PageTitleLaunchNode />
           </>
         )}
+        <ProfileDropdown />
       </div>
     </header>
   );
