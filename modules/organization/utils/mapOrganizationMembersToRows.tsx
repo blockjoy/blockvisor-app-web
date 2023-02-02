@@ -66,7 +66,7 @@ export const mapOrganizationMembersToRows = (
     members?.map((member: ClientOrganizationMember) => ({
       id: member.id,
       email: member.email,
-      createdAt: member.createdAtString,
+      createdAt: null,
       firstName: member.firstName,
       lastName: member.lastName,
       invitationId: null,
@@ -112,11 +112,11 @@ export const mapOrganizationMembersToRows = (
       key: '1',
       width: '40%',
     },
-    {
-      name: 'Joined',
-      key: '2',
-      width: '55%',
-    },
+    // {
+    //   name: 'Joined',
+    //   key: '2',
+    //   width: '55%',
+    // },
     {
       name: '',
       key: '3',
@@ -149,20 +149,20 @@ export const mapOrganizationMembersToRows = (
           </div>
         ),
       },
-      {
-        key: '2',
-        component: (
-          <>
-            {member.createdAt && (
-              <p>
-                {formatDistanceToNow(new Date(member.createdAt || ''), {
-                  addSuffix: true,
-                })}
-              </p>
-            )}
-          </>
-        ),
-      },
+      // {
+      //   key: '2',
+      //   component: (
+      //     <>
+      //       {member.createdAt && (
+      //         <p>
+      //           {formatDistanceToNow(new Date(member.createdAt || ''), {
+      //             addSuffix: true,
+      //           })}
+      //         </p>
+      //       )}
+      //     </>
+      //   ),
+      // },
       {
         key: '3',
         component:
