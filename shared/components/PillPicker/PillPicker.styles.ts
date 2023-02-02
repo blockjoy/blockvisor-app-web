@@ -21,7 +21,7 @@ export const styles = {
     }
 
     :is(:focus, :hover, :active) + label span {
-      box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
+      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.125);
     }
   `,
   button: (theme: ITheme) => css`
