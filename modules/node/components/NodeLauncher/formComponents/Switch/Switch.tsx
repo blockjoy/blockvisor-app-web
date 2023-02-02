@@ -4,6 +4,7 @@ import IconLock from '@public/assets/icons/lock-12.svg';
 
 type Props = {
   name: string;
+  tabIndex?: number;
   tooltip: string;
   disabled: boolean;
   onPropertyChanged: (e: any) => void;
@@ -14,10 +15,11 @@ export const Switch: FC<Props> = ({
   tooltip = 'test',
   disabled,
   name,
+  tabIndex,
 }) => {
   return (
     <div css={styles.wrapper}>
-      <label>
+      <label tabIndex={tabIndex}>
         <input
           disabled={disabled}
           name={name}

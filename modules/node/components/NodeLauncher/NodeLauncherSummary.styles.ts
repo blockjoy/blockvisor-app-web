@@ -112,6 +112,12 @@ export const styles = {
       opacity: 0.2;
     }
 
+    :focus,
+    :hover,
+    :active {
+      box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
+    }
+
     @media ${breakpoints.fromLrg} {
       width: 300px;
     }

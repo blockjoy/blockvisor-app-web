@@ -59,6 +59,7 @@ const icons = {
   Undefined: <IconUndefined />,
   Earning: <IconEarning />,
   Processing: <IconProcessing />,
+  Provisioning: <IconProcessing />,
   Broadcasting: <IconBroadcasting />,
   Cancelled: <IconCancelled />,
   Delegating: <IconDelegating />,
