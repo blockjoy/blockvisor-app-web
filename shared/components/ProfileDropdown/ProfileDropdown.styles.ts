@@ -3,17 +3,25 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   base: css`
+    margin-left: 8px;
     position: relative;
     max-width: max-content;
   `,
   button: css`
     border: none;
-    border-radius: 0;
+    border-radius: 6px;
     background: none;
     padding: 0;
     font-size: inherit;
     font-family: inherit;
     color: inherit;
+    width: 44px;
+    transition: box-shadow 0.3s;
+
+    &:hover,
+    &:active {
+      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.05);
+    }
   `,
   dropdown: css`
     top: 52px;

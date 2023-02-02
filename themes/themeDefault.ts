@@ -8,6 +8,7 @@ export const themeDefault: ITheme = {
   colorAccent: '#e9c09c',
   colorBorder: '#363938',
   colorBorderGrey: '#5e605c',
+  colorDarkGrey: '#1b1d1c',
   colorLabel: '#5F615D',
   colorDefault: '#5F615D',
   colorActive: '#363938',
