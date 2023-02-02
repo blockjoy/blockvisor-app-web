@@ -70,7 +70,7 @@ export const useNodeView = (): Hook => {
         data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
       },
       { label: 'HOST', data: node.hostName || 'Unknown' },
-      { label: 'NODE ADDRESS', data: node.walletAddress },
+      { label: 'NODE ADDRESS', data: node?.address || '-' },
       { label: 'VERSION', data: node.version || 'Latest' },
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
     ];
