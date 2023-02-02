@@ -58,6 +58,6 @@ describe('Organizations page tests', () => {
       cy.get('[data-cy="organization-title-input"]').should('have.value', org);
     });
 
-    it('Should display a toast message when the organization is renamed', () => {});
+    it('Should display a toast message when the organization is renamed successfully', () => {});
   });
 });

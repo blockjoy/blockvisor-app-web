@@ -14,6 +14,7 @@ export function RegisterFooter() {
           href={ROUTES.LOGIN}
           css={[link, linkPrimary, linkUnderline]}
           shallow
+          data-cy="register-signin-link"
         >
           Login here
         </Link>
