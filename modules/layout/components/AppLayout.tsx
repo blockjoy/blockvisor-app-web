@@ -12,6 +12,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains } from '@modules/node';
+import Script from 'next/script';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -50,6 +51,11 @@ export const AppLayout: React.FC<LayoutType> = ({
     <>
       <Head>
         <title>{pageTitle}</title>
+        <script
+          defer
+          data-domain="app.blockjoy.com"
+          src="https://plausible.io/js/script.js"
+        ></script>
       </Head>
       <Burger />
       <Sidebar />
