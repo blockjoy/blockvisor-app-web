@@ -97,5 +97,15 @@ describe('Organizations page tests', () => {
         'be.visible',
       );
     });
+
+    it('Should redirect to organizations when organization is deleted', () => {
+      const org = generateOrganizationName();
+      createOrganization(org);
+      cy.get('[data-cy="organization-delete-button"]').click();
+      cy.get('[data-cy="organization-delete-confirm-input"]').type(org);
+      cy.get('[data-cy="organization-delete-submit"]').click();
+
+      cy.url().should('be.equal', `${Cypress.config('baseUrl')}/organizations`);
+    });
   });
 });
