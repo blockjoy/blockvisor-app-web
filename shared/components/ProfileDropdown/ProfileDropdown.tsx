@@ -15,7 +15,7 @@ export default function ProfileDropdown() {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
 
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const signOut = useSignOut();

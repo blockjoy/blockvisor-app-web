@@ -4,6 +4,8 @@ import { styles } from './DropdownItem.styles';
 import { link } from 'styles/link.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { reset } from 'styles/utils.reset.styles';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 type Props = {
   id?: string;
@@ -11,7 +13,9 @@ type Props = {
   children?: ReactNode;
   size?: 'large' | 'medium' | 'small';
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
-  additionalStyles?: any;
+  additionalStyles?:
+    | ((theme: ITheme) => SerializedStyles)[]
+    | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
 };
 export function DropdownItem({
