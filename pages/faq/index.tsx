@@ -14,12 +14,7 @@ FaqView.getLayout = function getLayout(page: ReactNode) {
   return <AppLayout pageTitle="FAQ">{page}</AppLayout>;
 };
 
-export async function getServerSideProps({ res }: NextPageContext) {
-  res!.setHeader(
-    'Cache-Control',
-    'public, s-maxage=10, stale-while-revalidate=59',
-  );
-
+export async function getStaticProps() {
   const { data } = await fetchFAQ();
 
   return { props: { data } };
