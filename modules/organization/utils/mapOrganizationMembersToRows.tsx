@@ -17,6 +17,16 @@ export enum Action {
   resend = 'resend ',
 }
 
+type MemberListItem = {
+  id?: string | null;
+  email?: string;
+  createdAt?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  invitationId?: string | null;
+  isPending?: boolean;
+};
+
 export type Member = {
   user_id?: string | undefined;
   org_id?: string | undefined;
@@ -52,31 +62,29 @@ export const mapOrganizationMembersToRows = (
     Permissions.DELETE_MEMBER,
   );
 
-  const membersMap =
-    members?.map((member) => ({
+  const membersMap: MemberListItem[] =
+    members?.map((member: ClientOrganizationMember) => ({
       id: member.id,
       email: member.email,
-      active: true,
-      createdAt: member.createdAtString,
+      createdAt: null,
       firstName: member.firstName,
       lastName: member.lastName,
       invitationId: null,
       isPending: false,
     })) ?? [];
 
-  const invitationsMap =
-    invitations?.map((invitation) => ({
+  const invitationsMap: MemberListItem[] =
+    invitations?.map((invitation: ClientOrganizationInvitation) => ({
       id: null,
       email: invitation.inviteeEmail,
-      active: false,
-      createdAt: invitation.createdAtString,
-      firstName: '',
-      lastName: '',
+      createdAt: null,
+      firstName: null,
+      lastName: null,
       invitationId: invitation.id,
       isPending: true,
     })) ?? [];
 
-  const allMembers = [...membersMap, ...invitationsMap];
+  const allMembers: MemberListItem[] = [...membersMap, ...invitationsMap];
 
   const handleRemoveMember = async (
     user_id: string,
@@ -104,11 +112,11 @@ export const mapOrganizationMembersToRows = (
       key: '1',
       width: '40%',
     },
-    {
-      name: 'Added',
-      key: '2',
-      width: '55%',
-    },
+    // {
+    //   name: 'Joined',
+    //   key: '2',
+    //   width: '55%',
+    // },
     {
       name: '',
       key: '3',
@@ -129,7 +137,7 @@ export const mapOrganizationMembersToRows = (
         component: (
           <div css={flex.display.inline}>
             <p>{member.email}</p>
-            {!member.active && (
+            {member.isPending && (
               <Badge
                 color="note"
                 style="outline"
@@ -141,16 +149,20 @@ export const mapOrganizationMembersToRows = (
           </div>
         ),
       },
-      {
-        key: '2',
-        component: (
-          <p>
-            {formatDistanceToNow(new Date(member.createdAt || ''), {
-              addSuffix: true,
-            })}
-          </p>
-        ),
-      },
+      // {
+      //   key: '2',
+      //   component: (
+      //     <>
+      //       {member.createdAt && (
+      //         <p>
+      //           {formatDistanceToNow(new Date(member.createdAt || ''), {
+      //             addSuffix: true,
+      //           })}
+      //         </p>
+      //       )}
+      //     </>
+      //   ),
+      // },
       {
         key: '3',
         component:
@@ -178,7 +190,7 @@ export const mapOrganizationMembersToRows = (
         component: (
           <>
             {canRemoveMember ? (
-              member.active ? (
+              !member.isPending ? (
                 member.id !== userId && (
                   <Button
                     type="button"
