@@ -22,7 +22,6 @@ export function useDeleteOrganization() {
       updateOrganizations(id);
       setLoadingState('finished');
       toast.success('Deleted successfully');
-      console.log('Deleted Successfully');
     } else {
       setLoadingState('finished');
       toast.error('Delete failed');
