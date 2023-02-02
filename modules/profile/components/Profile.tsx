@@ -17,10 +17,7 @@ export const Profile = () => {
   const signOut = useSignOut();
   const { push } = useRouter();
 
-  const handleSignout = async () => {
-    signOut();
-    window.location.href = '/';
-  };
+  const handleSignout = async () => signOut();
 
   const tabItems = useMemo(
     () => [

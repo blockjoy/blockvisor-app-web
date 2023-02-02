@@ -7,8 +7,9 @@ export const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    padding: 0 32px 0 24px;
+    gap: 12px;
+    padding: 0 24px 0 18px;
+    margin-left: auto;
     height: 44px;
     border-radius: 6px;
     background: ${theme.colorPrimary};
@@ -46,8 +47,8 @@ export const styles = {
       min-width: 0;
 
       svg {
-        width: 14px;
-        flex: 0 0 14px;
+        width: 30px;
+        flex: 0 0 30px;
       }
     }
   `,

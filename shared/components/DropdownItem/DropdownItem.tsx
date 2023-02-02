@@ -4,6 +4,8 @@ import { styles } from './DropdownItem.styles';
 import { link } from 'styles/link.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { reset } from 'styles/utils.reset.styles';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 type Props = {
   id?: string;
@@ -11,6 +13,10 @@ type Props = {
   children?: ReactNode;
   size?: 'large' | 'medium' | 'small';
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
+  additionalStyles?:
+    | ((theme: ITheme) => SerializedStyles)[]
+    | SerializedStyles[];
+  type?: 'link' | 'button' | 'plain';
 };
 export function DropdownItem({
   href,
@@ -18,26 +24,54 @@ export function DropdownItem({
   children,
   size = 'small',
   onButtonClick,
+  additionalStyles,
+  type = 'plain',
 }: Props) {
-  if (href) {
-    return (
-      <Link
-        id={id}
-        href={href}
-        css={[typo.tiny, link, styles.base, styles[size]]}
-      >
-        {children}
-      </Link>
-    );
+  switch (type) {
+    case 'link':
+      return (
+        <Link
+          id={id}
+          href={href!}
+          css={[
+            typo.tiny,
+            link,
+            styles.base(size),
+            styles[size],
+            additionalStyles && additionalStyles,
+          ]}
+        >
+          {children}
+        </Link>
+      );
+    case 'button':
+      return (
+        <button
+          id={id}
+          onClick={onButtonClick}
+          css={[
+            reset.button,
+            typo.tiny,
+            styles.base(size),
+            styles[size],
+            additionalStyles && additionalStyles,
+          ]}
+        >
+          {children}
+        </button>
+      );
+    default:
+      return (
+        <div
+          css={[
+            typo.tiny,
+            styles.base(size),
+            styles[size],
+            additionalStyles && additionalStyles,
+          ]}
+        >
+          {children}
+        </div>
+      );
   }
-
-  return (
-    <button
-      id={id}
-      onClick={onButtonClick}
-      css={[reset.button, typo.tiny, styles.base, styles[size]]}
-    >
-      {children}
-    </button>
-  );
 }

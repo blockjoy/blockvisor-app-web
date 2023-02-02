@@ -7,6 +7,7 @@ export const ROUTES = {
   NODE_GROUP: (id: string) => `/nodes/group/${id}`,
   LOGIN: '/login',
   ORGANIZATIONS: '/organizations',
+  PROFILE: '/profile',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
 };
