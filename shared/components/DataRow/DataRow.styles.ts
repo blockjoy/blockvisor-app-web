@@ -9,6 +9,9 @@ export const styles = {
     border-bottom: 1px solid var(--color-text-5-o10);
 
     @media ${breakpoints.toXlrg} {
+      display: flex;
+      flex-direction: column;
+
       th {
         width: 160px;
       }
@@ -17,12 +20,14 @@ export const styles = {
   column: css`
     padding-top: 28px;
     padding-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-    /* @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toXlrg} {
       padding-top: 8px;
       padding-bottom: 8px;
       display: block;
-    } */
+    }
   `,
   heading: css`
     padding-right: 28px;

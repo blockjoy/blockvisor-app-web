@@ -7,20 +7,22 @@ export const styles = {
     display: flex;
     gap: 12px;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     @media ${breakpoints.toLrg} {
       flex-direction: column;
       align-items: flex-start;
+      margin-bottom: 16px;
     }
   `,
   detailsHeader: css`
     display: flex;
-    gap: 20px;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin-bottom: 4px;
 
     @media ${breakpoints.toXlrg} {
       flex-direction: column;
+      margin-bottom: 16px;
     }
   `,
   detailsFooter: css`
@@ -30,6 +32,8 @@ export const styles = {
 
     @media ${breakpoints.toLrg} {
       gap: 8px;
+      flex-wrap: wrap;
+      max-width: 300px;
     }
   `,
   actions: css`
@@ -39,10 +43,6 @@ export const styles = {
 
     > button {
       width: 86px;
-    }
-
-    @media ${breakpoints.toXlrg} {
-      margin-left: 52px;
     }
 
     @media ${breakpoints.toLrg} {
