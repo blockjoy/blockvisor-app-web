@@ -28,6 +28,9 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
   const [keyword, setKeyword] = useState<string>('');
 
+  const [activeProtocolIndex, setActiveProtocolIndex] =
+    useState<number | null>(null);
+
   const filteredBlockchains = blockchains?.filter(
     (b) =>
       b.status !== 0 && b.name?.toLowerCase().includes(keyword.toLowerCase()),
@@ -36,8 +39,6 @@ export const NodeLauncherProtocol: FC<Props> = ({
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
-
-  console.log('loading', loading);
 
   const handleProtocolSelected = (blockchainId: string, nodeTypeId: string) => {
     const blockchainsCopy = [...blockchains];
@@ -59,6 +60,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
       <div>
         <div css={styles.searchWrapper}>
           <input
+            tabIndex={1}
             autoFocus
             autoComplete="off"
             autoCorrect="off"
@@ -85,11 +87,17 @@ export const NodeLauncherProtocol: FC<Props> = ({
           </div>
         ) : (
           <>
-            {filteredBlockchains?.map((b) => (
+            {filteredBlockchains?.map((b, index) => (
               <div
+                tabIndex={activeNodeTypeId ? -1 : index + 1}
                 key={b.id}
+                onFocus={() => setActiveProtocolIndex(index)}
                 css={[styles.row, styles.rowHover]}
-                className={b.id === activeBlockchainId ? 'active row' : 'row'}
+                className={
+                  b.id === activeBlockchainId || activeProtocolIndex === index
+                    ? 'active row'
+                    : 'row'
+                }
               >
                 <span css={styles.blockchainWrapper}>
                   <span css={styles.iconWrapper}>
@@ -105,6 +113,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 <div css={styles.nodeTypeButtons} className="node-type-buttons">
                   {b.supported_node_types.map((type: any) => (
                     <button
+                      tabIndex={activeNodeTypeId ? -1 : index + 1}
                       key={type.id}
                       className={
                         type.id === activeNodeTypeId &&
