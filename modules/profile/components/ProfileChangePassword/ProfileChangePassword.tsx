@@ -11,6 +11,7 @@ import { containers } from 'styles/containers.styles';
 import { styles } from './ProfileChangePassword.styles';
 import { toast } from 'react-toastify';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useGetOrganizations } from '@modules/organization';
 
 type ChangePasswordForm = {
   currentPassword: string;
@@ -36,6 +37,8 @@ export function ProfileChangePassword() {
     formState: { isDirty },
   } = form;
 
+  const { getOrganizations } = useGetOrganizations();
+
   const handleIconClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     const name = e.currentTarget.name as keyof ChangePasswordForm;
 
@@ -49,13 +52,17 @@ export function ProfileChangePassword() {
 
       try {
         await changePassword(currentPassword, newPassword, confirmPassword);
+        setChangePasswordError(undefined);
         setIsLoading(false);
+        await getOrganizations(true);
         form.reset();
         toast.success('Password changed');
       } catch (error) {
         if (error instanceof ApplicationError) {
-          setChangePasswordError(error.message);
-          toast.error('Something went wrong');
+          const errorMessage = error.message.includes('invalid authentication')
+            ? 'Error changing password, please check current password.'
+            : 'Error changing password, please contact our support team.';
+          setChangePasswordError(errorMessage);
         }
       } finally {
         setIsLoading(false);
