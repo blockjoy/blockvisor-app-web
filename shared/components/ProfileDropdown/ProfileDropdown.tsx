@@ -46,7 +46,11 @@ export default function ProfileDropdown() {
 
   return (
     <div ref={dropdownRef} css={styles.base}>
-      <button css={styles.button} onClick={handleClick}>
+      <button
+        data-cy="profileDropdown-button"
+        css={styles.button}
+        onClick={handleClick}
+      >
         <ProfileBubble />
       </button>
       <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
@@ -69,7 +73,12 @@ export default function ProfileDropdown() {
           </span>
           Profile
         </DropdownItem>
-        <DropdownItem type="button" size="medium" onButtonClick={handleSignOut}>
+        <DropdownItem
+          dataCy="profileDropdown-signout-button"
+          type="button"
+          size="medium"
+          onButtonClick={handleSignOut}
+        >
           <span css={styles.icon}>
             <IconDoor />
           </span>

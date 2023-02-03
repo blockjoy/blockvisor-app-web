@@ -17,6 +17,7 @@ type Props = {
     | ((theme: ITheme) => SerializedStyles)[]
     | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
+  dataCy?: string;
 };
 export function DropdownItem({
   href,
@@ -26,12 +27,14 @@ export function DropdownItem({
   onButtonClick,
   additionalStyles,
   type = 'plain',
+  dataCy,
 }: Props) {
   switch (type) {
     case 'link':
       return (
         <Link
           id={id}
+          data-cy={dataCy}
           href={href!}
           css={[
             typo.tiny,
@@ -49,6 +52,7 @@ export function DropdownItem({
         <button
           id={id}
           onClick={onButtonClick}
+          data-cy={dataCy}
           css={[
             reset.button,
             typo.tiny,
@@ -63,6 +67,7 @@ export function DropdownItem({
     default:
       return (
         <div
+          data-cy={dataCy}
           css={[
             typo.tiny,
             styles.base(size),
