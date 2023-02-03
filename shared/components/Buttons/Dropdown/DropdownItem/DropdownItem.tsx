@@ -17,6 +17,7 @@ type DropdownItemProps = {
     | ((theme: ITheme) => SerializedStyles)[]
     | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
+  dataCy?: string;
 };
 export const DropdownItem = ({
   href,
@@ -26,12 +27,14 @@ export const DropdownItem = ({
   onButtonClick,
   additionalStyles,
   type = 'plain',
+  dataCy,
 }: DropdownItemProps) => {
   switch (type) {
     case 'link':
       return (
         <Link
           id={id}
+          data-cy={dataCy}
           href={href!}
           css={[
             typo.tiny,
@@ -49,6 +52,7 @@ export const DropdownItem = ({
         <button
           id={id}
           onClick={onButtonClick}
+          data-cy={dataCy}
           css={[
             reset.button,
             typo.tiny,
@@ -63,6 +67,7 @@ export const DropdownItem = ({
     default:
       return (
         <div
+          data-cy={dataCy}
           css={[
             typo.tiny,
             styles.base(size),

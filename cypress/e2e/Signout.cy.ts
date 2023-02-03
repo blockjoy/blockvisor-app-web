@@ -12,9 +12,13 @@ describe('Signout Action', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
-      cy.get('[data-cy="sidebarMain-signout-button"]').click();
+      cy.get('[data-cy="profileDropdown-button"]').click();
+      cy.get('[data-cy="profileDropdown-signout-button"]').click();
 
-      cy.url().should('be.equal', `${Cypress.config('baseUrl')}/login`);
+      cy.url().should(
+        'be.equal',
+        `${Cypress.config('baseUrl')}/login?redirect=%2F`,
+      );
     });
   });
 });
