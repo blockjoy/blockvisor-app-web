@@ -1,10 +1,14 @@
+import { authAtoms } from '@modules/auth';
 import { apiClient } from '@modules/client';
+import { useSetRecoilState } from 'recoil';
 import { isSuccess } from '../utils/authTypeGuards';
 import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
 
 export function useChangePassword() {
   const repository = useIdentityRepository();
+
+  const setUser = useSetRecoilState(authAtoms.user);
 
   const changePassword = async (
     currentPassword: string,
@@ -18,8 +22,16 @@ export function useChangePassword() {
     });
 
     if (isSuccess(response)) {
-      repository?.updateIdentity({ accessToken: response.value });
+      const accessToken = Buffer.from(
+        response?.value?.toString(),
+        'binary',
+      ).toString('base64');
+
       apiClient.setTokenValue(response.value);
+      repository?.saveIdentity({
+        accessToken,
+        verified: true,
+      });
     } else {
       throw new ApplicationError(
         'ChangePasswordError',
