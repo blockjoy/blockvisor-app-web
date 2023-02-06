@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
 
 export type FilterItem = {
@@ -31,11 +31,18 @@ const isLoading = atom<LoadingState>({
 const isFiltersOpen = atom<boolean>({
   key: 'node.isFiltersOpen',
   default: false,
-});
-
-const isFiltersCollapsed = atom<boolean>({
-  key: 'node.isFiltersCollapsed',
-  default: true,
+  effects: [
+    ({ setSelf }) => {
+      const savedNodeFiltersToggle =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('nodeFiltersOpen')
+          : null;
+      const isFiltersOpenValue = savedNodeFiltersToggle
+        ? JSON.parse(savedNodeFiltersToggle)
+        : false;
+      setSelf(isFiltersOpenValue);
+    },
+  ],
 });
 
 const filtersBlockchain = atom<FilterItem[]>({
@@ -70,6 +77,27 @@ const filtersHealth = atom<string | 'online' | 'offline' | null>({
   default: null,
 });
 
+const filtersTotal = selector({
+  key: 'node.filtersTotal',
+  get: ({ get }: any) => {
+    const filtersBlockchainTotal = get(filtersBlockchain).some(
+      (s: any) => s.isChecked,
+    );
+    const filtersTypeTotal = get(filtersType).some((s: any) => s.isChecked);
+    const filtersStatusTotal = get(filtersStatus).some((s: any) => s.isChecked);
+    const filtersHealthTotal = get(filtersHealth) ? true : false;
+
+    const total = [
+      filtersBlockchainTotal,
+      filtersTypeTotal,
+      filtersStatusTotal,
+      filtersHealthTotal,
+    ].filter(Boolean).length;
+
+    return total;
+  },
+});
+
 const nodeWizardActive = atom<boolean>({
   key: 'nodeWizard.active',
   default: false,
@@ -100,12 +128,12 @@ export const nodeAtoms = {
   nodeList,
   isLoading,
   isFiltersOpen,
-  isFiltersCollapsed,
   activeListType,
   filtersHealth,
   filtersBlockchain,
   filtersStatus,
   filtersType,
+  filtersTotal,
   nodeWizardActive,
   hasMoreNodes,
   nodeMetrics,
