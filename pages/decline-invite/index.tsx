@@ -2,7 +2,6 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { apiClient } from '@modules/client';
-import { delay } from '@shared/utils/delay';
 import { Layout } from '@shared/components';
 
 const AcceptInvite: NextPage = () => {

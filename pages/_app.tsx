@@ -1,7 +1,6 @@
 import { Global } from '@emotion/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'rc-slider/assets/index.css';
 import { RecoilRoot } from 'recoil';
 import { globalStyles } from 'styles/global.styles';
 import ThemeProvider from '@modules/theme/ThemeProvider';
