@@ -17,7 +17,7 @@ import { NodeListHeader } from './NodeListHeader/NodeListHeader';
 import { TableSkeleton } from '@shared/index';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { resultsStatus } from '@modules/node/helpers/NodeHelpers';
+import { resultsStatus } from '@modules/node/utils';
 import { organizationAtoms } from '@modules/organization';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 import { wrapper } from 'styles/wrapper.styles';
