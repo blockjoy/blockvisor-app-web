@@ -5,5 +5,10 @@ export const styles = {
     th {
       width: 200px;
     }
+
+    td {
+      text-overflow: ellipsis;
+      line-height: 1.6;
+    }
   `,
 };
