@@ -23,9 +23,10 @@ export const OrganizationInvite: FC<Props> = ({
   return (
     <div css={spacing.bottom.large}>
       <input
+        type="email"
         autoFocus
         onChange={(e: ChangeEvent<HTMLInputElement>) => onTextareaChanged(e)}
-        placeholder="Insert new member email address here"
+        placeholder="New member email address"
         css={styles.textarea}
       />
       <div css={styles.buttons}>

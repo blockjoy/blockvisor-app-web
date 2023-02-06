@@ -19,9 +19,7 @@ export const useInviteMembers = () => {
     );
 
     if (isResponeMetaObject(response)) {
-      toast.success(
-        `You've invited ${formattedEmail} to ${selectedOrganization?.name}! They'll be receiving an email shortly.`,
-      );
+      toast.success('Invitation Sent');
       onComplete();
     } else {
       throw new ApplicationError('UpdateOrganization', 'Update failed');
