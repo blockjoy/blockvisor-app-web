@@ -178,11 +178,6 @@ export const styles = {
       background: ${theme.colorLightGrey};
       opacity: 1;
 
-      /* @media ${breakpoints.toXlrg} {
-        max-height: 1000px;
-        height: 90px;
-      } */
-
       .beta-badge {
         opacity: 1;
       }
@@ -228,9 +223,18 @@ export const styles = {
     border-radius: 4px;
     cursor: pointer;
 
-    :is(:hover, :focus, .active) {
-      background: ${theme.colorPrimary};
-      color: ${theme.colorPrimaryText};
+    @media ${breakpoints.toXlrg} {
+      &.active {
+        background: ${theme.colorPrimary};
+        color: ${theme.colorPrimaryText};
+      }
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      :is(:hover, :focus, .active) {
+        background: ${theme.colorPrimary};
+        color: ${theme.colorPrimaryText};
+      }
     }
   `,
   skeletonWrapper: css`

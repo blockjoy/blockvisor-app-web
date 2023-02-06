@@ -11,7 +11,7 @@ const inputField = css`
   width: 100%;
   font-weight: var(--font-weight-normal);
   font-size: 16px;
-  color: inherit;
+  color: var(--color-text-5);
   transition: color 0.18s var(--transition-easing-cubic),
     background-color 0.18s var(--transition-easing-cubic),
     border-color 0.18s var(--transition-easing-cubic);

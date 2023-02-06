@@ -14,18 +14,23 @@ export const styles = {
 
       th {
         width: 160px;
+        padding-top: 16px;
+        padding-bottom: 0;
+      }
+
+      td {
+        padding-top: 6px;
+        padding-bottom: 16px;
       }
     }
   `,
   column: css`
     padding-top: 28px;
     padding-bottom: 8px;
-    overflow: hidden;
-    text-overflow: ellipsis;
 
     @media ${breakpoints.toXlrg} {
-      padding-top: 8px;
-      padding-bottom: 8px;
+      padding-top: 16px;
+      padding-bottom: 16px;
       display: block;
     }
   `,
