@@ -24,6 +24,7 @@ export const Profile = () => {
       {
         label: 'Personal',
         value: '1',
+        dataCy: 'profile-personal-tab',
         component: (
           <PageSection bottomBorder={false}>
             <ProfileForm
@@ -38,6 +39,7 @@ export const Profile = () => {
       {
         label: 'Account',
         value: '2',
+        dataCy: 'profile-account-tab',
         component: (
           <>
             <PageSection>
@@ -59,6 +61,7 @@ export const Profile = () => {
               </p>
               <Button
                 customCss={[styles.button, spacing.bottom.large]}
+                dataCy="profile-signout-button"
                 style="warning"
                 size="medium"
                 onClick={handleSignout}

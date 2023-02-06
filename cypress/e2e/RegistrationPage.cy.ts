@@ -17,14 +17,13 @@ describe('Registration page tests', () => {
 
   it('Should go to verify page when registration is successful', () => {
     cy.visit('/register');
-    const userData = generateUserRegistrationData();
-    cy.get('[data-cy="register-email-input"]').type(userData.email);
-    cy.get('[data-cy="register-firstName-input"]').type(userData.firstName);
-    cy.get('[data-cy="register-lastName-input"]').type(userData.lastName);
-    cy.get('[data-cy="register-password-input"]').type(userData.password);
-    cy.get('[data-cy="register-confirmPassword-input"]').type(
-      userData.password,
-    );
+    const { email, firstName, lastName, password } =
+      generateUserRegistrationData();
+    cy.get('[data-cy="register-email-input"]').type(email);
+    cy.get('[data-cy="register-firstName-input"]').type(firstName);
+    cy.get('[data-cy="register-lastName-input"]').type(lastName);
+    cy.get('[data-cy="register-password-input"]').type(password);
+    cy.get('[data-cy="register-confirmPassword-input"]').type(password);
 
     cy.get('[data-cy="register-submit-button"]').click();
 
@@ -33,16 +32,14 @@ describe('Registration page tests', () => {
 
   it('Should display an error when the email address is already registered', () => {
     cy.visit('/register');
-    const userData = generateUserRegistrationData();
+    const { firstName, lastName, password } = generateUserRegistrationData();
     cy.get('[data-cy="register-email-input"]').type(
       Cypress.env('TEST_USER_EMAIL'),
     );
-    cy.get('[data-cy="register-firstName-input"]').type(userData.firstName);
-    cy.get('[data-cy="register-lastName-input"]').type(userData.lastName);
-    cy.get('[data-cy="register-password-input"]').type(userData.password);
-    cy.get('[data-cy="register-confirmPassword-input"]').type(
-      userData.password,
-    );
+    cy.get('[data-cy="register-firstName-input"]').type(firstName);
+    cy.get('[data-cy="register-lastName-input"]').type(lastName);
+    cy.get('[data-cy="register-password-input"]').type(password);
+    cy.get('[data-cy="register-confirmPassword-input"]').type(password);
 
     cy.get('[data-cy="register-submit-button"]').click();
 

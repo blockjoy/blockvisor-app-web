@@ -32,6 +32,7 @@ const blocks = [
         name: 'FAQ',
         path: '/faq',
         icon: <IconChat />,
+        dataTagValue: 'sidebarMain-faq-link',
       },
     ],
   },
