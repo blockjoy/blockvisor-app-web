@@ -66,7 +66,7 @@ export const styles = {
 
     & tbody tr {
       position: relative;
-      border-bottom: 2px solid ${theme.colorBorder};
+      border-bottom: 1px solid ${theme.colorBorder};
       transition: 0.3s;
     }
 
@@ -103,7 +103,7 @@ export const styles = {
     display: block;
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: -1px;
     width: 100%;
     height: 1px;
     transform: scaleX(0);
