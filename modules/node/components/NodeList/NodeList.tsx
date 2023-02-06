@@ -93,9 +93,9 @@ export const NodeList = () => {
     <>
       <PageTitle title="Nodes" />
       <div css={[styles.wrapper, wrapper.main]}>
-        <NodeFilters />
+        <NodeFilters isLoading={isLoading} />
         <div css={styles.nodeListWrapper}>
-          <NodeListHeader totalRows={nodeList?.length || 0} />
+          <NodeListHeader />
           {isLoading === 'initializing' ? (
             <TableSkeleton />
           ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (

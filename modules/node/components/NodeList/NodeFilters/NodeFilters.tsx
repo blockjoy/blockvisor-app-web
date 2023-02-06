@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { styles } from './nodeFilters.styles';
 import { styles as blockStyles } from './NodeFiltersBlock.styles';
-import { Checkbox } from '@shared/components';
+import { Checkbox, Skeleton, SkeletonGrid } from '@shared/components';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
@@ -21,7 +21,11 @@ import { buildParams, loadPersistedFilters } from '@modules/node/utils';
 import { organizationAtoms } from '@modules/organization';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 
-export const NodeFilters = () => {
+export type NodeFiltersProps = {
+  isLoading: LoadingState;
+};
+
+export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
   const nodeUIContext = useNodeUIContext();
   const nodeUIProps = useMemo(() => {
     return {
@@ -84,15 +88,12 @@ export const NodeFilters = () => {
     nodeAtoms.filtersHealth,
   );
 
-  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
-    nodeAtoms.isFiltersOpen,
-  );
-  const [isFiltersCollapsed, setIsFiltersCollapsed] = useRecoilState(
-    nodeAtoms.isFiltersCollapsed,
-  );
+  const isFiltersOpen = useRecoilValue(nodeAtoms.isFiltersOpen);
 
   const [openFilterName, setOpenFilterName] =
     useState<string | 'Blockchain' | 'Status' | 'Type'>('');
+
+  const isCompleted = useRef(false);
 
   const loadLookups = async () => {
     if (!blockchains?.length) {
@@ -262,16 +263,6 @@ export const NodeFilters = () => {
   }, [defaultOrganization?.id]);
 
   useEffect(() => {
-    (() => {
-      if (localStorage.getItem('nodeFiltersCollapsed') === 'false') {
-        setIsFiltersCollapsed(false);
-      } else {
-        setIsFiltersCollapsed(true);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
     if (blockchains?.length) {
       if (!localStorage.getItem('nodeFilters')) {
         loadLookups();
@@ -286,78 +277,90 @@ export const NodeFilters = () => {
     }
   }, [blockchains?.length]);
 
+  if (isLoading === 'finished') isCompleted.current = true;
+
   return (
     <div
       css={[
         styles.outerWrapper,
-        isFiltersCollapsed && styles.outerWrapperCollapsed,
+        !isFiltersOpen && styles.outerWrapperCollapsed,
       ]}
     >
-      <NodeFiltersHeader />
-      <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-        <button
-          css={styles.updateButton}
-          type="button"
-          disabled={!isDirty}
-          onClick={handleUpdateClicked}
-        >
-          <IconRefresh />
-          Apply
-        </button>
-        <PerfectScrollbar css={styles.filters}>
-          <div
-            css={blockStyles.filterBlock}
-            onClick={() => setOpenFilterName('')}
+      <NodeFiltersHeader isLoading={!isCompleted.current} />
+
+      {!isCompleted.current ? (
+        isFiltersOpen && (
+          <SkeletonGrid>
+            <Skeleton width="80%" />
+            <Skeleton width="80%" />
+          </SkeletonGrid>
+        )
+      ) : (
+        <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
+          <button
+            css={styles.updateButton}
+            type="button"
+            disabled={!isDirty}
+            onClick={handleUpdateClicked}
           >
-            <label css={blockStyles.labelHeader}>
-              <span css={blockStyles.labelText}>Health</span>
-            </label>
-            <div css={[blockStyles.checkboxList]}>
-              <div css={blockStyles.checkboxRow}>
-                <Checkbox
-                  onChange={() => handleHealthChanged('online')}
-                  name="healthOnline"
-                  checked={filtersHealth === 'online'}
-                >
-                  Online
-                </Checkbox>
-              </div>
-              <div css={blockStyles.checkboxRow}>
-                <Checkbox
-                  onChange={() => handleHealthChanged('offline')}
-                  name="healthOffline"
-                  checked={filtersHealth === 'offline'}
-                >
-                  Offline
-                </Checkbox>
+            <IconRefresh />
+            Apply
+          </button>
+          <PerfectScrollbar css={styles.filters}>
+            <div
+              css={blockStyles.filterBlock}
+              onClick={() => setOpenFilterName('')}
+            >
+              <label css={blockStyles.labelHeader}>
+                <span css={blockStyles.labelText}>Health</span>
+              </label>
+              <div css={[blockStyles.checkboxList]}>
+                <div css={blockStyles.checkboxRow}>
+                  <Checkbox
+                    onChange={() => handleHealthChanged('online')}
+                    name="healthOnline"
+                    checked={filtersHealth === 'online'}
+                  >
+                    Online
+                  </Checkbox>
+                </div>
+                <div css={blockStyles.checkboxRow}>
+                  <Checkbox
+                    onChange={() => handleHealthChanged('offline')}
+                    name="healthOffline"
+                    checked={filtersHealth === 'offline'}
+                  >
+                    Offline
+                  </Checkbox>
+                </div>
               </div>
             </div>
-          </div>
-          {filters.map((item) => (
-            <NodeFiltersBlock
-              hasError={item.name === 'Blockchain' && hasBlockchainError}
-              isDisabled={item.isDisabled}
-              isOpen={item.name === openFilterName}
-              onPlusMinusClicked={handlePlusMinusClicked}
-              onFilterBlockClicked={handleFilterBlockClicked}
-              key={item.name}
-              name={item.name}
-              filterCount={item.filterCount}
-              filterList={item.filterList}
-              setFilterList={item.setFilterList}
-              onFilterChanged={handleFilterChanged}
-            />
-          ))}
-        </PerfectScrollbar>
-        <button
-          css={styles.resetButton}
-          type="button"
-          onClick={handleResetFilters}
-        >
-          <IconClose />
-          Reset Filters
-        </button>
-      </div>
+            {filters.map((item) => (
+              <NodeFiltersBlock
+                hasError={item.name === 'Blockchain' && hasBlockchainError}
+                isDisabled={item.isDisabled}
+                isOpen={item.name === openFilterName}
+                onPlusMinusClicked={handlePlusMinusClicked}
+                onFilterBlockClicked={handleFilterBlockClicked}
+                key={item.name}
+                name={item.name}
+                filterCount={item.filterCount}
+                filterList={item.filterList}
+                setFilterList={item.setFilterList}
+                onFilterChanged={handleFilterChanged}
+              />
+            ))}
+          </PerfectScrollbar>
+          <button
+            css={styles.resetButton}
+            type="button"
+            onClick={handleResetFilters}
+          >
+            <IconClose />
+            Reset Filters
+          </button>
+        </div>
+      )}
     </div>
   );
 };
