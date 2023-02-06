@@ -121,11 +121,13 @@ export const mapOrganizationMembersToRows = (
       name: '',
       key: '3',
       width: '10%',
+      textAlign: 'right',
     },
     {
       name: '',
       key: '4',
       width: '5%',
+      textAlign: 'right',
     },
   ];
 
@@ -167,7 +169,10 @@ export const mapOrganizationMembersToRows = (
         key: '3',
         component:
           member.isPending && canCreateMember ? (
-            <span css={spacing.right.medium}>
+            <span
+              css={spacing.right.medium}
+              style={{ textAlign: 'right', width: '100%', display: 'block' }}
+            >
               <Button
                 type="button"
                 onClick={() =>
@@ -211,7 +216,7 @@ export const mapOrganizationMembersToRows = (
               ) : (
                 <Button
                   type="button"
-                  tooltip="Revoke"
+                  tooltip="Cancel"
                   style="icon"
                   size="medium"
                   onClick={() =>

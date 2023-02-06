@@ -30,7 +30,7 @@ export function useRemoveMember() {
 
     if (!isStatusResponse(response)) {
       removeMemberFromList(user_id);
-      toast.success('Removed successfully');
+      toast.success('Member Removed');
     } else {
       toast.error('Error while removing');
     }

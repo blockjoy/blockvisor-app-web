@@ -57,12 +57,12 @@ export function OrganizationDialog({
 
   const messages = {
     [Action.remove]: {
-      headline: `Remove 1 member from ${selectedOrganization?.name}`,
-      subheadline: 'The following members will be removed:',
+      headline: 'Remove Member',
+      subheadline: `You are removing ${email} from ${selectedOrganization?.name}.`,
     },
     [Action.revoke]: {
-      headline: `Canceling 1 invitation from ${selectedOrganization?.name}`,
-      subheadline: 'The following invitations will be canceled:',
+      headline: 'Cancel Invitation',
+      subheadline: `You are canceling an invitation to ${selectedOrganization?.name} for ${email}.`,
     },
   };
 
@@ -72,10 +72,9 @@ export function OrganizationDialog({
         {messages[activeAction].headline}
       </h2>
       <div css={spacing.bottom.medium}>
-        <p css={spacing.bottom.micro}>{messages[activeAction].subheadline}</p>
-        <small>{email}</small>
+        <p>{messages[activeAction].subheadline}</p>
       </div>
-      <div css={[styles.actions, spacing.top.medium]}>
+      <div css={[styles.actions]}>
         <Button style="warning" onClick={handleSubmit}>
           Confirm
         </Button>
