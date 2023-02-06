@@ -1,6 +1,6 @@
 import { useGetBlockchains } from '@modules/node';
 import { BlockchainIcon, TableSkeleton } from '@shared/components';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import IconSearch from '@public/assets/icons/search-16.svg';
 import { nodeTypeList } from '@shared/constants/lookups';

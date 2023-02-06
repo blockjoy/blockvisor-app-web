@@ -7,7 +7,6 @@ import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
-import { apiClient } from '@modules/client';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -96,8 +95,6 @@ export const NodeFilters = () => {
     useState<string | 'Blockchain' | 'Status' | 'Type'>('');
 
   const loadLookups = async () => {
-    console.log('blockchains', blockchains);
-
     if (!blockchains?.length) {
       setFiltersBlockchain([]);
       setHasBlockchainError(true);

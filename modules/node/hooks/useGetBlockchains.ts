@@ -17,7 +17,6 @@ export function useGetBlockchains() {
     setLoadingState('loading');
     const response: any = await apiClient.getBlockchains();
 
-    console.log('blockchains', response);
     await delay(env.loadingDuration);
 
     if (!isStatusResponse(response)) {
@@ -28,7 +27,6 @@ export function useGetBlockchains() {
       localStorage.clear();
       window.location.href = '/';
     } else {
-      console.log('getting in here');
       setBlockchains([]);
       setLoadingState('finished');
     }
