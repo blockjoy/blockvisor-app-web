@@ -22,6 +22,7 @@ export const styles = {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    padding-bottom: 8px;
 
     li:last-child {
       margin-top: auto;

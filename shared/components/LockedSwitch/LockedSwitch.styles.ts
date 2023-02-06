@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -75,5 +76,11 @@ export const styles = {
     opacity: 0;
     visibility: hidden;
     transition: 0.3s;
+
+    @media ${breakpoints.toXlrg} {
+      top: 50%;
+      left: 60px;
+      translate: 0 -50%;
+    }
   `,
 };
