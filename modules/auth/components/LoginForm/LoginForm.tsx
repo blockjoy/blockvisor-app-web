@@ -51,10 +51,9 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      await signIn(email, password);
+      await signIn({ email, password });
       await getOrganizations(true);
       await getBlockchains();
-
       handleRedirect();
     } catch (error) {
       if (error instanceof ApplicationError) {

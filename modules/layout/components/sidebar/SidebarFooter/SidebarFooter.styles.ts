@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     color: var(--color-text-5);
-    padding: 16px 26px;
+    padding: 0 16px 26px;
   `,
   wrapperCollapsed: css`
     padding: 0px 21px 0px 21px;
