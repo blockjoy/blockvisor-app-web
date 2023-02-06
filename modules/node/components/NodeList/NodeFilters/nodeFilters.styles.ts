@@ -65,6 +65,7 @@ export const styles = {
     margin-bottom: 40px;
 
     @media ${breakpoints.toXlrg} {
+      margin-top: 20px;
       height: auto;
     }
   `,
