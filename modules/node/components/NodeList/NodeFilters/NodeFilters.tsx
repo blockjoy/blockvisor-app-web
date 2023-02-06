@@ -18,10 +18,7 @@ import {
   InitialFilter,
   InitialQueryParams,
 } from '@modules/node/ui/NodeUIHelpers';
-import {
-  buildParams,
-  loadPersistedFilters,
-} from '@modules/node/helpers/NodeHelpers';
+import { buildParams, loadPersistedFilters } from '@modules/node/utils';
 import { organizationAtoms } from '@modules/organization';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 
