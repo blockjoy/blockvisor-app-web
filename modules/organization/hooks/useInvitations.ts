@@ -9,9 +9,8 @@ export function useInvitations() {
     organizationAtoms.organizationSentInvitations,
   );
 
-  const [sentInvitationsLoadingState, setSentInvitationsLoadingState] = useRecoilState(
-    organizationAtoms.organizationSentInvitationsLoadingState
-  );
+  const [sentInvitationsLoadingState, setSentInvitationsLoadingState] =
+    useRecoilState(organizationAtoms.organizationSentInvitationsLoadingState);
 
   const setReceivedInvitations = useSetRecoilState(
     organizationAtoms.organizationReceivedInvitations,
@@ -47,7 +46,7 @@ export function useInvitations() {
       token,
       invitationId,
     });
-    toast.success('Invite Accepted');
+    toast.success('Invitation Accepted');
     onSuccess();
   };
 
@@ -65,7 +64,7 @@ export function useInvitations() {
       token,
       invitationId,
     });
-    toast.success('Invite Declined');
+    toast.success('Invitation Declined');
     onSuccess();
   };
 
@@ -86,8 +85,7 @@ export function useInvitations() {
 
     updateInvitations(invitationId!);
 
-    toast.success('Invitation Revoked');
-    console.log('revokeInvitation response', response);
+    toast.success('Invitation Canceled');
   };
 
   const updateInvitations = (invitation_id: string) => {
