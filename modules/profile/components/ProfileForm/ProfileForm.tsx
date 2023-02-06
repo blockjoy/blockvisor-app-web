@@ -79,6 +79,7 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
             <Input
               disabled={loading}
               labelStyles={[typo.base]}
+              data-cy="profile-firstName-input"
               inputSize="medium"
               label="First name"
               name="firstName"
@@ -90,6 +91,7 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
           </li>
           <li css={[styles.formItem]}>
             <Input
+              data-cy="profile-lastName-input"
               disabled={loading}
               inputSize="medium"
               labelStyles={[typo.base]}
@@ -104,6 +106,7 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
         </ul>
         <Button
           loading={loading}
+          dataCy="profile-submit-button"
           customCss={[styles.loadingButton]}
           disabled={!isDirty || loading || !isValid}
           size="medium"

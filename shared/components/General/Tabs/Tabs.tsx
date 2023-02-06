@@ -5,7 +5,12 @@ import { styles } from './Tabs.styles';
 
 type Props = {
   activeTab: string;
-  tabItems: Array<{ value: string; label: string; component: ReactNode }>;
+  tabItems: Array<{
+    value: string;
+    label: string;
+    component: ReactNode;
+    dataCy?: string;
+  }>;
   onTabClick: (tabValue: string) => void;
 };
 
@@ -18,6 +23,7 @@ export function Tabs({ tabItems, activeTab, onTabClick }: Props) {
             {tabItems.map((item, index) => (
               <li key={index}>
                 <button
+                  data-cy={item.dataCy}
                   css={[reset.button, styles.tabsButton]}
                   className={activeTab === item.value ? 'active' : ''}
                   onClick={() => onTabClick(item.value)}

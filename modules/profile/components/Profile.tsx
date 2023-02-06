@@ -21,6 +21,7 @@ export const Profile = () => {
       {
         label: 'Personal',
         value: '1',
+        dataCy: 'profile-personal-tab',
         component: (
           <PageSection bottomBorder={false}>
             <ProfileForm
@@ -35,6 +36,7 @@ export const Profile = () => {
       {
         label: 'Account',
         value: '2',
+        dataCy: 'profile-account-tab',
         component: (
           <>
             <PageSection>
@@ -51,7 +53,6 @@ export const Profile = () => {
               >
                 Danger Zone
               </header>
-
               <ProfileDeleteAccount />
             </PageSection>
           </>

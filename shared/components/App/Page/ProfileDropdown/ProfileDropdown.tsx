@@ -63,6 +63,7 @@ export const ProfileDropdown = () => {
           </div>
         </DropdownItem>
         <DropdownItem
+          dataCy="profileDropdown-profile-button"
           type="button"
           size="medium"
           onButtonClick={handleProfileRedirect}
