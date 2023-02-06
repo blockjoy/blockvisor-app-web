@@ -28,7 +28,7 @@ export const AppLayout: React.FC<LayoutType> = ({
   const userId = repository?.getIdentity()?.id;
 
   const { getReceivedInvitations } = useInvitations();
-  const { getOrganizations } = useGetOrganizations();
+  const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
 
   useEffect(() => {
@@ -36,14 +36,8 @@ export const AppLayout: React.FC<LayoutType> = ({
   }, []);
 
   useEffect(() => {
-    getOrganizations();
-  }, []);
-
-  useEffect(() => {
-    if (!blockchains?.length) {
-      getBlockchains();
-      console.log('getting blockchains in layout');
-    }
+    if (!organizations.length) getOrganizations();
+    if (!blockchains?.length) getBlockchains();
   }, []);
 
   return (
