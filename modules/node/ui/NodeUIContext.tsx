@@ -13,6 +13,11 @@ type NodeUIContext = {
   setQueryParams: (nextQueryParams: InitialQueryParams) => void;
 };
 
+export type NodeUIProps = {
+  queryParams: InitialQueryParams;
+  setQueryParams: (nextQueryParams: InitialQueryParams) => void;
+};
+
 type NodeUIProvider = {
   children?: React.ReactNode;
 };

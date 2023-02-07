@@ -1,5 +1,6 @@
 import { atom, selector } from 'recoil';
 import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
+import { blockchainsAtoms } from './blockchains';
 
 export type FilterItem = {
   name?: string | undefined;
@@ -45,9 +46,46 @@ const isFiltersOpen = atom<boolean>({
   ],
 });
 
-const filtersBlockchain = atom<FilterItem[]>({
-  key: 'node.filtersBlockchain',
-  default: [],
+const filtersBlockchain = atom({
+  key: 'blockchains.filters',
+  default: selector({
+    key: 'blockchains.filters/Default',
+    get: ({ get }) => {
+      const blockchainsAll = get(blockchainsAtoms.blockchains);
+
+      const mappedBlockchains: FilterItem[] = blockchainsAll?.map((b) => ({
+        id: b.id,
+        name: b.name,
+        isChecked: false,
+      }));
+
+      return mappedBlockchains;
+    },
+  }),
+  effects: [
+    ({ setSelf }) => {
+      const savedNodeFilters =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('nodeFilters')
+          : null;
+      if (savedNodeFilters) {
+        const savedBlockchain = JSON.parse(savedNodeFilters)['blockchain'];
+        if (savedBlockchain) setSelf(savedBlockchain);
+      }
+    },
+  ],
+});
+
+const filtersBlockchainTotal = selector<number>({
+  key: 'node.filtersBlockchainTotal',
+  get: ({ get }) => {
+    const filtersBlockchainAll = get(filtersBlockchain);
+    const filtersBlockchainTotal = filtersBlockchainAll?.filter(
+      (item) => item.isChecked,
+    ).length;
+
+    return filtersBlockchainTotal;
+  },
 });
 
 const filtersType = atom<FilterItem[]>({
@@ -57,6 +95,29 @@ const filtersType = atom<FilterItem[]>({
     id: item.id.toString()!,
     isChecked: false,
   })),
+  effects: [
+    ({ setSelf }) => {
+      const savedNodeFilters =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('nodeFilters')
+          : null;
+      if (savedNodeFilters) {
+        const savedType = JSON.parse(savedNodeFilters)['type'];
+        if (savedType) setSelf(savedType);
+      }
+    },
+  ],
+});
+
+const filtersTypeTotal = selector<number>({
+  key: 'node.filtersTypeTotal',
+  get: ({ get }) => {
+    const filtersTypeAll = get(filtersType);
+    const filtersTypeTotal = filtersTypeAll?.filter(
+      (item) => item.isChecked,
+    ).length;
+    return filtersTypeTotal;
+  },
 });
 
 const filtersStatus = atom<FilterItem[]>({
@@ -65,26 +126,60 @@ const filtersStatus = atom<FilterItem[]>({
     .filter((item) => item.id !== 0)
     .map((item) => ({
       name: item.name,
-      // id: item.id.toString()!,
       id: item.name.toString().toLowerCase()!,
       isChecked: false,
       isOnline: item.isOnline,
     })),
+  effects: [
+    ({ setSelf }) => {
+      const savedNodeFilters =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('nodeFilters')
+          : null;
+      if (savedNodeFilters) {
+        const savedStatus = JSON.parse(savedNodeFilters)['status'];
+        if (savedStatus) setSelf(savedStatus);
+      }
+    },
+  ],
+});
+
+const filtersStatusTotal = selector<number>({
+  key: 'node.filtersStatusTotal',
+  get: ({ get }) => {
+    const filtersStatusAll = get(filtersStatus);
+    const filtersStatusTotal = filtersStatusAll?.filter(
+      (item) => item.isChecked,
+    ).length;
+    return filtersStatusTotal;
+  },
 });
 
 const filtersHealth = atom<string | 'online' | 'offline' | null>({
   key: 'node.filtersHealth',
   default: null,
+  effects: [
+    ({ setSelf }) => {
+      const savedNodeFilters =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('nodeFilters')
+          : null;
+      if (savedNodeFilters) {
+        const savedHealth = JSON.parse(savedNodeFilters)['health'];
+        if (savedHealth) setSelf(savedHealth);
+      }
+    },
+  ],
 });
 
-const filtersTotal = selector({
+const filtersTotal = selector<number>({
   key: 'node.filtersTotal',
-  get: ({ get }: any) => {
+  get: ({ get }) => {
     const filtersBlockchainTotal = get(filtersBlockchain).some(
-      (s: any) => s.isChecked,
+      (s) => s.isChecked,
     );
-    const filtersTypeTotal = get(filtersType).some((s: any) => s.isChecked);
-    const filtersStatusTotal = get(filtersStatus).some((s: any) => s.isChecked);
+    const filtersTypeTotal = get(filtersType).some((s) => s.isChecked);
+    const filtersStatusTotal = get(filtersStatus).some((s) => s.isChecked);
     const filtersHealthTotal = get(filtersHealth) ? true : false;
 
     const total = [
@@ -131,8 +226,11 @@ export const nodeAtoms = {
   activeListType,
   filtersHealth,
   filtersBlockchain,
+  filtersBlockchainTotal,
   filtersStatus,
+  filtersStatusTotal,
   filtersType,
+  filtersTypeTotal,
   filtersTotal,
   nodeWizardActive,
   hasMoreNodes,

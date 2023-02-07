@@ -12,6 +12,15 @@ const blockchains = atom<GrpcBlockchainObject[]>({
   default: [],
 });
 
+const blockchainsHasError = selector<boolean>({
+  key: 'blockchains.hasError',
+  get: ({ get }) => {
+    const blockchainsAll = get(blockchains);
+
+    return !Array.isArray(blockchainsAll) || !blockchainsAll.length;
+  },
+});
+
 const filteredBySearchTermBlockchains = selector({
   key: 'blockchains.filtered',
   get: ({ get }) => {
@@ -60,6 +69,7 @@ const blockchainsWithNodeTypes = selector({
 });
 
 export const blockchainSelectors = {
+  blockchainsHasError,
   blockchainsWithNodeTypes,
   filteredBySearchTermBlockchains,
 };
