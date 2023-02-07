@@ -69,6 +69,11 @@ export const styles = {
       height: auto;
     }
   `,
+  skeleton: css`
+    @media ${breakpoints.toXlrg} {
+      margin-top: 20px;
+    }
+  `,
   resetButton: (theme: ITheme) => css`
     background: transparent;
     border: 0;
