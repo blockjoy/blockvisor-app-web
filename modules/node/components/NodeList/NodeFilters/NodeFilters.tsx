@@ -125,10 +125,12 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
 
       {!isCompleted.current ? (
         isFiltersOpen && (
-          <SkeletonGrid>
-            <Skeleton width="80%" />
-            <Skeleton width="80%" />
-          </SkeletonGrid>
+          <div css={[styles.skeleton]}>
+            <SkeletonGrid>
+              <Skeleton width="80%" />
+              <Skeleton width="80%" />
+            </SkeletonGrid>
+          </div>
         )
       ) : (
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
