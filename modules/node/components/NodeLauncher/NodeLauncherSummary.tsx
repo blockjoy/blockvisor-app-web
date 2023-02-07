@@ -147,6 +147,7 @@ export const NodeLauncherSummary: FC<Props> = ({
 
         <div css={styles.buttons}>
           <button
+            data-cy="nodeLauncher-launch-button"
             tabIndex={20}
             onClick={onCreateNodeClicked}
             disabled={
