@@ -1,6 +1,7 @@
 import { atom, selector } from 'recoil';
 import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
 import { blockchainsAtoms } from './blockchains';
+import { isMobile } from 'react-device-detect';
 
 export type FilterItem = {
   name?: string | undefined;
@@ -34,6 +35,11 @@ const isFiltersOpen = atom<boolean>({
   default: false,
   effects: [
     ({ setSelf }) => {
+      if (isMobile) {
+        setSelf(false);
+        return;
+      }
+
       const savedNodeFiltersToggle =
         typeof window !== 'undefined'
           ? window.localStorage.getItem('nodeFiltersOpen')
