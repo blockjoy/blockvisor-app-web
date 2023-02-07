@@ -48,7 +48,7 @@ export const NodeListHeader = () => {
 
       <span css={styles.total}>
         {totalNodes === null ? (
-          <Skeleton />
+          <Skeleton margin="0 0 0 auto" />
         ) : (
           <>
             Total: <span css={styles.totalValue}>{totalNodes} </span>
