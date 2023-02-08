@@ -6,7 +6,7 @@ export const styles = {
     position: relative;
     display: inline-block;
     line-height: 1.35;
-    border-radius: 24px;
+    border-radius: 6px;
     padding: 10px 24px 10px 36px;
     background: ${theme.colorLightGrey};
     color: ${theme.colorText};

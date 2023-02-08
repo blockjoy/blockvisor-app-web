@@ -91,7 +91,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
               <div
                 tabIndex={activeNodeTypeId ? -1 : index + 1}
                 key={b.id}
-                onFocus={() => setActiveProtocolIndex(index)}
+                // onFocus={() => setActiveProtocolIndex(index)}
                 css={[styles.row, styles.rowHover]}
                 className={
                   b.id === activeBlockchainId || activeProtocolIndex === index

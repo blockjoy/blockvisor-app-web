@@ -107,17 +107,18 @@ export const styles = {
     gap: 10px;
     line-height: 1;
   `,
-  linkTextHidden: css`
+  linkTextHidden: (theme: ITheme) => css`
     @media ${breakpoints.fromXLrg} {
       position: absolute;
       left: 110%;
-      background: #0c0c02;
+      background: ${theme.colorTooltip};
       padding: 6px 10px;
       font-size: 12px;
       border-radius: 4px;
       white-space: nowrap;
       opacity: 0;
       visibility: hidden;
+      transition: opacity 0.001s 0.5s;
     }
   `,
   linkIcon: css`

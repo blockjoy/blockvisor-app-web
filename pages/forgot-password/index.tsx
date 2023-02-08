@@ -13,7 +13,7 @@ const Register: NextPage = () => {
         css={[typo.small, colors.text3, spacing.bottom.medium]}
         className="t-small t-color-text-3 s-bottom--medium forgot-password__description"
       >
-        No worries, just enter your registration e-mail address and we will send
+        Just enter the email you used to register your account and we'll send
         you a link to reset your password.
       </p>
       <div css={[spacing.bottom.mediumSmall]}>

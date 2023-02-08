@@ -1,12 +1,13 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 const layout = css`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   padding: 24px 12px;
+  min-height: 100vh;
 `;
 
 const layoutWrapper = css`
@@ -15,10 +16,13 @@ const layoutWrapper = css`
   border-radius: 8px;
   padding: 30px;
   overflow: hidden;
+  width: 90%;
 
-  @media (min-width: 35.5rem) {
-    padding: 60px;
-    width: 380px;
+  @media ${breakpoints.fromSml} {
+    padding: 70px 50px 60px;
+    width: 400px;
+    max-width: 400px;
+    min-width: 400px;
   }
 `;
 

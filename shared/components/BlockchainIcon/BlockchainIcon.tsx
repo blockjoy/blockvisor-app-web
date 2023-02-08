@@ -1,6 +1,7 @@
 import { FC, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { styles } from './styles';
+import { styles } from './BlockchainIcon.styles';
+import { Tooltip } from '@shared/components';
 
 type Props = {
   blockchainId?: string;
@@ -104,9 +105,11 @@ export const BlockchainIcon: FC<Props> = ({ blockchainName, hideTooltip }) => {
   return (
     <span css={styles.icon}>
       {!hideTooltip && (
-        <span className="tooltip" css={styles.tooltip}>
-          {blockchainName}
-        </span>
+        <Tooltip
+          noWrap
+          tooltip={blockchainName!}
+          customCss={[styles.tooltip]}
+        />
       )}
       <Suspense fallback={null}>
         <Component />

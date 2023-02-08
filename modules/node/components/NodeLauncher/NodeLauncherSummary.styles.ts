@@ -101,10 +101,15 @@ export const styles = {
     border-radius: 4px;
     cursor: pointer;
     white-space: nowrap;
+    transition: 0.3s;
 
     svg {
       width: 20px;
       height: 20px;
+    }
+
+    path {
+      fill: ${theme.colorPrimaryText};
     }
 
     :disabled {
