@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -60,16 +61,11 @@ export const styles = {
     }
   `,
   tooltip: css`
-    position: absolute;
     top: -6px;
     left: 120%;
+    bottom: auto;
+    right: auto;
     width: 190px;
-    background: #0c0c02;
-    padding: 6px 10px;
-    font-size: 12px;
-    border-radius: 4px;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.3s;
+    translate: none;
   `,
 };

@@ -64,18 +64,13 @@ export const styles = {
     border: 3px solid ${theme.colorBackground};
   `,
   tooltip: css`
-    position: absolute;
-    top: -48px;
+    top: -56px;
     left: 50%;
-    width: 190px;
+    right: auto;
+    bottom: auto;
     translate: -50% 0;
-    background: #0c0c02;
-    padding: 6px 10px;
-    font-size: 12px;
-    border-radius: 4px;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.3s;
+    width: 190px;
+    min-width: 190px;
 
     @media ${breakpoints.toXlrg} {
       top: 50%;

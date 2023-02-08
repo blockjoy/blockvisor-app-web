@@ -38,10 +38,11 @@ export function ForgotPasswordForm() {
           <li css={[spacing.bottom.medium]}>
             <Input
               tabIndex={1}
+              type="email"
               name="email"
-              placeholder="Your e-mail"
+              placeholder="Your email"
               validationOptions={{
-                required: 'Your e-mail address is required',
+                required: 'Your email address is required',
                 pattern: {
                   value: isValidEmail(),
                   message: 'Email format is not correct',

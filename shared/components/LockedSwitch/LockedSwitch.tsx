@@ -1,6 +1,7 @@
 import { styles } from './LockedSwitch.styles';
 import IconLock from '@public/assets/icons/lock-12.svg';
 import { FC } from 'react';
+import { Tooltip } from '@shared/components';
 
 type Props = {
   isChecked?: boolean;
@@ -9,7 +10,7 @@ type Props = {
 
 export const LockedSwitch: FC<Props> = ({
   isChecked = true,
-  tooltip = 'You will be able to disable Auto Updates soon.',
+  tooltip = 'You will be able to disable Auto Updates after BETA.',
 }) => (
   <div css={[styles.wrapper, isChecked && styles.isChecked]}>
     <div css={styles.switch}>
@@ -17,8 +18,6 @@ export const LockedSwitch: FC<Props> = ({
         <IconLock />
       </div>
     </div>
-    <div className="tooltip" css={styles.tooltip}>
-      {tooltip}
-    </div>
+    <Tooltip customCss={[styles.tooltip]} tooltip={tooltip} />
   </div>
 );

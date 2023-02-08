@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
+import { rgba } from 'polished';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
@@ -151,6 +152,7 @@ export const styles = {
     font-size: 16px;
     align-items: center;
     background: transparent;
+    border-radius: 6px;
     border: 0;
     cursor: pointer;
     opacity: 0.7;
@@ -174,7 +176,20 @@ export const styles = {
     }
   `,
   rowHover: (theme: ITheme) => css`
-    :is(:hover, :focus, .active) {
+    @media ${breakpoints.toXlrg} {
+      &:focus,
+      &:hover {
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.35)};
+      }
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      &:hover {
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.35)};
+      }
+    }
+
+    &.active {
       background: ${theme.colorLightGrey};
       opacity: 1;
 
@@ -217,8 +232,9 @@ export const styles = {
     border: 0;
     font-size: 11px;
     height: 32px;
+    min-width: 60px;
     padding: 0 10px;
-    background: #181a19;
+    background: ${theme.colorDarkGrey};
     color: #f9f9f9;
     border-radius: 4px;
     cursor: pointer;

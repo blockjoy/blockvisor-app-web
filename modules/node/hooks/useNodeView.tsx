@@ -88,7 +88,7 @@ export const useNodeView = (): Hook => {
             '-'
           ) : property.ui_type === 'switch' ? (
             <LockedSwitch
-              tooltip="You will be able to edit this setting after BETA."
+              tooltip="You will be able to enable Self Hosting after BETA."
               isChecked={property.value === 'true' ? true : false}
             />
           ) : (

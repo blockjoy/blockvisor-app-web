@@ -73,21 +73,9 @@ export function LoginForm() {
 
   return (
     <>
-      {invited && (
-        <Alert isSuccess>
-          You've been invited, <br /> please login.
-        </Alert>
-      )}
-      {verified && (
-        <Alert isSuccess>
-          Account verified, <br /> please login.
-        </Alert>
-      )}
-      {forgot && (
-        <Alert isSuccess>
-          Password reset, <br /> please login.
-        </Alert>
-      )}
+      {invited && <Alert isSuccess>You've been invited, please login.</Alert>}
+      {verified && <Alert isSuccess>Account verified, please login.</Alert>}
+      {forgot && <Alert isSuccess>Password reset, please login.</Alert>}
       <FormProvider {...form}>
         <form onSubmit={onSubmit}>
           <ul css={[reset.list]}>
@@ -100,7 +88,7 @@ export function LoginForm() {
                 placeholder="Email"
                 type="email"
                 validationOptions={{
-                  required: 'Your e-mail address is required',
+                  required: 'Your email address is required',
                   pattern: {
                     value: isValidEmail(),
                     message: 'Email format is not correct',

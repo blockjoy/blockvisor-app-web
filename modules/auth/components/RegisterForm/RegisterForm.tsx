@@ -104,10 +104,11 @@ export function RegisterForm() {
                   tabIndex={1}
                   labelStyles={[display.visuallyHidden]}
                   disabled={loading}
+                  type="email"
                   name="email"
                   placeholder="Email"
                   validationOptions={{
-                    required: 'Your e-mail address is required',
+                    required: 'Your email address is required',
                     pattern: {
                       value: isValidEmail(),
                       message: 'Email format is not correct',

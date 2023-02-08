@@ -80,11 +80,11 @@ export const styles = {
   buttonText: css`
     margin-left: 10px;
   `,
-  tooltip: css`
+  tooltip: (theme: ITheme) => css`
     @media ${breakpoints.fromXLrg} {
       position: absolute;
       left: 110%;
-      background: #0c0c02;
+      background: ${theme.colorTooltip};
       padding: 6px 10px;
       font-size: 12px;
       border-radius: 4px;

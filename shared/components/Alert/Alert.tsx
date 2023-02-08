@@ -10,7 +10,7 @@ type Props = {
 export const Alert: FC<Props> = ({ isSuccess, children, width = '100%' }) => (
   <div
     css={[styles.alert, isSuccess ? styles.alertSuccess : styles.alertDanger]}
-    style={{ width }}
+    style={{ maxWidth: width }}
   >
     {children}
   </div>
