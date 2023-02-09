@@ -133,8 +133,6 @@ export const NodeLauncher = () => {
   const handleCreateNodeClicked = () => {
     setIsCreating(true);
 
-    console.log('handleCreateNodeClicked', node);
-
     const mergedFiles: File[] = [];
 
     // build merged file array
