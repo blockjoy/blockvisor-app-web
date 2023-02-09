@@ -70,6 +70,10 @@ describe('Organizations page tests', () => {
     });
 
     it('Should display a toast success message when a member has been invited', () => {
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       cy.createOrganization(generateOrganizationName());
 
       cy.get('[data-cy="organization-member-add-button"]').click();
@@ -82,6 +86,10 @@ describe('Organizations page tests', () => {
     });
 
     it('Should display invited member on the list', () => {
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       const testUserEmail = 'random@test.com';
       cy.createOrganization(generateOrganizationName());
 
@@ -95,6 +103,10 @@ describe('Organizations page tests', () => {
     });
 
     it('Should display an input for entering organization name when deleting organization', () => {
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       cy.createOrganization(generateOrganizationName());
       cy.get('[data-cy="organization-delete-button"]').click();
       cy.get('[data-cy="organization-delete-confirm-input"]').should(
@@ -103,6 +115,10 @@ describe('Organizations page tests', () => {
     });
 
     it('Should redirect to organizations when organization is deleted', () => {
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
       const org = generateOrganizationName();
       cy.createOrganization(org);
       cy.deleteOrganization(org);
