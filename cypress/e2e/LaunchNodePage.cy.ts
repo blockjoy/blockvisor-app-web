@@ -1,5 +1,3 @@
-import { Authenticate } from 'cypress/support/utils';
-
 describe('Nodes Page tests', () => {
   context('FullHD resolution', () => {
     beforeEach(() => {
@@ -11,7 +9,7 @@ describe('Nodes Page tests', () => {
       cy.clearLocalStorage();
     });
     it('Should go to launch-node when clicked on Launch Node', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -21,7 +19,7 @@ describe('Nodes Page tests', () => {
     });
 
     it('Should launch a Validator node', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -41,3 +39,4 @@ describe('Nodes Page tests', () => {
     });
   });
 });
+export {};

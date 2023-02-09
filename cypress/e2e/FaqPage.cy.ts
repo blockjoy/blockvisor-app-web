@@ -1,5 +1,3 @@
-import { Authenticate } from 'cypress/support/utils';
-
 describe('FAQ Page tests', () => {
   context('FullHD resolution', () => {
     beforeEach(() => {
@@ -7,7 +5,7 @@ describe('FAQ Page tests', () => {
       cy.viewport(1920, 1080);
     });
     it('Should go to FAQ when clicked on FAQ link', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -17,3 +15,5 @@ describe('FAQ Page tests', () => {
     });
   });
 });
+
+export {};

@@ -1,8 +1,4 @@
-import {
-  Authenticate,
-  createOrganization,
-  generateOrganizationName,
-} from 'cypress/support/utils';
+import { generateOrganizationName } from 'cypress/support/utils';
 
 describe('Organizations page tests', () => {
   context('FullHD resolution', () => {
@@ -16,7 +12,7 @@ describe('Organizations page tests', () => {
     });
 
     it('Should go to organizations page when clicked on the main sidebar link', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -26,7 +22,7 @@ describe('Organizations page tests', () => {
     });
 
     it('Should open a drawer when clicked on create new organization', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -37,7 +33,7 @@ describe('Organizations page tests', () => {
     });
 
     it('Should display an error when creating organization without a name', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -50,13 +46,21 @@ describe('Organizations page tests', () => {
 
     it('Should redirect to created organization page', () => {
       const org = generateOrganizationName();
-      createOrganization(org);
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
+      cy.createOrganization(org);
 
       cy.get('[data-cy="organization-title-input"]').should('have.value', org);
     });
 
     it('Should display a toast success message when the organization is renamed successfully', () => {
-      createOrganization(generateOrganizationName());
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
+      cy.createOrganization(generateOrganizationName());
 
       cy.get('[data-cy="organization-edit-title"]').click();
       cy.get('[data-cy="organization-title-input"]').clear().type('e2e org');
@@ -66,7 +70,7 @@ describe('Organizations page tests', () => {
     });
 
     it('Should display a toast success message when a member has been invited', () => {
-      createOrganization(generateOrganizationName());
+      cy.createOrganization(generateOrganizationName());
 
       cy.get('[data-cy="organization-member-add-button"]').click();
       cy.get('[data-cy="organization-member-invite-input"]').type(
@@ -79,7 +83,7 @@ describe('Organizations page tests', () => {
 
     it('Should display invited member on the list', () => {
       const testUserEmail = 'random@test.com';
-      createOrganization(generateOrganizationName());
+      cy.createOrganization(generateOrganizationName());
 
       cy.get('[data-cy="organization-member-add-button"]').click();
       cy.get('[data-cy="organization-member-invite-input"]').type(
@@ -91,7 +95,7 @@ describe('Organizations page tests', () => {
     });
 
     it('Should display an input for entering organization name when deleting organization', () => {
-      createOrganization(generateOrganizationName());
+      cy.createOrganization(generateOrganizationName());
       cy.get('[data-cy="organization-delete-button"]').click();
       cy.get('[data-cy="organization-delete-confirm-input"]').should(
         'be.visible',
@@ -100,10 +104,8 @@ describe('Organizations page tests', () => {
 
     it('Should redirect to organizations when organization is deleted', () => {
       const org = generateOrganizationName();
-      createOrganization(org);
-      cy.get('[data-cy="organization-delete-button"]').click();
-      cy.get('[data-cy="organization-delete-confirm-input"]').type(org);
-      cy.get('[data-cy="organization-delete-submit"]').click();
+      cy.createOrganization(org);
+      cy.deleteOrganization(org);
 
       cy.url().should('be.equal', `${Cypress.config('baseUrl')}/organizations`);
     });

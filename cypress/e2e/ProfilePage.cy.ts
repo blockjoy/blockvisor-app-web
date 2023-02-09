@@ -1,7 +1,4 @@
-import {
-  Authenticate,
-  generateUserRegistrationData,
-} from 'cypress/support/utils';
+import { generateUserRegistrationData } from 'cypress/support/utils';
 
 describe('Profile page', () => {
   context('FullHD resolution', () => {
@@ -11,7 +8,7 @@ describe('Profile page', () => {
     });
 
     it('Should go to Personal tab', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -22,7 +19,7 @@ describe('Profile page', () => {
     });
 
     it('Should go to the Account tab', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -35,7 +32,7 @@ describe('Profile page', () => {
 
     it('Should update first name and last name in the Personal tab', () => {
       const { firstName, lastName } = generateUserRegistrationData();
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -57,7 +54,7 @@ describe('Profile page', () => {
     });
 
     it('Should signout when clicked on the Danger zone signout button', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );

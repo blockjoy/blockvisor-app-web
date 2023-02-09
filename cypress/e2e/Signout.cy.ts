@@ -1,5 +1,3 @@
-import { Authenticate } from 'cypress/support/utils';
-
 describe('Signout Action', () => {
   context('FullHD resolution', () => {
     beforeEach(() => {
@@ -8,7 +6,7 @@ describe('Signout Action', () => {
     });
 
     it('Should signout and return to login page', () => {
-      Authenticate(
+      cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
@@ -22,3 +20,5 @@ describe('Signout Action', () => {
     });
   });
 });
+
+export {};
