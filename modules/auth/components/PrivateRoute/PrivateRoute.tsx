@@ -14,7 +14,7 @@ export function PrivateRoute({ router, children }: Props) {
   const isPrivateRoute = !PUBLIC_ROUTES.some((r) => router.asPath.includes(r));
 
   useEffect(() => {
-    authCheck(router.asPath, isLoggedIn);
+    authCheck(isLoggedIn);
 
     const hideContent = () => {
       setAuthorized(false);
@@ -32,8 +32,7 @@ export function PrivateRoute({ router, children }: Props) {
     }
   }, [isLoggedIn]);
 
-  function authCheck(url: any, loggedIn: boolean): any {
-    const path = url.split('?')[0];
+  function authCheck(loggedIn: boolean): any {
     if (!loggedIn && isPrivateRoute) {
       setAuthorized(false);
       router.push({
