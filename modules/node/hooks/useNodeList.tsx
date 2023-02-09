@@ -6,7 +6,6 @@ import { apiClient } from '@modules/client';
 import { useIdentityRepository } from '@modules/auth';
 
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
-import { useGetBlockchains } from './useGetBlockchains';
 
 interface Hook {
   nodeList: BlockjoyNode[];
@@ -21,8 +20,6 @@ export const useNodeList = (): Hook => {
 
   const setIsLoading = useSetRecoilState(nodeAtoms.isLoading);
   const setPreloadNodes = useSetRecoilState(nodeAtoms.preloadNodes);
-
-  const { blockchains } = useGetBlockchains();
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
@@ -46,13 +43,6 @@ export const useNodeList = (): Hook => {
     const loadingState =
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
-
-    let blockchainList: any;
-    if (!blockchains?.length) {
-      blockchainList = await apiClient.getBlockchains();
-    } else {
-      blockchainList = blockchains;
-    }
 
     setHasMore(false);
 

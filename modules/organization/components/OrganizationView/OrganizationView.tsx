@@ -32,7 +32,6 @@ import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrgani
 import { useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
-import { useNodeList } from '@modules/node';
 import { apiClient } from '@modules/client';
 
 export const OrganizationView = () => {
@@ -42,7 +41,6 @@ export const OrganizationView = () => {
   const { deleteOrganization, loading: isDeleting } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
-  const { loadNodes, nodeList } = useNodeList();
 
   const sentInvitationsLoadingState = useRecoilValue(
     organizationAtoms.organizationSentInvitationsLoadingState,

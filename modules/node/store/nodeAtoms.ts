@@ -2,6 +2,7 @@ import { atom, selector } from 'recoil';
 import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
 import { blockchainsAtoms } from './blockchains';
 import { isMobile } from 'react-device-detect';
+import { localStorageEffect } from 'utils/store/persist';
 
 export type FilterItem = {
   name?: string | undefined;
@@ -23,6 +24,7 @@ const activeListType = atom<string | 'table' | 'grid'>({
 const nodeList = atom<BlockjoyNode[]>({
   key: 'node.nodeList',
   default: [],
+  effects: [localStorageEffect('nodeList')],
 });
 
 const isLoading = atom<LoadingState>({
