@@ -16,32 +16,20 @@ describe('Registration page tests', () => {
   });
 
   it('Should go to verify page when registration is successful', () => {
-    cy.visit('/register');
-    const { email, firstName, lastName, password } =
-      generateUserRegistrationData();
-    cy.get('[data-cy="register-email-input"]').type(email);
-    cy.get('[data-cy="register-firstName-input"]').type(firstName);
-    cy.get('[data-cy="register-lastName-input"]').type(lastName);
-    cy.get('[data-cy="register-password-input"]').type(password);
-    cy.get('[data-cy="register-confirmPassword-input"]').type(password);
-
-    cy.get('[data-cy="register-submit-button"]').click();
+    const data = generateUserRegistrationData();
+    cy.register({ ...data });
 
     cy.url().should('be.equal', `${Cypress.config('baseUrl')}/verify`);
   });
 
   it('Should display an error when the email address is already registered', () => {
-    cy.visit('/register');
     const { firstName, lastName, password } = generateUserRegistrationData();
-    cy.get('[data-cy="register-email-input"]').type(
-      Cypress.env('TEST_USER_EMAIL'),
-    );
-    cy.get('[data-cy="register-firstName-input"]').type(firstName);
-    cy.get('[data-cy="register-lastName-input"]').type(lastName);
-    cy.get('[data-cy="register-password-input"]').type(password);
-    cy.get('[data-cy="register-confirmPassword-input"]').type(password);
-
-    cy.get('[data-cy="register-submit-button"]').click();
+    cy.register({
+      email: Cypress.env('TEST_USER_EMAIL'),
+      firstName,
+      lastName,
+      password,
+    });
 
     cy.get('[data-cy="register-error-message"]').should('be.visible');
   });

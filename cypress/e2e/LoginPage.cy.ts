@@ -1,5 +1,3 @@
-import { Authenticate } from 'cypress/support/utils';
-
 describe('Login Page tests', () => {
   beforeEach(() => cy.clearLocalStorage());
   afterEach(() => cy.clearLocalStorage());
@@ -19,20 +17,17 @@ describe('Login Page tests', () => {
   });
 
   it('Shows password validation error when password is too short', () => {
-    Authenticate('test@test.com', '1234');
+    cy.login('test@test.com', '1234');
     cy.get('[data-cy="input-error-field"]').should('exist');
   });
 
   it('Shows error message when the credentials are invalid', () => {
-    Authenticate('someone@somewhere.com', 'test123456');
+    cy.login('someone@somewhere.com', 'test123456');
     cy.get('[data-cy="login-error-field"]').should('exist');
   });
 
   it('Redirects to nodes route when authentication is successfull', () => {
-    Authenticate(
-      Cypress.env('TEST_USER_EMAIL'),
-      Cypress.env('TEST_USER_PASSWORD'),
-    );
+    cy.login(Cypress.env('TEST_USER_EMAIL'), Cypress.env('TEST_USER_PASSWORD'));
 
     cy.url().should('be.equal', `${Cypress.config('baseUrl')}/nodes`);
   });
