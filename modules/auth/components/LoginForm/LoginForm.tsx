@@ -14,7 +14,7 @@ import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { PasswordToggle } from '../PasswordTogle';
+import { PasswordToggle } from '../PasswordField/PasswordTogle';
 
 type LoginForm = {
   email: string;

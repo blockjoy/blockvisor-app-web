@@ -4,7 +4,7 @@ import { Alert, Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { PasswordToggle } from '../PasswordTogle';
+import { PasswordToggle } from '../PasswordField/PasswordTogle';
 import { isValidEmail } from '@shared/utils/validation';
 import { apiClient } from '@modules/client';
 import Router, { useRouter } from 'next/router';
@@ -13,6 +13,8 @@ import { colors } from 'styles/utils.colors.styles';
 import { Routes } from '@modules/auth/utils/routes';
 import { isStatusResponse } from '@modules/organization';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
+import { PasswordField } from '../PasswordField/PasswordField';
+import { position } from 'styles/utils.position.styles';
 
 type RegisterForm = {
   first_name: string;
@@ -138,30 +140,8 @@ export function RegisterForm() {
                 }}
               />
             </li>
-            <li css={[spacing.bottom.mediumSmall]}>
-              <Input
-                tabIndex={4}
-                labelStyles={[display.visuallyHidden]}
-                disabled={loading}
-                name="password"
-                placeholder="Password"
-                type={activeType['password']}
-                validationOptions={{
-                  required: 'This is a mandatory field',
-                  minLength: {
-                    value: 8,
-                    message: 'Password should be at least 8 characters long',
-                  },
-                }}
-                rightIcon={
-                  <PasswordToggle
-                    name="password"
-                    tabIndex={0}
-                    activeType={activeType['password']}
-                    onClick={handleIconClick}
-                  />
-                }
-              />
+            <li css={[spacing.bottom.mediumSmall, position.relative]}>
+              <PasswordField loading={loading} />
             </li>
             <li css={[spacing.bottom.medium]}>
               <Input
