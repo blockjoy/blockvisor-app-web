@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
-import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { apiClient } from '@modules/client';
-import { authAtoms, useIdentityRepository } from '@modules/auth';
+import { useIdentityRepository } from '@modules/auth';
 
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { useGetBlockchains } from './useGetBlockchains';
@@ -17,13 +17,12 @@ interface Hook {
 
 export const useNodeList = (): Hook => {
   const router = useRouter();
-  const user = useRecoilValue(authAtoms.user);
   const repository = useIdentityRepository();
 
   const setIsLoading = useSetRecoilState(nodeAtoms.isLoading);
   const setPreloadNodes = useSetRecoilState(nodeAtoms.preloadNodes);
 
-  const { blockchains, getBlockchains } = useGetBlockchains();
+  const { blockchains } = useGetBlockchains();
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
@@ -48,8 +47,6 @@ export const useNodeList = (): Hook => {
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
 
-    console.log('loadNodes blockchains', blockchains);
-
     let blockchainList: any;
     if (!blockchains?.length) {
       blockchainList = await apiClient.getBlockchains();
@@ -59,18 +56,13 @@ export const useNodeList = (): Hook => {
 
     setHasMore(false);
 
-    // TODO: Org ID needs be set here
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
-    // let org_id = user?.defaultOrganization?.id || '';
 
-    console.log('-------------nodeUIProps-------------', queryParams);
     const nodes: any = await apiClient.listNodes(
       org_id!,
       queryParams.filter,
       queryParams.pagination,
     );
-
-    console.log('listNodesResponse', nodes);
 
     setPreloadNodes(nodes.length);
 

@@ -1,5 +1,4 @@
 import { PageTitle } from '@shared/components';
-import { styles } from './NodeLauncherPageHeader.styles';
 
 export const NodeLauncherPageHeader = () => (
   <PageTitle>
