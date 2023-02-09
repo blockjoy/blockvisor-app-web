@@ -6,10 +6,11 @@ import { layout, layoutTitle, layoutWrapper } from './Layout.styles';
 
 type Props = {
   title?: string;
+  overflow?: 'visible' | 'hidden';
   children?: ReactNode;
 };
 
-export function Layout({ children, title }: Props) {
+export function Layout({ children, title, overflow = 'hidden' }: Props) {
   const animateEntry = () =>
     anime({
       targets: `#js-auth-layout`,
@@ -28,7 +29,7 @@ export function Layout({ children, title }: Props) {
         <title>{title}</title>
       </Head>
       <main tabIndex={0} id="content" css={[layout]}>
-        <section css={[layoutWrapper]} id="js-auth-layout">
+        <section css={[layoutWrapper(overflow)]} id="js-auth-layout">
           <header>
             <BlockjoyLogo scale={1} />
             <h1 css={[layoutTitle]}>{title}</h1>
