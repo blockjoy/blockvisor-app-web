@@ -60,7 +60,6 @@ export const styles = {
     & > span {
       justify-content: center;
       align-items: center;
-      flex-direction: column;
     }
   `,
   linkInner: (theme: ITheme) => css`

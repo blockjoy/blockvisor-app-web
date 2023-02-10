@@ -63,6 +63,7 @@ export const styles = {
   searchBox: (theme: ITheme) => css`
     background: transparent;
     border: 0;
+    border-radius: 0;
     border-bottom: 1px solid ${theme.colorBorder};
     height: 54px;
     padding-left: 29px;
@@ -158,18 +159,6 @@ export const styles = {
     opacity: 0.7;
     outline: none;
 
-    /* :nth-child(even) {
-      background: rgba(255, 255, 255, 0.02);
-    } */
-
-    @media ${breakpoints.toXlrg} {
-      /* flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 16px;
-      padding: 10px 15px; */
-    }
-
     @media ${breakpoints.fromXLrg} {
       max-height: 56px;
       min-height: 56px;
@@ -179,18 +168,18 @@ export const styles = {
     @media ${breakpoints.toXlrg} {
       &:focus,
       &:hover {
-        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.35)};
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
     }
 
     @media ${breakpoints.fromXLrg} {
       &:hover {
-        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.35)};
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
     }
 
     &.active {
-      background: ${theme.colorLightGrey};
+      background: ${rgba(theme.colorLightGrey || '#ffffff', 0.5)};
       opacity: 1;
 
       .beta-badge {
@@ -234,8 +223,8 @@ export const styles = {
     height: 32px;
     min-width: 60px;
     padding: 0 10px;
-    background: ${theme.colorDarkGrey};
-    color: #f9f9f9;
+    background: ${theme.colorLightGrey};
+    color: ${theme.colorText};
     border-radius: 4px;
     cursor: pointer;
 

@@ -5,25 +5,29 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     color: var(--color-text-5);
-    padding: 0 16px 26px;
+    padding: 0 0 8px;
   `,
   wrapperCollapsed: css`
-    padding: 0px 21px 0px 21px;
+    padding: 0px 21px 8px 21px;
   `,
-  copy: (isSidebar: boolean) => css`
-    ${isSidebar &&
-    `
-  &:hover {
-    @media ${breakpoints.fromXLrg} {
-      :hover .sidebar-copy {
-        opacity: 1;
-        visibility: visible;
-        white-space: nowrap;
-        margin: 0;
+  copy: (isSidebarOpen: boolean) => css`
+    ${!isSidebarOpen &&
+    css`
+      padding: 0 24px;
+    `}
+    ${isSidebarOpen &&
+    css`
+      &:hover {
+        @media ${breakpoints.fromXLrg} {
+          :hover .sidebar-copy {
+            opacity: 1;
+            visibility: visible;
+            white-space: nowrap;
+            margin: 0;
+          }
+        }
       }
-    }
-  }
-  `}
+    `}
   `,
   support: css`
     display: flex;
@@ -32,8 +36,6 @@ export const styles = {
   `,
   separator: (isSidebar: boolean) => (theme: ITheme) =>
     css`
-      margin: 0 -26px 0 -26px;
-
       ${isSidebar &&
       `
       margin: 0 -21px;
