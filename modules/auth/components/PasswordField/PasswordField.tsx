@@ -6,6 +6,7 @@ import { position } from 'styles/utils.position.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
 import { typo } from 'styles/utils.typography.styles';
 import { useClickOutside } from '@shared/index';
+import { styles } from './PasswordField.styles';
 
 export enum PasswordFieldType {
   password = 'password',
@@ -54,11 +55,7 @@ export const PasswordField = ({
   useClickOutside<HTMLDivElement>(fieldRef, handleClickOutside);
 
   return (
-    <div
-      css={[position.relative]}
-      ref={fieldRef}
-      style={{ maxWidth: `${fieldRef?.current?.clientWidth}px` }}
-    >
+    <div css={styles.wrapper(fieldRef?.current?.clientWidth!)} ref={fieldRef}>
       <Input
         tabIndex={tabIndex}
         labelStyles={[Boolean(label) ? typo.base : display.visuallyHidden]}
