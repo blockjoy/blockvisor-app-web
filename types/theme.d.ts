@@ -11,6 +11,7 @@ interface ITheme {
   colorBorder: string;
   colorBorderGrey: string;
   colorDarkGrey: string;
+  colorInput: string;
   colorLabel: string;
   colorPlaceholder: string;
   colorActive: string;
@@ -22,6 +23,8 @@ interface ITheme {
   colorDanger: string;
   colorNote: string;
   colorOverlay: string;
+  colorSuccess: string;
+  colorTertiary: string;
   colorDark: string;
   screenXs: string;
   screenSm: string;

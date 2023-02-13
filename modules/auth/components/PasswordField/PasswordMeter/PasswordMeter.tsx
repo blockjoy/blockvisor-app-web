@@ -36,19 +36,38 @@ export const PasswordMeter = ({
                 )}
               ></div>
             </div>
-            <div css={styles.hints}>
-              <p css={styles.hintsTitle}>It's better to have:</p>
+            <div>
               <ul css={styles.hintsContent}>
-                <li css={passwordTracker.letters && styles.hintDisabled}>
+                <li
+                  css={[
+                    styles.hint,
+                    passwordTracker.letters ? styles.hintDisabled : '',
+                  ]}
+                >
                   Upper & lower case letters
                 </li>
-                <li css={passwordTracker.specialChar && styles.hintDisabled}>
+                <li
+                  css={[
+                    styles.hint,
+                    passwordTracker.specialChar ? styles.hintDisabled : '',
+                  ]}
+                >
                   A symbol (#$&)
                 </li>
-                <li css={passwordTracker.number && styles.hintDisabled}>
+                <li
+                  css={[
+                    styles.hint,
+                    passwordTracker.number ? styles.hintDisabled : '',
+                  ]}
+                >
                   A number
                 </li>
-                <li css={passwordTracker.long && styles.hintDisabled}>
+                <li
+                  css={[
+                    styles.hint,
+                    passwordTracker.long ? styles.hintDisabled : '',
+                  ]}
+                >
                   A longer password
                 </li>
               </ul>
