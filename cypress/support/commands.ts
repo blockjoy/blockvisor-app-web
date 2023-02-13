@@ -45,6 +45,7 @@ declare global {
       }: RegistrationInput): Chainable<void>;
       createOrganization(orgName: string): Chainable<void>;
       deleteOrganization(orgName: string): Chainable<void>;
+      waitForElement(selector: string, timeout: number): Chainable<void>;
     }
   }
 }
@@ -71,6 +72,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add('createOrganization', (orgName: string) => {
+  cy.waitForElement('[data-cy="sidebarMain-organizations-link"]', 15000);
   cy.get('[data-cy="sidebarMain-organizations-link"]').click();
   cy.get('[data-cy="organizations-create-button"]').click();
   cy.get('[data-cy="organization-drawer-add-input"]').type(orgName);
@@ -83,4 +85,7 @@ Cypress.Commands.add('deleteOrganization', (orgName: string) => {
   cy.get('[data-cy="organization-delete-submit"]').click();
 });
 
+Cypress.Commands.add('waitForElement', (selector: string, timeout: number) => {
+  cy.get(selector, { timeout });
+});
 export {};

@@ -13,6 +13,7 @@ describe('Nodes Page tests', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="nodes-launchNode-button"]', 15000);
       cy.get('[data-cy="nodes-launchNode-button"]').click();
 
       cy.url().should('be.equal', `${Cypress.config('baseUrl')}/launch-node`);
@@ -23,6 +24,7 @@ describe('Nodes Page tests', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="nodes-launchNode-button"]', 15000);
       cy.get('[data-cy="nodes-launchNode-button"]').click();
 
       cy.get('[data-cy="nodeLauncher-protocol"]')
