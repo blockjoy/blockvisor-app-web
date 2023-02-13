@@ -5,16 +5,14 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   tooltip: (theme: ITheme) => css`
-    @media ${breakpoints.toLrg} {
-      max-width: 250px;
-    }
     @media ${breakpoints.fromLrg} {
       position: absolute;
       z-index: 4000;
       top: 50%;
       left: calc(100% + 25px);
       min-width: 300px;
-      transform: translateY(-50%);
+      transform: translate(10px, -50%);
+      animation: tooltips-horz 300ms ease-out forwards;
 
       ::before {
         content: '';
@@ -26,6 +24,12 @@ export const styles = {
         top: 50%;
         left: 0;
         transform: translate(-9px, -9px) rotate(45deg);
+      }
+    }
+
+    @keyframes tooltips-horz {
+      to {
+        transform: translate(0, -50%);
       }
     }
   `,
@@ -76,7 +80,7 @@ export const styles = {
     }
   `,
   hintDisabled: (theme: ITheme) => css`
-    opacity: 0.3;
+    opacity: 0.5;
     color: ${theme.colorTextGrey};
     text-decoration: line-through;
   `,
