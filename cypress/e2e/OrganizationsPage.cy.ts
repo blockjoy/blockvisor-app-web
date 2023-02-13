@@ -16,9 +16,13 @@ describe('Organizations page tests', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="sidebarMain-organizations-link"]', 15000);
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
 
-      cy.url().should('be.equal', `${Cypress.config('baseUrl')}/organizations`);
+      cy.url({ timeout: 15000 }).should(
+        'be.equal',
+        `${Cypress.config('baseUrl')}/organizations`,
+      );
     });
 
     it('Should open a drawer when clicked on create new organization', () => {
@@ -26,6 +30,7 @@ describe('Organizations page tests', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="sidebarMain-organizations-link"]', 15000);
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
       cy.get('[data-cy="organizations-create-button"]').click();
 
@@ -37,6 +42,7 @@ describe('Organizations page tests', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="sidebarMain-organizations-link"]', 15000);
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
       cy.get('[data-cy="organizations-create-button"]').click();
       cy.get('[data-cy="organization-drawer-submit-button"]').click();
@@ -123,7 +129,10 @@ describe('Organizations page tests', () => {
       cy.createOrganization(org);
       cy.deleteOrganization(org);
 
-      cy.url().should('be.equal', `${Cypress.config('baseUrl')}/organizations`);
+      cy.url({ timeout: 15000 }).should(
+        'be.equal',
+        `${Cypress.config('baseUrl')}/organizations`,
+      );
     });
   });
 });

@@ -9,6 +9,8 @@ describe('FAQ Page tests', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+
+      cy.waitForElement('[data-cy="sidebarMain-faq-link"]', 15000);
       cy.get('[data-cy="sidebarMain-faq-link"]').click();
 
       cy.url().should('be.equal', `${Cypress.config('baseUrl')}/faq`);

@@ -29,7 +29,10 @@ describe('Login Page tests', () => {
   it('Redirects to nodes route when authentication is successfull', () => {
     cy.login(Cypress.env('TEST_USER_EMAIL'), Cypress.env('TEST_USER_PASSWORD'));
 
-    cy.url().should('be.equal', `${Cypress.config('baseUrl')}/nodes`);
+    cy.url({ timeout: 15000 }).should(
+      'be.equal',
+      `${Cypress.config('baseUrl')}/nodes`,
+    );
   });
 });
 

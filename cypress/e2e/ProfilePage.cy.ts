@@ -12,6 +12,7 @@ describe('Profile page', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="profileDropdown-button"]', 15000);
       cy.get('[data-cy="profileDropdown-button"]').click();
       cy.get('[data-cy="profileDropdown-profile-button"]').click();
 
@@ -23,6 +24,7 @@ describe('Profile page', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="profileDropdown-button"]', 15000);
       cy.get('[data-cy="profileDropdown-button"]').click();
       cy.get('[data-cy="profileDropdown-profile-button"]').click();
 
@@ -36,6 +38,7 @@ describe('Profile page', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="profileDropdown-button"]', 15000);
       cy.get('[data-cy="profileDropdown-button"]').click();
       cy.get('[data-cy="profileDropdown-profile-button"]').click();
 
@@ -58,6 +61,7 @@ describe('Profile page', () => {
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
       );
+      cy.waitForElement('[data-cy="profileDropdown-button"]', 15000);
       cy.get('[data-cy="profileDropdown-button"]').click();
       cy.get('[data-cy="profileDropdown-profile-button"]').click();
       cy.get('[data-cy="profile-account-tab"]').click();
