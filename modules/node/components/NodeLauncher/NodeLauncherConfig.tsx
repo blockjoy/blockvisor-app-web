@@ -135,11 +135,12 @@ export const NodeLauncherConfig: FC<Props> = ({
             </>
           )}
 
-          {/* ) : (
+          {isConfigValid !== null && !networkList?.length && (
             <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
               Missing Network Configuration
             </div>
-          )} */}
+          )}
+
           {Boolean(networkList?.length) &&
             nodeTypeProperties?.map((property: NodeTypeConfig) => {
               return (
