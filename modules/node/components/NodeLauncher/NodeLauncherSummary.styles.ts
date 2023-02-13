@@ -4,7 +4,7 @@ import { ITheme } from 'types/theme';
 
 const spin = keyframes`
   100% {
-    rotate: 1turn;
+    transform: rotate(1turn);
   }
 `;
 
