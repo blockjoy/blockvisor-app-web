@@ -5,6 +5,9 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   tooltip: (theme: ITheme) => css`
+    @media ${breakpoints.toLrg} {
+      max-width: 250px;
+    }
     @media ${breakpoints.fromLrg} {
       position: absolute;
       z-index: 4000;
@@ -49,29 +52,31 @@ export const styles = {
   summary: css`
     display: flex;
     flex-direction: column-reverse;
+    margin-bottom: 10px;
 
     @media ${breakpoints.fromLrg} {
-      margin-bottom: 15px;
       flex-direction: column;
     }
   `,
   title: css`
     font-weight: 600;
   `,
-  hints: css`
-    @media ${breakpoints.toLrg} {
-      display: none;
+  hintsContent: css`
+    display: flex;
+    flex-flow: row wrap;
+    gap: 5px;
+  `,
+  hint: (theme: ITheme) => css`
+    padding: 3px 10px;
+    background: ${theme.colorInput};
+    border-radius: 10px;
+
+    @media ${breakpoints.fromLrg} {
+      background: ${theme.colorCard};
     }
   `,
-  hintsTitle: css`
-    margin-bottom: 5px;
-  `,
-  hintsContent: css`
-    list-style: disc;
-    margin-left: 20px;
-  `,
-
   hintDisabled: (theme: ITheme) => css`
+    opacity: 0.3;
     color: ${theme.colorTextGrey};
     text-decoration: line-through;
   `,
@@ -90,8 +95,8 @@ export const styles = {
           theme.colorDanger,
           theme.colorNote,
           theme.colorAccent,
-          theme.colorAccent,
           theme.colorPrimary,
+          theme.colorSuccess,
         ][passwordStrength - 1] || ''};
         height: 100%;
         width: ${(passwordStrength / 5) * 100}%;
