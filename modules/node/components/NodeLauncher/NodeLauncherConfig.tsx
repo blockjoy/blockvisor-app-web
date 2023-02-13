@@ -99,7 +99,7 @@ export const NodeLauncherConfig: FC<Props> = ({
           <Alert isSuccess={isConfigValid}>
             {isConfigValid
               ? 'All systems GO!'
-              : 'Node requires configuration information.'}
+              : 'Requires configuration information.'}
           </Alert>
         </div>
         <div css={styles.nodeTypeProperties}>

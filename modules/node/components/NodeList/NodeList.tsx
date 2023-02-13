@@ -1,53 +1,22 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import {
-  EmptyColumn,
-  PageTitle,
-  Table,
-  TableGrid,
-  Button,
-} from '@shared/components';
-import { toRows, toGrid } from '@modules/node/utils';
+import { EmptyColumn, PageTitle, Table, TableGrid } from '@shared/components';
+import { toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
-import anime from 'animejs';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
 import { TableSkeleton } from '@shared/index';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { resultsStatus } from '@modules/node/helpers/NodeHelpers';
+import { resultsStatus } from '@modules/node/utils';
 import { organizationAtoms } from '@modules/organization';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 import { wrapper } from 'styles/wrapper.styles';
 import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
-
-const tableHeaders = [
-  {
-    name: '',
-    key: '1',
-    width: '30px',
-    minWidth: '30px',
-    maxWidth: '30px',
-  },
-  {
-    name: 'Name',
-    key: '2',
-    width: '300px',
-  },
-  {
-    name: 'Added',
-    key: '3',
-    width: '200px',
-  },
-  {
-    name: 'Status',
-    key: '4',
-    width: '200px',
-  },
-];
+import { mapNodeListToRows } from '@modules/node/utils/mapNodeListToRows';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -60,11 +29,10 @@ export const NodeList = () => {
     };
   }, [nodeUIContext]);
 
-  const nodeList = useRecoilValue(nodeAtoms.nodeList);
-  const hasMoreNodes = useRecoilValue(nodeAtoms.hasMoreNodes);
-
   const { loadNodes, handleNodeClick } = useNodeList();
 
+  const nodeList = useRecoilValue(nodeAtoms.nodeList);
+  const hasMoreNodes = useRecoilValue(nodeAtoms.hasMoreNodes);
   const isLoading = useRecoilValue(nodeAtoms.isLoading);
   const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
   const activeListType = useRecoilValue(nodeAtoms.activeListType);
@@ -72,20 +40,11 @@ export const NodeList = () => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-  const currentOrganization = useRef(defaultOrganization);
 
-  const animateEntry = () =>
-    anime({
-      targets: `#js-nodes-empty`,
-      opacity: [0, 1],
-      translateY: [8, 0],
-      easing: 'easeInOutQuad',
-      duration: 400,
-    });
+  const currentOrganization = useRef(defaultOrganization);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    animateEntry();
   }, []);
 
   useEffect(() => {
@@ -124,7 +83,7 @@ export const NodeList = () => {
   };
 
   const cells = toGrid(nodeList, handleNodeClick);
-  const rows = toRows(nodeList);
+  const { headers, rows } = mapNodeListToRows(nodeList);
   const { isFiltered, isEmpty } = resultsStatus(
     nodeList.length,
     nodeUIProps.queryParams.filter,
@@ -134,14 +93,13 @@ export const NodeList = () => {
     <>
       <PageTitle title="Nodes" />
       <div css={[styles.wrapper, wrapper.main]}>
-        <NodeFilters />
+        <NodeFilters isLoading={isLoading} />
         <div css={styles.nodeListWrapper}>
-          <NodeListHeader totalRows={nodeList?.length || 0} />
+          <NodeListHeader />
           {isLoading === 'initializing' ? (
             <TableSkeleton />
           ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
             <EmptyColumn
-              id="js-nodes-empty"
               title="No Nodes."
               description={
                 isFiltered && isEmpty ? (
@@ -174,7 +132,7 @@ export const NodeList = () => {
               {activeListType === 'table' ? (
                 <Table
                   isLoading={isLoading}
-                  headers={tableHeaders}
+                  headers={headers}
                   preload={preloadNodes}
                   rows={rows}
                   onRowClick={handleNodeClick}

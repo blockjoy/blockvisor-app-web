@@ -8,7 +8,6 @@ import { env } from '@shared/constants/env';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
-import { useGetBlockchains } from './useGetBlockchains';
 
 type Args = string | string[] | undefined;
 
@@ -29,7 +28,6 @@ const createUuid = (id: Args) => {
 export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-  const { blockchains } = useGetBlockchains();
 
   const deleteNode = async (id: Args) => {
     await apiClient.deleteNode(createUuid(id));
@@ -51,8 +49,6 @@ export const useNodeView = (): Hook => {
 
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
-
-    console.log('loadNode', node);
 
     let nodeType: any;
 
@@ -88,7 +84,7 @@ export const useNodeView = (): Hook => {
             '-'
           ) : property.ui_type === 'switch' ? (
             <LockedSwitch
-              tooltip="You will be able to edit this setting after BETA."
+              tooltip="You will be able to enable Self Hosting after BETA."
               isChecked={property.value === 'true' ? true : false}
             />
           ) : (

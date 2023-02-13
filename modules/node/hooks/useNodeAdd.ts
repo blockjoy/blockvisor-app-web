@@ -49,22 +49,10 @@ export const useNodeAdd = () => {
       })),
     });
 
-    console.log({
-      id: params.nodeType,
-      properties: params.nodeTypeProperties.map((property) => ({
-        ...property,
-        default: property.default === null ? 'null' : property.default,
-        value: property.value === null ? 'null' : property.value,
-        description: '',
-        label: '',
-      })),
-    });
-
     node.setType(nodeTypeString);
     node.setVersion(params.version);
 
     const response: any = await apiClient.createNode(node, params.key_files);
-    console.log('createNode', response);
 
     try {
       const nodeId = response.messagesList[0];

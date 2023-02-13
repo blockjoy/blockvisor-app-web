@@ -65,7 +65,13 @@ export const styles = {
     margin-bottom: 40px;
 
     @media ${breakpoints.toXlrg} {
+      margin-top: 20px;
       height: auto;
+    }
+  `,
+  skeleton: css`
+    @media ${breakpoints.toXlrg} {
+      margin-top: 20px;
     }
   `,
   resetButton: (theme: ITheme) => css`

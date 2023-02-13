@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
+import { rgba } from 'polished';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
@@ -62,6 +63,7 @@ export const styles = {
   searchBox: (theme: ITheme) => css`
     background: transparent;
     border: 0;
+    border-radius: 0;
     border-bottom: 1px solid ${theme.colorBorder};
     height: 54px;
     padding-left: 29px;
@@ -151,22 +153,11 @@ export const styles = {
     font-size: 16px;
     align-items: center;
     background: transparent;
+    border-radius: 6px;
     border: 0;
     cursor: pointer;
     opacity: 0.7;
     outline: none;
-
-    /* :nth-child(even) {
-      background: rgba(255, 255, 255, 0.02);
-    } */
-
-    @media ${breakpoints.toXlrg} {
-      /* flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 16px;
-      padding: 10px 15px; */
-    }
 
     @media ${breakpoints.fromXLrg} {
       max-height: 56px;
@@ -174,8 +165,21 @@ export const styles = {
     }
   `,
   rowHover: (theme: ITheme) => css`
-    :is(:hover, :focus, .active) {
-      background: ${theme.colorLightGrey};
+    @media ${breakpoints.toXlrg} {
+      &:focus,
+      &:hover {
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
+      }
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      &:hover {
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
+      }
+    }
+
+    &.active {
+      background: ${rgba(theme.colorLightGrey || '#ffffff', 0.5)};
       opacity: 1;
 
       .beta-badge {
@@ -217,9 +221,10 @@ export const styles = {
     border: 0;
     font-size: 11px;
     height: 32px;
+    min-width: 60px;
     padding: 0 10px;
-    background: #181a19;
-    color: #f9f9f9;
+    background: ${theme.colorLightGrey};
+    color: ${theme.colorText};
     border-radius: 4px;
     cursor: pointer;
 

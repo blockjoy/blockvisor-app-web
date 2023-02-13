@@ -5,32 +5,38 @@ import IconClose from '@public/assets/icons/arrow-left-12.svg';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { NodeFiltersHeaderIconText } from './NodeFiltersHeaderIconText';
+import { Skeleton } from '@shared/index';
 
-export const NodeFiltersHeader = () => {
+export type NodeFiltersHeaderProps = {
+  isLoading: boolean;
+};
+
+export const NodeFiltersHeader = ({ isLoading }: NodeFiltersHeaderProps) => {
   const [isFiltersOpen, setFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
-  );
-
-  const [isFiltersCollapsed, setFiltersCollapsed] = useRecoilState(
-    nodeAtoms.isFiltersCollapsed,
   );
 
   const handleClick = () => {
     setFiltersOpen(!isFiltersOpen);
 
-    localStorage.setItem('nodeFiltersCollapsed', JSON.stringify(true));
-    setFiltersCollapsed(!isFiltersCollapsed);
+    localStorage.setItem('nodeFiltersOpen', JSON.stringify(false));
   };
 
   return (
     <header css={styles.header} onClick={handleClick}>
-      <span css={styles.collapseButton}>
-        <IconClose />
-      </span>
-      <NodeFiltersHeaderIconText />
-      <span css={styles.dropdownIcon}>
-        {isFiltersOpen ? <IconMinus /> : <IconPlus />}
-      </span>
+      {isLoading ? (
+        <Skeleton />
+      ) : (
+        <>
+          <span css={styles.collapseButton}>
+            <IconClose />
+          </span>
+          <NodeFiltersHeaderIconText />
+          <span css={styles.dropdownIcon}>
+            {isFiltersOpen ? <IconMinus /> : <IconPlus />}
+          </span>
+        </>
+      )}
     </header>
   );
 };

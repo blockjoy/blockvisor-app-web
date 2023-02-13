@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { styles } from './Switch.styles';
 import IconLock from '@public/assets/icons/lock-12.svg';
+import { Tooltip } from '@shared/components';
 
 type Props = {
   name: string;
@@ -33,11 +34,7 @@ export const Switch: FC<Props> = ({
           </span>
         </span>
       </label>
-      {disabled && (
-        <div className="tooltip" css={styles.tooltip}>
-          {tooltip}
-        </div>
-      )}
+      {disabled && <Tooltip customCss={[styles.tooltip]} tooltip={tooltip} />}
     </div>
   );
 };

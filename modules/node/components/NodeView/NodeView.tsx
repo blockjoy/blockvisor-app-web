@@ -19,7 +19,6 @@ import { NodeViewConfig } from './NodeViewConfig';
 import { ROUTES } from '@shared/index';
 
 export function NodeView() {
-  const [isMounted, setMounted] = useState<boolean>(false);
   const [nodeError, setNodeError] = useState<boolean>(false);
 
   const router = useRouter();
@@ -36,12 +35,9 @@ export function NodeView() {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (router.isReady) {
-      setMounted(true);
       loadNode(id, handleNodeError);
     }
   }, [id]);
-
-  if (!isMounted) return null;
 
   return (
     <>

@@ -35,11 +35,15 @@ export const OrganizationPicker = () => {
     }
   };
 
-  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setDefaultOrganization(
+  const handleSelect = async (e: ChangeEvent<HTMLSelectElement>) => {
+    await switchOrganization(
       e.target.value,
       allOrganizations[e.target.selectedIndex].name!,
     );
+    // setDefaultOrganization(
+    //   e.target.value,
+    //   allOrganizations[e.target.selectedIndex].name!,
+    // );
   };
 
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
