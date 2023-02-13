@@ -1,13 +1,14 @@
 import { apiClient } from '@modules/client';
-import { delay } from '@shared/utils/delay';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { env } from '@shared/constants/env';
 
 export function useGetOrganization() {
   const [organization, setOrganization] = useRecoilState(
     organizationAtoms.selectedOrganization,
   );
+
+  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
+
   const [isLoading, setIsLoading] = useRecoilState(
     organizationAtoms.organizationLoadingState,
   );
@@ -15,13 +16,18 @@ export function useGetOrganization() {
   const getOrganization = async (id: string) => {
     setIsLoading('initializing');
 
-    const organizations: any = await apiClient.getOrganizations(id);
-    const organization: any =
-      organizations.length > 0 ? organizations[0] : null;
+    const foundOrganization = allOrganizations.find((o: any) => o.id === id);
 
-    setOrganization(organization);
+    if (foundOrganization) {
+      console.log('foundOrganization', foundOrganization);
+      setOrganization(foundOrganization);
+    } else {
+      const organizations: any = await apiClient.getOrganizations(id);
+      const organization: any =
+        organizations.length > 0 ? organizations[0] : null;
 
-    await delay(env.loadingDuration);
+      setOrganization(organization);
+    }
 
     setIsLoading('finished');
   };
@@ -29,6 +35,7 @@ export function useGetOrganization() {
   return {
     organization,
     getOrganization,
+    setOrganization,
     isLoading,
   };
 }

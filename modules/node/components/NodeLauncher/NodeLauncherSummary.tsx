@@ -6,6 +6,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import IconCheck from '@public/assets/icons/check-16.svg';
 import IconClose from '@public/assets/icons/close.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
+import IconCog from '@public/assets/icons/cog-12.svg';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 
@@ -14,7 +15,7 @@ type Props = {
   hasAddedFiles: boolean;
   hasNetworkList: boolean;
   isNodeValid: boolean;
-  isConfigValid: boolean;
+  isConfigValid: boolean | null;
   isCreating: boolean;
   blockchainId: string;
   nodeTypeId: string;
@@ -35,6 +36,9 @@ export const NodeLauncherSummary: FC<Props> = ({
   onCreateNodeClicked,
 }) => {
   const { blockchains } = useGetBlockchains();
+
+  if (isConfigValid === null) return null;
+
   return (
     <div css={styles.wrapper}>
       <h2 css={styles.h2}>Launch</h2>
@@ -130,10 +134,25 @@ export const NodeLauncherSummary: FC<Props> = ({
               Boolean(serverError) ||
               isCreating
             }
-            css={styles.createButton}
+            css={[
+              styles.createButton,
+              isCreating && !Boolean(serverError) && styles.createButtonLoading,
+            ]}
           >
-            <IconRocket />
-            <span>Launch Your Node</span>
+            <span css={styles.createButtonInner}>
+              {isCreating && !Boolean(serverError) ? (
+                <span css={styles.cogIcon}>
+                  <IconCog />
+                </span>
+              ) : (
+                <IconRocket />
+              )}
+              <span>
+                {isCreating && !Boolean(serverError)
+                  ? 'Launching'
+                  : 'Launch Your Node'}
+              </span>
+            </span>
           </button>
         </div>
       </div>

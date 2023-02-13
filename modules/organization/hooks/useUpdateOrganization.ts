@@ -4,6 +4,7 @@ import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
+import { useGetOrganization } from './useGetOrganization';
 import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
 export function useUpdateOrganization() {
@@ -15,21 +16,19 @@ export function useUpdateOrganization() {
   );
   const { setDefaultOrganization } = useSetDefaultOrganization();
 
-  const [loadingState, setLoadingState] = useRecoilState(
-    organizationAtoms.organizationLoadingState,
-  );
+  const { setOrganization } = useGetOrganization();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
 
   const updateOrganization = async (id: string, name: string) => {
-    setLoadingState('loading');
-
     const organization = new Organization();
     organization.setName(name);
     organization.setId(id);
     const response = await apiClient.updateOrganization(organization);
+
+    console.log('updateOrganization', response, isResponeMetaObject(response));
 
     if (isResponeMetaObject(response)) {
       const newOrg = {
@@ -37,34 +36,30 @@ export function useUpdateOrganization() {
         name,
       };
 
+      setOrganization(newOrg);
       setSelectedOrganization(newOrg);
 
-      const updatedAllOrgs = allOrganizations.map((org) => {
-        if (org.id === selectedOrganization?.id)
-          return {
-            ...org,
-            name,
-          };
+      console.log('test');
 
-        return org;
-      });
+      const updatedAllOrgs = allOrganizations.map((org: any) => ({
+        ...org,
+        name: org.id === id ? name : org.name,
+      }));
+
+      console.log('updateAllOrgs', updatedAllOrgs);
 
       setAllOrganizations(updatedAllOrgs);
 
       if (defaultOrganization?.id === selectedOrganization?.id) {
         setDefaultOrganization(selectedOrganization?.id ?? '', name);
       }
-
-      setLoadingState('finished');
       return;
     } else {
-      setLoadingState('finished');
       throw new ApplicationError('UpdateOrganization', 'Update failed');
     }
   };
 
   return {
     updateOrganization,
-    loading: loadingState === 'initializing' || loadingState === 'loading',
   };
 }

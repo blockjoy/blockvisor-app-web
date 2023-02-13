@@ -22,13 +22,13 @@ export function useInvitations() {
   };
 
   const getSentInvitations = async (id: string) => {
-    setSentInvitationsLoadingState('initializing');
     const response: any = await apiClient.pendingInvitations(id);
     if (isStatusResponse(response)) {
       setSentInvitations([]);
     } else {
       setSentInvitations(response);
     }
+
     setSentInvitationsLoadingState('finished');
   };
 
@@ -42,7 +42,7 @@ export function useInvitations() {
     },
     onSuccess: VoidFunction,
   ) => {
-    const response = await apiClient.acceptInvitation({
+    await apiClient.acceptInvitation({
       token,
       invitationId,
     });
@@ -60,7 +60,7 @@ export function useInvitations() {
     },
     onSuccess: VoidFunction,
   ) => {
-    const response = await apiClient.declineInvitation({
+    await apiClient.declineInvitation({
       token,
       invitationId,
     });

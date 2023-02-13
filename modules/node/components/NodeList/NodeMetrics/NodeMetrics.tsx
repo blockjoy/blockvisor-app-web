@@ -13,7 +13,9 @@ export const NodeMetrics = () => {
 
   const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
 
-  return offline === null ? (
+  const isLoading = useRecoilValue(nodeAtoms.isLoading);
+
+  return isLoading !== 'finished' || offline === null ? (
     <Skeleton />
   ) : (
     <div css={styles.wrapper}>

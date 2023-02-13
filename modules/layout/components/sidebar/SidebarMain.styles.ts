@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { rgba } from 'polished';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
@@ -110,7 +111,8 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       position: absolute;
       left: 110%;
-      background: ${theme.colorTooltip};
+      background: ${rgba(theme.colorTooltip, 0.85)};
+      backdrop-filter: blur(10px);
       padding: 6px 10px;
       font-size: 12px;
       border-radius: 4px;

@@ -1,5 +1,5 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
-import { Button, checkIfValidEmail, Table } from '@shared/index';
+import { Button, Table } from '@shared/index';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
@@ -44,8 +44,8 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
 
-  const [emails, setEmails] = useState<string[]>();
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [inviteeEmail, setInviteeEmail] = useState<string>();
+  const [isInviting, setIsInviting] = useState<boolean>(false);
 
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
@@ -56,15 +56,8 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     Permissions.CREATE_MEMBER,
   );
 
-  const handleTextareaChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    const isValid = checkIfValidEmail(e.target.value);
-
-    if (isValid) {
-      setIsDisabled(false);
-      setEmails([e.target.value]);
-    } else {
-      setIsDisabled(true);
-    }
+  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    setInviteeEmail(e.target.value);
   };
 
   const handlePageClicked = (index: number) => {
@@ -72,19 +65,23 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   };
 
   const handleInviteClicked = () => {
+    setIsInviting(true);
+
     const isMemberOrInvited = checkIfExists(
       members!,
       invitations!,
-      emails![0]?.toLowerCase(),
+      inviteeEmail!?.toLowerCase(),
     );
 
     if (!isMemberOrInvited) {
-      inviteMembers(emails!, () => {
+      inviteMembers(inviteeEmail!, () => {
         getSentInvitations(id!);
         setActiveView('list');
         setPageIndex(0);
+        setIsInviting(false);
       });
     } else {
+      setIsInviting(false);
       if (isMemberOrInvited === 'member') {
         toast.error('Already a member');
       } else {
@@ -140,10 +137,11 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
       </h2>
       {activeView === 'invite' && (
         <OrganizationInvite
-          hasTextareaValue={!isDisabled}
+          isInviting={isInviting}
+          inviteeEmail={inviteeEmail!}
           onInviteClicked={handleInviteClicked}
           onCancelClicked={() => setActiveView('list')}
-          onTextareaChanged={handleTextareaChanged}
+          onInviteeEmailChanged={handleInviteeEmailChanged}
         />
       )}
       <Table
