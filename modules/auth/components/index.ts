@@ -1,5 +1,6 @@
 export * from './LoginForm/LoginForm';
 export * from './PasswordField/PasswordTogle/PasswordToggle';
+export * from './PasswordField/PasswordMeter/PasswordMeter';
 export * from './Footer/LoginFooter';
 export * from './Footer/RegisterFooter';
 export * from './RegisterForm/RegisterForm';

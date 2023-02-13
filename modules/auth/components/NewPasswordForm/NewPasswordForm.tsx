@@ -5,7 +5,7 @@ import { Button, Input } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { PasswordToggle } from '../PasswordField/PasswordTogle';
+import { PasswordToggle } from '@modules/auth';
 import { useRouter } from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
