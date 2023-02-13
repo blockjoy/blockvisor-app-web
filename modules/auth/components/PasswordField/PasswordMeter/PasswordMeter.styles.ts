@@ -4,65 +4,73 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
-    padding: 2px 1px;
-    @media ${breakpoints.fromLrg} {
-      display: none;
-    }
-  `,
-  mobileTitle: css`
-    font-weight: 600;
-    font-size: 12px;
-  `,
   tooltip: (theme: ITheme) => css`
-    position: absolute;
-    z-index: 4000;
-    top: 50%;
-    left: calc(100% + 25px);
-    min-width: 300px;
-    transform: translateY(-50%);
-
-    @media ${breakpoints.toLrg} {
-      display: none;
-    }
-
-    ::before {
-      content: '';
-      width: 18px;
-      height: 18px;
-      background-color: ${theme.colorLightGrey};
+    @media ${breakpoints.fromLrg} {
       position: absolute;
-      z-index: 11;
+      z-index: 4000;
       top: 50%;
-      left: 0;
-      transform: translate(-9px, -9px) rotate(45deg);
+      left: calc(100% + 25px);
+      min-width: 300px;
+      transform: translateY(-50%);
+
+      ::before {
+        content: '';
+        width: 18px;
+        height: 18px;
+        background-color: ${theme.colorLightGrey};
+        position: absolute;
+        z-index: 11;
+        top: 50%;
+        left: 0;
+        transform: translate(-9px, -9px) rotate(45deg);
+      }
     }
   `,
   tooltipTop: css`
-    top: calc(50% + 15px);
+    @media ${breakpoints.fromLrg} {
+      top: calc(50% + 15px);
+    }
   `,
   tooltipContainer: (theme: ITheme) => css`
-    background-color: ${theme.colorLightGrey};
-    box-shadow: 0 0 11px 0 ${rgba(theme.colorDark, 0.3)};
-    padding: 20px;
-    font-size: 14px;
+    padding: 7px 3px;
+    font-size: 12px;
+
+    @media ${breakpoints.fromLrg} {
+      background-color: ${theme.colorLightGrey};
+      box-shadow: 0 0 11px 0 ${rgba(theme.colorDark, 0.3)};
+      padding: 20px;
+      font-size: 14px;
+    }
+
     line-height: 20px;
     color: ${theme.colorText};
     border-radius: 8px;
   `,
   summary: css`
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column-reverse;
+
+    @media ${breakpoints.fromLrg} {
+      margin-bottom: 15px;
+      flex-direction: column;
+    }
   `,
   title: css`
     font-weight: 600;
   `,
   hints: css`
-    list-style: disc;
-    margin-left: 20px;
+    @media ${breakpoints.toLrg} {
+      display: none;
+    }
   `,
   hintsTitle: css`
     margin-bottom: 5px;
   `,
+  hintsContent: css`
+    list-style: disc;
+    margin-left: 20px;
+  `,
+
   hintDisabled: (theme: ITheme) => css`
     color: ${theme.colorTextGrey};
     text-decoration: line-through;
@@ -73,6 +81,8 @@ export const styles = {
       background-color: ${theme.colorText};
       border-radius: 3px;
       margin: 7px auto;
+      display: flex;
+      width: 100%;
 
       ::before {
         content: '';

@@ -26,14 +26,6 @@ export const PasswordMeter = ({
   return (
     meter && (
       <>
-        <div css={styles.wrapper}>
-          <div
-            css={styles.meter(
-              !passwordTracker.eightCharsOrGreater ? 0 : passwordStrength,
-            )}
-          ></div>
-          <p css={styles.mobileTitle}>{title}</p>
-        </div>
         <div css={[styles.tooltip, isLabeled && styles.tooltipTop]}>
           <div css={styles.tooltipContainer}>
             <div css={styles.summary}>
@@ -44,9 +36,9 @@ export const PasswordMeter = ({
                 )}
               ></div>
             </div>
-            <div>
+            <div css={styles.hints}>
               <p css={styles.hintsTitle}>It's better to have:</p>
-              <ul css={styles.hints}>
+              <ul css={styles.hintsContent}>
                 <li css={passwordTracker.letters && styles.hintDisabled}>
                   Upper & lower case letters
                 </li>
