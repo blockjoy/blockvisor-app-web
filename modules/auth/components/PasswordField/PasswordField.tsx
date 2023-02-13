@@ -1,10 +1,11 @@
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { Input } from '@shared/components';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { position } from 'styles/utils.position.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
 import { typo } from 'styles/utils.typography.styles';
+import { useClickOutside } from '@shared/index';
 
 export enum PasswordFieldType {
   password = 'password',
@@ -26,6 +27,7 @@ export const PasswordField = ({
   name,
   placeholder,
 }: PasswordFieldProps) => {
+  const fieldRef = useRef<HTMLDivElement | null>(null);
   const [activeType, setActiveType] = useState<PasswordFieldType>(
     PasswordFieldType.password,
   );
@@ -47,8 +49,16 @@ export const PasswordField = ({
     setActiveType(type);
   };
 
+  const handleClickOutside = () => setMeter(false);
+
+  useClickOutside<HTMLDivElement>(fieldRef, handleClickOutside);
+
   return (
-    <div css={[position.relative]}>
+    <div
+      css={[position.relative]}
+      ref={fieldRef}
+      style={{ maxWidth: `${fieldRef?.current?.clientWidth}px` }}
+    >
       <Input
         tabIndex={tabIndex}
         labelStyles={[Boolean(label) ? typo.base : display.visuallyHidden]}
@@ -57,9 +67,8 @@ export const PasswordField = ({
         name={name}
         placeholder={placeholder}
         type={activeType}
-        onFocus={() => setMeter(true)}
-        onBlur={() => setMeter(false)}
         onChange={(e) => setPassword(e.target.value)}
+        onFocus={() => setMeter(true)}
         validationOptions={{
           required: 'This is a mandatory field',
           minLength: {
