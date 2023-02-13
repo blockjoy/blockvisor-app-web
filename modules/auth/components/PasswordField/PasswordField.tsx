@@ -2,7 +2,6 @@ import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { Input } from '@shared/components';
 import { useRef, useState } from 'react';
 import { display } from 'styles/utils.display.styles';
-import { position } from 'styles/utils.position.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
 import { typo } from 'styles/utils.typography.styles';
 import { useClickOutside } from '@shared/index';
