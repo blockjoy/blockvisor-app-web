@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { position } from 'styles/utils.position.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
+import { typo } from 'styles/utils.typography.styles';
 
 export enum PasswordFieldType {
   password = 'password',
@@ -13,9 +14,18 @@ export enum PasswordFieldType {
 export type PasswordFieldProps = {
   loading: boolean;
   tabIndex: number;
+  label?: string;
+  name: string;
+  placeholder: string;
 };
 
-export const PasswordField = ({ loading, tabIndex }: PasswordFieldProps) => {
+export const PasswordField = ({
+  loading,
+  tabIndex,
+  label,
+  name,
+  placeholder,
+}: PasswordFieldProps) => {
   const [activeType, setActiveType] = useState<PasswordFieldType>(
     PasswordFieldType.password,
   );
@@ -41,10 +51,11 @@ export const PasswordField = ({ loading, tabIndex }: PasswordFieldProps) => {
     <div css={[position.relative]}>
       <Input
         tabIndex={tabIndex}
-        labelStyles={[display.visuallyHidden]}
+        labelStyles={[Boolean(label) ? typo.base : display.visuallyHidden]}
         disabled={loading}
-        name="password"
-        placeholder="Password"
+        label={label}
+        name={name}
+        placeholder={placeholder}
         type={activeType}
         onFocus={() => setMeter(true)}
         onBlur={() => setMeter(false)}
@@ -58,7 +69,7 @@ export const PasswordField = ({ loading, tabIndex }: PasswordFieldProps) => {
         }}
         rightIcon={
           <PasswordToggle
-            tabIndex={4}
+            tabIndex={tabIndex + 1}
             activeType={activeType}
             onClick={handleIconClick}
           />
@@ -66,6 +77,7 @@ export const PasswordField = ({ loading, tabIndex }: PasswordFieldProps) => {
       />
       <PasswordMeter
         meter={meter}
+        isLabeled={Boolean(label)}
         passwordStrength={passwordStrength}
         passwordTracker={passwordTracker}
         passwordMessage={passwordMessage}

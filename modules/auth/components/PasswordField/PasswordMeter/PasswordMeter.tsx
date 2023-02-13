@@ -6,6 +6,7 @@ export type PasswordMeterProps = {
   passwordStrength: number;
   passwordTracker: PasswordTracker;
   passwordMessage: () => string;
+  isLabeled: boolean;
 };
 
 export const PasswordMeter = ({
@@ -13,6 +14,7 @@ export const PasswordMeter = ({
   passwordStrength,
   passwordTracker,
   passwordMessage,
+  isLabeled,
 }: PasswordMeterProps) => {
   if (!meter) return null;
 
@@ -32,7 +34,7 @@ export const PasswordMeter = ({
           ></div>
           <p css={styles.mobileTitle}>{title}</p>
         </div>
-        <div css={styles.tooltip}>
+        <div css={[styles.tooltip, isLabeled && styles.tooltipTop]}>
           <div css={styles.tooltipContainer}>
             <div css={styles.summary}>
               <p css={styles.title}>{title}</p>

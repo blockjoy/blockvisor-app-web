@@ -140,7 +140,12 @@ export function RegisterForm() {
               />
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
-              <PasswordField loading={loading} tabIndex={4} />
+              <PasswordField
+                loading={loading}
+                tabIndex={4}
+                name="password"
+                placeholder="Password"
+              />
             </li>
             <li css={[spacing.bottom.medium]}>
               <Input

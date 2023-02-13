@@ -18,7 +18,7 @@ export const styles = {
     position: absolute;
     z-index: 4000;
     top: 50%;
-    right: calc(100% + 25px);
+    left: calc(100% + 25px);
     min-width: 300px;
     transform: translateY(-50%);
 
@@ -34,9 +34,12 @@ export const styles = {
       position: absolute;
       z-index: 11;
       top: 50%;
-      right: 0;
-      transform: translate(9px, -9px) rotate(45deg);
+      left: 0;
+      transform: translate(-9px, -9px) rotate(45deg);
     }
+  `,
+  tooltipTop: css`
+    top: calc(50% + 15px);
   `,
   tooltipContainer: (theme: ITheme) => css`
     background-color: ${theme.colorLightGrey};
