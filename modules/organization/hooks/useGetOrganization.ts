@@ -37,5 +37,6 @@ export function useGetOrganization() {
     getOrganization,
     setOrganization,
     isLoading,
+    setIsLoading,
   };
 }

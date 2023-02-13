@@ -38,8 +38,13 @@ import { apiClient } from '@modules/client';
 export const OrganizationView = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { getOrganization, setOrganization, organization, isLoading } =
-    useGetOrganization();
+  const {
+    getOrganization,
+    setOrganization,
+    organization,
+    isLoading,
+    setIsLoading,
+  } = useGetOrganization();
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
@@ -128,7 +133,10 @@ export const OrganizationView = () => {
       getSentInvitations(queryAsString(id));
     }
 
-    return () => setOrganization(null);
+    return () => {
+      setIsLoading('initializing');
+      setOrganization(null);
+    };
   }, [router.isReady]);
 
   // quick win to check if org has nodes
