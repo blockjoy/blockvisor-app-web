@@ -2,8 +2,8 @@ import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { Input } from '@shared/components';
 import { useState } from 'react';
 import { display } from 'styles/utils.display.styles';
-import { PasswordToggle } from './PasswordTogle/PasswordToggle';
-import { PasswordMeter } from './PasswordMeter/PasswordMeter';
+import { position } from 'styles/utils.position.styles';
+import { PasswordToggle, PasswordMeter } from '@modules/auth';
 
 export enum PasswordFieldType {
   password = 'password',
@@ -12,9 +12,10 @@ export enum PasswordFieldType {
 
 export type PasswordFieldProps = {
   loading: boolean;
+  tabIndex: number;
 };
 
-export const PasswordField = ({ loading }: PasswordFieldProps) => {
+export const PasswordField = ({ loading, tabIndex }: PasswordFieldProps) => {
   const [activeType, setActiveType] = useState<PasswordFieldType>(
     PasswordFieldType.password,
   );
@@ -37,9 +38,9 @@ export const PasswordField = ({ loading }: PasswordFieldProps) => {
   };
 
   return (
-    <>
+    <div css={[position.relative]}>
       <Input
-        tabIndex={4}
+        tabIndex={tabIndex}
         labelStyles={[display.visuallyHidden]}
         disabled={loading}
         name="password"
@@ -69,6 +70,6 @@ export const PasswordField = ({ loading }: PasswordFieldProps) => {
         passwordTracker={passwordTracker}
         passwordMessage={passwordMessage}
       />
-    </>
+    </div>
   );
 };

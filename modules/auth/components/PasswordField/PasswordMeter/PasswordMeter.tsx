@@ -1,5 +1,4 @@
 import { PasswordTracker } from '@modules/auth/hooks/usePasswordStrength';
-import { Tooltip } from '@shared/components';
 import { styles } from './PasswordMeter.styles';
 
 export type PasswordMeterProps = {
@@ -35,32 +34,30 @@ export const PasswordMeter = ({
         </div>
         <div css={styles.tooltip}>
           <div css={styles.tooltipContainer}>
-            <div css={styles.tooltipContent}>
-              <div css={styles.summary}>
-                <p css={styles.title}>{title}</p>
-                <div
-                  css={styles.meter(
-                    !passwordTracker.eightCharsOrGreater ? 0 : passwordStrength,
-                  )}
-                ></div>
-              </div>
-              <div css={styles.hints}>
-                <p>It's better to have:</p>
-                <ul css={styles.hintsList}>
-                  <li css={passwordTracker.letters && styles.hintDisabled}>
-                    Upper & lower case letters
-                  </li>
-                  <li css={passwordTracker.specialChar && styles.hintDisabled}>
-                    A symbol (#$&)
-                  </li>
-                  <li css={passwordTracker.number && styles.hintDisabled}>
-                    A number
-                  </li>
-                  <li css={passwordTracker.long && styles.hintDisabled}>
-                    A longer password
-                  </li>
-                </ul>
-              </div>
+            <div css={styles.summary}>
+              <p css={styles.title}>{title}</p>
+              <div
+                css={styles.meter(
+                  !passwordTracker.eightCharsOrGreater ? 0 : passwordStrength,
+                )}
+              ></div>
+            </div>
+            <div>
+              <p css={styles.hintsTitle}>It's better to have:</p>
+              <ul css={styles.hints}>
+                <li css={passwordTracker.letters && styles.hintDisabled}>
+                  Upper & lower case letters
+                </li>
+                <li css={passwordTracker.specialChar && styles.hintDisabled}>
+                  A symbol (#$&)
+                </li>
+                <li css={passwordTracker.number && styles.hintDisabled}>
+                  A number
+                </li>
+                <li css={passwordTracker.long && styles.hintDisabled}>
+                  A longer password
+                </li>
+              </ul>
             </div>
           </div>
         </div>

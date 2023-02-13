@@ -17,19 +17,13 @@ export const styles = {
   tooltip: (theme: ITheme) => css`
     position: absolute;
     z-index: 4000;
+    top: 50%;
+    right: calc(100% + 25px);
+    min-width: 300px;
+    transform: translateY(-50%);
 
     @media ${breakpoints.toLrg} {
       display: none;
-      // top: calc(0px - 12px);
-      // left: 0;
-      // transform: translate(-10px, -100%);
-      // width: calc(100% + 20px);
-    }
-    @media ${breakpoints.fromLrg} {
-      top: 50%;
-      right: calc(100% + 25px);
-      min-width: 300px;
-      transform: translateY(-50%);
     }
 
     ::before {
@@ -39,60 +33,43 @@ export const styles = {
       background-color: ${theme.colorLightGrey};
       position: absolute;
       z-index: 11;
-
-      @media ${breakpoints.toLrg} {
-        bottom: 0;
-        right: 50%;
-        transform: translate(9px, 9px) rotate(45deg);
-      }
-      @media ${breakpoints.fromLrg} {
-        top: 50%;
-        right: 0;
-        transform: translate(9px, -9px) rotate(45deg);
-      }
+      top: 50%;
+      right: 0;
+      transform: translate(9px, -9px) rotate(45deg);
     }
   `,
   tooltipContainer: (theme: ITheme) => css`
-    position: absolute;
-    z-index: 4000;
     background-color: ${theme.colorLightGrey};
     box-shadow: 0 0 11px 0 ${rgba(theme.colorDark, 0.3)};
-    position: relative;
-    z-index: 10;
     padding: 20px;
     font-size: 14px;
     line-height: 20px;
     color: ${theme.colorText};
     border-radius: 8px;
-    word-wrap: break-word;
   `,
-  tooltipContent: css``,
   summary: css`
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   `,
   title: css`
     font-weight: 600;
   `,
   hints: css`
-    @media ${breakpoints.toLrg} {
-      display: none;
-    }
-  `,
-  hintsList: css`
     list-style: disc;
     margin-left: 20px;
-    margin-top: 10px;
   `,
-  hintDisabled: css`
-    color: #b9b9bd;
+  hintsTitle: css`
+    margin-bottom: 5px;
+  `,
+  hintDisabled: (theme: ITheme) => css`
+    color: ${theme.colorTextGrey};
     text-decoration: line-through;
   `,
   meter: (passwordStrength: number) => (theme: ITheme) =>
     css`
-      height: 0.3rem;
-      background-color: lightgrey;
+      height: 3px;
+      background-color: ${theme.colorText};
       border-radius: 3px;
-      margin: 0.5rem 0;
+      margin: 7px auto;
 
       ::before {
         content: '';
@@ -107,10 +84,7 @@ export const styles = {
         width: ${(passwordStrength / 5) * 100}%;
         display: block;
         border-radius: 3px;
-        transition: width 0.2s;
+        transition: width 0.3s;
       }
     `,
-  messages: css`
-    font-size: 13px;
-  `,
 };
