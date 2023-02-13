@@ -41,8 +41,6 @@ export function NewPasswordForm() {
   const onSubmit = async ({ password, confirmPassword }: NewPassword) => {
     const { token } = router.query;
 
-    console.log({ password, confirmPassword, token });
-
     const response: any = await apiClient.updateResetPassword(
       token?.toString()!,
       password,
