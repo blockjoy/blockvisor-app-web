@@ -1,7 +1,6 @@
 import { useEditUser } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { Button, Input } from '@shared/components';
-import { delay } from '@shared/utils/delay';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -43,8 +42,10 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
 
     try {
       await editUser(firstName, lastName, id ?? '');
-      await delay(1000);
       setIsLoading(false);
+      form.reset();
+      form.setValue('firstName', firstName ?? '');
+      form.setValue('lastName', lastName ?? '');
       toast.success('Profile updated');
     } catch (error) {
       if (error instanceof ApplicationError) {

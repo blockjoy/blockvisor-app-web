@@ -25,7 +25,7 @@ export const Profile = () => {
         label: 'Personal',
         value: '1',
         component: (
-          <PageSection>
+          <PageSection bottomBorder={false}>
             <ProfileForm
               firstName={user?.firstName}
               lastName={user?.lastName}
@@ -43,9 +43,15 @@ export const Profile = () => {
             <PageSection>
               <ProfileChangePassword />
             </PageSection>
-
-            <div css={[styles.buttonWrapper]}>
-              <header css={[colors.text3, typo.medium, spacing.bottom.medium]}>
+            <PageSection bottomBorder={false}>
+              <header
+                css={[
+                  colors.text3,
+                  typo.medium,
+                  spacing.bottom.medium,
+                  spacing.top.medium,
+                ]}
+              >
                 Danger Zone
               </header>
               <p css={[colors.text4, typo.small, spacing.bottom.medium]}>
@@ -60,7 +66,7 @@ export const Profile = () => {
                 <IconDoor />
                 Sign out
               </Button>
-            </div>
+            </PageSection>
           </>
         ),
       },

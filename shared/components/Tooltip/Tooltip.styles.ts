@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
+import { rgba } from 'polished';
 
 type TooltipStyleProps = {
   top?: string;
@@ -19,7 +20,8 @@ export const styles = {
       bottom: ${p.bottom};
       left: ${p.left};
       translate: 0 -18px;
-      background: ${theme.colorTooltip};
+      background: ${rgba(theme.colorTooltip, 0.55)};
+      backdrop-filter: blur(10px);
       padding: 2px 10px;
       font-size: 12px;
       border-radius: 4px;

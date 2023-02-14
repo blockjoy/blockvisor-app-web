@@ -20,6 +20,7 @@ import { ROUTES } from '@shared/index';
 
 export function NodeView() {
   const [nodeError, setNodeError] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const router = useRouter();
   const { id } = router.query;
@@ -29,20 +30,24 @@ export function NodeView() {
 
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id!);
-  const handleDelete = async () => deleteNode(id);
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    await deleteNode(id);
+  };
   const handleNodeError = () => setNodeError(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (router.isReady) {
       loadNode(id, handleNodeError);
+      setIsDeleting(false);
     }
   }, [id]);
 
   return (
     <>
       <PageTitle title="Nodes" />
-      <PageSection topPadding={false}>
+      <PageSection bottomBorder={false} topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>
             <BackButton backUrl={ROUTES.NODES} />
@@ -82,18 +87,19 @@ export function NodeView() {
           </>
         )}
       </PageSection>
-      {node?.nodeTypeConfig && !isLoading && !nodeError && <NodeViewConfig />}
-      {!nodeError && (
-        <PageSection>
-          {isLoading ? (
-            <TableSkeleton />
-          ) : (
-            <DangerZone
-              elementName="Node"
-              elementNameToCompare={node?.name!}
-              handleAction={handleDelete}
-            ></DangerZone>
-          )}
+      {node?.nodeTypeConfig && !isLoading && !nodeError && (
+        <PageSection bottomBorder={false}>
+          <NodeViewConfig />
+        </PageSection>
+      )}
+      {!nodeError && !isLoading && (
+        <PageSection bottomBorder={false}>
+          <DangerZone
+            isLoading={isDeleting}
+            elementName="Node"
+            elementNameToCompare={node?.name!}
+            handleAction={handleDelete}
+          ></DangerZone>
         </PageSection>
       )}
     </>

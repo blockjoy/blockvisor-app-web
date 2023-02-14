@@ -3,8 +3,6 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
 import { apiClient } from '@modules/client';
 import { useState } from 'react';
-import { delay } from '@shared/utils/delay';
-import { env } from '@shared/constants/env';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
@@ -13,7 +11,7 @@ type Args = string | string[] | undefined;
 
 type Hook = {
   loadNode: (id: Args, onError: VoidFunction) => void;
-  deleteNode: (args1: Args) => void;
+  deleteNode: (args1: Args) => Promise<void>;
   stopNode: (nodeId: Args) => void;
   restartNode: (nodeId: Args) => void;
   isLoading: boolean;
@@ -119,8 +117,6 @@ export const useNodeView = (): Hook => {
     };
 
     setNode(activeNode);
-
-    await delay(env.loadingDuration);
 
     setIsLoading(false);
   };

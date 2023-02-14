@@ -1,4 +1,9 @@
-import { NodeTypeConfigLabel, Alert, PillPicker } from '@shared/components';
+import {
+  NodeTypeConfigLabel,
+  Alert,
+  PillPicker,
+  Skeleton,
+} from '@shared/components';
 import { FC, Fragment } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
@@ -11,7 +16,7 @@ import { styles } from './NodeLauncherConfig.styles';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 
 type Props = {
-  isConfigValid: boolean;
+  isConfigValid: boolean | null;
   nodeTypeProperties?: NodeTypeConfig[];
   nodeFiles?: NodeFiles[];
   networkList: string[];
@@ -91,40 +96,51 @@ export const NodeLauncherConfig: FC<Props> = ({
   //   setValue('validatorKeys', newKeys);
   // };
 
+  console.log('isConfigValid', isConfigValid);
+
   return (
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>
         <h2 css={styles.h2}>Configure</h2>
         <div css={styles.alertWrapper}>
-          <Alert isSuccess={isConfigValid}>
-            {isConfigValid
-              ? 'All systems GO!'
-              : 'Requires configuration information.'}
+          <Alert isSuccess={isConfigValid!}>
+            {isConfigValid === null ? (
+              <Skeleton />
+            ) : isConfigValid === true ? (
+              'All systems GO!'
+            ) : (
+              'Node requires configuration information.'
+            )}
           </Alert>
         </div>
         <div css={styles.nodeTypeProperties}>
-          <label
-            css={[
-              spacing.bottom.mediumSmall,
-              typo.button,
-              display.block,
-              colors.text2,
-            ]}
-          >
-            Network
-          </label>
-          {Boolean(networkList?.length) ? (
-            <PillPicker
-              items={networkList}
-              selectedItem={nodeNetwork}
-              onChange={onNetworkChanged}
-              tabIndexStart={3}
-            />
-          ) : (
+          {isConfigValid !== null && (
+            <>
+              <label
+                css={[
+                  spacing.bottom.mediumSmall,
+                  typo.button,
+                  display.block,
+                  colors.text2,
+                ]}
+              >
+                Network
+              </label>
+              <PillPicker
+                items={networkList}
+                selectedItem={nodeNetwork}
+                onChange={onNetworkChanged}
+                tabIndexStart={3}
+              />
+            </>
+          )}
+
+          {isConfigValid !== null && !networkList?.length && (
             <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
               Missing Network Configuration
             </div>
           )}
+
           {Boolean(networkList?.length) &&
             nodeTypeProperties?.map((property: NodeTypeConfig) => {
               return (

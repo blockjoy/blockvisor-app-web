@@ -12,6 +12,8 @@ export const NodeListHeader = () => {
     nodeAtoms.isFiltersOpen,
   );
 
+  const isLoading = useRecoilValue(nodeAtoms.isLoading);
+
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
   );
@@ -47,7 +49,7 @@ export const NodeListHeader = () => {
       </div>
 
       <span css={styles.total}>
-        {totalNodes === null ? (
+        {isLoading !== 'finished' || totalNodes === null ? (
           <Skeleton margin="0 0 0 auto" />
         ) : (
           <>

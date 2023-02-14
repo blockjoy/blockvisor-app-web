@@ -34,7 +34,7 @@ const allOrganizations = atom<ClientOrganization[]>({
 
 const organizationsLoadingState = atom<LoadingState>({
   key: 'organizations.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const organizationLoadingState = atom<LoadingState>({

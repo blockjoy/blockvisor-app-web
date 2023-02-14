@@ -16,19 +16,19 @@ export function useDeleteOrganization() {
   );
 
   const deleteOrganization = async (id: string) => {
-    setLoadingState('loading');
+    setLoadingState('initializing');
     const response = await apiClient.deleteOrganization(id);
 
     /* TODO: temporary fix - API for node deletion doesn't return success response, but instead code 25 (Record not found) */
     if (isResponeMetaObject(response) || response?.code === 25) {
       updateOrganizations(id);
-      setLoadingState('finished');
       try {
         const newActiveOrganization = organizations[0];
         switchOrganization(
           newActiveOrganization.id!,
           newActiveOrganization.name!,
         );
+        setLoadingState('finished');
       } catch (error) {
         console.log('Error switching org: ', error);
       }
@@ -43,5 +43,6 @@ export function useDeleteOrganization() {
   return {
     loading: loadingState === 'initializing' || loadingState === 'loading',
     deleteOrganization,
+    setLoadingState,
   };
 }
