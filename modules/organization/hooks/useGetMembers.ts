@@ -1,5 +1,6 @@
 import { apiClient } from '@modules/client';
 import { useRecoilState } from 'recoil';
+import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useGetOrganizationMembers() {
@@ -17,6 +18,7 @@ export function useGetOrganizationMembers() {
   const getOrganizationMembers = async (id: string) => {
     setIsLoading('initializing');
     const members: any = await apiClient.getOrganizationMembers(id);
+    checkForTokenError(members);
     setOrganizationMembers(members);
     setIsLoading('finished');
   };
