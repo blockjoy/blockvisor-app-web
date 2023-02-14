@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   tooltip: (theme: ITheme) => css`
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       position: absolute;
       z-index: 4000;
       top: 50%;
@@ -34,7 +34,7 @@ export const styles = {
     }
   `,
   tooltipTop: css`
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       top: calc(50% + 15px);
     }
   `,
@@ -42,7 +42,7 @@ export const styles = {
     padding: 7px 3px;
     font-size: 12px;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       background-color: ${theme.colorLightGrey};
       box-shadow: 0 0 11px 0 ${rgba(theme.colorDark, 0.3)};
       padding: 20px;
@@ -58,7 +58,7 @@ export const styles = {
     flex-direction: column-reverse;
     margin-bottom: 10px;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       flex-direction: column;
     }
   `,
@@ -75,7 +75,7 @@ export const styles = {
     background: ${theme.colorInput};
     border-radius: 10px;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       background: ${theme.colorCard};
     }
   `,
