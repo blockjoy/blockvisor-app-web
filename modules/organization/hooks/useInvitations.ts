@@ -1,6 +1,7 @@
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { isStatusResponse } from '../utils/typeGuards';
 
@@ -18,6 +19,7 @@ export function useInvitations() {
 
   const getReceivedInvitations = async (id: string) => {
     const response: any = await apiClient.receivedInvitations(id);
+    checkForTokenError(response);
     setReceivedInvitations(response);
   };
 
@@ -77,7 +79,7 @@ export function useInvitations() {
     invitationId?: string;
     email?: string;
   }) => {
-    const response = await apiClient.revokeInvitation({
+    await apiClient.revokeInvitation({
       token,
       invitationId,
       email,

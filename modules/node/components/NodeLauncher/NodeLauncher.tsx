@@ -226,9 +226,6 @@ export const NodeLauncher = () => {
           activeBlockchainId={node.blockchainId}
           activeNodeTypeId={node.nodeTypeId}
         />
-        {/* {!!node.nodeTypeProperties?.filter(
-          (property) => property.name !== 'self-hosted',
-        )?.length && ( */}
         {node.blockchainId &&
           node.nodeTypeId &&
           node.nodeTypeProperties?.length && (
@@ -243,8 +240,6 @@ export const NodeLauncher = () => {
               nodeNetwork={node.network}
             />
           )}
-
-        {/* )} */}
         {!node.blockchainId && !node.nodeTypeId && (
           <div css={styles.empty}>
             <EmptyColumn

@@ -7,6 +7,7 @@ import { useIdentityRepository } from '@modules/auth';
 
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { useGetBlockchains } from './useGetBlockchains';
+import { checkForTokenError } from 'utils/checkForTokenError';
 
 interface Hook {
   nodeList: BlockjoyNode[];
@@ -51,6 +52,7 @@ export const useNodeList = (): Hook => {
     let blockchainList: any;
     if (!blockchains?.length) {
       blockchainList = await apiClient.getBlockchains();
+      checkForTokenError(blockchainList);
     } else {
       blockchainList = blockchains;
     }
