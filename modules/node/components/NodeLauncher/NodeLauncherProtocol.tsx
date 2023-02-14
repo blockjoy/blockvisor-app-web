@@ -28,9 +28,6 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
   const [keyword, setKeyword] = useState<string>('');
 
-  const [activeProtocolIndex, setActiveProtocolIndex] =
-    useState<number | null>(null);
-
   const filteredBlockchains = blockchains?.filter(
     (b) =>
       b.status !== 0 && b.name?.toLowerCase().includes(keyword.toLowerCase()),
@@ -91,13 +88,8 @@ export const NodeLauncherProtocol: FC<Props> = ({
               <div
                 tabIndex={activeNodeTypeId ? -1 : index + 1}
                 key={b.id}
-                // onFocus={() => setActiveProtocolIndex(index)}
                 css={[styles.row, styles.rowHover]}
-                className={
-                  b.id === activeBlockchainId || activeProtocolIndex === index
-                    ? 'active row'
-                    : 'row'
-                }
+                className={b.id === activeBlockchainId ? 'active row' : 'row'}
               >
                 <span css={styles.blockchainWrapper}>
                   <span css={styles.iconWrapper}>
@@ -133,38 +125,27 @@ export const NodeLauncherProtocol: FC<Props> = ({
             ))}
             <div css={styles.disabledBlockchains}>
               {!keyword &&
-                blockchainsDisabled?.map((b: any) => (
-                  <div key={b} css={[styles.row, styles.rowDisabled]}>
-                    <span css={styles.blockchainWrapper}>
-                      <span css={styles.iconWrapper}>
-                        <BlockchainIcon hideTooltip blockchainName={b} />
+                blockchainsDisabled
+                  ?.filter(
+                    (b: any) => !blockchains?.some((c: any) => b === c.name),
+                  )
+                  ?.map((b: any) => (
+                    <div key={b} css={[styles.row, styles.rowDisabled]}>
+                      <span css={styles.blockchainWrapper}>
+                        <span css={styles.iconWrapper}>
+                          <BlockchainIcon hideTooltip blockchainName={b} />
+                        </span>
+                        <span css={styles.name}>{b}</span>
+                        <span
+                          className="coming-soon-badge"
+                          css={styles.comingSoonBadge}
+                        >
+                          Coming Soon
+                        </span>
                       </span>
-                      <span css={styles.name}>{b}</span>
-                      <span
-                        className="coming-soon-badge"
-                        css={styles.comingSoonBadge}
-                      >
-                        Coming Soon
-                      </span>
-                    </span>
-                  </div>
-                ))}
+                    </div>
+                  ))}
             </div>
-            {/* {!keyword &&
-              disabledBlockchains
-                ?.filter(
-                  (b) => b.name !== 'Ethereum PoS' && b.name !== 'Helium',
-                )
-                ?.map((b: any) => (
-                  <div key={b.id} css={[styles.row, styles.rowDisabled]}>
-                    <span css={styles.blockchainWrapper}>
-                      <span css={styles.iconWrapper}>
-                        <BlockchainIcon hideTooltip blockchainName={b.name} />
-                      </span>
-                      <span css={styles.name}>{b.name}</span>
-                    </span>
-                  </div>
-                ))} */}
           </>
         )}
       </div>

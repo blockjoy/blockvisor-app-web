@@ -17,6 +17,7 @@ interface Hook {
   removeNodeFromTheList: (nodeId: string) => Promise<void>;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
+  setIsLoading: SetterOrUpdater<LoadingState>;
 }
 
 export const useNodeList = (): Hook => {
@@ -125,5 +126,6 @@ export const useNodeList = (): Hook => {
     removeNodeFromTheList,
     handleAddNode,
     handleNodeClick,
+    setIsLoading,
   };
 };

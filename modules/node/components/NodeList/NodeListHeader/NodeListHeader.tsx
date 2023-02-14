@@ -14,6 +14,8 @@ export const NodeListHeader = () => {
     nodeAtoms.isFiltersOpen,
   );
 
+  const isLoading = useRecoilValue(nodeAtoms.isLoading);
+
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
   );

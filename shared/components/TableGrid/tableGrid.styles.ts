@@ -52,9 +52,11 @@ export const styles = {
     background: rgba(248, 250, 246, 0.03);
     cursor: pointer;
 
-    :hover,
-    :active {
-      border-color: ${theme.colorBorderGrey};
+    @media ${breakpoints.fromLrg} {
+      :hover,
+      :active {
+        border-color: ${theme.colorBorderGrey};
+      }
     }
   `,
   cellHeader: css`

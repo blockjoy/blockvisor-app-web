@@ -34,4 +34,12 @@ export const styles = {
     width: 24px;
     height: 24px;
   `,
+  span: (theme: ITheme) => css`
+    color: ${theme.colorText};
+    font-size: 24px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    margin-right: 11px;
+  `,
 };

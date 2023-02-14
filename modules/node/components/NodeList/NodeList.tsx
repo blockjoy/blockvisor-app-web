@@ -28,7 +28,7 @@ export const NodeList = () => {
     };
   }, [nodeUIContext]);
 
-  const { loadNodes, handleNodeClick } = useNodeList();
+  const { loadNodes, handleNodeClick, setIsLoading } = useNodeList();
 
   const nodeList = useRecoilValue(nodeAtoms.nodeList);
   const hasMoreNodes = useRecoilValue(nodeAtoms.hasMoreNodes);
@@ -40,6 +40,7 @@ export const NodeList = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    return () => setIsLoading('initializing');
   }, []);
 
   useEffect(() => {

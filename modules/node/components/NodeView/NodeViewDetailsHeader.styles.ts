@@ -24,6 +24,10 @@ export const styles = {
       flex-direction: column;
       margin-bottom: 16px;
     }
+
+    h2 {
+      word-break: break-word;
+    }
   `,
   detailsFooter: css`
     display: flex;

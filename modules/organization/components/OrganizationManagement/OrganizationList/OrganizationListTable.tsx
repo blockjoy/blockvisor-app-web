@@ -1,4 +1,4 @@
-import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
+import { Table, TableSkeleton } from '@shared/components';
 import { FC } from 'react';
 import { useGetOrganizations } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
@@ -22,12 +22,6 @@ export const AllOrganizationsTable: FC = () => {
 
   return isLoading === 'initializing' ? (
     <TableSkeleton />
-  ) : !Boolean(rows?.length) && isLoading === 'finished' ? (
-    <EmptyColumn
-      id="js-nodes-empty"
-      title="No organizations"
-      description={'Add your first organization'}
-    />
   ) : (
     <Table
       isLoading={isLoading}

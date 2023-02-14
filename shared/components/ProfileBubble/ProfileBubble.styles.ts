@@ -12,9 +12,9 @@ export const styles = {
     padding: 0;
     font-size: 13px;
     font-weight: 600;
-    background: ${theme.colorDarkGrey};
+    background: ${theme.colorLightGrey};
     border-radius: 6px;
-    color: ${theme.colorPrimary};
+    color: ${theme.colorText};
     cursor: pointer;
   `,
   arrowIcon: (theme: ITheme) => css`
@@ -24,7 +24,7 @@ export const styles = {
     height: 6px;
 
     path {
-      fill: ${theme.colorPrimary};
+      fill: ${theme.colorText};
     }
   `,
 };

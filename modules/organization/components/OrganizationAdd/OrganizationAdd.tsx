@@ -12,12 +12,14 @@ import {
 import { width } from 'styles/utils.width.styles';
 import {
   useCreateOrganization,
+  useGetOrganization,
   useGetOrganizations,
 } from '@modules/organization';
 import { toast } from 'react-toastify';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useRouter } from 'next/router';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
+import { useEffect } from 'react';
 
 type OrganisationAddForm = {
   name: string;
@@ -28,7 +30,8 @@ export const OrganizationAdd: FC = () => {
   const form = useForm<OrganisationAddForm>();
   const [layout, setLayout] = useRecoilState(layoutState);
   const createOrganization = useCreateOrganization();
-  const { getOrganizations } = useGetOrganizations();
+  const { addToOrganizations } = useGetOrganizations();
+  const { setOrganization } = useGetOrganization();
   const { switchOrganization } = useSwitchOrganization();
 
   const [loading, setLoading] = useState(false);
@@ -38,10 +41,10 @@ export const OrganizationAdd: FC = () => {
 
     try {
       await createOrganization(name, async (org: any) => {
-        router.push(`/organizations/${org.id}`);
-        await getOrganizations();
         form.reset();
-        setLoading(false);
+        addToOrganizations(org);
+        setOrganization(org);
+        router.push(`/organizations/${org.id}`);
         setLayout(undefined);
         switchOrganization(org.id, name);
       });
@@ -50,6 +53,12 @@ export const OrganizationAdd: FC = () => {
       if (error instanceof ApplicationError) toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (layout === 'organization') {
+      setLoading(false);
+    }
+  }, [layout]);
 
   return (
     <Drawer isOpen={layout === 'organization'}>
@@ -66,6 +75,7 @@ export const OrganizationAdd: FC = () => {
                 validationOptions={{
                   required: 'This is a mandatory field',
                 }}
+                autoFocus={layout === 'organization'}
               />
             </div>
             <Button

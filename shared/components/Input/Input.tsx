@@ -1,6 +1,6 @@
 import { SerializedStyles } from '@emotion/react';
 import { ErrorMessage } from '@hookform/error-message';
-import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useEffect } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 
 import { colors } from 'styles/utils.colors.styles';
@@ -47,6 +47,7 @@ export const Input = ({
   const {
     register,
     formState: { errors },
+    setFocus,
   } = useFormContext();
 
   const inputClasses = setInputStyles(
@@ -57,6 +58,12 @@ export const Input = ({
     !!rightIcon,
     inputStyles,
   );
+
+  useEffect(() => {
+    if (rest.autoFocus) {
+      setFocus(name);
+    }
+  }, [rest.autoFocus]);
 
   return (
     <>

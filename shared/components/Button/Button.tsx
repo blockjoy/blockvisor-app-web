@@ -54,7 +54,7 @@ export function Button({
   ];
 
   if (customCss) {
-    buttonStyles.push(...customCss);
+    buttonStyles.push(customCss);
   }
 
   if (href) {

@@ -1,23 +1,44 @@
 import { Button } from '@shared/components';
-import { ChangeEvent, FC } from 'react';
+import { checkIfValidEmail } from '@shared/utils/validation';
+import {
+  ChangeEvent,
+  FC,
+  KeyboardEvent,
+  KeyboardEventHandler,
+  useState,
+} from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvite.styles';
 
 type Props = {
-  hasTextareaValue: boolean;
+  inviteeEmail: string;
+  isInviting: boolean;
   onInviteClicked: VoidFunction;
   onCancelClicked: VoidFunction;
-  onTextareaChanged: (e: ChangeEvent<HTMLInputElement>) => void;
+  onInviteeEmailChanged: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const OrganizationInvite: FC<Props> = ({
-  hasTextareaValue,
+  inviteeEmail,
+  isInviting,
   onInviteClicked,
   onCancelClicked,
-  onTextareaChanged,
+  onInviteeEmailChanged,
 }) => {
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
   const handleInviteClicked = () => {
     onInviteClicked();
+  };
+
+  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    const isValid = checkIfValidEmail(e.target.value);
+    if (isValid) {
+      setIsDisabled(false);
+      onInviteeEmailChanged(e);
+    } else {
+      setIsDisabled(true);
+    }
   };
 
   return (
@@ -25,13 +46,17 @@ export const OrganizationInvite: FC<Props> = ({
       <input
         type="email"
         autoFocus
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onTextareaChanged(e)}
+        onChange={handleInviteeEmailChanged}
+        onKeyUp={(e: KeyboardEvent<HTMLInputElement>) =>
+          e.key === 'Enter' && handleInviteClicked()
+        }
         placeholder="New member email address"
         css={styles.textarea}
       />
       <div css={styles.buttons}>
         <Button
-          disabled={!hasTextareaValue}
+          loading={isInviting}
+          disabled={isDisabled}
           onClick={handleInviteClicked}
           display="block"
           size="small"
