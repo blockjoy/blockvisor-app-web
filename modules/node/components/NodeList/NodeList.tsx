@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
+import { isEqual } from 'lodash';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { EmptyColumn, PageTitle, Table, TableGrid } from '@shared/components';
@@ -11,8 +12,6 @@ import { TableSkeleton } from '@shared/index';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { resultsStatus } from '@modules/node/utils';
-import { organizationAtoms } from '@modules/organization';
-import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 import { wrapper } from 'styles/wrapper.styles';
 import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -37,29 +36,18 @@ export const NodeList = () => {
   const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
   const activeListType = useRecoilValue(nodeAtoms.activeListType);
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
-
-  const currentOrganization = useRef(defaultOrganization);
+  const currentQueryParams = useRef(nodeUIProps.queryParams);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    loadNodes(nodeUIProps.queryParams);
-  }, [nodeUIProps.queryParams]);
-
-  useEffect(() => {
-    if (currentOrganization.current?.id !== defaultOrganization?.id) {
-      // TODO: remove/move reloadQueryParams to avoid double-render
-      reloadQueryParams();
-      loadNodes(initialQueryParams);
-
-      currentOrganization.current = defaultOrganization;
+    if (!isEqual(currentQueryParams.current, nodeUIProps.queryParams)) {
+      loadNodes(nodeUIProps.queryParams);
+      currentQueryParams.current = nodeUIProps.queryParams;
     }
-  }, [defaultOrganization?.id]);
+  }, [nodeUIProps.queryParams]);
 
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
@@ -76,10 +64,6 @@ export const NodeList = () => {
     };
 
     nodeUIProps.setQueryParams(newQueryParams);
-  };
-
-  const reloadQueryParams = async () => {
-    nodeUIProps.setQueryParams(initialQueryParams);
   };
 
   const cells = toGrid(nodeList, handleNodeClick);

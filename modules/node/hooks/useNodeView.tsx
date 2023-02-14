@@ -3,20 +3,20 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
 import { apiClient } from '@modules/client';
 import { useState } from 'react';
-import { delay } from '@shared/utils/delay';
-import { env } from '@shared/constants/env';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
+import { useNodeList } from './useNodeList';
 
 type Args = string | string[] | undefined;
 
 type Hook = {
-  loadNode: (id: Args, onError: VoidFunction) => void;
+  loadNode: (id: Args, onError: VoidFunction) => Promise<void>;
   deleteNode: (args1: Args) => void;
   stopNode: (nodeId: Args) => void;
   restartNode: (nodeId: Args) => void;
   isLoading: boolean;
+  unloadNode: any;
   node: BlockjoyNode | null;
 };
 
@@ -28,9 +28,12 @@ const createUuid = (id: Args) => {
 export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
+  const { updateNodeList, removeNodeFromTheList } = useNodeList();
 
   const deleteNode = async (id: Args) => {
-    await apiClient.deleteNode(createUuid(id));
+    const uuid = createUuid(id);
+    await apiClient.deleteNode(uuid);
+    removeNodeFromTheList(uuid);
     toast.success(`Node Deleted`);
   };
 
@@ -120,9 +123,13 @@ export const useNodeView = (): Hook => {
 
     setNode(activeNode);
 
-    await delay(env.loadingDuration);
+    updateNodeList(node);
 
     setIsLoading(false);
+  };
+
+  const unloadNode = () => {
+    setNode(null);
   };
 
   return {
@@ -130,6 +137,7 @@ export const useNodeView = (): Hook => {
     deleteNode,
     stopNode,
     restartNode,
+    unloadNode,
     node,
     isLoading,
   };

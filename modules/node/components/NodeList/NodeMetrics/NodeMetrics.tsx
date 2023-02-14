@@ -4,8 +4,10 @@ import { useRecoilValue } from 'recoil';
 import { styles } from './NodeMetrics.styles';
 
 export const NodeMetrics = () => {
-  // TODO: re-add back api call here (atm moved to useNodeList becase we don't have total nodes amount returned)
   const metrics = useRecoilValue(nodeAtoms.nodeMetrics);
+  const isLoadingMetrics = useRecoilValue(nodeAtoms.nodeMetricsLoadingState);
+  const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
+
   const offline =
     metrics && metrics.length > 0
       ? metrics.find((metric: NodeMetrics) => metric.name === 4)['value']
@@ -13,7 +15,12 @@ export const NodeMetrics = () => {
 
   const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
 
-  return offline === null ? (
+  const isLoading =
+    offline === null ||
+    isLoadingMetrics !== 'finished' ||
+    isLoadingNodes !== 'finished';
+
+  return isLoading ? (
     <Skeleton />
   ) : (
     <div css={styles.wrapper}>

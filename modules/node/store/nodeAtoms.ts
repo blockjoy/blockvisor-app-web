@@ -201,6 +201,20 @@ const filtersTotal = selector<number>({
   },
 });
 
+const filtersAll = selector<FilterItem[] | null>({
+  key: 'node.filtersAll',
+  get: () => {
+    const savedNodeFilters =
+      typeof window !== 'undefined'
+        ? window.localStorage.getItem('nodeFilters')
+        : null;
+    if (savedNodeFilters) {
+      const savedFilters = JSON.parse(savedNodeFilters);
+      if (savedFilters) return savedFilters;
+    }
+  },
+});
+
 const nodeWizardActive = atom<boolean>({
   key: 'nodeWizard.active',
   default: false,
@@ -211,6 +225,10 @@ const hasMoreNodes = atom<boolean>({
   default: false,
 });
 
+const nodeMetricsLoadingState = atom<any>({
+  key: 'node.metricsLoadingState',
+  default: 'initializing',
+});
 const nodeMetrics = atom<any>({
   key: 'node.metrics',
   default: {},
@@ -240,9 +258,11 @@ export const nodeAtoms = {
   filtersType,
   filtersTypeTotal,
   filtersTotal,
+  filtersAll,
   nodeWizardActive,
   hasMoreNodes,
   nodeMetrics,
+  nodeMetricsLoadingState,
   totalNodes,
   preloadNodes,
 };

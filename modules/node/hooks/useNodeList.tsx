@@ -4,12 +4,17 @@ import { nodeAtoms } from '../store/nodeAtoms';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { apiClient } from '@modules/client';
 import { useIdentityRepository } from '@modules/auth';
-
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
+import { useRef } from 'react';
+import { isInQuery } from '../utils/isInQuery';
+import { getInitialQueryParams } from '../ui/NodeUIContext';
+import { useNodeMetrics } from './useNodeMetrics';
 
 interface Hook {
   nodeList: BlockjoyNode[];
-  loadNodes: (queryParams: InitialQueryParams) => void;
+  loadNodes: (queryParams?: InitialQueryParams) => Promise<void>;
+  updateNodeList: (node: BlockjoyNode) => Promise<void>;
+  removeNodeFromTheList: (nodeId: string) => Promise<void>;
   handleAddNode: () => void;
   handleNodeClick: (args1: any) => void;
 }
@@ -26,10 +31,11 @@ export const useNodeList = (): Hook => {
 
   const setLayout = useSetRecoilState(layoutState);
 
-  const setNodeMetrics = useSetRecoilState(nodeAtoms.nodeMetrics);
-  const [totalNodes, setTotalNodes] = useRecoilState(nodeAtoms.totalNodes);
+  const isUpdated = useRef(false);
 
-  let total = totalNodes || 0;
+  const { loadMetrics } = useNodeMetrics();
+
+  let total = 0;
 
   const handleAddNode = () => {
     setLayout('nodes');
@@ -39,7 +45,12 @@ export const useNodeList = (): Hook => {
     router.push(`${router.pathname}/${args.key}`);
   };
 
-  const loadNodes = async (queryParams: InitialQueryParams) => {
+  const loadNodes = async (queryParams?: InitialQueryParams) => {
+    if (!queryParams) {
+      const savedQueryParams = getInitialQueryParams();
+      queryParams = savedQueryParams;
+    }
+
     const loadingState =
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
     setIsLoading(loadingState);
@@ -58,19 +69,9 @@ export const useNodeList = (): Hook => {
 
     if (queryParams.pagination.current_page === 1) {
       // TODO: get total nodes from listNodes API and move metrics to separate component
-      const metrics: any = await apiClient.getDashboardMetrics(org_id);
-      setNodeMetrics(metrics);
+      const totalNodes: number | undefined = await loadMetrics(true);
 
-      const _total: number = metrics.reduce(
-        (accumulator: number, metric: NodeMetrics) => {
-          const currentValue = parseInt(metric.value) ?? 0;
-          return accumulator + currentValue;
-        },
-        0,
-      );
-
-      setTotalNodes(_total);
-      total = _total;
+      if (totalNodes) total = totalNodes;
     }
 
     // TODO: (maybe) remove - added for better UI
@@ -97,9 +98,32 @@ export const useNodeList = (): Hook => {
     setIsLoading('finished');
   };
 
+  const updateNodeList = async (node: BlockjoyNode) => {
+    const isInTheList = nodeList.some((nl) => nl.id === node.id);
+
+    const isInTheQuery = isInQuery(node);
+
+    if (!isInTheList && isInTheQuery && !isUpdated.current) {
+      isUpdated.current = true;
+      setNodeList((prevNodeList) => [node, ...prevNodeList]);
+      await loadMetrics();
+    }
+  };
+
+  const removeNodeFromTheList = async (nodeId: string) => {
+    const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
+
+    if (newNodeList.length !== nodeList.length) {
+      setNodeList(newNodeList);
+      await loadMetrics();
+    }
+  };
+
   return {
     nodeList,
     loadNodes,
+    updateNodeList,
+    removeNodeFromTheList,
     handleAddNode,
     handleNodeClick,
   };
