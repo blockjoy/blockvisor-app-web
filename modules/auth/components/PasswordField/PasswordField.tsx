@@ -54,7 +54,7 @@ export const PasswordField = ({
   useClickOutside<HTMLDivElement>(fieldRef, handleClickOutside);
 
   return (
-    <div css={styles.wrapper(fieldRef?.current?.clientWidth!)} ref={fieldRef}>
+    <div css={styles.wrapper} ref={fieldRef}>
       <Input
         tabIndex={tabIndex}
         labelStyles={[Boolean(label) ? typo.base : display.visuallyHidden]}
