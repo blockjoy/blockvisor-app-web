@@ -18,6 +18,10 @@ export function useGetBlockchains() {
     if (!isStatusResponse(response)) {
       setBlockchains(response);
       setLoadingState('finished');
+    } else if (response?.message.includes('token')) {
+      // token has expired
+      localStorage.clear();
+      window.location.href = '/';
     } else {
       setBlockchains([]);
       setLoadingState('finished');
