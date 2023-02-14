@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
+import { checkForTokenError } from 'utils/checkForTokenError';
 
 type Args = string | string[] | undefined;
 
@@ -47,6 +48,8 @@ export const useNodeView = (): Hook => {
 
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
+
+    checkForTokenError(node);
 
     let nodeType: any;
 

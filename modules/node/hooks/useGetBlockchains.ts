@@ -1,6 +1,7 @@
 import { apiClient } from '@modules/client';
 import { isStatusResponse } from '@modules/organization';
 import { useRecoilState } from 'recoil';
+import { checkForTokenError } from 'utils/checkForTokenError';
 import { blockchainsAtoms } from '../store/blockchains';
 
 export function useGetBlockchains() {
@@ -15,13 +16,11 @@ export function useGetBlockchains() {
     setLoadingState('loading');
     const response: any = await apiClient.getBlockchains();
 
+    checkForTokenError(response);
+
     if (!isStatusResponse(response)) {
       setBlockchains(response);
       setLoadingState('finished');
-    } else if (response?.message.includes('token')) {
-      // token has expired
-      localStorage.clear();
-      window.location.href = '/';
     } else {
       setBlockchains([]);
       setLoadingState('finished');

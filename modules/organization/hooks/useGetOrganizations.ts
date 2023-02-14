@@ -1,5 +1,6 @@
 import { apiClient } from '@modules/client';
 import { useRecoilState } from 'recoil';
+import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useDefaultOrganization } from './useDefaultOrganization';
 
@@ -20,6 +21,9 @@ export function useGetOrganizations() {
   const getOrganizations = async (init?: boolean) => {
     setIsLoading('initializing');
     const organizations: any = await apiClient.getOrganizations();
+
+    checkForTokenError(organizations);
+
     setOrganizations(organizations);
 
     if (init) getDefaultOrganization(organizations);

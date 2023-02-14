@@ -1,5 +1,6 @@
 import { apiClient } from '@modules/client';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useGetOrganization() {
@@ -23,6 +24,9 @@ export function useGetOrganization() {
       setOrganization(foundOrganization);
     } else {
       const organizations: any = await apiClient.getOrganizations(id);
+
+      checkForTokenError(organizations);
+
       const organization: any =
         organizations.length > 0 ? organizations[0] : null;
 
