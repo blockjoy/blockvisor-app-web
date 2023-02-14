@@ -9,6 +9,7 @@ import { useRef } from 'react';
 import { isInQuery } from '../utils/isInQuery';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useNodeMetrics } from './useNodeMetrics';
+import { removeQueryParams } from 'utils/removeQueryParams';
 
 interface Hook {
   nodeList: BlockjoyNode[];
@@ -100,6 +101,9 @@ export const useNodeList = (): Hook => {
   };
 
   const updateNodeList = async (node: BlockjoyNode) => {
+    const isInRoute = Boolean(router.query.created);
+    if (!isInRoute) return;
+
     const isInTheList = nodeList.some((nl) => nl.id === node.id);
 
     const isInTheQuery = isInQuery(node);
@@ -109,6 +113,8 @@ export const useNodeList = (): Hook => {
       setNodeList((prevNodeList) => [node, ...prevNodeList]);
       await loadMetrics();
     }
+
+    removeQueryParams(router, ['created']);
   };
 
   const removeNodeFromTheList = async (nodeId: string) => {
