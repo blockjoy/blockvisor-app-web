@@ -3,18 +3,15 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
 import { apiClient } from '@modules/client';
 import { useState } from 'react';
-import { delay } from '@shared/utils/delay';
-import { env } from '@shared/constants/env';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
-import { useGetBlockchains } from './useGetBlockchains';
 
 type Args = string | string[] | undefined;
 
 type Hook = {
   loadNode: (id: Args, onError: VoidFunction) => void;
-  deleteNode: (args1: Args) => void;
+  deleteNode: (args1: Args) => Promise<void>;
   stopNode: (nodeId: Args) => void;
   restartNode: (nodeId: Args) => void;
   isLoading: boolean;
@@ -29,7 +26,6 @@ const createUuid = (id: Args) => {
 export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-  const { blockchains } = useGetBlockchains();
 
   const deleteNode = async (id: Args) => {
     await apiClient.deleteNode(createUuid(id));
@@ -51,8 +47,6 @@ export const useNodeView = (): Hook => {
 
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
-
-    console.log('loadNode', node);
 
     let nodeType: any;
 
@@ -123,8 +117,6 @@ export const useNodeView = (): Hook => {
     };
 
     setNode(activeNode);
-
-    await delay(env.loadingDuration);
 
     setIsLoading(false);
   };

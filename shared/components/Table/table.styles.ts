@@ -47,6 +47,14 @@ export const styles = {
       opacity: 1;
     }
 
+    tr path {
+      transition: 0.3s;
+    }
+
+    tr:hover td:first-child path {
+      fill: ${theme.colorPrimary};
+    }
+
     & .has-hover-color {
       transition: color 0.3s;
     }

@@ -3,28 +3,36 @@ import { styles } from './EditableTitle.styles';
 import IconPencil from '@public/assets/icons/pencil-12.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
 import { Button } from '../Button/Button';
+import { css } from '@emotion/react';
 
 type Props = {
+  isLoading?: boolean;
   isSaving?: boolean;
   initialValue: string;
   onSaveClicked: (value: string) => void;
+  onEditClicked: VoidFunction;
   canUpdate: boolean;
 };
 
 export const EditableTitle: FC<Props> = ({
+  isLoading,
   isSaving,
   initialValue,
   onSaveClicked,
-  canUpdate
+  onEditClicked,
+  canUpdate,
 }) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(true);
+  const [isDirty, setIsDirty] = useState<boolean>(false);
   const [characterCount, setCharacterCount] = useState<number>(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const inputValue = useRef<string>('');
 
   const handleEditToggled = () => {
+    onEditClicked();
+
     if (isEditMode && inputRef.current) {
       inputRef.current.value = initialValue;
       inputValue.current = initialValue;
@@ -40,10 +48,10 @@ export const EditableTitle: FC<Props> = ({
     inputValue.current = value;
     setCharacterCount(value?.length + 1);
     setIsValid(value?.length > 0);
+    setIsDirty(value !== initialValue);
   };
 
   const handleSaveClicked = () => {
-    setIsEditMode(false);
     onSaveClicked(inputValue.current);
   };
 
@@ -58,38 +66,55 @@ export const EditableTitle: FC<Props> = ({
     }
   }, [isEditMode]);
 
+  useEffect(() => {
+    if (isSaving === false) {
+      setIsEditMode(false);
+    }
+  }, [isSaving]);
+
   return (
     <div css={styles.wrapper}>
-      <input
-        autoComplete={'off'}
-        spellCheck={false}
-        ref={inputRef}
-        disabled={!isEditMode}
-        placeholder=""
-        size={characterCount}
-        css={[styles.input, isEditMode && styles.inputEditable]}
-        defaultValue={initialValue}
-        onChange={handleChange}
-      />
+      {isEditMode ? (
+        <input
+          autoComplete={'off'}
+          spellCheck={false}
+          ref={inputRef}
+          disabled={!isEditMode}
+          placeholder=""
+          size={characterCount}
+          css={[styles.input, isEditMode && styles.inputEditable]}
+          defaultValue={initialValue}
+          onChange={handleChange}
+        />
+      ) : (
+        <span css={styles.span}>{initialValue}</span>
+      )}
 
-      {canUpdate && (<Button
-        style="icon"
-        onClick={handleEditToggled}
-        tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
-      >
-        <span css={styles.iconWrapper}>
-          {isEditMode ? <IconClose /> : <IconPencil />}
-        </span>
-      </Button>)}
+      {canUpdate && !isLoading && initialValue?.length && (
+        <Button
+          style="icon"
+          onClick={handleEditToggled}
+          tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
+        >
+          <span css={styles.iconWrapper}>
+            {isEditMode ? <IconClose /> : <IconPencil />}
+          </span>
+        </Button>
+      )}
 
       {isEditMode && canUpdate && (
         <>
           <Button
-            disabled={isSaving || !isValid}
-            loading={isSaving}
+            disabled={isSaving || !isValid || !isDirty}
+            loading={isSaving !== null}
             onClick={handleSaveClicked}
             size="small"
             style="secondary"
+            customCss={[
+              css`
+                min-width: 84px;
+              `,
+            ]}
           >
             Save
           </Button>

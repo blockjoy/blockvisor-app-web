@@ -11,13 +11,15 @@ export const PageSection: React.FC<React.PropsWithChildren<Props>> = ({
   bottomBorder = true,
   topPadding = true,
 }) => (
-  <section
-    css={[
-      styles.section,
-      bottomBorder && styles.sectionBorder,
-      !topPadding && styles.sectionNoTopPadding,
-    ]}
-  >
-    <div css={wrapper.main}>{children}</div>
-  </section>
+  <div css={[wrapper.main]}>
+    <section
+      css={[
+        styles.section,
+        bottomBorder && styles.sectionBorder,
+        !topPadding && styles.sectionNoTopPadding,
+      ]}
+    >
+      {children}
+    </section>
+  </div>
 );

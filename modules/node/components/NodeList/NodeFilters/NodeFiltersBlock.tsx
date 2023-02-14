@@ -1,13 +1,6 @@
 import { FilterItem } from '@modules/node/store/nodeAtoms';
 import { Checkbox } from '@shared/components';
-import {
-  ChangeEvent,
-  Dispatch,
-  EventHandler,
-  FC,
-  MouseEvent,
-  SetStateAction,
-} from 'react';
+import { ChangeEvent, FC, MouseEvent } from 'react';
 import { SetterOrUpdater } from 'recoil';
 import { styles } from './NodeFiltersBlock.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';

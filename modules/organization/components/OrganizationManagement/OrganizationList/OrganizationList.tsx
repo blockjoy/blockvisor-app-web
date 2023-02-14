@@ -28,7 +28,7 @@ export const OrganizationsList = () => {
             style="outline"
             onClick={() => setLayout('organization')}
           >
-            Create New
+            Add New
           </Button>
         </span>
       </header>

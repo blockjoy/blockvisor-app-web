@@ -1,17 +1,26 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import { isEqual, isFunction } from "lodash";
-import { InitialQueryParams, initialQueryParams } from "./NodeUIHelpers";
-import { buildParams, loadPersistedFilters, numOfItemsPerPage } from "../helpers/NodeHelpers";
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { isEqual, isFunction } from 'lodash';
+import { InitialQueryParams, initialQueryParams } from './NodeUIHelpers';
+import {
+  buildParams,
+  loadPersistedFilters,
+  numOfItemsPerPage,
+} from '@modules/node/utils';
 
 type NodeUIContext = {
-  queryParams: InitialQueryParams,
+  queryParams: InitialQueryParams;
   setQueryParamsBase: React.Dispatch<React.SetStateAction<InitialQueryParams>>;
   setQueryParams: (nextQueryParams: InitialQueryParams) => void;
-}
+};
+
+export type NodeUIProps = {
+  queryParams: InitialQueryParams;
+  setQueryParams: (nextQueryParams: InitialQueryParams) => void;
+};
 
 type NodeUIProvider = {
-  children?: React.ReactNode
-}
+  children?: React.ReactNode;
+};
 
 const NodeUIContext = createContext<NodeUIContext>({} as NodeUIContext);
 
@@ -30,8 +39,8 @@ const getInitialQueryParams = () => {
     filter: params,
     pagination: {
       ...initialQueryParams.pagination,
-      items_per_page: itemsPerPage
-    }
+      items_per_page: itemsPerPage,
+    },
   };
 };
 
@@ -44,7 +53,9 @@ export const NodeUIConsumer = NodeUIContext.Consumer;
 export function NodeUIProvider({ children }: NodeUIProvider) {
   const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
 
-  const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(initialQueryParamsValue);
+  const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
+    initialQueryParamsValue,
+  );
   const setQueryParams = useCallback((nextQueryParams: InitialQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
@@ -59,15 +70,13 @@ export function NodeUIProvider({ children }: NodeUIProvider) {
     });
   }, []);
 
-  const value : NodeUIContext = {
+  const value: NodeUIContext = {
     queryParams,
     setQueryParamsBase,
     setQueryParams,
   };
 
   return (
-    <NodeUIContext.Provider value={value}>
-      {children}
-    </NodeUIContext.Provider>
+    <NodeUIContext.Provider value={value}>{children}</NodeUIContext.Provider>
   );
-};
+}

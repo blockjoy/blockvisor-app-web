@@ -38,11 +38,16 @@ import { apiClient } from '@modules/client';
 export const OrganizationView = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { getOrganization, organization, isLoading } = useGetOrganization();
-  const { deleteOrganization, loading: isDeleting } = useDeleteOrganization();
+  const {
+    getOrganization,
+    setOrganization,
+    organization,
+    isLoading,
+    setIsLoading,
+  } = useGetOrganization();
+  const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
-  const { loadNodes, nodeList } = useNodeList();
 
   const sentInvitationsLoadingState = useRecoilValue(
     organizationAtoms.organizationSentInvitationsLoadingState,
@@ -52,7 +57,9 @@ export const OrganizationView = () => {
   );
 
   const [isSavingOrganization, setIsSavingOrganization] =
-    useState<boolean>(false);
+    useState<boolean | null>(null);
+
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const [totalNodes, setTotalNodes] = useState<number | null>(null);
 
@@ -67,6 +74,10 @@ export const OrganizationView = () => {
     }
   };
 
+  const handleEditClicked = () => {
+    setIsSavingOrganization(null);
+  };
+
   const canUpdateOrganization: boolean = useHasPermissions(
     organization?.currentUser?.role!,
     Permissions.UPDATE_ORGANIZATION,
@@ -79,6 +90,7 @@ export const OrganizationView = () => {
   const action = canDeleteOrganization ? 'delete' : 'leave';
 
   const handleAction = async () => {
+    setIsDeleting(true);
     if (canDeleteOrganization) {
       await deleteOrganization(queryAsString(id));
     } else {
@@ -90,14 +102,6 @@ export const OrganizationView = () => {
     useGetOrganizationMembers();
 
   const { getSentInvitations, sentInvitations } = useInvitations();
-
-  useEffect(() => {
-    if (router.isReady) {
-      getOrganization(queryAsString(id));
-      getOrganizationMembers(queryAsString(id));
-      getSentInvitations(queryAsString(id));
-    }
-  }, [router.isReady]);
 
   const getTotalNodes = async () => {
     const nodes: any = await apiClient.listNodes(
@@ -120,6 +124,21 @@ export const OrganizationView = () => {
     setTotalNodes(nodes?.length);
   };
 
+  useEffect(() => {
+    if (router.isReady) {
+      setIsDeleting(false);
+      setIsSavingOrganization(false);
+      getOrganization(queryAsString(id));
+      getOrganizationMembers(queryAsString(id));
+      getSentInvitations(queryAsString(id));
+    }
+
+    return () => {
+      setIsLoading('initializing');
+      setOrganization(null);
+    };
+  }, [router.isReady]);
+
   // quick win to check if org has nodes
   useEffect(() => {
     getTotalNodes();
@@ -134,7 +153,7 @@ export const OrganizationView = () => {
   return (
     <>
       <PageTitle title="Organizations" />
-      <PageSection>
+      <PageSection bottomBorder={false}>
         <div css={spacing.top.medium}>
           <BackButton backUrl={ROUTES.ORGANIZATIONS} />
         </div>
@@ -153,12 +172,17 @@ export const OrganizationView = () => {
           />
         ) : (
           <div css={spacing.top.medium}>
-            <EditableTitle
-              isSaving={isSavingOrganization}
-              initialValue={organization?.name!}
-              onSaveClicked={handleSaveClicked}
-              canUpdate={canUpdateOrganization && !organization?.personal}
-            />
+            {organization?.name?.length && (
+              <EditableTitle
+                isLoading={isLoadingOrg}
+                isSaving={isSavingOrganization!}
+                initialValue={organization?.name!}
+                onSaveClicked={handleSaveClicked}
+                onEditClicked={handleEditClicked}
+                canUpdate={canUpdateOrganization && !organization?.personal}
+              />
+            )}
+
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <Members
@@ -170,7 +194,7 @@ export const OrganizationView = () => {
         )}
       </PageSection>
       {!isLoadingOrg && organization !== null && !organization?.personal && (
-        <PageSection>
+        <PageSection bottomBorder={false}>
           <DangerZone
             elementName="Organization"
             elementNameToCompare={organization?.name ?? ''}

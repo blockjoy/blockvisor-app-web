@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { styles } from './styles';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -7,23 +6,21 @@ import { NodeFiltersHeaderIconText } from '../NodeFilters/NodeFiltersHeaderIconT
 import { NodeMetrics } from '@modules/node/components/NodeList/NodeMetrics/NodeMetrics';
 import { Skeleton, GridTableViewPicker } from '@shared/components';
 
-type Props = {
-  totalRows: number;
-};
-
-export const NodeListHeader: FC<Props> = ({ totalRows }) => {
+export const NodeListHeader = () => {
   const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
-  const [isFiltersCollapsed, setFiltersCollapsed] = useRecoilState(
-    nodeAtoms.isFiltersCollapsed,
+  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
+    nodeAtoms.isFiltersOpen,
   );
+
+  const isLoading = useRecoilValue(nodeAtoms.isLoading);
 
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
   );
 
   const handleFilterCollapseToggled = () => {
-    localStorage.setItem('nodeFiltersCollapsed', JSON.stringify(false));
-    setFiltersCollapsed(!isFiltersCollapsed);
+    setIsFiltersOpen(!isFiltersOpen);
+    localStorage.setItem('nodeFiltersOpen', JSON.stringify(true));
   };
 
   const handleGridTableViewChanged = (type: string) => {
@@ -32,7 +29,7 @@ export const NodeListHeader: FC<Props> = ({ totalRows }) => {
 
   return (
     <div css={styles.wrapper}>
-      {isFiltersCollapsed && (
+      {!isFiltersOpen && (
         <div css={styles.wrapperInner}>
           {totalNodes === null ? (
             <Skeleton width="65px" />
@@ -52,8 +49,8 @@ export const NodeListHeader: FC<Props> = ({ totalRows }) => {
       </div>
 
       <span css={styles.total}>
-        {totalNodes === null ? (
-          <Skeleton />
+        {isLoading !== 'finished' || totalNodes === null ? (
+          <Skeleton margin="0 0 0 auto" />
         ) : (
           <>
             Total: <span css={styles.totalValue}>{totalNodes} </span>

@@ -62,17 +62,19 @@ export const NodeLauncher = () => {
     });
   };
 
-  const isNodeValid = () => Boolean(node.blockchainId && node.nodeTypeId);
+  const isNodeValid = Boolean(node.blockchainId && node.nodeTypeId);
 
-  const isConfigValid = () =>
-    Boolean(
-      node.nodeFiles?.every((f) => f.files?.length) &&
-        node.nodeTypeProperties
-          .filter((type) => type.required && type.ui_type !== 'key-upload')
-          .every(
-            (type) => type.value || type.disabled || type.ui_type === 'switch',
-          ),
-    );
+  const isConfigValid = !node.nodeFiles
+    ? null
+    : Boolean(
+        node.nodeFiles?.every((f) => f.files?.length) &&
+          node.nodeTypeProperties
+            .filter((type) => type.required && type.ui_type !== 'key-upload')
+            .every(
+              (type) =>
+                type.value || type.disabled || type.ui_type === 'switch',
+            ),
+      );
 
   // hack that needs removing
   const hasAddedFiles = () => {
@@ -133,8 +135,6 @@ export const NodeLauncher = () => {
   const handleCreateNodeClicked = () => {
     setIsCreating(true);
 
-    console.log('handleCreateNodeClicked', node);
-
     const mergedFiles: File[] = [];
 
     // build merged file array
@@ -156,7 +156,6 @@ export const NodeLauncher = () => {
     createNode(
       params,
       (nodeId: string) => {
-        setIsCreating(false);
         router.push(`/nodes/${nodeId}`);
       },
       (error: string) => setServerError(error),
@@ -230,18 +229,20 @@ export const NodeLauncher = () => {
         {/* {!!node.nodeTypeProperties?.filter(
           (property) => property.name !== 'self-hosted',
         )?.length && ( */}
-        {node.blockchainId && node.nodeTypeId && (
-          <NodeLauncherConfig
-            isConfigValid={isConfigValid()}
-            onFileUploaded={handleFileUploaded}
-            onPropertyChanged={handlePropertyChanged}
-            onNetworkChanged={handleNetworkChanged}
-            nodeTypeProperties={node.nodeTypeProperties}
-            nodeFiles={node.nodeFiles}
-            networkList={networkList}
-            nodeNetwork={node.network}
-          />
-        )}
+        {node.blockchainId &&
+          node.nodeTypeId &&
+          node.nodeTypeProperties?.length && (
+            <NodeLauncherConfig
+              isConfigValid={isConfigValid}
+              onFileUploaded={handleFileUploaded}
+              onPropertyChanged={handlePropertyChanged}
+              onNetworkChanged={handleNetworkChanged}
+              nodeTypeProperties={node.nodeTypeProperties}
+              nodeFiles={node.nodeFiles}
+              networkList={networkList}
+              nodeNetwork={node.network}
+            />
+          )}
 
         {/* )} */}
         {!node.blockchainId && !node.nodeTypeId && (
@@ -252,20 +253,22 @@ export const NodeLauncher = () => {
             />
           </div>
         )}
-        {node.blockchainId && node.nodeTypeId && (
-          <NodeLauncherSummary
-            hasNetworkList={Boolean(networkList?.length)}
-            serverError={serverError!}
-            hasAddedFiles={hasAddedFiles()}
-            isCreating={isCreating}
-            isNodeValid={isNodeValid()}
-            isConfigValid={isConfigValid()}
-            blockchainId={node.blockchainId}
-            nodeTypeId={node.nodeTypeId}
-            nodeTypeProperties={node.nodeTypeProperties}
-            onCreateNodeClicked={handleCreateNodeClicked}
-          />
-        )}
+        {node.blockchainId &&
+          node.nodeTypeId &&
+          node?.nodeTypeProperties?.length && (
+            <NodeLauncherSummary
+              hasNetworkList={Boolean(networkList?.length)}
+              serverError={serverError!}
+              hasAddedFiles={hasAddedFiles()}
+              isCreating={isCreating}
+              isNodeValid={isNodeValid}
+              isConfigValid={isConfigValid}
+              blockchainId={node.blockchainId}
+              nodeTypeId={node.nodeTypeId}
+              nodeTypeProperties={node.nodeTypeProperties}
+              onCreateNodeClicked={handleCreateNodeClicked}
+            />
+          )}
       </div>
     </>
   );

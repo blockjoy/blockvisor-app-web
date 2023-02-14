@@ -10,8 +10,11 @@ export const useInviteMembers = () => {
     organizationAtoms.selectedOrganization,
   );
 
-  const inviteMembers = async (emails: string[], onComplete: VoidFunction) => {
-    const formattedEmail = emails[0]?.toLowerCase();
+  const inviteMembers = async (
+    inviteeEmail: string,
+    onComplete: VoidFunction,
+  ) => {
+    const formattedEmail = inviteeEmail?.toLowerCase();
 
     const response = await apiClient.inviteOrgMember(
       formattedEmail,

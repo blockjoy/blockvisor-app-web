@@ -108,7 +108,7 @@ export const DangerZone: FC<Props> = ({
                 style={{ maxWidth: '320px' }}
                 labelStyles={[display.visuallyHidden]}
                 name="elementNameToDelete"
-                placeholder={`Enter your ${elementName} name here`}
+                placeholder={`Type ${elementName} name`}
                 type="text"
                 validationOptions={{
                   required: 'This is a mandatory field',
@@ -124,7 +124,7 @@ export const DangerZone: FC<Props> = ({
                   loading={isLoading}
                   customCss={[
                     css`
-                      min-width: 84px;
+                      min-width: 92px;
                     `,
                   ]}
                 >
@@ -137,7 +137,7 @@ export const DangerZone: FC<Props> = ({
                   style="outline"
                   customCss={[
                     css`
-                      min-width: 84px;
+                      min-width: 92px;
                     `,
                   ]}
                 >
