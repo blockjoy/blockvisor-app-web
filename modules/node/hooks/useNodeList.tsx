@@ -113,10 +113,9 @@ export const useNodeList = (): Hook => {
   const removeNodeFromTheList = async (nodeId: string) => {
     const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
 
-    if (newNodeList.length !== nodeList.length) {
-      setNodeList(newNodeList);
-      await loadMetrics();
-    }
+    if (newNodeList.length !== nodeList.length) setNodeList(newNodeList);
+
+    await loadMetrics();
   };
 
   return {
