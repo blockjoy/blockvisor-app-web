@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 
 export const useNodeAdd = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const repository = useIdentityRepository();
 
   const createNode = async (
@@ -14,7 +12,6 @@ export const useNodeAdd = () => {
     onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
-    setIsLoading(true);
     const node = new Node();
 
     const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';
@@ -68,12 +65,9 @@ export const useNodeAdd = () => {
       }
       onError(errorMessage);
     }
-
-    setIsLoading(false);
   };
 
   return {
     createNode,
-    isLoading,
   };
 };

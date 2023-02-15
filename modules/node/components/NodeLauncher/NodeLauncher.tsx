@@ -157,7 +157,6 @@ export const NodeLauncher = () => {
     createNode(
       params,
       (nodeId: string) => {
-        setIsCreating(false);
         router.push({
           pathname: `${ROUTES.NODE(nodeId)}`,
           query: { created: true },
