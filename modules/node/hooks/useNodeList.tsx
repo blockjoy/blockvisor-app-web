@@ -101,6 +101,8 @@ export const useNodeList = (): Hook => {
   };
 
   const updateNodeList = async (node: BlockjoyNode) => {
+    if (isUpdated.current) return;
+
     const isInRoute = Boolean(router.query.created);
     if (!isInRoute) return;
 
@@ -108,13 +110,15 @@ export const useNodeList = (): Hook => {
 
     const isInTheQuery = isInQuery(node);
 
-    if (!isInTheList && isInTheQuery && !isUpdated.current) {
-      isUpdated.current = true;
+    if (!isInTheList && isInTheQuery) {
       setNodeList((prevNodeList) => [node, ...prevNodeList]);
-      await loadMetrics();
     }
 
+    await loadMetrics();
+
     removeQueryParams(router, ['created']);
+
+    isUpdated.current = true;
   };
 
   const removeNodeFromTheList = async (nodeId: string) => {
