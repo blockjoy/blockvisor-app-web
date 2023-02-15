@@ -28,7 +28,7 @@ export function LoginFooter() {
           css={[link, linkPrimary, linkUnderline]}
           href={ROUTES.REGISTER}
           passHref
-          shallow={true}
+          shallow
         >
           Create an Account
         </Link>
