@@ -109,6 +109,9 @@ export function NodeView() {
             isLoading={isDeleting}
             elementName="Node"
             elementNameToCompare={node?.name!}
+            buttonDataCy="node-delete-button"
+            inputDataCy="node-delete-confirm-input"
+            submitDataCy="node-delete-submit"
             handleAction={handleDelete}
           ></DangerZone>
         </PageSection>

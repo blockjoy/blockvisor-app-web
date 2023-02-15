@@ -127,7 +127,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                     <button
                       tabIndex={activeNodeTypeId ? -1 : index + 1}
                       key={type.nodeType}
-                      data-cy="nodeLauncher-nodeType-button"
+                      data-cy={`nodeLauncher-nodeType-button-${b.name}-${name}`}
                       className={
                         type.nodeType === activeNodeTypeId &&
                         b.id === activeBlockchainId

@@ -35,7 +35,7 @@ export const NodeViewDetailsHeader: FC<Props> = ({
       </div>
       <div>
         <div css={styles.detailsHeader}>
-          <h2>{title}</h2>
+          <h2 data-cy={'node-details-title'}>{title}</h2>
           <div>
             <NodeStatus status={status} />
           </div>

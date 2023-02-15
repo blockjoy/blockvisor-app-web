@@ -17,6 +17,9 @@ export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
           }
           cellStatus={<NodeStatus hasBorder status={node.status} />}
           cellType={nodeTypeList.find((n) => n.id === node.nodeType)?.name}
+          dataCy={`nodeList-${node.blockchainName}-${
+            nodeTypeList.find((n) => n.id === node.nodeType)?.name
+          }`}
         />
       ),
     };
