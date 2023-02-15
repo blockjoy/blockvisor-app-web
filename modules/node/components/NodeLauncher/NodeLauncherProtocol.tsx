@@ -106,7 +106,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 tabIndex={activeNodeTypeId ? -1 : index + 1}
                 key={b.id}
                 css={[styles.row, styles.rowHover]}
-                data-cy="nodeLauncher-protocol"
+                data-cy={`nodeLauncher-protocol-${b.name}`}
                 className={b.id === activeBlockchainId ? 'active row' : 'row'}
               >
                 <span css={styles.blockchainWrapper}>
