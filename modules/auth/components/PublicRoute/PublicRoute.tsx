@@ -1,5 +1,5 @@
 import { useIdentity } from '@modules/auth';
-import { EmptyColumn, LoadingSpinner } from '@shared/components';
+import { EmptyColumn } from '@shared/components';
 import { ROUTES } from '@shared/index';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
@@ -11,7 +11,7 @@ interface Props {
 
 export function PublicRoute({ children }: Props) {
   const router = useRouter();
-  const { isLoading, isLoggedIn } = useIdentity();
+  const { isLoggedIn } = useIdentity();
 
   useEffect(() => {
     if (isLoggedIn) {

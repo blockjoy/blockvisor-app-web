@@ -45,6 +45,12 @@ export function PrivateRoute({ router, children }: Props) {
   }
 
   return (
-    <>{isLoading || !authorized ? <LoadingSpinner size="page" /> : children}</>
+    <>
+      {isLoading || (!authorized && isPrivateRoute) ? (
+        <LoadingSpinner size="page" />
+      ) : (
+        children
+      )}
+    </>
   );
 }
