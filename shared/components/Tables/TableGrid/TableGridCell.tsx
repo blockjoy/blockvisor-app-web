@@ -10,6 +10,7 @@ type Props = {
   cellEarnings?: number;
   cellIcon: ReactNode;
   cellEarningsDirection?: string | 'up' | 'down' | '-';
+  dataCy?: string;
 };
 
 export const TableGridCell: FC<Props> = ({
@@ -20,8 +21,9 @@ export const TableGridCell: FC<Props> = ({
   cellIcon,
   cellEarnings = 11.24,
   cellEarningsDirection = '-',
+  dataCy,
 }) => (
-  <div onClick={onCellClick} css={styles.cell}>
+  <div data-cy={dataCy} onClick={onCellClick} css={styles.cell}>
     <div css={styles.cellIcon}>{cellIcon}</div>
     <div css={styles.cellRight}>
       <header css={styles.cellHeader}>
