@@ -2,6 +2,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { apiClient } from '@modules/client';
 import { organizationAtoms } from '@modules/organization';
+import { checkForTokenError } from 'utils/checkForTokenError';
 
 interface Hook {
   totalNodes: number | null;
@@ -23,6 +24,9 @@ export const useNodeMetrics = (): Hook => {
   const loadMetrics = async (shouldReturn = false) => {
     setIsLoading('initializing');
     const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
+
+    checkForTokenError(metrics);
+
     setNodeMetrics(metrics);
 
     const total: number = metrics.reduce(
