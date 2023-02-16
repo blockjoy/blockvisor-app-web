@@ -104,6 +104,7 @@ import {
   ListPendingInvitationRequest,
   ListReceivedInvitationRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
+import * as mqtt from 'mqtt';
 
 export type UIUser = {
   first_name: string;
