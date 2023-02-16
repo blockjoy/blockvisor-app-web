@@ -104,6 +104,7 @@ import {
   ListPendingInvitationRequest,
   ListReceivedInvitationRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
+import * as mqtt from 'mqtt';
 
 export type UIUser = {
   first_name: string;
@@ -1237,39 +1238,14 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(callback: (data: any) => void): void {
-    let request_meta = new RequestMeta();
-    request_meta.setId(this.getDummyUuid());
+  getUpdates(stateObject: StateObject): void {
+    let client = mqtt.connect('mqtt://35.237.162.218:1883');
 
-    let request = new GetUpdatesRequest();
-    request.setMeta(request_meta);
+    console.log('mqtt client: ', client);
 
-    let update_stream = this.update?.updates(request, this.getAuthHeader());
-
-    update_stream?.on('data', (response) => {
-      if (
-        response.getUpdate()?.getNotificationCase() ===
-        UpdateNotification.NotificationCase.HOST
-      ) {
-        const host = response.getUpdate()?.getHost();
-
-        console.log(`got host update from server: `, host);
-        callback(host);
-      } else if (
-        response.getUpdate()?.getNotificationCase() ===
-        UpdateNotification.NotificationCase.NODE
-      ) {
-        const node = response.getUpdate()?.getNode()?.toObject();
-
-        console.log(`got node update from server: `, node);
-        callback(node);
-      } else {
-        console.error("unsupported notification type");
-      }
-    });
-    update_stream?.on('error', (err) => {
-      console.error(`update stream closed unexpectedly: `, err);
-    });
+    window.setTimeout(() => {
+      console.debug('Waiting 1000ms for next update');
+    }, 1000);
   }
 
   /* Command service */
