@@ -1,16 +1,16 @@
 import { spacing } from 'styles/utils.spacing.styles';
 import { AllOrganizationsTable } from './OrganizationListTable';
 import { styles } from './OrganizationList.styles';
-import { useRecoilState } from 'recoil';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetOrganizations } from '../../../hooks/useGetOrganizations';
 import { Button } from '@shared/components';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { OrganizationAdd } from '@modules/organization';
+import IconOrganizations from '@public/assets/icons/organization-16.svg';
 
 export const OrganizationsList = () => {
   const { getOrganizations, organizations } = useGetOrganizations();
 
-  const [, setLayout] = useRecoilState(layoutState);
+  const [isAdding, setIsAdding] = useState<boolean>(false);
 
   useEffect(() => {
     if (!organizations?.length) {
@@ -22,16 +22,20 @@ export const OrganizationsList = () => {
     <div css={styles.wrapper}>
       <header css={[styles.header, spacing.bottom.large]}>
         All Organizations
-        <span css={styles.createButton}>
+        {!isAdding && (
           <Button
             size="small"
             style="outline"
-            onClick={() => setLayout('organization')}
+            onClick={() => setIsAdding(true)}
           >
+            <span css={styles.addIcon}>
+              <IconOrganizations />
+            </span>
             Add New
           </Button>
-        </span>
+        )}
       </header>
+      {isAdding && <OrganizationAdd setIsAdding={setIsAdding} />}
       <section css={spacing.top.large}>
         <AllOrganizationsTable />
       </section>

@@ -6,14 +6,14 @@ export const styles = {
   buttons: css`
     display: flex;
     gap: 10px;
-    width: 300px;
+    width: 200px;
 
     @media ${breakpoints.toMed} {
       width: 100%;
     }
   `,
   textarea: (theme: ITheme) => css`
-    padding: 16px;
+    padding: 12px 16px;
     color: ${theme.colorText};
     background: transparent;
     border-radius: 4px;
