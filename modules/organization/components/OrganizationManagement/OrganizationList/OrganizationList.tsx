@@ -6,8 +6,13 @@ import { useGetOrganizations } from '../../../hooks/useGetOrganizations';
 import { Button } from '@shared/components';
 import { OrganizationAdd } from '@modules/organization';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import { useRouter } from 'next/router';
 
 export const OrganizationsList = () => {
+  const router = useRouter();
+
+  const { add } = router.query;
+
   const { getOrganizations, organizations } = useGetOrganizations();
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
@@ -17,6 +22,12 @@ export const OrganizationsList = () => {
       getOrganizations();
     }
   }, []);
+
+  useEffect(() => {
+    if (router.isReady && add) {
+      setIsAdding(true);
+    }
+  }, [router.isReady, add]);
 
   return (
     <div css={styles.wrapper}>
