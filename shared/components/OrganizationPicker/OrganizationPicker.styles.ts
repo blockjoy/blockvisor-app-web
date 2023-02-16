@@ -10,6 +10,27 @@ export const styles = {
     position: relative;
     display: flex;
     align-items: center;
+
+    :hover .title {
+      opacity: 1;
+      visibility: visible;
+    }
+  `,
+  title: (theme: ITheme) => css`
+    position: absolute;
+    top: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: ${theme.colorLabel};
+    font-size: 9px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: 0.3s;
+
+    @media ${breakpoints.fromXLrg} {
+      visibility: hidden;
+      opacity: 0;
+    }
   `,
   select: (theme: ITheme) => css`
     background: transparent;
@@ -23,6 +44,8 @@ export const styles = {
     text-align: left;
     text-overflow: ellipsis;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     :hover,
     :active,
@@ -30,24 +53,11 @@ export const styles = {
       box-shadow: none;
     }
   `,
-  nativeSelect: css`
-    @media ${breakpoints.fromMed} {
-      display: none;
-    }
-  `,
-  customSelect: css`
-    @media ${breakpoints.toMed} {
-      display: none;
-    }
-  `,
   dropdown: css`
     top: 54px;
     right: 5px;
     left: 0;
     overflow: hidden;
-    @media ${breakpoints.toMed} {
-      display: none;
-    }
   `,
   dropdownInner: (items: number) => css`
     max-height: ${items * 40}px;
@@ -96,5 +106,5 @@ export const styles = {
         fill: ${theme.colorPrimaryText};
       }
     }
-  `
+  `,
 };
