@@ -9,9 +9,10 @@ import {
   useInvitations,
 } from '@modules/organization';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains } from '@modules/node';
+import { apiClient } from '@modules/client';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -27,6 +28,8 @@ export const AppLayout: React.FC<LayoutType> = ({
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
+  const hasGotUpdates = useRef<boolean>(false);
+
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
@@ -38,6 +41,14 @@ export const AppLayout: React.FC<LayoutType> = ({
   useEffect(() => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
+  }, []);
+
+  useEffect(() => {
+    if (!hasGotUpdates.current) {
+      console.log('subscribing to updates');
+      apiClient.getUpdates();
+      hasGotUpdates.current = true;
+    }
   }, []);
 
   return (

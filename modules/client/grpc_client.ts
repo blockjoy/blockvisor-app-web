@@ -104,7 +104,7 @@ import {
   ListPendingInvitationRequest,
   ListReceivedInvitationRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
-import * as mqtt from "mqtt";
+import * as mqtt from 'mqtt';
 
 export type UIUser = {
   first_name: string;
@@ -1238,10 +1238,10 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject: StateObject): void {
+  getUpdates(stateObject?: StateObject): void {
     let client = mqtt.connect('mqtt://35.237.162.218:1883');
 
-    console.log("mqtt client: ", client);
+    console.log('mqtt client: ', client);
 
     window.setTimeout(() => {
       console.debug('Waiting 1000ms for next update');
