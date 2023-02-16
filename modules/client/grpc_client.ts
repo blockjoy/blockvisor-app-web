@@ -1305,13 +1305,27 @@ export class GrpcClient {
   /* Update service */
 
   getUpdates(stateObject?: StateObject): void {
-    let client = mqtt.connect('mqtt://35.237.162.218:1883');
+    let mqtt_client = mqtt.connect(eqmx_url, {
+      clean: true,
+      connectTimeout: 4000,
+      port: 8083,
+      protocolId: 'MQTT',
+      clientId: 'mqtt-js',
+      username: 'mqtt-js',
+      password: 'mqtt-js',
+    });
 
-    console.log('mqtt client: ', client);
+    mqtt_client.on('connect', function (err) {
+      console.log('MQTT connected');
+      mqtt_client.subscribe('js-test-topic', function (err) {
+        if (err) console.log('subscription error: ', err);
+        else console.log('MQTT subscribed to "js-test-topic"');
+      });
+    });
 
-    window.setTimeout(() => {
-      console.debug('Waiting 1000ms for next update');
-    }, 1000);
+    mqtt_client.on('error', function (err) {
+      console.log('MQTT connection error: ', err);
+    });
   }
 
   /* Command service */
