@@ -250,6 +250,8 @@ export interface StateObject {
   processNodeUpdate: (node: Node | undefined) => boolean;
 }
 
+const eqmx_url = 'ws://35.237.162.218/mqtt';
+
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
