@@ -23,5 +23,13 @@ export const styles = {
       justify-content: flex-start;
     }
   `,
-  createButton: css``,
+  addIcon: (theme: ITheme) => css`
+    display: grid;
+    place-items: center;
+    width: 14px;
+    height: 14px;
+    path {
+      fill: ${theme.colorText};
+    }
+  `,
 };
