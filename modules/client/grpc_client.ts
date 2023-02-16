@@ -1241,6 +1241,11 @@ export class GrpcClient {
   /* Update service */
 
   getUpdates(stateObject?: StateObject): void {
+    let token = this.getApiToken() || "";
+    token = Buffer.from(token, 'base64').toString('binary');
+
+    console.log('using token for mqtt auth: ', token);
+
     let mqtt_client = mqtt.connect(eqmx_url,
         {
           clean: true,
@@ -1248,8 +1253,10 @@ export class GrpcClient {
           port: 8083,
           protocolId: 'MQTT',
           clientId: 'mqtt-js',
+          reconnectPeriod: 10000,
           username: 'mqtt-js',
-          password: 'mqtt-js',
+          password: token,
+          // password: 'mqtt-js',
         }
     );
 
