@@ -1306,57 +1306,52 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject?: StateObject): void {
-    let token = this.getApiToken() || '';
-    token = Buffer.from(token, 'base64').toString('binary');
+  getUpdates(stateObject: StateObject): void {
+    let retry_count = 3;
+    let should_run = true;
+    let request_meta = new RequestMeta();
+    request_meta.setId(this.getDummyUuid());
 
-    const data = JSON.parse(
-      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
-    );
-    const channel = `/orgs/${data.data.org_id}/nodes`;
+    let request = new GetUpdatesRequest();
+    request.setMeta(request_meta);
 
-    console.log('using token for mqtt auth: ', data);
+    let update_stream = this.update?.updates(request, this.getAuthHeader());
 
-    let mqtt_client = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
-      clean: true,
-      connectTimeout: 30000,
-      port: 8083,
-      protocolId: 'MQTT',
-      clientId: 'user_auth',
-      reconnectPeriod: 30000,
-      username: token,
-      password: token,
-    });
+    while (should_run) {
+      update_stream?.on('data', (response) => {
+        if (
+          response.getUpdate()?.getNotificationCase() ===
+          UpdateNotification.NotificationCase.HOST
+        ) {
+          const host = response.getUpdate()?.getHost();
 
-    // /orgs/ <
-    //   org_id >
-    //   /nodes/ <
-    //   node_id >
+          console.log(`got host update from server: `, host);
+          stateObject.processHostUpdate(host);
+        } else if (
+          response.getUpdate()?.getNotificationCase() ===
+          UpdateNotification.NotificationCase.NODE
+        ) {
+          const node = response.getUpdate()?.getNode();
 
-    mqtt_client.on('connect', () => {
-      console.log('MQTT connected');
-      mqtt_client.subscribe(channel, (err) => {
-        if (err) {
-          console.log('subscription error: ', err);
-        } else {
-          console.log(`MQTT subscribed to ${channel}`);
+          console.log(`got node update from server: `, node);
+          stateObject.processNodeUpdate(node);
         }
       });
-    });
+      update_stream?.on('error', (err) => {
+        console.error(`update stream closed unexpectedly: `, err);
+        if (retry_count > 0) {
+          console.info('Trying to reinitialize the update connection');
+          update_stream = this.update?.updates(request, this.getAuthHeader());
+          retry_count--;
+        } else {
+          should_run = false;
+        }
+      });
 
-    mqtt_client.on('message', (topic, payload) => {
-      // let tmp = new TextDecoder().decode(payload);
-      let msg = NodeMessage.deserializeBinary(
-        new Uint8Array(payload),
-      ).toObject();
-      console.log('MQTT topic: ', topic);
-      console.log('MQTT payload: ', msg.deleted);
-      callback(payload);
-    });
-
-    mqtt_client.on('error', (err) => {
-      console.log('MQTT connection error: ', err);
-    });
+      window.setTimeout(() => {
+        console.debug('Waiting 1000ms for next update');
+      }, 1000);
+    }
   }
 
   /* Command service */
