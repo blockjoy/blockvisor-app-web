@@ -47,22 +47,12 @@ export const OrganizationPicker = () => {
 
   return (
     <div css={[styles.wrapper]} ref={dropdownRef}>
-      <select
-        css={[styles.select, styles.nativeSelect]}
-        value={defaultOrganization?.id}
-        onChange={handleSelect}
-      >
-        {allOrganizations?.map((org) => (
-          <option key={org.id} value={org.id}>
-            {org.name}
-          </option>
-        ))}
-      </select>
-
-      <button css={[styles.select, styles.customSelect]} onClick={handleClick}>
+      <button css={styles.select} onClick={handleClick}>
+        <span className="title" css={styles.title}>
+          Organization
+        </span>
         {defaultOrganization?.name}
       </button>
-
       <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
         <PerfectScrollbar css={styles.dropdownInner(10)}>
           <ul>
