@@ -250,7 +250,7 @@ export interface StateObject {
   processNodeUpdate: (node: Node | undefined) => boolean;
 }
 
-//const eqmx_url = 'ws://35.231.38.123/mqtt';
+const eqmx_url = 'ws://35.237.162.218/mqtt';
 
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
@@ -1330,43 +1330,17 @@ export class GrpcClient {
     let request = new GetUpdatesRequest();
     request.setMeta(request_meta);
 
-    let update_stream = this.update?.updates(request, this.getAuthHeader());
-
-    while (should_run) {
-      update_stream?.on('data', (response) => {
-        if (
-          response.getUpdate()?.getNotificationCase() ===
-          UpdateNotification.NotificationCase.HOST
-        ) {
-          const host = response.getUpdate()?.getHost();
-
-          console.log(`got host update from server: `, host);
-          stateObject.processHostUpdate(host);
-        } else if (
-          response.getUpdate()?.getNotificationCase() ===
-          UpdateNotification.NotificationCase.NODE
-        ) {
-          const node = response.getUpdate()?.getNode();
-
-          console.log(`got node update from server: `, node);
-          stateObject.processNodeUpdate(node);
-        }
+    mqtt_client.on('connect', function (err) {
+      console.log('MQTT connected');
+      mqtt_client.subscribe('js-test-topic', function (err) {
+        if (err) console.log('subscription error: ', err);
+        else console.log('MQTT subscribed to "js-test-topic"');
       });
-      update_stream?.on('error', (err) => {
-        console.error(`update stream closed unexpectedly: `, err);
-        if (retry_count > 0) {
-          console.info('Trying to reinitialize the update connection');
-          update_stream = this.update?.updates(request, this.getAuthHeader());
-          retry_count--;
-        } else {
-          should_run = false;
-        }
-      });
+    });
 
-      window.setTimeout(() => {
-        console.debug('Waiting 1000ms for next update');
-      }, 1000);
-    }
+    mqtt_client.on('error', function (err) {
+      console.log('MQTT connection error: ', err);
+    });
   }
 
   /* Command service */
