@@ -1304,7 +1304,7 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject: StateObject): void {
+  getUpdates(stateObject?: StateObject): void {
     let client = mqtt.connect('mqtt://35.237.162.218:1883');
 
     console.log('mqtt client: ', client);
