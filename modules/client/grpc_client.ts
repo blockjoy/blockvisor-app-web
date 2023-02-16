@@ -104,7 +104,6 @@ import {
   ListReceivedInvitationRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
 import * as mqtt from 'mqtt';
-import { NodeMessage } from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
 
 export type UIUser = {
   first_name: string;
@@ -1306,42 +1305,13 @@ export class GrpcClient {
   /* Update service */
 
   getUpdates(stateObject: StateObject): void {
-    let retry_count = 3;
-    let should_run = true;
-    let request_meta = new RequestMeta();
-    request_meta.setId(this.getDummyUuid());
+    let client = mqtt.connect('mqtt://35.237.162.218:1883');
 
-    const data = JSON.parse(
-      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
-    );
-    const channel = `/orgs/${data.data.org_id}/nodes`;
+    console.log('mqtt client: ', client);
 
-    let update_stream = this.update?.updates(request, this.getAuthHeader());
-
-    update_stream?.on('data', (response) => {
-      if (
-        response.getUpdate()?.getNotificationCase() ===
-        UpdateNotification.NotificationCase.HOST
-      ) {
-        const host = response.getUpdate()?.getHost();
-
-        console.log(`got host update from server: `, host);
-        callback(host);
-      } else if (
-        response.getUpdate()?.getNotificationCase() ===
-        UpdateNotification.NotificationCase.NODE
-      ) {
-        const node = response.getUpdate()?.getNode()?.toObject();
-
-        console.log(`got node update from server: `, node);
-        callback(node);
-      } else {
-        console.error('unsupported notification type');
-      }
-    });
-    update_stream?.on('error', (err) => {
-      console.error(`update stream closed unexpectedly: `, err);
-    });
+    window.setTimeout(() => {
+      console.debug('Waiting 1000ms for next update');
+    }, 1000);
   }
 
   /* Command service */
