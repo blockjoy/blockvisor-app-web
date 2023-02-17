@@ -274,7 +274,11 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    this.token = token;
+    // this.token = token;
+    const new_token = Buffer.from(token, 'binary').toString('base64');
+
+    this.token = new_token;
+    JSON.parse(localStorage.getItem('identity') || '').accessToken = new_token;
   }
 
   initStorage() {
@@ -567,6 +571,7 @@ export class GrpcClient {
     return this.blockchain
       ?.list(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response
           .getBlockchainsList()
           .map((chain) => blockchain_to_grpc_blockchain(chain));
