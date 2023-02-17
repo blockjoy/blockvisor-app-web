@@ -274,7 +274,11 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    this.token = token;
+    // this.token = token;
+    const new_token = Buffer.from(token, 'binary').toString('base64');
+
+    this.token = new_token;
+    JSON.parse(localStorage.getItem('identity') || '').accessToken = new_token;
   }
 
   initStorage() {
@@ -567,6 +571,7 @@ export class GrpcClient {
     return this.blockchain
       ?.list(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response
           .getBlockchainsList()
           .map((chain) => blockchain_to_grpc_blockchain(chain));
@@ -1271,35 +1276,33 @@ export class GrpcClient {
   /* Update service */
 
   getUpdates(stateObject?: StateObject): void {
-    let token = this.getApiToken() || "";
+    let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 
     console.log('using token for mqtt auth: ', token);
 
-    let mqtt_client = mqtt.connect(eqmx_url,
-        {
-          clean: true,
-          connectTimeout: 4000,
-          port: 8083,
-          protocolId: 'MQTT',
-          clientId: 'mqtt-js',
-          reconnectPeriod: 10000,
-          username: 'mqtt-js',
-          password: token,
-          // password: 'mqtt-js',
-        }
-    );
+    let mqtt_client = mqtt.connect(eqmx_url, {
+      clean: true,
+      connectTimeout: 4000,
+      port: 8083,
+      protocolId: 'MQTT',
+      clientId: 'user_auth',
+      reconnectPeriod: 10000,
+      username: 'user_auth',
+      password: token,
+      // password: 'mqtt-js',
+    });
 
-    mqtt_client.on('connect', function(err) {
+    mqtt_client.on('connect', function (err) {
       console.log('MQTT connected');
       mqtt_client.subscribe('js-test-topic', function (err) {
-        if (err) console.log("subscription error: ", err);
+        if (err) console.log('subscription error: ', err);
         else console.log('MQTT subscribed to "js-test-topic"');
       });
     });
 
-    mqtt_client.on('error', function(err) {
-      console.log("MQTT connection error: ", err);
+    mqtt_client.on('error', function (err) {
+      console.log('MQTT connection error: ', err);
     });
   }
 
