@@ -21,7 +21,6 @@ import {
   Parameter,
   RequestMeta,
   ResponseMeta,
-  // UpdateNotification,
   User,
   UserConfigurationParameter,
   Pagination,
