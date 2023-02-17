@@ -21,7 +21,6 @@ import {
   Parameter,
   RequestMeta,
   ResponseMeta,
-  // UpdateNotification,
   User,
   UserConfigurationParameter,
   Pagination,
@@ -275,17 +274,7 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    const new_token = Buffer.from(token, 'binary').toString('base64');
-
-    this.token = new_token;
-
-    const identity = localStorage.getItem('identity');
-    if (identity) {
-      const parsedIdentity = JSON.parse(identity);
-      parsedIdentity.accessToken = new_token;
-      const updatedIdentityString = JSON.stringify(parsedIdentity);
-      localStorage.setItem('identity', updatedIdentityString);
-    }
+    this.token = token;
   }
 
   initStorage() {
