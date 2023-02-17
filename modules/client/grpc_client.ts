@@ -274,17 +274,13 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    const new_token = Buffer.from(token, 'binary').toString('base64');
+    // this.token = token;
+    const new_token = Buffer.from(token, 'binary').toString(
+        'base64',
+    );
 
     this.token = new_token;
-
-    const identity = localStorage.getItem('identity');
-    if (identity) {
-      const parsedIdentity = JSON.parse(identity);
-      parsedIdentity.accessToken = new_token;
-      const updatedIdentityString = JSON.stringify(parsedIdentity);
-      localStorage.setItem('identity', updatedIdentityString);
-    }
+    JSON.parse(localStorage.getItem('identity') || '').accessToken = new_token;
   }
 
   initStorage() {
