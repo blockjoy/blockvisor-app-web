@@ -25,8 +25,15 @@ export function NodeView() {
   const router = useRouter();
   const { id } = router.query;
 
-  const { node, loadNode, deleteNode, stopNode, restartNode, isLoading } =
-    useNodeView();
+  const {
+    node,
+    loadNode,
+    unloadNode,
+    deleteNode,
+    stopNode,
+    restartNode,
+    isLoading,
+  } = useNodeView();
 
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id!);
@@ -42,6 +49,10 @@ export function NodeView() {
       loadNode(id, handleNodeError);
       setIsDeleting(false);
     }
+
+    return () => {
+      unloadNode();
+    };
   }, [id]);
 
   return (

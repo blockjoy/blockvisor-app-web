@@ -7,12 +7,12 @@ import { NodeMetrics } from '@modules/node/components/NodeList/NodeMetrics/NodeM
 import { Skeleton, GridTableViewPicker } from '@shared/components';
 
 export const NodeListHeader = () => {
+  const isLoadingMetrics = useRecoilValue(nodeAtoms.nodeMetricsLoadingState);
+  const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
   const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
-
-  const isLoading = useRecoilValue(nodeAtoms.isLoading);
 
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
@@ -27,12 +27,17 @@ export const NodeListHeader = () => {
     setActiveListType(type);
   };
 
+  const isLoading =
+    totalNodes === null ||
+    isLoadingMetrics !== 'finished' ||
+    isLoadingNodes !== 'finished';
+
   return (
     <div css={styles.wrapper}>
       {!isFiltersOpen && (
         <div css={styles.wrapperInner}>
-          {totalNodes === null ? (
-            <Skeleton width="65px" />
+          {isLoading ? (
+            <Skeleton width="90px" />
           ) : (
             <button
               onClick={handleFilterCollapseToggled}
@@ -49,7 +54,7 @@ export const NodeListHeader = () => {
       </div>
 
       <span css={styles.total}>
-        {isLoading !== 'finished' || totalNodes === null ? (
+        {isLoading ? (
           <Skeleton margin="0 0 0 auto" />
         ) : (
           <>

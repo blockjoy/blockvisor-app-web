@@ -24,7 +24,7 @@ type NodeUIProvider = {
 
 const NodeUIContext = createContext<NodeUIContext>({} as NodeUIContext);
 
-const getInitialQueryParams = () => {
+export const getInitialQueryParams = () => {
   const persistedNodeFilters = loadPersistedFilters();
 
   if (!persistedNodeFilters) return initialQueryParams;
