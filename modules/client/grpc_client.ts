@@ -274,12 +274,11 @@ export class GrpcClient {
 
   setTokenValue(token: string) {
     // this.token = token;
-    const new_token = Buffer.from(token, 'binary').toString(
-        'base64',
-    );
+    const new_token = Buffer.from(token, 'binary').toString('base64');
 
     this.token = new_token;
-    JSON.parse(localStorage.getItem('identity') || '').accessToken = new_token;
+    JSON.parse(localStorage.getItem('identity') || '{}').accessToken =
+      new_token;
   }
 
   initStorage() {
@@ -624,7 +623,7 @@ export class GrpcClient {
     return this.host
       ?.get(request, this.getAuthHeader())
       .then((response) => {
-        this.setTokenValue(response.getMeta()?.getToken()?.getValue()!);
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
@@ -787,9 +786,6 @@ export class GrpcClient {
       ?.get(request, this.getAuthHeader())
       .then((response) => {
         this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
-
-        console.log('getNode', node_to_grpc_node(response.getNode()));
-
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
@@ -1311,9 +1307,9 @@ export class GrpcClient {
       connectTimeout: 4000,
       port: 8083,
       protocolId: 'MQTT',
-      clientId: 'mqtt-js',
+      clientId: 'user_auth',
       reconnectPeriod: 10000,
-      username: 'mqtt-js',
+      username: 'user_auth',
       password: token,
       // password: 'mqtt-js',
     });
