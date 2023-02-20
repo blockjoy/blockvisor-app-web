@@ -274,7 +274,12 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    this.token = token;
+    // this.token = token;
+    const new_token = Buffer.from(token, 'binary').toString('base64');
+
+    this.token = new_token;
+    JSON.parse(localStorage.getItem('identity') || '{}').accessToken =
+      new_token;
   }
 
   initStorage() {
@@ -782,9 +787,6 @@ export class GrpcClient {
       ?.get(request, this.getAuthHeader())
       .then((response) => {
         this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
-
-        console.log('getNode', node_to_grpc_node(response.getNode()));
-
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
