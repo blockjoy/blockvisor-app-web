@@ -1280,9 +1280,9 @@ export class GrpcClient {
       connectTimeout: 4000,
       port: 8083,
       protocolId: 'MQTT',
-      clientId: 'mqtt-js',
+      clientId: 'user_auth',
       reconnectPeriod: 10000,
-      username: 'mqtt-js',
+      username: 'user_auth',
       password: token,
       // password: 'mqtt-js',
     });
