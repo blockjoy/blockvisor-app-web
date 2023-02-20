@@ -7,7 +7,7 @@ export const styles = {
     align-items: center;
     justify-content: space-between;
     height: 72px;
-    padding-left: 50px;
+    padding-left: 60px;
     border-bottom: 1px solid ${theme.colorBorder};
     box-sizing: border-box;
 

@@ -57,7 +57,7 @@ export function NodeView() {
 
   return (
     <>
-      <PageTitle title="Nodes" />
+      <PageTitle title="Nodes" hasOrgPicker />
       <PageSection bottomBorder={false} topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>
