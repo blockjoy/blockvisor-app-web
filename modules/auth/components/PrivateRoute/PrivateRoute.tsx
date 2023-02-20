@@ -34,6 +34,13 @@ export function PrivateRoute({ router, children }: Props) {
     }
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    if (isLoggedIn) refreshToken();
+    return () => {
+      removeRefreshTokenCall();
+    };
+  });
+
   function authCheck(loggedIn: boolean): any {
     if (!loggedIn && isPrivateRoute) {
       setAuthorized(false);
