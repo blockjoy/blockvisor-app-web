@@ -16,9 +16,17 @@ export const styles = {
       visibility: visible;
     }
   `,
+  wrapperNameHidden: css`
+    width: 52px;
+    max-width: 52px;
+
+    @media ${breakpoints.fromXLrg} {
+      margin-right: 6px;
+    }
+  `,
   title: (theme: ITheme) => css`
     position: absolute;
-    top: 11px;
+    top: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: ${theme.colorLabel};
@@ -33,10 +41,13 @@ export const styles = {
     }
   `,
   select: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    gap: 6px;
     background: transparent;
     color: ${theme.colorText};
     height: 64px;
-    padding-left: 8px;
+    padding-left: 0;
     padding-right: 24px;
     border: 0;
     width: 100%;
@@ -44,14 +55,20 @@ export const styles = {
     text-align: left;
     text-overflow: ellipsis;
     cursor: pointer;
-    overflow: hidden;
-    text-overflow: ellipsis;
 
     :hover,
     :active,
     :focus {
       box-shadow: none;
     }
+  `,
+  selectText: css`
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 8px;
+    line-height: 1.8;
   `,
   dropdown: css`
     top: 54px;
@@ -106,5 +123,18 @@ export const styles = {
         fill: ${theme.colorPrimaryText};
       }
     }
+  `,
+  bubble: (theme: ITheme) => css`
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    border-radius: 50%;
+    background: ${theme.colorPrimary};
+    color: ${theme.colorPrimaryText};
+    font-weight: 600;
+    font-size: 11px;
+    text-align: center;
   `,
 };

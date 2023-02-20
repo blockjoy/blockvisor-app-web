@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useRouter } from 'next/router';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
+import { ROUTES } from '@shared/constants/routes';
 
 type OrganisationAddForm = {
   name: string;
@@ -52,6 +53,11 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
     }
   };
 
+  const handleCancel = () => {
+    setIsAdding(false);
+    router.push(ROUTES.ORGANIZATIONS);
+  };
+
   return (
     <>
       <FormProvider {...form}>
@@ -60,7 +66,7 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
             placeholder="New organization name"
             name="name"
             type="text"
-            inputSize="small"
+            inputSize="medium"
             validationOptions={{
               required: 'This is a mandatory field',
             }}
@@ -75,11 +81,7 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
             >
               Add
             </Button>
-            <Button
-              onClick={() => setIsAdding(false)}
-              style="outline"
-              size="small"
-            >
+            <Button onClick={handleCancel} style="outline" size="small">
               Cancel
             </Button>
           </div>

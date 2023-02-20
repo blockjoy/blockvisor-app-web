@@ -15,6 +15,7 @@ export const styles = {
 
     h1 {
       font-size: 18px;
+      margin-right: auto;
     }
 
     @media ${breakpoints.toXlrg} {
