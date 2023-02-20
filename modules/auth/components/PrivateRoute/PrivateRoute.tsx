@@ -1,4 +1,5 @@
 import { useIdentity } from '@modules/auth';
+import { useRefreshToken } from '@modules/auth/hooks/useRefreshToken';
 import { LoadingSpinner, PUBLIC_ROUTES, ROUTES } from '@shared/index';
 import { useEffect, useState } from 'react';
 
@@ -10,11 +11,12 @@ interface Props {
 export function PrivateRoute({ router, children }: Props) {
   const { isLoggedIn, isLoading } = useIdentity();
   const [authorized, setAuthorized] = useState(false);
+  const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
 
   const isPrivateRoute = !PUBLIC_ROUTES.some((r) => router.asPath.includes(r));
 
   useEffect(() => {
-    authCheck(router.asPath, isLoggedIn);
+    authCheck(isLoggedIn);
 
     const hideContent = () => {
       setAuthorized(false);
@@ -32,8 +34,14 @@ export function PrivateRoute({ router, children }: Props) {
     }
   }, [isLoggedIn]);
 
-  function authCheck(url: any, loggedIn: boolean): any {
-    const path = url.split('?')[0];
+  useEffect(() => {
+    if (isLoggedIn) refreshToken();
+    return () => {
+      removeRefreshTokenCall();
+    };
+  });
+
+  function authCheck(loggedIn: boolean): any {
     if (!loggedIn && isPrivateRoute) {
       setAuthorized(false);
       router.push({
