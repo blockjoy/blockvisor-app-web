@@ -80,11 +80,10 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
       <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
         <header css={styles.header}>
           <h2>Your Organizations</h2>
-          <SvgIcon tooltip="Active organization affects how you view and launch nodes.">
+          <SvgIcon tooltip="View and launch nodes from your organizations">
             <IconInfo />
           </SvgIcon>
         </header>
-
         <ul>
           <li>
             <DropdownItem

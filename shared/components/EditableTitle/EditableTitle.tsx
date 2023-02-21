@@ -37,7 +37,7 @@ export const EditableTitle: FC<Props> = ({
     if (isEditMode && inputRef.current) {
       inputRef.current.value = initialValue;
       inputValue.current = initialValue;
-      setCharacterCount(initialValue?.length + 1);
+      setCharacterCount(escapeHtml(initialValue)?.length + 1);
     }
 
     setIsEditMode(!isEditMode);
@@ -47,9 +47,9 @@ export const EditableTitle: FC<Props> = ({
     const { value } = e.target;
 
     inputValue.current = value;
-    setCharacterCount(value?.length + 1);
+    setCharacterCount(escapeHtml(value)?.length + 1);
     setIsValid(value?.length > 0);
-    setIsDirty(value !== initialValue);
+    setIsDirty(escapeHtml(value) !== escapeHtml(initialValue));
   };
 
   const handleSaveClicked = () => {
@@ -58,7 +58,7 @@ export const EditableTitle: FC<Props> = ({
 
   useEffect(() => {
     inputValue.current = initialValue;
-    setCharacterCount(initialValue?.length + 1);
+    setCharacterCount(escapeHtml(initialValue)?.length + 1);
   }, []);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export const EditableTitle: FC<Props> = ({
           placeholder=""
           size={characterCount}
           css={[styles.input, isEditMode && styles.inputEditable]}
-          defaultValue={initialValue}
+          defaultValue={escapeHtml(initialValue)}
           onChange={handleChange}
         />
       ) : (
