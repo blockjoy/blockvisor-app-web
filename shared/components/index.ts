@@ -73,3 +73,4 @@ export * from './GridTableViewPicker/GridTableViewPicker';
 export * from './PillPicker/PillPicker';
 export * from './Tooltip/Tooltip';
 export * from './LoadingSpinner/';
+export * from './SvgIcon/SvgIcon';

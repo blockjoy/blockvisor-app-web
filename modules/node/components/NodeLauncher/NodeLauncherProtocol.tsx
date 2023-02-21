@@ -1,5 +1,5 @@
 import { useGetBlockchains } from '@modules/node';
-import { BlockchainIcon, TableSkeleton } from '@shared/components';
+import { BlockchainIcon, TableSkeleton, SvgIcon } from '@shared/components';
 import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import IconSearch from '@public/assets/icons/search-16.svg';
@@ -92,9 +92,11 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 className={b.id === activeBlockchainId ? 'active row' : 'row'}
               >
                 <span css={styles.blockchainWrapper}>
-                  <span css={styles.iconWrapper}>
-                    <BlockchainIcon hideTooltip blockchainName={b.name} />
-                  </span>
+                  <BlockchainIcon
+                    size="28px"
+                    hideTooltip
+                    blockchainName={b.name}
+                  />
                   <span css={styles.name}>
                     <span className="beta-badge" css={styles.betaBadge}>
                       BETA
@@ -132,9 +134,11 @@ export const NodeLauncherProtocol: FC<Props> = ({
                   ?.map((b: any) => (
                     <div key={b} css={[styles.row, styles.rowDisabled]}>
                       <span css={styles.blockchainWrapper}>
-                        <span css={styles.iconWrapper}>
-                          <BlockchainIcon hideTooltip blockchainName={b} />
-                        </span>
+                        <BlockchainIcon
+                          size="28px"
+                          hideTooltip
+                          blockchainName={b}
+                        />
                         <span css={styles.name}>{b}</span>
                         <span
                           className="coming-soon-badge"

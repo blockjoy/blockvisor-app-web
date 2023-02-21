@@ -30,7 +30,7 @@ export const NodeViewDetailsHeader: FC<Props> = ({
   return (
     <header css={styles.header}>
       <div css={styles.blockchainIcon}>
-        <BlockchainIcon blockchainName={blockchainName} />
+        <BlockchainIcon size="40px" blockchainName={blockchainName} />
       </div>
       <div>
         <div css={styles.detailsHeader}>

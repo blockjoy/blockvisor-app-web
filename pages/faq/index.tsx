@@ -1,6 +1,6 @@
 import { AppLayout } from '@modules/layout';
 import { Faq } from '@modules/faq/Faq';
-import { fetchFAQ } from 'utils/faq/fetchFAQ';
+import { fetchFAQ } from 'utils/FAQ/fetchFAQ';
 import { ReactNode } from 'react';
 
 export type FaqViewProps = {

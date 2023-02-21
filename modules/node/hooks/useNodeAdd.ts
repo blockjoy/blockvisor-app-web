@@ -3,9 +3,12 @@ import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
+import { useNodeList } from './useNodeList';
 
 export const useNodeAdd = () => {
   const repository = useIdentityRepository();
+
+  const { loadNodes } = useNodeList();
 
   const createNode = async (
     params: CreateNodeParams,
@@ -54,6 +57,7 @@ export const useNodeAdd = () => {
     try {
       const nodeId = response.messagesList[0];
       toast.success('Node Created');
+      loadNodes();
       onSuccess(nodeId);
     } catch (err) {
       let errorMessage =
