@@ -117,7 +117,7 @@ export const BlockchainIcon: FC<Props> = ({
           customCss={[styles.tooltip]}
         />
       )}
-      <SvgIcon size={size} additionalStyle={[styles.icon]}>
+      <SvgIcon size={size} additionalStyles={[styles.icon]}>
         <Suspense fallback={null}>
           <Component />
         </Suspense>
