@@ -1,17 +1,18 @@
 import Sidebar from './sidebar/Sidebar';
-import Overlay from './overlay/Overlay';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
 import { useIdentityRepository } from '@modules/auth';
 import {
-  OrganizationAdd,
+  organizationAtoms,
   useGetOrganizations,
   useInvitations,
 } from '@modules/organization';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Head from 'next/head';
-import { useGetBlockchains } from '@modules/node';
+import { useGetBlockchains, useNodeList } from '@modules/node';
+import { useRecoilValue } from 'recoil';
+import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -30,15 +31,27 @@ export const AppLayout: React.FC<LayoutType> = ({
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
+  const { loadNodes } = useNodeList();
 
-  useEffect(() => {
-    getReceivedInvitations(userId!);
-  }, []);
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
+
+  const currentOrganization = useRef(defaultOrganization);
 
   useEffect(() => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
+    getReceivedInvitations(userId!);
+    loadNodes();
   }, []);
+
+  useEffect(() => {
+    if (currentOrganization.current?.id !== defaultOrganization?.id) {
+      currentOrganization.current = defaultOrganization;
+      loadNodes(initialQueryParams);
+    }
+  }, [defaultOrganization?.id]);
 
   return (
     <>
@@ -52,8 +65,6 @@ export const AppLayout: React.FC<LayoutType> = ({
       </Head>
       <Burger />
       <Sidebar />
-      <Overlay />
-      <OrganizationAdd />
       <Page isFlex={isPageFlex}>{children}</Page>
     </>
   );

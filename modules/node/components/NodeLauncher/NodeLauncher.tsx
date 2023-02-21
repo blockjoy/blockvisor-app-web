@@ -11,6 +11,7 @@ import { EmptyColumn } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
+import { ROUTES } from '@shared/index';
 
 type NodeState = {
   blockchainId: string;
@@ -156,7 +157,10 @@ export const NodeLauncher = () => {
     createNode(
       params,
       (nodeId: string) => {
-        router.push(`/nodes/${nodeId}`);
+        router.push({
+          pathname: `${ROUTES.NODE(nodeId)}`,
+          query: { created: true },
+        });
       },
       (error: string) => setServerError(error),
     );

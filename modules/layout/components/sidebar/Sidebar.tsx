@@ -3,6 +3,7 @@ import { layoutState, sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { styles } from './Sidebar.styles';
 
 import { SidebarHeader } from './SidebarHeader';
+import { SidebarOverlay } from './SidebarOverlay';
 import SidebarMain from './SidebarMain';
 import { useEffect } from 'react';
 
@@ -17,17 +18,20 @@ export default () => {
   }, []);
 
   return (
-    <div
-      css={[
-        styles.sidebar,
-        isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed,
-        Boolean(layout) && styles.sidebarDrawerOpen,
-      ]}
-    >
-      <SidebarHeader />
-      <div css={[styles.wrapper]}>
-        <SidebarMain />
-      </div>
-    </div>
+    <>
+      <SidebarOverlay />
+      <aside
+        css={[
+          styles.sidebar,
+          isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed,
+          Boolean(layout) && styles.sidebarDrawerOpen,
+        ]}
+      >
+        <SidebarHeader />
+        <div css={[styles.wrapper]}>
+          <SidebarMain />
+        </div>
+      </aside>
+    </>
   );
 };

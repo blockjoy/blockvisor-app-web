@@ -4,6 +4,7 @@ import {
   useGetOrganizations,
   useInvitations,
 } from '@modules/organization';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Badge, Button } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -44,8 +45,10 @@ export const OrganizationInvitations = () => {
         {invitations?.map((invite) => (
           <li key={invite.id} css={styles.item}>
             <div css={[spacing.bottom.medium]}>
-              <b>{invite.createdByUserName || 'Unknown'}</b> invited you to join{' '}
-              <b>{invite.createdForOrgName || 'Unknown'}</b> organization
+              <b>{escapeHtml(invite.createdByUserName!) || 'Unknown'}</b>{' '}
+              invited you to join{' '}
+              <b>{escapeHtml(invite.createdForOrgName!) || 'Unknown'}</b>{' '}
+              organization
             </div>
             <div css={styles.buttons}>
               <Button

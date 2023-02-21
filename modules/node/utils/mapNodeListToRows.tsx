@@ -35,7 +35,7 @@ export const mapNodeListToRows = (nodeList?: BlockjoyNode[]) => {
         key: '1',
         component: (
           <div style={{ marginTop: '4px' }}>
-            <BlockchainIcon blockchainName={node.blockchainName} />
+            <BlockchainIcon size="32px" blockchainName={node.blockchainName} />
           </div>
         ),
       },

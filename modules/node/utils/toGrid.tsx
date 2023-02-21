@@ -14,7 +14,9 @@ export const toGrid = (
           key={node.id}
           onCellClick={() => onCellClick({ key: node.id })}
           cellTitle={node.name}
-          cellIcon={<BlockchainIcon blockchainName={node.blockchainName} />}
+          cellIcon={
+            <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
+          }
           cellStatus={<NodeStatus hasBorder status={node.status} />}
           cellType={
             nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)?.name

@@ -32,7 +32,6 @@ import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrgani
 import { useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
-import { useNodeList } from '@modules/node';
 import { apiClient } from '@modules/client';
 
 export const OrganizationView = () => {

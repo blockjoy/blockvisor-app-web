@@ -6,6 +6,7 @@ import {
   Action,
   Member,
 } from '@modules/organization/utils/mapOrganizationMembersToRows';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Button, Modal } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -58,11 +59,15 @@ export function OrganizationDialog({
   const messages = {
     [Action.remove]: {
       headline: 'Remove Member',
-      subheadline: `You are removing ${email} from ${selectedOrganization?.name}.`,
+      subheadline: `You are removing ${escapeHtml(email!)} from ${escapeHtml(
+        selectedOrganization?.name!,
+      )}.`,
     },
     [Action.revoke]: {
       headline: 'Cancel Invitation',
-      subheadline: `You are canceling an invitation to ${selectedOrganization?.name} for ${email}.`,
+      subheadline: `You are canceling an invitation to ${escapeHtml(
+        selectedOrganization?.name!,
+      )} for ${escapeHtml(email!)}.`,
     },
   };
 

@@ -1,6 +1,6 @@
 export * from './components/OrganizationManagement/OrganizationManagement';
 export * from './components/OrganizationManagement/OrganizationList/OrganizationList';
-export * from './components/OrganizationAdd/OrganizationAdd';
+export * from './components/OrganizationManagement/OrganizationList/OrganizationAdd/OrganizationAdd';
 export * from './components/OrganizationView/OrganizationView';
 export * from './components/OrganizationView/OrganizationDetails/OrganizationDetails';
 export * from './components/OrganizationView/OrganizationMembers/OrganizationMembers';

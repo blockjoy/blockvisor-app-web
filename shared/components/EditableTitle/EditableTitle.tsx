@@ -4,6 +4,7 @@ import IconPencil from '@public/assets/icons/pencil-12.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
 import { Button } from '../Button/Button';
 import { css } from '@emotion/react';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 type Props = {
   isLoading?: boolean;
@@ -87,7 +88,7 @@ export const EditableTitle: FC<Props> = ({
           onChange={handleChange}
         />
       ) : (
-        <span css={styles.span}>{initialValue}</span>
+        <span css={styles.span}>{escapeHtml(initialValue)}</span>
       )}
 
       {canUpdate && !isLoading && initialValue?.length && (
