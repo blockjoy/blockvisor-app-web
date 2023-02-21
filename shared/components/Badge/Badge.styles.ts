@@ -4,10 +4,11 @@ import { ITheme } from 'types/theme';
 export const styles = {
   badge: (theme: ITheme) => css`
     display: inline-flex;
+    flex: 0 0 auto;
     justify-content: center;
     align-items: center;
     height: 18px;
-    min-width: 32px;
+    min-width: 0;
     padding: 0 8px;
     border-radius: 9px;
     font-size: 10px;
@@ -16,19 +17,21 @@ export const styles = {
     line-height: 1;
   `,
   primary: (theme: ITheme) => css`
-    background: ${theme.colorDanger};
-    color: ${theme.colorBackground};
+    color: ${theme.colorPrimary};
+    border-color: ${theme.colorPrimary};
   `,
   secondary: (theme: ITheme) => css`
-    background: ${theme.colorPrimary};
-    color: ${theme.colorText};
+    color: ${theme.colorAccent};
+    border-color: ${theme.colorAccent};
   `,
   note: (theme: ITheme) => css`
     color: ${theme.colorNote};
     background: ${theme.colorBackground};
+    border-color: ${theme.colorNote};
   `,
-  outline: (theme: ITheme) => css`
+  outline: css`
     background: transparent;
-    border: 1px solid ${theme.colorNote};
+    border-width: 1px;
+    border-style: solid;
   `,
 };

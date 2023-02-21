@@ -1,6 +1,7 @@
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { OrganizationPicker } from '@shared/components';
 import { FC, ReactNode } from 'react';
+import { isDesktop } from 'react-device-detect';
 import { useRecoilValue } from 'recoil';
 import { typo } from 'styles/utils.typography.styles';
 import { wrapper } from 'styles/wrapper.styles';
@@ -24,7 +25,9 @@ export const PageTitle: FC<Props> = ({ children, title, hasOrgPicker }) => {
           <>{children}</>
         ) : (
           <>
-            {hasOrgPicker && !isSidebarOpen && <OrganizationPicker hideName />}
+            {hasOrgPicker && ((!isSidebarOpen && isDesktop) || !isDesktop) && (
+              <OrganizationPicker hideName />
+            )}
             <h1 css={typo.large}>{title}</h1>
             <PageTitleLaunchNode />
           </>

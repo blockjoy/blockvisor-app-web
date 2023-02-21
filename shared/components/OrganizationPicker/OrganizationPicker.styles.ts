@@ -24,20 +24,22 @@ export const styles = {
       margin-right: 6px;
     }
   `,
-  title: (theme: ITheme) => css`
-    position: absolute;
-    top: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: ${theme.colorLabel};
-    font-size: 9px;
-    font-weight: 500;
-    white-space: nowrap;
-    transition: 0.3s;
+  activeOrg: css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+  `,
+  header: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 10px;
+    border-bottom: 1px solid ${theme.colorBorderGrey};
 
-    @media ${breakpoints.fromXLrg} {
-      visibility: hidden;
-      opacity: 0;
+    h2 {
+      font-size: 12px;
+      color: ${theme.colorDefault};
     }
   `,
   select: (theme: ITheme) => css`
@@ -51,6 +53,7 @@ export const styles = {
     padding-right: 24px;
     border: 0;
     width: 100%;
+    white-space: nowrap;
     overflow: hidden;
     text-align: left;
     text-overflow: ellipsis;
@@ -70,14 +73,26 @@ export const styles = {
     padding-right: 8px;
     line-height: 1.8;
   `,
+  activeOrganization: css`
+    cursor: default;
+
+    :hover,
+    :focus,
+    :active {
+      background: none;
+    }
+  `,
   dropdown: css`
     top: 54px;
     right: 5px;
     left: 0;
-    overflow: hidden;
+    max-width: 190px;
+    min-width: 190px;
+    width: 190px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 30%);
   `,
-  dropdownInner: (items: number) => css`
-    max-height: ${items * 40}px;
+  dropdownInner: css`
+    max-height: 199px;
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
@@ -99,15 +114,20 @@ export const styles = {
     border: 0;
     border-top: 1px solid ${theme.colorBorderGrey};
     border-bottom: 1px solid transparent;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     display: flex;
     align-items: center;
     width: 100%;
-    margin-top: 10px;
     padding: 12px;
     gap: 12px;
     color: ${theme.colorDefault};
     font-size: 12px;
     cursor: pointer;
+
+    path {
+      fill: ${theme.colorDefault};
+    }
 
     svg {
       width: 8px;
@@ -131,7 +151,7 @@ export const styles = {
     height: 22px;
     flex: 0 0 22px;
     border-radius: 50%;
-    background: ${theme.colorPrimary};
+    background: ${theme.colorAccent};
     color: ${theme.colorPrimaryText};
     font-weight: 600;
     font-size: 11px;
