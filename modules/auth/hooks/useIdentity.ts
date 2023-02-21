@@ -2,7 +2,15 @@ import { authAtoms } from '@modules/auth/store/authAtoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-export const useIdentity = () => {
+export type UseIdentity = {
+  isLoggedIn: boolean;
+  isVerified: boolean;
+  isLoading: boolean;
+  isDone: boolean;
+  user: User | null;
+  state: string;
+};
+export const useIdentity = (): UseIdentity => {
   const user = useRecoilValue(authAtoms.user);
   const [loading, setLoading] = useState<string>('initializing');
 

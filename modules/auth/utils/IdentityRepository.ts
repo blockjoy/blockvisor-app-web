@@ -1,6 +1,19 @@
 import { BrowserStorage } from './BrowserStorage';
 
-export class IdentityRepository {
+export interface IIdentityRepository {
+  getIdentity: () => User | null;
+  saveIdentity: (user: User) => void;
+  updateIdentity: (user: User) => void;
+  deleteIdentity: VoidFunction;
+  getDefaultOrganization: () =>
+    | {
+        name?: string | undefined;
+        id?: string | undefined;
+      }
+    | undefined;
+  saveDefaultOrganization: (name: string, id: string) => void;
+}
+export class IdentityRepository implements IIdentityRepository {
   private _key = 'identity';
   private _hostProvisionsKey = 'hostProvisionKeys';
   private _storage: BrowserStorage<User>;

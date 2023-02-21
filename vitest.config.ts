@@ -8,6 +8,8 @@ export default defineConfig({
   plugins: [react(), svgr({ exportAsDefault: true })],
   test: {
     environment: 'jsdom',
+    globals: false,
+    setupFiles: ['./__tests__/utils.ts'],
   },
   resolve: {
     alias: {

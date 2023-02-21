@@ -91,10 +91,11 @@ export const NodeList = () => {
         <div css={styles.nodeListWrapper}>
           <NodeListHeader />
           {isLoading === 'initializing' ? (
-            <TableSkeleton />
+            <TableSkeleton dataCy="nodeList-skeleton" />
           ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
             <EmptyColumn
               title="No Nodes."
+              dataCy="nodeList-emptyColumn"
               description={
                 isFiltered && isEmpty ? (
                   'Reset filters.'

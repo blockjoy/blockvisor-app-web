@@ -70,7 +70,6 @@ export const useNodeList = () => {
       const newNodes = [...nodeList, ...nodes];
       setNodeList(newNodes);
     }
-
     // TODO: has to be improved once the total nodes count is received (doesn't work with filtering)
     const hasMoreNodes =
       queryParams.pagination.current_page *
@@ -82,6 +81,7 @@ export const useNodeList = () => {
     setPreloadNodes(0);
 
     setIsLoading('finished');
+    console.log('FINISHED');
   };
 
   // const updateNodeList = async (node: BlockjoyNode) => {
