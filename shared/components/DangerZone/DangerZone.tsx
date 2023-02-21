@@ -7,6 +7,7 @@ import { display } from 'styles/utils.display.styles';
 import { styles } from './DangerZone.styles';
 import { FormProvider, useForm } from 'react-hook-form';
 import { css } from '@emotion/react';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export enum Action {
   leave = 'leave',
@@ -48,9 +49,8 @@ export const DangerZone: FC<Props> = ({
 
   const gotoStep = (step: number) => setStep(step);
 
-  const doNamesMatch = (name: string) => {
-    return name === elementNameToCompare;
-  };
+  const doNamesMatch = (name: string) =>
+    name === escapeHtml(elementNameToCompare);
 
   const handleRedirect = () => router.push(redirects[elementName]);
 
@@ -90,7 +90,7 @@ export const DangerZone: FC<Props> = ({
           {isDisabled && (
             <div css={spacing.top.medium}>
               <Alert width="420px">
-                You cannot delete an organization that has nodes.
+                You cannot delete an ${elementName} that has nodes.
               </Alert>
             </div>
           )}
