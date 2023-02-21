@@ -29,7 +29,7 @@ import {
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
 import { apiClient } from '@modules/client';
@@ -48,10 +48,10 @@ export const OrganizationView = () => {
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
 
-  const sentInvitationsLoadingState = useRecoilValue(
-    organizationAtoms.organizationSentInvitationsLoadingState,
-  );
-  const membersLoadingState = useRecoilValue(
+  const [sentInvitationsLoadingState, setSentInvitationsLoadingState] =
+    useRecoilState(organizationAtoms.organizationSentInvitationsLoadingState);
+
+  const [membersLoadingState, setMembersLoadingState] = useRecoilState(
     organizationAtoms.organizationMembersLoadingState,
   );
 
@@ -135,6 +135,8 @@ export const OrganizationView = () => {
     return () => {
       setIsLoading('initializing');
       setOrganization(null);
+      setSentInvitationsLoadingState('initializing');
+      setMembersLoadingState('initializing');
     };
   }, [router.isReady]);
 
@@ -147,7 +149,10 @@ export const OrganizationView = () => {
   const isLoadingOrg =
     isLoading !== 'finished' ||
     membersLoadingState !== 'finished' ||
-    sentInvitationsLoadingState !== 'finished';
+    sentInvitationsLoadingState !== 'finished' ||
+    totalNodes === null;
+
+  console.log('sentInvitesta', sentInvitationsLoadingState);
 
   return (
     <>
@@ -200,7 +205,9 @@ export const OrganizationView = () => {
             activeAction={action}
             handleAction={handleAction}
             isLoading={isDeleting}
-            isDisabled={action === 'delete' && totalNodes! > 0}
+            isDisabled={
+              action === 'delete' && totalNodes !== null && totalNodes! > 0
+            }
           ></DangerZone>
         </PageSection>
       )}
