@@ -10,6 +10,7 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export enum Action {
   revoke = 'revoke',
@@ -138,7 +139,7 @@ export const mapOrganizationMembersToRows = (
         key: '1',
         component: (
           <div css={flex.display.inline}>
-            <p>{member.email}</p>
+            <p>{escapeHtml(member.email!)}</p>
             {member.isPending && (
               <Badge
                 color="note"

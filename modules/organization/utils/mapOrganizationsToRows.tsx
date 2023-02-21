@@ -1,6 +1,7 @@
 import { Button } from '@shared/components';
 import { flex } from 'styles/utils.flex.styles';
 import { USER_ROLES } from '@modules/auth/hooks/useHasPermissions';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export const mapOrganizationsToRows = (
   organizations?: ClientOrganization[],
@@ -34,7 +35,7 @@ export const mapOrganizationsToRows = (
         key: '1',
         component: (
           <>
-            <p>{org.name}</p>
+            <p>{escapeHtml(org.name!)}</p>
           </>
         ),
       },

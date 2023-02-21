@@ -10,6 +10,7 @@ import IconPerson from '@public/assets/icons/person-12.svg';
 import { Dropdown } from '../Dropdown/Dropdown';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { useRef, useState } from 'react';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export default function ProfileDropdown() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function ProfileDropdown() {
         >
           <div css={styles.userInfo}>
             <span css={styles.label}>Signed in as</span>
-            <span>{`${user?.firstName} ${user?.lastName}`}</span>
+            <span>{escapeHtml(`${user?.firstName} ${user?.lastName}`)}</span>
           </div>
         </DropdownItem>
         <DropdownItem

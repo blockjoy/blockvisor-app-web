@@ -1,3 +1,4 @@
+import { escapeHtml } from '@shared/utils/escapeHtml';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { colors } from 'styles/utils.colors.styles';
 
@@ -14,7 +15,7 @@ export const mapMembersToRows = (members: Member[]) => {
         key: '1',
         component: (
           <>
-            <p>{member.username}</p>
+            <p>{escapeHtml(member.username)}</p>
           </>
         ),
       },
@@ -38,7 +39,7 @@ export const mapInvitesToRows = (invites: any[]) => {
         key: '1',
         component: (
           <>
-            <p>{invite.inviteeEmail}</p>
+            <p>{escapeHtml(invite.inviteeEmail)}</p>
           </>
         ),
       },

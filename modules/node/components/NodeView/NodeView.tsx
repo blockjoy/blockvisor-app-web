@@ -64,7 +64,6 @@ export function NodeView() {
             <BackButton backUrl={ROUTES.NODES} />
           </PageHeader>
         </div>
-
         {!isLoading ? (
           <>
             {!nodeError ? (
