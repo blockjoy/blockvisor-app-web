@@ -67,12 +67,14 @@ export const Input = ({
 
   return (
     <>
-      <label
-        htmlFor={name}
-        css={[inputLabel, inputLabelSize.small, labelStyles]}
-      >
-        {label}
-      </label>
+      {Boolean(label) && (
+        <label
+          htmlFor={name}
+          css={[inputLabel, inputLabelSize.small, labelStyles]}
+        >
+          {label}
+        </label>
+      )}
       <div css={[inputWrapper]}>
         <InputUtil position="left">{leftIcon}</InputUtil>
         <input

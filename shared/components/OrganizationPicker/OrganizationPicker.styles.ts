@@ -10,15 +10,50 @@ export const styles = {
     position: relative;
     display: flex;
     align-items: center;
+
+    :hover .title {
+      opacity: 1;
+      visibility: visible;
+    }
+  `,
+  wrapperNameHidden: css`
+    width: 52px;
+    max-width: 52px;
+
+    @media ${breakpoints.fromXLrg} {
+      margin-right: 6px;
+    }
+  `,
+  activeOrg: css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+  `,
+  header: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 10px;
+    border-bottom: 1px solid ${theme.colorBorderGrey};
+
+    h2 {
+      font-size: 12px;
+      color: ${theme.colorDefault};
+    }
   `,
   select: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    gap: 6px;
     background: transparent;
     color: ${theme.colorText};
     height: 64px;
-    padding-left: 8px;
+    padding-left: 0;
     padding-right: 24px;
     border: 0;
     width: 100%;
+    white-space: nowrap;
     overflow: hidden;
     text-align: left;
     text-overflow: ellipsis;
@@ -30,27 +65,34 @@ export const styles = {
       box-shadow: none;
     }
   `,
-  nativeSelect: css`
-    @media ${breakpoints.fromMed} {
-      display: none;
-    }
+  selectText: css`
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 8px;
+    line-height: 1.8;
   `,
-  customSelect: css`
-    @media ${breakpoints.toMed} {
-      display: none;
+  activeOrganization: css`
+    cursor: default;
+
+    :hover,
+    :focus,
+    :active {
+      background: none;
     }
   `,
   dropdown: css`
     top: 54px;
     right: 5px;
     left: 0;
-    overflow: hidden;
-    @media ${breakpoints.toMed} {
-      display: none;
-    }
+    max-width: 190px;
+    min-width: 190px;
+    width: 190px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 30%);
   `,
-  dropdownInner: (items: number) => css`
-    max-height: ${items * 40}px;
+  dropdownInner: css`
+    max-height: 199px;
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
@@ -72,15 +114,20 @@ export const styles = {
     border: 0;
     border-top: 1px solid ${theme.colorBorderGrey};
     border-bottom: 1px solid transparent;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     display: flex;
     align-items: center;
     width: 100%;
-    margin-top: 10px;
     padding: 12px;
     gap: 12px;
     color: ${theme.colorDefault};
     font-size: 12px;
     cursor: pointer;
+
+    path {
+      fill: ${theme.colorDefault};
+    }
 
     svg {
       width: 8px;
@@ -96,5 +143,18 @@ export const styles = {
         fill: ${theme.colorPrimaryText};
       }
     }
-  `
+  `,
+  bubble: (theme: ITheme) => css`
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    border-radius: 50%;
+    background: ${theme.colorAccent};
+    color: ${theme.colorPrimaryText};
+    font-weight: 600;
+    font-size: 11px;
+    text-align: center;
+  `,
 };

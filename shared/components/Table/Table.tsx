@@ -34,6 +34,7 @@ export const Table: React.FC<Props> = ({
   setPageIndex,
 }) => {
   const [activeRows, setActiveRows] = useState<Row[]>(rows);
+  const [isBuildingRows, setIsBuildingRows] = useState<boolean>(true);
 
   const pageTotal =
     rows?.length < pageSize! ? 1 : Math.ceil(rows?.length / pageSize!);
@@ -51,6 +52,7 @@ export const Table: React.FC<Props> = ({
   };
 
   const getPageOfRows = () => {
+    setIsBuildingRows(true);
     const start = pageIndex === 0 ? 0 : pageIndex! * pageSize!;
     const end = pageIndex === 0 ? pageSize : pageIndex! * pageSize! + pageSize!;
     const newRows = rows.slice(start, end);
@@ -60,6 +62,7 @@ export const Table: React.FC<Props> = ({
   useEffect(() => {
     if (pageSize) {
       setActiveRows(getPageOfRows());
+      setIsBuildingRows(false);
     }
   }, [pageIndex]);
 
@@ -72,9 +75,10 @@ export const Table: React.FC<Props> = ({
         setPageIndex(pageTotal - 1);
       }
     }
+    setIsBuildingRows(false);
   }, [rows?.length]);
 
-  return (
+  return isBuildingRows ? null : (
     <div css={styles.wrapper}>
       <table
         css={[

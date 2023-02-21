@@ -9,6 +9,9 @@ import IconRocket from '@public/assets/icons/rocket-12.svg';
 import IconCog from '@public/assets/icons/cog-12.svg';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
+import { useRecoilValue } from 'recoil';
+import { organizationAtoms } from '@modules/organization';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 type Props = {
   serverError: string;
@@ -36,6 +39,10 @@ export const NodeLauncherSummary: FC<Props> = ({
   onCreateNodeClicked,
 }) => {
   const { blockchains } = useGetBlockchains();
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   if (isConfigValid === null) return null;
 
@@ -72,6 +79,15 @@ export const NodeLauncherSummary: FC<Props> = ({
                     {nodeTypeList?.find((n) => n.id === +nodeTypeId)?.name ||
                       'Not Selected'}
                   </span>
+                </div>
+              </li>
+              <li>
+                <span css={styles.summaryIcon}>
+                  <IconCheck />
+                </span>
+                <div>
+                  <label>Organization</label>
+                  <span>{escapeHtml(defaultOrganization?.name!)}</span>
                 </div>
               </li>
               <li>

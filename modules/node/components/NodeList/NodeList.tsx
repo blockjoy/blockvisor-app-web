@@ -75,7 +75,7 @@ export const NodeList = () => {
 
   return (
     <>
-      <PageTitle title="Nodes" />
+      <PageTitle hasOrgPicker title="Nodes" />
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters isLoading={isLoading} />
         <div css={styles.nodeListWrapper}>

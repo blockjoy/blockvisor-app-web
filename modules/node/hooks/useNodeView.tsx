@@ -127,7 +127,8 @@ export const useNodeView = (): Hook => {
 
     setNode(activeNode);
 
-    updateNodeList(node);
+    // this is causing some weird duplicate bug
+    // updateNodeList(node);
 
     setIsLoading(false);
   };
