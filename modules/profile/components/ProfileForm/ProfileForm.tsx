@@ -67,6 +67,7 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               labelStyles={[typo.base]}
               label="Email"
               name="email"
+              placeholder="Email"
               value={email}
             />
           </li>
@@ -75,8 +76,9 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               disabled={loading}
               labelStyles={[typo.base]}
               inputSize="medium"
-              label="First Name"
+              label="First name"
               name="firstName"
+              placeholder="First name"
               validationOptions={{
                 required: 'Your first name is required',
               }}
@@ -87,8 +89,9 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               disabled={loading}
               inputSize="medium"
               labelStyles={[typo.base]}
-              label="Last Name"
+              label="Last name"
               name="lastName"
+              placeholder="Last name"
               validationOptions={{
                 required: 'Your last name is required',
               }}

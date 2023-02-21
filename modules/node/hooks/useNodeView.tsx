@@ -8,6 +8,7 @@ import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 type Args = string | string[] | undefined;
 
@@ -94,7 +95,7 @@ export const useNodeView = (): Hook => {
               isChecked={property.value === 'true' ? true : false}
             />
           ) : (
-            property.value
+            escapeHtml(property.value)
           ),
       }));
 
