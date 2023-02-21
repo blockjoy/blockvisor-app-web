@@ -87,7 +87,7 @@ export const NodeLauncherSummary: FC<Props> = ({
                 </span>
                 <div>
                   <label>Organization</label>
-                  <span>{escapeHtml(defaultOrganization?.name)}</span>
+                  <span>{escapeHtml(defaultOrganization?.name!)}</span>
                 </div>
               </li>
               <li>
