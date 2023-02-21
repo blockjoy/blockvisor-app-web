@@ -15,7 +15,7 @@ export const ProfileBubble = () => {
 
   return (
     <span css={[styles.bubble]}>
-      <span>{!hasHtmlCharacters ? initials : 'U'}</span>
+      <span>{initials?.substring(0, 2)}</span>
       <span css={styles.arrowIcon}>
         <IconArrow />
       </span>

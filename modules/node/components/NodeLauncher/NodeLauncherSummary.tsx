@@ -11,6 +11,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 type Props = {
   serverError: string;
@@ -86,7 +87,7 @@ export const NodeLauncherSummary: FC<Props> = ({
                 </span>
                 <div>
                   <label>Organization</label>
-                  <span>{defaultOrganization?.name}</span>
+                  <span>{escapeHtml(defaultOrganization?.name)}</span>
                 </div>
               </li>
               <li>

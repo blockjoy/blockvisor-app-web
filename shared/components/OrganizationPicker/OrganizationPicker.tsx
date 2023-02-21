@@ -13,6 +13,7 @@ import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrga
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { isMobile } from 'react-device-detect';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 type Props = {
   hideName?: boolean;
@@ -65,10 +66,15 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
     >
       <button css={styles.select} onClick={handleClick}>
         <span css={styles.bubble}>
-          {defaultOrganization?.name?.substring(0, 1)?.toUpperCase()}
+          {escapeHtml(defaultOrganization?.name?.toUpperCase()!)?.substring(
+            0,
+            1,
+          )}
         </span>
         {!hideName && (
-          <p css={styles.selectText}>{defaultOrganization?.name}</p>
+          <p css={styles.selectText}>
+            {escapeHtml(defaultOrganization?.name!)}
+          </p>
         )}
       </button>
       <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
@@ -86,7 +92,9 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
               size="medium"
               type="button"
             >
-              <p css={styles.activeOrg}>{defaultOrganization?.name}</p>
+              <p css={styles.activeOrg}>
+                {escapeHtml(defaultOrganization?.name!)}
+              </p>
               <Badge color="primary" style="outline">
                 Active
               </Badge>
@@ -104,7 +112,7 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
                     type="button"
                     onButtonClick={() => handleChange(org.id, org.name)}
                   >
-                    {org.name}
+                    <p css={styles.activeOrg}>{escapeHtml(org.name!)}</p>
                   </DropdownItem>
                 </li>
               ))}
