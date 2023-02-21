@@ -23,8 +23,8 @@ export const SvgIcon: React.FC<Props> = ({
       <Tooltip
         customCss={[
           css`
-            min-width: 260px;
-            max-width: 260px;
+            min-width: 180px;
+            max-width: 180px;
             transition-delay: 0.6s;
             background: rgb(0 0 0 / 42%);
           `,
