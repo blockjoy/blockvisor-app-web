@@ -1,5 +1,6 @@
 import { useEditUser } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Button, Input } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -33,8 +34,8 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
   } = form;
 
   useEffect(() => {
-    form.setValue('firstName', firstName ?? '');
-    form.setValue('lastName', lastName ?? '');
+    form.setValue('firstName', escapeHtml(firstName!) ?? '');
+    form.setValue('lastName', escapeHtml(lastName!) ?? '');
   }, []);
 
   const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {
@@ -44,8 +45,8 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
       await editUser(firstName, lastName, id ?? '');
       setIsLoading(false);
       form.reset();
-      form.setValue('firstName', firstName ?? '');
-      form.setValue('lastName', lastName ?? '');
+      form.setValue('firstName', escapeHtml(firstName) ?? '');
+      form.setValue('lastName', escapeHtml(lastName) ?? '');
       toast.success('Profile updated');
     } catch (error) {
       if (error instanceof ApplicationError) {
@@ -68,7 +69,7 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               label="Email"
               name="email"
               placeholder="Email"
-              value={email}
+              value={escapeHtml(email!)}
             />
           </li>
           <li css={[styles.formItem]}>
