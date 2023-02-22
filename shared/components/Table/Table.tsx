@@ -3,16 +3,17 @@ import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
 import { isSafari } from 'react-device-detect';
 import { TableSortButton } from './TableSortButton';
+import { InitialQueryParams } from '@modules/organization/ui/OrganizationsUIHelpers';
 
 export type TableProps = {
   headers?: TableHeader[];
   rows?: Row[];
-  onRowClick?: (arg0: Row) => void;
+  onRowClick?: (arg0: any) => void;
   isLoading: LoadingState;
   preload?: number;
   verticalAlign?: 'top' | 'middle';
   fixedRowHeight?: string;
-  properties?: InitialFilter;
+  properties?: InitialQueryParams;
   handleSort?: (dataField: string) => void;
 };
 
@@ -27,7 +28,7 @@ export const Table = ({
   properties,
   handleSort,
 }: TableProps) => {
-  const handleRowClick = (tr: Row) => {
+  const handleRowClick = (tr: any) => {
     if (onRowClick) {
       onRowClick(tr);
     }

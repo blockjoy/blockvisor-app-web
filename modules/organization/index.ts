@@ -11,6 +11,8 @@ export * from './utils/organizationDetails';
 export * from './utils/toRow';
 export * from './utils/mapOrganizationsToRows';
 export * from './utils/getHandlerTableChange';
+export * from './utils/paginate';
+export * from './utils/sort';
 export * from './hooks/useCreateOrganization';
 export * from './hooks/useGetOrganizations';
 export * from './hooks/useGetOrganization';

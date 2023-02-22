@@ -34,8 +34,6 @@ export const OrganizationsList = () => {
     organizationAtoms.organizationsActive(organizationUIProps.queryParams),
   );
 
-  const setLayout = useSetRecoilState(layoutState);
-
   useEffect(() => {
     if (router.isReady && add) {
       setIsAdding(true);

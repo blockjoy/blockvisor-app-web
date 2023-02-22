@@ -1,17 +1,13 @@
 import { Table } from '@shared/components';
-import { organizationAtoms } from '@modules/organization';
+import { useGetOrganizations } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
 import { getHandlerTableChange } from '@modules/organization/utils/getHandlerTableChange';
-import { withQuery } from '@shared/components/Table/utils/withQuery';
+import { withPagination } from '@shared/components/Table/utils/withPagination';
 import { ROUTES } from '@shared/index';
-import {
-  FILTERS,
-  InitialQueryParams,
-} from '@modules/organization/ui/OrganizationsUIHelpers';
+import { InitialQueryParams } from '@modules/organization/ui/OrganizationsUIHelpers';
 import { SetQueryParams } from '@modules/organization/ui/OrganizationsUIContext';
 import { GridCell } from '@shared/components/TableGrid/types/GridCell';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
 
 export type AllOrganizationsTableProps = {
   organizations: ClientOrganization[];
@@ -28,13 +24,7 @@ export const AllOrganizationsTable = ({
 }: AllOrganizationsTableProps) => {
   const router = useRouter();
 
-  const setOrganizationsFilters = useSetRecoilState(
-    organizationAtoms.organizationsFilters,
-  );
-
-  const organizationsActiveCount = useRecoilValue(
-    organizationAtoms.organizationsFiltered(queryParams),
-  ).length;
+  const { total } = useGetOrganizations();
 
   const { headers, rows } = mapOrganizationsToRows(organizations);
 
@@ -44,10 +34,9 @@ export const AllOrganizationsTable = ({
 
   const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
     getHandlerTableChange(setQueryParams)(type, queryParams);
-    setOrganizationsFilters(queryParams);
   };
 
-  const OrganizationsTable = withQuery(Table);
+  const OrganizationsTable = withPagination(Table);
 
   return (
     <OrganizationsTable
@@ -57,9 +46,8 @@ export const AllOrganizationsTable = ({
       rows={rows}
       fixedRowHeight="74px"
       properties={queryParams}
-      total={organizationsActiveCount}
+      total={total}
       onTableChange={handleTableChange}
-      filters={FILTERS}
     />
   );
 };
