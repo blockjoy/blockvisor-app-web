@@ -1,5 +1,5 @@
 import { apiClient } from '@modules/client';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useDefaultOrganization } from './useDefaultOrganization';
@@ -8,12 +8,11 @@ export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
     organizationAtoms.allOrganizations,
   );
+
+  const total = useRecoilValue(organizationAtoms.organisationCount);
+
   const [isLoading, setIsLoading] = useRecoilState(
     organizationAtoms.organizationsLoadingState,
-  );
-
-  const [pageIndex, setPageIndex] = useRecoilState(
-    organizationAtoms.organizationsPageIndex,
   );
 
   const { getDefaultOrganization } = useDefaultOrganization();
@@ -46,11 +45,11 @@ export function useGetOrganizations() {
 
   return {
     organizations,
+    total,
     getOrganizations,
     updateOrganizations,
     addToOrganizations,
     isLoading,
-    pageIndex,
-    setPageIndex,
+    setIsLoading,
   };
 }

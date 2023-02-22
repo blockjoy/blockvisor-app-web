@@ -3,7 +3,7 @@ import SizedIcon from '@modules/layout/components/shared/SizedIcon';
 import { styles } from './TableSortButton.styles';
 
 type Props = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onClick: (arg0: string) => void;
   sortExpression?: string;
   activeSortExpression?: string;
@@ -16,15 +16,14 @@ export const TableSortButton: React.FC<Props> = ({
   activeSortExpression,
 }) => {
   return (
-    <button
-      onClick={() => onClick(sortExpression || '')}
-      css={[
-        styles.button,
-        sortExpression === activeSortExpression ? styles.active : '',
-      ]}
-    >
+    <button onClick={() => onClick(sortExpression || '')} css={[styles.button]}>
       <span css={[styles.text]}>{children}</span>
-      <SizedIcon size="10px">
+      <SizedIcon
+        size="10px"
+        additionalStyles={
+          sortExpression === activeSortExpression ? [styles.active] : undefined
+        }
+      >
         <IconSort />
       </SizedIcon>
     </button>

@@ -12,11 +12,6 @@ const Template: ComponentStory<typeof Pagination> = (args) => (
 
 export const Default = Template.bind({});
 
-Default.args = {
-  pageTotal: 10,
-  pagesToDisplay: 5,
-};
-
 Default.parameters = {
   nextRouter: {
     path: '/',

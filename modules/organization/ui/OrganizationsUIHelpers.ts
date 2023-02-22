@@ -1,15 +1,22 @@
 export type Pagination = {
-  current_page: number;
-  items_per_page: number;
-}
+  currentPage: number;
+  itemsPerPage: number;
+};
+
+export type Sorting = {
+  order: 'asc' | 'desc';
+  field: string;
+};
 
 export type InitialQueryParams = {
   pagination: Pagination;
-}
+  sorting: Sorting;
+};
 
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
-    current_page: 1,
-    items_per_page: 10,
-  }
+    currentPage: 1,
+    itemsPerPage: 10,
+  },
+  sorting: { order: 'asc', field: 'name' },
 };
