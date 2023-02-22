@@ -1,6 +1,6 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
@@ -36,7 +36,7 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
 
   const { resendInvitation } = useResendInvitation();
 
-  const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers();
+  const { isLoading } = useGetOrganizationMembers();
 
   // TOOD: remove after fixed bug in API (return org the invitation's id in response)
   const { getSentInvitations } = useInvitations();
@@ -60,10 +60,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     setInviteeEmail(e.target.value);
   };
 
-  const handlePageClicked = (index: number) => {
-    setPageIndex(index);
-  };
-
   const handleInviteClicked = () => {
     setIsInviting(true);
 
@@ -77,7 +73,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
       inviteMembers(inviteeEmail!, () => {
         getSentInvitations(id!);
         setActiveView('list');
-        setPageIndex(0);
         setIsInviting(false);
       });
     } else {
