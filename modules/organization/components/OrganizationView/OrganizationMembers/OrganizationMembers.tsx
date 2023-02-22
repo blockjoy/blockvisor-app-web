@@ -88,10 +88,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     Permissions.CREATE_MEMBER,
   );
 
-  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    //setInviteeEmail(e.target.value);
-  };
-
   const handleInviteClicked = (email: string) => {
     setIsInviting(true);
 
