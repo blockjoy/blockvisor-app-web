@@ -1,22 +1,29 @@
 import { spacing } from 'styles/utils.spacing.styles';
 import { AllOrganizationsTable } from './OrganizationListTable';
 import { styles } from './OrganizationList.styles';
-import { useRecoilState } from 'recoil';
-import { useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useGetOrganizations } from '../../../hooks/useGetOrganizations';
-import { Button } from '@shared/components';
+import { Button, TableSkeleton } from '@shared/components';
 import { layoutState } from '@modules/layout/store/layoutAtoms';
+import { useOrganizationsUIContext } from '@modules/organization/ui/OrganizationsUIContext';
+import { useMemo } from 'react';
+import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 
 export const OrganizationsList = () => {
-  const { getOrganizations, organizations } = useGetOrganizations();
+  const organizationUIContext = useOrganizationsUIContext();
+  const organizationUIProps = useMemo(() => {
+    return {
+      queryParams: organizationUIContext.queryParams,
+      setQueryParams: organizationUIContext.setQueryParams,
+    };
+  }, [organizationUIContext]);
 
-  const [, setLayout] = useRecoilState(layoutState);
+  const { isLoading } = useGetOrganizations();
+  const organizationsActive = useRecoilValue(
+    organizationAtoms.organizationsActive(organizationUIProps.queryParams),
+  );
 
-  useEffect(() => {
-    if (!organizations?.length) {
-      getOrganizations();
-    }
-  }, []);
+  const setLayout = useSetRecoilState(layoutState);
 
   return (
     <div css={styles.wrapper}>
@@ -33,7 +40,16 @@ export const OrganizationsList = () => {
         </span>
       </header>
       <section css={spacing.top.large}>
-        <AllOrganizationsTable />
+        {isLoading === 'initializing' ? (
+          <TableSkeleton />
+        ) : (
+          <AllOrganizationsTable
+            organizations={organizationsActive}
+            isLoading={isLoading}
+            queryParams={organizationUIProps.queryParams}
+            setQueryParams={organizationUIProps.setQueryParams}
+          />
+        )}
       </section>
     </div>
   );

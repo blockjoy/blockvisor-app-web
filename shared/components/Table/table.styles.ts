@@ -51,7 +51,7 @@ export const styles = {
       transition: 0.3s;
     }
 
-    tr:hover td:first-child path {
+    tr:hover td:first-of-type path {
       fill: ${theme.colorPrimary};
     }
 

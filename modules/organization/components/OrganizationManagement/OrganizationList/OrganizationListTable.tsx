@@ -1,38 +1,53 @@
-import { Table, TableSkeleton } from '@shared/components';
-import { FC } from 'react';
+import { Table } from '@shared/components';
 import { useGetOrganizations } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
+import { getHandlerTableChange } from '@modules/organization/utils/getHandlerTableChange';
+import { withPagination } from '@shared/components/Table/utils/withPagination';
+import { ROUTES } from '@shared/index';
+import { InitialQueryParams } from '@modules/organization/ui/OrganizationsUIHelpers';
+import { SetQueryParams } from '@modules/organization/ui/OrganizationsUIContext';
+import { GridCell } from '@shared/components/TableGrid/types/GridCell';
 
-export const AllOrganizationsTable: FC = () => {
+export type AllOrganizationsTableProps = {
+  organizations: ClientOrganization[];
+  isLoading: LoadingState;
+  queryParams: InitialQueryParams;
+  setQueryParams: SetQueryParams;
+};
+
+export const AllOrganizationsTable = ({
+  organizations,
+  isLoading,
+  queryParams,
+  setQueryParams,
+}: AllOrganizationsTableProps) => {
   const router = useRouter();
 
-  const { organizations, isLoading, pageIndex, setPageIndex } =
-    useGetOrganizations();
+  const { total } = useGetOrganizations();
 
   const { headers, rows } = mapOrganizationsToRows(organizations);
 
-  const handleRowClicked = (id: any) => {
-    router.push(`organizations/${id.key}`);
+  const handleRowClicked = (id: GridCell) => {
+    router.push(`${ROUTES.ORGANIZATION(id.key)}`);
   };
 
-  const handlePageClicked = (index: number) => {
-    setPageIndex(index);
+  const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
+    getHandlerTableChange(setQueryParams)(type, queryParams);
   };
 
-  return isLoading === 'initializing' ? (
-    <TableSkeleton />
-  ) : (
-    <Table
+  const OrganizationsTable = withPagination(Table);
+
+  return (
+    <OrganizationsTable
       isLoading={isLoading}
       onRowClick={handleRowClicked}
-      pageSize={8}
-      pageIndex={pageIndex}
-      setPageIndex={setPageIndex}
-      onPageClicked={handlePageClicked}
       headers={headers}
       rows={rows}
       fixedRowHeight="74px"
+      properties={queryParams}
+      total={total}
+      onTableChange={handleTableChange}
     />
   );
 };
