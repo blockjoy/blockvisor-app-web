@@ -36,7 +36,7 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
 
   const { resendInvitation } = useResendInvitation();
 
-  const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers();
+  const { isLoading } = useGetOrganizationMembers();
 
   // TOOD: remove after fixed bug in API (return org the invitation's id in response)
   const { getSentInvitations } = useInvitations();
@@ -73,7 +73,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
       inviteMembers(email!, () => {
         getSentInvitations(id!);
         setActiveView('list');
-        setPageIndex(0);
         setIsInviting(false);
       });
     } else {

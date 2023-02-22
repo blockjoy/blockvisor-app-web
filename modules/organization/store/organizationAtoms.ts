@@ -1,6 +1,6 @@
 import { atom, selector, selectorFamily } from 'recoil';
-import { paginate } from '@modules/organization/utils/paginate';
-import { sort } from '@modules/organization/utils/sort';
+import { paginate } from '@shared/components/Table/utils/paginate';
+import { sort } from '@shared/components/Table/utils/sort';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
