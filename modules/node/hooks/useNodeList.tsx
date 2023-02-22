@@ -81,7 +81,6 @@ export const useNodeList = () => {
     setPreloadNodes(0);
 
     setIsLoading('finished');
-    console.log('FINISHED');
   };
 
   // const updateNodeList = async (node: BlockjoyNode) => {

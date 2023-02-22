@@ -32,7 +32,7 @@ const mockedNodesResponse = [
     stakingStatus: 0,
     status: 0,
     syncStatus: 0,
-    type: '',
+    type: '{"id":10,"properties":[{"name":"self-hosted","label":"","description":"","ui_type":"switch","disabled":true,"required":true,"value":"false"}]}',
     updated_at_datetime: new Date(),
     updatedAt: {
       nanos: 240922000,
