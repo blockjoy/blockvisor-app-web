@@ -9,13 +9,17 @@ export const mapOrganizationsToRows = (
   const headers: TableHeader[] = [
     {
       name: 'Org. Name',
+      dataField: 'name',
       key: '1',
       width: '300px',
+      sort: true,
     },
     {
       name: 'Members',
       key: '2',
       width: '300px',
+      dataField: 'memberCount',
+      sort: true,
     },
     {
       name: 'Role',
@@ -33,6 +37,7 @@ export const mapOrganizationsToRows = (
     cells: [
       {
         key: '1',
+        data: org.name,
         component: (
           <>
             <p>{escapeHtml(org.name!)}</p>
@@ -41,6 +46,7 @@ export const mapOrganizationsToRows = (
       },
       {
         key: '2',
+        data: org.memberCount,
         component: (
           <>
             <p>{org.memberCount}</p>

@@ -139,15 +139,11 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
         />
       )}
       <Table
-        pageSize={8}
-        pageIndex={pageIndex}
-        onPageClicked={handlePageClicked}
         isLoading={isLoading}
         headers={headers}
         rows={rows}
         verticalAlign="middle"
         fixedRowHeight="74px"
-        setPageIndex={setPageIndex}
       />
       {activeView === 'action' && (
         <OrganizationDialog

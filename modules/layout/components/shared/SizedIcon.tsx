@@ -1,13 +1,14 @@
 import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 import { styles } from './SizedIcon.styles';
 
-type Props = {
+type SizedIconProps = {
   children?: React.ReactNode;
-  additionalStyles?: SerializedStyles[];
+  additionalStyles?: ((theme: ITheme) => SerializedStyles)[];
   size: string;
 };
 
-const SizedIcon: React.FC<Props> = ({ children, size, additionalStyles }) => (
+const SizedIcon = ({ children, size, additionalStyles }: SizedIconProps) => (
   <span
     css={[styles.icon, additionalStyles ?? '']}
     style={{ width: size, height: size }}

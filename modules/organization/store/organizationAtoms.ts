@@ -1,4 +1,6 @@
-import { atom, selector } from 'recoil';
+import { atom, selector, selectorFamily } from 'recoil';
+import { paginate } from '@modules/organization/utils/paginate';
+import { sort } from '@modules/organization/utils/sort';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
@@ -34,7 +36,7 @@ const allOrganizations = atom<ClientOrganization[]>({
 
 const organizationsLoadingState = atom<LoadingState>({
   key: 'organizations.loadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 const organizationLoadingState = atom<LoadingState>({
@@ -49,7 +51,7 @@ const organizationDefaultLoadingState = atom<LoadingState>({
 
 const organizationDeleteLoadingState = atom<LoadingState>({
   key: 'organization.organizationDeleteLoadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 const organizationMemberCount = selector({
@@ -68,6 +70,21 @@ const organisationCount = selector({
 
     return organizations.length;
   },
+});
+
+const organizationsActive = selectorFamily<any, any>({
+  key: 'organizations.active',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgs = get(allOrganizations);
+      const { sorting, pagination } = queryParams;
+
+      const sortedOrganizations = sort(allOrgs, sorting);
+      const paginatedOrganizations = paginate(sortedOrganizations, pagination);
+
+      return paginatedOrganizations;
+    },
 });
 
 const organizationMembers = atom<ClientOrganizationMember[]>({
@@ -113,6 +130,7 @@ export const organizationAtoms = {
   organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,
+  organizationsActive,
   organizationMemberCount,
   organisationCount,
   defaultOrganization,

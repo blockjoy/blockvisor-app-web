@@ -1,84 +1,40 @@
 import { styles } from './table.styles';
 import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
-import { useEffect, useState } from 'react';
-import { Pagination } from '@shared/components';
-import { SetterOrUpdater } from 'recoil';
 import { isSafari } from 'react-device-detect';
+import { TableSortButton } from './TableSortButton';
+import { InitialQueryParams } from '@modules/organization/ui/OrganizationsUIHelpers';
 
-type Props = {
+export type TableProps = {
   headers?: TableHeader[];
   rows?: Row[];
   onRowClick?: (arg0: any) => void;
-  onPageClicked?: (pageIndex: number) => void;
   isLoading: LoadingState;
   preload?: number;
   verticalAlign?: 'top' | 'middle';
   fixedRowHeight?: string;
-  pageSize?: number;
-  pageIndex?: number;
-  setPageIndex?: SetterOrUpdater<number>;
+  properties?: InitialQueryParams;
+  handleSort?: (dataField: string) => void;
 };
 
-export const Table: React.FC<Props> = ({
+export const Table = ({
   headers = [],
   rows = [],
   onRowClick,
-  onPageClicked,
   isLoading,
   preload,
   verticalAlign,
   fixedRowHeight,
-  pageSize,
-  pageIndex,
-  setPageIndex,
-}) => {
-  const [activeRows, setActiveRows] = useState<Row[]>(rows);
-  const [isBuildingRows, setIsBuildingRows] = useState<boolean>(true);
-
-  const pageTotal =
-    rows?.length < pageSize! ? 1 : Math.ceil(rows?.length / pageSize!);
-
-  const handlePageClicked = (index: number) => {
-    if (onPageClicked) {
-      onPageClicked(index);
-    }
-  };
-
+  properties,
+  handleSort,
+}: TableProps) => {
   const handleRowClick = (tr: any) => {
     if (onRowClick) {
       onRowClick(tr);
     }
   };
 
-  const getPageOfRows = () => {
-    setIsBuildingRows(true);
-    const start = pageIndex === 0 ? 0 : pageIndex! * pageSize!;
-    const end = pageIndex === 0 ? pageSize : pageIndex! * pageSize! + pageSize!;
-    const newRows = rows.slice(start, end);
-    return newRows;
-  };
-
-  useEffect(() => {
-    if (pageSize) {
-      setActiveRows(getPageOfRows());
-      setIsBuildingRows(false);
-    }
-  }, [pageIndex]);
-
-  useEffect(() => {
-    if (pageSize) {
-      if (rows?.length) {
-        setActiveRows(getPageOfRows());
-      }
-      if (pageIndex! > pageTotal - 1 && setPageIndex) {
-        setPageIndex(pageTotal - 1);
-      }
-    }
-    setIsBuildingRows(false);
-  }, [rows?.length]);
-
-  return isBuildingRows ? null : (
+  return (
     <div css={styles.wrapper}>
       <table
         css={[
@@ -100,6 +56,8 @@ export const Table: React.FC<Props> = ({
                   textAlign,
                   name,
                   component,
+                  sort,
+                  dataField,
                 }) => (
                   <th
                     className={isHiddenOnMobile ? 'hidden-on-mobile' : ''}
@@ -111,7 +69,17 @@ export const Table: React.FC<Props> = ({
                       text-align: ${textAlign || 'left'};
                     `}
                   >
-                    {component || name}
+                    {sort && handleSort && dataField ? (
+                      <TableSortButton
+                        onClick={() => handleSort(dataField)}
+                        sortExpression={dataField}
+                        activeSortExpression={properties?.sorting.field}
+                      >
+                        {component || name}
+                      </TableSortButton>
+                    ) : (
+                      component || name
+                    )}
                   </th>
                 ),
               )}
@@ -122,7 +90,7 @@ export const Table: React.FC<Props> = ({
           {isLoading === 'initializing' ? (
             <TableRowLoader length={preload} />
           ) : (
-            activeRows?.map((tr) => (
+            rows?.map((tr) => (
               <tr
                 key={tr.key}
                 className={tr.isDanger ? 'danger' : ''}
@@ -158,15 +126,6 @@ export const Table: React.FC<Props> = ({
           ) : null}
         </tbody>
       </table>
-      {Boolean(pageSize) && isLoading === 'finished' && pageTotal > 1 && (
-        <Pagination
-          onPageClicked={handlePageClicked}
-          pagesToDisplay={pageTotal < 5 ? pageTotal : 5}
-          pageTotal={pageTotal}
-          pageIndex={pageIndex!}
-          itemTotal={rows?.length}
-        />
-      )}
     </div>
   );
 };
