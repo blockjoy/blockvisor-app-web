@@ -28,6 +28,7 @@ export const styles = {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
+    white-space: nowrap;
   `,
   header: (theme: ITheme) => css`
     display: flex;
