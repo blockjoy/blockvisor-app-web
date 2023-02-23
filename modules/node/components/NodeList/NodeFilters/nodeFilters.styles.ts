@@ -37,33 +37,15 @@ export const styles = {
       overflow: hidden;
     }
   `,
-  filters: (theme: ITheme) => css`
+  filters: css`
     overflow: auto;
-    flex: 1 1 auto;
     min-height: 0;
     margin: 16px 0 0;
     display: grid;
     grid-auto-rows: max-content;
     gap: 16px;
-
-    .ps .ps__rail-x:hover,
-    .ps .ps__rail-y:hover,
-    .ps .ps__rail-x:focus,
-    .ps .ps__rail-y:focus,
-    .ps .ps__rail-x.ps--clicking,
-    .ps .ps__rail-y.ps--clicking {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* .ps__rail-y:hover > .ps__thumb-y,
-    .ps__rail-y:focus > .ps__thumb-y,
-    .ps__rail-y.ps--clicking .ps__thumb-y {
-      background: ${theme.colorPrimary};
-    } */
   `,
   wrapperOpen: css`
-    margin-bottom: 40px;
-
     @media ${breakpoints.toXlrg} {
       margin-top: 20px;
       height: auto;

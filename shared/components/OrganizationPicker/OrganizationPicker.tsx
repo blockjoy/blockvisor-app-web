@@ -2,8 +2,13 @@ import { FC, useRef, useState } from 'react';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 import IconPlus from '@public/assets/icons/plus-12.svg';
 import IconInfo from '@public/assets/icons/info.svg';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Badge, Dropdown, DropdownItem, SvgIcon } from '@shared/components';
+import {
+  Badge,
+  Dropdown,
+  DropdownItem,
+  SvgIcon,
+  Scrollbar,
+} from '@shared/components';
 import { styles } from './OrganizationPicker.styles';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
@@ -100,7 +105,7 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
             </DropdownItem>
           </li>
         </ul>
-        <PerfectScrollbar css={styles.dropdownInner}>
+        <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>
             {allOrganizations
               ?.filter((org) => org.id !== defaultOrganization?.id)
@@ -116,7 +121,7 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
                 </li>
               ))}
           </ul>
-        </PerfectScrollbar>
+        </Scrollbar>
         <button css={[styles.createButton]} onClick={handleCreateClicked}>
           <IconPlus /> Add Organization
         </button>
