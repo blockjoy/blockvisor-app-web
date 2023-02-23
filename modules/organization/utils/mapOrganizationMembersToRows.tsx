@@ -9,22 +9,13 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
+import { MemberAndInvitation } from './mapMembersAndInvitations';
 
 export enum Action {
   revoke = 'revoke',
   remove = 'remove ',
   resend = 'resend ',
 }
-
-type MemberListItem = {
-  id?: string | null;
-  email?: string;
-  createdAt?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  invitationId?: string | null;
-  isPending?: boolean;
-};
 
 export type Member = {
   user_id?: string | undefined;
@@ -110,7 +101,7 @@ export const mapOrganizationMembersToRows = (
     },
   ];
 
-  const rows = allMembers?.map((member: MemberListItem, idx: string) => ({
+  const rows = allMembers?.map((member: MemberAndInvitation, idx: string) => ({
     key: member.id ?? `${idx}`,
     cells: [
       {
