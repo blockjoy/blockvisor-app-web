@@ -1,6 +1,11 @@
 import { styles } from './nodeFilters.styles';
 import { styles as blockStyles } from './NodeFiltersBlock.styles';
-import { Checkbox, Skeleton, SkeletonGrid } from '@shared/components';
+import {
+  Checkbox,
+  Skeleton,
+  SkeletonGrid,
+  Scrollbar,
+} from '@shared/components';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
@@ -8,7 +13,6 @@ import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
 import { organizationAtoms } from '@modules/organization';
 import { useFilters } from '@modules/node/hooks/useFilters';
@@ -143,7 +147,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
             <IconRefresh />
             Apply
           </button>
-          <PerfectScrollbar css={styles.filters}>
+          <Scrollbar additionalStyles={[styles.filters]}>
             <div
               css={blockStyles.filterBlock}
               onClick={() => setOpenFilterName('')}
@@ -187,7 +191,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
                 onFilterChanged={handleFilterChanged}
               />
             ))}
-          </PerfectScrollbar>
+          </Scrollbar>
           <button
             css={styles.resetButton}
             type="button"
