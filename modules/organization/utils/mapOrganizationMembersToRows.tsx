@@ -33,9 +33,10 @@ export type Methods = {
 };
 
 export const mapOrganizationMembersToRows = (
-  membersAndInvitations?: any,
+  membersAndInvitations?: MemberAndInvitation[],
   methods?: Methods,
 ) => {
+  console.log('membersAndInvitations', membersAndInvitations);
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
@@ -100,7 +101,7 @@ export const mapOrganizationMembersToRows = (
   ];
 
   const rows = membersAndInvitations?.map(
-    (member: MemberAndInvitation, idx: string) => ({
+    (member: MemberAndInvitation, idx: number) => ({
       key: member.id ?? `${idx}`,
       cells: [
         {
