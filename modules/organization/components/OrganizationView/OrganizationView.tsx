@@ -18,7 +18,6 @@ import {
 } from '@shared/components';
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
-import { Members } from './OrganizationMembers/OrganizationMembers';
 import {
   organizationAtoms,
   useInvitations,
@@ -32,8 +31,8 @@ import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrgani
 import { useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
-import { useNodeList } from '@modules/node';
 import { apiClient } from '@modules/client';
+import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -98,10 +97,9 @@ export const OrganizationView = () => {
     }
   };
 
-  const { getOrganizationMembers, organizationMembers } =
-    useGetOrganizationMembers();
+  const { getOrganizationMembers } = useGetOrganizationMembers();
 
-  const { getSentInvitations, sentInvitations } = useInvitations();
+  const { getSentInvitations } = useInvitations();
 
   const getTotalNodes = async () => {
     const nodes: any = await apiClient.listNodes(
@@ -139,7 +137,7 @@ export const OrganizationView = () => {
     };
   }, [router.isReady]);
 
-  // quick win to check if org has nodes
+  // TODO: improve - it causes performance leaks. (quick win to check if org has nodes)
   useEffect(() => {
     getTotalNodes();
   }, []);
@@ -185,11 +183,7 @@ export const OrganizationView = () => {
 
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
-            <Members
-              members={organizationMembers}
-              invitations={sentInvitations}
-              id={queryAsString(id)}
-            />
+            <OrganizationMembersView />
           </div>
         )}
       </PageSection>
