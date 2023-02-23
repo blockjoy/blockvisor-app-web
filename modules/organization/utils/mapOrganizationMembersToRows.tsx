@@ -62,12 +62,13 @@ export const mapOrganizationMembersToRows = (
   );
 
   const allMembers = membersAndInvitations.map((mi: any) => ({
-    id: mi.id ? mi.id : null,
+    id: mi.email ? mi.id : null,
     email: mi.email ? mi.email : mi.inviteeEmail,
     createdAt: null,
     firstName: mi.firstName ? mi.firstName : null,
     lastName: mi.lastName ? mi.lastName : null,
     isPending: mi.inviteeEmail ? true : false,
+    invitationId: mi.inviteeEmail ? mi.id : null,
   }));
 
   const handleRemoveMember = async (
