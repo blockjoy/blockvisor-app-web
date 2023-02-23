@@ -129,11 +129,8 @@ const organizationMembers = atom<ClientOrganizationMember[]>({
   default: [],
 });
 
-const organizationMembersAndInvitationsFiltered = selectorFamily<
-  MemberAndInvitation[],
-  InitialQueryParamsMembers
->({
-  key: 'organizations.members.filtered',
+const organizationMembersAndInvitations = selectorFamily<any, any>({
+  key: 'organizations.members.active',
   get:
     (queryParams) =>
     ({ get }) => {
@@ -141,28 +138,11 @@ const organizationMembersAndInvitationsFiltered = selectorFamily<
       const allInvitations = get(organizationSentInvitations);
 
       const all = allOrgMembers.concat(allInvitations);
-      const mappedAll = mapMembersAndInvitations(all);
-      const { sorting } = queryParams;
+      const { sorting, pagination } = queryParams;
 
-      const sortedAll = sort(mappedAll, sorting);
-      return sortedAll;
-    },
-});
-
-const organizationMembersAndInvitations = selectorFamily<
-  MemberAndInvitation[],
-  InitialQueryParamsMembers
->({
-  key: 'organizations.members.active',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgMembers = get(
-        organizationMembersAndInvitationsFiltered(queryParams),
-      );
-      const { pagination } = queryParams;
-
-      const paginatedAll = paginate(allOrgMembers, pagination);
+      // const sortedAll = sort(all, sorting);
+      // const paginatedAll = paginate(sortedAll, pagination);
+      const paginatedAll = paginate(all, pagination);
       return paginatedAll;
     },
 });
@@ -223,7 +203,6 @@ export const organizationAtoms = {
   defaultOrganization,
   organizationMembers,
   organizationMembersAndInvitations,
-  organizationMembersAndInvitationsFiltered,
   organizationMembersAndInvitationsTotal,
   organizationMemberLoadingState,
   organizationMembersLoadingState,

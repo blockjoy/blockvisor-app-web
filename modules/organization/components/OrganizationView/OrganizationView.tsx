@@ -18,7 +18,11 @@ import {
 } from '@shared/components';
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
-import { useInvitations, useUpdateOrganization } from '@modules/organization';
+import {
+  organizationAtoms,
+  useInvitations,
+  useUpdateOrganization,
+} from '@modules/organization';
 import {
   Permissions,
   useHasPermissions,

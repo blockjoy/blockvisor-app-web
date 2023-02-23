@@ -37,7 +37,7 @@ export function OrganizationMembersUIProvider({
   const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
     initialQueryParamsValue,
   );
-  const setQueryParams = useCallback((nextQueryParams: InitialQueryParams) => {
+  const setQueryParams = useCallback((nextQueryParams: any) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
         nextQueryParams = nextQueryParams(prevQueryParams);

@@ -33,7 +33,7 @@ export type Methods = {
 };
 
 export const mapOrganizationMembersToRows = (
-  membersAndInvitations?: MemberAndInvitation[],
+  membersAndInvitations?: any,
   methods?: Methods,
 ) => {
   const repository = useIdentityRepository();
@@ -51,6 +51,15 @@ export const mapOrganizationMembersToRows = (
     selectedOrganization?.currentUser?.role!,
     Permissions.DELETE_MEMBER,
   );
+
+  const allMembers = membersAndInvitations.map((mi: any) => ({
+    id: mi.id ? mi.id : null,
+    email: mi.email ? mi.email : mi.inviteeEmail,
+    createdAt: null,
+    firstName: mi.firstName ? mi.firstName : null,
+    lastName: mi.lastName ? mi.lastName : null,
+    isPending: mi.inviteeEmail ? true : false,
+  }));
 
   const handleRemoveMember = async (
     user_id: string,
@@ -82,11 +91,6 @@ export const mapOrganizationMembersToRows = (
       dataField: 'email',
       sort: true,
     },
-    // {
-    //   name: 'Joined',
-    //   key: '2',
-    //   width: '55%',
-    // },
     {
       name: '',
       key: '2',
