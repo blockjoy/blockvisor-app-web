@@ -56,11 +56,11 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     Permissions.CREATE_MEMBER,
   );
 
-  const handlePageClicked = (index: number) => {
-    setPageIndex(index);
+  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    setInviteeEmail(e.target.value);
   };
 
-  const handleInviteClicked = (email: string) => {
+  const handleInviteClicked = () => {
     setIsInviting(true);
 
     const isMemberOrInvited = checkIfExists(

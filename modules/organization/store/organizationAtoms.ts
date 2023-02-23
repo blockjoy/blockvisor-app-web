@@ -92,6 +92,34 @@ const organizationMembers = atom<ClientOrganizationMember[]>({
   default: [],
 });
 
+const organizationMembersAndInvitations = selectorFamily<any, any>({
+  key: 'organizations.members.active',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgMembers = get(organizationMembers);
+      const allInvitations = get(organizationSentInvitations);
+
+      const all = allOrgMembers.concat(allInvitations);
+      const { sorting, pagination } = queryParams;
+
+      // const sortedAll = sort(all, sorting);
+      // const paginatedAll = paginate(sortedAll, pagination);
+      const paginatedAll = paginate(all, pagination);
+      return paginatedAll;
+    },
+});
+
+const organizationMembersAndInvitationsTotal = selector<number>({
+  key: 'organizations.members.total',
+  get: ({ get }) => {
+    const allOrgMembers = get(organizationMembers);
+    const allInvitations = get(organizationSentInvitations);
+
+    return allOrgMembers.length + allInvitations.length;
+  },
+});
+
 const organizationMembersPageIndex = atom<number>({
   key: 'organization.member.pageIndex',
   default: 0,
@@ -135,6 +163,8 @@ export const organizationAtoms = {
   organisationCount,
   defaultOrganization,
   organizationMembers,
+  organizationMembersAndInvitations,
+  organizationMembersAndInvitationsTotal,
   organizationMemberLoadingState,
   organizationMembersLoadingState,
   organizationMembersPageIndex,
