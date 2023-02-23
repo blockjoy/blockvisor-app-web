@@ -1,6 +1,12 @@
 import { atom, selector, selectorFamily } from 'recoil';
 import { paginate } from '@shared/components/Table/utils/paginate';
 import { sort } from '@shared/components/Table/utils/sort';
+import { InitialQueryParams as InitialQueryParamsMembers } from '../ui/OrganizationMembersUIHelpers';
+import { InitialQueryParams as InitialQueryParamsOrganizations } from '../ui/OrganizationsUIHelpers';
+import {
+  mapMembersAndInvitations,
+  MemberAndInvitation,
+} from '../utils/mapMembersAndInvitations';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
@@ -72,7 +78,10 @@ const organisationCount = selector({
   },
 });
 
-const organizationsActive = selectorFamily<any, any>({
+const organizationsActive = selectorFamily<
+  ClientOrganization[],
+  InitialQueryParamsOrganizations
+>({
   key: 'organizations.active',
   get:
     (queryParams) =>
@@ -92,7 +101,10 @@ const organizationMembers = atom<ClientOrganizationMember[]>({
   default: [],
 });
 
-const organizationMembersAndInvitations = selectorFamily<any, any>({
+const organizationMembersAndInvitations = selectorFamily<
+  MemberAndInvitation[],
+  InitialQueryParamsMembers
+>({
   key: 'organizations.members.active',
   get:
     (queryParams) =>
@@ -101,11 +113,11 @@ const organizationMembersAndInvitations = selectorFamily<any, any>({
       const allInvitations = get(organizationSentInvitations);
 
       const all = allOrgMembers.concat(allInvitations);
+      const mappedAll = mapMembersAndInvitations(all);
       const { sorting, pagination } = queryParams;
 
-      // const sortedAll = sort(all, sorting);
-      // const paginatedAll = paginate(sortedAll, pagination);
-      const paginatedAll = paginate(all, pagination);
+      const sortedAll = sort(mappedAll, sorting);
+      const paginatedAll = paginate(sortedAll, pagination);
       return paginatedAll;
     },
 });
