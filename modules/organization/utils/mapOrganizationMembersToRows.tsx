@@ -52,16 +52,6 @@ export const mapOrganizationMembersToRows = (
     Permissions.DELETE_MEMBER,
   );
 
-  const allMembers = membersAndInvitations.map((mi: any) => ({
-    id: mi.email ? mi.id : null,
-    email: mi.email ? mi.email : mi.inviteeEmail,
-    createdAt: null,
-    firstName: mi.firstName ? mi.firstName : null,
-    lastName: mi.lastName ? mi.lastName : null,
-    isPending: mi.inviteeEmail ? true : false,
-    invitationId: mi.inviteeEmail ? mi.id : null,
-  }));
-
   const handleRemoveMember = async (
     user_id: string,
     org_id: string,
@@ -111,14 +101,14 @@ export const mapOrganizationMembersToRows = (
   ];
 
   const rows = membersAndInvitations?.map(
-    (member: MemberAndInvitation, idx: number) => ({
+    (member: MemberAndInvitation, idx: string) => ({
       key: member.id ?? `${idx}`,
       cells: [
         {
           key: '1',
           component: (
             <div css={flex.display.inline}>
-              <p>{escapeHtml(member.email!)}</p>
+              <p>{member.email}</p>
               {member.isPending && (
                 <Badge
                   color="note"
@@ -131,22 +121,8 @@ export const mapOrganizationMembersToRows = (
             </div>
           ),
         },
-        // {
-        //   key: '2',
-        //   component: (
-        //     <>
-        //       {member.createdAt && (
-        //         <p>
-        //           {formatDistanceToNow(new Date(member.createdAt || ''), {
-        //             addSuffix: true,
-        //           })}
-        //         </p>
-        //       )}
-        //     </>
-        //   ),
-        // },
         {
-          key: '3',
+          key: '2',
           component:
             member.isPending && canCreateMember ? (
               <span
@@ -171,7 +147,7 @@ export const mapOrganizationMembersToRows = (
             ) : null,
         },
         {
-          key: '4',
+          key: '3',
           component: (
             <>
               {canRemoveMember ? (
