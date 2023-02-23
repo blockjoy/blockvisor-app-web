@@ -1,4 +1,9 @@
-export const checkIfExists = (membersAndInvitations: any, email: string) => {
+import { MemberAndInvitation } from './mapMembersAndInvitations';
+
+export const checkIfExists = (
+  membersAndInvitations: MemberAndInvitation[],
+  email: string,
+) => {
   if (
     membersAndInvitations.some(
       (member: ClientOrganizationMember) =>
