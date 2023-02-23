@@ -10,8 +10,9 @@ export function useInvitations() {
     organizationAtoms.organizationSentInvitations,
   );
 
-  const [sentInvitationsLoadingState, setSentInvitationsLoadingState] =
-    useRecoilState(organizationAtoms.organizationSentInvitationsLoadingState);
+  const [isLoading, setIsLoading] = useRecoilState(
+    organizationAtoms.organizationSentInvitationsLoadingState,
+  );
 
   const setReceivedInvitations = useSetRecoilState(
     organizationAtoms.organizationReceivedInvitations,
@@ -32,7 +33,7 @@ export function useInvitations() {
       setSentInvitations(response);
     }
 
-    setSentInvitationsLoadingState('finished');
+    setIsLoading('finished');
   };
 
   const acceptInvitation = async (
@@ -102,9 +103,10 @@ export function useInvitations() {
     getReceivedInvitations,
     sentInvitations,
     getSentInvitations,
-    sentInvitationsLoadingState,
     acceptInvitation,
     declineInvitation,
     revokeInvitation,
+    isLoading,
+    setIsLoading,
   };
 }

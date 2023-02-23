@@ -29,5 +29,6 @@ export function useGetOrganizationMembers() {
     isLoading,
     pageIndex,
     setPageIndex,
+    setIsLoading,
   };
 }
