@@ -34,11 +34,13 @@ export const withPagination = (Component: any) => {
     return (
       <>
         <Component {...props} handleSort={handleSort} />
-        <Pagination
-          onPageClicked={handlePagination}
-          totalPages={totalPages}
-          currentPage={properties.pagination.currentPage}
-        />
+        {totalPages > 1 && (
+          <Pagination
+            onPageClicked={handlePagination}
+            totalPages={totalPages}
+            currentPage={properties.pagination.currentPage}
+          />
+        )}
       </>
     );
   };
