@@ -1,10 +1,9 @@
 export type MemberAndInvitation = {
-  id?: string | null;
+  id?: string;
   email?: string;
-  createdAt?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  invitationId?: string | null;
+  firstName?: string;
+  lastName?: string;
+  invitationId?: string;
   isPending?: boolean;
 };
 
@@ -14,7 +13,6 @@ export const mapMembersAndInvitations = (
   return membersAndInvitations.map((mi: any) => ({
     id: mi.email ? mi.id : null,
     email: mi.email ? mi.email : mi.inviteeEmail,
-    createdAt: null,
     firstName: mi.firstName ? mi.firstName : null,
     lastName: mi.lastName ? mi.lastName : null,
     isPending: mi.inviteeEmail ? true : false,
