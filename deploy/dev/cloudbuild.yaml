@@ -10,6 +10,7 @@ steps:
       env:
           - 'NPM_TOKEN=${_NPM_TOKEN}'
           - 'SHORT_SHA=${SHORT_SHA}'
+          - 'CRISP_TOKEN_KEY=${_CRISP_TOKEN_KEY}'
 
     - name: 'google/cloud-sdk:latest'
       entrypoint: 'sh'
