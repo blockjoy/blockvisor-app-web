@@ -90,7 +90,7 @@ export const DangerZone: FC<Props> = ({
           {isDisabled && (
             <div css={spacing.top.medium}>
               <Alert width="420px">
-                You cannot delete an ${elementName} that has nodes.
+                You cannot delete an {elementName} that has Nodes.
               </Alert>
             </div>
           )}

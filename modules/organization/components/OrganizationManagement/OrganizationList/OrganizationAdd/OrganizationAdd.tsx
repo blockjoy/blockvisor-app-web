@@ -3,9 +3,7 @@ import { useRecoilState } from 'recoil';
 import { Button, Input } from '@shared/components';
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationAdd.styles';
-import { width } from 'styles/utils.width.styles';
 import {
   useCreateOrganization,
   useGetOrganization,
