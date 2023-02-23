@@ -3,32 +3,18 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  buttons: css`
-    display: flex;
-    gap: 10px;
-    width: 200px;
+  wrapper: css`
+    padding: 0;
+    margin: 0;
 
-    @media ${breakpoints.toMed} {
-      width: 100%;
+    @media ${breakpoints.fromXLrg} {
+      max-width: 500px;
     }
   `,
-  textarea: (theme: ITheme) => css`
-    padding: 12px 16px;
-    color: ${theme.colorText};
-    background: transparent;
-    border-radius: 4px;
-    border: 1px solid ${theme.colorBorder};
-    margin-bottom: 16px;
-    resize: none;
-    outline: none;
-    min-width: 500px;
-
-    ::placeholder {
-      color: ${theme.colorLabel};
-    }
-
-    @media ${breakpoints.toMed} {
-      min-width: 100%;
-    }
+  buttons: css`
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 90px 90px;
+    gap: 8px;
   `,
 };

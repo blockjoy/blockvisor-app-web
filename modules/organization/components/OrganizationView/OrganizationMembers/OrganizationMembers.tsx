@@ -1,6 +1,6 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
@@ -56,25 +56,21 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     Permissions.CREATE_MEMBER,
   );
 
-  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    setInviteeEmail(e.target.value);
-  };
-
   const handlePageClicked = (index: number) => {
     setPageIndex(index);
   };
 
-  const handleInviteClicked = () => {
+  const handleInviteClicked = (email: string) => {
     setIsInviting(true);
 
     const isMemberOrInvited = checkIfExists(
       members!,
       invitations!,
-      inviteeEmail!?.toLowerCase(),
+      email!?.toLowerCase(),
     );
 
     if (!isMemberOrInvited) {
-      inviteMembers(inviteeEmail!, () => {
+      inviteMembers(email!, () => {
         getSentInvitations(id!);
         setActiveView('list');
         setPageIndex(0);
@@ -138,10 +134,8 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
       {activeView === 'invite' && (
         <OrganizationInvite
           isInviting={isInviting}
-          inviteeEmail={inviteeEmail!}
           onInviteClicked={handleInviteClicked}
           onCancelClicked={() => setActiveView('list')}
-          onInviteeEmailChanged={handleInviteeEmailChanged}
         />
       )}
       <Table

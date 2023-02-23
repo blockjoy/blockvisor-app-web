@@ -7,7 +7,6 @@ import {
   useGetOrganizations,
   useInvitations,
 } from '@modules/organization';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';

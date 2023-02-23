@@ -94,6 +94,10 @@ export const styles = {
   `,
   dropdownInner: css`
     max-height: 199px;
+
+    ::-webkit-scrollbar-track {
+      background: rgb(255 255 255 / 5%);
+    }
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
