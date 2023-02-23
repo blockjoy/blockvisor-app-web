@@ -36,7 +36,6 @@ export const mapOrganizationMembersToRows = (
   membersAndInvitations?: MemberAndInvitation[],
   methods?: Methods,
 ) => {
-  console.log('membersAndInvitations', membersAndInvitations);
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
