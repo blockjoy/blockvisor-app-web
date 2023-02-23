@@ -40,7 +40,7 @@ export const styles = {
       &:active,
       &:focus {
         text-decoration: none;
-        background-color: ${theme.colorBorderGrey};
+        background-color: rgb(255 255 255 / 10%);
 
         & :global(svg) {
           color: var(--color-text-5);
