@@ -48,12 +48,16 @@ export const OrganizationView = () => {
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
 
-  const sentInvitationsLoadingState = useRecoilValue(
-    organizationAtoms.organizationSentInvitationsLoadingState,
-  );
-  const membersLoadingState = useRecoilValue(
-    organizationAtoms.organizationMembersLoadingState,
-  );
+  const {
+    getOrganizationMembers,
+    isLoading: membersLoadingState,
+    setIsLoading: setIsLoadingMembers,
+  } = useGetOrganizationMembers();
+  const {
+    getSentInvitations,
+    isLoading: sentInvitationsLoadingState,
+    setIsLoading: setSentInvitationsLoadingState,
+  } = useInvitations();
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean | null>(null);
@@ -97,10 +101,6 @@ export const OrganizationView = () => {
     }
   };
 
-  const { getOrganizationMembers } = useGetOrganizationMembers();
-
-  const { getSentInvitations } = useInvitations();
-
   const getTotalNodes = async () => {
     const nodes: any = await apiClient.listNodes(
       id?.toString()!,
@@ -133,6 +133,8 @@ export const OrganizationView = () => {
 
     return () => {
       setIsLoading('initializing');
+      setIsLoadingMembers('initializing');
+      setSentInvitationsLoadingState('initializing');
       setOrganization(null);
     };
   }, [router.isReady]);
