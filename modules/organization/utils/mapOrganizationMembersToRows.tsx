@@ -80,15 +80,20 @@ export const mapOrganizationMembersToRows = (
       dataField: 'email',
       sort: true,
     },
+    // {
+    //   name: 'Joined',
+    //   key: '2',
+    //   width: '55%',
+    // },
     {
       name: '',
-      key: '2',
+      key: '3',
       width: '10%',
       textAlign: 'right',
     },
     {
       name: '',
-      key: '3',
+      key: '4',
       width: '5%',
       textAlign: 'right',
     },
@@ -102,7 +107,7 @@ export const mapOrganizationMembersToRows = (
           key: '1',
           component: (
             <div css={flex.display.inline}>
-              <p>{member.email}</p>
+              <p>{escapeHtml(member.email!)}</p>
               {member.isPending && (
                 <Badge
                   color="note"
@@ -115,8 +120,22 @@ export const mapOrganizationMembersToRows = (
             </div>
           ),
         },
+        // {
+        //   key: '2',
+        //   component: (
+        //     <>
+        //       {member.createdAt && (
+        //         <p>
+        //           {formatDistanceToNow(new Date(member.createdAt || ''), {
+        //             addSuffix: true,
+        //           })}
+        //         </p>
+        //       )}
+        //     </>
+        //   ),
+        // },
         {
-          key: '2',
+          key: '3',
           component:
             member.isPending && canCreateMember ? (
               <span
@@ -141,7 +160,7 @@ export const mapOrganizationMembersToRows = (
             ) : null,
         },
         {
-          key: '3',
+          key: '4',
           component: (
             <>
               {canRemoveMember ? (

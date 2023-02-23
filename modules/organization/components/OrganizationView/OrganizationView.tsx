@@ -18,17 +18,12 @@ import {
 } from '@shared/components';
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
-import {
-  organizationAtoms,
-  useInvitations,
-  useUpdateOrganization,
-} from '@modules/organization';
+import { useInvitations, useUpdateOrganization } from '@modules/organization';
 import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
 import { apiClient } from '@modules/client';
