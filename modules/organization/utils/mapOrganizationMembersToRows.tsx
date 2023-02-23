@@ -80,15 +80,20 @@ export const mapOrganizationMembersToRows = (
       dataField: 'email',
       sort: true,
     },
+    // {
+    //   name: 'Joined',
+    //   key: '2',
+    //   width: '55%',
+    // },
     {
       name: '',
-      key: '2',
+      key: '3',
       width: '10%',
       textAlign: 'right',
     },
     {
       name: '',
-      key: '3',
+      key: '4',
       width: '5%',
       textAlign: 'right',
     },
@@ -96,18 +101,46 @@ export const mapOrganizationMembersToRows = (
 
   const rows = membersAndInvitations?.map(
     (member: MemberAndInvitation, idx: string) => ({
-    key: member.id ?? `${idx}`,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <div css={flex.display.inline}>
-            <p>{escapeHtml(member.email!)}</p>
-            {member.isPending && (
-              <Badge
-                color="note"
-                style="outline"
-                customCss={[spacing.left.small]}
+      key: member.id ?? `${idx}`,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <div css={flex.display.inline}>
+              <p>{escapeHtml(member.email!)}</p>
+              {member.isPending && (
+                <Badge
+                  color="note"
+                  style="outline"
+                  customCss={[spacing.left.small]}
+                >
+                  Pending
+                </Badge>
+              )}
+            </div>
+          ),
+        },
+        // {
+        //   key: '2',
+        //   component: (
+        //     <>
+        //       {member.createdAt && (
+        //         <p>
+        //           {formatDistanceToNow(new Date(member.createdAt || ''), {
+        //             addSuffix: true,
+        //           })}
+        //         </p>
+        //       )}
+        //     </>
+        //   ),
+        // },
+        {
+          key: '3',
+          component:
+            member.isPending && canCreateMember ? (
+              <span
+                css={spacing.right.medium}
+                style={{ textAlign: 'right', width: '100%', display: 'block' }}
               >
                 <Button
                   type="button"
@@ -127,7 +160,7 @@ export const mapOrganizationMembersToRows = (
             ) : null,
         },
         {
-          key: '3',
+          key: '4',
           component: (
             <>
               {canRemoveMember ? (

@@ -1,10 +1,9 @@
 import { spacing } from 'styles/utils.spacing.styles';
 import { AllOrganizationsTable } from './OrganizationListTable';
 import { styles } from './OrganizationList.styles';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useGetOrganizations } from '../../../hooks/useGetOrganizations';
 import { Button, TableSkeleton } from '@shared/components';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useOrganizationsUIContext } from '@modules/organization/ui/OrganizationsUIContext';
 import { useMemo } from 'react';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
@@ -21,19 +20,15 @@ export const OrganizationsList = () => {
       setQueryParams: organizationUIContext.setQueryParams,
     };
   }, [organizationUIContext]);
+  const router = useRouter();
+  const { add } = router.query;
 
   const { isLoading } = useGetOrganizations();
   const organizationsActive = useRecoilValue(
     organizationAtoms.organizationsActive(organizationUIProps.queryParams),
   );
-  
-    const router = useRouter();
-
-  const { add } = router.query;
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
-
-  const setLayout = useSetRecoilState(layoutState);
 
   useEffect(() => {
     if (router.isReady && add) {
