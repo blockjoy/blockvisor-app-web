@@ -23,8 +23,9 @@ export function useInvitations() {
     setReceivedInvitations(response);
   };
 
-  const getSentInvitations = async (id: string) => {
-    const response: any = await apiClient.pendingInvitations(id);
+  const getSentInvitations = async (id: string | string[]) => {
+    const orgId = Array.isArray(id) ? id[0] : id;
+    const response: any = await apiClient.pendingInvitations(orgId);
     if (isStatusResponse(response)) {
       setSentInvitations([]);
     } else {

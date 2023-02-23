@@ -1,6 +1,5 @@
 import { useIdentityRepository } from '@modules/auth';
 import { Badge, Button, SvgIcon } from '@shared/components';
-import { formatDistanceToNow } from 'date-fns';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -43,8 +42,7 @@ export type Methods = {
 };
 
 export const mapOrganizationMembersToRows = (
-  members?: ClientOrganizationMember[],
-  invitations?: ClientOrganizationInvitation[],
+  membersAndInvitations?: any,
   methods?: Methods,
 ) => {
   const repository = useIdentityRepository();
@@ -63,29 +61,14 @@ export const mapOrganizationMembersToRows = (
     Permissions.DELETE_MEMBER,
   );
 
-  const membersMap: MemberListItem[] =
-    members?.map((member: ClientOrganizationMember) => ({
-      id: member.id,
-      email: member.email,
-      createdAt: null,
-      firstName: member.firstName,
-      lastName: member.lastName,
-      invitationId: null,
-      isPending: false,
-    })) ?? [];
-
-  const invitationsMap: MemberListItem[] =
-    invitations?.map((invitation: ClientOrganizationInvitation) => ({
-      id: null,
-      email: invitation.inviteeEmail,
-      createdAt: null,
-      firstName: null,
-      lastName: null,
-      invitationId: invitation.id,
-      isPending: true,
-    })) ?? [];
-
-  const allMembers: MemberListItem[] = [...membersMap, ...invitationsMap];
+  const allMembers = membersAndInvitations.map((mi: any) => ({
+    id: mi.id ? mi.id : null,
+    email: mi.email ? mi.email : mi.inviteeEmail,
+    createdAt: null,
+    firstName: mi.firstName ? mi.firstName : null,
+    lastName: mi.lastName ? mi.lastName : null,
+    isPending: mi.inviteeEmail ? true : false,
+  }));
 
   const handleRemoveMember = async (
     user_id: string,
@@ -115,14 +98,9 @@ export const mapOrganizationMembersToRows = (
       minWidth: '300px',
       maxWidth: '300px',
     },
-    // {
-    //   name: 'Joined',
-    //   key: '2',
-    //   width: '55%',
-    // },
     {
       name: '',
-      key: '3',
+      key: '2',
       width: '60px',
       minWidth: '60px',
       maxWidth: '60px',
@@ -130,7 +108,7 @@ export const mapOrganizationMembersToRows = (
     },
     {
       name: '',
-      key: '4',
+      key: '3',
       width: '50px',
       minWidth: '50px',
       maxWidth: '50px',
@@ -138,7 +116,7 @@ export const mapOrganizationMembersToRows = (
     },
   ];
 
-  const rows = allMembers?.map((member, idx) => ({
+  const rows = allMembers?.map((member: MemberListItem, idx: string) => ({
     key: member.id ?? `${idx}`,
     cells: [
       {
@@ -158,22 +136,8 @@ export const mapOrganizationMembersToRows = (
           </div>
         ),
       },
-      // {
-      //   key: '2',
-      //   component: (
-      //     <>
-      //       {member.createdAt && (
-      //         <p>
-      //           {formatDistanceToNow(new Date(member.createdAt || ''), {
-      //             addSuffix: true,
-      //           })}
-      //         </p>
-      //       )}
-      //     </>
-      //   ),
-      // },
       {
-        key: '3',
+        key: '2',
         component:
           member.isPending && canCreateMember ? (
             <span
@@ -198,7 +162,7 @@ export const mapOrganizationMembersToRows = (
           ) : null,
       },
       {
-        key: '4',
+        key: '3',
         component: (
           <>
             {canRemoveMember ? (
