@@ -1,5 +1,6 @@
 import { useEditUser } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Button, Input } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -33,8 +34,8 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
   } = form;
 
   useEffect(() => {
-    form.setValue('firstName', firstName ?? '');
-    form.setValue('lastName', lastName ?? '');
+    form.setValue('firstName', escapeHtml(firstName!) ?? '');
+    form.setValue('lastName', escapeHtml(lastName!) ?? '');
   }, []);
 
   const onSubmit = form.handleSubmit(async ({ firstName, lastName }) => {
@@ -44,8 +45,8 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
       await editUser(firstName, lastName, id ?? '');
       setIsLoading(false);
       form.reset();
-      form.setValue('firstName', firstName ?? '');
-      form.setValue('lastName', lastName ?? '');
+      form.setValue('firstName', escapeHtml(firstName) ?? '');
+      form.setValue('lastName', escapeHtml(lastName) ?? '');
       toast.success('Profile updated');
     } catch (error) {
       if (error instanceof ApplicationError) {
@@ -67,7 +68,8 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               labelStyles={[typo.base]}
               label="Email"
               name="email"
-              value={email}
+              placeholder="Email"
+              value={escapeHtml(email!)}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -75,8 +77,9 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               disabled={loading}
               labelStyles={[typo.base]}
               inputSize="medium"
-              label="First Name"
+              label="First name"
               name="firstName"
+              placeholder="First name"
               validationOptions={{
                 required: 'Your first name is required',
               }}
@@ -87,8 +90,9 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
               disabled={loading}
               inputSize="medium"
               labelStyles={[typo.base]}
-              label="Last Name"
+              label="Last name"
               name="lastName"
+              placeholder="Last name"
               validationOptions={{
                 required: 'Your last name is required',
               }}

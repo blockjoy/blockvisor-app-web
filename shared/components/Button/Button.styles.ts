@@ -101,6 +101,7 @@ const button = css`
   justify-content: center;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
   ${typo.button}
   text-decoration: none;
   transition: background-color 0.18s var(--transition-easing-cubic),

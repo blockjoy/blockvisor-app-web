@@ -62,7 +62,7 @@ export const OrganizationInvite: FC<Props> = ({
           size="small"
           style="secondary"
         >
-          Add Member
+          Add
         </Button>
         <Button
           onClick={onCancelClicked}

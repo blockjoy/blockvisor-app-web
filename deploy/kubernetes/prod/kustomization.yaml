@@ -12,6 +12,7 @@ patches:
       spec:
         domains:
           - app.prod.blockjoy.com
+          - app.blockjoy.com
   - patch: |-
       apiVersion: networking.k8s.io/v1
       kind: Ingress

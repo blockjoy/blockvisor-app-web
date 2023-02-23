@@ -8,6 +8,10 @@ import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { useOrganizationsUIContext } from '@modules/organization/ui/OrganizationsUIContext';
 import { useMemo } from 'react';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
+import { useEffect, useState } from 'react';
+import { OrganizationAdd } from '@modules/organization';
+import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import { useRouter } from 'next/router';
 
 export const OrganizationsList = () => {
   const organizationUIContext = useOrganizationsUIContext();
@@ -22,23 +26,39 @@ export const OrganizationsList = () => {
   const organizationsActive = useRecoilValue(
     organizationAtoms.organizationsActive(organizationUIProps.queryParams),
   );
+  
+    const router = useRouter();
+
+  const { add } = router.query;
+
+  const [isAdding, setIsAdding] = useState<boolean>(false);
 
   const setLayout = useSetRecoilState(layoutState);
+
+  useEffect(() => {
+    if (router.isReady && add) {
+      setIsAdding(true);
+    }
+  }, [router.isReady, add]);
 
   return (
     <div css={styles.wrapper}>
       <header css={[styles.header, spacing.bottom.large]}>
         All Organizations
-        <span css={styles.createButton}>
+        {!isAdding && (
           <Button
             size="small"
             style="outline"
-            onClick={() => setLayout('organization')}
+            onClick={() => setIsAdding(true)}
           >
+            <span css={styles.addIcon}>
+              <IconOrganizations />
+            </span>
             Add New
           </Button>
-        </span>
+        )}
       </header>
+      {isAdding && <OrganizationAdd setIsAdding={setIsAdding} />}
       <section css={spacing.top.large}>
         {isLoading === 'initializing' ? (
           <TableSkeleton />

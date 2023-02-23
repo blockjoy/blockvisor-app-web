@@ -41,5 +41,7 @@ export const styles = {
     display: flex;
     align-items: center;
     margin-right: 11px;
+    min-width: 0;
+    overflow: hidden;
   `,
 };

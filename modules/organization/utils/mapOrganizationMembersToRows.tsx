@@ -10,6 +10,7 @@ import {
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { MemberAndInvitation } from './mapMembersAndInvitations';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export enum Action {
   revoke = 'revoke',
@@ -95,32 +96,18 @@ export const mapOrganizationMembersToRows = (
 
   const rows = membersAndInvitations?.map(
     (member: MemberAndInvitation, idx: string) => ({
-      key: member.id ?? `${idx}`,
-      cells: [
-        {
-          key: '1',
-          component: (
-            <div css={flex.display.inline}>
-              <p>{member.email}</p>
-              {member.isPending && (
-                <Badge
-                  color="note"
-                  style="outline"
-                  customCss={[spacing.left.small]}
-                >
-                  Pending
-                </Badge>
-              )}
-            </div>
-          ),
-        },
-        {
-          key: '2',
-          component:
-            member.isPending && canCreateMember ? (
-              <span
-                css={spacing.right.medium}
-                style={{ textAlign: 'right', width: '100%', display: 'block' }}
+    key: member.id ?? `${idx}`,
+    cells: [
+      {
+        key: '1',
+        component: (
+          <div css={flex.display.inline}>
+            <p>{escapeHtml(member.email!)}</p>
+            {member.isPending && (
+              <Badge
+                color="note"
+                style="outline"
+                customCss={[spacing.left.small]}
               >
                 <Button
                   type="button"

@@ -70,6 +70,7 @@ export const styles = {
     margin: 0 0 20px;
 
     li {
+      min-width: 0;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -82,6 +83,13 @@ export const styles = {
       font-size: 14px;
       color: ${theme.colorLabel};
       width: 100%;
+    }
+
+    li div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      min-width: 0;
     }
   `,
   summaryIcon: (theme: ITheme) => css`

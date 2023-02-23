@@ -209,7 +209,7 @@ export const globalStyles = css`
     box-sizing: border-box;
     scroll-behavior: smooth;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   #__next {

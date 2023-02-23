@@ -8,6 +8,10 @@ export const styles = {
     width: 28px;
     height: 28px;
 
+    svg > circle {
+      fill: ${theme.colorLightGrey};
+    }
+
     path {
       fill: ${theme.colorLabel};
     }

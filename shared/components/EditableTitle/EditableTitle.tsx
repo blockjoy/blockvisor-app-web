@@ -4,6 +4,7 @@ import IconPencil from '@public/assets/icons/pencil-12.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
 import { Button } from '../Button/Button';
 import { css } from '@emotion/react';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 type Props = {
   isLoading?: boolean;
@@ -36,7 +37,7 @@ export const EditableTitle: FC<Props> = ({
     if (isEditMode && inputRef.current) {
       inputRef.current.value = initialValue;
       inputValue.current = initialValue;
-      setCharacterCount(initialValue?.length + 1);
+      setCharacterCount(escapeHtml(initialValue)?.length + 1);
     }
 
     setIsEditMode(!isEditMode);
@@ -46,9 +47,9 @@ export const EditableTitle: FC<Props> = ({
     const { value } = e.target;
 
     inputValue.current = value;
-    setCharacterCount(value?.length + 1);
+    setCharacterCount(escapeHtml(value)?.length + 1);
     setIsValid(value?.length > 0);
-    setIsDirty(value !== initialValue);
+    setIsDirty(escapeHtml(value) !== escapeHtml(initialValue));
   };
 
   const handleSaveClicked = () => {
@@ -57,7 +58,7 @@ export const EditableTitle: FC<Props> = ({
 
   useEffect(() => {
     inputValue.current = initialValue;
-    setCharacterCount(initialValue?.length + 1);
+    setCharacterCount(escapeHtml(initialValue)?.length + 1);
   }, []);
 
   useEffect(() => {
@@ -83,11 +84,11 @@ export const EditableTitle: FC<Props> = ({
           placeholder=""
           size={characterCount}
           css={[styles.input, isEditMode && styles.inputEditable]}
-          defaultValue={initialValue}
+          defaultValue={escapeHtml(initialValue)}
           onChange={handleChange}
         />
       ) : (
-        <span css={styles.span}>{initialValue}</span>
+        <span css={styles.span}>{escapeHtml(initialValue)}</span>
       )}
 
       {canUpdate && !isLoading && initialValue?.length && (

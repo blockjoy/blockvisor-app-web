@@ -9,6 +9,8 @@ steps:
   - skaffold build --filename='deploy/prod/skaffold.yaml' --file-output=/workspace/artifacts.json
   env:
   - 'NPM_TOKEN=${_NPM_TOKEN}'
+  - 'SHORT_SHA=${SHORT_SHA}'
+  - 'CRISP_TOKEN_KEY=${_CRISP_TOKEN_KEY}'
 
 - name: 'google/cloud-sdk:latest'
   entrypoint: 'sh'
@@ -19,8 +21,8 @@ steps:
   - |
     gcloud config set deploy/region us-east1
     gcloud deploy apply --file deploy/prod/clouddeploy.yaml
-    gcloud deploy releases create rel-${SHORT_SHA} \
-                        --delivery-pipeline blockvisor-ui-dev \
+    gcloud deploy releases create prod-rel-${SHORT_SHA} \
+                        --delivery-pipeline blockvisor-ui-prod \
                         --description "$(git log -1  --pretty='%s')" \
                         --build-artifacts /workspace/artifacts.json \
                         --skaffold-file deploy/prod/skaffold.yaml \
