@@ -9,9 +9,7 @@ export type MemberAndInvitation = {
 };
 
 export const mapMembersAndInvitations = (
-  membersAndInvitations:
-    | ClientOrganizationMember[]
-    | ClientOrganizationInvitation[],
+  membersAndInvitations: any,
 ): MemberAndInvitation[] => {
   return membersAndInvitations.map((mi: any) => ({
     id: mi.email ? mi.id : null,
