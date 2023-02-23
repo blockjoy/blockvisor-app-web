@@ -1,9 +1,4 @@
-export const checkIfExists = (
-  membersAndInvitations:
-    | ClientOrganizationMember[]
-    | ClientOrganizationInvitation[],
-  email: string,
-) => {
+export const checkIfExists = (membersAndInvitations: any, email: string) => {
   if (
     membersAndInvitations.some(
       (member: ClientOrganizationMember) =>

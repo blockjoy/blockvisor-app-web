@@ -9,11 +9,11 @@ export const mapOrganizationsToRows = (
   const headers: TableHeader[] = [
     {
       name: 'Org. Name',
-      dataField: 'name',
       key: '1',
       minWidth: '300px',
       maxWidth: '300px',
       width: '300px',
+      dataField: 'name',
       sort: true,
     },
     {
