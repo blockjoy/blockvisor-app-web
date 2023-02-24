@@ -11,7 +11,6 @@ export const themeDefault: ITheme = {
   colorInput: '#313534',
   colorDarkGrey: '#232524',
   colorTooltip: '#191b1a',
-  colorInput: '#313534',
   colorLabel: '#5F615D',
   colorDefault: '#5F615D',
   colorActive: '#363938',
