@@ -9,7 +9,7 @@ export const styles = {
       position: absolute;
       z-index: 4000;
       top: 50%;
-      left: calc(100% + 25px);
+      right: calc(100% + 22px);
       min-width: 300px;
       transform: translate(10px, -50%);
       animation: tooltips-horz 300ms ease-out forwards;
@@ -22,7 +22,7 @@ export const styles = {
         position: absolute;
         z-index: 11;
         top: 50%;
-        left: 0;
+        right: -17px;
         transform: translate(-9px, -9px) rotate(45deg);
       }
     }
@@ -44,7 +44,7 @@ export const styles = {
 
     @media ${breakpoints.fromXLrg} {
       background-color: ${theme.colorLightGrey};
-      box-shadow: 0 0 11px 0 ${rgba(theme.colorDark, 0.3)};
+      box-shadow: 0 0 10px rgb(0 0 0 / 10%);
       padding: 20px;
       font-size: 14px;
     }
@@ -97,10 +97,10 @@ export const styles = {
         content: '';
         background-color: ${[
           theme.colorDanger,
+          theme.colorDanger,
           theme.colorNote,
-          theme.colorAccent,
+          theme.colorNote,
           theme.colorPrimary,
-          theme.colorSuccess,
         ][passwordStrength - 1] || ''};
         height: 100%;
         width: ${(passwordStrength / 5) * 100}%;
