@@ -17,6 +17,7 @@ export function LoginFooter() {
           css={[link, footerLoginLink, linkUnderline]}
           href={ROUTES.FORGOT_PASSWORD}
           passHref
+          shallow
         >
           Forgot password?
         </Link>
@@ -27,6 +28,7 @@ export function LoginFooter() {
           css={[link, linkPrimary, linkUnderline]}
           href={ROUTES.REGISTER}
           passHref
+          shallow
         >
           Create an Account
         </Link>
