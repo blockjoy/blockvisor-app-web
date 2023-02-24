@@ -11,6 +11,7 @@ interface ITheme {
   colorBorder: string;
   colorBorderGrey: string;
   colorDarkGrey: string;
+  colorInput: string;
   colorTooltip: string;
   colorInput: string;
   colorLabel: string;

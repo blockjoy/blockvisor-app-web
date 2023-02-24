@@ -16,6 +16,7 @@ const layoutWrapper = (overflow: string) => css`
   border-radius: 8px;
   padding: 30px;
   overflow: ${overflow};
+  width: 90%;
 
   @media ${breakpoints.fromSml} {
     padding: 70px 50px 60px;
