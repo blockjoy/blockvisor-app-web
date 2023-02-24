@@ -22,6 +22,7 @@ export const styles = {
     min-width: max-content;
     transition: all 0.4s;
     background-color: ${theme.colorLightGrey};
+    box-shadow: 0 0 10px rgb(0 0 0 / 30%);
   `,
   isOpen: css`
     opacity: 1;
