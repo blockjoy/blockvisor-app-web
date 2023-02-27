@@ -25,7 +25,7 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { withPagination } from '@shared/components/Table/utils/withPagination';
+import { withQuery } from '@shared/components/Table/utils/withQuery';
 import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
 import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
 import { useRouter } from 'next/router';
@@ -139,7 +139,7 @@ export const Members = () => {
     );
   };
 
-  const MembersTable = withPagination(Table);
+  const MembersTable = withQuery(Table);
 
   return (
     <>
