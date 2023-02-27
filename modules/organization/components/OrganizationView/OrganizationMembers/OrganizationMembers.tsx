@@ -1,6 +1,6 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
-import { ChangeEvent, useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
@@ -48,15 +48,16 @@ export const Members = () => {
     ),
   );
 
+  const members = useRecoilValue(organizationAtoms.organizationMembers);
+  const invitations = useRecoilValue(
+    organizationAtoms.organizationSentInvitations,
+  );
+
   const membersAndInvitationsActiveCount = useRecoilValue(
     organizationAtoms.organizationMembersAndInvitationsFiltered(
       organizationMembersUIProps.queryParams,
     ),
   ).length;
-
-  // const total = useRecoilValue(
-  //   organizationAtoms.organizationMembersAndInvitationsTotal,
-  // );
 
   const { inviteMembers } = useInviteMembers();
 
@@ -85,7 +86,8 @@ export const Members = () => {
     setIsInviting(true);
 
     const isMemberOrInvited = checkIfExists(
-      membersAndInvitations!,
+      members!,
+      invitations!,
       email!?.toLowerCase(),
     );
 
