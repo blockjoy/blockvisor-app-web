@@ -1,6 +1,7 @@
 import { atom, selector, selectorFamily } from 'recoil';
 import { paginate } from '@shared/components/Table/utils/paginate';
 import { sort } from '@shared/components/Table/utils/sort';
+import { filter } from '@shared/components/Table/utils/filter';
 import { InitialQueryParams as InitialQueryParamsMembers } from '../ui/OrganizationMembersUIHelpers';
 import { InitialQueryParams as InitialQueryParamsOrganizations } from '../ui/OrganizationsUIHelpers';
 import {
@@ -78,6 +79,24 @@ const organisationCount = selector({
   },
 });
 
+const organizationsFiltered = selectorFamily<
+  ClientOrganization[],
+  InitialQueryParamsOrganizations
+>({
+  key: 'organizations.active.filtered',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgs = get(allOrganizations);
+      const { sorting, filtering } = queryParams;
+
+      const filteredOrganizations = filter(allOrgs, filtering);
+      const sortedOrganizations = sort(filteredOrganizations, sorting);
+
+      return sortedOrganizations;
+    },
+});
+
 const organizationsActive = selectorFamily<
   ClientOrganization[],
   InitialQueryParamsOrganizations
@@ -86,11 +105,10 @@ const organizationsActive = selectorFamily<
   get:
     (queryParams) =>
     ({ get }) => {
-      const allOrgs = get(allOrganizations);
-      const { sorting, pagination } = queryParams;
+      const allOrgs = get(organizationsFiltered(queryParams));
+      const { pagination } = queryParams;
 
-      const sortedOrganizations = sort(allOrgs, sorting);
-      const paginatedOrganizations = paginate(sortedOrganizations, pagination);
+      const paginatedOrganizations = paginate(allOrgs, pagination);
 
       return paginatedOrganizations;
     },
@@ -101,11 +119,11 @@ const organizationMembers = atom<ClientOrganizationMember[]>({
   default: [],
 });
 
-const organizationMembersAndInvitations = selectorFamily<
+const organizationMembersAndInvitationsFiltered = selectorFamily<
   MemberAndInvitation[],
   InitialQueryParamsMembers
 >({
-  key: 'organizations.members.active',
+  key: 'organizations.members.filtered',
   get:
     (queryParams) =>
     ({ get }) => {
@@ -114,10 +132,27 @@ const organizationMembersAndInvitations = selectorFamily<
 
       const all = allOrgMembers.concat(allInvitations);
       const mappedAll = mapMembersAndInvitations(all);
-      const { sorting, pagination } = queryParams;
+      const { sorting } = queryParams;
 
       const sortedAll = sort(mappedAll, sorting);
-      const paginatedAll = paginate(sortedAll, pagination);
+      return sortedAll;
+    },
+});
+
+const organizationMembersAndInvitations = selectorFamily<
+  MemberAndInvitation[],
+  InitialQueryParamsMembers
+>({
+  key: 'organizations.members.active',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgMembers = get(
+        organizationMembersAndInvitationsFiltered(queryParams),
+      );
+      const { pagination } = queryParams;
+
+      const paginatedAll = paginate(allOrgMembers, pagination);
       return paginatedAll;
     },
 });
@@ -170,12 +205,14 @@ export const organizationAtoms = {
   organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,
+  organizationsFiltered,
   organizationsActive,
   organizationMemberCount,
   organisationCount,
   defaultOrganization,
   organizationMembers,
   organizationMembersAndInvitations,
+  organizationMembersAndInvitationsFiltered,
   organizationMembersAndInvitationsTotal,
   organizationMemberLoadingState,
   organizationMembersLoadingState,

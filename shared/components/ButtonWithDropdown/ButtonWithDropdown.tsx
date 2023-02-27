@@ -27,7 +27,9 @@ export function ButtonWithDropdown({ children, button }: Props) {
     <div ref={dropdownRef} css={[styles.base]}>
       {isValidElement<HTMLButtonElement>(button) &&
         cloneElement(button as ReactElement, { onClick: handleClick })}
-      <Dropdown isOpen={isOpen}>{children}</Dropdown>
+      <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
+        {children}
+      </Dropdown>
     </div>
   );
 }

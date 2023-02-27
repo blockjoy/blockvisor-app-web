@@ -1,13 +1,17 @@
 import { Table } from '@shared/components';
-import { useGetOrganizations } from '@modules/organization';
+import { organizationAtoms } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
 import { getHandlerTableChange } from '@modules/organization/utils/getHandlerTableChange';
 import { withPagination } from '@shared/components/Table/utils/withPagination';
 import { ROUTES } from '@shared/index';
-import { InitialQueryParams } from '@modules/organization/ui/OrganizationsUIHelpers';
+import {
+  FILTERS,
+  InitialQueryParams,
+} from '@modules/organization/ui/OrganizationsUIHelpers';
 import { SetQueryParams } from '@modules/organization/ui/OrganizationsUIContext';
 import { GridCell } from '@shared/components/TableGrid/types/GridCell';
+import { useRecoilValue } from 'recoil';
 
 export type AllOrganizationsTableProps = {
   organizations: ClientOrganization[];
@@ -24,7 +28,9 @@ export const AllOrganizationsTable = ({
 }: AllOrganizationsTableProps) => {
   const router = useRouter();
 
-  const { total } = useGetOrganizations();
+  const organizationsActiveCount = useRecoilValue(
+    organizationAtoms.organizationsFiltered(queryParams),
+  ).length;
 
   const { headers, rows } = mapOrganizationsToRows(organizations);
 
@@ -46,8 +52,9 @@ export const AllOrganizationsTable = ({
       rows={rows}
       fixedRowHeight="74px"
       properties={queryParams}
-      total={total}
+      total={organizationsActiveCount}
       onTableChange={handleTableChange}
+      filters={FILTERS}
     />
   );
 };
