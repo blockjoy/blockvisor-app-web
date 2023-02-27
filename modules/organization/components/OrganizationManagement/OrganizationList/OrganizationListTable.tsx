@@ -3,7 +3,7 @@ import { organizationAtoms } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
 import { getHandlerTableChange } from '@modules/organization/utils/getHandlerTableChange';
-import { withPagination } from '@shared/components/Table/utils/withPagination';
+import { withQuery } from '@shared/components/Table/utils/withQuery';
 import { ROUTES } from '@shared/index';
 import {
   FILTERS,
@@ -47,7 +47,7 @@ export const AllOrganizationsTable = ({
     setOrganizationsFilters(queryParams);
   };
 
-  const OrganizationsTable = withPagination(Table);
+  const OrganizationsTable = withQuery(Table);
 
   return (
     <OrganizationsTable

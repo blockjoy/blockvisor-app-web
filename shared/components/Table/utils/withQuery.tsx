@@ -2,8 +2,8 @@ import { Filtering } from '@shared/components/Filtering/Filtering';
 import { Pagination } from '../../Pagination/Pagination';
 import { TableEmpty } from '../TableEmpty';
 
-export const withPagination = (Component: any) => {
-  const WithPagination = ({ ...props }: any) => {
+export const withQuery = (Component: any) => {
+  const withQuery = ({ ...props }: any) => {
     const { properties, filters, onTableChange, total } = props;
 
     const totalPages = Math.ceil(total / properties.pagination.itemsPerPage);
@@ -78,9 +78,9 @@ export const withPagination = (Component: any) => {
     );
   };
 
-  WithPagination.displayName = `WithPagination(${
+  withQuery.displayName = `withQuery(${
     Component.displayName || Component.name || 'Component'
   })`;
 
-  return WithPagination;
+  return withQuery;
 };
