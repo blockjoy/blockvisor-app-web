@@ -4,7 +4,7 @@ import { Alert, Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { PasswordToggle } from '../PasswordTogle';
+import { PasswordToggle } from '@modules/auth';
 import { isValidEmail } from '@shared/utils/validation';
 import { apiClient } from '@modules/client';
 import Router, { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { Routes } from '@modules/auth/utils/routes';
 import { isStatusResponse } from '@modules/organization';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
+import { PasswordField } from '../PasswordField/PasswordField';
 
 type RegisterForm = {
   first_name: string;
@@ -99,23 +100,22 @@ export function RegisterForm() {
         <form onSubmit={onSubmit}>
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.mediumSmall]}>
-              <li css={[spacing.bottom.mediumSmall]}>
-                <Input
-                  tabIndex={1}
-                  labelStyles={[display.visuallyHidden]}
-                  disabled={loading}
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  validationOptions={{
-                    required: 'Your email address is required',
-                    pattern: {
-                      value: isValidEmail(),
-                      message: 'Email format is not correct',
-                    },
-                  }}
-                />
-              </li>
+              <Input
+                tabIndex={1}
+                labelStyles={[display.visuallyHidden]}
+                disabled={loading}
+                name="email"
+                placeholder="Email"
+                validationOptions={{
+                  required: 'Your e-mail address is required',
+                  pattern: {
+                    value: isValidEmail(),
+                    message: 'Email format is not correct',
+                  },
+                }}
+              />
+            </li>
+            <li css={[spacing.bottom.mediumSmall]}>
               <Input
                 tabIndex={2}
                 labelStyles={[display.visuallyHidden]}
@@ -140,28 +140,11 @@ export function RegisterForm() {
               />
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
-              <Input
+              <PasswordField
+                loading={loading}
                 tabIndex={4}
-                labelStyles={[display.visuallyHidden]}
-                disabled={loading}
                 name="password"
                 placeholder="Password"
-                type={activeType['password']}
-                validationOptions={{
-                  required: 'This is a mandatory field',
-                  minLength: {
-                    value: 8,
-                    message: 'Password should be at least 8 characters long',
-                  },
-                }}
-                rightIcon={
-                  <PasswordToggle
-                    name="password"
-                    tabIndex={0}
-                    activeType={activeType['password']}
-                    onClick={handleIconClick}
-                  />
-                }
               />
             </li>
             <li css={[spacing.bottom.medium]}>

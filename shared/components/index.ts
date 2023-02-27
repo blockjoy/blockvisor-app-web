@@ -74,3 +74,4 @@ export * from './PillPicker/PillPicker';
 export * from './Tooltip/Tooltip';
 export * from './LoadingSpinner/';
 export * from './SvgIcon/SvgIcon';
+export * from './Scrollbar/Scrollbar';

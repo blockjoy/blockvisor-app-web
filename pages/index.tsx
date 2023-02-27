@@ -9,7 +9,9 @@ const Index: NextPage = () => {
   const { isLoggedIn, isLoading } = useIdentity();
   const router = useRouter();
   useEffect(() => {
-    router.push(`${isLoggedIn ? ROUTES.DEFAULT : ROUTES.LOGIN}`);
+    router.push(`${isLoggedIn ? ROUTES.DEFAULT : ROUTES.LOGIN}`, undefined, {
+      shallow: true,
+    });
   }, []);
 
   if (isLoading) {

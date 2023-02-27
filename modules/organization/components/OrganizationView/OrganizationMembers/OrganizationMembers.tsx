@@ -82,10 +82,6 @@ export const Members = () => {
     Permissions.CREATE_MEMBER,
   );
 
-  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    setInviteeEmail(e.target.value);
-  };
-
   const handleInviteClicked = () => {
     setIsInviting(true);
 
@@ -95,7 +91,7 @@ export const Members = () => {
     );
 
     if (!isMemberOrInvited) {
-      inviteMembers(inviteeEmail!, () => {
+      inviteMembers(email!, () => {
         getSentInvitations(id!);
         setActiveView('list');
         setIsInviting(false);
@@ -166,10 +162,8 @@ export const Members = () => {
       {activeView === 'invite' && (
         <OrganizationInvite
           isInviting={isInviting}
-          inviteeEmail={inviteeEmail!}
           onInviteClicked={handleInviteClicked}
           onCancelClicked={() => setActiveView('list')}
-          onInviteeEmailChanged={handleInviteeEmailChanged}
         />
       )}
       <MembersTable

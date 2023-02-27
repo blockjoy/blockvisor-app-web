@@ -90,10 +90,13 @@ export const styles = {
     max-width: 190px;
     min-width: 190px;
     width: 190px;
-    box-shadow: 0 0 10px rgb(0 0 0 / 30%);
   `,
   dropdownInner: css`
     max-height: 199px;
+
+    ::-webkit-scrollbar-track {
+      background: rgb(255 255 255 / 5%);
+    }
   `,
   icon: (theme: ITheme) => css`
     position: absolute;

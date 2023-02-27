@@ -12,6 +12,7 @@ import { styles } from './ProfileChangePassword.styles';
 import { toast } from 'react-toastify';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetOrganizations } from '@modules/organization';
+import { PasswordField } from '@modules/auth/components/PasswordField/PasswordField';
 
 type ChangePasswordForm = {
   currentPassword: string;
@@ -104,35 +105,17 @@ export function ProfileChangePassword() {
               />
             </li>
             <li css={[spacing.bottom.medium]}>
-              <Input
+              <PasswordField
                 tabIndex={2}
+                loading={loading}
                 label="New password"
-                disabled={loading}
                 name="newPassword"
                 placeholder="New password"
-                type={activeType['newPassword']}
-                inputSize="medium"
-                labelStyles={[typo.base]}
-                validationOptions={{
-                  required: 'This is a mandatory field',
-                  minLength: {
-                    value: 8,
-                    message: 'Password should be at least 8 characters long',
-                  },
-                }}
-                rightIcon={
-                  <PasswordToggle
-                    tabIndex={5}
-                    name="newPassword"
-                    activeType={activeType['newPassword']}
-                    onClick={handleIconClick}
-                  />
-                }
               />
             </li>
             <li css={[spacing.bottom.large]}>
               <Input
-                tabIndex={3}
+                tabIndex={4}
                 label="Confirm new password"
                 disabled={loading}
                 name="confirmPassword"
@@ -150,7 +133,7 @@ export function ProfileChangePassword() {
                 }}
                 rightIcon={
                   <PasswordToggle
-                    tabIndex={6}
+                    tabIndex={5}
                     name="confirmPassword"
                     activeType={activeType['confirmPassword']}
                     onClick={handleIconClick}
@@ -160,7 +143,7 @@ export function ProfileChangePassword() {
             </li>
           </ul>
           <Button
-            tabIndex={4}
+            tabIndex={6}
             loading={loading}
             customCss={[styles.loadingButton]}
             disabled={!isDirty || loading}

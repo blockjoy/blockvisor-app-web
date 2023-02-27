@@ -10,7 +10,11 @@ export function RegisterFooter() {
     <footer css={[footerLogin, typo.tiny]}>
       <div css={[footerLoginAccount]}>
         <p css={[colors.text2]}>Already have a BlockJoy account?</p>
-        <Link href={ROUTES.LOGIN} css={[link, linkPrimary, linkUnderline]}>
+        <Link
+          href={ROUTES.LOGIN}
+          css={[link, linkPrimary, linkUnderline]}
+          shallow
+        >
           Log In
         </Link>
       </div>

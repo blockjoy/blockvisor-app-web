@@ -1,5 +1,5 @@
-import { Button } from '@shared/components';
-import { checkIfValidEmail } from '@shared/utils/validation';
+import { Button, Input } from '@shared/components';
+import { checkIfValidEmail, isValidEmail } from '@shared/utils/validation';
 import {
   ChangeEvent,
   FC,
@@ -7,72 +7,67 @@ import {
   KeyboardEventHandler,
   useState,
 } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvite.styles';
 
 type Props = {
-  inviteeEmail: string;
   isInviting: boolean;
-  onInviteClicked: VoidFunction;
+  onInviteClicked: (name: string) => void;
   onCancelClicked: VoidFunction;
-  onInviteeEmailChanged: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+type InviteForm = {
+  email: string;
 };
 
 export const OrganizationInvite: FC<Props> = ({
-  inviteeEmail,
   isInviting,
   onInviteClicked,
   onCancelClicked,
-  onInviteeEmailChanged,
 }) => {
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const form = useForm<InviteForm>();
 
-  const handleInviteClicked = () => {
-    onInviteClicked();
-  };
+  const { isValid } = form.formState;
 
-  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    const isValid = checkIfValidEmail(e.target.value);
-    if (isValid) {
-      setIsDisabled(false);
-      onInviteeEmailChanged(e);
-    } else {
-      setIsDisabled(true);
-    }
+  const onSubmit: SubmitHandler<InviteForm> = async ({ email }) => {
+    onInviteClicked(email);
   };
 
   return (
     <div css={spacing.bottom.large}>
-      <input
-        type="email"
-        autoFocus
-        onChange={handleInviteeEmailChanged}
-        onKeyUp={(e: KeyboardEvent<HTMLInputElement>) =>
-          e.key === 'Enter' && handleInviteClicked()
-        }
-        placeholder="New member email address"
-        css={styles.textarea}
-      />
-      <div css={styles.buttons}>
-        <Button
-          loading={isInviting}
-          disabled={isDisabled}
-          onClick={handleInviteClicked}
-          display="block"
-          size="small"
-          style="secondary"
-        >
-          Add
-        </Button>
-        <Button
-          onClick={onCancelClicked}
-          display="block"
-          size="small"
-          style="outline"
-        >
-          Cancel
-        </Button>
-      </div>
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} css={styles.wrapper}>
+          <Input
+            placeholder="New member email address"
+            name="email"
+            type="text"
+            inputSize="medium"
+            validationOptions={{
+              required: 'An email address is required',
+              pattern: {
+                value: isValidEmail(),
+                message: 'Email format is not correct',
+              },
+            }}
+            autoFocus
+          />
+          <div css={styles.buttons}>
+            <Button
+              disabled={!isValid}
+              loading={isInviting}
+              style="secondary"
+              size="small"
+              type="submit"
+            >
+              Add
+            </Button>
+            <Button onClick={onCancelClicked} style="outline" size="small">
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </FormProvider>
     </div>
   );
 };

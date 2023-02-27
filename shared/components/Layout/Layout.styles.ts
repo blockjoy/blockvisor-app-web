@@ -10,12 +10,12 @@ const layout = css`
   min-height: 100vh;
 `;
 
-const layoutWrapper = css`
+const layoutWrapper = (overflow: string) => css`
   opacity: 0;
   background-color: var(--color-text-5-o3);
   border-radius: 8px;
   padding: 30px;
-  overflow: hidden;
+  overflow: ${overflow};
   width: 90%;
 
   @media ${breakpoints.fromSml} {
