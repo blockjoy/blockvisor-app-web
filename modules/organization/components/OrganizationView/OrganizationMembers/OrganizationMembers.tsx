@@ -1,6 +1,6 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useMemo } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
@@ -24,6 +24,34 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
+import { withQuery } from '@shared/components/Table/utils/withQuery';
+import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
+import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
+import { useRouter } from 'next/router';
+
+export const Members = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const OrganizationMembersUIContext = useOrganizationMembersUIContext();
+  const organizationMembersUIProps = useMemo(() => {
+    return {
+      queryParams: OrganizationMembersUIContext.queryParams,
+      setQueryParams: OrganizationMembersUIContext.setQueryParams,
+    };
+  }, [OrganizationMembersUIContext]);
+
+  const membersAndInvitations = useRecoilValue(
+    organizationAtoms.organizationMembersAndInvitations(
+      organizationMembersUIProps.queryParams,
+    ),
+  );
+
+  const membersAndInvitationsActiveCount = useRecoilValue(
+    organizationAtoms.organizationMembersAndInvitationsFiltered(
+      organizationMembersUIProps.queryParams,
+    ),
+  ).length;
 
 export type MembersProps = {
   members?: ClientOrganizationMember[];
@@ -112,6 +140,15 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     invitations,
     methods,
   );
+
+  const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
+    getHandlerTableChange(organizationMembersUIProps.setQueryParams)(
+      type,
+      queryParams,
+    );
+  };
+
+  const MembersTable = withQuery(Table);
 
   return (
     <>
