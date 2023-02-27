@@ -47,6 +47,11 @@ export const Members = () => {
     ),
   );
 
+  const members = useRecoilValue(organizationAtoms.organizationMembers);
+  const invitations = useRecoilValue(
+    organizationAtoms.organizationSentInvitations,
+  );
+
   const membersAndInvitationsActiveCount = useRecoilValue(
     organizationAtoms.organizationMembersAndInvitationsFiltered(
       organizationMembersUIProps.queryParams,
@@ -72,7 +77,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
 
-  const [inviteeEmail, setInviteeEmail] = useState<string>();
   const [isInviting, setIsInviting] = useState<boolean>(false);
 
   const selectedOrganization = useRecoilValue(
@@ -85,10 +89,10 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   );
 
   const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    setInviteeEmail(e.target.value);
+    //setInviteeEmail(e.target.value);
   };
 
-  const handleInviteClicked = () => {
+  const handleInviteClicked = (email: string) => {
     setIsInviting(true);
 
     const isMemberOrInvited = checkIfExists(
