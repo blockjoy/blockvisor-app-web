@@ -3,7 +3,10 @@ import { paginate } from '@shared/components/Table/utils/paginate';
 import { sort } from '@shared/components/Table/utils/sort';
 import { filter } from '@shared/components/Table/utils/filter';
 import { InitialQueryParams as InitialQueryParamsMembers } from '../ui/OrganizationMembersUIHelpers';
-import { InitialQueryParams as InitialQueryParamsOrganizations } from '../ui/OrganizationsUIHelpers';
+import {
+  InitialQueryParams as InitialQueryParamsOrganizations,
+  initialQueryParams,
+} from '../ui/OrganizationsUIHelpers';
 import {
   mapMembersAndInvitations,
   MemberAndInvitation,
@@ -42,9 +45,9 @@ const allOrganizations = atom<ClientOrganization[]>({
   default: [],
 });
 
-const organizationsFilters = atom<any>({
+const organizationsFilters = atom<InitialQueryParamsOrganizations>({
   key: 'organization.filters',
-  default: null,
+  default: initialQueryParams,
   effects: [localStorageEffect('organizationsFilters')],
 });
 

@@ -1,11 +1,11 @@
 import { apiClient } from '@modules/client';
 import { toast } from 'react-toastify';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganizations } from './useGetOrganizations';
 
 export function useLeaveOrganization() {
-  const { updateOrganizations } = useGetOrganizations();
+  const { removeFromOrganizations } = useGetOrganizations();
 
   const [loadingState, setLoadingState] = useRecoilState(
     organizationAtoms.organizationLoadingState,
@@ -16,7 +16,7 @@ export function useLeaveOrganization() {
     try {
       await apiClient.leaveOrganization(org_id);
 
-      updateOrganizations(org_id);
+      removeFromOrganizations(org_id);
 
       setLoadingState('finished');
       toast.success('Successfully left the organization');
