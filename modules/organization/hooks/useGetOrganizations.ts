@@ -30,7 +30,7 @@ export function useGetOrganizations() {
     setIsLoading('finished');
   };
 
-  const updateOrganizations = (org_id: string) => {
+  const removeFromOrganizations = (org_id: string) => {
     const newOrganizations = organizations.filter(
       (organization) => organization.id !== org_id,
     );
@@ -47,7 +47,7 @@ export function useGetOrganizations() {
     organizations,
     total,
     getOrganizations,
-    updateOrganizations,
+    removeFromOrganizations,
     addToOrganizations,
     isLoading,
     setIsLoading,
