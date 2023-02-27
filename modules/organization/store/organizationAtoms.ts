@@ -8,6 +8,7 @@ import {
   mapMembersAndInvitations,
   MemberAndInvitation,
 } from '../utils/mapMembersAndInvitations';
+import { localStorageEffect } from 'utils/store/persist';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
@@ -39,6 +40,12 @@ const organizationsPageIndex = atom<number>({
 const allOrganizations = atom<ClientOrganization[]>({
   key: 'organization.all',
   default: [],
+});
+
+const organizationsFilters = atom<any>({
+  key: 'organization.filters',
+  default: null,
+  effects: [localStorageEffect('organizationsFilters')],
 });
 
 const organizationsLoadingState = atom<LoadingState>({
@@ -205,6 +212,7 @@ export const organizationAtoms = {
   organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,
+  organizationsFilters,
   organizationsFiltered,
   organizationsActive,
   organizationMemberCount,
