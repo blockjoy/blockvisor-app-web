@@ -4,6 +4,8 @@ import {
   InitialQueryParams,
   initialQueryParams,
 } from './OrganizationsUIHelpers';
+import { useRecoilValue } from 'recoil';
+import { organizationAtoms } from '../store/organizationAtoms';
 
 export type SetQueryParams = (nextQueryParams: InitialQueryParams) => void;
 
@@ -21,6 +23,16 @@ const OrganizationsUIContext = createContext<OrganizationsUIContext>(
   {} as OrganizationsUIContext,
 );
 
+export const getInitialQueryParams = () => {
+  const persistedNodeFilters = useRecoilValue(
+    organizationAtoms.organizationsFilters,
+  );
+
+  if (!persistedNodeFilters) return initialQueryParams;
+
+  return persistedNodeFilters;
+};
+
 export function useOrganizationsUIContext() {
   return useContext(OrganizationsUIContext);
 }
@@ -28,7 +40,7 @@ export function useOrganizationsUIContext() {
 export const OrganizationsUIConsumer = OrganizationsUIContext.Consumer;
 
 export function OrganizationsUIProvider({ children }: OrganizationsUIProvider) {
-  const initialQueryParamsValue: InitialQueryParams = initialQueryParams;
+  const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
 
   const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
     initialQueryParamsValue,

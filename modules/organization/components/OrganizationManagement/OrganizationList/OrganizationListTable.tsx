@@ -11,7 +11,7 @@ import {
 } from '@modules/organization/ui/OrganizationsUIHelpers';
 import { SetQueryParams } from '@modules/organization/ui/OrganizationsUIContext';
 import { GridCell } from '@shared/components/TableGrid/types/GridCell';
-import { useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 
 export type AllOrganizationsTableProps = {
   organizations: ClientOrganization[];
@@ -28,6 +28,10 @@ export const AllOrganizationsTable = ({
 }: AllOrganizationsTableProps) => {
   const router = useRouter();
 
+  const setOrganizationsFilters = useSetRecoilState(
+    organizationAtoms.organizationsFilters,
+  );
+
   const organizationsActiveCount = useRecoilValue(
     organizationAtoms.organizationsFiltered(queryParams),
   ).length;
@@ -40,6 +44,7 @@ export const AllOrganizationsTable = ({
 
   const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
     getHandlerTableChange(setQueryParams)(type, queryParams);
+    setOrganizationsFilters(queryParams);
   };
 
   const OrganizationsTable = withPagination(Table);
