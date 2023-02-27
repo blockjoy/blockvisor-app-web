@@ -1,5 +1,5 @@
 export const sort = (items: any, sorting: Sorting) => {
-  return [...items].sort((a: ClientOrganization, b: ClientOrganization) => {
+  return [...items].sort((a: any, b: any) => {
     let aField = a[sorting.field!];
     let bField = b[sorting.field!];
 
