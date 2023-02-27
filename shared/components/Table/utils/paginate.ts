@@ -1,7 +1,5 @@
-import { Pagination } from '@modules/organization/ui/OrganizationsUIHelpers';
-
 export const paginate = (items: any, pagination: Pagination) => {
-  const { currentPage, itemsPerPage } = pagination;
+  const { currentPage = 1, itemsPerPage = 10 } = pagination;
 
   const start = (currentPage - 1) * itemsPerPage;
   const end = currentPage * itemsPerPage;
