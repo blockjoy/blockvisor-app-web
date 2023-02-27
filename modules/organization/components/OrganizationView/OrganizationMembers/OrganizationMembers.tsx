@@ -47,9 +47,16 @@ export const Members = () => {
       organizationMembersUIProps.queryParams,
     ),
   );
-  const total = useRecoilValue(
-    organizationAtoms.organizationMembersAndInvitationsTotal,
-  );
+
+  const membersAndInvitationsActiveCount = useRecoilValue(
+    organizationAtoms.organizationMembersAndInvitationsFiltered(
+      organizationMembersUIProps.queryParams,
+    ),
+  ).length;
+
+  // const total = useRecoilValue(
+  //   organizationAtoms.organizationMembersAndInvitationsTotal,
+  // );
 
   const { inviteMembers } = useInviteMembers();
 
@@ -171,7 +178,7 @@ export const Members = () => {
         rows={rows}
         verticalAlign="middle"
         fixedRowHeight="74px"
-        total={total}
+        total={membersAndInvitationsActiveCount}
         properties={organizationMembersUIProps.queryParams}
         onTableChange={handleTableChange}
       />
