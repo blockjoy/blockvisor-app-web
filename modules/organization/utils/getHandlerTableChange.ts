@@ -1,14 +1,13 @@
-import { InitialQueryParams } from '@modules/organization/ui/OrganizationsUIHelpers';
-
 export function getHandlerTableChange(setQueryParams: any) {
   return (
     type: string,
     {
       pagination: { currentPage, itemsPerPage },
       sorting: { order, field },
-    }: InitialQueryParams,
+      filtering,
+    }: any,
   ) => {
-    setQueryParams((prev: InitialQueryParams) =>
+    setQueryParams((prev: any) =>
       type === 'sort'
         ? {
             ...prev,
@@ -29,6 +28,14 @@ export function getHandlerTableChange(setQueryParams: any) {
               ...prev.pagination,
               currentPage,
               itemsPerPage,
+            },
+          }
+        : type === 'filter'
+        ? {
+            ...prev,
+            filtering: {
+              ...prev.filtering,
+              ...filtering,
             },
           }
         : prev,
