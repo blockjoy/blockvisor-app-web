@@ -1,4 +1,4 @@
-export const filter = (items: any, filtering: any) => {
+export const filter = (items: any, filtering: Filtering) => {
   const filteredRows = items.filter((i: any) => {
     const filters: any = Object.fromEntries(
       Object.entries(filtering).filter(
