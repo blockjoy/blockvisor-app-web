@@ -1,14 +1,8 @@
-import { styles } from './Billing.styles';
 import { PageSection, PageTitle } from '@shared/components';
 import { useMemo } from 'react';
 import { Tabs, useTabs } from '@shared/index';
 import { useRouter } from 'next/router';
-import {
-  Plan,
-  PaymentMethod,
-  BillingAddress,
-  Invoices,
-} from '@modules/billing/';
+import { Plan, PaymentMethod, BillingInfo, Invoices } from '@modules/billing/';
 
 export const Billing = () => {
   const { push } = useRouter();
@@ -33,11 +27,11 @@ export const Billing = () => {
         ),
       },
       {
-        label: 'Billing Address',
+        label: 'Billing Info',
         value: '3',
         component: (
           <PageSection bottomBorder={false}>
-            <BillingAddress />
+            <BillingInfo />
           </PageSection>
         ),
       },
