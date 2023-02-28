@@ -11,11 +11,14 @@ export type BillingAddressProps = {
   handleAdding: (isAdding: boolean) => void;
 };
 
-export type BillingAddress = {
-  cardnumber: string;
-  cardholder: string;
-  expdate: string;
-  cvc: string;
+export type BillingAddressForm = {
+  name: string;
+  address: string;
+  city: string;
+  country: string;
+  region: string;
+  postal: string;
+  vat: string;
 };
 
 export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
@@ -23,13 +26,25 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit: SubmitHandler<any> = async ({
-    cardnumber,
-    cardholder,
-    expdate,
-    cvc,
-  }: BillingAddress) => {
-    console.log('FORM SUBMIT', cardnumber, cardholder, expdate, cvc);
+  const onSubmit: SubmitHandler<BillingAddressForm> = async ({
+    name,
+    address,
+    city,
+    country,
+    region,
+    postal,
+    vat,
+  }: BillingAddressForm) => {
+    console.log(
+      'FORM SUBMIT',
+      name,
+      address,
+      city,
+      country,
+      region,
+      postal,
+      vat,
+    );
     setLoading(true);
     try {
       setLoading(false);
