@@ -1,18 +1,15 @@
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { Button, Input } from '@shared/index';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './BillingAddress.styles';
 
-export type BillingAddressProps = {
-  handleAdding: (isAdding: boolean) => void;
-};
-
 export type BillingAddressForm = {
   name: string;
+  company: string;
   address: string;
   city: string;
   country: string;
@@ -21,13 +18,33 @@ export type BillingAddressForm = {
   vat: string;
 };
 
-export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
+export type BillingAddressProps = {
+  handleAdding: (isAdding: boolean) => void;
+  billingAddress: BillingAddressForm;
+};
+
+export const BillingAddress = ({
+  handleAdding,
+  billingAddress,
+}: BillingAddressProps) => {
   const form = useForm<any>();
 
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    form.setValue('name', billingAddress.name ?? '');
+    form.setValue('company', billingAddress.company ?? '');
+    form.setValue('address', billingAddress.address ?? '');
+    form.setValue('city', billingAddress.city ?? '');
+    form.setValue('country', billingAddress.country ?? '');
+    form.setValue('region', billingAddress.region ?? '');
+    form.setValue('postal', billingAddress.postal ?? '');
+    form.setValue('vat', billingAddress.vat ?? '');
+  }, []);
+
   const onSubmit: SubmitHandler<BillingAddressForm> = async ({
     name,
+    company,
     address,
     city,
     country,
@@ -38,6 +55,7 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
     console.log(
       'FORM SUBMIT',
       name,
+      company,
       address,
       city,
       country,
@@ -69,6 +87,18 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={0}
+              value={billingAddress.name}
+            />
+          </li>
+          <li css={[styles.formItem]}>
+            <Input
+              name="company"
+              label="Company"
+              placeholder="BlockJoy Inc."
+              inputSize="medium"
+              labelStyles={[typo.base]}
+              tabIndex={1}
+              value={billingAddress.company}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -78,7 +108,8 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
               placeholder="Address"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={1}
+              tabIndex={2}
+              value={billingAddress.address}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -88,7 +119,8 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
               placeholder="City"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={2}
+              tabIndex={3}
+              value={billingAddress.name}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -98,7 +130,8 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
               placeholder="Country"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={3}
+              tabIndex={4}
+              value={billingAddress.country}
             />
           </li>
           <li css={[styles.formItem, styles.formRow]}>
@@ -109,7 +142,8 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
                 placeholder="Region"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={4}
+                tabIndex={5}
+                value={billingAddress.region}
               />
             </div>
             <div>
@@ -119,7 +153,8 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
                 placeholder="Postal code"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={5}
+                tabIndex={6}
+                value={billingAddress.postal}
               />
             </div>
           </li>
@@ -131,6 +166,7 @@ export const BillingAddress = ({ handleAdding }: BillingAddressProps) => {
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={6}
+              value={billingAddress.vat}
             />
           </li>
         </ul>
