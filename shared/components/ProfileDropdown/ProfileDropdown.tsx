@@ -7,6 +7,7 @@ import { ProfileBubble } from '../ProfileBubble/ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
 import IconDoor from '@public/assets/icons/door-12.svg';
 import IconPerson from '@public/assets/icons/person-12.svg';
+import IconCard from '@public/assets/icons/credit-card.svg';
 import { Dropdown } from '../Dropdown/Dropdown';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { useRef, useState } from 'react';
@@ -32,6 +33,17 @@ export default function ProfileDropdown() {
         query: {
           tab: 1,
         },
+      },
+      undefined,
+      { shallow: true },
+    );
+    handleClickOutside();
+  };
+
+  const handleBillingRedirect = () => {
+    router.push(
+      {
+        pathname: ROUTES.BILLING,
       },
       undefined,
       { shallow: true },
@@ -68,6 +80,16 @@ export default function ProfileDropdown() {
             <IconPerson />
           </span>
           Profile
+        </DropdownItem>
+        <DropdownItem
+          type="button"
+          size="medium"
+          onButtonClick={handleBillingRedirect}
+        >
+          <span css={styles.icon}>
+            <IconCard />
+          </span>
+          Billing
         </DropdownItem>
         <DropdownItem type="button" size="medium" onButtonClick={handleSignOut}>
           <span css={styles.icon}>
