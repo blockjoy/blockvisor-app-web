@@ -90,10 +90,11 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
         {loading ? (
           <div css={styles.skeletonWrapper}>
-            <TableSkeleton />
+            <TableSkeleton dataCy="nodeLauncher-loading-skeleton" />
           </div>
         ) : !Boolean(blockchains?.length) ? (
           <div
+            data-cy="nodeLauncher-error"
             css={[typo.small, colors.warning]}
             style={{ marginLeft: '16px' }}
           >

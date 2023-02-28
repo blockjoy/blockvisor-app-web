@@ -8,6 +8,7 @@ type IconButtonProps = {
   name: string;
   onClick: VoidFunction;
   icon: ReactNode;
+  dataCy?: string;
 };
 
 const IconButton: FC<IconButtonProps> = ({
@@ -15,8 +16,10 @@ const IconButton: FC<IconButtonProps> = ({
   name,
   onClick,
   icon,
+  dataCy,
 }) => (
   <button
+    data-cy={dataCy}
     onClick={onClick}
     css={[styles.iconButton]}
     className={activeListType === name ? 'active' : ''}
@@ -31,8 +34,8 @@ type Props = {
 };
 
 const gridTableTypes = [
-  { name: 'table', icon: <IconTable /> },
-  { name: 'grid', icon: <IconGrid /> },
+  { name: 'table', icon: <IconTable />, dataCy: 'nodeList-tableView-button' },
+  { name: 'grid', icon: <IconGrid />, dataCy: 'nodeList-gridView-button' },
 ];
 
 export const GridTableViewPicker: FC<Props> = ({
@@ -47,6 +50,7 @@ export const GridTableViewPicker: FC<Props> = ({
         onClick={() => onChange(type.name)}
         icon={type.icon}
         activeListType={activeListType}
+        dataCy={type.dataCy}
       />
     ))}
   </div>

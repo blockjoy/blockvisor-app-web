@@ -1,5 +1,5 @@
-import { expect, describe, it, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '../renderer';
+import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
+import { fireEvent, render, screen, waitFor, cleanup } from '../renderer';
 import {
   mockedBlockchainsResponse,
   mockedMetricsResponse,
@@ -43,43 +43,87 @@ beforeEach(() => {
   dashboardMetricsSpy.mockImplementationOnce(async () => mockedMetricsResponse);
 });
 
-describe('Node List', () => {
-  it('Should display Skeleton loading component', () => {
-    nodeListSpy.mockImplementationOnce(async () => []);
+afterEach(() => {
+  cleanup();
+});
 
-    render(
-      <NodeUIProvider>
-        <NodeList />
-      </NodeUIProvider>,
-    );
-    expect(screen.getByDataCy('nodeList-skeleton')).toBeTruthy();
-  });
+describe('Node List Page', () => {
+  test('Skeleton loading', () => {
+    it('Should be visible when fetching nodes', () => {
+      nodeListSpy.mockImplementationOnce(async () => []);
 
-  it('Should display Empty Column component when there are no nodes', async () => {
-    nodeListSpy.mockImplementationOnce(async () => []);
-
-    render(
-      <NodeUIProvider>
-        <NodeList />
-      </NodeUIProvider>,
-    );
-
-    await waitFor(() => {
-      expect(screen.getByDataCy('nodeList-emptyColumn')).toBeTruthy();
+      render(
+        <NodeUIProvider>
+          <NodeList />
+        </NodeUIProvider>,
+      );
+      expect(screen.getByDataCy('nodeList-skeleton')).toBeTruthy();
     });
   });
 
-  it('Should display one Ethereum node', async () => {
-    nodeListSpy.mockImplementationOnce(async () => mockedNodesResponse);
+  test('Node List Empty colmn', () => {
+    it('Should be visible when there are no nodes', async () => {
+      nodeListSpy.mockImplementationOnce(async () => []);
 
-    render(
-      <NodeUIProvider>
-        <NodeList />
-      </NodeUIProvider>,
-    );
+      render(
+        <NodeUIProvider>
+          <NodeList />
+        </NodeUIProvider>,
+      );
 
-    await waitFor(() => {
-      expect(screen.getByDataCy('nodeList-Ethereum-Node')).toBeTruthy();
+      await waitFor(() => {
+        expect(screen.getByDataCy('nodeList-emptyColumn')).toBeTruthy();
+      });
+    });
+  });
+
+  test('Node list', () => {
+    it('Should display one Ethereum node', async () => {
+      nodeListSpy.mockImplementationOnce(async () => mockedNodesResponse);
+
+      render(
+        <NodeUIProvider>
+          <NodeList />
+        </NodeUIProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByDataCy('nodeList-Ethereum-Node')).toBeTruthy();
+      });
+    });
+  });
+
+  test('Node List', () => {
+    it('Should display grid view by default', async () => {
+      nodeListSpy.mockImplementationOnce(async () => mockedNodesResponse);
+
+      render(
+        <NodeUIProvider>
+          <NodeList />
+        </NodeUIProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByDataCy('nodeList-gridView')).toBeTruthy();
+      });
+    });
+  });
+
+  test('Node List', () => {
+    it('Should switch to table view when clicked on list view button', async () => {
+      nodeListSpy.mockImplementationOnce(async () => mockedNodesResponse);
+
+      render(
+        <NodeUIProvider>
+          <NodeList />
+        </NodeUIProvider>,
+      );
+
+      fireEvent.click(screen.getByDataCy('nodeList-tableView-button'));
+
+      await waitFor(() => {
+        expect(screen.getByDataCy('nodeList-tableView')).toBeTruthy();
+      });
     });
   });
 });

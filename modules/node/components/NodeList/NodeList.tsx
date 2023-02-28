@@ -132,6 +132,7 @@ export const NodeList = () => {
                   rows={rows}
                   fixedRowHeight="140px"
                   onRowClick={handleNodeClick}
+                  dataCy="nodeList-tableView"
                 />
               ) : (
                 <div css={styles.gridWrapper}>
@@ -139,6 +140,7 @@ export const NodeList = () => {
                     isLoading={isLoading}
                     cells={cells!}
                     preload={preloadNodes}
+                    dataCy="nodeList-gridView"
                   />
                 </div>
               )}
