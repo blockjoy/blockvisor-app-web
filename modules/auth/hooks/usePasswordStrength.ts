@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
 export enum PASSWORD_STRENGTH {
-  weak = 'Weak',
-  fair = 'Fair',
-  average = 'Average',
-  good = 'Good',
-  strong = 'Strong',
+  weak = 'Very Weak',
+  fair = 'Weak',
+  average = 'Medium',
+  good = 'Strong',
+  strong = 'Very Strong',
 }
 
 export const PASSWORD_VALIDATION: {

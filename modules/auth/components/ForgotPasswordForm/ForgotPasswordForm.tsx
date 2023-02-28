@@ -16,7 +16,13 @@ type ForgotPassword = {
 };
 
 export function ForgotPasswordForm() {
-  const form = useForm<ForgotPassword>();
+  const form = useForm<ForgotPassword>({
+    mode: 'all',
+    reValidateMode: 'onBlur',
+  });
+
+  const { isValid } = form.formState;
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -37,6 +43,7 @@ export function ForgotPasswordForm() {
         <ul css={[reset.list]}>
           <li css={[spacing.bottom.medium]}>
             <Input
+              autoFocus
               tabIndex={1}
               type="email"
               name="email"
@@ -54,6 +61,7 @@ export function ForgotPasswordForm() {
         <Button
           tabIndex={2}
           loading={isLoading}
+          disabled={!isValid}
           size="medium"
           display="block"
           style="primary"

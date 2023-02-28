@@ -26,8 +26,12 @@ export function LoginForm() {
   const router = useRouter();
   const { invited, verified, redirect, forgot, token } = router.query;
   const signIn = useSignIn();
-  const form = useForm<LoginForm>();
-  const { setValue } = form;
+  const form = useForm<LoginForm>({
+    mode: 'all',
+    reValidateMode: 'onBlur',
+  });
+  const { setValue, formState } = form;
+  const { isValid } = formState;
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
@@ -81,6 +85,7 @@ export function LoginForm() {
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                autoFocus
                 tabIndex={1}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
@@ -121,7 +126,7 @@ export function LoginForm() {
           <Button
             tabIndex={3}
             loading={loading}
-            disabled={loading}
+            disabled={loading || !isValid}
             size="medium"
             display="block"
             style="primary"

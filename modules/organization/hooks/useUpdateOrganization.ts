@@ -39,14 +39,10 @@ export function useUpdateOrganization() {
       setOrganization(newOrg);
       setSelectedOrganization(newOrg);
 
-      console.log('test');
-
       const updatedAllOrgs = allOrganizations.map((org: any) => ({
         ...org,
         name: org.id === id ? name : org.name,
       }));
-
-      console.log('updateAllOrgs', updatedAllOrgs);
 
       setAllOrganizations(updatedAllOrgs);
 

@@ -14,7 +14,7 @@ const layoutWrapper = (overflow: string) => css`
   opacity: 0;
   background-color: var(--color-text-5-o3);
   border-radius: 8px;
-  padding: 30px;
+  padding: 50px 30px;
   overflow: ${overflow};
   width: 90%;
 

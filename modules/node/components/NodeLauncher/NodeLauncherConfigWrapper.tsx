@@ -7,8 +7,8 @@ const styles = {
   wrapper: css`
     flex: 1 1 auto;
     @media ${breakpoints.fromXLrg} {
+      flex: 1 1 400px;
       max-height: calc(100vh - 72px);
-      overflow: auto;
     }
   `,
 };

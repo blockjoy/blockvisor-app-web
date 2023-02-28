@@ -25,12 +25,15 @@ type Props = {
 };
 
 export function ProfileForm({ firstName, lastName, id, email }: Props) {
-  const form = useForm<EditUserForm>();
+  const form = useForm<EditUserForm>({
+    mode: 'all',
+    reValidateMode: 'onBlur',
+  });
   const editUser = useEditUser();
   const [loading, setIsLoading] = useState(false);
   const [updateError, setUpdateError] = useState<string | undefined>();
   const {
-    formState: { isDirty },
+    formState: { isDirty, isValid },
   } = form;
 
   useEffect(() => {
@@ -102,7 +105,7 @@ export function ProfileForm({ firstName, lastName, id, email }: Props) {
         <Button
           loading={loading}
           customCss={[styles.loadingButton]}
-          disabled={!isDirty || loading}
+          disabled={!isDirty || loading || !isValid}
           size="medium"
           display="inline"
           style="secondary"
