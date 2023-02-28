@@ -9,6 +9,7 @@ type Props = {
   entityName?: string;
   preload?: number;
   isLoading?: LoadingState;
+  dataCy?: string;
 };
 
 export const TableGrid: FC<Props> = ({
@@ -17,13 +18,14 @@ export const TableGrid: FC<Props> = ({
   entityName = 'node',
   preload,
   isLoading,
+  dataCy,
 }) => {
   return isLoading === 'initializing' ? (
     <div css={styles.grid}>
       <TableGridLoader length={preload || 0} />
     </div>
   ) : (
-    <div css={styles.grid}>
+    <div data-cy={dataCy} css={styles.grid}>
       {cells?.map(({ component: Component }) => Component)}
       {isLoading === 'loading' && preload ? (
         <TableGridLoader length={preload} />

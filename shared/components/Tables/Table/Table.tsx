@@ -15,12 +15,14 @@ export type TableProps = {
   fixedRowHeight?: string;
   properties?: InitialFilter;
   handleSort?: (dataField: string) => void;
+  dataCy?: string;
 };
 
 export const Table = ({
   hideHeader,
   headers = [],
   rows = [],
+  dataCy,
   onRowClick,
   isLoading,
   preload,
@@ -38,6 +40,7 @@ export const Table = ({
   return (
     <div css={styles.wrapper}>
       <table
+        data-cy={dataCy}
         css={[
           styles.table,
           !!onRowClick && styles.hasHoverRows,
