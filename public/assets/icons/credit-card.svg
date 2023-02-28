@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
+  <defs>
+    <style>
+      .a{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1px;}</style>
+  </defs>
+  <rect class="a" x="1.1" y="1.1" width="15.12" height="11" rx="1.37" />
+  <line class="a" x1="1.1" y1="4.63" y2="4.63" x2="15.12" />
+</svg>

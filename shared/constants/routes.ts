@@ -1,4 +1,5 @@
 export const ROUTES = {
+  BILLING: '/billing',
   DEFAULT: '/nodes',
   DASHBOARD: '/dashboard',
   HOSTS: '/hosts',
