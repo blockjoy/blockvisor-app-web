@@ -35,7 +35,7 @@ export function ProfileChangePassword() {
   const [loading, setIsLoading] = useState(false);
   const { handleSubmit, watch } = form;
   const {
-    formState: { isDirty },
+    formState: { isDirty, isValid, isSubmitted },
   } = form;
 
   const { getOrganizations } = useGetOrganizations();
@@ -100,6 +100,7 @@ export function ProfileChangePassword() {
                     name="currentPassword"
                     activeType={activeType['currentPassword']}
                     onClick={handleIconClick}
+                    tabIndex={7}
                   />
                 }
               />
@@ -111,9 +112,11 @@ export function ProfileChangePassword() {
                 label="New password"
                 name="newPassword"
                 placeholder="New password"
+                isCompact
+                isSubmitted={isSubmitted}
               />
             </li>
-            <li css={[spacing.bottom.large]}>
+            <li css={[spacing.bottom.medium]}>
               <Input
                 tabIndex={4}
                 label="Confirm new password"
@@ -133,7 +136,7 @@ export function ProfileChangePassword() {
                 }}
                 rightIcon={
                   <PasswordToggle
-                    tabIndex={5}
+                    tabIndex={8}
                     name="confirmPassword"
                     activeType={activeType['confirmPassword']}
                     onClick={handleIconClick}
@@ -146,7 +149,7 @@ export function ProfileChangePassword() {
             tabIndex={6}
             loading={loading}
             customCss={[styles.loadingButton]}
-            disabled={!isDirty || loading}
+            disabled={!isDirty || loading || !isValid}
             size="medium"
             display="inline"
             style="secondary"

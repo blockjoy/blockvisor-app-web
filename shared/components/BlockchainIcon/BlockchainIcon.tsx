@@ -59,6 +59,10 @@ const IconSolana = dynamic(
   () => import(`@public/assets/icons/blockchain/Solana.svg`),
 );
 
+const IconTezos = dynamic(
+  () => import(`@public/assets/icons/blockchain/Tezos.svg`),
+);
+
 export const BlockchainIcon: FC<Props> = ({
   blockchainName,
   hideTooltip,
@@ -102,6 +106,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'solana':
       Component = IconSolana;
+      break;
+    case 'tezos':
+      Component = IconTezos;
       break;
     default:
       Component = IconAlgorand;

@@ -20,7 +20,6 @@ export function useGetOrganization() {
     const foundOrganization = allOrganizations.find((o: any) => o.id === id);
 
     if (foundOrganization) {
-      console.log('foundOrganization', foundOrganization);
       setOrganization(foundOrganization);
     } else {
       const organizations: any = await apiClient.getOrganizations(id);

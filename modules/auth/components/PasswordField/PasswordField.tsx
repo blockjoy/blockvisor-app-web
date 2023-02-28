@@ -1,11 +1,12 @@
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { Input } from '@shared/components';
-import { useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
 import { typo } from 'styles/utils.typography.styles';
 import { useClickOutside } from '@shared/index';
 import { styles } from './PasswordField.styles';
+import { isMobile } from 'react-device-detect';
 
 export enum PasswordFieldType {
   password = 'password',
@@ -18,6 +19,8 @@ export type PasswordFieldProps = {
   label?: string;
   name: string;
   placeholder: string;
+  isCompact?: boolean;
+  isSubmitted?: boolean;
 };
 
 export const PasswordField = ({
@@ -26,6 +29,8 @@ export const PasswordField = ({
   label,
   name,
   placeholder,
+  isCompact = false,
+  isSubmitted = false,
 }: PasswordFieldProps) => {
   const fieldRef = useRef<HTMLDivElement | null>(null);
   const [activeType, setActiveType] = useState<PasswordFieldType>(
@@ -53,6 +58,12 @@ export const PasswordField = ({
 
   useClickOutside<HTMLDivElement>(fieldRef, handleClickOutside);
 
+  useEffect(() => {
+    if (isSubmitted) {
+      setPassword('');
+    }
+  }, [isSubmitted]);
+
   return (
     <div css={styles.wrapper} ref={fieldRef}>
       <Input
@@ -63,7 +74,10 @@ export const PasswordField = ({
         name={name}
         placeholder={placeholder}
         type={activeType}
-        onChange={(e) => setPassword(e.target.value)}
+        onInput={(e: ChangeEvent<HTMLInputElement>) =>
+          setPassword(e.target.value)
+        }
+        // onChange={(e) => setPassword(e.target.value)}
         onFocus={() => setMeter(true)}
         validationOptions={{
           required: 'This is a mandatory field',
@@ -74,18 +88,19 @@ export const PasswordField = ({
         }}
         rightIcon={
           <PasswordToggle
-            tabIndex={tabIndex + 1}
+            tabIndex={tabIndex + 10}
             activeType={activeType}
             onClick={handleIconClick}
           />
         }
       />
       <PasswordMeter
-        meter={meter}
+        meter={meter || isMobile || isCompact}
         isLabeled={Boolean(label)}
         passwordStrength={passwordStrength}
         passwordTracker={passwordTracker}
         passwordMessage={passwordMessage}
+        isCompact={isCompact}
       />
     </div>
   );

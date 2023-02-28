@@ -40,7 +40,7 @@ export const styles = {
   filters: css`
     overflow: auto;
     min-height: 0;
-    margin: 16px 0 0;
+    margin: 16px 8px 0 0;
     display: grid;
     grid-auto-rows: max-content;
     gap: 16px;
@@ -88,7 +88,9 @@ export const styles = {
     gap: 10px;
     font-size: 13px;
     font-weight: 600;
-    height: 40px;
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
     padding: 0 16px;
     border: 0;
     border-radius: 6px;
