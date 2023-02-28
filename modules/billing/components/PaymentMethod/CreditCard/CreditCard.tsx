@@ -11,7 +11,7 @@ export type CreditCardProps = {
   handleAdding: (isAdding: boolean) => void;
 };
 
-export type CreditCard = {
+export type CreditCardForm = {
   cardnumber: string;
   cardholder: string;
   expdate: string;
@@ -23,12 +23,12 @@ export const CreditCard = ({ handleAdding }: CreditCardProps) => {
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit: SubmitHandler<any> = async ({
+  const onSubmit: SubmitHandler<CreditCardForm> = async ({
     cardnumber,
     cardholder,
     expdate,
     cvc,
-  }: CreditCard) => {
+  }: CreditCardForm) => {
     console.log('FORM SUBMIT', cardnumber, cardholder, expdate, cvc);
     setLoading(true);
     try {
