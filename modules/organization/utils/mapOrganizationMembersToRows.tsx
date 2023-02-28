@@ -1,5 +1,5 @@
 import { useIdentityRepository } from '@modules/auth';
-import { Badge, Button } from '@shared/components';
+import { Badge, Button, SvgIcon } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
@@ -211,7 +211,9 @@ export const mapOrganizationMembersToRows = (
                       )
                     }
                   >
-                    <IconClose />
+                    <SvgIcon size="32px">
+                      <IconClose />
+                    </SvgIcon>
                   </Button>
                 )
               ) : (
@@ -227,7 +229,9 @@ export const mapOrganizationMembersToRows = (
                     )
                   }
                 >
-                  <IconClose />
+                  <SvgIcon size="20px">
+                    <IconClose />
+                  </SvgIcon>
                 </Button>
               )
             ) : null}

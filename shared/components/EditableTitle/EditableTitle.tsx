@@ -4,6 +4,7 @@ import IconPencil from '@public/assets/icons/pencil-12.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
 import { Button } from '../Button/Button';
 import { css } from '@emotion/react';
+import { SvgIcon } from '../SvgIcon/SvgIcon';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 
 type Props = {
@@ -98,7 +99,9 @@ export const EditableTitle: FC<Props> = ({
           tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
         >
           <span css={styles.iconWrapper}>
-            {isEditMode ? <IconClose /> : <IconPencil />}
+            <SvgIcon size="24px">
+              {isEditMode ? <IconClose /> : <IconPencil />}
+            </SvgIcon>
           </span>
         </Button>
       )}

@@ -30,7 +30,7 @@ export function LoginFooter() {
           passHref
           shallow
         >
-          Create an Account
+          Create an account
         </Link>
       </div>
     </footer>

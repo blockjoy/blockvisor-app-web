@@ -53,7 +53,7 @@ export const Input = ({
   const inputClasses = setInputStyles(
     inputSize,
     disabled,
-    !!errors[name],
+    !!errors[name] && value !== '',
     !!leftIcon,
     !!rightIcon,
     inputStyles,
@@ -78,20 +78,21 @@ export const Input = ({
       <div css={[inputWrapper]}>
         <InputUtil position="left">{leftIcon}</InputUtil>
         <input
-          {...register(name, validationOptions)}
           css={[inputClasses]}
           disabled={disabled}
           value={value}
           {...rest}
-          name={name}
+          {...register(name, {
+            ...validationOptions,
+          })}
         />
         <InputUtil position="right">{rightIcon}</InputUtil>
       </div>
-      <ErrorMessage
+      {/* <ErrorMessage
         name={name}
         errors={errors}
         as={<p css={[typo.smaller, colors.warning, spacing.top.small]} />}
-      />
+      /> */}
     </>
   );
 };

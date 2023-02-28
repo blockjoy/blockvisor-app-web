@@ -96,8 +96,6 @@ export const NodeLauncherConfig: FC<Props> = ({
   //   setValue('validatorKeys', newKeys);
   // };
 
-  console.log('isConfigValid', isConfigValid);
-
   return (
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>

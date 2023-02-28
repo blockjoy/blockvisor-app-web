@@ -16,8 +16,6 @@ const AcceptInvite: NextPage = () => {
           token: token?.toString()!,
         });
 
-        console.log('declineInvitation', response);
-
         if (response.code === 20) {
           return;
         }

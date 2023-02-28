@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { ROUTES } from '@shared/constants/routes';
+import { PasswordField } from '../PasswordField/PasswordField';
 
 type NewPassword = {
   password: string;
@@ -18,6 +19,8 @@ type NewPassword = {
 
 export function NewPasswordForm() {
   const [serverError, setServerError] = useState<string>('');
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<NewPassword>();
 
@@ -39,6 +42,8 @@ export function NewPasswordForm() {
   };
 
   const onSubmit = async ({ password, confirmPassword }: NewPassword) => {
+    setIsLoading(true);
+
     const { token } = router.query;
 
     const response: any = await apiClient.updateResetPassword(
@@ -69,27 +74,11 @@ export function NewPasswordForm() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <ul css={[reset.list]}>
               <li css={[spacing.bottom.mediumSmall]}>
-                <Input
-                  tabIndex={1}
-                  labelStyles={[display.visuallyHidden]}
+                <PasswordField
+                  loading={isLoading}
+                  tabIndex={4}
                   name="password"
                   placeholder="Password"
-                  type={activeType['password']}
-                  validationOptions={{
-                    required: 'This is a mandatory field',
-                    minLength: {
-                      value: 8,
-                      message: 'Password should be at least 8 characters long',
-                    },
-                  }}
-                  rightIcon={
-                    <PasswordToggle
-                      tabIndex={4}
-                      name="password"
-                      activeType={activeType['password']}
-                      onClick={handleIconClick}
-                    />
-                  }
                 />
               </li>
               <li css={[spacing.bottom.medium]}>

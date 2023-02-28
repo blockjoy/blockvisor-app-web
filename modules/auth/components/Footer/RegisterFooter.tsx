@@ -15,7 +15,7 @@ export function RegisterFooter() {
           css={[link, linkPrimary, linkUnderline]}
           shallow
         >
-          Log In
+          Login here
         </Link>
       </div>
     </footer>

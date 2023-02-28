@@ -5,6 +5,7 @@ import {
   Skeleton,
   SkeletonGrid,
   Scrollbar,
+  SvgIcon,
 } from '@shared/components';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
@@ -197,7 +198,9 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
             type="button"
             onClick={handleResetFilters}
           >
-            <IconClose />
+            <SvgIcon size="18px">
+              <IconClose />
+            </SvgIcon>
             Reset Filters
           </button>
         </div>

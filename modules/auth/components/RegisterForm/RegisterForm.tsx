@@ -14,13 +14,14 @@ import { Routes } from '@modules/auth/utils/routes';
 import { isStatusResponse } from '@modules/organization';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { PasswordField } from '../PasswordField/PasswordField';
+import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 
 type RegisterForm = {
   first_name: string;
   last_name: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  // confirmPassword: string;
 };
 
 type ActiveType = {
@@ -41,7 +42,10 @@ export function RegisterForm() {
   const router = useRouter();
   const { invited, token } = router.query;
 
-  const form = useForm<RegisterForm>();
+  const form = useForm<RegisterForm>({
+    mode: 'all',
+    reValidateMode: 'onBlur',
+  });
   const [activeType, setActiveType] = useState<
     Record<keyof ActiveType, 'password' | 'text'>
   >({
@@ -50,22 +54,27 @@ export function RegisterForm() {
   });
   const [registerError, setRegisterError] = useState<string | undefined>();
   const [loading, setIsLoading] = useState(false);
-  const { handleSubmit, watch, setValue } = form;
-  const handleIconClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-    const name = e.currentTarget.name as keyof ActiveType;
-    const type = activeType[name] === 'password' ? 'text' : 'password';
-    setActiveType((prev) => ({ ...prev, [name]: type }));
-  };
+  const { handleSubmit, setValue, formState, watch } = form;
+  const { isValid } = formState;
+
+  const { setPassword } = usePasswordStrength();
 
   const onSubmit = handleSubmit(
-    async ({ email, password, confirmPassword, first_name, last_name }) => {
+    async ({
+      email,
+      password,
+      //confirmPassword,
+      first_name,
+      last_name,
+    }) => {
       setIsLoading(true);
       const response: any = await apiClient.createUser({
         first_name,
         last_name,
         email,
         password,
-        password_confirmation: confirmPassword,
+        password_confirmation: password,
+        // password_confirmation: confirmPassword,
       });
 
       console.log('signup', response);
@@ -89,6 +98,12 @@ export function RegisterForm() {
     }
   }, [router.isReady]);
 
+  const watchPassword = watch('password');
+
+  useEffect(() => {
+    setPassword(form.getValues().password);
+  }, [watchPassword]);
+
   return (
     <>
       {invited && (
@@ -101,13 +116,14 @@ export function RegisterForm() {
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
+                autoFocus
                 tabIndex={1}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="email"
                 placeholder="Email"
                 validationOptions={{
-                  required: 'Your e-mail address is required',
+                  required: 'Your email address is required',
                   pattern: {
                     value: isValidEmail(),
                     message: 'Email format is not correct',
@@ -121,7 +137,7 @@ export function RegisterForm() {
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="first_name"
-                placeholder="First Name"
+                placeholder="First name"
                 validationOptions={{
                   required: 'Your first name is required',
                 }}
@@ -133,13 +149,13 @@ export function RegisterForm() {
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="last_name"
-                placeholder="Last Name"
+                placeholder="Last name"
                 validationOptions={{
                   required: 'Your last name is required',
                 }}
               />
             </li>
-            <li css={[spacing.bottom.mediumSmall]}>
+            <li css={[spacing.bottom.medium]}>
               <PasswordField
                 loading={loading}
                 tabIndex={4}
@@ -147,7 +163,7 @@ export function RegisterForm() {
                 placeholder="Password"
               />
             </li>
-            <li css={[spacing.bottom.medium]}>
+            {/* <li css={[spacing.bottom.medium]}>
               <Input
                 tabIndex={5}
                 labelStyles={[display.visuallyHidden]}
@@ -156,7 +172,7 @@ export function RegisterForm() {
                 placeholder="Confirm Password"
                 type={activeType['confirmPassword']}
                 validationOptions={{
-                  required: 'This is a mandatory field',
+                  required: 'You must confirm your password',
                   validate: (value) => {
                     if (watch('password') != value) {
                       return 'Passwords do not match';
@@ -172,12 +188,12 @@ export function RegisterForm() {
                   />
                 }
               />
-            </li>
+            </li> */}
           </ul>
           <Button
             tabIndex={6}
             loading={loading}
-            disabled={loading}
+            disabled={loading || !isValid}
             size="medium"
             display="block"
             style="primary"
