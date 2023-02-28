@@ -1,15 +1,11 @@
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { Button, Input } from '@shared/index';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './CreditCard.styles';
-
-export type CreditCardProps = {
-  handleAdding: (isAdding: boolean) => void;
-};
 
 export type CreditCardForm = {
   cardnumber: string;
@@ -18,10 +14,22 @@ export type CreditCardForm = {
   cvc: string;
 };
 
-export const CreditCard = ({ handleAdding }: CreditCardProps) => {
+export type CreditCardProps = {
+  handleAdding: (isAdding: boolean) => void;
+  card: CreditCardForm;
+};
+
+export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
   const form = useForm<any>();
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    form.setValue('cardnumber', card.cardnumber ?? '');
+    form.setValue('cardholder', card.cardholder ?? '');
+    form.setValue('expdate', card.expdate ?? '');
+    form.setValue('cvc', card.cvc ?? '');
+  }, []);
 
   const onSubmit: SubmitHandler<CreditCardForm> = async ({
     cardnumber,
@@ -54,6 +62,7 @@ export const CreditCard = ({ handleAdding }: CreditCardProps) => {
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={0}
+              value={card.cardnumber}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -64,6 +73,7 @@ export const CreditCard = ({ handleAdding }: CreditCardProps) => {
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={1}
+              value={card.cardholder}
             />
           </li>
           <li css={[styles.formItem, styles.formRow]}>
@@ -75,6 +85,7 @@ export const CreditCard = ({ handleAdding }: CreditCardProps) => {
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={2}
+                value={card.expdate}
               />
             </div>
             <div>
@@ -85,6 +96,7 @@ export const CreditCard = ({ handleAdding }: CreditCardProps) => {
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={3}
+                value={card.cvc}
               />
             </div>
           </li>
