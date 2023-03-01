@@ -16,6 +16,7 @@ export type TableProps = {
   properties?: InitialFilter;
   handleSort?: (dataField: string) => void;
   dataCy?: string;
+  loadingDataCy?: string;
 };
 
 export const Table = ({
@@ -29,6 +30,7 @@ export const Table = ({
   verticalAlign,
   fixedRowHeight,
   properties,
+  loadingDataCy,
   handleSort,
 }: TableProps) => {
   const handleRowClick = (tr: Row) => {
@@ -93,7 +95,7 @@ export const Table = ({
         )}
         <tbody>
           {isLoading === 'initializing' ? (
-            <TableRowLoader length={preload} />
+            <TableRowLoader dataCy={loadingDataCy} length={preload} />
           ) : (
             rows?.map((tr) => (
               <tr
