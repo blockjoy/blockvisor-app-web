@@ -11,6 +11,8 @@ export const styles = {
     align-items: center;
     background: #2a2c2b;
     height: 72px;
+    min-height: 72px;
+    max-height: 72px;
     border-bottom: 1px solid ${theme.colorBorder};
 
     h1 {

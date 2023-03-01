@@ -1,11 +1,7 @@
 import { SerializedStyles } from '@emotion/react';
-import { ErrorMessage } from '@hookform/error-message';
-import { forwardRef, InputHTMLAttributes, ReactNode, useEffect } from 'react';
+import { InputHTMLAttributes, ReactNode, useEffect } from 'react';
+import { isMobileSafari } from 'react-device-detect';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
-
-import { colors } from 'styles/utils.colors.styles';
-import { spacing } from 'styles/utils.spacing.styles';
-import { typo } from 'styles/utils.typography.styles';
 import {
   inputField,
   inputFieldDefault,
@@ -28,6 +24,7 @@ type InputProps = {
   labelStyles?: SerializedStyles[];
   inputStyles?: SerializedStyles[];
   inputSize?: InputSize;
+  shouldAutoFocus?: boolean;
   validationOptions?: RegisterOptions;
 } & InputHTMLAttributes<HTMLInputElement>;
 
@@ -42,6 +39,7 @@ export const Input = ({
   validationOptions,
   inputStyles,
   value,
+  shouldAutoFocus,
   ...rest
 }: InputProps) => {
   const {
@@ -60,10 +58,10 @@ export const Input = ({
   );
 
   useEffect(() => {
-    if (rest.autoFocus) {
+    if (shouldAutoFocus && !isMobileSafari) {
       setFocus(name);
     }
-  }, [rest.autoFocus]);
+  }, [shouldAutoFocus]);
 
   return (
     <>
@@ -88,11 +86,6 @@ export const Input = ({
         />
         <InputUtil position="right">{rightIcon}</InputUtil>
       </div>
-      {/* <ErrorMessage
-        name={name}
-        errors={errors}
-        as={<p css={[typo.smaller, colors.warning, spacing.top.small]} />}
-      /> */}
     </>
   );
 };

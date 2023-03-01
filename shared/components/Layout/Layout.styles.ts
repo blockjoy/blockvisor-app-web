@@ -7,7 +7,7 @@ const layout = css`
   justify-content: center;
   align-items: center;
   padding: 24px 12px;
-  min-height: 100vh;
+  height: 100%;
 `;
 
 const layoutWrapper = (overflow: string) => css`

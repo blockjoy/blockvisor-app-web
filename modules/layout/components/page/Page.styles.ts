@@ -5,7 +5,7 @@ export const styles = {
   wrapper: css`
     position: relative;
     z-index: 3;
-    min-height: 100vh;
+    height: 100%;
 
     @media ${breakpoints.fromXLrg} {
       margin-left: 64px;

@@ -59,7 +59,7 @@ export const PasswordMeter = ({
                   passwordTracker.letters ? styles.hintDisabled : '',
                 ]}
               >
-                Uppercase letter
+                Upper & lower case letters
               </li>
               <li
                 css={[
