@@ -1,18 +1,9 @@
-import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useCreditCard } from '@modules/billing/hooks/useCreditCard';
 import { Button, Input } from '@shared/index';
-import { useEffect, useState } from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { FormProvider, useForm } from 'react-hook-form';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './CreditCard.styles';
-
-export type CreditCardForm = {
-  cardnumber: string;
-  cardholder: string;
-  expdate: string;
-  cvc: string;
-};
 
 export type CreditCardProps = {
   handleAdding: (isAdding: boolean) => void;
@@ -20,35 +11,36 @@ export type CreditCardProps = {
 };
 
 export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
-  const form = useForm<any>();
+  const form = useForm<CreditCardForm>({
+    defaultValues: {
+      cardnumber: card.cardnumber ?? '',
+      cardholder: card.cardholder ?? '',
+      expdate: card.expdate ?? '',
+      cvc: card.cvc ?? '',
+    },
+  });
 
-  const [loading, setLoading] = useState(false);
+  const handleCancel = () => handleAdding(false);
+  const {
+    loading,
+    onSubmit,
 
-  useEffect(() => {
-    form.setValue('cardnumber', card.cardnumber ?? '');
-    form.setValue('cardholder', card.cardholder ?? '');
-    form.setValue('expdate', card.expdate ?? '');
-    form.setValue('cvc', card.cvc ?? '');
-  }, []);
+    cardNumber,
+    cardNumberController,
+    handleCardNumberChange,
 
-  const onSubmit: SubmitHandler<CreditCardForm> = async ({
-    cardnumber,
-    cardholder,
-    expdate,
+    cardHolder,
+    cardHolderController,
+    handleCardHolderChange,
+
+    expDate,
+    expDateController,
+    handleExpDateChange,
+
     cvc,
-  }: CreditCardForm) => {
-    console.log('FORM SUBMIT', cardnumber, cardholder, expdate, cvc);
-    setLoading(true);
-    try {
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof ApplicationError) toast.error(error.message);
-    }
-  };
-  const handleCancel = () => {
-    handleAdding(false);
-  };
+    cvcController,
+    handleCvcChange,
+  } = useCreditCard(form, card);
 
   return (
     <FormProvider {...form}>
@@ -56,47 +48,60 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
         <ul css={[reset.list]}>
           <li css={[styles.formItem]}>
             <Input
-              name="cardnumber"
+              type="tel"
+              inputMode="numeric"
+              autoComplete="cc-number"
+              maxLength={19}
               label="Card number"
               placeholder="1234 1234 1234 1234"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={0}
-              value={card.cardnumber}
+              {...cardNumberController.field}
+              onChange={handleCardNumberChange}
+              value={cardNumber}
             />
           </li>
           <li css={[styles.formItem]}>
             <Input
-              name="cardholder"
+              type="text"
               label="Card holder"
+              autoComplete="cc-name"
               placeholder="John Doe"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={1}
-              value={card.cardholder}
+              {...cardHolderController.field}
+              onChange={handleCardHolderChange}
+              value={cardHolder}
             />
           </li>
           <li css={[styles.formItem, styles.formRow]}>
             <div>
               <Input
-                name="expdate"
+                type="text"
+                autoComplete="cc-exp"
                 label="Expiry Date"
                 placeholder="MM / YY"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={2}
-                value={card.expdate}
+                maxLength={5}
+                {...expDateController.field}
+                onChange={handleExpDateChange}
+                value={expDate}
               />
             </div>
             <div>
               <Input
-                name="cvc"
                 label="CVC"
                 placeholder="CVC"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={3}
-                value={card.cvc}
+                {...cvcController.field}
+                onChange={handleCvcChange}
+                value={cvc}
               />
             </div>
           </li>
