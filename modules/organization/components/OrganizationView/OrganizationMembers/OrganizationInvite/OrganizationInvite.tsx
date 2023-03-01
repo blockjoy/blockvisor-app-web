@@ -50,7 +50,7 @@ export const OrganizationInvite: FC<Props> = ({
                 message: 'Email format is not correct',
               },
             }}
-            autoFocus
+            shouldAutoFocus
           />
           <div css={styles.buttons}>
             <Button
