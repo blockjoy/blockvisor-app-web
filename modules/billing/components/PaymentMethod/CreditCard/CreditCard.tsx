@@ -1,6 +1,6 @@
-import { useCreditCard } from '@modules/billing/hooks/useCreditCard';
+import { useCreditCard } from '@modules/billing';
 import { Button, Input } from '@shared/index';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './CreditCard.styles';
@@ -11,18 +11,12 @@ export type CreditCardProps = {
 };
 
 export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
-  const form = useForm<CreditCardForm>({
-    defaultValues: {
-      cardnumber: card.cardnumber ?? '',
-      cardholder: card.cardholder ?? '',
-      expdate: card.expdate ?? '',
-      cvc: card.cvc ?? '',
-    },
-  });
-
   const handleCancel = () => handleAdding(false);
+
   const {
     loading,
+    form,
+
     onSubmit,
 
     cardNumber,
@@ -40,7 +34,7 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
     cvc,
     cvcController,
     handleCvcChange,
-  } = useCreditCard(form, card);
+  } = useCreditCard(card);
 
   return (
     <FormProvider {...form}>
@@ -56,7 +50,7 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
               placeholder="1234 1234 1234 1234"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={0}
+              tabIndex={1}
               {...cardNumberController.field}
               onChange={handleCardNumberChange}
               value={cardNumber}
@@ -70,7 +64,7 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
               placeholder="John Doe"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={1}
+              tabIndex={2}
               {...cardHolderController.field}
               onChange={handleCardHolderChange}
               value={cardHolder}
@@ -85,7 +79,7 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
                 placeholder="MM / YY"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={2}
+                tabIndex={3}
                 maxLength={5}
                 {...expDateController.field}
                 onChange={handleExpDateChange}
@@ -98,7 +92,7 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
                 placeholder="CVC"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={3}
+                tabIndex={4}
                 {...cvcController.field}
                 onChange={handleCvcChange}
                 value={cvc}
@@ -112,10 +106,16 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
             style="secondary"
             size="small"
             type="submit"
+            tabIndex={5}
           >
             Add
           </Button>
-          <Button onClick={handleCancel} style="outline" size="small">
+          <Button
+            onClick={handleCancel}
+            style="outline"
+            size="small"
+            tabIndex={6}
+          >
             Cancel
           </Button>
         </div>
