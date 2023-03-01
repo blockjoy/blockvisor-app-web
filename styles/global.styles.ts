@@ -210,6 +210,7 @@ export const globalStyles = css`
     scroll-behavior: smooth;
     overflow-x: hidden;
     overflow-y: auto;
+    height: 100%;
   }
 
   #__next {
@@ -244,7 +245,7 @@ export const globalStyles = css`
 
   body,
   #__next {
-    min-height: 100vh;
+    height: 100%;
   }
 
   a {

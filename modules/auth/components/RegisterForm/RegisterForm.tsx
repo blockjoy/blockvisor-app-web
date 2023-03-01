@@ -116,7 +116,7 @@ export function RegisterForm() {
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
-                autoFocus
+                shouldAutoFocus
                 tabIndex={1}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}

@@ -43,7 +43,7 @@ export function ForgotPasswordForm() {
         <ul css={[reset.list]}>
           <li css={[spacing.bottom.medium]}>
             <Input
-              autoFocus
+              shouldAutoFocus
               tabIndex={1}
               type="email"
               name="email"

@@ -68,7 +68,7 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
             validationOptions={{
               required: 'This is a mandatory field',
             }}
-            autoFocus
+            shouldAutoFocus
           />
           <div css={styles.buttons}>
             <Button
