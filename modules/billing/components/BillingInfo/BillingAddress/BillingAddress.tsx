@@ -1,22 +1,9 @@
-import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useBillingAddress } from '@modules/billing/';
 import { Button, Input } from '@shared/index';
-import { useEffect, useState } from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { FormProvider } from 'react-hook-form';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './BillingAddress.styles';
-
-export type BillingAddressForm = {
-  name: string;
-  company: string;
-  address: string;
-  city: string;
-  country: string;
-  region: string;
-  postal: string;
-  vat: string;
-};
 
 export type BillingAddressProps = {
   handleAdding: (isAdding: boolean) => void;
@@ -27,53 +14,38 @@ export const BillingAddress = ({
   handleAdding,
   billingAddress,
 }: BillingAddressProps) => {
-  const form = useForm<any>();
+  const {
+    loading,
+    form,
 
-  const [loading, setLoading] = useState(false);
+    onSubmit,
 
-  useEffect(() => {
-    form.setValue('name', billingAddress.name ?? '');
-    form.setValue('company', billingAddress.company ?? '');
-    form.setValue('address', billingAddress.address ?? '');
-    form.setValue('city', billingAddress.city ?? '');
-    form.setValue('country', billingAddress.country ?? '');
-    form.setValue('region', billingAddress.region ?? '');
-    form.setValue('postal', billingAddress.postal ?? '');
-    form.setValue('vat', billingAddress.vat ?? '');
-  }, []);
-
-  const onSubmit: SubmitHandler<BillingAddressForm> = async ({
     name,
+    handleNameChange,
+
     company,
+    handleCompanyChange,
+
     address,
+    handleAddressChange,
+
     city,
+    handleCityChange,
+
     country,
+    handleCountryChange,
+
     region,
+    handleRegionChange,
+
     postal,
+    handlePostalChange,
+
     vat,
-  }: BillingAddressForm) => {
-    console.log(
-      'FORM SUBMIT',
-      name,
-      company,
-      address,
-      city,
-      country,
-      region,
-      postal,
-      vat,
-    );
-    setLoading(true);
-    try {
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof ApplicationError) toast.error(error.message);
-    }
-  };
-  const handleCancel = () => {
-    handleAdding(false);
-  };
+    handleVatChange,
+  } = useBillingAddress(billingAddress);
+
+  const handleCancel = () => handleAdding(false);
 
   return (
     <FormProvider {...form}>
@@ -86,8 +58,9 @@ export const BillingAddress = ({
               placeholder="John Doe"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={0}
-              value={billingAddress.name}
+              tabIndex={1}
+              value={name}
+              onChange={handleNameChange}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -97,8 +70,9 @@ export const BillingAddress = ({
               placeholder="BlockJoy Inc."
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={1}
-              value={billingAddress.company}
+              tabIndex={2}
+              value={company}
+              onChange={handleCompanyChange}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -108,8 +82,9 @@ export const BillingAddress = ({
               placeholder="Address"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={2}
-              value={billingAddress.address}
+              tabIndex={3}
+              value={address}
+              onChange={handleAddressChange}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -119,8 +94,9 @@ export const BillingAddress = ({
               placeholder="City"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={3}
-              value={billingAddress.name}
+              tabIndex={4}
+              value={city}
+              onChange={handleCityChange}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -130,8 +106,9 @@ export const BillingAddress = ({
               placeholder="Country"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={4}
-              value={billingAddress.country}
+              tabIndex={5}
+              value={country}
+              onChange={handleCountryChange}
             />
           </li>
           <li css={[styles.formItem, styles.formRow]}>
@@ -142,8 +119,9 @@ export const BillingAddress = ({
                 placeholder="Region"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={5}
-                value={billingAddress.region}
+                tabIndex={6}
+                value={region}
+                onChange={handleRegionChange}
               />
             </div>
             <div>
@@ -153,8 +131,9 @@ export const BillingAddress = ({
                 placeholder="Postal code"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={6}
-                value={billingAddress.postal}
+                tabIndex={7}
+                value={postal}
+                onChange={handlePostalChange}
               />
             </div>
           </li>
@@ -165,8 +144,9 @@ export const BillingAddress = ({
               placeholder="VAT Number"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={6}
-              value={billingAddress.vat}
+              tabIndex={8}
+              value={vat}
+              onChange={handleVatChange}
             />
           </li>
         </ul>
@@ -176,10 +156,16 @@ export const BillingAddress = ({
             style="secondary"
             size="small"
             type="submit"
+            tabIndex={9}
           >
             Add
           </Button>
-          <Button onClick={handleCancel} style="outline" size="small">
+          <Button
+            onClick={handleCancel}
+            style="outline"
+            size="small"
+            tabIndex={10}
+          >
             Cancel
           </Button>
         </div>

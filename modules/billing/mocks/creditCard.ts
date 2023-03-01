@@ -1,12 +1,13 @@
-export const CREDIT_CARD2 = {
-  cardnumber: '1234 1234 1234 1234',
-  cardholder: 'John Doe',
-  expdate: '22/15',
-  cvc: '123',
-};
-export const CREDIT_CARD = {
+export const CREDIT_CARD_DEFAULT = {
   cardnumber: '',
   cardholder: '',
   expdate: '',
   cvc: '',
+};
+
+export const CREDIT_CARD = {
+  cardnumber: '5555 5555 5555 4444',
+  cardholder: 'John Doe',
+  expdate: '15/30',
+  cvc: '123',
 };

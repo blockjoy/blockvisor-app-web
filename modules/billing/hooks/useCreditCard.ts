@@ -1,13 +1,24 @@
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useState } from 'react';
-import { SubmitHandler, useController, UseFormReturn } from 'react-hook-form';
+import {
+  SubmitHandler,
+  useController,
+  useForm,
+  UseFormReturn,
+} from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export const useCreditCard = (
-  form: UseFormReturn<CreditCardForm>,
-  card: CreditCardForm,
-) => {
+export const useCreditCard = (card: CreditCardForm) => {
   const [loading, setLoading] = useState(false);
+
+  const form: UseFormReturn<CreditCardForm> = useForm<CreditCardForm>({
+    defaultValues: {
+      cardnumber: card.cardnumber ?? '',
+      cardholder: card.cardholder ?? '',
+      expdate: card.expdate ?? '',
+      cvc: card.cvc ?? '',
+    },
+  });
 
   const [cardNumber, setCardNumber] = useState(card.cardnumber ?? '');
   const [cardHolder, setCardHolder] = useState(card.cardholder ?? '');
@@ -95,6 +106,8 @@ export const useCreditCard = (
 
   return {
     loading,
+    form,
+
     onSubmit,
 
     cardNumber,

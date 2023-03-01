@@ -1,26 +1,32 @@
 import { Badge, Button } from '@shared/components';
 import { flex } from 'styles/utils.flex.styles';
+import IconDownload from '@public/assets/icons/download-12.svg';
 
 export const mapInvoicesToRows = (invoices?: any[]) => {
   const headers: TableHeader[] = [
     {
-      name: 'Date',
+      name: 'ID',
       key: '1',
-      width: '300px',
+      width: '200px',
     },
     {
-      name: 'Amount',
+      name: 'Date',
       key: '2',
       width: '300px',
     },
     {
-      name: 'Status',
+      name: 'Amount',
       key: '3',
       width: '300px',
     },
     {
-      name: '',
+      name: 'Status',
       key: '4',
+      width: '300px',
+    },
+    {
+      name: '',
+      key: '5',
     },
   ];
 
@@ -31,7 +37,7 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         key: '1',
         component: (
           <>
-            <p>{new Date(invoice.createdAt).toLocaleDateString()}</p>
+            <p>{invoice.id}</p>
           </>
         ),
       },
@@ -39,12 +45,20 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         key: '2',
         component: (
           <>
-            <p>{invoice.amount}</p>
+            <p>{new Date(invoice.createdAt).toLocaleDateString()}</p>
           </>
         ),
       },
       {
         key: '3',
+        component: (
+          <>
+            <p>{invoice.amount}</p>
+          </>
+        ),
+      },
+      {
+        key: '4',
         component: (
           <>
             <Badge
@@ -57,12 +71,13 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         ),
       },
       {
-        key: '4',
+        key: '5',
         component: (
           <>
             <div css={[flex.display.flex]}>
               <Button style="outline" size="small">
-                {`${invoice.status === 'paid' ? 'View' : 'Manage'}`}
+                <IconDownload />
+                <span>Download</span>
               </Button>
             </div>
           </>
