@@ -63,6 +63,7 @@ export const AllOrganizationsTable = ({
       properties={queryParams}
       total={organizationsActiveCount}
       onTableChange={handleTableChange}
+      loadingDataCy="organizationsListTable-skeleton"
       // filters={FILTERS}
     />
   );

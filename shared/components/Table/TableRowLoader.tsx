@@ -1,15 +1,16 @@
-import { Skeleton } from "../Skeleton/Skeleton";
+import { Skeleton } from '../Skeleton/Skeleton';
 
 export type TableRowLoaderProps = {
-  length?: number
-}
+  length?: number;
+  dataCy?: string;
+};
 
-const TableRowLoader = ({ length }: TableRowLoaderProps) => {
+const TableRowLoader = ({ length, dataCy }: TableRowLoaderProps) => {
   return (
     <>
       {[...Array(length)].map((_, index) => {
         return (
-          <tr key={index}>
+          <tr data-cy={dataCy} key={index}>
             <td>
               <div style={{ marginTop: '4px' }}>
                 <Skeleton width="28px" height="28px" />
@@ -27,10 +28,10 @@ const TableRowLoader = ({ length }: TableRowLoaderProps) => {
               <Skeleton width="100px" />
             </td>
           </tr>
-        )
+        );
       })}
     </>
-  )
+  );
 };
 
 export default TableRowLoader;

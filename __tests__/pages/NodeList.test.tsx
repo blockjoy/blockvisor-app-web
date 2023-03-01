@@ -1,4 +1,4 @@
-import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
+import { expect, describe, it, vi, beforeEach, afterEach, test } from 'vitest';
 import { fireEvent, render, screen, waitFor, cleanup } from '../renderer';
 import {
   mockedBlockchainsResponse,
