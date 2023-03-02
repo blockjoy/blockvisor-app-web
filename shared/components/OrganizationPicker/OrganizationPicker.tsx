@@ -38,6 +38,7 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
+
   const { switchOrganization } = useSwitchOrganization();
 
   const handleClick = () => setIsOpen(!isOpen);

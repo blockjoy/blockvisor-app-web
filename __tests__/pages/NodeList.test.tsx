@@ -4,7 +4,6 @@ import {
   mockedBlockchainsResponse,
   mockedMetricsResponse,
   mockedNodesResponse,
-  mockUseIdentityValue,
   routerMockBuilder,
 } from '../mocks';
 import {
@@ -15,25 +14,9 @@ import {
 } from '../utils';
 import { NodeList } from '@modules/node';
 import { NodeUIProvider } from '@modules/node/ui/NodeUIContext';
-import { IIdentityRepository } from '@modules/auth/utils/IdentityRepository';
 
 beforeEach(() => {
   window.scrollTo = vi.fn() as any;
-  vi.mock('@modules/auth/hooks/useIdentity', () => ({
-    useIdentity() {
-      return {
-        ...mockUseIdentityValue({ isLoggedIn: true }),
-      };
-    },
-  }));
-
-  vi.mock('@modules/auth/hooks/useIdentityRepository', () => ({
-    useIdentityRepository(): Partial<IIdentityRepository> {
-      return {
-        getIdentity: () => ({ defaultOrganization: { id: '12345' } }),
-      };
-    },
-  }));
 
   useRouterSpy.mockImplementation(() => routerMockBuilder());
 
