@@ -6,7 +6,6 @@ import { Global } from '@emotion/react';
 import { globalStyles } from 'styles/global.styles';
 import ThemeProvider from '@modules/theme/ThemeProvider';
 import { ToastContainer } from 'react-toastify';
-import { Chat } from '@shared/components/Chat/Chat';
 import { authAtoms } from '@modules/auth';
 import { organizationAtoms } from '@modules/organization';
 
