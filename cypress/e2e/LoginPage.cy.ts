@@ -16,9 +16,11 @@ describe('Login Page tests', () => {
     cy.url().should('be.equal', `${Cypress.config('baseUrl')}/forgot-password`);
   });
 
-  it('Shows password validation error when password is too short', () => {
-    cy.login('test@test.com', '1234');
-    cy.get('[data-cy="input-error-field"]').should('exist');
+  it('Submit button should be disabled when password is too short', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="login-email-input"]').type('test@test.com');
+    cy.get('[data-cy="login-password-input"]').type('1234');
+    cy.get('[data-cy="login-submit-button"]').should('be.disabled');
   });
 
   it('Shows error message when the credentials are invalid', () => {
