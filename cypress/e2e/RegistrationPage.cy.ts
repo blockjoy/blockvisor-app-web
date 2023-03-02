@@ -1,11 +1,9 @@
 import { generateUserRegistrationData } from 'cypress/support/utils';
 
 describe('Registration page tests', () => {
-  it('Should display validation errors when submiting empty form', () => {
+  it('Sumbmit button should be disabled when form is empty', () => {
     cy.visit('/register');
-    cy.get('[data-cy="register-submit-button"]').click();
-
-    cy.get('[data-cy="input-error-field"]').should('have.length', 5);
+    cy.get('[data-cy="register-submit-button"]').should('be.disabled');
   });
 
   it('Should go to login page when clicked on Login link', () => {
