@@ -26,7 +26,7 @@ export type InitialQueryParams = {
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     currentPage: 1,
-    itemsPerPage: 10,
+    itemsPerPage: 8,
   },
   sorting: { order: 'asc', field: 'name' },
   filtering: {
