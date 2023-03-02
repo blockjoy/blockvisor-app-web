@@ -37,6 +37,7 @@ export const OrganizationPicker = ({ isRightAligned = false }: Props) => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
+
   const { switchOrganization } = useSwitchOrganization();
 
   const handleClick = () => setIsOpen(!isOpen);

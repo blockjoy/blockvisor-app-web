@@ -7,12 +7,26 @@ import { globalStyles } from 'styles/global.styles';
 import ThemeProvider from '@modules/theme/ThemeProvider';
 import { ToastContainer } from 'react-toastify';
 import { Chat } from '@shared/components/Chat/Chat';
+import { authAtoms } from '@modules/auth';
+import { organizationAtoms } from '@modules/organization';
 
 const allQueries = { ...queries, ...customQueries };
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return (
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={(snapshot) => {
+        snapshot.set(authAtoms.user, {
+          firstName: 'test',
+          lastName: 'no',
+          defaultOrganization: { id: '12345', name: 'SomeORg' },
+        });
+        snapshot.set(organizationAtoms.defaultOrganization, {
+          id: '12345',
+          name: 'SomeORg',
+        });
+      }}
+    >
       <Global styles={globalStyles} />
       <ThemeProvider>
         {children}
