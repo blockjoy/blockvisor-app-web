@@ -162,7 +162,7 @@ export function RegisterForm() {
                 loading={loading}
                 tabIndex={4}
                 name="password"
-                data-cy="register-password-input"
+                dataCy="register-password-input"
                 placeholder="Password"
               />
             </li>

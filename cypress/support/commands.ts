@@ -66,7 +66,6 @@ Cypress.Commands.add(
     cy.get('[data-cy="register-firstName-input"]').type(firstName);
     cy.get('[data-cy="register-lastName-input"]').type(lastName);
     cy.get('[data-cy="register-password-input"]').type(password);
-    cy.get('[data-cy="register-confirmPassword-input"]').type(password);
 
     cy.get('[data-cy="register-submit-button"]').click();
   },

@@ -21,6 +21,7 @@ export type PasswordFieldProps = {
   placeholder: string;
   isCompact?: boolean;
   isSubmitted?: boolean;
+  dataCy?: string;
 };
 
 export const PasswordField = ({
@@ -31,6 +32,7 @@ export const PasswordField = ({
   placeholder,
   isCompact = false,
   isSubmitted = false,
+  dataCy,
 }: PasswordFieldProps) => {
   const fieldRef = useRef<HTMLDivElement | null>(null);
   const [activeType, setActiveType] = useState<PasswordFieldType>(
@@ -69,6 +71,7 @@ export const PasswordField = ({
     <div css={styles.wrapper} ref={fieldRef}>
       <Input
         tabIndex={tabIndex}
+        data-cy={dataCy}
         labelStyles={[Boolean(label) ? typo.base : display.visuallyHidden]}
         disabled={loading}
         label={label}
