@@ -1,5 +1,7 @@
 export const paginate = (items: any, pagination: Pagination) => {
-  const { currentPage = 1, itemsPerPage = 10 } = pagination;
+  const { currentPage = 1, itemsPerPage = 8 } = pagination;
+
+  console.log('pagination', pagination);
 
   const start = (currentPage - 1) * itemsPerPage;
   const end = currentPage * itemsPerPage;
