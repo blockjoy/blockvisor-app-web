@@ -9096,11 +9096,6 @@ raw-loader@^4.0.2:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-react-arrow-key-navigation-hook@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-arrow-key-navigation-hook/-/react-arrow-key-navigation-hook-1.0.2.tgz#9722e6b494b9c44a988ee2ba5724df1be286cb67"
-  integrity sha512-ClU6OTB91/BgQdei8+LRMOhy9x7IA15tlT9I+bdwwE/pdv7l1a0w2M5HoFxzVbI0OZJdn0oDZ6FveNR7GAUxpA==
-
 react-device-detect@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/react-device-detect/-/react-device-detect-2.2.2.tgz#dbabbce798ec359c83f574c3edb24cf1cca641a5"

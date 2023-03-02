@@ -65,9 +65,40 @@ export const styles = {
       flex-direction: column;
     }
   `,
+  header: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 2px;
+  `,
+  infoButton: (theme: ITheme) => css`
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    path {
+      transition: 0.3s;
+    }
+
+    :hover path {
+      fill: ${theme.colorText};
+    }
+  `,
+  infoButtonHidden: css`
+    display: none;
+  `,
   title: (theme: ITheme) => css`
     font-weight: 600;
     color: ${theme.colorDefault};
+  `,
+  hintsWrapper: (theme: ITheme) => css`
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s;
+  `,
+  hintsWrapperVisible: css`
+    max-height: 250px;
   `,
   hintsContent: css`
     display: flex;
@@ -75,10 +106,6 @@ export const styles = {
     gap: 5px;
     padding-top: 10px;
     padding-bottom: 7px;
-
-    @media ${breakpoints.toXlrg} {
-      display: none;
-    }
   `,
   hint: (theme: ITheme) => css`
     padding: 3px 10px;
