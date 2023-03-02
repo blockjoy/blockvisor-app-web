@@ -69,11 +69,11 @@ export const styles = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-right: 2px;
   `,
   infoButton: (theme: ITheme) => css`
     background: transparent;
     border: 0;
+    padding: 4px 8px;
     cursor: pointer;
 
     path {
