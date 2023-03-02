@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { SubmitHandler, useForm, UseFormReturn } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export const useBillingAddress = (billingAddress: BillingAddressForm) => {
+export const useBillingAddress = (
+  billingAddress: BillingAddressForm,
+): IBillingAddressHook => {
   const [loading, setLoading] = useState(false);
 
   const form: UseFormReturn<BillingAddressForm> = useForm<BillingAddressForm>({

@@ -61,12 +61,15 @@ export const BillingAddress = ({
               tabIndex={1}
               value={name}
               onChange={handleNameChange}
+              validationOptions={{
+                required: 'Name is required',
+              }}
             />
           </li>
           <li css={[styles.formItem]}>
             <Input
               name="company"
-              label="Company"
+              label="Company (optional)"
               placeholder="BlockJoy Inc."
               inputSize="medium"
               labelStyles={[typo.base]}
@@ -85,6 +88,9 @@ export const BillingAddress = ({
               tabIndex={3}
               value={address}
               onChange={handleAddressChange}
+              validationOptions={{
+                required: 'Address is required',
+              }}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -97,6 +103,9 @@ export const BillingAddress = ({
               tabIndex={4}
               value={city}
               onChange={handleCityChange}
+              validationOptions={{
+                required: 'City is required',
+              }}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -109,6 +118,9 @@ export const BillingAddress = ({
               tabIndex={5}
               value={country}
               onChange={handleCountryChange}
+              validationOptions={{
+                required: 'Country is required',
+              }}
             />
           </li>
           <li css={[styles.formItem, styles.formRow]}>
@@ -134,6 +146,9 @@ export const BillingAddress = ({
                 tabIndex={7}
                 value={postal}
                 onChange={handlePostalChange}
+                validationOptions={{
+                  required: 'Postal code is required',
+                }}
               />
             </div>
           </li>

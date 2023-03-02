@@ -54,6 +54,9 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
               {...cardNumberController.field}
               onChange={handleCardNumberChange}
               value={cardNumber}
+              validationOptions={{
+                required: 'Credit Card is required',
+              }}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -68,6 +71,9 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
               {...cardHolderController.field}
               onChange={handleCardHolderChange}
               value={cardHolder}
+              validationOptions={{
+                required: 'Name is required',
+              }}
             />
           </li>
           <li css={[styles.formItem, styles.formRow]}>
@@ -84,6 +90,9 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
                 {...expDateController.field}
                 onChange={handleExpDateChange}
                 value={expDate}
+                validationOptions={{
+                  required: 'Expiration date is required',
+                }}
               />
             </div>
             <div>
@@ -96,6 +105,9 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
                 {...cvcController.field}
                 onChange={handleCvcChange}
                 value={cvc}
+                validationOptions={{
+                  required: 'CVC is required',
+                }}
               />
             </div>
           </li>

@@ -8,7 +8,7 @@ import {
 } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export const useCreditCard = (card: CreditCardForm) => {
+export const useCreditCard = (card: CreditCardForm): ICreditCardHook => {
   const [loading, setLoading] = useState(false);
 
   const form: UseFormReturn<CreditCardForm> = useForm<CreditCardForm>({
