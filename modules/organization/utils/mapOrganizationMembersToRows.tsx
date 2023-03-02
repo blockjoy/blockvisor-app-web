@@ -9,8 +9,8 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { escapeHtml } from '@shared/utils/escapeHtml';
 import { MemberAndInvitation } from './mapMembersAndInvitations';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export enum Action {
   revoke = 'revoke',
@@ -179,7 +179,7 @@ export const mapOrganizationMembersToRows = (
                         )
                       }
                     >
-                      <SvgIcon size="32px">
+                      <SvgIcon size="26px">
                         <IconClose />
                       </SvgIcon>
                     </Button>
@@ -197,7 +197,7 @@ export const mapOrganizationMembersToRows = (
                       )
                     }
                   >
-                    <SvgIcon size="32px">
+                    <SvgIcon size="26px">
                       <IconClose />
                     </SvgIcon>
                   </Button>

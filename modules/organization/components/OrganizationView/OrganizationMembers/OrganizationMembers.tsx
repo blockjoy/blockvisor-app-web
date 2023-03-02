@@ -1,11 +1,12 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
-import { ChangeEvent, useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import {
+  getHandlerTableChange,
   organizationAtoms,
   useInvitations,
   useResendInvitation,
@@ -58,13 +59,6 @@ export const Members = () => {
     ),
   ).length;
 
-export type MembersProps = {
-  members?: ClientOrganizationMember[];
-  invitations?: ClientOrganizationInvitation[];
-  id?: string;
-};
-
-export const Members = ({ members, invitations, id }: MembersProps) => {
   const { inviteMembers } = useInviteMembers();
 
   const { resendInvitation } = useResendInvitation();
@@ -87,10 +81,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     selectedOrganization?.currentUser?.role!,
     Permissions.CREATE_MEMBER,
   );
-
-  const handleInviteeEmailChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    //setInviteeEmail(e.target.value);
-  };
 
   const handleInviteClicked = (email: string) => {
     setIsInviting(true);
@@ -140,8 +130,7 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   };
 
   const { headers, rows } = mapOrganizationMembersToRows(
-    members,
-    invitations,
+    membersAndInvitations,
     methods,
   );
 
@@ -178,12 +167,15 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
           onCancelClicked={() => setActiveView('list')}
         />
       )}
-      <Table
+      <MembersTable
         isLoading={isLoading}
         headers={headers}
         rows={rows}
         verticalAlign="middle"
         fixedRowHeight="74px"
+        total={membersAndInvitationsActiveCount}
+        properties={organizationMembersUIProps.queryParams}
+        onTableChange={handleTableChange}
       />
       {activeView === 'action' && (
         <OrganizationDialog

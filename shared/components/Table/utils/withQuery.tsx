@@ -53,7 +53,7 @@ export const withQuery = (Component: any) => {
 
     return (
       <>
-        {isFiltering && (
+        {isFiltering && filters?.length && (
           <Filtering
             filters={filters}
             values={properties.filtering}

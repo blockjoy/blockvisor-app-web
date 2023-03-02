@@ -59,7 +59,7 @@ export const AllOrganizationsTable = ({
       properties={queryParams}
       total={organizationsActiveCount}
       onTableChange={handleTableChange}
-      filters={FILTERS}
+      // filters={FILTERS}
     />
   );
 };
