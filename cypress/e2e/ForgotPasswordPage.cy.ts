@@ -1,10 +1,8 @@
 describe('Forgot Password tests', () => {
-  it('Should show validation error when submiting without an email', () => {
+  it('Submit button should be disabled when the field is empty', () => {
     cy.visit('/forgot-password');
 
-    cy.get('[data-cy="forgot-password-submit"]').click();
-
-    cy.get('[data-cy="input-error-field"]').should('exist');
+    cy.get('[data-cy="forgot-password-submit"]').should('be.disabled');
   });
 
   it('Should show toast when email is sent', () => {
