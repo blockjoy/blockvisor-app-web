@@ -2,12 +2,10 @@ import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 
 const layout = css`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
   padding: 24px 12px;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const layoutWrapper = (overflow: string) => css`
@@ -15,7 +13,6 @@ const layoutWrapper = (overflow: string) => css`
   background-color: var(--color-text-5-o3);
   border-radius: 8px;
   padding: 50px 30px;
-  overflow: ${overflow};
   width: 90%;
 
   @media ${breakpoints.fromSml} {

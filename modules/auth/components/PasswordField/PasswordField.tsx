@@ -41,6 +41,7 @@ export const PasswordField = ({
     meter,
     passwordStrength,
     passwordTracker,
+    isPasswordRare,
     passwordMessage,
     setMeter,
     setPassword,
@@ -100,6 +101,7 @@ export const PasswordField = ({
         passwordStrength={passwordStrength}
         passwordTracker={passwordTracker}
         passwordMessage={passwordMessage}
+        isPasswordRare={isPasswordRare}
         isCompact={isCompact}
       />
     </div>

@@ -58,7 +58,7 @@ export const Profile = () => {
                 Click the button below to sign out.
               </p>
               <Button
-                customCss={[styles.button]}
+                customCss={[styles.button, spacing.bottom.large]}
                 style="warning"
                 size="medium"
                 onClick={handleSignout}

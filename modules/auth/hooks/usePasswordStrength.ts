@@ -1,3 +1,4 @@
+import { passwords } from '@shared/constants/passwords';
 import { useState } from 'react';
 
 export enum PASSWORD_STRENGTH {
@@ -21,7 +22,7 @@ export const PASSWORD_VALIDATION: {
   numeric: /[0-9]/g,
   specialChars: /[^\w\s]/g, // /[#?!@$%^&*-]/g
   numberOfChars: /.{8,}/g,
-  length: /.{12,}/g,
+  length: /.{16,}/g,
 };
 
 export type PasswordTracker = {
@@ -36,17 +37,27 @@ export function usePasswordStrength() {
   const [password, setPassword] = useState<string>('');
   const [meter, setMeter] = useState<boolean>(false);
 
+  const eightCharsOrGreater = password.match(PASSWORD_VALIDATION.numberOfChars);
+
   const passwordTracker: PasswordTracker = {
     letters: password.match(PASSWORD_VALIDATION.letters),
     number: password.match(PASSWORD_VALIDATION.numeric),
     specialChar: password.match(PASSWORD_VALIDATION.specialChars),
-    eightCharsOrGreater: password.match(PASSWORD_VALIDATION.numberOfChars),
+    eightCharsOrGreater,
     long: password.match(PASSWORD_VALIDATION.length),
   };
 
-  const passwordStrength: number = Object.values(passwordTracker).filter(
+  const isPasswordRare =
+    !passwords.some((p) => password?.toLowerCase().includes(p)) &&
+    !!eightCharsOrGreater;
+
+  let passwordStrength = Object.values(passwordTracker).filter(
     (value) => value,
   ).length;
+
+  if (!isPasswordRare && passwordStrength > 3) {
+    passwordStrength = 3;
+  }
 
   const passwordMessage = () => {
     switch (passwordStrength) {
@@ -70,6 +81,7 @@ export function usePasswordStrength() {
     passwordStrength,
     passwordTracker,
     passwordMessage,
+    isPasswordRare,
     setMeter,
     setPassword,
   };

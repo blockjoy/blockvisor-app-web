@@ -1,6 +1,10 @@
 import { PasswordTracker } from '@modules/auth/hooks/usePasswordStrength';
+import { SvgIcon } from '@shared/components';
+import { isMobile } from 'react-device-detect';
 import { display } from 'styles/utils.display.styles';
+import IconInfo from '@public/assets/icons/info.svg';
 import { styles } from './PasswordMeter.styles';
+import { useEffect, useState } from 'react';
 
 export type PasswordMeterProps = {
   meter: boolean;
@@ -9,6 +13,7 @@ export type PasswordMeterProps = {
   passwordMessage: () => string;
   isLabeled: boolean;
   isCompact?: boolean;
+  isPasswordRare?: boolean;
 };
 
 export const PasswordMeter = ({
@@ -18,13 +23,22 @@ export const PasswordMeter = ({
   passwordMessage,
   isLabeled,
   isCompact,
+  isPasswordRare,
 }: PasswordMeterProps) => {
   if (!meter) return null;
+
+  const [isHintsOpen, setIsHintsOpen] = useState<null | boolean>(null);
 
   const message = passwordMessage();
   const title = !passwordTracker.eightCharsOrGreater
     ? 'Minimum length 8 characters'
     : `${message} Password`;
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsHintsOpen(false);
+    }
+  }, []);
 
   return meter ? (
     <>
@@ -42,24 +56,41 @@ export const PasswordMeter = ({
           ]}
         >
           <div css={styles.summary}>
-            <p css={styles.title}>{title}</p>
+            <header css={styles.header}>
+              <p css={styles.title}>{title}</p>
+              <button
+                onClick={() => setIsHintsOpen(!isHintsOpen)}
+                type="button"
+                css={[
+                  styles.infoButton,
+                  !isCompact && !isMobile ? styles.infoButtonHidden : null,
+                ]}
+              >
+                <SvgIcon>
+                  <IconInfo />
+                </SvgIcon>
+              </button>
+            </header>
             <div
               css={styles.meter(
                 !passwordTracker.eightCharsOrGreater ? 0 : passwordStrength,
               )}
             ></div>
           </div>
-          <div>
-            <ul
-              css={[styles.hintsContent, isCompact && display.visuallyHidden]}
-            >
+          <div
+            css={[
+              (isCompact || isMobile) && styles.hintsWrapper,
+              isHintsOpen && styles.hintsWrapperVisible,
+            ]}
+          >
+            <ul css={styles.hintsContent}>
               <li
                 css={[
                   styles.hint,
                   passwordTracker.letters ? styles.hintDisabled : '',
                 ]}
               >
-                Upper & lower case letters
+                Mixed letters (Aa)
               </li>
               <li
                 css={[
@@ -84,7 +115,12 @@ export const PasswordMeter = ({
                   passwordTracker.long ? styles.hintDisabled : '',
                 ]}
               >
-                Long password
+                16+ characters
+              </li>
+              <li
+                css={[styles.hint, isPasswordRare ? styles.hintDisabled : '']}
+              >
+                No common words
               </li>
             </ul>
           </div>
