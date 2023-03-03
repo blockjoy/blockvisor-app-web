@@ -2,15 +2,19 @@ import { styles } from './SinglePlan.styles';
 import IconCheckmark from '@public/assets/icons/checkmark-12.svg';
 import { Button } from '@shared/index';
 
-export const SinglePlan = () => {
+export type SinglePlanProps = {
+  plan: any;
+};
+
+export const SinglePlan = ({ plan }: SinglePlanProps) => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.title}>
-        <span>Pro</span>
+        <span>{plan?.title}</span>
       </div>
 
       <div css={styles.pricing}>
-        <p css={styles.price}>$199,00</p>
+        <p css={styles.price}>{plan?.pricing}</p>
         <p css={styles.priceLabel}>
           Per month
           <br />
@@ -24,22 +28,12 @@ export const SinglePlan = () => {
 
       <div css={styles.listContainer}>
         <ul css={styles.list}>
-          <li css={styles.listItem}>
-            <IconCheckmark />
-            <span>Unlimited Nodes</span>
-          </li>
-          <li css={styles.listItem}>
-            <IconCheckmark />
-            <span>Unlimited organizations</span>
-          </li>
-          <li css={styles.listItem}>
-            <IconCheckmark />
-            <span>Unlimited collaborators</span>
-          </li>
-          <li css={styles.listItem}>
-            <IconCheckmark />
-            <span>24/7 support</span>
-          </li>
+          {plan?.features.map((feature: any) => (
+            <li css={styles.listItem}>
+              <IconCheckmark />
+              <span>{feature}</span>
+            </li>
+          ))}
         </ul>
       </div>
 
