@@ -105,7 +105,9 @@ export const EditableTitle: FC<Props> = ({
           onKeyDown={handleKeyDown}
         />
       ) : (
-        <span css={styles.span}>{escapeHtml(initialValue)}</span>
+        <span data-cy="organization-title-value" css={styles.span}>
+          {escapeHtml(initialValue)}
+        </span>
       )}
 
       {canUpdate && !isLoading && initialValue?.length && (

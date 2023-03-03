@@ -60,6 +60,7 @@ export const OrganizationInvite: FC<Props> = ({
               style="secondary"
               size="small"
               type="submit"
+              dataCy="organization-member-invite-button"
             >
               Add
             </Button>
