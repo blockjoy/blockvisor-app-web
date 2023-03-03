@@ -128,7 +128,9 @@ export const EditableTitle: FC<Props> = ({
           {initialValue}
         </div>
       ) : (
-        <span css={styles.span}>{escapeHtml(initialValue)}</span>
+        <span data-cy="organization-title-value" css={styles.span}>
+          {escapeHtml(initialValue)}
+        </span>
       )}
 
       {canUpdate && !isLoading && initialValue?.length && (

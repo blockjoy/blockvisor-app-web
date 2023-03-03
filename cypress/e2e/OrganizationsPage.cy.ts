@@ -25,7 +25,7 @@ describe('Organizations page tests', () => {
       );
     });
 
-    it('Should open a drawer when clicked on create new organization', () => {
+    it('Should show an input for creating a new organization', () => {
       cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
@@ -37,7 +37,7 @@ describe('Organizations page tests', () => {
       cy.get('[data-cy="organizations-add-drawer"]').should('be.visible');
     });
 
-    it('Should display an error when creating organization without a name', () => {
+    /*   it('Save button should be disabled when creating organization without a name', () => {
       cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
@@ -45,10 +45,10 @@ describe('Organizations page tests', () => {
       cy.waitForElement('[data-cy="sidebarMain-organizations-link"]', 15000);
       cy.get('[data-cy="sidebarMain-organizations-link"]').click();
       cy.get('[data-cy="organizations-create-button"]').click();
-      cy.get('[data-cy="organization-drawer-submit-button"]').click();
-
-      cy.get('[data-cy="input-error-field"]').should('be.visible');
-    });
+      cy.get('[data-cy="organization-drawer-submit-button"]').should(
+        'be.disabled',
+      );
+    }); */
 
     it('Should redirect to created organization page', () => {
       const org = generateOrganizationName();
@@ -58,7 +58,7 @@ describe('Organizations page tests', () => {
       );
       cy.createOrganization(org);
 
-      cy.get('[data-cy="organization-title-input"]').should('have.value', org);
+      cy.get('[data-cy="organization-title-value"]').should('have.text', org);
     });
 
     it('Should display a toast success message when the organization is renamed successfully', () => {

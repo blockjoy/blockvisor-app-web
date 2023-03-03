@@ -81,7 +81,7 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
               style="secondary"
               size="small"
               type="submit"
-              data-cy="organization-drawer-submit-button"
+              dataCy="organization-drawer-submit-button"
             >
               Add
             </Button>
