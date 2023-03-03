@@ -86,7 +86,7 @@ export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={3}
-                maxLength={5}
+                maxLength={7}
                 {...expDateController.field}
                 onChange={handleExpDateChange}
                 value={expDate}
