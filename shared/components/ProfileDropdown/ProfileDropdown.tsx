@@ -7,7 +7,7 @@ import { ProfileBubble } from '../ProfileBubble/ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
 import IconDoor from '@public/assets/icons/door-12.svg';
 import IconPerson from '@public/assets/icons/person-12.svg';
-import IconCard from '@public/assets/icons/credit-card.svg';
+import IconBilling from '@public/assets/icons/billing.svg';
 import { Dropdown } from '../Dropdown/Dropdown';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { useRef, useState } from 'react';
@@ -87,7 +87,7 @@ export default function ProfileDropdown() {
           onButtonClick={handleBillingRedirect}
         >
           <span css={styles.icon}>
-            <IconCard />
+            <IconBilling />
           </span>
           Billing
         </DropdownItem>
