@@ -79,13 +79,21 @@ export const useCreditCard = (card: CreditCardForm): ICreditCardHook => {
   // TODO: improve function
   const handleExpDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    console.log('VALUE', value);
     let formattedValue = value
       .replace(/\D/g, '')
-      .replace(
-        /(\d{2})(\d{1,2})?/,
-        (match: string, p1: string, p2: string) => `${p1}/${p2 || ''}`,
-      )
-      .slice(0, 5);
+      .replace(/^(1[\/]?)/, '1')
+      .replace(/^([2-9])/, '$1 / ')
+      .replace(/^(\d{2})(\d{1,2})?/, (match, p1, p2) => {
+        if (!p2) {
+          return `${p1} / `;
+        } else {
+          return `${p1} / ${p2}`;
+        }
+      })
+      .slice(0, 7);
+
+    console.log('formattedValue', formattedValue);
     setExpDate(formattedValue);
     expDateController.field.onChange(event);
   };
@@ -95,6 +103,7 @@ export const useCreditCard = (card: CreditCardForm): ICreditCardHook => {
   ) => {
     const { value } = event.target;
     setCardHolder(value);
+    cardHolderController.field.onChange(event);
   };
 
   const handleCvcChange = (event: React.ChangeEvent<HTMLInputElement>) => {

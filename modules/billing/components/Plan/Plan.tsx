@@ -1,20 +1,12 @@
-import { EmptyColumn } from '@shared/index';
 import { styles } from './Plan.styles';
+import { PlanPreview } from './PlanPreview/PlanPreview';
+import { SinglePlan } from './SinglePlan/SinglePlan';
 
 export const Plan = () => {
   return (
-    <EmptyColumn
-      title="You Have No Active Plans."
-      description={
-        <div>
-          <p>
-            You are currently on a free plan. To access BlockVisor features add
-            a paid plan.
-          </p>
-        </div>
-      }
-      align="left"
-      additionalStyles={styles.wrapper}
-    />
+    <div css={styles.wrapper}>
+      <PlanPreview />
+      <SinglePlan />
+    </div>
   );
 };
