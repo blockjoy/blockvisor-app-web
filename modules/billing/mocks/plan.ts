@@ -10,7 +10,7 @@ export const PLANS = [
   {
     id: 'pro',
     title: 'Pro',
-    active: false,
+    active: true,
     features: [
       'Unlimited Nodes',
       'Unlimited organizations',
@@ -18,5 +18,16 @@ export const PLANS = [
       '24/7 support',
     ],
     pricing: '$199.00',
+  },
+];
+
+export const PLAN_DATA = [
+  {
+    label: 'Active Plan',
+    data: 'Pro',
+  },
+  {
+    label: 'Price',
+    data: '$199.00',
   },
 ];

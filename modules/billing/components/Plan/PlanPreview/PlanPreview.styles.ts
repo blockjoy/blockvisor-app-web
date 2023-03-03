@@ -1,7 +1,10 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  emptyColumn: css`
-    margin: 0;
+  details: css`
+    width: 70%;
+  `,
+  button: css`
+    margin-top: 20px;
   `,
 };
