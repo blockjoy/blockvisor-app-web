@@ -6,4 +6,7 @@ export const styles = {
     flex-direction: column;
     gap: 50px;
   `,
+  emptyColumn: css`
+    margin: 0;
+  `,
 };
