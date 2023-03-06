@@ -12,6 +12,7 @@ import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
+import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -26,6 +27,8 @@ export const AppLayout: React.FC<LayoutType> = ({
 }) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
+
+  useNodeUpdates();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
