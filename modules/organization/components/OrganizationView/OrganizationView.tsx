@@ -157,7 +157,7 @@ export const OrganizationView = () => {
           <BackButton backUrl={ROUTES.ORGANIZATIONS} />
         </div>
         {isLoadingOrg ? (
-          <div css={spacing.top.medium}>
+          <div data-cy="organization-loading" css={spacing.top.medium}>
             <SkeletonGrid padding="10px 0 70px">
               <Skeleton width="260px" />
               <Skeleton width="180px" />
@@ -166,6 +166,7 @@ export const OrganizationView = () => {
           </div>
         ) : organization === null ? (
           <EmptyColumn
+            dataCy="organization-not-found"
             title="Organization Not Found"
             description="No organization exists with this ID"
           />

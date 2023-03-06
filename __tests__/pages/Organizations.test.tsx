@@ -1,9 +1,13 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, cleanup } from '../renderer';
+import { render, screen, waitFor, cleanup, fireEvent } from '../renderer';
 import { mockeOrganizationsResponse, routerMockBuilder } from '../mocks';
 import { getOrganizationsSpy, useRouterSpy } from '../utils';
-import { OrganizationManagement } from '@modules/organization';
+import {
+  OrganizationManagement,
+  useCreateOrganization,
+} from '@modules/organization';
 import { OrganizationsUIProvider } from '@modules/organization/ui/OrganizationsUIContext';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 
 describe('Organizations page', () => {
   beforeEach(() => {
@@ -43,6 +47,32 @@ describe('Organizations page', () => {
 
     await waitFor(() => {
       expect(screen.getByDataCy('organizationsList-table')).toBeTruthy();
+    });
+  });
+
+  it('Should show error toast when creating fails', async () => {
+    vi.mock('@modules/organization/hooks/useCreateOrganization');
+    vi.mocked(useCreateOrganization).mockImplementation(
+      () => async (name: string, onSuccess: (org: any) => void) => {
+        throw new ApplicationError('test', 'error');
+      },
+    );
+    render(
+      <OrganizationsUIProvider>
+        <OrganizationManagement />
+      </OrganizationsUIProvider>,
+    );
+
+    fireEvent.click(screen.getByDataCy('organizations-create-button'));
+
+    fireEvent.change(screen.getByDataCy('organization-drawer-add-input'), {
+      target: { value: 'some value' },
+    });
+
+    fireEvent.click(screen.getByDataCy('organization-drawer-submit-button'));
+
+    await waitFor(() => {
+      expect(screen.getByText('error')).toBeTruthy();
     });
   });
 });
