@@ -6,6 +6,22 @@ export const INVOICES = [
     amount: '$158.73',
     description: 'Algorand Nodes',
     status: 'pending',
+    services: [
+      {
+        id: '1001',
+        title: 'Montly Subscription',
+        quantity: 1,
+        price: '$100.00',
+        totalPrice: '$100.00',
+      },
+      {
+        id: '1002',
+        title: 'Premium Customer Support',
+        quantity: 2,
+        price: '$30.00',
+        totalPrice: '$60.00',
+      },
+    ],
   },
   {
     id: '0001',
@@ -14,6 +30,22 @@ export const INVOICES = [
     amount: '$126.15',
     description: 'Algorand Nodes',
     status: 'paid',
+    services: [
+      {
+        id: '1001',
+        title: 'Montly Subscription',
+        quantity: 1,
+        price: '$100.00',
+        totalPrice: '$100.00',
+      },
+      {
+        id: '1002',
+        title: 'Premium Customer Support',
+        quantity: 2,
+        price: '$30.00',
+        totalPrice: '$60.00',
+      },
+    ],
   },
 ];
 
