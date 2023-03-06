@@ -13,6 +13,7 @@ import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
 import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
+import { apiClient } from '@modules/client';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -29,6 +30,8 @@ export const AppLayout: React.FC<LayoutType> = ({
   const userId = repository?.getIdentity()?.id;
 
   useNodeUpdates();
+
+  const hasGotUpdates = useRef<boolean>(false);
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -54,6 +57,14 @@ export const AppLayout: React.FC<LayoutType> = ({
       loadNodes(initialQueryParams);
     }
   }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    if (!hasGotUpdates.current) {
+      console.log('subscribing to updates');
+      apiClient.getUpdates((node: any) => console.log('got updates: ', node));
+      hasGotUpdates.current = true;
+    }
+  }, []);
 
   return (
     <>
