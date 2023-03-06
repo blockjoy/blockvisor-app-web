@@ -1,6 +1,6 @@
-import { Badge, Button } from '@shared/components';
+import { Badge } from '@shared/components';
 import { flex } from 'styles/utils.flex.styles';
-import IconDownload from '@public/assets/icons/download-12.svg';
+import { InvoiceDownload } from '../components/Invoices/InvoiceDownload/InvoiceDownload';
 
 export const mapInvoicesToRows = (invoices?: any[]) => {
   const headers: TableHeader[] = [
@@ -75,10 +75,7 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         component: (
           <>
             <div css={[flex.display.flex]}>
-              <Button style="outline" size="small">
-                <IconDownload />
-                <span>Download</span>
-              </Button>
+              <InvoiceDownload />
             </div>
           </>
         ),
