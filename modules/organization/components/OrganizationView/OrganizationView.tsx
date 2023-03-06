@@ -106,6 +106,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
         <EmptyColumn
           title="Organization Not Found"
           description="No organization exists with this ID"
+          dataCy="organization-not-found"
         />
       ) : (
         <>
