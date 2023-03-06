@@ -11,7 +11,9 @@ export * from './components/BillingInfo/BillingPreview/BillingPreview';
 export * from './components/BillingInfo/BillingAddress/BillingAddress';
 
 export * from './components/Invoices/Invoices';
+export * from './components/Invoices/InvoiceDownload/InvoiceDownload';
 export * from './components/Invoices/InvoicesList/InvoicesList';
+export * from './components/Invoices/InvoicePDF/InvoicePDF';
 
 export * from './hooks/useBillingAddress';
 export * from './hooks/useCreditCard';

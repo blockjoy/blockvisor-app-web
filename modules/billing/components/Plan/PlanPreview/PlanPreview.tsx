@@ -4,7 +4,7 @@ import { styles } from './PlanPreview.styles';
 
 export const PlanPreview = () => {
   return (
-    <div css={styles.details}>
+    <div css={styles.wrapper}>
       <DetailsTable bodyElements={PLAN_DATA} />
       <Button style="outline" customCss={[styles.button]}>
         Cancel Plan

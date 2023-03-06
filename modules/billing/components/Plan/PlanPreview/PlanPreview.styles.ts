@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  details: css`
-    width: 70%;
+  wrapper: css`
+    max-width: 600px;
   `,
   button: css`
-    margin-top: 20px;
+    margin-top: 30px;
   `,
 };
