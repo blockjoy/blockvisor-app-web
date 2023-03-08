@@ -15,25 +15,20 @@ export const BillingInfo = () => {
     setIsAdding(isAdding);
   };
 
-  return (
+  const handleUpdate = () => {
+    console.log('Update');
+  };
+
+  return !isAdded ? (
     <>
       {!isAdding ? (
         <>
           <p css={styles.text}>
-            {!isAdded ? (
-              <>
-                You have not yet added any billing addresses. Click the button
-                below to add one.
-              </>
-            ) : (
-              <BillingPreview billingAddress={BILLING_ADDRESS} />
-            )}
-          </p>{' '}
-          <Button
-            onClick={() => handleAdding(true)}
-            style={!isAdded ? 'primary' : 'outline'}
-          >
-            {!isAdded ? 'Add a new Billing Address' : 'Edit Billing Address'}
+            You have not yet added any billing addresses. Click the button below
+            to add one.
+          </p>
+          <Button onClick={() => handleAdding(true)} style="primary">
+            Add a new Billing Address
           </Button>
         </>
       ) : (
@@ -43,5 +38,12 @@ export const BillingInfo = () => {
         />
       )}
     </>
+  ) : (
+    <div css={styles.preview}>
+      <BillingPreview billingAddress={BILLING_ADDRESS} />
+      <Button onClick={() => handleUpdate()} style="outline">
+        Update Billing Address
+      </Button>
+    </div>
   );
 };

@@ -9,7 +9,7 @@ export const Plan = () => {
 
   return (
     <div css={styles.wrapper}>
-      {proPlan?.active ? (
+      {!proPlan?.active ? (
         <PlanPreview />
       ) : (
         <>
