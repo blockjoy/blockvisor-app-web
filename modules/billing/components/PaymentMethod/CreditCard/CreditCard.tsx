@@ -6,13 +6,11 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './CreditCard.styles';
 
 export type CreditCardProps = {
-  handleAdding: (isAdding: boolean) => void;
+  handleCancel: VoidFunction;
   card: CreditCardForm;
 };
 
-export const CreditCard = ({ handleAdding, card }: CreditCardProps) => {
-  const handleCancel = () => handleAdding(false);
-
+export const CreditCard = ({ handleCancel, card }: CreditCardProps) => {
   const {
     loading,
     form,
