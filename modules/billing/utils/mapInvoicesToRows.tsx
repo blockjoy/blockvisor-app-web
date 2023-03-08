@@ -75,7 +75,7 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         component: (
           <>
             <div css={[flex.display.flex]}>
-              <InvoiceDownload />
+              <InvoiceDownload invoice={invoice} />
             </div>
           </>
         ),
