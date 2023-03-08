@@ -15,30 +15,31 @@ export const PaymentMethod = () => {
     setIsAdding(isAdding);
   };
 
-  return (
+  const handleUpdate = () => {
+    console.log('Update');
+  };
+
+  return !isAdded ? (
     <>
       {!isAdding ? (
-        <>
+        <div>
           <p css={styles.text}>
-            {!isAdded ? (
-              <>
-                You have not yet added any cards. Click the button below to add
-                one.
-              </>
-            ) : (
-              <PaymentPreview cardNumber={CREDIT_CARD.cardnumber} />
-            )}
+            You have not yet added any cards. Click the button below to add one.
           </p>
-          <Button
-            onClick={() => handleAdding(true)}
-            style={!isAdded ? 'primary' : 'outline'}
-          >
-            {!isAdded ? 'Add a new Card' : 'Update Card'}
+          <Button onClick={() => handleAdding(true)} style="primary">
+            Add a new Card
           </Button>
-        </>
+        </div>
       ) : (
         <CreditCard handleAdding={handleAdding} card={CREDIT_CARD_DEFAULT} />
       )}
     </>
+  ) : (
+    <div css={styles.preview}>
+      <PaymentPreview cardNumber={CREDIT_CARD.cardnumber} />
+      <Button onClick={() => handleUpdate()} style="outline">
+        Update Card
+      </Button>
+    </div>
   );
 };
