@@ -6,12 +6,12 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './BillingAddress.styles';
 
 export type BillingAddressProps = {
-  handleAdding: (isAdding: boolean) => void;
+  handleCancel: VoidFunction;
   billingAddress: BillingAddressForm;
 };
 
 export const BillingAddress = ({
-  handleAdding,
+  handleCancel,
   billingAddress,
 }: BillingAddressProps) => {
   const {
@@ -44,8 +44,6 @@ export const BillingAddress = ({
     vat,
     handleVatChange,
   } = useBillingAddress(billingAddress);
-
-  const handleCancel = () => handleAdding(false);
 
   return (
     <FormProvider {...form}>

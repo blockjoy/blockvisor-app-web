@@ -7,43 +7,51 @@ import { Button } from '@shared/index';
 import { useState } from 'react';
 import { styles } from './BillingInfo.styles';
 
+const isAdded = true; /** REMOVE, TESTING PURPOSES */
+
 export const BillingInfo = () => {
-  const isAdded = false;
+  const [billingAddress, setBillingAddress] = useState<BillingAddressForm>(
+    BILLING_ADDRESS_DEFAULT,
+  );
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const handleAdding = (isAdding: boolean) => {
-    setIsAdding(isAdding);
+  const handleAdding = () => {
+    setIsAdding(true);
+    setBillingAddress(BILLING_ADDRESS_DEFAULT);
   };
 
   const handleUpdate = () => {
-    console.log('Update');
+    setIsAdding(true);
+    setBillingAddress(BILLING_ADDRESS);
   };
 
-  return !isAdded ? (
-    <>
-      {!isAdding ? (
-        <>
-          <p css={styles.text}>
-            You have not yet added any billing addresses. Click the button below
-            to add one.
-          </p>
-          <Button onClick={() => handleAdding(true)} style="primary">
-            Add a new Billing Address
-          </Button>
-        </>
-      ) : (
-        <BillingAddress
-          handleAdding={handleAdding}
-          billingAddress={BILLING_ADDRESS_DEFAULT}
-        />
-      )}
-    </>
+  const handleCancel = () => {
+    setIsAdding(false);
+  };
+
+  return !isAdding ? (
+    isAdded ? (
+      <div>
+        <p css={styles.text}>
+          You have not yet added any billing addresses. Click the button below
+          to add one.
+        </p>
+        <Button onClick={handleAdding} style="primary">
+          Add a new Billing Address
+        </Button>
+      </div>
+    ) : (
+      <div css={styles.preview}>
+        <BillingPreview billingAddress={BILLING_ADDRESS} />
+        <Button onClick={handleUpdate} style="outline">
+          Update Billing Address
+        </Button>
+      </div>
+    )
   ) : (
-    <div css={styles.preview}>
-      <BillingPreview billingAddress={BILLING_ADDRESS} />
-      <Button onClick={() => handleUpdate()} style="outline">
-        Update Billing Address
-      </Button>
-    </div>
+    <BillingAddress
+      handleCancel={handleCancel}
+      billingAddress={billingAddress}
+    />
   );
 };
