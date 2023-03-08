@@ -137,6 +137,7 @@ export const Members = () => {
 
   const { headers, rows } = mapOrganizationMembersToRows(
     membersAndInvitations,
+    [],
     methods,
   );
 
@@ -181,6 +182,7 @@ export const Members = () => {
         fixedRowHeight="74px"
         total={membersAndInvitationsActiveCount}
         properties={organizationMembersUIProps.queryParams}
+        rowDataCy="organizationMembers-list"
         onTableChange={handleTableChange}
       />
       {activeView === 'action' && (

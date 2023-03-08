@@ -65,6 +65,7 @@ export const AllOrganizationsTable = ({
       onTableChange={handleTableChange}
       loadingDataCy="organizationsListTable-skeleton"
       // filters={FILTERS}
+      tableDataCy="organizationsList-table"
     />
   );
 };

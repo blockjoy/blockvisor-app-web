@@ -42,7 +42,27 @@ const mockedNodesResponse = [
     walletAddress: '-',
   },
 ];
-const mockedGetOrganizationsResponse = [
+const mockedGetOrganizationsResponse: ClientOrganization[] = [
+  {
+    createdAt: {
+      nanos: 240922000,
+      seconds: 1673558135,
+    },
+    currentUser: {
+      orgId: 'ed0fa3a5-bac8-4d71-aca4-63d0afd1189c',
+      role: 2,
+      userId: 'f05f3a1e-22ff-47e6-92c6-de537bac0a0f',
+    },
+
+    id: 'ed0fa3a5-bac8-4d71-aca4-63d0afd1189c',
+    memberCount: 4,
+    name: 'bla0@unicsite.com',
+    personal: true,
+    updatedAt: {
+      nanos: 240922000,
+      seconds: 1673558135,
+    },
+  },
   {
     createdAt: {
       nanos: 240922000,
@@ -57,11 +77,26 @@ const mockedGetOrganizationsResponse = [
     id: 'ed0fa3a5-bac8-4d71-aca4-63d0afd1189c',
     memberCount: 4,
     name: 'danixa5510@unicsite.com',
-    personal: true,
+    personal: false,
     updatedAt: {
       nanos: 240922000,
       seconds: 1673558135,
     },
+  },
+];
+
+const mockedMembersResponse = [
+  {
+    email: 'spider08@man.com',
+    firstName: 'Spider',
+    id: '0138f33e-13c8-46ab-ab94-fd569dd87b13',
+    lastName: 'Man',
+  },
+  {
+    email: 'tom@gmail.com',
+    firstName: 'Tom',
+    id: '12344523131231',
+    lastName: 'Hanks',
   },
 ];
 
@@ -166,6 +201,7 @@ const mockUseIdentityValue = (overrides?: Partial<UseIdentity>) => {
   return { ...base, ...overrides };
 };
 
+const mockedInvitations = [{ inviteeEmail: 'tom@gmail.com' }];
 const mockeOrganizationsResponse = [
   {
     updatedAt: {
@@ -211,6 +247,8 @@ export {
   mockedBlockchainsResponse,
   mockedGetOrganizationsResponse,
   mockeOrganizationsResponse,
+  mockedMembersResponse,
+  mockedInvitations,
   mockJWT,
   mockedRouter,
   mockedMetricsResponse,

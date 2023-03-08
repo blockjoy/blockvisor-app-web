@@ -16,12 +16,15 @@ export type TableProps = {
   handleSort?: (dataField: string) => void;
   dataCy?: string;
   loadingDataCy?: string;
+  tableDataCy?: string;
+  rowDataCy?: string;
 };
 
 export const Table = ({
   headers = [],
   rows = [],
-  dataCy,
+  tableDataCy,
+  rowDataCy,
   onRowClick,
   isLoading,
   preload,
@@ -40,7 +43,7 @@ export const Table = ({
   return (
     <div css={styles.wrapper}>
       <table
-        data-cy={dataCy}
+        data-cy={tableDataCy}
         css={[
           styles.table,
           !!onRowClick && styles.hasHoverRows,
@@ -97,6 +100,7 @@ export const Table = ({
           ) : (
             rows?.map((tr) => (
               <tr
+                data-cy={rowDataCy}
                 key={tr.key}
                 className={tr.isDanger ? 'danger' : ''}
                 css={[

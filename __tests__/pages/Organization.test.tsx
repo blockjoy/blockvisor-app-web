@@ -1,15 +1,6 @@
 import { expect, vi, it, describe, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup, waitFor, act } from '../renderer';
 import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-  waitFor,
-  act,
-  renderHook,
-} from '../renderer';
-import {
-  organizationAtoms,
   OrganizationView,
   useDeleteOrganization,
   useGetOrganization,
@@ -17,7 +8,13 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useRouterSpy } from '__tests__/utils';
-import { mockedNodesResponse, routerMockBuilder } from '__tests__/mocks';
+import {
+  mockedGetOrganizationsResponse,
+  mockedInvitations,
+  mockedMembersResponse,
+  mockedNodesResponse,
+  routerMockBuilder,
+} from '__tests__/mocks';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
 
 import { apiClient } from '@modules/client';
@@ -25,22 +22,37 @@ import { apiClient } from '@modules/client';
 describe('Single Organization Page', () => {
   beforeEach(() => {
     window.scrollTo = vi.fn() as any;
+
+    useRouterSpy.mockImplementation(() =>
+      routerMockBuilder({ route: '/organizations/1234', isReady: true }),
+    );
     vi.mock('@modules/client');
-    //vi.mock('@modules/organization/hooks/useInvitations');
     vi.mock('@modules/organization/hooks/useGetOrganization');
     vi.mock('@modules/organization/hooks/useDeleteOrganization');
     vi.mock('@modules/organization/hooks/useUpdateOrganization');
     vi.mock('@modules/organization/hooks/useLeaveOrganization');
+
+    vi.mocked(useDeleteOrganization).mockReturnValue({
+      loading: false,
+      deleteOrganization: vi.fn(),
+      setLoadingState: vi.fn(),
+    });
+
+    vi.mocked(useUpdateOrganization).mockReturnValue({
+      updateOrganization: vi.fn(),
+    });
+
+    vi.mocked(useLeaveOrganization).mockReturnValue({
+      loading: false,
+      leaveOrganization: vi.fn(),
+    });
   });
 
   afterEach(() => {
     cleanup();
   });
-  it('should display loading skeleton when data is fetching', async () => {
-    useRouterSpy.mockImplementation(() =>
-      routerMockBuilder({ route: '/organizations/1234', isReady: true }),
-    );
 
+  it('should display loading skeleton when data is fetching', async () => {
     vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
       async (id: string) => [],
     );
@@ -59,21 +71,6 @@ describe('Single Organization Page', () => {
       setIsLoading: vi.fn(),
     });
 
-    vi.mocked(useDeleteOrganization).mockReturnValue({
-      loading: false,
-      deleteOrganization: vi.fn(),
-      setLoadingState: vi.fn(),
-    });
-
-    vi.mocked(useUpdateOrganization).mockReturnValue({
-      updateOrganization: vi.fn(),
-    });
-
-    vi.mocked(useLeaveOrganization).mockReturnValue({
-      loading: false,
-      leaveOrganization: vi.fn(),
-    });
-
     render(<OrganizationView />);
 
     await waitFor(() => {
@@ -82,10 +79,6 @@ describe('Single Organization Page', () => {
   });
 
   it('should display empty column when there is no organization', async () => {
-    useRouterSpy.mockImplementation(() =>
-      routerMockBuilder({ route: '/organizations/1234', isReady: true }),
-    );
-
     vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
       async (id: string) => [],
     );
@@ -102,21 +95,6 @@ describe('Single Organization Page', () => {
       organization: null,
       isLoading: 'finished',
       setIsLoading: vi.fn(),
-    });
-
-    vi.mocked(useDeleteOrganization).mockReturnValue({
-      loading: false,
-      deleteOrganization: vi.fn(),
-      setLoadingState: vi.fn(),
-    });
-
-    vi.mocked(useUpdateOrganization).mockReturnValue({
-      updateOrganization: vi.fn(),
-    });
-
-    vi.mocked(useLeaveOrganization).mockReturnValue({
-      loading: false,
-      leaveOrganization: vi.fn(),
     });
 
     render(<OrganizationView />);
@@ -127,10 +105,6 @@ describe('Single Organization Page', () => {
   });
 
   it('should not display danger zone when there is no organization', async () => {
-    useRouterSpy.mockImplementation(() =>
-      routerMockBuilder({ route: '/organizations/1234', isReady: true }),
-    );
-
     vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
       async (id: string) => [],
     );
@@ -149,25 +123,69 @@ describe('Single Organization Page', () => {
       setIsLoading: vi.fn(),
     });
 
-    vi.mocked(useDeleteOrganization).mockReturnValue({
-      loading: false,
-      deleteOrganization: vi.fn(),
-      setLoadingState: vi.fn(),
-    });
+    render(<OrganizationView />);
 
-    vi.mocked(useUpdateOrganization).mockReturnValue({
-      updateOrganization: vi.fn(),
+    await waitFor(() => {
+      const dangerZone = screen.queryByDataCy('organization-delete-button');
+      expect(dangerZone).toBeFalsy();
     });
+  });
 
-    vi.mocked(useLeaveOrganization).mockReturnValue({
-      loading: false,
-      leaveOrganization: vi.fn(),
+  it('should not display danger zone when the organization is personal', async () => {
+    const [org] = mockedGetOrganizationsResponse;
+
+    vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
+      async (id: string) => [],
+    );
+    vi.mocked(apiClient.pendingInvitations).mockImplementationOnce(
+      async (id: string) => ({ code: 1 } as any),
+    );
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(
+      async () => mockedNodesResponse,
+    );
+
+    vi.mocked(useGetOrganization).mockReturnValue({
+      getOrganization: vi.fn(),
+      setOrganization: vi.fn(),
+      organization: org,
+      isLoading: 'finished',
+      setIsLoading: vi.fn(),
     });
 
     render(<OrganizationView />);
 
     await waitFor(() => {
-      expect(screen.getByDataCy('organization-delete-button')).toBeFalsy();
+      const dangerZone = screen.queryByDataCy('organization-delete-button');
+      expect(dangerZone).toBeFalsy();
+    });
+  });
+
+  it('should display all members when organization has other non default memebers', async () => {
+    const [org] = mockedGetOrganizationsResponse;
+
+    vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
+      async (id: string) => mockedMembersResponse,
+    );
+    vi.mocked(apiClient.pendingInvitations).mockImplementationOnce(
+      async (id: string) => ({ code: 1 } as any),
+    );
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(
+      async () => mockedNodesResponse,
+    );
+
+    vi.mocked(useGetOrganization).mockReturnValue({
+      getOrganization: vi.fn(),
+      setOrganization: vi.fn(),
+      organization: org,
+      isLoading: 'finished',
+      setIsLoading: vi.fn(),
+    });
+
+    render(<OrganizationView />);
+
+    await waitFor(() => {
+      const members = screen.queryAllByDataCy('organizationMembers-list');
+      expect(members).toHaveLength(2);
     });
   });
 });
