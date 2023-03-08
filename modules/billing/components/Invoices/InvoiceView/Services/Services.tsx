@@ -1,5 +1,6 @@
 import { mapServicesToRows } from '@modules/billing';
 import { Table } from '@shared/index';
+import { styles } from './Services.styles';
 
 export type ServicesProps = {
   services: any[];
@@ -8,5 +9,12 @@ export type ServicesProps = {
 export const Services = ({ services }: any) => {
   const { headers, rows } = mapServicesToRows(services);
 
-  return <Table isLoading={'finished'} headers={headers} rows={rows} />;
+  return (
+    <Table
+      additionalStyles={styles.totalWrapper}
+      isLoading={'finished'}
+      headers={headers}
+      rows={rows}
+    />
+  );
 };

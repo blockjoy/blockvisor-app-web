@@ -1,3 +1,5 @@
+import { styles } from '../components/Invoices/InvoiceView/Services/Services.styles';
+
 export const mapServicesToRows = (services?: any[]) => {
   const headers: TableHeader[] = [
     {
@@ -59,6 +61,38 @@ export const mapServicesToRows = (services?: any[]) => {
       },
     ],
   }));
+
+  const totalRow = {
+    key: 'total',
+    cells: [
+      {
+        key: '1',
+        component: null,
+      },
+      {
+        key: '2',
+        component: null,
+      },
+      {
+        key: '3',
+        component: (
+          <>
+            <p css={styles.totalTitle}>Grand Total</p>
+          </>
+        ),
+      },
+      {
+        key: '4',
+        component: (
+          <>
+            <p css={styles.totalPrice}>$160.00</p>
+          </>
+        ),
+      },
+    ],
+  };
+
+  rows.push(totalRow);
 
   return {
     rows,

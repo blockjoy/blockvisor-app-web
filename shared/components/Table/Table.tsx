@@ -1,5 +1,5 @@
 import { styles } from './table.styles';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
 import { useEffect, useState } from 'react';
 import { Pagination } from '@shared/components';
@@ -18,6 +18,7 @@ type Props = {
   pageSize?: number;
   pageIndex?: number;
   setPageIndex?: SetterOrUpdater<number>;
+  additionalStyles?: SerializedStyles;
 };
 
 export const Table: React.FC<Props> = ({
@@ -32,6 +33,7 @@ export const Table: React.FC<Props> = ({
   pageSize,
   pageIndex,
   setPageIndex,
+  additionalStyles,
 }) => {
   const [activeRows, setActiveRows] = useState<Row[]>(rows);
   const [isBuildingRows, setIsBuildingRows] = useState<boolean>(true);
@@ -85,6 +87,7 @@ export const Table: React.FC<Props> = ({
           styles.table,
           !!onRowClick && styles.hasHoverRows,
           fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
+          additionalStyles && additionalStyles,
         ]}
       >
         {headers && rows?.length > 0 && (
