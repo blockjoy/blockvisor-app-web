@@ -12,7 +12,7 @@ export * from './components/BillingInfo/BillingAddress/BillingAddress';
 
 export * from './components/Invoices/Invoices';
 export * from './components/Invoices/InvoiceView/InvoiceView';
-export * from './components/Invoices/InvoiceView/Services';
+export * from './components/Invoices/InvoiceView/Services/Services';
 export * from './components/Invoices/InvoiceDownload/InvoiceDownload';
 export * from './components/Invoices/InvoicesList/InvoicesList';
 export * from './components/Invoices/InvoicePDF/InvoicePDF';
