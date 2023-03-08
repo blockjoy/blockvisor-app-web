@@ -10,10 +10,14 @@ import {
 } from '../../../../../shared/components/Button/Button.styles';
 import IconDownload from '@public/assets/icons/download-12.svg';
 
-export const InvoiceDownload = () => (
+export type InvoiceDownloadProps = {
+  invoice: any;
+};
+
+export const InvoiceDownload = ({ invoice }: any) => (
   <div>
     <PDFDownloadLink
-      document={<InvoicePDF />}
+      document={<InvoicePDF invoice={invoice} />}
       fileName="invoice.pdf"
       css={[
         reset.button,

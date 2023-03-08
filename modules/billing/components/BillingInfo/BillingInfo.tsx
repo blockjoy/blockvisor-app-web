@@ -7,7 +7,7 @@ import { Button } from '@shared/index';
 import { useState } from 'react';
 import { styles } from './BillingInfo.styles';
 
-const isAdded = true; /** REMOVE, TESTING PURPOSES */
+const isAdded = false; /** REMOVE, TESTING PURPOSES */
 
 export const BillingInfo = () => {
   const [billingAddress, setBillingAddress] = useState<BillingAddressForm>(
@@ -30,7 +30,7 @@ export const BillingInfo = () => {
   };
 
   return !isAdding ? (
-    isAdded ? (
+    !isAdded ? (
       <div>
         <p css={styles.text}>
           You have not yet added any billing addresses. Click the button below

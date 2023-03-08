@@ -35,7 +35,7 @@ export const InvoiceView = () => {
               <span>{new Date(invoice.createdAt).toLocaleDateString()}</span>
             </div>
           </div>
-          <InvoiceDownload />
+          <InvoiceDownload invoice={invoice} />
         </div>
         <div>
           <DetailsView headline="Invoice recepient">

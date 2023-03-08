@@ -27,11 +27,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export const InvoicePDF = () => (
+export type InvoicePDFProps = {
+  invoice: any;
+};
+
+export const InvoicePDF = ({ invoice: { id } }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
-        <Text style={styles.title}>Invoice</Text>
+        <Text style={styles.title}>Invoice {id}</Text>
         <Text style={styles.subtitle}>Customer Information</Text>
         <Text style={styles.text}>Name: John Doe</Text>
         <Text style={styles.text}>Email: john.doe@example.com</Text>
