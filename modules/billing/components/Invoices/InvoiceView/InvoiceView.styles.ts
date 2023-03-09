@@ -19,4 +19,7 @@ export const styles = {
     gap: 8px;
     color: ${theme.colorPlaceholder};
   `,
+  details: css`
+    margin-top: 40px;
+  `,
 };

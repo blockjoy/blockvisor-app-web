@@ -49,6 +49,7 @@ export * from './Table/TableSkeleton';
 export * from './Table/TableBlockNodes';
 export * from './DetailsHeader/DetailsHeader';
 export * from './DetailsTable/DetailsTable';
+export * from './DetailsView/DetailsView';
 export * from './DataRow/DataRow';
 export * from './HostStatus/HostStatus';
 export * from './TableBlockHosts/TableBlockHosts';

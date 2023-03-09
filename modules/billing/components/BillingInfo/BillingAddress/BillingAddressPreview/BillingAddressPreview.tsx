@@ -1,10 +1,10 @@
-import { styles } from './BillingPreview.styles';
+import { styles } from './BillingAddressPreview.styles';
 
-export type BillingPreviewProps = {
+export type BillingAddressPreviewProps = {
   billingAddress: BillingAddressForm;
 };
 
-export const BillingPreview = ({
+export const BillingAddressPreview = ({
   billingAddress: {
     name,
     company,
@@ -15,7 +15,7 @@ export const BillingPreview = ({
     postal,
     vat,
   },
-}: BillingPreviewProps) => {
+}: BillingAddressPreviewProps) => {
   return (
     <div css={styles.address}>
       <span>{name}</span>

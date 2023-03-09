@@ -3,8 +3,8 @@ import { css } from '@emotion/react';
 export const styles = {
   wrapper: css`
     display: flex;
-    flex-direction: row wrap;
-    padding: 40px 0;
+    flex-flow: row wrap;
+    margin-bottom: 50px;
   `,
   headlineWrapper: css`
     width: 25%;
