@@ -250,7 +250,7 @@ export interface StateObject {
   processNodeUpdate: (node: Node | undefined) => boolean;
 }
 
-const eqmx_url = 'ws://35.237.162.218/mqtt';
+//const eqmx_url = 'ws://35.231.38.123/mqtt';
 
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
@@ -792,6 +792,9 @@ export class GrpcClient {
       ?.get(request, this.getAuthHeader())
       .then((response) => {
         this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+
+        console.log('getNode', node_to_grpc_node(response.getNode()));
+
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
@@ -1302,33 +1305,41 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject?: StateObject): void {
+  getUpdates(eqmx_url: string, callback: (payload: any) => void): void {
     let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 
     console.log('using token for mqtt auth: ', token);
 
-    let mqtt_client = mqtt.connect(eqmx_url, {
+    let mqtt_client = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
       clean: true,
-      connectTimeout: 4000,
+      connectTimeout: 30000,
       port: 8083,
       protocolId: 'MQTT',
       clientId: 'mqtt-js',
       reconnectPeriod: 10000,
       username: 'mqtt-js',
       password: token,
-      // password: 'mqtt-js',
     });
 
-    mqtt_client.on('connect', function (err) {
+    mqtt_client.on('connect', () => {
       console.log('MQTT connected');
-      mqtt_client.subscribe('js-test-topic', function (err) {
-        if (err) console.log('subscription error: ', err);
-        else console.log('MQTT subscribed to "js-test-topic"');
+      mqtt_client.subscribe('js-test-topic', (err) => {
+        if (err) {
+          console.log('subscription error: ', err);
+        } else {
+          console.log('MQTT subscribed to "js-test-topic"');
+        }
       });
     });
 
-    mqtt_client.on('error', function (err) {
+    mqtt_client.on('message', (topic, payload) => {
+      callback(payload);
+      console.log('MQTT topic: ', topic);
+      console.log('MQTT payload: ', payload);
+    });
+
+    mqtt_client.on('error', (err) => {
       console.log('MQTT connection error: ', err);
     });
   }
