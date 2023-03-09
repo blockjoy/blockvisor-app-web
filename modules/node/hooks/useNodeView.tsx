@@ -69,17 +69,6 @@ export const useNodeView = (): Hook => {
       return;
     }
 
-    const details = [
-      {
-        label: 'TYPE',
-        data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
-      },
-      { label: 'HOST', data: node.hostName || 'Unknown' },
-      { label: 'NODE ADDRESS', data: node?.address || '-' },
-      { label: 'VERSION', data: node.version || 'Latest' },
-      { label: 'BLOCK HEIGHT', data: node.blockHeight },
-    ];
-
     const nodeTypeConfigDetails = nodeType.properties
       ?.filter(
         (property: any) =>
@@ -112,17 +101,11 @@ export const useNodeView = (): Hook => {
     });
 
     const activeNode: BlockjoyNode = {
-      id: node.id,
-      hostId: node.hostId,
-      status: node.status,
-      name: node.name,
-      ip: node.ip,
-      blockchainId: node.blockchainId,
-      blockchainName: node.blockchainName,
+      ...node,
       created: formatDistanceToNow(new Date(node.created_at_datetime), {
         addSuffix: true,
       }),
-      details,
+      nodeTypeId: nodeType.id,
       nodeTypeConfig: nodeType.properties,
       nodeTypeConfigDetails,
     };
