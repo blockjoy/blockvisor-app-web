@@ -9,7 +9,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
 import IconCalendar from '@public/assets/icons/calendar-12.svg';
 import { DetailsView } from '@shared/components/DetailsView/DetailsView';
-import { BillingPreview, InvoiceDownload, Services } from '@modules/billing';
+import {
+  BillingAddressPreview,
+  InvoiceDownload,
+  Services,
+} from '@modules/billing';
 import { INVOICES } from '@modules/billing/mocks/invoices';
 import { BILLING_ADDRESS } from '@modules/billing/mocks/billingAddress';
 
@@ -37,9 +41,9 @@ export const InvoiceView = () => {
           </div>
           <InvoiceDownload invoice={invoice} />
         </div>
-        <div>
+        <div css={styles.details}>
           <DetailsView headline="Invoice recepient">
-            <BillingPreview billingAddress={BILLING_ADDRESS} />
+            <BillingAddressPreview billingAddress={BILLING_ADDRESS} />
           </DetailsView>
           <DetailsView headline="Services">
             <Services services={invoice.services} />
