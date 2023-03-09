@@ -1,16 +1,16 @@
-import { PLANS } from '@modules/billing/mocks/plan';
+import { BILLING_PLANS } from '@modules/billing/mocks/plan';
 import { EmptyColumn } from '@shared/index';
 import { styles } from './Plan.styles';
 import { PlanPreview } from './PlanPreview/PlanPreview';
-import { SinglePlan } from './SinglePlan/SinglePlan';
+import { PlansList } from './PlansList/PlansList';
+
+const activePlan = !BILLING_PLANS[0];
 
 export const Plan = () => {
-  const proPlan = PLANS.find((plan) => plan.id === 'pro');
-
   return (
     <div css={styles.wrapper}>
-      {!proPlan?.active ? (
-        <PlanPreview />
+      {activePlan ? (
+        <PlanPreview plan={activePlan} />
       ) : (
         <>
           <EmptyColumn
@@ -26,7 +26,7 @@ export const Plan = () => {
             align="left"
             additionalStyles={styles.emptyColumn}
           />
-          <SinglePlan plan={proPlan} />
+          <PlansList />
         </>
       )}
     </div>
