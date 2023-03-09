@@ -250,7 +250,7 @@ export interface StateObject {
   processNodeUpdate: (node: Node | undefined) => boolean;
 }
 
-const eqmx_url = 'ws://35.237.162.218/mqtt';
+//const eqmx_url = 'ws://35.231.38.123/mqtt';
 
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
@@ -623,12 +623,13 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
+    request.setId(host_id!);
     request.setMeta(request_meta);
 
     return this.host
       ?.get(request, this.getAuthHeader())
       .then((response) => {
-        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue()!);
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
@@ -791,6 +792,9 @@ export class GrpcClient {
       ?.get(request, this.getAuthHeader())
       .then((response) => {
         this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+
+        console.log('getNode', node_to_grpc_node(response.getNode()));
+
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {

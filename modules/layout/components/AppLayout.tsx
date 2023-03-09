@@ -41,6 +41,8 @@ export const AppLayout: React.FC<LayoutType> = ({
 
   const currentOrganization = useRef(defaultOrganization);
 
+  useNodeUpdates(defaultOrganization!);
+
   useEffect(() => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
