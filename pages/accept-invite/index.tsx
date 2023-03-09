@@ -12,7 +12,7 @@ const AcceptInvite: NextPage = () => {
       const { token } = router.query;
       router.push({
         pathname: ROUTES.REGISTER,
-        query: { token },
+        query: { token, invited: true },
       });
     }
   }, [router.isReady]);
