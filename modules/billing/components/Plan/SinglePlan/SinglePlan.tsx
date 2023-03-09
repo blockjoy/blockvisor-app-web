@@ -8,9 +8,12 @@ export type SinglePlanProps = {
 
 export const SinglePlan = ({ plan }: SinglePlanProps) => {
   return (
-    <div css={styles.wrapper}>
-      <div css={styles.title}>
-        <span>{plan?.title}</span>
+    <div css={[styles.wrapper, plan.featured && styles.featured]}>
+      <div css={styles.titleWrapper}>
+        <span css={styles.title}>{plan?.title}</span>
+        {plan.featured && (
+          <span css={[styles.title, styles.featuredTitle]}>Best Value</span>
+        )}
       </div>
 
       <div css={styles.pricing}>
@@ -23,7 +26,7 @@ export const SinglePlan = ({ plan }: SinglePlanProps) => {
       </div>
 
       <div css={styles.priceInfo}>
-        <p>You save 12$/month by choosing the annual plan.</p>
+        <p>{plan.description}</p>
       </div>
 
       <div css={styles.listContainer}>
@@ -36,8 +39,9 @@ export const SinglePlan = ({ plan }: SinglePlanProps) => {
           ))}
         </ul>
       </div>
-
-      <Button style="secondary">Select plan</Button>
+      <Button style={plan.featured ? 'secondary' : 'outline'}>
+        Select plan
+      </Button>
     </div>
   );
 };

@@ -1,23 +1,42 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
-    background-color: ${theme.colorOverlay};
+    background-color: ${theme.colorCard};
     padding: 20px;
     border-radius: 4px;
-    max-width: 400px;
+    width: 100%;
     display: flex;
     flex-direction: column;
-  `,
 
+    @media ${breakpoints.fromSml} {
+      flex: 1;
+      width: 50%;
+      max-width: 50%;
+    }
+
+    @media ${breakpoints.fromLrg} {
+      width: 33%;
+      max-width: 33%;
+    }
+  `,
+  featured: (theme: ITheme) => css`
+    background-color: ${theme.colorOverlay};
+  `,
+  titleWrapper: css`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  `,
   title: css`
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 1.25px;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
+  `,
+  featuredTitle: (theme: ITheme) => css`
+    color: ${theme.colorPrimary};
   `,
   pricing: css`
     display: flex;
