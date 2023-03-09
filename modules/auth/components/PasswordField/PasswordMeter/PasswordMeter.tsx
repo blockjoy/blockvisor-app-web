@@ -128,12 +128,12 @@ export const PasswordMeter = ({
                   passwordTracker.long ? styles.hintDisabled : '',
                 ]}
               >
-                16+ characters
+                16+ Characters
               </li>
               <li
                 css={[styles.hint, isPasswordRare ? styles.hintDisabled : '']}
               >
-                Super Obscure Password
+                Unique Password
               </li>
             </ul>
           </div>
