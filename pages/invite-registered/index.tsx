@@ -7,12 +7,12 @@ const AcceptInvite: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    localStorage.removeItem('identity');
+    // localStorage.removeItem('identity');
     if (router.isReady) {
       const { token } = router.query;
       router.push({
         pathname: ROUTES.LOGIN,
-        query: { token },
+        query: { token, redirect: ROUTES.ORGANIZATIONS },
       });
     }
   }, [router.isReady]);
