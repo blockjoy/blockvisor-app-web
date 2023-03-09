@@ -102,13 +102,7 @@ export const useNodeView = (): Hook => {
     });
 
     const activeNode: BlockjoyNode = {
-      id: node.id,
-      hostId: node.hostId,
-      status: node.status,
-      name: node.name,
-      ip: node.ip,
-      blockchainId: node.blockchainId,
-      blockchainName: node.blockchainName,
+      ...node,
       created: formatDistanceToNow(new Date(node.created_at_datetime), {
         addSuffix: true,
       }),

@@ -17,6 +17,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
 import { ROUTES } from '@shared/index';
+import { mapNodeToDetails } from '@modules/node/utils/mapNodeToDetails';
 
 export function NodeView() {
   const [nodeError, setNodeError] = useState<boolean>(false);
@@ -78,7 +79,7 @@ export function NodeView() {
                   date={node?.created!}
                   id={node?.id!}
                 />
-                <DetailsTable bodyElements={node?.details!} />
+                <DetailsTable bodyElements={mapNodeToDetails(node!)} />
               </>
             ) : (
               <EmptyColumn
