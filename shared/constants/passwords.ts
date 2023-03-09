@@ -1,5 +1,5 @@
 export const passwords = [
-  'password',
+  'word',
   '123',
   '12345',
   '6789',
@@ -42,6 +42,8 @@ export const passwords = [
   '4321',
   'qwerty',
   'abcd',
+  'test',
+  'pass',
   'p@ss',
   'p@$$',
   'pa$$',
@@ -105,4 +107,8 @@ export const passwords = [
   '123qwe',
   'fuck',
   'pussy',
+  'tosser',
+  'wanker',
+  'tits',
+  'boob',
 ];
