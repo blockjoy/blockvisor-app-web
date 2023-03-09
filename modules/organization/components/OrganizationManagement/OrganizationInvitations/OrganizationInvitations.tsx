@@ -39,7 +39,9 @@ export const OrganizationInvitations = () => {
     <div css={styles.wrapper}>
       <header css={styles.header}>
         Invitations
-        {invitations?.length && <Badge>{invitations?.length}</Badge>}
+        {invitations?.length && (
+          <Badge color="danger">{invitations?.length}</Badge>
+        )}
       </header>
       <ul>
         {invitations?.map((invite) => (

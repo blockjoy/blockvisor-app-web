@@ -29,6 +29,11 @@ export const styles = {
     background: ${theme.colorBackground};
     border-color: ${theme.colorNote};
   `,
+  danger: (theme: ITheme) => css`
+    color: ${theme.colorText};
+    background: ${theme.colorDanger};
+    border-color: ${theme.colorDanger};
+  `,
   outline: css`
     background: transparent;
     border-width: 1px;

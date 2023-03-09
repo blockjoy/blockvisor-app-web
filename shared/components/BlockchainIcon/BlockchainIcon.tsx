@@ -2,7 +2,6 @@ import { FC, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { styles } from './BlockchainIcon.styles';
 import { Tooltip, SvgIcon } from '@shared/components';
-import { css } from '@emotion/react';
 
 type Props = {
   blockchainId?: string;
@@ -10,6 +9,10 @@ type Props = {
   hideTooltip?: boolean;
   size?: string;
 };
+
+const IconAleo = dynamic(
+  () => import(`@public/assets/icons/blockchain/Aleo.svg`),
+);
 
 const IconAptos = dynamic(
   () => import(`@public/assets/icons/blockchain/Aptos.svg`),
@@ -70,6 +73,9 @@ export const BlockchainIcon: FC<Props> = ({
 }) => {
   let Component;
   switch (blockchainName?.toLowerCase()) {
+    case 'aleo':
+      Component = IconAleo;
+      break;
     case 'aptos':
       Component = IconAptos;
       break;

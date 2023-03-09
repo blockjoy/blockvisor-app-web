@@ -4,7 +4,7 @@ import { isMobile } from 'react-device-detect';
 import { display } from 'styles/utils.display.styles';
 import IconInfo from '@public/assets/icons/info.svg';
 import { styles } from './PasswordMeter.styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export type PasswordMeterProps = {
   meter: boolean;
@@ -27,16 +27,30 @@ export const PasswordMeter = ({
 }: PasswordMeterProps) => {
   if (!meter) return null;
 
-  const [isHintsOpen, setIsHintsOpen] = useState<null | boolean>(null);
+  const hintsRef = useRef<HTMLDivElement>(null);
+
+  const hintsClientHeight = useRef<number>(0);
+
+  const [hintsHeight, setHintsHeight] = useState<number | undefined>();
 
   const message = passwordMessage();
   const title = !passwordTracker.eightCharsOrGreater
     ? 'Minimum length 8 characters'
     : `${message} Password`;
 
+  const toggleHints = () => {
+    if (hintsHeight === 0) {
+      setHintsHeight(hintsClientHeight.current);
+    } else {
+      setHintsHeight(0);
+    }
+  };
+
   useEffect(() => {
-    if (isMobile) {
-      setIsHintsOpen(false);
+    hintsClientHeight.current = hintsRef.current?.clientHeight!;
+
+    if (isMobile || isCompact) {
+      setHintsHeight(0);
     }
   }, []);
 
@@ -59,7 +73,7 @@ export const PasswordMeter = ({
             <header css={styles.header}>
               <p css={styles.title}>{title}</p>
               <button
-                onClick={() => setIsHintsOpen(!isHintsOpen)}
+                onClick={toggleHints}
                 type="button"
                 css={[
                   styles.infoButton,
@@ -78,10 +92,9 @@ export const PasswordMeter = ({
             ></div>
           </div>
           <div
-            css={[
-              (isCompact || isMobile) && styles.hintsWrapper,
-              isHintsOpen && styles.hintsWrapperVisible,
-            ]}
+            ref={hintsRef}
+            css={[(isCompact || isMobile) && styles.hintsWrapper]}
+            style={{ height: `${hintsHeight}px` }}
           >
             <ul css={styles.hintsContent}>
               <li
@@ -90,7 +103,7 @@ export const PasswordMeter = ({
                   passwordTracker.letters ? styles.hintDisabled : '',
                 ]}
               >
-                Mixed letters (Aa)
+                Letters (Aa)
               </li>
               <li
                 css={[
@@ -120,7 +133,7 @@ export const PasswordMeter = ({
               <li
                 css={[styles.hint, isPasswordRare ? styles.hintDisabled : '']}
               >
-                No common words
+                Super Obscure Password
               </li>
             </ul>
           </div>
