@@ -1269,33 +1269,41 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject?: StateObject): void {
+  getUpdates(eqmx_url: string, callback: (payload: any) => void): void {
     let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 
     console.log('using token for mqtt auth: ', token);
 
-    let mqtt_client = mqtt.connect(eqmx_url, {
+    let mqtt_client = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
       clean: true,
-      connectTimeout: 4000,
+      connectTimeout: 30000,
       port: 8083,
       protocolId: 'MQTT',
       clientId: 'user_auth',
-      reconnectPeriod: 10000,
+      reconnectPeriod: 30000,
       username: 'user_auth',
       password: token,
-      // password: 'mqtt-js',
     });
 
-    mqtt_client.on('connect', function (err) {
+    mqtt_client.on('connect', () => {
       console.log('MQTT connected');
-      mqtt_client.subscribe('js-test-topic', function (err) {
-        if (err) console.log('subscription error: ', err);
-        else console.log('MQTT subscribed to "js-test-topic"');
+      mqtt_client.subscribe('js-test-topic', (err) => {
+        if (err) {
+          console.log('subscription error: ', err);
+        } else {
+          console.log('MQTT subscribed to "js-test-topic"');
+        }
       });
     });
 
-    mqtt_client.on('error', function (err) {
+    mqtt_client.on('message', (topic, payload) => {
+      callback(payload);
+      console.log('MQTT topic: ', topic);
+      console.log('MQTT payload: ', payload);
+    });
+
+    mqtt_client.on('error', (err) => {
       console.log('MQTT connection error: ', err);
     });
   }
