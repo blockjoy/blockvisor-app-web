@@ -90,7 +90,7 @@ export default () => {
                     {item.name}
 
                     {Boolean(invitationCount) && item.isOrganizations && (
-                      <Badge>{invitationCount}</Badge>
+                      <Badge color="danger">{invitationCount}</Badge>
                     )}
                   </span>
                 </span>
