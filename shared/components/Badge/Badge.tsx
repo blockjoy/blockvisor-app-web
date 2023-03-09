@@ -4,7 +4,7 @@ import { styles } from './Badge.styles';
 
 type Props = {
   children?: ReactNode;
-  color?: 'primary' | 'secondary' | 'note';
+  color?: 'primary' | 'secondary' | 'note' | 'danger';
   style?: 'standard' | 'outline';
   customCss?: SerializedStyles[];
 };

@@ -93,12 +93,8 @@ export const styles = {
   `,
   hintsWrapper: (theme: ITheme) => css`
     padding: 0;
-    max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s;
-  `,
-  hintsWrapperVisible: css`
-    max-height: 250px;
+    transition: height 0.5s;
   `,
   hintsContent: css`
     display: flex;
