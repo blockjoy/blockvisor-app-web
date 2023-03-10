@@ -55,7 +55,7 @@ export function usePasswordStrength() {
     (value) => value,
   ).length;
 
-  if (!isPasswordRare && passwordStrength > 3) {
+  if ((!isPasswordRare || !passwordTracker.long) && passwordStrength > 3) {
     passwordStrength = 3;
   }
 
