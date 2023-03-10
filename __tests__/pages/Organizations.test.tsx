@@ -1,6 +1,5 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, cleanup, fireEvent } from '../renderer';
-import { mockeOrganizationsResponse, routerMockBuilder } from '../mocks';
 import { getOrganizationsSpy, useRouterSpy } from '../utils';
 import {
   OrganizationManagement,
@@ -8,6 +7,8 @@ import {
 } from '@modules/organization';
 import { OrganizationsUIProvider } from '@modules/organization/ui/OrganizationsUIContext';
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { routerMockBuilder } from '__tests__/mocks/router';
+import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
 
 describe('Organizations page', () => {
   beforeEach(() => {
