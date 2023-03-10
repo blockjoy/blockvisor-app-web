@@ -11,13 +11,14 @@ interface Props {
 
 export function PublicRoute({ children }: Props) {
   const router = useRouter();
+  const { redirect } = router.query;
   const { isLoggedIn } = useIdentity();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      router.push(ROUTES.DEFAULT);
+    if (router.isReady && isLoggedIn) {
+      router.push(redirect?.toString() || ROUTES.DEFAULT);
     }
-  }, []);
+  }, [router.isReady]);
 
   return (
     <>

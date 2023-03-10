@@ -43,9 +43,7 @@ export function LoginForm() {
   };
 
   const handleRedirect = () => {
-    const loginRedirect = invited
-      ? ROUTES.ORGANIZATIONS
-      : /^\/$|\/login/.test(redirect?.toString()!)
+    const loginRedirect = /^\/$|\/login/.test(redirect?.toString()!)
       ? ROUTES.DEFAULT
       : redirect?.toString()!;
     router.push(`${loginRedirect || ROUTES.DEFAULT}`, undefined, {
