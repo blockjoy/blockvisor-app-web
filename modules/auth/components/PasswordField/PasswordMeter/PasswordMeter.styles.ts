@@ -14,7 +14,9 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       position: absolute;
       z-index: 4000;
-      min-width: 300px;
+      min-width: 310px;
+      max-width: 310px;
+      width: 310px;
       top: 50%;
       right: calc(100% + 22px);
       transform: translate(10px, -50%);
@@ -80,8 +82,14 @@ export const styles = {
       transition: 0.3s;
     }
 
-    :hover path {
+    :active path {
       fill: ${theme.colorText};
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      :hover path {
+        fill: ${theme.colorText};
+      }
     }
   `,
   infoButtonHidden: css`
@@ -91,22 +99,21 @@ export const styles = {
     font-weight: 600;
     color: ${theme.colorDefault};
   `,
-  hintsWrapper: (theme: ITheme) => css`
+  hintsWrapper: css`
     padding: 0;
     overflow: hidden;
     transition: height 0.5s;
   `,
   hintsContent: css`
-    display: flex;
-    flex-flow: row wrap;
-    gap: 5px;
     padding-top: 10px;
-    padding-bottom: 7px;
   `,
   hint: (theme: ITheme) => css`
+    display: inline-block;
     padding: 3px 10px;
     background: ${theme.colorLabel};
     border-radius: 13px;
+    margin-right: 5px;
+    margin-bottom: 5px;
 
     @media ${breakpoints.fromXLrg} {
       background: ${theme.colorLabel};

@@ -1,10 +1,9 @@
 import { PasswordTracker } from '@modules/auth/hooks/usePasswordStrength';
 import { SvgIcon } from '@shared/components';
 import { isMobile } from 'react-device-detect';
-import { display } from 'styles/utils.display.styles';
 import IconInfo from '@public/assets/icons/info.svg';
 import { styles } from './PasswordMeter.styles';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 export type PasswordMeterProps = {
   meter: boolean;
@@ -27,7 +26,7 @@ export const PasswordMeter = ({
 }: PasswordMeterProps) => {
   if (!meter) return null;
 
-  const hintsRef = useRef<HTMLDivElement>(null);
+  const hintsRef = useRef<HTMLUListElement>(null);
 
   const hintsClientHeight = useRef<number>(0);
 
@@ -46,9 +45,8 @@ export const PasswordMeter = ({
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     hintsClientHeight.current = hintsRef.current?.clientHeight!;
-
     if (isMobile || isCompact) {
       setHintsHeight(0);
     }
@@ -92,11 +90,10 @@ export const PasswordMeter = ({
             ></div>
           </div>
           <div
-            ref={hintsRef}
             css={[(isCompact || isMobile) && styles.hintsWrapper]}
             style={{ height: `${hintsHeight}px` }}
           >
-            <ul css={styles.hintsContent}>
+            <ul ref={hintsRef} css={styles.hintsContent}>
               <li
                 css={[
                   styles.hint,
