@@ -1,23 +1,19 @@
 import { expect, vi, it, describe, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup, waitFor, act } from '../renderer';
+import { render, screen, cleanup, waitFor } from '../renderer';
 import {
   OrganizationView,
   useDeleteOrganization,
   useGetOrganization,
-  useInvitations,
   useUpdateOrganization,
 } from '@modules/organization';
 import { useRouterSpy } from '__tests__/utils';
-import {
-  mockedGetOrganizationsResponse,
-  mockedInvitations,
-  mockedMembersResponse,
-  mockedNodesResponse,
-  routerMockBuilder,
-} from '__tests__/mocks';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
 
 import { apiClient } from '@modules/client';
+import { routerMockBuilder } from '__tests__/mocks/router';
+import { mockedNodesResponse } from '__tests__/mocks/nodes';
+import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
+import { mockedMembersResponse } from '__tests__/mocks/members';
 
 describe('Single Organization Page', () => {
   beforeEach(() => {
@@ -132,7 +128,7 @@ describe('Single Organization Page', () => {
   });
 
   it('should not display danger zone when the organization is personal', async () => {
-    const [org] = mockedGetOrganizationsResponse;
+    const [org] = mockeOrganizationsResponse;
 
     vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
       async (id: string) => [],
@@ -161,7 +157,7 @@ describe('Single Organization Page', () => {
   });
 
   it('should display all members when organization has other non default memebers', async () => {
-    const [org] = mockedGetOrganizationsResponse;
+    const [org] = mockeOrganizationsResponse;
 
     vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
       async (id: string) => mockedMembersResponse,

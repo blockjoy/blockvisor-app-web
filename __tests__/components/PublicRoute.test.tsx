@@ -1,22 +1,19 @@
 import { expect, vi, it, describe } from 'vitest';
-import { render, screen, fireEvent } from '../renderer';
+import { render } from '../renderer';
 import { LoginForm, PublicRoute } from '@modules/auth';
 import { useRouter } from 'next/router';
-import {
-  mockedBlockchainsResponse,
-  mockedGetOrganizationsResponse,
-  mockJWT,
-  mockedRouter,
-  mockUseIdentityValue,
-} from '../mocks';
 import {
   getBlockchainSpy,
   getOrganizationsSpy,
   loginSpy,
   useRouterSpy,
 } from '../utils';
+import { routerMockBuilder } from '__tests__/mocks/router';
+import { mockJWT, mockUseIdentityValue } from '__tests__/mocks/auth';
+import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
+import { mockedBlockchainsResponse } from '__tests__/mocks/blockchains';
 
-describe('LoginForm', () => {
+describe('Public Route', () => {
   vi.mock('@modules/auth/hooks/useIdentity', () => ({
     useIdentity() {
       return {
@@ -25,13 +22,15 @@ describe('LoginForm', () => {
     },
   }));
 
-  useRouterSpy.mockImplementation(() => mockedRouter);
+  useRouterSpy.mockImplementation(() =>
+    routerMockBuilder({ pathname: '/login' }),
+  );
   loginSpy.mockImplementation(async () => ({
     value: mockJWT,
   }));
   getBlockchainSpy.mockImplementation(async () => mockedBlockchainsResponse);
   getOrganizationsSpy.mockImplementation(
-    async () => mockedGetOrganizationsResponse,
+    async () => mockeOrganizationsResponse,
   );
   const router = useRouter();
   it('should redirect to /nodes when signed in', () => {
@@ -40,18 +39,6 @@ describe('LoginForm', () => {
         <LoginForm />
       </PublicRoute>,
     );
-    const emailInputValue = 'blah@foo.com';
-    const passwordInputValue = '12345678';
-
-    fireEvent.change(screen.getByDataCy('login-email-input'), {
-      target: { value: emailInputValue },
-    });
-
-    fireEvent.change(screen.getByDataCy('login-password-input'), {
-      target: { value: passwordInputValue },
-    });
-
-    fireEvent.click(screen.getByDataCy('login-submit-button'));
 
     expect(router.push).toHaveBeenCalledWith('/nodes');
   });

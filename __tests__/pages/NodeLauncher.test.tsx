@@ -1,9 +1,10 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, cleanup } from '../renderer';
-import { mockedBlockchainsResponse, routerMockBuilder } from '../mocks';
 import { useRouterSpy } from '../utils';
 import { NodeLauncher, useGetBlockchains } from '@modules/node';
 import { apiClient } from '@modules/client';
+import { routerMockBuilder } from '__tests__/mocks/router';
+import { mockedBlockchainsResponse } from '__tests__/mocks/blockchains';
 
 beforeEach(() => {
   window.scrollTo = vi.fn() as any;
