@@ -187,7 +187,7 @@ export const styles = {
       }
     }
 
-    :is(:hover, :focus, .active) div {
+    :is(:hover, :focus, :focus-within, .active) div {
       opacity: 1;
       visibility: visible;
     }
@@ -196,11 +196,11 @@ export const styles = {
       opacity: 1;
     }
 
-    :is(:hover, :focus, .active) path {
+    :is(:hover, :focus, :focus-within, .active) path {
       fill: ${theme.colorPrimary};
     }
 
-    :is(:hover, :focus, .active) .node-type-buttons {
+    :is(:hover, :focus, :focus-within, .active) .node-type-buttons {
       scale: 1;
       position: relative;
     }
