@@ -23,7 +23,7 @@ describe('Public Route', () => {
   }));
 
   useRouterSpy.mockImplementation(() =>
-    routerMockBuilder({ pathname: '/login' }),
+    routerMockBuilder({ pathname: '/login', isReady: true }),
   );
   loginSpy.mockImplementation(async () => ({
     value: mockJWT,
