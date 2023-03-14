@@ -42,7 +42,10 @@ export const styles = StyleSheet.create({
   mbAuto: { marginBottom: 'auto' },
   mtAuto: { marginTop: 'auto' },
 
-  pMed: { paddingTop: 12, paddingBottom: 12 },
+  pMed: { padding: 12 },
+  pxMed: { paddingLeft: 12, paddingRight: 12 },
+  pyMic: { paddingTop: 5, paddingBottom: 5 },
+  pyMed: { paddingTop: 12, paddingBottom: 12 },
 
   wSml: { width: '15%' },
   wMed: { width: '20%' },
@@ -71,17 +74,10 @@ export const styles = StyleSheet.create({
 
   uppercase: { textTransform: 'uppercase' },
 
-  table: {
-    marginLeft: -12,
-    marginRight: -12,
-  },
-  tableHeadingRow: { backgroundColor: '#BFF589' },
-  tableHeadingCell: { padding: '4px 12px' },
-  tableHeading: {
-    fontWeight: 500,
-    textTransform: 'uppercase',
-  },
-  tableCell: { padding: 12 },
-  tableBorder: { borderBottom: '1px solid #F4F4F4' },
-  tableBorderDashed: { borderBottom: '1px dashed #D9D8D8' },
+  bgPrimary: { backgroundColor: '#BFF589' },
+
+  borderPrimary: { borderBottom: '1px solid #F4F4F4' },
+  borderSecondary: { borderBottom: '1px dashed #D9D8D8' },
+
+  mxIndent: { marginLeft: -12, marginRight: -12 },
 });

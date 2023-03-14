@@ -45,7 +45,14 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
 
       {/* Bill Info */}
       <View style={[styles.flex, styles.flexCol, styles.mbSml]}>
-        <Text style={[styles.mbMic, styles.uppercase, styles.textGray]}>
+        <Text
+          style={[
+            styles.mbMic,
+            styles.uppercase,
+            styles.textGray,
+            styles.fontMedium,
+          ]}
+        >
           Bill to
         </Text>
         <View style={styles.textSml}>
@@ -61,7 +68,14 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
         <View style={[styles.flex, styles.flexRow]}>
           {BILL_HEADERS.map((header) => (
             <View key={header.key} style={styles.wLrg}>
-              <Text style={[styles.mbMic, styles.uppercase, styles.textGray]}>
+              <Text
+                style={[
+                  styles.mbMic,
+                  styles.uppercase,
+                  styles.textGray,
+                  styles.fontMedium,
+                ]}
+              >
                 {header.name}
               </Text>
             </View>
@@ -77,18 +91,22 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
       </View>
 
       {/* Invoice Details */}
-      <View style={[styles.flex, styles.table]}>
-        <View style={[styles.flex, styles.flexRow, styles.tableHeadingRow]}>
+      <View style={[styles.flex, styles.mxIndent]}>
+        <View style={[styles.flex, styles.flexRow, styles.bgPrimary]}>
           {INVOICE_DATA_HEADERS.map((header) => (
             <View
               key={header.key}
               style={[
-                styles.tableHeadingCell,
+                styles.pxMed,
+                styles.pyMic,
                 styles[header.width],
                 styles[header.align],
+                styles.fontMedium,
               ]}
             >
-              <Text style={styles.tableHeading}>{header.name}</Text>
+              <Text style={[styles.uppercase, styles.fontBold]}>
+                {header.name}
+              </Text>
             </View>
           ))}
         </View>
@@ -100,31 +118,31 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
                 styles.flex,
                 styles.flexRow,
                 rowIndex !== services.length - 1
-                  ? styles.tableBorder
-                  : styles.tableBorderDashed,
+                  ? styles.borderPrimary
+                  : styles.borderSecondary,
               ]}
             >
-              <View key="1" style={[styles.wLrg, styles.tableCell]}>
+              <View key="1" style={[styles.wLrg, styles.pMed]}>
                 <Text style={styles.textSml}>{row.date}</Text>
               </View>
-              <View key="2" style={[styles.wXLrg, styles.tableCell]}>
+              <View key="2" style={[styles.wXLrg, styles.pMed]}>
                 <Text style={styles.textSml}>{row.description}</Text>
               </View>
               <View
                 key="3"
-                style={[styles.wSml, styles.textRight, styles.tableCell]}
+                style={[styles.wSml, styles.textRight, styles.pMed]}
               >
                 <Text style={styles.textSml}>{row.quantity}</Text>
               </View>
               <View
                 key="4"
-                style={[styles.wSml, styles.textRight, styles.tableCell]}
+                style={[styles.wSml, styles.textRight, styles.pMed]}
               >
                 <Text style={styles.textSml}>{row.price}</Text>
               </View>
               <View
                 key="5"
-                style={[styles.wSml, styles.textRight, styles.tableCell]}
+                style={[styles.wSml, styles.textRight, styles.pMed]}
               >
                 <Text style={styles.textSml}>{row.totalPrice}</Text>
               </View>
@@ -140,15 +158,16 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
           styles.flexRow,
           styles.justifyBetween,
           styles.mbXLrg,
+          styles.fontMedium,
         ]}
       >
         <View style={styles.flex}>
-          <Text style={[styles.textGray, styles.uppercase, styles.pMed]}>
+          <Text style={[styles.textGray, styles.uppercase, styles.pyMed]}>
             Balance
           </Text>
         </View>
         <View style={styles.flex}>
-          <Text style={[styles.textRight, styles.fontBold, styles.pMed]}>
+          <Text style={[styles.textRight, styles.fontBold, styles.pyMed]}>
             $2,000.00
           </Text>
         </View>
