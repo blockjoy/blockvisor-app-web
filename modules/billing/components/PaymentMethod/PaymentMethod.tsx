@@ -35,13 +35,13 @@ export const PaymentMethod = () => {
           You have not yet added any cards. Click the button below to add one.
         </p>
         <Button onClick={handleAdding} style="primary">
-          Add a new Card
+          Add Credit Card
         </Button>
       </div>
     ) : (
       <div css={styles.preview}>
         <PaymentPreview cardNumber={CREDIT_CARD.cardnumber} />
-        <Button onClick={handleUpdate} style="outline">
+        <Button onClick={handleUpdate} size="small" style="outline">
           Update Card
         </Button>
       </div>

@@ -14,7 +14,7 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@blockjoy/blockjoy-grpc": "^1.1.58",
+    "@blockjoy/blockjoy-grpc": "^1.1.59",
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "@react-pdf/renderer": "^3.1.6",
