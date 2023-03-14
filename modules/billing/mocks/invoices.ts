@@ -9,6 +9,9 @@ export const INVOICES = [
     services: [
       {
         id: '1001',
+        date: 'ETL-Monthly',
+        description:
+          'Monthly ETL managed service API service for the period of April 2022 through January 2023',
         title: 'Montly Subscription',
         quantity: 1,
         price: '$100.00',
@@ -16,6 +19,9 @@ export const INVOICES = [
       },
       {
         id: '1002',
+        date: 'ETL-Monthly',
+        description:
+          'Monthly ETL managed service API service for the period of April 2022 through January 2023',
         title: 'Premium Customer Support',
         quantity: 2,
         price: '$30.00',
@@ -33,6 +39,9 @@ export const INVOICES = [
     services: [
       {
         id: '1001',
+        date: 'ETL-Monthly',
+        description:
+          'Monthly ETL managed service API service for the period of April 2022 through January 2023',
         title: 'Montly Subscription',
         quantity: 1,
         price: '$100.00',
@@ -40,6 +49,9 @@ export const INVOICES = [
       },
       {
         id: '1002',
+        date: 'ETL-Monthly',
+        description:
+          'Monthly ETL managed service API service for the period of April 2022 through January 2023',
         title: 'Premium Customer Support',
         quantity: 2,
         price: '$30.00',

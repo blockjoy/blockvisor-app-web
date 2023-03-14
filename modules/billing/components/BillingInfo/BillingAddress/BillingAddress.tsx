@@ -36,14 +36,14 @@ export const BillingAddress = () => {
           You have not yet added any billing addresses. Click the button below
           to add one.
         </p>
-        <Button onClick={handleAdding} style="primary">
-          Add a new Billing Address
+        <Button onClick={handleAdding} size="small" style="primary">
+          Add Billing Address
         </Button>
       </div>
     ) : (
       <div css={styles.preview}>
         <BillingAddressPreview billingAddress={BILLING_ADDRESS} />
-        <Button onClick={handleUpdate} style="outline">
+        <Button onClick={handleUpdate} size="small" style="outline">
           Update Billing Address
         </Button>
       </div>

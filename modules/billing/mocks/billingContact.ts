@@ -15,4 +15,9 @@ export const BILLING_CONTACTS = [
     name: 'Jane Doe',
     email: 'janedoe@example.com',
   },
+  {
+    id: '0002',
+    name: 'Yvonne Yoe',
+    email: 'yvonneyoe@example.com',
+  },
 ];

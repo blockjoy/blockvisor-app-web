@@ -31,8 +31,8 @@ export const BillingContacts = () => {
       ) : (
         <BillingContactsList />
       )}
-      <Button onClick={handleAdding} style="outline">
-        Add a new Billing Contact
+      <Button onClick={handleAdding} size="small" style="outline">
+        Add Billing Contact
       </Button>
     </div>
   ) : (
