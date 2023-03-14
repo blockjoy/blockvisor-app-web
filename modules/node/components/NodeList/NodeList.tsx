@@ -125,7 +125,7 @@ export const NodeList = () => {
                   rows={rows}
                   fixedRowHeight="120px"
                   onRowClick={handleNodeClick}
-                  dataCy="nodeList-tableView"
+                  tableDataCy="nodeList-tableView"
                 />
               ) : (
                 <div css={styles.gridWrapper}>
