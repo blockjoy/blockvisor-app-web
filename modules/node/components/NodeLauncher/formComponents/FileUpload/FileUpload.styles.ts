@@ -18,6 +18,11 @@ export const styles = {
     width: 100%;
     margin-bottom: 20px;
 
+    &:focus {
+      outline: 0;
+      border-color: 2px dashed var(--color-text-5-o30);
+    }
+
     @media ${breakpoints.fromXLrg} {
       max-width: 700px;
     }

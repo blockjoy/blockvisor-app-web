@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import { styles } from './Switch.styles';
 import IconLock from '@public/assets/icons/lock-12.svg';
 import { Tooltip } from '@shared/components';
@@ -8,7 +8,7 @@ type Props = {
   tabIndex?: number;
   tooltip: string;
   disabled: boolean;
-  onPropertyChanged: (e: any) => void;
+  onPropertyChanged: (e: any, name?: string, type?: string) => void;
 };
 
 export const Switch: FC<Props> = ({
@@ -18,10 +18,23 @@ export const Switch: FC<Props> = ({
   name,
   tabIndex,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div css={styles.wrapper}>
-      <label tabIndex={tabIndex}>
+      <label
+        tabIndex={tabIndex}
+        onKeyDown={(e: any) => {
+          if (e.key === 'Enter') {
+            onPropertyChanged(e, name);
+            const checked = inputRef.current?.checked;
+            if (inputRef.current) {
+              inputRef.current.checked = !checked;
+            }
+          }
+        }}
+      >
         <input
+          ref={inputRef}
           disabled={disabled}
           name={name}
           type="checkbox"

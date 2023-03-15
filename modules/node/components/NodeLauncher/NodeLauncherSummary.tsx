@@ -141,7 +141,6 @@ export const NodeLauncherSummary: FC<Props> = ({
 
         <div css={styles.buttons}>
           <button
-            tabIndex={20}
             onClick={onCreateNodeClicked}
             disabled={
               !hasNetworkList ||

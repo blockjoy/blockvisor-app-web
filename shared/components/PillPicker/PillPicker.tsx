@@ -22,13 +22,17 @@ export const PillPicker: FC<Props> = ({
         .map((item, index) => (
           <Fragment key={item}>
             <input
-              tabIndex={tabIndexStart! + index}
               css={styles.input}
               name={item}
               id={item}
               type="radio"
               onChange={() => onChange(item)}
               checked={item === selectedItem}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onChange(item);
+                }
+              }}
               value={item}
             />
             <label htmlFor={item} css={styles.label}>

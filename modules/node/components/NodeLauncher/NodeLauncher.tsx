@@ -93,14 +93,15 @@ export const NodeLauncher = () => {
     });
   };
 
-  const handlePropertyChanged = (e: any) => {
+  const handlePropertyChanged = (e: any, name?: string) => {
     setServerError('');
 
     const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
 
-    let foundProperty = nodeTypePropertiesCopy.find(
-      (property) => property.name === e.target.name,
-    );
+    let foundProperty =
+      nodeTypePropertiesCopy.find(
+        (property) => property.name === e.target.name,
+      ) ?? nodeTypePropertiesCopy.find((property) => property.name === name);
 
     if (!foundProperty) return;
 
