@@ -6,7 +6,7 @@ export const PlansList = () => {
   return (
     <div css={styles.wrapper}>
       {BILLING_PLANS.map((plan) => (
-        <SinglePlan plan={plan} />
+        <SinglePlan key={plan.id} plan={plan} />
       ))}
     </div>
   );

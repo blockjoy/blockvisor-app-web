@@ -31,8 +31,8 @@ export const SinglePlan = ({ plan }: SinglePlanProps) => {
 
       <div css={styles.listContainer}>
         <ul css={styles.list}>
-          {plan?.features.map((feature: any) => (
-            <li css={styles.listItem}>
+          {plan?.features.map((feature: any, featureIndex: number) => (
+            <li key={featureIndex} css={styles.listItem}>
               <IconCheckmark />
               <span>{feature}</span>
             </li>

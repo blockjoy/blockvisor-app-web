@@ -1,5 +1,5 @@
 import { styles } from './BillingContactForm.styles';
-import { useBillingContacts } from '@modules/billing/';
+import { useBillingContactsForm } from '@modules/billing/';
 import { Button, Input } from '@shared/components';
 import { FormProvider } from 'react-hook-form';
 import { reset } from 'styles/utils.reset.styles';
@@ -20,12 +20,9 @@ export const BillingContactForm = ({
 
     onSubmit,
 
-    name,
-    handleNameChange,
-
-    email,
-    handleEmailChange,
-  } = useBillingContacts(billingContact);
+    nameController,
+    emailController,
+  } = useBillingContactsForm(billingContact);
 
   return (
     <FormProvider {...form}>
@@ -33,14 +30,12 @@ export const BillingContactForm = ({
         <ul css={[reset.list]}>
           <li css={[styles.formItem]}>
             <Input
-              name="name"
               label="Name"
               placeholder="John Doe"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={1}
-              value={name}
-              onChange={handleNameChange}
+              {...nameController.field}
               validationOptions={{
                 required: 'Name is required',
               }}
@@ -48,15 +43,13 @@ export const BillingContactForm = ({
           </li>
           <li css={[styles.formItem]}>
             <Input
-              type="email"
               name="email"
               label="Email"
               placeholder="Email"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={2}
-              value={email}
-              onChange={handleEmailChange}
+              {...emailController.field}
             />
           </li>
         </ul>
