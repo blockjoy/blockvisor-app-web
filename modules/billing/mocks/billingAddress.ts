@@ -1,21 +1,23 @@
 export const BILLING_ADDRESS_DEFAULT = {
   name: '',
-  company: '',
-  address: '',
+  line1: '',
+  line2: '',
   city: '',
-  region: '',
-  postal: '',
+  state: '',
+  postal_code: '',
   country: '',
+  company: '',
   vat: '',
 };
 
 export const BILLING_ADDRESS = {
   name: 'John Doe',
-  company: 'BlockJoy Inc.',
-  address: '8625 South Drive',
+  line1: '8625 South Drive',
+  line2: '',
   city: 'New York',
-  region: 'Buffalo',
-  postal: '14224',
+  state: 'Buffalo',
+  postal_code: '14224',
   country: 'USA',
+  company: 'BlockJoy Inc.',
   vat: '12345678912345',
 };

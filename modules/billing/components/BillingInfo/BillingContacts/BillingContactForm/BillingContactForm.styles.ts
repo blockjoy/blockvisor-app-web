@@ -5,10 +5,7 @@ export const styles = {
   wrapper: css`
     padding: 0;
     margin: 0;
-
-    @media ${breakpoints.fromXLrg} {
-      max-width: 500px;
-    }
+    max-width: 500px;
   `,
   buttons: css`
     margin-top: 12px;

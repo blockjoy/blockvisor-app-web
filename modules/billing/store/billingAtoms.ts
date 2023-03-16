@@ -12,7 +12,20 @@ const creditCardLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const billingAddress = atom<IBillingAddress | null>({
+  key: 'billing.billingAddress',
+  default: null,
+  effects: [localStorageEffect('billingAddress')],
+});
+
+const billingAddressLoadingState = atom<LoadingState>({
+  key: 'billing.billingAddress.loadingState',
+  default: 'initializing',
+});
+
 export const billingAtoms = {
   creditCard,
   creditCardLoadingState,
+  billingAddress,
+  billingAddressLoadingState,
 };

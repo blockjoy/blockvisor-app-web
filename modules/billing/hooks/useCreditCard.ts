@@ -7,6 +7,7 @@ export const useCreditCard = (): ICreditCardHook => {
   const [creditCardLoadingState, setCreditCardLoadingState] = useRecoilState(
     billingAtoms.creditCardLoadingState,
   );
+
   const getCard = (id: string) => {
     setCreditCardLoadingState('initializing');
 

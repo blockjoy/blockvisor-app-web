@@ -2,24 +2,26 @@ import { useEffect, useState } from 'react';
 import { CreditCard, PaymentPreview, useCreditCard } from '@modules/billing';
 import { Button } from '@shared/index';
 import { styles } from './PaymentMethod.styles';
-import { useRecoilValue } from 'recoil';
-import { billingSelectors } from '@modules/billing/store/billingSelectors';
 
 export const PaymentMethod = () => {
-  const { creditCard, getCard } = useCreditCard();
-  const isAdded = useRecoilValue(billingSelectors.isAddedCreditCard);
+  const { creditCard, getCard, addCard } = useCreditCard();
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
-
-  const handleAdding = () => setIsAdding(true);
-  const handleCancel = () => setIsAdding(false);
 
   useEffect(() => {
     // getCard('card_1MlrZFB5ce1jJsfTsRthNrQW');
   }, []);
 
+  const handleAdding = () => setIsAdding(true);
+  const handleCancel = () => setIsAdding(false);
+
+  const actions: CreditCardActions = {
+    add: addCard,
+    cancel: handleCancel,
+  };
+
   return !isAdding ? (
-    !isAdded ? (
+    !creditCard ? (
       <div>
         <p css={styles.text}>
           You have not yet added any cards. Click the button below to add one.
@@ -37,6 +39,6 @@ export const PaymentMethod = () => {
       </div>
     )
   ) : (
-    <CreditCard handleCancel={handleCancel} />
+    <CreditCard actions={actions} />
   );
 };

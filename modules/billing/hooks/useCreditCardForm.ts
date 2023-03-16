@@ -1,6 +1,16 @@
-import { useController, useForm, UseFormReturn } from 'react-hook-form';
+import { useState } from 'react';
+import {
+  SubmitHandler,
+  useController,
+  useForm,
+  UseFormReturn,
+} from 'react-hook-form';
 
-export const useCreditCardForm = (): ICreditCardFormHook => {
+export const useCreditCardForm = (
+  actions: CreditCardActions,
+): ICreditCardFormHook => {
+  const [loading, setLoading] = useState<any>(false);
+
   const form: UseFormReturn<CreditCardForm> = useForm<CreditCardForm>({
     defaultValues: {
       cardNumber: '',
@@ -9,6 +19,34 @@ export const useCreditCardForm = (): ICreditCardFormHook => {
       cvc: '',
     },
   });
+
+  const onSubmit: SubmitHandler<CreditCardForm> = async ({
+    cardNumber,
+    cardHolder,
+    expDate,
+    cvc,
+  }: CreditCardForm) => {
+    setLoading(true);
+
+    const expMonth = expDate.split('/')[0];
+    const expYear = expDate.split('/')[1];
+
+    const card = {
+      cardHolder,
+      cardNumber,
+      expMonth: parseInt(expMonth),
+      expYear: parseInt(expYear),
+      cvc,
+    };
+
+    try {
+      await actions.add(card);
+      actions.cancel();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   const cardNumberController = useController({
     name: 'cardNumber',
@@ -82,7 +120,10 @@ export const useCreditCardForm = (): ICreditCardFormHook => {
   };
 
   return {
+    loading,
     form,
+
+    onSubmit,
 
     cardNumberController,
     handleCardNumberChange,

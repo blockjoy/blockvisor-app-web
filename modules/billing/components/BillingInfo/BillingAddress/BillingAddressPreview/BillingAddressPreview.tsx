@@ -1,18 +1,18 @@
 import { styles } from './BillingAddressPreview.styles';
 
 export type BillingAddressPreviewProps = {
-  billingAddress: BillingAddressForm;
+  billingAddress: IBillingAddress;
 };
 
 export const BillingAddressPreview = ({
   billingAddress: {
     name,
     company,
-    address,
+    line1,
     city,
     country,
-    region,
-    postal,
+    state,
+    postal_code,
     vat,
   },
 }: BillingAddressPreviewProps) => {
@@ -20,9 +20,9 @@ export const BillingAddressPreview = ({
     <div css={styles.address}>
       <span>{name}</span>
       <span>{company}</span>
-      <span>{address}</span>
+      <span>{line1}</span>
       <span>
-        {region}, {city} {postal}
+        {state}, {city} {postal_code}
       </span>
       <span>{country}</span>
       <span>VAT: {vat}</span>

@@ -1,19 +1,20 @@
-import { useCreditCard, useCreditCardForm } from '@modules/billing';
+import { useCreditCardForm } from '@modules/billing';
 import { Button, Input } from '@shared/index';
-import { useState } from 'react';
-import { FormProvider, SubmitHandler } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './CreditCard.styles';
 
 export type CreditCardProps = {
-  handleCancel: VoidFunction;
+  actions: CreditCardActions;
 };
 
-export const CreditCard = ({ handleCancel }: CreditCardProps) => {
-  const { addCard } = useCreditCard();
+export const CreditCard = ({ actions }: CreditCardProps) => {
   const {
+    loading,
     form,
+
+    onSubmit,
 
     cardNumberController,
     handleCardNumberChange,
@@ -26,38 +27,7 @@ export const CreditCard = ({ handleCancel }: CreditCardProps) => {
 
     cvcController,
     handleCvcChange,
-  } = useCreditCardForm();
-
-  const [loading, setLoading] = useState<any>(false);
-
-  const onSubmit: SubmitHandler<CreditCardForm> = async ({
-    cardNumber,
-    cardHolder,
-    expDate,
-    cvc,
-  }: CreditCardForm) => {
-    console.log('FORM SUBMIT init CreditCard');
-    setLoading(true);
-
-    const expMonth = expDate.split('/')[0];
-    const expYear = expDate.split('/')[1];
-
-    const card = {
-      cardHolder,
-      cardNumber,
-      expMonth: parseInt(expMonth),
-      expYear: parseInt(expYear),
-      cvc,
-    };
-
-    try {
-      await addCard(card);
-      handleCancel();
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  };
+  } = useCreditCardForm(actions);
 
   return (
     <>
@@ -147,7 +117,7 @@ export const CreditCard = ({ handleCancel }: CreditCardProps) => {
               Add
             </Button>
             <Button
-              onClick={handleCancel}
+              onClick={() => actions.cancel()}
               style="outline"
               size="small"
               tabIndex={6}
