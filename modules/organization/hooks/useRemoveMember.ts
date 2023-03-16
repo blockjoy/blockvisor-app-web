@@ -9,9 +9,20 @@ export function useRemoveMember() {
     organizationAtoms.organizationMemberLoadingState,
   );
 
+  const [organization, setOrganization] = useRecoilState(
+    organizationAtoms.selectedOrganization,
+  );
+
   const [organizationMembers, setOrganizationMembers] = useRecoilState(
     organizationAtoms.organizationMembers,
   );
+
+  const decrementMemberCount = () => {
+    setOrganization({
+      ...organization,
+      memberCount: organization?.memberCount! - 1,
+    });
+  };
 
   const removeMemberFromList = (user_id: string) => {
     const newOrganizationMembers = organizationMembers.filter(
@@ -30,6 +41,7 @@ export function useRemoveMember() {
 
     if (!isStatusResponse(response)) {
       removeMemberFromList(user_id);
+      decrementMemberCount();
       toast.success('Member Removed');
     } else {
       toast.error('Error while removing');
