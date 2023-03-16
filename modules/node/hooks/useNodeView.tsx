@@ -57,6 +57,8 @@ export const useNodeView = (): Hook => {
 
     checkForTokenError(node);
 
+    console.log('node', node);
+
     let nodeType: any;
 
     try {

@@ -60,8 +60,13 @@ export const styles = {
     }
 
     & td {
-      padding: 16px 0;
-      white-space: nowrap;
+      padding: 16px 20px 0 0;
+
+      p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
       @media ${breakpoints.toXlrg} {
         padding: 20px 16px 20px 0;

@@ -10,21 +10,27 @@ export const mapOrganizationsToRows = (
     {
       name: 'Org. Name',
       key: '1',
-      width: '300px',
+      minWidth: '300px',
+      maxWidth: '300px',
     },
     {
       name: 'Members',
       key: '2',
-      width: '300px',
+      width: '180px',
+      minWidth: '180px',
+      maxWidth: '180px',
     },
     {
       name: 'Role',
       key: '3',
-      width: '300px',
+      width: '180px',
+      minWidth: '180px',
+      maxWidth: '180px',
     },
     {
       name: '',
       key: '4',
+      textAlign: 'right',
     },
   ];
 
@@ -60,11 +66,9 @@ export const mapOrganizationsToRows = (
         component: (
           <>
             {!org.personal && (
-              <div css={[flex.display.flex]}>
-                <Button style="outline" size="small">
-                  Manage
-                </Button>
-              </div>
+              <Button style="outline" size="small">
+                Manage
+              </Button>
             )}
           </>
         ),
