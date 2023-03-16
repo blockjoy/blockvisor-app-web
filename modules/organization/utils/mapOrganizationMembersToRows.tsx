@@ -111,7 +111,9 @@ export const mapOrganizationMembersToRows = (
     {
       name: 'Email',
       key: '1',
-      width: '40%',
+      width: '300px',
+      minWidth: '300px',
+      maxWidth: '300px',
     },
     // {
     //   name: 'Joined',
@@ -121,13 +123,17 @@ export const mapOrganizationMembersToRows = (
     {
       name: '',
       key: '3',
-      width: '10%',
+      width: '60px',
+      minWidth: '60px',
+      maxWidth: '60px',
       textAlign: 'right',
     },
     {
       name: '',
       key: '4',
-      width: '5%',
+      width: '50px',
+      minWidth: '50px',
+      maxWidth: '50px',
       textAlign: 'right',
     },
   ];
@@ -211,7 +217,7 @@ export const mapOrganizationMembersToRows = (
                       )
                     }
                   >
-                    <SvgIcon size="32px">
+                    <SvgIcon size="20px">
                       <IconClose />
                     </SvgIcon>
                   </Button>

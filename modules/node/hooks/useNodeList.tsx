@@ -67,6 +67,8 @@ export const useNodeList = (): Hook => {
       queryParams.pagination,
     );
 
+    console.log('nodes', nodes);
+
     setPreloadNodes(nodes.length);
 
     if (queryParams.pagination.current_page === 1) {

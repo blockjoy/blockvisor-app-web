@@ -25,17 +25,17 @@ export const useNodeMetrics = (): Hook => {
     setIsLoading('initializing');
     const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
 
+    console.log('metrics', metrics);
+
     checkForTokenError(metrics);
 
     setNodeMetrics(metrics);
 
-    const total: number = metrics.reduce(
-      (accumulator: number, metric: NodeMetrics) => {
+    const total: number =
+      metrics?.reduce((accumulator: number, metric: NodeMetrics) => {
         const currentValue = parseInt(metric.value) ?? 0;
         return accumulator + currentValue;
-      },
-      0,
-    );
+      }, 0) ?? 0;
 
     setTotalNodes(total);
 

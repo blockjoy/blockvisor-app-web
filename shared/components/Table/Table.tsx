@@ -142,6 +142,11 @@ export const Table: React.FC<Props> = ({
                         styles.hiddenOnMobile,
                       verticalAlign ? styles[verticalAlign] : styles.middle,
                       styles.textAlign(headers[index].textAlign || 'left'),
+                      css`
+                        width: ${headers[index].width};
+                        min-width: ${headers[index].minWidth};
+                        max-width: ${headers[index].maxWidth};
+                      `,
                     ]}
                   >
                     {td.component}
