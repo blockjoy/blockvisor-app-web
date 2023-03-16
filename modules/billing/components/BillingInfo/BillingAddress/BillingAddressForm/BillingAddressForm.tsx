@@ -6,12 +6,12 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './BillingAddressForm.styles';
 
 export type BillingAddressFormProps = {
-  handleCancel: VoidFunction;
-  billingAddress: BillingAddressForm;
+  actions: BillingAddressActions;
+  billingAddress: IBillingAddress | null;
 };
 
 export const BillingAddressForm = ({
-  handleCancel,
+  actions,
   billingAddress,
 }: BillingAddressFormProps) => {
   const {
@@ -28,7 +28,7 @@ export const BillingAddressForm = ({
     regionController,
     postalController,
     vatController,
-  } = useBillingAddressForm(billingAddress);
+  } = useBillingAddressForm(billingAddress, actions);
 
   return (
     <FormProvider {...form}>
@@ -42,6 +42,7 @@ export const BillingAddressForm = ({
               labelStyles={[typo.base]}
               tabIndex={1}
               {...nameController.field}
+              ref={null}
               validationOptions={{
                 required: 'Name is required',
               }}
@@ -55,6 +56,7 @@ export const BillingAddressForm = ({
               labelStyles={[typo.base]}
               tabIndex={2}
               {...companyController.field}
+              ref={null}
             />
           </li>
           <li css={[styles.formItem]}>
@@ -65,6 +67,7 @@ export const BillingAddressForm = ({
               labelStyles={[typo.base]}
               tabIndex={3}
               {...addressController.field}
+              ref={null}
               validationOptions={{
                 required: 'Address is required',
               }}
@@ -78,6 +81,7 @@ export const BillingAddressForm = ({
               labelStyles={[typo.base]}
               tabIndex={4}
               {...cityController.field}
+              ref={null}
               validationOptions={{
                 required: 'City is required',
               }}
@@ -91,6 +95,7 @@ export const BillingAddressForm = ({
               labelStyles={[typo.base]}
               tabIndex={5}
               {...countryController.field}
+              ref={null}
               validationOptions={{
                 required: 'Country is required',
               }}
@@ -105,6 +110,7 @@ export const BillingAddressForm = ({
                 labelStyles={[typo.base]}
                 tabIndex={6}
                 {...regionController.field}
+                ref={null}
               />
             </div>
             <div>
@@ -115,6 +121,7 @@ export const BillingAddressForm = ({
                 labelStyles={[typo.base]}
                 tabIndex={7}
                 {...postalController.field}
+                ref={null}
                 validationOptions={{
                   required: 'Postal code is required',
                 }}
@@ -129,6 +136,7 @@ export const BillingAddressForm = ({
               labelStyles={[typo.base]}
               tabIndex={8}
               {...vatController.field}
+              ref={null}
             />
           </li>
         </ul>
@@ -143,7 +151,7 @@ export const BillingAddressForm = ({
             Add
           </Button>
           <Button
-            onClick={handleCancel}
+            onClick={() => actions.cancel()}
             style="outline"
             size="small"
             tabIndex={10}

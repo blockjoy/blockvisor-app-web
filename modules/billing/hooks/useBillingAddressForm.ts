@@ -9,22 +9,54 @@ import {
 import { toast } from 'react-toastify';
 
 export const useBillingAddressForm = (
-  billingAddress: BillingAddressForm,
-): IBillingAddressHook => {
+  billingAddress: IBillingAddress | null,
+  actions: BillingAddressActions,
+): IBillingAddressFormHook => {
   const [loading, setLoading] = useState(false);
 
   const form: UseFormReturn<BillingAddressForm> = useForm<BillingAddressForm>({
     defaultValues: {
-      name: billingAddress.name ?? '',
-      company: billingAddress.company ?? '',
-      address: billingAddress.address ?? '',
-      city: billingAddress.city ?? '',
-      country: billingAddress.country ?? '',
-      region: billingAddress.region ?? '',
-      postal: billingAddress.postal ?? '',
-      vat: billingAddress.vat ?? '',
+      name: billingAddress?.name ?? '',
+      company: billingAddress?.company ?? '',
+      address: billingAddress?.line1 ?? '',
+      city: billingAddress?.city ?? '',
+      country: billingAddress?.country ?? '',
+      region: billingAddress?.state ?? '',
+      postal: billingAddress?.postal_code ?? '',
+      vat: billingAddress?.vat ?? '',
     },
   });
+
+  const onSubmit: SubmitHandler<BillingAddressForm> = async ({
+    name,
+    company,
+    address,
+    city,
+    country,
+    region,
+    postal,
+    vat,
+  }: BillingAddressForm) => {
+    setLoading(true);
+
+    try {
+      await actions.add({
+        name,
+        company,
+        address,
+        city,
+        country,
+        region,
+        postal,
+        vat,
+      });
+      actions.cancel();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      if (error instanceof ApplicationError) toast.error(error.message);
+    }
+  };
 
   const nameController = useController({
     name: 'name',
@@ -73,36 +105,6 @@ export const useBillingAddressForm = (
     control: form.control,
     defaultValue: '',
   });
-
-  const onSubmit: SubmitHandler<BillingAddressForm> = async ({
-    name,
-    company,
-    address,
-    city,
-    country,
-    region,
-    postal,
-    vat,
-  }: BillingAddressForm) => {
-    console.log(
-      'FORM SUBMIT',
-      name,
-      company,
-      address,
-      city,
-      country,
-      region,
-      postal,
-      vat,
-    );
-    setLoading(true);
-    try {
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof ApplicationError) toast.error(error.message);
-    }
-  };
 
   return {
     loading,

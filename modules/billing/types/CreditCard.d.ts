@@ -33,7 +33,9 @@ interface ICreditCardHook {
 }
 
 interface ICreditCardFormHook {
+  loading?: boolean;
   form?: UseFormReturn<CreditCardForm>;
+  onSubmit?: SubmitHandler<CreditCardForm>;
   cardNumberController?: any;
   handleCardNumberChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   cardHolderController?: any;
@@ -57,4 +59,9 @@ type CreditCardForm = {
   cardNumber: string;
   expDate: string;
   cvc: string;
+};
+
+type CreditCardActions = {
+  add: (card: CreditCardParams) => void;
+  cancel: VoidFunction;
 };

@@ -1,36 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styles } from './BillingAddress.styles';
-import { BillingAddressPreview, BillingAddressForm } from '@modules/billing';
 import {
-  BILLING_ADDRESS,
-  BILLING_ADDRESS_DEFAULT,
-} from '@modules/billing/mocks/billingAddress';
+  BillingAddressPreview,
+  BillingAddressForm,
+  useBillingAddress,
+} from '@modules/billing';
 import { Button } from '@shared/components';
 
-const isAdded = true; /** REMOVE, TESTING PURPOSES */
-
 export const BillingAddress = () => {
-  const [billingAddress, setBillingAddress] = useState<BillingAddressForm>(
-    BILLING_ADDRESS_DEFAULT,
-  );
+  const { billingAddress, getBillingAddress, addBillingAddress } =
+    useBillingAddress();
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const handleAdding = () => {
-    setIsAdding(true);
-    setBillingAddress(BILLING_ADDRESS_DEFAULT);
-  };
+  useEffect(() => {
+    // getBillingAddress('test123');
+  }, []);
 
-  const handleUpdate = () => {
-    setIsAdding(true);
-    setBillingAddress(BILLING_ADDRESS);
-  };
+  const handleAdding = () => setIsAdding(true);
+  const handleCancel = () => setIsAdding(false);
 
-  const handleCancel = () => {
-    setIsAdding(false);
+  const actions: BillingAddressActions = {
+    add: addBillingAddress,
+    cancel: handleCancel,
   };
 
   return !isAdding ? (
-    !isAdded ? (
+    !billingAddress ? (
       <div>
         <p css={styles.text}>
           You have not yet added any billing addresses. Click the button below
@@ -42,16 +37,13 @@ export const BillingAddress = () => {
       </div>
     ) : (
       <div css={styles.preview}>
-        <BillingAddressPreview billingAddress={BILLING_ADDRESS} />
-        <Button onClick={handleUpdate} size="small" style="outline">
+        <BillingAddressPreview billingAddress={billingAddress} />
+        <Button onClick={handleAdding} size="small" style="outline">
           Update Billing Address
         </Button>
       </div>
     )
   ) : (
-    <BillingAddressForm
-      handleCancel={handleCancel}
-      billingAddress={billingAddress}
-    />
+    <BillingAddressForm actions={actions} billingAddress={billingAddress} />
   );
 };
