@@ -1,9 +1,14 @@
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useState } from 'react';
-import { SubmitHandler, useForm, UseFormReturn } from 'react-hook-form';
+import {
+  SubmitHandler,
+  useController,
+  useForm,
+  UseFormReturn,
+} from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export const useBillingContacts = (
+export const useBillingContactsForm = (
   billingContact: BillingContactForm,
 ): IBillingContactsHook => {
   const [loading, setLoading] = useState(false);
@@ -15,8 +20,17 @@ export const useBillingContacts = (
     },
   });
 
-  const [name, setName] = useState(billingContact.name ?? '');
-  const [email, setEmail] = useState(billingContact.email ?? '');
+  const nameController = useController({
+    name: 'name',
+    control: form.control,
+    defaultValue: '',
+  });
+
+  const emailController = useController({
+    name: 'email',
+    control: form.control,
+    defaultValue: '',
+  });
 
   const onSubmit: SubmitHandler<BillingContactForm> = async ({
     name,
@@ -32,26 +46,13 @@ export const useBillingContacts = (
     }
   };
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setName(value);
-  };
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setEmail(value);
-  };
-
   return {
     loading,
     form,
 
     onSubmit,
 
-    name,
-    handleNameChange,
-
-    email,
-    handleEmailChange,
+    nameController,
+    emailController,
   };
 };

@@ -1,15 +1,12 @@
-import { handleCreditCardInfo } from '@modules/billing';
-
 export type PaymentPreviewProps = {
-  cardNumber: string;
+  card: ICreditCard | null;
 };
 
-export const PaymentPreview = ({ cardNumber }: PaymentPreviewProps) => {
-  const { cardType, cardEnding } = handleCreditCardInfo(cardNumber);
+export const PaymentPreview = ({ card }: PaymentPreviewProps) => {
   return (
     <div>
       <p>
-        <b>{cardType}</b> ending in <b>{cardEnding}</b>
+        <b>{card?.brand}</b> ending in <b>{card?.last4}</b>
       </p>
     </div>
   );

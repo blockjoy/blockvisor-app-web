@@ -1,32 +1,22 @@
-import { useState } from 'react';
-import { CreditCard, PaymentPreview } from '@modules/billing';
-import {
-  CREDIT_CARD,
-  CREDIT_CARD_DEFAULT,
-} from '@modules/billing/mocks/creditCard';
+import { useEffect, useState } from 'react';
+import { CreditCard, PaymentPreview, useCreditCard } from '@modules/billing';
 import { Button } from '@shared/index';
 import { styles } from './PaymentMethod.styles';
-
-const isAdded = false; /** REMOVE, TESTING PURPOSES */
+import { useRecoilValue } from 'recoil';
+import { billingSelectors } from '@modules/billing/store/billingSelectors';
 
 export const PaymentMethod = () => {
-  const [creditCard, setCreditCard] =
-    useState<CreditCardForm>(CREDIT_CARD_DEFAULT);
+  const { creditCard, getCard } = useCreditCard();
+  const isAdded = useRecoilValue(billingSelectors.isAddedCreditCard);
+
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const handleAdding = () => {
-    setIsAdding(true);
-    setCreditCard(CREDIT_CARD_DEFAULT);
-  };
+  const handleAdding = () => setIsAdding(true);
+  const handleCancel = () => setIsAdding(false);
 
-  const handleUpdate = () => {
-    setIsAdding(true);
-    setCreditCard(CREDIT_CARD);
-  };
-
-  const handleCancel = () => {
-    setIsAdding(false);
-  };
+  useEffect(() => {
+    // getCard('card_1MlrZFB5ce1jJsfTsRthNrQW');
+  }, []);
 
   return !isAdding ? (
     !isAdded ? (
@@ -40,13 +30,13 @@ export const PaymentMethod = () => {
       </div>
     ) : (
       <div css={styles.preview}>
-        <PaymentPreview cardNumber={CREDIT_CARD.cardnumber} />
-        <Button onClick={handleUpdate} size="small" style="outline">
+        <PaymentPreview card={creditCard} />
+        <Button onClick={handleAdding} size="small" style="outline">
           Update Card
         </Button>
       </div>
     )
   ) : (
-    <CreditCard handleCancel={handleCancel} card={creditCard} />
+    <CreditCard handleCancel={handleCancel} />
   );
 };

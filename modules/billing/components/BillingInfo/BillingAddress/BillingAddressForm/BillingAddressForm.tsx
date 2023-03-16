@@ -1,5 +1,5 @@
 import { FormProvider } from 'react-hook-form';
-import { useBillingAddress } from '@modules/billing/';
+import { useBillingAddressForm } from '@modules/billing/';
 import { Button, Input } from '@shared/components';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -20,30 +20,15 @@ export const BillingAddressForm = ({
 
     onSubmit,
 
-    name,
-    handleNameChange,
-
-    company,
-    handleCompanyChange,
-
-    address,
-    handleAddressChange,
-
-    city,
-    handleCityChange,
-
-    country,
-    handleCountryChange,
-
-    region,
-    handleRegionChange,
-
-    postal,
-    handlePostalChange,
-
-    vat,
-    handleVatChange,
-  } = useBillingAddress(billingAddress);
+    nameController,
+    companyController,
+    addressController,
+    cityController,
+    countryController,
+    regionController,
+    postalController,
+    vatController,
+  } = useBillingAddressForm(billingAddress);
 
   return (
     <FormProvider {...form}>
@@ -51,14 +36,12 @@ export const BillingAddressForm = ({
         <ul css={[reset.list]}>
           <li css={[styles.formItem]}>
             <Input
-              name="name"
               label="Name"
               placeholder="Name"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={1}
-              value={name}
-              onChange={handleNameChange}
+              {...nameController.field}
               validationOptions={{
                 required: 'Name is required',
               }}
@@ -66,26 +49,22 @@ export const BillingAddressForm = ({
           </li>
           <li css={[styles.formItem]}>
             <Input
-              name="company"
               label="Company (optional)"
               placeholder="Company"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={2}
-              value={company}
-              onChange={handleCompanyChange}
+              {...companyController.field}
             />
           </li>
           <li css={[styles.formItem]}>
             <Input
-              name="address"
               label="Address"
               placeholder="Address"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={3}
-              value={address}
-              onChange={handleAddressChange}
+              {...addressController.field}
               validationOptions={{
                 required: 'Address is required',
               }}
@@ -93,14 +72,12 @@ export const BillingAddressForm = ({
           </li>
           <li css={[styles.formItem]}>
             <Input
-              name="city"
               label="City"
               placeholder="City"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={4}
-              value={city}
-              onChange={handleCityChange}
+              {...cityController.field}
               validationOptions={{
                 required: 'City is required',
               }}
@@ -108,14 +85,12 @@ export const BillingAddressForm = ({
           </li>
           <li css={[styles.formItem]}>
             <Input
-              name="country"
               label="Country"
               placeholder="Country"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={5}
-              value={country}
-              onChange={handleCountryChange}
+              {...countryController.field}
               validationOptions={{
                 required: 'Country is required',
               }}
@@ -124,26 +99,22 @@ export const BillingAddressForm = ({
           <li css={[styles.formItem, styles.formRow]}>
             <div>
               <Input
-                name="region"
                 label="Region"
                 placeholder="Region"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={6}
-                value={region}
-                onChange={handleRegionChange}
+                {...regionController.field}
               />
             </div>
             <div>
               <Input
-                name="postal"
                 label="Postal code"
                 placeholder="Postal code"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={7}
-                value={postal}
-                onChange={handlePostalChange}
+                {...postalController.field}
                 validationOptions={{
                   required: 'Postal code is required',
                 }}
@@ -152,14 +123,12 @@ export const BillingAddressForm = ({
           </li>
           <li css={[styles.formItem]}>
             <Input
-              name="vat"
               label="VAT Number"
               placeholder="VAT Number"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={8}
-              value={vat}
-              onChange={handleVatChange}
+              {...vatController.field}
             />
           </li>
         </ul>
