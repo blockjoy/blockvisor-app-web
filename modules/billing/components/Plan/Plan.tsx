@@ -1,5 +1,7 @@
+import { usePlans } from '@modules/billing/hooks/usePlans';
 import { BILLING_PLANS } from '@modules/billing/mocks/plan';
 import { EmptyColumn } from '@shared/index';
+import { useEffect } from 'react';
 import { styles } from './Plan.styles';
 import { PlanPreview } from './PlanPreview/PlanPreview';
 import { PlansList } from './PlansList/PlansList';
@@ -7,6 +9,12 @@ import { PlansList } from './PlansList/PlansList';
 const activePlan = !BILLING_PLANS[0];
 
 export const Plan = () => {
+  const { plans, getPlans } = usePlans();
+
+  useEffect(() => {
+    getPlans();
+  }, []);
+
   return (
     <div css={styles.wrapper}>
       {activePlan ? (
@@ -26,7 +34,7 @@ export const Plan = () => {
             align="left"
             additionalStyles={styles.emptyColumn}
           />
-          <PlansList />
+          <PlansList plans={plans} />
         </>
       )}
     </div>
