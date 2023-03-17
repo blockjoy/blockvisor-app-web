@@ -1,23 +1,23 @@
 import { styles } from './SinglePlan.styles';
 import IconCheckmark from '@public/assets/icons/checkmark-12.svg';
-import { Button } from '@shared/index';
+import { Button, formatCurrency } from '@shared/index';
 
 export type SinglePlanProps = {
-  plan: any;
+  plan: IPlan;
 };
 
 export const SinglePlan = ({ plan }: SinglePlanProps) => {
   return (
-    <div css={[styles.wrapper, plan.featured && styles.featured]}>
+    <div css={[styles.wrapper, plan.metadata.featured && styles.featured]}>
       <div css={styles.titleWrapper}>
-        <span css={styles.title}>{plan?.title}</span>
-        {plan.featured && (
+        <span css={styles.title}>{plan?.nickname}</span>
+        {plan.metadata.featured && (
           <span css={[styles.title, styles.featuredTitle]}>Best Value</span>
         )}
       </div>
 
       <div css={styles.pricing}>
-        <p css={styles.price}>{plan?.pricing}</p>
+        <p css={styles.price}>{formatCurrency(plan?.amount / 100)}</p>
         <p css={styles.priceLabel}>
           Per month
           <br />
@@ -26,20 +26,20 @@ export const SinglePlan = ({ plan }: SinglePlanProps) => {
       </div>
 
       <div css={styles.priceInfo}>
-        <p>{plan.description}</p>
+        <p>{plan.statement_descriptor}</p>
       </div>
 
       <div css={styles.listContainer}>
         <ul css={styles.list}>
-          {plan?.features.map((feature: any, featureIndex: number) => (
-            <li key={featureIndex} css={styles.listItem}>
+          {Object.keys(plan?.metadata.features).map((featureKey: string) => (
+            <li key={featureKey} css={styles.listItem}>
               <IconCheckmark />
-              <span>{feature}</span>
+              <span>{plan?.metadata.features[featureKey]}</span>
             </li>
           ))}
         </ul>
       </div>
-      <Button style={plan.featured ? 'secondary' : 'outline'}>
+      <Button style={plan.metadata.featured ? 'secondary' : 'outline'}>
         Select plan
       </Button>
     </div>
