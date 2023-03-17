@@ -13,15 +13,28 @@ export function useRemoveMember() {
     organizationAtoms.selectedOrganization,
   );
 
+  const [organizations, setOrganizations] = useRecoilState(
+    organizationAtoms.allOrganizations,
+  );
+
   const [organizationMembers, setOrganizationMembers] = useRecoilState(
     organizationAtoms.organizationMembers,
   );
 
   const decrementMemberCount = () => {
-    setOrganization({
+    const newOrg = {
       ...organization,
       memberCount: organization?.memberCount! - 1,
-    });
+    };
+
+    const organizationsCopy = [...organizations];
+
+    const index = organizations.findIndex((org) => org.id === newOrg.id);
+
+    organizationsCopy[index] = newOrg;
+
+    setOrganizations(organizationsCopy);
+    setOrganization(newOrg);
   };
 
   const removeMemberFromList = (user_id: string) => {
