@@ -1,27 +1,40 @@
-import { expect, describe, it, vi, beforeEach, afterEach, test } from 'vitest';
-import { fireEvent, render, screen, waitFor, cleanup } from '../renderer';
-import {
-  dashboardMetricsSpy,
-  getBlockchainSpy,
-  nodeListSpy,
-  useRouterSpy,
-} from '../utils';
-import { NodeList } from '@modules/node';
+import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, waitFor, cleanup, fireEvent } from '../renderer';
+import { useRouterSpy } from '../utils';
+import { NodeList, useGetBlockchains } from '@modules/node';
 import { NodeUIProvider } from '@modules/node/ui/NodeUIContext';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockedNodesResponse } from '__tests__/mocks/nodes';
 import { mockedBlockchainsResponse } from '__tests__/mocks/blockchains';
 import { mockedMetricsResponse } from '__tests__/mocks/metrics';
+import { apiClient } from '@modules/client';
+import { AppLayout } from '@modules/layout';
+
+import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
 
 beforeEach(() => {
   window.scrollTo = vi.fn() as any;
 
-  useRouterSpy.mockImplementation(() => routerMockBuilder());
-
-  getBlockchainSpy.mockImplementationOnce(
-    async () => mockedBlockchainsResponse,
+  useRouterSpy.mockImplementation(() =>
+    routerMockBuilder({ isReady: true, pathname: '/nodes' }),
   );
-  dashboardMetricsSpy.mockImplementationOnce(async () => mockedMetricsResponse);
+
+  vi.mock('@modules/client/apiClient');
+
+  vi.mocked(apiClient.getOrganizations).mockImplementationOnce(
+    async () => mockeOrganizationsResponse,
+  );
+
+  vi.mock('@modules/node/hooks/useGetBlockchains');
+  vi.mocked(useGetBlockchains).mockReturnValue({
+    getBlockchains: vi.fn(),
+    loading: false,
+    blockchains: mockedBlockchainsResponse,
+  });
+
+  vi.mocked(apiClient.getDashboardMetrics).mockImplementationOnce(
+    async () => mockedMetricsResponse,
+  );
 });
 
 afterEach(() => {
@@ -29,82 +42,103 @@ afterEach(() => {
 });
 
 describe('Node List Page', () => {
-  test('Skeleton loading', () => {
-    it('Should be visible when fetching nodes', () => {
-      nodeListSpy.mockImplementationOnce(async () => []);
+  it('Should display skeleton loader when fetching nodes', () => {
+    render(
+      <NodeUIProvider>
+        <NodeList />
+      </NodeUIProvider>,
+    );
+    expect(screen.getByDataCy('nodeList-skeleton')).toBeTruthy();
+  });
 
-      render(
+  it('Should display empty column when there are no nodes', async () => {
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(async () => []);
+
+    render(
+      <AppLayout pageTitle="Nodes">
         <NodeUIProvider>
           <NodeList />
-        </NodeUIProvider>,
-      );
-      expect(screen.getByDataCy('nodeList-skeleton')).toBeTruthy();
+        </NodeUIProvider>
+        ,
+      </AppLayout>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByDataCy('nodeList-emptyColumn')).toBeTruthy();
     });
   });
 
-  test('Node List Empty colmn', () => {
-    it('Should be visible when there are no nodes', async () => {
-      nodeListSpy.mockImplementationOnce(async () => []);
+  it('Should display one Ethereum node', async () => {
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(
+      async () => mockedNodesResponse,
+    );
 
-      render(
+    render(
+      <AppLayout pageTitle="Nodes">
         <NodeUIProvider>
           <NodeList />
-        </NodeUIProvider>,
-      );
+        </NodeUIProvider>
+      </AppLayout>,
+    );
 
-      await waitFor(() => {
-        expect(screen.getByDataCy('nodeList-emptyColumn')).toBeTruthy();
-      });
+    await waitFor(() => {
+      expect(screen.getByDataCy('nodeList-Ethereum-Node')).toBeTruthy();
     });
   });
 
-  test('Node list', () => {
-    it('Should display one Ethereum node', async () => {
-      nodeListSpy.mockImplementationOnce(async () => mockedNodesResponse);
+  it('Should display grid view by default', async () => {
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(
+      async () => mockedNodesResponse,
+    );
 
-      render(
+    render(
+      <AppLayout pageTitle="Nodes">
         <NodeUIProvider>
           <NodeList />
-        </NodeUIProvider>,
-      );
+        </NodeUIProvider>
+      </AppLayout>,
+    );
 
-      await waitFor(() => {
-        expect(screen.getByDataCy('nodeList-Ethereum-Node')).toBeTruthy();
-      });
+    await waitFor(() => {
+      expect(screen.getByDataCy('nodeList-gridView')).toBeTruthy();
     });
   });
 
-  test('Node List', () => {
-    it('Should display grid view by default', async () => {
-      nodeListSpy.mockImplementationOnce(async () => mockedNodesResponse);
+  it('Should display total 3 nodes', async () => {
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(
+      async () => mockedNodesResponse,
+    );
 
-      render(
+    render(
+      <AppLayout pageTitle="Nodes">
         <NodeUIProvider>
           <NodeList />
-        </NodeUIProvider>,
-      );
+        </NodeUIProvider>
+      </AppLayout>,
+    );
 
-      await waitFor(() => {
-        expect(screen.getByDataCy('nodeList-gridView')).toBeTruthy();
-      });
+    await waitFor(() => {
+      expect(screen.getByDataCy('nodeList-header').textContent).toEqual('3 ');
     });
   });
 
-  test('Node List', () => {
-    it('Should switch to table view when clicked on list view button', async () => {
-      nodeListSpy.mockImplementationOnce(async () => mockedNodesResponse);
+  it('Should switch to table view when clicked on list view button', async () => {
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(
+      async () => mockedNodesResponse,
+    );
 
-      render(
+    render(
+      <AppLayout pageTitle="Nodes">
         <NodeUIProvider>
           <NodeList />
-        </NodeUIProvider>,
-      );
+        </NodeUIProvider>
+      </AppLayout>,
+    );
 
-      fireEvent.click(screen.getByDataCy('nodeList-tableView-button'));
+    fireEvent.click(screen.getByDataCy('nodeList-tableView-button'));
 
-      await waitFor(() => {
-        expect(screen.getByDataCy('nodeList-tableView')).toBeTruthy();
-      });
+    await waitFor(() => {
+      expect(screen.getByDataCy('nodeList-tableView')).toBeTruthy();
     });
   });
 });
