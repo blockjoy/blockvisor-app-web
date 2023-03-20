@@ -15,7 +15,7 @@ export enum PasswordFieldType {
 
 export type PasswordFieldProps = {
   loading: boolean;
-  tabIndex: number;
+  tabIndex?: number;
   label?: string;
   name: string;
   placeholder: string;
@@ -88,11 +88,7 @@ export const PasswordField = ({
           },
         }}
         rightIcon={
-          <PasswordToggle
-            tabIndex={tabIndex + 10}
-            activeType={activeType}
-            onClick={handleIconClick}
-          />
+          <PasswordToggle activeType={activeType} onClick={handleIconClick} />
         }
       />
       <PasswordMeter

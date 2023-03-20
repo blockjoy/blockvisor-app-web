@@ -76,14 +76,12 @@ export function NewPasswordForm() {
               <li css={[spacing.bottom.mediumSmall]}>
                 <PasswordField
                   loading={isLoading}
-                  tabIndex={4}
                   name="password"
                   placeholder="Password"
                 />
               </li>
               <li css={[spacing.bottom.medium]}>
                 <Input
-                  tabIndex={2}
                   labelStyles={[display.visuallyHidden]}
                   name="confirmPassword"
                   placeholder="Confirm password"
@@ -98,7 +96,6 @@ export function NewPasswordForm() {
                   }}
                   rightIcon={
                     <PasswordToggle
-                      tabIndex={5}
                       name="confirmPassword"
                       activeType={activeType['confirmPassword']}
                       onClick={handleIconClick}
@@ -107,13 +104,7 @@ export function NewPasswordForm() {
                 />
               </li>
             </ul>
-            <Button
-              tabIndex={3}
-              size="medium"
-              display="block"
-              style="primary"
-              type="submit"
-            >
+            <Button size="medium" display="block" style="primary" type="submit">
               Reset Password
             </Button>
           </form>

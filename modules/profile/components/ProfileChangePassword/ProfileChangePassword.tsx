@@ -80,7 +80,6 @@ export function ProfileChangePassword() {
           <ul css={[reset.list]}>
             <li css={[spacing.bottom.medium]}>
               <Input
-                tabIndex={1}
                 disabled={loading}
                 label="Current password"
                 name="currentPassword"
@@ -100,14 +99,12 @@ export function ProfileChangePassword() {
                     name="currentPassword"
                     activeType={activeType['currentPassword']}
                     onClick={handleIconClick}
-                    tabIndex={7}
                   />
                 }
               />
             </li>
             <li css={[spacing.bottom.medium]}>
               <PasswordField
-                tabIndex={2}
                 loading={loading}
                 label="New password"
                 name="newPassword"
@@ -118,7 +115,6 @@ export function ProfileChangePassword() {
             </li>
             <li css={[spacing.bottom.medium]}>
               <Input
-                tabIndex={4}
                 label="Confirm new password"
                 disabled={loading}
                 name="confirmPassword"
@@ -136,7 +132,6 @@ export function ProfileChangePassword() {
                 }}
                 rightIcon={
                   <PasswordToggle
-                    tabIndex={8}
                     name="confirmPassword"
                     activeType={activeType['confirmPassword']}
                     onClick={handleIconClick}
@@ -146,7 +141,6 @@ export function ProfileChangePassword() {
             </li>
           </ul>
           <Button
-            tabIndex={6}
             loading={loading}
             customCss={[styles.loadingButton]}
             disabled={!isDirty || loading || !isValid}
