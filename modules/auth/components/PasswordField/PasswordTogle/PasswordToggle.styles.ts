@@ -10,6 +10,7 @@ const passwordToggle = css`
   }
 
   &:hover,
+  &:focus,
   &:active {
     & > svg {
       path {
