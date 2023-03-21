@@ -45,6 +45,17 @@ const billingContactsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const invoice = atom<IInvoice | null>({
+  key: 'billing.invoice',
+  default: null,
+  effects: [localStorageEffect('invoices')],
+});
+
+const invoiceLoadingState = atom<LoadingState>({
+  key: 'billing.invoice.loadingState',
+  default: 'initializing',
+});
+
 const invoices = atom<IInvoice[]>({
   key: 'billing.invoices',
   default: [],
@@ -69,6 +80,8 @@ export const billingAtoms = {
   plans,
   plansLoadingState,
 
+  invoice,
+  invoiceLoadingState,
   invoices,
   invoicesLoadingState,
 };

@@ -156,7 +156,10 @@ interface IInvoice {
 }
 
 interface IInvoiceHook {
+  invoice: IInvoice | null;
   invoices: IInvoice[] | null;
+  invoiceLoadingState: LoadingState;
   invoicesLoadingState: LoadingState;
+  getInvoice: (id: RouterId) => void;
   getInvoices: VoidFunction;
 }
