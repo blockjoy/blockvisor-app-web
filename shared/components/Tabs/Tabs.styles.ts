@@ -27,7 +27,8 @@ export const styles = {
     transition: color 0.15s var(--transition-easing-cubic),
       border-color 0.15s var(--transition-easing-cubic);
 
-    :hover {
+    :hover,
+    :focus {
       border-bottom: 1px solid var(--color-text-2);
       color: var(--color-text-3);
     }

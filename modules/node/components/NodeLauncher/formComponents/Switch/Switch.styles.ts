@@ -13,6 +13,9 @@ export const styles = {
       visibility: visible;
     }
   `,
+  label: css`
+    outline: none;
+  `,
   input: (theme: ITheme) => css`
     position: absolute;
     scale: 0;
@@ -29,6 +32,14 @@ export const styles = {
     :checked ~ .switch .handle {
       translate: 40px 0;
       background: ${theme.colorPrimary};
+    }
+
+    :focus:not(:checked) + .switch {
+      border: 1px solid var(--color-text-5);
+    }
+
+    :focus:not(:checked) ~ span .handle {
+      background-color: var(--color-text-5);
     }
   `,
   switch: (theme: ITheme) => css`

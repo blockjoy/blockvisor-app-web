@@ -23,6 +23,7 @@ export const Switch: FC<Props> = ({
     <div css={styles.wrapper}>
       <label
         tabIndex={tabIndex}
+        css={styles.label}
         onKeyDown={(e: any) => {
           if (e.key === 'Enter') {
             onPropertyChanged(e, name);
