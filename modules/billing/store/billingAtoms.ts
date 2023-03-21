@@ -34,12 +34,26 @@ const plansLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const billingContacts = atom<IBillingContact[]>({
+  key: 'billing.contacts',
+  default: [],
+  effects: [localStorageEffect('billingContacts')],
+});
+
+const billingContactsLoadingState = atom<LoadingState>({
+  key: 'billing.contacts.loadingState',
+  default: 'initializing',
+});
+
 export const billingAtoms = {
   creditCard,
   creditCardLoadingState,
 
   billingAddress,
   billingAddressLoadingState,
+
+  billingContacts,
+  billingContactsLoadingState,
 
   plans,
   plansLoadingState,

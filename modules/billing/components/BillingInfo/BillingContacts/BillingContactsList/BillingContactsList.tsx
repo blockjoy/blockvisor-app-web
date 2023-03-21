@@ -1,16 +1,45 @@
 import { Table } from '@shared/index';
-import { BILLING_CONTACTS } from '@modules/billing/mocks/billingContact';
-import { mapBillingContactsToRows } from '@modules/billing/';
+import {
+  BillingContactDialog,
+  mapBillingContactsToRows,
+} from '@modules/billing/';
+import { useState } from 'react';
 
-export const BillingContactsList = () => {
-  const handleRemove = () => {
-    () => console.log('REMOVED');
+export type BillingContactsListProps = {
+  billingContacts: IBillingContact[];
+  handleRemove: (id: string) => void;
+};
+
+export const BillingContactsList = ({
+  billingContacts,
+  handleRemove,
+}: BillingContactsListProps) => {
+  const [activeView, setActiveView] =
+    useState<string | 'list' | 'action'>('list');
+
+  const [activeContact, setActiveContact] = useState<any>(null);
+
+  const handleRemoveAction = (contact: any) => {
+    setActiveContact(contact);
+    setActiveView('action');
   };
+  const onHide = () => setActiveView('list');
 
   const { headers, rows } = mapBillingContactsToRows(
-    BILLING_CONTACTS,
-    handleRemove,
+    billingContacts,
+    handleRemoveAction,
   );
 
-  return <Table isLoading={'finished'} headers={headers} rows={rows} />;
+  return (
+    <>
+      <Table isLoading={'finished'} headers={headers} rows={rows} />
+      {activeView === 'action' && (
+        <BillingContactDialog
+          activeContact={activeContact}
+          handleRemove={handleRemove}
+          onHide={onHide}
+        />
+      )}
+    </>
+  );
 };

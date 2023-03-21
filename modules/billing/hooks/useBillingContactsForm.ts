@@ -9,16 +9,31 @@ import {
 import { toast } from 'react-toastify';
 
 export const useBillingContactsForm = (
-  billingContact: BillingContactForm,
-): IBillingContactsHook => {
+  actions: BillingContactsActions,
+): IBillingContactsFormHook => {
   const [loading, setLoading] = useState(false);
 
   const form: UseFormReturn<BillingContactForm> = useForm<BillingContactForm>({
     defaultValues: {
-      name: billingContact.name ?? '',
-      email: billingContact.email ?? '',
+      name: '',
+      email: '',
     },
   });
+
+  const onSubmit: SubmitHandler<BillingContactForm> = async ({
+    name,
+    email,
+  }: BillingContactForm) => {
+    setLoading(true);
+    try {
+      await actions.add({ name, email });
+      actions.cancel();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      if (error instanceof ApplicationError) toast.error(error.message);
+    }
+  };
 
   const nameController = useController({
     name: 'name',
@@ -31,20 +46,6 @@ export const useBillingContactsForm = (
     control: form.control,
     defaultValue: '',
   });
-
-  const onSubmit: SubmitHandler<BillingContactForm> = async ({
-    name,
-    email,
-  }: BillingContactForm) => {
-    console.log('FORM SUBMIT', name, email);
-    setLoading(true);
-    try {
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof ApplicationError) toast.error(error.message);
-    }
-  };
 
   return {
     loading,

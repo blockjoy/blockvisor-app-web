@@ -14,6 +14,7 @@ export * from './components/BillingInfo/BillingContacts/BillingContacts';
 export * from './components/BillingInfo/BillingContacts/BillingContactsPreview/BillingContactsPreview';
 export * from './components/BillingInfo/BillingContacts/BillingContactsList/BillingContactsList';
 export * from './components/BillingInfo/BillingContacts/BillingContactForm/BillingContactForm';
+export * from './components/BillingInfo/BillingContacts/BillingContactDialog/BillingContactDialog';
 
 export * from './components/Invoices/Invoices';
 export * from './components/Invoices/InvoiceView/InvoiceView';

@@ -1,44 +1,49 @@
 import { BillingContactsList, BillingContactForm } from '@modules/billing';
 import { styles } from './BillingContacts.styles';
-import { BILLING_CONTACT_DEFAULT } from '@modules/billing/mocks/billingContact';
 import { Button } from '@shared/components';
-import { useState } from 'react';
-
-const isAdded = true; /** REMOVE, TESTING PURPOSES */
+import { useEffect, useState } from 'react';
+import { useBillingContacts } from '@modules/billing/hooks/useBillingContacts';
 
 export const BillingContacts = () => {
-  const [billingContact, setBillingContact] = useState<BillingContactForm>(
-    BILLING_CONTACT_DEFAULT,
-  );
+  const {
+    getBillingContacts,
+    billingContacts,
+    addBillingContact,
+    removeBillingContact,
+  } = useBillingContacts();
+
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
-  const handleAdding = () => {
-    setIsAdding(true);
-    setBillingContact(BILLING_CONTACT_DEFAULT);
-  };
+  useEffect(() => {
+    // getBillingContacts('contact_1MlrZFB5ce1jJsfTsRthNrQW');
+  }, []);
 
-  const handleCancel = () => {
-    setIsAdding(false);
+  const handleAdding = () => setIsAdding(true);
+  const handleCancel = () => setIsAdding(false);
+
+  const actions: BillingContactsActions = {
+    add: addBillingContact,
+    cancel: handleCancel,
   };
 
   return !isAdding ? (
     <div css={styles.wrapper}>
-      {!isAdded ? (
+      {!billingContacts.length ? (
         <p>
           You have not yet added any billing contacts. Click the button below to
           add one.
         </p>
       ) : (
-        <BillingContactsList />
+        <BillingContactsList
+          billingContacts={billingContacts}
+          handleRemove={removeBillingContact}
+        />
       )}
       <Button onClick={handleAdding} size="small" style="outline">
         Add Billing Contact
       </Button>
     </div>
   ) : (
-    <BillingContactForm
-      handleCancel={handleCancel}
-      billingContact={billingContact}
-    />
+    <BillingContactForm actions={actions} />
   );
 };
