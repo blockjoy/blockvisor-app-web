@@ -80,4 +80,11 @@ export const styles = StyleSheet.create({
   borderSecondary: { borderBottom: '1px dashed #D9D8D8' },
 
   mxIndent: { marginLeft: -12, marginRight: -12 },
+
+  ellipsis: {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    maxWidth: '95%',
+  },
 });

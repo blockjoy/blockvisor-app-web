@@ -8,3 +8,13 @@ type TableHeader = {
   isHiddenOnMobile?: boolean;
   component?: EmotionJSX.Element;
 };
+
+type TableRow = {
+  key: string;
+  cells: TableCell[];
+};
+
+type TableCell = {
+  key: string;
+  component: EmotionJSX.Element;
+};

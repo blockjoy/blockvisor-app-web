@@ -25,7 +25,7 @@ export const SinglePlan = ({ plan }: SinglePlanProps) => {
       </div>
 
       <div css={styles.pricing}>
-        <p css={styles.price}>{formatCurrency(plan?.amount / 100)}</p>
+        <p css={styles.price}>{formatCurrency(plan?.amount)}</p>
         <p css={styles.priceLabel}>
           Per month
           <br />

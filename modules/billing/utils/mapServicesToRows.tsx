@@ -1,11 +1,12 @@
-import { styles } from '../components/Invoices/InvoiceView/Services/Services.styles';
+import { formatCurrency } from '@shared/index';
+import { typo } from 'styles/utils.typography.styles';
 
-export const mapServicesToRows = (services?: any[]) => {
+export const mapServicesToRows = (services?: any[], total?: number) => {
   const headers: TableHeader[] = [
     {
       name: 'Service Name',
       key: '1',
-      width: '300px',
+      width: '200px',
     },
     {
       name: 'Quantity',
@@ -24,14 +25,16 @@ export const mapServicesToRows = (services?: any[]) => {
     },
   ];
 
-  const rows: any = services?.map((service: any, idx: any) => ({
+  const rows: TableRow[] = services!.map((service: any, idx: any) => ({
     key: service.id ?? `${idx}`,
     cells: [
       {
         key: '1',
         component: (
           <>
-            <p>{service.title}</p>
+            <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+              {service.description}
+            </p>
           </>
         ),
       },
@@ -47,7 +50,7 @@ export const mapServicesToRows = (services?: any[]) => {
         key: '3',
         component: (
           <>
-            <p>{service.price}</p>
+            <p>{formatCurrency(service.amount)}</p>
           </>
         ),
       },
@@ -55,7 +58,7 @@ export const mapServicesToRows = (services?: any[]) => {
         key: '4',
         component: (
           <>
-            <p>{service.totalPrice}</p>
+            <p>{formatCurrency(service.amount)}</p>
           </>
         ),
       },
@@ -77,7 +80,15 @@ export const mapServicesToRows = (services?: any[]) => {
         key: '3',
         component: (
           <>
-            <p css={styles.totalTitle}>Grand Total</p>
+            <p
+              style={{
+                fontSize: '10px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+              }}
+            >
+              Grand Total
+            </p>
           </>
         ),
       },
@@ -85,7 +96,14 @@ export const mapServicesToRows = (services?: any[]) => {
         key: '4',
         component: (
           <>
-            <p css={styles.totalPrice}>$160.00</p>
+            <p
+              style={{
+                fontSize: '20px',
+                width: '21.43%',
+              }}
+            >
+              {formatCurrency(total!)}
+            </p>
           </>
         ),
       },

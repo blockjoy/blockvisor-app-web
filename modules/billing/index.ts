@@ -30,6 +30,7 @@ export * from './hooks/useBillingContacts';
 export * from './hooks/useBillingContactsForm';
 export * from './hooks/useCreditCard';
 export * from './hooks/useCreditCardForm';
+export * from './hooks/useInvoices';
 
 export * from './store/billingAtoms';
 

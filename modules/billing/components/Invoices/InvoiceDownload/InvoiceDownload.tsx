@@ -11,25 +11,34 @@ import {
 import IconDownload from '@public/assets/icons/download-12.svg';
 
 export type InvoiceDownloadProps = {
-  invoice: any;
+  invoice: IInvoice;
 };
 
-export const InvoiceDownload = ({ invoice }: any) => (
-  <div>
-    <PDFDownloadLink
-      document={<InvoicePDF invoice={invoice} />}
-      fileName="invoice.pdf"
-      css={[
-        reset.button,
-        button,
-        buttonSize['small'],
-        buttonBorder['rounded'],
-        buttonDisplay['inline'],
-        buttonStyle['outline'],
-      ]}
-    >
-      <IconDownload />
-      <span>Download</span>
-    </PDFDownloadLink>
-  </div>
-);
+export const InvoiceDownload = ({ invoice }: InvoiceDownloadProps) => {
+  const handleDownloadClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+  ): void => {
+    event.stopPropagation();
+  };
+
+  return (
+    <div>
+      <PDFDownloadLink
+        document={<InvoicePDF invoice={invoice} />}
+        fileName="invoice.pdf"
+        onClick={handleDownloadClick}
+        css={[
+          reset.button,
+          button,
+          buttonSize['small'],
+          buttonBorder['rounded'],
+          buttonDisplay['inline'],
+          buttonStyle['outline'],
+        ]}
+      >
+        <IconDownload />
+        <span>Download</span>
+      </PDFDownloadLink>
+    </div>
+  );
+};

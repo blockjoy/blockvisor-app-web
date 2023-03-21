@@ -30,7 +30,9 @@ export const BillingContacts = () => {
     const isAdded = checkIfExists(billingContacts, contact?.email);
 
     if (isAdded) {
-      toast.error(`${contact?.email} is already added as a Billing Contact`);
+      toast.error(
+        `${contact?.email?.toLowerCase()} is already added as a Billing Contact`,
+      );
       return;
     }
 
