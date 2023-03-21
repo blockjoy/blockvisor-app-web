@@ -6,14 +6,10 @@ import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 
 export type BillingContactFormProps = {
-  handleCancel: VoidFunction;
-  billingContact: BillingContactForm;
+  actions: BillingContactsActions;
 };
 
-export const BillingContactForm = ({
-  handleCancel,
-  billingContact,
-}: BillingContactFormProps) => {
+export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
   const {
     loading,
     form,
@@ -22,7 +18,7 @@ export const BillingContactForm = ({
 
     nameController,
     emailController,
-  } = useBillingContactsForm(billingContact);
+  } = useBillingContactsForm(actions);
 
   return (
     <FormProvider {...form}>
@@ -36,6 +32,7 @@ export const BillingContactForm = ({
               labelStyles={[typo.base]}
               tabIndex={1}
               {...nameController.field}
+              ref={null}
               validationOptions={{
                 required: 'Name is required',
               }}
@@ -50,6 +47,10 @@ export const BillingContactForm = ({
               labelStyles={[typo.base]}
               tabIndex={2}
               {...emailController.field}
+              ref={null}
+              validationOptions={{
+                required: 'Email is required',
+              }}
             />
           </li>
         </ul>
@@ -64,7 +65,7 @@ export const BillingContactForm = ({
             Add
           </Button>
           <Button
-            onClick={handleCancel}
+            onClick={() => actions.cancel()}
             style="outline"
             size="small"
             tabIndex={10}

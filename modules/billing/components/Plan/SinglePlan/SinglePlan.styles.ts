@@ -73,7 +73,7 @@ export const styles = {
       margin-bottom: 5px;
     }
 
-    span {
+    span:first-of-type {
       margin-left: 12px;
     }
   `,

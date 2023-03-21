@@ -2,8 +2,8 @@ import { Button } from '@shared/components';
 import IconClose from '@public/assets/icons/close-12.svg';
 
 export const mapBillingContactsToRows = (
-  billingContacts?: any[],
-  handleRemove?: VoidFunction,
+  billingContacts: IBillingContact[],
+  handleRemove: (id: string) => void,
 ) => {
   const headers: TableHeader[] = [
     {
@@ -52,7 +52,7 @@ export const mapBillingContactsToRows = (
               tooltip="Remove"
               style="icon"
               size="medium"
-              onClick={handleRemove}
+              onClick={() => handleRemove(contact)}
             >
               <IconClose />
             </Button>

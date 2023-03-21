@@ -1,9 +1,17 @@
 import { styles } from './SinglePlan.styles';
 import IconCheckmark from '@public/assets/icons/checkmark-12.svg';
 import { Button, formatCurrency } from '@shared/index';
+import { capitalize } from 'utils/capitalize';
 
 export type SinglePlanProps = {
   plan: IPlan;
+};
+
+const FEATURES_HEADINGS = {
+  max_nodes: 'Nodes',
+  max_organizations: 'Organizations',
+  max_collaborators: 'Collaborators',
+  support_type: 'Support',
 };
 
 export const SinglePlan = ({ plan }: SinglePlanProps) => {
@@ -34,7 +42,10 @@ export const SinglePlan = ({ plan }: SinglePlanProps) => {
           {Object.keys(plan?.metadata.features).map((featureKey: string) => (
             <li key={featureKey} css={styles.listItem}>
               <IconCheckmark />
-              <span>{plan?.metadata.features[featureKey]}</span>
+              <span>
+                {capitalize(plan?.metadata.features[featureKey])}
+              </span>{' '}
+              <span>{FEATURES_HEADINGS[featureKey]}</span>
             </li>
           ))}
         </ul>
