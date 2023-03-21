@@ -2,7 +2,7 @@ import { Table } from '@shared/index';
 import {
   BillingContactDialog,
   mapBillingContactsToRows,
-} from '@modules/billing/';
+} from '@modules/billing';
 import { useState } from 'react';
 
 export type BillingContactsListProps = {
@@ -15,13 +15,13 @@ export const BillingContactsList = ({
   handleRemove,
 }: BillingContactsListProps) => {
   const [activeView, setActiveView] =
-    useState<string | 'list' | 'action'>('list');
+    useState<string | 'list' | 'dialog'>('list');
 
   const [activeContact, setActiveContact] = useState<any>(null);
 
   const handleRemoveAction = (contact: any) => {
     setActiveContact(contact);
-    setActiveView('action');
+    setActiveView('dialog');
   };
   const onHide = () => setActiveView('list');
 
@@ -33,7 +33,7 @@ export const BillingContactsList = ({
   return (
     <>
       <Table isLoading={'finished'} headers={headers} rows={rows} />
-      {activeView === 'action' && (
+      {activeView === 'dialog' && (
         <BillingContactDialog
           activeContact={activeContact}
           handleRemove={handleRemove}
