@@ -1123,10 +1123,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@blockjoy/blockjoy-grpc@^1.1.59":
-  version "1.1.59"
-  resolved "https://registry.yarnpkg.com/@blockjoy/blockjoy-grpc/-/blockjoy-grpc-1.1.59.tgz#ccffd22a5e36d8acbdd8e91939d74830dae74809"
-  integrity sha512-LMvL6JootCBJl0svLJ+ROYz0iFg6KwRYExb0fODEZptKi+Gb6TE0KO2UMuIhHPyGLHZMPi2ioDaVk8qQNl8uMw==
+"@blockjoy/blockjoy-grpc@^1.1.62":
+  version "1.1.62"
+  resolved "https://registry.yarnpkg.com/@blockjoy/blockjoy-grpc/-/blockjoy-grpc-1.1.62.tgz#5fd381630afe85216765d69eb6c350e567fa00ee"
+  integrity sha512-FxDZNzOgCOjWw84qBg/SRbEe7q5AxArHluhCtx8zRYQ5X2uZixEiNLXz17YE8sxJ5RAOoPtLJYxDu3PpKDCeOw==
   dependencies:
     google-protobuf "~3.15.8"
     grpc-web "^1.3.1"
