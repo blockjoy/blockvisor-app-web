@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { CREDIT_CARD } from '../mocks/creditCard';
-import { billingAtoms } from '../store/billingAtoms';
+import { billingAtoms } from '@modules/billing';
 
 export const useCreditCard = (): ICreditCardHook => {
   const [creditCard, setCreditCard] = useRecoilState(billingAtoms.creditCard);

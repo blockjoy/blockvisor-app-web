@@ -1,8 +1,10 @@
 import { Badge } from '@shared/components';
+import { formatCurrency, formatDate } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
-import { InvoiceDownload } from '../components/Invoices/InvoiceDownload/InvoiceDownload';
+import { typo } from 'styles/utils.typography.styles';
+import { InvoiceDownload } from '@modules/billing';
 
-export const mapInvoicesToRows = (invoices?: any[]) => {
+export const mapInvoicesToRows = (invoices?: IInvoice[] | null) => {
   const headers: TableHeader[] = [
     {
       name: 'ID',
@@ -12,32 +14,35 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
     {
       name: 'Date',
       key: '2',
-      width: '300px',
+      width: '200px',
     },
     {
       name: 'Amount',
       key: '3',
-      width: '300px',
+      width: '150px',
     },
     {
       name: 'Status',
       key: '4',
-      width: '300px',
+      width: '100px',
     },
     {
       name: '',
       key: '5',
+      width: '150px',
     },
   ];
 
-  const rows: any = invoices?.map((invoice: any, idx: any) => ({
+  const rows: TableRow[] = invoices!.map((invoice: any, idx: any) => ({
     key: invoice.id ?? `${idx}`,
     cells: [
       {
         key: '1',
         component: (
           <>
-            <p>{invoice.id}</p>
+            <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+              {invoice.id}
+            </p>
           </>
         ),
       },
@@ -45,7 +50,7 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         key: '2',
         component: (
           <>
-            <p>{new Date(invoice.createdAt).toLocaleDateString()}</p>
+            <p>{formatDate(invoice.created)}</p>
           </>
         ),
       },
@@ -53,7 +58,7 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         key: '3',
         component: (
           <>
-            <p>{invoice.amount}</p>
+            <p>{formatCurrency(invoice.total)}</p>
           </>
         ),
       },

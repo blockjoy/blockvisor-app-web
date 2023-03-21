@@ -4,10 +4,11 @@ import { styles } from './Services.styles';
 
 export type ServicesProps = {
   services: any[];
+  total: number;
 };
 
-export const Services = ({ services }: any) => {
-  const { headers, rows } = mapServicesToRows(services);
+export const Services = ({ services, total }: any) => {
+  const { headers, rows } = mapServicesToRows(services, total);
 
   return (
     <Table

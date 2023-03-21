@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { BILLING_ADDRESS } from '../mocks/billingAddress';
-import { billingAtoms } from '../store/billingAtoms';
+import { billingAtoms } from '@modules/billing';
 
 export const useBillingAddress = (): IBillingAddressHook => {
   const [billingAddress, setBillingAddress] = useRecoilState(

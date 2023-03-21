@@ -1,16 +1,17 @@
-import { Page, Text, View, Document, Image, Font } from '@react-pdf/renderer';
+import { Page, Text, View, Document } from '@react-pdf/renderer';
 import { BILL_HEADERS, INVOICE_DATA_HEADERS } from '@shared/constants/invoice';
 import { InvoiceLogo } from './InvoiceLogo';
 import { InvoiceQRCode } from './InvoiceQRCode';
 import { styles } from './InvoicePDF.styles';
+import { formatCurrency, formatDate } from '@shared/index';
 
 export type InvoicePDFProps = {
-  invoice: any;
+  invoice: IInvoice;
 };
 
-const billData = ['76', '02/23/2023', 'Due on receipt', '02/23/2023'];
-
-export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
+export const InvoicePDF = ({
+  invoice: { id, amount_due, created, due_date, lines },
+}: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {/* Company Brand */}
@@ -82,11 +83,18 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
           ))}
         </View>
         <View style={[styles.flex, styles.flexRow]}>
-          {billData.map((data, dataIndex) => (
-            <View key={dataIndex} style={styles.wLrg}>
-              <Text>{data}</Text>
-            </View>
-          ))}
+          <View style={styles.wLrg}>
+            <Text style={styles.ellipsis}>{id}</Text>
+          </View>
+          <View style={styles.wLrg}>
+            <Text>{formatDate(created)}</Text>
+          </View>
+          <View style={styles.wLrg}>
+            <Text>Due on receipt</Text>
+          </View>
+          <View style={styles.wLrg}>
+            <Text>{formatDate(due_date ? due_date : created)}</Text>
+          </View>
         </View>
       </View>
 
@@ -111,19 +119,21 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
           ))}
         </View>
         <View>
-          {services.map((row: any, rowIndex: any) => (
+          {lines.data.map((row: any, rowIndex: any) => (
             <View
               key={row.id}
               style={[
                 styles.flex,
                 styles.flexRow,
-                rowIndex !== services.length - 1
+                rowIndex !== lines.data.length - 1
                   ? styles.borderPrimary
                   : styles.borderSecondary,
               ]}
             >
               <View key="1" style={[styles.wLrg, styles.pMed]}>
-                <Text style={styles.textSml}>{row.date}</Text>
+                <Text style={styles.textSml}>
+                  {formatDate(row.price.created)}
+                </Text>
               </View>
               <View key="2" style={[styles.wXLrg, styles.pMed]}>
                 <Text style={styles.textSml}>{row.description}</Text>
@@ -138,13 +148,13 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
                 key="4"
                 style={[styles.wSml, styles.textRight, styles.pMed]}
               >
-                <Text style={styles.textSml}>{row.price}</Text>
+                <Text style={styles.textSml}>{formatCurrency(row.amount)}</Text>
               </View>
               <View
                 key="5"
                 style={[styles.wSml, styles.textRight, styles.pMed]}
               >
-                <Text style={styles.textSml}>{row.totalPrice}</Text>
+                <Text style={styles.textSml}>{formatCurrency(row.amount)}</Text>
               </View>
             </View>
           ))}
@@ -168,7 +178,7 @@ export const InvoicePDF = ({ invoice: { services } }: InvoicePDFProps) => (
         </View>
         <View style={styles.flex}>
           <Text style={[styles.textRight, styles.fontBold, styles.pyMed]}>
-            $2,000.00
+            {formatCurrency(amount_due)}
           </Text>
         </View>
       </View>

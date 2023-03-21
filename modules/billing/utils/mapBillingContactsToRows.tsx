@@ -23,44 +23,46 @@ export const mapBillingContactsToRows = (
     },
   ];
 
-  const rows: any = billingContacts?.map((contact: any, idx: number) => ({
-    key: contact.id ?? `${idx}`,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p>{contact.name}</p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>{contact.email}</p>
-          </>
-        ),
-      },
+  const rows: TableRow[] = billingContacts!.map(
+    (contact: any, idx: number) => ({
+      key: contact.id ?? `${idx}`,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <>
+              <p>{contact.name}</p>
+            </>
+          ),
+        },
+        {
+          key: '2',
+          component: (
+            <>
+              <p>{contact.email}</p>
+            </>
+          ),
+        },
 
-      {
-        key: '3',
-        component: (
-          <>
-            <Button
-              type="button"
-              tooltip="Remove"
-              style="icon"
-              size="medium"
-              onClick={() => handleRemove(contact)}
-            >
-              <IconClose />
-            </Button>
-          </>
-        ),
-      },
-    ],
-  }));
+        {
+          key: '3',
+          component: (
+            <>
+              <Button
+                type="button"
+                tooltip="Remove"
+                style="icon"
+                size="medium"
+                onClick={() => handleRemove(contact)}
+              >
+                <IconClose />
+              </Button>
+            </>
+          ),
+        },
+      ],
+    }),
+  );
 
   return {
     rows,

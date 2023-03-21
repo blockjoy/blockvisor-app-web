@@ -1,5 +1,6 @@
 import {
   BackButton,
+  formatDate,
   PageHeader,
   PageSection,
   PageTitle,
@@ -36,7 +37,7 @@ export const InvoiceView = () => {
             </h2>
             <div css={styles.info}>
               <IconCalendar />
-              <span>{new Date(invoice.createdAt).toLocaleDateString()}</span>
+              <span>{formatDate(invoice.created)}</span>
             </div>
           </div>
           <InvoiceDownload invoice={invoice} />
@@ -46,7 +47,10 @@ export const InvoiceView = () => {
             <BillingAddressPreview billingAddress={BILLING_ADDRESS} />
           </DetailsView>
           <DetailsView headline="Services">
-            <Services services={invoice.services} />
+            <Services
+              services={invoice.lines.data}
+              total={invoice.amount_due}
+            />
           </DetailsView>
         </div>
       </PageSection>
