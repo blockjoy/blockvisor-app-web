@@ -1,12 +1,12 @@
-import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   SubmitHandler,
   useController,
   useForm,
   UseFormReturn,
 } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 
 export const useBillingContactsForm = (
   actions: BillingContactsActions,
@@ -27,7 +27,6 @@ export const useBillingContactsForm = (
     setLoading(true);
     try {
       await actions.add({ name, email });
-      actions.cancel();
       setLoading(false);
     } catch (error) {
       setLoading(false);

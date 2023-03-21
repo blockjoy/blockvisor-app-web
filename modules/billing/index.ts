@@ -26,11 +26,14 @@ export * from './components/Invoices/InvoicePDF/InvoicePDF';
 export * from './hooks/useCreditCard';
 export * from './hooks/useBillingAddress';
 export * from './hooks/useBillingAddressForm';
+export * from './hooks/useBillingContacts';
 export * from './hooks/useBillingContactsForm';
+export * from './hooks/useCreditCard';
 export * from './hooks/useCreditCardForm';
 
 export * from './store/billingAtoms';
 
+export * from './utils/checkIfExists';
 export * from './utils/handleCreditCardInfo';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapInvoicesToRows';

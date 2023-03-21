@@ -1,5 +1,5 @@
 import { FormProvider } from 'react-hook-form';
-import { useBillingAddressForm } from '@modules/billing/';
+import { useBillingAddressForm } from '@modules/billing';
 import { Button, Input } from '@shared/components';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';

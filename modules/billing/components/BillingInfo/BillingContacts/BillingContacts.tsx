@@ -1,8 +1,13 @@
-import { BillingContactsList, BillingContactForm } from '@modules/billing';
-import { styles } from './BillingContacts.styles';
-import { Button } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { useBillingContacts } from '@modules/billing/hooks/useBillingContacts';
+import { toast } from 'react-toastify';
+import { styles } from './BillingContacts.styles';
+import {
+  BillingContactsList,
+  BillingContactForm,
+  useBillingContacts,
+  checkIfExists,
+} from '@modules/billing';
+import { Button } from '@shared/components';
 
 export const BillingContacts = () => {
   const {
@@ -12,21 +17,33 @@ export const BillingContacts = () => {
     removeBillingContact,
   } = useBillingContacts();
 
-  const [isAdding, setIsAdding] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<'list' | 'action'>('list');
 
   useEffect(() => {
     // getBillingContacts('contact_1MlrZFB5ce1jJsfTsRthNrQW');
   }, []);
 
-  const handleAdding = () => setIsAdding(true);
-  const handleCancel = () => setIsAdding(false);
+  const handleAdding = () => setActiveView('action');
+  const handleCancel = () => setActiveView('list');
+
+  const handleNewBillingContact = async (contact: IBillingContact) => {
+    const isAdded = checkIfExists(billingContacts, contact?.email);
+
+    if (isAdded) {
+      toast.error(`${contact?.email} is already added as a Billing Contact`);
+      return;
+    }
+
+    await addBillingContact(contact);
+    setActiveView('list');
+  };
 
   const actions: BillingContactsActions = {
-    add: addBillingContact,
+    add: handleNewBillingContact,
     cancel: handleCancel,
   };
 
-  return !isAdding ? (
+  return activeView === 'list' ? (
     <div css={styles.wrapper}>
       {!billingContacts.length ? (
         <p>
