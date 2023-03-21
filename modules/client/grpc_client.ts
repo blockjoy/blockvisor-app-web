@@ -1273,7 +1273,9 @@ export class GrpcClient {
     let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 
-    console.log('using token for mqtt auth: ', token);
+    const data = JSON.parse(token?.split('.')[1]);
+
+    console.log('using token for mqtt auth: ', data);
 
     let mqtt_client = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
       clean: true,
@@ -1285,6 +1287,11 @@ export class GrpcClient {
       username: 'user_auth',
       password: token,
     });
+
+    // /orgs/ <
+    //   org_id >
+    //   /nodes/ <
+    //   node_id >
 
     mqtt_client.on('connect', () => {
       console.log('MQTT connected');
