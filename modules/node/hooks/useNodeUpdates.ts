@@ -1,12 +1,9 @@
 import { authAtoms } from '@modules/auth';
 import { apiClient } from '@modules/client';
 import { env } from '@shared/constants/env';
-import { useEffect, useRef, useMemo } from 'react';
-import { toast } from 'react-toastify';
+import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-import { useNodeUIContext } from '../ui/NodeUIContext';
-import { useFilters } from './useFilters';
 
 type MqttNodeUpdate = {
   topic: string | 'node-updated' | 'node-deleted' | 'node-created';
@@ -22,29 +19,31 @@ export const useNodeUpdates = (defaultOrganization: {
   const user = useRecoilValue(authAtoms.user);
   const mqttOrgId = useRef('');
   const accessToken = useRef('');
-  const nodeUIContext = useNodeUIContext();
-  const nodeUIProps = useMemo(() => {
-    return {
-      setQueryParams: nodeUIContext.setQueryParams,
-      queryParams: nodeUIContext.queryParams,
-    };
-  }, [nodeUIContext]);
-  const { filters } = useFilters(nodeUIProps);
 
-  const getNodeIndexInNodeList = (node: any) =>
-    nodeList.findIndex((n) => n.id === node.id);
+  const deleteFromNodeList = (node: any) => {
+    console.log('deleteFromNodeList', node);
+    const newNodeList = nodeList.filter((n) => n.id !== node.nodeId);
+    setNodeList(newNodeList);
+  };
 
-  const deleteFromNodeList = (node: any) => {};
+  const addToNodeList = (node: any) => {
+    console.log('addToNodeList', node);
 
-  const addToNodeList = (node: any) => {};
-
-  const updateNodeList = (node: any) => {
     const nodeListCopy = [...nodeList];
 
-    const nodeIndex = getNodeIndexInNodeList(node);
+    nodeListCopy.push(node);
+
+    setNodeList(nodeList);
+  };
+
+  const updateNodeList = (node: any) => {
+    console.log('updateNodeList', node);
+
+    const nodeListCopy = [...nodeList];
+
+    const nodeIndex = nodeListCopy.findIndex(node.id);
     nodeListCopy[nodeIndex] = node;
     setNodeList(nodeListCopy);
-    console.log('MQTT: New nodeList ', nodeListCopy);
   };
 
   const updateActiveNode = (node: any) => {
@@ -65,64 +64,24 @@ export const useNodeUpdates = (defaultOrganization: {
     }
   };
 
-  const getUpdateType = (node: any) => {
-    const { created_by } = node;
+  const handleNodeUpdate = (payload: any) => {
+    const { node, type } = payload;
 
-    const hasFilters = filters.some((f) =>
-      f.filterList.some((fl) => fl.isChecked),
-    );
+    console.log('MQTT: Node Update From Server ', node, type);
 
-    const isInNodeList = getNodeIndexInNodeList(node) > -1;
-
-    const isActiveNode = node?.id === activeNode?.id;
-
-    // if someone else did something
-    if (created_by !== user?.id) {
-      if (!isInNodeList && hasFilters) {
-        // TOAST: node created (view node / refresh list)
-      } else if (!hasFilters) {
-        if (isActiveNode) {
-          // update activeNode
-        }
-
-        if (!isInNodeList) {
-          // push new node to nodeList
-        }
-        // TOAST: node created (view node)
-      }
-    }
-
-    // node created (not me)
-    // node updated (not me)
-  };
-
-  const handleNodeUpdate = (node: any) => {
-    const type = getUpdateType(node);
-
-    console.log('MQTT: Node Update From Server ', node);
     switch (type) {
-      case 'node-updated': {
+      case 'update': {
         updateNodeList(node);
         updateActiveNode(node);
+        break;
       }
-      case 'node-created': {
-        if (getNodeIndexInNodeList(node) > -1) {
-          updateNodeList(node);
-        } else {
-          // check if filters are hiding new node
-          if (filters.some((f) => f.filterList.some((fl) => fl.isChecked))) {
-            // prompt user to reset filters to see it
-          } else {
-          }
-          addToNodeList(node);
-          // add node to nodeList if doesn't already exist
-        }
+      case 'create': {
+        addToNodeList(node);
+        break;
       }
-      case 'node-deleted': {
-        // remove node from node list if it exists
-        if (getNodeIndexInNodeList(node) > -1) {
-          deleteFromNodeList(node);
-        }
+      case 'delete': {
+        deleteFromNodeList(node);
+        break;
       }
     }
   };

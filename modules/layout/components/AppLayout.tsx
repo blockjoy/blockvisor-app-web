@@ -12,7 +12,6 @@ import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
 import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
-import { apiClient } from '@modules/client';
 import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
 
 type LayoutType = {

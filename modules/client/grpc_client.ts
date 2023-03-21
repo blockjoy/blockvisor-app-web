@@ -1275,11 +1275,13 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(stateObject?: StateObject): void {
+  getUpdates(eqmx_url: string, callback: (payload: any) => void): void {
     let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 
-    const data = JSON.parse(Buffer.from(token?.split('.')[1], 'base64').toString('binary'));
+    const data = JSON.parse(
+      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
+    );
     const channel = `/orgs/${data.data.org_id}/nodes`;
 
     console.log('using token for mqtt auth: ', data);
@@ -1313,10 +1315,32 @@ export class GrpcClient {
 
     mqtt_client.on('message', (topic, payload) => {
       // let tmp = new TextDecoder().decode(payload);
-      let msg = NodeMessage.deserializeBinary(new Uint8Array(payload)).toObject();
+      let msg = NodeMessage.deserializeBinary(
+        new Uint8Array(payload),
+      ).toObject();
       console.log('MQTT topic: ', topic);
-      console.log('MQTT payload: ', msg.deleted);
-      callback(payload);
+
+      console.log('msg', msg);
+
+      if (msg.deleted) {
+        console.log('MQTT payload (node deleted): ', msg.deleted);
+        callback({
+          type: 'delete',
+          node: msg.deleted,
+        });
+      } else if (msg.updated) {
+        console.log('MQTT payload (node updated): ', msg.updated);
+        callback({
+          type: 'updated',
+          node: msg.updated,
+        });
+      } else if (msg.created) {
+        console.log('MQTT payload (node created): ', msg.created);
+        callback({
+          type: 'create',
+          node: msg.created,
+        });
+      }
     });
 
     mqtt_client.on('error', (err) => {
