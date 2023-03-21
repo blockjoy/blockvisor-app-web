@@ -1309,7 +1309,10 @@ export class GrpcClient {
     let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 
-    const data = JSON.parse(token?.split('.')[1]);
+    const data = JSON.parse(
+      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
+    );
+    const channel = `/orgs/${data.data.org_id}/nodes`;
 
     console.log('using token for mqtt auth: ', data);
 
@@ -1331,19 +1334,23 @@ export class GrpcClient {
 
     mqtt_client.on('connect', () => {
       console.log('MQTT connected');
-      mqtt_client.subscribe('js-test-topic', (err) => {
+      mqtt_client.subscribe(channel, (err) => {
         if (err) {
           console.log('subscription error: ', err);
         } else {
-          console.log('MQTT subscribed to "js-test-topic"');
+          console.log(`MQTT subscribed to ${channel}`);
         }
       });
     });
 
     mqtt_client.on('message', (topic, payload) => {
-      callback(payload);
+      // let tmp = new TextDecoder().decode(payload);
+      let msg = NodeMessage.deserializeBinary(
+        new Uint8Array(payload),
+      ).toObject();
       console.log('MQTT topic: ', topic);
-      console.log('MQTT payload: ', payload);
+      console.log('MQTT payload: ', msg.deleted);
+      callback(payload);
     });
 
     mqtt_client.on('error', (err) => {
