@@ -4,7 +4,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { InvoiceDownload } from '@modules/billing';
 
-export const mapInvoicesToRows = (invoices?: IInvoice[] | null) => {
+export const mapInvoicesToRows = (invoices?: IInvoice[]) => {
   const headers: TableHeader[] = [
     {
       name: 'ID',

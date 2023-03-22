@@ -25,7 +25,8 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 export const InvoiceView = () => {
-  const { invoice, getInvoice, invoiceLoadingState } = useInvoices();
+  const { invoice, getInvoice, invoiceLoadingState, unloadInvoice } =
+    useInvoices();
   const router = useRouter();
   const { id } = router.query;
 
@@ -33,6 +34,8 @@ export const InvoiceView = () => {
     if (router.isReady) {
       getInvoice(id);
     }
+
+    return () => unloadInvoice();
   }, [router.isReady]);
 
   return (

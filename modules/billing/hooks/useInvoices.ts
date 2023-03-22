@@ -14,7 +14,7 @@ export const useInvoices = (): IInvoiceHook => {
 
   const getInvoice = async (id: RouterId) => {
     setInvoiceLoadingState('initializing');
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 300));
 
     const invoice: IInvoice | undefined = INVOICES.find(
       (invoice) => invoice.id === id,
@@ -27,13 +27,17 @@ export const useInvoices = (): IInvoiceHook => {
 
   const getInvoices = async () => {
     setInvoicesLoadingState('initializing');
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 300));
 
     const invoices: IInvoice[] = INVOICES;
 
     setInvoices(invoices);
 
     setInvoicesLoadingState('finished');
+  };
+
+  const unloadInvoice = () => {
+    setInvoice(null);
   };
 
   return {
@@ -44,5 +48,7 @@ export const useInvoices = (): IInvoiceHook => {
 
     getInvoice,
     getInvoices,
+
+    unloadInvoice,
   };
 };
