@@ -1,23 +1,17 @@
-import { selector } from 'recoil';
+import { selectorFamily } from 'recoil';
 import { billingAtoms } from '@modules/billing';
 
-const activePlan = selector<any>({
+const activePlan = selectorFamily<IPlan | null, string>({
   key: 'billing.plan.active',
-  get: ({ get }) => {
-    let priceId: string | null = null;
-    let activePlan = null;
+  get:
+    (planId) =>
+    ({ get }) => {
+      const plans = get(billingAtoms.plans);
 
-    const subscription = get(billingAtoms.subscription);
-    const plans = get(billingAtoms.plans);
+      const activePlan = plans?.find((plan: IPlan) => plan.id === planId);
 
-    if (subscription && subscription.items.data.length > 0) {
-      priceId = subscription.items.data[0].price.id;
-    }
-
-    activePlan = plans?.find((plan: IPlan) => plan.id === priceId);
-
-    return activePlan;
-  },
+      return activePlan ?? null;
+    },
 });
 
 export const billingSelectors = {
