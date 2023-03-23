@@ -9,7 +9,7 @@ const creditCard = atom<ICreditCard | null>({
 
 const creditCardLoadingState = atom<LoadingState>({
   key: 'billing.creditCard.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const billingAddress = atom<IBillingAddress | null>({
@@ -20,7 +20,7 @@ const billingAddress = atom<IBillingAddress | null>({
 
 const billingAddressLoadingState = atom<LoadingState>({
   key: 'billing.billingAddress.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const plans = atom<IPlan[] | null>({
@@ -31,7 +31,7 @@ const plans = atom<IPlan[] | null>({
 
 const plansLoadingState = atom<LoadingState>({
   key: 'billing.plans.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const billingContacts = atom<IBillingContact[]>({
@@ -42,7 +42,7 @@ const billingContacts = atom<IBillingContact[]>({
 
 const billingContactsLoadingState = atom<LoadingState>({
   key: 'billing.contacts.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const invoice = atom<IInvoice | null>({
@@ -53,7 +53,7 @@ const invoice = atom<IInvoice | null>({
 
 const invoiceLoadingState = atom<LoadingState>({
   key: 'billing.invoice.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const invoices = atom<IInvoice[]>({
@@ -64,7 +64,18 @@ const invoices = atom<IInvoice[]>({
 
 const invoicesLoadingState = atom<LoadingState>({
   key: 'billing.invoices.loadingState',
-  default: 'initializing',
+  default: 'finished',
+});
+
+const subscription = atom<ISubscription | null>({
+  key: 'billing.subscription',
+  default: null,
+  effects: [localStorageEffect('subscription')],
+});
+
+const subscriptionLoadingState = atom<LoadingState>({
+  key: 'billing.subscription.loadingState',
+  default: 'finished',
 });
 
 export const billingAtoms = {
@@ -84,4 +95,7 @@ export const billingAtoms = {
   invoiceLoadingState,
   invoices,
   invoicesLoadingState,
+
+  subscription,
+  subscriptionLoadingState,
 };

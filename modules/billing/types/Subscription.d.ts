@@ -31,44 +31,42 @@ interface ISubscription {
   ended_at: any;
   items: {
     object: string;
-    data: [
-      {
+    data: {
+      id: string;
+      object: string;
+      billing_thresholds: any;
+      created: number;
+      metadata: {};
+      price: {
         id: string;
         object: string;
-        billing_thresholds: any;
+        active: boolean;
+        billing_scheme: string;
         created: number;
+        currency: string;
+        custom_unit_amount: any;
+        livemode: boolean;
+        lookup_key: any;
         metadata: {};
-        price: {
-          id: string;
-          object: string;
-          active: boolean;
-          billing_scheme: string;
-          created: number;
-          currency: string;
-          custom_unit_amount: any;
-          livemode: boolean;
-          lookup_key: any;
-          metadata: {};
-          nickname: any;
-          product: string;
-          recurring: {
-            aggregate_usage: any;
-            interval: string;
-            interval_count: number;
-            usage_type: string;
-          };
-          tax_behavior: string;
-          tiers_mode: any;
-          transform_quantity: any;
-          type: string;
-          unit_amount: number;
-          unit_amount_decimal: string;
+        nickname: any;
+        product: string;
+        recurring: {
+          aggregate_usage: any;
+          interval: string;
+          interval_count: number;
+          usage_type: string;
         };
-        quantity: number;
-        subscription: string;
-        tax_rates: any;
-      },
-    ];
+        tax_behavior: string;
+        tiers_mode: any;
+        transform_quantity: any;
+        type: string;
+        unit_amount: number;
+        unit_amount_decimal: string;
+      };
+      quantity: number;
+      subscription: string;
+      tax_rates: any;
+    }[];
     has_more: boolean;
     url: string;
   };
@@ -98,4 +96,13 @@ interface ISubscription {
     };
   };
   trial_start: any;
+}
+
+interface ISubscriptionHook {
+  subscription: ISubscription | null;
+  subscriptionLoadingState: LoadingState;
+  getSubscription: VoidFunction;
+  createSubscription: (subscription: ISubscription) => void;
+  updateSubscription: (subscription: ISubscription) => void;
+  cancelSubscription: VoidFunction;
 }
