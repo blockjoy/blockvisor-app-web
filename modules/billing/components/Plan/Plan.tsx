@@ -1,14 +1,19 @@
-import { PlanPreview, PlanSelect, PlansList, usePlans } from '@modules/billing';
-import { BILLING_PLANS } from '@modules/billing/mocks/plan';
+import {
+  billingSelectors,
+  PlanPreview,
+  PlanSelect,
+  PlansList,
+  usePlans,
+} from '@modules/billing';
 import { EmptyColumn } from '@shared/index';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styles } from './Plan.styles';
-
-const selectedPlan = !BILLING_PLANS[0];
 
 export const Plan = () => {
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
   const [activePlan, setActivePlan] = useState<IPlan | null>(null);
+  const subscribedPlan = useRecoilValue(billingSelectors.activePlan);
 
   const { plans, getPlans } = usePlans();
 
@@ -25,8 +30,8 @@ export const Plan = () => {
 
   return (
     <div css={styles.wrapper}>
-      {selectedPlan ? (
-        <PlanPreview plan={selectedPlan} />
+      {subscribedPlan ? (
+        <PlanPreview plan={subscribedPlan} />
       ) : activeView === 'list' ? (
         <>
           <EmptyColumn

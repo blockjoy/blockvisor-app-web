@@ -1,17 +1,24 @@
-import { PLAN_DATA } from '@modules/billing/mocks/plan';
+import { useSubscription, mapPlanDataToDetails } from '@modules/billing';
 import { Button, DetailsTable } from '@shared/index';
 import { styles } from './PlanPreview.styles';
 
 export type PlanPreviewProps = {
-  plan: any;
+  plan: IPlan;
 };
 
-export const PlanPreview = ({ plan }: any) => {
+export const PlanPreview = ({ plan }: PlanPreviewProps) => {
+  const { cancelSubscription } = useSubscription();
+  const planData = mapPlanDataToDetails(plan);
+
   return (
-    <div css={styles.wrapper}>
-      <DetailsTable bodyElements={PLAN_DATA} />
-      <Button style="outline" customCss={[styles.button]}>
-        Cancel Plan
+    <div>
+      <DetailsTable bodyElements={planData} />
+      <Button
+        style="outline"
+        customCss={[styles.button]}
+        onClick={cancelSubscription}
+      >
+        Cancel Subscription
       </Button>
     </div>
   );

@@ -1,6 +1,6 @@
 export const BILLING_PLANS = [
   {
-    id: 'price_0001',
+    id: 'price_1MoSDq2eZvKYlo2Cj1zhEDhf',
     object: 'plan',
     active: true,
     aggregate_usage: null,
@@ -30,7 +30,7 @@ export const BILLING_PLANS = [
     usage_type: 'licensed',
   },
   {
-    id: 'price_0002',
+    id: 'price_1MnseT2eZvKYlo2Cr2bB0nDF',
     object: 'plan',
     active: true,
     aggregate_usage: null,
@@ -60,7 +60,7 @@ export const BILLING_PLANS = [
     usage_type: 'licensed',
   },
   {
-    id: 'price_0003',
+    id: 'price_1MnseT2eAdEYlo2Cr2bB0nfD',
     object: 'plan',
     active: true,
     aggregate_usage: null,
@@ -88,16 +88,5 @@ export const BILLING_PLANS = [
     transform_usage: null,
     trial_period_days: null,
     usage_type: 'licensed',
-  },
-];
-
-export const PLAN_DATA = [
-  {
-    label: 'Active Plan',
-    data: 'Pro',
-  },
-  {
-    label: 'Price',
-    data: '$199.00',
   },
 ];

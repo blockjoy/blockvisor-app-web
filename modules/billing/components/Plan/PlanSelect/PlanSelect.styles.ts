@@ -35,6 +35,9 @@ export const styles = {
     flex-flow: row nowrap;
     gap: 10px;
   `,
+  button: css`
+    min-width: 120px;
+  `,
   features: css`
     display: flex;
     flex-direction: column;

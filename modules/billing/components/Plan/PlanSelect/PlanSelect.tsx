@@ -2,6 +2,7 @@ import {
   calcNextAutoRenew,
   calcPlanPrice,
   getPlanFeatures,
+  useSubscription,
 } from '@modules/billing';
 import { Button, PillPicker, Switch } from '@shared/components';
 import { formatCurrency, formatDate } from '@shared/index';
@@ -10,6 +11,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';
+import { SUBSCRIPTION } from '@modules/billing/mocks/subscription';
 
 export type PlanSelectProps = {
   plan: IPlan | null;
@@ -19,6 +21,8 @@ export type PlanSelectProps = {
 const BILLING_PERIOD: string[] = ['Monthly', 'Annual'];
 
 export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
+  const { createSubscription, subscriptionLoadingState } = useSubscription();
+
   const [billingPeriod, setBillingPeriod] = useState<string>('Annual');
   const [autoRenew, setAutoRenew] = useState<boolean>(true);
 
@@ -29,6 +33,10 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
   };
 
   const handleAutoRenew = () => setAutoRenew(!autoRenew);
+
+  const handleSubscription = () => {
+    createSubscription(SUBSCRIPTION);
+  };
 
   return (
     <div css={styles.wrapper}>
@@ -92,7 +100,13 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
         </p>
       </div>
       <div css={styles.buttons}>
-        <Button style="secondary" size="medium">
+        <Button
+          style="secondary"
+          size="medium"
+          customCss={[styles.button]}
+          loading={subscriptionLoadingState !== 'finished'}
+          onClick={handleSubscription}
+        >
           Update Plan
         </Button>
         <Button style="outline" size="medium" onClick={handleCancel}>

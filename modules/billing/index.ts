@@ -36,8 +36,10 @@ export * from './hooks/useCreditCard';
 export * from './hooks/useCreditCardForm';
 export * from './hooks/useInvoices';
 export * from './hooks/usePlans';
+export * from './hooks/useSubscription';
 
 export * from './store/billingAtoms';
+export * from './store/billingSelectors';
 
 export * from './utils/calcNextRenewDate';
 export * from './utils/calcPlanPrice';
@@ -47,6 +49,7 @@ export * from './utils/handleCreditCardInfo';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapInvoicesToRows';
 export * from './utils/mapServicesToRows';
+export * from './utils/mapPlanDataToDetails';
 
 export * from './ui/InvoicesUIContext';
 export * from './ui/InvoicesUIHelpers';
