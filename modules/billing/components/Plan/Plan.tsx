@@ -1,25 +1,33 @@
-import { usePlans } from '@modules/billing/hooks/usePlans';
+import { PlanPreview, PlanSelect, PlansList, usePlans } from '@modules/billing';
 import { BILLING_PLANS } from '@modules/billing/mocks/plan';
 import { EmptyColumn } from '@shared/index';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { styles } from './Plan.styles';
-import { PlanPreview } from './PlanPreview/PlanPreview';
-import { PlansList } from './PlansList/PlansList';
 
-const activePlan = !BILLING_PLANS[0];
+const selectedPlan = !BILLING_PLANS[0];
 
 export const Plan = () => {
+  const [activeView, setActiveView] = useState<'list' | 'action'>('list');
+  const [activePlan, setActivePlan] = useState<IPlan | null>(null);
+
   const { plans, getPlans } = usePlans();
 
   useEffect(() => {
     getPlans();
   }, []);
 
+  const handleSelect = (plan: IPlan) => {
+    setActiveView('action');
+    setActivePlan(plan);
+  };
+
+  const handleCancel = () => setActiveView('list');
+
   return (
     <div css={styles.wrapper}>
-      {activePlan ? (
-        <PlanPreview plan={activePlan} />
-      ) : (
+      {selectedPlan ? (
+        <PlanPreview plan={selectedPlan} />
+      ) : activeView === 'list' ? (
         <>
           <EmptyColumn
             title="You Have No Active Plans."
@@ -34,8 +42,10 @@ export const Plan = () => {
             align="left"
             additionalStyles={styles.emptyColumn}
           />
-          <PlansList plans={plans} />
+          <PlansList plans={plans} handleSelect={handleSelect} />
         </>
+      ) : (
+        <PlanSelect plan={activePlan} handleCancel={handleCancel} />
       )}
     </div>
   );

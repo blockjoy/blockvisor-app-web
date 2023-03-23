@@ -1,20 +1,16 @@
 import { styles } from './SinglePlan.styles';
-import IconCheckmark from '@public/assets/icons/checkmark-12.svg';
 import { Button, formatCurrency } from '@shared/index';
-import { capitalize } from 'utils/capitalize';
+import { getPlanFeatures } from '@modules/billing';
+import IconCheckmark from '@public/assets/icons/checkmark-12.svg';
 
 export type SinglePlanProps = {
   plan: IPlan;
+  handleSelect: (plan: IPlan) => void;
 };
 
-const FEATURES_HEADINGS = {
-  max_nodes: 'Nodes',
-  max_organizations: 'Organizations',
-  max_collaborators: 'Collaborators',
-  support_type: 'Support',
-};
+export const SinglePlan = ({ plan, handleSelect }: SinglePlanProps) => {
+  const planFeatures = getPlanFeatures(plan?.metadata.features);
 
-export const SinglePlan = ({ plan }: SinglePlanProps) => {
   return (
     <div css={[styles.wrapper, plan.metadata.featured && styles.featured]}>
       <div css={styles.titleWrapper}>
@@ -39,18 +35,19 @@ export const SinglePlan = ({ plan }: SinglePlanProps) => {
 
       <div css={styles.listContainer}>
         <ul css={styles.list}>
-          {Object.keys(plan?.metadata.features).map((featureKey: string) => (
-            <li key={featureKey} css={styles.listItem}>
+          {planFeatures.map((feature: string, featureIndex: number) => (
+            <li key={featureIndex} css={styles.listItem}>
               <IconCheckmark />
-              <span>
-                {capitalize(plan?.metadata.features[featureKey])}
-              </span>{' '}
-              <span>{FEATURES_HEADINGS[featureKey]}</span>
+              <span>{feature}</span>
             </li>
           ))}
         </ul>
       </div>
-      <Button style={plan.metadata.featured ? 'secondary' : 'outline'}>
+
+      <Button
+        style={plan.metadata.featured ? 'secondary' : 'outline'}
+        onClick={() => handleSelect(plan)}
+      >
         Select plan
       </Button>
     </div>
