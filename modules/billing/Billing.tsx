@@ -2,7 +2,12 @@ import { PageSection, PageTitle } from '@shared/components';
 import { useMemo } from 'react';
 import { Tabs, useTabs } from '@shared/index';
 import { useRouter } from 'next/router';
-import { Plan, PaymentMethod, BillingInfo, Invoices } from '@modules/billing/';
+import {
+  Subscription,
+  PaymentMethod,
+  BillingInfo,
+  Invoices,
+} from '@modules/billing/';
 
 export const Billing = () => {
   const { push } = useRouter();
@@ -13,7 +18,7 @@ export const Billing = () => {
         value: '1',
         component: (
           <PageSection bottomBorder={false}>
-            <Plan />
+            <Subscription />
           </PageSection>
         ),
       },
