@@ -1,7 +1,5 @@
 export * from './Billing';
 
-export * from './components/Plan/Plan';
-
 export * from './components/PaymentMethod/PaymentMethod';
 export * from './components/PaymentMethod/CreditCard/CreditCard';
 export * from './components/PaymentMethod/PaymentPreview/PaymentPreview';
@@ -23,6 +21,12 @@ export * from './components/Invoices/InvoiceDownload/InvoiceDownload';
 export * from './components/Invoices/InvoicesList/InvoicesList';
 export * from './components/Invoices/InvoicePDF/InvoicePDF';
 
+export * from './components/Plan/Plan';
+export * from './components/Plan/PlansList/PlansList';
+export * from './components/Plan/SinglePlan/SinglePlan';
+export * from './components/Plan/PlanPreview/PlanPreview';
+export * from './components/Plan/PlanSelect/PlanSelect';
+
 export * from './hooks/useCreditCard';
 export * from './hooks/useBillingAddress';
 export * from './hooks/useBillingAddressForm';
@@ -31,10 +35,14 @@ export * from './hooks/useBillingContactsForm';
 export * from './hooks/useCreditCard';
 export * from './hooks/useCreditCardForm';
 export * from './hooks/useInvoices';
+export * from './hooks/usePlans';
 
 export * from './store/billingAtoms';
 
+export * from './utils/calcNextRenewDate';
+export * from './utils/calcPlanPrice';
 export * from './utils/checkIfExists';
+export * from './utils/getPlanFeatures';
 export * from './utils/handleCreditCardInfo';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapInvoicesToRows';
