@@ -1,15 +1,37 @@
-import { DetailsView } from '@shared/components';
-import { BillingAddress, BillingContacts } from '@modules/billing';
+import { DetailsView, TableSkeleton } from '@shared/components';
+import {
+  BillingAddress,
+  BillingContacts,
+  useBillingAddress,
+  useBillingContacts,
+} from '@modules/billing';
+import { useEffect } from 'react';
 
 export const BillingInfo = () => {
+  const { getBillingAddress, billingAddressLoadingState } = useBillingAddress();
+  const { getBillingContacts, billingContactsLoadingState } =
+    useBillingContacts();
+
+  useEffect(() => {
+    getBillingAddress();
+    getBillingContacts();
+  }, []);
+
   return (
-    <div>
-      <DetailsView headline="Billing Address">
-        <BillingAddress />
-      </DetailsView>
-      <DetailsView headline="Billing Contacts">
-        <BillingContacts />
-      </DetailsView>
-    </div>
+    <>
+      {billingAddressLoadingState !== 'finished' ||
+      billingContactsLoadingState !== 'finished' ? (
+        <TableSkeleton />
+      ) : (
+        <div>
+          <DetailsView headline="Billing Address">
+            <BillingAddress />
+          </DetailsView>
+          <DetailsView headline="Billing Contacts">
+            <BillingContacts />
+          </DetailsView>
+        </div>
+      )}
+    </>
   );
 };

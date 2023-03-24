@@ -10,8 +10,9 @@ export const useBillingContacts = (): IBillingContactsHook => {
   const [billingContactsLoadingState, setBillingContactsLoadingState] =
     useRecoilState(billingAtoms.billingContactsLoadingState);
 
-  const getBillingContacts = () => {
+  const getBillingContacts = async () => {
     setBillingContactsLoadingState('initializing');
+    await new Promise((r) => setTimeout(r, 300));
 
     const billingContacts: IBillingContact[] = BILLING_CONTACTS;
 
@@ -21,7 +22,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
   };
 
   const addBillingContact = async ({ name, email }: BillingContactForm) => {
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 300));
 
     const newBillingContact = {
       id: uuidv4(),
@@ -34,7 +35,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
   };
 
   const removeBillingContact = async (id: string) => {
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 300));
 
     const newBillingContacts = [...billingContacts].filter(
       (billingContact) => billingContact.id !== id,

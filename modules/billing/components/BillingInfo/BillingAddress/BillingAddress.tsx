@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { styles } from './BillingAddress.styles';
 import {
   BillingAddressPreview,
@@ -8,13 +8,8 @@ import {
 import { Button } from '@shared/components';
 
 export const BillingAddress = () => {
-  const { billingAddress, getBillingAddress, addBillingAddress } =
-    useBillingAddress();
+  const { billingAddress, addBillingAddress } = useBillingAddress();
   const [isAdding, setIsAdding] = useState<boolean>(false);
-
-  useEffect(() => {
-    // getBillingAddress('test123');
-  }, []);
 
   const handleAdding = () => setIsAdding(true);
   const handleCancel = () => setIsAdding(false);

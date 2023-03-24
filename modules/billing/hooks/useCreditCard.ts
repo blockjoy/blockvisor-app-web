@@ -25,7 +25,7 @@ export const useCreditCard = (): ICreditCardHook => {
     expYear,
     cvc,
   }: CreditCardParams) => {
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 300));
 
     console.log(
       'CREDIT CARD [addCard]',

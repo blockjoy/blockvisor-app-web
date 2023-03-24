@@ -11,7 +11,7 @@ export const usePlans = (): IPlansHook => {
   const getPlans = async () => {
     setPlansLoadingState('initializing');
 
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 300));
 
     const plans: IPlan[] = BILLING_PLANS;
 

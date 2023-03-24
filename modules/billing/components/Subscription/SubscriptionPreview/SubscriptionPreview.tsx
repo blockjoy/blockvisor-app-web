@@ -20,7 +20,7 @@ export const SubscriptionPreview = ({
       <DetailsTable bodyElements={subscriptionData} />
       <div css={styles.buttons}>
         <Button style="secondary" onClick={handleSubscriptionCancellation}>
-          Update Subscription
+          Update
         </Button>
         <Button style="outline" onClick={cancelSubscription}>
           Cancel Subscription
