@@ -9,8 +9,9 @@ export const useBillingAddress = (): IBillingAddressHook => {
   const [billingAddressLoadingState, setBillingAddressLoadingState] =
     useRecoilState(billingAtoms.billingAddressLoadingState);
 
-  const getBillingAddress = (id: string) => {
+  const getBillingAddress = async () => {
     setBillingAddressLoadingState('initializing');
+    await new Promise((r) => setTimeout(r, 300));
 
     const billingAddress: IBillingAddress = BILLING_ADDRESS;
 
@@ -29,7 +30,7 @@ export const useBillingAddress = (): IBillingAddressHook => {
     postal,
     vat,
   }: BillingAddressForm) => {
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 300));
 
     const newBillingAddress = {
       ...BILLING_ADDRESS,

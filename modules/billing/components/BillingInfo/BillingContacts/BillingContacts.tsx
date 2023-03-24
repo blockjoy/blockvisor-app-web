@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { styles } from './BillingContacts.styles';
 import {
@@ -10,18 +10,10 @@ import {
 import { Button } from '@shared/components';
 
 export const BillingContacts = () => {
-  const {
-    getBillingContacts,
-    billingContacts,
-    addBillingContact,
-    removeBillingContact,
-  } = useBillingContacts();
+  const { billingContacts, addBillingContact, removeBillingContact } =
+    useBillingContacts();
 
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
-
-  useEffect(() => {
-    // getBillingContacts('contact_1MlrZFB5ce1jJsfTsRthNrQW');
-  }, []);
 
   const handleAdding = () => setActiveView('action');
   const handleCancel = () => setActiveView('list');

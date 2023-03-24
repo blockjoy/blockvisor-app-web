@@ -13,7 +13,7 @@ interface IBillingAddress {
 interface IBillingAddressHook {
   billingAddress: IBillingAddress | null;
   billingAddressLoadingState: LoadingState;
-  getBillingAddress: (id: string) => void;
+  getBillingAddress: VoidFunction;
   addBillingAddress: (card: BillingAddressParams) => void;
   updateBillingAddress: VoidFunction;
 }

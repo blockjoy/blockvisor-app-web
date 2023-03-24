@@ -20,18 +20,7 @@ const billingAddress = atom<IBillingAddress | null>({
 
 const billingAddressLoadingState = atom<LoadingState>({
   key: 'billing.billingAddress.loadingState',
-  default: 'finished',
-});
-
-const plans = atom<IPlan[] | null>({
-  key: 'billing.plans',
-  default: null,
-  effects: [localStorageEffect('plans')],
-});
-
-const plansLoadingState = atom<LoadingState>({
-  key: 'billing.plans.loadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 const billingContacts = atom<IBillingContact[]>({
@@ -42,7 +31,7 @@ const billingContacts = atom<IBillingContact[]>({
 
 const billingContactsLoadingState = atom<LoadingState>({
   key: 'billing.contacts.loadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 const invoice = atom<IInvoice | null>({
@@ -64,6 +53,17 @@ const invoices = atom<IInvoice[]>({
 
 const invoicesLoadingState = atom<LoadingState>({
   key: 'billing.invoices.loadingState',
+  default: 'finished',
+});
+
+const plans = atom<IPlan[] | null>({
+  key: 'billing.plans',
+  default: null,
+  effects: [localStorageEffect('plans')],
+});
+
+const plansLoadingState = atom<LoadingState>({
+  key: 'billing.plans.loadingState',
   default: 'finished',
 });
 
