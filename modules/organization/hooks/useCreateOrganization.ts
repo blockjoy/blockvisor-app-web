@@ -1,7 +1,4 @@
-import {
-  Organization,
-  ResponseMeta,
-} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { ResponseMeta } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { apiClient } from '@modules/client';
 import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
@@ -9,7 +6,7 @@ import { ApplicationError } from '@modules/auth/utils/Errors';
 // used for generating mock member count
 
 function isSuccess(response: ResponseMeta.AsObject) {
-  return response.status === ResponseMeta.Status.SUCCESS;
+  return response.status === ResponseMeta.Status.STATUS_SUCCESS;
 }
 
 export function useCreateOrganization() {
@@ -17,12 +14,7 @@ export function useCreateOrganization() {
     name: string,
     onSuccess: (org: any) => void,
   ) => {
-    const organization = new Organization();
-    const uuid = Math.random().toString();
-    organization.setId(uuid);
-    organization.setName(name);
-
-    const response = await apiClient.createOrganization(organization);
+    const response = await apiClient.createOrganization(name);
 
     if (
       isResponeMetaObject(response) &&

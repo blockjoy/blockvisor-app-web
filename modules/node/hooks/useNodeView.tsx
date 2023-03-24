@@ -57,22 +57,10 @@ export const useNodeView = (): Hook => {
 
     checkForTokenError(node);
 
-    console.log('node', node);
-
-    let nodeType: any;
-
-    try {
-      nodeType = JSON.parse(node.type);
-    } catch (error) {
-      setIsLoading(false);
-      onError();
-      return;
-    }
-
     const details = [
       {
         label: 'TYPE',
-        data: nodeTypeList.find((n) => n.id === nodeType?.id)?.name,
+        data: nodeTypeList.find((n) => n.id === node.type)?.name,
       },
       { label: 'HOST', data: node.hostName || 'Unknown' },
       { label: 'NODE ADDRESS', data: node?.address || '-' },
@@ -80,18 +68,17 @@ export const useNodeView = (): Hook => {
       { label: 'BLOCK HEIGHT', data: node.blockHeight },
     ];
 
-    const nodeTypeConfigDetails = nodeType.properties
+    const nodeTypeConfigDetails = node.propertiesList
       ?.filter(
         (property: any) =>
-          property.ui_type !== 'key-upload' &&
-          !property.ui_type.includes('pwd'),
+          property.uiType !== 'key-upload' && !property.uiType.includes('pwd'),
       )
       .map((property: any) => ({
         label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
         data:
           property.value === 'null' ? (
             '-'
-          ) : property.ui_type === 'switch' ? (
+          ) : property.uiType === 'switch' ? (
             <LockedSwitch
               tooltip="You will be able to enable Self Hosting after BETA."
               isChecked={property.value === 'true' ? true : false}
@@ -123,7 +110,7 @@ export const useNodeView = (): Hook => {
         addSuffix: true,
       }),
       details,
-      nodeTypeConfig: nodeType.properties,
+      nodeTypeConfig: node.propertiesList,
       nodeTypeConfigDetails,
     };
 

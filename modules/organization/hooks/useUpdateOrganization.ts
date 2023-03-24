@@ -1,4 +1,3 @@
-import { Organization } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { apiClient } from '@modules/client';
@@ -23,12 +22,7 @@ export function useUpdateOrganization() {
   );
 
   const updateOrganization = async (id: string, name: string) => {
-    const organization = new Organization();
-    organization.setName(name);
-    organization.setId(id);
-    const response = await apiClient.updateOrganization(organization);
-
-    console.log('updateOrganization', response, isResponeMetaObject(response));
+    const response = await apiClient.updateOrganization(id, name);
 
     if (isResponeMetaObject(response)) {
       const newOrg = {
