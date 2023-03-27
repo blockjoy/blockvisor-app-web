@@ -12,6 +12,10 @@ export const styles = {
     }
   `,
   fixedRowHeight: (rowHeight: string) => css`
+    tbody td {
+      padding: 16px 20px 0 0;
+    }
+
     tbody tr {
       height: ${rowHeight};
     }
@@ -60,7 +64,7 @@ export const styles = {
     }
 
     & td {
-      padding: 16px 20px 0 0;
+      padding: 16px 20px 16px 0;
 
       p {
         white-space: nowrap;
