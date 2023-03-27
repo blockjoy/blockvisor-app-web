@@ -7,6 +7,8 @@ export const toGrid = (
   onCellClick: (args0: any) => void,
 ) => {
   return nodeList?.map((node: any) => {
+    console.log('node', node);
+
     return {
       key: node.id,
       component: (
@@ -18,9 +20,7 @@ export const toGrid = (
             <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
           }
           cellStatus={<NodeStatus hasBorder status={node.status} />}
-          cellType={
-            nodeTypeList.find((n) => n.id === JSON.parse(node.type).id)?.name
-          }
+          cellType={nodeTypeList.find((n) => n.id === node.type)?.name}
         />
       ),
     };
