@@ -74,6 +74,7 @@ export const useNodeView = (): Hook => {
           property.uiType !== 'key-upload' && !property.uiType.includes('pwd'),
       )
       .map((property: any) => ({
+        id: property.name,
         label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
         data:
           property.value === 'null' ? (
@@ -89,11 +90,13 @@ export const useNodeView = (): Hook => {
       }));
 
     nodeTypeConfigDetails.unshift({
+      id: 'auto-updates',
       label: 'AUTO UPDATES',
       data: <LockedSwitch />,
     });
 
     nodeTypeConfigDetails.unshift({
+      id: 'network',
       label: 'NETWORK',
       data: node.network || '-',
     });
