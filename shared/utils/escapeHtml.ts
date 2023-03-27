@@ -4,7 +4,7 @@
 export const escapeHtml = (unsafe: string) => {
   if (!unsafe?.length) {
     console.log('escapeHtml', unsafe);
-    return;
+    return '';
   }
 
   return (
