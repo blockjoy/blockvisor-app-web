@@ -10,7 +10,7 @@ import { useNodeMetrics } from './useNodeMetrics';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 
-export const useNodeUpdates = () => {
+export const useMqttUpdates = () => {
   const { loadMetrics } = useNodeMetrics();
   const { user } = useIdentity();
   const router = useRouter();

@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
-import { useNodeUpdates } from '@modules/node/hooks/useNodeUpdates';
+import { useMqttUpdates } from '@modules/node/hooks/useMqttUpdates';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ export const AppLayout: React.FC<LayoutType> = ({
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
-  useNodeUpdates();
+  useMqttUpdates();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
