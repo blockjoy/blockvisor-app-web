@@ -21,7 +21,7 @@ import {
   Parameter,
   RequestMeta,
   ResponseMeta,
-  UpdateNotification,
+  // UpdateNotification,
   User,
   UserConfigurationParameter,
   Pagination,
@@ -32,7 +32,7 @@ import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_s
 import { DashboardServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Dashboard_serviceServiceClientPb';
 import { HostServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Fe_host_serviceServiceClientPb';
 import { HostProvisionServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Host_provision_serviceServiceClientPb';
-import { NodeServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Node_serviceServiceClientPb';
+import { NodeServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Ui_node_serviceServiceClientPb';
 import { OrganizationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Organization_serviceServiceClientPb';
 import { UpdateServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Update_serviceServiceClientPb';
 import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_serviceServiceClientPb';
@@ -58,7 +58,7 @@ import {
   ListNodesRequest,
   UpdateNodeRequest,
   UpdateNodeResponse,
-} from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
+} from '@blockjoy/blockjoy-grpc/dist/out/ui_node_service_pb';
 import {
   CreateOrganizationRequest,
   DeleteOrganizationRequest,
@@ -112,6 +112,14 @@ export type UIUser = {
   password: string;
   password_confirmation: string;
 };
+export type UINode = {
+  org_id: string;
+  blockchain_id: string;
+  version?: string;
+  type: Node.NodeType;
+  properties: Node.NodeProperty.AsObject[];
+  network: string;
+};
 export type UINodeCreate = {
   host_id: string;
   node_type: string;
@@ -149,8 +157,7 @@ export function timestamp_to_date(ts: Timestamp | undefined): Date | undefined {
 
 export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
   return {
-    groupsList: node?.getGroupsList() || [],
-    ...node?.toObject(),
+    ...node?.toObject()!,
     created_at_datetime: timestamp_to_date(node?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(node?.getUpdatedAt()),
   };
@@ -158,7 +165,7 @@ export function node_to_grpc_node(node: Node | undefined): GrpcNodeObject {
 
 export function host_to_grpc_host(host: Host | undefined): GrpcHostObject {
   return {
-    ...host?.toObject(),
+    ...host?.toObject()!,
     created_at_datetime: timestamp_to_date(host?.getCreatedAt()) || undefined,
     nodesList: host?.getNodesList().map((node) => node.toObject()) || [],
     node_objects: host?.getNodesList().map((node) => node_to_grpc_node(node)),
@@ -171,7 +178,9 @@ export function blockchain_to_grpc_blockchain(
   return {
     id: chain?.getId() || '',
     name: chain?.getName() || '',
-    status: chain?.getStatus() || Blockchain.BlockchainStatus.DEVELOPMENT,
+    status:
+      chain?.getStatus() ||
+      Blockchain.BlockchainStatus.BLOCKCHAIN_STATUS_DEVELOPMENT,
     supportedNodesTypes: chain?.getSupportedNodesTypes() || '',
     supportsBroadcast: false,
     supportsEtl: chain?.getSupportsEtl() || true,
@@ -188,10 +197,32 @@ export function blockchain_to_grpc_blockchain(
 
 export function user_to_grpc_user(user: User | undefined): GrpcUserObject {
   return {
-    ...user?.toObject(),
+    ...user?.toObject()!,
     created_at_datetime: timestamp_to_date(user?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(user?.getUpdatedAt()),
   };
+}
+
+export function node_properties_to_grpc_node_properties(
+  properties: Node.NodeProperty.AsObject[],
+): Node.NodeProperty[] {
+  let node_properties: Node.NodeProperty[] = [];
+
+  properties.forEach((property: Node.NodeProperty.AsObject) => {
+    let node_property: Node.NodeProperty = new Node.NodeProperty();
+
+    node_property.setName(property.name);
+    node_property.setLabel(property.label);
+    node_property.setDescription(property.description);
+    node_property.setUiType(property.uiType);
+    node_property.setDisabled(property.disabled);
+    node_property.setRequired(property.required);
+    if (property.value) node_property.setValue(property.value);
+
+    node_properties.push(node_property);
+  });
+
+  return node_properties;
 }
 
 export type ConvenienceConversion = {
@@ -288,7 +319,7 @@ export class GrpcClient {
 
   getDummyMeta(): ResponseMeta {
     let meta = new ResponseMeta();
-    meta.setStatus(ResponseMeta.Status.SUCCESS);
+    meta.setStatus(ResponseMeta.Status.STATUS_SUCCESS);
     meta.setOriginRequestId(this.getDummyUuid());
 
     return meta;
@@ -305,18 +336,13 @@ export class GrpcClient {
     node.setOrgId(this.getDummyUuid());
     node.setBlockchainId(this.getDummyUuid());
     node.setName('lorem-node');
-    node.setGroupsList(['group-one']);
     node.setVersion('0.1.0');
     node.setIp('127.0.0.1');
-    node.setType('');
-    node.setAddress('0x999999999');
-    node.setWalletAddress('0x000000001');
+    node.setType(Node.NodeType.NODE_TYPE_UNSPECIFIED);
     node.setBlockHeight(12_121_112);
-    node.setNodeData('some-blob');
     node.setCreatedAt(this.getDummyTimestamp());
     node.setUpdatedAt(this.getDummyTimestamp());
-    node.setStatus(Node.NodeStatus.PROCESSING);
-
+    node.setStatus(Node.NodeStatus.NODE_STATUS_PROCESSING);
     return node;
   }
 
@@ -333,7 +359,7 @@ export class GrpcClient {
     host.setOsVersion('21.6.0 Darwin Kernel Version 21.6.');
     host.setIp('127.0.0.1');
     host.addNodes(this.getDummyNode());
-    host.setStatus(Host.HostStatus.CREATING);
+    host.setStatus(Host.HostStatus.HOST_STATUS_CREATING);
     host.setCreatedAt(this.getDummyTimestamp());
 
     return host;
@@ -602,7 +628,6 @@ export class GrpcClient {
 
     let request = new CreateHostRequest();
     request.setMeta(request_meta);
-    request.setHost(host);
 
     return this.host
       ?.create(request, this.getAuthHeader())
@@ -666,7 +691,6 @@ export class GrpcClient {
 
     let request = new CreateHostProvisionRequest();
     request.setMeta(request_meta);
-    request.setHostProvision(host_provision);
 
     return this.host_provision
       ?.create(request, this.getAuthHeader())
@@ -752,22 +776,24 @@ export class GrpcClient {
   }
 
   async createNode(
-    node: Node,
+    node: UINode,
     key_files?: File[],
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    node.setStatus(Node.NodeStatus.PROVISIONING);
-    node.setWalletAddress('-');
-    node.setAddress('-');
-
-    let request = new CreateNodeRequest();
+    let request: CreateNodeRequest = new CreateNodeRequest();
     request.setMeta(request_meta);
-    request.setNode(node);
 
-    console.log('creating node: ', node);
-    console.log('got files: ', key_files);
+    request.setOrgId(node.org_id);
+    request.setBlockchainId(node.blockchain_id);
+    request.setVersion(node.version ?? '');
+    request.setType(node.type);
+    request.setNetwork(node.network);
+
+    const node_properties: Node.NodeProperty[] =
+      node_properties_to_grpc_node_properties(node.properties);
+    request.setPropertiesList(node_properties);
 
     let response_meta = await this.node
       ?.create(request, this.getAuthHeader())
@@ -840,7 +866,8 @@ export class GrpcClient {
   }
 
   async updateNode(
-    node: Node,
+    node_id: string,
+    version?: string,
     key_files?: FileList,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpdateNodeResponse();
@@ -850,7 +877,9 @@ export class GrpcClient {
 
     let request = new UpdateNodeRequest();
     request.setMeta(request_meta);
-    request.setNode(node);
+
+    request.setId(node_id);
+    if (version) request.setVersion(version);
 
     let response_meta = await this.node
       ?.update(request, this.getAuthHeader())
@@ -866,7 +895,6 @@ export class GrpcClient {
 
     // Node creation was successful, trying to upload keys, if existent
     if (key_files !== undefined && key_files?.length > 0) {
-      let node_id = node.getId();
       let request = new KeyFilesSaveRequest();
       let files: Array<Keyfile> = [];
 
@@ -962,14 +990,13 @@ export class GrpcClient {
   }
 
   async createOrganization(
-    organization: Organization,
+    name: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new CreateOrganizationRequest();
-    request.setMeta(request_meta);
-    request.setOrganization(organization);
+    request.setName(name);
 
     return this.organization
       ?.create(request, this.getAuthHeader())
@@ -985,14 +1012,16 @@ export class GrpcClient {
   }
 
   async updateOrganization(
-    organization: Organization,
+    id: string,
+    name: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new UpdateOrganizationRequest();
     request.setMeta(request_meta);
-    request.setOrganization(organization);
+    request.setId(id);
+    request.setName(name);
 
     return this.organization
       ?.update(request, this.getAuthHeader())
@@ -1008,14 +1037,14 @@ export class GrpcClient {
   }
 
   async deleteOrganization(
-    organization_id: string,
+    id: string,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new DeleteOrganizationRequest();
     request.setMeta(request_meta);
-    request.setId(organization_id);
+    request.setId(id);
 
     return this.organization
       ?.delete(request, this.getAuthHeader())
@@ -1177,15 +1206,12 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    let user = new User();
-    user.setEmail(ui_user.email);
-    user.setFirstName(ui_user.first_name);
-    user.setLastName(ui_user.last_name);
-
     let request = new CreateUserRequest();
+    request.setEmail(ui_user.email);
+    request.setFirstName(ui_user.first_name);
+    request.setLastName(ui_user.last_name);
     request.setPassword(ui_user.password);
     request.setPasswordConfirmation(ui_user.password_confirmation);
-    request.setUser(user);
 
     return this.user
       ?.create(request, null)
@@ -1198,14 +1224,18 @@ export class GrpcClient {
   }
 
   async updateUser(
-    user: User,
+    id: string,
+    first_name: string,
+    last_name: string,
   ): Promise<User.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
     let request = new UpdateUserRequest();
     request.setMeta(request_meta);
-    request.setUser(user);
+    request.setId(id);
+    request.setFirstName(first_name);
+    request.setLastName(last_name);
 
     return this.user
       ?.update(request, this.getAuthHeader())
@@ -1250,23 +1280,21 @@ export class GrpcClient {
 
     while (should_run) {
       update_stream?.on('data', (response) => {
-        if (
-          response.getUpdate()?.getNotificationCase() ===
-          UpdateNotification.NotificationCase.HOST
-        ) {
-          const host = response.getUpdate()?.getHost();
-
-          console.log(`got host update from server: `, host);
-          stateObject.processHostUpdate(host);
-        } else if (
-          response.getUpdate()?.getNotificationCase() ===
-          UpdateNotification.NotificationCase.NODE
-        ) {
-          const node = response.getUpdate()?.getNode();
-
-          console.log(`got node update from server: `, node);
-          stateObject.processNodeUpdate(node);
-        }
+        // if (
+        //   response.getUpdate()?.getNotificationCase() ===
+        //   UpdateNotification.NotificationCase.HOST
+        // ) {
+        //   const host = response.getUpdate()?.getHost();
+        //   console.log(`got host update from server: `, host);
+        //   stateObject.processHostUpdate(host);
+        // } else if (
+        //   response.getUpdate()?.getNotificationCase() ===
+        //   UpdateNotification.NotificationCase.NODE
+        // ) {
+        //   const node = response.getUpdate()?.getNode();
+        //   console.log(`got node update from server: `, node);
+        //   stateObject.processNodeUpdate(node);
+        // }
       });
       update_stream?.on('error', (err) => {
         console.error(`update stream closed unexpectedly: `, err);
