@@ -17,7 +17,7 @@ type BlockjoyNode = {
   hostId: string;
   name: string;
   ip: string;
-  created: string;
+  created?: string;
   status: number;
   blockchainId: string;
   blockchainName: string;

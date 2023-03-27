@@ -16,9 +16,14 @@ import { wrapper } from 'styles/wrapper.styles';
 import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
 import { mapNodeListToRows } from '@modules/node/utils/mapNodeListToRows';
+import { organizationAtoms } from '@modules/organization';
 
 export const NodeList = () => {
   const router = useRouter();
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const nodeUIContext = useNodeUIContext();
   const nodeUIProps = useMemo(() => {
@@ -48,6 +53,11 @@ export const NodeList = () => {
       currentQueryParams.current = nodeUIProps.queryParams;
     }
   }, [nodeUIProps.queryParams]);
+
+  // useEffect(() => {
+  //   loadNodes();
+  //   console.log('hmmm', defaultOrganization?.id);
+  // }, [defaultOrganization]);
 
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
@@ -119,6 +129,7 @@ export const NodeList = () => {
                   headers={headers}
                   preload={preloadNodes}
                   rows={rows}
+                  fixedRowHeight="140px"
                   onRowClick={handleNodeClick}
                 />
               ) : (

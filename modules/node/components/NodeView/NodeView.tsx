@@ -68,7 +68,7 @@ export function NodeView() {
         </div>
         {!isLoading ? (
           <>
-            {!nodeError ? (
+            {!nodeError && node?.id ? (
               <>
                 <NodeViewDetailsHeader
                   handleStop={handleStop}
@@ -105,7 +105,7 @@ export function NodeView() {
           <NodeViewConfig />
         </PageSection>
       )}
-      {!nodeError && !isLoading && (
+      {!nodeError && !isLoading && node?.id && (
         <PageSection bottomBorder={false}>
           <DangerZone
             isLoading={isDeleting}

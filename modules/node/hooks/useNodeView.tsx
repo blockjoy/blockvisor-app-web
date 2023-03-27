@@ -31,12 +31,12 @@ const createUuid = (id: Args) => {
 export const useNodeView = (): Hook => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-  const { updateNodeList, removeNodeFromTheList } = useNodeList();
+  const { removeFromNodeList } = useNodeList();
 
   const deleteNode = async (id: Args) => {
     const uuid = createUuid(id);
     await apiClient.deleteNode(uuid);
-    removeNodeFromTheList(uuid);
+    removeFromNodeList(uuid);
     toast.success(`Node Deleted`);
   };
 
