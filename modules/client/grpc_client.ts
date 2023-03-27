@@ -32,7 +32,7 @@ import { BillingServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Billing_s
 import { DashboardServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Dashboard_serviceServiceClientPb';
 import { HostServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Fe_host_serviceServiceClientPb';
 import { HostProvisionServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Host_provision_serviceServiceClientPb';
-import { NodeServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Node_serviceServiceClientPb';
+import { NodeServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Ui_node_serviceServiceClientPb';
 import { OrganizationServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Organization_serviceServiceClientPb';
 import { UpdateServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/Update_serviceServiceClientPb';
 import { UserServiceClient } from '@blockjoy/blockjoy-grpc/dist/out/User_serviceServiceClientPb';
@@ -58,7 +58,7 @@ import {
   ListNodesRequest,
   UpdateNodeRequest,
   UpdateNodeResponse,
-} from '@blockjoy/blockjoy-grpc/dist/out/node_service_pb';
+} from '@blockjoy/blockjoy-grpc/dist/out/ui_node_service_pb';
 import {
   CreateOrganizationRequest,
   DeleteOrganizationRequest,
@@ -111,6 +111,14 @@ export type UIUser = {
   email: string;
   password: string;
   password_confirmation: string;
+};
+export type UINode = {
+  org_id: string;
+  blockchain_id: string;
+  version?: string;
+  type: Node.NodeType;
+  properties: Node.NodeProperty.AsObject[];
+  network: string;
 };
 export type UINodeCreate = {
   host_id: string;
@@ -193,6 +201,28 @@ export function user_to_grpc_user(user: User | undefined): GrpcUserObject {
     created_at_datetime: timestamp_to_date(user?.getCreatedAt()),
     updated_at_datetime: timestamp_to_date(user?.getUpdatedAt()),
   };
+}
+
+export function node_properties_to_grpc_node_properties(
+  properties: Node.NodeProperty.AsObject[],
+): Node.NodeProperty[] {
+  let node_properties: Node.NodeProperty[] = [];
+
+  properties.forEach((property: Node.NodeProperty.AsObject) => {
+    let node_property: Node.NodeProperty = new Node.NodeProperty();
+
+    node_property.setName(property.name);
+    node_property.setLabel(property.label);
+    node_property.setDescription(property.description);
+    node_property.setUiType(property.uiType);
+    node_property.setDisabled(property.disabled);
+    node_property.setRequired(property.required);
+    if (property.value) node_property.setValue(property.value);
+
+    node_properties.push(node_property);
+  });
+
+  return node_properties;
 }
 
 export type ConvenienceConversion = {
@@ -746,20 +776,24 @@ export class GrpcClient {
   }
 
   async createNode(
-    node: Node,
+    node: UINode,
     key_files?: File[],
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
 
-    node.setStatus(Node.NodeStatus.NODE_STATUS_PROVISIONING);
-
-    let request = new CreateNodeRequest();
+    let request: CreateNodeRequest = new CreateNodeRequest();
     request.setMeta(request_meta);
-    request.setNode(node);
 
-    console.log('creating node: ', node);
-    console.log('got files: ', key_files);
+    request.setOrgId(node.org_id);
+    request.setBlockchainId(node.blockchain_id);
+    request.setVersion(node.version ?? '');
+    request.setType(node.type);
+    request.setNetwork(node.network);
+
+    const node_properties: Node.NodeProperty[] =
+      node_properties_to_grpc_node_properties(node.properties);
+    request.setPropertiesList(node_properties);
 
     let response_meta = await this.node
       ?.create(request, this.getAuthHeader())
@@ -832,7 +866,8 @@ export class GrpcClient {
   }
 
   async updateNode(
-    node: Node,
+    node_id: string,
+    version?: string,
     key_files?: FileList,
   ): Promise<ResponseMeta.AsObject | StatusResponse | undefined> {
     let response = new UpdateNodeResponse();
@@ -842,7 +877,9 @@ export class GrpcClient {
 
     let request = new UpdateNodeRequest();
     request.setMeta(request_meta);
-    request.setNode(node);
+
+    request.setId(node_id);
+    if (version) request.setVersion(version);
 
     let response_meta = await this.node
       ?.update(request, this.getAuthHeader())
@@ -858,7 +895,6 @@ export class GrpcClient {
 
     // Node creation was successful, trying to upload keys, if existent
     if (key_files !== undefined && key_files?.length > 0) {
-      let node_id = node.getId();
       let request = new KeyFilesSaveRequest();
       let files: Array<Keyfile> = [];
 
