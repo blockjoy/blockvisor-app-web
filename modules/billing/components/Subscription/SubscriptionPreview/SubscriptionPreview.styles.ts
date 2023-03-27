@@ -11,7 +11,7 @@ export const styles = {
   buttons: css`
     margin-top: 30px;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     gap: 10px;
   `,
 };

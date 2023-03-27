@@ -22,23 +22,21 @@ export const InvoiceDownload = ({ invoice }: InvoiceDownloadProps) => {
   };
 
   return (
-    <div>
-      <PDFDownloadLink
-        document={<InvoicePDF invoice={invoice} />}
-        fileName="invoice.pdf"
-        onClick={handleDownloadClick}
-        css={[
-          reset.button,
-          button,
-          buttonSize['small'],
-          buttonBorder['rounded'],
-          buttonDisplay['inline'],
-          buttonStyle['outline'],
-        ]}
-      >
-        <IconDownload />
-        <span>Download</span>
-      </PDFDownloadLink>
-    </div>
+    <PDFDownloadLink
+      document={<InvoicePDF invoice={invoice} />}
+      fileName="invoice.pdf"
+      onClick={handleDownloadClick}
+      css={[
+        reset.button,
+        button,
+        buttonSize['small'],
+        buttonBorder['rounded'],
+        buttonDisplay['inline'],
+        buttonStyle['outline'],
+      ]}
+    >
+      <IconDownload />
+      <span>Download</span>
+    </PDFDownloadLink>
   );
 };

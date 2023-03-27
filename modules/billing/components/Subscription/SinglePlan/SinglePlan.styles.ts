@@ -8,11 +8,12 @@ export const styles = {
     padding: 20px;
     border-radius: 4px;
     width: 100%;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
 
-    @media ${breakpoints.fromSml} {
-      flex: 1;
+    @media ${breakpoints.fromMed} {
+      flex: 1 1 200px;
       width: 50%;
       max-width: 50%;
     }
