@@ -49,7 +49,7 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
         ]}
       >
         <p css={styles.planTitle}>{plan?.nickname}</p>
-        <Button style="outline" size="medium" onClick={handleCancel}>
+        <Button style="outline" size="small" onClick={handleCancel}>
           Change Plan
         </Button>
       </div>

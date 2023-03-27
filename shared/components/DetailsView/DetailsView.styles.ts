@@ -8,16 +8,18 @@ export const styles = {
   `,
   headlineWrapper: css`
     width: 25%;
+    min-width: 200px;
     max-width: 300px;
+    margin-bottom: 20px;
   `,
   headline: css`
     font-size: 10px;
-
     letter-spacing: 1px;
     text-transform: uppercase;
   `,
   contentWrapper: css`
     width: 75%;
-    max-width: cacl(100% - 300px);
+    min-width: 300px;
+    max-width: calc(100% - 300px);
   `,
 };

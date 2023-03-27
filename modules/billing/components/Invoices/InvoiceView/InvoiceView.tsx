@@ -51,8 +51,8 @@ export const InvoiceView = () => {
           <>
             {invoice ? (
               <>
-                <div css={styles.header}>
-                  <div>
+                <div css={styles.headerWrapper}>
+                  <div css={styles.header}>
                     <h2 css={styles.headline}>{`Invoice ${invoice.id}`}</h2>
                     <div css={styles.info}>
                       <IconCalendar />
