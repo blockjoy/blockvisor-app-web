@@ -1305,7 +1305,11 @@ export class GrpcClient {
 
   /* Update service */
 
-  getUpdates(eqmx_url: string, callback: (payload: any) => void): void {
+  getUpdates(
+    eqmx_url: string,
+    callback: (payload: any, nodeList: any[]) => void,
+    nodeList: any[],
+  ): void {
     let token = this.getApiToken() || '';
     token = Buffer.from(token, 'base64').toString('binary');
 

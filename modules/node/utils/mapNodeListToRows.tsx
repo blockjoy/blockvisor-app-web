@@ -51,9 +51,11 @@ export const mapNodeListToRows = (nodeList?: BlockjoyNode[]) => {
         key: '3',
         component: (
           <span style={{ fontSize: '14px' }}>
-            {formatDistanceToNow(new Date(node.created_at_datetime), {
-              addSuffix: true,
-            })}
+            {!node.created_at_datetime
+              ? 'Oh Shit'
+              : formatDistanceToNow(new Date(node.created_at_datetime), {
+                  addSuffix: true,
+                })}
           </span>
         ),
       },
