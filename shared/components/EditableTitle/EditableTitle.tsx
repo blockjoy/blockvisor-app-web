@@ -1,4 +1,11 @@
-import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  FC,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { styles } from './EditableTitle.styles';
 import IconPencil from '@public/assets/icons/pencil-12.svg';
 import IconClose from '@public/assets/icons/close-12.svg';
@@ -53,6 +60,12 @@ export const EditableTitle: FC<Props> = ({
     setIsDirty(escapeHtml(value) !== escapeHtml(initialValue));
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!['Enter'].includes(e.key)) return;
+
+    handleSaveClicked();
+  };
+
   const handleSaveClicked = () => {
     onSaveClicked(inputValue.current);
   };
@@ -87,6 +100,7 @@ export const EditableTitle: FC<Props> = ({
           css={[styles.input, isEditMode && styles.inputEditable]}
           defaultValue={escapeHtml(initialValue)}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
         />
       ) : (
         <span css={styles.span}>{escapeHtml(initialValue)}</span>
