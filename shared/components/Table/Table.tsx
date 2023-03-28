@@ -33,8 +33,6 @@ export const Table = ({
     }
   };
 
-  console.log('props', properties?.sorting);
-
   return (
     <div css={styles.wrapper}>
       <table
