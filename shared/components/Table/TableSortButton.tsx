@@ -9,6 +9,7 @@ type Props = {
   onClick: (arg0: string) => void;
   sortExpression?: string;
   activeSortExpression?: string;
+  activeOrder?: string;
 };
 
 export const TableSortButton: React.FC<Props> = ({
@@ -16,8 +17,10 @@ export const TableSortButton: React.FC<Props> = ({
   onClick,
   sortExpression,
   activeSortExpression,
+  activeOrder,
 }) => {
   const isActive = sortExpression === activeSortExpression;
+
   return (
     <button
       onClick={() => onClick(sortExpression || '')}
@@ -28,7 +31,13 @@ export const TableSortButton: React.FC<Props> = ({
         size="10px"
         additionalStyles={isActive ? [styles.active] : undefined}
       >
-        <IconSort />
+        {!isActive || !activeOrder ? (
+          <IconSort />
+        ) : activeOrder === 'asc' ? (
+          <IconSortAsc />
+        ) : (
+          <IconSortDesc />
+        )}
       </SvgIcon>
     </button>
   );

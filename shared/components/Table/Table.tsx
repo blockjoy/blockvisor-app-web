@@ -33,6 +33,8 @@ export const Table = ({
     }
   };
 
+  console.log('props', properties?.sorting);
+
   return (
     <div css={styles.wrapper}>
       <table
@@ -73,6 +75,7 @@ export const Table = ({
                         onClick={() => handleSort(dataField)}
                         sortExpression={dataField}
                         activeSortExpression={properties?.sorting?.field}
+                        activeOrder={properties?.sorting?.order}
                       >
                         {component || name}
                       </TableSortButton>
