@@ -86,8 +86,8 @@ export const useMqttUpdates = () => {
 
   const mqttRef = useRef<any>({});
 
-  const connectMqtt = (eqmx_url: string) => {
-    const token = Buffer.from(accessToken.current, 'base64').toString('binary');
+  const connectMqtt = (eqmx_url: string, tokenString: string) => {
+    const token = Buffer.from(tokenString, 'base64').toString('binary');
 
     // let token = JSON.parse(
     //   window.localStorage.getItem('identity') || '{}',
@@ -107,6 +107,7 @@ export const useMqttUpdates = () => {
 
     const mqtt_client = mqttRef.current;
 
+    console.log('mqtt_client', mqtt_client, token);
     mqtt_client.on('connect', async () => {
       console.log('MQTT connected');
 
@@ -177,7 +178,7 @@ export const useMqttUpdates = () => {
       console.log('MQTT: Organization Changed');
       accessToken.current = user?.accessToken!;
       mqttOrgId.current = defaultOrganization?.id!;
-      connectMqtt(env.eqmx_url!);
+      connectMqtt(env.eqmx_url!, user?.accessToken!);
     }
   }, [defaultOrganization?.id]);
 
@@ -186,7 +187,7 @@ export const useMqttUpdates = () => {
     if (user?.accessToken !== accessToken.current) {
       console.log('MQTT: Access Token Changed');
       accessToken.current = user?.accessToken!;
-      connectMqtt(env.eqmx_url!);
+      connectMqtt(env.eqmx_url!, user?.accessToken!);
     }
   }, [user?.accessToken]);
 };
