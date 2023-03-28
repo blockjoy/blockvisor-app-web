@@ -1303,59 +1303,6 @@ export class GrpcClient {
     return response.getParamsList().map((item) => item.toObject());
   }
 
-  /* Update service */
-
-  getUpdates(eqmx_url: string, callback: (payload: any) => void): void {
-    let token = this.getApiToken() || '';
-    token = Buffer.from(token, 'base64').toString('binary');
-
-    const data = JSON.parse(Buffer.from(token?.split('.')[1], 'base64').toString('binary'));
-    const channel = `/orgs/${data.data.org_id}/nodes`;
-
-    console.log('using token for mqtt auth: ', data);
-
-    let mqtt_client = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
-      clean: true,
-      connectTimeout: 30000,
-      port: 8083,
-      protocolId: 'MQTT',
-      clientId: 'user_auth',
-      reconnectPeriod: 30000,
-      username: token,
-      password: token,
-    });
-
-    // /orgs/ <
-    //   org_id >
-    //   /nodes/ <
-    //   node_id >
-
-    mqtt_client.on('connect', () => {
-      console.log('MQTT connected');
-      mqtt_client.subscribe(channel, (err) => {
-        if (err) {
-          console.log('subscription error: ', err);
-        } else {
-          console.log(`MQTT subscribed to ${channel}`);
-        }
-      });
-    });
-
-    mqtt_client.on('message', (topic, payload) => {
-      // let tmp = new TextDecoder().decode(payload);
-      let msg = NodeMessage.deserializeBinary(new Uint8Array(payload)).toObject();
-      console.log('MQTT topic: ', topic);
-      console.log('MQTT payload: ', msg.deleted);
-      callback(payload);
-    });
-
-    mqtt_client.on('error', (err) => {
-      console.log('MQTT connection error: ', err);
-    });
-  }
-
-  /* Command service */
-
   async execCreateNode(
     host_id: string,
     node: UINodeCreate,

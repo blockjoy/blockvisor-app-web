@@ -37,11 +37,6 @@ export const AppLayout: React.FC<LayoutType> = ({
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-
-  const currentOrganization = useRef(defaultOrganization);
-
-  useMqttUpdates();
-
   useEffect(() => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
