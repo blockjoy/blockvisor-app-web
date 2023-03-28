@@ -3,11 +3,14 @@ export * from './components/OrganizationManagement/OrganizationList/Organization
 export * from './components/OrganizationManagement/OrganizationList/OrganizationAdd/OrganizationAdd';
 export * from './components/OrganizationView/OrganizationView';
 export * from './components/OrganizationView/OrganizationDetails/OrganizationDetails';
+export * from './components/OrganizationView/OrganizationMembers/OrganizationMembersView';
 export * from './components/OrganizationView/OrganizationMembers/OrganizationMembers';
 export * from './store/organizationAtoms';
 export * from './utils/typeGuards';
 export * from './utils/organizationDetails';
 export * from './utils/toRow';
+export * from './utils/mapOrganizationsToRows';
+export * from './utils/getHandlerTableChange';
 export * from './hooks/useCreateOrganization';
 export * from './hooks/useGetOrganizations';
 export * from './hooks/useGetOrganization';

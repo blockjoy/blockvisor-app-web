@@ -1,10 +1,11 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { styles } from './SvgIcon.styles';
 import { Tooltip } from '../Tooltip/Tooltip';
+import { ITheme } from 'types/theme';
 
 type Props = {
   children?: React.ReactNode;
-  additionalStyles?: SerializedStyles[];
+  additionalStyles?: ((theme: ITheme) => SerializedStyles)[] | undefined;
   size?: string;
   tooltip?: string;
 };

@@ -7,6 +7,12 @@ type Member = {
   role: string;
 };
 
+type Invitee = {
+  id: string;
+  inviteeEmail: string;
+  createdAtString: string;
+};
+
 export const mapMembersToRows = (members: Member[]) => {
   return members.map((member, idx) => ({
     key: member.username ?? `${idx}`,
@@ -31,7 +37,7 @@ export const mapMembersToRows = (members: Member[]) => {
   }));
 };
 
-export const mapInvitesToRows = (invites: any[]) => {
+export const mapInvitesToRows = (invites: Invitee[]) => {
   return invites.map((invite) => ({
     key: invite.id,
     cells: [

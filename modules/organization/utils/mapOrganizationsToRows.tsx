@@ -12,6 +12,9 @@ export const mapOrganizationsToRows = (
       key: '1',
       minWidth: '300px',
       maxWidth: '300px',
+      width: '300px',
+      dataField: 'name',
+      sort: true,
     },
     {
       name: 'Members',
@@ -19,6 +22,8 @@ export const mapOrganizationsToRows = (
       width: '180px',
       minWidth: '180px',
       maxWidth: '180px',
+      dataField: 'memberCount',
+      sort: true,
     },
     {
       name: 'Role',
@@ -39,6 +44,7 @@ export const mapOrganizationsToRows = (
     cells: [
       {
         key: '1',
+        data: org.name,
         component: (
           <>
             <p>{escapeHtml(org.name!)}</p>
@@ -47,6 +53,7 @@ export const mapOrganizationsToRows = (
       },
       {
         key: '2',
+        data: org.memberCount,
         component: (
           <>
             <p>{org.memberCount}</p>

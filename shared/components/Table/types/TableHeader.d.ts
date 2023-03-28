@@ -7,4 +7,6 @@ type TableHeader = {
   textAlign?: string;
   isHiddenOnMobile?: boolean;
   component?: EmotionJSX.Element;
+  dataField?: string;
+  sort?: boolean;
 };

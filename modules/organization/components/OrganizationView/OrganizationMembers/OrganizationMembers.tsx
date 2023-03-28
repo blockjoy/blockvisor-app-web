@@ -1,11 +1,12 @@
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
-import { ChangeEvent, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationMembers.styles';
 import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import {
+  getHandlerTableChange,
   organizationAtoms,
   useInvitations,
   useResendInvitation,
@@ -24,19 +25,45 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
+import { withQuery } from '@shared/components/Table/utils/withQuery';
+import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
+import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
+import { useRouter } from 'next/router';
 
-export type MembersProps = {
-  members?: ClientOrganizationMember[];
-  invitations?: ClientOrganizationInvitation[];
-  id?: string;
-};
+export const Members = () => {
+  const router = useRouter();
+  const { id } = router.query;
 
-export const Members = ({ members, invitations, id }: MembersProps) => {
+  const OrganizationMembersUIContext = useOrganizationMembersUIContext();
+  const organizationMembersUIProps = useMemo(() => {
+    return {
+      queryParams: OrganizationMembersUIContext.queryParams,
+      setQueryParams: OrganizationMembersUIContext.setQueryParams,
+    };
+  }, [OrganizationMembersUIContext]);
+
+  const membersAndInvitations = useRecoilValue(
+    organizationAtoms.organizationMembersAndInvitations(
+      organizationMembersUIProps.queryParams,
+    ),
+  );
+
+  const members = useRecoilValue(organizationAtoms.organizationMembers);
+  const invitations = useRecoilValue(
+    organizationAtoms.organizationSentInvitations,
+  );
+
+  const membersAndInvitationsActiveCount = useRecoilValue(
+    organizationAtoms.organizationMembersAndInvitationsFiltered(
+      organizationMembersUIProps.queryParams,
+    ),
+  ).length;
+
   const { inviteMembers } = useInviteMembers();
 
   const { resendInvitation } = useResendInvitation();
 
-  const { isLoading, pageIndex, setPageIndex } = useGetOrganizationMembers();
+  const { isLoading } = useGetOrganizationMembers();
 
   // TOOD: remove after fixed bug in API (return org the invitation's id in response)
   const { getSentInvitations } = useInvitations();
@@ -44,7 +71,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
 
-  const [inviteeEmail, setInviteeEmail] = useState<string>();
   const [isInviting, setIsInviting] = useState<boolean>(false);
 
   const selectedOrganization = useRecoilValue(
@@ -55,10 +81,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
     selectedOrganization?.currentUser?.role!,
     Permissions.CREATE_MEMBER,
   );
-
-  const handlePageClicked = (index: number) => {
-    setPageIndex(index);
-  };
 
   const handleInviteClicked = (email: string) => {
     setIsInviting(true);
@@ -73,7 +95,6 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
       inviteMembers(email!, () => {
         getSentInvitations(id!);
         setActiveView('list');
-        setPageIndex(0);
         setIsInviting(false);
       });
     } else {
@@ -109,10 +130,18 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
   };
 
   const { headers, rows } = mapOrganizationMembersToRows(
-    members,
-    invitations,
+    membersAndInvitations,
     methods,
   );
+
+  const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
+    getHandlerTableChange(organizationMembersUIProps.setQueryParams)(
+      type,
+      queryParams,
+    );
+  };
+
+  const MembersTable = withQuery(Table);
 
   return (
     <>
@@ -138,16 +167,15 @@ export const Members = ({ members, invitations, id }: MembersProps) => {
           onCancelClicked={() => setActiveView('list')}
         />
       )}
-      <Table
-        pageSize={8}
-        pageIndex={pageIndex}
-        onPageClicked={handlePageClicked}
+      <MembersTable
         isLoading={isLoading}
         headers={headers}
         rows={rows}
         verticalAlign="middle"
         fixedRowHeight="74px"
-        setPageIndex={setPageIndex}
+        total={membersAndInvitationsActiveCount}
+        properties={organizationMembersUIProps.queryParams}
+        onTableChange={handleTableChange}
       />
       {activeView === 'action' && (
         <OrganizationDialog

@@ -3,44 +3,36 @@ import { isEqual, isFunction } from 'lodash';
 import {
   InitialQueryParams,
   initialQueryParams,
-} from './OrganizationsUIHelpers';
-import { useRecoilValue } from 'recoil';
-import { organizationAtoms } from '../store/organizationAtoms';
+} from './OrganizationMembersUIHelpers';
 
 export type SetQueryParams = (nextQueryParams: InitialQueryParams) => void;
 
-type OrganizationsUIContext = {
+type OrganizationMembersUIContext = {
   queryParams: InitialQueryParams;
   setQueryParamsBase: React.Dispatch<React.SetStateAction<InitialQueryParams>>;
   setQueryParams: SetQueryParams;
 };
 
-type OrganizationsUIProvider = {
+type OrganizationMembersUIProvider = {
   children?: React.ReactNode;
 };
 
-const OrganizationsUIContext = createContext<OrganizationsUIContext>(
-  {} as OrganizationsUIContext,
-);
-
-export const getInitialQueryParams = () => {
-  const persistedNodeFilters = useRecoilValue(
-    organizationAtoms.organizationsFilters,
+const OrganizationMembersUIContext =
+  createContext<OrganizationMembersUIContext>(
+    {} as OrganizationMembersUIContext,
   );
 
-  if (!persistedNodeFilters) return initialQueryParams;
-
-  return persistedNodeFilters;
-};
-
-export function useOrganizationsUIContext() {
-  return useContext(OrganizationsUIContext);
+export function useOrganizationMembersUIContext() {
+  return useContext(OrganizationMembersUIContext);
 }
 
-export const OrganizationsUIConsumer = OrganizationsUIContext.Consumer;
+export const OrganizationMembersUIConsumer =
+  OrganizationMembersUIContext.Consumer;
 
-export function OrganizationsUIProvider({ children }: OrganizationsUIProvider) {
-  const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
+export function OrganizationMembersUIProvider({
+  children,
+}: OrganizationMembersUIProvider) {
+  const initialQueryParamsValue: InitialQueryParams = initialQueryParams;
 
   const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
     initialQueryParamsValue,
@@ -59,15 +51,15 @@ export function OrganizationsUIProvider({ children }: OrganizationsUIProvider) {
     });
   }, []);
 
-  const value: OrganizationsUIContext = {
+  const value: OrganizationMembersUIContext = {
     queryParams,
     setQueryParamsBase,
     setQueryParams,
   };
 
   return (
-    <OrganizationsUIContext.Provider value={value}>
+    <OrganizationMembersUIContext.Provider value={value}>
       {children}
-    </OrganizationsUIContext.Provider>
+    </OrganizationMembersUIContext.Provider>
   );
 }

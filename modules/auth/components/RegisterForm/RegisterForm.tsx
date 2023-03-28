@@ -30,6 +30,7 @@ type ActiveType = {
 };
 
 const getError = (message: string) => {
+  console.log('getError');
   // temporary getError method based on message
   if (message?.toLowerCase()?.includes('duplicate')) {
     return 'Email address already registered';

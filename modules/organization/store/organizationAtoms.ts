@@ -1,4 +1,17 @@
-import { atom, selector } from 'recoil';
+import { atom, selector, selectorFamily } from 'recoil';
+import { paginate } from '@shared/components/Table/utils/paginate';
+import { sort } from '@shared/components/Table/utils/sort';
+import { filter } from '@shared/components/Table/utils/filter';
+import { InitialQueryParams as InitialQueryParamsMembers } from '../ui/OrganizationMembersUIHelpers';
+import {
+  InitialQueryParams as InitialQueryParamsOrganizations,
+  initialQueryParams,
+} from '../ui/OrganizationsUIHelpers';
+import {
+  mapMembersAndInvitations,
+  MemberAndInvitation,
+} from '../utils/mapMembersAndInvitations';
+import { localStorageEffect } from 'utils/store/persist';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
@@ -32,9 +45,15 @@ const allOrganizations = atom<ClientOrganization[]>({
   default: [],
 });
 
+const organizationsFilters = atom<InitialQueryParamsOrganizations>({
+  key: 'organization.filters',
+  default: initialQueryParams,
+  effects: [localStorageEffect('organizationsFilters')],
+});
+
 const organizationsLoadingState = atom<LoadingState>({
   key: 'organizations.loadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 const organizationLoadingState = atom<LoadingState>({
@@ -49,7 +68,7 @@ const organizationDefaultLoadingState = atom<LoadingState>({
 
 const organizationDeleteLoadingState = atom<LoadingState>({
   key: 'organization.organizationDeleteLoadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 const organizationMemberCount = selector({
@@ -70,9 +89,92 @@ const organisationCount = selector({
   },
 });
 
+const organizationsFiltered = selectorFamily<
+  ClientOrganization[],
+  InitialQueryParamsOrganizations
+>({
+  key: 'organizations.active.filtered',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgs = get(allOrganizations);
+      const { sorting, filtering } = queryParams;
+
+      const filteredOrganizations = filter(allOrgs, filtering);
+      const sortedOrganizations = sort(filteredOrganizations, sorting);
+
+      return sortedOrganizations;
+    },
+});
+
+const organizationsActive = selectorFamily<
+  ClientOrganization[],
+  InitialQueryParamsOrganizations
+>({
+  key: 'organizations.active',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgs = get(organizationsFiltered(queryParams));
+      const { pagination } = queryParams;
+
+      const paginatedOrganizations = paginate(allOrgs, pagination);
+
+      return paginatedOrganizations;
+    },
+});
+
 const organizationMembers = atom<ClientOrganizationMember[]>({
   key: 'organization.members.all',
   default: [],
+});
+
+const organizationMembersAndInvitationsFiltered = selectorFamily<
+  MemberAndInvitation[],
+  InitialQueryParamsMembers
+>({
+  key: 'organizations.members.filtered',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgMembers = get(organizationMembers);
+      const allInvitations = get(organizationSentInvitations);
+
+      const all = allOrgMembers.concat(allInvitations);
+      const mappedAll = mapMembersAndInvitations(all);
+      const { sorting } = queryParams;
+
+      const sortedAll = sort(mappedAll, sorting);
+      return sortedAll;
+    },
+});
+
+const organizationMembersAndInvitations = selectorFamily<
+  MemberAndInvitation[],
+  InitialQueryParamsMembers
+>({
+  key: 'organizations.members.active',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const allOrgMembers = get(
+        organizationMembersAndInvitationsFiltered(queryParams),
+      );
+      const { pagination } = queryParams;
+
+      const paginatedAll = paginate(allOrgMembers, pagination);
+      return paginatedAll;
+    },
+});
+
+const organizationMembersAndInvitationsTotal = selector<number>({
+  key: 'organizations.members.total',
+  get: ({ get }) => {
+    const allOrgMembers = get(organizationMembers);
+    const allInvitations = get(organizationSentInvitations);
+
+    return allOrgMembers.length + allInvitations.length;
+  },
 });
 
 const organizationMembersPageIndex = atom<number>({
@@ -113,10 +215,16 @@ export const organizationAtoms = {
   organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,
+  organizationsFilters,
+  organizationsFiltered,
+  organizationsActive,
   organizationMemberCount,
   organisationCount,
   defaultOrganization,
   organizationMembers,
+  organizationMembersAndInvitations,
+  organizationMembersAndInvitationsFiltered,
+  organizationMembersAndInvitationsTotal,
   organizationMemberLoadingState,
   organizationMembersLoadingState,
   organizationMembersPageIndex,

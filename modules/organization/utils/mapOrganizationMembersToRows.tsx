@@ -1,6 +1,5 @@
 import { useIdentityRepository } from '@modules/auth';
 import { Badge, Button, SvgIcon } from '@shared/components';
-import { formatDistanceToNow } from 'date-fns';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -10,6 +9,7 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
+import { MemberAndInvitation } from './mapMembersAndInvitations';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export enum Action {
@@ -17,16 +17,6 @@ export enum Action {
   remove = 'remove ',
   resend = 'resend ',
 }
-
-type MemberListItem = {
-  id?: string | null;
-  email?: string;
-  createdAt?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-  invitationId?: string | null;
-  isPending?: boolean;
-};
 
 export type Member = {
   user_id?: string | undefined;
@@ -43,8 +33,7 @@ export type Methods = {
 };
 
 export const mapOrganizationMembersToRows = (
-  members?: ClientOrganizationMember[],
-  invitations?: ClientOrganizationInvitation[],
+  membersAndInvitations?: MemberAndInvitation[],
   methods?: Methods,
 ) => {
   const repository = useIdentityRepository();
@@ -62,30 +51,6 @@ export const mapOrganizationMembersToRows = (
     selectedOrganization?.currentUser?.role!,
     Permissions.DELETE_MEMBER,
   );
-
-  const membersMap: MemberListItem[] =
-    members?.map((member: ClientOrganizationMember) => ({
-      id: member.id,
-      email: member.email,
-      createdAt: null,
-      firstName: member.firstName,
-      lastName: member.lastName,
-      invitationId: null,
-      isPending: false,
-    })) ?? [];
-
-  const invitationsMap: MemberListItem[] =
-    invitations?.map((invitation: ClientOrganizationInvitation) => ({
-      id: null,
-      email: invitation.inviteeEmail,
-      createdAt: null,
-      firstName: null,
-      lastName: null,
-      invitationId: invitation.id,
-      isPending: true,
-    })) ?? [];
-
-  const allMembers: MemberListItem[] = [...membersMap, ...invitationsMap];
 
   const handleRemoveMember = async (
     user_id: string,
@@ -114,6 +79,8 @@ export const mapOrganizationMembersToRows = (
       width: '300px',
       minWidth: '300px',
       maxWidth: '300px',
+      dataField: 'email',
+      sort: true,
     },
     // {
     //   name: 'Joined',
@@ -122,7 +89,7 @@ export const mapOrganizationMembersToRows = (
     // },
     {
       name: '',
-      key: '3',
+      key: '2',
       width: '60px',
       minWidth: '60px',
       maxWidth: '60px',
@@ -130,7 +97,7 @@ export const mapOrganizationMembersToRows = (
     },
     {
       name: '',
-      key: '4',
+      key: '3',
       width: '50px',
       minWidth: '50px',
       maxWidth: '50px',
@@ -138,81 +105,100 @@ export const mapOrganizationMembersToRows = (
     },
   ];
 
-  const rows = allMembers?.map((member, idx) => ({
-    key: member.id ?? `${idx}`,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <div css={flex.display.inline}>
-            <p>{escapeHtml(member.email!)}</p>
-            {member.isPending && (
-              <Badge
-                color="note"
-                style="outline"
-                customCss={[spacing.left.small]}
+  const rows = membersAndInvitations?.map(
+    (member: MemberAndInvitation, idx: number) => ({
+      key: member.id ?? `${idx}`,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <div css={flex.display.inline}>
+              <p>{escapeHtml(member.email!)}</p>
+              {member.isPending && (
+                <Badge
+                  color="note"
+                  style="outline"
+                  customCss={[spacing.left.small]}
+                >
+                  Pending
+                </Badge>
+              )}
+            </div>
+          ),
+        },
+        // {
+        //   key: '2',
+        //   component: (
+        //     <>
+        //       {member.createdAt && (
+        //         <p>
+        //           {formatDistanceToNow(new Date(member.createdAt || ''), {
+        //             addSuffix: true,
+        //           })}
+        //         </p>
+        //       )}
+        //     </>
+        //   ),
+        // },
+        {
+          key: '3',
+          component:
+            member.isPending && canCreateMember ? (
+              <span
+                css={spacing.right.medium}
+                style={{ textAlign: 'right', width: '100%', display: 'block' }}
               >
-                Pending
-              </Badge>
-            )}
-          </div>
-        ),
-      },
-      // {
-      //   key: '2',
-      //   component: (
-      //     <>
-      //       {member.createdAt && (
-      //         <p>
-      //           {formatDistanceToNow(new Date(member.createdAt || ''), {
-      //             addSuffix: true,
-      //           })}
-      //         </p>
-      //       )}
-      //     </>
-      //   ),
-      // },
-      {
-        key: '3',
-        component:
-          member.isPending && canCreateMember ? (
-            <span
-              css={spacing.right.medium}
-              style={{ textAlign: 'right', width: '100%', display: 'block' }}
-            >
-              <Button
-                type="button"
-                onClick={() =>
-                  handleResendInvitation(
-                    member.invitationId!,
-                    member.email!,
-                    selectedOrganization?.id!,
+                <Button
+                  type="button"
+                  onClick={() =>
+                    handleResendInvitation(
+                      member.invitationId!,
+                      member.email!,
+                      selectedOrganization?.id!,
+                    )
+                  }
+                  style="outline"
+                  size="small"
+                >
+                  Resend
+                </Button>
+              </span>
+            ) : null,
+        },
+        {
+          key: '4',
+          component: (
+            <>
+              {canRemoveMember ? (
+                !member.isPending ? (
+                  member.id !== userId && (
+                    <Button
+                      type="button"
+                      tooltip="Remove"
+                      style="icon"
+                      size="medium"
+                      onClick={() =>
+                        handleRemoveMember(
+                          member?.id!,
+                          selectedOrganization?.id!,
+                          member?.email!,
+                        )
+                      }
+                    >
+                      <SvgIcon size="20px">
+                        <IconClose />
+                      </SvgIcon>
+                    </Button>
                   )
-                }
-                style="outline"
-                size="small"
-              >
-                Resend
-              </Button>
-            </span>
-          ) : null,
-      },
-      {
-        key: '4',
-        component: (
-          <>
-            {canRemoveMember ? (
-              !member.isPending ? (
-                member.id !== userId && (
+                ) : (
                   <Button
                     type="button"
-                    tooltip="Remove"
+                    tooltip="Cancel"
                     style="icon"
                     size="medium"
                     onClick={() =>
-                      handleRemoveMember(
-                        member?.id!,
-                        selectedOrganization?.id!,
+                      handleRevokeInvitation(
+                        member?.invitationId!,
                         member?.email!,
                       )
                     }
@@ -222,30 +208,13 @@ export const mapOrganizationMembersToRows = (
                     </SvgIcon>
                   </Button>
                 )
-              ) : (
-                <Button
-                  type="button"
-                  tooltip="Cancel"
-                  style="icon"
-                  size="medium"
-                  onClick={() =>
-                    handleRevokeInvitation(
-                      member?.invitationId!,
-                      member?.email!,
-                    )
-                  }
-                >
-                  <SvgIcon size="20px">
-                    <IconClose />
-                  </SvgIcon>
-                </Button>
-              )
-            ) : null}
-          </>
-        ),
-      },
-    ],
-  }));
+              ) : null}
+            </>
+          ),
+        },
+      ],
+    }),
+  );
 
   return {
     rows,

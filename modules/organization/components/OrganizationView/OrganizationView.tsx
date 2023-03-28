@@ -18,21 +18,16 @@ import {
 } from '@shared/components';
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
-import { Members } from './OrganizationMembers/OrganizationMembers';
-import {
-  organizationAtoms,
-  useInvitations,
-  useUpdateOrganization,
-} from '@modules/organization';
+import { useInvitations, useUpdateOrganization } from '@modules/organization';
 import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
 import { apiClient } from '@modules/client';
+import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -48,12 +43,16 @@ export const OrganizationView = () => {
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
 
-  const [sentInvitationsLoadingState, setSentInvitationsLoadingState] =
-    useRecoilState(organizationAtoms.organizationSentInvitationsLoadingState);
-
-  const [membersLoadingState, setMembersLoadingState] = useRecoilState(
-    organizationAtoms.organizationMembersLoadingState,
-  );
+  const {
+    getOrganizationMembers,
+    isLoading: membersLoadingState,
+    setIsLoading: setIsLoadingMembers,
+  } = useGetOrganizationMembers();
+  const {
+    getSentInvitations,
+    isLoading: sentInvitationsLoadingState,
+    setIsLoading: setSentInvitationsLoadingState,
+  } = useInvitations();
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean | null>(null);
@@ -97,11 +96,6 @@ export const OrganizationView = () => {
     }
   };
 
-  const { getOrganizationMembers, organizationMembers } =
-    useGetOrganizationMembers();
-
-  const { getSentInvitations, sentInvitations } = useInvitations();
-
   const getTotalNodes = async () => {
     const nodes: any = await apiClient.listNodes(
       id?.toString()!,
@@ -134,13 +128,15 @@ export const OrganizationView = () => {
 
     return () => {
       setIsLoading('initializing');
+      setIsLoadingMembers('initializing');
+      setSentInvitationsLoadingState('initializing');
       setOrganization(null);
       setSentInvitationsLoadingState('initializing');
-      setMembersLoadingState('initializing');
+      // setMembersLoadingState('initializing');
     };
   }, [router.isReady]);
 
-  // quick win to check if org has nodes
+  // TODO: improve - it causes performance leaks. (quick win to check if org has nodes)
   useEffect(() => {
     getTotalNodes();
   }, []);
@@ -151,8 +147,6 @@ export const OrganizationView = () => {
     membersLoadingState !== 'finished' ||
     sentInvitationsLoadingState !== 'finished' ||
     totalNodes === null;
-
-  console.log('sentInvitesta', sentInvitationsLoadingState);
 
   return (
     <>
@@ -189,11 +183,7 @@ export const OrganizationView = () => {
 
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
-            <Members
-              members={organizationMembers}
-              invitations={sentInvitations}
-              id={queryAsString(id)}
-            />
+            <OrganizationMembersView />
           </div>
         )}
       </PageSection>
