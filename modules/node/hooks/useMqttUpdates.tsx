@@ -86,12 +86,14 @@ export const useMqttUpdates = () => {
 
   const mqttRef = useRef<any>({});
 
-  const connectMqtt = (eqmx_url: string, tokenString: string) => {
-    const token = Buffer.from(tokenString, 'base64').toString('binary');
+  const connectMqtt = (eqmx_url: string) => {
+    const tokenString = JSON.parse(
+      window.localStorage.getItem('identity') || '{}',
+    ).accessToken;
 
-    // let token = JSON.parse(
-    //   window.localStorage.getItem('identity') || '{}',
-    // ).accessToken;
+    console.log('MQTT: Connecting', tokenString);
+
+    const token = Buffer.from(tokenString, 'base64').toString('binary');
 
     mqttRef.current = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
       clean: true,
@@ -99,7 +101,7 @@ export const useMqttUpdates = () => {
       port: 8083,
       protocolId: 'MQTT',
       clientId: 'user_auth',
-      keepalive: 1000000,
+      keepalive: 1000,
       reconnectPeriod: 10000,
       username: token,
       password: token,
@@ -178,7 +180,7 @@ export const useMqttUpdates = () => {
       console.log('MQTT: Organization Changed');
       accessToken.current = user?.accessToken!;
       mqttOrgId.current = defaultOrganization?.id!;
-      connectMqtt(env.eqmx_url!, user?.accessToken!);
+      connectMqtt(env.eqmx_url!);
     }
   }, [defaultOrganization?.id]);
 
@@ -187,7 +189,7 @@ export const useMqttUpdates = () => {
     if (user?.accessToken !== accessToken.current) {
       console.log('MQTT: Access Token Changed');
       accessToken.current = user?.accessToken!;
-      connectMqtt(env.eqmx_url!, user?.accessToken!);
+      connectMqtt(env.eqmx_url!);
     }
   }, [user?.accessToken]);
 };

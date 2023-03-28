@@ -152,8 +152,6 @@ export const OrganizationView = () => {
     sentInvitationsLoadingState !== 'finished' ||
     totalNodes === null;
 
-  console.log('sentInvitesta', sentInvitationsLoadingState);
-
   return (
     <>
       <PageTitle title="Organizations" />
