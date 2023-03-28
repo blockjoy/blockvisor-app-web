@@ -2,7 +2,7 @@ import { styles } from './Filtering.styles';
 import { Filter } from './Filter';
 
 export type FilteringProps = {
-  filters: FilteringItem[];
+  filters?: FilteringItem[];
   values: any;
   onFilterChange: (key: string, value: string) => void;
 };
@@ -16,7 +16,7 @@ export const Filtering = ({
     onFilterChange(key, value);
   };
 
-  return (
+  return filters?.length ? (
     <div css={styles.wrapper}>
       {filters.map((filter: FilteringItem) => (
         <Filter
@@ -27,5 +27,5 @@ export const Filtering = ({
         />
       ))}
     </div>
-  );
+  ) : null;
 };

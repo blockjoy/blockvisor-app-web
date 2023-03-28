@@ -14,6 +14,15 @@ export const styles = {
     color: inherit;
     cursor: pointer;
 
+    &,
+    svg path {
+      transition: 0.3s;
+    }
+
+    & svg path {
+      fill: ${theme.colorLabel};
+    }
+
     &:hover {
       color: ${theme.colorText};
     }
@@ -22,15 +31,22 @@ export const styles = {
       fill: ${theme.colorText};
     }
   `,
+  buttonActive: (theme: ITheme) => css`
+    color: ${theme.colorText};
+  `,
   active: (theme: ITheme) => css`
-    &,
+    svg :is(path, circle, rect) {
+      fill: ${theme.colorText};
+    }
+
+    /* &,
     &:hover {
       color: ${theme.colorPrimary};
     }
     & path,
     &:hover path {
       fill: ${theme.colorPrimary};
-    }
+    } */
   `,
   text: css`
     letter-spacing: inherit;

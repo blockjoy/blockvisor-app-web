@@ -1,6 +1,8 @@
-import IconSort from '@public/assets/icons/sort-12.svg';
-import SizedIcon from '@modules/layout/components/shared/SizedIcon';
+import IconSort from '@public/assets/icons/sort.svg';
+import IconSortAsc from '@public/assets/icons/sort-asc.svg';
+import IconSortDesc from '@public/assets/icons/sort-desc.svg';
 import { styles } from './TableSortButton.styles';
+import { SvgIcon } from '../SvgIcon/SvgIcon';
 
 type Props = {
   children?: React.ReactNode;
@@ -15,17 +17,19 @@ export const TableSortButton: React.FC<Props> = ({
   sortExpression,
   activeSortExpression,
 }) => {
+  const isActive = sortExpression === activeSortExpression;
   return (
-    <button onClick={() => onClick(sortExpression || '')} css={[styles.button]}>
+    <button
+      onClick={() => onClick(sortExpression || '')}
+      css={[styles.button, isActive && styles.buttonActive]}
+    >
       <span css={[styles.text]}>{children}</span>
-      <SizedIcon
+      <SvgIcon
         size="10px"
-        additionalStyles={
-          sortExpression === activeSortExpression ? [styles.active] : undefined
-        }
+        additionalStyles={isActive ? [styles.active] : undefined}
       >
         <IconSort />
-      </SizedIcon>
+      </SvgIcon>
     </button>
   );
 };

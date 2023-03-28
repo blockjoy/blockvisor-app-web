@@ -185,7 +185,7 @@ export const mapOrganizationMembersToRows = (
                         )
                       }
                     >
-                      <SvgIcon size="32px">
+                      <SvgIcon size="20px">
                         <IconClose />
                       </SvgIcon>
                     </Button>
