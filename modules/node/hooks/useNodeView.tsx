@@ -55,6 +55,12 @@ export const useNodeView = (): Hook => {
     const nodeId = createUuid(id);
     const node: any = await apiClient.getNode(nodeId);
 
+    if (!node.id) {
+      setIsLoading(false);
+      onError();
+      return;
+    }
+
     checkForTokenError(node);
 
     const details = [
