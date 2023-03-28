@@ -9,8 +9,8 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { escapeHtml } from '@shared/utils/escapeHtml';
 import { MemberAndInvitation } from './mapMembersAndInvitations';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export enum Action {
   revoke = 'revoke',

@@ -1,6 +1,6 @@
 import { styles } from './Modal.styles';
 import { ReactNode, useEffect, useRef } from 'react';
-import { Portal } from '@shared/components';
+import { Portal, SvgIcon } from '@shared/components';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import IconClose from '@public/assets/icons/close-12.svg';
 
@@ -47,7 +47,9 @@ export function Modal({ isOpen, children, portalId, handleClose }: Props) {
           {children}
           <button type="button" onClick={handleClose} css={styles.closeButton}>
             <span css={styles.iconWrapper}>
-              <IconClose />
+              <SvgIcon size="26px">
+                <IconClose />
+              </SvgIcon>
             </span>
           </button>
         </div>
