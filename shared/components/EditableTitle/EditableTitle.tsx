@@ -43,6 +43,7 @@ export const EditableTitle: FC<Props> = ({
     onEditClicked();
 
     if (isEditMode && inputRef.current) {
+      inputRef.current.focus();
       inputRef.current.value = initialValue;
       inputValue.current = initialValue;
       setCharacterCount(escapeHtml(initialValue)?.length + 1);
