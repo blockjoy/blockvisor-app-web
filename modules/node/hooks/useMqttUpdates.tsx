@@ -7,12 +7,14 @@ import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeMetrics } from './useNodeMetrics';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import { useToast } from '@modules/layout';
 
 export const useMqttUpdates = () => {
   const { loadMetrics } = useNodeMetrics();
   const { user } = useIdentity();
+  const toast = useToast();
   const router = useRouter();
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
@@ -32,8 +34,10 @@ export const useMqttUpdates = () => {
     console.log('deleteFromNodeList', node);
     const nodeListCopy = [...latestNodeList.current];
     setNodeList(nodeListCopy.filter((n) => n.id !== node.nodeId));
-    // await loadMetrics();
-    toast.success('Someone deleted a node');
+    await loadMetrics();
+    toast.mqtt({
+      content: `${node.deletedByName} just deleted a node`,
+    });
   };
 
   const deleteActiveNode = (node: any) => {
@@ -50,15 +54,18 @@ export const useMqttUpdates = () => {
     const nodeListCopy = JSON.parse(JSON.stringify(latestNodeList.current));
     nodeListCopy.push(node);
     setNodeList(nodeListCopy);
-    // await loadMetrics();
-    toast.success(
-      <div>
-        {node.createdByName} launched a node{' '}
-        <a onClick={() => router.push(`/nodes/${node.id}`)}>
-          Click here to view it
-        </a>
-      </div>,
-    );
+    await loadMetrics();
+
+    toast.success({
+      content: (
+        <div>
+          {node.createdByName} launched a node{' '}
+          <a onClick={() => router.push(`/nodes/${node.id}`)}>
+            Click here to view it
+          </a>
+        </div>
+      ),
+    });
   };
 
   const handleNodeUpdate = (payload: any) => {
@@ -86,14 +93,22 @@ export const useMqttUpdates = () => {
 
   const mqttRef = useRef<any>({});
 
-  const connectMqtt = (eqmx_url: string) => {
+  const connectMqtt = async (eqmx_url: string) => {
     const tokenString = JSON.parse(
       window.localStorage.getItem('identity') || '{}',
     ).accessToken;
 
-    console.log('MQTT: Connecting', tokenString);
-
     const token = Buffer.from(tokenString, 'base64').toString('binary');
+
+    console.log('MQTT: Connecting', token);
+
+    console.log('mqtt_client', mqttRef.current);
+
+    if (mqttRef.current.connected) {
+      await mqttRef.current.end();
+    }
+
+    console.log('mqtt end: ', mqttRef.current);
 
     mqttRef.current = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
       clean: true,
@@ -107,35 +122,44 @@ export const useMqttUpdates = () => {
       password: token,
     });
 
-    const mqtt_client = mqttRef.current;
-
-    console.log('mqtt_client', mqtt_client, token);
-    mqtt_client.on('connect', async () => {
+    mqttRef.current.on('connect', async () => {
       console.log('MQTT connected');
+
+      mqttRef.current.connected = true;
 
       const data = JSON.parse(
         Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
       );
 
-      if (currentChannel.current?.length) {
-        await mqtt_client.unsubscribe(currentChannel.current);
+      const channel = `/orgs/${data.data.org_id}/nodes`;
+
+      if (
+        currentChannel.current?.length &&
+        currentChannel.current !== channel
+      ) {
+        console.log('currentChannel', currentChannel.current);
+        console.log('newChannel', channel);
+        const unsubRes = mqttRef.current.unsubscribe(currentChannel.current);
+        console.log('unsubRes', unsubRes);
       }
 
-      const channel = `/orgs/${data.data.org_id}/nodes`;
       currentChannel.current = channel;
 
-      if (mqtt_client.connected && !mqtt_client.disconnecting) {
-        await mqtt_client.subscribe(channel, (err: any) => {
+      if (mqttRef.current.connected && !mqttRef.current.disconnecting) {
+        mqttRef.current.subscribe(channel, (err: any) => {
           if (err) {
-            console.log('subscription error: ', { error: err, mqtt_client });
+            console.log('subscription error: ', {
+              error: err,
+              mqtt_client: mqttRef.current,
+            });
           } else {
-            console.log(`MQTT subscribed to ${channel}`, mqtt_client);
+            console.log(`MQTT subscribed to ${channel}`, mqttRef.current);
           }
         });
       }
     });
 
-    mqtt_client.on('message', (topic: string, payload: any) => {
+    mqttRef.current.on('message', (topic: string, payload: any) => {
       let msg = NodeMessage.deserializeBinary(
         new Uint8Array(payload),
       ).toObject();
@@ -161,7 +185,7 @@ export const useMqttUpdates = () => {
       }
     });
 
-    mqtt_client.on('error', (err: any) => {
+    mqttRef.current.on('error', (err: any) => {
       console.log('MQTT connection error: ', err);
     });
   };
