@@ -274,7 +274,17 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    this.token = token;
+    const new_token = Buffer.from(token, 'binary').toString('base64');
+
+    this.token = new_token;
+
+    const identity = localStorage.getItem('identity');
+    if (identity) {
+      const parsedIdentity = JSON.parse(identity);
+      parsedIdentity.accessToken = new_token;
+      const updatedIdentityString = JSON.stringify(parsedIdentity);
+      localStorage.setItem('identity', updatedIdentityString);
+    }
   }
 
   initStorage() {
@@ -567,6 +577,7 @@ export class GrpcClient {
     return this.blockchain
       ?.list(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response
           .getBlockchainsList()
           .map((chain) => blockchain_to_grpc_blockchain(chain));
@@ -591,6 +602,7 @@ export class GrpcClient {
     return this.dashboard
       ?.metrics(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMetricsList().map((item) => item.toObject());
       })
       .catch((err) => {
@@ -611,11 +623,13 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
+    request.setId(host_id!);
     request.setMeta(request_meta);
 
     return this.host
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue()!);
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
@@ -634,7 +648,10 @@ export class GrpcClient {
 
     return this.host
       ?.create(request, this.getAuthHeader())
-      .then((response) => response.getMeta()?.toObject())
+      .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+        return response.getMeta()?.toObject();
+      })
       .catch((err) => {
         return StatusResponseFactory.createHostResponse(err, 'grpcClient');
       });
@@ -676,6 +693,7 @@ export class GrpcClient {
     return this.host_provision
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getHostProvisionsList().map((hp) => hp.toObject());
       })
       .catch((err) => {
@@ -698,6 +716,7 @@ export class GrpcClient {
     return this.host_provision
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -751,6 +770,7 @@ export class GrpcClient {
     return this.node
       ?.list(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getNodesList().map((node) => node_to_grpc_node(node));
       })
       .catch((err) => {
@@ -771,6 +791,10 @@ export class GrpcClient {
     return this.node
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+
+        console.log('getNode', node_to_grpc_node(response.getNode()));
+
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
@@ -801,6 +825,7 @@ export class GrpcClient {
     let response_meta = await this.node
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -887,6 +912,7 @@ export class GrpcClient {
     let response_meta = await this.node
       ?.update(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta();
       })
       .catch((err) => {
@@ -982,6 +1008,7 @@ export class GrpcClient {
     return this.organization
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getOrganizationsList().map((item) => item.toObject());
       })
       .catch((err) => {
@@ -1004,6 +1031,7 @@ export class GrpcClient {
     return this.organization
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1029,6 +1057,7 @@ export class GrpcClient {
     return this.organization
       ?.update(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1052,6 +1081,7 @@ export class GrpcClient {
     return this.organization
       ?.delete(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1100,6 +1130,7 @@ export class GrpcClient {
     return this.organization
       ?.restore(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getOrganization()?.toObject();
       })
       .catch((err) => {
@@ -1123,6 +1154,7 @@ export class GrpcClient {
     return this.organization
       ?.members(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getUsersList().map((item) => ({
           ...item.toObject(),
           createdAtString: timestamp_to_date(item?.getCreatedAt()) || undefined,
@@ -1196,6 +1228,7 @@ export class GrpcClient {
     return this.user
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return user_to_grpc_user(response.getUser());
       })
       .catch((err) => {
@@ -1219,6 +1252,7 @@ export class GrpcClient {
     return this.user
       ?.create(request, null)
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1243,6 +1277,7 @@ export class GrpcClient {
     return this.user
       ?.update(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getUser()?.toObject();
       })
       .catch((err) => {
@@ -1267,63 +1302,6 @@ export class GrpcClient {
 
     return response.getParamsList().map((item) => item.toObject());
   }
-
-  /* Update service */
-
-  getUpdates(eqmx_url: string, callback: (payload: any) => void): void {
-    let token = this.getApiToken() || '';
-    token = Buffer.from(token, 'base64').toString('binary');
-
-    const data = JSON.parse(
-      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
-    );
-    const channel = `/orgs/${data.data.org_id}/nodes`;
-
-    console.log('using token for mqtt auth: ', data);
-
-    let mqtt_client = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
-      clean: true,
-      connectTimeout: 30000,
-      port: 8083,
-      protocolId: 'MQTT',
-      clientId: 'user_auth',
-      reconnectPeriod: 30000,
-      username: token,
-      password: token,
-    });
-
-    // /orgs/ <
-    //   org_id >
-    //   /nodes/ <
-    //   node_id >
-
-    mqtt_client.on('connect', () => {
-      console.log('MQTT connected');
-      mqtt_client.subscribe(channel, (err) => {
-        if (err) {
-          console.log('subscription error: ', err);
-        } else {
-          console.log(`MQTT subscribed to ${channel}`);
-        }
-      });
-    });
-
-    mqtt_client.on('message', (topic, payload) => {
-      // let tmp = new TextDecoder().decode(payload);
-      let msg = NodeMessage.deserializeBinary(
-        new Uint8Array(payload),
-      ).toObject();
-      console.log('MQTT topic: ', topic);
-      console.log('MQTT payload: ', msg.deleted);
-      callback(payload);
-    });
-
-    mqtt_client.on('error', (err) => {
-      console.log('MQTT connection error: ', err);
-    });
-  }
-
-  /* Command service */
 
   async execCreateNode(
     host_id: string,
@@ -1363,6 +1341,7 @@ export class GrpcClient {
     return this.command
       ?.startNode(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1394,6 +1373,7 @@ export class GrpcClient {
     return this.command
       ?.stopNode(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1459,6 +1439,7 @@ export class GrpcClient {
     return this.command
       ?.restartHost(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1492,6 +1473,7 @@ export class GrpcClient {
     return this.invitation
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1642,7 +1624,7 @@ export class GrpcClient {
           'pendingInvitations',
           response.getInvitationsList().map((item) => item.toObject()),
         );
-
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getInvitationsList().map((item) => item.toObject());
       })
       .catch((err) => {
@@ -1663,6 +1645,7 @@ export class GrpcClient {
     return this.invitation
       ?.listPending(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getInvitationsList().map((item) => ({
           ...item.toObject(),
           createdAtString: timestamp_to_date(item?.getCreatedAt()) || undefined,
