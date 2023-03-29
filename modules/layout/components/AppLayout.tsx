@@ -1,6 +1,7 @@
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
+import { Toast } from './toast/Toast';
 import { useIdentityRepository } from '@modules/auth';
 import {
   organizationAtoms,
@@ -69,6 +70,7 @@ export const AppLayout: React.FC<LayoutType> = ({
       </Head>
       <Burger />
       <Sidebar />
+      <Toast />
       <Page isFlex={isPageFlex}>{children}</Page>
     </>
   );
