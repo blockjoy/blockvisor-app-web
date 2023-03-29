@@ -11,3 +11,4 @@ export * from './hooks/useEditUser';
 export * from './hooks/useSignOut';
 export * from './utils/BrowserStorage';
 export * from './utils/removeTokenFromUrl';
+export * from './utils/IdentityRepository';

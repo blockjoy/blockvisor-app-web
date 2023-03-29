@@ -52,7 +52,10 @@ export const NodeListHeader = () => {
           <Skeleton margin="0 0 0 auto" />
         ) : (
           <>
-            Total: <span css={styles.totalValue}>{totalNodes} </span>
+            Total:{' '}
+            <span data-cy="nodeList-header" css={styles.totalValue}>
+              {totalNodes}{' '}
+            </span>
             {totalNodes === 1 ? 'node' : 'nodes'}
           </>
         )}
