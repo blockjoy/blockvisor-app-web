@@ -28,7 +28,9 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
+  const allOrganizations = useRecoilValue(
+    organizationAtoms.allOrganizationsSorted,
+  );
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const setIsSidebarOpen = useSetRecoilState(sidebarOpen);

@@ -16,10 +16,6 @@ export function getHandlerTableChange(setQueryParams: any) {
               field,
               order,
             },
-            pagination: {
-              ...prev.pagination,
-              currentPage: 1,
-            },
           }
         : type === 'pagination'
         ? {

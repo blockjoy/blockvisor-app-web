@@ -45,6 +45,23 @@ const allOrganizations = atom<ClientOrganization[]>({
   default: [],
 });
 
+const allOrganizationsSorted = selector<ClientOrganization[]>({
+  key: 'organization.allSorted',
+  get: ({ get }) => {
+    const organizations = get(allOrganizations);
+
+    return [...organizations].sort(
+      (orgA: ClientOrganization, orgB: ClientOrganization) => {
+        if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
+          return -1;
+        if (orgA.name!.toLocaleLowerCase() > orgB.name!.toLocaleLowerCase())
+          return 1;
+        return 0;
+      },
+    );
+  },
+});
+
 const organizationsFilters = atom<InitialQueryParamsOrganizations>({
   key: 'organization.filters',
   default: initialQueryParams,
@@ -215,6 +232,7 @@ export const organizationAtoms = {
   organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,
+  allOrganizationsSorted,
   organizationsFilters,
   organizationsFiltered,
   organizationsActive,

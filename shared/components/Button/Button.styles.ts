@@ -82,7 +82,9 @@ const buttonStyle = {
       fill: ${theme.colorDefault};
     }
 
-    :hover {
+    :hover,
+    :active,
+    :focus {
       background: ${theme.colorLightGrey};
 
       rect,

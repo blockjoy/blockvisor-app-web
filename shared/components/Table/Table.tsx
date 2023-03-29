@@ -73,6 +73,7 @@ export const Table = ({
                         onClick={() => handleSort(dataField)}
                         sortExpression={dataField}
                         activeSortExpression={properties?.sorting?.field}
+                        activeOrder={properties?.sorting?.order}
                       >
                         {component || name}
                       </TableSortButton>
