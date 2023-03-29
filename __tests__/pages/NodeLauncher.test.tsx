@@ -1,6 +1,6 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, cleanup } from '../renderer';
-import { useRouterSpy } from '../utils';
+import { getOrganizationsSpy, useRouterSpy } from '../utils';
 import { NodeLauncher, useGetBlockchains } from '@modules/node';
 import { apiClient } from '@modules/client';
 import { routerMockBuilder } from '__tests__/mocks/router';
@@ -38,6 +38,7 @@ describe('Node Launcher Page', () => {
       loading: false,
       blockchains: [],
     });
+
     render(<NodeLauncher />);
 
     await waitFor(() => {
