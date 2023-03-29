@@ -9,6 +9,7 @@ import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { checkForApiError } from 'utils/checkForAPIError';
 
 type Args = string | string[] | undefined;
 
@@ -52,16 +53,19 @@ export const useNodeView = (): Hook => {
   const loadNode = async (id: Args, onError: VoidFunction) => {
     setIsLoading(true);
 
-    const nodeId = createUuid(id);
-    const node: any = await apiClient.getNode(nodeId);
+    let node: any = null;
 
-    if (!node.id) {
+    try {
+      const nodeId = createUuid(id);
+      node = await apiClient.getNode(nodeId);
+
+      checkForApiError('GetNode', node);
+      checkForTokenError(node);
+    } catch (err) {
       setIsLoading(false);
       onError();
       return;
     }
-
-    checkForTokenError(node);
 
     const details = [
       {
