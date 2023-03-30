@@ -8,7 +8,7 @@ export const isInQuery = (node: any) => {
   if (!filtersAll) return true;
 
   const blockchainID: string = node.blockchainId;
-  const typeID: string = JSON.parse(node.type)['id'].toString();
+  const typeID: string = node.type.toString();
   const statusID: string =
     nodeStatusList.find((nsl) => nsl.id === node.status)?.uuid ?? '';
 

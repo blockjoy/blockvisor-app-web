@@ -58,7 +58,7 @@ export const OrganizationsList = () => {
       {isAdding && <OrganizationAdd setIsAdding={setIsAdding} />}
       <section css={spacing.top.large}>
         {isLoading === 'initializing' ? (
-          <TableSkeleton />
+          <TableSkeleton dataCy="organizationsListTable-skeleton" />
         ) : (
           <AllOrganizationsTable
             organizations={organizationsActive}
