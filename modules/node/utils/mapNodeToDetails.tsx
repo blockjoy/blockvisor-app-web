@@ -1,14 +1,17 @@
 import { nodeTypeList } from '@shared/constants/lookups';
+import { BlockjoyNode } from 'types/Node';
 
 export const mapNodeToDetails = (node: BlockjoyNode) => {
-  if (!node?.nodeTypeId) {
+  console.log('mapNodeToDetails', node);
+
+  if (!node?.type) {
     return [];
   }
 
   const details: { label: string; data: any | undefined }[] = [
     {
       label: 'TYPE',
-      data: nodeTypeList.find((n) => n.id === node.nodeTypeId)?.name,
+      data: nodeTypeList.find((n) => n.id === node.type)?.name,
     },
     { label: 'HOST', data: node.hostName || 'Unknown' },
     { label: 'NODE ADDRESS', data: node?.address || '-' },
