@@ -37,13 +37,13 @@ export const mapNodeConfigToDetails = (node: BlockjoyNode) => {
 
   details.unshift({
     id: 'auto-updates',
-    label: <NodeTypeConfigLabel>AUTO UPDATES</NodeTypeConfigLabel>,
+    label: <>AUTO UPDATES</>,
     data: <LockedSwitch />,
   });
 
   details.unshift({
     id: 'network',
-    label: <NodeTypeConfigLabel>NETWORK</NodeTypeConfigLabel>,
+    label: <>NETWORK</>,
     data: node.network || '-',
   });
 
