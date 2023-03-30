@@ -1,4 +1,4 @@
-const mockeOrganizationsResponse: ClientOrganization[] = [
+const mockeOrganizationsResponse = [
   {
     updatedAt: {
       nanos: 240922000,
