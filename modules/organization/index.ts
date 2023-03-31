@@ -20,14 +20,11 @@ export * from './hooks/useProvisionToken';
 export * from './hooks/useResendInvitation';
 export * from './hooks/useSwitchOrganization';
 export * from './hooks/useUpdates';
-
 export * from './store/organizationAtoms';
 export * from './store/invitationAtoms';
-
 export * from './utils/typeGuards';
 export * from './utils/mapOrganizationDetails';
 export * from './utils/getOrgMemberRole';
 export * from './utils/mapOrganizationsToRows';
 export * from './utils/getHandlerTableChange';
-
 export * from './ui/OrganizationMembersUIHelpers';
