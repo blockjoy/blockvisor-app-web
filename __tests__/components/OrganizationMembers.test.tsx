@@ -1,13 +1,12 @@
 import { expect, vi, it, describe, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor } from '../renderer';
-import { Members } from '@modules/organization';
+import { Members, OrganizationMembersUIProvider } from '@modules/organization';
 import { useRouterSpy } from '__tests__/utils';
 
 import { apiClient } from '@modules/client';
 import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
-import { mockedMembersResponse } from '__tests__/mocks/members';
 import { mockedInvitations } from '__tests__/mocks/invitations';
 
 describe('Members component', () => {
@@ -30,16 +29,28 @@ describe('Members component', () => {
   it('Should display Alerady invited toast error', async () => {
     const [org, nonPrivateOrg] = mockeOrganizationsResponse;
 
+    vi.mocked(apiClient.receivedInvitations).mockImplementationOnce(
+      async (id?: string) => mockedInvitations,
+    );
+
     vi.mocked(apiClient.getOrganizations).mockImplementationOnce(
       async (id?: string) => [nonPrivateOrg],
     );
 
+    vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
+      async () => [
+        {
+          email: 'tom@gmail.com',
+          firstName: 'first',
+          id: '1234',
+          lastName: 'Last',
+        },
+      ],
+    );
     render(
-      <Members
-        id="1234"
-        members={mockedMembersResponse}
-        invitations={mockedInvitations}
-      />,
+      <OrganizationMembersUIProvider>
+        <Members />,
+      </OrganizationMembersUIProvider>,
     );
 
     fireEvent.click(screen.getByDataCy('organization-member-add-button'));
@@ -62,19 +73,21 @@ describe('Members component', () => {
       async (id?: string) => [nonPrivateOrg],
     );
 
+    vi.mocked(apiClient.getOrganizationMembers).mockImplementationOnce(
+      async () => [
+        {
+          email: 'tom@gmail.com',
+          firstName: 'first',
+          id: '1234',
+          lastName: 'Last',
+        },
+      ],
+    );
+
     render(
-      <Members
-        id="1234"
-        members={[
-          {
-            email: 'tom@gmail.com',
-            firstName: 'first',
-            id: '1234',
-            lastName: 'Last',
-          },
-        ]}
-        invitations={[]}
-      />,
+      <OrganizationMembersUIProvider>
+        <Members />
+      </OrganizationMembersUIProvider>,
     );
 
     fireEvent.click(screen.getByDataCy('organization-member-add-button'));

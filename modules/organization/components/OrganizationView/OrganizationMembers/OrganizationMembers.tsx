@@ -137,7 +137,6 @@ export const Members = () => {
 
   const { headers, rows } = mapOrganizationMembersToRows(
     membersAndInvitations,
-    [],
     methods,
   );
 
