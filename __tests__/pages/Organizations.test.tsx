@@ -1,9 +1,10 @@
 import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, cleanup, fireEvent } from '../renderer';
-import { getOrganizationsSpy, useRouterSpy } from '../utils';
+import { useRouterSpy } from '../utils';
 import {
   OrganizationManagement,
   useCreateOrganization,
+  useGetOrganizations,
 } from '@modules/organization';
 import { OrganizationsUIProvider } from '@modules/organization/ui/OrganizationsUIContext';
 import { ApplicationError } from '@modules/auth/utils/Errors';
@@ -13,6 +14,7 @@ import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
 describe('Organizations page', () => {
   beforeEach(() => {
     window.scrollTo = vi.fn() as any;
+    vi.mock('@modules/organization/hooks/useGetOrganizations');
 
     useRouterSpy.mockImplementation(() =>
       routerMockBuilder({ route: '/organizations' }),
@@ -24,7 +26,15 @@ describe('Organizations page', () => {
   });
 
   it('Loading skeleton should be visible when fetching organizations', async () => {
-    getOrganizationsSpy.mockImplementation(async () => []);
+    vi.mocked(useGetOrganizations).mockReturnValue({
+      isLoading: 'initializing',
+      getOrganizations: vi.fn(),
+      setIsLoading: vi.fn(),
+      organizations: [],
+      total: 0,
+      removeFromOrganizations: vi.fn(),
+      addToOrganizations: vi.fn(),
+    });
 
     render(
       <OrganizationsUIProvider>
@@ -36,9 +46,16 @@ describe('Organizations page', () => {
   });
 
   it('Organizations table should be visible when there are organizations', async () => {
-    getOrganizationsSpy.mockImplementation(
-      async () => mockeOrganizationsResponse,
-    );
+    vi.mock('@modules/organization/hooks/useGetOrganizations');
+    vi.mocked(useGetOrganizations).mockReturnValue({
+      isLoading: 'finished',
+      getOrganizations: vi.fn(),
+      setIsLoading: vi.fn(),
+      organizations: mockeOrganizationsResponse,
+      total: 0,
+      removeFromOrganizations: vi.fn(),
+      addToOrganizations: vi.fn(),
+    });
 
     render(
       <OrganizationsUIProvider>
