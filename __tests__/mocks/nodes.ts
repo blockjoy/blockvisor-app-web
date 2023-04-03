@@ -1,6 +1,6 @@
 import { GrpcNodeObject } from '@modules/client/grpc_client';
 
-const mockedNodesResponse: GrpcNodeObject[] = [
+const mockedNodesResponse = [
   {
     blockHeight: 0,
     blockchainId: 'b766f36a-4bdb-42a1-8cc1-edcfb343eb45',

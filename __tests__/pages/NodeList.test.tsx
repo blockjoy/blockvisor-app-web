@@ -82,7 +82,7 @@ describe('Node List Page', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByDataCy('nodeList-Ethereum-Node')).toBeTruthy();
+      expect(screen.getByDataCy('nodeList-Ethereum-Validator')).toBeTruthy();
     });
   });
 
