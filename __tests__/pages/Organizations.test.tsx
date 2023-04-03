@@ -4,21 +4,37 @@ import { useRouterSpy } from '../utils';
 import {
   OrganizationManagement,
   useCreateOrganization,
-  useGetOrganizations,
 } from '@modules/organization';
 import { OrganizationsUIProvider } from '@modules/organization/ui/OrganizationsUIContext';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
+import { apiClient } from '@modules/client';
+import { AppLayout } from '@modules/layout';
+import { mockedMetricsResponse } from '__tests__/mocks/metrics';
+import { useGetBlockchains } from '@modules/node';
+import { mockedBlockchainsResponse } from '__tests__/mocks/blockchains';
 
 describe('Organizations page', () => {
   beforeEach(() => {
     window.scrollTo = vi.fn() as any;
-    vi.mock('@modules/organization/hooks/useGetOrganizations');
 
     useRouterSpy.mockImplementation(() =>
       routerMockBuilder({ route: '/organizations' }),
     );
+
+    vi.mock('@modules/node/hooks/useGetBlockchains');
+    vi.mocked(useGetBlockchains).mockReturnValue({
+      getBlockchains: vi.fn(),
+      loading: false,
+      blockchains: mockedBlockchainsResponse,
+    });
+
+    vi.mocked(apiClient.getDashboardMetrics).mockImplementationOnce(
+      async () => mockedMetricsResponse,
+    );
+
+    vi.mocked(apiClient.listNodes).mockImplementationOnce(async () => []);
   });
 
   afterEach(() => {
@@ -26,41 +42,30 @@ describe('Organizations page', () => {
   });
 
   it('Loading skeleton should be visible when fetching organizations', async () => {
-    vi.mocked(useGetOrganizations).mockReturnValue({
-      isLoading: 'initializing',
-      getOrganizations: vi.fn(),
-      setIsLoading: vi.fn(),
-      organizations: [],
-      total: 0,
-      removeFromOrganizations: vi.fn(),
-      addToOrganizations: vi.fn(),
-    });
-
     render(
-      <OrganizationsUIProvider>
-        <OrganizationManagement />
-      </OrganizationsUIProvider>,
+      <AppLayout pageTitle="Organizations">
+        <OrganizationsUIProvider>
+          <OrganizationManagement />
+        </OrganizationsUIProvider>
+        ,
+      </AppLayout>,
     );
 
     expect(screen.getByDataCy('organizationsListTable-skeleton')).toBeTruthy();
   });
 
   it('Organizations table should be visible when there are organizations', async () => {
-    vi.mock('@modules/organization/hooks/useGetOrganizations');
-    vi.mocked(useGetOrganizations).mockReturnValue({
-      isLoading: 'finished',
-      getOrganizations: vi.fn(),
-      setIsLoading: vi.fn(),
-      organizations: mockeOrganizationsResponse,
-      total: 0,
-      removeFromOrganizations: vi.fn(),
-      addToOrganizations: vi.fn(),
-    });
+    vi.mocked(apiClient.getOrganizations).mockImplementation(
+      async () => mockeOrganizationsResponse,
+    );
 
     render(
-      <OrganizationsUIProvider>
-        <OrganizationManagement />
-      </OrganizationsUIProvider>,
+      <AppLayout pageTitle="Organizations">
+        <OrganizationsUIProvider>
+          <OrganizationManagement />
+        </OrganizationsUIProvider>
+        ,
+      </AppLayout>,
     );
 
     await waitFor(() => {

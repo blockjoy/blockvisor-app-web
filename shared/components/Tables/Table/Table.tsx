@@ -15,7 +15,6 @@ export type TableProps = {
   fixedRowHeight?: string;
   properties?: InitialFilter;
   handleSort?: (dataField: string) => void;
-  dataCy?: string;
   loadingDataCy?: string;
   tableDataCy?: string;
   rowDataCy?: string;
