@@ -1,5 +1,5 @@
 import { expect, vi, it, describe } from 'vitest';
-import { render } from '../renderer';
+import { render } from '../../renderer';
 import { LoginForm, PublicRoute } from '@modules/auth';
 import { useRouter } from 'next/router';
 import {
@@ -7,7 +7,7 @@ import {
   getOrganizationsSpy,
   loginSpy,
   useRouterSpy,
-} from '../utils';
+} from '../../utils';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockJWT, mockUseIdentityValue } from '__tests__/mocks/auth';
 import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';

@@ -1,8 +1,8 @@
 import { expect, vi, it, describe } from 'vitest';
-import { render, screen } from '../renderer';
+import { render, screen } from '../../renderer';
 import { PrivateRoute, useIdentity } from '@modules/auth';
 import { useRouter } from 'next/router';
-import { useRouterSpy } from '../utils';
+import { useRouterSpy } from '../../utils';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockUseIdentityValue } from '__tests__/mocks/auth';
 
