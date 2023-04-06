@@ -14,17 +14,13 @@ import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useRecoilValue } from 'recoil';
 import { useMqttUpdates } from '@modules/node/hooks/useMqttUpdates';
 
-type LayoutType = {
+export type LayoutProps = {
   children: React.ReactNode;
   isPageFlex?: boolean;
   pageTitle: string;
 };
 
-export const AppLayout: React.FC<LayoutType> = ({
-  children,
-  isPageFlex,
-  pageTitle,
-}) => {
+export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
