@@ -75,8 +75,6 @@ export function LoginForm() {
     }
   }, [router.isReady]);
 
-  console.log('loading', loading);
-  console.log('isValid', isValid);
   return (
     <>
       {invited && <Alert isSuccess>You've been invited, please login.</Alert>}
