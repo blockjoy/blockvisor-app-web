@@ -9,7 +9,7 @@ export const NodeViewConfig = () => {
   return (
     <>
       <h2 css={[typo.large, spacing.top.large]}>Configuration</h2>
-      <DetailsTable bodyElements={mapNodeConfigToDetails(node)} />
+      <DetailsTable bodyElements={mapNodeConfigToDetails(node!)} />
     </>
   );
 };

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { styles } from './DataRow.styles';
 
 interface Props {
-  label: string;
+  label: React.ReactNode | string;
   children: React.ReactNode;
 }
 

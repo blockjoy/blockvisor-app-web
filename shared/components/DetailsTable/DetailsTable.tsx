@@ -1,19 +1,21 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { table } from 'styles/table.styles';
 import { DataRow } from '../DataRow/DataRow';
 
 import { styles } from './DetailsTable.styles';
 
-interface Props {
-  bodyElements: { id?: string; label: string; data: string }[];
-}
+type DetailsDataRow = { id?: string; label: ReactNode | string; data: string };
 
-export const DetailsTable: FC<Props> = ({ bodyElements }) => {
+type DetailsTableProps = {
+  bodyElements: DetailsDataRow[];
+};
+
+export const DetailsTable: FC<DetailsTableProps> = ({ bodyElements }) => {
   return (
     <table css={[table.base, styles.base]}>
       <tbody>
-        {bodyElements?.map((item) => (
-          <DataRow key={item.id ? item.id : item.label} label={item.label}>
+        {bodyElements?.map((item: DetailsDataRow, itemIndex: number) => (
+          <DataRow key={item.id ? item.id : itemIndex} label={item.label}>
             {item.data}
           </DataRow>
         ))}
