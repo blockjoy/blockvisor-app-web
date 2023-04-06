@@ -6,7 +6,7 @@ import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganization } from './useGetOrganization';
 import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
-export function useUpdateOrganization() {
+export function useUpdateOrganization(): IUpdateOrganizationHook {
   const [selectedOrganization, setSelectedOrganization] = useRecoilState(
     organizationAtoms.selectedOrganization,
   );
@@ -22,34 +22,66 @@ export function useUpdateOrganization() {
   );
 
   const updateOrganization = async (id: string, name: string) => {
-    const response = await apiClient.updateOrganization(id, name);
+    const response: any = await apiClient.updateOrganization(id, name);
 
     if (isResponeMetaObject(response)) {
-      const newOrg = {
+      const newOrg: ClientOrganization = {
         ...selectedOrganization,
         name,
       };
 
-      setOrganization(newOrg);
-      setSelectedOrganization(newOrg);
+      modifyOrganization(newOrg);
 
-      const updatedAllOrgs = allOrganizations.map((org: any) => ({
-        ...org,
-        name: org.id === id ? name : org.name,
-      }));
-
-      setAllOrganizations(updatedAllOrgs);
-
-      if (defaultOrganization?.id === selectedOrganization?.id) {
-        setDefaultOrganization(selectedOrganization?.id ?? '', name);
-      }
       return;
     } else {
       throw new ApplicationError('UpdateOrganization', 'Update failed');
     }
   };
 
+  const modifyOrganization = (updatedOrganization: ClientOrganization) => {
+    if (selectedOrganization) {
+      const newOrg: ClientOrganization = {
+        ...selectedOrganization,
+        ...updatedOrganization,
+      };
+
+      setOrganization(newOrg);
+      setSelectedOrganization(newOrg);
+    }
+
+    const updatedAllOrgs: ClientOrganization[] = allOrganizations.map(
+      (organization: ClientOrganization) => {
+        if (organization.id === updatedOrganization.id) {
+          const newOrg: ClientOrganization = { ...updatedOrganization };
+          if (typeof newOrg.currentUser === 'undefined')
+            delete newOrg.currentUser;
+
+          const updatedNewOrganization: ClientOrganization = {
+            ...organization,
+            ...newOrg,
+          };
+
+          return updatedNewOrganization;
+        }
+        return organization;
+      },
+    );
+
+    setAllOrganizations(updatedAllOrgs);
+
+    if (
+      defaultOrganization?.id === updatedOrganization?.id &&
+      updatedOrganization?.name
+    ) {
+      setDefaultOrganization(
+        defaultOrganization?.id ?? '',
+        updatedOrganization.name,
+      );
+    }
+  };
+
   return {
     updateOrganization,
+    modifyOrganization,
   };
 }

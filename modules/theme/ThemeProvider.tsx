@@ -88,6 +88,10 @@ const globalStyles = (theme: ITheme) => css`
       }
     }
 
+    & .Toastify__progress-bar--success {
+      background-color: ${theme.colorLabel};
+    }
+
     & .Toastify__close-button--light {
       opacity: 1;
     }

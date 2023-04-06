@@ -8,3 +8,4 @@ export * from './store/nodeAtoms';
 export * from './store/nodeWizard';
 export * from './store/blockchains';
 export * from './hooks/useGetBlockchains';
+export * from './hooks/useUpdates';

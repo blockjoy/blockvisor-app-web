@@ -1,3 +1,6 @@
+import Head from 'next/head';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
@@ -8,11 +11,8 @@ import {
   useGetOrganizations,
   useInvitations,
 } from '@modules/organization';
-import { useEffect, useRef } from 'react';
-import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
-import { useRecoilValue } from 'recoil';
-import { useMqttUpdates } from '@modules/node/hooks/useMqttUpdates';
+import { MqttUIProvider } from '@modules/mqtt';
 
 type LayoutType = {
   children: React.ReactNode;
@@ -27,8 +27,6 @@ export const AppLayout: React.FC<LayoutType> = ({
 }) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
-
-  useMqttUpdates();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -54,7 +52,6 @@ export const AppLayout: React.FC<LayoutType> = ({
   useEffect(() => {
     if (!blockchains?.length) {
       getBlockchains();
-      console.log('getting blockchains in layout');
     }
   }, [defaultOrganization?.id]);
 
@@ -71,7 +68,9 @@ export const AppLayout: React.FC<LayoutType> = ({
       <Burger />
       <Sidebar />
       <Toast />
-      <Page isFlex={isPageFlex}>{children}</Page>
+      <MqttUIProvider>
+        <Page isFlex={isPageFlex}>{children}</Page>
+      </MqttUIProvider>
     </>
   );
 };

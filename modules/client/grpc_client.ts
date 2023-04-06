@@ -250,8 +250,6 @@ export interface StateObject {
   processNodeUpdate: (node: Node | undefined) => boolean;
 }
 
-const eqmx_url = 'ws://35.237.162.218/mqtt';
-
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
@@ -755,10 +753,6 @@ export class GrpcClient {
 
     if (filter_criteria) {
       let criteria = new FilterCriteria();
-
-      console.log('Setting blockchain filter: ', filter_criteria.blockchain);
-      console.log('Setting node status filter: ', filter_criteria.node_status);
-      console.log('Setting node type filter: ', filter_criteria.node_type);
 
       criteria.setBlockchainIdsList(filter_criteria.blockchain || []);
       criteria.setStatesList(filter_criteria.node_status || []);
@@ -1620,10 +1614,6 @@ export class GrpcClient {
     return this.invitation
       ?.listReceived(request, this.getAuthHeader())
       .then((response) => {
-        console.log(
-          'pendingInvitations',
-          response.getInvitationsList().map((item) => item.toObject()),
-        );
         this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getInvitationsList().map((item) => item.toObject());
       })

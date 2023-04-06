@@ -1,3 +1,15 @@
+interface IDeleteOrganizationHook {
+  loading: boolean;
+  deleteOrganization: (id: string) => void;
+  removeOrganization: (id: string) => void;
+  setLoadingState: SetterOrUpdater<LoadingState>;
+}
+
+interface IUpdateOrganizationHook {
+  updateOrganization: (id: string, name: string) => Promise<void>;
+  modifyOrganization: (organization: ClientOrganization) => void;
+}
+
 type ClientDefaultOrganization = {
   name?: string;
   id?: string;

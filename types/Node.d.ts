@@ -1,5 +1,3 @@
-import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-
 type NodeTypeConfig = {
   name: string;
   default: string;

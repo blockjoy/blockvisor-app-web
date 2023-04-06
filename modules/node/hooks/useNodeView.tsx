@@ -1,5 +1,4 @@
 import { formatDistanceToNow } from 'date-fns';
-import { nodeTypeList } from '@shared/constants/lookups';
 import { toast } from 'react-toastify';
 import { apiClient } from '@modules/client';
 import { useState } from 'react';
@@ -8,8 +7,6 @@ import { nodeAtoms } from '../store/nodeAtoms';
 
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
-import { escapeHtml } from '@shared/utils/escapeHtml';
-import { BlockjoyNode } from 'types/Node';
 
 type Args = string | string[] | undefined;
 

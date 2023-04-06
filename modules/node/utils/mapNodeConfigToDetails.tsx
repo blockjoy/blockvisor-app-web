@@ -1,6 +1,5 @@
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
-import { BlockjoyNode } from 'types/Node';
 import { ReactNode } from 'react';
 
 export const mapNodeConfigToDetails = (node: BlockjoyNode) => {

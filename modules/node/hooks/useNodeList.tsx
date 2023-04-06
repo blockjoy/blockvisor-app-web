@@ -57,8 +57,6 @@ export const useNodeList = () => {
       queryParams.pagination,
     );
 
-    console.log('nodes', nodes);
-
     setPreloadNodes(nodes.length);
 
     if (queryParams.pagination.current_page === 1) {
@@ -106,6 +104,14 @@ export const useNodeList = () => {
   //   isUpdated.current = true;
   // };
 
+  const addToNodeList = async (node: any) => {
+    const newNodeList = [...nodeList, node];
+
+    setNodeList(newNodeList);
+
+    await loadMetrics();
+  };
+
   const removeFromNodeList = async (nodeId: string) => {
     const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
 
@@ -118,6 +124,7 @@ export const useNodeList = () => {
     nodeList,
     loadNodes,
     // updateNodeList,
+    addToNodeList,
     removeFromNodeList,
     handleNodeClick,
     setIsLoading,

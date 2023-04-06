@@ -1,5 +1,4 @@
 import { nodeTypeList } from '@shared/constants/lookups';
-import { BlockjoyNode } from 'types/Node';
 
 export const mapNodeToDetails = (node: BlockjoyNode) => {
   console.log('mapNodeToDetails', node);

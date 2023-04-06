@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,21 +18,14 @@
     "incremental": true,
     "baseUrl": ".",
     "types": [
-      "@emotion/react/types/css-prop"
+      "@emotion/react/types/css-prop",
+      "@blockjoy/blockjoy-grpc/dist/out/common_pb"
     ],
     "paths": {
-      "@assets/*": [
-        "./assets/*"
-      ],
-      "@modules/*": [
-        "./modules/*"
-      ],
-      "@shared/*": [
-        "./shared/*"
-      ],
-      "@public/*": [
-        "./public/*"
-      ]
+      "@assets/*": ["./assets/*"],
+      "@modules/*": ["./modules/*"],
+      "@shared/*": ["./shared/*"],
+      "@public/*": ["./public/*"]
     },
     "plugins": [
       {
@@ -51,7 +40,5 @@
     "stories/Components/TagsField/tagsfields.stories.tss",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
