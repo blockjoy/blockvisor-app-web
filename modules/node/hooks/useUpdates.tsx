@@ -25,16 +25,14 @@ export const useUpdates = () => {
       addToNodeList(node);
 
       toast.success(
-        () => (
-          <div>
-            {node?.createdByName} launched a node{' '}
-            <a onClick={() => router.push(`/nodes/${node?.id}`)}>
-              Click here to view it
-            </a>
-          </div>
-        ),
+        <div>
+          {node?.createdByName} launched a node{' '}
+          <a onClick={() => router.push(`/nodes/${node?.id}`)}>
+            Click here to view it
+          </a>
+        </div>,
         {
-          autoClose: 15000,
+          autoClose: 5000,
           hideProgressBar: false,
         },
       );
