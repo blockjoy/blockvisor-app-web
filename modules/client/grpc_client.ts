@@ -76,10 +76,6 @@ import {
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
 import {
-  GetUpdatesRequest,
-  GetUpdatesResponse,
-} from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
-import {
   CommandRequest,
   CommandResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/command_service_pb';
@@ -103,8 +99,6 @@ import {
   ListPendingInvitationRequest,
   ListReceivedInvitationRequest,
 } from '@blockjoy/blockjoy-grpc/dist/out/invitation_service_pb';
-import * as mqtt from 'mqtt';
-import { NodeMessage } from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
 
 export type UIUser = {
   first_name: string;
