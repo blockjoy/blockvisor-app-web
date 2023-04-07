@@ -110,6 +110,14 @@ export const useMqtt = (): IMqttHook => {
       setConnectStatus('Reconnecting');
     });
 
+    mqttClient.on('offline', () => {
+      console.log('MQTT client offline');
+      setConnectStatus('Connect');
+
+      console.log('Attempting MQTT reconnection...');
+      mqttClient.reconnect();
+    });
+
     return () => mqttDisconnect();
   }, [defaultOrganization?.id]);
 

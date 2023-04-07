@@ -1,61 +1,71 @@
-import { OrgMessage } from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
-import { useUpdateOrganization } from './useUpdateOrganization';
-import { toast } from 'react-toastify';
-import { useDeleteOrganization } from './useDeleteOrganization';
+import {
+  OrgCreated,
+  OrgDeleted,
+  OrgMessage,
+  OrgUpdated,
+} from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
+import {
+  useUpdateOrganization,
+  useDeleteOrganization,
+} from '@modules/organization';
+import { showNotification } from '@modules/mqtt';
 
 export const useUpdates = () => {
   const { modifyOrganization } = useUpdateOrganization();
   const { removeOrganization } = useDeleteOrganization();
 
   const handleOrganizationUpdate = (message: Message) => {
-    const { payload } = message;
+    const { type, payload }: Message = message;
 
     let payloadDeserialized = OrgMessage.deserializeBinary(
       new Uint8Array(payload),
     ).toObject();
 
-    if (payloadDeserialized.created) {
-      console.log(
-        'MQTT payload (organization created): ',
-        payloadDeserialized.created,
-      );
+    switch (true) {
+      case !!payloadDeserialized.created: {
+        console.log(
+          'MQTT payload (organization created): ',
+          payloadDeserialized.created,
+        );
 
-      const { createdBy, createdByName, createdByEmail } =
-        payloadDeserialized.created;
+        const { createdByName }: OrgCreated.AsObject =
+          payloadDeserialized.created!;
 
-      toast.success(`${createdByName} just created an organization`, {
-        autoClose: 5000,
-        hideProgressBar: false,
-      });
-    } else if (payloadDeserialized.deleted) {
-      console.log(
-        'MQTT payload (organization deleted): ',
-        payloadDeserialized.deleted,
-      );
+        showNotification(type, `${createdByName} just created an organization`);
+        break;
+      }
 
-      const { organizationId, deletedBy, deletedByName, deletedByEmail } =
-        payloadDeserialized.deleted;
+      case !!payloadDeserialized.updated: {
+        console.log(
+          'MQTT payload (organization updated): ',
+          payloadDeserialized.updated,
+        );
 
-      removeOrganization(organizationId);
+        const { org, updatedByName }: OrgUpdated.AsObject =
+          payloadDeserialized.updated!;
+        modifyOrganization(org!);
 
-      toast.success(`${deletedByName} just deleted an organization`, {
-        autoClose: 5000,
-        hideProgressBar: false,
-      });
-    } else if (payloadDeserialized.updated) {
-      console.log(
-        'MQTT payload (organization updated): ',
-        payloadDeserialized.updated,
-      );
+        showNotification(type, `${updatedByName} just updated an organization`);
+        break;
+      }
 
-      const { org, updatedBy, updatedByName, updatedByEmail } =
-        payloadDeserialized.updated;
-      modifyOrganization(org!);
+      case !!payloadDeserialized.deleted: {
+        console.log(
+          'MQTT payload (organization deleted): ',
+          payloadDeserialized.deleted,
+        );
 
-      toast.success(`${updatedByName} just updated an organization`, {
-        autoClose: 5000,
-        hideProgressBar: false,
-      });
+        const { organizationId, deletedByName }: OrgDeleted.AsObject =
+          payloadDeserialized.deleted!;
+
+        removeOrganization(organizationId);
+
+        showNotification(type, `${deletedByName} just deleted an organization`);
+        break;
+      }
+
+      default:
+        break;
     }
   };
 

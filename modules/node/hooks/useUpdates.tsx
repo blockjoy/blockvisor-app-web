@@ -1,8 +1,12 @@
 import { useRouter } from 'next/router';
-import { useNodeList } from './useNodeList';
-import { useNodeView } from './useNodeView';
-import { NodeMessage } from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
-import { toast } from 'react-toastify';
+import {
+  NodeCreated,
+  NodeDeleted,
+  NodeMessage,
+  NodeUpdated,
+} from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
+import { useNodeList, useNodeView } from '@modules/node';
+import { showNotification } from '@modules/mqtt';
 
 export const useUpdates = () => {
   const router = useRouter();
@@ -11,52 +15,57 @@ export const useUpdates = () => {
   const { unloadNode } = useNodeView();
 
   const handleNodeUpdate = (message: Message) => {
-    const { payload } = message;
+    const { type, payload }: Message = message;
 
     let payloadDeserialized = NodeMessage.deserializeBinary(
       new Uint8Array(payload),
     ).toObject();
 
-    if (payloadDeserialized.created) {
-      console.log('MQTT payload (node created): ', payloadDeserialized.created);
+    switch (true) {
+      case !!payloadDeserialized.created: {
+        console.log(
+          'MQTT payload (node created): ',
+          payloadDeserialized.created,
+        );
 
-      const { node } = payloadDeserialized.created;
+        const { node }: NodeCreated.AsObject = payloadDeserialized.created!;
+        addToNodeList(node);
 
-      addToNodeList(node);
+        showNotification(
+          type,
+          `${node?.createdByName} launched a node `,
+          <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>,
+        );
+        break;
+      }
+      case !!payloadDeserialized.updated: {
+        console.log(
+          'MQTT payload (node updated): ',
+          payloadDeserialized.updated,
+        );
 
-      toast.success(
-        <div>
-          {node?.createdByName} launched a node{' '}
-          <a onClick={() => router.push(`/nodes/${node?.id}`)}>
-            Click here to view it
-          </a>
-        </div>,
-        {
-          autoClose: 5000,
-          hideProgressBar: false,
-        },
-      );
-    } else if (payloadDeserialized.deleted) {
-      console.log('MQTT payload (node deleted): ', payloadDeserialized.deleted);
+        const { updatedByName }: NodeUpdated.AsObject =
+          payloadDeserialized.updated!;
 
-      const { nodeId, deletedByName } = payloadDeserialized.deleted;
+        showNotification(type, `${updatedByName} just updated a node`);
+        break;
+      }
+      case !!payloadDeserialized.deleted: {
+        console.log(
+          'MQTT payload (node deleted): ',
+          payloadDeserialized.deleted,
+        );
 
-      removeFromNodeList(nodeId);
-      unloadNode();
+        const { nodeId, deletedByName }: NodeDeleted.AsObject =
+          payloadDeserialized.deleted!;
+        removeFromNodeList(nodeId);
+        unloadNode();
 
-      toast.success(`${deletedByName} just deleted a node`, {
-        autoClose: 5000,
-        hideProgressBar: false,
-      });
-    } else if (payloadDeserialized.updated) {
-      console.log('MQTT payload (node updated): ', payloadDeserialized.updated);
-
-      const { node, updatedByName } = payloadDeserialized.updated;
-
-      toast.success(`${updatedByName} just updated a node`, {
-        autoClose: 5000,
-        hideProgressBar: false,
-      });
+        showNotification(type, `${deletedByName} just deleted a node`);
+        break;
+      }
+      default:
+        break;
     }
   };
 
