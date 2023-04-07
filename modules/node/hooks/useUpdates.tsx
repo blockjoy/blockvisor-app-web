@@ -7,9 +7,13 @@ import {
 } from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
 import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
+import { useRecoilValue } from 'recoil';
+import { authAtoms } from '@modules/auth';
 
 export const useUpdates = () => {
   const router = useRouter();
+
+  const user = useRecoilValue(authAtoms.user);
 
   const { addToNodeList, removeFromNodeList } = useNodeList();
   const { unloadNode } = useNodeView();
@@ -29,6 +33,9 @@ export const useUpdates = () => {
         );
 
         const { node }: NodeCreated.AsObject = payloadDeserialized.created!;
+
+        if (node?.createdBy === user?.id) break;
+
         addToNodeList(node);
 
         showNotification(
@@ -44,8 +51,10 @@ export const useUpdates = () => {
           payloadDeserialized.updated,
         );
 
-        const { updatedByName }: NodeUpdated.AsObject =
+        const { updatedBy, updatedByName }: NodeUpdated.AsObject =
           payloadDeserialized.updated!;
+
+        if (updatedBy === user?.id) break;
 
         showNotification(type, `${updatedByName} just updated a node`);
         break;
@@ -56,8 +65,11 @@ export const useUpdates = () => {
           payloadDeserialized.deleted,
         );
 
-        const { nodeId, deletedByName }: NodeDeleted.AsObject =
+        const { nodeId, deletedBy, deletedByName }: NodeDeleted.AsObject =
           payloadDeserialized.deleted!;
+
+        if (deletedBy === user?.id) break;
+
         removeFromNodeList(nodeId);
         unloadNode();
 

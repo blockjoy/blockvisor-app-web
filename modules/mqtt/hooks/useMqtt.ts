@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useRef, useState } from 'react';
 import mqtt, { MqttClient, IClientOptions } from 'mqtt';
 import { useRecoilValue } from 'recoil';
 import { env } from '@shared/constants/env';
@@ -9,6 +9,7 @@ import {
   organizationAtoms,
 } from '@modules/organization';
 import { arraysEqual } from 'utils/arraysEqual';
+import { authAtoms } from '@modules/auth';
 
 const EQMX_URL: string = `ws://${env.eqmxUrl}/mqtt`;
 
@@ -18,6 +19,7 @@ export const useMqtt = (): IMqttHook => {
   const [connectStatus, setConnectStatus] =
     useState<ConnectionStatus>('Connect');
 
+  const user = useRecoilValue(authAtoms.user);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -32,11 +34,9 @@ export const useMqtt = (): IMqttHook => {
   const { handleNodeUpdate } = useNodeUpdates();
   const { handleOrganizationUpdate } = useOrgUpdates();
 
-  const accessToken: string = JSON.parse(
-    window.localStorage.getItem('identity') || '{}',
-  ).accessToken;
-
-  const token: string = Buffer.from(accessToken, 'base64').toString('binary');
+  const token: string = Buffer.from(user?.accessToken!, 'base64').toString(
+    'binary',
+  );
 
   const options: IClientOptions = {
     port: 8083,
@@ -76,6 +76,7 @@ export const useMqtt = (): IMqttHook => {
             );
             return;
           }
+          subscribedChannels.current = [];
           console.log(`Unsubscribed from ${subscribedChannels.current}`);
         });
       }
@@ -115,11 +116,11 @@ export const useMqtt = (): IMqttHook => {
       setConnectStatus('Connect');
 
       console.log('Attempting MQTT reconnection...');
-      mqttClient.reconnect();
+      mqttReconnect();
     });
 
     return () => mqttDisconnect();
-  }, [defaultOrganization?.id]);
+  }, [user?.accessToken]);
 
   const handleMessage = useCallback((channel: string, payload: any) => {
     const type: Channel = getActiveChannel(channel);
@@ -133,9 +134,15 @@ export const useMqtt = (): IMqttHook => {
     return mqtt.connect(EQMX_URL, options);
   };
 
+  const mqttReconnect = () => {
+    if (client.current) {
+      client.current.reconnect();
+    }
+  };
+
   const mqttDisconnect = () => {
     if (client.current) {
-      console.log('DISCONNECTED');
+      console.log('MQTT client disconnected');
       client.current.end(true, () => {
         setConnectStatus('Connect');
         client.current = null;

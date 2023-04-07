@@ -9,8 +9,12 @@ import {
   useDeleteOrganization,
 } from '@modules/organization';
 import { showNotification } from '@modules/mqtt';
+import { useRecoilValue } from 'recoil';
+import { authAtoms } from '@modules/auth';
 
 export const useUpdates = () => {
+  const user = useRecoilValue(authAtoms.user);
+
   const { modifyOrganization } = useUpdateOrganization();
   const { removeOrganization } = useDeleteOrganization();
 
@@ -28,8 +32,10 @@ export const useUpdates = () => {
           payloadDeserialized.created,
         );
 
-        const { createdByName }: OrgCreated.AsObject =
+        const { createdBy, createdByName }: OrgCreated.AsObject =
           payloadDeserialized.created!;
+
+        if (createdBy === user?.id) break;
 
         showNotification(type, `${createdByName} just created an organization`);
         break;
@@ -41,8 +47,11 @@ export const useUpdates = () => {
           payloadDeserialized.updated,
         );
 
-        const { org, updatedByName }: OrgUpdated.AsObject =
+        const { org, updatedBy, updatedByName }: OrgUpdated.AsObject =
           payloadDeserialized.updated!;
+
+        if (updatedBy === user?.id) break;
+
         modifyOrganization(org!);
 
         showNotification(type, `${updatedByName} just updated an organization`);
@@ -55,8 +64,13 @@ export const useUpdates = () => {
           payloadDeserialized.deleted,
         );
 
-        const { organizationId, deletedByName }: OrgDeleted.AsObject =
-          payloadDeserialized.deleted!;
+        const {
+          organizationId,
+          deletedBy,
+          deletedByName,
+        }: OrgDeleted.AsObject = payloadDeserialized.deleted!;
+
+        if (deletedBy === user?.id) break;
 
         removeOrganization(organizationId);
 
