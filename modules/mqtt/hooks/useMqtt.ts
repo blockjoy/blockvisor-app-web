@@ -1,4 +1,4 @@
-import { use, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import mqtt, { MqttClient, IClientOptions } from 'mqtt';
 import { useRecoilValue } from 'recoil';
 import { env } from '@shared/constants/env';
@@ -62,6 +62,8 @@ export const useMqtt = (): IMqttHook => {
 
     mqttClient.on('connect', () => {
       console.log('CONNECTED', mqttClient);
+      if (!mqttClient.connected) mqttReconnect();
+
       setConnectStatus('Connected');
       client.current = mqttClient;
 
@@ -101,9 +103,9 @@ export const useMqtt = (): IMqttHook => {
     });
 
     mqttClient.on('error', (err: string) => {
+      console.error(`MQTT connection error: ${err}`);
       mqttDisconnect();
       setError(err);
-      console.error(`MQTT connection error: ${err}`);
     });
 
     mqttClient.on('reconnect', () => {
@@ -115,7 +117,13 @@ export const useMqtt = (): IMqttHook => {
       console.log('MQTT client offline');
       setConnectStatus('Connect');
 
-      console.log('Attempting MQTT reconnection...');
+      mqttReconnect();
+    });
+
+    mqttClient.on('close', () => {
+      console.log('Disconnected from broker.');
+      setConnectStatus('Connect');
+
       mqttReconnect();
     });
 
@@ -135,6 +143,8 @@ export const useMqtt = (): IMqttHook => {
   };
 
   const mqttReconnect = () => {
+    console.log('Attempting MQTT reconnection...');
+
     if (client.current) {
       client.current.reconnect();
     }
