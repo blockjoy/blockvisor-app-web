@@ -62,7 +62,7 @@ export const useMqtt = (): IMqttHook => {
 
     mqttClient.on('connect', () => {
       console.log('CONNECTED', mqttClient);
-      if (!mqttClient.connected) mqttReconnect();
+      if (!mqttClient.connected && !mqttClient.reconnecting) mqttReconnect();
 
       setConnectStatus('Connected');
       client.current = mqttClient;
@@ -116,15 +116,11 @@ export const useMqtt = (): IMqttHook => {
     mqttClient.on('offline', () => {
       console.log('MQTT client offline');
       setConnectStatus('Connect');
-
-      mqttReconnect();
     });
 
     mqttClient.on('close', () => {
       console.log('Disconnected from broker.');
       setConnectStatus('Connect');
-
-      mqttReconnect();
     });
 
     return () => mqttDisconnect();
@@ -143,9 +139,12 @@ export const useMqtt = (): IMqttHook => {
   };
 
   const mqttReconnect = () => {
-    console.log('Attempting MQTT reconnection...');
-
-    if (client.current) {
+    if (
+      client.current &&
+      !client.current.connected &&
+      !client.current.reconnecting
+    ) {
+      console.log('Attempting MQTT reconnection...', connectStatus);
       client.current.reconnect();
     }
   };
