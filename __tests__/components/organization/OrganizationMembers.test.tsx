@@ -1,5 +1,5 @@
 import { expect, vi, it, describe, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup, waitFor } from '../renderer';
+import { render, screen, fireEvent, cleanup, waitFor } from '../../renderer';
 import { Members, OrganizationMembersUIProvider } from '@modules/organization';
 import { useRouterSpy } from '__tests__/utils';
 
@@ -26,7 +26,7 @@ describe('Members component', () => {
     cleanup();
   });
 
-  it('Should display Alerady invited toast error', async () => {
+  it('Should display Alerady invited toast error', () => {
     const [org, nonPrivateOrg] = mockeOrganizationsResponse;
 
     vi.mocked(apiClient.receivedInvitations).mockImplementationOnce(
@@ -66,7 +66,7 @@ describe('Members component', () => {
     });
   });
 
-  it('Should display Alerady a member toast error', async () => {
+  it('Should display Alerady a member toast error', () => {
     const [org, nonPrivateOrg] = mockeOrganizationsResponse;
 
     vi.mocked(apiClient.getOrganizations).mockImplementationOnce(
