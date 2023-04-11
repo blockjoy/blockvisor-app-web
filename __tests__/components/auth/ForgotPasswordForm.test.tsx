@@ -23,7 +23,7 @@ describe('Forgot Password Form', () => {
     expect(submitButton.disabled).toEqual(true);
   });
 
-  it('should have submit button enabled when vaild data is entered', () => {
+  it('should have submit button enabled when vaild data is entered', async () => {
     render(<ForgotPasswordForm />);
 
     userEvent.type(
@@ -31,10 +31,11 @@ describe('Forgot Password Form', () => {
       'test@test.com',
     );
 
-    waitFor(() => {
-      const submitButton = screen.getByDataCy(
-        'forgot-password-submit',
-      ) as HTMLButtonElement;
+    const submitButton = screen.getByDataCy(
+      'forgot-password-submit',
+    ) as HTMLButtonElement;
+
+    await waitFor(() => {
       expect(submitButton.disabled).toEqual(false);
     });
   });

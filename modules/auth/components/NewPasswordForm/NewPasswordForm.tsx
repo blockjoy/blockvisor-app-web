@@ -62,7 +62,10 @@ export function NewPasswordForm() {
   };
 
   return serverError ? (
-    <p css={[typo.small, colors.warning, spacing.bottom.medium]}>
+    <p
+      data-cy="newPassword-error"
+      css={[typo.small, colors.warning, spacing.bottom.medium]}
+    >
       There was an error resetting your password, please contact our support
       team.
     </p>
@@ -78,11 +81,13 @@ export function NewPasswordForm() {
                   tabIndex={4}
                   name="password"
                   placeholder="Password"
+                  dataCy="newPassword-password-input"
                 />
               </li>
               <li css={[spacing.bottom.medium]}>
                 <Input
                   tabIndex={2}
+                  data-cy="newPassword-password-confirm-input"
                   labelStyles={[display.visuallyHidden]}
                   name="confirmPassword"
                   placeholder="Confirm password"
@@ -112,6 +117,7 @@ export function NewPasswordForm() {
               display="block"
               style="primary"
               type="submit"
+              dataCy="newPassword-submit"
             >
               Reset Password
             </Button>
