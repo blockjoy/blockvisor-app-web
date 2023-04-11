@@ -21,7 +21,6 @@ export function useDeleteOrganization() {
 
     /* TODO: temporary fix - API for node deletion doesn't return success response, but instead code 25 (Record not found) */
     if (isResponeMetaObject(response) || response?.code === 25) {
-      removeFromOrganizations(id);
       try {
         const newActiveOrganization = organizations[0];
         switchOrganization(
