@@ -26,7 +26,7 @@ type ClientOrganization = {
     nanos: number;
     seconds: number;
   };
-
+  members?: User.AsObject[];
   id?: string;
   currentUser?: ClientOrganizationUser;
   memberCount?: number;
