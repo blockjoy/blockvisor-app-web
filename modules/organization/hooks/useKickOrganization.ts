@@ -4,8 +4,9 @@ import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useDeleteOrganization } from './useDeleteOrganization';
+import { OrgUser } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 
-export function useKickOrganization() {
+export function useKickOrganization(): IKickOrganizationHook {
   const router = useRouter();
 
   const user = useRecoilValue(authAtoms.user);
@@ -21,10 +22,10 @@ export function useKickOrganization() {
   const kickOrganization = async (organization: ClientOrganization) => {
     setLoadingState('loading');
 
-    const { members, ...org }: ClientOrganization = organization;
+    const { membersList, ...org }: ClientOrganization = organization;
 
-    const isRemoved = !members?.some(
-      (member: ClientOrganizationMember) => member.id === user?.id,
+    const isRemoved: boolean = !membersList?.some(
+      (member: OrgUser.AsObject) => member.userId === user?.id,
     );
 
     if (!isRemoved) {

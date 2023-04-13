@@ -10,25 +10,19 @@ interface IUpdateOrganizationHook {
   modifyOrganization: (organization: ClientOrganization) => void;
 }
 
-type ClientDefaultOrganization = {
-  name?: string;
-  id?: string;
-};
-
-type ClientOrganizationUser = {
-  orgId: string;
-  role: number;
-  userId: string;
-};
+interface IKickOrganizationHook {
+  loading: LoadingState;
+  kickOrganization: (organization: ClientOrganization) => Promise<void>;
+}
 
 type ClientOrganization = {
   createdAt?: {
     nanos: number;
     seconds: number;
   };
-  members?: User.AsObject[];
+  membersList?: OrgUser.AsObject[];
   id?: string;
-  currentUser?: ClientOrganizationUser;
+  currentUser?: OrgUser.AsObject;
   memberCount?: number;
   name?: string;
   personal?: boolean;
