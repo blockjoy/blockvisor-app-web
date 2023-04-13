@@ -147,6 +147,16 @@ const organizationMembers = atom<OrgUser.AsObject[]>({
   default: [],
 });
 
+const organizationMembersFromOrg = selector<OrgUser.AsObject[]>({
+  key: 'organization.members.all.fromOrganization',
+  get: ({ get }) => {
+    const organization = get(selectedOrganization);
+    if (!organization || !organization.membersList) return [];
+
+    return organization.membersList;
+  },
+});
+
 const organizationMembersAndInvitationsFiltered = selectorFamily<
   MemberAndInvitation[],
   InitialQueryParamsMembers
@@ -155,7 +165,7 @@ const organizationMembersAndInvitationsFiltered = selectorFamily<
   get:
     (queryParams) =>
     ({ get }) => {
-      const allOrgMembers = get(organizationMembers);
+      const allOrgMembers = get(organizationMembersFromOrg);
       const allInvitations = get(organizationSentInvitations);
 
       const all = allOrgMembers.concat(allInvitations);
@@ -241,6 +251,7 @@ export const organizationAtoms = {
   organisationCount,
   defaultOrganization,
   organizationMembers,
+  organizationMembersFromOrg,
   organizationMembersAndInvitations,
   organizationMembersAndInvitationsFiltered,
   organizationMembersAndInvitationsTotal,
