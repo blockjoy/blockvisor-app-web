@@ -1,7 +1,5 @@
 import { apiClient } from '@modules/client';
-import { Node } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 import { useNodeList } from './useNodeList';
 
@@ -15,44 +13,31 @@ export const useNodeAdd = () => {
     onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
-    const node = new Node();
-
     const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';
-    let blockchain_id = params.blockchain;
 
-    node.setBlockchainId(blockchain_id);
-    node.setOrgId(orgId);
-    node.setNetwork(params.network);
-    // TODO: Create type data based on the type definitions in
-    // https://github.com/blockjoy/blockvisor-api/blob/24c83705064a2331f5f2c4643f34553cbffedea3/conf/node_types.schema.ts#L98
-
-    // TODO: @joe/@dragan: JSON format has changed, plz use the following:
-    /**
-     * pub struct NodePropertyValue {
-     *     name: String,
-     *     label: String,
-     *     description: String,
-     *     ui_type: String,
-     *     disabled: bool,
-     *     required: bool,
-     *     value: Option<String>,
-     * }
-     */
-    const nodeTypeString = JSON.stringify({
-      id: params.nodeType,
-      properties: params.nodeTypeProperties.map((property) => ({
-        ...property,
+    const nodeProperties: any = params.nodeTypeProperties.map((property) => {
+      const { ui_type, ...rest } = property;
+      return {
+        ...rest,
         default: property.default === null ? 'null' : property.default,
         value: property?.value?.toString() || 'null',
         description: '',
         label: '',
-      })),
+        uiType: ui_type,
+      };
     });
 
-    node.setType(nodeTypeString);
-    node.setVersion(params.version);
-
-    const response: any = await apiClient.createNode(node, params.key_files);
+    const response: any = await apiClient.createNode(
+      {
+        org_id: orgId,
+        blockchain_id: params.blockchain,
+        version: params.version ?? '',
+        type: params.nodeType,
+        properties: nodeProperties,
+        network: params.network,
+      },
+      params.key_files,
+    );
 
     try {
       const nodeId = response.messagesList[0];

@@ -5,7 +5,7 @@ import { DataRow } from '../DataRow/DataRow';
 import { styles } from './DetailsTable.styles';
 
 interface Props {
-  bodyElements: { label: string; data: string }[];
+  bodyElements: { id?: string; label: string; data: string }[];
 }
 
 export const DetailsTable: FC<Props> = ({ bodyElements }) => {
@@ -13,7 +13,7 @@ export const DetailsTable: FC<Props> = ({ bodyElements }) => {
     <table css={[table.base, styles.base]}>
       <tbody>
         {bodyElements?.map((item) => (
-          <DataRow key={item.label} label={item.label}>
+          <DataRow key={item.id ? item.id : item.label} label={item.label}>
             {item.data}
           </DataRow>
         ))}

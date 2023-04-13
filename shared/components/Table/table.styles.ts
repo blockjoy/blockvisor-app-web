@@ -12,6 +12,10 @@ export const styles = {
     }
   `,
   fixedRowHeight: (rowHeight: string) => css`
+    tbody td {
+      padding: 16px 20px 0 0;
+    }
+
     tbody tr {
       height: ${rowHeight};
     }
@@ -51,7 +55,7 @@ export const styles = {
       transition: 0.3s;
     }
 
-    tr:hover td:first-child path {
+    tr:hover td:first-of-type path {
       fill: ${theme.colorPrimary};
     }
 
@@ -60,8 +64,13 @@ export const styles = {
     }
 
     & td {
-      padding: 16px 0;
-      white-space: nowrap;
+      padding: 16px 20px 16px 0;
+
+      p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
       @media ${breakpoints.toXlrg} {
         padding: 20px 16px 20px 0;

@@ -12,7 +12,7 @@ export const styles = {
     background: transparent;
     font-size: 24px;
     outline: none;
-    height: 50px;
+    min-height: 50px;
     min-width: 0;
     color: ${theme.colorText};
     -webkit-text-fill-color: ${theme.colorText};
@@ -21,6 +21,7 @@ export const styles = {
     padding: 0;
     border-radius: 0;
     border-bottom: 1px solid transparent;
+    resize: none;
 
     :disabled {
       -webkit-text-fill-color: ${theme.colorText};
@@ -37,7 +38,7 @@ export const styles = {
   span: (theme: ITheme) => css`
     color: ${theme.colorText};
     font-size: 24px;
-    height: 50px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     margin-right: 11px;

@@ -10,21 +10,32 @@ export const mapOrganizationsToRows = (
     {
       name: 'Org. Name',
       key: '1',
+      minWidth: '300px',
+      maxWidth: '300px',
       width: '300px',
+      dataField: 'name',
+      sort: true,
     },
     {
       name: 'Members',
       key: '2',
-      width: '300px',
+      width: '180px',
+      minWidth: '180px',
+      maxWidth: '180px',
+      dataField: 'memberCount',
+      sort: true,
     },
     {
       name: 'Role',
       key: '3',
-      width: '300px',
+      width: '180px',
+      minWidth: '180px',
+      maxWidth: '180px',
     },
     {
       name: '',
       key: '4',
+      textAlign: 'right',
     },
   ];
 
@@ -33,6 +44,7 @@ export const mapOrganizationsToRows = (
     cells: [
       {
         key: '1',
+        data: org.name,
         component: (
           <>
             <p>{escapeHtml(org.name!)}</p>
@@ -41,6 +53,7 @@ export const mapOrganizationsToRows = (
       },
       {
         key: '2',
+        data: org.memberCount,
         component: (
           <>
             <p>{org.memberCount}</p>
@@ -60,11 +73,9 @@ export const mapOrganizationsToRows = (
         component: (
           <>
             {!org.personal && (
-              <div css={[flex.display.flex]}>
-                <Button style="outline" size="small">
-                  Manage
-                </Button>
-              </div>
+              <Button style="outline" size="small">
+                Manage
+              </Button>
             )}
           </>
         ),

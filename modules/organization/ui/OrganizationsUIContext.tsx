@@ -1,18 +1,37 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import { isEqual, isFunction } from "lodash";
-import { InitialQueryParams, initialQueryParams } from "./OrganizationsUIHelpers";
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { isEqual, isFunction } from 'lodash';
+import {
+  InitialQueryParams,
+  initialQueryParams,
+} from './OrganizationsUIHelpers';
+import { useRecoilValue } from 'recoil';
+import { organizationAtoms } from '../store/organizationAtoms';
+
+export type SetQueryParams = (nextQueryParams: InitialQueryParams) => void;
 
 type OrganizationsUIContext = {
-  queryParams: InitialQueryParams,
+  queryParams: InitialQueryParams;
   setQueryParamsBase: React.Dispatch<React.SetStateAction<InitialQueryParams>>;
-  setQueryParams: (nextQueryParams: InitialQueryParams) => void;
-}
+  setQueryParams: SetQueryParams;
+};
 
 type OrganizationsUIProvider = {
-  children?: React.ReactNode
-}
+  children?: React.ReactNode;
+};
 
-const OrganizationsUIContext = createContext<OrganizationsUIContext>({} as OrganizationsUIContext);
+const OrganizationsUIContext = createContext<OrganizationsUIContext>(
+  {} as OrganizationsUIContext,
+);
+
+export const getInitialQueryParams = () => {
+  const persistedNodeFilters = useRecoilValue(
+    organizationAtoms.organizationsFilters,
+  );
+
+  if (!persistedNodeFilters) return initialQueryParams;
+
+  return persistedNodeFilters;
+};
 
 export function useOrganizationsUIContext() {
   return useContext(OrganizationsUIContext);
@@ -21,10 +40,12 @@ export function useOrganizationsUIContext() {
 export const OrganizationsUIConsumer = OrganizationsUIContext.Consumer;
 
 export function OrganizationsUIProvider({ children }: OrganizationsUIProvider) {
-  const initialQueryParamsValue: InitialQueryParams = initialQueryParams;
+  const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
 
-  const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(initialQueryParamsValue);
-  const setQueryParams = useCallback((nextQueryParams: any) => {
+  const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
+    initialQueryParamsValue,
+  );
+  const setQueryParams = useCallback((nextQueryParams: InitialQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
         nextQueryParams = nextQueryParams(prevQueryParams);
@@ -38,7 +59,7 @@ export function OrganizationsUIProvider({ children }: OrganizationsUIProvider) {
     });
   }, []);
 
-  const value : OrganizationsUIContext = {
+  const value: OrganizationsUIContext = {
     queryParams,
     setQueryParamsBase,
     setQueryParams,
@@ -49,4 +70,4 @@ export function OrganizationsUIProvider({ children }: OrganizationsUIProvider) {
       {children}
     </OrganizationsUIContext.Provider>
   );
-};
+}

@@ -10,8 +10,9 @@ export function useInvitations() {
     organizationAtoms.organizationSentInvitations,
   );
 
-  const [sentInvitationsLoadingState, setSentInvitationsLoadingState] =
-    useRecoilState(organizationAtoms.organizationSentInvitationsLoadingState);
+  const [isLoading, setIsLoading] = useRecoilState(
+    organizationAtoms.organizationSentInvitationsLoadingState,
+  );
 
   const setReceivedInvitations = useSetRecoilState(
     organizationAtoms.organizationReceivedInvitations,
@@ -23,15 +24,16 @@ export function useInvitations() {
     setReceivedInvitations(response);
   };
 
-  const getSentInvitations = async (id: string) => {
-    const response: any = await apiClient.pendingInvitations(id);
+  const getSentInvitations = async (id: string | string[]) => {
+    const orgId = Array.isArray(id) ? id[0] : id;
+    const response: any = await apiClient.pendingInvitations(orgId);
     if (isStatusResponse(response)) {
       setSentInvitations([]);
     } else {
       setSentInvitations(response);
     }
 
-    setSentInvitationsLoadingState('finished');
+    setIsLoading('finished');
   };
 
   const acceptInvitation = async (
@@ -101,9 +103,10 @@ export function useInvitations() {
     getReceivedInvitations,
     sentInvitations,
     getSentInvitations,
-    sentInvitationsLoadingState,
     acceptInvitation,
     declineInvitation,
     revokeInvitation,
+    isLoading,
+    setIsLoading,
   };
 }
