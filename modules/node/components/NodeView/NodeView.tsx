@@ -79,7 +79,7 @@ export function NodeView() {
                   date={node?.created!}
                   id={node?.id!}
                 />
-                <NodeViewCharts nodeId={node?.id} />
+                <NodeViewCharts nodeId={node?.id!} />
                 <DetailsTable bodyElements={node?.details!} />
               </>
             ) : (
