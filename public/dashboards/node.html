@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #nodeCharts {
+        display: flex;
+        gap: 150px;
+        overflow: auto;
+      }
+
+      #nodeCharts > div {
+        min-width: 120px !important;
+      }
+
+      body .netdata-chart {
+        overflow: visible;
+        font-family: "Styrene A LC";
+      }
+
+      body .netdata-container-easypiechart {
+        overflow: visible;
+      }
+
+      body .easyPieChartTitle,
+      body .easyPieChartLabel,
+      body .easyPieChartUnits {
+        left: calc(100% + 20px);
+        text-align: left;
+        line-height: 1;
+        font-weight: 400;
+        margin-left: 0 !important;
+      }
+
+      body .easyPieChartTitle {
+        translate: 0 -4px;
+      }
+
+      body .easyPieChartLabel {
+        font-size: 34px !important;
+        translate: 0 -8px;
+      }
+
+      body .easyPieChartUnits {
+        translate: 0 8px;
+      }
+    </style>
+  </head>
+  <script>
+    var netdataTheme = "slate";
+  </script>
+
+  <body style="background-color: transparent">
+    <div id="nodeCharts"></div>
+    <script>
+      var charts = [
+        {
+          netdata: "net.eth0",
+          library: "easypiechart",
+          dimensions: "sent",
+          title: "Outgoing Data",
+        },
+        {
+          netdata: "net.eth0",
+          library: "easypiechart",
+          dimensions: "received",
+          title: "Incoming Data",
+        },
+      ];
+    </script>
+    <script async>
+      const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+
+      //const { node_id } = params;
+      const node_id = "3b78c2f9-e9d5-4982-952e-23bae0fe9da1";
+      const colorPrimary = "#bff589";
+      const size = "120";
+      const after = "-600";
+      const nodeCharts = document.querySelector("#nodeCharts");
+
+      console.log("queryString", params.node_id);
+
+      charts.forEach((chart) => {
+          const element = document.createElement("div");
+          element.setAttribute("data-netdata", chart.netdata);
+          element.setAttribute("data-host", `http://205.209.100.226:19999/host/${node_id}`);
+          element.setAttribute("data-colors", colorPrimary);
+          element.setAttribute("data-chart-library", chart.library);
+          element.setAttribute("data-width", size);
+          element.setAttribute("data-height", size);
+          element.setAttribute("data-after", after);
+          element.setAttribute("data-dimensions", chart.dimensions);
+          element.setAttribute("data-title", chart.title);
+          nodeCharts.appendChild(element);
+        }
+      );
+    </script>
+    <script
+      async
+      type="text/javascript"
+      src="http://205.209.100.226:19999/dashboard.js"
+    ></script>
+  </body>
+</html>
