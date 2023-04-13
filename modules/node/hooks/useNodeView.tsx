@@ -9,7 +9,7 @@ import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { checkForApiError } from 'utils/checkForAPIError';
+import { checkForApiError } from 'utils/checkForApiError';
 
 type Args = string | string[] | undefined;
 
