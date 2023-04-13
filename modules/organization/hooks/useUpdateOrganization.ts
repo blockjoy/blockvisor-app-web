@@ -39,10 +39,19 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
   };
 
   const modifyOrganization = (updatedOrganization: ClientOrganization) => {
+    const updatedOrganizationModified =
+      typeof updatedOrganization.currentUser === 'undefined'
+        ? Object.fromEntries(
+            Object.entries(updatedOrganization).filter(
+              ([key]) => key !== 'currentUser',
+            ),
+          )
+        : updatedOrganization;
+
     if (selectedOrganization) {
       const newOrg: ClientOrganization = {
         ...selectedOrganization,
-        ...updatedOrganization,
+        ...updatedOrganizationModified,
       };
 
       setOrganization(newOrg);
@@ -51,14 +60,10 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
 
     const updatedAllOrgs: ClientOrganization[] = allOrganizations.map(
       (organization: ClientOrganization) => {
-        if (organization.id === updatedOrganization.id) {
-          const newOrg: ClientOrganization = { ...updatedOrganization };
-          if (typeof newOrg.currentUser === 'undefined')
-            delete newOrg.currentUser;
-
+        if (organization.id === updatedOrganizationModified.id) {
           const updatedNewOrganization: ClientOrganization = {
             ...organization,
-            ...newOrg,
+            ...updatedOrganizationModified,
           };
 
           return updatedNewOrganization;

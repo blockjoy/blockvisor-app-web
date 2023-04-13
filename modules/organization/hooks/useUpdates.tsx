@@ -11,14 +11,14 @@ import {
 import { showNotification } from '@modules/mqtt';
 import { useRecoilValue } from 'recoil';
 import { authAtoms } from '@modules/auth';
-import { useKickOrganization } from './useKickOrganization';
+import { useUpdateMembers } from './useUpdateMembers';
 
 export const useUpdates = () => {
   const user = useRecoilValue(authAtoms.user);
 
   const { modifyOrganization } = useUpdateOrganization();
   const { removeOrganization } = useDeleteOrganization();
-  const { kickOrganization } = useKickOrganization();
+  const { updateMembersList } = useUpdateMembers();
 
   const handleOrganizationUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -56,7 +56,7 @@ export const useUpdates = () => {
 
         modifyOrganization(org!);
 
-        kickOrganization(org!);
+        updateMembersList(org!);
 
         showNotification(type, `${updatedByName} just updated an organization`);
         break;

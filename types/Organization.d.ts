@@ -10,9 +10,8 @@ interface IUpdateOrganizationHook {
   modifyOrganization: (organization: ClientOrganization) => void;
 }
 
-interface IKickOrganizationHook {
-  loading: LoadingState;
-  kickOrganization: (organization: ClientOrganization) => Promise<void>;
+interface IUpdateMembersHook {
+  updateMembersList: (organization: ClientOrganization) => Promise<void>;
 }
 
 type ClientOrganization = {
