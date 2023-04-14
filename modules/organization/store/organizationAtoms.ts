@@ -12,6 +12,7 @@ import {
   MemberAndInvitation,
 } from '../utils/mapMembersAndInvitations';
 import { localStorageEffect } from 'utils/store/persist';
+import { OrgUser } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
@@ -141,9 +142,19 @@ const organizationsActive = selectorFamily<
     },
 });
 
-const organizationMembers = atom<ClientOrganizationMember[]>({
+const organizationMembers = atom<OrgUser.AsObject[]>({
   key: 'organization.members.all',
   default: [],
+});
+
+const organizationMembersFromOrg = selector<OrgUser.AsObject[]>({
+  key: 'organization.members.all.fromOrganization',
+  get: ({ get }) => {
+    const organization = get(selectedOrganization);
+    if (!organization || !organization.membersList) return [];
+
+    return organization.membersList;
+  },
 });
 
 const organizationMembersAndInvitationsFiltered = selectorFamily<
@@ -154,7 +165,7 @@ const organizationMembersAndInvitationsFiltered = selectorFamily<
   get:
     (queryParams) =>
     ({ get }) => {
-      const allOrgMembers = get(organizationMembers);
+      const allOrgMembers = get(organizationMembersFromOrg);
       const allInvitations = get(organizationSentInvitations);
 
       const all = allOrgMembers.concat(allInvitations);
@@ -240,6 +251,7 @@ export const organizationAtoms = {
   organisationCount,
   defaultOrganization,
   organizationMembers,
+  organizationMembersFromOrg,
   organizationMembersAndInvitations,
   organizationMembersAndInvitationsFiltered,
   organizationMembersAndInvitationsTotal,

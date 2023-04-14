@@ -1,27 +1,14 @@
 import { useRouter } from 'next/router';
-import { useSetRecoilState, useRecoilState, SetterOrUpdater } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { apiClient } from '@modules/client';
 import { useIdentityRepository } from '@modules/auth';
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { useRef } from 'react';
-import { isInQuery } from '../utils/isInQuery';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useNodeMetrics } from './useNodeMetrics';
-import { removeQueryParams } from 'utils/removeQueryParams';
 
-interface Hook {
-  nodeList: BlockjoyNode[];
-  loadNodes: (queryParams?: InitialQueryParams) => Promise<void>;
-  updateNodeList: (node: BlockjoyNode) => Promise<void>;
-  removeNodeFromTheList: (nodeId: string) => Promise<void>;
-  handleAddNode: () => void;
-  handleNodeClick: (args1: any) => void;
-  setIsLoading: SetterOrUpdater<LoadingState>;
-}
-
-export const useNodeList = (): Hook => {
+export const useNodeList = () => {
   const router = useRouter();
   const repository = useIdentityRepository();
 
@@ -31,23 +18,18 @@ export const useNodeList = (): Hook => {
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
 
-  const setLayout = useSetRecoilState(layoutState);
-
-  const isUpdated = useRef(false);
-
   const { loadMetrics } = useNodeMetrics();
 
   let total = 0;
-
-  const handleAddNode = () => {
-    setLayout('nodes');
-  };
 
   const handleNodeClick = (args: any) => {
     router.push(`${router.pathname}/${args.key}`);
   };
 
-  const loadNodes = async (queryParams?: InitialQueryParams) => {
+  const loadNodes = async (
+    queryParams?: InitialQueryParams,
+    showLoader: boolean = true,
+  ) => {
     if (!queryParams) {
       const savedQueryParams = getInitialQueryParams();
       queryParams = savedQueryParams;
@@ -55,7 +37,10 @@ export const useNodeList = (): Hook => {
 
     const loadingState =
       queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
-    setIsLoading(loadingState);
+
+    if (showLoader) {
+      setIsLoading(loadingState);
+    }
 
     setHasMore(false);
 
@@ -66,8 +51,6 @@ export const useNodeList = (): Hook => {
       queryParams.filter,
       queryParams.pagination,
     );
-
-    console.log('nodes', nodes);
 
     setPreloadNodes(nodes.length);
 
@@ -102,28 +85,29 @@ export const useNodeList = (): Hook => {
     setIsLoading('finished');
   };
 
-  const updateNodeList = async (node: BlockjoyNode) => {
-    if (isUpdated.current) return;
+  // const updateNodeList = async (node: BlockjoyNode) => {
+  //   if (isUpdated.current) return;
+  //   const isInRoute = Boolean(router.query.created);
+  //   if (!isInRoute) return;
+  //   const isInTheList = nodeList.some((nl) => nl.id === node.id);
+  //   const isInTheQuery = isInQuery(node);
+  //   if (!isInTheList && isInTheQuery) {
+  //     setNodeList((prevNodeList) => [node, ...prevNodeList]);
+  //   }
+  //   await loadMetrics();
+  //   removeQueryParams(router, ['created']);
+  //   isUpdated.current = true;
+  // };
 
-    const isInRoute = Boolean(router.query.created);
-    if (!isInRoute) return;
+  const addToNodeList = async (node: any) => {
+    const newNodeList = [...nodeList, node];
 
-    const isInTheList = nodeList.some((nl) => nl.id === node.id);
-
-    const isInTheQuery = isInQuery(node);
-
-    if (!isInTheList && isInTheQuery) {
-      setNodeList((prevNodeList) => [node, ...prevNodeList]);
-    }
+    setNodeList(newNodeList);
 
     await loadMetrics();
-
-    removeQueryParams(router, ['created']);
-
-    isUpdated.current = true;
   };
 
-  const removeNodeFromTheList = async (nodeId: string) => {
+  const removeFromNodeList = async (nodeId: string) => {
     const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
 
     if (newNodeList.length !== nodeList.length) setNodeList(newNodeList);
@@ -134,9 +118,9 @@ export const useNodeList = (): Hook => {
   return {
     nodeList,
     loadNodes,
-    updateNodeList,
-    removeNodeFromTheList,
-    handleAddNode,
+    // updateNodeList,
+    addToNodeList,
+    removeFromNodeList,
     handleNodeClick,
     setIsLoading,
   };

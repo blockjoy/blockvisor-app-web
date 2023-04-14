@@ -20,3 +20,4 @@ export * from './hooks/useUpdateOrganization';
 export * from './hooks/useInviteMembers';
 export * from './hooks/useInvitations';
 export * from './hooks/useResendInvitation';
+export * from './hooks/useUpdates';

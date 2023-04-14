@@ -88,8 +88,77 @@ const globalStyles = (theme: ITheme) => css`
       }
     }
 
-    & .Toastify__close-button--light {
-      opacity: 1;
+    & .Toastify__notification {
+      background: ${theme.colorLightGrey};
+      box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+      border-radius: 6px;
+
+      & .Toastify__toast-body {
+        padding: 16px;
+      }
+
+      & .Toastify__close-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        transform: translateY(0);
+        width: 20px;
+        height: 20px;
+
+        & svg {
+          width: 100%;
+          height: 100%;
+        }
+
+        & path {
+          fill: ${theme.colorText};
+        }
+      }
+
+      & .Toastify__progress-bar {
+        background: ${theme.colorPrimary};
+      }
+
+      h5 {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        gap: 10px;
+        color: ${theme.colorText};
+        font-weight: 600;
+        font-size: 18px;
+        margin-bottom: 20px;
+
+        svg {
+          display: block;
+          width: 20px;
+          height: auto;
+          & path {
+            fill: ${theme.colorPrimary};
+          }
+        }
+      }
+
+      p {
+        color: ${theme.colorDefault};
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 21px;
+      }
+
+      a {
+        display: block;
+        color: ${theme.colorDefault};
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 21px;
+        text-decoration-line: underline;
+        margin-top: 15px;
+
+        &:hover {
+          color: ${theme.colorText};
+        }
+      }
     }
   }
 `;

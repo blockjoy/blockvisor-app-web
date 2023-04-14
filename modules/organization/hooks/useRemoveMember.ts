@@ -39,7 +39,7 @@ export function useRemoveMember() {
 
   const removeMemberFromList = (user_id: string) => {
     const newOrganizationMembers = organizationMembers.filter(
-      (member) => member.id !== user_id,
+      (member) => member?.userId !== user_id,
     );
     setOrganizationMembers(newOrganizationMembers);
   };
