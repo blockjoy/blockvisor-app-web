@@ -11,7 +11,9 @@ import {
 import { arraysEqual } from 'utils/arraysEqual';
 import { authAtoms } from '@modules/auth';
 
-const EQMX_URL: string = `ws://${env.eqmxUrl}/mqtt`;
+// hardcode eqmx url for testing
+const EQMX_URL: string = `ws://35.231.38.123/mqtt`;
+// const EQMX_URL: string = `ws://${env.eqmxUrl}/mqtt`;
 
 export const useMqtt = (): IMqttHook => {
   const [error, setError] = useState<string | null>(null);
