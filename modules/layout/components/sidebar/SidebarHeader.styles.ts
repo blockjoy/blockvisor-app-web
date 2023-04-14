@@ -8,20 +8,13 @@ export const styles = {
     justify-content: space-between;
     height: 72px;
     padding-left: 60px;
+    padding-right: 16px;
     border-bottom: 1px solid ${theme.colorBorder};
     box-sizing: border-box;
-
+  `,
+  infoIcon: (theme: ITheme) => css`
     & path {
       fill: ${theme.colorLabel};
     }
-  `,
-  burgerWrapper: css`
-    display: grid;
-    padding: 0 16px;
-    place-items: center;
-    width: 50px;
-  `,
-  logo: css`
-    min-width: 26px;
   `,
 };

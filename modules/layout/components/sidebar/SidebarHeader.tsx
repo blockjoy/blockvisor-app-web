@@ -1,8 +1,9 @@
 import { styles } from './SidebarHeader.styles';
-import { OrganizationPicker } from '@shared/components';
-// import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
 import { useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
+import Logo from '@public/assets/icons/blockjoy-logo-full.svg';
+import Info from '@public/assets/icons/info.svg';
+import { SvgIcon } from '@shared/components';
 
 export const SidebarHeader = () => {
   const isSidebarOpen = useRecoilValue(sidebarOpen);
@@ -11,7 +12,10 @@ export const SidebarHeader = () => {
     <header css={[styles.wrapper]}>
       {isSidebarOpen && (
         <>
-          <OrganizationPicker />
+          <Logo />
+          <SvgIcon css={styles.infoIcon}>
+            <Info />
+          </SvgIcon>
         </>
       )}
     </header>
