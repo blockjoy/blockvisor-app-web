@@ -100,7 +100,7 @@ export function NodeView() {
           </>
         )}
       </PageSection>
-      {node?.nodeTypeConfig && !isLoading && !nodeError && (
+      {node?.propertiesList && !isLoading && !nodeError && (
         <PageSection bottomBorder={false}>
           <NodeViewConfig />
         </PageSection>

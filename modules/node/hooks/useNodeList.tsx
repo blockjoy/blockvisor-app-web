@@ -1,15 +1,12 @@
 import { useRouter } from 'next/router';
-import { useSetRecoilState, useRecoilState, SetterOrUpdater } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-import { layoutState } from '@modules/layout/store/layoutAtoms';
 import { apiClient } from '@modules/client';
 import { useIdentityRepository } from '@modules/auth';
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { useRef } from 'react';
-import { isInQuery } from '../utils/isInQuery';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useNodeMetrics } from './useNodeMetrics';
-import { removeQueryParams } from 'utils/removeQueryParams';
 
 export const useNodeList = () => {
   const router = useRouter();
@@ -20,8 +17,6 @@ export const useNodeList = () => {
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
-
-  const isUpdated = useRef(false);
 
   const { loadMetrics } = useNodeMetrics();
 
@@ -56,8 +51,6 @@ export const useNodeList = () => {
       queryParams.filter,
       queryParams.pagination,
     );
-
-    console.log('nodes', nodes);
 
     setPreloadNodes(nodes.length);
 
@@ -106,6 +99,14 @@ export const useNodeList = () => {
   //   isUpdated.current = true;
   // };
 
+  const addToNodeList = async (node: any) => {
+    const newNodeList = [...nodeList, node];
+
+    setNodeList(newNodeList);
+
+    await loadMetrics();
+  };
+
   const removeFromNodeList = async (nodeId: string) => {
     const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
 
@@ -118,6 +119,7 @@ export const useNodeList = () => {
     nodeList,
     loadNodes,
     // updateNodeList,
+    addToNodeList,
     removeFromNodeList,
     handleNodeClick,
     setIsLoading,

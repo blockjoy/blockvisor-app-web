@@ -21,13 +21,13 @@ type BlockjoyNode = {
   status: number;
   blockchainId: string;
   blockchainName: string;
-  nodeTypeConfigDetails: { label: string; data: string }[];
-  nodeTypeConfig?: NodeTypeConfig[];
-  nodeTypeId: number;
+  propertiesList: Node.NodeProperty.AsObject[];
+  type: number;
   hostName?: string;
   address?: string;
   version?: string;
   blockHeight?: string;
+  network?: string;
 };
 
 type CreateNodeParams = {

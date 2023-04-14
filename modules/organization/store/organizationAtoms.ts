@@ -12,6 +12,7 @@ import {
   MemberAndInvitation,
 } from '../utils/mapMembersAndInvitations';
 import { localStorageEffect } from 'utils/store/persist';
+import { OrgUser } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
 
 const selectedOrganization = atom<ClientOrganization | null>({
   key: 'organization.current',
@@ -141,7 +142,7 @@ const organizationsActive = selectorFamily<
     },
 });
 
-const organizationMembers = atom<ClientOrganizationMember[]>({
+const organizationMembers = atom<OrgUser.AsObject[]>({
   key: 'organization.members.all',
   default: [],
 });

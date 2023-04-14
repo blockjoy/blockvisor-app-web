@@ -7,8 +7,6 @@ export const toGrid = (
   onCellClick: (args0: any) => void,
 ) => {
   return nodeList?.map((node: any) => {
-    console.log('node', node);
-
     return {
       key: node.id,
       component: (

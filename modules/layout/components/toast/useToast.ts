@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { toastAtoms } from './atoms';
 import { v4 as uuidv4 } from 'uuid';
 
 type ToastParams = {
-  type: string;
+  type?: string;
   content: string | ReactNode;
 };
 
@@ -19,8 +19,10 @@ export type ToastItem = {
 export const useToast = () => {
   const [toastList, setToastList] = useRecoilState(toastAtoms.toastListAtom);
 
+  const latestToastList = useRef<ToastItem[]>(toastList);
+
   const createToast = (t: ToastItem) => {
-    const toastListCopy = [...toastList];
+    const toastListCopy = [...latestToastList.current];
     toastListCopy.push({
       ...t,
       id: uuidv4(),
@@ -28,7 +30,7 @@ export const useToast = () => {
     setToastList(toastListCopy);
   };
 
-  const success = ({ type, content }: ToastParams) => {
+  const success = ({ type = 'node', content }: ToastParams) => {
     createToast({
       type,
       content,
@@ -36,14 +38,14 @@ export const useToast = () => {
     });
   };
 
-  const error = ({ type, content }: ToastParams) => {
+  const error = ({ type = 'node', content }: ToastParams) => {
     createToast({
       type,
       content,
     });
   };
 
-  const mqtt = ({ type, content }: ToastParams) => {
+  const mqtt = ({ type = 'node', content }: ToastParams) => {
     createToast({
       type,
       content,
@@ -52,9 +54,14 @@ export const useToast = () => {
     });
   };
 
+  useEffect(() => {
+    latestToastList.current = toastList;
+  }, [toastList?.length]);
+
   return {
     success,
     error,
     mqtt,
+    toastList,
   };
 };

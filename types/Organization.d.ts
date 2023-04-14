@@ -1,22 +1,27 @@
-type ClientDefaultOrganization = {
-  name?: string;
-  id?: string;
-};
+interface IDeleteOrganizationHook {
+  loading: boolean;
+  deleteOrganization: (id: string) => void;
+  removeOrganization: (id: string) => void;
+  setLoadingState: SetterOrUpdater<LoadingState>;
+}
 
-type ClientOrganizationUser = {
-  orgId: string;
-  role: number;
-  userId: string;
-};
+interface IUpdateOrganizationHook {
+  updateOrganization: (id: string, name: string) => Promise<void>;
+  modifyOrganization: (organization: ClientOrganization) => void;
+}
+
+interface IUpdateMembersHook {
+  updateMembersList: (organization: ClientOrganization) => Promise<void>;
+}
 
 type ClientOrganization = {
   createdAt?: {
     nanos: number;
     seconds: number;
   };
-
+  membersList?: OrgUser.AsObject[];
   id?: string;
-  currentUser?: ClientOrganizationUser;
+  currentUser?: OrgUser.AsObject;
   memberCount?: number;
   name?: string;
   personal?: boolean;

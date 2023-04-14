@@ -268,13 +268,17 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    // this.token = token;
-    const new_token = Buffer.from(token, 'binary').toString(
-        'base64',
-    );
+    const new_token = Buffer.from(token, 'binary').toString('base64');
 
     this.token = new_token;
-    JSON.parse(localStorage.getItem('identity') || '').accessToken = new_token;
+
+    const identity = localStorage.getItem('identity');
+    if (identity) {
+      const parsedIdentity = JSON.parse(identity);
+      parsedIdentity.accessToken = new_token;
+      const updatedIdentityString = JSON.stringify(parsedIdentity);
+      localStorage.setItem('identity', updatedIdentityString);
+    }
   }
 
   initStorage() {
@@ -746,10 +750,6 @@ export class GrpcClient {
     if (filter_criteria) {
       let criteria = new FilterCriteria();
 
-      console.log('Setting blockchain filter: ', filter_criteria.blockchain);
-      console.log('Setting node status filter: ', filter_criteria.node_status);
-      console.log('Setting node type filter: ', filter_criteria.node_type);
-
       criteria.setBlockchainIdsList(filter_criteria.blockchain || []);
       criteria.setStatesList(filter_criteria.node_status || []);
       criteria.setNodeTypesList(filter_criteria.node_type || []);
@@ -782,6 +782,9 @@ export class GrpcClient {
       ?.get(request, this.getAuthHeader())
       .then((response) => {
         this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+
+        console.log('getNode', node_to_grpc_node(response.getNode()));
+
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
@@ -1290,52 +1293,6 @@ export class GrpcClient {
     return response.getParamsList().map((item) => item.toObject());
   }
 
-  /* Update service */
-
-  getUpdates(
-    eqmx_url: string,
-    callback: (payload: any, nodeList: any[]) => void,
-    nodeList: any[],
-  ): void {
-    let token = this.getApiToken() || '';
-    token = Buffer.from(token, 'base64').toString('binary');
-
-    const data = JSON.parse(
-      Buffer.from(token?.split('.')[1], 'base64').toString('binary'),
-    );
-    const channel = `/orgs/${data.data.org_id}/nodes`;
-
-    console.log('using token for mqtt auth: ', data);
-
-    let mqtt_client = mqtt.connect(`ws://${eqmx_url}/mqtt`, {
-      clean: true,
-      connectTimeout: 30000,
-      port: 8083,
-      protocolId: 'MQTT',
-      clientId: 'user_auth',
-      reconnectPeriod: 30000,
-      username: token,
-      password: token,
-    });
-
-    let request = new GetUpdatesRequest();
-    request.setMeta(request_meta);
-
-    mqtt_client.on('connect', function (err) {
-      console.log('MQTT connected');
-      mqtt_client.subscribe('js-test-topic', function (err) {
-        if (err) console.log('subscription error: ', err);
-        else console.log('MQTT subscribed to "js-test-topic"');
-      });
-    });
-
-    mqtt_client.on('error', function (err) {
-      console.log('MQTT connection error: ', err);
-    });
-  }
-
-  /* Command service */
-
   async execCreateNode(
     host_id: string,
     node: UINodeCreate,
@@ -1653,10 +1610,6 @@ export class GrpcClient {
     return this.invitation
       ?.listReceived(request, this.getAuthHeader())
       .then((response) => {
-        console.log(
-          'pendingInvitations',
-          response.getInvitationsList().map((item) => item.toObject()),
-        );
         this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getInvitationsList().map((item) => item.toObject());
       })

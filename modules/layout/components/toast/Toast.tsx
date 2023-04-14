@@ -9,6 +9,9 @@ const ToastListItem: FC<ToastItem> = ({ id, content, isSuccess }) => {
 
   useEffect(() => {
     setTimeout(() => {
+      // console.log('timeout id', id);
+      // console.log('timeout toastList', toastList);
+
       const newToastList = toastList.filter((t) => t.id !== id);
       setToastList(newToastList);
     }, 3000);
@@ -25,10 +28,14 @@ const ToastListItem: FC<ToastItem> = ({ id, content, isSuccess }) => {
 
 export const Toast = () => {
   const toastList = useRecoilValue(toastAtoms.toastListAtom);
+
+  // console.log('toastList', toastList);
+
   return (
     <div css={styles.wrapper}>
       {toastList.map((t: ToastItem) => (
         <ToastListItem
+          key={t.id}
           id={t.id}
           type={t.type}
           content={t.content}

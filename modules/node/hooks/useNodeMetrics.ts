@@ -25,8 +25,6 @@ export const useNodeMetrics = (): Hook => {
     setIsLoading('initializing');
     const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
 
-    console.log('metrics', metrics);
-
     checkForTokenError(metrics);
 
     setNodeMetrics(metrics);
