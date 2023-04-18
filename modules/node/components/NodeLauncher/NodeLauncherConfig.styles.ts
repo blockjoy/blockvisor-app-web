@@ -7,6 +7,13 @@ export const styles = {
     padding: 10px 0;
     flex: 1 1 400px;
   `,
+  label: (theme: ITheme) => css`
+    margin-bottom: 12px;
+    font-size: 16px;
+    display: flex;
+    gap: 8px;
+    color: ${theme.colorLabel};
+  `,
   h2: (theme: ITheme) => css`
     display: flex;
     align-items: center;

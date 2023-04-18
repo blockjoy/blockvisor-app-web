@@ -9,6 +9,7 @@ const styles = {
     @media ${breakpoints.fromXLrg} {
       flex: 1 1 400px;
       max-height: calc(100vh - 72px);
+      min-height: calc(100vh - 72px);
     }
   `,
 };

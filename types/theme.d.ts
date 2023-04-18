@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@emotion/react';
 
-interface ITheme {
+export type ITheme = {
   id?: string;
   fontPrimary: string;
   colorPrimary: string;
@@ -34,7 +34,7 @@ interface ITheme {
   screenLg: string;
   screenXl: string;
   screenXxl: string;
-}
+};
 
 declare module '@emotion/react' {
   export interface Theme extends ITheme, ThemeProvider {}

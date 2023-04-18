@@ -53,12 +53,14 @@ export const NodeLauncher = () => {
   );
   const currentOrganization = useRef(defaultOrganization);
 
-  const [node, setNode] = useState<NodeState>({
+  const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
     nodeTypeId: NodeType.NODE_TYPE_UNSPECIFIED,
     nodeTypeProperties: [],
     nodeVersion: '',
     network: '',
+    allowedIps: [],
+    deniedIps: [],
   });
 
   const handleProtocolSelected = (
@@ -106,14 +108,16 @@ export const NodeLauncher = () => {
     return !!activeNodeFiles?.files?.length;
   };
 
-  const handleNetworkChanged = (network: string) => {
+  const handleNodePropertyChanged = (name: string, value: any) => {
+    console.log('handle Node property changed', value, name, node);
+
     setNode({
       ...node,
-      network,
+      [name]: value,
     });
   };
 
-  const handlePropertyChanged = (e: any) => {
+  const handleNodeConfigPropertyChanged = (e: any) => {
     setServerError('');
 
     const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
@@ -240,6 +244,8 @@ export const NodeLauncher = () => {
         nodeTypeProperties: [],
         nodeVersion: '',
         network: '',
+        allowedIps: [],
+        deniedIps: [],
       });
       currentOrganization.current = defaultOrganization;
     }
@@ -260,12 +266,10 @@ export const NodeLauncher = () => {
             <NodeLauncherConfig
               isConfigValid={isConfigValid}
               onFileUploaded={handleFileUploaded}
-              onPropertyChanged={handlePropertyChanged}
-              onNetworkChanged={handleNetworkChanged}
-              nodeTypeProperties={node.nodeTypeProperties}
-              nodeFiles={node.nodeFiles}
+              onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
+              onNodePropertyChanged={handleNodePropertyChanged}
               networkList={networkList}
-              nodeNetwork={node.network}
+              nodeLauncherState={node}
             />
           )}
         {!node.blockchainId && !node.nodeTypeId && (

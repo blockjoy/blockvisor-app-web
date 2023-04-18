@@ -2,19 +2,24 @@ import { FC, Fragment } from 'react';
 import { styles } from './PillPicker.styles';
 
 type Props = {
-  name?: string;
+  name: string;
   items: string[];
   selectedItem: string;
   tabIndexStart?: number;
-  onChange: (item: string) => void;
+  onChange: (name: string, item: string) => void;
 };
 
 export const PillPicker: FC<Props> = ({
+  name,
   items,
   selectedItem,
   onChange,
   tabIndexStart,
 }) => {
+  const handleChange = (item: string) => {
+    onChange(name, item);
+  };
+
   return (
     <div css={styles.wrapper}>
       {items
@@ -27,7 +32,7 @@ export const PillPicker: FC<Props> = ({
               name={item}
               id={item}
               type="radio"
-              onChange={() => onChange(item)}
+              onChange={() => handleChange(item)}
               checked={item === selectedItem}
               value={item}
             />

@@ -6,17 +6,14 @@ import {
   DangerZone,
   DetailsTable,
   EmptyColumn,
-  PageHeader,
   PageSection,
-  PageTitle,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
 } from '@shared/components';
-import { spacing } from 'styles/utils.spacing.styles';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
-import { ROUTES } from '@shared/index';
+import { NodeViewPageTitle } from './NodeViewPageTitle';
 import { NodeViewCharts } from './NodeViewCharts';
 import { mapNodeToDetails } from '@modules/node/utils/mapNodeToDetails';
 
@@ -57,13 +54,8 @@ export function NodeView() {
 
   return (
     <>
-      <PageTitle title="Nodes" hasOrgPicker />
+      <NodeViewPageTitle />
       <PageSection bottomBorder={false} topPadding={false}>
-        <div css={spacing.top.medium}>
-          <PageHeader>
-            <BackButton backUrl={ROUTES.NODES} />
-          </PageHeader>
-        </div>
         {!isLoading ? (
           <>
             {!nodeError && node?.id ? (

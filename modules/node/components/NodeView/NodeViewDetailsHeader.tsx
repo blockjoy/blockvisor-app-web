@@ -1,5 +1,4 @@
 import { Button } from '@shared/components';
-import { CopyNode } from '@shared/components/CopyNode/CopyNode';
 import { FC } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -41,13 +40,6 @@ export const NodeViewDetailsHeader: FC<Props> = ({
           </div>
         </div>
         <div css={styles.detailsFooter}>
-          <CopyNode value={id!}>
-            <small
-              css={[styles.nodeId, typo.small, colors.text3, typo.ellipsis]}
-            >
-              {id}
-            </small>
-          </CopyNode>
           {ip && <small css={[typo.small, colors.text2]}>{ip}</small>}
           {date && (
             <small css={[typo.small, colors.text2]}>

@@ -75,3 +75,5 @@ export * from './Tooltip/Tooltip';
 export * from './LoadingSpinner/';
 export * from './SvgIcon/SvgIcon';
 export * from './Scrollbar/Scrollbar';
+export * from './FirewallDropdown/FirewallDropdown';
+export * from './CopyNode/CopyNode';

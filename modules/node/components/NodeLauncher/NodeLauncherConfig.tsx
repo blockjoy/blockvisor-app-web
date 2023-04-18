@@ -3,16 +3,18 @@ import {
   Alert,
   PillPicker,
   Skeleton,
+  FirewallDropdown,
+  SvgIcon,
 } from '@shared/components';
 import { FC, Fragment } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
 import { Switch } from './formComponents/Switch/Switch';
 import { colors } from 'styles/utils.colors.styles';
-import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeLauncherConfig.styles';
+import IconInfo from '@public/assets/icons/info.svg';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
 
@@ -21,10 +23,10 @@ type Props = {
   nodeTypeProperties?: NodeProperty[];
   nodeFiles?: NodeFiles[];
   networkList: string[];
-  nodeNetwork: string;
+  nodeLauncherState: NodeLauncherState;
   onFileUploaded: (e: any) => void;
-  onPropertyChanged: (e: any) => void;
-  onNetworkChanged: (network: string) => void;
+  onNodeConfigPropertyChanged: (e: any) => void;
+  onNodePropertyChanged: (name: string, value: any) => void;
 };
 
 const renderControls = (
@@ -80,14 +82,14 @@ const renderControls = (
 
 export const NodeLauncherConfig: FC<Props> = ({
   isConfigValid,
-  nodeTypeProperties,
-  nodeFiles,
-  nodeNetwork,
   networkList,
+  nodeLauncherState,
   onFileUploaded,
-  onPropertyChanged,
-  onNetworkChanged,
+  onNodePropertyChanged,
+  onNodeConfigPropertyChanged,
 }) => {
+  const { network, nodeTypeProperties, nodeFiles } = nodeLauncherState;
+
   // const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
   //   e.preventDefault();
   //   e.stopPropagation();
@@ -115,20 +117,12 @@ export const NodeLauncherConfig: FC<Props> = ({
         <div css={styles.nodeTypeProperties}>
           {isConfigValid !== null && (
             <>
-              <label
-                css={[
-                  spacing.bottom.mediumSmall,
-                  typo.button,
-                  display.block,
-                  colors.text2,
-                ]}
-              >
-                Network
-              </label>
+              <label css={styles.label}>Network</label>
               <PillPicker
+                name="network"
                 items={networkList}
-                selectedItem={nodeNetwork}
-                onChange={onNetworkChanged}
+                selectedItem={network}
+                onChange={onNodePropertyChanged}
                 tabIndexStart={3}
               />
             </>
@@ -140,18 +134,24 @@ export const NodeLauncherConfig: FC<Props> = ({
             </div>
           )}
 
+          <label css={styles.label}>
+            Firewall Rules{' '}
+            <SvgIcon tooltip="Add IP addresses that are allowed/denied">
+              <IconInfo />
+            </SvgIcon>
+          </label>
+
+          <FirewallDropdown
+            onNodePropertyChanged={onNodePropertyChanged}
+            allowedIps={nodeLauncherState.allowedIps}
+            deniedIps={nodeLauncherState.deniedIps}
+          />
+
           {Boolean(networkList?.length) &&
             nodeTypeProperties?.map((property: NodeProperty) => {
               return (
                 <Fragment key={property.name}>
-                  <label
-                    css={[
-                      spacing.bottom.mediumSmall,
-                      typo.button,
-                      display.block,
-                      colors.text2,
-                    ]}
-                  >
+                  <label css={styles.label}>
                     <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
                     {property.required && !property.disabled && (
                       <span css={styles.requiredAsterix}>*</span>
@@ -161,7 +161,7 @@ export const NodeLauncherConfig: FC<Props> = ({
                     property,
                     nodeFiles!,
                     onFileUploaded,
-                    onPropertyChanged,
+                    onNodeConfigPropertyChanged,
                   )}
                 </Fragment>
               );
