@@ -19,9 +19,12 @@ export const styles = {
       }
 
       td {
-        padding-top: 6px;
+        padding-top: 0;
         padding-bottom: 16px;
       }
+
+      display: flex;
+      flex-direction: column;
     }
   `,
   column: css`

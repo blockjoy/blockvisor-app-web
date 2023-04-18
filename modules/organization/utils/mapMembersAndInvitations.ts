@@ -11,10 +11,9 @@ export const mapMembersAndInvitations = (
   membersAndInvitations: any,
 ): MemberAndInvitation[] => {
   return membersAndInvitations.map((mi: any) => ({
-    id: mi.email ? mi.id : null,
+    id: mi.email ? mi.userId : null,
     email: mi.email ? mi.email : mi.inviteeEmail,
-    firstName: mi.firstName ? mi.firstName : null,
-    lastName: mi.lastName ? mi.lastName : null,
+    name: mi.name ? mi.name : null,
     isPending: mi.inviteeEmail ? true : false,
     invitationId: mi.inviteeEmail ? mi.id : null,
   }));

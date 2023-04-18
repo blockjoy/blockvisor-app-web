@@ -17,6 +17,8 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
 import { NodeViewConfig } from './NodeViewConfig';
 import { ROUTES } from '@shared/index';
+import { NodeViewCharts } from './NodeViewCharts';
+import { mapNodeToDetails } from '@modules/node/utils/mapNodeToDetails';
 
 export function NodeView() {
   const [nodeError, setNodeError] = useState<boolean>(false);
@@ -66,7 +68,7 @@ export function NodeView() {
         </div>
         {!isLoading ? (
           <>
-            {!nodeError ? (
+            {!nodeError && node?.id ? (
               <>
                 <NodeViewDetailsHeader
                   handleStop={handleStop}
@@ -78,7 +80,8 @@ export function NodeView() {
                   date={node?.created!}
                   id={node?.id!}
                 />
-                <DetailsTable bodyElements={node?.details!} />
+                <NodeViewCharts nodeId={node?.id!} />
+                <DetailsTable bodyElements={mapNodeToDetails(node!)} />
               </>
             ) : (
               <EmptyColumn
@@ -97,12 +100,12 @@ export function NodeView() {
           </>
         )}
       </PageSection>
-      {node?.nodeTypeConfig && !isLoading && !nodeError && (
+      {node?.propertiesList && !isLoading && !nodeError && (
         <PageSection bottomBorder={false}>
           <NodeViewConfig />
         </PageSection>
       )}
-      {!nodeError && !isLoading && (
+      {!nodeError && !isLoading && node?.id && (
         <PageSection bottomBorder={false}>
           <DangerZone
             isLoading={isDeleting}

@@ -1,29 +1,26 @@
+import Head from 'next/head';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
+import { Toast } from './toast/Toast';
 import { useIdentityRepository } from '@modules/auth';
 import {
   organizationAtoms,
   useGetOrganizations,
   useInvitations,
 } from '@modules/organization';
-import { useEffect, useRef } from 'react';
-import Head from 'next/head';
 import { useGetBlockchains, useNodeList } from '@modules/node';
-import { useRecoilValue } from 'recoil';
-import { initialQueryParams } from '@modules/node/ui/NodeUIHelpers';
+import { MqttUIProvider } from '@modules/mqtt';
 
-type LayoutType = {
+export type LayoutProps = {
   children: React.ReactNode;
   isPageFlex?: boolean;
   pageTitle: string;
 };
 
-export const AppLayout: React.FC<LayoutType> = ({
-  children,
-  isPageFlex,
-  pageTitle,
-}) => {
+export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
@@ -35,9 +32,6 @@ export const AppLayout: React.FC<LayoutType> = ({
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-
-  const currentOrganization = useRef(defaultOrganization);
-
   useEffect(() => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
@@ -46,9 +40,14 @@ export const AppLayout: React.FC<LayoutType> = ({
   }, []);
 
   useEffect(() => {
-    if (currentOrganization.current?.id !== defaultOrganization?.id) {
-      currentOrganization.current = defaultOrganization;
-      loadNodes(initialQueryParams);
+    if (defaultOrganization?.id) {
+      loadNodes();
+    }
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    if (!blockchains?.length) {
+      getBlockchains();
     }
   }, [defaultOrganization?.id]);
 
@@ -64,7 +63,10 @@ export const AppLayout: React.FC<LayoutType> = ({
       </Head>
       <Burger />
       <Sidebar />
-      <Page isFlex={isPageFlex}>{children}</Page>
+      <Toast />
+      <MqttUIProvider>
+        <Page isFlex={isPageFlex}>{children}</Page>
+      </MqttUIProvider>
     </>
   );
 };

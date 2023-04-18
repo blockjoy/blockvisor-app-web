@@ -21,7 +21,6 @@ import {
   Parameter,
   RequestMeta,
   ResponseMeta,
-  // UpdateNotification,
   User,
   UserConfigurationParameter,
   Pagination,
@@ -76,10 +75,6 @@ import {
   UpdateUserRequest,
   UpsertConfigurationResponse,
 } from '@blockjoy/blockjoy-grpc/dist/out/user_service_pb';
-import {
-  GetUpdatesRequest,
-  GetUpdatesResponse,
-} from '@blockjoy/blockjoy-grpc/dist/out/update_service_pb';
 import {
   CommandRequest,
   CommandResponse,
@@ -249,6 +244,8 @@ export interface StateObject {
   processNodeUpdate: (node: Node | undefined) => boolean;
 }
 
+const eqmx_url = 'ws://35.237.162.218/mqtt';
+
 export class GrpcClient {
   private authentication: AuthenticationServiceClient | undefined;
   private billing: BillingServiceClient | undefined;
@@ -271,7 +268,17 @@ export class GrpcClient {
   }
 
   setTokenValue(token: string) {
-    this.token = token;
+    const new_token = Buffer.from(token, 'binary').toString('base64');
+
+    this.token = new_token;
+
+    const identity = localStorage.getItem('identity');
+    if (identity) {
+      const parsedIdentity = JSON.parse(identity);
+      parsedIdentity.accessToken = new_token;
+      const updatedIdentityString = JSON.stringify(parsedIdentity);
+      localStorage.setItem('identity', updatedIdentityString);
+    }
   }
 
   initStorage() {
@@ -564,6 +571,7 @@ export class GrpcClient {
     return this.blockchain
       ?.list(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response
           .getBlockchainsList()
           .map((chain) => blockchain_to_grpc_blockchain(chain));
@@ -588,6 +596,7 @@ export class GrpcClient {
     return this.dashboard
       ?.metrics(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMetricsList().map((item) => item.toObject());
       })
       .catch((err) => {
@@ -608,11 +617,13 @@ export class GrpcClient {
     let request_meta = new RequestMeta();
     request_meta.setId(this.getDummyUuid());
     let request = new GetHostsRequest();
+    request.setId(host_id!);
     request.setMeta(request_meta);
 
     return this.host
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue()!);
         return response.getHostsList()?.map((host) => host_to_grpc_host(host));
       })
       .catch((err) => {
@@ -631,7 +642,10 @@ export class GrpcClient {
 
     return this.host
       ?.create(request, this.getAuthHeader())
-      .then((response) => response.getMeta()?.toObject())
+      .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+        return response.getMeta()?.toObject();
+      })
       .catch((err) => {
         return StatusResponseFactory.createHostResponse(err, 'grpcClient');
       });
@@ -673,6 +687,7 @@ export class GrpcClient {
     return this.host_provision
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getHostProvisionsList().map((hp) => hp.toObject());
       })
       .catch((err) => {
@@ -695,6 +710,7 @@ export class GrpcClient {
     return this.host_provision
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -734,10 +750,6 @@ export class GrpcClient {
     if (filter_criteria) {
       let criteria = new FilterCriteria();
 
-      console.log('Setting blockchain filter: ', filter_criteria.blockchain);
-      console.log('Setting node status filter: ', filter_criteria.node_status);
-      console.log('Setting node type filter: ', filter_criteria.node_type);
-
       criteria.setBlockchainIdsList(filter_criteria.blockchain || []);
       criteria.setStatesList(filter_criteria.node_status || []);
       criteria.setNodeTypesList(filter_criteria.node_type || []);
@@ -748,6 +760,7 @@ export class GrpcClient {
     return this.node
       ?.list(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getNodesList().map((node) => node_to_grpc_node(node));
       })
       .catch((err) => {
@@ -768,6 +781,10 @@ export class GrpcClient {
     return this.node
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
+
+        console.log('getNode', node_to_grpc_node(response.getNode()));
+
         return node_to_grpc_node(response.getNode());
       })
       .catch((err) => {
@@ -798,6 +815,7 @@ export class GrpcClient {
     let response_meta = await this.node
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -884,6 +902,7 @@ export class GrpcClient {
     let response_meta = await this.node
       ?.update(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta();
       })
       .catch((err) => {
@@ -979,6 +998,7 @@ export class GrpcClient {
     return this.organization
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getOrganizationsList().map((item) => item.toObject());
       })
       .catch((err) => {
@@ -1001,6 +1021,7 @@ export class GrpcClient {
     return this.organization
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1026,6 +1047,7 @@ export class GrpcClient {
     return this.organization
       ?.update(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1049,6 +1071,7 @@ export class GrpcClient {
     return this.organization
       ?.delete(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1097,6 +1120,7 @@ export class GrpcClient {
     return this.organization
       ?.restore(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getOrganization()?.toObject();
       })
       .catch((err) => {
@@ -1120,6 +1144,7 @@ export class GrpcClient {
     return this.organization
       ?.members(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getUsersList().map((item) => ({
           ...item.toObject(),
           createdAtString: timestamp_to_date(item?.getCreatedAt()) || undefined,
@@ -1193,6 +1218,7 @@ export class GrpcClient {
     return this.user
       ?.get(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return user_to_grpc_user(response.getUser());
       })
       .catch((err) => {
@@ -1216,6 +1242,7 @@ export class GrpcClient {
     return this.user
       ?.create(request, null)
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1240,6 +1267,7 @@ export class GrpcClient {
     return this.user
       ?.update(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getUser()?.toObject();
       })
       .catch((err) => {
@@ -1264,52 +1292,6 @@ export class GrpcClient {
 
     return response.getParamsList().map((item) => item.toObject());
   }
-
-  /* Update service */
-
-  getUpdates(stateObject: StateObject): void {
-    // let retry_count = 3;
-    // let should_run = true;
-    // let request_meta = new RequestMeta();
-    // request_meta.setId(this.getDummyUuid());
-    // let request = new GetUpdatesRequest();
-    // request.setMeta(request_meta);
-    // let update_stream = this.update?.updates(request, this.getAuthHeader());
-    //   while (should_run) {
-    //     update_stream?.on('data', (response) => {
-    //       if (
-    //         response.getUpdate()?.getNotificationCase() ===
-    //         UpdateNotification.NotificationCase.HOST
-    //       ) {
-    //         const host = response.getUpdate()?.getHost();
-    //         console.log(`got host update from server: `, host);
-    //         stateObject.processHostUpdate(host);
-    //       } else if (
-    //         response.getUpdate()?.getNotificationCase() ===
-    //         UpdateNotification.NotificationCase.NODE
-    //       ) {
-    //         const node = response.getUpdate()?.getNode();
-    //         console.log(`got node update from server: `, node);
-    //         stateObject.processNodeUpdate(node);
-    //       }
-    //     });
-    //     update_stream?.on('error', (err) => {
-    //       console.error(`update stream closed unexpectedly: `, err);
-    //       if (retry_count > 0) {
-    //         console.info('Trying to reinitialize the update connection');
-    //         update_stream = this.update?.updates(request, this.getAuthHeader());
-    //         retry_count--;
-    //       } else {
-    //         should_run = false;
-    //       }
-    //     });
-    //     window.setTimeout(() => {
-    //       console.debug('Waiting 1000ms for next update');
-    //     }, 1000);
-    //   }
-  }
-
-  /* Command service */
 
   async execCreateNode(
     host_id: string,
@@ -1349,6 +1331,7 @@ export class GrpcClient {
     return this.command
       ?.startNode(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1380,6 +1363,7 @@ export class GrpcClient {
     return this.command
       ?.stopNode(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1445,6 +1429,7 @@ export class GrpcClient {
     return this.command
       ?.restartHost(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1478,6 +1463,7 @@ export class GrpcClient {
     return this.invitation
       ?.create(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getMeta()?.toObject();
       })
       .catch((err) => {
@@ -1624,11 +1610,7 @@ export class GrpcClient {
     return this.invitation
       ?.listReceived(request, this.getAuthHeader())
       .then((response) => {
-        console.log(
-          'pendingInvitations',
-          response.getInvitationsList().map((item) => item.toObject()),
-        );
-
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getInvitationsList().map((item) => item.toObject());
       })
       .catch((err) => {
@@ -1649,6 +1631,7 @@ export class GrpcClient {
     return this.invitation
       ?.listPending(request, this.getAuthHeader())
       .then((response) => {
+        this.setTokenValue(response.getMeta()?.getToken()?.getValue() || '');
         return response.getInvitationsList().map((item) => ({
           ...item.toObject(),
           createdAtString: timestamp_to_date(item?.getCreatedAt()) || undefined,
