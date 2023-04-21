@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-import { apiClient } from '@modules/client';
+import { nodeClient } from '@modules/grpc';
 import { useIdentityRepository } from '@modules/auth';
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
-import { useRef } from 'react';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useNodeMetrics } from './useNodeMetrics';
 
@@ -46,7 +45,7 @@ export const useNodeList = () => {
 
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
 
-    const nodes: any = await apiClient.listNodes(
+    const nodes: any = await nodeClient.listNodes(
       org_id!,
       queryParams.filter,
       queryParams.pagination,

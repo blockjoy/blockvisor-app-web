@@ -1,4 +1,4 @@
-import { apiClient } from '@modules/client';
+import { organizationClient } from '@modules/grpc';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -19,10 +19,9 @@ export function useGetOrganizations() {
 
   const getOrganizations = async (init?: boolean) => {
     setIsLoading('initializing');
-    const organizations: any = await apiClient.getOrganizations();
+    const organizations: any = await organizationClient.getOrganizations();
 
     checkForTokenError(organizations);
-
     setOrganizations(organizations);
 
     if (init) getDefaultOrganization(organizations);

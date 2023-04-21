@@ -1,13 +1,12 @@
-import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'react-toastify';
-import { apiClient } from '@modules/client';
+import { nodeClient, commandClient } from '@modules/grpc';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { checkForApiError } from 'utils/checkForApiError';
+import { Node } from '@modules/grpc/library/node';
 
 type Args = string | string[] | undefined;
 
@@ -18,11 +17,11 @@ type Hook = {
   restartNode: (nodeId: Args) => void;
   isLoading: boolean;
   unloadNode: any;
-  node: BlockjoyNode | null;
+  node: Node | null;
 };
 
-const createUuid = (id: Args) => {
-  const uuid = id?.toString() || '';
+const convertRouteParamToString = (id: Args) => {
+  const uuid = id?.toString()!;
   return uuid;
 };
 
@@ -32,31 +31,41 @@ export const useNodeView = (): Hook => {
   const { removeFromNodeList } = useNodeList();
 
   const deleteNode = async (id: Args) => {
-    const uuid = createUuid(id);
-    await apiClient.deleteNode(uuid);
+    const uuid = convertRouteParamToString(id);
+    await nodeClient.deleteNode(uuid);
     removeFromNodeList(uuid);
     toast.success(`Node Deleted`);
   };
 
   const stopNode = async (nodeId: Args) => {
-    await apiClient.execStopNode(createUuid(node?.hostId), createUuid(nodeId));
-    toast.success(`Node Stopped`);
+    try {
+      await commandClient.create('stopNode', convertRouteParamToString(nodeId));
+      toast.success(`Node Stopped`);
+    } catch (err) {
+      toast.error(`Node Stop Failed`);
+    }
   };
 
   const restartNode = async (nodeId: Args) => {
-    await apiClient.execStartNode(createUuid(node?.hostId), createUuid(nodeId));
-    toast.success(`Node Started`);
+    try {
+      await commandClient.create(
+        'startNode',
+        convertRouteParamToString(nodeId),
+      );
+      toast.success(`Node Start`);
+    } catch (err) {
+      toast.error(`Node Start Failed`);
+    }
   };
 
   const loadNode = async (id: Args, onError: VoidFunction) => {
     setIsLoading(true);
 
-    let node: any = null;
+    let node: any;
 
     try {
-      const nodeId = createUuid(id);
-      node = await apiClient.getNode(nodeId);
-
+      const nodeId = convertRouteParamToString(id);
+      node = await nodeClient.getNode(nodeId);
       checkForApiError('GetNode', node);
       checkForTokenError(node);
     } catch (err) {
@@ -67,15 +76,7 @@ export const useNodeView = (): Hook => {
 
     checkForTokenError(node);
 
-    const activeNode: BlockjoyNode = {
-      ...node,
-      created: formatDistanceToNow(new Date(node.created_at_datetime), {
-        addSuffix: true,
-      }),
-      propertiesList: node.propertiesList,
-    };
-
-    setNode(activeNode);
+    setNode(node);
 
     setIsLoading(false);
   };

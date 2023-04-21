@@ -13,24 +13,27 @@ const mockdata = [
     name: 'Organization 1',
     personal: true,
     memberCount: 1,
-    createdAt: { seconds: 1664879710, nanos: 695973000 },
-    updatedAt: { seconds: 1664879710, nanos: 695973000 },
+    members: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '28ce6cf1-3caf-49a2-8928-bcd3777a2b3b',
     name: 'Organization 2',
     personal: false,
     memberCount: 1,
-    createdAt: { seconds: 1666791979, nanos: 867770000 },
-    updatedAt: { seconds: 1666791979, nanos: 867770000 },
+    members: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '793be634-bf9e-495d-891f-b3185696030e',
     name: 'Organization 3',
     personal: false,
     memberCount: 1,
-    createdAt: { seconds: 1666862370, nanos: 25407000 },
-    updatedAt: { seconds: 1666862370, nanos: 25407000 },
+    members: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
@@ -50,7 +53,7 @@ const headers: TableHeader[] = [
 ];
 
 const Template: ComponentStory<typeof Table> = (args) => {
-  const rows = mapOrganizationsToRows(mockdata);
+  const rows = mapOrganizationsToRows(mockdata, '');
 
   return <Table {...args} isLoading={'loading'} />;
 };

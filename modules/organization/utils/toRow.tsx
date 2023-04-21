@@ -1,3 +1,4 @@
+import { Invitation } from '@modules/grpc/library/invitation';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { colors } from 'styles/utils.colors.styles';
@@ -37,7 +38,7 @@ export const mapMembersToRows = (members: Member[]) => {
   }));
 };
 
-export const mapInvitesToRows = (invites: Invitee[]) => {
+export const mapInvitesToRows = (invites: Invitation[]) => {
   return invites.map((invite) => ({
     key: invite.id,
     cells: [
@@ -53,7 +54,7 @@ export const mapInvitesToRows = (invites: Invitee[]) => {
         key: '2',
         component: (
           <span css={[colors.text2]}>
-            {formatDistanceToNow(new Date(invite.createdAtString), {
+            {formatDistanceToNow(invite.createdAt!, {
               addSuffix: true,
             })}
           </span>

@@ -7,11 +7,9 @@ export const handleTokenFromQueryString = async (
   setValue: UseFormSetValue<any>,
 ) => {
   try {
-    console.log('token', token);
     const tokenObject: any = readToken(
       Buffer.from(token?.toString(), 'binary').toString('base64'),
     );
-    console.log('tokenObject', tokenObject);
     const email = tokenObject?.email || tokenObject?.invitee_email;
     if (email) {
       setValue('email', email);

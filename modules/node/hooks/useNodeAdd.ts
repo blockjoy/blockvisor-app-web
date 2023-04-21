@@ -1,7 +1,12 @@
-import { apiClient } from '@modules/client';
+import { nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 import { useNodeList } from './useNodeList';
+import { CreateNodeParams } from '..';
+import {
+  Node,
+  NodeScheduler_ResourceAffinity,
+} from '@modules/grpc/library/node';
 
 export const useNodeAdd = () => {
   const repository = useIdentityRepository();
@@ -16,44 +21,53 @@ export const useNodeAdd = () => {
     const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';
 
     const nodeProperties: any = params.nodeTypeProperties.map((property) => {
-      const { ui_type, ...rest } = property;
+      const { uiType, ...rest } = property;
       return {
         ...rest,
-        default: property.default === null ? 'null' : property.default,
+        // default: property.default === null ? 'null' : property.default,
         value: property?.value?.toString() || 'null',
         description: '',
         label: '',
-        uiType: ui_type,
+        uiType: uiType,
       };
     });
 
-    const response: any = await apiClient.createNode(
-      {
-        org_id: orgId,
-        blockchain_id: params.blockchain,
-        version: params.version ?? '',
-        type: params.nodeType,
-        properties: nodeProperties,
-        network: params.network,
-      },
-      params.key_files,
-    );
-
     try {
-      const nodeId = response.messagesList[0];
+      const response: Node = await nodeClient.createNode(
+        {
+          orgId: orgId,
+          blockchainId: params.blockchain,
+          version: params.version ?? '',
+          nodeType: params.nodeType,
+          properties: nodeProperties,
+          network: params.network,
+          scheduler: {
+            resource:
+              NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+          },
+        },
+        params.key_files,
+      );
+      const nodeId = response!.id;
       toast.success('Node Created');
       loadNodes();
       onSuccess(nodeId);
-    } catch (err) {
-      let errorMessage =
-        'Error launching node, please contact our support team.';
-      if (response?.message?.includes('No free IP available')) {
-        errorMessage = 'Error launching node, no free IP address available.';
-      } else if (response?.message?.includes('User node quota exceeded')) {
-        errorMessage = 'Unable to launch, node quota exceeded.';
-      }
-      onError(errorMessage);
+    } catch (err: any) {
+      onError(err.toString());
     }
+
+    // try {
+
+    // } catch (err) {
+    //   let errorMessage =
+    //     'Error launching node, please contact our support team.';
+    //   if (response?.message?.includes('No free IP available')) {
+    //     errorMessage = 'Error launching node, no free IP address available.';
+    //   } else if (response?.message?.includes('User node quota exceeded')) {
+    //     errorMessage = 'Unable to launch, node quota exceeded.';
+    //   }
+    //   onError(errorMessage);
+    // }
   };
 
   return {

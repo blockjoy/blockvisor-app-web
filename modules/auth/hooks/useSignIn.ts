@@ -1,7 +1,6 @@
-import { apiClient } from '@modules/client';
+import { authClient, userClient } from '@modules/grpc';
 import { useSetRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
-import { isSuccess } from '../utils/authTypeGuards';
 import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
 import { isStatusResponse } from '@modules/organization';
@@ -16,14 +15,14 @@ export function useSignIn() {
   const repository = useIdentityRepository();
 
   const handleSuccess = async (accessToken: string) => {
-    apiClient.setTokenValue(accessToken);
+    // authClient.setTokenValue(accessToken);
     repository?.saveIdentity({
       accessToken,
       // for demo purposes only, this will be set December 2045
       verified: true,
     });
 
-    const userData: any = await apiClient.getUser();
+    const userData: any = await userClient.getUser();
     repository?.updateIdentity(userData);
     setUser((current) => ({
       ...current,
@@ -39,15 +38,11 @@ export function useSignIn() {
     }
 
     if (params) {
-      const response: any = await apiClient.login(
-        params.email,
-        params.password,
-      );
+      const response = await authClient.login(params.email, params.password);
       if (!isStatusResponse(response)) {
-        const accessToken = response.value;
-        handleSuccess(accessToken);
+        await handleSuccess(response!);
       } else {
-        throw new ApplicationError('LoginError', response?.message ?? '');
+        throw new ApplicationError('LoginError', 'Login Error');
       }
     } else {
       throw new ApplicationError('LoginError', 'Error signing in');

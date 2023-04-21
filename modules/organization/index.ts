@@ -9,6 +9,7 @@ export * from './store/organizationAtoms';
 export * from './utils/typeGuards';
 export * from './utils/organizationDetails';
 export * from './utils/toRow';
+export * from './utils/getOrgMemberRole';
 export * from './utils/mapOrganizationsToRows';
 export * from './utils/getHandlerTableChange';
 export * from './hooks/useCreateOrganization';

@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
-import { apiClient } from '@modules/client';
+//import { apiClient } from '@modules/grpc';
 import { organizationAtoms } from '@modules/organization';
 import { checkForTokenError } from 'utils/checkForTokenError';
 
@@ -23,22 +23,23 @@ export const useNodeMetrics = (): Hook => {
 
   const loadMetrics = async (shouldReturn = false) => {
     setIsLoading('initializing');
-    const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
+    // const metrics: any = await apiClient.getDashboardMetrics(orgId?.id);
 
-    checkForTokenError(metrics);
+    // checkForTokenError(metrics);
 
-    setNodeMetrics(metrics);
+    // setNodeMetrics(metrics);
 
-    const total: number =
-      metrics?.reduce((accumulator: number, metric: NodeMetrics) => {
-        const currentValue = parseInt(metric.value) ?? 0;
-        return accumulator + currentValue;
-      }, 0) ?? 0;
+    // const total: number =
+    //   metrics?.reduce((accumulator: number, metric: NodeMetrics) => {
+    //     const currentValue = parseInt(metric.value) ?? 0;
+    //     return accumulator + currentValue;
+    //   }, 0) ?? 0;
 
-    setTotalNodes(total);
+    // setTotalNodes(total);
 
-    setIsLoading('finished');
-    if (shouldReturn) return total || 0;
+    // setIsLoading('finished');
+    // if (shouldReturn) return total || 0;
+    if (shouldReturn) return 0;
   };
 
   return {

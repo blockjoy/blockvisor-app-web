@@ -1,9 +1,4 @@
-export enum OrgRole {
-  UndefinedOrgRole,
-  Owner,
-  Member,
-  Admin,
-};
+import { OrgUser_OrgRole as OrgRole } from '@modules/grpc/library/organization';
 
 export enum Permissions {
   READ_ORGANIZATION,
@@ -15,28 +10,32 @@ export enum Permissions {
   CREATE_MEMBER,
   UPDATE_MEMBER,
   DELETE_MEMBER,
-};
-
-export const USER_ROLES: {
-  [OrgRole.UndefinedOrgRole]: string,
-  [OrgRole.Owner]: string,
-  [OrgRole.Member]: string,
-  [OrgRole.Admin]: string,
-} = {
-  [OrgRole.UndefinedOrgRole]: 'Undefined',
-  [OrgRole.Owner]: 'Owner',
-  [OrgRole.Member]: 'Member',
-  [OrgRole.Admin]: 'Admin'
 }
 
-export const PERMISSIONS: {
-  [OrgRole.UndefinedOrgRole]: Permissions[],
-  [OrgRole.Owner]: Permissions[],
-  [OrgRole.Member]: Permissions[],
-  [OrgRole.Admin]: Permissions[],
+export const USER_ROLES: {
+  [OrgRole.ORG_ROLE_UNSPECIFIED]: string;
+  [OrgRole.ORG_ROLE_MEMBER]: string;
+  [OrgRole.ORG_ROLE_OWNER]: string;
+  [OrgRole.ORG_ROLE_ADMIN]: string;
 } = {
-  [OrgRole.UndefinedOrgRole]: [],
-  [OrgRole.Owner]: [
+  [OrgRole.ORG_ROLE_UNSPECIFIED]: 'Undefined',
+  [OrgRole.ORG_ROLE_MEMBER]: 'Member',
+  [OrgRole.ORG_ROLE_OWNER]: 'Owner',
+  [OrgRole.ORG_ROLE_ADMIN]: 'Admin',
+};
+
+export const PERMISSIONS: {
+  [OrgRole.ORG_ROLE_UNSPECIFIED]: Permissions[];
+  [OrgRole.ORG_ROLE_MEMBER]: Permissions[];
+  [OrgRole.ORG_ROLE_OWNER]: Permissions[];
+  [OrgRole.ORG_ROLE_ADMIN]: Permissions[];
+} = {
+  [OrgRole.ORG_ROLE_UNSPECIFIED]: [],
+  [OrgRole.ORG_ROLE_MEMBER]: [
+    Permissions.READ_ORGANIZATION,
+    Permissions.READ_MEMBER,
+  ],
+  [OrgRole.ORG_ROLE_OWNER]: [
     Permissions.READ_ORGANIZATION,
     Permissions.CREATE_ORGANIZATION,
     Permissions.UPDATE_ORGANIZATION,
@@ -47,12 +46,7 @@ export const PERMISSIONS: {
     Permissions.UPDATE_MEMBER,
     Permissions.DELETE_MEMBER,
   ],
-  [OrgRole.Member]: [
-    Permissions.READ_ORGANIZATION,
-
-    Permissions.READ_MEMBER,
-  ],
-  [OrgRole.Admin]: [
+  [OrgRole.ORG_ROLE_ADMIN]: [
     Permissions.READ_ORGANIZATION,
     Permissions.CREATE_ORGANIZATION,
     Permissions.UPDATE_ORGANIZATION,
@@ -63,18 +57,21 @@ export const PERMISSIONS: {
   ],
 };
 
-export function useHasPermissions(orgRole: OrgRole, permissions: Permissions | Permissions[]) {
+export function useHasPermissions(
+  orgRole: OrgRole,
+  permissions: Permissions | Permissions[],
+) {
   if (typeof orgRole === 'undefined' || typeof permissions === 'undefined') {
     return false;
   }
 
-  if (typeof permissions === "number") {
+  if (typeof permissions === 'number') {
     return PERMISSIONS[orgRole].includes?.(permissions);
   } else if (Array.isArray(permissions)) {
     return PERMISSIONS[orgRole].some((permissions: Permissions) =>
-      Boolean(PERMISSIONS[orgRole].includes?.(permissions))
+      Boolean(PERMISSIONS[orgRole].includes?.(permissions)),
     );
   } else {
     return false;
   }
-};
+}

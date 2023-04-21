@@ -1,8 +1,7 @@
-import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { apiClient } from '@modules/client';
+import { organizationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
-import { SetterOrUpdater, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganizations } from './useGetOrganizations';
 import { useSwitchOrganization } from './useSwitchOrganization';
@@ -17,22 +16,18 @@ export function useDeleteOrganization(): IDeleteOrganizationHook {
 
   const deleteOrganization = async (id: string) => {
     setLoadingState('initializing');
-    const response = await apiClient.deleteOrganization(id);
 
-    /* TODO: temporary fix - API for node deletion doesn't return success response, but instead code 25 (Record not found) */
-    if (isResponeMetaObject(response) || response?.code === 25) {
-      try {
-        removeOrganization(id);
-        setLoadingState('finished');
-      } catch (error) {
-        console.log('Error switching org: ', error);
-      }
-      toast.success('Deleted successfully');
-    } else {
+    try {
+      await organizationClient.deleteOrganization(id);
+      removeOrganization(id);
       setLoadingState('finished');
+      toast.success('Deleted successfully');
+    } catch (err: any) {
       toast.error('Delete failed');
-      throw new ApplicationError('DeleteOrganization', 'Delete Failed');
+      throw new ApplicationError('DeleteOrganization', err?.message);
     }
+
+    setLoadingState('finished');
   };
 
   const removeOrganization = (id: string) => {

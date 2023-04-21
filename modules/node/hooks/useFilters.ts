@@ -28,18 +28,18 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
     queryParams: InitialQueryParams,
     values: InitialFilter,
   ) => {
-    const { blockchain, node_status, node_type } = values;
+    const { blockchain, nodeStatus, nodeType } = values;
     const newQueryParams = { ...queryParams };
 
     const filter: InitialFilter = {
       blockchain: [],
-      node_type: [],
-      node_status: [],
+      nodeType: [],
+      nodeStatus: [],
     };
 
     filter.blockchain = blockchain !== undefined ? blockchain : [];
-    filter.node_type = node_type !== undefined ? node_type : [];
-    filter.node_status = node_status !== undefined ? node_status : [];
+    filter.nodeType = nodeType !== undefined ? nodeType : [];
+    filter.nodeStatus = nodeStatus !== undefined ? nodeStatus : [];
 
     newQueryParams.filter = filter;
     return newQueryParams;

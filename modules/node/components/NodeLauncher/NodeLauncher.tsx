@@ -12,13 +12,28 @@ import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/index';
+import {
+  UiType,
+  Node_NodeProperty,
+  Node_NodeType,
+} from '@modules/grpc/library/node';
+import { SupportedNodeType } from '@modules/grpc/library/blockchain';
 
 type NodeState = {
   blockchainId: string;
   nodeVersion: string;
-  nodeTypeId: string;
-  nodeTypeProperties: NodeTypeConfig[];
+  nodeTypeId: Node_NodeType;
+  nodeTypeProperties: Node_NodeProperty[];
   nodeFiles?: NodeFiles[];
+  network: string;
+};
+
+export type CreateNodeParams = {
+  version: string;
+  nodeType: number;
+  blockchain: string;
+  nodeTypeProperties: Node_NodeProperty[];
+  key_files?: File[];
   network: string;
 };
 
@@ -40,7 +55,7 @@ export const NodeLauncher = () => {
 
   const [node, setNode] = useState<NodeState>({
     blockchainId: '',
-    nodeTypeId: '',
+    nodeTypeId: Node_NodeType.NODE_TYPE_UNSPECIFIED,
     nodeTypeProperties: [],
     nodeVersion: '',
     network: '',
@@ -48,8 +63,8 @@ export const NodeLauncher = () => {
 
   const handleProtocolSelected = (
     blockchainId: string,
-    nodeTypeId: string,
-    nodeTypeProperties: NodeTypeConfig[],
+    nodeTypeId: Node_NodeType,
+    nodeTypeProperties: Node_NodeProperty[],
     nodeVersion: string,
   ) => {
     setServerError(undefined);
@@ -70,10 +85,15 @@ export const NodeLauncher = () => {
     : Boolean(
         node.nodeFiles?.every((f) => f.files?.length) &&
           node.nodeTypeProperties
-            .filter((type) => type.required && type.ui_type !== 'key-upload')
+            ?.filter(
+              (type: Node_NodeProperty) =>
+                type.required && type.uiType !== UiType.UI_TYPE_FILE_UPLOAD,
+            )
             .every(
               (type) =>
-                type.value || type.disabled || type.ui_type === 'switch',
+                type.value ||
+                type.disabled ||
+                type.uiType === UiType.UI_TYPE_SWITCH,
             ),
       );
 
@@ -173,26 +193,30 @@ export const NodeLauncher = () => {
 
     if (!activeBlockchain) return;
 
-    setNetworkList(activeBlockchain.networksList.map((n: any) => n.name));
+    setNetworkList(activeBlockchain.networks.map((n: any) => n.name));
 
-    const activeNodeType = activeBlockchain.supported_node_types.find(
-      (type: any) => type.id === +node.nodeTypeId,
+    const supportedNodeTypes = activeBlockchain.nodesTypes;
+
+    const activeNodeType = supportedNodeTypes.find(
+      (type: SupportedNodeType) => type.nodeType === +node.nodeTypeId,
     );
 
-    const nodeTypePropertiesCopy = [...activeNodeType.properties];
+    const nodeTypePropertiesCopy = [...activeNodeType?.properties!];
 
-    const propertiesWithValue = nodeTypePropertiesCopy.map((property) => ({
-      ...property,
-      value:
-        property.ui_type === 'switch'
-          ? property.default === 'true'
-            ? true
-            : false
-          : null,
-    }));
+    const propertiesWithValue: Node_NodeProperty[] = nodeTypePropertiesCopy.map(
+      (property) => ({
+        name: property.name,
+        uiType: property.uiType,
+        disabled: property.disabled,
+        required: property.required,
+        label: '',
+        description: '',
+        value: property.default,
+      }),
+    );
 
     const fileProperties: NodeFiles[] = propertiesWithValue
-      .filter((p) => p.ui_type === 'key-upload')
+      .filter((p) => p.uiType === UiType.UI_TYPE_FILE_UPLOAD)
       .map((p) => ({
         name: p.name,
         files: [],
@@ -202,8 +226,8 @@ export const NodeLauncher = () => {
       ...node,
       nodeTypeProperties: propertiesWithValue,
       nodeFiles: fileProperties,
-      network: activeBlockchain?.networksList?.length
-        ? activeBlockchain?.networksList[0]?.name
+      network: activeBlockchain?.networks?.length
+        ? activeBlockchain?.networks[0]?.name
         : '',
     });
   }, [node.blockchainId, node.nodeTypeId]);
@@ -212,7 +236,7 @@ export const NodeLauncher = () => {
     if (currentOrganization.current?.id !== defaultOrganization?.id) {
       setNode({
         blockchainId: '',
-        nodeTypeId: '',
+        nodeTypeId: Node_NodeType.NODE_TYPE_UNSPECIFIED,
         nodeTypeProperties: [],
         nodeVersion: '',
         network: '',

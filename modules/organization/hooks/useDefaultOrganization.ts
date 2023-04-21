@@ -1,4 +1,5 @@
 import { useIdentityRepository } from '@modules/auth';
+import { Org } from '@modules/grpc/library/organization';
 import { readToken } from '@shared/utils/readToken';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -12,9 +13,7 @@ export function useDefaultOrganization() {
     organizationAtoms.defaultOrganization,
   );
 
-  const getDefaultOrganization = async (
-    organizations: ClientOrganization[],
-  ) => {
+  const getDefaultOrganization = async (organizations: Org[]) => {
     setLoadingState('loading');
 
     const identity = repository?.getIdentity();

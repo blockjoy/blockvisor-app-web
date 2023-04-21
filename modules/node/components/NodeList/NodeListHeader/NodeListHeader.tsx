@@ -1,13 +1,10 @@
 import { styles } from './styles';
-
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { NodeFiltersHeaderIconText } from '../NodeFilters/NodeFiltersHeaderIconText';
-import { NodeMetrics } from '@modules/node/components/NodeList/NodeMetrics/NodeMetrics';
 import { Skeleton, GridTableViewPicker } from '@shared/components';
 
 export const NodeListHeader = () => {
-  const isLoadingMetrics = useRecoilValue(nodeAtoms.nodeMetricsLoadingState);
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
   const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
@@ -27,10 +24,7 @@ export const NodeListHeader = () => {
     setActiveListType(type);
   };
 
-  const isLoading =
-    totalNodes === null ||
-    isLoadingMetrics !== 'finished' ||
-    isLoadingNodes !== 'finished';
+  const isLoading = isLoadingNodes !== 'finished';
 
   return (
     <div css={styles.wrapper}>
@@ -49,11 +43,11 @@ export const NodeListHeader = () => {
         </div>
       )}
 
-      <div css={styles.endBlock}>
+      {/* <div css={styles.endBlock}>
         <NodeMetrics />
-      </div>
+      </div> */}
 
-      <span css={styles.total}>
+      {/* <span css={styles.total}>
         {isLoading ? (
           <Skeleton margin="0 0 0 auto" />
         ) : (
@@ -62,7 +56,7 @@ export const NodeListHeader = () => {
             {totalNodes === 1 ? 'node' : 'nodes'}
           </>
         )}
-      </span>
+      </span> */}
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker

@@ -1,12 +1,3 @@
-type NodeTypeConfig = {
-  name: string;
-  default: string;
-  ui_type: string;
-  value?: any;
-  disabled?: boolean;
-  required: boolean;
-};
-
 type NodeFiles = {
   name: string;
   files: File[];
@@ -28,15 +19,6 @@ type BlockjoyNode = {
   version?: string;
   blockHeight?: string;
   network?: string;
-};
-
-type CreateNodeParams = {
-  version: string;
-  nodeType: number;
-  blockchain: string;
-  nodeTypeProperties: NodeTypeConfig[];
-  key_files?: File[];
-  network: string;
 };
 
 type UpdateNodeParams = {

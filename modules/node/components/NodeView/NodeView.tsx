@@ -39,9 +39,9 @@ export function NodeView() {
 
   const handleStop = () => stopNode(id);
   const handleRestart = () => restartNode(id!);
-  const handleDelete = async () => {
+  const handleDelete = () => {
     setIsDeleting(true);
-    await deleteNode(id);
+    deleteNode(id);
   };
   const handleNodeError = () => setNodeError(true);
 
@@ -52,9 +52,7 @@ export function NodeView() {
       setIsDeleting(false);
     }
 
-    return () => {
-      unloadNode();
-    };
+    return () => unloadNode();
   }, [id]);
 
   return (
@@ -77,10 +75,10 @@ export function NodeView() {
                   blockchainName={node?.blockchainName!}
                   title={node?.name!}
                   ip={node?.ip!}
-                  date={node?.created!}
+                  date={node?.createdAt!}
                   id={node?.id!}
                 />
-                <NodeViewCharts nodeId={node?.id!} />
+                {/* <NodeViewCharts nodeId={node?.id!} /> */}
                 <DetailsTable bodyElements={mapNodeToDetails(node!)} />
               </>
             ) : (
@@ -100,7 +98,7 @@ export function NodeView() {
           </>
         )}
       </PageSection>
-      {node?.propertiesList && !isLoading && !nodeError && (
+      {node?.properties && !isLoading && !nodeError && (
         <PageSection bottomBorder={false}>
           <NodeViewConfig />
         </PageSection>

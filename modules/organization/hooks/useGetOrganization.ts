@@ -1,4 +1,4 @@
-import { apiClient } from '@modules/client';
+import { organizationClient } from '@modules/grpc';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -14,6 +14,10 @@ export function useGetOrganization() {
     organizationAtoms.organizationLoadingState,
   );
 
+  const [membersPageIndex, setMembersPageIndex] = useRecoilState(
+    organizationAtoms.organizationMembersPageIndex,
+  );
+
   const getOrganization = async (id: string) => {
     setIsLoading('initializing');
 
@@ -22,12 +26,9 @@ export function useGetOrganization() {
     if (foundOrganization) {
       setOrganization(foundOrganization);
     } else {
-      const organizations: any = await apiClient.getOrganizations(id);
+      const organization: any = await organizationClient.getOrganization(id);
 
-      checkForTokenError(organizations);
-
-      const organization: any =
-        organizations.length > 0 ? organizations[0] : null;
+      checkForTokenError(organization);
 
       setOrganization(organization);
     }
@@ -37,9 +38,11 @@ export function useGetOrganization() {
 
   return {
     organization,
+    isLoading,
+    membersPageIndex,
     getOrganization,
     setOrganization,
-    isLoading,
     setIsLoading,
+    setMembersPageIndex,
   };
 }

@@ -1,4 +1,4 @@
-import { GrpcBlockchainObject } from '@modules/client/grpc_client';
+import { Blockchain } from '@modules/grpc/library/blockchain';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { atom, selector } from 'recoil';
 
@@ -7,7 +7,7 @@ const blockchainSearch = atom<string | null>({
   default: null,
 });
 
-const blockchains = atom<GrpcBlockchainObject[]>({
+const blockchains = atom<Blockchain[]>({
   key: 'blockchains.list',
   default: [],
 });
@@ -49,7 +49,7 @@ const blockchainsWithNodeTypes = selector({
     return blockchainList.map((block) => {
       return {
         ...block,
-        supported_node_types: block.supported_node_types
+        supported_node_types: block.nodesTypes
           .map((s: any) => {
             return nodeTypeList
               .map((f) => {
