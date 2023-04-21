@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { apiClient } from '@modules/client';
+import { authClient } from '@modules/grpc';
 
 import { Button, Input } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -28,7 +28,7 @@ export function ForgotPasswordForm() {
 
   const onSubmit = form.handleSubmit(async ({ email }) => {
     setIsLoading(true);
-    await apiClient.resetPassword(email);
+    await authClient.resetPassword(email);
 
     router.push(ROUTES.LOGIN);
 

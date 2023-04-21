@@ -1,5 +1,10 @@
-import { UIFilterCriteria as FilterCriteria } from '@modules/client/grpc_client';
 import { FilterItem } from '../store/nodeAtoms';
+
+export type FilterCriteria = {
+  blockchain?: string[];
+  node_type?: string[];
+  node_status?: string[];
+};
 
 export const buildParams = (
   blockchain: FilterItem[],

@@ -1,4 +1,4 @@
-import { apiClient } from '@modules/client';
+import { authClient } from '@modules/grpc';
 import { organizationAtoms } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
 import { useRecoilValue } from 'recoil';
@@ -23,7 +23,8 @@ export const useRefreshToken = (): Hook => {
     const callTime = expirationTime * 1000 + 100 - Date.now();
 
     refreshInterval = setInterval(async (): Promise<void> => {
-      await apiClient.getDashboardMetrics(orgId?.id);
+      // TODO
+      //await apiClient.getDashboardMetrics(orgId?.id);
     }, callTime);
   };
 

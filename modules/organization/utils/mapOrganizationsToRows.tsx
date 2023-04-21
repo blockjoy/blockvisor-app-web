@@ -1,10 +1,12 @@
 import { Button } from '@shared/components';
-import { flex } from 'styles/utils.flex.styles';
 import { USER_ROLES } from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { Org } from '@modules/grpc/library/organization';
+import { getOrgMemberRole } from './getOrgMemberRole';
 
 export const mapOrganizationsToRows = (
-  organizations?: ClientOrganization[],
+  organizations: Org[],
+  userId: string,
 ) => {
   const headers: TableHeader[] = [
     {
@@ -64,7 +66,7 @@ export const mapOrganizationsToRows = (
         key: '3',
         component: (
           <>
-            <p>{USER_ROLES[org?.currentUser?.role!]}</p>
+            <p>{USER_ROLES[getOrgMemberRole(org!, userId)]}</p>
           </>
         ),
       },

@@ -3,6 +3,7 @@ import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
 import { blockchainsAtoms } from './blockchains';
 import { isMobile } from 'react-device-detect';
 import { localStorageEffect } from 'utils/store/persist';
+import { Node } from '@modules/grpc/library/node';
 
 export type FilterItem = {
   name?: string | undefined;
@@ -11,7 +12,7 @@ export type FilterItem = {
   isOnline?: boolean | undefined;
 };
 
-const activeNode = atom<BlockjoyNode | null>({
+const activeNode = atom<Node | null>({
   key: 'node.activeNode',
   default: null,
 });
@@ -21,7 +22,7 @@ const activeListType = atom<string | 'table' | 'grid'>({
   default: 'grid',
 });
 
-const nodeList = atom<BlockjoyNode[]>({
+const nodeList = atom<Node[]>({
   key: 'node.nodeList',
   default: [],
   effects: [localStorageEffect('nodeList')],

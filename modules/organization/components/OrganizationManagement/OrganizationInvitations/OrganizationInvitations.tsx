@@ -9,6 +9,7 @@ import { Badge, Button } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvitations.styles';
+import { Invitation } from '@modules/grpc/library/invitation';
 
 export const OrganizationInvitations = () => {
   const { acceptInvitation, declineInvitation, getReceivedInvitations } =
@@ -18,7 +19,7 @@ export const OrganizationInvitations = () => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
-  const invitations: ClientOrganizationInvitation[] = useRecoilValue(
+  const invitations: Invitation[] = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
 
@@ -47,9 +48,8 @@ export const OrganizationInvitations = () => {
         {invitations?.map((invite) => (
           <li key={invite.id} css={styles.item}>
             <div css={[spacing.bottom.medium]}>
-              <b>{escapeHtml(invite.createdByUserName!) || 'Unknown'}</b>{' '}
-              invited you to join{' '}
-              <b>{escapeHtml(invite.createdForOrgName!) || 'Unknown'}</b>{' '}
+              <b>{escapeHtml(invite.createdByName!) || 'Unknown'}</b> invited
+              you to join <b>{escapeHtml(invite.orgName!) || 'Unknown'}</b>{' '}
               organization
             </div>
             <div css={styles.buttons}>

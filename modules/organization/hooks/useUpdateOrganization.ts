@@ -1,6 +1,7 @@
 import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { apiClient } from '@modules/client';
+import { Org } from '@modules/grpc/library/organization';
+import { organizationClient } from '@modules/grpc';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganization } from './useGetOrganization';
@@ -22,11 +23,11 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
   );
 
   const updateOrganization = async (id: string, name: string) => {
-    const response: any = await apiClient.updateOrganization(id, name);
+    const response: any = await organizationClient.updateOrganization(id, name);
 
-    if (isResponeMetaObject(response)) {
-      const newOrg: ClientOrganization = {
-        ...selectedOrganization,
+    if (response) {
+      const newOrg: Org = {
+        ...selectedOrganization!,
         name,
       };
 
@@ -38,42 +39,26 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
     }
   };
 
-  const modifyOrganization = (updatedOrganization: ClientOrganization) => {
-    const updatedOrganizationModified =
-      typeof updatedOrganization.currentUser === 'undefined'
-        ? Object.fromEntries(
-            Object.entries(updatedOrganization).filter(
-              ([key]) => key !== 'currentUser',
-            ),
-          )
-        : updatedOrganization;
-
+  const modifyOrganization = (updatedOrganization: Org) => {
     if (selectedOrganization) {
-      const newOrg: ClientOrganization = {
+      const newOrg: Org = {
         ...selectedOrganization,
-        ...updatedOrganizationModified,
+        ...updatedOrganization,
       };
-
       setOrganization(newOrg);
       setSelectedOrganization(newOrg);
     }
-
-    const updatedAllOrgs: ClientOrganization[] = allOrganizations.map(
-      (organization: ClientOrganization) => {
-        if (organization.id === updatedOrganizationModified.id) {
-          const updatedNewOrganization: ClientOrganization = {
-            ...organization,
-            ...updatedOrganizationModified,
-          };
-
-          return updatedNewOrganization;
-        }
-        return organization;
-      },
-    );
-
+    const updatedAllOrgs: Org[] = allOrganizations.map((organization: Org) => {
+      if (organization.id === updatedOrganization.id) {
+        const updatedNewOrganization: Org = {
+          ...organization,
+          ...updatedOrganization,
+        };
+        return updatedNewOrganization;
+      }
+      return organization;
+    });
     setAllOrganizations(updatedAllOrgs);
-
     if (
       defaultOrganization?.id === updatedOrganization?.id &&
       updatedOrganization?.name

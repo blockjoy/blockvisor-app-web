@@ -1,4 +1,4 @@
-import { apiClient } from '@modules/client';
+import { blockchainClient } from '@modules/grpc';
 import { isStatusResponse } from '@modules/organization';
 import { useRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
@@ -14,7 +14,7 @@ export function useGetBlockchains() {
 
   const getBlockchains = async () => {
     setLoadingState('loading');
-    const response: any = await apiClient.getBlockchains();
+    const response: any = await blockchainClient.getBlockchains();
 
     checkForTokenError(response);
 

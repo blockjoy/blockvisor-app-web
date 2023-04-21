@@ -7,16 +7,18 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { blockchainsDisabled } from '@shared/constants/lookups';
+import { Node_NodeProperty, Node_NodeType } from '@modules/grpc/library/node';
+import { SupportedNodeType } from '@modules/grpc/library/blockchain';
 
 type Props = {
   onProtocolSelected: (
     blockchainId: string,
-    nodeTypeId: string,
-    nodeTypeProperties: NodeTypeConfig[],
+    nodeTypeId: Node_NodeType,
+    nodeTypeProperties: Node_NodeProperty[],
     nodeVersion: string,
   ) => void;
   activeBlockchainId: string;
-  activeNodeTypeId: string;
+  activeNodeTypeId: Node_NodeType;
 };
 
 export const NodeLauncherProtocol: FC<Props> = ({
@@ -37,18 +39,33 @@ export const NodeLauncherProtocol: FC<Props> = ({
     setKeyword(e.target.value);
   };
 
-  const handleProtocolSelected = (blockchainId: string, nodeTypeId: string) => {
+  const handleProtocolSelected = (
+    blockchainId: string,
+    nodeTypeId: Node_NodeType,
+  ) => {
     const blockchainsCopy = [...blockchains];
 
-    const foundActiveNodeType = blockchainsCopy
-      ?.find((b) => b.id === blockchainId)
-      ?.supported_node_types.find((n: any) => n.id === nodeTypeId);
+    const foundActiveNodeType = blockchainsCopy?.find(
+      (b) => b.id === blockchainId,
+    );
+
+    const foundActiveSupportedNodeType = foundActiveNodeType?.nodesTypes!.find(
+      (n: SupportedNodeType) => n.nodeType === nodeTypeId,
+    );
 
     onProtocolSelected(
       blockchainId,
       nodeTypeId,
-      foundActiveNodeType.properties,
-      foundActiveNodeType.version,
+      foundActiveSupportedNodeType?.properties.map((property) => ({
+        name: property.name,
+        uiType: property.uiType,
+        disabled: property.disabled,
+        required: property.required,
+        label: '',
+        description: '',
+        value: property.default,
+      }))!,
+      foundActiveSupportedNodeType?.version!,
     );
   };
 
@@ -105,21 +122,23 @@ export const NodeLauncherProtocol: FC<Props> = ({
                   </span>
                 </span>
                 <div css={styles.nodeTypeButtons} className="node-type-buttons">
-                  {b.supported_node_types.map((type: any) => (
+                  {b.nodesTypes.map((type: SupportedNodeType) => (
                     <button
                       tabIndex={activeNodeTypeId ? -1 : index + 1}
-                      key={type.id}
+                      key={type.nodeType}
                       className={
-                        type.id === activeNodeTypeId &&
+                        type.nodeType === activeNodeTypeId &&
                         b.id === activeBlockchainId
                           ? 'active'
                           : ''
                       }
-                      onClick={() => handleProtocolSelected(b.id!, type.id)}
+                      onClick={() =>
+                        handleProtocolSelected(b.id!, type.nodeType)
+                      }
                       type="button"
                       css={styles.createButton}
                     >
-                      {nodeTypeList.find((n) => n.id === type.id)?.name}
+                      {nodeTypeList.find((n) => n.id === type.nodeType)?.name}
                     </button>
                   ))}
                 </div>

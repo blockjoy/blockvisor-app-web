@@ -1,4 +1,3 @@
-import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { Button, Table } from '@shared/index';
 import { useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -7,6 +6,7 @@ import { OrganizationInvite } from './OrganizationInvite/OrganizationInvite';
 import { useInviteMembers } from '@modules/organization/hooks/useInviteMembers';
 import {
   getHandlerTableChange,
+  getOrgMemberRole,
   organizationAtoms,
   useInvitations,
   useResendInvitation,
@@ -29,10 +29,14 @@ import { withQuery } from '@shared/components/Table/utils/withQuery';
 import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
 import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
 import { useRouter } from 'next/router';
+import { OrgUser } from '@modules/grpc/library/organization';
+import { useIdentity } from '@modules/auth';
 
 export const Members = () => {
   const router = useRouter();
   const { id } = router.query;
+
+  const { user } = useIdentity();
 
   const OrganizationMembersUIContext = useOrganizationMembersUIContext();
   const organizationMembersUIProps = useMemo(() => {
@@ -48,7 +52,12 @@ export const Members = () => {
     ),
   );
 
-  const members = useRecoilValue(organizationAtoms.organizationMembers);
+  const selectedOrganization = useRecoilValue(
+    organizationAtoms.selectedOrganization,
+  );
+
+  const members = selectedOrganization?.members;
+  // const members = useRecoilValue(organizationAtoms.organizationMembers);
   const invitations = useRecoilValue(
     organizationAtoms.organizationSentInvitations,
   );
@@ -63,8 +72,6 @@ export const Members = () => {
 
   const { resendInvitation } = useResendInvitation();
 
-  const { isLoading } = useGetOrganizationMembers();
-
   // TOOD: remove after fixed bug in API (return org the invitation's id in response)
   const { getSentInvitations } = useInvitations();
 
@@ -73,12 +80,11 @@ export const Members = () => {
 
   const [isInviting, setIsInviting] = useState<boolean>(false);
 
-  const selectedOrganization = useRecoilValue(
-    organizationAtoms.selectedOrganization,
-  );
+  // PERMISSIONS BOOLSHIT
+  const role = getOrgMemberRole(selectedOrganization!, user?.id!);
 
   const canCreateMember: boolean = useHasPermissions(
-    selectedOrganization?.currentUser?.role!,
+    role,
     Permissions.CREATE_MEMBER,
   );
 
@@ -168,7 +174,6 @@ export const Members = () => {
         />
       )}
       <MembersTable
-        isLoading={isLoading}
         headers={headers}
         rows={rows}
         verticalAlign="middle"

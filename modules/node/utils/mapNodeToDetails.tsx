@@ -1,21 +1,18 @@
+import { Node } from '@modules/grpc/library/node';
 import { nodeTypeList } from '@shared/constants/lookups';
 
-export const mapNodeToDetails = (node: BlockjoyNode) => {
-  console.log('mapNodeToDetails', node);
-
-  if (!node?.type) {
-    return [];
-  }
+export const mapNodeToDetails = (node: Node) => {
+  if (!node?.nodeType) return [];
 
   const details: { label: string; data: any | undefined }[] = [
     {
       label: 'TYPE',
-      data: nodeTypeList.find((n) => n.id === node.type)?.name,
+      data: nodeTypeList.find((n) => n.id === node.nodeType)?.name,
     },
     { label: 'HOST', data: node.hostName || 'Unknown' },
     { label: 'NODE ADDRESS', data: node?.address || '-' },
     { label: 'VERSION', data: node.version || 'Latest' },
-    { label: 'BLOCK HEIGHT', data: node.blockHeight },
+    { label: 'BLOCK HEIGHT', data: node.blockHeight || '-' },
   ];
 
   return details;

@@ -1,5 +1,5 @@
 import { ResponseMeta } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
-import { apiClient } from '@modules/client';
+import { organizationClient } from '@modules/grpc';
 import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 
@@ -14,18 +14,10 @@ export function useCreateOrganization() {
     name: string,
     onSuccess: (org: any) => void,
   ) => {
-    const response = await apiClient.createOrganization(name);
-
-    if (
-      isResponeMetaObject(response) &&
-      isSuccess(response) &&
-      response?.messagesList?.length
-    ) {
-      const orgId = response?.messagesList[0];
-      const org: any = await apiClient.getOrganizations(orgId);
-      console.log('found Org', org);
-      onSuccess(org[0]);
-    } else {
+    try {
+      const org = await organizationClient.createOrganization(name);
+      onSuccess(org);
+    } catch (err) {
       throw new ApplicationError('CreateOrganization', 'Creation failed');
     }
   };

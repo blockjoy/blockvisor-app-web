@@ -3,7 +3,7 @@ import {
   OrgDeleted,
   OrgMessage,
   OrgUpdated,
-} from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
+} from '@modules/grpc/library/mqtt';
 import {
   useUpdateOrganization,
   useDeleteOrganization,
@@ -23,9 +23,7 @@ export const useUpdates = () => {
   const handleOrganizationUpdate = (message: Message) => {
     const { type, payload }: Message = message;
 
-    let payloadDeserialized = OrgMessage.deserializeBinary(
-      new Uint8Array(payload),
-    ).toObject();
+    const payloadDeserialized = OrgMessage.decode(new Uint8Array(payload));
 
     switch (true) {
       case !!payloadDeserialized.created: {
@@ -34,7 +32,7 @@ export const useUpdates = () => {
           payloadDeserialized.created,
         );
 
-        const { createdBy, createdByName }: OrgCreated.AsObject =
+        const { createdBy, createdByName }: OrgCreated =
           payloadDeserialized.created!;
 
         if (createdBy === user?.id) break;
@@ -49,7 +47,7 @@ export const useUpdates = () => {
           payloadDeserialized.updated,
         );
 
-        const { org, updatedBy, updatedByName }: OrgUpdated.AsObject =
+        const { org, updatedBy, updatedByName }: OrgUpdated =
           payloadDeserialized.updated!;
 
         if (updatedBy === user?.id) break;
@@ -68,15 +66,12 @@ export const useUpdates = () => {
           payloadDeserialized.deleted,
         );
 
-        const {
-          organizationId,
-          deletedBy,
-          deletedByName,
-        }: OrgDeleted.AsObject = payloadDeserialized.deleted!;
+        const { orgId, deletedBy, deletedByName }: OrgDeleted =
+          payloadDeserialized.deleted!;
 
         if (deletedBy === user?.id) break;
 
-        removeOrganization(organizationId);
+        removeOrganization(orgId);
 
         showNotification(type, `${deletedByName} just deleted an organization`);
         break;
