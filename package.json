@@ -14,7 +14,7 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@blockjoy/blockjoy-grpc": "^1.1.70",
+    "@blockjoy/blockjoy-grpc": "^1.1.71",
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "animejs": "^3.2.1",
@@ -22,9 +22,13 @@
     "date-fns": "^2.29.2",
     "google-protobuf": "^3.21.0",
     "jwt-decode": "^3.1.2",
+    "long": "^5.2.3",
     "mqtt": "^4.3.7",
     "next": "13.1.2-canary.4",
+    "nice-grpc-common": "^2.0.2",
+    "nice-grpc-web": "^3.2.4",
     "polished": "^4.2.2",
+    "protobufjs": "^7.2.3",
     "react": "18.2.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "18.2.0",

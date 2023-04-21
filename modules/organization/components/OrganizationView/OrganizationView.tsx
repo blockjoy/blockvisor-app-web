@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { toast } from 'react-toastify';
@@ -16,18 +16,23 @@ import {
   EditableTitle,
   EmptyColumn,
 } from '@shared/components';
+import { useIdentity } from '@modules/auth';
 import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
-import { useInvitations, useUpdateOrganization } from '@modules/organization';
+import {
+  getOrgMemberRole,
+  useInvitations,
+  useUpdateOrganization,
+} from '@modules/organization';
 import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useGetOrganizationMembers } from '@modules/organization/hooks/useGetMembers';
 import { ROUTES } from '@shared/index';
-import { apiClient } from '@modules/client';
+import { nodeClient } from '@modules/grpc';
 import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
+import { OrgUser } from '@modules/grpc/library/organization';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -43,11 +48,8 @@ export const OrganizationView = () => {
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
 
-  const {
-    getOrganizationMembers,
-    isLoading: membersLoadingState,
-    setIsLoading: setIsLoadingMembers,
-  } = useGetOrganizationMembers();
+  const { user } = useIdentity();
+
   const {
     getSentInvitations,
     isLoading: sentInvitationsLoadingState,
@@ -76,12 +78,15 @@ export const OrganizationView = () => {
     setIsSavingOrganization(null);
   };
 
+  const role = getOrgMemberRole(organization!, user?.id!);
+
   const canUpdateOrganization: boolean = useHasPermissions(
-    organization?.currentUser?.role!,
+    role,
     Permissions.UPDATE_ORGANIZATION,
   );
+
   const canDeleteOrganization: boolean = useHasPermissions(
-    organization?.currentUser?.role!,
+    role,
     Permissions.DELETE_ORGANIZATION,
   );
 
@@ -97,7 +102,7 @@ export const OrganizationView = () => {
   };
 
   const getTotalNodes = async () => {
-    const nodes: any = await apiClient.listNodes(
+    const nodes: any = await nodeClient.listNodes(
       id?.toString()!,
       {
         blockchain: [],
@@ -122,17 +127,14 @@ export const OrganizationView = () => {
       setIsDeleting(false);
       setIsSavingOrganization(false);
       getOrganization(queryAsString(id));
-      getOrganizationMembers(queryAsString(id));
       getSentInvitations(queryAsString(id));
     }
 
     return () => {
       setIsLoading('initializing');
-      setIsLoadingMembers('initializing');
       setSentInvitationsLoadingState('initializing');
       setOrganization(null);
       setSentInvitationsLoadingState('initializing');
-      // setMembersLoadingState('initializing');
     };
   }, [router.isReady]);
 
@@ -144,7 +146,6 @@ export const OrganizationView = () => {
   const details = getOrganizationDetails(organization);
   const isLoadingOrg =
     isLoading !== 'finished' ||
-    membersLoadingState !== 'finished' ||
     sentInvitationsLoadingState !== 'finished' ||
     totalNodes === null;
 

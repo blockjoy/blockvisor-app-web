@@ -1,6 +1,6 @@
 import { MouseEventHandler, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { apiClient } from '@modules/client';
+import { authClient } from '@modules/grpc';
 import { Button, Input } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { display } from 'styles/utils.display.styles';
@@ -46,10 +46,9 @@ export function NewPasswordForm() {
 
     const { token } = router.query;
 
-    const response: any = await apiClient.updateResetPassword(
+    const response: any = await authClient.updateResetPassword(
       token?.toString()!,
       password,
-      confirmPassword,
     );
 
     if (response.code) {

@@ -5,12 +5,13 @@ import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewDetailsHeader.styles';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 interface Props {
   title: string;
   ip: string;
   id?: string;
-  date?: string;
+  date?: Date;
   status: number;
   blockchainName: string;
   handleStop?: VoidFunction;
@@ -48,7 +49,13 @@ export const NodeViewDetailsHeader: FC<Props> = ({
             </small>
           </CopyNode>
           {ip && <small css={[typo.small, colors.text2]}>{ip}</small>}
-          {date && <small css={[typo.small, colors.text2]}>{date}</small>}
+          {date && (
+            <small css={[typo.small, colors.text2]}>
+              {formatDistanceToNow(date!, {
+                addSuffix: true,
+              })}
+            </small>
+          )}
         </div>
       </div>
       <form css={styles.actions}>

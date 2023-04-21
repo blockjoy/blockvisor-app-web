@@ -14,10 +14,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeLauncherConfig.styles';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
+import { Node_NodeProperty, UiType } from '@modules/grpc/library/node';
 
 type Props = {
   isConfigValid: boolean | null;
-  nodeTypeProperties?: NodeTypeConfig[];
+  nodeTypeProperties?: Node_NodeProperty[];
   nodeFiles?: NodeFiles[];
   networkList: string[];
   nodeNetwork: string;
@@ -27,13 +28,13 @@ type Props = {
 };
 
 const renderControls = (
-  property: any,
+  property: Node_NodeProperty,
   nodeFiles: NodeFiles[],
   onFileUploaded: (e: any) => void,
   onPropertyChanged: (e: any) => void,
 ) => {
-  switch (property.ui_type) {
-    case 'key-upload':
+  switch (property.uiType) {
+    case UiType.UI_TYPE_FILE_UPLOAD:
       return (
         <FileUpload
           tabIndex={5}
@@ -44,7 +45,7 @@ const renderControls = (
           placeholder="Upload validator keys"
         />
       );
-    case 'voting_key_pwd':
+    case UiType.UI_TYPE_TEXT:
       return (
         <Textbox
           tabIndex={5}
@@ -54,7 +55,7 @@ const renderControls = (
           onPropertyChanged={onPropertyChanged}
         />
       );
-    case 'wallet_address':
+    case UiType.UI_TYPE_TEXT:
       return (
         <Textbox
           tabIndex={5}
@@ -64,7 +65,7 @@ const renderControls = (
           onPropertyChanged={onPropertyChanged}
         />
       );
-    case 'switch':
+    case UiType.UI_TYPE_SWITCH:
       return (
         <Switch
           tabIndex={!!property.disabled ? -1 : 5}
@@ -140,7 +141,7 @@ export const NodeLauncherConfig: FC<Props> = ({
           )}
 
           {Boolean(networkList?.length) &&
-            nodeTypeProperties?.map((property: NodeTypeConfig) => {
+            nodeTypeProperties?.map((property: Node_NodeProperty) => {
               return (
                 <Fragment key={property.name}>
                   <label

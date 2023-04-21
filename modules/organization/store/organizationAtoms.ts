@@ -12,9 +12,10 @@ import {
   MemberAndInvitation,
 } from '../utils/mapMembersAndInvitations';
 import { localStorageEffect } from 'utils/store/persist';
-import { OrgUser } from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Org } from '@modules/grpc/library/organization';
+import { Invitation } from '@modules/grpc/library/invitation';
 
-const selectedOrganization = atom<ClientOrganization | null>({
+const selectedOrganization = atom<Org | null>({
   key: 'organization.current',
   default: null,
 });
@@ -41,25 +42,22 @@ const organizationsPageIndex = atom<number>({
   default: 0,
 });
 
-const allOrganizations = atom<ClientOrganization[]>({
+const allOrganizations = atom<Org[]>({
   key: 'organization.all',
   default: [],
 });
 
-const allOrganizationsSorted = selector<ClientOrganization[]>({
+const allOrganizationsSorted = selector<Org[]>({
   key: 'organization.allSorted',
   get: ({ get }) => {
     const organizations = get(allOrganizations);
-
-    return [...organizations].sort(
-      (orgA: ClientOrganization, orgB: ClientOrganization) => {
-        if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
-          return -1;
-        if (orgA.name!.toLocaleLowerCase() > orgB.name!.toLocaleLowerCase())
-          return 1;
-        return 0;
-      },
-    );
+    return [...organizations].sort((orgA: Org, orgB: Org) => {
+      if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
+        return -1;
+      if (orgA.name!.toLocaleLowerCase() > orgB.name!.toLocaleLowerCase())
+        return 1;
+      return 0;
+    });
   },
 });
 
@@ -108,7 +106,7 @@ const organisationCount = selector({
 });
 
 const organizationsFiltered = selectorFamily<
-  ClientOrganization[],
+  Org[],
   InitialQueryParamsOrganizations
 >({
   key: 'organizations.active.filtered',
@@ -126,7 +124,7 @@ const organizationsFiltered = selectorFamily<
 });
 
 const organizationsActive = selectorFamily<
-  ClientOrganization[],
+  Org[],
   InitialQueryParamsOrganizations
 >({
   key: 'organizations.active',
@@ -142,21 +140,6 @@ const organizationsActive = selectorFamily<
     },
 });
 
-const organizationMembers = atom<OrgUser.AsObject[]>({
-  key: 'organization.members.all',
-  default: [],
-});
-
-const organizationMembersFromOrg = selector<OrgUser.AsObject[]>({
-  key: 'organization.members.all.fromOrganization',
-  get: ({ get }) => {
-    const organization = get(selectedOrganization);
-    if (!organization || !organization.membersList) return [];
-
-    return organization.membersList;
-  },
-});
-
 const organizationMembersAndInvitationsFiltered = selectorFamily<
   MemberAndInvitation[],
   InitialQueryParamsMembers
@@ -165,10 +148,10 @@ const organizationMembersAndInvitationsFiltered = selectorFamily<
   get:
     (queryParams) =>
     ({ get }) => {
-      const allOrgMembers = get(organizationMembersFromOrg);
+      const allOrgMembers = get(selectedOrganization)?.members;
       const allInvitations = get(organizationSentInvitations);
 
-      const all = allOrgMembers.concat(allInvitations);
+      const all = allOrgMembers?.concat(allInvitations as any);
       const mappedAll = mapMembersAndInvitations(all);
       const { sorting } = queryParams;
 
@@ -198,10 +181,10 @@ const organizationMembersAndInvitations = selectorFamily<
 const organizationMembersAndInvitationsTotal = selector<number>({
   key: 'organizations.members.total',
   get: ({ get }) => {
-    const allOrgMembers = get(organizationMembers);
+    const allOrgMembers = get(selectedOrganization)?.members;
     const allInvitations = get(organizationSentInvitations);
 
-    return allOrgMembers.length + allInvitations.length;
+    return allOrgMembers?.length! + allInvitations.length;
   },
 });
 
@@ -220,7 +203,7 @@ const organizationMembersLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const organizationSentInvitations = atom<any[]>({
+const organizationSentInvitations = atom<Invitation[]>({
   key: 'organizationSentInvitations',
   default: [],
 });
@@ -250,8 +233,6 @@ export const organizationAtoms = {
   organizationMemberCount,
   organisationCount,
   defaultOrganization,
-  organizationMembers,
-  organizationMembersFromOrg,
   organizationMembersAndInvitations,
   organizationMembersAndInvitationsFiltered,
   organizationMembersAndInvitationsTotal,

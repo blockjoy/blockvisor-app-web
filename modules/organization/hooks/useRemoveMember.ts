@@ -1,4 +1,5 @@
-import { apiClient } from '@modules/client';
+import { organizationClient } from '@modules/grpc';
+import { Org } from '@modules/grpc/library/organization';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -17,13 +18,11 @@ export function useRemoveMember() {
     organizationAtoms.allOrganizations,
   );
 
-  const [organizationMembers, setOrganizationMembers] = useRecoilState(
-    organizationAtoms.organizationMembers,
-  );
+  const organizationMembers = organization?.members;
 
   const decrementMemberCount = () => {
-    const newOrg = {
-      ...organization,
+    const newOrg: Org = {
+      ...organization!,
       memberCount: organization?.memberCount! - 1,
     };
 
@@ -38,10 +37,14 @@ export function useRemoveMember() {
   };
 
   const removeMemberFromList = (user_id: string) => {
-    const newOrganizationMembers = organizationMembers.filter(
+    const newOrganizationMembers = organizationMembers!.filter(
       (member) => member?.userId !== user_id,
     );
-    setOrganizationMembers(newOrganizationMembers);
+
+    setOrganization({
+      ...organization!,
+      members: newOrganizationMembers,
+    });
   };
 
   const removeMemberFromOrganization = async (
@@ -50,9 +53,12 @@ export function useRemoveMember() {
   ) => {
     setIsLoading('loading');
 
-    const response = await apiClient.removeOrganizationMember(user_id, org_id);
+    const response = await organizationClient.removeOrganizationMember(
+      user_id,
+      org_id,
+    );
 
-    if (!isStatusResponse(response)) {
+    if (response) {
       removeMemberFromList(user_id);
       decrementMemberCount();
       toast.success('Member Removed');

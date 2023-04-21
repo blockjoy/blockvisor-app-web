@@ -11,7 +11,7 @@ interface Props {
 export function PrivateRoute({ router, children }: Props) {
   const { isLoggedIn, isLoading } = useIdentity();
   const [authorized, setAuthorized] = useState(false);
-  const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
+  // const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
 
   const isPrivateRoute = !PUBLIC_ROUTES.some((r) => router.asPath.includes(r));
 
@@ -34,12 +34,12 @@ export function PrivateRoute({ router, children }: Props) {
     }
   }, [isLoggedIn]);
 
-  useEffect(() => {
-    if (isLoggedIn) refreshToken();
-    return () => {
-      removeRefreshTokenCall();
-    };
-  });
+  // useEffect(() => {
+  //   if (isLoggedIn) refreshToken();
+  //   return () => {
+  //     removeRefreshTokenCall();
+  //   };
+  // });
 
   function authCheck(loggedIn: boolean): any {
     if (!loggedIn && isPrivateRoute) {

@@ -12,6 +12,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import {
+  Node_NodeProperty,
+  Node_NodeType,
+  UiType,
+} from '@modules/grpc/library/node';
 
 type Props = {
   serverError: string;
@@ -21,8 +26,8 @@ type Props = {
   isConfigValid: boolean | null;
   isCreating: boolean;
   blockchainId: string;
-  nodeTypeId: string;
-  nodeTypeProperties: NodeTypeConfig[];
+  nodeTypeId: Node_NodeType;
+  nodeTypeProperties: Node_NodeProperty[];
   onCreateNodeClicked: VoidFunction;
 };
 
@@ -118,11 +123,12 @@ export const NodeLauncherSummary: FC<Props> = ({
                   {nodeTypeProperties
                     ?.filter(
                       (property) =>
-                        (property.ui_type !== 'key-upload' &&
+                        (property.uiType !== UiType.UI_TYPE_FILE_UPLOAD &&
                           property.required &&
                           !property.disabled &&
                           !property.value) ||
-                        (property.ui_type === 'key-upload' && !hasAddedFiles),
+                        (property.uiType === UiType.UI_TYPE_FILE_UPLOAD &&
+                          !hasAddedFiles),
                     )
                     .map((property) => (
                       <div key={property.name}>

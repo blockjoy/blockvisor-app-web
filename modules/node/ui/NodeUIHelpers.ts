@@ -1,3 +1,5 @@
+import { Node_NodeStatus, Node_NodeType } from '@modules/grpc/library/node';
+
 export type ItemsPerPage = {
   sm: number;
   lg: number;
@@ -11,8 +13,8 @@ export type Pagination = {
 
 export type InitialFilter = {
   blockchain?: string[];
-  node_status?: string[];
-  node_type?: string[];
+  nodeStatus?: Node_NodeStatus[];
+  nodeType?: Node_NodeType[];
 };
 
 export type InitialQueryParams = {
@@ -34,7 +36,7 @@ export const initialQueryParams: InitialQueryParams = {
 
   filter: {
     blockchain: [],
-    node_status: [],
-    node_type: [],
+    nodeStatus: [],
+    nodeType: [],
   },
 };

@@ -1,6 +1,9 @@
+import { Invitation } from '@modules/grpc/library/invitation';
+import { OrgUser } from '@modules/grpc/library/organization';
+
 export const checkIfExists = (
-  members: ClientOrganizationMember[],
-  invitations: ClientOrganizationInvitation[],
+  members: OrgUser[],
+  invitations: Invitation[],
   email: string,
 ) => {
   if (members.some((member) => member.email?.toLowerCase() === email))

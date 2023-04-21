@@ -1,6 +1,6 @@
 import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { apiClient } from '@modules/client';
+import { invitationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -15,16 +15,14 @@ export const useInviteMembers = () => {
     onComplete: VoidFunction,
   ) => {
     const formattedEmail = inviteeEmail?.toLowerCase();
-
-    const response = await apiClient.inviteOrgMember(
-      formattedEmail,
-      selectedOrganization?.id!,
-    );
-
-    if (isResponeMetaObject(response)) {
+    try {
+      await invitationClient.inviteOrgMember(
+        formattedEmail,
+        selectedOrganization?.id!,
+      );
       toast.success('Invitation Sent');
       onComplete();
-    } else {
+    } catch (err) {
       throw new ApplicationError('UpdateOrganization', 'Update failed');
     }
   };

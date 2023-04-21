@@ -4,41 +4,37 @@ import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useDeleteOrganization } from './useDeleteOrganization';
-import {
-  Invitation,
-  OrgUser,
-} from '@blockjoy/blockjoy-grpc/dist/out/common_pb';
+import { Invitation } from '@modules/grpc/library/invitation';
+import { Org, OrgUser } from '@modules/grpc/library/organization';
 
 export function useUpdateMembers(): IUpdateMembersHook {
   const router = useRouter();
 
-  const [organizationMembers, setOrganizationMembers] = useRecoilState(
-    organizationAtoms.organizationMembers,
-  );
   const [sentInvitations, setSentInvitations] = useRecoilState(
     organizationAtoms.organizationSentInvitations,
   );
   const user = useRecoilValue(authAtoms.user);
-  const selectedOrganization = useRecoilValue(
+  const [selectedOrganization, setSelectedOrganization] = useRecoilState(
     organizationAtoms.selectedOrganization,
   );
 
+  const organizationMembers = selectedOrganization?.members;
+
   const { removeOrganization } = useDeleteOrganization();
 
-  const updateMembersList = async (organization: ClientOrganization) => {
-    const { membersList, ...org }: ClientOrganization = organization;
+  const updateMembersList = async (organization: Org) => {
+    const { members, ...org }: Org = organization;
 
     // TODO: add deep checks
-    const isUpdated: boolean =
-      organizationMembers.length !== membersList?.length;
+    const isUpdated: boolean = organizationMembers?.length !== members?.length;
 
     if (!isUpdated) return;
 
-    const isAdded: boolean = membersList?.length! > organizationMembers.length;
+    const isAdded = members!.length > organizationMembers!.length;
 
     if (!isAdded) {
-      const isRemovedCurrentUser: boolean = !membersList?.some(
-        (member: OrgUser.AsObject) => member.userId === user?.id,
+      const isRemovedCurrentUser: boolean = !members?.some(
+        (member: OrgUser) => member.userId === user?.id,
       );
 
       if (isRemovedCurrentUser) {
@@ -50,18 +46,21 @@ export function useUpdateMembers(): IUpdateMembersHook {
     }
 
     // TODO: check if it needs to be modified
-    const newMembers = [...membersList!];
+    const newMembers = [...members!];
 
-    const newInvitations: Invitation.AsObject[] = sentInvitations.filter(
-      (sentInvitation: Invitation.AsObject) => {
+    const newInvitations: Invitation[] = sentInvitations.filter(
+      (sentInvitation: Invitation) => {
         return !newMembers?.some(
-          (member: OrgUser.AsObject) =>
-            member.email === sentInvitation.inviteeEmail,
+          (member: OrgUser) => member.email === sentInvitation.inviteeEmail,
         );
       },
     );
 
-    setOrganizationMembers(newMembers!);
+    const selectedOrganizationCopy = { ...selectedOrganization };
+
+    selectedOrganizationCopy.members = newMembers;
+
+    // setSelectedOrganization(selectedOrganizationCopy);
     setSentInvitations(newInvitations);
   };
 

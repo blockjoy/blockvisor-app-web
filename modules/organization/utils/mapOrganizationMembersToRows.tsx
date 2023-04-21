@@ -11,6 +11,7 @@ import {
 } from '@modules/auth/hooks/useHasPermissions';
 import { MemberAndInvitation } from './mapMembersAndInvitations';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { getOrgMemberRole } from './getOrgMemberRole';
 
 export enum Action {
   revoke = 'revoke',
@@ -44,11 +45,11 @@ export const mapOrganizationMembersToRows = (
   );
 
   const canCreateMember: boolean = useHasPermissions(
-    selectedOrganization?.currentUser?.role!,
+    getOrgMemberRole(selectedOrganization!, userId!),
     Permissions.CREATE_MEMBER,
   );
   const canRemoveMember: boolean = useHasPermissions(
-    selectedOrganization?.currentUser?.role!,
+    getOrgMemberRole(selectedOrganization!, userId!),
     Permissions.DELETE_MEMBER,
   );
 

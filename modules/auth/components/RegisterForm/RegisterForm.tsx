@@ -1,12 +1,10 @@
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Alert, Button, Input } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { PasswordToggle } from '@modules/auth';
 import { isValidEmail } from '@shared/utils/validation';
-import { apiClient } from '@modules/client';
 import Router, { useRouter } from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
@@ -15,10 +13,11 @@ import { isStatusResponse } from '@modules/organization';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { PasswordField } from '../PasswordField/PasswordField';
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
+import { userClient } from '@modules/grpc';
 
 type RegisterForm = {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   // confirmPassword: string;
@@ -30,7 +29,6 @@ type ActiveType = {
 };
 
 const getError = (message: string) => {
-  console.log('getError');
   // temporary getError method based on message
   if (message?.toLowerCase()?.includes('duplicate')) {
     return 'Email address already registered';
@@ -65,16 +63,16 @@ export function RegisterForm() {
       email,
       password,
       //confirmPassword,
-      first_name,
-      last_name,
+      firstName,
+      lastName,
     }) => {
       setIsLoading(true);
-      const response: any = await apiClient.createUser({
-        first_name,
-        last_name,
+      const response: any = await userClient.createUser({
+        firstName,
+        lastName,
         email,
         password,
-        password_confirmation: password,
+        passwordConfirmation: password,
         // password_confirmation: confirmPassword,
       });
 
@@ -137,7 +135,7 @@ export function RegisterForm() {
                 tabIndex={2}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
-                name="first_name"
+                name="firstName"
                 placeholder="First name"
                 validationOptions={{
                   required: 'Your first name is required',
@@ -149,7 +147,7 @@ export function RegisterForm() {
                 tabIndex={3}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
-                name="last_name"
+                name="lastName"
                 placeholder="Last name"
                 validationOptions={{
                   required: 'Your last name is required',

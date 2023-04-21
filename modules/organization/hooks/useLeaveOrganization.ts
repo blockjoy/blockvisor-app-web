@@ -1,4 +1,4 @@
-import { apiClient } from '@modules/client';
+import { organizationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -14,7 +14,7 @@ export function useLeaveOrganization() {
   const leaveOrganization = async (org_id: string) => {
     setLoadingState('loading');
     try {
-      await apiClient.leaveOrganization(org_id);
+      await organizationClient.leaveOrganization(org_id);
 
       removeFromOrganizations(org_id);
 

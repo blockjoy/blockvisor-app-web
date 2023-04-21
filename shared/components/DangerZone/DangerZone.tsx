@@ -15,7 +15,7 @@ export enum Action {
 }
 
 interface Props {
-  handleAction: () => Promise<void>;
+  handleAction: () => void;
   elementName: string | 'Node' | 'Host';
   elementNameToCompare: string;
   activeAction?: string | 'delete' | 'leave';
@@ -57,7 +57,7 @@ export const DangerZone: FC<Props> = ({
   const onSubmit = async (e: any) => {
     setIsSubmitted(true);
     e.preventDefault();
-    await handleAction();
+    handleAction();
     handleRedirect();
   };
 

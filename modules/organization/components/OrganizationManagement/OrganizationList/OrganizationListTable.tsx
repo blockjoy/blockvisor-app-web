@@ -12,9 +12,11 @@ import {
 import { SetQueryParams } from '@modules/organization/ui/OrganizationsUIContext';
 import { GridCell } from '@shared/components/TableGrid/types/GridCell';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { useIdentity } from '@modules/auth';
+import { Org } from '@modules/grpc/library/organization';
 
 export type AllOrganizationsTableProps = {
-  organizations: ClientOrganization[];
+  organizations: Org[];
   isLoading: LoadingState;
   queryParams: InitialQueryParams;
   setQueryParams: SetQueryParams;
@@ -28,6 +30,8 @@ export const AllOrganizationsTable = ({
 }: AllOrganizationsTableProps) => {
   const router = useRouter();
 
+  const { user } = useIdentity();
+
   const setOrganizationsFilters = useSetRecoilState(
     organizationAtoms.organizationsFilters,
   );
@@ -36,7 +40,7 @@ export const AllOrganizationsTable = ({
     organizationAtoms.organizationsFiltered(queryParams),
   ).length;
 
-  const { headers, rows } = mapOrganizationsToRows(organizations);
+  const { headers, rows } = mapOrganizationsToRows(organizations, user?.id!);
 
   const handleRowClicked = (id: GridCell) => {
     router.push(`${ROUTES.ORGANIZATION(id.key)}`);

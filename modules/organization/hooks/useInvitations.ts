@@ -1,4 +1,4 @@
-import { apiClient } from '@modules/client';
+import { invitationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
@@ -19,14 +19,14 @@ export function useInvitations() {
   );
 
   const getReceivedInvitations = async (id: string) => {
-    const response: any = await apiClient.receivedInvitations(id);
+    const response: any = await invitationClient.receivedInvitations(id);
     checkForTokenError(response);
     setReceivedInvitations(response);
   };
 
   const getSentInvitations = async (id: string | string[]) => {
     const orgId = Array.isArray(id) ? id[0] : id;
-    const response: any = await apiClient.pendingInvitations(orgId);
+    const response: any = await invitationClient.pendingInvitations(orgId);
     if (isStatusResponse(response)) {
       setSentInvitations([]);
     } else {
@@ -46,10 +46,7 @@ export function useInvitations() {
     },
     onSuccess: VoidFunction,
   ) => {
-    await apiClient.acceptInvitation({
-      token,
-      invitationId,
-    });
+    await invitationClient.acceptInvitation(invitationId);
     toast.success('Invitation Accepted');
     onSuccess();
   };
@@ -64,10 +61,7 @@ export function useInvitations() {
     },
     onSuccess: VoidFunction,
   ) => {
-    await apiClient.declineInvitation({
-      token,
-      invitationId,
-    });
+    await invitationClient.declineInvitation(invitationId);
     toast.success('Invitation Declined');
     onSuccess();
   };
@@ -81,14 +75,8 @@ export function useInvitations() {
     invitationId?: string;
     email?: string;
   }) => {
-    await apiClient.revokeInvitation({
-      token,
-      invitationId,
-      email,
-    });
-
+    await invitationClient.revokeInvitation(invitationId);
     updateInvitations(invitationId!);
-
     toast.success('Invitation Canceled');
   };
 

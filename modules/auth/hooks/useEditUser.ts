@@ -1,7 +1,7 @@
 import { useRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
 import { useIdentityRepository } from './useIdentityRepository';
-import { apiClient } from '@modules/client';
+import { userClient } from '@modules/grpc';
 import { isStatusResponse } from '@modules/organization';
 import { ApplicationError } from '../utils/Errors';
 
@@ -10,13 +10,16 @@ export function useEditUser() {
   const repository = useIdentityRepository();
 
   const editUser = async (firstName: string, lastName: string, id: string) => {
-    const response: any = await apiClient.updateUser(id, firstName, lastName);
-
-    if (isStatusResponse(response)) {
-      throw new ApplicationError('EditUserError', response.message);
-    } else {
+    try {
+      const response: any = await userClient.updateUser(
+        id,
+        firstName,
+        lastName,
+      );
       setUser((current) => ({ ...current, ...response }));
       repository?.updateIdentity({ ...response });
+    } catch (err: any) {
+      throw new ApplicationError('EditUserError', err);
     }
   };
 

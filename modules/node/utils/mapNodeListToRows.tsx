@@ -1,8 +1,9 @@
 import { TableBlockNodes } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
+import { Node } from '@modules/grpc/library/node';
 
-export const mapNodeListToRows = (nodeList?: BlockjoyNode[]) => {
+export const mapNodeListToRows = (nodeList?: Node[]) => {
   const headers: TableHeader[] = [
     {
       name: '',

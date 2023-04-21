@@ -4,7 +4,7 @@ import {
   NodeDeleted,
   NodeMessage,
   NodeUpdated,
-} from '@blockjoy/blockjoy-grpc/dist/out/mqtt_pb';
+} from '@modules/grpc/library/mqtt';
 import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
 import { useRecoilValue } from 'recoil';
@@ -21,9 +21,7 @@ export const useUpdates = () => {
   const handleNodeUpdate = (message: Message) => {
     const { type, payload }: Message = message;
 
-    let payloadDeserialized = NodeMessage.deserializeBinary(
-      new Uint8Array(payload),
-    ).toObject();
+    let payloadDeserialized = NodeMessage.decode(new Uint8Array(payload));
 
     switch (true) {
       case !!payloadDeserialized.created: {
@@ -32,7 +30,7 @@ export const useUpdates = () => {
           payloadDeserialized.created,
         );
 
-        const { node }: NodeCreated.AsObject = payloadDeserialized.created!;
+        const { node }: NodeCreated = payloadDeserialized.created!;
 
         if (node?.createdBy === user?.id) break;
 
@@ -51,7 +49,7 @@ export const useUpdates = () => {
           payloadDeserialized.updated,
         );
 
-        const { updatedBy, updatedByName }: NodeUpdated.AsObject =
+        const { updatedBy, updatedByName }: NodeUpdated =
           payloadDeserialized.updated!;
 
         if (updatedBy === user?.id) break;
@@ -65,7 +63,7 @@ export const useUpdates = () => {
           payloadDeserialized.deleted,
         );
 
-        const { nodeId, deletedBy, deletedByName }: NodeDeleted.AsObject =
+        const { nodeId, deletedBy, deletedByName }: NodeDeleted =
           payloadDeserialized.deleted!;
 
         if (deletedBy === user?.id) break;

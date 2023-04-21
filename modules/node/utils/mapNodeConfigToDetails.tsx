@@ -1,22 +1,20 @@
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 import { ReactNode } from 'react';
+import { Node, Node_NodeProperty, UiType } from '@modules/grpc/library/node';
 
-export const mapNodeConfigToDetails = (node: BlockjoyNode) => {
-  console.log('mapNodeConfigToDetails', node);
-
-  if (!node?.type) {
-    return [];
-  }
+export const mapNodeConfigToDetails = (node: Node) => {
+  if (!node?.nodeType) return [];
 
   const details: {
     id: string;
     label: string | ReactNode;
     data: any | undefined;
-  }[] = node.propertiesList
+  }[] = node.properties
     ?.filter(
-      (property: any) =>
-        property.uiType !== 'key-upload' && !property.uiType.includes('pwd'),
+      (property: Node_NodeProperty) =>
+        property.uiType !== UiType.UI_TYPE_FILE_UPLOAD &&
+        property.uiType !== UiType.UI_TYPE_PASSWORD,
     )
     .map((property: any) => ({
       id: property.name,
