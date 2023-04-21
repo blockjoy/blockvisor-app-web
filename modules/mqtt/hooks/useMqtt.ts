@@ -12,7 +12,9 @@ import { arraysEqual } from 'utils/arraysEqual';
 import { authAtoms } from '@modules/auth';
 
 // hardcode eqmx url for testing
-const EQMX_URL: string = `ws://35.231.38.123/mqtt`;
+const EQMX_URL: string = `ws${
+  process.env.NODE_ENV === 'development' ? '' : 's'
+}://35.231.38.123/mqtt`;
 // const EQMX_URL: string = `ws://${env.eqmxUrl}/mqtt`;
 
 export const useMqtt = (): IMqttHook => {
