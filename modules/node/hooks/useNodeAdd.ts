@@ -1,4 +1,4 @@
-import { nodeClient } from '@modules/grpc';
+import { nodeClient, keyFileClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 import { useNodeList } from './useNodeList';
@@ -33,22 +33,22 @@ export const useNodeAdd = () => {
     });
 
     try {
-      const response: Node = await nodeClient.createNode(
-        {
-          orgId: orgId,
-          blockchainId: params.blockchain,
-          version: params.version ?? '',
-          nodeType: params.nodeType,
-          properties: nodeProperties,
-          network: params.network,
-          scheduler: {
-            resource:
-              NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
-          },
+      const response: Node = await nodeClient.createNode({
+        orgId: orgId,
+        blockchainId: params.blockchain,
+        version: params.version ?? '',
+        nodeType: params.nodeType,
+        properties: nodeProperties,
+        network: params.network,
+        scheduler: {
+          resource:
+            NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
         },
-        params.key_files,
-      );
+      });
       const nodeId = response!.id;
+
+      await keyFileClient.create(nodeId, params.key_files!);
+
       toast.success('Node Created');
       loadNodes();
       onSuccess(nodeId);

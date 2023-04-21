@@ -72,7 +72,7 @@ class NodeClient {
     }
   }
 
-  async createNode(node: CreateNodeRequest, keyFiles?: File[]): Promise<Node> {
+  async createNode(node: CreateNodeRequest): Promise<Node> {
     try {
       const response = await this.client.create(node, getOptions());
       return response.node!;
