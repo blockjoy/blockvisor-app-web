@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { _customer } from 'chargebee-typescript';
 import { Card, Customer } from 'chargebee-typescript/lib/resources';
-import { CustomerData } from '../types';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
 const createChargebeeCustomer = async (
