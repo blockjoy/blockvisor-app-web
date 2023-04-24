@@ -1,4 +1,4 @@
-export type CustomerBillingAddress = {
+type CustomerBillingAddress = {
   first_name: string;
   last_name: string;
   line1: string;
@@ -8,7 +8,7 @@ export type CustomerBillingAddress = {
   country: string;
 };
 
-export type CustomerData = {
+type CustomerData = {
   first_name: string;
   last_name: string;
   email: string;
