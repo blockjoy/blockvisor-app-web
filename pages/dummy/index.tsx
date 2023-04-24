@@ -12,7 +12,7 @@ const Dummy = () => {
         <div>
           <button
             onClick={() =>
-              createCustomer('dragan.rakita@hellobello.at', 'Dragan', 'Rakita')
+              createCustomer('dragan@blockjoy.com', 'Dragan', 'Rakita')
             }
           >
             Create Customer

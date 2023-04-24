@@ -1143,6 +1143,11 @@
     typescript "^4.8.2"
     uuid "^8.3.2"
 
+"@chargebee/chargebee-js-react-wrapper@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@chargebee/chargebee-js-react-wrapper/-/chargebee-js-react-wrapper-0.6.3.tgz#fd7782cf6aa2be3fa98999a7160c64bb0b23df89"
+  integrity sha512-U3KJLZZiUxxkW4HAkAZr2bs6r4HqL1S59zo3AAp4UYtJZbxmBpfX5e/MlsSENvsRxd2GvOpumcHr8rR4V0D5vw==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
