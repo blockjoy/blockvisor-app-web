@@ -1,63 +1,41 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ChargeBee, _customer, } from 'chargebee-typescript';
+import { Customer, Card } from 'chargebee-typescript/lib/resources';
+import { CustomerData } from '../types';
 
-const CHARGEBEE_API_KEY = 'your_chargebee_api_key';
-const CHARGEBEE_SITE = 'your_chargebee_site';
-const CHARGEBEE_API_BASE_URL = `https://${CHARGEBEE_SITE}.chargebee.com/api/v2`;
+let chargebee = new ChargeBee();
 
-interface CustomerData {
-  email: string;
-  first_name: string;
-  last_name: string;
-}
-
-interface ChargebeeCustomer {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-}
-
-async function createChargebeeCustomer(
-  customerData: CustomerData,
-): Promise<ChargebeeCustomer> {
-  const authString = Buffer.from(`${CHARGEBEE_API_KEY}:`).toString('base64');
-
-  try {
-    const response = await fetch(`${CHARGEBEE_API_BASE_URL}/customers`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${authString}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(customerData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error creating Chargebee customer');
-    }
-
-    const data = await response.json();
-    return data.customer;
-  } catch (error) {
-    console.error('Error creating Chargebee customer:', error);
-    throw error;
-  }
-}
+chargebee.configure({
+  site: process.env.CHARGEBEE_SITE,
+  api_key: process.env.CHARGEBEE_API_KEY,
+});
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ChargebeeCustomer | { message: string }>,
+    req: NextApiRequest,
+    res: NextApiResponse,
+    customer_data: CustomerData,
 ) {
   if (req.method === 'POST') {
     try {
-      const customerData = req.body as CustomerData;
-      const chargebeeCustomer = await createChargebeeCustomer(customerData);
+      const response = await chargebee.customer.create(customer_data)
+          .request(
+              function(error: any, result: { customer: Customer; card: Card; }) {
+              if(error){
+                //handle error
+                console.log(error);
+              } else{
+                console.log(`${result}`);
+              }
+            });
 
-      res.status(200).json(chargebeeCustomer);
-    } catch (error) {
-      res.status(500).json({ message: 'Error creating Chargebee customer' });
+            console.log("chargebee response: ", response);
+            res.status(200).json(response);
+    } catch (error: any) {
+      res.status(error.http_status_code || 500).json(error);
     }
   } else {
-    res.status(405).json({ message: 'Method Not Allowed' });
+    // Handle any other HTTP methods
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
