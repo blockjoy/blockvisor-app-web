@@ -13,11 +13,11 @@ chargebee.configure({
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse,
-    customer_data: CustomerData,
+    customerData: CustomerData,
 ) {
   if (req.method === 'POST') {
     try {
-      const response = await chargebee.customer.create(customer_data)
+      const response = await chargebee.customer.create(customerData)
           .request(
               function(error: any, result: { customer: Customer; card: Card; }) {
               if(error){
