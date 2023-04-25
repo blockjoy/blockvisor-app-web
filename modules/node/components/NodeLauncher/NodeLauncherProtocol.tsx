@@ -128,7 +128,9 @@ export const NodeLauncherProtocol: FC<Props> = ({
                     <button
                       tabIndex={activeNodeTypeId ? -1 : index + 1}
                       key={type.nodeType}
-                      data-cy={`nodeLauncher-nodeType-button-${b.name}-${name}`}
+                      data-cy={`nodeLauncher-nodeType-button-${b.name}-${
+                        nodeTypeList.find((n) => n.id === type.nodeType)?.name
+                      }`} //TODO: extract this into function
                       className={
                         type.nodeType === activeNodeTypeId &&
                         b.id === activeBlockchainId
