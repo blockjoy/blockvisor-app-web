@@ -44,7 +44,7 @@ export const useMqtt = (): IMqttHook => {
     clean: true,
     hostname: 'mqtt.dev.blockjoy.com',
     protocol: 'wss',
-    port: 8084,
+    port: 8883,
     path: '/mqtt',
     clientId: 'mqtt_prod',
     username: token,
