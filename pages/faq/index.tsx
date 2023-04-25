@@ -14,9 +14,12 @@ FaqView.getLayout = function getLayout(page: ReactNode) {
 };
 
 export async function getStaticProps() {
-  const { data } = await fetchFAQ();
-
-  return { props: { data } };
+  try {
+    const { data } = await fetchFAQ();
+    return { props: { data } };
+  } catch {
+    return { props: { data: [] } };
+  }
 }
 
 export default FaqView;
