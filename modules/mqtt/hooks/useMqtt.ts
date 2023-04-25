@@ -12,9 +12,7 @@ import { arraysEqual } from 'utils/arraysEqual';
 import { authAtoms } from '@modules/auth';
 
 // hardcode eqmx url for testing
-const EQMX_URL: string = `ws${
-  process.env.NODE_ENV === 'development' ? '' : 's'
-}://n623af5d.emqx.cloud/mqtt`;
+const EQMX_URL: string = ``;
 // const EQMX_URL: string = `ws://${env.eqmxUrl}/mqtt`;
 
 export const useMqtt = (): IMqttHook => {
@@ -43,7 +41,12 @@ export const useMqtt = (): IMqttHook => {
   );
 
   const options: IClientOptions = {
-    port: process.env.NODE_ENV === 'development' ? 8083 : 8084,
+    clean: true,
+    hostname: 'mqtt.dev.blockjoy.com',
+    protocol: 'wss',
+    port: 8084,
+    path: '/mqtt',
+    clientId: 'mqtt_prod',
     username: token,
     password: token,
     reconnectPeriod: 1000,
