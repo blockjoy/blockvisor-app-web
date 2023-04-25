@@ -43,8 +43,8 @@ export const useMqtt = (): IMqttHook => {
   const options: IClientOptions = {
     clean: true,
     hostname: 'mqtt.dev.blockjoy.com',
-    protocol: 'wss',
-    port: 8084,
+    protocol: 'ws',
+    port: 8883,
     path: '/mqtt',
     clientId: 'mqtt_prod',
     username: token,
