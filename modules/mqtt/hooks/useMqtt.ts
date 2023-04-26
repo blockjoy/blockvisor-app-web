@@ -44,12 +44,11 @@ export const useMqtt = (): IMqttHook => {
     clean: true,
     hostname: 'mqtt.dev.blockjoy.com',
     protocol: 'wss',
-    port: 8883,
+    port: 8083,
     path: '/mqtt',
-    clientId: 'mqtt_prod',
     username: token,
     password: token,
-    reconnectPeriod: 1000,
+    reconnectPeriod: 10000,
   };
 
   useEffect(() => {
