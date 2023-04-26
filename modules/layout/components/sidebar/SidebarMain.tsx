@@ -15,7 +15,12 @@ const blocks = [
   {
     title: 'BLOCKVISOR',
     items: [
-      { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
+      {
+        name: 'Nodes',
+        path: '/nodes',
+        icon: <IconNodes />,
+        dataTagValue: 'sidebarMain-node-link',
+      },
       {
         name: 'Launch Node',
         path: '/launch-node',

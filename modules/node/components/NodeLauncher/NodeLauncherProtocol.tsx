@@ -3,12 +3,12 @@ import { BlockchainIcon, TableSkeleton, SvgIcon } from '@shared/components';
 import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import IconSearch from '@public/assets/icons/search-16.svg';
-import { nodeTypeList } from '@shared/constants/lookups';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { blockchainsDisabled } from '@shared/constants/lookups';
 import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { getNodeTypeName } from '@modules/node/utils';
 
 type Props = {
   onProtocolSelected: (
@@ -128,9 +128,9 @@ export const NodeLauncherProtocol: FC<Props> = ({
                     <button
                       tabIndex={activeNodeTypeId ? -1 : index + 1}
                       key={type.nodeType}
-                      data-cy={`nodeLauncher-nodeType-button-${b.name}-${
-                        nodeTypeList.find((n) => n.id === type.nodeType)?.name
-                      }`} //TODO: extract this into function
+                      data-cy={`nodeLauncher-nodeType-button-${
+                        b.name
+                      }-${getNodeTypeName(type)}`}
                       className={
                         type.nodeType === activeNodeTypeId &&
                         b.id === activeBlockchainId
@@ -143,7 +143,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                       type="button"
                       css={styles.createButton}
                     >
-                      {nodeTypeList.find((n) => n.id === type.nodeType)?.name}
+                      {getNodeTypeName(type)}
                     </button>
                   ))}
                 </div>

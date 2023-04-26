@@ -141,7 +141,14 @@ export const NodeLauncherSummary: FC<Props> = ({
               </>
             )}
 
-            {serverError && <div css={styles.serverError}>{serverError}</div>}
+            {serverError && (
+              <div
+                data-cy="nodeLauncherSummary-serverError"
+                css={styles.serverError}
+              >
+                {serverError}
+              </div>
+            )}
           </>
         )}
 

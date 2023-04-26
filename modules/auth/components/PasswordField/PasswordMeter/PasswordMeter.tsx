@@ -55,6 +55,7 @@ export const PasswordMeter = ({
   return meter ? (
     <>
       <div
+        data-cy="password-meter"
         css={[
           styles.tooltip,
           !isCompact && styles.tooltipFloating,

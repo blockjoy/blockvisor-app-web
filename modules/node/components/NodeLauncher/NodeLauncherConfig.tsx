@@ -135,7 +135,10 @@ export const NodeLauncherConfig: FC<Props> = ({
           )}
 
           {isConfigValid !== null && !networkList?.length && (
-            <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
+            <div
+              data-cy="nodeLauncher-missingNetwork-message"
+              css={[spacing.bottom.medium, colors.warning, typo.small]}
+            >
               Missing Network Configuration
             </div>
           )}

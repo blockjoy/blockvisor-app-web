@@ -56,6 +56,24 @@ describe('Profile page', () => {
       );
     });
 
+    it('Save button should be disabled when there is no first or last name', () => {
+      const { firstName } = generateUserRegistrationData();
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
+      cy.waitForElement('[data-cy="profileDropdown-button"]', 15000);
+      cy.get('[data-cy="profileDropdown-button"]').click();
+      cy.get('[data-cy="profileDropdown-profile-button"]').click();
+
+      cy.get('[data-cy="profile-firstName-input"]').clear();
+      cy.get('[data-cy="profile-submit-button"]').should('be.disabled');
+      cy.get('[data-cy="profile-firstName-input"]').type(firstName);
+
+      cy.get('[data-cy="profile-lastName-input"]').clear();
+      cy.get('[data-cy="profile-submit-button"]').should('be.disabled');
+    });
+
     it('Should signout when clicked on the Danger zone signout button', () => {
       cy.login(
         Cypress.env('TEST_USER_EMAIL'),

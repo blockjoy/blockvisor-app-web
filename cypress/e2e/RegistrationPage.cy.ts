@@ -20,6 +20,27 @@ describe('Registration page tests', () => {
     cy.url().should('be.equal', `${Cypress.config('baseUrl')}/verify`);
   });
 
+  it('Should display password meter while typing the password', () => {
+    const { password } = generateUserRegistrationData();
+    cy.visit('/register');
+    cy.get('[data-cy="register-password-input"]')
+      .type(password)
+      .then(() => {
+        cy.get('[data-cy="password-meter"]').should('be.visible');
+      });
+  });
+
+  it('Submit button should be disabled if password is weak', () => {
+    const { email, firstName, lastName } = generateUserRegistrationData();
+    cy.visit('/register');
+    cy.get('[data-cy="register-email-input"]').type(email);
+    cy.get('[data-cy="register-firstName-input"]').type(firstName);
+    cy.get('[data-cy="register-lastName-input"]').type(lastName);
+    cy.get('[data-cy="register-password-input"]').type('test');
+
+    cy.get('[data-cy="register-submit-button"]').should('be.disabled');
+  });
+
   it('Should display an error when the email address is already registered', () => {
     const { firstName, lastName, password } = generateUserRegistrationData();
     cy.register({
