@@ -26,6 +26,7 @@ export const Burger = () => {
         isSidebarOpen && styles.buttonClosed,
         !!layout && styles.overlayOpen,
       ]}
+      data-cy="layout-burger-button"
       onClick={handleClick}
     >
       <span css={styles.icon}>
