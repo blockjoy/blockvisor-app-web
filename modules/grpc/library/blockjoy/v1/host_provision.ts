@@ -1,9 +1,9 @@
 /* eslint-disable */
-import type { CallContext, CallOptions } from "nice-grpc-common";
-import _m0 from "protobufjs/minimal";
-import { Timestamp } from "../../google/protobuf/timestamp";
+import type { CallContext, CallOptions } from 'nice-grpc-common';
+import _m0 from 'protobufjs/minimal';
+import { Timestamp } from '../../google/protobuf/timestamp';
 
-export const protobufPackage = "blockjoy.v1";
+export const protobufPackage = 'blockjoy.v1';
 
 /** HostProvision entity */
 export interface HostProvision {
@@ -13,9 +13,7 @@ export interface HostProvision {
    * a host. Afer that happens, the created host's id will be placed here.
    */
   hostId?: string | undefined;
-  createdAt:
-    | Date
-    | undefined;
+  createdAt: Date | undefined;
   /**
    * If this HostProvision has been used to create a Host, the moment of host
    * creation  will be placed here.
@@ -49,42 +47,51 @@ export interface HostProvisionServiceCreateResponse {
 
 function createBaseHostProvision(): HostProvision {
   return {
-    id: "",
+    id: '',
     hostId: undefined,
     createdAt: undefined,
     claimedAt: undefined,
     installCmd: undefined,
-    ipRangeFrom: "",
-    ipRangeTo: "",
-    ipGateway: "",
+    ipRangeFrom: '',
+    ipRangeTo: '',
+    ipGateway: '',
     orgId: undefined,
   };
 }
 
 export const HostProvision = {
-  encode(message: HostProvision, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+  encode(
+    message: HostProvision,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     if (message.hostId !== undefined) {
       writer.uint32(18).string(message.hostId);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.createdAt),
+        writer.uint32(26).fork(),
+      ).ldelim();
     }
     if (message.claimedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.claimedAt), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.claimedAt),
+        writer.uint32(34).fork(),
+      ).ldelim();
     }
     if (message.installCmd !== undefined) {
       writer.uint32(42).string(message.installCmd);
     }
-    if (message.ipRangeFrom !== "") {
+    if (message.ipRangeFrom !== '') {
       writer.uint32(50).string(message.ipRangeFrom);
     }
-    if (message.ipRangeTo !== "") {
+    if (message.ipRangeTo !== '') {
       writer.uint32(58).string(message.ipRangeTo);
     }
-    if (message.ipGateway !== "") {
+    if (message.ipGateway !== '') {
       writer.uint32(66).string(message.ipGateway);
     }
     if (message.orgId !== undefined) {
@@ -94,7 +101,8 @@ export const HostProvision = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): HostProvision {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHostProvision();
     while (reader.pos < end) {
@@ -119,14 +127,18 @@ export const HostProvision = {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 4:
           if (tag != 34) {
             break;
           }
 
-          message.claimedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.claimedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 5:
           if (tag != 42) {
@@ -178,33 +190,40 @@ export const HostProvision = {
 
   fromPartial(object: DeepPartial<HostProvision>): HostProvision {
     const message = createBaseHostProvision();
-    message.id = object.id ?? "";
+    message.id = object.id ?? '';
     message.hostId = object.hostId ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.claimedAt = object.claimedAt ?? undefined;
     message.installCmd = object.installCmd ?? undefined;
-    message.ipRangeFrom = object.ipRangeFrom ?? "";
-    message.ipRangeTo = object.ipRangeTo ?? "";
-    message.ipGateway = object.ipGateway ?? "";
+    message.ipRangeFrom = object.ipRangeFrom ?? '';
+    message.ipRangeTo = object.ipRangeTo ?? '';
+    message.ipGateway = object.ipGateway ?? '';
     message.orgId = object.orgId ?? undefined;
     return message;
   },
 };
 
 function createBaseHostProvisionServiceGetRequest(): HostProvisionServiceGetRequest {
-  return { id: "" };
+  return { id: '' };
 }
 
 export const HostProvisionServiceGetRequest = {
-  encode(message: HostProvisionServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+  encode(
+    message: HostProvisionServiceGetRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostProvisionServiceGetRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): HostProvisionServiceGetRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHostProvisionServiceGetRequest();
     while (reader.pos < end) {
@@ -226,13 +245,17 @@ export const HostProvisionServiceGetRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<HostProvisionServiceGetRequest>): HostProvisionServiceGetRequest {
+  create(
+    base?: DeepPartial<HostProvisionServiceGetRequest>,
+  ): HostProvisionServiceGetRequest {
     return HostProvisionServiceGetRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostProvisionServiceGetRequest>): HostProvisionServiceGetRequest {
+  fromPartial(
+    object: DeepPartial<HostProvisionServiceGetRequest>,
+  ): HostProvisionServiceGetRequest {
     const message = createBaseHostProvisionServiceGetRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -242,15 +265,25 @@ function createBaseHostProvisionServiceGetResponse(): HostProvisionServiceGetRes
 }
 
 export const HostProvisionServiceGetResponse = {
-  encode(message: HostProvisionServiceGetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: HostProvisionServiceGetResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.hostProvisions !== undefined) {
-      HostProvision.encode(message.hostProvisions, writer.uint32(10).fork()).ldelim();
+      HostProvision.encode(
+        message.hostProvisions,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostProvisionServiceGetResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): HostProvisionServiceGetResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHostProvisionServiceGetResponse();
     while (reader.pos < end) {
@@ -261,7 +294,10 @@ export const HostProvisionServiceGetResponse = {
             break;
           }
 
-          message.hostProvisions = HostProvision.decode(reader, reader.uint32());
+          message.hostProvisions = HostProvision.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
@@ -272,32 +308,40 @@ export const HostProvisionServiceGetResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<HostProvisionServiceGetResponse>): HostProvisionServiceGetResponse {
+  create(
+    base?: DeepPartial<HostProvisionServiceGetResponse>,
+  ): HostProvisionServiceGetResponse {
     return HostProvisionServiceGetResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostProvisionServiceGetResponse>): HostProvisionServiceGetResponse {
+  fromPartial(
+    object: DeepPartial<HostProvisionServiceGetResponse>,
+  ): HostProvisionServiceGetResponse {
     const message = createBaseHostProvisionServiceGetResponse();
-    message.hostProvisions = (object.hostProvisions !== undefined && object.hostProvisions !== null)
-      ? HostProvision.fromPartial(object.hostProvisions)
-      : undefined;
+    message.hostProvisions =
+      object.hostProvisions !== undefined && object.hostProvisions !== null
+        ? HostProvision.fromPartial(object.hostProvisions)
+        : undefined;
     return message;
   },
 };
 
 function createBaseHostProvisionServiceCreateRequest(): HostProvisionServiceCreateRequest {
-  return { ipRangeFrom: "", ipRangeTo: "", ipGateway: "", orgId: undefined };
+  return { ipRangeFrom: '', ipRangeTo: '', ipGateway: '', orgId: undefined };
 }
 
 export const HostProvisionServiceCreateRequest = {
-  encode(message: HostProvisionServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ipRangeFrom !== "") {
+  encode(
+    message: HostProvisionServiceCreateRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.ipRangeFrom !== '') {
       writer.uint32(10).string(message.ipRangeFrom);
     }
-    if (message.ipRangeTo !== "") {
+    if (message.ipRangeTo !== '') {
       writer.uint32(18).string(message.ipRangeTo);
     }
-    if (message.ipGateway !== "") {
+    if (message.ipGateway !== '') {
       writer.uint32(26).string(message.ipGateway);
     }
     if (message.orgId !== undefined) {
@@ -306,8 +350,12 @@ export const HostProvisionServiceCreateRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostProvisionServiceCreateRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): HostProvisionServiceCreateRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHostProvisionServiceCreateRequest();
     while (reader.pos < end) {
@@ -350,15 +398,19 @@ export const HostProvisionServiceCreateRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<HostProvisionServiceCreateRequest>): HostProvisionServiceCreateRequest {
+  create(
+    base?: DeepPartial<HostProvisionServiceCreateRequest>,
+  ): HostProvisionServiceCreateRequest {
     return HostProvisionServiceCreateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostProvisionServiceCreateRequest>): HostProvisionServiceCreateRequest {
+  fromPartial(
+    object: DeepPartial<HostProvisionServiceCreateRequest>,
+  ): HostProvisionServiceCreateRequest {
     const message = createBaseHostProvisionServiceCreateRequest();
-    message.ipRangeFrom = object.ipRangeFrom ?? "";
-    message.ipRangeTo = object.ipRangeTo ?? "";
-    message.ipGateway = object.ipGateway ?? "";
+    message.ipRangeFrom = object.ipRangeFrom ?? '';
+    message.ipRangeTo = object.ipRangeTo ?? '';
+    message.ipGateway = object.ipGateway ?? '';
     message.orgId = object.orgId ?? undefined;
     return message;
   },
@@ -369,15 +421,25 @@ function createBaseHostProvisionServiceCreateResponse(): HostProvisionServiceCre
 }
 
 export const HostProvisionServiceCreateResponse = {
-  encode(message: HostProvisionServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: HostProvisionServiceCreateResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.hostProvision !== undefined) {
-      HostProvision.encode(message.hostProvision, writer.uint32(10).fork()).ldelim();
+      HostProvision.encode(
+        message.hostProvision,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostProvisionServiceCreateResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): HostProvisionServiceCreateResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHostProvisionServiceCreateResponse();
     while (reader.pos < end) {
@@ -399,31 +461,37 @@ export const HostProvisionServiceCreateResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<HostProvisionServiceCreateResponse>): HostProvisionServiceCreateResponse {
+  create(
+    base?: DeepPartial<HostProvisionServiceCreateResponse>,
+  ): HostProvisionServiceCreateResponse {
     return HostProvisionServiceCreateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostProvisionServiceCreateResponse>): HostProvisionServiceCreateResponse {
+  fromPartial(
+    object: DeepPartial<HostProvisionServiceCreateResponse>,
+  ): HostProvisionServiceCreateResponse {
     const message = createBaseHostProvisionServiceCreateResponse();
-    message.hostProvision = (object.hostProvision !== undefined && object.hostProvision !== null)
-      ? HostProvision.fromPartial(object.hostProvision)
-      : undefined;
+    message.hostProvision =
+      object.hostProvision !== undefined && object.hostProvision !== null
+        ? HostProvision.fromPartial(object.hostProvision)
+        : undefined;
     return message;
   },
 };
 
 /** Host provisioning */
-export type HostProvisionServiceDefinition = typeof HostProvisionServiceDefinition;
+export type HostProvisionServiceDefinition =
+  typeof HostProvisionServiceDefinition;
 export const HostProvisionServiceDefinition = {
-  name: "HostProvisionService",
-  fullName: "blockjoy.v1.HostProvisionService",
+  name: 'HostProvisionService',
+  fullName: 'blockjoy.v1.HostProvisionService',
   methods: {
     /**
      * Get a single host provision identified by ID or a list of all available
      * host provisions
      */
     get: {
-      name: "Get",
+      name: 'Get',
       requestType: HostProvisionServiceGetRequest,
       requestStream: false,
       responseType: HostProvisionServiceGetResponse,
@@ -432,7 +500,7 @@ export const HostProvisionServiceDefinition = {
     },
     /** Create a single host provision */
     create: {
-      name: "Create",
+      name: 'Create',
       requestType: HostProvisionServiceCreateRequest,
       requestStream: false,
       responseType: HostProvisionServiceCreateResponse,
@@ -474,11 +542,23 @@ export interface HostProvisionServiceClient<CallOptionsExt = {}> {
   ): Promise<HostProvisionServiceCreateResponse>;
 }
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function toTimestamp(date: Date): Timestamp {

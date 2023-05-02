@@ -17,6 +17,7 @@ import { styles } from './NodeLauncherConfig.styles';
 import IconInfo from '@public/assets/icons/info.svg';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeLauncherState } from './NodeLauncher';
 
 type Props = {
   isConfigValid: boolean | null;
@@ -88,7 +89,7 @@ export const NodeLauncherConfig: FC<Props> = ({
   onNodePropertyChanged,
   onNodeConfigPropertyChanged,
 }) => {
-  const { network, nodeTypeProperties, nodeFiles } = nodeLauncherState;
+  const { network, properties, keyFiles } = nodeLauncherState;
 
   // const handleRemove: MouseEventHandler<HTMLButtonElement> = (e) => {
   //   e.preventDefault();
@@ -143,12 +144,12 @@ export const NodeLauncherConfig: FC<Props> = ({
 
           <FirewallDropdown
             onNodePropertyChanged={onNodePropertyChanged}
-            allowedIps={nodeLauncherState.allowedIps}
-            deniedIps={nodeLauncherState.deniedIps}
+            allowedIps={nodeLauncherState.allowIps}
+            deniedIps={nodeLauncherState.denyIps}
           />
 
           {Boolean(networkList?.length) &&
-            nodeTypeProperties?.map((property: NodeProperty) => {
+            properties?.map((property: NodeProperty) => {
               return (
                 <Fragment key={property.name}>
                   <label css={styles.label}>
@@ -159,7 +160,7 @@ export const NodeLauncherConfig: FC<Props> = ({
                   </label>
                   {renderControls(
                     property,
-                    nodeFiles!,
+                    keyFiles!,
                     onFileUploaded,
                     onNodeConfigPropertyChanged,
                   )}

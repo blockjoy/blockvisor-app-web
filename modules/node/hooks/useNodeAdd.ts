@@ -2,8 +2,8 @@ import { nodeClient, keyFileClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 import { useNodeList } from './useNodeList';
-import { CreateNodeParams } from '..';
 import {
+  NodeServiceCreateRequest,
   Node,
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
@@ -14,13 +14,14 @@ export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
 
   const createNode = async (
-    params: CreateNodeParams,
+    params: NodeServiceCreateRequest,
+    keyFiles: File[],
     onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
     const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';
 
-    const nodeProperties: any = params.nodeTypeProperties.map((property) => {
+    const nodeProperties: any = params.properties.map((property) => {
       const { uiType, ...rest } = property;
       return {
         ...rest,
@@ -35,7 +36,7 @@ export const useNodeAdd = () => {
     try {
       const response: Node = await nodeClient.createNode({
         orgId: orgId,
-        blockchainId: params.blockchain,
+        blockchainId: params.blockchainId,
         version: params.version ?? '',
         nodeType: params.nodeType,
         properties: nodeProperties,
@@ -49,9 +50,12 @@ export const useNodeAdd = () => {
           },
         },
       });
+
+      response.allowIps;
+
       const nodeId = response!.id;
 
-      await keyFileClient.create(nodeId, params.key_files!);
+      await keyFileClient.create(nodeId, keyFiles);
 
       toast.success('Node Created');
       loadNodes();

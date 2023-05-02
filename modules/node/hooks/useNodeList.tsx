@@ -6,6 +6,7 @@ import { useIdentityRepository } from '@modules/auth';
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useNodeMetrics } from './useNodeMetrics';
+import { checkForTokenError } from 'utils/checkForTokenError';
 
 export const useNodeList = () => {
   const router = useRouter();
@@ -50,6 +51,8 @@ export const useNodeList = () => {
       queryParams.filter,
       queryParams.pagination,
     );
+
+    checkForTokenError(nodes);
 
     setPreloadNodes(nodes.length);
 

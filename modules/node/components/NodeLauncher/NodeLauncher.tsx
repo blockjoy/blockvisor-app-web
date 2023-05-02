@@ -16,16 +16,20 @@ import {
   UiType,
   NodeProperty,
   NodeType,
+  NodeServiceCreateRequest,
+  FilteredIpAddr,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
-type NodeState = {
+export type NodeLauncherState = {
   blockchainId: string;
   nodeVersion: string;
-  nodeTypeId: NodeType;
-  nodeTypeProperties: NodeProperty[];
-  nodeFiles?: NodeFiles[];
+  nodeType: NodeType;
+  properties: NodeProperty[];
+  keyFiles?: NodeFiles[];
   network: string;
+  allowIps: FilteredIpAddr[];
+  denyIps: FilteredIpAddr[];
 };
 
 export type CreateNodeParams = {
@@ -35,6 +39,8 @@ export type CreateNodeParams = {
   nodeTypeProperties: NodeProperty[];
   key_files?: File[];
   network: string;
+  allowedIps: FilteredIpAddr[];
+  deniedIps: FilteredIpAddr[];
 };
 
 export const NodeLauncher = () => {
@@ -55,18 +61,18 @@ export const NodeLauncher = () => {
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
-    nodeTypeId: NodeType.NODE_TYPE_UNSPECIFIED,
-    nodeTypeProperties: [],
+    nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
+    properties: [],
     nodeVersion: '',
     network: '',
-    allowedIps: [],
-    deniedIps: [],
+    allowIps: [],
+    denyIps: [],
   });
 
   const handleProtocolSelected = (
     blockchainId: string,
-    nodeTypeId: NodeType,
-    nodeTypeProperties: NodeProperty[],
+    nodeType: NodeType,
+    properties: NodeProperty[],
     nodeVersion: string,
   ) => {
     setServerError(undefined);
@@ -74,19 +80,19 @@ export const NodeLauncher = () => {
     setNode({
       ...node,
       blockchainId,
-      nodeTypeId,
-      nodeTypeProperties,
+      nodeType,
+      properties,
       nodeVersion,
     });
   };
 
-  const isNodeValid = Boolean(node.blockchainId && node.nodeTypeId);
+  const isNodeValid = Boolean(node.blockchainId && node.nodeType);
 
-  const isConfigValid = !node.nodeFiles
+  const isConfigValid = !node.keyFiles
     ? null
     : Boolean(
-        node.nodeFiles?.every((f) => f.files?.length) &&
-          node.nodeTypeProperties
+        node.keyFiles?.every((f) => f.files?.length) &&
+          node.properties
             ?.filter(
               (type: NodeProperty) =>
                 type.required && type.uiType !== UiType.UI_TYPE_FILE_UPLOAD,
@@ -101,7 +107,7 @@ export const NodeLauncher = () => {
 
   // hack that needs removing
   const hasAddedFiles = () => {
-    const activeNodeFiles = node.nodeFiles?.find((f, i) => i === 0);
+    const activeNodeFiles = node.keyFiles?.find((f, i) => i === 0);
 
     if (!activeNodeFiles) return true;
 
@@ -120,9 +126,9 @@ export const NodeLauncher = () => {
   const handleNodeConfigPropertyChanged = (e: any) => {
     setServerError('');
 
-    const nodeTypePropertiesCopy = [...node.nodeTypeProperties];
+    const propertiesCopy = [...node.properties];
 
-    let foundProperty = nodeTypePropertiesCopy.find(
+    let foundProperty = propertiesCopy.find(
       (property) => property.name === e.target.name,
     );
 
@@ -133,15 +139,15 @@ export const NodeLauncher = () => {
 
     setNode({
       ...node,
-      nodeTypeProperties: nodeTypePropertiesCopy,
+      properties: propertiesCopy,
     });
   };
 
   const handleFileUploaded = (e: any) => {
     setServerError(undefined);
-    const nodeFilesCopy = [...node.nodeFiles!];
+    const keyFilesCopy = [...node.keyFiles!];
 
-    let foundNodeFiles = nodeFilesCopy.find(
+    let foundNodeFiles = keyFilesCopy.find(
       (files) => files.name === e.target.name,
     );
 
@@ -153,7 +159,7 @@ export const NodeLauncher = () => {
 
     setNode({
       ...node,
-      nodeFiles: nodeFilesCopy,
+      keyFiles: keyFilesCopy,
     });
   };
 
@@ -163,23 +169,27 @@ export const NodeLauncher = () => {
     const mergedFiles: File[] = [];
 
     // build merged file array
-    for (let f of node.nodeFiles!) {
+    for (let f of node.keyFiles!) {
       for (let nf of f.files) {
         mergedFiles.push(nf);
       }
     }
 
-    const params: CreateNodeParams = {
+    const params: NodeServiceCreateRequest = {
+      orgId: defaultOrganization!.id,
       version: node.nodeVersion,
-      nodeType: +node.nodeTypeId ?? 0,
-      blockchain: node.blockchainId ?? '',
-      nodeTypeProperties: node.nodeTypeProperties,
-      key_files: mergedFiles.flat(),
+      nodeType: +node.nodeType ?? 0,
+      blockchainId: node.blockchainId ?? '',
+      properties: node.properties,
       network: node.network,
+      allowIps: node.allowIps,
+      denyIps: node.allowIps,
+      placement: {},
     };
 
     createNode(
       params,
+      mergedFiles.flat(),
       (nodeId: string) => {
         router.push({
           pathname: `${ROUTES.NODE(nodeId)}`,
@@ -202,7 +212,7 @@ export const NodeLauncher = () => {
     const supportedNodeTypes = activeBlockchain.nodesTypes;
 
     const activeNodeType = supportedNodeTypes.find(
-      (type: SupportedNodeType) => type.nodeType === +node.nodeTypeId,
+      (type: SupportedNodeType) => type.nodeType === +node.nodeType,
     );
 
     const nodeTypePropertiesCopy = [...activeNodeType?.properties!];
@@ -228,24 +238,24 @@ export const NodeLauncher = () => {
 
     setNode({
       ...node,
-      nodeTypeProperties: propertiesWithValue,
-      nodeFiles: fileProperties,
+      properties: propertiesWithValue,
+      keyFiles: fileProperties,
       network: activeBlockchain?.networks?.length
         ? activeBlockchain?.networks[0]?.name
         : '',
     });
-  }, [node.blockchainId, node.nodeTypeId]);
+  }, [node.blockchainId, node.nodeType]);
 
   useEffect(() => {
     if (currentOrganization.current?.id !== defaultOrganization?.id) {
       setNode({
         blockchainId: '',
-        nodeTypeId: NodeType.NODE_TYPE_UNSPECIFIED,
-        nodeTypeProperties: [],
+        nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
+        properties: [],
         nodeVersion: '',
         network: '',
-        allowedIps: [],
-        deniedIps: [],
+        allowIps: [],
+        denyIps: [],
       });
       currentOrganization.current = defaultOrganization;
     }
@@ -258,21 +268,19 @@ export const NodeLauncher = () => {
         <NodeLauncherProtocol
           onProtocolSelected={handleProtocolSelected}
           activeBlockchainId={node.blockchainId}
-          activeNodeTypeId={node.nodeTypeId}
+          activeNodeTypeId={node.nodeType}
         />
-        {node.blockchainId &&
-          node.nodeTypeId &&
-          node.nodeTypeProperties?.length && (
-            <NodeLauncherConfig
-              isConfigValid={isConfigValid}
-              onFileUploaded={handleFileUploaded}
-              onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
-              onNodePropertyChanged={handleNodePropertyChanged}
-              networkList={networkList}
-              nodeLauncherState={node}
-            />
-          )}
-        {!node.blockchainId && !node.nodeTypeId && (
+        {node.blockchainId && node.nodeType && node.properties?.length && (
+          <NodeLauncherConfig
+            isConfigValid={isConfigValid}
+            onFileUploaded={handleFileUploaded}
+            onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
+            onNodePropertyChanged={handleNodePropertyChanged}
+            networkList={networkList}
+            nodeLauncherState={node}
+          />
+        )}
+        {!node.blockchainId && !node.nodeType && (
           <div css={styles.empty}>
             <EmptyColumn
               title="Launch a Node"
@@ -280,22 +288,20 @@ export const NodeLauncher = () => {
             />
           </div>
         )}
-        {node.blockchainId &&
-          node.nodeTypeId &&
-          node?.nodeTypeProperties?.length && (
-            <NodeLauncherSummary
-              hasNetworkList={Boolean(networkList?.length)}
-              serverError={serverError!}
-              hasAddedFiles={hasAddedFiles()}
-              isCreating={isCreating}
-              isNodeValid={isNodeValid}
-              isConfigValid={isConfigValid}
-              blockchainId={node.blockchainId}
-              nodeTypeId={node.nodeTypeId}
-              nodeTypeProperties={node.nodeTypeProperties}
-              onCreateNodeClicked={handleCreateNodeClicked}
-            />
-          )}
+        {node.blockchainId && node.nodeType && node?.properties?.length && (
+          <NodeLauncherSummary
+            hasNetworkList={Boolean(networkList?.length)}
+            serverError={serverError!}
+            hasAddedFiles={hasAddedFiles()}
+            isCreating={isCreating}
+            isNodeValid={isNodeValid}
+            isConfigValid={isConfigValid}
+            blockchainId={node.blockchainId}
+            nodeTypeId={node.nodeType}
+            nodeTypeProperties={node.properties}
+            onCreateNodeClicked={handleCreateNodeClicked}
+          />
+        )}
       </div>
     </>
   );
