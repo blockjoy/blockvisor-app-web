@@ -1,11 +1,15 @@
-import { apiClient } from '@modules/client';
+import {
+  authClient,
+  blockchainClient,
+  nodeClient,
+  organizationClient,
+} from '@modules/grpc';
 import { vi } from 'vitest';
 
-const loginSpy = vi.spyOn(apiClient, 'login');
-const getOrganizationsSpy = vi.spyOn(apiClient, 'getOrganizations');
-const nodeListSpy = vi.spyOn(apiClient, 'listNodes');
-const dashboardMetricsSpy = vi.spyOn(apiClient, 'getDashboardMetrics');
-const getBlockchainSpy = vi.spyOn(apiClient, 'getBlockchains');
+const loginSpy = vi.spyOn(authClient, 'login');
+const getOrganizationsSpy = vi.spyOn(organizationClient, 'getOrganizations');
+const nodeListSpy = vi.spyOn(nodeClient, 'listNodes');
+const getBlockchainSpy = vi.spyOn(blockchainClient, 'getBlockchains');
 const useRouterSpy = vi.spyOn(require('next/router'), 'useRouter');
 
 export {
@@ -14,5 +18,4 @@ export {
   getOrganizationsSpy,
   useRouterSpy,
   nodeListSpy,
-  dashboardMetricsSpy,
 };
