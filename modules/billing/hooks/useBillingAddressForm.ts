@@ -1,4 +1,5 @@
 import { ApplicationError } from '@modules/auth/utils/Errors';
+import { CustomerBillingAddress } from 'chargebee-typescript/lib/resources';
 import { useState } from 'react';
 import {
   SubmitHandler,
@@ -9,21 +10,20 @@ import {
 import { toast } from 'react-toastify';
 
 export const useBillingAddressForm = (
-  billingAddress: IBillingAddress | null,
+  billingAddress: CustomerBillingAddress | null,
   actions: BillingAddressActions,
 ): IBillingAddressFormHook => {
   const [loading, setLoading] = useState(false);
 
   const form: UseFormReturn<BillingAddressForm> = useForm<BillingAddressForm>({
     defaultValues: {
-      name: billingAddress?.name ?? '',
+      name: billingAddress?.first_name ?? '',
       company: billingAddress?.company ?? '',
       address: billingAddress?.line1 ?? '',
       city: billingAddress?.city ?? '',
       country: billingAddress?.country ?? '',
       region: billingAddress?.state ?? '',
-      postal: billingAddress?.postal_code ?? '',
-      vat: billingAddress?.vat ?? '',
+      postal: billingAddress?.zip ?? '',
     },
   });
 
@@ -35,7 +35,6 @@ export const useBillingAddressForm = (
     country,
     region,
     postal,
-    vat,
   }: BillingAddressForm) => {
     setLoading(true);
 
@@ -48,7 +47,6 @@ export const useBillingAddressForm = (
         country,
         region,
         postal,
-        vat,
       });
       actions.cancel();
       setLoading(false);
@@ -100,12 +98,6 @@ export const useBillingAddressForm = (
     defaultValue: '',
   });
 
-  const vatController = useController({
-    name: 'vat',
-    control: form.control,
-    defaultValue: '',
-  });
-
   return {
     loading,
     form,
@@ -119,6 +111,5 @@ export const useBillingAddressForm = (
     countryController,
     regionController,
     postalController,
-    vatController,
   };
 };

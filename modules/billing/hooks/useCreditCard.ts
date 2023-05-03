@@ -8,12 +8,24 @@ export const useCreditCard = (): ICreditCardHook => {
     billingAtoms.creditCardLoadingState,
   );
 
-  const getCard = (id: string) => {
+  const getCard = async (customerId: string) => {
     setCreditCardLoadingState('initializing');
 
-    const card: ICreditCard = CREDIT_CARD;
+    try {
+      const response = await fetch('/api/billing/payments/list', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: customerId }),
+      });
 
-    setCreditCard(card);
+      const data = await response.json();
+
+      setCreditCard(data[0].card);
+    } catch (error) {
+      console.error('Failed to fetch payment methods', error);
+    }
 
     setCreditCardLoadingState('finished');
   };

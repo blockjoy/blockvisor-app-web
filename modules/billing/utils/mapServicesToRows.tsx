@@ -21,7 +21,7 @@ export const mapServicesToRows = (services?: any[], total?: number) => {
     {
       name: 'Total',
       key: '4',
-      width: '150px',
+      width: '200px',
     },
   ];
 
@@ -99,7 +99,7 @@ export const mapServicesToRows = (services?: any[], total?: number) => {
             <p
               style={{
                 fontSize: '20px',
-                width: '21.43%',
+                width: '100%',
               }}
             >
               {formatCurrency(total!)}

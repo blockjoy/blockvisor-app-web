@@ -1,24 +1,12 @@
-import { useRecoilState } from 'recoil';
-import { BILLING_ADDRESS } from '../mocks/billingAddress';
-import { billingAtoms } from '@modules/billing';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { billingAtoms, billingSelectors } from '@modules/billing';
 
 export const useBillingAddress = (): IBillingAddressHook => {
-  const [billingAddress, setBillingAddress] = useRecoilState(
-    billingAtoms.billingAddress,
+  const billingAddress = useRecoilValue(billingSelectors.billingAddress);
+  const [customer, setCustomer] = useRecoilState(billingAtoms.customer);
+  const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
+    billingAtoms.customerLoadingState,
   );
-  const [billingAddressLoadingState, setBillingAddressLoadingState] =
-    useRecoilState(billingAtoms.billingAddressLoadingState);
-
-  const getBillingAddress = async () => {
-    setBillingAddressLoadingState('initializing');
-    await new Promise((r) => setTimeout(r, 300));
-
-    const billingAddress: IBillingAddress = BILLING_ADDRESS;
-
-    setBillingAddress(billingAddress);
-
-    setBillingAddressLoadingState('finished');
-  };
 
   const addBillingAddress = async ({
     name,
@@ -28,32 +16,41 @@ export const useBillingAddress = (): IBillingAddressHook => {
     country,
     region,
     postal,
-    vat,
   }: BillingAddressForm) => {
-    await new Promise((r) => setTimeout(r, 300));
+    setCustomerLoadingState('loading');
 
-    const newBillingAddress = {
-      ...BILLING_ADDRESS,
-      name,
+    const updatedBillingInfo = {
+      first_name: name,
       line1: address,
       city,
       state: region,
-      postal_code: postal,
+      zip: postal,
       country,
       company,
-      vat,
     };
 
-    console.log('BILLING ADDRESS [addBillingAddress]', newBillingAddress);
-    setBillingAddress(newBillingAddress);
+    const response = await fetch('/api/billing/customers/billing-info/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        customerId: customer?.id,
+        billingInfo: updatedBillingInfo,
+      }),
+    });
+
+    const data = await response.json();
+
+    setCustomer(data);
+
+    setCustomerLoadingState('finished');
   };
   const updateBillingAddress = () => {};
 
   return {
     billingAddress,
-    billingAddressLoadingState,
-
-    getBillingAddress,
+    billingAddressLoadingState: customerLoadingState,
     addBillingAddress,
     updateBillingAddress,
   };

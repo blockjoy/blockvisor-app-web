@@ -1,22 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { _customer } from 'chargebee-typescript';
-import { Card, Customer } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
+import { Subscription } from 'chargebee-typescript/lib/resources';
 
-const createChargebeeCustomer = async (
-  customerData: CustomerData,
-): Promise<Customer> => {
+const createSubscription = async (
+  customerId: string,
+  subscription: any,
+): Promise<Subscription> => {
   return new Promise((resolve, reject) => {
-    chargebee.customer
-      .create(customerData)
+    chargebee.subscription
+      .create_with_items(customerId, subscription)
       .request(function (
         error: any,
-        result: { customer: Customer; card: Card },
+        result: {
+          subscription: Subscription;
+        },
       ) {
         if (error) {
           reject(error);
         } else {
-          resolve(result.customer);
+          console.log(`${result}`);
+          resolve(result.subscription);
         }
       });
   });
@@ -24,12 +27,15 @@ const createChargebeeCustomer = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Customer | { message: string }>,
+  res: NextApiResponse<Subscription | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {
-      const customerData = req.body as CustomerData;
-      const response = await createChargebeeCustomer(customerData);
+      const { customerId, subscription } = req.body as any;
+
+      console.log('subscription123', subscription);
+
+      const response = await createSubscription(customerId, subscription);
 
       res.status(200).json(response);
     } catch (error: any) {

@@ -1,3 +1,4 @@
+import { Customer } from 'chargebee-typescript/lib/resources';
 import { BrowserStorage } from './BrowserStorage';
 
 export class IdentityRepository {
@@ -41,6 +42,18 @@ export class IdentityRepository {
       const newData: User = {
         ...data,
         defaultOrganization: { name, id },
+      };
+      this._storage.save(this._key, newData);
+    }
+  };
+
+  public saveCustomer = (customer: Customer) => {
+    const data = this._storage.get(this._key);
+
+    if (data) {
+      const newData = {
+        ...data,
+        customer,
       };
       this._storage.save(this._key, newData);
     }

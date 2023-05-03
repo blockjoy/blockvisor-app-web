@@ -4,13 +4,15 @@ import { InvoiceLogo } from './InvoiceLogo';
 import { InvoiceQRCode } from './InvoiceQRCode';
 import { styles } from './InvoicePDF.styles';
 import { formatCurrency, formatDate } from '@shared/index';
+import { Invoice } from 'chargebee-typescript/lib/resources';
+import { LineItem } from 'chargebee-typescript/lib/resources/invoice';
 
 export type InvoicePDFProps = {
-  invoice: IInvoice;
+  invoice: Invoice;
 };
 
 export const InvoicePDF = ({
-  invoice: { id, amount_due, created, due_date, lines },
+  invoice: { id, amount_due, amount_paid, date, due_date, line_items },
 }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -87,13 +89,13 @@ export const InvoicePDF = ({
             <Text style={styles.ellipsis}>{id}</Text>
           </View>
           <View style={styles.wLrg}>
-            <Text>{formatDate(created)}</Text>
+            <Text>{formatDate(date!)}</Text>
           </View>
           <View style={styles.wLrg}>
             <Text>Due on receipt</Text>
           </View>
           <View style={styles.wLrg}>
-            <Text>{formatDate(due_date ? due_date : created)}</Text>
+            <Text>{formatDate(due_date ? due_date : date!)}</Text>
           </View>
         </View>
       </View>
@@ -119,42 +121,46 @@ export const InvoicePDF = ({
           ))}
         </View>
         <View>
-          {lines.data.map((row: any, rowIndex: any) => (
+          {line_items?.map((lineItem: LineItem, lineItemIndex: number) => (
             <View
-              key={row.id}
+              key={lineItem.id}
               style={[
                 styles.flex,
                 styles.flexRow,
-                rowIndex !== lines.data.length - 1
+                lineItemIndex !== line_items.length - 1
                   ? styles.borderPrimary
                   : styles.borderSecondary,
               ]}
             >
               <View key="1" style={[styles.wLrg, styles.pMed]}>
                 <Text style={styles.textSml}>
-                  {formatDate(row.price.created)}
+                  {formatDate(lineItem.date_from)}
                 </Text>
               </View>
               <View key="2" style={[styles.wXLrg, styles.pMed]}>
-                <Text style={styles.textSml}>{row.description}</Text>
+                <Text style={styles.textSml}>{lineItem.description}</Text>
               </View>
               <View
                 key="3"
                 style={[styles.wSml, styles.textRight, styles.pMed]}
               >
-                <Text style={styles.textSml}>{row.quantity}</Text>
+                <Text style={styles.textSml}>{lineItem.quantity}</Text>
               </View>
               <View
                 key="4"
                 style={[styles.wSml, styles.textRight, styles.pMed]}
               >
-                <Text style={styles.textSml}>{formatCurrency(row.amount)}</Text>
+                <Text style={styles.textSml}>
+                  {formatCurrency(lineItem.amount!)}
+                </Text>
               </View>
               <View
                 key="5"
                 style={[styles.wSml, styles.textRight, styles.pMed]}
               >
-                <Text style={styles.textSml}>{formatCurrency(row.amount)}</Text>
+                <Text style={styles.textSml}>
+                  {formatCurrency(lineItem.amount!)}
+                </Text>
               </View>
             </View>
           ))}
@@ -178,7 +184,7 @@ export const InvoicePDF = ({
         </View>
         <View style={styles.flex}>
           <Text style={[styles.textRight, styles.fontBold, styles.pyMed]}>
-            {formatCurrency(amount_due)}
+            {formatCurrency(amount_due ? amount_due : amount_paid!)}
           </Text>
         </View>
       </View>

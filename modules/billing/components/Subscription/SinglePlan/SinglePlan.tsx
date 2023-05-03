@@ -43,7 +43,7 @@ export const SinglePlan = ({ plan, handleSelect }: SinglePlanProps) => {
           ))}
         </ul>
       </div>
-
+      {/* TODO: add prevent if no payment method has been added */}
       <Button
         style={plan.metadata.featured ? 'secondary' : 'outline'}
         onClick={() => handleSelect(plan)}

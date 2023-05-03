@@ -7,13 +7,11 @@ interface IBillingAddress {
   postal_code: string;
   country: string;
   company: string;
-  vat: string;
 }
 
 interface IBillingAddressHook {
-  billingAddress: IBillingAddress | null;
+  billingAddress: CustomerBillingAddress | null;
   billingAddressLoadingState: LoadingState;
-  getBillingAddress: VoidFunction;
   addBillingAddress: (card: BillingAddressParams) => void;
   updateBillingAddress: VoidFunction;
 }
@@ -29,7 +27,6 @@ interface IBillingAddressFormHook {
   countryController: any;
   regionController: any;
   postalController: any;
-  vatController: any;
 }
 
 type BillingAddressForm = {
@@ -40,7 +37,6 @@ type BillingAddressForm = {
   country: string;
   region: string;
   postal: string;
-  vat: string;
 };
 
 type BillingAddressParams = {
@@ -51,7 +47,6 @@ type BillingAddressParams = {
   country: string;
   region: string;
   postal: string;
-  vat: string;
 };
 
 type BillingAddressActions = {

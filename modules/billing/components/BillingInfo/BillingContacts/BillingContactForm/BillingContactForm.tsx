@@ -60,7 +60,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
             style="secondary"
             size="small"
             type="submit"
-            tabIndex={9}
+            tabIndex={3}
           >
             Add
           </Button>
@@ -68,7 +68,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
             onClick={() => actions.cancel()}
             style="outline"
             size="small"
-            tabIndex={10}
+            tabIndex={4}
           >
             Cancel
           </Button>

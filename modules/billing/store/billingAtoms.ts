@@ -1,5 +1,22 @@
+import {
+  Contact,
+  Customer,
+  Invoice,
+  Subscription,
+} from 'chargebee-typescript/lib/resources';
 import { atom } from 'recoil';
 import { localStorageEffect } from 'utils/store/persist';
+
+const customer = atom<Customer | null>({
+  key: 'billing.customer',
+  default: null,
+  effects: [localStorageEffect('customer')],
+});
+
+const customerLoadingState = atom<LoadingState>({
+  key: 'billing.customer.loadingState',
+  default: 'finished',
+});
 
 const creditCard = atom<ICreditCard | null>({
   key: 'billing.creditCard',
@@ -12,18 +29,22 @@ const creditCardLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const billingAddress = atom<IBillingAddress | null>({
-  key: 'billing.billingAddress',
+const paymentMethods = atom<any | null>({
+  key: 'billing.paymentMethods',
   default: null,
-  effects: [localStorageEffect('billingAddress')],
+});
+
+const paymentMethodsLoadingState = atom<LoadingState>({
+  key: 'billing.paymentMethods.loadingState',
+  default: 'initializing',
 });
 
 const billingAddressLoadingState = atom<LoadingState>({
   key: 'billing.billingAddress.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
-const billingContacts = atom<IBillingContact[]>({
+const billingContacts = atom<Contact[]>({
   key: 'billing.contacts',
   default: [],
   effects: [localStorageEffect('billingContacts')],
@@ -34,10 +55,9 @@ const billingContactsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const invoice = atom<IInvoice | null>({
+const invoice = atom<Invoice | null>({
   key: 'billing.invoice',
   default: null,
-  effects: [localStorageEffect('invoice')],
 });
 
 const invoiceLoadingState = atom<LoadingState>({
@@ -45,10 +65,9 @@ const invoiceLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const invoices = atom<IInvoice[]>({
+const invoices = atom<Invoice[]>({
   key: 'billing.invoices',
   default: [],
-  effects: [localStorageEffect('invoices')],
 });
 
 const invoicesLoadingState = atom<LoadingState>({
@@ -59,7 +78,6 @@ const invoicesLoadingState = atom<LoadingState>({
 const plans = atom<IPlan[] | null>({
   key: 'billing.plans',
   default: null,
-  effects: [localStorageEffect('plans')],
 });
 
 const plansLoadingState = atom<LoadingState>({
@@ -67,7 +85,7 @@ const plansLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const subscription = atom<ISubscription | null>({
+const subscription = atom<Subscription | null>({
   key: 'billing.subscription',
   default: null,
   effects: [localStorageEffect('subscription')],
@@ -79,10 +97,15 @@ const subscriptionLoadingState = atom<LoadingState>({
 });
 
 export const billingAtoms = {
+  customer,
+  customerLoadingState,
+
   creditCard,
   creditCardLoadingState,
 
-  billingAddress,
+  paymentMethods,
+  paymentMethodsLoadingState,
+
   billingAddressLoadingState,
 
   billingContacts,

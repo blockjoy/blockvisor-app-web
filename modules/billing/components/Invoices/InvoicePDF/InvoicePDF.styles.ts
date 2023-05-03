@@ -17,7 +17,7 @@ Font.register({
   ],
 });
 
-export const styles = StyleSheet.create({
+export const styles: any = StyleSheet.create({
   page: {
     padding: 32,
     backgroundColor: '#FFFFFF',
@@ -83,7 +83,6 @@ export const styles = StyleSheet.create({
 
   ellipsis: {
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
     overflow: 'hidden',
     maxWidth: '95%',
   },

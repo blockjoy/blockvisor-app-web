@@ -13,6 +13,7 @@ import {
 } from '@modules/organization';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider } from '@modules/mqtt';
+import { useCustomer, useSubscription } from '@modules/billing';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -23,6 +24,10 @@ export type LayoutProps = {
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
+  const userEmail = repository?.getIdentity()?.email;
+
+  const { customer, getCustomer } = useCustomer();
+  const { subscription, getSubscription } = useSubscription();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -40,6 +45,12 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, []);
 
   useEffect(() => {
+    if (!customer) {
+      getCustomer(userEmail!);
+    }
+  }, []);
+
+  useEffect(() => {
     if (defaultOrganization?.id) {
       loadNodes();
     }
@@ -49,6 +60,12 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     if (!blockchains?.length) {
       getBlockchains();
     }
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    console.log('test123', subscription);
+    console.log('test456', defaultOrganization?.id);
+    getSubscription(defaultOrganization?.id!);
   }, [defaultOrganization?.id]);
 
   return (

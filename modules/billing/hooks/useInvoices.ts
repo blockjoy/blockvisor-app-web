@@ -1,8 +1,8 @@
-import { useRecoilState } from 'recoil';
-import { INVOICES } from '../mocks/invoices';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { billingAtoms } from '@modules/billing';
 
 export const useInvoices = (): IInvoiceHook => {
+  const customer = useRecoilValue(billingAtoms.customer);
   const [invoice, setInvoice] = useRecoilState(billingAtoms.invoice);
   const [invoices, setInvoices] = useRecoilState(billingAtoms.invoices);
   const [invoiceLoadingState, setInvoiceLoadingState] = useRecoilState(
@@ -12,28 +12,48 @@ export const useInvoices = (): IInvoiceHook => {
     billingAtoms.invoicesLoadingState,
   );
 
-  const getInvoice = async (id: RouterId) => {
+  const getInvoice = async (invoiceId: RouterId) => {
     setInvoiceLoadingState('initializing');
-    await new Promise((r) => setTimeout(r, 300));
 
-    const invoice: IInvoice | undefined = INVOICES.find(
-      (invoice) => invoice.id === id,
-    );
+    try {
+      const response = await fetch('/api/billing/invoices/get', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: invoiceId }),
+      });
 
-    setInvoice(invoice!);
+      const data = await response.json();
 
-    setInvoiceLoadingState('finished');
+      setInvoice(data);
+    } catch (error) {
+      console.error('Failed to fetch payment methods', error);
+    } finally {
+      setInvoiceLoadingState('finished');
+    }
   };
 
   const getInvoices = async () => {
     setInvoicesLoadingState('initializing');
-    await new Promise((r) => setTimeout(r, 300));
 
-    const invoices: IInvoice[] = INVOICES;
+    try {
+      const response = await fetch('/api/billing/invoices/list', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: customer?.id }),
+      });
 
-    setInvoices(invoices);
+      const data = await response.json();
 
-    setInvoicesLoadingState('finished');
+      setInvoices(data);
+    } catch (error) {
+      console.error('Failed to fetch payment methods', error);
+    } finally {
+      setInvoicesLoadingState('finished');
+    }
   };
 
   const unloadInvoice = () => {

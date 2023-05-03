@@ -9,7 +9,7 @@ export type DetailsViewProps = {
 
 export const DetailsView = ({ children, headline }: DetailsViewProps) => {
   return (
-    <div css={styles.wrapper}>
+    <div css={styles.wrapper} style={{ width: '100%' }}>
       <div css={styles.headlineWrapper}>
         <h3 css={[styles.headline, typo.ellipsis]}>{headline}</h3>
       </div>

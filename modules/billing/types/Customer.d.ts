@@ -1,3 +1,10 @@
+interface ICustomerHook {
+  customer: Customer;
+  customerLoadingState: LoadingState;
+  getCustomer: (customerId: string) => void;
+  createCustomer: (params?: _customer.create_params) => void;
+}
+
 interface ICustomer {
   id: string;
   object: string;

@@ -1,7 +1,5 @@
 import { useRecoilState } from 'recoil';
 import { billingAtoms } from '@modules/billing';
-import { BILLING_CONTACTS } from '../mocks/billingContact';
-import { v4 as uuidv4 } from 'uuid';
 
 export const useBillingContacts = (): IBillingContactsHook => {
   const [billingContacts, setBillingContacts] = useRecoilState(
@@ -10,38 +8,89 @@ export const useBillingContacts = (): IBillingContactsHook => {
   const [billingContactsLoadingState, setBillingContactsLoadingState] =
     useRecoilState(billingAtoms.billingContactsLoadingState);
 
+  const [customer] = useRecoilState(billingAtoms.customer);
+
   const getBillingContacts = async () => {
     setBillingContactsLoadingState('initializing');
-    await new Promise((r) => setTimeout(r, 300));
 
-    const billingContacts: IBillingContact[] = BILLING_CONTACTS;
+    try {
+      const response = await fetch('/api/billing/customers/contacts/list', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: customer?.id }),
+      });
 
-    setBillingContacts(billingContacts);
+      const data = await response.json();
 
-    setBillingContactsLoadingState('finished');
+      setBillingContacts(data);
+    } catch (error) {
+      console.error('Failed to fetch payment methods', error);
+    } finally {
+      setBillingContactsLoadingState('finished');
+    }
   };
 
   const addBillingContact = async ({ name, email }: BillingContactForm) => {
-    await new Promise((r) => setTimeout(r, 300));
+    setBillingContactsLoadingState('initializing');
 
-    const newBillingContact = {
-      id: uuidv4(),
-      name,
-      email,
-    };
-    const newBillingContacts = [...billingContacts, newBillingContact];
+    try {
+      const newBillingContact = {
+        first_name: name,
+        email,
+      };
 
-    setBillingContacts(newBillingContacts);
+      const response = await fetch('/api/billing/customers/contacts/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerId: customer?.id,
+          contact: newBillingContact,
+        }),
+      });
+
+      const data = await response.json();
+
+      const newBillingContacts = [...billingContacts, data];
+
+      setBillingContacts(newBillingContacts);
+    } catch (error) {
+      console.error('Failed to fetch payment methods', error);
+    } finally {
+      setBillingContactsLoadingState('finished');
+    }
   };
 
   const removeBillingContact = async (id: string) => {
-    await new Promise((r) => setTimeout(r, 300));
+    setBillingContactsLoadingState('initializing');
 
-    const newBillingContacts = [...billingContacts].filter(
-      (billingContact) => billingContact.id !== id,
-    );
+    try {
+      const response = await fetch('/api/billing/customers/contacts/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerId: customer?.id,
+          contact: { id },
+        }),
+      });
 
-    setBillingContacts(newBillingContacts);
+      const data = await response.json();
+
+      const newBillingContacts = [...billingContacts].filter(
+        (billingContact) => billingContact.id !== id,
+      );
+
+      setBillingContacts(newBillingContacts);
+    } catch (error) {
+      console.error('Failed to fetch payment methods', error);
+    } finally {
+      setBillingContactsLoadingState('finished');
+    }
   };
 
   return {

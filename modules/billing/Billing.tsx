@@ -1,5 +1,5 @@
 import { PageSection, PageTitle } from '@shared/components';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Tabs, useTabs } from '@shared/index';
 import { useRouter } from 'next/router';
 import {
@@ -11,6 +11,19 @@ import {
 
 export const Billing = () => {
   const { push } = useRouter();
+
+  const [chargebeeInstance, setChargebeeInstance] = useState<any>(null);
+
+  useEffect(() => {
+    // TODO: improve type. Call globally
+    const Chargebee = (window as any).Chargebee;
+    Chargebee.init({
+      site: 'blockjoy-test',
+      api_key: 'test_vWM0WV6tScukmLUT1CpdoppIOlNjCJRi5',
+    });
+    setChargebeeInstance(Chargebee.getInstance());
+  }, []);
+
   const tabItems = useMemo(
     () => [
       {
@@ -69,12 +82,13 @@ export const Billing = () => {
   return (
     <>
       <PageTitle title="Billing" />
-
-      <Tabs
-        activeTab={activeTab}
-        onTabClick={handleClick}
-        tabItems={tabItems}
-      />
+      {chargebeeInstance && (
+        <Tabs
+          activeTab={activeTab}
+          onTabClick={handleClick}
+          tabItems={tabItems}
+        />
+      )}
     </>
   );
 };

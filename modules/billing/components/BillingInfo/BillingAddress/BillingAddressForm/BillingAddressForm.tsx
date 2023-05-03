@@ -4,10 +4,11 @@ import { Button, Input } from '@shared/components';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './BillingAddressForm.styles';
+import { CustomerBillingAddress } from 'chargebee-typescript/lib/resources';
 
 export type BillingAddressFormProps = {
   actions: BillingAddressActions;
-  billingAddress: IBillingAddress | null;
+  billingAddress: CustomerBillingAddress | null;
 };
 
 export const BillingAddressForm = ({
@@ -27,7 +28,6 @@ export const BillingAddressForm = ({
     countryController,
     regionController,
     postalController,
-    vatController,
   } = useBillingAddressForm(billingAddress, actions);
 
   return (
@@ -127,17 +127,6 @@ export const BillingAddressForm = ({
                 }}
               />
             </div>
-          </li>
-          <li css={[styles.formItem]}>
-            <Input
-              label="VAT Number"
-              placeholder="VAT Number"
-              inputSize="medium"
-              labelStyles={[typo.base]}
-              tabIndex={8}
-              {...vatController.field}
-              ref={null}
-            />
           </li>
         </ul>
         <div css={styles.buttons}>

@@ -20,7 +20,6 @@ import {
   Services,
   useInvoices,
 } from '@modules/billing';
-import { BILLING_ADDRESS } from '@modules/billing/mocks/billingAddress';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
@@ -56,19 +55,21 @@ export const InvoiceView = () => {
                     <h2 css={styles.headline}>{`Invoice ${invoice.id}`}</h2>
                     <div css={styles.info}>
                       <IconCalendar />
-                      <span>{formatDate(invoice.created)}</span>
+                      <span>{formatDate(invoice.date)}</span>
                     </div>
                   </div>
                   <InvoiceDownload invoice={invoice} />
                 </div>
                 <div css={styles.details}>
                   <DetailsView headline="Invoice recepient">
-                    <BillingAddressPreview billingAddress={BILLING_ADDRESS} />
+                    <BillingAddressPreview
+                      billingAddress={invoice.billing_address}
+                    />
                   </DetailsView>
                   <DetailsView headline="Services">
                     <Services
-                      services={invoice.lines.data}
-                      total={invoice.amount_due}
+                      services={invoice.line_items}
+                      total={invoice.total}
                     />
                   </DetailsView>
                 </div>

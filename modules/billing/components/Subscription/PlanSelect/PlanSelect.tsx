@@ -11,7 +11,6 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';
-import { SUBSCRIPTION } from '@modules/billing/mocks/subscription';
 
 export type PlanSelectProps = {
   plan: IPlan | null;
@@ -35,7 +34,11 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
   const handleAutoRenew = () => setAutoRenew(!autoRenew);
 
   const handleSubscription = () => {
-    createSubscription(SUBSCRIPTION);
+    createSubscription({
+      supportPlanId: plan?.id,
+      autoRenew,
+      billingPeriod,
+    });
   };
 
   return (

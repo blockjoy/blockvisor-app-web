@@ -99,10 +99,12 @@ interface ISubscription {
 }
 
 interface ISubscriptionHook {
-  subscription: ISubscription | null;
+  subscription: any | null;
   subscriptionLoadingState: LoadingState;
-  getSubscription: VoidFunction;
-  createSubscription: (subscription: ISubscription) => void;
-  updateSubscription: (subscription: ISubscription) => void;
-  cancelSubscription: VoidFunction;
+  getSubscription: (subscriptionId: string) => void;
+  createSubscription: (subscriptionInputParams: any) => void;
+  updateSubscription: (subscription: any) => void;
+  cancelSubscription: (subscriptionId: string) => void;
+  restoreSubscription: (subscriptionId: string) => void;
+  reactivateSubscription: (subscriptionId: string) => void;
 }

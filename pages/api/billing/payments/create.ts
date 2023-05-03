@@ -11,12 +11,22 @@ export default async function handler(
     try {
       const response = chargebee.payment_source
         .create_using_payment_intent({
-          customer_id: 'dragan_test',
+          customer_id: 'Azz5cITcL8g3NasS',
+          // payment_intent: {
+          //   id: 'gw_AzZiy6TcWKGpzJHc',
+          // },
           payment_intent: {
-            gateway_account_id: 'gw___test__5SK2lMpwSRp4Mx02v',
-            gw_token: 'pi_1IVbmIJv9j0DyntJo1AUvK4o',
+            gateway_account_id: 'gw_AzZiy6TcWrETcfCo',
+            gw_token:
+              '01013C8667F12882CC62104BC349BF9F7439A9FDD56A87420E9860577C1BD27DB88A2B6992C8751BEC6E1F124221DD6E5A7E52175BD209E70804357DFECA9710C15D5B0DBEE47CDCB5588C48224C6007',
           },
         })
+        // .create_using_temp_token({
+        //   customer_id: 'Azz5cITcL8g3NasS',
+        //   type: 'card',
+        //   gateway_account_id: 'gw_AzZn81TZOcQ9ZYev',
+        //   tmp_token: 'pi_1IVbmIJv9j0DyntJo1AUvK4o',
+        // })
         .request(function (error: any, result: any) {
           if (error) {
             //handle error

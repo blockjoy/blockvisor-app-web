@@ -1,6 +1,6 @@
 export const BILLING_PLANS = [
   {
-    id: 'price_1MoSDq2eZvKYlo2Cj1zhEDhf',
+    id: 'support-gold',
     object: 'plan',
     active: true,
     aggregate_usage: null,
@@ -30,7 +30,7 @@ export const BILLING_PLANS = [
     usage_type: 'licensed',
   },
   {
-    id: 'price_1MnseT2eZvKYlo2Cr2bB0nDF',
+    id: 'support-platinum',
     object: 'plan',
     active: true,
     aggregate_usage: null,
@@ -60,7 +60,7 @@ export const BILLING_PLANS = [
     usage_type: 'licensed',
   },
   {
-    id: 'price_1MnseT2eAdEYlo2Cr2bB0nfD',
+    id: 'support-palladium',
     object: 'plan',
     active: true,
     aggregate_usage: null,

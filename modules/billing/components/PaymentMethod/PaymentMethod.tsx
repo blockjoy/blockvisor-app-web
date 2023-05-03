@@ -1,27 +1,34 @@
 import { useEffect, useState } from 'react';
-import { CreditCard, PaymentPreview, useCreditCard } from '@modules/billing';
-import { Button } from '@shared/index';
+import {
+  CreditCard,
+  PaymentPreview,
+  useCreditCard,
+  useCustomer,
+  usePaymentMethods,
+} from '@modules/billing';
+import { Button, TableSkeleton } from '@shared/index';
 import { styles } from './PaymentMethod.styles';
 
+// TODO: rename to PaymentMethods
 export const PaymentMethod = () => {
   const { creditCard, getCard, addCard } = useCreditCard();
+  const { customer } = useCustomer();
+  const { paymentMethods, getPaymentMethods, paymentMethodsLoadingState } =
+    usePaymentMethods();
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
   useEffect(() => {
-    // getCard('card_1MlrZFB5ce1jJsfTsRthNrQW');
+    getPaymentMethods(customer.id);
   }, []);
 
   const handleAdding = () => setIsAdding(true);
   const handleCancel = () => setIsAdding(false);
 
-  const actions: CreditCardActions = {
-    add: addCard,
-    cancel: handleCancel,
-  };
-
-  return !isAdding ? (
-    !creditCard ? (
+  return paymentMethodsLoadingState !== 'finished' ? (
+    <TableSkeleton />
+  ) : !isAdding ? (
+    !paymentMethods || !paymentMethods?.length ? (
       <div>
         <p css={styles.text}>
           You have not yet added any cards. Click the button below to add one.
@@ -32,13 +39,12 @@ export const PaymentMethod = () => {
       </div>
     ) : (
       <div css={styles.preview}>
-        <PaymentPreview card={creditCard} />
-        <Button onClick={handleAdding} size="small" style="outline">
-          Update Card
-        </Button>
+        <PaymentPreview items={paymentMethods} />
       </div>
     )
   ) : (
-    <CreditCard actions={actions} />
+    <>
+      <CreditCard handleCancel={handleCancel} />
+    </>
   );
 };

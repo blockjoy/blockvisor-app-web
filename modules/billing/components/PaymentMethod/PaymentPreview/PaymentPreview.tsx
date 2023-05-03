@@ -1,13 +1,22 @@
+import { DetailsView } from '@shared/index';
+import { CardPreview } from './CardPreview/CardPreview';
+import { Card } from 'chargebee-typescript/lib/resources';
+
 export type PaymentPreviewProps = {
-  card: ICreditCard | null;
+  items: Card[];
 };
 
-export const PaymentPreview = ({ card }: PaymentPreviewProps) => {
+export const PaymentPreview = ({ items }: PaymentPreviewProps) => {
   return (
-    <div>
-      <p>
-        <b>{card?.brand}</b> ending in <b>{card?.last4}</b>
-      </p>
-    </div>
+    <>
+      <DetailsView headline="Payment methods">
+        {items.map((item: any) => {
+          if (item.card)
+            return <CardPreview key={item.card.id} card={item.card} />;
+          // TODO: if other payment methods are added, add previews
+          return null;
+        })}
+      </DetailsView>
+    </>
   );
 };

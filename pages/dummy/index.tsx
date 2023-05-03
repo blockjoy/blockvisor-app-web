@@ -1,22 +1,51 @@
-import { useCustomer } from '@modules/billing/hooks/useCustomer';
+import { useSubscription } from '@modules/billing';
 import { AppLayout } from '@modules/layout';
-import { PageSection, PageTitle } from '@shared/index';
+import { Button, PageSection, PageTitle } from '@shared/index';
+import { flex } from 'styles/utils.flex.styles';
+import { typo } from 'styles/utils.typography.styles';
+import { containers } from 'styles/containers.styles';
 
 const Dummy = () => {
-  const { createCustomer }: any = useCustomer();
+  const { createSubscription, updateSubscription } = useSubscription();
 
   return (
     <>
       <PageTitle hasOrgPicker title="Dummy" />
       <PageSection bottomBorder={false}>
-        <div>
-          <button
+        <div css={[containers.buttons]}>
+          <Button
             onClick={() =>
-              createCustomer('dragan@blockjoy.com', 'Dragan', 'Rakita')
+              createSubscription({
+                planId: 'single-node',
+              })
             }
           >
-            Create Customer
-          </button>
+            Create Subscription
+          </Button>
+          <Button
+            onClick={() =>
+              updateSubscription({
+                type: 'create',
+                payload: {
+                  item: 'polygon-pruned-apac-USD-Yearly',
+                },
+              })
+            }
+          >
+            Update Subscription (ADD)
+          </Button>
+          <Button
+            onClick={() =>
+              updateSubscription({
+                type: 'delete',
+                payload: {
+                  item: 'polygon-pruned-apac-USD-Yearly',
+                },
+              })
+            }
+          >
+            Update Subscription (DELETE)
+          </Button>
         </div>
       </PageSection>
     </>

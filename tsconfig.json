@@ -14,13 +14,13 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
-    "suppressImplicitAnyIndexErrors": true,
     "incremental": true,
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "types": [
       "@emotion/react/types/css-prop",
-      "@blockjoy/blockjoy-grpc/dist/out/common_pb"
+      "@blockjoy/blockjoy-grpc/dist/out/common_pb",
+      "chargebee-typescript/lib/resources"
     ],
     "paths": {
       "@assets/*": ["./assets/*"],

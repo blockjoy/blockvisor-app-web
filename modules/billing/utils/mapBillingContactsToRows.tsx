@@ -1,4 +1,4 @@
-import { Button } from '@shared/components';
+import { Button, SvgIcon } from '@shared/components';
 import IconClose from '@public/assets/icons/close-12.svg';
 
 export const mapBillingContactsToRows = (
@@ -31,7 +31,7 @@ export const mapBillingContactsToRows = (
           key: '1',
           component: (
             <>
-              <p>{contact.name}</p>
+              <p>{contact.first_name}</p>
             </>
           ),
         },
@@ -55,7 +55,9 @@ export const mapBillingContactsToRows = (
                 size="medium"
                 onClick={() => handleRemove(contact)}
               >
-                <IconClose />
+                <SvgIcon size="20px">
+                  <IconClose />
+                </SvgIcon>
               </Button>
             </>
           ),

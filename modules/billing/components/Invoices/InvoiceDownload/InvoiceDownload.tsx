@@ -9,9 +9,10 @@ import {
   button,
 } from '../../../../../shared/components/Button/Button.styles';
 import IconDownload from '@public/assets/icons/download-12.svg';
+import { Invoice } from 'chargebee-typescript/lib/resources';
 
 export type InvoiceDownloadProps = {
-  invoice: IInvoice;
+  invoice: Invoice;
 };
 
 export const InvoiceDownload = ({ invoice }: InvoiceDownloadProps) => {

@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { styles } from './Subscription.styles';
 
 export const Subscription = () => {
-  const { subscription } = useSubscription();
+  const { subscription, getSubscription } = useSubscription();
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
   const [activePlan, setActivePlan] = useState<IPlan | null>(null);
 
@@ -27,10 +27,12 @@ export const Subscription = () => {
 
   const handleCancel = () => setActiveView('list');
 
+  console.log('subscription', subscription);
+
   return (
     <div css={styles.wrapper}>
       {subscription ? (
-        <SubscriptionPreview subscription={subscription!} />
+        <SubscriptionPreview subscription={subscription} />
       ) : activeView === 'list' ? (
         <>
           <EmptyColumn

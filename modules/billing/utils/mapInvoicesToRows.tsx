@@ -50,7 +50,7 @@ export const mapInvoicesToRows = (invoices?: IInvoice[]) => {
         key: '2',
         component: (
           <>
-            <p>{formatDate(invoice.created)}</p>
+            <p>{formatDate(invoice.date)}</p>
           </>
         ),
       },

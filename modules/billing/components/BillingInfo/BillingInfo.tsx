@@ -8,12 +8,11 @@ import {
 import { useEffect } from 'react';
 
 export const BillingInfo = () => {
-  const { getBillingAddress, billingAddressLoadingState } = useBillingAddress();
+  const { billingAddress, billingAddressLoadingState } = useBillingAddress();
   const { getBillingContacts, billingContactsLoadingState } =
     useBillingContacts();
 
   useEffect(() => {
-    getBillingAddress();
     getBillingContacts();
   }, []);
 

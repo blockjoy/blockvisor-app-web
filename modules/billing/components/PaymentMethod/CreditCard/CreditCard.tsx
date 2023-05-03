@@ -1,132 +1,292 @@
-import { useCreditCardForm } from '@modules/billing';
-import { Button, Input } from '@shared/index';
-import { FormProvider } from 'react-hook-form';
-import { reset } from 'styles/utils.reset.styles';
+import { useRef, useState } from 'react';
+import {
+  CardComponent,
+  CardNumber,
+  CardExpiry,
+  CardCVV,
+  Provider,
+} from '@chargebee/chargebee-js-react-wrapper';
+import { Button } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './CreditCard.styles';
 
-export type CreditCardProps = {
-  actions: CreditCardActions;
+import {
+  inputField,
+  inputFieldDefault,
+  inputTypesStyle,
+  inputWrapper,
+} from '@shared/components/Input/Input.styles';
+import {
+  inputLabel,
+  inputLabelSize,
+} from '@shared/components/Input/InputLabel.styles';
+import { flex } from 'styles/utils.flex.styles';
+import { toast } from 'react-toastify';
+
+// import './Example4.css';
+
+const CHARGEBEE_OPTIONS = {
+  // Custom classes - applied on container elements based on field's state
+  classes: {
+    focus: 'focus',
+    invalid: 'invalid',
+    empty: 'empty',
+    complete: 'complete',
+  },
+
+  style: {
+    // Styles for default field state
+    base: {
+      color: '#f7faf5',
+      fontWeight: '500',
+      fontSize: '16px',
+      fontSmoothing: 'antialiased',
+
+      ':focus': {
+        color: '#f7faf5',
+      },
+
+      '::placeholder': {
+        color: '#757575',
+      },
+
+      ':focus::placeholder': {
+        color: '#757575',
+      },
+    },
+
+    // Styles for invalid field state
+    invalid: {
+      color: '#e41029',
+
+      ':focus': {
+        color: '#e44d5f',
+      },
+      '::placeholder': {
+        color: '#FFCCA5',
+      },
+    },
+  },
+
+  // locale
+  locale: 'en',
+
+  // Custom placeholders
+  placeholder: {
+    number: '4111 1111 1111 1111',
+    expiry: 'MM / YY',
+    cvv: 'CVV',
+  },
 };
 
-export const CreditCard = ({ actions }: CreditCardProps) => {
-  const {
-    loading,
-    form,
+export type CreditCardProps = {
+  handleCancel: VoidFunction;
+};
 
-    onSubmit,
+export const CreditCard = ({ handleCancel }: CreditCardProps) => {
+  const cardRef = useRef<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<any>(null);
+  const [state, setState] = useState<any>({
+    intent_id: '',
+    error: '',
+    firstName: '',
+  });
 
-    cardNumberController,
-    handleCardNumberChange,
+  const urlEncode = (data: any) => {
+    var str = [];
+    for (var p in data) {
+      if (
+        data.hasOwnProperty(p) &&
+        !(data[p] == undefined || data[p] == null)
+      ) {
+        str.push(
+          encodeURIComponent(p) +
+            '=' +
+            (data[p] ? encodeURIComponent(data[p]) : ''),
+        );
+      }
+    }
+    return str.join('&');
+  };
 
-    cardHolderController,
-    handleCardHolderChange,
+  const createIntent = async () => {
+    return fetch('/api/billing/payments/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      // body: urlEncode({
+      //   amount: 500,
+      //   currency_code: 'INR',
+      //   payment_method_type: 'card',
+      // }),
+    })
+      .then((response) => response.json())
+      .catch((err) => {
+        console.log('error', err);
+        toast.error('Error while fetching payment intent');
+      });
+  };
 
-    expDateController,
-    handleExpDateChange,
+  const authorizeWith3ds = async () => {
+    setLoading(true);
 
-    cvcController,
-    handleCvcChange,
-  } = useCreditCardForm(actions);
+    const intent = await createIntent();
+    console.log('INTENT', intent);
+    setLoading(false);
+    return;
+    const additionalData = {
+      billingAddress: {
+        firstName: 'John',
+        lastName: 'Doe',
+        phone: '123123123',
+        addressLine1: ' Aarti Chowk',
+        addressLine2: 'Gurdev Nagar',
+        addressLine3: '',
+        city: 'Ludhiana',
+        state: 'Punjab',
+        stateCode: 'PB',
+        countryCode: 'IN',
+        zip: '141001',
+      },
+      email: 'a@ac.com',
+      mandate: {
+        requireMandate: true,
+        description: 'mandate_description', // It could be plan name or plan id
+      },
+    };
+    // Call authorizeWith3ds methods through  card component's ref
+    cardRef.current
+      .authorizeWith3ds(intent.payment_intent, additionalData)
+      .then((data: any) => {
+        setLoading(false);
+        setState((prevState: any) => ({
+          ...prevState,
+          intent_id: data.id,
+          error: '',
+        }));
+      })
+      .catch((error: any) => {
+        setLoading(false);
+        setState((prevState: any) => ({
+          ...prevState,
+          intent_id: '',
+          error: 'Problem while tokenizing your card details',
+        }));
+        toast.error('Problem while tokenizing your card details');
+      });
+  };
+
+  const handleChange = (event: any) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    setState((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const { style, classes, locale, placeholder } = CHARGEBEE_OPTIONS;
 
   return (
-    <>
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} css={styles.wrapper}>
-          <ul css={[reset.list]}>
-            <li css={[styles.formItem]}>
-              <Input
-                type="tel"
-                inputMode="numeric"
-                autoComplete="cc-number"
-                maxLength={19}
-                label="Card number"
-                placeholder="1234 1234 1234 1234"
-                inputSize="medium"
-                labelStyles={[typo.base]}
-                tabIndex={1}
-                {...cardNumberController.field}
-                ref={null}
-                onChange={handleCardNumberChange}
-                validationOptions={{
-                  required: 'Credit Card is required',
-                }}
-              />
-            </li>
-            <li css={[styles.formItem]}>
-              <Input
-                type="text"
-                label="Card holder"
-                autoComplete="cc-name"
-                placeholder="John Doe"
-                inputSize="medium"
-                labelStyles={[typo.base]}
-                tabIndex={2}
-                {...cardHolderController.field}
-                ref={null}
-                onChange={handleCardHolderChange}
-                validationOptions={{
-                  required: 'Name is required',
-                }}
-              />
-            </li>
-            <li css={[styles.formItem, styles.formRow]}>
-              <div>
-                <Input
-                  type="text"
-                  autoComplete="cc-exp"
-                  label="Expiry Date"
-                  placeholder="MM / YY"
-                  inputSize="medium"
-                  labelStyles={[typo.base]}
-                  tabIndex={3}
-                  maxLength={7}
-                  {...expDateController.field}
-                  ref={null}
-                  onChange={handleExpDateChange}
-                  validationOptions={{
-                    required: 'Expiration date is required',
-                  }}
-                />
-              </div>
-              <div>
-                <Input
-                  label="CVC"
-                  placeholder="CVC"
-                  inputSize="medium"
-                  labelStyles={[typo.base]}
-                  tabIndex={4}
-                  {...cvcController.field}
-                  ref={null}
-                  onChange={handleCvcChange}
-                  validationOptions={{
-                    required: 'CVC is required',
-                  }}
-                />
-              </div>
-            </li>
-          </ul>
-          <div css={styles.buttons}>
-            <Button
-              loading={loading}
-              style="secondary"
-              size="small"
-              type="submit"
-              tabIndex={5}
-            >
-              Add
-            </Button>
-            <Button
-              onClick={() => actions.cancel()}
-              style="outline"
-              size="small"
-              tabIndex={6}
-            >
-              Cancel
-            </Button>
+    <div css={styles.wrapper}>
+      <div>
+        <div css={[styles.formItem]}>
+          <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+            Card Holder
+          </label>
+          <div css={[inputWrapper]}>
+            <input
+              name="firstName"
+              css={[inputField, inputTypesStyle['medium'], inputFieldDefault]}
+              type="text"
+              placeholder="John Doe"
+              value={state.firstName}
+              onChange={handleChange}
+            />
           </div>
-        </form>
-      </FormProvider>
-    </>
+        </div>
+
+        <CardComponent
+          ref={cardRef}
+          className="fieldset field"
+          styles={style}
+          classes={classes}
+          locale={locale}
+          placeholder={placeholder}
+        >
+          <div css={[styles.formItem]}>
+            <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+              Card number
+            </label>
+            <div css={[inputWrapper]}>
+              <CardNumber
+                css={[inputField, inputTypesStyle['medium'], inputFieldDefault]}
+              />
+            </div>
+          </div>
+          <div css={[styles.formItem, styles.formRow]}>
+            <div
+              css={[flex.display.flex, flex.direction.column, flex.basis.b100]}
+            >
+              <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+                Expiry
+              </label>
+              <div css={[inputWrapper]}>
+                <CardExpiry
+                  css={[
+                    inputField,
+                    inputTypesStyle['medium'],
+                    inputFieldDefault,
+                  ]}
+                />
+              </div>
+            </div>
+            <div
+              css={[flex.display.flex, flex.direction.column, flex.basis.b100]}
+            >
+              <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+                CVC
+              </label>
+              <div css={[inputWrapper]}>
+                <CardCVV
+                  css={[
+                    inputField,
+                    inputTypesStyle['medium'],
+                    inputFieldDefault,
+                  ]}
+                />
+              </div>
+            </div>
+          </div>
+        </CardComponent>
+      </div>
+
+      <div css={styles.buttons}>
+        <Button
+          loading={loading}
+          style="secondary"
+          size="small"
+          type="submit"
+          tabIndex={5}
+          onClick={authorizeWith3ds}
+        >
+          Add
+        </Button>
+        <Button
+          onClick={handleCancel}
+          style="outline"
+          size="small"
+          tabIndex={6}
+        >
+          Cancel
+        </Button>
+      </div>
+
+      {state.intent_id && <div className="intent_id">{state.intent_id}</div>}
+    </div>
   );
 };

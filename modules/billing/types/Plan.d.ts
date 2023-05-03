@@ -30,7 +30,8 @@ interface IPlan {
 }
 
 interface IPlansHook {
-  plans: IPlan[] | null;
+  plans: any[] | null;
   plansLoadingState: LoadingState;
+  getPlan: (planId: string) => void;
   getPlans: VoidFunction;
 }
