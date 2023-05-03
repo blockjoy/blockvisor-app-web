@@ -14,11 +14,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeLauncherConfig.styles';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
-import { Node_NodeProperty, UiType } from '@modules/grpc/library/node';
+import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
 
 type Props = {
   isConfigValid: boolean | null;
-  nodeTypeProperties?: Node_NodeProperty[];
+  nodeTypeProperties?: NodeProperty[];
   nodeFiles?: NodeFiles[];
   networkList: string[];
   nodeNetwork: string;
@@ -28,7 +28,7 @@ type Props = {
 };
 
 const renderControls = (
-  property: Node_NodeProperty,
+  property: NodeProperty,
   nodeFiles: NodeFiles[],
   onFileUploaded: (e: any) => void,
   onPropertyChanged: (e: any) => void,
@@ -141,7 +141,7 @@ export const NodeLauncherConfig: FC<Props> = ({
           )}
 
           {Boolean(networkList?.length) &&
-            nodeTypeProperties?.map((property: Node_NodeProperty) => {
+            nodeTypeProperties?.map((property: NodeProperty) => {
               return (
                 <Fragment key={property.name}>
                   <label

@@ -1,19 +1,18 @@
 import {
-  CommandsClient,
-  CommandsDefinition,
-  CreateCommandRequest,
-} from '../library/command';
+  CommandServiceClient,
+  CommandServiceDefinition,
+} from '../library/blockjoy/v1/command';
 
 import { getOptions } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 class CommandClient {
-  private client: CommandsClient;
+  private client: CommandServiceClient;
 
   constructor() {
     const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!);
-    this.client = createClient(CommandsDefinition, channel);
+    this.client = createClient(CommandServiceDefinition, channel);
   }
 
   async create(

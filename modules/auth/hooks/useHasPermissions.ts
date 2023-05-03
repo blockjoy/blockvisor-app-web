@@ -1,4 +1,4 @@
-import { OrgUser_OrgRole as OrgRole } from '@modules/grpc/library/organization';
+import { OrgRole as OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 
 export enum Permissions {
   READ_ORGANIZATION,

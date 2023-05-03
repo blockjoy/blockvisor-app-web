@@ -1,7 +1,11 @@
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
 import { ReactNode } from 'react';
-import { Node, Node_NodeProperty, UiType } from '@modules/grpc/library/node';
+import {
+  Node,
+  NodeProperty,
+  UiType,
+} from '@modules/grpc/library/blockjoy/v1/node';
 
 export const mapNodeConfigToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
@@ -12,7 +16,7 @@ export const mapNodeConfigToDetails = (node: Node) => {
     data: any | undefined;
   }[] = node.properties
     ?.filter(
-      (property: Node_NodeProperty) =>
+      (property: NodeProperty) =>
         property.uiType !== UiType.UI_TYPE_FILE_UPLOAD &&
         property.uiType !== UiType.UI_TYPE_PASSWORD,
     )

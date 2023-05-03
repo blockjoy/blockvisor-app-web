@@ -2,9 +2,9 @@
 import _m0 from "protobufjs/minimal";
 import { Host } from "./host";
 import { Node } from "./node";
-import { Org } from "./organization";
+import { Org } from "./org";
 
-export const protobufPackage = "v1";
+export const protobufPackage = "blockjoy.v1";
 
 /** A message about an event that happened to a node. */
 export interface NodeMessage {

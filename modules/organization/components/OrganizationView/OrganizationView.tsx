@@ -32,7 +32,7 @@ import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrgani
 import { ROUTES } from '@shared/index';
 import { nodeClient } from '@modules/grpc';
 import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
-import { OrgUser } from '@modules/grpc/library/organization';
+import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 
 export const OrganizationView = () => {
   const router = useRouter();

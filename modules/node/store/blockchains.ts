@@ -1,4 +1,4 @@
-import { Blockchain } from '@modules/grpc/library/blockchain';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { atom, selector } from 'recoil';
 

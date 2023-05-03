@@ -1,25 +1,25 @@
 import {
   Org,
-  OrgsClient,
-  OrgsDefinition,
-  UpdateOrgResponse,
-} from '../library/organization';
+  OrgServiceClient,
+  OrgServiceDefinition,
+  OrgServiceUpdateResponse,
+} from '../library/blockjoy/v1/org';
 
 import { getOptions, getIdentity, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 class OrganizationClient {
-  private client: OrgsClient;
+  private client: OrgServiceClient;
 
   constructor() {
     const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!);
-    this.client = createClient(OrgsDefinition, channel);
+    this.client = createClient(OrgServiceDefinition, channel);
   }
 
-  async getOrganization(orgId: string): Promise<Org | StatusResponse> {
+  async getOrganization(id: string): Promise<Org | StatusResponse> {
     try {
-      const response = await this.client.get({ orgId }, getOptions());
+      const response = await this.client.get({ id }, getOptions());
       return response.org!;
     } catch (err) {
       return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');
@@ -50,7 +50,7 @@ class OrganizationClient {
   async updateOrganization(
     id: string,
     name: string,
-  ): Promise<UpdateOrgResponse | StatusResponse> {
+  ): Promise<OrgServiceUpdateResponse | StatusResponse> {
     try {
       const response = await this.client.update({ id, name }, getOptions());
       return response;
@@ -70,34 +70,17 @@ class OrganizationClient {
     }
   }
 
-  async restoreOrganization(id: string): Promise<Org | undefined> {
-    try {
-      const response = await this.client.restore({ id }, getOptions());
-      return response.org!;
-    } catch (err) {
-      handleError(err);
-    }
-  }
-
-  async removeOrganizationMember(
+  async removeMember(
     userId: string,
     orgId: string,
   ): Promise<void | StatusResponse> {
     try {
-      await this.client.removeMember({ orgId, userId }, getOptions());
+      await this.client.removeMember({ userId, orgId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.removeOrganizationMemberResponse(
         err,
         'grpcClient',
       );
-    }
-  }
-
-  async leaveOrganization(orgId: string): Promise<void | StatusResponse> {
-    try {
-      await this.client.leave({ orgId }, getOptions());
-    } catch (err) {
-      return StatusResponseFactory.leaveOrganizationResponse(err, 'grpcClient');
     }
   }
 }

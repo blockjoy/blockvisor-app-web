@@ -1,7 +1,7 @@
 import { TableGridCell, NodeStatus } from '@shared/components';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { BlockchainIcon } from '@shared/components';
-import { Node } from '@modules/grpc/library/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
   return nodeList?.map((node: Node) => {

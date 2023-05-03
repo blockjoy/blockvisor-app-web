@@ -2,32 +2,32 @@
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "v1";
+export const protobufPackage = "blockjoy.v1";
 
 /** This is here for forwards compatibility. */
-export interface ServicesRequest {
+export interface DiscoveryServiceServicesRequest {
 }
 
 /** All relevant service URLs */
-export interface ServicesResponse {
+export interface DiscoveryServiceServicesResponse {
   keyServiceUrl: string;
   registryUrl: string;
   notificationUrl: string;
 }
 
-function createBaseServicesRequest(): ServicesRequest {
+function createBaseDiscoveryServiceServicesRequest(): DiscoveryServiceServicesRequest {
   return {};
 }
 
-export const ServicesRequest = {
-  encode(_: ServicesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DiscoveryServiceServicesRequest = {
+  encode(_: DiscoveryServiceServicesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ServicesRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DiscoveryServiceServicesRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseServicesRequest();
+    const message = createBaseDiscoveryServiceServicesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -40,22 +40,22 @@ export const ServicesRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ServicesRequest>): ServicesRequest {
-    return ServicesRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<DiscoveryServiceServicesRequest>): DiscoveryServiceServicesRequest {
+    return DiscoveryServiceServicesRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<ServicesRequest>): ServicesRequest {
-    const message = createBaseServicesRequest();
+  fromPartial(_: DeepPartial<DiscoveryServiceServicesRequest>): DiscoveryServiceServicesRequest {
+    const message = createBaseDiscoveryServiceServicesRequest();
     return message;
   },
 };
 
-function createBaseServicesResponse(): ServicesResponse {
+function createBaseDiscoveryServiceServicesResponse(): DiscoveryServiceServicesResponse {
   return { keyServiceUrl: "", registryUrl: "", notificationUrl: "" };
 }
 
-export const ServicesResponse = {
-  encode(message: ServicesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DiscoveryServiceServicesResponse = {
+  encode(message: DiscoveryServiceServicesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.keyServiceUrl !== "") {
       writer.uint32(10).string(message.keyServiceUrl);
     }
@@ -68,10 +68,10 @@ export const ServicesResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ServicesResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DiscoveryServiceServicesResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseServicesResponse();
+    const message = createBaseDiscoveryServiceServicesResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -105,12 +105,12 @@ export const ServicesResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ServicesResponse>): ServicesResponse {
-    return ServicesResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<DiscoveryServiceServicesResponse>): DiscoveryServiceServicesResponse {
+    return DiscoveryServiceServicesResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ServicesResponse>): ServicesResponse {
-    const message = createBaseServicesResponse();
+  fromPartial(object: DeepPartial<DiscoveryServiceServicesResponse>): DiscoveryServiceServicesResponse {
+    const message = createBaseDiscoveryServiceServicesResponse();
     message.keyServiceUrl = object.keyServiceUrl ?? "";
     message.registryUrl = object.registryUrl ?? "";
     message.notificationUrl = object.notificationUrl ?? "";
@@ -118,17 +118,17 @@ export const ServicesResponse = {
   },
 };
 
-export type DiscoveryDefinition = typeof DiscoveryDefinition;
-export const DiscoveryDefinition = {
-  name: "Discovery",
-  fullName: "v1.Discovery",
+export type DiscoveryServiceDefinition = typeof DiscoveryServiceDefinition;
+export const DiscoveryServiceDefinition = {
+  name: "DiscoveryService",
+  fullName: "blockjoy.v1.DiscoveryService",
   methods: {
     /** Return relevant service URLs */
     services: {
       name: "Services",
-      requestType: ServicesRequest,
+      requestType: DiscoveryServiceServicesRequest,
       requestStream: false,
-      responseType: ServicesResponse,
+      responseType: DiscoveryServiceServicesResponse,
       responseStream: false,
       options: {},
     },
@@ -137,12 +137,18 @@ export const DiscoveryDefinition = {
 
 export interface DiscoveryServiceImplementation<CallContextExt = {}> {
   /** Return relevant service URLs */
-  services(request: ServicesRequest, context: CallContext & CallContextExt): Promise<DeepPartial<ServicesResponse>>;
+  services(
+    request: DiscoveryServiceServicesRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<DiscoveryServiceServicesResponse>>;
 }
 
-export interface DiscoveryClient<CallOptionsExt = {}> {
+export interface DiscoveryServiceClient<CallOptionsExt = {}> {
   /** Return relevant service URLs */
-  services(request: DeepPartial<ServicesRequest>, options?: CallOptions & CallOptionsExt): Promise<ServicesResponse>;
+  services(
+    request: DeepPartial<DiscoveryServiceServicesRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<DiscoveryServiceServicesResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

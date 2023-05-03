@@ -1,5 +1,5 @@
-import { Invitation } from '@modules/grpc/library/invitation';
-import { OrgUser } from '@modules/grpc/library/organization';
+import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
+import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 
 export const checkIfExists = (
   members: OrgUser[],

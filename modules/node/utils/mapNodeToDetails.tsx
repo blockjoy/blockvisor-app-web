@@ -1,4 +1,4 @@
-import { Node } from '@modules/grpc/library/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeTypeList } from '@shared/constants/lookups';
 
 export const mapNodeToDetails = (node: Node) => {

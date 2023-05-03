@@ -1,4 +1,8 @@
-import { User, UsersClient, UsersDefinition } from '../library/user';
+import {
+  User,
+  UserServiceClient,
+  UserServiceDefinition,
+} from '../library/blockjoy/v1/user';
 import { getOptions } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
@@ -12,11 +16,11 @@ export type UIUser = {
 };
 
 class UserClient {
-  private client: UsersClient;
+  private client: UserServiceClient;
 
   constructor() {
     const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!);
-    this.client = createClient(UsersDefinition, channel);
+    this.client = createClient(UserServiceDefinition, channel);
   }
 
   async getUser(): Promise<User | StatusResponse> {

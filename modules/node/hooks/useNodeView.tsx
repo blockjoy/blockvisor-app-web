@@ -6,7 +6,7 @@ import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { checkForApiError } from 'utils/checkForApiError';
-import { Node } from '@modules/grpc/library/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 type Args = string | string[] | undefined;
 

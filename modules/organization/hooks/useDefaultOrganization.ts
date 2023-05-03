@@ -1,5 +1,5 @@
 import { useIdentityRepository } from '@modules/auth';
-import { Org } from '@modules/grpc/library/organization';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { readToken } from '@shared/utils/readToken';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';

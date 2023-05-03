@@ -13,10 +13,10 @@ import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import {
-  Node_NodeProperty,
-  Node_NodeType,
+  NodeProperty,
+  NodeType,
   UiType,
-} from '@modules/grpc/library/node';
+} from '@modules/grpc/library/blockjoy/v1/node';
 
 type Props = {
   serverError: string;
@@ -26,8 +26,8 @@ type Props = {
   isConfigValid: boolean | null;
   isCreating: boolean;
   blockchainId: string;
-  nodeTypeId: Node_NodeType;
-  nodeTypeProperties: Node_NodeProperty[];
+  nodeTypeId: NodeType;
+  nodeTypeProperties: NodeProperty[];
   onCreateNodeClicked: VoidFunction;
 };
 

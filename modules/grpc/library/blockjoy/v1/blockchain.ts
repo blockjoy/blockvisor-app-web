@@ -1,16 +1,34 @@
 /* eslint-disable */
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { Timestamp } from "./google/protobuf/timestamp";
-import { Node_NodeType, UiType } from "./node";
+import { Timestamp } from "../../google/protobuf/timestamp";
+import { NodeType, UiType } from "./node";
 
-export const protobufPackage = "v1";
+export const protobufPackage = "blockjoy.v1";
+
+export enum BlockchainStatus {
+  BLOCKCHAIN_STATUS_UNSPECIFIED = 0,
+  BLOCKCHAIN_STATUS_DEVELOPMENT = 1,
+  BLOCKCHAIN_STATUS_ALPHA = 2,
+  BLOCKCHAIN_STATUS_BETA = 3,
+  BLOCKCHAIN_STATUS_PRODUCTION = 4,
+  BLOCKCHAIN_STATUS_DELETED = 5,
+  UNRECOGNIZED = -1,
+}
+
+export enum BlockchainNetworkType {
+  BLOCKCHAIN_NETWORK_TYPE_UNSPECIFIED = 0,
+  BLOCKCHAIN_NETWORK_TYPE_DEV = 1,
+  BLOCKCHAIN_NETWORK_TYPE_TEST = 2,
+  BLOCKCHAIN_NETWORK_TYPE_MAIN = 3,
+  UNRECOGNIZED = -1,
+}
 
 export interface Blockchain {
   id: string;
   name: string;
   description: string;
-  status: Blockchain_BlockchainStatus;
+  status: BlockchainStatus;
   projectUrl?: string | undefined;
   repoUrl?: string | undefined;
   version?: string | undefined;
@@ -26,32 +44,23 @@ export interface Blockchain {
   networks: BlockchainNetwork[];
 }
 
-export enum Blockchain_BlockchainStatus {
-  BLOCKCHAIN_STATUS_UNSPECIFIED = 0,
-  BLOCKCHAIN_STATUS_DEVELOPMENT = 1,
-  BLOCKCHAIN_STATUS_ALPHA = 2,
-  BLOCKCHAIN_STATUS_BETA = 3,
-  BLOCKCHAIN_STATUS_PRODUCTION = 4,
-  BLOCKCHAIN_STATUS_DELETED = 5,
-  UNRECOGNIZED = -1,
+export interface BlockchainServiceGetRequest {
+  id: string;
 }
 
-export interface BlockchainNetwork {
-  name: string;
-  url: string;
-  netType: BlockchainNetwork_NetworkType;
+export interface BlockchainServiceGetResponse {
+  blockchain: Blockchain | undefined;
 }
 
-export enum BlockchainNetwork_NetworkType {
-  NETWORK_TYPE_UNSPECIFIED = 0,
-  NETWORK_TYPE_DEV = 1,
-  NETWORK_TYPE_TEST = 2,
-  NETWORK_TYPE_MAIN = 3,
-  UNRECOGNIZED = -1,
+export interface BlockchainServiceListRequest {
+}
+
+export interface BlockchainServiceListResponse {
+  blockchains: Blockchain[];
 }
 
 export interface SupportedNodeType {
-  nodeType: Node_NodeType;
+  nodeType: NodeType;
   version: string;
   properties: SupportedNodeProperty[];
 }
@@ -64,19 +73,10 @@ export interface SupportedNodeProperty {
   required: boolean;
 }
 
-export interface GetBlockchainRequest {
-  id: string;
-}
-
-export interface GetBlockchainResponse {
-  blockchain: Blockchain | undefined;
-}
-
-export interface ListBlockchainsRequest {
-}
-
-export interface ListBlockchainsResponse {
-  blockchains: Blockchain[];
+export interface BlockchainNetwork {
+  name: string;
+  url: string;
+  netType: BlockchainNetworkType;
 }
 
 function createBaseBlockchain(): Blockchain {
@@ -247,28 +247,22 @@ export const Blockchain = {
   },
 };
 
-function createBaseBlockchainNetwork(): BlockchainNetwork {
-  return { name: "", url: "", netType: 0 };
+function createBaseBlockchainServiceGetRequest(): BlockchainServiceGetRequest {
+  return { id: "" };
 }
 
-export const BlockchainNetwork = {
-  encode(message: BlockchainNetwork, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    if (message.url !== "") {
-      writer.uint32(18).string(message.url);
-    }
-    if (message.netType !== 0) {
-      writer.uint32(24).int32(message.netType);
+export const BlockchainServiceGetRequest = {
+  encode(message: BlockchainServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainNetwork {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceGetRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBlockchainNetwork();
+    const message = createBaseBlockchainServiceGetRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -277,21 +271,7 @@ export const BlockchainNetwork = {
             break;
           }
 
-          message.name = reader.string();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.url = reader.string();
-          continue;
-        case 3:
-          if (tag != 24) {
-            break;
-          }
-
-          message.netType = reader.int32() as any;
+          message.id = reader.string();
           continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
@@ -302,15 +282,142 @@ export const BlockchainNetwork = {
     return message;
   },
 
-  create(base?: DeepPartial<BlockchainNetwork>): BlockchainNetwork {
-    return BlockchainNetwork.fromPartial(base ?? {});
+  create(base?: DeepPartial<BlockchainServiceGetRequest>): BlockchainServiceGetRequest {
+    return BlockchainServiceGetRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<BlockchainNetwork>): BlockchainNetwork {
-    const message = createBaseBlockchainNetwork();
-    message.name = object.name ?? "";
-    message.url = object.url ?? "";
-    message.netType = object.netType ?? 0;
+  fromPartial(object: DeepPartial<BlockchainServiceGetRequest>): BlockchainServiceGetRequest {
+    const message = createBaseBlockchainServiceGetRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseBlockchainServiceGetResponse(): BlockchainServiceGetResponse {
+  return { blockchain: undefined };
+}
+
+export const BlockchainServiceGetResponse = {
+  encode(message: BlockchainServiceGetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.blockchain !== undefined) {
+      Blockchain.encode(message.blockchain, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceGetResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServiceGetResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.blockchain = Blockchain.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServiceGetResponse>): BlockchainServiceGetResponse {
+    return BlockchainServiceGetResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainServiceGetResponse>): BlockchainServiceGetResponse {
+    const message = createBaseBlockchainServiceGetResponse();
+    message.blockchain = (object.blockchain !== undefined && object.blockchain !== null)
+      ? Blockchain.fromPartial(object.blockchain)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseBlockchainServiceListRequest(): BlockchainServiceListRequest {
+  return {};
+}
+
+export const BlockchainServiceListRequest = {
+  encode(_: BlockchainServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceListRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServiceListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServiceListRequest>): BlockchainServiceListRequest {
+    return BlockchainServiceListRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<BlockchainServiceListRequest>): BlockchainServiceListRequest {
+    const message = createBaseBlockchainServiceListRequest();
+    return message;
+  },
+};
+
+function createBaseBlockchainServiceListResponse(): BlockchainServiceListResponse {
+  return { blockchains: [] };
+}
+
+export const BlockchainServiceListResponse = {
+  encode(message: BlockchainServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.blockchains) {
+      Blockchain.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceListResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServiceListResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.blockchains.push(Blockchain.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServiceListResponse>): BlockchainServiceListResponse {
+    return BlockchainServiceListResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainServiceListResponse>): BlockchainServiceListResponse {
+    const message = createBaseBlockchainServiceListResponse();
+    message.blockchains = object.blockchains?.map((e) => Blockchain.fromPartial(e)) || [];
     return message;
   },
 };
@@ -473,22 +580,28 @@ export const SupportedNodeProperty = {
   },
 };
 
-function createBaseGetBlockchainRequest(): GetBlockchainRequest {
-  return { id: "" };
+function createBaseBlockchainNetwork(): BlockchainNetwork {
+  return { name: "", url: "", netType: 0 };
 }
 
-export const GetBlockchainRequest = {
-  encode(message: GetBlockchainRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+export const BlockchainNetwork = {
+  encode(message: BlockchainNetwork, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
+    }
+    if (message.netType !== 0) {
+      writer.uint32(24).int32(message.netType);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetBlockchainRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainNetwork {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetBlockchainRequest();
+    const message = createBaseBlockchainNetwork();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -497,7 +610,21 @@ export const GetBlockchainRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        case 3:
+          if (tag != 24) {
+            break;
+          }
+
+          message.netType = reader.int32() as any;
           continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
@@ -508,197 +635,70 @@ export const GetBlockchainRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<GetBlockchainRequest>): GetBlockchainRequest {
-    return GetBlockchainRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<BlockchainNetwork>): BlockchainNetwork {
+    return BlockchainNetwork.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<GetBlockchainRequest>): GetBlockchainRequest {
-    const message = createBaseGetBlockchainRequest();
-    message.id = object.id ?? "";
-    return message;
-  },
-};
-
-function createBaseGetBlockchainResponse(): GetBlockchainResponse {
-  return { blockchain: undefined };
-}
-
-export const GetBlockchainResponse = {
-  encode(message: GetBlockchainResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.blockchain !== undefined) {
-      Blockchain.encode(message.blockchain, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetBlockchainResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetBlockchainResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.blockchain = Blockchain.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<GetBlockchainResponse>): GetBlockchainResponse {
-    return GetBlockchainResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<GetBlockchainResponse>): GetBlockchainResponse {
-    const message = createBaseGetBlockchainResponse();
-    message.blockchain = (object.blockchain !== undefined && object.blockchain !== null)
-      ? Blockchain.fromPartial(object.blockchain)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseListBlockchainsRequest(): ListBlockchainsRequest {
-  return {};
-}
-
-export const ListBlockchainsRequest = {
-  encode(_: ListBlockchainsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListBlockchainsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListBlockchainsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<ListBlockchainsRequest>): ListBlockchainsRequest {
-    return ListBlockchainsRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<ListBlockchainsRequest>): ListBlockchainsRequest {
-    const message = createBaseListBlockchainsRequest();
-    return message;
-  },
-};
-
-function createBaseListBlockchainsResponse(): ListBlockchainsResponse {
-  return { blockchains: [] };
-}
-
-export const ListBlockchainsResponse = {
-  encode(message: ListBlockchainsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.blockchains) {
-      Blockchain.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListBlockchainsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListBlockchainsResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.blockchains.push(Blockchain.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<ListBlockchainsResponse>): ListBlockchainsResponse {
-    return ListBlockchainsResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<ListBlockchainsResponse>): ListBlockchainsResponse {
-    const message = createBaseListBlockchainsResponse();
-    message.blockchains = object.blockchains?.map((e) => Blockchain.fromPartial(e)) || [];
+  fromPartial(object: DeepPartial<BlockchainNetwork>): BlockchainNetwork {
+    const message = createBaseBlockchainNetwork();
+    message.name = object.name ?? "";
+    message.url = object.url ?? "";
+    message.netType = object.netType ?? 0;
     return message;
   },
 };
 
 /** Blockchain related service. */
-export type BlockchainsDefinition = typeof BlockchainsDefinition;
-export const BlockchainsDefinition = {
-  name: "Blockchains",
-  fullName: "v1.Blockchains",
+export type BlockchainServiceDefinition = typeof BlockchainServiceDefinition;
+export const BlockchainServiceDefinition = {
+  name: "BlockchainService",
+  fullName: "blockjoy.v1.BlockchainService",
   methods: {
     /** Returns a single blockchain as identified by its id. */
     get: {
       name: "Get",
-      requestType: GetBlockchainRequest,
+      requestType: BlockchainServiceGetRequest,
       requestStream: false,
-      responseType: GetBlockchainResponse,
+      responseType: BlockchainServiceGetResponse,
       responseStream: false,
       options: {},
     },
     /** Returns a list of all blockchains. */
     list: {
       name: "List",
-      requestType: ListBlockchainsRequest,
+      requestType: BlockchainServiceListRequest,
       requestStream: false,
-      responseType: ListBlockchainsResponse,
+      responseType: BlockchainServiceListResponse,
       responseStream: false,
       options: {},
     },
   },
 } as const;
 
-export interface BlockchainsServiceImplementation<CallContextExt = {}> {
+export interface BlockchainServiceImplementation<CallContextExt = {}> {
   /** Returns a single blockchain as identified by its id. */
   get(
-    request: GetBlockchainRequest,
+    request: BlockchainServiceGetRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<GetBlockchainResponse>>;
+  ): Promise<DeepPartial<BlockchainServiceGetResponse>>;
   /** Returns a list of all blockchains. */
   list(
-    request: ListBlockchainsRequest,
+    request: BlockchainServiceListRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<ListBlockchainsResponse>>;
+  ): Promise<DeepPartial<BlockchainServiceListResponse>>;
 }
 
-export interface BlockchainsClient<CallOptionsExt = {}> {
+export interface BlockchainServiceClient<CallOptionsExt = {}> {
   /** Returns a single blockchain as identified by its id. */
   get(
-    request: DeepPartial<GetBlockchainRequest>,
+    request: DeepPartial<BlockchainServiceGetRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<GetBlockchainResponse>;
+  ): Promise<BlockchainServiceGetResponse>;
   /** Returns a list of all blockchains. */
   list(
-    request: DeepPartial<ListBlockchainsRequest>,
+    request: DeepPartial<BlockchainServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<ListBlockchainsResponse>;
+  ): Promise<BlockchainServiceListResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

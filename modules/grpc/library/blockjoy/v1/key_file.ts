@@ -2,7 +2,7 @@
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 
-export const protobufPackage = "v1";
+export const protobufPackage = "blockjoy.v1";
 
 /** A single keyfile representation */
 export interface Keyfile {
@@ -10,20 +10,20 @@ export interface Keyfile {
   content: Uint8Array;
 }
 
-export interface GetKeyFilesRequest {
+export interface KeyFileServiceListRequest {
   nodeId: string;
 }
 
-export interface GetKeyFilesResponse {
+export interface KeyFileServiceListResponse {
   keyFiles: Keyfile[];
 }
 
-export interface CreateKeyFilesRequest {
+export interface KeyFileServiceCreateRequest {
   nodeId: string;
   keyFiles: Keyfile[];
 }
 
-export interface CreateKeyFilesResponse {
+export interface KeyFileServiceCreateResponse {
 }
 
 function createBaseKeyfile(): Keyfile {
@@ -83,22 +83,22 @@ export const Keyfile = {
   },
 };
 
-function createBaseGetKeyFilesRequest(): GetKeyFilesRequest {
+function createBaseKeyFileServiceListRequest(): KeyFileServiceListRequest {
   return { nodeId: "" };
 }
 
-export const GetKeyFilesRequest = {
-  encode(message: GetKeyFilesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const KeyFileServiceListRequest = {
+  encode(message: KeyFileServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nodeId !== "") {
       writer.uint32(10).string(message.nodeId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetKeyFilesRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): KeyFileServiceListRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetKeyFilesRequest();
+    const message = createBaseKeyFileServiceListRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -118,33 +118,33 @@ export const GetKeyFilesRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<GetKeyFilesRequest>): GetKeyFilesRequest {
-    return GetKeyFilesRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<KeyFileServiceListRequest>): KeyFileServiceListRequest {
+    return KeyFileServiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<GetKeyFilesRequest>): GetKeyFilesRequest {
-    const message = createBaseGetKeyFilesRequest();
+  fromPartial(object: DeepPartial<KeyFileServiceListRequest>): KeyFileServiceListRequest {
+    const message = createBaseKeyFileServiceListRequest();
     message.nodeId = object.nodeId ?? "";
     return message;
   },
 };
 
-function createBaseGetKeyFilesResponse(): GetKeyFilesResponse {
+function createBaseKeyFileServiceListResponse(): KeyFileServiceListResponse {
   return { keyFiles: [] };
 }
 
-export const GetKeyFilesResponse = {
-  encode(message: GetKeyFilesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const KeyFileServiceListResponse = {
+  encode(message: KeyFileServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.keyFiles) {
       Keyfile.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetKeyFilesResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): KeyFileServiceListResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetKeyFilesResponse();
+    const message = createBaseKeyFileServiceListResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -164,23 +164,23 @@ export const GetKeyFilesResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<GetKeyFilesResponse>): GetKeyFilesResponse {
-    return GetKeyFilesResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<KeyFileServiceListResponse>): KeyFileServiceListResponse {
+    return KeyFileServiceListResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<GetKeyFilesResponse>): GetKeyFilesResponse {
-    const message = createBaseGetKeyFilesResponse();
+  fromPartial(object: DeepPartial<KeyFileServiceListResponse>): KeyFileServiceListResponse {
+    const message = createBaseKeyFileServiceListResponse();
     message.keyFiles = object.keyFiles?.map((e) => Keyfile.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseCreateKeyFilesRequest(): CreateKeyFilesRequest {
+function createBaseKeyFileServiceCreateRequest(): KeyFileServiceCreateRequest {
   return { nodeId: "", keyFiles: [] };
 }
 
-export const CreateKeyFilesRequest = {
-  encode(message: CreateKeyFilesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const KeyFileServiceCreateRequest = {
+  encode(message: KeyFileServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nodeId !== "") {
       writer.uint32(10).string(message.nodeId);
     }
@@ -190,10 +190,10 @@ export const CreateKeyFilesRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateKeyFilesRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): KeyFileServiceCreateRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateKeyFilesRequest();
+    const message = createBaseKeyFileServiceCreateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -220,31 +220,31 @@ export const CreateKeyFilesRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<CreateKeyFilesRequest>): CreateKeyFilesRequest {
-    return CreateKeyFilesRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<KeyFileServiceCreateRequest>): KeyFileServiceCreateRequest {
+    return KeyFileServiceCreateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<CreateKeyFilesRequest>): CreateKeyFilesRequest {
-    const message = createBaseCreateKeyFilesRequest();
+  fromPartial(object: DeepPartial<KeyFileServiceCreateRequest>): KeyFileServiceCreateRequest {
+    const message = createBaseKeyFileServiceCreateRequest();
     message.nodeId = object.nodeId ?? "";
     message.keyFiles = object.keyFiles?.map((e) => Keyfile.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseCreateKeyFilesResponse(): CreateKeyFilesResponse {
+function createBaseKeyFileServiceCreateResponse(): KeyFileServiceCreateResponse {
   return {};
 }
 
-export const CreateKeyFilesResponse = {
-  encode(_: CreateKeyFilesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const KeyFileServiceCreateResponse = {
+  encode(_: KeyFileServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateKeyFilesResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): KeyFileServiceCreateResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateKeyFilesResponse();
+    const message = createBaseKeyFileServiceCreateResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -257,60 +257,66 @@ export const CreateKeyFilesResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<CreateKeyFilesResponse>): CreateKeyFilesResponse {
-    return CreateKeyFilesResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<KeyFileServiceCreateResponse>): KeyFileServiceCreateResponse {
+    return KeyFileServiceCreateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<CreateKeyFilesResponse>): CreateKeyFilesResponse {
-    const message = createBaseCreateKeyFilesResponse();
+  fromPartial(_: DeepPartial<KeyFileServiceCreateResponse>): KeyFileServiceCreateResponse {
+    const message = createBaseKeyFileServiceCreateResponse();
     return message;
   },
 };
 
-export type KeyFilesDefinition = typeof KeyFilesDefinition;
-export const KeyFilesDefinition = {
-  name: "KeyFiles",
-  fullName: "v1.KeyFiles",
+export type KeyFileServiceDefinition = typeof KeyFileServiceDefinition;
+export const KeyFileServiceDefinition = {
+  name: "KeyFileService",
+  fullName: "blockjoy.v1.KeyFileService",
   methods: {
     /** Save key files for given node ID */
     create: {
       name: "Create",
-      requestType: CreateKeyFilesRequest,
+      requestType: KeyFileServiceCreateRequest,
       requestStream: false,
-      responseType: CreateKeyFilesResponse,
+      responseType: KeyFileServiceCreateResponse,
       responseStream: false,
       options: {},
     },
     /** Return all available key files for given node ID */
-    get: {
-      name: "Get",
-      requestType: GetKeyFilesRequest,
+    list: {
+      name: "List",
+      requestType: KeyFileServiceListRequest,
       requestStream: false,
-      responseType: GetKeyFilesResponse,
+      responseType: KeyFileServiceListResponse,
       responseStream: false,
       options: {},
     },
   },
 } as const;
 
-export interface KeyFilesServiceImplementation<CallContextExt = {}> {
+export interface KeyFileServiceImplementation<CallContextExt = {}> {
   /** Save key files for given node ID */
   create(
-    request: CreateKeyFilesRequest,
+    request: KeyFileServiceCreateRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<CreateKeyFilesResponse>>;
+  ): Promise<DeepPartial<KeyFileServiceCreateResponse>>;
   /** Return all available key files for given node ID */
-  get(request: GetKeyFilesRequest, context: CallContext & CallContextExt): Promise<DeepPartial<GetKeyFilesResponse>>;
+  list(
+    request: KeyFileServiceListRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<KeyFileServiceListResponse>>;
 }
 
-export interface KeyFilesClient<CallOptionsExt = {}> {
+export interface KeyFileServiceClient<CallOptionsExt = {}> {
   /** Save key files for given node ID */
   create(
-    request: DeepPartial<CreateKeyFilesRequest>,
+    request: DeepPartial<KeyFileServiceCreateRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<CreateKeyFilesResponse>;
+  ): Promise<KeyFileServiceCreateResponse>;
   /** Return all available key files for given node ID */
-  get(request: DeepPartial<GetKeyFilesRequest>, options?: CallOptions & CallOptionsExt): Promise<GetKeyFilesResponse>;
+  list(
+    request: DeepPartial<KeyFileServiceListRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<KeyFileServiceListResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

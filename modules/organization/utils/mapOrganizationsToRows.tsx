@@ -1,7 +1,7 @@
 import { Button } from '@shared/components';
 import { USER_ROLES } from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { Org } from '@modules/grpc/library/organization';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { getOrgMemberRole } from './getOrgMemberRole';
 
 export const mapOrganizationsToRows = (
