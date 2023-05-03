@@ -1,5 +1,5 @@
 import { organizationClient } from '@modules/grpc';
-import { Org } from '@modules/grpc/library/organization';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -48,18 +48,22 @@ export function useRemoveMember() {
   };
 
   const removeMemberFromOrganization = async (
-    user_id: string,
-    org_id: string,
+    userId: string,
+    orgId: string,
   ) => {
     setIsLoading('loading');
 
-    const response = await organizationClient.removeOrganizationMember(
-      user_id,
-      org_id,
-    );
+    console.log('removeMembers', {
+      userId,
+      orgId,
+    });
+
+    const response = await organizationClient.removeMember(userId, orgId);
+
+    console.log('removeMember', response);
 
     if (response) {
-      removeMemberFromList(user_id);
+      removeMemberFromList(userId);
       decrementMemberCount();
       toast.success('Member Removed');
     } else {

@@ -14,16 +14,16 @@ import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/index';
 import {
   UiType,
-  Node_NodeProperty,
-  Node_NodeType,
-} from '@modules/grpc/library/node';
-import { SupportedNodeType } from '@modules/grpc/library/blockchain';
+  NodeProperty,
+  NodeType,
+} from '@modules/grpc/library/blockjoy/v1/node';
+import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type NodeState = {
   blockchainId: string;
   nodeVersion: string;
-  nodeTypeId: Node_NodeType;
-  nodeTypeProperties: Node_NodeProperty[];
+  nodeTypeId: NodeType;
+  nodeTypeProperties: NodeProperty[];
   nodeFiles?: NodeFiles[];
   network: string;
 };
@@ -32,7 +32,7 @@ export type CreateNodeParams = {
   version: string;
   nodeType: number;
   blockchain: string;
-  nodeTypeProperties: Node_NodeProperty[];
+  nodeTypeProperties: NodeProperty[];
   key_files?: File[];
   network: string;
 };
@@ -55,7 +55,7 @@ export const NodeLauncher = () => {
 
   const [node, setNode] = useState<NodeState>({
     blockchainId: '',
-    nodeTypeId: Node_NodeType.NODE_TYPE_UNSPECIFIED,
+    nodeTypeId: NodeType.NODE_TYPE_UNSPECIFIED,
     nodeTypeProperties: [],
     nodeVersion: '',
     network: '',
@@ -63,8 +63,8 @@ export const NodeLauncher = () => {
 
   const handleProtocolSelected = (
     blockchainId: string,
-    nodeTypeId: Node_NodeType,
-    nodeTypeProperties: Node_NodeProperty[],
+    nodeTypeId: NodeType,
+    nodeTypeProperties: NodeProperty[],
     nodeVersion: string,
   ) => {
     setServerError(undefined);
@@ -86,7 +86,7 @@ export const NodeLauncher = () => {
         node.nodeFiles?.every((f) => f.files?.length) &&
           node.nodeTypeProperties
             ?.filter(
-              (type: Node_NodeProperty) =>
+              (type: NodeProperty) =>
                 type.required && type.uiType !== UiType.UI_TYPE_FILE_UPLOAD,
             )
             .every(
@@ -203,7 +203,7 @@ export const NodeLauncher = () => {
 
     const nodeTypePropertiesCopy = [...activeNodeType?.properties!];
 
-    const propertiesWithValue: Node_NodeProperty[] = nodeTypePropertiesCopy.map(
+    const propertiesWithValue: NodeProperty[] = nodeTypePropertiesCopy.map(
       (property) => ({
         name: property.name,
         uiType: property.uiType,
@@ -236,7 +236,7 @@ export const NodeLauncher = () => {
     if (currentOrganization.current?.id !== defaultOrganization?.id) {
       setNode({
         blockchainId: '',
-        nodeTypeId: Node_NodeType.NODE_TYPE_UNSPECIFIED,
+        nodeTypeId: NodeType.NODE_TYPE_UNSPECIFIED,
         nodeTypeProperties: [],
         nodeVersion: '',
         network: '',

@@ -1,4 +1,4 @@
-import { Org } from '@modules/grpc/library/organization';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 
 export function getOrganizationDetails(org: Org | null) {
   if (!org) {

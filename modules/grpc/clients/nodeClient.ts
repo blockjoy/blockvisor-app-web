@@ -1,13 +1,13 @@
 import {
   Node,
-  Node_NodeType,
-  Node_NodeProperty,
-  CreateNodeRequest,
-  ListNodesRequest,
-  NodesClient,
-  NodesDefinition,
-  Node_NodeStatus,
-} from '../library/node';
+  NodeType,
+  NodeProperty,
+  NodeServiceCreateRequest,
+  NodeServiceClient,
+  NodeServiceDefinition,
+  NodeStatus,
+  NodeServiceUpdateRequest,
+} from '../library/blockjoy/v1/node';
 
 import { getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
@@ -17,15 +17,15 @@ export type UINode = {
   orgId: string;
   blockchainId: string;
   version?: string;
-  nodeType: Node_NodeType;
-  properties: Node_NodeProperty[];
+  nodeType: NodeType;
+  properties: NodeProperty[];
   network: string;
 };
 
 export type UIFilterCriteria = {
   blockchain?: string[];
-  node_type?: Node_NodeType[];
-  node_status?: Node_NodeStatus[];
+  node_type?: NodeType[];
+  node_status?: NodeStatus[];
 };
 
 export type UIPagination = {
@@ -34,11 +34,11 @@ export type UIPagination = {
 };
 
 class NodeClient {
-  private client: NodesClient;
+  private client: NodeServiceClient;
 
   constructor() {
     const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!);
-    this.client = createClient(NodesDefinition, channel);
+    this.client = createClient(NodeServiceDefinition, channel);
   }
 
   async listNodes(
@@ -46,7 +46,7 @@ class NodeClient {
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
   ): Promise<Node[] | StatusResponse> {
-    let request: ListNodesRequest = {
+    let request = {
       orgId,
       offset: 0,
       limit: 10,
@@ -72,10 +72,18 @@ class NodeClient {
     }
   }
 
-  async createNode(node: CreateNodeRequest): Promise<Node> {
+  async createNode(node: NodeServiceCreateRequest): Promise<Node> {
     try {
       const response = await this.client.create(node, getOptions());
       return response.node!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async updateNode(node: NodeServiceUpdateRequest): Promise<void> {
+    try {
+      await this.client.update(node, getOptions());
     } catch (err) {
       return handleError(err);
     }

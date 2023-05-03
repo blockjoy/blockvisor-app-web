@@ -1,7 +1,7 @@
 import {
-  AuthenticationClient,
-  AuthenticationDefinition,
-} from '../library/authentication';
+  AuthServiceClient,
+  AuthServiceDefinition,
+} from '../library/blockjoy/v1/auth';
 import { getOptions, setTokenValue } from '@modules/grpc';
 import { createChannel, createClient, Metadata } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
@@ -13,11 +13,11 @@ export type NewPassword = {
 };
 
 class AuthClient {
-  private client: AuthenticationClient;
+  private client: AuthServiceClient;
 
   constructor() {
     const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!);
-    this.client = createClient(AuthenticationDefinition, channel);
+    this.client = createClient(AuthServiceDefinition, channel);
   }
 
   async login(

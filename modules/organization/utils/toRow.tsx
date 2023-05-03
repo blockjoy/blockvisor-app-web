@@ -1,4 +1,4 @@
-import { Invitation } from '@modules/grpc/library/invitation';
+import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { colors } from 'styles/utils.colors.styles';

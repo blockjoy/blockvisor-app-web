@@ -3,7 +3,7 @@ import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
 import { blockchainsAtoms } from './blockchains';
 import { isMobile } from 'react-device-detect';
 import { localStorageEffect } from 'utils/store/persist';
-import { Node } from '@modules/grpc/library/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export type FilterItem = {
   name?: string | undefined;

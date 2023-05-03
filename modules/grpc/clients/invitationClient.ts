@@ -1,19 +1,20 @@
 import {
-  InvitationsDefinition,
-  InvitationsClient,
+  InvitationServiceClient,
+  InvitationServiceDefinition,
   Invitation,
-} from '../library/invitation';
+  InvitationStatus,
+} from '../library/blockjoy/v1/invitation';
 
 import { getOptions } from '@modules/grpc';
-import { createChannel, createClient, Metadata } from 'nice-grpc-web';
+import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 class InvitationClient {
-  private client: InvitationsClient;
+  private client: InvitationServiceClient;
 
   constructor() {
     const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!);
-    this.client = createClient(InvitationsDefinition, channel);
+    this.client = createClient(InvitationServiceDefinition, channel);
   }
 
   async inviteOrgMember(
@@ -58,10 +59,13 @@ class InvitationClient {
   }
 
   async receivedInvitations(
-    userId: string,
+    inviteeId: string,
   ): Promise<Invitation[] | StatusResponse> {
     try {
-      const response = await this.client.listReceived({ userId }, getOptions());
+      const response = await this.client.list(
+        { inviteeId, status: InvitationStatus.INVITATION_STATUS_OPEN },
+        getOptions(),
+      );
       return response.invitations;
     } catch (err) {
       return StatusResponseFactory.receivedInvitations(err, 'grpcClient');
@@ -72,7 +76,10 @@ class InvitationClient {
     orgId: string,
   ): Promise<Invitation[] | StatusResponse> {
     try {
-      const response = await this.client.listPending({ orgId }, getOptions());
+      const response = await this.client.list(
+        { orgId, status: InvitationStatus.INVITATION_STATUS_OPEN },
+        getOptions(),
+      );
       return response.invitations;
     } catch (err) {
       return StatusResponseFactory.pendingInvitations(err, 'grpcClient');

@@ -4,7 +4,7 @@ import {
   NodeDeleted,
   NodeMessage,
   NodeUpdated,
-} from '@modules/grpc/library/mqtt';
+} from '@modules/grpc/library/blockjoy/v1/mqtt';
 import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
 import { useRecoilValue } from 'recoil';

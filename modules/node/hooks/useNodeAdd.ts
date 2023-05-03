@@ -6,7 +6,7 @@ import { CreateNodeParams } from '..';
 import {
   Node,
   NodeScheduler_ResourceAffinity,
-} from '@modules/grpc/library/node';
+} from '@modules/grpc/library/blockjoy/v1/node';
 
 export const useNodeAdd = () => {
   const repository = useIdentityRepository();
@@ -40,9 +40,13 @@ export const useNodeAdd = () => {
         nodeType: params.nodeType,
         properties: nodeProperties,
         network: params.network,
-        scheduler: {
-          resource:
-            NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+        allowIps: [],
+        denyIps: [],
+        placement: {
+          scheduler: {
+            resource:
+              NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+          },
         },
       });
       const nodeId = response!.id;

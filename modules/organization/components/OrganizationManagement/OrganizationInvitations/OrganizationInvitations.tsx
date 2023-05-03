@@ -9,7 +9,7 @@ import { Badge, Button } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './OrganizationInvitations.styles';
-import { Invitation } from '@modules/grpc/library/invitation';
+import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
 
 export const OrganizationInvitations = () => {
   const { acceptInvitation, declineInvitation, getReceivedInvitations } =

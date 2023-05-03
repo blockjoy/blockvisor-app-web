@@ -12,8 +12,8 @@ import {
   MemberAndInvitation,
 } from '../utils/mapMembersAndInvitations';
 import { localStorageEffect } from 'utils/store/persist';
-import { Org } from '@modules/grpc/library/organization';
-import { Invitation } from '@modules/grpc/library/invitation';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
 
 const selectedOrganization = atom<Org | null>({
   key: 'organization.current',

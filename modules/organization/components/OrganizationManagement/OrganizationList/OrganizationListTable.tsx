@@ -13,7 +13,7 @@ import { SetQueryParams } from '@modules/organization/ui/OrganizationsUIContext'
 import { GridCell } from '@shared/components/TableGrid/types/GridCell';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { useIdentity } from '@modules/auth';
-import { Org } from '@modules/grpc/library/organization';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 
 export type AllOrganizationsTableProps = {
   organizations: Org[];

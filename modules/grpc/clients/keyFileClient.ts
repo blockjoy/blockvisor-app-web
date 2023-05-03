@@ -1,18 +1,18 @@
 import {
   Keyfile,
-  KeyFilesClient,
-  KeyFilesDefinition,
-} from '../library/key_file';
+  KeyFileServiceClient,
+  KeyFileServiceDefinition,
+} from '../library/blockjoy/v1/key_file';
 
 import { getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 
 class KeyFileClient {
-  private client: KeyFilesClient;
+  private client: KeyFileServiceClient;
 
   constructor() {
     const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!);
-    this.client = createClient(KeyFilesDefinition, channel);
+    this.client = createClient(KeyFileServiceDefinition, channel);
   }
 
   async create(nodeId: string, files: File[]): Promise<void> {

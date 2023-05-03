@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useDeleteOrganization } from './useDeleteOrganization';
-import { Invitation } from '@modules/grpc/library/invitation';
-import { Org, OrgUser } from '@modules/grpc/library/organization';
+import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
+import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 
 export function useUpdateMembers(): IUpdateMembersHook {
   const router = useRouter();

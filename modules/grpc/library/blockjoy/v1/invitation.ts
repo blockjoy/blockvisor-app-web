@@ -1,9 +1,9 @@
 /* eslint-disable */
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { Timestamp } from "./google/protobuf/timestamp";
+import { Timestamp } from "../../google/protobuf/timestamp";
 
-export const protobufPackage = "v1";
+export const protobufPackage = "blockjoy.v1";
 
 /** The status of an invitation. */
 export enum InvitationStatus {
@@ -71,7 +71,7 @@ export interface Invitation {
 }
 
 /** Use this message to create a new invitation. */
-export interface CreateInvitationRequest {
+export interface InvitationServiceCreateRequest {
   /**
    * The id of the person that is being invited here. Note that this is not the
    * uuid of some user, because the person that is being invited might not have
@@ -82,40 +82,39 @@ export interface CreateInvitationRequest {
   orgId: string;
 }
 
-export interface CreateInvitationResponse {
+export interface InvitationServiceCreateResponse {
 }
 
-export interface ListPendingInvitationRequest {
-  orgId: string;
+export interface InvitationServiceListRequest {
+  orgId?: string | undefined;
+  inviteeId?: string | undefined;
+  createdBy?: string | undefined;
+  status?: InvitationStatus | undefined;
 }
 
-export interface ListReceivedInvitationRequest {
-  userId: string;
-}
-
-export interface InvitationsResponse {
+export interface InvitationServiceListResponse {
   invitations: Invitation[];
 }
 
-export interface AcceptInvitationRequest {
+export interface InvitationServiceAcceptRequest {
   invitationId: string;
 }
 
-export interface AcceptInvitationResponse {
+export interface InvitationServiceAcceptResponse {
 }
 
-export interface DeclineInvitationRequest {
+export interface InvitationServiceDeclineRequest {
   invitationId: string;
 }
 
-export interface DeclineInvitationResponse {
+export interface InvitationServiceDeclineResponse {
 }
 
-export interface RevokeInvitationRequest {
+export interface InvitationServiceRevokeRequest {
   invitationId: string;
 }
 
-export interface RevokeInvitationResponse {
+export interface InvitationServiceRevokeResponse {
 }
 
 function createBaseInvitation(): Invitation {
@@ -274,12 +273,12 @@ export const Invitation = {
   },
 };
 
-function createBaseCreateInvitationRequest(): CreateInvitationRequest {
+function createBaseInvitationServiceCreateRequest(): InvitationServiceCreateRequest {
   return { inviteeEmail: "", orgId: "" };
 }
 
-export const CreateInvitationRequest = {
-  encode(message: CreateInvitationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceCreateRequest = {
+  encode(message: InvitationServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.inviteeEmail !== "") {
       writer.uint32(10).string(message.inviteeEmail);
     }
@@ -289,10 +288,10 @@ export const CreateInvitationRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateInvitationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceCreateRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateInvitationRequest();
+    const message = createBaseInvitationServiceCreateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -319,31 +318,31 @@ export const CreateInvitationRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<CreateInvitationRequest>): CreateInvitationRequest {
-    return CreateInvitationRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceCreateRequest>): InvitationServiceCreateRequest {
+    return InvitationServiceCreateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<CreateInvitationRequest>): CreateInvitationRequest {
-    const message = createBaseCreateInvitationRequest();
+  fromPartial(object: DeepPartial<InvitationServiceCreateRequest>): InvitationServiceCreateRequest {
+    const message = createBaseInvitationServiceCreateRequest();
     message.inviteeEmail = object.inviteeEmail ?? "";
     message.orgId = object.orgId ?? "";
     return message;
   },
 };
 
-function createBaseCreateInvitationResponse(): CreateInvitationResponse {
+function createBaseInvitationServiceCreateResponse(): InvitationServiceCreateResponse {
   return {};
 }
 
-export const CreateInvitationResponse = {
-  encode(_: CreateInvitationResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceCreateResponse = {
+  encode(_: InvitationServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateInvitationResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceCreateResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateInvitationResponse();
+    const message = createBaseInvitationServiceCreateResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -356,32 +355,41 @@ export const CreateInvitationResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<CreateInvitationResponse>): CreateInvitationResponse {
-    return CreateInvitationResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceCreateResponse>): InvitationServiceCreateResponse {
+    return InvitationServiceCreateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<CreateInvitationResponse>): CreateInvitationResponse {
-    const message = createBaseCreateInvitationResponse();
+  fromPartial(_: DeepPartial<InvitationServiceCreateResponse>): InvitationServiceCreateResponse {
+    const message = createBaseInvitationServiceCreateResponse();
     return message;
   },
 };
 
-function createBaseListPendingInvitationRequest(): ListPendingInvitationRequest {
-  return { orgId: "" };
+function createBaseInvitationServiceListRequest(): InvitationServiceListRequest {
+  return { orgId: undefined, inviteeId: undefined, createdBy: undefined, status: undefined };
 }
 
-export const ListPendingInvitationRequest = {
-  encode(message: ListPendingInvitationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
+export const InvitationServiceListRequest = {
+  encode(message: InvitationServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
+    }
+    if (message.inviteeId !== undefined) {
+      writer.uint32(18).string(message.inviteeId);
+    }
+    if (message.createdBy !== undefined) {
+      writer.uint32(26).string(message.createdBy);
+    }
+    if (message.status !== undefined) {
+      writer.uint32(32).int32(message.status);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListPendingInvitationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceListRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListPendingInvitationRequest();
+    const message = createBaseInvitationServiceListRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -392,51 +400,26 @@ export const ListPendingInvitationRequest = {
 
           message.orgId = reader.string();
           continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<ListPendingInvitationRequest>): ListPendingInvitationRequest {
-    return ListPendingInvitationRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<ListPendingInvitationRequest>): ListPendingInvitationRequest {
-    const message = createBaseListPendingInvitationRequest();
-    message.orgId = object.orgId ?? "";
-    return message;
-  },
-};
-
-function createBaseListReceivedInvitationRequest(): ListReceivedInvitationRequest {
-  return { userId: "" };
-}
-
-export const ListReceivedInvitationRequest = {
-  encode(message: ListReceivedInvitationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
-      writer.uint32(10).string(message.userId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListReceivedInvitationRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListReceivedInvitationRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
+        case 2:
+          if (tag != 18) {
             break;
           }
 
-          message.userId = reader.string();
+          message.inviteeId = reader.string();
+          continue;
+        case 3:
+          if (tag != 26) {
+            break;
+          }
+
+          message.createdBy = reader.string();
+          continue;
+        case 4:
+          if (tag != 32) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
           continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
@@ -447,33 +430,36 @@ export const ListReceivedInvitationRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ListReceivedInvitationRequest>): ListReceivedInvitationRequest {
-    return ListReceivedInvitationRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceListRequest>): InvitationServiceListRequest {
+    return InvitationServiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ListReceivedInvitationRequest>): ListReceivedInvitationRequest {
-    const message = createBaseListReceivedInvitationRequest();
-    message.userId = object.userId ?? "";
+  fromPartial(object: DeepPartial<InvitationServiceListRequest>): InvitationServiceListRequest {
+    const message = createBaseInvitationServiceListRequest();
+    message.orgId = object.orgId ?? undefined;
+    message.inviteeId = object.inviteeId ?? undefined;
+    message.createdBy = object.createdBy ?? undefined;
+    message.status = object.status ?? undefined;
     return message;
   },
 };
 
-function createBaseInvitationsResponse(): InvitationsResponse {
+function createBaseInvitationServiceListResponse(): InvitationServiceListResponse {
   return { invitations: [] };
 }
 
-export const InvitationsResponse = {
-  encode(message: InvitationsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceListResponse = {
+  encode(message: InvitationServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.invitations) {
       Invitation.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationsResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceListResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseInvitationsResponse();
+    const message = createBaseInvitationServiceListResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -493,33 +479,33 @@ export const InvitationsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<InvitationsResponse>): InvitationsResponse {
-    return InvitationsResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceListResponse>): InvitationServiceListResponse {
+    return InvitationServiceListResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<InvitationsResponse>): InvitationsResponse {
-    const message = createBaseInvitationsResponse();
+  fromPartial(object: DeepPartial<InvitationServiceListResponse>): InvitationServiceListResponse {
+    const message = createBaseInvitationServiceListResponse();
     message.invitations = object.invitations?.map((e) => Invitation.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseAcceptInvitationRequest(): AcceptInvitationRequest {
+function createBaseInvitationServiceAcceptRequest(): InvitationServiceAcceptRequest {
   return { invitationId: "" };
 }
 
-export const AcceptInvitationRequest = {
-  encode(message: AcceptInvitationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceAcceptRequest = {
+  encode(message: InvitationServiceAcceptRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.invitationId !== "") {
       writer.uint32(10).string(message.invitationId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): AcceptInvitationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceAcceptRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAcceptInvitationRequest();
+    const message = createBaseInvitationServiceAcceptRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -539,30 +525,30 @@ export const AcceptInvitationRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<AcceptInvitationRequest>): AcceptInvitationRequest {
-    return AcceptInvitationRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceAcceptRequest>): InvitationServiceAcceptRequest {
+    return InvitationServiceAcceptRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<AcceptInvitationRequest>): AcceptInvitationRequest {
-    const message = createBaseAcceptInvitationRequest();
+  fromPartial(object: DeepPartial<InvitationServiceAcceptRequest>): InvitationServiceAcceptRequest {
+    const message = createBaseInvitationServiceAcceptRequest();
     message.invitationId = object.invitationId ?? "";
     return message;
   },
 };
 
-function createBaseAcceptInvitationResponse(): AcceptInvitationResponse {
+function createBaseInvitationServiceAcceptResponse(): InvitationServiceAcceptResponse {
   return {};
 }
 
-export const AcceptInvitationResponse = {
-  encode(_: AcceptInvitationResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceAcceptResponse = {
+  encode(_: InvitationServiceAcceptResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): AcceptInvitationResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceAcceptResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAcceptInvitationResponse();
+    const message = createBaseInvitationServiceAcceptResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -575,32 +561,32 @@ export const AcceptInvitationResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<AcceptInvitationResponse>): AcceptInvitationResponse {
-    return AcceptInvitationResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceAcceptResponse>): InvitationServiceAcceptResponse {
+    return InvitationServiceAcceptResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<AcceptInvitationResponse>): AcceptInvitationResponse {
-    const message = createBaseAcceptInvitationResponse();
+  fromPartial(_: DeepPartial<InvitationServiceAcceptResponse>): InvitationServiceAcceptResponse {
+    const message = createBaseInvitationServiceAcceptResponse();
     return message;
   },
 };
 
-function createBaseDeclineInvitationRequest(): DeclineInvitationRequest {
+function createBaseInvitationServiceDeclineRequest(): InvitationServiceDeclineRequest {
   return { invitationId: "" };
 }
 
-export const DeclineInvitationRequest = {
-  encode(message: DeclineInvitationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceDeclineRequest = {
+  encode(message: InvitationServiceDeclineRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.invitationId !== "") {
       writer.uint32(10).string(message.invitationId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DeclineInvitationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceDeclineRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeclineInvitationRequest();
+    const message = createBaseInvitationServiceDeclineRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -620,30 +606,30 @@ export const DeclineInvitationRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<DeclineInvitationRequest>): DeclineInvitationRequest {
-    return DeclineInvitationRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceDeclineRequest>): InvitationServiceDeclineRequest {
+    return InvitationServiceDeclineRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<DeclineInvitationRequest>): DeclineInvitationRequest {
-    const message = createBaseDeclineInvitationRequest();
+  fromPartial(object: DeepPartial<InvitationServiceDeclineRequest>): InvitationServiceDeclineRequest {
+    const message = createBaseInvitationServiceDeclineRequest();
     message.invitationId = object.invitationId ?? "";
     return message;
   },
 };
 
-function createBaseDeclineInvitationResponse(): DeclineInvitationResponse {
+function createBaseInvitationServiceDeclineResponse(): InvitationServiceDeclineResponse {
   return {};
 }
 
-export const DeclineInvitationResponse = {
-  encode(_: DeclineInvitationResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceDeclineResponse = {
+  encode(_: InvitationServiceDeclineResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DeclineInvitationResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceDeclineResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeclineInvitationResponse();
+    const message = createBaseInvitationServiceDeclineResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -656,32 +642,32 @@ export const DeclineInvitationResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<DeclineInvitationResponse>): DeclineInvitationResponse {
-    return DeclineInvitationResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceDeclineResponse>): InvitationServiceDeclineResponse {
+    return InvitationServiceDeclineResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<DeclineInvitationResponse>): DeclineInvitationResponse {
-    const message = createBaseDeclineInvitationResponse();
+  fromPartial(_: DeepPartial<InvitationServiceDeclineResponse>): InvitationServiceDeclineResponse {
+    const message = createBaseInvitationServiceDeclineResponse();
     return message;
   },
 };
 
-function createBaseRevokeInvitationRequest(): RevokeInvitationRequest {
+function createBaseInvitationServiceRevokeRequest(): InvitationServiceRevokeRequest {
   return { invitationId: "" };
 }
 
-export const RevokeInvitationRequest = {
-  encode(message: RevokeInvitationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceRevokeRequest = {
+  encode(message: InvitationServiceRevokeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.invitationId !== "") {
       writer.uint32(10).string(message.invitationId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): RevokeInvitationRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceRevokeRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseRevokeInvitationRequest();
+    const message = createBaseInvitationServiceRevokeRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -701,30 +687,30 @@ export const RevokeInvitationRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<RevokeInvitationRequest>): RevokeInvitationRequest {
-    return RevokeInvitationRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceRevokeRequest>): InvitationServiceRevokeRequest {
+    return InvitationServiceRevokeRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<RevokeInvitationRequest>): RevokeInvitationRequest {
-    const message = createBaseRevokeInvitationRequest();
+  fromPartial(object: DeepPartial<InvitationServiceRevokeRequest>): InvitationServiceRevokeRequest {
+    const message = createBaseInvitationServiceRevokeRequest();
     message.invitationId = object.invitationId ?? "";
     return message;
   },
 };
 
-function createBaseRevokeInvitationResponse(): RevokeInvitationResponse {
+function createBaseInvitationServiceRevokeResponse(): InvitationServiceRevokeResponse {
   return {};
 }
 
-export const RevokeInvitationResponse = {
-  encode(_: RevokeInvitationResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const InvitationServiceRevokeResponse = {
+  encode(_: InvitationServiceRevokeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): RevokeInvitationResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationServiceRevokeResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseRevokeInvitationResponse();
+    const message = createBaseInvitationServiceRevokeResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -737,143 +723,124 @@ export const RevokeInvitationResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<RevokeInvitationResponse>): RevokeInvitationResponse {
-    return RevokeInvitationResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<InvitationServiceRevokeResponse>): InvitationServiceRevokeResponse {
+    return InvitationServiceRevokeResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<RevokeInvitationResponse>): RevokeInvitationResponse {
-    const message = createBaseRevokeInvitationResponse();
+  fromPartial(_: DeepPartial<InvitationServiceRevokeResponse>): InvitationServiceRevokeResponse {
+    const message = createBaseInvitationServiceRevokeResponse();
     return message;
   },
 };
 
 /** Manage invitations */
-export type InvitationsDefinition = typeof InvitationsDefinition;
-export const InvitationsDefinition = {
-  name: "Invitations",
-  fullName: "v1.Invitations",
+export type InvitationServiceDefinition = typeof InvitationServiceDefinition;
+export const InvitationServiceDefinition = {
+  name: "InvitationService",
+  fullName: "blockjoy.v1.InvitationService",
   methods: {
     /** Invite a user into an organization. */
     create: {
       name: "Create",
-      requestType: CreateInvitationRequest,
+      requestType: InvitationServiceCreateRequest,
       requestStream: false,
-      responseType: CreateInvitationResponse,
+      responseType: InvitationServiceCreateResponse,
       responseStream: false,
       options: {},
     },
     /** List pending invitations for given org. */
-    listPending: {
-      name: "ListPending",
-      requestType: ListPendingInvitationRequest,
+    list: {
+      name: "List",
+      requestType: InvitationServiceListRequest,
       requestStream: false,
-      responseType: InvitationsResponse,
-      responseStream: false,
-      options: {},
-    },
-    /** List received invitations for given user. */
-    listReceived: {
-      name: "ListReceived",
-      requestType: ListReceivedInvitationRequest,
-      requestStream: false,
-      responseType: InvitationsResponse,
+      responseType: InvitationServiceListResponse,
       responseStream: false,
       options: {},
     },
     /** Accept an invitation and become member of specified organization. */
     accept: {
       name: "Accept",
-      requestType: AcceptInvitationRequest,
+      requestType: InvitationServiceAcceptRequest,
       requestStream: false,
-      responseType: AcceptInvitationResponse,
+      responseType: InvitationServiceAcceptResponse,
       responseStream: false,
       options: {},
     },
     /** Decline an invitation. */
     decline: {
       name: "Decline",
-      requestType: DeclineInvitationRequest,
+      requestType: InvitationServiceDeclineRequest,
       requestStream: false,
-      responseType: DeclineInvitationResponse,
+      responseType: InvitationServiceDeclineResponse,
       responseStream: false,
       options: {},
     },
     /** Revoke a pending invitation. */
     revoke: {
       name: "Revoke",
-      requestType: RevokeInvitationRequest,
+      requestType: InvitationServiceRevokeRequest,
       requestStream: false,
-      responseType: RevokeInvitationResponse,
+      responseType: InvitationServiceRevokeResponse,
       responseStream: false,
       options: {},
     },
   },
 } as const;
 
-export interface InvitationsServiceImplementation<CallContextExt = {}> {
+export interface InvitationServiceImplementation<CallContextExt = {}> {
   /** Invite a user into an organization. */
   create(
-    request: CreateInvitationRequest,
+    request: InvitationServiceCreateRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<CreateInvitationResponse>>;
+  ): Promise<DeepPartial<InvitationServiceCreateResponse>>;
   /** List pending invitations for given org. */
-  listPending(
-    request: ListPendingInvitationRequest,
+  list(
+    request: InvitationServiceListRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<InvitationsResponse>>;
-  /** List received invitations for given user. */
-  listReceived(
-    request: ListReceivedInvitationRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<InvitationsResponse>>;
+  ): Promise<DeepPartial<InvitationServiceListResponse>>;
   /** Accept an invitation and become member of specified organization. */
   accept(
-    request: AcceptInvitationRequest,
+    request: InvitationServiceAcceptRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<AcceptInvitationResponse>>;
+  ): Promise<DeepPartial<InvitationServiceAcceptResponse>>;
   /** Decline an invitation. */
   decline(
-    request: DeclineInvitationRequest,
+    request: InvitationServiceDeclineRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<DeclineInvitationResponse>>;
+  ): Promise<DeepPartial<InvitationServiceDeclineResponse>>;
   /** Revoke a pending invitation. */
   revoke(
-    request: RevokeInvitationRequest,
+    request: InvitationServiceRevokeRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<RevokeInvitationResponse>>;
+  ): Promise<DeepPartial<InvitationServiceRevokeResponse>>;
 }
 
-export interface InvitationsClient<CallOptionsExt = {}> {
+export interface InvitationServiceClient<CallOptionsExt = {}> {
   /** Invite a user into an organization. */
   create(
-    request: DeepPartial<CreateInvitationRequest>,
+    request: DeepPartial<InvitationServiceCreateRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<CreateInvitationResponse>;
+  ): Promise<InvitationServiceCreateResponse>;
   /** List pending invitations for given org. */
-  listPending(
-    request: DeepPartial<ListPendingInvitationRequest>,
+  list(
+    request: DeepPartial<InvitationServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<InvitationsResponse>;
-  /** List received invitations for given user. */
-  listReceived(
-    request: DeepPartial<ListReceivedInvitationRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<InvitationsResponse>;
+  ): Promise<InvitationServiceListResponse>;
   /** Accept an invitation and become member of specified organization. */
   accept(
-    request: DeepPartial<AcceptInvitationRequest>,
+    request: DeepPartial<InvitationServiceAcceptRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<AcceptInvitationResponse>;
+  ): Promise<InvitationServiceAcceptResponse>;
   /** Decline an invitation. */
   decline(
-    request: DeepPartial<DeclineInvitationRequest>,
+    request: DeepPartial<InvitationServiceDeclineRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<DeclineInvitationResponse>;
+  ): Promise<InvitationServiceDeclineResponse>;
   /** Revoke a pending invitation. */
   revoke(
-    request: DeepPartial<RevokeInvitationRequest>,
+    request: DeepPartial<InvitationServiceRevokeRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<RevokeInvitationResponse>;
+  ): Promise<InvitationServiceRevokeResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

@@ -1,4 +1,4 @@
-import { Node_NodeStatus, Node_NodeType } from '@modules/grpc/library/node';
+import { NodeStatus, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 
 export type ItemsPerPage = {
   sm: number;
@@ -13,8 +13,8 @@ export type Pagination = {
 
 export type InitialFilter = {
   blockchain?: string[];
-  nodeStatus?: Node_NodeStatus[];
-  nodeType?: Node_NodeType[];
+  nodeStatus?: NodeStatus[];
+  nodeType?: NodeType[];
 };
 
 export type InitialQueryParams = {

@@ -2,26 +2,44 @@
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { Empty } from "./google/protobuf/empty";
-import { Node_NodeStatus, Node_StakingStatus, Node_SyncStatus } from "./node";
+import { NodeStatus, StakingStatus, SyncStatus } from "./node";
 
-export const protobufPackage = "v1";
+export const protobufPackage = "blockjoy.v1";
 
 /** This message is used to store the metrics for a given set of nodes. */
-export interface NodeMetricsRequest {
+export interface MetricsServiceNodeRequest {
   /** This field maps the id of the node to the metrics that apply to that node. */
   metrics: { [key: string]: NodeMetrics };
 }
 
-export interface NodeMetricsRequest_MetricsEntry {
+export interface MetricsServiceNodeRequest_MetricsEntry {
   key: string;
   value: NodeMetrics | undefined;
 }
 
+/** This message exists only for forward compatibility. */
+export interface MetricsServiceNodeResponse {
+}
+
+/** This message is used to store the metrics for a given set of hosts. */
+export interface MetricsServiceHostRequest {
+  /** This field maps the id of the host to the metrics that apply to that host. */
+  metrics: { [key: string]: HostMetrics };
+}
+
+export interface MetricsServiceHostRequest_MetricsEntry {
+  key: string;
+  value: HostMetrics | undefined;
+}
+
+/** This message exists only for forward compatibility. */
+export interface MetricsServiceHostResponse {
+}
+
 /**
  * The metrics for a single `Node`. Note that there is no node id in this
- * message, because it is embedded in the `NodeMetricsRequest`, where the key
- * of the map already is the id of the node.
+ * message, because it is embedded in the `MetricsServiceNodeRequest`, where the
+ * key of the map already is the id of the node.
  */
 export interface NodeMetrics {
   /** This is the current height of the blockchain. */
@@ -34,7 +52,7 @@ export interface NodeMetrics {
     | undefined;
   /** This is the current staking status of the node. */
   stakingStatus?:
-    | Node_StakingStatus
+    | StakingStatus
     | undefined;
   /** Iff the blockchain is in consensus, this field is `true`. */
   consensus?:
@@ -45,30 +63,19 @@ export interface NodeMetrics {
    * application.
    */
   applicationStatus?:
-    | Node_NodeStatus
+    | NodeStatus
     | undefined;
   /**
    * The status of the node with respect to the rest of the network, i.e.
    * whether it is in sync with the other nodes.
    */
-  syncStatus?: Node_SyncStatus | undefined;
-}
-
-/** This message is used to store the metrics for a given set of hosts. */
-export interface HostMetricsRequest {
-  /** This field maps the id of the host to the metrics that apply to that host. */
-  metrics: { [key: string]: HostMetrics };
-}
-
-export interface HostMetricsRequest_MetricsEntry {
-  key: string;
-  value: HostMetrics | undefined;
+  syncStatus?: SyncStatus | undefined;
 }
 
 /**
  * The metrics for a single `Host`. Note that there is no host id in this
- * message, because it is embedded in the `HostMetricsRequest`, where the key of
- * the map already is the id of the host.
+ * message, because it is embedded in the `MetricsServiceHostRequest`, where the
+ * key of the map already is the id of the host.
  */
 export interface HostMetrics {
   /**
@@ -131,22 +138,22 @@ export interface HostMetrics {
   uptime?: number | undefined;
 }
 
-function createBaseNodeMetricsRequest(): NodeMetricsRequest {
+function createBaseMetricsServiceNodeRequest(): MetricsServiceNodeRequest {
   return { metrics: {} };
 }
 
-export const NodeMetricsRequest = {
-  encode(message: NodeMetricsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const MetricsServiceNodeRequest = {
+  encode(message: MetricsServiceNodeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.metrics).forEach(([key, value]) => {
-      NodeMetricsRequest_MetricsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+      MetricsServiceNodeRequest_MetricsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeMetricsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MetricsServiceNodeRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeMetricsRequest();
+    const message = createBaseMetricsServiceNodeRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -155,7 +162,7 @@ export const NodeMetricsRequest = {
             break;
           }
 
-          const entry1 = NodeMetricsRequest_MetricsEntry.decode(reader, reader.uint32());
+          const entry1 = MetricsServiceNodeRequest_MetricsEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.metrics[entry1.key] = entry1.value;
           }
@@ -169,12 +176,12 @@ export const NodeMetricsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeMetricsRequest>): NodeMetricsRequest {
-    return NodeMetricsRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<MetricsServiceNodeRequest>): MetricsServiceNodeRequest {
+    return MetricsServiceNodeRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeMetricsRequest>): NodeMetricsRequest {
-    const message = createBaseNodeMetricsRequest();
+  fromPartial(object: DeepPartial<MetricsServiceNodeRequest>): MetricsServiceNodeRequest {
+    const message = createBaseMetricsServiceNodeRequest();
     message.metrics = Object.entries(object.metrics ?? {}).reduce<{ [key: string]: NodeMetrics }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
@@ -188,12 +195,12 @@ export const NodeMetricsRequest = {
   },
 };
 
-function createBaseNodeMetricsRequest_MetricsEntry(): NodeMetricsRequest_MetricsEntry {
+function createBaseMetricsServiceNodeRequest_MetricsEntry(): MetricsServiceNodeRequest_MetricsEntry {
   return { key: "", value: undefined };
 }
 
-export const NodeMetricsRequest_MetricsEntry = {
-  encode(message: NodeMetricsRequest_MetricsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const MetricsServiceNodeRequest_MetricsEntry = {
+  encode(message: MetricsServiceNodeRequest_MetricsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -203,10 +210,10 @@ export const NodeMetricsRequest_MetricsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeMetricsRequest_MetricsEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MetricsServiceNodeRequest_MetricsEntry {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeMetricsRequest_MetricsEntry();
+    const message = createBaseMetricsServiceNodeRequest_MetricsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -233,16 +240,202 @@ export const NodeMetricsRequest_MetricsEntry = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeMetricsRequest_MetricsEntry>): NodeMetricsRequest_MetricsEntry {
-    return NodeMetricsRequest_MetricsEntry.fromPartial(base ?? {});
+  create(base?: DeepPartial<MetricsServiceNodeRequest_MetricsEntry>): MetricsServiceNodeRequest_MetricsEntry {
+    return MetricsServiceNodeRequest_MetricsEntry.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeMetricsRequest_MetricsEntry>): NodeMetricsRequest_MetricsEntry {
-    const message = createBaseNodeMetricsRequest_MetricsEntry();
+  fromPartial(object: DeepPartial<MetricsServiceNodeRequest_MetricsEntry>): MetricsServiceNodeRequest_MetricsEntry {
+    const message = createBaseMetricsServiceNodeRequest_MetricsEntry();
     message.key = object.key ?? "";
     message.value = (object.value !== undefined && object.value !== null)
       ? NodeMetrics.fromPartial(object.value)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseMetricsServiceNodeResponse(): MetricsServiceNodeResponse {
+  return {};
+}
+
+export const MetricsServiceNodeResponse = {
+  encode(_: MetricsServiceNodeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MetricsServiceNodeResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMetricsServiceNodeResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MetricsServiceNodeResponse>): MetricsServiceNodeResponse {
+    return MetricsServiceNodeResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<MetricsServiceNodeResponse>): MetricsServiceNodeResponse {
+    const message = createBaseMetricsServiceNodeResponse();
+    return message;
+  },
+};
+
+function createBaseMetricsServiceHostRequest(): MetricsServiceHostRequest {
+  return { metrics: {} };
+}
+
+export const MetricsServiceHostRequest = {
+  encode(message: MetricsServiceHostRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    Object.entries(message.metrics).forEach(([key, value]) => {
+      MetricsServiceHostRequest_MetricsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+    });
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MetricsServiceHostRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMetricsServiceHostRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          const entry1 = MetricsServiceHostRequest_MetricsEntry.decode(reader, reader.uint32());
+          if (entry1.value !== undefined) {
+            message.metrics[entry1.key] = entry1.value;
+          }
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MetricsServiceHostRequest>): MetricsServiceHostRequest {
+    return MetricsServiceHostRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<MetricsServiceHostRequest>): MetricsServiceHostRequest {
+    const message = createBaseMetricsServiceHostRequest();
+    message.metrics = Object.entries(object.metrics ?? {}).reduce<{ [key: string]: HostMetrics }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = HostMetrics.fromPartial(value);
+        }
+        return acc;
+      },
+      {},
+    );
+    return message;
+  },
+};
+
+function createBaseMetricsServiceHostRequest_MetricsEntry(): MetricsServiceHostRequest_MetricsEntry {
+  return { key: "", value: undefined };
+}
+
+export const MetricsServiceHostRequest_MetricsEntry = {
+  encode(message: MetricsServiceHostRequest_MetricsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      HostMetrics.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MetricsServiceHostRequest_MetricsEntry {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMetricsServiceHostRequest_MetricsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.value = HostMetrics.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MetricsServiceHostRequest_MetricsEntry>): MetricsServiceHostRequest_MetricsEntry {
+    return MetricsServiceHostRequest_MetricsEntry.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<MetricsServiceHostRequest_MetricsEntry>): MetricsServiceHostRequest_MetricsEntry {
+    const message = createBaseMetricsServiceHostRequest_MetricsEntry();
+    message.key = object.key ?? "";
+    message.value = (object.value !== undefined && object.value !== null)
+      ? HostMetrics.fromPartial(object.value)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseMetricsServiceHostResponse(): MetricsServiceHostResponse {
+  return {};
+}
+
+export const MetricsServiceHostResponse = {
+  encode(_: MetricsServiceHostResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MetricsServiceHostResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMetricsServiceHostResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MetricsServiceHostResponse>): MetricsServiceHostResponse {
+    return MetricsServiceHostResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<MetricsServiceHostResponse>): MetricsServiceHostResponse {
+    const message = createBaseMetricsServiceHostResponse();
     return message;
   },
 };
@@ -351,122 +544,6 @@ export const NodeMetrics = {
     message.consensus = object.consensus ?? undefined;
     message.applicationStatus = object.applicationStatus ?? undefined;
     message.syncStatus = object.syncStatus ?? undefined;
-    return message;
-  },
-};
-
-function createBaseHostMetricsRequest(): HostMetricsRequest {
-  return { metrics: {} };
-}
-
-export const HostMetricsRequest = {
-  encode(message: HostMetricsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    Object.entries(message.metrics).forEach(([key, value]) => {
-      HostMetricsRequest_MetricsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
-    });
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostMetricsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostMetricsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          const entry1 = HostMetricsRequest_MetricsEntry.decode(reader, reader.uint32());
-          if (entry1.value !== undefined) {
-            message.metrics[entry1.key] = entry1.value;
-          }
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostMetricsRequest>): HostMetricsRequest {
-    return HostMetricsRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostMetricsRequest>): HostMetricsRequest {
-    const message = createBaseHostMetricsRequest();
-    message.metrics = Object.entries(object.metrics ?? {}).reduce<{ [key: string]: HostMetrics }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = HostMetrics.fromPartial(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    return message;
-  },
-};
-
-function createBaseHostMetricsRequest_MetricsEntry(): HostMetricsRequest_MetricsEntry {
-  return { key: "", value: undefined };
-}
-
-export const HostMetricsRequest_MetricsEntry = {
-  encode(message: HostMetricsRequest_MetricsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== undefined) {
-      HostMetrics.encode(message.value, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostMetricsRequest_MetricsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostMetricsRequest_MetricsEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        case 2:
-          if (tag != 18) {
-            break;
-          }
-
-          message.value = HostMetrics.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) == 4 || tag == 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostMetricsRequest_MetricsEntry>): HostMetricsRequest_MetricsEntry {
-    return HostMetricsRequest_MetricsEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostMetricsRequest_MetricsEntry>): HostMetricsRequest_MetricsEntry {
-    const message = createBaseHostMetricsRequest_MetricsEntry();
-    message.key = object.key ?? "";
-    message.value = (object.value !== undefined && object.value !== null)
-      ? HostMetrics.fromPartial(object.value)
-      : undefined;
     return message;
   },
 };
@@ -615,26 +692,26 @@ export const HostMetrics = {
   },
 };
 
-export type MetricsDefinition = typeof MetricsDefinition;
-export const MetricsDefinition = {
-  name: "Metrics",
-  fullName: "v1.Metrics",
+export type MetricsServiceDefinition = typeof MetricsServiceDefinition;
+export const MetricsServiceDefinition = {
+  name: "MetricsService",
+  fullName: "blockjoy.v1.MetricsService",
   methods: {
     /** Overwrite the metrics for the given nodes. */
     node: {
       name: "Node",
-      requestType: NodeMetricsRequest,
+      requestType: MetricsServiceNodeRequest,
       requestStream: false,
-      responseType: Empty,
+      responseType: MetricsServiceNodeResponse,
       responseStream: false,
       options: {},
     },
     /** Overwrite the metrics for the given hosts. */
     host: {
       name: "Host",
-      requestType: HostMetricsRequest,
+      requestType: MetricsServiceHostRequest,
       requestStream: false,
-      responseType: Empty,
+      responseType: MetricsServiceHostResponse,
       responseStream: false,
       options: {},
     },
@@ -643,16 +720,28 @@ export const MetricsDefinition = {
 
 export interface MetricsServiceImplementation<CallContextExt = {}> {
   /** Overwrite the metrics for the given nodes. */
-  node(request: NodeMetricsRequest, context: CallContext & CallContextExt): Promise<DeepPartial<Empty>>;
+  node(
+    request: MetricsServiceNodeRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<MetricsServiceNodeResponse>>;
   /** Overwrite the metrics for the given hosts. */
-  host(request: HostMetricsRequest, context: CallContext & CallContextExt): Promise<DeepPartial<Empty>>;
+  host(
+    request: MetricsServiceHostRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<MetricsServiceHostResponse>>;
 }
 
-export interface MetricsClient<CallOptionsExt = {}> {
+export interface MetricsServiceClient<CallOptionsExt = {}> {
   /** Overwrite the metrics for the given nodes. */
-  node(request: DeepPartial<NodeMetricsRequest>, options?: CallOptions & CallOptionsExt): Promise<Empty>;
+  node(
+    request: DeepPartial<MetricsServiceNodeRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<MetricsServiceNodeResponse>;
   /** Overwrite the metrics for the given hosts. */
-  host(request: DeepPartial<HostMetricsRequest>, options?: CallOptions & CallOptionsExt): Promise<Empty>;
+  host(
+    request: DeepPartial<MetricsServiceHostRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<MetricsServiceHostResponse>;
 }
 
 declare var self: any | undefined;

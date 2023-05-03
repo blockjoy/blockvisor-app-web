@@ -1,3 +1,4 @@
+import { useIdentityRepository } from '@modules/auth';
 import { organizationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
@@ -11,12 +12,15 @@ export function useLeaveOrganization() {
     organizationAtoms.organizationLoadingState,
   );
 
-  const leaveOrganization = async (org_id: string) => {
+  const repository = useIdentityRepository();
+  const userId = repository?.getIdentity()?.id;
+
+  const leaveOrganization = async (orgId: string) => {
     setLoadingState('loading');
     try {
-      await organizationClient.leaveOrganization(org_id);
+      await organizationClient.removeMember(userId!, orgId);
 
-      removeFromOrganizations(org_id);
+      removeFromOrganizations(orgId);
 
       setLoadingState('finished');
       toast.success('Successfully left the organization');

@@ -7,18 +7,18 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { blockchainsDisabled } from '@shared/constants/lookups';
-import { Node_NodeProperty, Node_NodeType } from '@modules/grpc/library/node';
-import { SupportedNodeType } from '@modules/grpc/library/blockchain';
+import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
+import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   onProtocolSelected: (
     blockchainId: string,
-    nodeTypeId: Node_NodeType,
-    nodeTypeProperties: Node_NodeProperty[],
+    nodeTypeId: NodeType,
+    nodeTypeProperties: NodeProperty[],
     nodeVersion: string,
   ) => void;
   activeBlockchainId: string;
-  activeNodeTypeId: Node_NodeType;
+  activeNodeTypeId: NodeType;
 };
 
 export const NodeLauncherProtocol: FC<Props> = ({
@@ -41,7 +41,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
   const handleProtocolSelected = (
     blockchainId: string,
-    nodeTypeId: Node_NodeType,
+    nodeTypeId: NodeType,
   ) => {
     const blockchainsCopy = [...blockchains];
 

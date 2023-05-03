@@ -1,9 +1,9 @@
 /* eslint-disable */
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { Timestamp } from "./google/protobuf/timestamp";
+import { Timestamp } from "../../google/protobuf/timestamp";
 
-export const protobufPackage = "v1";
+export const protobufPackage = "blockjoy.v1";
 
 /** User representation. */
 export interface User {
@@ -15,40 +15,41 @@ export interface User {
   updatedAt: Date | undefined;
 }
 
-export interface GetUserRequest {
+export interface UserServiceGetRequest {
+  id: string;
 }
 
-export interface GetUserResponse {
+export interface UserServiceGetResponse {
   user: User | undefined;
 }
 
-export interface CreateUserRequest {
+export interface UserServiceCreateRequest {
   email: string;
   firstName: string;
   lastName: string;
   password: string;
 }
 
-export interface CreateUserResponse {
+export interface UserServiceCreateResponse {
   user: User | undefined;
 }
 
-export interface UpdateUserRequest {
+export interface UserServiceUpdateRequest {
   /** The id of the user to be updated. */
   id: string;
   firstName?: string | undefined;
   lastName?: string | undefined;
 }
 
-export interface UpdateUserResponse {
+export interface UserServiceUpdateResponse {
   user: User | undefined;
 }
 
 /** Users can only delete themselves, so no need for any further params */
-export interface DeleteUserRequest {
+export interface UserServiceDeleteRequest {
 }
 
-export interface DeleteUserResponse {
+export interface UserServiceDeleteResponse {
 }
 
 function createBaseUser(): User {
@@ -152,22 +153,32 @@ export const User = {
   },
 };
 
-function createBaseGetUserRequest(): GetUserRequest {
-  return {};
+function createBaseUserServiceGetRequest(): UserServiceGetRequest {
+  return { id: "" };
 }
 
-export const GetUserRequest = {
-  encode(_: GetUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceGetRequest = {
+  encode(message: UserServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetUserRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUserRequest();
+    const message = createBaseUserServiceGetRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -177,32 +188,33 @@ export const GetUserRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<GetUserRequest>): GetUserRequest {
-    return GetUserRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceGetRequest>): UserServiceGetRequest {
+    return UserServiceGetRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<GetUserRequest>): GetUserRequest {
-    const message = createBaseGetUserRequest();
+  fromPartial(object: DeepPartial<UserServiceGetRequest>): UserServiceGetRequest {
+    const message = createBaseUserServiceGetRequest();
+    message.id = object.id ?? "";
     return message;
   },
 };
 
-function createBaseGetUserResponse(): GetUserResponse {
+function createBaseUserServiceGetResponse(): UserServiceGetResponse {
   return { user: undefined };
 }
 
-export const GetUserResponse = {
-  encode(message: GetUserResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceGetResponse = {
+  encode(message: UserServiceGetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetUserResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUserResponse();
+    const message = createBaseUserServiceGetResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -222,23 +234,23 @@ export const GetUserResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<GetUserResponse>): GetUserResponse {
-    return GetUserResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceGetResponse>): UserServiceGetResponse {
+    return UserServiceGetResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<GetUserResponse>): GetUserResponse {
-    const message = createBaseGetUserResponse();
+  fromPartial(object: DeepPartial<UserServiceGetResponse>): UserServiceGetResponse {
+    const message = createBaseUserServiceGetResponse();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     return message;
   },
 };
 
-function createBaseCreateUserRequest(): CreateUserRequest {
+function createBaseUserServiceCreateRequest(): UserServiceCreateRequest {
   return { email: "", firstName: "", lastName: "", password: "" };
 }
 
-export const CreateUserRequest = {
-  encode(message: CreateUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceCreateRequest = {
+  encode(message: UserServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.email !== "") {
       writer.uint32(10).string(message.email);
     }
@@ -254,10 +266,10 @@ export const CreateUserRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateUserRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceCreateRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateUserRequest();
+    const message = createBaseUserServiceCreateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -298,12 +310,12 @@ export const CreateUserRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<CreateUserRequest>): CreateUserRequest {
-    return CreateUserRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceCreateRequest>): UserServiceCreateRequest {
+    return UserServiceCreateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<CreateUserRequest>): CreateUserRequest {
-    const message = createBaseCreateUserRequest();
+  fromPartial(object: DeepPartial<UserServiceCreateRequest>): UserServiceCreateRequest {
+    const message = createBaseUserServiceCreateRequest();
     message.email = object.email ?? "";
     message.firstName = object.firstName ?? "";
     message.lastName = object.lastName ?? "";
@@ -312,22 +324,22 @@ export const CreateUserRequest = {
   },
 };
 
-function createBaseCreateUserResponse(): CreateUserResponse {
+function createBaseUserServiceCreateResponse(): UserServiceCreateResponse {
   return { user: undefined };
 }
 
-export const CreateUserResponse = {
-  encode(message: CreateUserResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceCreateResponse = {
+  encode(message: UserServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateUserResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceCreateResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateUserResponse();
+    const message = createBaseUserServiceCreateResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -347,23 +359,23 @@ export const CreateUserResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<CreateUserResponse>): CreateUserResponse {
-    return CreateUserResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceCreateResponse>): UserServiceCreateResponse {
+    return UserServiceCreateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<CreateUserResponse>): CreateUserResponse {
-    const message = createBaseCreateUserResponse();
+  fromPartial(object: DeepPartial<UserServiceCreateResponse>): UserServiceCreateResponse {
+    const message = createBaseUserServiceCreateResponse();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     return message;
   },
 };
 
-function createBaseUpdateUserRequest(): UpdateUserRequest {
+function createBaseUserServiceUpdateRequest(): UserServiceUpdateRequest {
   return { id: "", firstName: undefined, lastName: undefined };
 }
 
-export const UpdateUserRequest = {
-  encode(message: UpdateUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceUpdateRequest = {
+  encode(message: UserServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -376,10 +388,10 @@ export const UpdateUserRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUserRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateUserRequest();
+    const message = createBaseUserServiceUpdateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -413,12 +425,12 @@ export const UpdateUserRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UpdateUserRequest>): UpdateUserRequest {
-    return UpdateUserRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceUpdateRequest>): UserServiceUpdateRequest {
+    return UserServiceUpdateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UpdateUserRequest>): UpdateUserRequest {
-    const message = createBaseUpdateUserRequest();
+  fromPartial(object: DeepPartial<UserServiceUpdateRequest>): UserServiceUpdateRequest {
+    const message = createBaseUserServiceUpdateRequest();
     message.id = object.id ?? "";
     message.firstName = object.firstName ?? undefined;
     message.lastName = object.lastName ?? undefined;
@@ -426,22 +438,22 @@ export const UpdateUserRequest = {
   },
 };
 
-function createBaseUpdateUserResponse(): UpdateUserResponse {
+function createBaseUserServiceUpdateResponse(): UserServiceUpdateResponse {
   return { user: undefined };
 }
 
-export const UpdateUserResponse = {
-  encode(message: UpdateUserResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceUpdateResponse = {
+  encode(message: UserServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUserResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateUserResponse();
+    const message = createBaseUserServiceUpdateResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -461,30 +473,30 @@ export const UpdateUserResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UpdateUserResponse>): UpdateUserResponse {
-    return UpdateUserResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceUpdateResponse>): UserServiceUpdateResponse {
+    return UserServiceUpdateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UpdateUserResponse>): UpdateUserResponse {
-    const message = createBaseUpdateUserResponse();
+  fromPartial(object: DeepPartial<UserServiceUpdateResponse>): UserServiceUpdateResponse {
+    const message = createBaseUserServiceUpdateResponse();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     return message;
   },
 };
 
-function createBaseDeleteUserRequest(): DeleteUserRequest {
+function createBaseUserServiceDeleteRequest(): UserServiceDeleteRequest {
   return {};
 }
 
-export const DeleteUserRequest = {
-  encode(_: DeleteUserRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceDeleteRequest = {
+  encode(_: UserServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteUserRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteUserRequest();
+    const message = createBaseUserServiceDeleteRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -497,29 +509,29 @@ export const DeleteUserRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<DeleteUserRequest>): DeleteUserRequest {
-    return DeleteUserRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceDeleteRequest>): UserServiceDeleteRequest {
+    return UserServiceDeleteRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<DeleteUserRequest>): DeleteUserRequest {
-    const message = createBaseDeleteUserRequest();
+  fromPartial(_: DeepPartial<UserServiceDeleteRequest>): UserServiceDeleteRequest {
+    const message = createBaseUserServiceDeleteRequest();
     return message;
   },
 };
 
-function createBaseDeleteUserResponse(): DeleteUserResponse {
+function createBaseUserServiceDeleteResponse(): UserServiceDeleteResponse {
   return {};
 }
 
-export const DeleteUserResponse = {
-  encode(_: DeleteUserResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceDeleteResponse = {
+  encode(_: UserServiceDeleteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteUserResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteUserResponse();
+    const message = createBaseUserServiceDeleteResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -532,81 +544,105 @@ export const DeleteUserResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<DeleteUserResponse>): DeleteUserResponse {
-    return DeleteUserResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceDeleteResponse>): UserServiceDeleteResponse {
+    return UserServiceDeleteResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<DeleteUserResponse>): DeleteUserResponse {
-    const message = createBaseDeleteUserResponse();
+  fromPartial(_: DeepPartial<UserServiceDeleteResponse>): UserServiceDeleteResponse {
+    const message = createBaseUserServiceDeleteResponse();
     return message;
   },
 };
 
 /** User related services. */
-export type UsersDefinition = typeof UsersDefinition;
-export const UsersDefinition = {
-  name: "Users",
-  fullName: "v1.Users",
+export type UserServiceDefinition = typeof UserServiceDefinition;
+export const UserServiceDefinition = {
+  name: "UserService",
+  fullName: "blockjoy.v1.UserService",
   methods: {
     /** Retrieve a single user. */
     get: {
       name: "Get",
-      requestType: GetUserRequest,
+      requestType: UserServiceGetRequest,
       requestStream: false,
-      responseType: GetUserResponse,
+      responseType: UserServiceGetResponse,
       responseStream: false,
       options: {},
     },
     /** Create a single user. */
     create: {
       name: "Create",
-      requestType: CreateUserRequest,
+      requestType: UserServiceCreateRequest,
       requestStream: false,
-      responseType: CreateUserResponse,
+      responseType: UserServiceCreateResponse,
       responseStream: false,
       options: {},
     },
     /** Update a single user. */
     update: {
       name: "Update",
-      requestType: UpdateUserRequest,
+      requestType: UserServiceUpdateRequest,
       requestStream: false,
-      responseType: UpdateUserResponse,
+      responseType: UserServiceUpdateResponse,
       responseStream: false,
       options: {},
     },
     /** Delete a single user. */
     delete: {
       name: "Delete",
-      requestType: DeleteUserRequest,
+      requestType: UserServiceDeleteRequest,
       requestStream: false,
-      responseType: DeleteUserResponse,
+      responseType: UserServiceDeleteResponse,
       responseStream: false,
       options: {},
     },
   },
 } as const;
 
-export interface UsersServiceImplementation<CallContextExt = {}> {
+export interface UserServiceImplementation<CallContextExt = {}> {
   /** Retrieve a single user. */
-  get(request: GetUserRequest, context: CallContext & CallContextExt): Promise<DeepPartial<GetUserResponse>>;
+  get(
+    request: UserServiceGetRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceGetResponse>>;
   /** Create a single user. */
-  create(request: CreateUserRequest, context: CallContext & CallContextExt): Promise<DeepPartial<CreateUserResponse>>;
+  create(
+    request: UserServiceCreateRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceCreateResponse>>;
   /** Update a single user. */
-  update(request: UpdateUserRequest, context: CallContext & CallContextExt): Promise<DeepPartial<UpdateUserResponse>>;
+  update(
+    request: UserServiceUpdateRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceUpdateResponse>>;
   /** Delete a single user. */
-  delete(request: DeleteUserRequest, context: CallContext & CallContextExt): Promise<DeepPartial<DeleteUserResponse>>;
+  delete(
+    request: UserServiceDeleteRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceDeleteResponse>>;
 }
 
-export interface UsersClient<CallOptionsExt = {}> {
+export interface UserServiceClient<CallOptionsExt = {}> {
   /** Retrieve a single user. */
-  get(request: DeepPartial<GetUserRequest>, options?: CallOptions & CallOptionsExt): Promise<GetUserResponse>;
+  get(
+    request: DeepPartial<UserServiceGetRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceGetResponse>;
   /** Create a single user. */
-  create(request: DeepPartial<CreateUserRequest>, options?: CallOptions & CallOptionsExt): Promise<CreateUserResponse>;
+  create(
+    request: DeepPartial<UserServiceCreateRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceCreateResponse>;
   /** Update a single user. */
-  update(request: DeepPartial<UpdateUserRequest>, options?: CallOptions & CallOptionsExt): Promise<UpdateUserResponse>;
+  update(
+    request: DeepPartial<UserServiceUpdateRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceUpdateResponse>;
   /** Delete a single user. */
-  delete(request: DeepPartial<DeleteUserRequest>, options?: CallOptions & CallOptionsExt): Promise<DeleteUserResponse>;
+  delete(
+    request: DeepPartial<UserServiceDeleteRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceDeleteResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
