@@ -1,15 +1,11 @@
-import { GrpcNodeObject } from '@modules/client/grpc_client';
+import { Node } from '@modules/grpc/library/node';
 
-const mockedNodesResponse = [
+const mockedNodesResponse: Node[] = [
   {
     blockHeight: 0,
     blockchainId: 'b766f36a-4bdb-42a1-8cc1-edcfb343eb45',
     blockchainName: 'Ethereum',
-    createdAt: {
-      nanos: 240922000,
-      seconds: 1673558135,
-    },
-    created_at_datetime: new Date(),
+    createdAt: new Date(),
     hostId: '796aeb8f-1d92-447d-a27e-b9da33cd65a2',
     hostName: '192-69-220-2.slc.cloud.blockjoy.com',
     id: '5303423e-557b-4088-b24f-5835bd1b4889',
@@ -22,24 +18,24 @@ const mockedNodesResponse = [
     stakingStatus: 0,
     status: 0,
     syncStatus: 0,
-    type: 3,
-    updated_at_datetime: new Date(),
-    updatedAt: {
-      nanos: 240922000,
-      seconds: 1673558135,
-    },
-    propertiesList: [
+    containerStatus: 0,
+    updatedAt: new Date(),
+    nodeType: 3,
+    properties: [
       {
         description: '',
         disabled: true,
         label: '',
         name: 'self-hosted',
         required: true,
-        uiType: 'switch',
+        uiType: 1,
         value: 'false',
       },
     ],
     version: '3.4.0-build.1',
+    allowIps: [{ ip: '192.69.220.6' }],
+    denyIps: [],
+    scheduler: undefined,
   },
 ];
 

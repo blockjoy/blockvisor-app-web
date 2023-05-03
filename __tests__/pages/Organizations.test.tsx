@@ -9,11 +9,11 @@ import { OrganizationsUIProvider } from '@modules/organization/ui/OrganizationsU
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
-import { apiClient } from '@modules/client';
 import { AppLayout } from '@modules/layout';
-import { mockedMetricsResponse } from '__tests__/mocks/metrics';
 import { useGetBlockchains } from '@modules/node';
 import { mockedBlockchainsResponse } from '__tests__/mocks/blockchains';
+import { nodeClient, organizationClient } from '@modules/grpc';
+import { useMqtt } from '@modules/mqtt';
 
 describe('Organizations page', () => {
   beforeEach(() => {
@@ -30,11 +30,15 @@ describe('Organizations page', () => {
       blockchains: mockedBlockchainsResponse,
     });
 
-    vi.mocked(apiClient.getDashboardMetrics).mockImplementationOnce(
-      async () => mockedMetricsResponse,
-    );
+    vi.mock('@modules/mqtt/hooks/useMqtt');
+    vi.mocked(useMqtt).mockReturnValue({
+      client: '',
+      connectStatus: 'Connected',
+      error: null,
+      message: null,
+    });
 
-    vi.mocked(apiClient.listNodes).mockImplementationOnce(async () => []);
+    vi.mocked(nodeClient.listNodes).mockImplementationOnce(async () => []);
   });
 
   afterEach(() => {
@@ -55,7 +59,7 @@ describe('Organizations page', () => {
   });
 
   it('Organizations table should be visible when there are organizations', async () => {
-    vi.mocked(apiClient.getOrganizations).mockImplementation(
+    vi.mocked(organizationClient.getOrganizations).mockImplementation(
       async () => mockeOrganizationsResponse,
     );
 

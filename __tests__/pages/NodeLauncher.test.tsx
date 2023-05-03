@@ -2,9 +2,9 @@ import { expect, describe, it, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, cleanup } from '../renderer';
 import { useRouterSpy } from '../utils';
 import { NodeLauncher, useGetBlockchains } from '@modules/node';
-import { apiClient } from '@modules/client';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockedBlockchainsResponse } from '__tests__/mocks/blockchains';
+import { blockchainClient } from '@modules/grpc';
 
 beforeEach(() => {
   window.scrollTo = vi.fn() as any;
@@ -29,8 +29,8 @@ afterEach(() => {
 
 describe('Node Launcher Page', () => {
   it('Node launch error should be visible when there are no blockchains', async () => {
-    vi.mocked(apiClient.getBlockchains).mockImplementation(
-      async () => undefined,
+    vi.mocked(blockchainClient.getBlockchains).mockImplementation(
+      async () => [],
     );
     vi.mock('@modules/node/hooks/useGetBlockchains');
     vi.mocked(useGetBlockchains).mockReturnValue({
@@ -47,7 +47,9 @@ describe('Node Launcher Page', () => {
   });
 
   it('Should display skeleton when loading', async () => {
-    vi.mocked(apiClient.getBlockchains).mockImplementation(async () => []);
+    vi.mocked(blockchainClient.getBlockchains).mockImplementation(
+      async () => [],
+    );
     vi.mock('@modules/node/hooks/useGetBlockchains');
     vi.mocked(useGetBlockchains).mockReturnValue({
       getBlockchains: vi.fn(),
@@ -62,7 +64,7 @@ describe('Node Launcher Page', () => {
   });
 
   it('Should display Algorand protocol when the response contains a single Algorand', async () => {
-    vi.mocked(apiClient.getBlockchains).mockImplementation(
+    vi.mocked(blockchainClient.getBlockchains).mockImplementation(
       async () => mockedBlockchainsResponse,
     );
 
