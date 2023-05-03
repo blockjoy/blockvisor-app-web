@@ -568,10 +568,7 @@ export const HostServiceCreateResponse = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceCreateResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateHostResponse {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -595,31 +592,23 @@ export const HostServiceCreateResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<HostServiceCreateResponse>,
-  ): HostServiceCreateResponse {
-    return HostServiceCreateResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<CreateHostResponse>): CreateHostResponse {
+    return CreateHostResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceCreateResponse>,
-  ): HostServiceCreateResponse {
-    const message = createBaseHostServiceCreateResponse();
-    message.host =
-      object.host !== undefined && object.host !== null
-        ? Host.fromPartial(object.host)
-        : undefined;
+  fromPartial(_: DeepPartial<CreateHostResponse>): CreateHostResponse {
+    const message = createBaseCreateHostResponse();
     return message;
   },
 };
 
-function createBaseHostServiceGetRequest(): HostServiceGetRequest {
+function createBaseGetHostRequest(): GetHostRequest {
   return { id: '' };
 }
 
-export const HostServiceGetRequest = {
+export const GetHostRequest = {
   encode(
-    message: HostServiceGetRequest,
+    message: GetHostRequest,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.id !== '') {
@@ -628,10 +617,7 @@ export const HostServiceGetRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceGetRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetHostRequest {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -659,10 +645,8 @@ export const HostServiceGetRequest = {
     return HostServiceGetRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceGetRequest>,
-  ): HostServiceGetRequest {
-    const message = createBaseHostServiceGetRequest();
+  fromPartial(object: DeepPartial<GetHostRequest>): GetHostRequest {
+    const message = createBaseGetHostRequest();
     message.id = object.id ?? '';
     return message;
   },
@@ -672,9 +656,9 @@ function createBaseHostServiceGetResponse(): HostServiceGetResponse {
   return { host: undefined };
 }
 
-export const HostServiceGetResponse = {
+export const GetHostResponse = {
   encode(
-    message: HostServiceGetResponse,
+    message: GetHostResponse,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.host !== undefined) {
@@ -683,10 +667,7 @@ export const HostServiceGetResponse = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceGetResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetHostResponse {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -714,10 +695,8 @@ export const HostServiceGetResponse = {
     return HostServiceGetResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceGetResponse>,
-  ): HostServiceGetResponse {
-    const message = createBaseHostServiceGetResponse();
+  fromPartial(object: DeepPartial<GetHostResponse>): GetHostResponse {
+    const message = createBaseGetHostResponse();
     message.host =
       object.host !== undefined && object.host !== null
         ? Host.fromPartial(object.host)
@@ -726,25 +705,19 @@ export const HostServiceGetResponse = {
   },
 };
 
-function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: '' };
+function createBaseListHostsRequest(): ListHostsRequest {
+  return {};
 }
 
-export const HostServiceListRequest = {
+export const ListHostsRequest = {
   encode(
-    message: HostServiceListRequest,
+    _: ListHostsRequest,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
-    if (message.orgId !== '') {
-      writer.uint32(10).string(message.orgId);
-    }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceListRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListHostsRequest {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -772,11 +745,8 @@ export const HostServiceListRequest = {
     return HostServiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceListRequest>,
-  ): HostServiceListRequest {
-    const message = createBaseHostServiceListRequest();
-    message.orgId = object.orgId ?? '';
+  fromPartial(_: DeepPartial<ListHostsRequest>): ListHostsRequest {
+    const message = createBaseListHostsRequest();
     return message;
   },
 };
@@ -785,9 +755,9 @@ function createBaseHostServiceListResponse(): HostServiceListResponse {
   return { hosts: [] };
 }
 
-export const HostServiceListResponse = {
+export const ListHostsResponse = {
   encode(
-    message: HostServiceListResponse,
+    message: ListHostsResponse,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     for (const v of message.hosts) {
@@ -796,10 +766,7 @@ export const HostServiceListResponse = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceListResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListHostsResponse {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -827,16 +794,14 @@ export const HostServiceListResponse = {
     return HostServiceListResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceListResponse>,
-  ): HostServiceListResponse {
-    const message = createBaseHostServiceListResponse();
+  fromPartial(object: DeepPartial<ListHostsResponse>): ListHostsResponse {
+    const message = createBaseListHostsResponse();
     message.hosts = object.hosts?.map((e) => Host.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
+function createBaseUpdateHostRequest(): UpdateHostRequest {
   return {
     id: '',
     name: undefined,
@@ -846,9 +811,9 @@ function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
   };
 }
 
-export const HostServiceUpdateRequest = {
+export const UpdateHostRequest = {
   encode(
-    message: HostServiceUpdateRequest,
+    message: UpdateHostRequest,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.id !== '') {
@@ -869,10 +834,7 @@ export const HostServiceUpdateRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceUpdateRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateHostRequest {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -924,16 +886,12 @@ export const HostServiceUpdateRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<HostServiceUpdateRequest>,
-  ): HostServiceUpdateRequest {
-    return HostServiceUpdateRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<UpdateHostRequest>): UpdateHostRequest {
+    return UpdateHostRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceUpdateRequest>,
-  ): HostServiceUpdateRequest {
-    const message = createBaseHostServiceUpdateRequest();
+  fromPartial(object: DeepPartial<UpdateHostRequest>): UpdateHostRequest {
+    const message = createBaseUpdateHostRequest();
     message.id = object.id ?? '';
     message.name = object.name ?? undefined;
     message.version = object.version ?? undefined;
@@ -947,18 +905,15 @@ function createBaseHostServiceUpdateResponse(): HostServiceUpdateResponse {
   return {};
 }
 
-export const HostServiceUpdateResponse = {
+export const UpdateHostResponse = {
   encode(
-    _: HostServiceUpdateResponse,
+    _: UpdateHostResponse,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceUpdateResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateHostResponse {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -975,27 +930,23 @@ export const HostServiceUpdateResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<HostServiceUpdateResponse>,
-  ): HostServiceUpdateResponse {
-    return HostServiceUpdateResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<UpdateHostResponse>): UpdateHostResponse {
+    return UpdateHostResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    _: DeepPartial<HostServiceUpdateResponse>,
-  ): HostServiceUpdateResponse {
-    const message = createBaseHostServiceUpdateResponse();
+  fromPartial(_: DeepPartial<UpdateHostResponse>): UpdateHostResponse {
+    const message = createBaseUpdateHostResponse();
     return message;
   },
 };
 
-function createBaseHostServiceDeleteRequest(): HostServiceDeleteRequest {
+function createBaseDeleteHostRequest(): DeleteHostRequest {
   return { id: '' };
 }
 
-export const HostServiceDeleteRequest = {
+export const DeleteHostRequest = {
   encode(
-    message: HostServiceDeleteRequest,
+    message: DeleteHostRequest,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.id !== '') {
@@ -1004,10 +955,7 @@ export const HostServiceDeleteRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceDeleteRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteHostRequest {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -1031,16 +979,12 @@ export const HostServiceDeleteRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<HostServiceDeleteRequest>,
-  ): HostServiceDeleteRequest {
-    return HostServiceDeleteRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<DeleteHostRequest>): DeleteHostRequest {
+    return DeleteHostRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceDeleteRequest>,
-  ): HostServiceDeleteRequest {
-    const message = createBaseHostServiceDeleteRequest();
+  fromPartial(object: DeepPartial<DeleteHostRequest>): DeleteHostRequest {
+    const message = createBaseDeleteHostRequest();
     message.id = object.id ?? '';
     return message;
   },
@@ -1050,18 +994,15 @@ function createBaseHostServiceDeleteResponse(): HostServiceDeleteResponse {
   return {};
 }
 
-export const HostServiceDeleteResponse = {
+export const DeleteHostResponse = {
   encode(
-    _: HostServiceDeleteResponse,
+    _: DeleteHostResponse,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HostServiceDeleteResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteHostResponse {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -1078,16 +1019,12 @@ export const HostServiceDeleteResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<HostServiceDeleteResponse>,
-  ): HostServiceDeleteResponse {
-    return HostServiceDeleteResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<DeleteHostResponse>): DeleteHostResponse {
+    return DeleteHostResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    _: DeepPartial<HostServiceDeleteResponse>,
-  ): HostServiceDeleteResponse {
-    const message = createBaseHostServiceDeleteResponse();
+  fromPartial(_: DeepPartial<DeleteHostResponse>): DeleteHostResponse {
+    const message = createBaseDeleteHostResponse();
     return message;
   },
 };
@@ -1107,9 +1044,9 @@ function createBaseHostServiceProvisionRequest(): HostServiceProvisionRequest {
   };
 }
 
-export const HostServiceProvisionRequest = {
+export const ProvisionHostRequest = {
   encode(
-    message: HostServiceProvisionRequest,
+    message: ProvisionHostRequest,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.otp !== '') {
@@ -1148,7 +1085,7 @@ export const HostServiceProvisionRequest = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number,
-  ): HostServiceProvisionRequest {
+  ): ProvisionHostRequest {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -1235,16 +1172,12 @@ export const HostServiceProvisionRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<HostServiceProvisionRequest>,
-  ): HostServiceProvisionRequest {
-    return HostServiceProvisionRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<ProvisionHostRequest>): ProvisionHostRequest {
+    return ProvisionHostRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<HostServiceProvisionRequest>,
-  ): HostServiceProvisionRequest {
-    const message = createBaseHostServiceProvisionRequest();
+  fromPartial(object: DeepPartial<ProvisionHostRequest>): ProvisionHostRequest {
+    const message = createBaseProvisionHostRequest();
     message.otp = object.otp ?? '';
     message.status = object.status ?? 0;
     message.name = object.name ?? '';
@@ -1259,13 +1192,13 @@ export const HostServiceProvisionRequest = {
   },
 };
 
-function createBaseHostServiceProvisionResponse(): HostServiceProvisionResponse {
+function createBaseProvisionHostResponse(): ProvisionHostResponse {
   return { hostId: '', token: '' };
 }
 
-export const HostServiceProvisionResponse = {
+export const ProvisionHostResponse = {
   encode(
-    message: HostServiceProvisionResponse,
+    message: ProvisionHostResponse,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.hostId !== '') {
@@ -1280,7 +1213,7 @@ export const HostServiceProvisionResponse = {
   decode(
     input: _m0.Reader | Uint8Array,
     length?: number,
-  ): HostServiceProvisionResponse {
+  ): ProvisionHostResponse {
     const reader =
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -1311,16 +1244,14 @@ export const HostServiceProvisionResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<HostServiceProvisionResponse>,
-  ): HostServiceProvisionResponse {
-    return HostServiceProvisionResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<ProvisionHostResponse>): ProvisionHostResponse {
+    return ProvisionHostResponse.fromPartial(base ?? {});
   },
 
   fromPartial(
-    object: DeepPartial<HostServiceProvisionResponse>,
-  ): HostServiceProvisionResponse {
-    const message = createBaseHostServiceProvisionResponse();
+    object: DeepPartial<ProvisionHostResponse>,
+  ): ProvisionHostResponse {
+    const message = createBaseProvisionHostResponse();
     message.hostId = object.hostId ?? '';
     message.token = object.token ?? '';
     return message;
@@ -1328,15 +1259,15 @@ export const HostServiceProvisionResponse = {
 };
 
 /** Manage hosts */
-export type HostServiceDefinition = typeof HostServiceDefinition;
-export const HostServiceDefinition = {
-  name: 'HostService',
-  fullName: 'blockjoy.v1.HostService',
+export type HostsDefinition = typeof HostsDefinition;
+export const HostsDefinition = {
+  name: 'Hosts',
+  fullName: 'v1.Hosts',
   methods: {
     /** Create a single host */
     create: {
       name: 'Create',
-      requestType: HostServiceCreateRequest,
+      requestType: CreateHostRequest,
       requestStream: false,
       responseType: HostServiceCreateResponse,
       responseStream: false,
@@ -1344,7 +1275,7 @@ export const HostServiceDefinition = {
     },
     get: {
       name: 'Get',
-      requestType: HostServiceGetRequest,
+      requestType: GetHostRequest,
       requestStream: false,
       responseType: HostServiceGetResponse,
       responseStream: false,
@@ -1352,7 +1283,7 @@ export const HostServiceDefinition = {
     },
     list: {
       name: 'List',
-      requestType: HostServiceListRequest,
+      requestType: ListHostsRequest,
       requestStream: false,
       responseType: HostServiceListResponse,
       responseStream: false,
@@ -1361,7 +1292,7 @@ export const HostServiceDefinition = {
     /** Update a single host */
     update: {
       name: 'Update',
-      requestType: HostServiceUpdateRequest,
+      requestType: UpdateHostRequest,
       requestStream: false,
       responseType: HostServiceUpdateResponse,
       responseStream: false,
@@ -1370,7 +1301,7 @@ export const HostServiceDefinition = {
     /** Delete a single host */
     delete: {
       name: 'Delete',
-      requestType: HostServiceDeleteRequest,
+      requestType: DeleteHostRequest,
       requestStream: false,
       responseType: HostServiceDeleteResponse,
       responseStream: false,
@@ -1379,7 +1310,7 @@ export const HostServiceDefinition = {
     /** This endpoint creates a new host from an already created host provision. */
     provision: {
       name: 'Provision',
-      requestType: HostServiceProvisionRequest,
+      requestType: ProvisionHostRequest,
       requestStream: false,
       responseType: HostServiceProvisionResponse,
       responseStream: false,

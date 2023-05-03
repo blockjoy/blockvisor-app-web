@@ -6,10 +6,12 @@ export const styles = {
     border-collapse: collapse;
     width: 100%;
     margin-bottom: 10px;
+    color: ${theme.colorText};
 
     tr {
       height: 40px;
       border-bottom: 1px solid ${theme.colorBorderGrey};
+      text-transform: none;
       transition: 0.3s;
     }
 

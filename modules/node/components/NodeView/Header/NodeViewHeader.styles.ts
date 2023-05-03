@@ -3,16 +3,19 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  header: css`
+  header: (theme: ITheme) => css`
     display: flex;
     gap: 12px;
     align-items: center;
-    margin-bottom: 12px;
+    min-height: 100px;
+    margin-bottom: 0;
+    border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toLrg} {
       flex-direction: column;
       align-items: flex-start;
       margin-bottom: 16px;
+      padding: 20px 0;
     }
   `,
   detailsHeader: css`
@@ -22,12 +25,11 @@ export const styles = {
 
     @media ${breakpoints.toXlrg} {
       flex-direction: column;
-      margin-bottom: 16px;
+      margin-bottom: 2px;
+      font-size: 20px;
     }
 
-    h2 {
-      word-break: break-word;
-    }
+    word-break: break-word;
   `,
   detailsFooter: css`
     display: flex;
@@ -37,7 +39,8 @@ export const styles = {
     @media ${breakpoints.toLrg} {
       gap: 8px;
       flex-wrap: wrap;
-      max-width: 300px;
+      max-width: 100%;
+      padding-top: 8px;
     }
   `,
   actions: css`
@@ -66,6 +69,50 @@ export const styles = {
     > span {
       width: 40px;
       height: 40px;
+    }
+  `,
+  breadcrumb: css`
+    display: flex;
+  `,
+  nodesButton: (theme: ITheme) => css`
+    display: flex;
+    gap: 10px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: ${theme.colorDefault};
+    font-size: 18px;
+    cursor: pointer;
+
+    svg path {
+      fill: ${theme.colorLabel};
+    }
+
+    :hover {
+      color: ${theme.colorText};
+
+      svg path {
+        fill: ${theme.colorDefault};
+      }
+    }
+  `,
+  separator: (theme: ITheme) => css`
+    color: ${theme.colorLabel};
+    margin-right: 8px;
+    margin-left: 8px;
+  `,
+  nodeType: (theme: ITheme) => css`
+    display: flex;
+    gap: 4px;
+    align-items: center;
+
+    svg > path {
+      fill: ${theme.colorLabel};
+    }
+
+    p {
+      color: ${theme.colorLabel};
+      font-size: 14px;
     }
   `,
 };

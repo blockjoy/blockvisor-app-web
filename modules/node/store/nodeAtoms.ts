@@ -33,6 +33,11 @@ const isLoading = atom<LoadingState>({
   default: 'initializing',
 });
 
+const isLoadingActiveNode = atom<boolean>({
+  key: 'node.loadingActiveNode',
+  default: true,
+});
+
 const isFiltersOpen = atom<boolean>({
   key: 'node.isFiltersOpen',
   default: false,
@@ -249,6 +254,7 @@ export const nodeAtoms = {
   activeNode,
   nodeList,
   isLoading,
+  isLoadingActiveNode,
   isFiltersOpen,
   activeListType,
   filtersHealth,

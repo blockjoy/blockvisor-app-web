@@ -3,7 +3,6 @@ import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { isStatusResponse } from '../utils/typeGuards';
 
 export function useRemoveMember() {
   const [isLoading, setIsLoading] = useRecoilState(
@@ -38,7 +37,7 @@ export function useRemoveMember() {
 
   const removeMemberFromList = (user_id: string) => {
     const newOrganizationMembers = organizationMembers!.filter(
-      (member) => member?.userId !== user_id,
+      (member: any) => member?.userId !== user_id,
     );
 
     setOrganization({

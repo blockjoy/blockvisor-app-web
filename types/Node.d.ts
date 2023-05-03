@@ -36,14 +36,3 @@ type NodeFirewallRule = {
   ip: string;
   comment?: string;
 };
-
-type NodeLauncherState = {
-  blockchainId: string;
-  nodeVersion: string;
-  nodeTypeId: string;
-  nodeTypeProperties: NodeTypeConfig[];
-  nodeFiles?: NodeFiles[];
-  network: string;
-  allowedIps: FirewallRule[];
-  deniedIps: FirewallRule[];
-};

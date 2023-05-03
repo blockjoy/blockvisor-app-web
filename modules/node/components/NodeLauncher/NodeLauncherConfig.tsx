@@ -116,7 +116,7 @@ export const NodeLauncherConfig: FC<Props> = ({
           </Alert>
         </div>
         <div css={styles.nodeTypeProperties}>
-          {isConfigValid !== null && (
+          {isConfigValid !== null && !!networkList?.length && (
             <>
               <label css={styles.label}>Network</label>
               <PillPicker

@@ -7,6 +7,7 @@ import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useNodeMetrics } from './useNodeMetrics';
 import { checkForTokenError } from 'utils/checkForTokenError';
+import { ROUTES } from '@shared/constants/routes';
 
 export const useNodeList = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ export const useNodeList = () => {
   let total = 0;
 
   const handleNodeClick = (args: any) => {
-    router.push(`${router.pathname}/${args.key}`);
+    router.push(ROUTES.NODE(args.key));
   };
 
   const loadNodes = async (

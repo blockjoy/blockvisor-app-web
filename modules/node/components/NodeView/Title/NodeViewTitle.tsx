@@ -1,14 +1,14 @@
-import { PageTitle, SvgIcon, CopyNode } from '@shared/components';
+import { CopyNode, PageTitle, SvgIcon, Skeleton } from '@shared/components';
+import { styles } from './NodeViewTitle.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { styles } from './NodeViewPageTitle.styles';
 import { useNodeView } from '@modules/node';
 import IconNodes from '@public/assets/icons/box-12.svg';
 
-export const NodeViewPageTitle = () => {
+export const NodeViewTitle = () => {
   const router = useRouter();
 
-  const { node } = useNodeView();
+  const { node, isLoading } = useNodeView();
 
   const handleNodesClicked = () => router.push(ROUTES.NODES);
 
@@ -22,7 +22,14 @@ export const NodeViewPageTitle = () => {
           <p>Nodes</p>
         </button>
         <span css={styles.separator}>/</span>
-        <CopyNode value={node?.id!}>{node?.id}</CopyNode>
+
+        {isLoading && !node?.id ? (
+          <Skeleton width="80px" />
+        ) : !isLoading && !node?.id ? (
+          <p>Node not found</p>
+        ) : (
+          <CopyNode value={node?.id!}>{node?.id}</CopyNode>
+        )}
       </div>
     </PageTitle>
   );

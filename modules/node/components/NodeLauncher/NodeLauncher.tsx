@@ -191,10 +191,7 @@ export const NodeLauncher = () => {
       params,
       mergedFiles.flat(),
       (nodeId: string) => {
-        router.push({
-          pathname: `${ROUTES.NODE(nodeId)}`,
-          query: { created: true },
-        });
+        router.push(ROUTES.NODE(nodeId));
       },
       (error: string) => setServerError(error),
     );

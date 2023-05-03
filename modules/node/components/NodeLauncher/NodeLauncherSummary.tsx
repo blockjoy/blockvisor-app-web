@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { nodeTypeList } from '@shared/constants/lookups';
-import IconCheck from '@public/assets/icons/check-16.svg';
+import IconCheck from '@public/assets/icons/check-circle.svg';
 import IconClose from '@public/assets/icons/close.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 import IconCog from '@public/assets/icons/cog-12.svg';

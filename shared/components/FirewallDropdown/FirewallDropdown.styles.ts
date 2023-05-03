@@ -11,6 +11,7 @@ export const styles = {
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+    font-size: 16px;
 
     :hover,
     &.not-empty,

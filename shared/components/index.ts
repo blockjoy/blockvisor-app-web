@@ -69,6 +69,7 @@ export * from './BlockjoyLogo/BlockjoyLogo';
 export * from './Alert/Alert';
 export * from './LockedSwitch/LockedSwitch';
 export * from './NodeStatus/NodeStatus';
+export * from './NodeStatus/NodeStatusIcon';
 export * from './GridTableViewPicker/GridTableViewPicker';
 export * from './PillPicker/PillPicker';
 export * from './Tooltip/Tooltip';

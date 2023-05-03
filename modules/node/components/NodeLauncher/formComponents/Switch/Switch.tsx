@@ -4,18 +4,20 @@ import IconLock from '@public/assets/icons/lock-12.svg';
 import { Tooltip } from '@shared/components';
 
 type Props = {
+  checked?: boolean;
   name: string;
   tabIndex?: number;
-  tooltip: string;
+  tooltip?: string;
   disabled: boolean;
   onPropertyChanged: (e: any) => void;
 };
 
 export const Switch: FC<Props> = ({
   onPropertyChanged,
-  tooltip = 'test',
+  tooltip,
   disabled,
   name,
+  checked,
   tabIndex,
 }) => {
   return (
@@ -27,6 +29,7 @@ export const Switch: FC<Props> = ({
           type="checkbox"
           css={styles.input}
           onChange={(e: any) => onPropertyChanged(e)}
+          checked={checked}
         />
         <span className="switch" css={styles.switch}>
           <span className="handle" css={styles.handle}>
@@ -34,7 +37,7 @@ export const Switch: FC<Props> = ({
           </span>
         </span>
       </label>
-      {disabled && <Tooltip customCss={[styles.tooltip]} tooltip={tooltip} />}
+      {disabled && <Tooltip customCss={[styles.tooltip]} tooltip={tooltip!} />}
     </div>
   );
 };

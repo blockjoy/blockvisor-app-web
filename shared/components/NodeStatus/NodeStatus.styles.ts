@@ -27,7 +27,7 @@ export const styles = {
     color: ${theme.colorPrimary};
     border-color: ${theme.colorPrimary};
 
-    & path {
+    svg :is(path, circle, rect) {
       fill: ${theme.colorPrimary};
     }
   `,

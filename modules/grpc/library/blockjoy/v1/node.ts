@@ -1,10 +1,19 @@
 /* eslint-disable */
+<<<<<<< HEAD
 import Long from 'long';
 import type { CallContext, CallOptions } from 'nice-grpc-common';
 import _m0 from 'protobufjs/minimal';
 import { Timestamp } from '../../google/protobuf/timestamp';
 
 export const protobufPackage = 'blockjoy.v1';
+=======
+import Long from "long";
+import type { CallContext, CallOptions } from "nice-grpc-common";
+import _m0 from "protobufjs/minimal";
+import { Timestamp } from "../../google/protobuf/timestamp";
+
+export const protobufPackage = "blockjoy.v1";
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
 
 /**
  * Describe the node's chain related status
@@ -160,7 +169,13 @@ export interface NodeServiceCreateRequest {
    */
   network: string;
   /** Logic with regards to where the node should placed. */
+<<<<<<< HEAD
   placement: NodePlacement | undefined;
+=======
+  placement:
+    | NodePlacement
+    | undefined;
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
   /** A list of ip addresses allowed to access public ports on this node. */
   allowIps: FilteredIpAddr[];
   /** A list of ip addresses denied all access to any ports on this node. */
@@ -229,6 +244,7 @@ export interface NodeServiceUpdateRequest {
   /** The UUID of the node that you want to update. */
   id: string;
   /** The version of the blockchain software that should now be ran on the node. */
+<<<<<<< HEAD
   version?: string | undefined;
   /** Whether or not the node software should update itself. */
   selfUpdate?: boolean | undefined;
@@ -236,16 +252,44 @@ export interface NodeServiceUpdateRequest {
   containerStatus?: ContainerStatus | undefined;
   /** Update the P2P address of the blockchain node. */
   address?: string | undefined;
+=======
+  version?:
+    | string
+    | undefined;
+  /** Whether or not the node software should update itself. */
+  selfUpdate?:
+    | boolean
+    | undefined;
+  /** Set the container status field to this value. */
+  containerStatus?:
+    | ContainerStatus
+    | undefined;
+  /** Update the P2P address of the blockchain node. */
+  address?:
+    | string
+    | undefined;
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
   /** A list of ip addresses allowed to access public ports on this node. */
   allowIps: FilteredIpAddr[];
   /** A list of ip addresses denied all access to any ports on this node. */
   denyIps: FilteredIpAddr[];
 }
 
+<<<<<<< HEAD
 export interface NodeServiceUpdateResponse {}
 
 export interface NodeServiceDeleteRequest {
   id: string;
+=======
+export interface NodeServiceUpdateResponse {
+}
+
+export interface NodeServiceDeleteRequest {
+  id: string;
+}
+
+export interface NodeServiceDeleteResponse {
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
 }
 
 export interface NodeServiceDeleteResponse {}
@@ -704,8 +748,12 @@ export const Node = {
     message.version = object.version ?? '';
     message.ip = object.ip ?? undefined;
     message.nodeType = object.nodeType ?? 0;
+<<<<<<< HEAD
     message.properties =
       object.properties?.map((e) => NodeProperty.fromPartial(e)) || [];
+=======
+    message.properties = object.properties?.map((e) => NodeProperty.fromPartial(e)) || [];
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
     message.blockHeight = object.blockHeight ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
@@ -734,16 +782,26 @@ export const Node = {
 
 function createBaseNodeServiceCreateRequest(): NodeServiceCreateRequest {
   return {
+<<<<<<< HEAD
     orgId: '',
     blockchainId: '',
     version: '',
     nodeType: 0,
     properties: [],
     network: '',
+=======
+    orgId: "",
+    blockchainId: "",
+    version: "",
+    nodeType: 0,
+    properties: [],
+    network: "",
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
     placement: undefined,
     allowIps: [],
     denyIps: [],
   };
+<<<<<<< HEAD
 }
 
 export const NodeServiceCreateRequest = {
@@ -759,6 +817,19 @@ export const NodeServiceCreateRequest = {
     }
     if (message.version !== '') {
       writer.uint32(34).string(message.version);
+=======
+}
+
+export const NodeServiceCreateRequest = {
+  encode(message: NodeServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(18).string(message.orgId);
+    }
+    if (message.blockchainId !== "") {
+      writer.uint32(26).string(message.blockchainId);
+    }
+    if (message.version !== "") {
+      writer.uint32(34).string(message.version);
     }
     if (message.nodeType !== 0) {
       writer.uint32(40).int32(message.nodeType);
@@ -766,14 +837,11 @@ export const NodeServiceCreateRequest = {
     for (const v of message.properties) {
       NodeProperty.encode(v!, writer.uint32(50).fork()).ldelim();
     }
-    if (message.network !== '') {
+    if (message.network !== "") {
       writer.uint32(58).string(message.network);
     }
     if (message.placement !== undefined) {
-      NodePlacement.encode(
-        message.placement,
-        writer.uint32(66).fork(),
-      ).ldelim();
+      NodePlacement.encode(message.placement, writer.uint32(66).fork()).ldelim();
     }
     for (const v of message.allowIps) {
       FilteredIpAddr.encode(v!, writer.uint32(74).fork()).ldelim();
@@ -784,12 +852,8 @@ export const NodeServiceCreateRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): NodeServiceCreateRequest {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceCreateRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceCreateRequest();
     while (reader.pos < end) {
@@ -807,6 +871,892 @@ export const NodeServiceCreateRequest = {
             break;
           }
 
+          message.blockchainId = reader.string();
+          continue;
+        case 4:
+          if (tag != 34) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        case 5:
+          if (tag != 40) {
+            break;
+          }
+
+          message.nodeType = reader.int32() as any;
+          continue;
+        case 6:
+          if (tag != 50) {
+            break;
+          }
+
+          message.properties.push(NodeProperty.decode(reader, reader.uint32()));
+          continue;
+        case 7:
+          if (tag != 58) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
+        case 8:
+          if (tag != 66) {
+            break;
+          }
+
+          message.placement = NodePlacement.decode(reader, reader.uint32());
+          continue;
+        case 9:
+          if (tag != 74) {
+            break;
+          }
+
+          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          continue;
+        case 10:
+          if (tag != 82) {
+            break;
+          }
+
+          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceCreateRequest>): NodeServiceCreateRequest {
+    return NodeServiceCreateRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceCreateRequest>): NodeServiceCreateRequest {
+    const message = createBaseNodeServiceCreateRequest();
+    message.orgId = object.orgId ?? "";
+    message.blockchainId = object.blockchainId ?? "";
+    message.version = object.version ?? "";
+    message.nodeType = object.nodeType ?? 0;
+    message.properties = object.properties?.map((e) => NodeProperty.fromPartial(e)) || [];
+    message.network = object.network ?? "";
+    message.placement = (object.placement !== undefined && object.placement !== null)
+      ? NodePlacement.fromPartial(object.placement)
+      : undefined;
+    message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseNodeServiceCreateResponse(): NodeServiceCreateResponse {
+  return { node: undefined };
+}
+
+export const NodeServiceCreateResponse = {
+  encode(message: NodeServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.node !== undefined) {
+      Node.encode(message.node, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceCreateResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceCreateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.node = Node.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceCreateResponse>): NodeServiceCreateResponse {
+    return NodeServiceCreateResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceCreateResponse>): NodeServiceCreateResponse {
+    const message = createBaseNodeServiceCreateResponse();
+    message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeServiceGetRequest(): NodeServiceGetRequest {
+  return { id: "" };
+}
+
+export const NodeServiceGetRequest = {
+  encode(message: NodeServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceGetRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceGetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceGetRequest>): NodeServiceGetRequest {
+    return NodeServiceGetRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceGetRequest>): NodeServiceGetRequest {
+    const message = createBaseNodeServiceGetRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceGetResponse(): NodeServiceGetResponse {
+  return { node: undefined };
+}
+
+export const NodeServiceGetResponse = {
+  encode(message: NodeServiceGetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.node !== undefined) {
+      Node.encode(message.node, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceGetResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceGetResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.node = Node.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceGetResponse>): NodeServiceGetResponse {
+    return NodeServiceGetResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceGetResponse>): NodeServiceGetResponse {
+    const message = createBaseNodeServiceGetResponse();
+    message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeServiceListRequest(): NodeServiceListRequest {
+  return { orgId: "", offset: 0, limit: 0, statuses: [], nodeTypes: [], blockchainIds: [] };
+}
+
+export const NodeServiceListRequest = {
+  encode(message: NodeServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    if (message.offset !== 0) {
+      writer.uint32(16).uint64(message.offset);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(24).uint64(message.limit);
+    }
+    writer.uint32(34).fork();
+    for (const v of message.statuses) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    writer.uint32(42).fork();
+    for (const v of message.nodeTypes) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    for (const v of message.blockchainIds) {
+      writer.uint32(50).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceListRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 2:
+          if (tag != 16) {
+            break;
+          }
+
+          message.offset = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag != 24) {
+            break;
+          }
+
+          message.limit = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag == 32) {
+            message.statuses.push(reader.int32() as any);
+            continue;
+          }
+
+          if (tag == 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.statuses.push(reader.int32() as any);
+            }
+
+            continue;
+          }
+
+          break;
+        case 5:
+          if (tag == 40) {
+            message.nodeTypes.push(reader.int32() as any);
+            continue;
+          }
+
+          if (tag == 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.nodeTypes.push(reader.int32() as any);
+            }
+
+            continue;
+          }
+
+          break;
+        case 6:
+          if (tag != 50) {
+            break;
+          }
+
+          message.blockchainIds.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceListRequest>): NodeServiceListRequest {
+    return NodeServiceListRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceListRequest>): NodeServiceListRequest {
+    const message = createBaseNodeServiceListRequest();
+    message.orgId = object.orgId ?? "";
+    message.offset = object.offset ?? 0;
+    message.limit = object.limit ?? 0;
+    message.statuses = object.statuses?.map((e) => e) || [];
+    message.nodeTypes = object.nodeTypes?.map((e) => e) || [];
+    message.blockchainIds = object.blockchainIds?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseNodeServiceListResponse(): NodeServiceListResponse {
+  return { nodes: [] };
+}
+
+export const NodeServiceListResponse = {
+  encode(message: NodeServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.nodes) {
+      Node.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceListResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceListResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.nodes.push(Node.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceListResponse>): NodeServiceListResponse {
+    return NodeServiceListResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceListResponse>): NodeServiceListResponse {
+    const message = createBaseNodeServiceListResponse();
+    message.nodes = object.nodes?.map((e) => Node.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseNodeServiceUpdateRequest(): NodeServiceUpdateRequest {
+  return {
+    id: "",
+    version: undefined,
+    selfUpdate: undefined,
+    containerStatus: undefined,
+    address: undefined,
+    allowIps: [],
+    denyIps: [],
+  };
+}
+
+export const NodeServiceUpdateRequest = {
+  encode(message: NodeServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.version !== undefined) {
+      writer.uint32(18).string(message.version);
+    }
+    if (message.selfUpdate !== undefined) {
+      writer.uint32(32).bool(message.selfUpdate);
+    }
+    if (message.containerStatus !== undefined) {
+      writer.uint32(40).int32(message.containerStatus);
+    }
+    if (message.address !== undefined) {
+      writer.uint32(50).string(message.address);
+    }
+    for (const v of message.allowIps) {
+      FilteredIpAddr.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+    for (const v of message.denyIps) {
+      FilteredIpAddr.encode(v!, writer.uint32(66).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpdateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        case 4:
+          if (tag != 32) {
+            break;
+          }
+
+          message.selfUpdate = reader.bool();
+          continue;
+        case 5:
+          if (tag != 40) {
+            break;
+          }
+
+          message.containerStatus = reader.int32() as any;
+          continue;
+        case 6:
+          if (tag != 50) {
+            break;
+          }
+
+          message.address = reader.string();
+          continue;
+        case 7:
+          if (tag != 58) {
+            break;
+          }
+
+          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          continue;
+        case 8:
+          if (tag != 66) {
+            break;
+          }
+
+          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpdateRequest>): NodeServiceUpdateRequest {
+    return NodeServiceUpdateRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceUpdateRequest>): NodeServiceUpdateRequest {
+    const message = createBaseNodeServiceUpdateRequest();
+    message.id = object.id ?? "";
+    message.version = object.version ?? undefined;
+    message.selfUpdate = object.selfUpdate ?? undefined;
+    message.containerStatus = object.containerStatus ?? undefined;
+    message.address = object.address ?? undefined;
+    message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseNodeServiceUpdateResponse(): NodeServiceUpdateResponse {
+  return {};
+}
+
+export const NodeServiceUpdateResponse = {
+  encode(_: NodeServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpdateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpdateResponse>): NodeServiceUpdateResponse {
+    return NodeServiceUpdateResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceUpdateResponse>): NodeServiceUpdateResponse {
+    const message = createBaseNodeServiceUpdateResponse();
+    return message;
+  },
+};
+
+function createBaseNodeServiceDeleteRequest(): NodeServiceDeleteRequest {
+  return { id: "" };
+}
+
+export const NodeServiceDeleteRequest = {
+  encode(message: NodeServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceDeleteRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceDeleteRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceDeleteRequest>): NodeServiceDeleteRequest {
+    return NodeServiceDeleteRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceDeleteRequest>): NodeServiceDeleteRequest {
+    const message = createBaseNodeServiceDeleteRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceDeleteResponse(): NodeServiceDeleteResponse {
+  return {};
+}
+
+export const NodeServiceDeleteResponse = {
+  encode(_: NodeServiceDeleteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceDeleteResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceDeleteResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceDeleteResponse>): NodeServiceDeleteResponse {
+    return NodeServiceDeleteResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceDeleteResponse>): NodeServiceDeleteResponse {
+    const message = createBaseNodeServiceDeleteResponse();
+    return message;
+  },
+};
+
+function createBaseNodePlacement(): NodePlacement {
+  return { hostId: undefined, scheduler: undefined };
+}
+
+export const NodePlacement = {
+  encode(message: NodePlacement, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== undefined) {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.scheduler !== undefined) {
+      NodeScheduler.encode(message.scheduler, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodePlacement {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodePlacement();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.scheduler = NodeScheduler.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodePlacement>): NodePlacement {
+    return NodePlacement.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodePlacement>): NodePlacement {
+    const message = createBaseNodePlacement();
+    message.hostId = object.hostId ?? undefined;
+    message.scheduler = (object.scheduler !== undefined && object.scheduler !== null)
+      ? NodeScheduler.fromPartial(object.scheduler)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeScheduler(): NodeScheduler {
+  return { similarity: undefined, resource: 0 };
+}
+
+export const NodeScheduler = {
+  encode(message: NodeScheduler, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.similarity !== undefined) {
+      writer.uint32(8).int32(message.similarity);
+    }
+    if (message.resource !== 0) {
+      writer.uint32(16).int32(message.resource);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeScheduler {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeScheduler();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 8) {
+            break;
+          }
+
+          message.similarity = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag != 16) {
+            break;
+          }
+
+          message.resource = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeScheduler>): NodeScheduler {
+    return NodeScheduler.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeScheduler>): NodeScheduler {
+    const message = createBaseNodeScheduler();
+    message.similarity = object.similarity ?? undefined;
+    message.resource = object.resource ?? 0;
+    return message;
+  },
+};
+
+function createBaseFilteredIpAddr(): FilteredIpAddr {
+  return { ip: "", description: undefined };
+}
+
+export const FilteredIpAddr = {
+  encode(message: FilteredIpAddr, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.ip !== "") {
+      writer.uint32(10).string(message.ip);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(18).string(message.description);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FilteredIpAddr {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFilteredIpAddr();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FilteredIpAddr>): FilteredIpAddr {
+    return FilteredIpAddr.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<FilteredIpAddr>): FilteredIpAddr {
+    const message = createBaseFilteredIpAddr();
+    message.ip = object.ip ?? "";
+    message.description = object.description ?? undefined;
+    return message;
+  },
+};
+
+function createBaseNodeProperty(): NodeProperty {
+  return { name: "", label: "", description: "", uiType: 0, disabled: false, required: false, value: undefined };
+}
+
+export const NodeProperty = {
+  encode(message: NodeProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.label !== "") {
+      writer.uint32(18).string(message.label);
+    }
+    if (message.description !== "") {
+      writer.uint32(26).string(message.description);
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
+    }
+    if (message.uiType !== 0) {
+      writer.uint32(32).int32(message.uiType);
+    }
+<<<<<<< HEAD
+    for (const v of message.properties) {
+      NodeProperty.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.network !== '') {
+      writer.uint32(58).string(message.network);
+    }
+    if (message.placement !== undefined) {
+      NodePlacement.encode(
+        message.placement,
+        writer.uint32(66).fork(),
+      ).ldelim();
+    }
+    for (const v of message.allowIps) {
+      FilteredIpAddr.encode(v!, writer.uint32(74).fork()).ldelim();
+    }
+    for (const v of message.denyIps) {
+      FilteredIpAddr.encode(v!, writer.uint32(82).fork()).ldelim();
+=======
+    if (message.disabled === true) {
+      writer.uint32(40).bool(message.disabled);
+    }
+    if (message.required === true) {
+      writer.uint32(48).bool(message.required);
+    }
+    if (message.value !== undefined) {
+      writer.uint32(58).string(message.value);
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
+    }
+    return writer;
+  },
+
+<<<<<<< HEAD
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceCreateRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceCreateRequest();
+=======
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeProperty {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeProperty();
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.label = reader.string();
+          continue;
+        case 3:
+          if (tag != 26) {
+            break;
+          }
+
+<<<<<<< HEAD
           message.blockchainId = reader.string();
           continue;
         case 4:
@@ -1328,41 +2278,37 @@ export const NodeServiceUpdateRequest = {
           }
 
           message.version = reader.string();
+=======
+          message.description = reader.string();
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
           continue;
         case 4:
           if (tag != 32) {
             break;
           }
 
-          message.selfUpdate = reader.bool();
+          message.uiType = reader.int32() as any;
           continue;
         case 5:
           if (tag != 40) {
             break;
           }
 
-          message.containerStatus = reader.int32() as any;
+          message.disabled = reader.bool();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag != 48) {
             break;
           }
 
-          message.address = reader.string();
+          message.required = reader.bool();
           continue;
         case 7:
           if (tag != 58) {
             break;
           }
 
-          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
-          continue;
-        case 8:
-          if (tag != 66) {
-            break;
-          }
-
-          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          message.value = reader.string();
           continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
@@ -1373,6 +2319,7 @@ export const NodeServiceUpdateRequest = {
     return message;
   },
 
+<<<<<<< HEAD
   create(
     base?: DeepPartial<NodeServiceUpdateRequest>,
   ): NodeServiceUpdateRequest {
@@ -1392,10 +2339,26 @@ export const NodeServiceUpdateRequest = {
       object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.denyIps =
       object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+=======
+  create(base?: DeepPartial<NodeProperty>): NodeProperty {
+    return NodeProperty.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeProperty>): NodeProperty {
+    const message = createBaseNodeProperty();
+    message.name = object.name ?? "";
+    message.label = object.label ?? "";
+    message.description = object.description ?? "";
+    message.uiType = object.uiType ?? 0;
+    message.disabled = object.disabled ?? false;
+    message.required = object.required ?? false;
+    message.value = object.value ?? undefined;
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
     return message;
   },
 };
 
+<<<<<<< HEAD
 function createBaseNodeServiceUpdateResponse(): NodeServiceUpdateResponse {
   return {};
 }
@@ -1866,6 +2829,16 @@ export const NodeServiceDefinition = {
     /** Create a single blockchain node */
     create: {
       name: 'Create',
+=======
+export type NodeServiceDefinition = typeof NodeServiceDefinition;
+export const NodeServiceDefinition = {
+  name: "NodeService",
+  fullName: "blockjoy.v1.NodeService",
+  methods: {
+    /** Create a single blockchain node */
+    create: {
+      name: "Create",
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
       requestType: NodeServiceCreateRequest,
       requestStream: false,
       responseType: NodeServiceCreateResponse,
@@ -1874,7 +2847,11 @@ export const NodeServiceDefinition = {
     },
     /** Get single blockchain node */
     get: {
+<<<<<<< HEAD
       name: 'Get',
+=======
+      name: "Get",
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
       requestType: NodeServiceGetRequest,
       requestStream: false,
       responseType: NodeServiceGetResponse,
@@ -1883,7 +2860,11 @@ export const NodeServiceDefinition = {
     },
     /** Get nodes belonging to org */
     list: {
+<<<<<<< HEAD
       name: 'List',
+=======
+      name: "List",
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
       requestType: NodeServiceListRequest,
       requestStream: false,
       responseType: NodeServiceListResponse,
@@ -1892,7 +2873,11 @@ export const NodeServiceDefinition = {
     },
     /** Update a single blockchain node */
     update: {
+<<<<<<< HEAD
       name: 'Update',
+=======
+      name: "Update",
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
       requestType: NodeServiceUpdateRequest,
       requestStream: false,
       responseType: NodeServiceUpdateResponse,
@@ -1901,7 +2886,11 @@ export const NodeServiceDefinition = {
     },
     /** Delete a single node */
     delete: {
+<<<<<<< HEAD
       name: 'Delete',
+=======
+      name: "Delete",
+>>>>>>> 88c867ec (all hell breaking loose because of luuk)
       requestType: NodeServiceDeleteRequest,
       requestStream: false,
       responseType: NodeServiceDeleteResponse,

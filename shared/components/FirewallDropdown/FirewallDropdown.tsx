@@ -6,6 +6,7 @@ import { FirewallDropdownForm } from './FirewallDropdownForm';
 import { FirewallDropdownItems } from './FirewallDropdownItems';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 import IconFirewall from '@public/assets/icons/firewall.svg';
+import { useClickOutside } from '@shared/hooks/useClickOutside';
 
 type Props = {
   allowedIps: NodeFirewallRule[];
@@ -30,22 +31,21 @@ export const FirewallDropdown: FC<Props> = ({
     setIsOpen(!isOpen);
   };
 
+  useClickOutside<HTMLDivElement>(dropdownRef, () => setIsOpen(false));
+
   const handleRuleAdded = (rule: NodeFirewallRule) => {
     const listToAddCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];
 
     listToAddCopy.push(rule);
 
-    onNodePropertyChanged(
-      isAllowedIp ? 'allowedIps' : 'deniedIps',
-      listToAddCopy,
-    );
+    onNodePropertyChanged(isAllowedIp ? 'allowIps' : 'denyIps', listToAddCopy);
   };
 
   const handleRemoveFromList = (index: number) => {
     const listToRemoveFromCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];
 
     onNodePropertyChanged(
-      isAllowedIp ? 'allowedIps' : 'deniedIps',
+      isAllowedIp ? 'allowIps' : 'denyIps',
       listToRemoveFromCopy.filter((item, i) => i !== index),
     );
   };
