@@ -13,20 +13,20 @@ export function useSwitchOrganization() {
       // update default organization
       setDefaultOrganization(orgId, orgName);
       // update route
-      updateRouteIfNodeView();
+      //updateRouteIfNodeView();
 
-      toast.success('Organization Changed');
+      // toast.success('Organization Changed');
     } catch (error) {
       console.log('Error changing organization: ', error);
-      toast.error('Error Changing');
+      // toast.error('Error Changing');
     }
   };
 
-  const updateRouteIfNodeView = () => {
-    if (router.pathname === '/nodes/[id]') {
-      router.push(ROUTES.NODES, undefined, { shallow: true });
-    }
-  };
+  // const updateRouteIfNodeView = () => {
+  //   if (router.pathname === '/nodes/[id]') {
+  //     router.push(ROUTES.NODES, undefined, { shallow: true });
+  //   }
+  // };
 
   return {
     switchOrganization,

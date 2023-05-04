@@ -1,12 +1,10 @@
-import { FC, useRef, useState } from 'react';
-import { Dropdown, DropdownButton, SvgIcon } from '@shared/components';
+import { FC, useState } from 'react';
+import { Dropdown, DropdownButton, DropdownWrapper } from '@shared/components';
 import { styles } from './FirewallDropdown.styles';
 import { FirewallDropdownHeader } from './FirewallDropdownHeader';
 import { FirewallDropdownForm } from './FirewallDropdownForm';
 import { FirewallDropdownItems } from './FirewallDropdownItems';
-import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 import IconFirewall from '@public/assets/icons/firewall.svg';
-import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 
 type Props = {
@@ -20,7 +18,6 @@ export const FirewallDropdown: FC<Props> = ({
   deniedIps,
   onNodePropertyChanged,
 }) => {
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const isAllowedIp = activeTabIndex === 0;
@@ -32,15 +29,9 @@ export const FirewallDropdown: FC<Props> = ({
     setIsOpen(!isOpen);
   };
 
-  useClickOutside<HTMLDivElement>(dropdownRef, () => setIsOpen(false));
-
   const handleRuleAdded = (rule: FilteredIpAddr) => {
     const listToAddCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];
-
     listToAddCopy.push(rule);
-
-    console.log('handleRuleAdded', rule, isAllowedIp);
-
     onNodePropertyChanged(isAllowedIp ? 'allowIps' : 'denyIps', listToAddCopy);
   };
 
@@ -68,10 +59,10 @@ export const FirewallDropdown: FC<Props> = ({
   const activeListToShow = activeTabIndex === 0 ? allowedIps : deniedIps;
 
   return (
-    <div
-      className={`${!isEmpty ? 'not-empty' : ''} ${isOpen ? 'is-open' : ''}`}
-      css={[styles.wrapper]}
-      ref={dropdownRef}
+    <DropdownWrapper
+      isEmpty={isEmpty}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
     >
       <DropdownButton
         isOpen={isOpen}
@@ -95,6 +86,6 @@ export const FirewallDropdown: FC<Props> = ({
           onRemoveClicked={handleRemoveFromList}
         />
       </Dropdown>
-    </div>
+    </DropdownWrapper>
   );
 };

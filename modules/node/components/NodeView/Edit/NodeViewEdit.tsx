@@ -19,19 +19,15 @@ export const NodeViewEdit = () => {
     });
   };
 
-  const handleFirewallChanged = (name: string, value: any) => {
-    console.log('handleFirewallChanged', name, value);
-
+  const handleFirewallChanged = (name: string, value: any) =>
     handleUpdateNode({
       [name]: value,
     });
-  };
 
-  const handleAutoUpdatesChanged = (e: any) => {
+  const handleAutoUpdatesChanged = (e: any) =>
     handleUpdateNode({
       selfUpdate: e.target.checked,
     });
-  };
 
   return isLoading && !node?.id ? (
     <TableSkeleton />

@@ -11,6 +11,7 @@ export const styles = {
       top: 71px;
       position: sticky;
       flex: 0 0 200px;
+      margin-right: 16px;
       min-width: 200px;
       max-width: 200px;
       height: calc(100vh - 82px);
@@ -40,14 +41,13 @@ export const styles = {
   filters: css`
     overflow: auto;
     min-height: 0;
-    margin: 16px 8px 0 0;
+    margin: 0 0 16px 0;
     display: grid;
     grid-auto-rows: max-content;
     gap: 16px;
   `,
   wrapperOpen: css`
     @media ${breakpoints.toXlrg} {
-      margin-top: 20px;
       height: auto;
     }
   `,
@@ -96,7 +96,6 @@ export const styles = {
     border-radius: 6px;
     background: ${theme.colorPrimary};
     color: ${theme.colorPrimaryText};
-    margin-right: 16px;
     cursor: pointer;
 
     path {

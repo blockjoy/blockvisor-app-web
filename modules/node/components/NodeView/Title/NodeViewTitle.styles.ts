@@ -23,25 +23,27 @@ export const styles = {
     }
   `,
   nodesButton: (theme: ITheme) => css`
-    display: flex;
-    gap: 10px;
-    padding: 0;
     background: transparent;
     border: 0;
-    color: ${theme.colorDefault};
-    font-size: 18px;
+    padding: 0;
     cursor: pointer;
 
-    span > svg {
-      min-width: 16px;
+    p {
+      color: ${theme.colorDefault};
     }
 
-    svg path {
+    svg > path {
       fill: ${theme.colorLabel};
     }
 
+    :is(p, path) {
+      transition: 0.3s;
+    }
+
     :hover {
-      color: ${theme.colorText};
+      p {
+        color: ${theme.colorText};
+      }
 
       svg path {
         fill: ${theme.colorDefault};

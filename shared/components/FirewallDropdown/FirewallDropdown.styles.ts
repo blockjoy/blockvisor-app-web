@@ -39,7 +39,7 @@ export const styles = {
     }
   `,
   dropdown: css`
-    top: 48px;
+    top: 54px;
     right: 5px;
     left: 0;
     width: 100%;

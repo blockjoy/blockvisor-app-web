@@ -56,9 +56,10 @@ export const NodeLauncherSummary: FC<Props> = ({
   return (
     <div css={styles.wrapper}>
       <NodeLauncherFormHeader>Launch</NodeLauncherFormHeader>
-      {/* <NodeLauncherFormLabel>Organization</NodeLauncherFormLabel>
-      <NodeLauncherOrgPicker /> */}
+      <NodeLauncherFormLabel>Organization</NodeLauncherFormLabel>
+      <NodeLauncherOrgPicker />
 
+      <NodeLauncherFormLabel>Summary</NodeLauncherFormLabel>
       <div css={styles.summary}>
         {!hasNetworkList ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
@@ -89,15 +90,6 @@ export const NodeLauncherSummary: FC<Props> = ({
                     {nodeTypeList?.find((n) => n.id === +nodeTypeId)?.name ||
                       'Not Selected'}
                   </span>
-                </div>
-              </li>
-              <li>
-                <span css={styles.summaryIcon}>
-                  <IconCheck />
-                </span>
-                <div>
-                  <label>Organization</label>
-                  <span>{escapeHtml(defaultOrganization?.name!)}</span>
                 </div>
               </li>
               <li>
@@ -149,39 +141,38 @@ export const NodeLauncherSummary: FC<Props> = ({
             {serverError && <div css={styles.serverError}>{serverError}</div>}
           </>
         )}
-
-        <div css={styles.buttons}>
-          <button
-            tabIndex={20}
-            onClick={onCreateNodeClicked}
-            disabled={
-              !hasNetworkList ||
-              !isNodeValid ||
-              !isConfigValid ||
-              Boolean(serverError) ||
-              isCreating
-            }
-            css={[
-              styles.createButton,
-              isCreating && !Boolean(serverError) && styles.createButtonLoading,
-            ]}
-          >
-            <span css={styles.createButtonInner}>
-              {isCreating && !Boolean(serverError) ? (
-                <span css={styles.cogIcon}>
-                  <IconCog />
-                </span>
-              ) : (
-                <IconRocket />
-              )}
-              <span>
-                {isCreating && !Boolean(serverError)
-                  ? 'Launching'
-                  : 'Launch Your Node'}
+      </div>
+      <div css={styles.buttons}>
+        <button
+          tabIndex={20}
+          onClick={onCreateNodeClicked}
+          disabled={
+            !hasNetworkList ||
+            !isNodeValid ||
+            !isConfigValid ||
+            Boolean(serverError) ||
+            isCreating
+          }
+          css={[
+            styles.createButton,
+            isCreating && !Boolean(serverError) && styles.createButtonLoading,
+          ]}
+        >
+          <span css={styles.createButtonInner}>
+            {isCreating && !Boolean(serverError) ? (
+              <span css={styles.cogIcon}>
+                <IconCog />
               </span>
+            ) : (
+              <IconRocket />
+            )}
+            <span>
+              {isCreating && !Boolean(serverError)
+                ? 'Launching'
+                : 'Launch Your Node'}
             </span>
-          </button>
-        </div>
+          </span>
+        </button>
       </div>
     </div>
   );

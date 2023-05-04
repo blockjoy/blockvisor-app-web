@@ -40,11 +40,11 @@ export const styles = {
   summary: (theme: ITheme) => css`
     border: 1px solid ${theme.colorBorder};
     border-radius: 6px;
-    padding: 16px;
+    padding: 16px 16px 0;
+    margin-bottom: 16px;
 
     @media ${breakpoints.toXlrg} {
       max-width: 100%;
-      margin-bottom: 100px;
     }
   `,
   summaryList: (theme: ITheme) => css`
@@ -56,7 +56,7 @@ export const styles = {
       min-width: 0;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
 
     li label {
@@ -107,6 +107,10 @@ export const styles = {
     cursor: pointer;
     white-space: nowrap;
     transition: 0.3s;
+
+    @media ${breakpoints.toXlrg} {
+      margin-bottom: 100px;
+    }
 
     svg {
       width: 20px;

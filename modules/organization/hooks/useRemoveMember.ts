@@ -51,15 +51,7 @@ export function useRemoveMember() {
     orgId: string,
   ) => {
     setIsLoading('loading');
-
-    console.log('removeMembers', {
-      userId,
-      orgId,
-    });
-
     const response = await organizationClient.removeMember(userId, orgId);
-
-    console.log('removeMember', response);
 
     if (response) {
       removeMemberFromList(userId);

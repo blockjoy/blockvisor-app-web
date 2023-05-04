@@ -98,7 +98,7 @@ export const NodeLauncherConfig: FC<Props> = ({
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>
         <NodeLauncherFormHeader>Configure</NodeLauncherFormHeader>
-        <Alert isSuccess={isConfigValid!}>
+        {/* <Alert isSuccess={isConfigValid!}>
           {isConfigValid === null ? (
             <Skeleton />
           ) : isConfigValid === true ? (
@@ -106,7 +106,7 @@ export const NodeLauncherConfig: FC<Props> = ({
           ) : (
             'Node requires configuration information.'
           )}
-        </Alert>
+        </Alert> */}
 
         {isConfigValid !== null && !!networkList?.length && (
           <>

@@ -34,6 +34,7 @@ export * from './DropdownButton/DropdownButton';
 export * from './NodeTypePicker/NodeTypePicker';
 export * from './Pagination/Pagination';
 export * from './Dropdown/Dropdown';
+export * from './DropdownWrapper/DropdownWrapper';
 export * from './Tabs/Tabs';
 export * from './EmptyColumn/EmptyColum';
 export * from './EmptyColumn/AnimatedGraphic';

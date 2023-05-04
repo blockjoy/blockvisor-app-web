@@ -11,15 +11,10 @@ type Props = {
   onClick: VoidFunction;
 };
 
-export const DropdownButton = ({
-  icon = <IconFirewall />,
-  onClick,
-  text,
-  isOpen,
-}: Props) => {
+export const DropdownButton = ({ icon, onClick, text, isOpen }: Props) => {
   return (
     <button css={styles.button} onClick={onClick}>
-      <SvgIcon size="16px">{icon}</SvgIcon>
+      {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
       {text}
       <span css={[styles.icon, isOpen && styles.iconOpen]}>
         <IconArrow />

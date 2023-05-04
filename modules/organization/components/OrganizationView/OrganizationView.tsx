@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { toast } from 'react-toastify';
@@ -32,7 +32,6 @@ import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrgani
 import { ROUTES } from '@shared/index';
 import { nodeClient } from '@modules/grpc';
 import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
-import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 
 export const OrganizationView = () => {
   const router = useRouter();
@@ -44,6 +43,7 @@ export const OrganizationView = () => {
     isLoading,
     setIsLoading,
   } = useGetOrganization();
+
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
@@ -181,7 +181,6 @@ export const OrganizationView = () => {
                 canUpdate={canUpdateOrganization && !organization?.personal}
               />
             )}
-
             <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
             <OrganizationMembersView />

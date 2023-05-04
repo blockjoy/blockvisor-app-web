@@ -7,9 +7,6 @@ import { SvgIcon } from '@shared/components';
 
 export const SidebarHeader = () => {
   const isSidebarOpen = useRecoilValue(sidebarOpen);
-
-  console.log('isSidebarOpen', isSidebarOpen);
-
   return (
     <header css={[styles.wrapper, isSidebarOpen && styles.wrapperSidebarOpen]}>
       {isSidebarOpen && (

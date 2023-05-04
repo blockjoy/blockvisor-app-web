@@ -7,8 +7,8 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 16px 10px 0;
     margin-left: -16px;
-    width: 500px;
-    max-width: 500px;
+    width: 440px;
+    max-width: 440px;
     border-right: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {
@@ -71,7 +71,11 @@ export const styles = {
     outline: none;
     color: ${theme.colorText};
 
-    :focus ~ span path {
+    :is(:focus, :hover) {
+      border-color: ${theme.colorBorderGrey};
+    }
+
+    :is(:focus, :hover) ~ span path {
       fill: ${theme.colorText};
     }
 

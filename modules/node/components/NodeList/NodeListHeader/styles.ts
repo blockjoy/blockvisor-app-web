@@ -16,12 +16,12 @@ export const styles = {
     margin-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${theme.colorBackground};
-  `,
-  wrapperInner: css`
+
     @media ${breakpoints.toXlrg} {
       display: none;
     }
   `,
+  wrapperInner: css``,
   listTypePicker: css`
     margin-left: auto;
     display: flex;

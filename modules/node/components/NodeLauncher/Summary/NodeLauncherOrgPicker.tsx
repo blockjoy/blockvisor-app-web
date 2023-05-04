@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Badge,
   Dropdown,
@@ -6,18 +6,17 @@ import {
   DropdownItem,
   SvgIcon,
   Scrollbar,
+  DropdownWrapper,
 } from '@shared/components';
 import { styles } from './NodeLauncherOrgPicker.styles';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
-import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 import IconPlus from '@public/assets/icons/plus-12.svg';
 import IconInfo from '@public/assets/icons/info.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
@@ -28,7 +27,6 @@ type Props = {
 
 export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
   const router = useRouter();
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const allOrganizations = useRecoilValue(
     organizationAtoms.allOrganizationsSorted,
@@ -43,19 +41,13 @@ export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
   const { switchOrganization } = useSwitchOrganization();
 
   const handleClick = () => setIsOpen(!isOpen);
-  const handleClickOutside = () => setIsOpen(false);
 
   const handleChange = async (orgId?: string, orgName?: string) => {
     if (orgId && orgName && orgId !== defaultOrganization?.id) {
       await switchOrganization(orgId, orgName);
       setIsOpen(false);
-      if (isMobile) {
-        setIsSidebarOpen(false);
-      }
     }
   };
-
-  useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   const handleCreateClicked = () => {
     setIsOpen(false);
@@ -69,13 +61,13 @@ export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
   };
 
   return (
-    <div
-      css={[styles.wrapper, hideName && styles.wrapperNameHidden]}
-      ref={dropdownRef}
+    <DropdownWrapper
+      isEmpty={true}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
     >
       <DropdownButton
-        icon={<IconOrganizations />}
-        text={'Select'}
+        text={<p>{escapeHtml(defaultOrganization?.name!)}</p>}
         onClick={handleClick}
         isOpen={isOpen}
       />
@@ -94,28 +86,6 @@ export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
         )}
       </button> */}
       <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
-        <header css={styles.header}>
-          <h2>Your Organizations</h2>
-          <SvgIcon tooltip="View and launch nodes from your organizations">
-            <IconInfo />
-          </SvgIcon>
-        </header>
-        <ul>
-          <li>
-            <DropdownItem
-              additionalStyles={[styles.activeOrganization]}
-              size="medium"
-              type="button"
-            >
-              <p css={styles.activeOrg}>
-                {escapeHtml(defaultOrganization?.name!)}
-              </p>
-              <Badge color="primary" style="outline">
-                Active
-              </Badge>
-            </DropdownItem>
-          </li>
-        </ul>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>
             {allOrganizations
@@ -137,9 +107,6 @@ export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
           <IconPlus /> Add Organization
         </button>
       </Dropdown>
-      <span css={[styles.icon, isOpen && styles.iconActive]}>
-        <IconArrow />
-      </span>
-    </div>
+    </DropdownWrapper>
   );
 };

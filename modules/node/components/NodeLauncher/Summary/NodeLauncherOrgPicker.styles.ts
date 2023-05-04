@@ -87,9 +87,9 @@ export const styles = {
     top: 54px;
     right: 5px;
     left: 0;
-    max-width: 190px;
-    min-width: 190px;
-    width: 190px;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
   `,
   dropdownInner: css`
     max-height: 199px;
@@ -143,7 +143,7 @@ export const styles = {
       color: ${theme.colorPrimaryText};
       border-color: ${theme.colorPrimary};
 
-      & path {
+      & svg path {
         fill: ${theme.colorPrimaryText};
       }
     }

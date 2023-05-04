@@ -4,11 +4,15 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   filterBlock: (theme: ITheme) => css`
-    margin-right: 8px;
     padding: 12px;
     border-radius: 4px;
-    border: 1px solid ${theme.colorBorder};
+    border: 1px solid transparent;
     cursor: pointer;
+    background: ${theme.colorCard};
+
+    :hover {
+      border-color: ${theme.colorBorder};
+    }
   `,
   filterBlockDisabled: css`
     cursor: not-allowed;

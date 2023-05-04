@@ -2,8 +2,7 @@ import { CopyNode, PageTitle, SvgIcon, Skeleton } from '@shared/components';
 import { styles } from './NodeViewTitle.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { useNodeView } from '@modules/node';
-import IconNodes from '@public/assets/icons/box-12.svg';
+import { useNodeView, NodeTitle } from '@modules/node';
 
 export const NodeViewTitle = () => {
   const router = useRouter();
@@ -16,10 +15,7 @@ export const NodeViewTitle = () => {
     <PageTitle>
       <div css={styles.breadcrumb}>
         <button onClick={handleNodesClicked} css={styles.nodesButton}>
-          <SvgIcon size="20px">
-            <IconNodes />
-          </SvgIcon>
-          <p>Nodes</p>
+          <NodeTitle />
         </button>
         <span css={styles.separator}>/</span>
 

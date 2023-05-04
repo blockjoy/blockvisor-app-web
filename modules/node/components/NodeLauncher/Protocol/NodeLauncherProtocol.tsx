@@ -1,5 +1,10 @@
 import { useGetBlockchains } from '@modules/node';
-import { BlockchainIcon, TableSkeleton, SvgIcon } from '@shared/components';
+import {
+  BlockchainIcon,
+  TableSkeleton,
+  SvgIcon,
+  EmptyColumn,
+} from '@shared/components';
 import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import IconSearch from '@public/assets/icons/search-16.svg';
@@ -101,49 +106,59 @@ export const NodeLauncherProtocol: FC<Props> = ({
           </div>
         ) : (
           <>
-            {filteredBlockchains?.map((b, index) => (
-              <div
-                tabIndex={activeNodeTypeId ? -1 : index + 1}
-                key={b.id}
-                css={[styles.row, styles.rowHover]}
-                className={b.id === activeBlockchainId ? 'active row' : 'row'}
-              >
-                <span css={styles.blockchainWrapper}>
-                  <BlockchainIcon
-                    size="28px"
-                    hideTooltip
-                    blockchainName={b.name}
-                  />
-                  <span css={styles.name}>
-                    <span className="beta-badge" css={styles.betaBadge}>
-                      BETA
+            {!filteredBlockchains?.length ? (
+              <EmptyColumn
+                title="No Blockchains"
+                description="Please refine your search"
+              />
+            ) : (
+              filteredBlockchains?.map((b, index) => (
+                <div
+                  tabIndex={activeNodeTypeId ? -1 : index + 1}
+                  key={b.id}
+                  css={[styles.row, styles.rowHover]}
+                  className={b.id === activeBlockchainId ? 'active row' : 'row'}
+                >
+                  <span css={styles.blockchainWrapper}>
+                    <BlockchainIcon
+                      size="28px"
+                      hideTooltip
+                      blockchainName={b.name}
+                    />
+                    <span css={styles.name}>
+                      <span className="beta-badge" css={styles.betaBadge}>
+                        BETA
+                      </span>
+                      {b.name}
                     </span>
-                    {b.name}
                   </span>
-                </span>
-                <div css={styles.nodeTypeButtons} className="node-type-buttons">
-                  {b.nodesTypes.map((type: SupportedNodeType) => (
-                    <button
-                      tabIndex={activeNodeTypeId ? -1 : index + 1}
-                      key={type.nodeType}
-                      className={
-                        type.nodeType === activeNodeTypeId &&
-                        b.id === activeBlockchainId
-                          ? 'active'
-                          : ''
-                      }
-                      onClick={() =>
-                        handleProtocolSelected(b.id!, type.nodeType)
-                      }
-                      type="button"
-                      css={styles.createButton}
-                    >
-                      {nodeTypeList.find((n) => n.id === type.nodeType)?.name}
-                    </button>
-                  ))}
+                  <div
+                    css={styles.nodeTypeButtons}
+                    className="node-type-buttons"
+                  >
+                    {b.nodesTypes.map((type: SupportedNodeType) => (
+                      <button
+                        tabIndex={activeNodeTypeId ? -1 : index + 1}
+                        key={type.nodeType}
+                        className={
+                          type.nodeType === activeNodeTypeId &&
+                          b.id === activeBlockchainId
+                            ? 'active'
+                            : ''
+                        }
+                        onClick={() =>
+                          handleProtocolSelected(b.id!, type.nodeType)
+                        }
+                        type="button"
+                        css={styles.createButton}
+                      >
+                        {nodeTypeList.find((n) => n.id === type.nodeType)?.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
             <div css={styles.disabledBlockchains}>
               {!keyword &&
                 blockchainsDisabled

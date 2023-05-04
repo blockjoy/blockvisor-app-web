@@ -21,6 +21,8 @@ export function useGetOrganizations() {
     setIsLoading('initializing');
     const organizations: any = await organizationClient.getOrganizations();
 
+    console.log('getOrganizations', organizations);
+
     checkForTokenError(organizations);
     setOrganizations(organizations);
 

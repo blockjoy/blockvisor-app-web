@@ -114,14 +114,11 @@ export const NodeLauncher = () => {
     return !!activeNodeFiles?.files?.length;
   };
 
-  const handleNodePropertyChanged = (name: string, value: any) => {
-    console.log('handle Node property changed', value, name, node);
-
+  const handleNodePropertyChanged = (name: string, value: any) =>
     setNode({
       ...node,
       [name]: value,
     });
-  };
 
   const handleNodeConfigPropertyChanged = (e: any) => {
     setServerError('');
@@ -245,15 +242,15 @@ export const NodeLauncher = () => {
 
   useEffect(() => {
     if (currentOrganization.current?.id !== defaultOrganization?.id) {
-      setNode({
-        blockchainId: '',
-        nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
-        properties: [],
-        nodeVersion: '',
-        network: '',
-        allowIps: [],
-        denyIps: [],
-      });
+      // setNode({
+      //   blockchainId: '',
+      //   nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
+      //   properties: [],
+      //   nodeVersion: '',
+      //   network: '',
+      //   allowIps: [],
+      //   denyIps: [],
+      // });
       currentOrganization.current = defaultOrganization;
     }
   }, [defaultOrganization]);
