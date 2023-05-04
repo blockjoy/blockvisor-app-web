@@ -1,5 +1,6 @@
 FROM node:16-alpine AS builder
 WORKDIR /app
+COPY . .
 
 ARG NEXT_PUBLIC_VERCEL_ENV
 ARG NEXT_PUBLIC_SUPPORT_EMAIL
@@ -20,7 +21,6 @@ RUN yarn build
 # Production image
 FROM node:16-alpine AS runner
 WORKDIR /app
-COPY . .
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
