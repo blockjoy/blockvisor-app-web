@@ -18,10 +18,7 @@
     "incremental": true,
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
-    "types": [
-      "@emotion/react/types/css-prop",
-      "@blockjoy/blockjoy-grpc/dist/out/common_pb"
-    ],
+    "types": ["@emotion/react/types/css-prop"],
     "paths": {
       "@assets/*": ["./assets/*"],
       "@modules/*": ["./modules/*"],
