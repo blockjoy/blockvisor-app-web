@@ -1,38 +1,37 @@
 steps:
-- name: 'gcr.io/k8s-skaffold/skaffold'
-  entrypoint: 'sh'
-  id: 'prod-build'
-  waitFor: ['-']
-  args:
-  - -xe
-  - -c
-  - skaffold build --filename='deploy/prod/skaffold.yaml' --file-output=/workspace/artifacts.json
-  env:
-  - 'NPM_TOKEN=${_NPM_TOKEN}'
-  - 'SHORT_SHA=${SHORT_SHA}'
-  - 'CRISP_TOKEN_KEY=${_CRISP_TOKEN_KEY}'
+    - name: 'gcr.io/k8s-skaffold/skaffold'
+      entrypoint: 'sh'
+      id: 'prod-build'
+      waitFor: ['-']
+      args:
+          - -xe
+          - -c
+          - skaffold build --filename='deploy/prod/skaffold.yaml' --file-output=/workspace/artifacts.json
+      env:
+          - 'SHORT_SHA=${SHORT_SHA}'
+          - 'CRISP_TOKEN_KEY=${_CRISP_TOKEN_KEY}'
 
-- name: 'google/cloud-sdk:latest'
-  entrypoint: 'sh'
-  waitFor: ['prod-build']
-  args:
-  - -xe
-  - -c
-  - |
-    gcloud config set deploy/region us-east1
-    gcloud deploy apply --file deploy/prod/clouddeploy.yaml
-    gcloud deploy releases create prod-rel-${SHORT_SHA} \
-                        --delivery-pipeline blockvisor-ui-prod \
-                        --description "$(git log -1  --pretty='%s')" \
-                        --build-artifacts /workspace/artifacts.json \
-                        --skaffold-file deploy/prod/skaffold.yaml \
-                        --annotations "commit_ui=https://source.cloud.google.com/blockjoy-deployer/blockvisor-ui/+/$COMMIT_SHA"
+    - name: 'google/cloud-sdk:latest'
+      entrypoint: 'sh'
+      waitFor: ['prod-build']
+      args:
+          - -xe
+          - -c
+          - |
+              gcloud config set deploy/region us-east1
+              gcloud deploy apply --file deploy/prod/clouddeploy.yaml
+              gcloud deploy releases create prod-rel-${SHORT_SHA} \
+                                  --delivery-pipeline blockvisor-ui-prod \
+                                  --description "$(git log -1  --pretty='%s')" \
+                                  --build-artifacts /workspace/artifacts.json \
+                                  --skaffold-file deploy/prod/skaffold.yaml \
+                                  --annotations "commit_ui=https://source.cloud.google.com/blockjoy-deployer/blockvisor-ui/+/$COMMIT_SHA"
 artifacts:
-  objects:
-    location: 'gs://blockvisor-ui-artifacts/'
-    paths:
-    - '/workspace/artifacts.json'
+    objects:
+        location: 'gs://blockvisor-ui-artifacts/'
+        paths:
+            - '/workspace/artifacts.json'
 options:
-  pool:
-    name: 'projects/blockjoy-deployer/locations/us-east1/workerPools/blockjoy'
+    pool:
+        name: 'projects/blockjoy-deployer/locations/us-east1/workerPools/blockjoy'
 timeout: 3600s
