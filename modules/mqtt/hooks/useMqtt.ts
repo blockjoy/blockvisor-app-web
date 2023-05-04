@@ -11,9 +11,6 @@ import {
 import { arraysEqual } from 'utils/arraysEqual';
 import { authAtoms } from '@modules/auth';
 
-// hardcode eqmx url for testing
-const EQMX_URL: string = `wss://mqtt.dev.blockjoy.com:8084/mqtt`;
-
 export const useMqtt = (): IMqttHook => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<Message | null>(null);
@@ -135,10 +132,8 @@ export const useMqtt = (): IMqttHook => {
 
   const mqttConnect = (options: any) => {
     setConnectStatus('Connecting');
-
-    console.log('EQMX URL: ', EQMX_URL);
-
-    return mqtt.connect(EQMX_URL, options);
+    console.log('MQTT Connect - URL: ', env.mqttUrl!);
+    return mqtt.connect(env.mqttUrl!, options);
   };
 
   const mqttReconnect = () => {
