@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "grpc:update": "yarn add @blockjoy/blockjoy-grpc@latest",
     "dev": "yarn run next dev",
     "build": "next build",
     "start": "next start",
@@ -14,7 +13,6 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@blockjoy/blockjoy-grpc": "^1.1.71",
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "animejs": "^3.2.1",
