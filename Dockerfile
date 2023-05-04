@@ -20,6 +20,7 @@ RUN yarn build
 # Production image
 FROM node:16-alpine AS runner
 WORKDIR /app
+COPY . .
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
