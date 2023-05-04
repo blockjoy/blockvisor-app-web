@@ -1,6 +1,6 @@
 import { ChargeBee } from 'chargebee-typescript';
 
-let chargebee = new ChargeBee();
+const chargebee = new ChargeBee();
 
 chargebee.configure({
   site: process.env.CHARGEBEE_SITE,

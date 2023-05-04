@@ -30,6 +30,8 @@ export * from './components/Subscription/PlanSelect/PlanSelect';
 export * from './constants/plan';
 export * from './constants/routes';
 
+export * from './helpers/chargebeeClientInstance';
+
 export * from './hooks/useBillingAddress';
 export * from './hooks/useBillingAddressForm';
 export * from './hooks/useBillingContacts';
@@ -38,12 +40,16 @@ export * from './hooks/useCreditCard';
 export * from './hooks/useCreditCardForm';
 export * from './hooks/useCustomer';
 export * from './hooks/useInvoices';
+export * from './hooks/usePaymentMethods';
 export * from './hooks/usePlans';
 export * from './hooks/useSubscription';
-export * from './hooks/usePaymentMethods';
 
 export * from './store/billingAtoms';
 export * from './store/billingSelectors';
+
+export * from './ui/BillingUIContext';
+export * from './ui/InvoicesUIContext';
+export * from './ui/InvoicesUIHelpers';
 
 export * from './utils/calcNextRenewDate';
 export * from './utils/calcPlanPrice';
@@ -54,6 +60,3 @@ export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapInvoicesToRows';
 export * from './utils/mapServicesToRows';
 export * from './utils/mapSubscriptionToDetails';
-
-export * from './ui/InvoicesUIContext';
-export * from './ui/InvoicesUIHelpers';

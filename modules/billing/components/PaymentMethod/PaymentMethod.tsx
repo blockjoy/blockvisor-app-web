@@ -28,7 +28,8 @@ export const PaymentMethod = () => {
   return paymentMethodsLoadingState !== 'finished' ? (
     <TableSkeleton />
   ) : !isAdding ? (
-    !paymentMethods || !paymentMethods?.length ? (
+    <>
+      {/* // !paymentMethods || !paymentMethods?.length ? ( */}
       <div>
         <p css={styles.text}>
           You have not yet added any cards. Click the button below to add one.
@@ -37,11 +38,12 @@ export const PaymentMethod = () => {
           Add Credit Card
         </Button>
       </div>
-    ) : (
+      {/* // ) : ( */}
       <div css={styles.preview}>
         <PaymentPreview items={paymentMethods} />
       </div>
-    )
+      {/* // ) */}
+    </>
   ) : (
     <>
       <CreditCard handleCancel={handleCancel} />

@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { _customer } from 'chargebee-typescript';
-import { Card, Customer } from 'chargebee-typescript/lib/resources';
+import { Customer } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
 const createChargebeeCustomer = async (
-  customerData: CustomerData,
+  customerData: _customer.create_params,
 ): Promise<Customer> => {
   return new Promise((resolve, reject) => {
     chargebee.customer
@@ -25,8 +25,8 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const customerData = req.body as CustomerData;
-      const response = await createChargebeeCustomer(customerData);
+      const params = req.body as _customer.create_params;
+      const response = await createChargebeeCustomer(params);
 
       res.status(200).json(response);
     } catch (error: any) {

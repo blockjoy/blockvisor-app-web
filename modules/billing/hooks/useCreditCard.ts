@@ -12,7 +12,7 @@ export const useCreditCard = (): ICreditCardHook => {
     setCreditCardLoadingState('initializing');
 
     try {
-      const response = await fetch('/api/billing/payments/list', {
+      const response = await fetch('/api/billing/payments/sources/list', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

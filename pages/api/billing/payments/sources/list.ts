@@ -3,7 +3,9 @@ import { _customer } from 'chargebee-typescript';
 import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
-const getPayment = async (customerData: Customer): Promise<PaymentSource[]> => {
+const listPayments = async (
+  customerData: Customer,
+): Promise<PaymentSource[]> => {
   return new Promise((resolve, reject) => {
     chargebee.payment_source
       .list({
@@ -26,12 +28,12 @@ const getPayment = async (customerData: Customer): Promise<PaymentSource[]> => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<any | { message: string }>,
+  res: NextApiResponse<PaymentSource[] | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {
-      const customerData = req.body as any;
-      const response = await getPayment(customerData);
+      const params = req.body as any;
+      const response = await listPayments(params);
 
       res.status(200).json(response);
     } catch (error: any) {

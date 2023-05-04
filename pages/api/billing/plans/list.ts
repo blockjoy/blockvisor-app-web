@@ -3,7 +3,7 @@ import { _item } from 'chargebee-typescript';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 import { Item } from 'chargebee-typescript/lib/resources';
 
-const listChargebeePlans = async (): Promise<Item[]> => {
+const listPlans = async (): Promise<Item[]> => {
   return new Promise((resolve, reject) => {
     chargebee.item
       .list({ item_family_id: { is: 'blockjoy-node-plans' } })
@@ -26,7 +26,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const response = await listChargebeePlans();
+      const response = await listPlans();
 
       res.status(200).json(response);
     } catch (error: any) {

@@ -4,12 +4,10 @@ import {
   CardNumber,
   CardExpiry,
   CardCVV,
-  Provider,
 } from '@chargebee/chargebee-js-react-wrapper';
 import { Button } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './CreditCard.styles';
-
 import {
   inputField,
   inputFieldDefault,
@@ -21,7 +19,8 @@ import {
   inputLabelSize,
 } from '@shared/components/Input/InputLabel.styles';
 import { flex } from 'styles/utils.flex.styles';
-import { toast } from 'react-toastify';
+import { usePayment } from '@modules/billing/hooks/usePayment';
+import { usePaymentMethods } from '@modules/billing/hooks/usePaymentMethods';
 
 // import './Example4.css';
 
@@ -86,107 +85,34 @@ export type CreditCardProps = {
 export const CreditCard = ({ handleCancel }: CreditCardProps) => {
   const cardRef = useRef<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<any>(null);
   const [state, setState] = useState<any>({
     intent_id: '',
     error: '',
     firstName: '',
   });
 
-  const urlEncode = (data: any) => {
-    var str = [];
-    for (var p in data) {
-      if (
-        data.hasOwnProperty(p) &&
-        !(data[p] == undefined || data[p] == null)
-      ) {
-        str.push(
-          encodeURIComponent(p) +
-            '=' +
-            (data[p] ? encodeURIComponent(data[p]) : ''),
-        );
-      }
-    }
-    return str.join('&');
-  };
+  const { createIntent } = usePayment();
+  const { createCard } = usePaymentMethods();
 
-  const createIntent = async () => {
-    return fetch('/api/billing/payments/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      // body: urlEncode({
-      //   amount: 500,
-      //   currency_code: 'INR',
-      //   payment_method_type: 'card',
-      // }),
-    })
-      .then((response) => response.json())
-      .catch((err) => {
-        console.log('error', err);
-        toast.error('Error while fetching payment intent');
-      });
-  };
-
-  const authorizeWith3ds = async () => {
+  const onSubmit = async () => {
     setLoading(true);
 
-    const intent = await createIntent();
-    console.log('INTENT', intent);
-    setLoading(false);
-    return;
-    const additionalData = {
-      billingAddress: {
-        firstName: 'John',
-        lastName: 'Doe',
-        phone: '123123123',
-        addressLine1: ' Aarti Chowk',
-        addressLine2: 'Gurdev Nagar',
-        addressLine3: '',
-        city: 'Ludhiana',
-        state: 'Punjab',
-        stateCode: 'PB',
-        countryCode: 'IN',
-        zip: '141001',
-      },
-      email: 'a@ac.com',
-      mandate: {
-        requireMandate: true,
-        description: 'mandate_description', // It could be plan name or plan id
-      },
-    };
-    // Call authorizeWith3ds methods through  card component's ref
+    const intent: any = await createIntent();
+
     cardRef.current
-      .authorizeWith3ds(intent.payment_intent, additionalData)
+      .authorizeWith3ds(intent)
       .then((data: any) => {
-        setLoading(false);
-        setState((prevState: any) => ({
-          ...prevState,
-          intent_id: data.id,
-          error: '',
-        }));
+        console.log('authorizeWith3ds Data', data);
+        createCard(data.id);
       })
       .catch((error: any) => {
-        setLoading(false);
-        setState((prevState: any) => ({
-          ...prevState,
-          intent_id: '',
-          error: 'Problem while tokenizing your card details',
-        }));
-        toast.error('Problem while tokenizing your card details');
+        console.log('authorizeWith3ds Error', error);
       });
   };
 
-  const handleChange = (event: any) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
-    setState((prevState: any) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleChange = (e: any) => {
+    // TODO: include Card Holder name to Payment Source
+    e.preventDefault();
   };
 
   const { style, classes, locale, placeholder } = CHARGEBEE_OPTIONS;
@@ -272,7 +198,7 @@ export const CreditCard = ({ handleCancel }: CreditCardProps) => {
           size="small"
           type="submit"
           tabIndex={5}
-          onClick={authorizeWith3ds}
+          onClick={onSubmit}
         >
           Add
         </Button>

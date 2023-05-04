@@ -96,7 +96,13 @@ const subscriptionLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
+const chargebee = atom<any>({
+  key: 'billing.chargebee',
+  default: null,
+});
+
 export const billingAtoms = {
+  chargebee,
   customer,
   customerLoadingState,
 

@@ -27,7 +27,7 @@ const Dummy = () => {
               updateSubscription({
                 type: 'create',
                 payload: {
-                  item: 'polygon-pruned-apac-USD-Yearly',
+                  item: 'polygon-pruned-apac-USD-Monthly',
                 },
               })
             }
@@ -39,7 +39,7 @@ const Dummy = () => {
               updateSubscription({
                 type: 'delete',
                 payload: {
-                  item: 'polygon-pruned-apac-USD-Yearly',
+                  item: 'polygon-pruned-apac-USD-Monthly',
                 },
               })
             }
