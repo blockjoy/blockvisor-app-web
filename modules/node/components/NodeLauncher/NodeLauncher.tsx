@@ -183,7 +183,7 @@ export const NodeLauncher = () => {
       properties: node.properties,
       network: node.network,
       allowIps: node.allowIps,
-      denyIps: node.allowIps,
+      denyIps: node.denyIps,
       placement: {},
     };
 

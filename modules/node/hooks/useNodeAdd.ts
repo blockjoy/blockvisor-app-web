@@ -27,13 +27,13 @@ export const useNodeAdd = () => {
       };
     });
 
+    console.log('createNode Request', nodeRequest);
+
     try {
       const response: Node = await nodeClient.createNode({
         ...nodeRequest,
         properties: nodeProperties,
         network: nodeRequest.network,
-        allowIps: [],
-        denyIps: [],
         placement: {
           scheduler: {
             resource:

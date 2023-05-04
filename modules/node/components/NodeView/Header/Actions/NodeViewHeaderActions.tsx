@@ -8,7 +8,6 @@ import IconDelete from '@public/assets/icons/trash.svg';
 import IconStop from '@public/assets/icons/stop.svg';
 import IconStart from '@public/assets/icons/start.svg';
 import { useNodeView } from '@modules/node';
-import { NodeViewHeaderDelete } from './NodeViewHeaderDelete';
 
 type Props = {
   onDeleteClicked: VoidFunction;

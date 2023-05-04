@@ -34,5 +34,5 @@ type NodeMetrics = {
 
 type NodeFirewallRule = {
   ip: string;
-  comment?: string;
+  description?: string;
 };

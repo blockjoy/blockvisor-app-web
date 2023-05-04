@@ -21,7 +21,7 @@ export const FirewallDropdown: FC<Props> = ({
 }) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [activeTabIndex, setActiveTabIndex] = useState(-1);
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
   const isAllowedIp = activeTabIndex === 0;
 
   const handleClick = () => {
@@ -37,6 +37,8 @@ export const FirewallDropdown: FC<Props> = ({
     const listToAddCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];
 
     listToAddCopy.push(rule);
+
+    console.log('handleRuleAdded', rule, isAllowedIp);
 
     onNodePropertyChanged(isAllowedIp ? 'allowIps' : 'denyIps', listToAddCopy);
   };

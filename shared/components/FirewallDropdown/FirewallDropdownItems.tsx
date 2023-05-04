@@ -26,7 +26,7 @@ export const FirewallDropdownItems: FC<Props> = ({
             items?.map((item, index) => (
               <tr key={item.ip}>
                 <td style={{ width: '140px' }}>{item.ip}</td>
-                <td style={{ width: '120px' }}>{item.comment}</td>
+                <td style={{ width: '120px' }}>{item.description}</td>
                 <td style={{ textAlign: 'right', paddingRight: '10px' }}>
                   <button
                     onClick={() => onRemoveClicked(index)}

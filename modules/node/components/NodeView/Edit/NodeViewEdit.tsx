@@ -11,11 +11,15 @@ export const NodeViewEdit = () => {
   const handleUpdateNode = (args: any) => {
     updateNode({
       id: node!.id,
+      allowIps: node?.allowIps,
+      denyIps: node?.denyIps,
       ...args,
     });
   };
 
   const handleFirewallChanged = (name: string, value: any) => {
+    console.log('handleFirewallChanged', name, value);
+
     handleUpdateNode({
       [name]: value,
     });

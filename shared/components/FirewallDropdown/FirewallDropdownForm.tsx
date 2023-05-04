@@ -16,7 +16,7 @@ export const FirewallDropdownForm: FC<Props> = ({
 
   const [state, setState] = useState<NodeFirewallRule>({
     ip: '',
-    comment: '',
+    description: '',
   });
 
   const handleInputChanged = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ export const FirewallDropdownForm: FC<Props> = ({
       onRuleAdded(state);
       setState({
         ip: '',
-        comment: '',
+        description: '',
       });
       ipRef?.current?.focus();
     }
@@ -59,11 +59,11 @@ export const FirewallDropdownForm: FC<Props> = ({
         value={state.ip}
       />
       <input
-        name="comment"
+        name="description"
         onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChanged(e)}
         onKeyUp={handleKeyUp}
         placeholder="Comment"
-        value={state.comment}
+        value={state.description}
       />
       {/* <button onClick={() => onRuleAdded()}>Go</button> */}
     </div>

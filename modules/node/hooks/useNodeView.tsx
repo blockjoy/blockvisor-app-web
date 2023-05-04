@@ -95,13 +95,7 @@ export const useNodeView = (): Hook => {
 
   const updateNode = (nodeRequest: NodeServiceUpdateRequest) => {
     nodeClient.updateNode(nodeRequest);
-
     setNode({
-      ...node!,
-      ...nodeRequest,
-    });
-
-    console.log('updateNode', {
       ...node!,
       ...nodeRequest,
     });
