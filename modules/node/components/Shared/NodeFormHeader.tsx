@@ -19,7 +19,7 @@ type Props = {
   noBottomMargin?: boolean;
 } & PropsWithChildren;
 
-export const NodeViewFormHeader: FC<Props> = ({ children, noBottomMargin }) => {
+export const NodeFormHeader: FC<Props> = ({ children, noBottomMargin }) => {
   return (
     <h3 css={[styles.h3, noBottomMargin && styles.h3NoMargin]}>{children}</h3>
   );

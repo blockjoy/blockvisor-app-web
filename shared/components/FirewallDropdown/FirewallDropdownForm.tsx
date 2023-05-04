@@ -4,7 +4,7 @@ import { styles } from './FirewallDropdownForm.styles';
 type Props = {
   isOpen: boolean;
   activeTabIndex: number;
-  onRuleAdded: (params: NodeFirewallRule) => void;
+  onRuleAdded: (params: FilteredIpAddr) => void;
 };
 
 export const FirewallDropdownForm: FC<Props> = ({
@@ -14,7 +14,7 @@ export const FirewallDropdownForm: FC<Props> = ({
 }) => {
   const ipRef = useRef<HTMLInputElement>(null);
 
-  const [state, setState] = useState<NodeFirewallRule>({
+  const [state, setState] = useState<FilteredIpAddr>({
     ip: '',
     description: '',
   });

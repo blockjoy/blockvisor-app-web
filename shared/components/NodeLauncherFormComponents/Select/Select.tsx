@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { styles } from '../Select/Select.styles';
+import { styles } from './Select.styles';
 
 type Props = {
   items: string[];

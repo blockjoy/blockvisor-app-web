@@ -4,7 +4,7 @@ import { styles } from './FirewallDropdownItems.styles';
 import IconTrash from '@public/assets/icons/trash.svg';
 
 type Props = {
-  items: NodeFirewallRule[];
+  items: FilteredIpAddr[];
   listType: string;
   onRemoveClicked: (index: number) => void;
 };

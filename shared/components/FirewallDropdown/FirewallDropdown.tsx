@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from 'react';
-import { Dropdown, SvgIcon } from '@shared/components';
+import { Dropdown, DropdownButton, SvgIcon } from '@shared/components';
 import { styles } from './FirewallDropdown.styles';
 import { FirewallDropdownHeader } from './FirewallDropdownHeader';
 import { FirewallDropdownForm } from './FirewallDropdownForm';
@@ -7,10 +7,11 @@ import { FirewallDropdownItems } from './FirewallDropdownItems';
 import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 import IconFirewall from '@public/assets/icons/firewall.svg';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
+import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 
 type Props = {
-  allowedIps: NodeFirewallRule[];
-  deniedIps: NodeFirewallRule[];
+  allowedIps: FilteredIpAddr[];
+  deniedIps: FilteredIpAddr[];
   onNodePropertyChanged: (name: string, value: any) => void;
 };
 
@@ -33,7 +34,7 @@ export const FirewallDropdown: FC<Props> = ({
 
   useClickOutside<HTMLDivElement>(dropdownRef, () => setIsOpen(false));
 
-  const handleRuleAdded = (rule: NodeFirewallRule) => {
+  const handleRuleAdded = (rule: FilteredIpAddr) => {
     const listToAddCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];
 
     listToAddCopy.push(rule);
@@ -72,12 +73,12 @@ export const FirewallDropdown: FC<Props> = ({
       css={[styles.wrapper]}
       ref={dropdownRef}
     >
-      <button css={styles.button} onClick={handleClick}>
-        <SvgIcon size="16px">
-          <IconFirewall />
-        </SvgIcon>
-        {selectText}
-      </button>
+      <DropdownButton
+        isOpen={isOpen}
+        icon={<IconFirewall />}
+        text={selectText}
+        onClick={handleClick}
+      />
       <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
         <FirewallDropdownHeader
           activeTabIndex={activeTabIndex}
@@ -94,9 +95,6 @@ export const FirewallDropdown: FC<Props> = ({
           onRemoveClicked={handleRemoveFromList}
         />
       </Dropdown>
-      <span css={[styles.icon, isOpen && styles.iconOpen]}>
-        <IconArrow />
-      </span>
     </div>
   );
 };

@@ -17,11 +17,11 @@ export const styles = {
     &.not-empty,
     &.is-open {
       svg path {
-        fill: ${theme.colorDefault};
+        fill: ${theme.colorText};
       }
 
       p {
-        color: ${theme.colorDefault};
+        color: ${theme.colorText};
       }
 
       > button {
@@ -53,7 +53,7 @@ export const styles = {
     border-radius: 6px;
     border: 1px solid ${theme.colorBorder};
     width: 100%;
-    height: 40px;
+    height: 44px;
     padding: 0 10px;
     background: transparent;
     cursor: pointer;
@@ -65,11 +65,11 @@ export const styles = {
     }
 
     svg path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
 
     p {
-      color: ${theme.colorLabel};
+      color: ${theme.colorDefault};
     }
   `,
   dropdownlabel: (theme: ITheme) => css`

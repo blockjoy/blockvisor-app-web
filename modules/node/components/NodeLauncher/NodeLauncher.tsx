@@ -1,9 +1,9 @@
 import { styles } from './NodeLauncher.styles';
-import { NodeLauncherPageHeader } from './NodeLauncherPageHeader';
 import { useEffect, useRef, useState } from 'react';
-import { NodeLauncherConfig } from './NodeLauncherConfig';
-import { NodeLauncherProtocol } from './NodeLauncherProtocol';
-import { NodeLauncherSummary } from './NodeLauncherSummary';
+import { NodeLauncherTitle } from './Title/NodeLauncherTitle';
+import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
+import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
+import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
@@ -193,7 +193,7 @@ export const NodeLauncher = () => {
       (nodeId: string) => {
         router.push(ROUTES.NODE(nodeId));
       },
-      (error: string) => setServerError(error),
+      (error: string) => setServerError(error!),
     );
   };
 
@@ -260,7 +260,7 @@ export const NodeLauncher = () => {
 
   return (
     <>
-      <NodeLauncherPageHeader />
+      <NodeLauncherTitle />
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeLauncherProtocol
           onProtocolSelected={handleProtocolSelected}

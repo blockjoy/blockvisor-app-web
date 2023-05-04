@@ -17,6 +17,8 @@ import {
   NodeType,
   UiType,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeLauncherOrgPicker } from './NodeLauncherOrgPicker';
+import { NodeLauncherFormHeader, NodeLauncherFormLabel } from '@modules/node';
 
 type Props = {
   serverError: string;
@@ -53,7 +55,10 @@ export const NodeLauncherSummary: FC<Props> = ({
 
   return (
     <div css={styles.wrapper}>
-      <h2 css={styles.h2}>Launch</h2>
+      <NodeLauncherFormHeader>Launch</NodeLauncherFormHeader>
+      {/* <NodeLauncherFormLabel>Organization</NodeLauncherFormLabel>
+      <NodeLauncherOrgPicker /> */}
+
       <div css={styles.summary}>
         {!hasNetworkList ? (
           <div css={[colors.warning, spacing.bottom.medium]}>

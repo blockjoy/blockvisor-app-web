@@ -1,11 +1,11 @@
 import NodeGraphs from '@public/assets/images/node-graphs.svg';
-import { NodeViewFormHeader } from '../../../NodeViewFormHeader';
+import { NodeFormHeader } from '@modules/node';
 import { styles } from './NodeViewDashboardMetrics.styles';
 
 export const NodeViewDashboardMetrics = () => {
   return (
     <section css={styles.wrapper}>
-      <NodeViewFormHeader>Metrics</NodeViewFormHeader>
+      <NodeFormHeader>Metrics</NodeFormHeader>
       <NodeGraphs />
     </section>
   );

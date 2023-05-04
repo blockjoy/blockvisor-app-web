@@ -76,7 +76,7 @@ export const styles = {
     }
 
     ::placeholder {
-      color: ${theme.colorLabel};
+      color: ${theme.colorDefault};
     }
   `,
   nodeTypeButtons: css`

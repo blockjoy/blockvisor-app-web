@@ -30,6 +30,7 @@ export * from './PillBox/PillBox';
 export * from './LoadingSpinner';
 export * from './ButtonWithDropdown/ButtonWithDropdown';
 export * from './DropdownItem/DropdownItem';
+export * from './DropdownButton/DropdownButton';
 export * from './NodeTypePicker/NodeTypePicker';
 export * from './Pagination/Pagination';
 export * from './Dropdown/Dropdown';

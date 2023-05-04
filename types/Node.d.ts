@@ -32,7 +32,7 @@ type NodeMetrics = {
   value: string;
 };
 
-type NodeFirewallRule = {
+type FilteredIpAddr = {
   ip: string;
   description?: string;
 };

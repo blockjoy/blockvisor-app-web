@@ -1,10 +1,7 @@
-import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { NodeStatusIcon } from '@shared/components';
-import { NodeViewFormHeader } from '../../../NodeViewFormHeader';
+import { useNodeView, NodeFormHeader } from '@modules/node';
 import { styles } from './NodeViewDashboardStatus.styles';
-
 import { nodeStatusList } from '@shared/constants/lookups';
-
 import { getColor } from '@shared/components';
 
 const iconSize = '24px';
@@ -12,9 +9,7 @@ const iconSize = '24px';
 export const NodeViewDashboardStatus = () => {
   const { node } = useNodeView();
 
-  if (!node?.id) {
-    return null;
-  }
+  if (!node?.id) return null;
 
   const statusInfo = nodeStatusList.find((s) => s.id === node.status),
     containerStatusInfo = nodeStatusList.find(
@@ -25,7 +20,7 @@ export const NodeViewDashboardStatus = () => {
 
   return (
     <>
-      <NodeViewFormHeader>Status</NodeViewFormHeader>
+      <NodeFormHeader>Status</NodeFormHeader>
       <div css={styles.wrapper}>
         <div css={styles.card}>
           <NodeStatusIcon size={iconSize} status={node!.status} />

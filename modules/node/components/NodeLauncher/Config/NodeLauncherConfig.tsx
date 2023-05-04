@@ -1,0 +1,165 @@
+import {
+  NodeTypeConfigLabel,
+  Alert,
+  PillPicker,
+  Skeleton,
+  FirewallDropdown,
+  SvgIcon,
+} from '@shared/components';
+import { FC, Fragment } from 'react';
+import {
+  FileUpload,
+  Textbox,
+  Switch,
+} from '@shared/components/NodeLauncherFormComponents';
+import { colors } from 'styles/utils.colors.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { typo } from 'styles/utils.typography.styles';
+import { styles } from './NodeLauncherConfig.styles';
+import IconInfo from '@public/assets/icons/info.svg';
+import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
+import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeLauncherState } from '../NodeLauncher';
+import { NodeLauncherFormLabel, NodeLauncherFormHeader } from '@modules/node';
+
+type Props = {
+  isConfigValid: boolean | null;
+  nodeTypeProperties?: NodeProperty[];
+  nodeFiles?: NodeFiles[];
+  networkList: string[];
+  nodeLauncherState: NodeLauncherState;
+  onFileUploaded: (e: any) => void;
+  onNodeConfigPropertyChanged: (e: any) => void;
+  onNodePropertyChanged: (name: string, value: any) => void;
+};
+
+const renderControls = (
+  property: NodeProperty,
+  nodeFiles: NodeFiles[],
+  onFileUploaded: (e: any) => void,
+  onPropertyChanged: (e: any) => void,
+) => {
+  switch (property.uiType) {
+    case UiType.UI_TYPE_FILE_UPLOAD:
+      return (
+        <FileUpload
+          tabIndex={5}
+          currentFiles={nodeFiles?.find((f) => f.name === property.name)?.files}
+          multiple={true}
+          onChange={onFileUploaded}
+          name={property.name}
+          placeholder="Upload validator keys"
+        />
+      );
+    case UiType.UI_TYPE_TEXT:
+      return (
+        <Textbox
+          tabIndex={5}
+          type="password"
+          isRequired={property?.required && !property.value}
+          name={property.name}
+          onPropertyChanged={onPropertyChanged}
+        />
+      );
+    case UiType.UI_TYPE_TEXT:
+      return (
+        <Textbox
+          tabIndex={5}
+          type="text"
+          isRequired={property?.required && !property.value}
+          name={property.name}
+          onPropertyChanged={onPropertyChanged}
+        />
+      );
+    case UiType.UI_TYPE_SWITCH:
+      return (
+        <Switch
+          tabIndex={!!property.disabled ? -1 : 5}
+          disabled={!!property.disabled}
+          tooltip="Self hosting will be available after BETA."
+          name={property.name}
+          onPropertyChanged={onPropertyChanged}
+        />
+      );
+  }
+};
+
+export const NodeLauncherConfig: FC<Props> = ({
+  isConfigValid,
+  networkList,
+  nodeLauncherState,
+  onFileUploaded,
+  onNodePropertyChanged,
+  onNodeConfigPropertyChanged,
+}) => {
+  const { network, properties, keyFiles } = nodeLauncherState;
+
+  return (
+    <NodeLauncherConfigWrapper>
+      <div css={styles.wrapper}>
+        <NodeLauncherFormHeader>Configure</NodeLauncherFormHeader>
+        <Alert isSuccess={isConfigValid!}>
+          {isConfigValid === null ? (
+            <Skeleton />
+          ) : isConfigValid === true ? (
+            'All systems GO!'
+          ) : (
+            'Node requires configuration information.'
+          )}
+        </Alert>
+
+        {isConfigValid !== null && !!networkList?.length && (
+          <>
+            <NodeLauncherFormLabel>Network</NodeLauncherFormLabel>
+            <PillPicker
+              name="network"
+              items={networkList}
+              selectedItem={network}
+              onChange={onNodePropertyChanged}
+              tabIndexStart={3}
+            />
+          </>
+        )}
+
+        {isConfigValid !== null && !networkList?.length && (
+          <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
+            Missing Network Configuration
+          </div>
+        )}
+
+        <NodeLauncherFormLabel>
+          Firewall Rules{' '}
+          <SvgIcon tooltip="Add IP addresses that are allowed/denied">
+            <IconInfo />
+          </SvgIcon>
+        </NodeLauncherFormLabel>
+
+        <FirewallDropdown
+          onNodePropertyChanged={onNodePropertyChanged}
+          allowedIps={nodeLauncherState.allowIps}
+          deniedIps={nodeLauncherState.denyIps}
+        />
+
+        {Boolean(networkList?.length) &&
+          properties?.map((property: NodeProperty) => {
+            return (
+              <Fragment key={property.name}>
+                <NodeLauncherFormLabel>
+                  <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
+                  {property.required && !property.disabled && (
+                    <span css={styles.requiredAsterix}>*</span>
+                  )}
+                </NodeLauncherFormLabel>
+                {renderControls(
+                  property,
+                  keyFiles!,
+                  onFileUploaded,
+                  onNodeConfigPropertyChanged,
+                )}
+              </Fragment>
+            );
+          })}
+      </div>
+    </NodeLauncherConfigWrapper>
+  );
+};

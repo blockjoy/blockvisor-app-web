@@ -12,6 +12,6 @@ const styles = {
   `,
 };
 
-export const NodeViewFormLabel: FC<PropsWithChildren> = ({ children }) => {
+export const NodeFormLabel: FC<PropsWithChildren> = ({ children }) => {
   return <h4 css={styles.h4}>{children}</h4>;
 };

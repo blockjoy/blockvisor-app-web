@@ -19,30 +19,18 @@ const move = keyframes`
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
-    padding: 10px 0;
+    padding: 10px 0 10px 24px;
     flex: 1 1 400px;
     max-width: 500px;
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {
+      padding: 10px 0 10px 0;
       max-width: 100%;
       width: 100%;
       min-width: 100%;
       border-left: 0;
       border-top: 1px solid ${theme.colorBorder};
-    }
-  `,
-  h2: (theme: ITheme) => css`
-    display: flex;
-    align-items: center;
-    height: 58px;
-    font-size: 16px;
-    margin: 0;
-    font-weight: 400;
-    color: ${theme.colorLabel};
-
-    @media ${breakpoints.fromXLrg} {
-      padding: 0 24px;
     }
   `,
   buttons: css`
@@ -53,15 +41,10 @@ export const styles = {
     border: 1px solid ${theme.colorBorder};
     border-radius: 6px;
     padding: 16px;
-    margin: 0 0 16px;
 
     @media ${breakpoints.toXlrg} {
       max-width: 100%;
       margin-bottom: 100px;
-    }
-
-    @media ${breakpoints.fromXLrg} {
-      margin: 0 24px;
     }
   `,
   summaryList: (theme: ITheme) => css`

@@ -4,6 +4,7 @@ export * from './components/NodeView/Tabs/Dashboard/NodeViewDashboard';
 export * from './components/NodeView/Tabs/Metrics/NodeViewMetrics';
 export * from './components/NodeView/Tabs/Details/NodeViewDetails';
 export * from './components/NodeLauncher/NodeLauncher';
+export * from './components/Shared';
 export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeList';
 export * from './hooks/useNodeView';
