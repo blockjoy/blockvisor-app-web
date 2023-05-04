@@ -8,6 +8,7 @@ USER node
 
 FROM node:16-alpine AS builder
 WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ARG NEXT_PUBLIC_VERCEL_ENV
