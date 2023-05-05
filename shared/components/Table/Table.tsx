@@ -1,5 +1,5 @@
 import { styles } from './table.styles';
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
 import { isSafari } from 'react-device-detect';
 import { TableSortButton } from './TableSortButton';
@@ -14,7 +14,6 @@ export type TableProps = {
   fixedRowHeight?: string;
   properties?: InitialFilter;
   handleSort?: (dataField: string) => void;
-  additionalStyles?: SerializedStyles;
 };
 
 export const Table = ({
@@ -27,7 +26,6 @@ export const Table = ({
   fixedRowHeight,
   properties,
   handleSort,
-  additionalStyles,
 }: TableProps) => {
   const handleRowClick = (tr: Row) => {
     if (onRowClick) {
@@ -42,7 +40,6 @@ export const Table = ({
           styles.table,
           !!onRowClick && styles.hasHoverRows,
           fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
-          additionalStyles && additionalStyles,
         ]}
       >
         {headers && rows?.length > 0 && (

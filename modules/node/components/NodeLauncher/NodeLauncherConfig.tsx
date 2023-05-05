@@ -3,11 +3,11 @@ import {
   Alert,
   PillPicker,
   Skeleton,
-  Switch,
 } from '@shared/components';
 import { FC, Fragment } from 'react';
 import { FileUpload } from './formComponents/FileUpload/FileUpload';
 import { Textbox } from './formComponents/Textbox/Textbox';
+import { Switch } from './formComponents/Switch/Switch';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';

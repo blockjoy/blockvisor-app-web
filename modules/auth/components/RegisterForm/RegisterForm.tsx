@@ -14,7 +14,6 @@ import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQ
 import { PasswordField } from '../PasswordField/PasswordField';
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { userClient } from '@modules/grpc';
-import { useCustomer } from '@modules/billing';
 
 type RegisterForm = {
   firstName: string;
@@ -42,9 +41,6 @@ export function RegisterForm() {
   const router = useRouter();
   const { invited, token } = router.query;
 
-  const { setPassword } = usePasswordStrength();
-  const { createCustomer } = useCustomer();
-
   const form = useForm<RegisterForm>({
     mode: 'all',
     reValidateMode: 'onBlur',
@@ -59,6 +55,8 @@ export function RegisterForm() {
   const [loading, setIsLoading] = useState(false);
   const { handleSubmit, setValue, formState, watch } = form;
   const { isValid } = formState;
+
+  const { setPassword } = usePasswordStrength();
 
   const onSubmit = handleSubmit(
     async ({
@@ -78,18 +76,13 @@ export function RegisterForm() {
         // password_confirmation: confirmPassword,
       });
 
+      console.log('signup', response);
+
       if (isStatusResponse(response)) {
         setRegisterError(getError(response.message));
         setIsLoading(false);
         return;
       }
-
-      createCustomer({
-        id: response.id,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-      });
 
       setIsLoading(false);
       Router.push(Routes.verify);

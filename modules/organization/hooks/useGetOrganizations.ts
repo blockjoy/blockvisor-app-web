@@ -24,7 +24,7 @@ export function useGetOrganizations() {
     checkForTokenError(organizations);
     setOrganizations(organizations);
 
-    if (init) await getDefaultOrganization(organizations);
+    if (init) getDefaultOrganization(organizations);
 
     setIsLoading('finished');
   };
