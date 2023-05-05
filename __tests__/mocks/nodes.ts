@@ -1,4 +1,4 @@
-import { Node } from '@modules/grpc/library/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 const mockedNodesResponse: Node[] = [
   {
@@ -35,7 +35,7 @@ const mockedNodesResponse: Node[] = [
     version: '3.4.0-build.1',
     allowIps: [{ ip: '192.69.220.6' }],
     denyIps: [],
-    scheduler: undefined,
+    placement: {},
   },
 ];
 

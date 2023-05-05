@@ -7,13 +7,11 @@ import {
   InitialQueryParams as InitialQueryParamsOrganizations,
   initialQueryParams,
 } from '../ui/OrganizationsUIHelpers';
-import {
-  mapMembersAndInvitations,
-  MemberAndInvitation,
-} from '../utils/mapMembersAndInvitations';
+import { mapMembersAndInvitations } from '../utils/mapMembersAndInvitations';
 import { localStorageEffect } from 'utils/store/persist';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
+import { MemberAndInvitation } from '../types';
 
 const selectedOrganization = atom<Org | null>({
   key: 'organization.current',
@@ -51,6 +49,7 @@ const allOrganizationsSorted = selector<Org[]>({
   key: 'organization.allSorted',
   get: ({ get }) => {
     const organizations = get(allOrganizations);
+
     return [...organizations].sort((orgA: Org, orgB: Org) => {
       if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
         return -1;

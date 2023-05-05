@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 
 export const toRows = (nodeList: BlockjoyNode[] | null) => {
-  return nodeList?.map((node: any) => ({
+  return nodeList?.map((node) => ({
     key: node.id,
     cells: [
       {
@@ -26,7 +26,7 @@ export const toRows = (nodeList: BlockjoyNode[] | null) => {
         key: '3',
         component: (
           <span style={{ fontSize: '14px' }}>
-            {formatDistanceToNow(new Date(node.created_at_datetime), {
+            {formatDistanceToNow(new Date(node.created), {
               addSuffix: true,
             })}
           </span>

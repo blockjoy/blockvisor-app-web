@@ -10,7 +10,9 @@ export const handleTokenFromQueryString = async (
     const tokenObject: any = readToken(
       Buffer.from(token?.toString(), 'binary').toString('base64'),
     );
-    const email = tokenObject?.email || tokenObject?.invitee_email;
+
+    const email = tokenObject?.data.email || tokenObject?.data.invitee_email;
+
     if (email) {
       setValue('email', email);
     }

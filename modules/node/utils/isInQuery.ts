@@ -1,14 +1,15 @@
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeStatusList } from '@shared/constants/lookups';
 import { buildParams } from './buildParams';
 import { loadPersistedFilters } from './loadPersistedFilters';
 
-export const isInQuery = (node: any) => {
+export const isInQuery = (node: Node) => {
   const filtersAll = loadPersistedFilters();
 
   if (!filtersAll) return true;
 
   const blockchainID: string = node.blockchainId;
-  const typeID: string = node.type.toString();
+  const typeID: string = node.nodeType.toString();
   const statusID: string =
     nodeStatusList.find((nsl) => nsl.id === node.status)?.uuid ?? '';
 
