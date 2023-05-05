@@ -4,10 +4,10 @@ import { NewPasswordForm } from '@modules/auth';
 import { useRouterSpy } from '../../utils';
 import { routerMockBuilder } from '__tests__/mocks/router';
 import userEvent from '@testing-library/user-event';
-import { apiClient } from '@modules/client';
+import { authClient } from '@modules/grpc';
 
 beforeEach(() => {
-  vi.mock('@modules/client');
+  vi.mock('@modules/grpc');
 });
 
 afterEach(() => {
@@ -20,7 +20,7 @@ describe('New Password Form', () => {
   );
 
   it('should display error text when there is an error', () => {
-    vi.mocked(apiClient.resetPassword).mockResolvedValue({
+    vi.mocked(authClient.updateResetPassword).mockResolvedValue({
       code: 2,
       message: 'no good',
       metadata: { headers: '' },

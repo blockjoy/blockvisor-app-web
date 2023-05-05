@@ -14,7 +14,7 @@ describe('toRows', () => {
     const res = toRows(
       mockedNodesResponse.map((n) => ({
         ...n,
-        created: '',
+        created: new Date(),
         details: [],
         nodeTypeConfigDetails: [],
       })),
