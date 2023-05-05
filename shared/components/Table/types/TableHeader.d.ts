@@ -10,3 +10,23 @@ type TableHeader = {
   dataField?: string;
   sort?: boolean;
 };
+
+type TableRow = {
+  key: string;
+  cells: TableCell[];
+};
+
+type TableCell = {
+  key: string;
+  component: EmotionJSX.Element;
+};
+
+type TableRow = {
+  key: string;
+  cells: TableCell[];
+};
+
+type TableCell = {
+  key: string;
+  component: EmotionJSX.Element;
+};

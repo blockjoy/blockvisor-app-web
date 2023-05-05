@@ -15,7 +15,9 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
+    "@react-pdf/renderer": "^3.1.6",
     "animejs": "^3.2.1",
+    "chargebee-typescript": "^2.18.0",
     "crisp-sdk-web": "^1.0.11",
     "date-fns": "^2.29.2",
     "google-protobuf": "^3.21.0",

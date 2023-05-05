@@ -1,0 +1,32 @@
+export const CREDIT_CARD_DEFAULT = {
+  cardNumber: '',
+  cardHolder: '',
+  expDate: '',
+  cvc: '',
+};
+
+export const CREDIT_CARD = {
+  id: 'card_1MlrZFB5ce1jJsfTsRthNrQW',
+  object: 'card',
+  address_city: null,
+  address_country: null,
+  address_line1: null,
+  address_line1_check: null,
+  address_line2: null,
+  address_state: null,
+  address_zip: null,
+  address_zip_check: null,
+  brand: 'Visa',
+  country: 'US',
+  customer: 'cus_NWvQOHS2ZbnSed',
+  cvc_check: 'pass',
+  dynamic_last4: null,
+  exp_month: 8,
+  exp_year: 2024,
+  fingerprint: '6miHob5DrPy3VE1b',
+  funding: 'credit',
+  last4: '4242',
+  metadata: {},
+  name: null,
+  tokenization_method: null,
+};

@@ -4,7 +4,11 @@ import { DataRow } from '../DataRow/DataRow';
 
 import { styles } from './DetailsTable.styles';
 
-type DetailsDataRow = { id?: string; label: ReactNode | string; data: string };
+export type DetailsDataRow = {
+  id?: string;
+  label: ReactNode | string;
+  data: ReactNode | string;
+};
 
 type DetailsTableProps = {
   bodyElements: DetailsDataRow[];

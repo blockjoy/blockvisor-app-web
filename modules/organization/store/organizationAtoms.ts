@@ -51,6 +51,7 @@ const allOrganizationsSorted = selector<Org[]>({
   key: 'organization.allSorted',
   get: ({ get }) => {
     const organizations = get(allOrganizations);
+    if (!organizations || !organizations.length) return [];
     return [...organizations].sort((orgA: Org, orgB: Org) => {
       if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
         return -1;
