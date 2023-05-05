@@ -27,8 +27,8 @@ export const styles = {
     top: 52px;
     right: 0;
     overflow: hidden;
-    max-width: 220px;
-    min-width: 0;
+    max-width: 180px;
+    min-width: 180px;
   `,
   userInfoContainer: (theme: ITheme) => css`
     border-bottom: 1px solid ${theme.colorLabel};

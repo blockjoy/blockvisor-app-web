@@ -1,24 +1,14 @@
 import { styles } from './nodeFilters.styles';
-import { styles as blockStyles } from './NodeFiltersBlock.styles';
-import {
-  Checkbox,
-  Skeleton,
-  SkeletonGrid,
-  Scrollbar,
-  SvgIcon,
-} from '@shared/components';
+import { Skeleton, SkeletonGrid, Scrollbar, SvgIcon } from '@shared/components';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useMemo, useRef, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
 import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
-import {
-  organizationAtoms,
-  useDefaultOrganization,
-} from '@modules/organization';
+import { useDefaultOrganization } from '@modules/organization';
 import { useFilters } from '@modules/node/hooks/useFilters';
 import { blockchainSelectors } from '@modules/node/store/blockchains';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';

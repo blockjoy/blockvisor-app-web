@@ -71,10 +71,6 @@ export const styles = {
     outline: none;
     color: ${theme.colorText};
 
-    :is(:focus, :hover) {
-      border-color: ${theme.colorBorderGrey};
-    }
-
     :is(:focus, :hover) ~ span path {
       fill: ${theme.colorText};
     }

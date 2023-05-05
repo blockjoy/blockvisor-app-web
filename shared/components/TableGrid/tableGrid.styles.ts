@@ -55,7 +55,7 @@ export const styles = {
     @media ${breakpoints.fromLrg} {
       :hover,
       :active {
-        border-color: ${theme.colorBorderGrey};
+        border-color: ${theme.colorBorder};
       }
     }
   `,

@@ -11,10 +11,10 @@ export const styles = {
       top: 71px;
       position: sticky;
       flex: 0 0 200px;
-      margin-right: 16px;
       min-width: 200px;
       max-width: 200px;
       height: calc(100vh - 82px);
+      padding-right: 16px;
     }
   `,
   outerWrapperCollapsed: css`

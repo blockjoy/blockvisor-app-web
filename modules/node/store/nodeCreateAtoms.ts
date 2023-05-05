@@ -1,3 +1,4 @@
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { atom } from 'recoil';
 
 export type FilterItem = {
@@ -6,7 +7,7 @@ export type FilterItem = {
   isChecked?: boolean | undefined;
 };
 
-export const activeNode = atom<BlockjoyNode | null>({
+export const activeNode = atom<Node | null>({
   key: 'node.activeNode',
   default: null,
 });

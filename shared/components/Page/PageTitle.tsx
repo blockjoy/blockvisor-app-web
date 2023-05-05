@@ -25,7 +25,6 @@ export const PageTitle: FC<Props> = ({ children, title, hasOrgPicker }) => {
           </>
         )}
         <PageTitleLaunchNode />
-
         <ProfileDropdown />
       </div>
     </header>

@@ -16,11 +16,12 @@ export const styles = {
     gap: 6px;
     height: 72px;
     min-height: 72px;
+    margin-bottom: 20px;
     cursor: pointer;
+    border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromXLrg} {
       display: flex;
-      width: calc(100% - 16px);
     }
 
     path {
