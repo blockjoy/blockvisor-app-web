@@ -13,7 +13,9 @@ describe('FAQ Page tests', () => {
       cy.waitForElement('[data-cy="sidebarMain-faq-link"]', 15000);
       cy.get('[data-cy="sidebarMain-faq-link"]').click();
 
-      cy.url().should('be.equal', `${Cypress.config('baseUrl')}/faq`);
+      cy.wait(2000)
+        .url()
+        .should('be.equal', `${Cypress.config('baseUrl')}/faq`);
     });
   });
 });
