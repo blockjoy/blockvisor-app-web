@@ -1,0 +1,23 @@
+name: tests
+on:
+  push:
+    branches:
+      - feature/cypress-testing
+jobs:
+  cypress-run:
+    env:
+      ENV_SECRETS: ${{ secrets.TESTING_SECRETS }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download environment secrets
+        uses: RollyPeres/base64-to-path@v1
+        with:
+          filePath: ${{ github.workspace }}/.env.production
+          encodedString: ${{ env.ENV_SECRETS }}
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          build: yarn build
+          start: yarn start
