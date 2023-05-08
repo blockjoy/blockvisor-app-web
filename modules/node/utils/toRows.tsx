@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 
 export const toRows = (nodeList: BlockjoyNode[] | null) => {
-  return nodeList?.map((node) => ({
+  return nodeList?.map((node: any) => ({
     key: node.id,
     cells: [
       {

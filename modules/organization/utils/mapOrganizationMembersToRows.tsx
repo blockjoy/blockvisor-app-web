@@ -9,9 +9,9 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { MemberAndInvitation } from './mapMembersAndInvitations';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { getOrgMemberRole } from './getOrgMemberRole';
+import { MemberAndInvitation } from '../types';
 
 export enum Action {
   revoke = 'revoke',
