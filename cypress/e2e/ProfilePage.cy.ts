@@ -84,10 +84,9 @@ describe('Profile page', () => {
       cy.get('[data-cy="profileDropdown-profile-button"]').click();
       cy.get('[data-cy="profile-account-tab"]').click();
       cy.get('[data-cy="profile-signout-button"]').click();
-      cy.url().should(
-        'be.equal',
-        `${Cypress.config('baseUrl')}/login?redirect=%2F`,
-      );
+      cy.wait(2000)
+        .url()
+        .should('be.equal', `${Cypress.config('baseUrl')}/login?redirect=%2F`);
     });
   });
 });

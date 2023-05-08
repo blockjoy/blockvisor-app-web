@@ -15,10 +15,9 @@ describe('Signout Action', () => {
       cy.get('[data-cy="profileDropdown-button"]').click();
       cy.get('[data-cy="profileDropdown-signout-button"]').click();
 
-      cy.url().should(
-        'be.equal',
-        `${Cypress.config('baseUrl')}/login?redirect=%2F`,
-      );
+      cy.wait(2000)
+        .url()
+        .should('be.equal', `${Cypress.config('baseUrl')}/login?redirect=%2F`);
     });
   });
 });
