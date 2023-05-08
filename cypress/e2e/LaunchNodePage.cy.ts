@@ -88,7 +88,8 @@ describe('Nodes Page tests', () => {
     });
   });
 
-  it("If there is an active Helium Validator it shouldn't launch a new Helium Validator and display the error, delete the node after test", () => {
+  //Skipped for now because of the its allowed to have more than one validator
+  it.skip("If there is an active Helium Validator it shouldn't launch a new Helium Validator and display the error, delete the node after test", () => {
     cy.login(Cypress.env('TEST_USER_EMAIL'), Cypress.env('TEST_USER_PASSWORD'));
     cy.waitForElement('[data-cy="nodes-launchNode-button"]', 15000);
     cy.get('[data-cy="nodes-launchNode-button"]').click();
