@@ -101,7 +101,7 @@ describe('Node List Page', () => {
     });
   });
 
-  //Skipped for now because of the new grpc client
+  //Skipped for now because the total nodes count was removed
   it.skip('Should display total 3 nodes', async () => {
     vi.mocked(nodeClient.listNodes).mockImplementationOnce(
       async () => mockedNodesResponse,
@@ -113,6 +113,7 @@ describe('Node List Page', () => {
         </NodeUIProvider>
       </AppLayout>,
     );
+
     await waitFor(() => {
       expect(screen.getByDataCy('nodeList-header').textContent).toEqual('3');
     });
