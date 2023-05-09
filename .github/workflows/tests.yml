@@ -16,6 +16,10 @@ jobs:
         with:
           filePath: ${{ github.workspace }}/.env.production
           encodedString: ${{ env.ENV_SECRETS }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Build project
+        run: yarn build
       - name: Vitest run
         run: yarn test
       - name: Cypress run
