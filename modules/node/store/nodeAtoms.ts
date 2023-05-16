@@ -33,6 +33,11 @@ const isLoading = atom<LoadingState>({
   default: 'initializing',
 });
 
+const isLoadingActiveNode = atom<boolean>({
+  key: 'node.loadingActiveNode',
+  default: true,
+});
+
 const isFiltersOpen = atom<boolean>({
   key: 'node.isFiltersOpen',
   default: false,
@@ -191,12 +196,13 @@ const filtersTotal = selector<number>({
     const filtersStatusTotal = get(filtersStatus).some((s) => s.isChecked);
     const filtersHealthTotal = get(filtersHealth) ? true : false;
 
-    const total = [
-      filtersBlockchainTotal,
-      filtersTypeTotal,
-      filtersStatusTotal,
-      filtersHealthTotal,
-    ].filter(Boolean).length;
+    const total =
+      [
+        filtersBlockchainTotal,
+        filtersTypeTotal,
+        filtersStatusTotal,
+        filtersHealthTotal,
+      ].filter(Boolean).length + 1;
 
     return total;
   },
@@ -249,6 +255,7 @@ export const nodeAtoms = {
   activeNode,
   nodeList,
   isLoading,
+  isLoadingActiveNode,
   isFiltersOpen,
   activeListType,
   filtersHealth,

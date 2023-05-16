@@ -80,7 +80,6 @@ export const Members = () => {
 
   const [isInviting, setIsInviting] = useState<boolean>(false);
 
-  // PERMISSIONS BOOLSHIT
   const role = getOrgMemberRole(selectedOrganization!, user?.id!);
 
   const canCreateMember: boolean = useHasPermissions(

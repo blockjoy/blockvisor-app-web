@@ -22,9 +22,9 @@ export const PageTitle: FC<Props> = ({ children, title, hasOrgPicker }) => {
           <>
             {hasOrgPicker && <OrganizationPicker hideName />}
             <h1 css={typo.large}>{title}</h1>
-            <PageTitleLaunchNode />
           </>
         )}
+        <PageTitleLaunchNode />
         <ProfileDropdown />
       </div>
     </header>

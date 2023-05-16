@@ -1,30 +1,25 @@
 import { nodeClient, keyFileClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
-import { useIdentityRepository } from '@modules/auth/hooks/useIdentityRepository';
 import { useNodeList } from './useNodeList';
-import { CreateNodeParams } from '..';
 import {
+  NodeServiceCreateRequest,
   Node,
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const useNodeAdd = () => {
-  const repository = useIdentityRepository();
-
   const { loadNodes } = useNodeList();
 
   const createNode = async (
-    params: CreateNodeParams,
+    nodeRequest: NodeServiceCreateRequest,
+    keyFiles: File[],
     onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
-    const orgId = repository?.getIdentity()?.defaultOrganization?.id ?? '';
-
-    const nodeProperties: any = params.nodeTypeProperties.map((property) => {
+    const nodeProperties: any = nodeRequest.properties.map((property) => {
       const { uiType, ...rest } = property;
       return {
         ...rest,
-        // default: property.default === null ? 'null' : property.default,
         value: property?.value?.toString() || 'null',
         description: '',
         label: '',
@@ -32,16 +27,13 @@ export const useNodeAdd = () => {
       };
     });
 
+    console.log('createNode Request', nodeRequest);
+
     try {
       const response: Node = await nodeClient.createNode({
-        orgId: orgId,
-        blockchainId: params.blockchain,
-        version: params.version ?? '',
-        nodeType: params.nodeType,
+        ...nodeRequest,
         properties: nodeProperties,
-        network: params.network,
-        allowIps: [],
-        denyIps: [],
+        network: nodeRequest.network,
         placement: {
           scheduler: {
             resource:
@@ -49,9 +41,10 @@ export const useNodeAdd = () => {
           },
         },
       });
-      const nodeId = response!.id;
 
-      await keyFileClient.create(nodeId, params.key_files!);
+      const nodeId = response.id;
+
+      await keyFileClient.create(nodeId, keyFiles);
 
       toast.success('Node Created');
       loadNodes();

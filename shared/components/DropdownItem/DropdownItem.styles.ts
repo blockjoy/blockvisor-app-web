@@ -21,7 +21,7 @@ export const styles = {
       justify-content: flex-start;
       gap: ${handleGap(size)};
       align-items: center;
-      min-width: 160px;
+      min-width: 100%;
       cursor: pointer;
 
       &,

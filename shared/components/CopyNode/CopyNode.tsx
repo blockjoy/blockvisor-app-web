@@ -41,7 +41,7 @@ export const CopyNode: FC<Props> = ({ disabled, children, value }) => {
       disabled={disabled}
       css={[reset.button, styles.base, colors.text3]}
     >
-      {children}
+      <p css={styles.text}>{children}</p>
       <CopyIcon />
     </button>
   );

@@ -15,15 +15,11 @@ import { resultsStatus } from '@modules/node/utils';
 import { wrapper } from 'styles/wrapper.styles';
 import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
-import { mapNodeListToRows } from '@modules/node/utils/mapNodeListToRows';
-import { organizationAtoms } from '@modules/organization';
+import { mapNodeListToRows } from '@modules/node/utils';
+import { NodeTitle } from '@modules/node';
 
 export const NodeList = () => {
   const router = useRouter();
-
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
 
   const nodeUIContext = useNodeUIContext();
   const nodeUIProps = useMemo(() => {
@@ -85,7 +81,9 @@ export const NodeList = () => {
 
   return (
     <>
-      <PageTitle hasOrgPicker title="Nodes" />
+      <PageTitle>
+        <NodeTitle />
+      </PageTitle>
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters isLoading={isLoading} />
         <div css={styles.nodeListWrapper}>
@@ -129,7 +127,7 @@ export const NodeList = () => {
                   headers={headers}
                   preload={preloadNodes}
                   rows={rows}
-                  fixedRowHeight="140px"
+                  fixedRowHeight="120px"
                   onRowClick={handleNodeClick}
                 />
               ) : (

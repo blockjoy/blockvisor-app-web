@@ -17,7 +17,7 @@ import { MqttUIProvider } from '@modules/mqtt';
 export type LayoutProps = {
   children: React.ReactNode;
   isPageFlex?: boolean;
-  pageTitle: string;
+  pageTitle?: string;
 };
 
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {

@@ -1,48 +1,23 @@
-import { BackButton } from '@shared/components/BackButton/BackButton';
+import { styles } from './NodeView.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import {
-  DangerZone,
-  DetailsTable,
-  EmptyColumn,
-  PageHeader,
-  PageSection,
-  PageTitle,
-  Skeleton,
-  SkeletonGrid,
-  TableSkeleton,
-} from '@shared/components';
-import { spacing } from 'styles/utils.spacing.styles';
-import { NodeViewDetailsHeader } from './NodeViewDetailsHeader';
-import { NodeViewConfig } from './NodeViewConfig';
-import { ROUTES } from '@shared/index';
-import { NodeViewCharts } from './NodeViewCharts';
-import { mapNodeToDetails } from '@modules/node/utils/mapNodeToDetails';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { NodeViewTitle } from './Title/NodeViewTitle';
+import { NodeViewHeader } from './Header/NodeViewHeader';
+import { NodeViewEdit } from './Edit/NodeViewEdit';
+import { NodeViewTabs } from './Tabs/NodeViewTabs';
+import { wrapper } from 'styles/wrapper.styles';
+import { EmptyColumn, TableSkeleton } from '@shared/components';
 
-export function NodeView() {
+export const NodeView: FC<PropsWithChildren> = ({ children }) => {
   const [nodeError, setNodeError] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const router = useRouter();
   const { id } = router.query;
 
-  const {
-    node,
-    loadNode,
-    unloadNode,
-    deleteNode,
-    stopNode,
-    restartNode,
-    isLoading,
-  } = useNodeView();
+  const { node, loadNode, unloadNode, isLoading } = useNodeView();
 
-  const handleStop = () => stopNode(id);
-  const handleRestart = () => restartNode(id!);
-  const handleDelete = () => {
-    setIsDeleting(true);
-    deleteNode(id);
-  };
   const handleNodeError = () => setNodeError(true);
 
   useEffect(() => {
@@ -57,62 +32,36 @@ export function NodeView() {
 
   return (
     <>
-      <PageTitle title="Nodes" hasOrgPicker />
-      <PageSection bottomBorder={false} topPadding={false}>
-        <div css={spacing.top.medium}>
-          <PageHeader>
-            <BackButton backUrl={ROUTES.NODES} />
-          </PageHeader>
-        </div>
-        {!isLoading ? (
-          <>
-            {!nodeError && node?.id ? (
-              <>
-                <NodeViewDetailsHeader
-                  handleStop={handleStop}
-                  handleRestart={handleRestart}
-                  status={node?.status!}
-                  blockchainName={node?.blockchainName!}
-                  title={node?.name!}
-                  ip={node?.ip!}
-                  date={node?.createdAt!}
-                  id={node?.id!}
-                />
-                {/* <NodeViewCharts nodeId={node?.id!} /> */}
-                <DetailsTable bodyElements={mapNodeToDetails(node!)} />
-              </>
+      <NodeViewTitle />
+      {!isLoading && !node?.id ? (
+        <EmptyColumn
+          title="Node Not Found"
+          description="No node exists with this ID"
+        />
+      ) : (
+        <>
+          {node?.id && (
+            <>
+              <NodeViewHeader />
+              <NodeViewTabs />
+            </>
+          )}
+          <div css={[styles.wrapper, wrapper.main]}>
+            {isLoading && !node?.id ? (
+              <div css={styles.loader}>
+                <TableSkeleton />
+              </div>
             ) : (
-              <EmptyColumn
-                title="Node Not Found"
-                description="No node exists with this ID"
-              />
+              <>
+                <div css={styles.content}>{children}</div>
+                <div css={styles.quickEdit}>
+                  <NodeViewEdit />
+                </div>
+              </>
             )}
-          </>
-        ) : (
-          <>
-            <SkeletonGrid padding="10px 0 70px">
-              <Skeleton width="260px" />
-              <Skeleton width="180px" />
-            </SkeletonGrid>
-            <TableSkeleton />
-          </>
-        )}
-      </PageSection>
-      {node?.properties && !isLoading && !nodeError && (
-        <PageSection bottomBorder={false}>
-          <NodeViewConfig />
-        </PageSection>
-      )}
-      {!nodeError && !isLoading && node?.id && (
-        <PageSection bottomBorder={false}>
-          <DangerZone
-            isLoading={isDeleting}
-            elementName="Node"
-            elementNameToCompare={node?.name!}
-            handleAction={handleDelete}
-          ></DangerZone>
-        </PageSection>
+          </div>
+        </>
       )}
     </>
   );
-}
+};

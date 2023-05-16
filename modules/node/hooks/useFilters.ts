@@ -1,4 +1,8 @@
-import { nodeStatusList } from '@shared/constants/lookups';
+import {
+  useDefaultOrganization,
+  useGetOrganizations,
+} from '@modules/organization';
+import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { isEqual } from 'lodash';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { FilterItem, nodeAtoms } from '../store/nodeAtoms';
@@ -7,15 +11,16 @@ import { InitialFilter, InitialQueryParams } from '../ui/NodeUIHelpers';
 import { buildParams } from '../utils';
 
 export const useFilters = (nodeUIProps: NodeUIProps) => {
+  const { organizations } = useGetOrganizations();
+  const { defaultOrganization } = useDefaultOrganization();
+  const { switchOrganization } = useSwitchOrganization();
+
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
   const [filtersType, setFiltersType] = useRecoilState(nodeAtoms.filtersType);
   const [filtersStatus, setFiltersStatus] = useRecoilState(
     nodeAtoms.filtersStatus,
-  );
-  const [filtersHealth, setFiltersHealth] = useRecoilState(
-    nodeAtoms.filtersHealth,
   );
 
   const filtersBlockchainTotal = useRecoilValue(
@@ -61,15 +66,12 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
       blockchain: filtersBlockchain,
       type: filtersType,
       status: filtersStatus,
-      health: filtersHealth,
     };
 
     localStorage.setItem('nodeFilters', JSON.stringify(filtersToUpdate));
   };
 
   const removeFilters = () => {
-    setFiltersHealth(null);
-
     let filtersBlockchainCopy = filtersBlockchain.map((item: FilterItem) => ({
       ...item,
       isChecked: false,
@@ -96,30 +98,18 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
     applyFilter(params);
   };
 
-  const updateHealthFilter = (health: string) => {
-    setFiltersHealth(filtersHealth === health ? null : health);
-  };
-
-  const updateStatusFilterByHealth = (health: string) => {
-    const statuses = nodeStatusList
-      .filter((item) => item.id !== 0)
-      .map((item) => ({
-        name: item.name,
-        // id: item.id.toString()!,
-        id: item.name.toString().toLowerCase()!,
-        isChecked:
-          filtersHealth === health
-            ? false
-            : health === 'online'
-            ? item.isOnline
-            : !item.isOnline,
-        isOnline: item.isOnline,
-      }));
-
-    setFiltersStatus(statuses);
-  };
-
   const filters = [
+    {
+      name: 'Organization',
+      isDisabled: false,
+      filterCount: 1,
+      filterList: organizations?.map((org) => ({
+        id: org.id,
+        name: org.name,
+        isChecked: org.id === defaultOrganization?.id,
+      })),
+      switchOrganization,
+    },
     {
       name: 'Blockchain',
       isDisabled: false,
@@ -129,7 +119,7 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
     },
     {
       name: 'Status',
-      isDisabled: !!filtersHealth,
+      isDisabled: false,
       filterCount: filtersStatusTotal,
       filterList: filtersStatus,
       setFilterList: setFiltersStatus,
@@ -145,16 +135,9 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
 
   return {
     filters,
-
     applyFilter,
     updateFilters,
     removeFilters,
-
     resetFilters,
-
-    updateHealthFilter,
-    updateStatusFilterByHealth,
-
-    filtersHealth,
   };
 };

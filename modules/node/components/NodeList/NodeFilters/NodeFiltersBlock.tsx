@@ -17,12 +17,14 @@ type FilterBlock = {
   filterCount: number;
   filterList: FilterItem[];
   setFilterList: SetterOrUpdater<FilterItem[]>;
+  setOrganization: (id: string, name: string) => void;
   onPlusMinusClicked: (filterName: string, args1: boolean) => void;
   onFilterBlockClicked: (name: string) => void;
   onFilterChanged: (
     e: ChangeEvent<HTMLInputElement>,
     list: FilterItem[],
-    setter: SetterOrUpdater<FilterItem[]>,
+    setFilterList: SetterOrUpdater<FilterItem[]>,
+    setOrganization: (id: string, name: string) => void,
   ) => void;
 };
 
@@ -37,6 +39,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
   onFilterBlockClicked,
   onFilterChanged,
   setFilterList,
+  setOrganization,
 }) => {
   const handleMinusClicked = (e: MouseEvent<HTMLLabelElement>) => {
     if (!isDisabled) {
@@ -77,7 +80,12 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                   <Checkbox
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       e.stopPropagation();
-                      onFilterChanged(e, filterList, setFilterList);
+                      onFilterChanged(
+                        e,
+                        filterList,
+                        setFilterList,
+                        setOrganization,
+                      );
                     }}
                     name={item.name!}
                     checked={item.isChecked}

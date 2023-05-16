@@ -1,23 +1,17 @@
 import { styles } from './nodeFilters.styles';
-import { styles as blockStyles } from './NodeFiltersBlock.styles';
-import {
-  Checkbox,
-  Skeleton,
-  SkeletonGrid,
-  Scrollbar,
-  SvgIcon,
-} from '@shared/components';
+import { Skeleton, SkeletonGrid, Scrollbar, SvgIcon } from '@shared/components';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useMemo, useRef, useState } from 'react';
 import { nodeAtoms, FilterItem } from '../../../store/nodeAtoms';
 import { NodeFiltersHeader } from './NodeFiltersHeader';
 import { NodeFiltersBlock } from './NodeFiltersBlock';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
 import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
-import { organizationAtoms } from '@modules/organization';
+import { useDefaultOrganization } from '@modules/organization';
 import { useFilters } from '@modules/node/hooks/useFilters';
 import { blockchainSelectors } from '@modules/node/store/blockchains';
+import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 
 export type NodeFiltersProps = {
   isLoading: LoadingState;
@@ -32,20 +26,11 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
     };
   }, [nodeUIContext]);
 
-  const {
-    filters,
-    updateFilters,
-    removeFilters,
-    resetFilters,
-    updateHealthFilter,
-    updateStatusFilterByHealth,
-    filtersHealth,
-  } = useFilters(nodeUIProps);
+  const { filters, updateFilters, removeFilters, resetFilters } =
+    useFilters(nodeUIProps);
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
-  const currentOrganization = useRef(defaultOrganization);
+  const { switchOrganization } = useSwitchOrganization();
+  const { defaultOrganization } = useDefaultOrganization();
 
   const [isDirty, setIsDirty] = useState(false);
 
@@ -60,20 +45,19 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
 
   const isCompleted = useRef(false);
 
-  useEffect(() => {
-    if (currentOrganization.current?.id !== defaultOrganization?.id) {
-      handleResetFilters();
-      currentOrganization.current = defaultOrganization;
-    }
-  }, [defaultOrganization?.id]);
-
   const handleFilterChanged = (
     e: ChangeEvent<HTMLInputElement>,
     list: FilterItem[],
-    setter: SetterOrUpdater<FilterItem[]>,
+    setFilterList: SetterOrUpdater<FilterItem[]>,
   ) => {
-    if (!isDirty) {
+    if (!isDirty && !!setFilterList) {
       setIsDirty(true);
+    }
+
+    if (!setFilterList) {
+      const foundOrg = list.find((item) => item.name === e.target.id);
+      switchOrganization(foundOrg?.id!, foundOrg?.name!);
+      return;
     }
 
     const filtersList = list.map((item) => {
@@ -87,7 +71,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
       return item;
     });
 
-    setter(filtersList);
+    setFilterList(filtersList);
   };
 
   const handleResetFilters = () => {
@@ -97,15 +81,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
 
   const handleUpdateClicked = () => {
     updateFilters();
-
     setIsDirty(false);
-  };
-
-  const handleHealthChanged = (health: string) => {
-    updateHealthFilter(health);
-    updateStatusFilterByHealth(health);
-
-    if (!isDirty) setIsDirty(true);
   };
 
   const handleFilterBlockClicked = (filterName: string) => {
@@ -139,44 +115,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
         )
       ) : (
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-          <button
-            css={styles.updateButton}
-            type="button"
-            disabled={!isDirty}
-            onClick={handleUpdateClicked}
-          >
-            <IconRefresh />
-            Apply
-          </button>
           <Scrollbar additionalStyles={[styles.filters]}>
-            <div
-              css={blockStyles.filterBlock}
-              onClick={() => setOpenFilterName('')}
-            >
-              <label css={blockStyles.labelHeader}>
-                <span css={blockStyles.labelText}>Health</span>
-              </label>
-              <div css={[blockStyles.checkboxList]}>
-                <div css={blockStyles.checkboxRow}>
-                  <Checkbox
-                    onChange={() => handleHealthChanged('online')}
-                    name="healthOnline"
-                    checked={filtersHealth === 'online'}
-                  >
-                    Online
-                  </Checkbox>
-                </div>
-                <div css={blockStyles.checkboxRow}>
-                  <Checkbox
-                    onChange={() => handleHealthChanged('offline')}
-                    name="healthOffline"
-                    checked={filtersHealth === 'offline'}
-                  >
-                    Offline
-                  </Checkbox>
-                </div>
-              </div>
-            </div>
             {filters.map((item) => (
               <NodeFiltersBlock
                 hasError={item.name === 'Blockchain' && hasBlockchainError}
@@ -188,11 +127,21 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
                 name={item.name}
                 filterCount={item.filterCount}
                 filterList={item.filterList}
-                setFilterList={item.setFilterList}
+                setFilterList={item?.setFilterList!}
+                setOrganization={switchOrganization}
                 onFilterChanged={handleFilterChanged}
               />
             ))}
           </Scrollbar>
+          <button
+            css={styles.updateButton}
+            type="button"
+            disabled={!isDirty}
+            onClick={handleUpdateClicked}
+          >
+            <IconRefresh />
+            Apply
+          </button>
           <button
             css={styles.resetButton}
             type="button"

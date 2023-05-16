@@ -8,9 +8,9 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
     {
       name: '',
       key: '1',
-      width: '30px',
-      minWidth: '30px',
-      maxWidth: '30px',
+      width: '40px',
+      minWidth: '40px',
+      maxWidth: '40px',
     },
     {
       name: 'Name',
@@ -29,13 +29,13 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
     },
   ];
 
-  const rows = nodeList?.map((node: any) => ({
+  const rows = nodeList?.map((node: Node) => ({
     key: node.id,
     cells: [
       {
         key: '1',
         component: (
-          <div style={{ marginTop: '4px' }}>
+          <div style={{ marginTop: '4px', marginLeft: '8px' }}>
             <BlockchainIcon size="32px" blockchainName={node.blockchainName} />
           </div>
         ),
@@ -44,7 +44,11 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
         key: '2',
         component: (
           <>
-            <TableBlockNodes id={node.id} name={node.name} address={node.ip} />
+            <TableBlockNodes
+              id={node.id}
+              name={node.name}
+              address={node?.ip!}
+            />
           </>
         ),
       },
@@ -52,11 +56,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
         key: '3',
         component: (
           <span style={{ fontSize: '14px' }}>
-            {!node.created_at_datetime
-              ? 'Oh Shit'
-              : formatDistanceToNow(new Date(node.created_at_datetime), {
-                  addSuffix: true,
-                })}
+            {formatDistanceToNow(new Date(node.createdAt!))}
           </span>
         ),
       },

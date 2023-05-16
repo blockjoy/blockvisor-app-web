@@ -16,6 +16,8 @@ export function useGetBlockchains() {
     setLoadingState('loading');
     const response: any = await blockchainClient.getBlockchains();
 
+    console.log('getBlockchains', response);
+
     checkForTokenError(response);
 
     if (!isStatusResponse(response)) {

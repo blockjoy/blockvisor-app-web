@@ -30,7 +30,6 @@ export const styles = {
     background: ${theme.colorLightGrey};
     padding: 12px 12px;
     font-size: 14px;
-    font-weight: 500;
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
