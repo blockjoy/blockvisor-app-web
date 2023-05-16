@@ -10,8 +10,8 @@ import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, TableSkeleton } from '@shared/components';
 
 export const NodeView: FC<PropsWithChildren> = ({ children }) => {
-  const [nodeError, setNodeError] = useState<boolean>(false);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [, setNodeError] = useState<boolean>(false);
+  const [, setIsDeleting] = useState<boolean>(false);
 
   const router = useRouter();
   const { id } = router.query;

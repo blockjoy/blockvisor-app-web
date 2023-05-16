@@ -15,8 +15,6 @@ export const NodeViewTabs = () => {
     { href: createPath('details'), name: 'Details' },
   ];
 
-  console.log('router', asPath);
-
   const isActive = (href: string) => {
     const routerPath = asPath.substring(asPath.lastIndexOf('/'), asPath.length);
     const buttonPath = href.substring(href.lastIndexOf('/'), href.length);

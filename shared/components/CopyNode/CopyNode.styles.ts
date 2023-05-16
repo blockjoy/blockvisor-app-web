@@ -26,7 +26,7 @@ export const styles = {
     color: ${theme.colorText};
 
     @media ${breakpoints.toLrg} {
-      max-width: 140px;
+      max-width: 50px;
     }
   `,
 };

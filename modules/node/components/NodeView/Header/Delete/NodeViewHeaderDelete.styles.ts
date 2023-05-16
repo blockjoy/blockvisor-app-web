@@ -8,5 +8,8 @@ export const styles = {
   header: css`
     font-size: 20px;
     margin-bottom: 26px;
+    word-break: break-all;
+    hyphens: auto;
+    padding-right: 30px;
   `,
 };
