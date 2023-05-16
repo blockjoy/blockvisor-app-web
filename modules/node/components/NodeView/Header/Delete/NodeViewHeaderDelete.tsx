@@ -1,4 +1,4 @@
-import { Button, DangerZone, Input, Modal } from '@shared/components';
+import { Button, Input, Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useNodeList, useNodeView } from '@modules/node';
 import { useState } from 'react';
@@ -8,7 +8,6 @@ import { css } from '@emotion/react';
 import { styles } from './NodeViewHeaderDelete.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { toast } from 'react-toastify';
 
 export type Props = {
   onHide: VoidFunction;
@@ -20,7 +19,6 @@ type DeleteForm = {
 
 export const NodeViewHeaderDelete = ({ onHide }: Props) => {
   const { node, deleteNode } = useNodeView();
-  const { loadNodes } = useNodeList();
   const router = useRouter();
   const form = useForm<DeleteForm>({ mode: 'onChange' });
   const { isValid } = form.formState;
@@ -88,13 +86,6 @@ export const NodeViewHeaderDelete = ({ onHide }: Props) => {
           </div>
         </form>
       </FormProvider>
-
-      {/* <DangerZone
-        isLoading={isDeleting}
-        elementName="Node"
-        elementNameToCompare={node?.name!}
-        handleAction={handleDelete}
-      ></DangerZone> */}
     </Modal>
   );
 };
