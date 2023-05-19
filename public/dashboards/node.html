@@ -71,7 +71,6 @@
         {
           netdata: "system.cpu",
           library: "easypiechart",
-          dimensions: "sent",
           title: "CPU",
           units: "Load"
         },
@@ -108,8 +107,12 @@
           element.setAttribute("data-height", size);
           element.setAttribute("data-units", chart.units);
           element.setAttribute("data-after", after);
-          element.setAttribute("data-dimensions", chart.dimensions);
           element.setAttribute("data-title", chart.title);
+          
+          if (chart.dimensions) {
+            element.setAttribute("data-dimensions", chart.dimensions);
+          }
+
           nodeCharts.appendChild(element);
         }
       );
