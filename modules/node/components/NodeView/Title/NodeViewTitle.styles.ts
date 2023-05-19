@@ -11,8 +11,6 @@ export const styles = {
     }
 
     button {
-      min-width: 0;
-
       svg {
         min-width: 12px;
       }
@@ -53,7 +51,6 @@ export const styles = {
   separator: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    min-width: 0;
     color: ${theme.colorLabel};
     padding-right: 8px;
     padding-left: 8px;

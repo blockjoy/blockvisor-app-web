@@ -1,24 +1,21 @@
-import { NodeTypeConfigLabel } from '@shared/components';
+import { NodeTypeConfigLabel } from '@modules/node';
 import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { nodeTypeList } from '@shared/constants/lookups';
-import IconCheck from '@public/assets/icons/check-circle.svg';
-import IconClose from '@public/assets/icons/close.svg';
-import IconRocket from '@public/assets/icons/rocket-12.svg';
-import IconCog from '@public/assets/icons/cog-12.svg';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useRecoilValue } from 'recoil';
-import { organizationAtoms } from '@modules/organization';
-import { escapeHtml } from '@shared/utils/escapeHtml';
 import {
   NodeProperty,
   NodeType,
   UiType,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeLauncherOrgPicker } from './NodeLauncherOrgPicker';
-import { NodeLauncherFormHeader, NodeLauncherFormLabel } from '@modules/node';
+import { FormHeader, FormLabel } from '@shared/components';
+import IconCheck from '@public/assets/icons/check-circle.svg';
+import IconClose from '@public/assets/icons/close.svg';
+import IconRocket from '@public/assets/icons/rocket-12.svg';
+import IconCog from '@public/assets/icons/cog-12.svg';
 
 type Props = {
   serverError: string;
@@ -47,19 +44,15 @@ export const NodeLauncherSummary: FC<Props> = ({
 }) => {
   const { blockchains } = useGetBlockchains();
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
-
   if (isConfigValid === null) return null;
 
   return (
     <div css={styles.wrapper}>
-      <NodeLauncherFormHeader>Launch</NodeLauncherFormHeader>
-      <NodeLauncherFormLabel>Organization</NodeLauncherFormLabel>
+      <FormHeader>Launch</FormHeader>
+      <FormLabel>Organization</FormLabel>
       <NodeLauncherOrgPicker />
 
-      <NodeLauncherFormLabel>Summary</NodeLauncherFormLabel>
+      <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
         {!hasNetworkList ? (
           <div css={[colors.warning, spacing.bottom.medium]}>

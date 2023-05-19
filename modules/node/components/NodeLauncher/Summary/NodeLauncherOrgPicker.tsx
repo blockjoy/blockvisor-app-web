@@ -1,10 +1,8 @@
 import { FC, useState } from 'react';
 import {
-  Badge,
-  Dropdown,
+  DropdownMenu,
   DropdownButton,
   DropdownItem,
-  SvgIcon,
   Scrollbar,
   DropdownWrapper,
 } from '@shared/components';
@@ -18,8 +16,6 @@ import { ROUTES } from '@shared/constants/routes';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import IconPlus from '@public/assets/icons/plus-12.svg';
-import IconInfo from '@public/assets/icons/info.svg';
-import IconOrganizations from '@public/assets/icons/organization-16.svg';
 
 type Props = {
   hideName?: boolean;
@@ -85,7 +81,7 @@ export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
           </p>
         )}
       </button> */}
-      <Dropdown isOpen={isOpen} additionalStyles={styles.dropdown}>
+      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>
             {allOrganizations
@@ -106,7 +102,7 @@ export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
         <button css={[styles.createButton]} onClick={handleCreateClicked}>
           <IconPlus /> Add Organization
         </button>
-      </Dropdown>
+      </DropdownMenu>
     </DropdownWrapper>
   );
 };

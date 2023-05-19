@@ -1,5 +1,6 @@
 import { NodeStatusIcon } from '@shared/components';
-import { useNodeView, NodeFormHeader } from '@modules/node';
+import { useNodeView } from '@modules/node';
+import { FormHeaderCaps } from '@shared/components';
 import { styles } from './NodeViewDashboardStatus.styles';
 import { nodeStatusList } from '@shared/constants/lookups';
 import { getColor } from '@shared/components';
@@ -20,7 +21,7 @@ export const NodeViewDashboardStatus = () => {
 
   return (
     <>
-      <NodeFormHeader>Status</NodeFormHeader>
+      <FormHeaderCaps>Status</FormHeaderCaps>
       <div css={styles.wrapper}>
         <div css={styles.card}>
           <NodeStatusIcon size={iconSize} status={node!.status} />

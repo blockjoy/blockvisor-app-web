@@ -3,17 +3,14 @@ import { organizationAtoms } from '@modules/organization';
 import { mapOrganizationsToRows } from '@modules/organization/utils/mapOrganizationsToRows';
 import { useRouter } from 'next/router';
 import { getHandlerTableChange } from '@modules/organization/utils/getHandlerTableChange';
-import { withQuery } from '@shared/components/Table/utils/withQuery';
+import { withQuery } from '@shared/components/Tables/Table/utils/withQuery';
 import { ROUTES } from '@shared/index';
-import {
-  FILTERS,
-  InitialQueryParams,
-} from '@modules/organization/ui/OrganizationsUIHelpers';
+import { InitialQueryParams } from '@modules/organization/ui/OrganizationsUIHelpers';
 import { SetQueryParams } from '@modules/organization/ui/OrganizationsUIContext';
-import { GridCell } from '@shared/components/TableGrid/types/GridCell';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { useIdentity } from '@modules/auth';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { GridCell } from '@shared/components/Tables/TableGrid/types/GridCell';
 
 export type AllOrganizationsTableProps = {
   organizations: Org[];
@@ -63,7 +60,6 @@ export const AllOrganizationsTable = ({
       properties={queryParams}
       total={organizationsActiveCount}
       onTableChange={handleTableChange}
-      // filters={FILTERS}
     />
   );
 };

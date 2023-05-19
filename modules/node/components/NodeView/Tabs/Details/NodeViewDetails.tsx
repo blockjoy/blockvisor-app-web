@@ -1,7 +1,8 @@
 import { mapNodeConfigToDetails } from '@modules/node/utils/mapNodeConfigToDetails';
 import { mapNodeToDetails } from '@modules/node/utils/mapNodeToDetails';
 import { DetailsTable } from '@shared/components';
-import { useNodeView, NodeFormHeader } from '@modules/node';
+import { useNodeView } from '@modules/node';
+import { FormHeaderCaps } from '@shared/components';
 import { styles } from './NodeViewDetails.styles';
 
 export const NodeViewDetails = () => {
@@ -9,11 +10,11 @@ export const NodeViewDetails = () => {
   return (
     <>
       <section css={styles.section}>
-        <NodeFormHeader noBottomMargin>Main</NodeFormHeader>
+        <FormHeaderCaps noBottomMargin>Main</FormHeaderCaps>
         <DetailsTable bodyElements={mapNodeToDetails(node!)} />
       </section>
 
-      <NodeFormHeader noBottomMargin>Configuration</NodeFormHeader>
+      <FormHeaderCaps noBottomMargin>Configuration</FormHeaderCaps>
       <DetailsTable bodyElements={mapNodeConfigToDetails(node!)} />
     </>
   );
