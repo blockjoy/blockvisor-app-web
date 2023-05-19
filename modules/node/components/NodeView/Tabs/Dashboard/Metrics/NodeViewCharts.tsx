@@ -2,16 +2,16 @@ import { FC } from 'react';
 import { styles } from './NodeViewCharts.styles';
 
 type Props = {
-  nodeId: string;
+  nodeId?: string;
 };
 
-export const NodeViewCharts: FC<Props> = ({ nodeId }) => {
+export const NodeViewCharts: FC<Props> = () => {
   return (
     <iframe
       css={styles.iframe}
       width="100%"
       height="150px"
-      src={`/dashboards/node.html?node_id=${nodeId}`}
+      src={`/dashboards/node.html?node_id=${''}`}
     />
   );
 };

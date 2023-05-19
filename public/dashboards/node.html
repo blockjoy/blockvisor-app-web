@@ -42,6 +42,7 @@
         text-align: left;
         line-height: 1;
         font-weight: 400;
+        white-space: nowrap !important;
         margin-left: 0 !important;
       }
 
@@ -68,17 +69,18 @@
     <script>
       var charts = [
         {
-          netdata: "net.eth0",
+          netdata: "system.cpu",
           library: "easypiechart",
           dimensions: "sent",
-          title: "Outgoing Data",
+          title: "CPU",
+          units: "Load"
         },
-        {
-          netdata: "net.eth0",
-          library: "easypiechart",
-          dimensions: "received",
-          title: "Incoming Data",
-        },
+        // {
+        //   netdata: "system.cpu",
+        //   library: "easypiechart",
+        //   dimensions: "received",
+        //   title: "Incoming Data",
+        // },
       ];
     </script>
     <script async>
@@ -95,14 +97,16 @@
 
       console.log("queryString", params.node_id);
 
+
       charts.forEach((chart) => {
           const element = document.createElement("div");
           element.setAttribute("data-netdata", chart.netdata);
-          element.setAttribute("data-host", `http://205.209.100.226:19999/host/${node_id}`);
+          element.setAttribute("data-host", `https://xrp02.db.node.blockjoy.com/host/platypus01.lon.blockjoy.com`);
           element.setAttribute("data-colors", colorPrimary);
           element.setAttribute("data-chart-library", chart.library);
           element.setAttribute("data-width", size);
           element.setAttribute("data-height", size);
+          element.setAttribute("data-units", chart.units);
           element.setAttribute("data-after", after);
           element.setAttribute("data-dimensions", chart.dimensions);
           element.setAttribute("data-title", chart.title);
@@ -110,10 +114,11 @@
         }
       );
     </script>
+    <script>var netdataNoBootstrap = true;</script>
     <script
       async
       type="text/javascript"
-      src="http://205.209.100.226:19999/dashboard.js"
+      src="https://xrp02.db.node.blockjoy.com/host/platypus01.lon.blockjoy.com/dashboard.js"
     ></script>
   </body>
 </html>
