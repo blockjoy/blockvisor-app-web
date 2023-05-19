@@ -1,5 +1,5 @@
 import { PageTitle } from '@shared/components';
-import { NodeTitle } from '../../Shared';
+import { NodeTitle } from '@modules/node';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 
 export const NodeLauncherTitle = () => (

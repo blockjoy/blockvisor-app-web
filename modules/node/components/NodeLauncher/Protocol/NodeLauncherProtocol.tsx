@@ -1,19 +1,14 @@
 import { useGetBlockchains } from '@modules/node';
-import {
-  BlockchainIcon,
-  TableSkeleton,
-  SvgIcon,
-  EmptyColumn,
-} from '@shared/components';
+import { BlockchainIcon, TableSkeleton, EmptyColumn } from '@shared/components';
 import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
-import IconSearch from '@public/assets/icons/search-16.svg';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { blockchainsDisabled } from '@shared/constants/lookups';
 import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import IconSearch from '@public/assets/icons/search-16.svg';
 
 type Props = {
   onProtocolSelected: (

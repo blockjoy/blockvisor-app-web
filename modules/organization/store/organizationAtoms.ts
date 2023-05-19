@@ -1,7 +1,5 @@
 import { atom, selector, selectorFamily } from 'recoil';
-import { paginate } from '@shared/components/Table/utils/paginate';
-import { sort } from '@shared/components/Table/utils/sort';
-import { filter } from '@shared/components/Table/utils/filter';
+import { paginate, sort, filter } from '@shared/components';
 import { InitialQueryParams as InitialQueryParamsMembers } from '../ui/OrganizationMembersUIHelpers';
 import {
   InitialQueryParams as InitialQueryParamsOrganizations,

@@ -1,11 +1,11 @@
 import { styles } from './NodeViewEdit.styles';
-import { FirewallDropdown, TableSkeleton } from '@shared/components';
 import {
-  useNodeView,
-  NodeFormLabel,
-  NodeFormHeader,
+  TableSkeleton,
   Switch,
-} from '@modules/node';
+  FormLabelCaps,
+  FormHeaderCaps,
+} from '@shared/components';
+import { useNodeView, FirewallDropdown } from '@modules/node';
 
 export const NodeViewEdit = () => {
   const { node, isLoading, updateNode } = useNodeView();
@@ -33,9 +33,9 @@ export const NodeViewEdit = () => {
     <TableSkeleton />
   ) : (
     <div css={styles.wrapper}>
-      <NodeFormHeader>Edit</NodeFormHeader>
+      <FormHeaderCaps>Edit</FormHeaderCaps>
       <div>
-        <NodeFormLabel>Firewall Rules</NodeFormLabel>
+        <FormLabelCaps>Firewall Rules</FormLabelCaps>
         <FirewallDropdown
           onNodePropertyChanged={handleFirewallChanged}
           allowedIps={node!.allowIps}
@@ -43,7 +43,7 @@ export const NodeViewEdit = () => {
         />
       </div>
       <div>
-        <NodeFormLabel>Auto Updates</NodeFormLabel>
+        <FormLabelCaps>Auto Updates</FormLabelCaps>
         <Switch
           checked={node!.selfUpdate}
           tooltip=""

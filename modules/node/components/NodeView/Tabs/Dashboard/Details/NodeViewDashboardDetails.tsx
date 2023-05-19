@@ -1,4 +1,5 @@
-import { useNodeView, NodeFormHeader } from '@modules/node';
+import { useNodeView } from '@modules/node';
+import { FormHeaderCaps } from '@shared/components';
 import { mapNodeToDashboardDetails } from '@modules/node/utils/mapNodeToDashboardDetails';
 import { DetailsTable } from '@shared/components';
 
@@ -7,7 +8,7 @@ export const NodeViewDashboardDetails = () => {
 
   return (
     <>
-      <NodeFormHeader>Details</NodeFormHeader>
+      <FormHeaderCaps>Details</FormHeaderCaps>
       <DetailsTable bodyElements={mapNodeToDashboardDetails(node!)} />
     </>
   );

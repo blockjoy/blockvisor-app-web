@@ -1,17 +1,13 @@
-import {
-  NodeTypeConfigLabel,
-  Alert,
-  PillPicker,
-  Skeleton,
-  FirewallDropdown,
-  SvgIcon,
-} from '@shared/components';
+import { PillPicker, SvgIcon } from '@shared/components';
+import { NodeTypeConfigLabel, FirewallDropdown } from '@modules/node';
 import { FC, Fragment } from 'react';
 import {
   FileUpload,
   Textbox,
   Switch,
-} from '@shared/components/NodeLauncherFormComponents';
+  FormLabel,
+  FormHeader,
+} from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -20,7 +16,6 @@ import IconInfo from '@public/assets/icons/info.svg';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeLauncherState } from '../NodeLauncher';
-import { NodeLauncherFormLabel, NodeLauncherFormHeader } from '@modules/node';
 
 type Props = {
   isConfigValid: boolean | null;
@@ -97,7 +92,7 @@ export const NodeLauncherConfig: FC<Props> = ({
   return (
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>
-        <NodeLauncherFormHeader>Configure</NodeLauncherFormHeader>
+        <FormHeader>Configure</FormHeader>
         {/* <Alert isSuccess={isConfigValid!}>
           {isConfigValid === null ? (
             <Skeleton />
@@ -110,7 +105,7 @@ export const NodeLauncherConfig: FC<Props> = ({
 
         {isConfigValid !== null && !!networkList?.length && (
           <>
-            <NodeLauncherFormLabel>Network</NodeLauncherFormLabel>
+            <FormLabel>Network</FormLabel>
             <PillPicker
               name="network"
               items={networkList}
@@ -127,12 +122,12 @@ export const NodeLauncherConfig: FC<Props> = ({
           </div>
         )}
 
-        <NodeLauncherFormLabel>
+        <FormLabel>
           Firewall Rules{' '}
           <SvgIcon tooltip="Add IP addresses that are allowed/denied">
             <IconInfo />
           </SvgIcon>
-        </NodeLauncherFormLabel>
+        </FormLabel>
 
         <FirewallDropdown
           onNodePropertyChanged={onNodePropertyChanged}
@@ -144,12 +139,12 @@ export const NodeLauncherConfig: FC<Props> = ({
           properties?.map((property: NodeProperty) => {
             return (
               <Fragment key={property.name}>
-                <NodeLauncherFormLabel>
+                <FormLabel>
                   <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
                   {property.required && !property.disabled && (
                     <span css={styles.requiredAsterix}>*</span>
                   )}
-                </NodeLauncherFormLabel>
+                </FormLabel>
                 {renderControls(
                   property,
                   keyFiles!,

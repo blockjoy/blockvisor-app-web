@@ -5,7 +5,7 @@ import { RecoilRoot } from 'recoil';
 import { globalStyles } from 'styles/global.styles';
 import ThemeProvider from '@modules/theme/ThemeProvider';
 import { PrivateRoute } from '@modules/auth';
-import { Chat } from '@shared/components/Chat/Chat';
+import { Chat } from '@shared/components';
 
 function MyApp({ Component, pageProps, router }: any) {
   const getLayout = Component?.getLayout || ((page: any) => page);

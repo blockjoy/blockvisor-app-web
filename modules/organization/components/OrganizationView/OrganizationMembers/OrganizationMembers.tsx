@@ -25,11 +25,10 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { withQuery } from '@shared/components/Table/utils/withQuery';
+import { withQuery } from '@shared/components';
 import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
 import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
 import { useRouter } from 'next/router';
-import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { useIdentity } from '@modules/auth';
 
 export const Members = () => {

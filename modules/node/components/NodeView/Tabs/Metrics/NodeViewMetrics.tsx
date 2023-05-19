@@ -1,5 +1,4 @@
 // import NodeGraphs from '@public/assets/images/node-graphs.svg';
-import { NodeFormHeader } from '@modules/node';
 import { styles } from './NodeViewMetrics.styles';
 import { EmptyColumn } from '@shared/components';
 

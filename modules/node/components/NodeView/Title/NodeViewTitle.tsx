@@ -1,8 +1,8 @@
-import { CopyNode, PageTitle, SvgIcon, Skeleton } from '@shared/components';
+import { PageTitle, Skeleton } from '@shared/components';
 import { styles } from './NodeViewTitle.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { useNodeView, NodeTitle } from '@modules/node';
+import { useNodeView, NodeTitle, CopyNode } from '@modules/node';
 
 export const NodeViewTitle = () => {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { NodeTypeConfigLabel, LockedSwitch } from '@shared/components';
+import { NodeTypeConfigLabel, LockedSwitch } from '@modules/node';
 import { ReactNode } from 'react';
 import {
   Node,

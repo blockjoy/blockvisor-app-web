@@ -18,7 +18,7 @@
 
       #nodeCharts {
         display: flex;
-        gap: 150px;
+        gap: 170px;
         overflow: auto;
       }
 
@@ -44,9 +44,13 @@
         font-weight: 400;
         white-space: nowrap !important;
         margin-left: 0 !important;
+        font-family: "Styrene A LC" !important;
       }
 
       body .easyPieChartTitle {
+        font-size: 12px !important;
+        letter-spacing: 1px;
+        text-transform: uppercase;
         translate: 0 -4px;
       }
 
@@ -56,6 +60,7 @@
       }
 
       body .easyPieChartUnits {
+        font-size: 12px !important;
         translate: 0 8px;
       }
     </style>
@@ -72,7 +77,21 @@
           netdata: "system.cpu",
           library: "easypiechart",
           title: "CPU",
-          units: "Load"
+          units: "Load",
+        },
+        {
+          netdata: "system.net",
+          library: "easypiechart",
+          title: "Net Inbound",
+          units: "kilobits/s",
+          dimensions: "received",
+        },
+        {
+          netdata: "system.net",
+          library: "easypiechart",
+          title: "Net Outbound",
+          units: "kilobits/s",
+          dimensions: "sent",
         },
         // {
         //   netdata: "system.cpu",
@@ -100,10 +119,10 @@
       charts.forEach((chart) => {
           const element = document.createElement("div");
           element.setAttribute("data-netdata", chart.netdata);
-          element.setAttribute("data-host", `https://xrp02.db.node.blockjoy.com/host/platypus01.lon.blockjoy.com`);
+          element.setAttribute("data-host", `https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com`);
           element.setAttribute("data-colors", colorPrimary);
           element.setAttribute("data-chart-library", chart.library);
-          element.setAttribute("data-width", size);
+          element.setAttribute("data-width", chart.width || size);
           element.setAttribute("data-height", size);
           element.setAttribute("data-units", chart.units);
           element.setAttribute("data-after", after);
@@ -121,7 +140,7 @@
     <script
       async
       type="text/javascript"
-      src="https://xrp02.db.node.blockjoy.com/host/platypus01.lon.blockjoy.com/dashboard.js"
+      src="https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com/dashboard.js"
     ></script>
   </body>
 </html>

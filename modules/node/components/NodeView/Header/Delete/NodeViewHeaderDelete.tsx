@@ -1,6 +1,6 @@
 import { Button, Input, Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useNodeList, useNodeView } from '@modules/node';
+import { useNodeView } from '@modules/node';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { display } from 'styles/utils.display.styles';

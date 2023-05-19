@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { BackButton } from '@shared/components/BackButton/BackButton';
+import { BackButton } from '@shared/components/Buttons/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { toast } from 'react-toastify';
 import { getOrganizationDetails } from '@modules/organization/utils/organizationDetails';
