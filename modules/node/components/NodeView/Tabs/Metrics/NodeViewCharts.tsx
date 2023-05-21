@@ -10,7 +10,7 @@ export const NodeViewCharts: FC<Props> = () => {
     <iframe
       css={styles.iframe}
       width="100%"
-      height="150px"
+      height="400px"
       src={`/dashboards/node.html?node_id=${''}`}
     />
   );

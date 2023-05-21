@@ -12,7 +12,7 @@ export const NodeViewDashboard = () => {
   ) : (
     <>
       <NodeViewDashboardStatus />
-      <NodeViewDashboardMetrics />
+      {/* <NodeViewDashboardMetrics /> */}
       <NodeViewDashboardDetails />
       {/* {node?.properties && !isLoading && (
         <PageSection bottomBorder={false}>

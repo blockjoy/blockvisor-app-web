@@ -11,15 +11,48 @@
       content="black-translucent"
     />
     <style>
+      @font-face {
+        font-family: 'Styrene A LC';
+        font-style: italic;
+        font-weight: 400;
+        font-display: swap;
+        src: url('/assets/fonts/StyreneALC-RegularItalic.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Styrene A LC';
+        font-style: italic;
+        font-weight: 700;
+        font-display: swap;
+        src: url('/assets/fonts/StyreneALC-BoldItalic.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Styrene A LC';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('/assets/fonts/StyreneALC-Regular.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Styrene A LC';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url('/assets/fonts/StyreneALC-Bold.woff2') format('woff2');
+      }
+
       body {
         margin: 0;
         overflow: hidden;
       }
 
       #nodeCharts {
-        display: flex;
-        gap: 170px;
-        overflow: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 150px;
+        gap: 10px;
       }
 
       #nodeCharts > div {
@@ -48,7 +81,7 @@
       }
 
       body .easyPieChartTitle {
-        font-size: 12px !important;
+        font-size: 9px !important;
         letter-spacing: 1px;
         text-transform: uppercase;
         translate: 0 -4px;
@@ -67,6 +100,7 @@
   </head>
   <script>
     var netdataTheme = "slate";
+    NETDATA.unpause();
   </script>
 
   <body style="background-color: transparent">
@@ -110,7 +144,7 @@
       const node_id = "3b78c2f9-e9d5-4982-952e-23bae0fe9da1";
       const colorPrimary = "#bff589";
       const size = "120";
-      const after = "-600";
+      const after = "-5";
       const nodeCharts = document.querySelector("#nodeCharts");
 
       console.log("queryString", params.node_id);
@@ -136,11 +170,13 @@
         }
       );
     </script>
-    <script>var netdataNoBootstrap = true;</script>
     <script
-      async
       type="text/javascript"
       src="https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com/dashboard.js"
     ></script>
+    <script type="text/javascript">
+      var netdataNoBootstrap = true;
+      NETDATA.options.current.stop_updates_when_focus_is_lost = false
+    </script>
   </body>
 </html>
