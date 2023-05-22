@@ -1,5 +1,5 @@
 export const checkForTokenError = (response: any) => {
-  if (response?.message?.includes('token')) {
+  if (response?.message?.includes('JWT')) {
     localStorage.clear();
     window.location.href = '/';
   }

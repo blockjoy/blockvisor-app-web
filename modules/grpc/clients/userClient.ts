@@ -23,9 +23,9 @@ class UserClient {
     this.client = createClient(UserServiceDefinition, channel);
   }
 
-  async getUser(): Promise<User | StatusResponse> {
+  async getUser(id: string): Promise<User | StatusResponse> {
     try {
-      const response = await this.client.get({}, getOptions());
+      const response = await this.client.get({ id }, getOptions());
       return response.user!;
     } catch (err) {
       return StatusResponseFactory.getUserResponse(err, 'grpcClient');

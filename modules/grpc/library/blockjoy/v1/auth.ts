@@ -10,14 +10,44 @@ export interface AuthServiceLoginRequest {
 }
 
 export interface AuthServiceLoginResponse {
+  /**
+   * This is the auth token that you will include with each request. It is a
+   * Json Web Token, and therefore it may be decoded and inspected by the client
+   * to seen the allowed permissions.
+   */
   token: string;
+  /**
+   * The `refresh token` is used to obtain a new token without having to provide
+   * the email and password again. Note that if you are a browser client, this
+   * field can be ignored, because we also include a HTTP-Only, Set-Cookie
+   * header. This means that this token does not have to be stored in
+   * localStorage.
+   */
+  refresh: string;
 }
 
 export interface AuthServiceRefreshRequest {
+  /** This is your old token. It is allowed that this token is expired. */
+  token: string;
+  /**
+   * This is the refresh token that was sent to you on login. It is optional
+   * here, because if it is not provided, the value from the metadata is used as
+   * a fallback. This means that if you are a browser client, you do not have to
+   * provide this field, as it was set by the call to AuthService/Login, or by
+   * the previous call to this endpoint.
+   */
+  refresh?: string | undefined;
 }
 
 export interface AuthServiceRefreshResponse {
+  /** A newly minted Json Web Token. */
   token: string;
+  /**
+   * The new refresh token. Just as with the call to AuthService/Login, this
+   * value is duplicated in the metadata, so a cookie can be set for the browser
+   * client.
+   */
+  refresh: string;
 }
 
 export interface AuthServiceResetPasswordRequest {
@@ -32,16 +62,15 @@ export interface AuthServiceUpdatePasswordRequest {
 }
 
 export interface AuthServiceUpdatePasswordResponse {
-  token: string;
 }
 
 export interface AuthServiceUpdateUIPasswordRequest {
+  userId: string;
   oldPassword: string;
   newPassword: string;
 }
 
 export interface AuthServiceUpdateUIPasswordResponse {
-  token: string;
 }
 
 export interface AuthServiceConfirmRequest {
@@ -49,6 +78,7 @@ export interface AuthServiceConfirmRequest {
 
 export interface AuthServiceConfirmResponse {
   token: string;
+  refresh: string;
 }
 
 export interface AuthServiceSwitchOrgRequest {
@@ -113,13 +143,16 @@ export const AuthServiceLoginRequest = {
 };
 
 function createBaseAuthServiceLoginResponse(): AuthServiceLoginResponse {
-  return { token: "" };
+  return { token: "", refresh: "" };
 }
 
 export const AuthServiceLoginResponse = {
   encode(message: AuthServiceLoginResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
+    }
+    if (message.refresh !== "") {
+      writer.uint32(18).string(message.refresh);
     }
     return writer;
   },
@@ -138,6 +171,13 @@ export const AuthServiceLoginResponse = {
 
           message.token = reader.string();
           continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.refresh = reader.string();
+          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -154,16 +194,23 @@ export const AuthServiceLoginResponse = {
   fromPartial(object: DeepPartial<AuthServiceLoginResponse>): AuthServiceLoginResponse {
     const message = createBaseAuthServiceLoginResponse();
     message.token = object.token ?? "";
+    message.refresh = object.refresh ?? "";
     return message;
   },
 };
 
 function createBaseAuthServiceRefreshRequest(): AuthServiceRefreshRequest {
-  return {};
+  return { token: "", refresh: undefined };
 }
 
 export const AuthServiceRefreshRequest = {
-  encode(_: AuthServiceRefreshRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: AuthServiceRefreshRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.token !== "") {
+      writer.uint32(10).string(message.token);
+    }
+    if (message.refresh !== undefined) {
+      writer.uint32(18).string(message.refresh);
+    }
     return writer;
   },
 
@@ -174,6 +221,20 @@ export const AuthServiceRefreshRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.refresh = reader.string();
+          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -187,20 +248,25 @@ export const AuthServiceRefreshRequest = {
     return AuthServiceRefreshRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<AuthServiceRefreshRequest>): AuthServiceRefreshRequest {
+  fromPartial(object: DeepPartial<AuthServiceRefreshRequest>): AuthServiceRefreshRequest {
     const message = createBaseAuthServiceRefreshRequest();
+    message.token = object.token ?? "";
+    message.refresh = object.refresh ?? undefined;
     return message;
   },
 };
 
 function createBaseAuthServiceRefreshResponse(): AuthServiceRefreshResponse {
-  return { token: "" };
+  return { token: "", refresh: "" };
 }
 
 export const AuthServiceRefreshResponse = {
   encode(message: AuthServiceRefreshResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
+    }
+    if (message.refresh !== "") {
+      writer.uint32(18).string(message.refresh);
     }
     return writer;
   },
@@ -219,6 +285,13 @@ export const AuthServiceRefreshResponse = {
 
           message.token = reader.string();
           continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.refresh = reader.string();
+          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -235,6 +308,7 @@ export const AuthServiceRefreshResponse = {
   fromPartial(object: DeepPartial<AuthServiceRefreshResponse>): AuthServiceRefreshResponse {
     const message = createBaseAuthServiceRefreshResponse();
     message.token = object.token ?? "";
+    message.refresh = object.refresh ?? "";
     return message;
   },
 };
@@ -367,14 +441,11 @@ export const AuthServiceUpdatePasswordRequest = {
 };
 
 function createBaseAuthServiceUpdatePasswordResponse(): AuthServiceUpdatePasswordResponse {
-  return { token: "" };
+  return {};
 }
 
 export const AuthServiceUpdatePasswordResponse = {
-  encode(message: AuthServiceUpdatePasswordResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== "") {
-      writer.uint32(10).string(message.token);
-    }
+  encode(_: AuthServiceUpdatePasswordResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
@@ -385,13 +456,6 @@ export const AuthServiceUpdatePasswordResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.token = reader.string();
-          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -405,24 +469,26 @@ export const AuthServiceUpdatePasswordResponse = {
     return AuthServiceUpdatePasswordResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<AuthServiceUpdatePasswordResponse>): AuthServiceUpdatePasswordResponse {
+  fromPartial(_: DeepPartial<AuthServiceUpdatePasswordResponse>): AuthServiceUpdatePasswordResponse {
     const message = createBaseAuthServiceUpdatePasswordResponse();
-    message.token = object.token ?? "";
     return message;
   },
 };
 
 function createBaseAuthServiceUpdateUIPasswordRequest(): AuthServiceUpdateUIPasswordRequest {
-  return { oldPassword: "", newPassword: "" };
+  return { userId: "", oldPassword: "", newPassword: "" };
 }
 
 export const AuthServiceUpdateUIPasswordRequest = {
   encode(message: AuthServiceUpdateUIPasswordRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
     if (message.oldPassword !== "") {
-      writer.uint32(10).string(message.oldPassword);
+      writer.uint32(18).string(message.oldPassword);
     }
     if (message.newPassword !== "") {
-      writer.uint32(18).string(message.newPassword);
+      writer.uint32(26).string(message.newPassword);
     }
     return writer;
   },
@@ -439,10 +505,17 @@ export const AuthServiceUpdateUIPasswordRequest = {
             break;
           }
 
-          message.oldPassword = reader.string();
+          message.userId = reader.string();
           continue;
         case 2:
           if (tag != 18) {
+            break;
+          }
+
+          message.oldPassword = reader.string();
+          continue;
+        case 3:
+          if (tag != 26) {
             break;
           }
 
@@ -463,6 +536,7 @@ export const AuthServiceUpdateUIPasswordRequest = {
 
   fromPartial(object: DeepPartial<AuthServiceUpdateUIPasswordRequest>): AuthServiceUpdateUIPasswordRequest {
     const message = createBaseAuthServiceUpdateUIPasswordRequest();
+    message.userId = object.userId ?? "";
     message.oldPassword = object.oldPassword ?? "";
     message.newPassword = object.newPassword ?? "";
     return message;
@@ -470,14 +544,11 @@ export const AuthServiceUpdateUIPasswordRequest = {
 };
 
 function createBaseAuthServiceUpdateUIPasswordResponse(): AuthServiceUpdateUIPasswordResponse {
-  return { token: "" };
+  return {};
 }
 
 export const AuthServiceUpdateUIPasswordResponse = {
-  encode(message: AuthServiceUpdateUIPasswordResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== "") {
-      writer.uint32(10).string(message.token);
-    }
+  encode(_: AuthServiceUpdateUIPasswordResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
@@ -488,13 +559,6 @@ export const AuthServiceUpdateUIPasswordResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          if (tag != 10) {
-            break;
-          }
-
-          message.token = reader.string();
-          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -508,9 +572,8 @@ export const AuthServiceUpdateUIPasswordResponse = {
     return AuthServiceUpdateUIPasswordResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<AuthServiceUpdateUIPasswordResponse>): AuthServiceUpdateUIPasswordResponse {
+  fromPartial(_: DeepPartial<AuthServiceUpdateUIPasswordResponse>): AuthServiceUpdateUIPasswordResponse {
     const message = createBaseAuthServiceUpdateUIPasswordResponse();
-    message.token = object.token ?? "";
     return message;
   },
 };
@@ -551,13 +614,16 @@ export const AuthServiceConfirmRequest = {
 };
 
 function createBaseAuthServiceConfirmResponse(): AuthServiceConfirmResponse {
-  return { token: "" };
+  return { token: "", refresh: "" };
 }
 
 export const AuthServiceConfirmResponse = {
   encode(message: AuthServiceConfirmResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
+    }
+    if (message.refresh !== "") {
+      writer.uint32(18).string(message.refresh);
     }
     return writer;
   },
@@ -576,6 +642,13 @@ export const AuthServiceConfirmResponse = {
 
           message.token = reader.string();
           continue;
+        case 2:
+          if (tag != 18) {
+            break;
+          }
+
+          message.refresh = reader.string();
+          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -592,6 +665,7 @@ export const AuthServiceConfirmResponse = {
   fromPartial(object: DeepPartial<AuthServiceConfirmResponse>): AuthServiceConfirmResponse {
     const message = createBaseAuthServiceConfirmResponse();
     message.token = object.token ?? "";
+    message.refresh = object.refresh ?? "";
     return message;
   },
 };

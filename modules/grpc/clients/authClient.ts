@@ -1,8 +1,9 @@
 import {
   AuthServiceClient,
   AuthServiceDefinition,
+  AuthServiceRefreshResponse,
 } from '../library/blockjoy/v1/auth';
-import { getOptions, setTokenValue } from '@modules/grpc';
+import { getOptions, handleError, setTokenValue } from '@modules/grpc';
 import { createChannel, createClient, Metadata } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -41,9 +42,7 @@ class AuthClient {
   ): Promise<string | StatusResponse> {
     const authHeader = {
       metadata: Metadata({
-        authorization: `Bearer ${Buffer.from(token, 'binary').toString(
-          'base64',
-        )}`,
+        authorization: `Bearer ${token}`,
       }),
     };
     try {
@@ -65,20 +64,14 @@ class AuthClient {
   async updateResetPassword(
     token: string,
     password: string,
-  ): Promise<string | StatusResponse> {
+  ): Promise<void | StatusResponse> {
     const authHeader = {
       metadata: Metadata({
-        authorization: `Bearer ${Buffer.from(token, 'binary').toString(
-          'base64',
-        )}`,
+        authorization: `Bearer ${token}`,
       }),
     };
     try {
-      const response = await this.client.updatePassword(
-        { password },
-        authHeader,
-      );
-      return response.token;
+      await this.client.updatePassword({ password }, authHeader);
     } catch (err) {
       return StatusResponseFactory.updateResetPasswordResponse(
         err,
@@ -87,18 +80,25 @@ class AuthClient {
     }
   }
 
-  async updatePassword(pwd: NewPassword): Promise<string | StatusResponse> {
+  async updatePassword(pwd: NewPassword): Promise<void | StatusResponse> {
     try {
-      const response = await this.client.updateUIPassword(
+      await this.client.updateUIPassword(
         {
           oldPassword: pwd.old_pwd,
           newPassword: pwd.new_pwd,
         },
         getOptions(),
       );
-      return response.token;
     } catch (err) {
       return StatusResponseFactory.updatePasswordResponse(err, 'grpcClient');
+    }
+  }
+
+  async refreshToken(token: string): Promise<AuthServiceRefreshResponse> {
+    try {
+      return await this.client.refresh({ token });
+    } catch (err) {
+      return handleError(err);
     }
   }
 }

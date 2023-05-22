@@ -45,8 +45,8 @@ export interface UserServiceUpdateResponse {
   user: User | undefined;
 }
 
-/** Users can only delete themselves, so no need for any further params */
 export interface UserServiceDeleteRequest {
+  id: string;
 }
 
 export interface UserServiceDeleteResponse {
@@ -485,11 +485,14 @@ export const UserServiceUpdateResponse = {
 };
 
 function createBaseUserServiceDeleteRequest(): UserServiceDeleteRequest {
-  return {};
+  return { id: "" };
 }
 
 export const UserServiceDeleteRequest = {
-  encode(_: UserServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UserServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     return writer;
   },
 
@@ -500,6 +503,13 @@ export const UserServiceDeleteRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag != 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -513,8 +523,9 @@ export const UserServiceDeleteRequest = {
     return UserServiceDeleteRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<UserServiceDeleteRequest>): UserServiceDeleteRequest {
+  fromPartial(object: DeepPartial<UserServiceDeleteRequest>): UserServiceDeleteRequest {
     const message = createBaseUserServiceDeleteRequest();
+    message.id = object.id ?? "";
     return message;
   },
 };

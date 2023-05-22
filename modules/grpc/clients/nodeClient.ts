@@ -9,7 +9,12 @@ import {
   NodeServiceUpdateRequest,
 } from '../library/blockjoy/v1/node';
 
-import { getOptions, handleError } from '@modules/grpc';
+import {
+  checkTokenAndRefresh,
+  getApiToken,
+  getOptions,
+  handleError,
+} from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -46,6 +51,8 @@ class NodeClient {
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
   ): Promise<Node[] | StatusResponse> {
+    //await checkTokenAndRefresh(getApiToken());
+
     let request = {
       orgId,
       offset: 0,
@@ -54,6 +61,8 @@ class NodeClient {
       nodeTypes: filter_criteria?.node_type!,
       blockchainIds: filter_criteria?.blockchain!,
     };
+
+    console.log('listNodes request', request);
 
     try {
       const response = await this.client.list(request, getOptions());

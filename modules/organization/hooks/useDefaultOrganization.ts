@@ -16,20 +16,16 @@ export function useDefaultOrganization() {
   const getDefaultOrganization = async (organizations: Org[]) => {
     setLoadingState('loading');
 
-    const identity = repository?.getIdentity();
-    const user: any = readToken(identity?.accessToken!);
-    const userData: any = user?.data;
-    const orgId = userData.org_id ?? '';
-
-    const organization = organizations.find((org) => org.id === orgId);
+    // TODO: store default organization is api/localStorage
+    const organization = organizations[0];
 
     const orgName = organization?.name ?? '';
 
-    repository?.saveDefaultOrganization(orgName, orgId);
+    repository?.saveDefaultOrganization(orgName, organization.id);
 
     setDefaultOrganization({
       name: orgName,
-      id: orgId,
+      id: organization.id,
     });
 
     setLoadingState('finished');

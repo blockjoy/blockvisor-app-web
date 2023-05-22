@@ -87,7 +87,7 @@ export interface InvitationServiceCreateResponse {
 
 export interface InvitationServiceListRequest {
   orgId?: string | undefined;
-  inviteeId?: string | undefined;
+  inviteeEmail?: string | undefined;
   createdBy?: string | undefined;
   status?: InvitationStatus | undefined;
 }
@@ -366,7 +366,7 @@ export const InvitationServiceCreateResponse = {
 };
 
 function createBaseInvitationServiceListRequest(): InvitationServiceListRequest {
-  return { orgId: undefined, inviteeId: undefined, createdBy: undefined, status: undefined };
+  return { orgId: undefined, inviteeEmail: undefined, createdBy: undefined, status: undefined };
 }
 
 export const InvitationServiceListRequest = {
@@ -374,8 +374,8 @@ export const InvitationServiceListRequest = {
     if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
-    if (message.inviteeId !== undefined) {
-      writer.uint32(18).string(message.inviteeId);
+    if (message.inviteeEmail !== undefined) {
+      writer.uint32(18).string(message.inviteeEmail);
     }
     if (message.createdBy !== undefined) {
       writer.uint32(26).string(message.createdBy);
@@ -405,7 +405,7 @@ export const InvitationServiceListRequest = {
             break;
           }
 
-          message.inviteeId = reader.string();
+          message.inviteeEmail = reader.string();
           continue;
         case 3:
           if (tag != 26) {
@@ -437,7 +437,7 @@ export const InvitationServiceListRequest = {
   fromPartial(object: DeepPartial<InvitationServiceListRequest>): InvitationServiceListRequest {
     const message = createBaseInvitationServiceListRequest();
     message.orgId = object.orgId ?? undefined;
-    message.inviteeId = object.inviteeId ?? undefined;
+    message.inviteeEmail = object.inviteeEmail ?? undefined;
     message.createdBy = object.createdBy ?? undefined;
     message.status = object.status ?? undefined;
     return message;
