@@ -63,7 +63,7 @@ class InvitationClient {
   ): Promise<Invitation[] | StatusResponse> {
     try {
       const response = await this.client.list(
-        { inviteeId, status: InvitationStatus.INVITATION_STATUS_OPEN },
+        { inviteeEmail: '', status: InvitationStatus.INVITATION_STATUS_OPEN },
         getOptions(),
       );
       return response.invitations;
