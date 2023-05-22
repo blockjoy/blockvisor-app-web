@@ -1,3 +1,5 @@
+import { readToken } from '@shared/utils/readToken';
+import { authClient } from '@modules/grpc';
 import { Metadata } from 'nice-grpc-web';
 
 export const getApiToken = () => {
@@ -25,12 +27,28 @@ export const handleError = (error: any) => {
 };
 
 export const setTokenValue = (token: string) => {
-  const new_token = Buffer.from(token, 'binary').toString('base64');
   const identity = localStorage.getItem('identity');
   if (identity) {
     const parsedIdentity = JSON.parse(identity);
-    parsedIdentity.accessToken = new_token;
+    parsedIdentity.accessToken = token;
     const updatedIdentityString = JSON.stringify(parsedIdentity);
     localStorage.setItem('identity', updatedIdentityString);
+  }
+};
+
+export const checkTokenAndRefresh = async (token: string) => {
+  const tokenObject = readToken(token);
+
+  console.log('tokenExpiry', tokenObject.exp);
+  console.log('currentDate', Math.round(new Date().getTime() / 1000));
+
+  const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
+
+  if (tokenObject.exp > currentDateTimestamp) {
+    console.log('Token is expired'!!!);
+    const refreshTokenResponse = await authClient.refreshToken(token);
+    console.log('New Token Expiry', readToken(refreshTokenResponse.token).exp);
+
+    setTokenValue(refreshTokenResponse.token);
   }
 };

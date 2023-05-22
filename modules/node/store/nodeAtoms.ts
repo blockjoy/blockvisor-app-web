@@ -40,7 +40,7 @@ const isLoadingActiveNode = atom<boolean>({
 
 const isFiltersOpen = atom<boolean>({
   key: 'node.isFiltersOpen',
-  default: false,
+  default: true,
   effects: [
     ({ setSelf }) => {
       if (isMobile) {

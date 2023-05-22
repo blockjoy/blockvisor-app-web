@@ -4,6 +4,7 @@ import { authAtoms } from '../store/authAtoms';
 import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
 import { isStatusResponse } from '@modules/organization';
+import { readToken } from '@shared/utils/readToken';
 
 type SignInParams = {
   email: string;
@@ -22,7 +23,17 @@ export function useSignIn() {
       verified: true,
     });
 
-    const userData: any = await userClient.getUser();
+    // const middle = accessToken.split('.')[1];
+    // const payload = JSON.parse(Buffer.from(middle, 'base64').toString());
+    const tokenObject: any = readToken(accessToken);
+
+    console.log('tokenObject', tokenObject);
+
+    const userId = tokenObject.resource_id;
+
+    // console.log('handleSuccess', payload);
+
+    const userData: any = await userClient.getUser(userId);
     repository?.updateIdentity(userData);
     setUser((current) => ({
       ...current,
@@ -39,6 +50,8 @@ export function useSignIn() {
 
     if (params) {
       const response = await authClient.login(params.email, params.password);
+
+      console.log('signIn Response', response);
       if (!isStatusResponse(response)) {
         await handleSuccess(response!);
       } else {

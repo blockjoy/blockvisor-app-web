@@ -156,6 +156,7 @@ export interface HostServiceProvisionRequest {
 export interface HostServiceProvisionResponse {
   hostId: string;
   token: string;
+  refresh: string;
 }
 
 function createBaseHost(): Host {
@@ -1147,7 +1148,7 @@ export const HostServiceProvisionRequest = {
 };
 
 function createBaseHostServiceProvisionResponse(): HostServiceProvisionResponse {
-  return { hostId: "", token: "" };
+  return { hostId: "", token: "", refresh: "" };
 }
 
 export const HostServiceProvisionResponse = {
@@ -1157,6 +1158,9 @@ export const HostServiceProvisionResponse = {
     }
     if (message.token !== "") {
       writer.uint32(18).string(message.token);
+    }
+    if (message.refresh !== "") {
+      writer.uint32(26).string(message.refresh);
     }
     return writer;
   },
@@ -1182,6 +1186,13 @@ export const HostServiceProvisionResponse = {
 
           message.token = reader.string();
           continue;
+        case 3:
+          if (tag != 26) {
+            break;
+          }
+
+          message.refresh = reader.string();
+          continue;
       }
       if ((tag & 7) == 4 || tag == 0) {
         break;
@@ -1199,6 +1210,7 @@ export const HostServiceProvisionResponse = {
     const message = createBaseHostServiceProvisionResponse();
     message.hostId = object.hostId ?? "";
     message.token = object.token ?? "";
+    message.refresh = object.refresh ?? "";
     return message;
   },
 };
