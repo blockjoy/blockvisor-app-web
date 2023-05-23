@@ -96,6 +96,7 @@ class AuthClient {
 
   async updatePassword(pwd: NewPassword): Promise<void | StatusResponse> {
     try {
+      await this.refreshToken();
       await this.client.updateUIPassword(
         {
           oldPassword: pwd.old_pwd,
@@ -110,20 +111,18 @@ class AuthClient {
   }
 
   async refreshToken(): Promise<boolean | undefined> {
-    let refreshTokenResponse;
     try {
       const tokenObject = readToken(getApiToken());
       const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
-      //if (currentDateTimestamp > tokenObject.exp) {
-      refreshTokenResponse = await this.client.refresh({
-        token: getApiToken(),
-      });
-      //}
+      if (currentDateTimestamp > tokenObject.exp) {
+        const refreshTokenResponse = await this.client.refresh({
+          token: getApiToken(),
+        });
+        setTokenValue(refreshTokenResponse.token);
+      }
     } catch (err) {
       return handleError(err);
     }
-
-    //setTokenValue(refreshTokenResponse.token);
   }
 }
 

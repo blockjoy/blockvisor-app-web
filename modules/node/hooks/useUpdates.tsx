@@ -16,7 +16,7 @@ export const useUpdates = () => {
   const user = useRecoilValue(authAtoms.user);
 
   const { addToNodeList, removeFromNodeList } = useNodeList();
-  const { unloadNode } = useNodeView();
+  const { unloadNode, modifyNode } = useNodeView();
 
   const handleNodeUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -53,6 +53,8 @@ export const useUpdates = () => {
           payloadDeserialized.updated!;
 
         if (updatedBy === user?.id) break;
+
+        modifyNode(payloadDeserialized.updated?.node!);
 
         showNotification(type, `${updatedByName} just updated a node`);
         break;
