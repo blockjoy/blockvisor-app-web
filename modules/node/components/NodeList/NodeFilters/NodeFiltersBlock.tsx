@@ -82,7 +82,6 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                   <Checkbox
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       e.stopPropagation();
-                      console.log('getting in here');
                       onFilterChanged(
                         e,
                         filterList,

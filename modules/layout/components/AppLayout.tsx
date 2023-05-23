@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
@@ -24,25 +24,27 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
   const userEmail = repository?.getIdentity()?.email;
 
-  console.log('userEmail', userEmail);
+  const currentOrg = useRef<string>();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
-  const { loadNodes } = useNodeList();
+  const { loadNodes, nodeList } = useNodeList();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
+
   useEffect(() => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
+    if (!nodeList?.length) loadNodes();
     getReceivedInvitations(userEmail!);
-    loadNodes();
   }, []);
 
   useEffect(() => {
-    if (defaultOrganization?.id) {
+    if (defaultOrganization?.id !== currentOrg.current) {
+      currentOrg.current = defaultOrganization!.id;
       loadNodes();
     }
   }, [defaultOrganization?.id]);
