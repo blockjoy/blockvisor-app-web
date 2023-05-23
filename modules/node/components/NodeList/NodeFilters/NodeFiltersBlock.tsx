@@ -63,7 +63,9 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
         <span css={styles.labelText}>
           {name} {filterCount ? `(${filterCount})` : ''}
         </span>
-        <a css={styles.labelIcon}>{isOpen ? <IconMinus /> : <IconPlus />}</a>
+        {!isDisabled && (
+          <a css={styles.labelIcon}>{isOpen ? <IconMinus /> : <IconPlus />}</a>
+        )}
       </label>
       <div
         style={{ padding: !isOpen && !filterCount ? '0' : '' }}
@@ -80,6 +82,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                   <Checkbox
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       e.stopPropagation();
+                      console.log('getting in here');
                       onFilterChanged(
                         e,
                         filterList,
@@ -87,6 +90,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                         setOrganization,
                       );
                     }}
+                    id={item.id}
                     name={item.name!}
                     checked={item.isChecked}
                   >

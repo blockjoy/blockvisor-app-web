@@ -17,23 +17,23 @@ export const OrganizationInvitations = () => {
   const { getOrganizations } = useGetOrganizations();
 
   const repository = useIdentityRepository();
-  const userId = repository?.getIdentity()?.id;
+  const userEmail = repository?.getIdentity()?.email;
 
   const invitations: Invitation[] = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
   );
 
   const handleAcceptInvitation = (invitationId: string) => {
-    acceptInvitation({ invitationId: invitationId }, () => {
+    console.log('acceptInvitation', invitationId, userEmail);
+
+    acceptInvitation(invitationId, () => {
       getOrganizations();
-      getReceivedInvitations(userId!);
+      getReceivedInvitations(userEmail!);
     });
   };
 
   const handleDeclineInvitation = (invitationId: string) => {
-    declineInvitation({ invitationId: invitationId }, () =>
-      getReceivedInvitations(userId!),
-    );
+    declineInvitation(invitationId, () => getReceivedInvitations(userEmail!));
   };
 
   return (

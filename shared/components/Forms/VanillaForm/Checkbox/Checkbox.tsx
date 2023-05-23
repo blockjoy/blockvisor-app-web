@@ -10,6 +10,7 @@ import { styles } from './Checkbox.styles';
 
 type Props = {
   name: string;
+  id?: string;
   label?: ReactNode;
   description?: string;
   formTouched?: boolean;
@@ -20,6 +21,7 @@ type Props = {
 
 export function Checkbox({
   label,
+  id,
   name,
   formTouched = false,
   checked,
@@ -32,13 +34,14 @@ export function Checkbox({
     <>
       <input
         css={[display.visuallyHidden]}
-        id={name}
+        id={id}
+        name={name}
         defaultChecked={checked}
         type="checkbox"
         {...rest}
         onChange={onChange}
       />
-      <label css={[styles.base, checked ? styles.input : '']} htmlFor={name}>
+      <label css={[styles.base, checked ? styles.input : '']} htmlFor={id}>
         {children}
       </label>
     </>

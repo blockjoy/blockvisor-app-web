@@ -32,9 +32,7 @@ export const useMqtt = (): IMqttHook => {
   const { handleNodeUpdate } = useNodeUpdates();
   const { handleOrganizationUpdate } = useOrgUpdates();
 
-  const token: string = Buffer.from(user?.accessToken!, 'base64').toString(
-    'binary',
-  );
+  const token: string = user?.accessToken!;
 
   const options: IClientOptions = {
     clean: true,

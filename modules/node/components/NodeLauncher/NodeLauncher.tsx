@@ -242,15 +242,6 @@ export const NodeLauncher = () => {
 
   useEffect(() => {
     if (currentOrganization.current?.id !== defaultOrganization?.id) {
-      // setNode({
-      //   blockchainId: '',
-      //   nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
-      //   properties: [],
-      //   nodeVersion: '',
-      //   network: '',
-      //   allowIps: [],
-      //   denyIps: [],
-      // });
       currentOrganization.current = defaultOrganization;
     }
   }, [defaultOrganization]);

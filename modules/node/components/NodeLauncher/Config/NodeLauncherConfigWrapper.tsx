@@ -2,6 +2,7 @@ import { FC, PropsWithChildren } from 'react';
 import { Scrollbar } from '@shared/components';
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
+import { isDesktop } from 'react-device-detect';
 
 const styles = {
   wrapper: css`
@@ -17,11 +18,9 @@ const styles = {
 export const NodeLauncherConfigWrapper: FC<PropsWithChildren> = ({
   children,
 }) => {
-  const isMobile = window.innerWidth < 1200;
-
   return (
     <div css={styles.wrapper}>
-      {isMobile ? (
+      {!isDesktop ? (
         <>{children}</>
       ) : (
         <Scrollbar additionalStyles={[styles.wrapper]}>{children}</Scrollbar>

@@ -59,13 +59,16 @@ class InvitationClient {
   }
 
   async receivedInvitations(
-    inviteeId: string,
+    inviteeEmail: string,
   ): Promise<Invitation[] | StatusResponse> {
     try {
       const response = await this.client.list(
-        { inviteeEmail: '', status: InvitationStatus.INVITATION_STATUS_OPEN },
+        { inviteeEmail, status: InvitationStatus.INVITATION_STATUS_OPEN },
         getOptions(),
       );
+
+      console.log('receivedInvitations', response);
+
       return response.invitations;
     } catch (err) {
       return StatusResponseFactory.receivedInvitations(err, 'grpcClient');

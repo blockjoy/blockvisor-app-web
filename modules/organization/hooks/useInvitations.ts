@@ -18,8 +18,12 @@ export function useInvitations() {
     organizationAtoms.organizationReceivedInvitations,
   );
 
-  const getReceivedInvitations = async (id: string) => {
-    const response: any = await invitationClient.receivedInvitations(id);
+  const getReceivedInvitations = async (inviteeEmail: string) => {
+    console.log('getReceivedInvitations', inviteeEmail);
+
+    const response: any = await invitationClient.receivedInvitations(
+      inviteeEmail,
+    );
     checkForTokenError(response);
     setReceivedInvitations(response);
   };
@@ -37,13 +41,7 @@ export function useInvitations() {
   };
 
   const acceptInvitation = async (
-    {
-      token,
-      invitationId,
-    }: {
-      token?: string;
-      invitationId?: string;
-    },
+    invitationId: string,
     onSuccess: VoidFunction,
   ) => {
     await invitationClient.acceptInvitation(invitationId);
@@ -52,13 +50,7 @@ export function useInvitations() {
   };
 
   const declineInvitation = async (
-    {
-      token,
-      invitationId,
-    }: {
-      token?: string;
-      invitationId?: string;
-    },
+    invitationId: string,
     onSuccess: VoidFunction,
   ) => {
     await invitationClient.declineInvitation(invitationId);

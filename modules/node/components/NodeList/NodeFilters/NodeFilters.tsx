@@ -55,13 +55,13 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
     }
 
     if (!setFilterList) {
-      const foundOrg = list.find((item) => item.name === e.target.id);
+      const foundOrg = list.find((item) => item.id === e.target.id);
       switchOrganization(foundOrg?.id!, foundOrg?.name!);
       return;
     }
 
     const filtersList = list.map((item) => {
-      if (item.name === e.target.id) {
+      if (item.id === e.target.id) {
         return {
           ...item,
           isChecked: !item.isChecked,
@@ -74,9 +74,17 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
     setFilterList(filtersList);
   };
 
+  const hasFiltersApplied = filters.some(
+    (filter) =>
+      filter.name !== 'Organization' &&
+      filter.filterList.some((l) => l.isChecked),
+  );
+
   const handleResetFilters = () => {
+    setIsDirty(false);
     resetFilters();
     removeFilters();
+    setOpenFilterName('');
   };
 
   const handleUpdateClicked = () => {
@@ -142,16 +150,18 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
             <IconRefresh />
             Apply
           </button>
-          <button
-            css={styles.resetButton}
-            type="button"
-            onClick={handleResetFilters}
-          >
-            <SvgIcon size="18px">
-              <IconClose />
-            </SvgIcon>
-            Reset Filters
-          </button>
+          {hasFiltersApplied && (
+            <button
+              css={styles.resetButton}
+              type="button"
+              onClick={handleResetFilters}
+            >
+              <SvgIcon size="18px">
+                <IconClose />
+              </SvgIcon>
+              Reset Filters
+            </button>
+          )}
         </div>
       )}
     </div>

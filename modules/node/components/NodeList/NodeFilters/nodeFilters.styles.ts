@@ -6,6 +6,7 @@ export const styles = {
   outerWrapper: css`
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
 
     @media ${breakpoints.fromXLrg} {
       top: 71px;
@@ -15,14 +16,18 @@ export const styles = {
       max-width: 200px;
       height: calc(100vh - 82px);
       padding-right: 16px;
+      margin-bottom: 0;
     }
   `,
   outerWrapperCollapsed: css`
+    margin-bottom: 0;
+
     @media ${breakpoints.fromXLrg} {
       max-width: 0;
       min-width: 0;
       padding: 0;
       overflow: hidden;
+      margin-bottom: 0;
     }
   `,
   wrapper: css`
@@ -52,6 +57,8 @@ export const styles = {
     }
   `,
   skeleton: css`
+    margin-bottom: 20px;
+
     @media ${breakpoints.toXlrg} {
       margin-top: 20px;
     }

@@ -25,7 +25,8 @@ const activeListType = atom<string | 'table' | 'grid'>({
 const nodeList = atom<Node[]>({
   key: 'node.nodeList',
   default: [],
-  effects: [localStorageEffect('nodeList')],
+  // TODO: fix a weird bug where the grpc error response gets dumped into this variable
+  // effects: [localStorageEffect('nodeList')],
 });
 
 const isLoading = atom<LoadingState>({
@@ -54,7 +55,7 @@ const isFiltersOpen = atom<boolean>({
           : null;
       const isFiltersOpenValue = savedNodeFiltersToggle
         ? JSON.parse(savedNodeFiltersToggle)
-        : false;
+        : true;
       setSelf(isFiltersOpenValue);
     },
   ],

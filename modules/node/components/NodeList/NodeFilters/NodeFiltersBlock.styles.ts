@@ -20,6 +20,10 @@ export const styles = {
     label {
       cursor: not-allowed;
     }
+
+    :hover {
+      border-color: transparent;
+    }
   `,
   labelHeader: (theme: ITheme) => css`
     display: flex;

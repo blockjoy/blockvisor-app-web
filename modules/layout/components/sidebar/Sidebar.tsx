@@ -1,21 +1,13 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { layoutState, sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { styles } from './Sidebar.styles';
-
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarOverlay } from './SidebarOverlay';
 import SidebarMain from './SidebarMain';
-import { useEffect } from 'react';
 
 export default () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+  const isSidebarOpen = useRecoilValue(sidebarOpen);
   const layout = useRecoilValue(layoutState);
-
-  useEffect(() => {
-    if (window.innerWidth >= 1200) {
-      setIsSidebarOpen(!Boolean(localStorage.getItem('sidebarCollapsed')));
-    }
-  }, []);
 
   return (
     <>

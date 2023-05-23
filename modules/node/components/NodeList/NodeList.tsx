@@ -50,11 +50,6 @@ export const NodeList = () => {
     }
   }, [nodeUIProps.queryParams]);
 
-  // useEffect(() => {
-  //   loadNodes();
-  //   console.log('hmmm', defaultOrganization?.id);
-  // }, [defaultOrganization]);
-
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
     await new Promise((r) => setTimeout(r, 300));
