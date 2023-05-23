@@ -7,7 +7,7 @@ export const SidebarHeader = () => {
   const isSidebarOpen = useRecoilValue(sidebarOpen);
   return (
     <header css={[styles.wrapper, isSidebarOpen && styles.wrapperSidebarOpen]}>
-      {isSidebarOpen && isDesktop && <Logo />}
+      {isDesktop ? isSidebarOpen ? <Logo /> : null : <Logo />}
     </header>
   );
 };

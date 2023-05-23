@@ -18,7 +18,7 @@ export const SvgIcon: React.FC<Props> = ({
 }) => (
   <span
     css={[styles.icon, additionalStyles ?? '']}
-    style={{ width: size, height: size }}
+    style={{ width: size, minWidth: size, height: size, minHeight: size }}
   >
     {tooltip && (
       <Tooltip
