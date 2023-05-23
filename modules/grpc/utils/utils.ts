@@ -35,20 +35,3 @@ export const setTokenValue = (token: string) => {
     localStorage.setItem('identity', updatedIdentityString);
   }
 };
-
-export const checkTokenAndRefresh = async (token: string) => {
-  const tokenObject = readToken(token);
-
-  console.log('tokenExpiry', tokenObject.exp);
-  console.log('currentDate', Math.round(new Date().getTime() / 1000));
-
-  const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
-
-  if (tokenObject.exp > currentDateTimestamp) {
-    console.log('Token is expired'!!!);
-    const refreshTokenResponse = await authClient.refreshToken(token);
-    console.log('New Token Expiry', readToken(refreshTokenResponse.token).exp);
-
-    setTokenValue(refreshTokenResponse.token);
-  }
-};

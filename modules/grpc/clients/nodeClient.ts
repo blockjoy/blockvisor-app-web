@@ -9,12 +9,7 @@ import {
   NodeServiceUpdateRequest,
 } from '../library/blockjoy/v1/node';
 
-import {
-  checkTokenAndRefresh,
-  getApiToken,
-  getOptions,
-  handleError,
-} from '@modules/grpc';
+import { getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -51,8 +46,6 @@ class NodeClient {
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
   ): Promise<Node[] | StatusResponse> {
-    //await checkTokenAndRefresh(getApiToken());
-
     let request = {
       orgId,
       offset: 0,

@@ -1,7 +1,6 @@
 import {
   AuthServiceClient,
   AuthServiceDefinition,
-  AuthServiceRefreshResponse,
 } from '../library/blockjoy/v1/auth';
 import {
   createChannel,
@@ -10,12 +9,14 @@ import {
   Metadata,
 } from 'nice-grpc-web';
 import {
+  getApiToken,
   getIdentity,
   getOptions,
   handleError,
   setTokenValue,
 } from '@modules/grpc';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
+import { readToken } from '@shared/utils/readToken';
 
 export type NewPassword = {
   old_pwd: string;
@@ -108,12 +109,21 @@ class AuthClient {
     }
   }
 
-  async refreshToken(token: string): Promise<AuthServiceRefreshResponse> {
+  async refreshToken(): Promise<boolean | undefined> {
+    let refreshTokenResponse;
     try {
-      return await this.client.refresh({ token });
+      const tokenObject = readToken(getApiToken());
+      const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
+      //if (currentDateTimestamp > tokenObject.exp) {
+      refreshTokenResponse = await this.client.refresh({
+        token: getApiToken(),
+      });
+      //}
     } catch (err) {
       return handleError(err);
     }
+
+    //setTokenValue(refreshTokenResponse.token);
   }
 }
 
