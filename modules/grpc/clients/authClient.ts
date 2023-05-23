@@ -29,7 +29,7 @@ class AuthClient {
   constructor() {
     const channel = createChannel(
       process.env.NEXT_PUBLIC_API_URL!,
-      FetchTransport({ credentials: 'same-origin' }),
+      FetchTransport({ credentials: 'include' }),
     );
     this.client = createClient(AuthServiceDefinition, channel);
   }
