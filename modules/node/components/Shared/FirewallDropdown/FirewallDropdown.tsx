@@ -12,8 +12,8 @@ import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 import IconFirewall from '@public/assets/icons/firewall.svg';
 
 type Props = {
-  allowedIps: FilteredIpAddr[];
   deniedIps: FilteredIpAddr[];
+  allowedIps: FilteredIpAddr[];
   onNodePropertyChanged: (name: string, value: any) => void;
 };
 
@@ -83,6 +83,7 @@ export const FirewallDropdown: FC<Props> = ({
           isOpen={isOpen}
           activeTabIndex={activeTabIndex}
           onRuleAdded={handleRuleAdded}
+          fullIpList={[...allowedIps, ...deniedIps]}
         />
         <FirewallDropdownItems
           listType={activeTabIndex === 0 ? 'allow' : 'deny'}

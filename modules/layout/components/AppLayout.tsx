@@ -22,7 +22,9 @@ export type LayoutProps = {
 
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
-  const userId = repository?.getIdentity()?.id;
+  const userEmail = repository?.getIdentity()?.email;
+
+  console.log('userEmail', userEmail);
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -35,7 +37,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   useEffect(() => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
-    getReceivedInvitations(userId!);
+    getReceivedInvitations(userEmail!);
     loadNodes();
   }, []);
 

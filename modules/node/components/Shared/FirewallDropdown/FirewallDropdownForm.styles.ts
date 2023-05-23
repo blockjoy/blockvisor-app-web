@@ -30,4 +30,8 @@ export const styles = {
       max-width: 600px;
     }
   `,
+  validation: (theme: ITheme) => css`
+    color: ${theme.colorDanger};
+    margin-left: 8px;
+  `,
 };

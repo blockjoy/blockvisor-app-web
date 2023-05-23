@@ -101,7 +101,7 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
   const filters = [
     {
       name: 'Organization',
-      isDisabled: false,
+      isDisabled: organizations?.length === 1,
       filterCount: 1,
       filterList: organizations?.map((org) => ({
         id: org.id,

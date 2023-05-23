@@ -3,8 +3,18 @@ import {
   AuthServiceDefinition,
   AuthServiceRefreshResponse,
 } from '../library/blockjoy/v1/auth';
-import { getOptions, handleError, setTokenValue } from '@modules/grpc';
-import { createChannel, createClient, FetchTransport, Metadata } from 'nice-grpc-web';
+import {
+  createChannel,
+  createClient,
+  FetchTransport,
+  Metadata,
+} from 'nice-grpc-web';
+import {
+  getIdentity,
+  getOptions,
+  handleError,
+  setTokenValue,
+} from '@modules/grpc';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 export type NewPassword = {
@@ -17,7 +27,10 @@ class AuthClient {
   private client: AuthServiceClient;
 
   constructor() {
-    const channel = createChannel(process.env.NEXT_PUBLIC_API_URL!, FetchTransport({ credentials: 'same-origin' }));
+    const channel = createChannel(
+      process.env.NEXT_PUBLIC_API_URL!,
+      FetchTransport({ credentials: 'same-origin' }),
+    );
     this.client = createClient(AuthServiceDefinition, channel);
   }
 
@@ -86,6 +99,7 @@ class AuthClient {
         {
           oldPassword: pwd.old_pwd,
           newPassword: pwd.new_pwd,
+          userId: getIdentity().id,
         },
         getOptions(),
       );
