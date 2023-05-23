@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 import { nodeClient, commandClient } from '@modules/grpc';
-import { useState } from 'react';
-import { SetterOrUpdater, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
@@ -18,6 +17,7 @@ type Hook = {
   deleteNode: (args1: Args, onSuccess: VoidFunction) => void;
   stopNode: (nodeId: Args) => void;
   startNode: (nodeId: Args) => void;
+  modifyNode: (node: Node) => void;
   updateNode: (node: NodeServiceUpdateRequest) => void;
   isLoading: boolean;
   unloadNode: any;
@@ -93,13 +93,23 @@ export const useNodeView = (): Hook => {
     setIsLoading(true);
   };
 
-  const updateNode = (nodeRequest: NodeServiceUpdateRequest) => {
-    nodeClient.updateNode(nodeRequest);
+  const updateNode = async (nodeRequest: NodeServiceUpdateRequest) => {
+    try {
+      await nodeClient.updateNode(nodeRequest);
+      setNode({
+        ...node!,
+        ...nodeRequest,
+      });
+    } catch (err) {
+      toast.error('Error Updating Node');
+    }
+  };
+
+  const modifyNode = (mqttNode: Node) =>
     setNode({
       ...node!,
-      ...nodeRequest,
+      ...mqttNode,
     });
-  };
 
   return {
     loadNode,
@@ -108,6 +118,7 @@ export const useNodeView = (): Hook => {
     startNode,
     unloadNode,
     updateNode,
+    modifyNode,
     node,
     isLoading,
   };

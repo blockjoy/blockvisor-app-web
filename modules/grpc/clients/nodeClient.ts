@@ -9,7 +9,7 @@ import {
   NodeServiceUpdateRequest,
 } from '../library/blockjoy/v1/node';
 
-import { getOptions, handleError } from '@modules/grpc';
+import { authClient, getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -58,6 +58,7 @@ class NodeClient {
     console.log('listNodes request', request);
 
     try {
+      await authClient.refreshToken();
       const response = await this.client.list(request, getOptions());
       return response.nodes;
     } catch (err) {
@@ -67,6 +68,7 @@ class NodeClient {
 
   async getNode(id: string): Promise<Node | StatusResponse> {
     try {
+      await authClient.refreshToken();
       const response = await this.client.get({ id }, getOptions());
       return response.node!;
     } catch (err) {
@@ -85,6 +87,7 @@ class NodeClient {
 
   async updateNode(node: NodeServiceUpdateRequest): Promise<void> {
     try {
+      await authClient.refreshToken();
       await this.client.update(node, getOptions());
     } catch (err) {
       return handleError(err);

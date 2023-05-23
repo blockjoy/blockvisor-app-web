@@ -30,7 +30,7 @@ export function useUpdateMembers(): IUpdateMembersHook {
 
     if (!isUpdated) return;
 
-    const isAdded = members!.length > organizationMembers!.length;
+    const isAdded = members!.length > organizationMembers?.length!;
 
     if (!isAdded) {
       const isRemovedCurrentUser: boolean = !members?.some(
