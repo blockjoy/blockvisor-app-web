@@ -37,7 +37,7 @@ export const NodeViewEdit = () => {
       <div>
         <FormLabelCaps>Firewall Rules</FormLabelCaps>
         <FirewallDropdown
-          onNodePropertyChanged={handleFirewallChanged}
+          onPropertyChanged={handleFirewallChanged}
           allowedIps={node!.allowIps}
           deniedIps={node!.denyIps}
         />

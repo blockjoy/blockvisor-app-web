@@ -14,13 +14,13 @@ import IconFirewall from '@public/assets/icons/firewall.svg';
 type Props = {
   deniedIps: FilteredIpAddr[];
   allowedIps: FilteredIpAddr[];
-  onNodePropertyChanged: (name: string, value: any) => void;
+  onPropertyChanged: (name: string, value: FilteredIpAddr[]) => void;
 };
 
 export const FirewallDropdown: FC<Props> = ({
   allowedIps,
   deniedIps,
-  onNodePropertyChanged,
+  onPropertyChanged,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -36,13 +36,13 @@ export const FirewallDropdown: FC<Props> = ({
   const handleRuleAdded = (rule: FilteredIpAddr) => {
     const listToAddCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];
     listToAddCopy.push(rule);
-    onNodePropertyChanged(isAllowedIp ? 'allowIps' : 'denyIps', listToAddCopy);
+    onPropertyChanged(isAllowedIp ? 'allowIps' : 'denyIps', listToAddCopy);
   };
 
   const handleRemoveFromList = (index: number) => {
     const listToRemoveFromCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];
 
-    onNodePropertyChanged(
+    onPropertyChanged(
       isAllowedIp ? 'allowIps' : 'denyIps',
       listToRemoveFromCopy.filter((item, i) => i !== index),
     );

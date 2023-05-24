@@ -1,4 +1,11 @@
-import { ChangeEvent, FC, useLayoutEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  KeyboardEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { styles } from './FirewallDropdownForm.styles';
 
 type Props = {
@@ -25,6 +32,8 @@ export const FirewallDropdownForm: FC<Props> = ({
     description: '',
   });
 
+  const isFormValid = isValidIp && state.ip && !ipAlreadyAdded;
+
   const handleInputChanged = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === 'ip') {
       const pattern =
@@ -41,8 +50,8 @@ export const FirewallDropdownForm: FC<Props> = ({
     });
   };
 
-  const handleKeyUp = (e: any) => {
-    if (e.keyCode === 13 && isValidIp && state.ip && !ipAlreadyAdded) {
+  const handleSubmit = (e?: KeyboardEvent<HTMLInputElement>) => {
+    if ((!e || e?.key === 'Enter') && isFormValid) {
       if (ipAlreadyAdded) setIpAlreadyAdded(false);
       onRuleAdded(state);
       setState({
@@ -66,24 +75,30 @@ export const FirewallDropdownForm: FC<Props> = ({
 
   return (
     <>
-      <div css={styles.wrapper}>
+      <form css={styles.wrapper}>
         <input
           ref={ipRef}
           name="ip"
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChanged(e)}
-          onKeyUp={handleKeyUp}
+          onKeyUp={handleSubmit}
           placeholder="IP"
           value={state.ip}
         />
         <input
           name="description"
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChanged(e)}
-          onKeyUp={handleKeyUp}
+          onKeyUp={handleSubmit}
           placeholder="Comment"
           value={state.description}
         />
-        {/* <button onClick={() => onRuleAdded()}>Go</button> */}
-      </div>
+        <button
+          disabled={!isFormValid}
+          css={styles.submit}
+          onClick={() => handleSubmit()}
+        >
+          Add
+        </button>
+      </form>
       {!isValidIp && (
         <div css={styles.validation}>Please enter a valid CIDR IP</div>
       )}
