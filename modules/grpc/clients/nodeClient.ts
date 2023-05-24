@@ -9,7 +9,12 @@ import {
   NodeServiceUpdateRequest,
 } from '../library/blockjoy/v1/node';
 
-import { authClient, getOptions, handleError } from '@modules/grpc';
+import {
+  authClient,
+  callWithTokenRefresh,
+  getOptions,
+  handleError,
+} from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -46,38 +51,32 @@ class NodeClient {
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
   ): Promise<Node[] | StatusResponse> {
-    let request = {
-      orgId,
-      offset: 0,
-      limit: 10,
-      statuses: filter_criteria?.node_status!,
-      nodeTypes: filter_criteria?.node_type!,
-      blockchainIds: filter_criteria?.blockchain!,
-    };
-
-    console.log('listNodes request', request);
-
-    try {
-      await authClient.refreshToken();
-      const response = await this.client.list(request, getOptions());
-      return response.nodes;
-    } catch (err) {
-      return StatusResponseFactory.listNodesResponse(err, 'grpcClient');
-    }
+    const response = await callWithTokenRefresh(
+      this.client.list.bind(this.client),
+      {
+        orgId,
+        offset: 0,
+        limit: 10,
+        statuses: filter_criteria?.node_status!,
+        nodeTypes: filter_criteria?.node_type!,
+        blockchainIds: filter_criteria?.blockchain!,
+      },
+    );
+    return response.nodes;
   }
 
   async getNode(id: string): Promise<Node | StatusResponse> {
-    try {
-      await authClient.refreshToken();
-      const response = await this.client.get({ id }, getOptions());
-      return response.node!;
-    } catch (err) {
-      return StatusResponseFactory.getNodeResponse(err, 'grpcClient');
-    }
+    await authClient.refreshToken();
+    const response = await callWithTokenRefresh(
+      this.client.get.bind(this.client),
+      { id },
+    );
+    return response.node!;
   }
 
   async createNode(node: NodeServiceCreateRequest): Promise<Node> {
     try {
+      await authClient.refreshToken();
       const response = await this.client.create(node, getOptions());
       return response.node!;
     } catch (err) {
@@ -96,6 +95,7 @@ class NodeClient {
 
   async deleteNode(nodeId: string): Promise<void | StatusResponse> {
     try {
+      await authClient.refreshToken();
       await this.client.delete({ id: nodeId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.deleteNodeResponse(err, 'grpcClient');
