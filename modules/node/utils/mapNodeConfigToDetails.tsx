@@ -10,6 +10,8 @@ import {
 export const mapNodeConfigToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
+  console.log('nodeProperties', node.properties);
+
   const details: {
     id: string;
     label: string | ReactNode;
@@ -20,27 +22,21 @@ export const mapNodeConfigToDetails = (node: Node) => {
         property.uiType !== UiType.UI_TYPE_FILE_UPLOAD &&
         property.uiType !== UiType.UI_TYPE_PASSWORD,
     )
-    .map((property: any) => ({
+    .map((property: NodeProperty) => ({
       id: property.name,
       label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
       data:
         property.value === 'null' ? (
           '-'
-        ) : property.uiType === 'switch' ? (
+        ) : property.uiType === UiType.UI_TYPE_SWITCH ? (
           <LockedSwitch
             tooltip="You will be able to enable Self Hosting after BETA."
             isChecked={property.value === 'true' ? true : false}
           />
         ) : (
-          escapeHtml(property.value)
+          escapeHtml(property.value!)
         ),
     }));
-
-  details.unshift({
-    id: 'auto-updates',
-    label: <>AUTO UPDATES</>,
-    data: <LockedSwitch />,
-  });
 
   details.unshift({
     id: 'network',

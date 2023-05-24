@@ -29,7 +29,7 @@ import {
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { ROUTES } from '@shared/index';
+import { PageHeader, ROUTES } from '@shared/index';
 import { nodeClient } from '@modules/grpc';
 import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
 
