@@ -26,7 +26,7 @@ export const setTokenValue = (token: string) => {
     const parsedIdentity = JSON.parse(identity);
     parsedIdentity.accessToken = token;
     // TODO: Move to separate localStorage var to avoid JSON.parse to retrive it
-    parsedIdentity.accessTokenExpires = readToken(token).exp;
+    parsedIdentity.accessTokenExpires = readToken(token);
     const updatedIdentityString = JSON.stringify(parsedIdentity);
     localStorage.setItem('identity', updatedIdentityString);
   }
