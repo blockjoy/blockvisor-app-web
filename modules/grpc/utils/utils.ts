@@ -1,14 +1,6 @@
 import { readToken } from '@shared/utils/readToken';
-import { authClient } from '@modules/grpc';
 import { Metadata } from 'nice-grpc-web';
-
-export const getApiToken = () => {
-  if (!window.localStorage.getItem('identity')) return '';
-  const token = JSON.parse(
-    window.localStorage.getItem('identity') || '{}',
-  ).accessToken;
-  return token;
-};
+import { authClient } from '../clients/authClient';
 
 export const getIdentity = () => {
   if (!window.localStorage.getItem('identity')) return '';
@@ -18,7 +10,9 @@ export const getIdentity = () => {
 
 export const getOptions = () => {
   return {
-    metadata: Metadata({ authorization: `Bearer ${getApiToken()}` }),
+    metadata: Metadata({
+      authorization: `Bearer ${getIdentity().accessToken}`,
+    }),
   };
 };
 
@@ -31,7 +25,21 @@ export const setTokenValue = (token: string) => {
   if (identity) {
     const parsedIdentity = JSON.parse(identity);
     parsedIdentity.accessToken = token;
+    // TODO: Move to separate localStorage var to avoid JSON.parse to retrive it
+    parsedIdentity.accessTokenExpires = readToken(token).exp;
     const updatedIdentityString = JSON.stringify(parsedIdentity);
     localStorage.setItem('identity', updatedIdentityString);
+  }
+};
+
+export const callWithTokenRefresh = async (
+  method: (...args: any[]) => Promise<any>,
+  ...args: any[]
+): Promise<any> => {
+  try {
+    await authClient.refreshToken();
+    return await method(...args, getOptions());
+  } catch (err) {
+    return handleError(err);
   }
 };

@@ -4,7 +4,7 @@ import {
   KeyFileServiceDefinition,
 } from '../library/blockjoy/v1/key_file';
 
-import { getOptions, handleError } from '@modules/grpc';
+import { authClient, getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 
 class KeyFileClient {
@@ -16,6 +16,7 @@ class KeyFileClient {
   }
 
   async create(nodeId: string, files: File[]): Promise<void> {
+    await authClient.refreshToken();
     try {
       const keyFiles: Keyfile[] = await Promise.all(
         files.map(async (file) => {

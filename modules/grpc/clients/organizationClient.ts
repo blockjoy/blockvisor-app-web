@@ -5,7 +5,12 @@ import {
   OrgServiceUpdateResponse,
 } from '../library/blockjoy/v1/org';
 
-import { getOptions, getIdentity, handleError } from '@modules/grpc';
+import {
+  getOptions,
+  getIdentity,
+  handleError,
+  authClient,
+} from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -19,6 +24,7 @@ class OrganizationClient {
 
   async getOrganization(id: string): Promise<Org | StatusResponse> {
     try {
+      await authClient.refreshToken();
       const response = await this.client.get({ id }, getOptions());
       return response.org!;
     } catch (err) {
@@ -28,6 +34,7 @@ class OrganizationClient {
 
   async getOrganizations(): Promise<Org[] | StatusResponse> {
     try {
+      await authClient.refreshToken();
       const response = await this.client.list(
         { memberId: getIdentity().id },
         getOptions(),
@@ -40,6 +47,7 @@ class OrganizationClient {
 
   async createOrganization(name: string): Promise<Org | StatusResponse> {
     try {
+      await authClient.refreshToken();
       const response = await this.client.create({ name }, getOptions());
       return response.org!;
     } catch (err) {
@@ -52,8 +60,8 @@ class OrganizationClient {
     name: string,
   ): Promise<OrgServiceUpdateResponse | StatusResponse> {
     try {
-      const response = await this.client.update({ id, name }, getOptions());
-      return response;
+      await authClient.refreshToken();
+      return await this.client.update({ id, name }, getOptions());
     } catch (err) {
       return StatusResponseFactory.deleteOrganizationResponse(
         err,
@@ -64,6 +72,7 @@ class OrganizationClient {
 
   async deleteOrganization(id: string): Promise<void> {
     try {
+      await authClient.refreshToken();
       await this.client.delete({ id }, getOptions());
     } catch (err: any) {
       handleError(err);
@@ -75,6 +84,7 @@ class OrganizationClient {
     orgId: string,
   ): Promise<void | StatusResponse> {
     try {
+      await authClient.refreshToken();
       await this.client.removeMember({ userId, orgId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.removeOrganizationMemberResponse(

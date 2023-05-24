@@ -5,7 +5,7 @@ import {
   InvitationStatus,
 } from '../library/blockjoy/v1/invitation';
 
-import { getOptions } from '@modules/grpc';
+import { authClient, getOptions } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -22,6 +22,7 @@ class InvitationClient {
     orgId: string,
   ): Promise<void | StatusResponse> {
     try {
+      await authClient.refreshToken();
       await this.client.create({ inviteeEmail, orgId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.inviteOrgMember(err, 'grpcClient');
@@ -32,6 +33,7 @@ class InvitationClient {
     invitationId?: string,
   ): Promise<void | StatusResponse> {
     try {
+      await authClient.refreshToken();
       await this.client.accept({ invitationId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.acceptInvitation(err, 'grpcClient');
@@ -42,6 +44,7 @@ class InvitationClient {
     invitationId?: string,
   ): Promise<void | StatusResponse> {
     try {
+      await authClient.refreshToken();
       await this.client.decline({ invitationId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.declineInvitation(err, 'grpcClient');
@@ -52,6 +55,7 @@ class InvitationClient {
     invitationId?: string,
   ): Promise<void | StatusResponse> {
     try {
+      await authClient.refreshToken();
       await this.client.revoke({ invitationId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.revokeInvitation(err, 'grpcClient');
@@ -62,13 +66,11 @@ class InvitationClient {
     inviteeEmail: string,
   ): Promise<Invitation[] | StatusResponse> {
     try {
+      await authClient.refreshToken();
       const response = await this.client.list(
         { inviteeEmail, status: InvitationStatus.INVITATION_STATUS_OPEN },
         getOptions(),
       );
-
-      console.log('receivedInvitations', response);
-
       return response.invitations;
     } catch (err) {
       return StatusResponseFactory.receivedInvitations(err, 'grpcClient');
@@ -79,6 +81,7 @@ class InvitationClient {
     orgId: string,
   ): Promise<Invitation[] | StatusResponse> {
     try {
+      await authClient.refreshToken();
       const response = await this.client.list(
         { orgId, status: InvitationStatus.INVITATION_STATUS_OPEN },
         getOptions(),

@@ -1,7 +1,8 @@
 import { useIdentity } from '@modules/auth';
-import { useRefreshToken } from '@modules/auth/hooks/useRefreshToken';
+// import { useRefreshToken } from '@modules/auth/hooks/useRefreshToken';
 import { LoadingSpinner, PUBLIC_ROUTES, ROUTES } from '@shared/index';
 import { useEffect, useState } from 'react';
+//import { authClient } from '@modules/grpc';
 
 interface Props {
   router: any;
@@ -24,7 +25,6 @@ export function PrivateRoute({ router, children }: Props) {
 
     if (!isLoggedIn && isPrivateRoute) {
       router.events.on('routeChangeStart', hideContent);
-
       router.events.on('routeChangeComplete', authCheck);
 
       return () => {
@@ -35,10 +35,10 @@ export function PrivateRoute({ router, children }: Props) {
   }, [isLoggedIn]);
 
   // useEffect(() => {
-  //   if (isLoggedIn) refreshToken();
-  //   return () => {
-  //     removeRefreshTokenCall();
-  //   };
+  //   if (isLoggedIn) authClient.refreshToken();
+  //   // return () => {
+  //   //   removeRefreshTokenCall();
+  //   // };
   // });
 
   function authCheck(loggedIn: boolean): any {

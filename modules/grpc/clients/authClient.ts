@@ -9,14 +9,12 @@ import {
   Metadata,
 } from 'nice-grpc-web';
 import {
-  getApiToken,
   getIdentity,
   getOptions,
   handleError,
   setTokenValue,
 } from '@modules/grpc';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
-import { readToken } from '@shared/utils/readToken';
 
 export type NewPassword = {
   old_pwd: string;
@@ -112,11 +110,11 @@ class AuthClient {
 
   async refreshToken(): Promise<void> {
     try {
-      const tokenObject = readToken(getApiToken());
+      const tokenObject = getIdentity().accessTokenExpires;
       const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
       if (currentDateTimestamp > tokenObject.exp) {
         const refreshTokenResponse = await this.client.refresh({
-          token: getApiToken(),
+          token: getIdentity().accessToken,
         });
         setTokenValue(refreshTokenResponse.token);
       }
