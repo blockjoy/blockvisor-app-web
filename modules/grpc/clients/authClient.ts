@@ -112,9 +112,9 @@ class AuthClient {
 
   async refreshToken(): Promise<boolean | undefined> {
     try {
-      const tokenObject = readToken(getApiToken());
+      const accessTokenExpires = getIdentity().accessTokenExpires;
       const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
-      if (currentDateTimestamp > tokenObject.exp) {
+      if (currentDateTimestamp > accessTokenExpires) {
         const refreshTokenResponse = await this.client.refresh({
           token: getApiToken(),
         });
