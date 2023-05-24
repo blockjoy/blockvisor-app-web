@@ -109,13 +109,14 @@ class AuthClient {
   }
 
   async refreshToken(): Promise<void> {
+    console.log('attempt refresh token');
     try {
-      const tokenObject = getIdentity().accessTokenExpires;
       const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
-      if (currentDateTimestamp > tokenObject.exp) {
+      if (currentDateTimestamp > getIdentity().accessTokenExpires) {
         const refreshTokenResponse = await this.client.refresh({
           token: getIdentity().accessToken,
         });
+        console.log('token was refreshed');
         setTokenValue(refreshTokenResponse.token);
       }
     } catch (err) {
