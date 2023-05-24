@@ -72,12 +72,12 @@ export const DangerZone: FC<Props> = ({
 
   return (
     <section css={[spacing.top.large, spacing.bottom.xLarge]}>
-      {/* <h2 css={[typo.large, spacing.bottom.medium]}>Danger Zone</h2> */}
+      <h2 css={[typo.large, spacing.bottom.medium]}>Danger Zone</h2>
       {step === 1 && (
         <>
           <div css={spacing.bottom.medium}>
-            <p>Delete this {elementName}?</p>
-            {/* <small>Click the button below to {activeAction} it.</small> */}
+            <p>No longer need this {elementName}?</p>
+            <small>Click the button below to {activeAction}.</small>
           </div>
           <Button
             disabled={isDisabled}

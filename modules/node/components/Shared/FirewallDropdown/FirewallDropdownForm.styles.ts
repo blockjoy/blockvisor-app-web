@@ -9,7 +9,6 @@ export const styles = {
     margin-bottom: 10px;
 
     input {
-      flex: 1 1 auto;
       background: transparent;
       border: 1px solid ${theme.colorBorderGrey};
       border-radius: 4px;
@@ -41,11 +40,8 @@ export const styles = {
     border-radius: 4px;
     padding: 0 16px;
     background: ${theme.colorAccent};
-
-    @media ${breakpoints.fromXLrg} {
-      display: none;
-      position: absolute;
-    }
+    color: ${theme.colorPrimaryText};
+    cursor: pointer;
 
     :disabled {
       color: ${theme.colorPrimaryText};

@@ -77,6 +77,7 @@ export const FirewallDropdownForm: FC<Props> = ({
     <>
       <form css={styles.wrapper}>
         <input
+          style={{ width: '35%' }}
           ref={ipRef}
           name="ip"
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChanged(e)}
@@ -85,6 +86,7 @@ export const FirewallDropdownForm: FC<Props> = ({
           value={state.ip}
         />
         <input
+          style={{ width: '50%' }}
           name="description"
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChanged(e)}
           onKeyUp={handleSubmit}
@@ -92,6 +94,7 @@ export const FirewallDropdownForm: FC<Props> = ({
           value={state.description}
         />
         <button
+          style={{ width: '15%', minWidth: '70px' }}
           disabled={!isFormValid}
           css={styles.submit}
           onClick={() => handleSubmit()}
