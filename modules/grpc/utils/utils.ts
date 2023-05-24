@@ -21,12 +21,11 @@ export const handleError = (error: any) => {
 };
 
 export const setTokenValue = (token: string) => {
+  localStorage.setItem('accessTokenExpiry', readToken(token).exp);
   const identity = localStorage.getItem('identity');
   if (identity) {
     const parsedIdentity = JSON.parse(identity);
     parsedIdentity.accessToken = token;
-    // TODO: Move to separate localStorage var to avoid JSON.parse to retrive it
-    parsedIdentity.accessTokenExpires = readToken(token);
     const updatedIdentityString = JSON.stringify(parsedIdentity);
     localStorage.setItem('identity', updatedIdentityString);
   }
