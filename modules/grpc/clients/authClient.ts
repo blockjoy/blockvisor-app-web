@@ -110,7 +110,7 @@ class AuthClient {
     }
   }
 
-  async refreshToken(): Promise<boolean | undefined> {
+  async refreshToken(): Promise<void> {
     try {
       const tokenObject = readToken(getApiToken());
       const currentDateTimestamp = Math.round(new Date().getTime() / 1000);

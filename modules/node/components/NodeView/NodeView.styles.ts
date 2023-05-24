@@ -8,7 +8,7 @@ export const styles = {
     flex-direction: column;
     padding: 20px 0;
 
-    @media ${breakpoints.fromMed} {
+    @media ${breakpoints.fromLrg} {
       flex-direction: row;
       height: 100%;
     }
@@ -16,7 +16,7 @@ export const styles = {
   content: css`
     flex: 1 1 auto;
 
-    @media ${breakpoints.fromMed} {
+    @media ${breakpoints.fromLrg} {
       padding: 4px 20px 20px 0;
     }
   `,
@@ -26,11 +26,12 @@ export const styles = {
     padding: 4px 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
 
-    @media ${breakpoints.toMed} {
+    @media ${breakpoints.toLrg} {
       border-left: 0;
       border-top: 1px solid ${theme.colorBorder};
       padding: 20px 0 0 0;
-      max-width: auto;
+      max-width: 1000px;
+      margin-bottom: 100px;
     }
   `,
   formHeader: (theme: ITheme) => css`

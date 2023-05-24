@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { styles } from './Switch.styles';
 import IconLock from '@public/assets/icons/lock-12.svg';
 import { Tooltip } from '@shared/components';
@@ -9,7 +9,7 @@ type Props = {
   tabIndex?: number;
   tooltip?: string;
   disabled: boolean;
-  onPropertyChanged: (e: any) => void;
+  onPropertyChanged: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const Switch: FC<Props> = ({

@@ -130,7 +130,7 @@ export const NodeLauncherConfig: FC<Props> = ({
         </FormLabel>
 
         <FirewallDropdown
-          onNodePropertyChanged={onNodePropertyChanged}
+          onPropertyChanged={onNodePropertyChanged}
           allowedIps={nodeLauncherState.allowIps}
           deniedIps={nodeLauncherState.denyIps}
         />

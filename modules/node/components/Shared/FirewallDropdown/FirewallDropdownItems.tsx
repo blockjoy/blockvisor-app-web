@@ -27,13 +27,13 @@ export const FirewallDropdownItems: FC<Props> = ({
               <tr key={item.ip}>
                 <td style={{ width: '140px' }}>{item.ip}</td>
                 <td style={{ width: '120px' }}>{item.description}</td>
-                <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                <td style={{ textAlign: 'right' }}>
                   <button
                     onClick={() => onRemoveClicked(index)}
                     className="remove-button"
                     css={styles.removeButton}
                   >
-                    <SvgIcon size="18px">
+                    <SvgIcon size="16px">
                       <IconTrash />
                     </SvgIcon>
                   </button>
