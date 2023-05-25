@@ -62,6 +62,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
+      loadNodes();
     }
   }, []);
 
@@ -72,7 +73,8 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, []);
 
   useEffect(() => {
-    if (defaultOrganization?.id) {
+    if (defaultOrganization?.id !== currentOrg.current) {
+      currentOrg.current = defaultOrganization!.id;
       loadNodes();
       loadHosts();
       mqttConnect();
