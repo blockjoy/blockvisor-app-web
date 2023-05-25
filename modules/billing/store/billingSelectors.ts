@@ -1,15 +1,18 @@
 import { selector, selectorFamily } from 'recoil';
 import { billingAtoms } from '@modules/billing';
-import { CustomerBillingAddress } from 'chargebee-typescript/lib/resources';
+import {
+  CustomerBillingAddress,
+  Item,
+} from 'chargebee-typescript/lib/resources';
 
-const activePlan = selectorFamily<IPlan | null, string>({
+const activePlan = selectorFamily<Item | null, string>({
   key: 'billing.plan.active',
   get:
     (planId) =>
     ({ get }) => {
       const plans = get(billingAtoms.plans);
 
-      const activePlan = plans?.find((plan: IPlan) => plan.id === planId);
+      const activePlan = plans?.find((plan: Item) => plan.id === planId);
 
       return activePlan ?? null;
     },
