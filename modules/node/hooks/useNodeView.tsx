@@ -9,6 +9,11 @@ import {
   Node,
   NodeServiceUpdateRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  useDefaultOrganization,
+  useGetOrganizations,
+  useUpdateOrganization,
+} from '@modules/organization';
 
 type Args = string | string[] | undefined;
 
@@ -35,11 +40,22 @@ export const useNodeView = (): Hook => {
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
   const { removeFromNodeList } = useNodeList();
+  const { organizations } = useGetOrganizations();
+  const { defaultOrganization } = useDefaultOrganization();
+  const { modifyOrganization } = useUpdateOrganization();
 
   const deleteNode = async (id: Args, onSuccess: VoidFunction) => {
     const uuid = convertRouteParamToString(id);
     removeFromNodeList(uuid);
     await nodeClient.deleteNode(uuid);
+    // Update organization node count
+    const activeOrganization = organizations.find(
+      (org) => org.id === defaultOrganization?.id,
+    );
+    modifyOrganization({
+      ...activeOrganization,
+      nodeCount: activeOrganization!.nodeCount - 1,
+    });
     onSuccess();
   };
 
@@ -72,9 +88,6 @@ export const useNodeView = (): Hook => {
     try {
       const nodeId = convertRouteParamToString(id);
       node = await nodeClient.getNode(nodeId);
-
-      console.log('loadNode', node);
-
       checkForApiError('GetNode', node);
       checkForTokenError(node);
     } catch (err) {
@@ -82,8 +95,6 @@ export const useNodeView = (): Hook => {
       onError();
       return;
     }
-
-    checkForTokenError(node);
 
     setNode(node);
   };
