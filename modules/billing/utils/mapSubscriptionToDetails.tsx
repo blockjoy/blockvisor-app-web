@@ -1,5 +1,6 @@
-import { formatDate } from '@shared/index';
 import { Subscription } from 'chargebee-typescript/lib/resources';
+import { formatDate } from '@shared/index';
+import { SubscriptionStatus } from '@modules/billing';
 
 export const mapSubscriptionToDetails = (subscription: Subscription) => {
   return [
@@ -14,6 +15,10 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
     {
       label: 'Billing period',
       data: subscription.billing_period_unit === 'year' ? 'Yearly' : 'Monthly',
+    },
+    {
+      label: 'Status',
+      data: <p>{SubscriptionStatus[subscription.status]}</p>,
     },
   ];
 };

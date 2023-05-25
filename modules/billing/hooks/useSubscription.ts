@@ -20,8 +20,6 @@ export const useSubscription = (): ISubscriptionHook => {
   const getSubscription = async (id: string) => {
     setSubscriptionLoadingState('initializing');
 
-    console.log('GET SUBSCRIPTION');
-
     try {
       const response = await fetch(BILLING_API_ROUTES.subsriptions.get, {
         method: 'POST',
@@ -56,20 +54,26 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
-      const customerId = customer?.id;
+      const autoRenewValue: string = autoRenew ? 'on' : 'off';
 
-      const autoRenewValue = autoRenew ? 'on' : 'off';
+      const subscriptionItems: _subscription.subscription_items_create_with_items_params[] =
+        [
+          {
+            item_price_id: itemPriceId,
+            quantity: 1,
+          },
+        ];
 
-      const subscriptionItems: any = [
-        {
-          item_price_id: itemPriceId,
+      const params: {
+        id: string;
+        params: _subscription.create_with_items_params;
+      } = {
+        id: customer?.id!,
+        params: {
+          id: defaultOrganization?.id!,
           auto_collection: autoRenewValue,
+          subscription_items: subscriptionItems,
         },
-      ];
-
-      const subscriptionParams = {
-        id: defaultOrganization?.id,
-        subscription_items: subscriptionItems,
       };
 
       const response = await fetch(BILLING_API_ROUTES.subsriptions.create, {
@@ -77,14 +81,14 @@ export const useSubscription = (): ISubscriptionHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ customerId, subscription: subscriptionParams }),
+        body: JSON.stringify(params),
       });
 
-      const subscription: Subscription = await response.json();
+      const data: Subscription = await response.json();
 
-      setSubscription(subscription);
+      setSubscription(data);
     } catch (error) {
-      console.error('Failed to CREATE subscription', error);
+      console.error('Failed to create the subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -134,7 +138,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
     const { type, payload } = action;
 
-    const subscriptionParams: _subscription.update_for_items_params = {};
+    const params: _subscription.update_for_items_params = {};
 
     const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
       [];
@@ -179,21 +183,21 @@ export const useSubscription = (): ISubscriptionHook => {
             )!,
           );
 
-          subscriptionParams.replace_items_list = true;
+          params.replace_items_list = true;
         }
         break;
       default:
         break;
     }
 
-    subscriptionParams.subscription_items = subscriptionItems;
+    params.subscription_items = subscriptionItems;
 
     const subscriptionProperties: {
       id: string;
       params: _subscription.update_for_items_params;
     } = {
       id: subscription?.id!,
-      params: subscriptionParams,
+      params: params,
     };
 
     console.log(

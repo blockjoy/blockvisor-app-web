@@ -1,19 +1,23 @@
-import { Button, DetailsView, TableSkeleton } from '@shared/index';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { _subscription } from 'chargebee-typescript';
+import { DetailsView, TableSkeleton } from '@shared/components';
 import { styles } from './SubscriptionPreview.styles';
 import { SubscriptionInfo } from './SubscriptionInfo/SubscriptionInfo';
 import { SubscriptionItems } from './SubscriptionItems/SubscriptionItems';
-import { useEstimates } from '@modules/billing/hooks/useEstimates';
-import { useEffect, useState } from 'react';
-import { SubscriptionCancellation } from '../SubscriptionCancellation/SubscriptionCancellation';
-import { useSubscription } from '@modules/billing/hooks/useSubscription';
+import { useEstimates, SubscriptionCancellation } from '@modules/billing';
+import { billingAtoms } from '@modules/billing/store/billingAtoms';
 
 export const SubscriptionPreview = () => {
-  const { subscriptionLoadingState } = useSubscription();
+  const subscription = useRecoilValue(billingAtoms.subscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
+  );
   const { estimateLoadingState, getEstimate } = useEstimates();
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
 
   useEffect(() => {
-    getEstimate();
+    if (subscription?.status === 'active') getEstimate();
   }, []);
 
   const handleCancellation = () => setActiveView('action');
@@ -29,9 +33,11 @@ export const SubscriptionPreview = () => {
           <DetailsView headline="Info">
             <SubscriptionInfo handleCancellation={handleCancellation} />
           </DetailsView>
-          <DetailsView headline="Items">
-            <SubscriptionItems />
-          </DetailsView>
+          {subscription?.status === 'active' && (
+            <DetailsView headline="Items">
+              <SubscriptionItems />
+            </DetailsView>
+          )}
         </>
       ) : (
         <>
