@@ -51,7 +51,7 @@ export function NewPasswordForm() {
       password,
     );
 
-    if (response.code) {
+    if (response?.code) {
       setServerError('Error setting new password, please contact support.');
     } else {
       router.push({
