@@ -6,8 +6,10 @@ import { ROUTES } from '@shared/constants/routes';
 import { DropdownMenu, DropdownItem, Badge } from '@shared/components';
 import { ProfileBubble } from './ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
-import IconDoor from '@public/assets/icons/common/Door.svg';
-import IconPerson from '@public/assets/icons/common/Person.svg';
+import IconDoor from '@public/assets/icons/door-12.svg';
+import IconPerson from '@public/assets/icons/person-12.svg';
+import IconBilling from '@public/assets/icons/billing.svg';
+import IconCog from '@public/assets/icons/cog.svg';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -25,10 +27,10 @@ export const ProfileDropdown = () => {
   const handleClickOutside = () => setOpen(false);
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
-  const handleProfileRedirect = () => {
+  const handleRedirect = (path: string) => {
     router.push(
       {
-        pathname: ROUTES.PROFILE,
+        pathname: path,
         query: {
           tab: 1,
         },
@@ -69,12 +71,32 @@ export const ProfileDropdown = () => {
         <DropdownItem
           type="button"
           size="medium"
-          onButtonClick={handleProfileRedirect}
+          onButtonClick={() => handleRedirect(ROUTES.PROFILE)}
         >
           <span css={styles.icon}>
             <IconPerson />
           </span>
           Profile
+        </DropdownItem>
+        <DropdownItem
+          type="button"
+          size="medium"
+          onButtonClick={() => handleRedirect(ROUTES.SETTINGS)}
+        >
+          <span css={styles.icon}>
+            <IconCog />
+          </span>
+          Settings
+        </DropdownItem>
+        <DropdownItem
+          type="button"
+          size="medium"
+          onButtonClick={() => handleRedirect(ROUTES.BILLING)}
+        >
+          <span css={styles.icon}>
+            <IconBilling />
+          </span>
+          Billing
         </DropdownItem>
         <DropdownItem type="button" size="medium" onButtonClick={handleSignOut}>
           <span css={styles.icon}>

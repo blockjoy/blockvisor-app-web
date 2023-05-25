@@ -7,11 +7,26 @@ type Props = {
   id?: string;
   title: string;
   description: string | ReactNode;
+  align?: 'left' | 'center';
+  additionalStyles?: any;
 };
 
-export function EmptyColumn({ id, title, description }: Props) {
+export function EmptyColumn({
+  id,
+  title,
+  description,
+  align = 'center',
+  additionalStyles,
+}: Props) {
   return (
-    <article id={id} css={[styles.columnEmpty]}>
+    <article
+      id={id}
+      css={[
+        styles.columnEmpty,
+        styles.columnAlign(align),
+        additionalStyles && additionalStyles,
+      ]}
+    >
       <AnimatedGraphic />
       <div>
         <div css={[typo.medium]}>{title}</div>

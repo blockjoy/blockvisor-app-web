@@ -15,6 +15,7 @@ import { PasswordField } from '../PasswordField/PasswordField';
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { userClient } from '@modules/grpc';
 import { HUBSPOT_FORMS } from '@shared/index';
+import { useCustomer } from '@modules/billing';
 
 type RegisterForm = {
   firstName: string;
@@ -35,6 +36,8 @@ const getError = (message: string) => {
 export function RegisterForm() {
   const router = useRouter();
   const { invited, token } = router.query;
+
+  const { createCustomer } = useCustomer();
 
   const form = useForm<RegisterForm>({
     mode: 'all',
@@ -77,6 +80,13 @@ export function RegisterForm() {
           firstname: firstName,
           lastname: lastName,
         },
+      });
+
+      createCustomer({
+        id: response.id,
+        first_name: firstName,
+        last_name: lastName,
+        email,
       });
 
       setIsLoading(false);
