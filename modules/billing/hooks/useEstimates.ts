@@ -12,6 +12,8 @@ export const useEstimates = (): IEstimatesHook => {
   const getEstimate = async () => {
     setEstimateLoadingState('initializing');
 
+    console.log('subscID', { subscriptionId: subscription?.id });
+
     try {
       const response = await fetch(BILLING_API_ROUTES.estimates.get, {
         method: 'POST',

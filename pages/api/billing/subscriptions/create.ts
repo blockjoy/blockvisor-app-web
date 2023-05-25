@@ -14,10 +14,12 @@ const createSubscription = async (
         subscription: Subscription;
       },
     ) {
+      console.log('isAnythingHappening?123');
       if (error) {
+        console.log('error123', error);
         reject(error);
       } else {
-        console.log(`${result}`);
+        console.log('result123', `${result}`);
         resolve(result.subscription);
       }
     });
@@ -34,6 +36,8 @@ export default async function handler(
         id: string;
         params: _subscription.create_with_items_params;
       };
+
+      console.log('id123', id);
 
       const response = await createSubscription(id, params);
 

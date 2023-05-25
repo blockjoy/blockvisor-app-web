@@ -1,4 +1,5 @@
 import { ChangeEvent, useRef, useState } from 'react';
+import { PaymentIntent } from 'chargebee-typescript/lib/resources';
 import {
   CardComponent,
   CardNumber,
@@ -24,7 +25,6 @@ import {
   usePayment,
   CHARGEBEE_OPTIONS,
 } from '@modules/billing';
-import { PaymentIntent } from 'chargebee-typescript/lib/resources';
 
 export type CreditCardFormProps = {
   handleCancel: VoidFunction;
