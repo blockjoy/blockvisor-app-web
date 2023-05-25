@@ -2,6 +2,7 @@ import { ChangeEvent, FC } from 'react';
 import { styles } from './Switch.styles';
 import IconLock from '@public/assets/icons/common/Lock.svg';
 import { Tooltip } from '@shared/components';
+import { SerializedStyles } from '@emotion/react';
 
 type Props = {
   checked?: boolean;
@@ -11,6 +12,7 @@ type Props = {
   disabled: boolean;
   noBottomMargin?: boolean;
   onPropertyChanged: (e: ChangeEvent<HTMLInputElement>) => void;
+  additionalStyles?: SerializedStyles;
 };
 
 export const Switch: FC<Props> = ({
@@ -21,9 +23,16 @@ export const Switch: FC<Props> = ({
   checked,
   tabIndex,
   noBottomMargin,
+  additionalStyles,
 }) => {
   return (
-    <div css={[styles.wrapper, noBottomMargin && styles.wrapperNoBottomMargin]}>
+    <div
+      css={[
+        styles.wrapper,
+        noBottomMargin && styles.wrapperNoBottomMargin,
+        additionalStyles && additionalStyles,
+      ]}
+    >
       <label tabIndex={tabIndex}>
         <input
           disabled={disabled}
