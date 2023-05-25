@@ -61,8 +61,6 @@ export const OrganizationView = () => {
 
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-  const [totalNodes, setTotalNodes] = useState<number | null>(null);
-
   const handleSaveClicked = async (newOrganizationName: string) => {
     setIsSavingOrganization(true);
     try {
@@ -101,27 +99,6 @@ export const OrganizationView = () => {
     }
   };
 
-  const getTotalNodes = async () => {
-    const nodes: any = await nodeClient.listNodes(
-      id?.toString()!,
-      {
-        blockchain: [],
-        node_status: [],
-        node_type: [],
-      },
-      {
-        current_page: 1,
-        items_per_page: 1000,
-      },
-    );
-
-    if (nodes?.code) {
-      return;
-    }
-
-    setTotalNodes(nodes?.length);
-  };
-
   useEffect(() => {
     if (router.isReady) {
       setIsDeleting(false);
@@ -138,16 +115,11 @@ export const OrganizationView = () => {
     };
   }, [router.isReady]);
 
-  // TODO: improve - it causes performance leaks. (quick win to check if org has nodes)
-  useEffect(() => {
-    getTotalNodes();
-  }, []);
-
   const details = getOrganizationDetails(organization);
   const isLoadingOrg =
     isLoading !== 'finished' ||
     sentInvitationsLoadingState !== 'finished' ||
-    totalNodes === null;
+    organization?.nodeCount === null;
 
   return (
     <>
@@ -196,7 +168,9 @@ export const OrganizationView = () => {
             handleAction={handleAction}
             isLoading={isDeleting}
             isDisabled={
-              action === 'delete' && totalNodes !== null && totalNodes! > 0
+              action === 'delete' &&
+              organization.nodeCount !== null &&
+              organization.nodeCount! > 0
             }
           ></DangerZone>
         </PageSection>
