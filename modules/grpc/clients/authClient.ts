@@ -109,14 +109,12 @@ class AuthClient {
   }
 
   async refreshToken(): Promise<void> {
-    console.log('attempt refresh token');
     try {
       const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
       if (currentDateTimestamp > +localStorage.getItem('accessTokenExpiry')!) {
         const refreshTokenResponse = await this.client.refresh({
           token: getIdentity().accessToken,
         });
-        console.log('token was refreshed');
         setTokenValue(refreshTokenResponse.token);
       }
     } catch (err) {

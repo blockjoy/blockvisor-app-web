@@ -6,9 +6,17 @@ import {
   Node,
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  useDefaultOrganization,
+  useGetOrganizations,
+  useUpdateOrganization,
+} from '@modules/organization';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
+  const { organizations } = useGetOrganizations();
+  const { defaultOrganization } = useDefaultOrganization();
+  const { modifyOrganization } = useUpdateOrganization();
 
   const createNode = async (
     nodeRequest: NodeServiceCreateRequest,
@@ -45,6 +53,17 @@ export const useNodeAdd = () => {
       const nodeId = response.id;
 
       await keyFileClient.create(nodeId, keyFiles);
+
+      // Update organization node count
+
+      const activeOrganization = organizations.find(
+        (org) => org.id === defaultOrganization?.id,
+      );
+
+      modifyOrganization({
+        ...activeOrganization,
+        nodeCount: activeOrganization!.nodeCount + 1,
+      });
 
       toast.success('Node Created');
       loadNodes();
