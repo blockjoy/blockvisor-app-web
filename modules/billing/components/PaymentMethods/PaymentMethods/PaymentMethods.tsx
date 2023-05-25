@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import {
-  billingAtoms,
-  BillingContactDialog,
-  usePaymentMethods,
-} from '@modules/billing';
+import { useRecoilValue } from 'recoil';
 import { Button, Table, TableSkeleton } from '@shared/index';
 import { styles } from './PaymentMethods.styles';
-import { mapPaymentMethodsToRows } from '@modules/billing/utils/mapPaymentMethodsToRows';
-import { CreditCardForm } from '@modules/billing';
-import { useRecoilValue } from 'recoil';
-import { PaymentMethodDialog } from '@modules/billing/components/PaymentMethods/PaymentMethodDialog/PaymentMethodDialog';
+import {
+  billingAtoms,
+  usePaymentMethods,
+  mapPaymentMethodsToRows,
+  PaymentMethodDialog,
+  CreditCardForm,
+} from '@modules/billing';
 
 export const PaymentMethods = () => {
   const {
@@ -47,6 +46,7 @@ export const PaymentMethods = () => {
   const { headers, rows } = mapPaymentMethodsToRows(
     paymentMethods,
     handleRemove,
+    customer?.primary_payment_source_id,
   );
 
   return paymentMethodsLoadingState !== 'finished' ? (

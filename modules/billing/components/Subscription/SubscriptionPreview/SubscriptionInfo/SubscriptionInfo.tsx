@@ -1,8 +1,7 @@
 import { useSubscription } from '@modules/billing/hooks/useSubscription';
-import { mapSubscriptionToDetails } from '@modules/billing/utils/mapSubscriptionToDetails';
-import { ButtonGroup } from '@shared/components/Buttons/ButtonGroup/ButtonGroup';
-import { Button, DetailsTable } from '@shared/index';
-import { styles } from './SubscriptionInfo.styles';
+import { mapSubscriptionToDetails } from '@modules/billing';
+import { ButtonGroup, Button, DetailsTable } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
 type SubscriptionInfoProps = {
   handleCancellation: VoidFunction;

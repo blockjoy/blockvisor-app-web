@@ -6,6 +6,8 @@ export * from './VanillaForm/Select/Select';
 export * from './VanillaForm/Switch/Switch';
 export * from './VanillaForm/RangeSlider/RangeSlider';
 export * from './VanillaForm/Textbox/Textbox';
+export * from './VanillaForm/RadioButton/RadioButton';
+export * from './VanillaForm/RadioButton/RadioButtonGroup';
 
 export * from './ReactHookForm/Input/Input';
 export * from './ReactHookForm/Input/InputUtil';

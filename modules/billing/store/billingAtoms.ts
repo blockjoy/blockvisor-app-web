@@ -7,11 +7,9 @@ import {
   Item,
   ItemPrice,
   PaymentSource,
-  Plan,
   Subscription,
 } from 'chargebee-typescript/lib/resources';
 import { localStorageEffect } from 'utils/store/persist';
-import { Card } from 'chargebee-typescript/lib/resources/payment_source';
 
 const customer = atom<Customer | null>({
   key: 'billing.customer',
@@ -78,16 +76,6 @@ const invoicesLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const plans = atom<Plan[] | any>({
-  key: 'billing.plans',
-  default: null,
-});
-
-const plansLoadingState = atom<LoadingState>({
-  key: 'billing.plans.loadingState',
-  default: 'finished',
-});
-
 const items = atom<Item[] | null>({
   key: 'billing.items',
   default: null,
@@ -146,9 +134,6 @@ export const billingAtoms = {
 
   estimate,
   estimateLoadingState,
-
-  plans,
-  plansLoadingState,
 
   items,
   itemsLoadingState,
