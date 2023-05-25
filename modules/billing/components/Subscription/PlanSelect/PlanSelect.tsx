@@ -1,23 +1,22 @@
+import { useEffect, useRef, useState } from 'react';
+import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import {
   calcNextAutoRenew,
-  calcPlanPrice,
   useItems,
   useSubscription,
+  BILLING_PLAN_FEATURES,
 } from '@modules/billing';
-import { Button, PillPicker, Switch } from '@shared/components';
+import {
+  Button,
+  Switch,
+  RadioButton,
+  RadioButtonGroup,
+} from '@shared/components';
 import { formatCurrency, formatDate, TableSkeleton } from '@shared/index';
-import { useEffect, useState } from 'react';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';
-import {
-  BILLING_PERIOD,
-  BILLING_PLAN_FEATURES,
-} from '@modules/billing/constants/billing';
-import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
-import { RadioButtonGroup } from '@shared/components/Forms/VanillaForm/RadioButton/RadioButtonGroup';
-import { RadioButton } from '@shared/components/Forms/VanillaForm/RadioButton/RadioButton';
 
 export type PlanSelectProps = {
   plan: Item | null;
@@ -29,27 +28,37 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
   const { itemPrices, itemPricesLoadingState, getItemPrices } = useItems();
 
   const [periodUnit, setPeriodUnit] = useState<string>('year');
-
   const [autoRenew, setAutoRenew] = useState<boolean>(true);
+
+  const activeItemPrice = useRef<ItemPrice | null>(null);
 
   useEffect(() => {
     getItemPrices(plan?.id!);
+
+    if (itemPrices) {
+      const defaultItemPrice: ItemPrice = itemPrices?.find(
+        (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
+      );
+      activeItemPrice.current = defaultItemPrice;
+    }
   }, []);
 
   const handlePeriodUnit = (e: any) => {
     const { value } = e.target;
     setPeriodUnit(value);
+
+    const selectedItemPrice: ItemPrice = itemPrices?.find(
+      (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
+    );
+
+    activeItemPrice.current = selectedItemPrice;
   };
 
   const handleAutoRenew = () => setAutoRenew(!autoRenew);
 
   const handleSubscription = () => {
-    const activeItemPrice = itemPrices.find(
-      (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
-    );
-
     createSubscription({
-      itemPriceId: activeItemPrice?.id,
+      itemPriceId: activeItemPrice.current?.id,
       autoRenew,
     });
   };
@@ -123,7 +132,7 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
           <div css={[flex.display.flex, flex.justify.between]}>
             <p css={styles.headline}>Total</p>
             <p css={styles.totalPrice}>
-              {/* {formatCurrency(calcPlanPrice(plan?.amount!, billingPeriod))} */}
+              {formatCurrency(activeItemPrice.current?.price!)}
             </p>
           </div>
           <div css={styles.buttons}>

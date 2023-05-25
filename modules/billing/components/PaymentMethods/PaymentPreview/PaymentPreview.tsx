@@ -1,14 +1,16 @@
+import { useEffect, useState } from 'react';
 import {
   Button,
   DetailsTable,
   DetailsView,
   TableSkeleton,
-} from '@shared/index';
-import { usePaymentMethods } from '@modules/billing/hooks/usePaymentMethods';
-import { useEffect, useState } from 'react';
-import { useSubscription } from '@modules/billing/hooks/useSubscription';
-import { mapCardToDetails } from '@modules/billing/utils/mapCardToDetails';
-import { PaymentMethodsSelector } from '../PaymentMethodsSelector/PaymentMethodsSelector';
+} from '@shared/components';
+import {
+  usePaymentMethods,
+  useSubscription,
+  mapCardToDetails,
+  PaymentMethodsSelector,
+} from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 
 export const PaymentPreview = () => {

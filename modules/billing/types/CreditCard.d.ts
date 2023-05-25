@@ -1,31 +1,5 @@
-interface ICreditCard {
-  id: string;
-  object: string;
-  address_city?: string | null;
-  address_country?: string | null;
-  address_line1?: string | null;
-  address_line1_check?: string | null;
-  address_line2?: string | null;
-  address_state?: string | null;
-  address_zip?: string | null;
-  address_zip_check?: string | null;
-  brand: string;
-  country: string;
-  customer: string;
-  cvc_check: string;
-  dynamic_last4: any;
-  exp_month: number;
-  exp_year: number;
-  fingerprint: string;
-  funding: string;
-  last4: string;
-  metadata?: any;
-  name?: any;
-  tokenization_method?: any;
-}
-
 interface ICreditCardHook {
-  creditCard: ICreditCard | null;
+  creditCard: any;
   creditCardLoadingState: LoadingState;
   getCard: (id: string) => void;
   addCard: (card: CreditCardParams) => void;
