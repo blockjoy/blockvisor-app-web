@@ -3,6 +3,7 @@ import { typo } from 'styles/utils.typography.styles';
 
 export const styles = {
   base: css`
+    min-width: 0;
     display: inline-flex;
     align-items: center;
     gap: 8px;

@@ -29,8 +29,8 @@ export type UINode = {
 
 export type UIFilterCriteria = {
   blockchain?: string[];
-  node_type?: NodeType[];
-  node_status?: NodeStatus[];
+  nodeType?: string[];
+  nodeStatus?: string[];
 };
 
 export type UIPagination = {
@@ -51,17 +51,20 @@ class NodeClient {
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
   ): Promise<Node[] | StatusResponse> {
+    const request = {
+      orgId,
+      offset: 0,
+      limit: 10,
+      statuses: filter_criteria?.nodeStatus?.map((f) => +f),
+      nodeTypes: filter_criteria?.nodeType?.map((f) => +f),
+      blockchainIds: filter_criteria?.blockchain,
+    };
+
     const response = await callWithTokenRefresh(
       this.client.list.bind(this.client),
-      {
-        orgId,
-        offset: 0,
-        limit: 10,
-        statuses: filter_criteria?.node_status!,
-        nodeTypes: filter_criteria?.node_type!,
-        blockchainIds: filter_criteria?.blockchain!,
-      },
+      request,
     );
+
     return response.nodes;
   }
 

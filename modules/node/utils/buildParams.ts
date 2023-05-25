@@ -1,21 +1,22 @@
+import { NodeStatus, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { FilterItem } from '../store/nodeAtoms';
 
 export type FilterCriteria = {
   blockchain?: string[];
-  node_type?: string[];
-  node_status?: string[];
+  nodeType?: string[];
+  nodeStatus?: string[];
 };
 
 export const buildParams = (
   blockchain: FilterItem[],
-  type: FilterItem[],
+  nodeType: FilterItem[],
   status: FilterItem[],
 ) => {
   const blockchainFilters: string[] = blockchain
     .filter((item) => item.isChecked)
     .map((item) => item.id!);
 
-  const typeFilters: string[] = type
+  const typeFilters: string[] = nodeType
     .filter((item) => item.isChecked)
     .map((item) => item.id!);
 
@@ -25,8 +26,8 @@ export const buildParams = (
 
   const params: FilterCriteria = {
     blockchain: blockchainFilters || [],
-    node_type: typeFilters || [],
-    node_status: statusFilters || [],
+    nodeType: typeFilters || [],
+    nodeStatus: statusFilters || [],
   };
 
   return params;

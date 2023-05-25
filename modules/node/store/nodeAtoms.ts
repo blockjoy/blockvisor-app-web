@@ -141,7 +141,7 @@ const filtersStatus = atom<FilterItem[]>({
     .filter((item) => item.id !== 0)
     .map((item) => ({
       name: item.name,
-      id: item.name.toString().toLowerCase()!,
+      id: item.id?.toString(),
       isChecked: false,
       isOnline: item.isOnline,
     })),

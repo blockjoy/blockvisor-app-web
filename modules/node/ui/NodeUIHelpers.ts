@@ -13,8 +13,8 @@ export type Pagination = {
 
 export type InitialFilter = {
   blockchain?: string[];
-  nodeStatus?: NodeStatus[];
-  nodeType?: NodeType[];
+  nodeStatus?: string[];
+  nodeType?: string[];
 };
 
 export type InitialQueryParams = {

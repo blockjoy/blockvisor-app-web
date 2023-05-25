@@ -68,9 +68,9 @@ export const nodeStatusList = [
   { id: 12, name: 'Mining', uuid: 'mining', isOnline: true },
   { id: 13, name: 'Minting', uuid: 'minting', isOnline: true },
   { id: 14, name: 'Processing', uuid: 'processing', isOnline: true },
-  { id: 14, name: 'Relaying', uuid: 'relaying', isOnline: true },
-  { id: 15, name: 'Removed', uuid: 'removed', isOnline: false },
-  { id: 16, name: 'Removing', uuid: 'removing', isOnline: false },
+  { id: 15, name: 'Relaying', uuid: 'relaying', isOnline: true },
+  { id: 16, name: 'Removed', uuid: 'removed', isOnline: false },
+  { id: 17, name: 'Removing', uuid: 'removing', isOnline: false },
   { id: 0, name: 'Undefined', uuid: 'undefined', isOnline: false },
 ];
 

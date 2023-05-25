@@ -10,6 +10,7 @@ import {
   getIdentity,
   handleError,
   authClient,
+  checkForRefreshTokenError,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
@@ -41,7 +42,8 @@ class OrganizationClient {
         getOptions(),
       );
       return response.orgs;
-    } catch (err) {
+    } catch (err: any) {
+      checkForRefreshTokenError(err.message);
       return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');
     }
   }

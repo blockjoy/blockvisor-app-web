@@ -7,7 +7,8 @@ export function getOrganizationDetails(org: Org | null) {
 
   const details = [
     { label: 'TYPE', data: org.personal ? 'Personal' : 'Other' },
-    { label: 'MEMBERS', data: org?.memberCount?.toString() ?? '0' },
+    { label: 'MEMBERS', data: org?.memberCount },
+    { label: 'NODES', data: org?.nodeCount },
   ];
 
   return details;

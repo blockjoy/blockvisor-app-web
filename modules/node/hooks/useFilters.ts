@@ -33,7 +33,7 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
     queryParams: InitialQueryParams,
     values: InitialFilter,
   ) => {
-    const { blockchain, nodeStatus, nodeType } = values;
+    const { blockchain, nodeType, nodeStatus } = values;
     const newQueryParams = { ...queryParams };
 
     const filter: InitialFilter = {
@@ -125,7 +125,7 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
       setFilterList: setFiltersStatus,
     },
     {
-      name: 'Type',
+      name: 'Node Type',
       isDisabled: false,
       filterCount: filtersTypeTotal,
       filterList: filtersType,

@@ -165,19 +165,6 @@ export const styles = {
     }
   `,
   rowHover: (theme: ITheme) => css`
-    @media ${breakpoints.toXlrg} {
-      &:focus,
-      &:hover {
-        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
-      }
-    }
-
-    @media ${breakpoints.fromXLrg} {
-      &:hover {
-        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
-      }
-    }
-
     &.active {
       background: ${rgba(theme.colorLightGrey || '#ffffff', 0.5)};
       opacity: 1;
@@ -187,22 +174,53 @@ export const styles = {
       }
     }
 
-    :is(:hover, :focus, .active) div {
-      opacity: 1;
-      visibility: visible;
+    @media ${breakpoints.toMed} {
+      &:focus,
+      &:hover {
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
+      }
+
+      :is(:hover, :focus, .active) div {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      :is(:hover, :focus, .active) span {
+        opacity: 1;
+      }
+
+      :is(:hover, :focus, .active) path {
+        fill: ${theme.colorPrimary};
+      }
+
+      :is(:hover, :focus, .active) .node-type-buttons {
+        scale: 1;
+        position: relative;
+      }
     }
 
-    :is(:hover, :focus, .active) span {
-      opacity: 1;
-    }
+    @media ${breakpoints.fromMed} {
+      :is(:hover, .active) {
+        background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
+      }
 
-    :is(:hover, :focus, .active) path {
-      fill: ${theme.colorPrimary};
-    }
+      :is(:hover, .active) div {
+        opacity: 1;
+        visibility: visible;
+      }
 
-    :is(:hover, :focus, .active) .node-type-buttons {
-      scale: 1;
-      position: relative;
+      :is(:hover, .active) span {
+        opacity: 1;
+      }
+
+      :is(:hover, .active) path {
+        fill: ${theme.colorPrimary};
+      }
+
+      :is(:hover, .active) .node-type-buttons {
+        scale: 1;
+        position: relative;
+      }
     }
   `,
   rowDisabled: css`
