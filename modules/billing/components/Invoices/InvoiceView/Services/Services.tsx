@@ -13,7 +13,7 @@ export const Services = ({ services, total }: ServicesProps) => {
 
   return (
     <Table
-      additionalStyles={styles.totalWrapper}
+      additionalStyles={[styles.totalWrapper]}
       isLoading={'finished'}
       headers={headers}
       rows={rows}

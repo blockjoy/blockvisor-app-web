@@ -20,7 +20,8 @@ export const BillingUIConsumer = BillingUIContext.Consumer;
 
 export function BillingUIProvider({ children }: BillingUIProvider) {
   const value: BillingUIContext = {
-    instance: chargebee,
+    // instance: chargebee,
+    instance: null,
   };
 
   return (
