@@ -93,7 +93,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                     name={item.name!}
                     checked={item.isChecked}
                   >
-                    {item.name}
+                    <p css={styles.selectedFilterRowText}>{item.name}</p>
                   </Checkbox>
                 </div>
               ))
@@ -106,7 +106,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
                 <div css={styles.checkedIcon}>
                   <IconCheck />
                 </div>
-                {item.name}
+                <p css={styles.selectedFilterRowText}>{item.name}</p>
               </div>
             ))
         )}

@@ -25,14 +25,14 @@ export const isInQuery = (node: any) => {
     return false;
 
   if (
-    !!filtersAllChecked.node_type?.length &&
-    !filtersAllChecked.node_type?.includes(typeID)
+    !!filtersAllChecked.nodeType?.length &&
+    !filtersAllChecked.nodeType?.includes(typeID)
   )
     return false;
 
   if (
-    !!filtersAllChecked.node_status?.length &&
-    !filtersAllChecked.node_status?.includes(statusID)
+    !!filtersAllChecked.nodeStatus?.length &&
+    !filtersAllChecked.nodeStatus?.includes(statusID)
   )
     return false;
 

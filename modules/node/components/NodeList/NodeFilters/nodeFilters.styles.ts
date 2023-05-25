@@ -47,8 +47,8 @@ export const styles = {
     overflow: auto;
     min-height: 0;
     margin: 0 0 16px 0;
-    display: grid;
-    grid-auto-rows: max-content;
+    display: flex;
+    flex-direction: column;
     gap: 16px;
   `,
   wrapperOpen: css`

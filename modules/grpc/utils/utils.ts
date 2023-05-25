@@ -42,3 +42,11 @@ export const callWithTokenRefresh = async (
     return handleError(err);
   }
 };
+
+export const checkForRefreshTokenError = (message: string) => {
+  // TODO: Investigate token mismatch BS
+  if (message.includes('Refresh')) {
+    localStorage.clear();
+    window.location.href = '';
+  }
+};

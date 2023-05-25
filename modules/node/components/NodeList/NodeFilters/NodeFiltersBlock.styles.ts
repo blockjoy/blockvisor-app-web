@@ -56,7 +56,8 @@ export const styles = {
     }
   `,
   checkboxList: css`
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 8px;
     max-height: 122px;
     padding-top: 16px;
@@ -80,6 +81,9 @@ export const styles = {
     path {
       fill: ${theme.colorPrimary};
     }
+  `,
+  selectedFilterRowText: css`
+    word-break: break-word;
   `,
   checkedIcon: css`
     width: 18px;
