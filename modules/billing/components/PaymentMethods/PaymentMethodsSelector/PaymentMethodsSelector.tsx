@@ -1,19 +1,24 @@
-import { useCustomer } from '@modules/billing/hooks/useCustomer';
-import { usePaymentMethods } from '@modules/billing/hooks/usePaymentMethods';
-import { useSubscription } from '@modules/billing/hooks/useSubscription';
-import { ButtonGroup } from '@shared/components/Buttons/ButtonGroup/ButtonGroup';
+import { useEffect, useState } from 'react';
+import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import {
+  CreditCardTypes,
+  useCustomer,
+  usePaymentMethods,
+  useSubscription,
+} from '@modules/billing';
 import {
   Button,
+  ButtonGroup,
   DropdownButton,
   DropdownItem,
   DropdownMenu,
   DropdownWrapper,
+  InputLabel,
   Scrollbar,
-} from '@shared/index';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { useEffect, useState } from 'react';
-import { spacing } from 'styles/utils.spacing.styles';
+} from '@shared/components';
 import { styles } from './PaymentMethodsSelector.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { typo } from 'styles/utils.typography.styles';
 
 type PaymentMethodsSelectorProps = {
   currentPaymentMethod: PaymentSource;
@@ -53,7 +58,14 @@ export const PaymentMethodsSelector = ({
 
   return (
     <div>
-      <h3>Select different payment method:</h3>
+      <InputLabel
+        css={[typo.base]}
+        labelSize="medium"
+        name="paymentSource"
+        disabled={false}
+      >
+        Select payment method
+      </InputLabel>
       <DropdownWrapper
         isEmpty={false}
         isOpen={isOpen}
@@ -63,7 +75,7 @@ export const PaymentMethodsSelector = ({
           text={
             <p>
               {activePaymentMethod
-                ? activePaymentMethod.card?.brand
+                ? CreditCardTypes[activePaymentMethod.card?.brand!]
                 : 'Select payment method'}
             </p>
           }
@@ -82,7 +94,9 @@ export const PaymentMethodsSelector = ({
                       type="button"
                       onButtonClick={() => handleSelect(paymentMethod)}
                     >
-                      <p css={styles.activeOrg}>{paymentMethod.card?.brand}</p>
+                      <p css={styles.active}>
+                        {CreditCardTypes[paymentMethod.card?.brand!]}
+                      </p>
                     </DropdownItem>
                   </li>
                 );

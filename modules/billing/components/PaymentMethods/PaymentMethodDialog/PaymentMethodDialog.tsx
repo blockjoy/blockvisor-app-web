@@ -1,10 +1,9 @@
-import { escapeHtml } from '@shared/utils/escapeHtml';
+import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { Button, Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodDialog.styles';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { capitalize } from 'utils/capitalize';
+import { CreditCardTypes } from '@modules/billing';
 
 export type PaymentMethodDialogProps = {
   paymentMethod: PaymentSource;
@@ -31,7 +30,7 @@ export const PaymentMethodDialog = ({
       <h2 css={[typo.medium, spacing.bottom.medium]}>Remove Payment Method</h2>
       <div css={spacing.bottom.medium}>
         <p>{`You are removing 
-          ${capitalize(paymentMethod?.card?.brand!)} ****${
+          ${CreditCardTypes[paymentMethod?.card?.brand!]} ****${
           paymentMethod?.card?.last4
         } from Payment Methods list.`}</p>
       </div>

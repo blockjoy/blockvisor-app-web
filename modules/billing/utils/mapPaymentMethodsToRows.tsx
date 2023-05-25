@@ -1,4 +1,4 @@
-import { Button, formatDate, SvgIcon } from '@shared/index';
+import { Badge, Button, formatDate, SvgIcon } from '@shared/index';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { typo } from 'styles/utils.typography.styles';
 import { capitalize } from 'utils/capitalize';
@@ -6,6 +6,9 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 import { flex } from 'styles/utils.flex.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
+import IconCheck from '@public/assets/icons/check-16.svg';
+import { spacing } from 'styles/utils.spacing.styles';
+import { CreditCardTypes } from '../constants/common';
 
 const styles = {
   expiry: (theme: ITheme) => css`
@@ -15,7 +18,8 @@ const styles = {
 
 export const mapPaymentMethodsToRows = (
   paymentMethods: PaymentSource[],
-  handleRemove: (paymentMethod: any) => void,
+  handleRemove: (paymentMethod: PaymentSource) => void,
+  primaryPaymentMethodId?: string,
 ) => {
   const headers: TableHeader[] = [
     {
@@ -50,19 +54,34 @@ export const mapPaymentMethodsToRows = (
         key: '1',
         component: (
           <>
-            <p css={[flex.display.flex, flex.direction.column]}>
-              <span css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-                {`${capitalize(paymentMethod?.card?.brand!)} ****${
-                  paymentMethod.card?.last4
-                }`}
-              </span>
+            <div css={[flex.display.flex, flex.direction.column]}>
+              <div>
+                <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+                  {`${CreditCardTypes[paymentMethod?.card?.brand!]} ****${
+                    paymentMethod.card?.last4
+                  }`}
+                </p>
+              </div>
 
-              <span css={styles.expiry}>
-                {' '}
-                {paymentMethod?.card?.expiry_month}/
-                {paymentMethod?.card?.expiry_year}
-              </span>
-            </p>
+              <div
+                css={[
+                  flex.display.flex,
+                  flex.direction.row,
+                  flex.align.center,
+                  spacing.top.micro,
+                ]}
+              >
+                <p css={[styles.expiry, spacing.right.small]}>
+                  {paymentMethod?.card?.expiry_month}/
+                  {paymentMethod?.card?.expiry_year}
+                </p>
+                {primaryPaymentMethodId === paymentMethod.id && (
+                  <Badge color="primary" style="outline">
+                    Primary
+                  </Badge>
+                )}
+              </div>
+            </div>
           </>
         ),
       },

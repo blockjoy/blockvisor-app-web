@@ -1,19 +1,24 @@
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { Item } from 'chargebee-typescript/lib/resources';
 import {
   SubscriptionPreview,
   PlanSelect,
-  useSubscription,
   SinglePlan,
+  billingAtoms,
+  useItems,
 } from '@modules/billing';
-import { EmptyColumn } from '@shared/index';
-import { useEffect, useState } from 'react';
+import { EmptyColumn, TableSkeleton } from '@shared/components';
 import { styles } from './Subscription.styles';
-import { BILLING_PLAN } from '@modules/billing/mocks/plan';
-import { useItems } from '@modules/billing/hooks/useItems';
 
 export const Subscription = () => {
-  const { subscription } = useSubscription();
+  const subscription = useRecoilValue(billingAtoms.subscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
+  );
+
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
-  const [activePlan, setActivePlan] = useState<any | null>(null);
+  const [activePlan, setActivePlan] = useState<Item | null>(null);
 
   const { items, getItems } = useItems();
 
@@ -30,7 +35,9 @@ export const Subscription = () => {
 
   return (
     <div css={styles.wrapper}>
-      {subscription ? (
+      {subscriptionLoadingState !== 'finished' ? (
+        <TableSkeleton />
+      ) : subscription ? (
         <SubscriptionPreview />
       ) : activeView === 'list' ? (
         <>

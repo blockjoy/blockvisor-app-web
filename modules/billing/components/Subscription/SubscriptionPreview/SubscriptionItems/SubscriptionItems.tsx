@@ -1,5 +1,4 @@
-import { useEstimates } from '@modules/billing/hooks/useEstimates';
-import { mapEstimateItemsToRows } from '@modules/billing/utils/mapEstimateToRows';
+import { useEstimates, mapEstimateItemsToRows } from '@modules/billing';
 import { Table } from '@shared/index';
 
 export const SubscriptionItems = () => {
