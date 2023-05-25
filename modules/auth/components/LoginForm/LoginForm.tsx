@@ -1,4 +1,4 @@
-import { useSignIn } from '@modules/auth';
+import { useIdentityRepository, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
@@ -14,6 +14,7 @@ import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { PasswordToggle } from '@modules/auth';
+import { useCustomer, useSubscription } from '@modules/billing';
 
 type LoginForm = {
   email: string;
@@ -35,6 +36,10 @@ export function LoginForm() {
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getBlockchains } = useGetBlockchains();
+  const { getCustomer } = useCustomer();
+  const { getSubscription } = useSubscription();
+
+  const repository = useIdentityRepository();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -61,6 +66,13 @@ export function LoginForm() {
         !!invited,
       );
       await getOrganizations(!invited);
+
+      const usr_id = repository?.getIdentity()?.id;
+      await getCustomer(usr_id!);
+
+      const org_id = repository?.getIdentity()?.defaultOrganization?.id;
+      await getSubscription(org_id!);
+
       getBlockchains();
       handleRedirect();
     } catch (error) {

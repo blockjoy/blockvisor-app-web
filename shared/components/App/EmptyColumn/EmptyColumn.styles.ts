@@ -21,7 +21,13 @@ export const styles = {
       min-width: 160px;
     }
   `,
-  description: (theme: ITheme) => css`
+  columnAlign: (align: any) => css`
+    @media ${breakpoints.fromTny} {
+      flex-direction: row;
+      justify-content: ${align === 'center' ? 'center' : 'flex-start'};
+    }
+  `,
+  description: css`
     margin-top: 8px;
     color: var(--color-text-3);
     max-width: 300px;

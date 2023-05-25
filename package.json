@@ -13,9 +13,13 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
+    "@chargebee/chargebee-js-react-wrapper": "^0.6.3",
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
+    "@react-pdf/renderer": "^3.1.6",
     "animejs": "^3.2.1",
+    "chargebee-typescript": "^2.20.1",
+    "country-list": "^2.3.0",
     "crisp-sdk-web": "^1.0.11",
     "date-fns": "^2.29.2",
     "google-protobuf": "^3.21.0",
