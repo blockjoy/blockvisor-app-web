@@ -1,0 +1,177 @@
+@font-face {
+  font-family: 'Styrene A LC';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/StyreneALC-RegularItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Styrene A LC';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/StyreneALC-BoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Styrene A LC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/StyreneALC-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Styrene A LC';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/StyreneALC-Bold.woff2') format('woff2');
+}
+
+body {
+  margin: 0;
+  padding-top: 20px;
+  padding-bottom: 100px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html::-webkit-scrollbar {
+}
+
+::-webkit-scrollbar-track {
+  background: yellow;
+}
+
+::-webkit-scrollbar-thumb {
+  background: red;
+}
+
+#system {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 420px) {
+  #system {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 860px) {
+  #system {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  #system {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.card {
+  position: relative;
+  background: #272a29;
+  border-radius: 6px;
+  border: 1px solid #363938;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.card.aspect-ratio {
+  padding: 0;
+  aspect-ratio: 1 / 1;
+}
+
+@keyframes hide {
+  0%, 90% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes spin {
+  0%, 90% { opacity: 1; visibility: visible; }
+  100% { transform: translate(-50%, -50%) rotate(6turn); opacity: 0; visibility: hidden; }
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+}
+
+.card::before {
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #272a29;
+  animation: hide 3.5s both;
+}
+
+.card::after {
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  border: 4px solid rgb(255 255 255 / 20%);
+  border-top-color: #f9f9f9;
+  animation: spin 3.5s linear;
+  animation-fill-mode: both;
+}
+
+.card > div {
+  position: relative;
+  z-index: 1;
+  background: #272a29;
+}
+
+header {
+  color: #5F615D;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin: 0 0 16px;
+  font-family: "Styrene A LC" !important;
+}
+
+body .netdata-chart,
+body .dygraph-title,
+body .easyPieChartTitle,
+body .easyPieChartLabel,
+body .easyPieChartUnits,
+body .gaugeChartTitle,
+body .gaugeChartLabel,
+body .gaugeChartUnits,
+body .dygraph-label,
+body .dygraph-axis-label,
+body .netdata-chart-legend {
+  font-family: "Styrene A LC" !important;
+  font-weight: 400 !important;
+}
+
+body .easyPieChartTitle,
+body .gaugeChartTitle {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 9px !important;
+}
+
+body .easyPieChartTitle {
+  transform: translate(0, 6px);
+}
