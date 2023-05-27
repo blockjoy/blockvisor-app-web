@@ -6,7 +6,7 @@ export const styles = {
   wrapper: css`
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
+    flex: 1 1 auto;
 
     @media ${breakpoints.fromLrg} {
       flex-direction: row;
@@ -14,16 +14,14 @@ export const styles = {
     }
   `,
   content: css`
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
-
-    @media ${breakpoints.fromLrg} {
-      padding: 4px 20px 20px 0;
-    }
   `,
   quickEdit: (theme: ITheme) => css`
     flex: 1 1 360px;
     max-width: 360px;
-    padding: 4px 0 20px 20px;
+    padding: 20px 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toLrg} {
@@ -32,6 +30,7 @@ export const styles = {
       padding: 20px 0 0 0;
       max-width: 1000px;
       margin-bottom: 100px;
+      display: none;
     }
   `,
   formHeader: (theme: ITheme) => css`
