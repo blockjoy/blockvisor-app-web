@@ -8,6 +8,7 @@ export * from './Layout/Layout';
 export * from './Page/PageHeader';
 export * from './Page/PageSection';
 export * from './Page/PageTitle';
+export * from './NetdataDashboard/NetdataDashboard';
 export * from './NodeStatus/NodeStatus';
 export * from './NodeStatus/NodeStatusIcon';
 export * from './BlockchainIcon/BlockchainIcon';
