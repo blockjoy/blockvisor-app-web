@@ -7,7 +7,7 @@ const Component = () => <NodeViewMetrics />;
 Component.getLayout = function getLayout(page: any) {
   return (
     <AppLayout isPageFlex>
-      <NodeView>{page}</NodeView>
+      <NodeView hideEditPanel>{page}</NodeView>
     </AppLayout>
   );
 };

@@ -1,7 +1,7 @@
 import { styles } from './NodeView.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { useRouter } from 'next/router';
-import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { NodeViewTitle } from './Title/NodeViewTitle';
 import { NodeViewHeader } from './Header/NodeViewHeader';
 import { NodeViewEdit } from './Edit/NodeViewEdit';
@@ -9,7 +9,12 @@ import { NodeViewTabs } from './Tabs/NodeViewTabs';
 import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, TableSkeleton } from '@shared/components';
 
-export const NodeView: FC<PropsWithChildren> = ({ children }) => {
+type Props = {
+  children: ReactNode;
+  hideEditPanel?: boolean;
+};
+
+export const NodeView = ({ children, hideEditPanel }: Props) => {
   const [, setNodeError] = useState<boolean>(false);
   const [, setIsDeleting] = useState<boolean>(false);
 
@@ -21,12 +26,10 @@ export const NodeView: FC<PropsWithChildren> = ({ children }) => {
   const handleNodeError = () => setNodeError(true);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (router.isReady) {
       loadNode(id, handleNodeError);
       setIsDeleting(false);
     }
-
     return () => unloadNode();
   }, [id]);
 
@@ -54,9 +57,11 @@ export const NodeView: FC<PropsWithChildren> = ({ children }) => {
             ) : (
               <>
                 <div css={styles.content}>{children}</div>
-                <div css={styles.quickEdit}>
-                  <NodeViewEdit />
-                </div>
+                {!hideEditPanel && (
+                  <div css={styles.quickEdit}>
+                    <NodeViewEdit />
+                  </div>
+                )}
               </>
             )}
           </div>

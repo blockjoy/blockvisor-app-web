@@ -10,355 +10,38 @@
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    <style>
-      @font-face {
-        font-family: 'Styrene A LC';
-        font-style: italic;
-        font-weight: 400;
-        font-display: swap;
-        src: url('/assets/fonts/StyreneALC-RegularItalic.woff2') format('woff2');
-      }
-
-      @font-face {
-        font-family: 'Styrene A LC';
-        font-style: italic;
-        font-weight: 700;
-        font-display: swap;
-        src: url('/assets/fonts/StyreneALC-BoldItalic.woff2') format('woff2');
-      }
-
-      @font-face {
-        font-family: 'Styrene A LC';
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-        src: url('/assets/fonts/StyreneALC-Regular.woff2') format('woff2');
-      }
-
-      @font-face {
-        font-family: 'Styrene A LC';
-        font-style: normal;
-        font-weight: 700;
-        font-display: swap;
-        src: url('/assets/fonts/StyreneALC-Bold.woff2') format('woff2');
-      }
-
-      body {
-        margin: 0;
-        padding-top: 20px;
-        padding-bottom: 100px;
-      }
-
-      @media (min-width: 478px) {
-        body {
-          padding-right: 20px;
-        }
-      }
-
-      html,
-      body {
-        height: 100%;
-      }
-
-      html::-webkit-scrollbar {
-      }
-
-      ::-webkit-scrollbar-track {
-        background: yellow;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: red;
-      }
-
-      #system {
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        gap: 16px;
-        margin-bottom: 20px;
-      }
-
-      @media (min-width: 420px) {
-        #system {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (min-width: 768px) {
-        #system {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-
-      @media (min-width: 900px) {
-        #system {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      .card {
-        position: relative;
-        background: #272a29;
-        border-radius: 6px;
-        border: 1px solid #363938;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 30px 0;
-      }
-
-      .card.aspect-ratio {
-        padding: 0;
-        aspect-ratio: 1 / 1;
-      }
-
-      @keyframes hide {
-        0%, 90% { opacity: 1; visibility: visible; }
-        100% { opacity: 0; visibility: hidden; }
-      }
-
-      @keyframes spin {
-        0%, 90% { opacity: 1; visibility: visible; }
-        100% { transform: translate(-50%, -50%) rotate(6turn); opacity: 0; visibility: hidden; }
-      }
-
-      .card::before,
-      .card::after {
-        content: "";
-        position: absolute;
-      }
-      
-      .card::before {
-        z-index: 2;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #272a29;
-        animation: hide 3s both;
-      }
-
-      .card::after {
-        z-index: 3;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 30px;
-        height: 30px;
-        min-width: 30px;
-        min-height: 30px;
-        border-radius: 50%;
-        border: 4px solid rgb(255 255 255 / 20%);
-        border-top-color: #f9f9f9;
-        animation: spin 3s linear;
-        animation-fill-mode: both;
-      }
-
-      .card > div {
-        position: relative;
-        z-index: 1;
-        background: #272a29;
-      }
-
-      header {
-        color: #5F615D;
-        text-transform: uppercase;
-        font-size: 11px;
-        letter-spacing: 1px;
-        margin: 0 0 16px;
-        font-family: "Styrene A LC" !important;
-      }
-
-      body .dygraph-title,
-      body .easyPieChartTitle,
-      body .easyPieChartLabel,
-      body .easyPieChartUnits {
-        font-family: "Styrene A LC" !important;
-      }
-
-      body .easyPieChartTitle {
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        transform: translate(0, 6px);
-      }
-
-      body .easyPieChartLabel {
-
-      }
-
-      body .easyPieChartUnits {
-      }
-    </style>
+    <link rel="stylesheet" href="./node.css" />
   </head>
-  <script>
-    var netdataTheme = "slate";
-  </script>
-
   <body style="background-color: transparent">
     <header>System</header>
     <div id="system"></div>
     <header>Load</header>
     <div style="padding-bottom: 100px;">
       <article class="card">
-        <div data-netdata="system.load" data-width="100%" data-height="206px" data-dygraph-valuerange="[null, null]" data-colors="#bff589 #e9af3a #EE7070" data-decimal-digits="-1" data-legend-position="bottom" role="application" style="height: 206px; width: 100%;"></div>
+        <div 
+          data-netdata="system.load" 
+          data-width="100%" 
+          data-height="206px" 
+          data-dygraph-valuerange="[0, 100]" 
+          data-colors="#bff589 #e9af3a #EE7070" 
+          data-decimal-digits="-1" 
+          data-legend-position="bottom" 
+          role="application" 
+          style="height: 286px; width: 100%;">
+        </div>
       </article>
     </div>
-    <script>
-      var systemCharts = [
-        {
-          netdata: "system.cpu",
-          library: "gauge",
-          title: "CPU",
-          units: "Usage",
-          points: "420",
-          gaugeMaxValue: "100",
-          width: "85%",
-        },
-        {
-          netdata: "system.swap",
-          library: "easypiechart",
-          title: "Used Swap",
-          units: "%",
-          points: "480",
-          maxValue: "100",
-          appendOptions: "percentage",
-          dimensions: "used",
-          color: "#e9c09c",
-          width: "60%",
-        },  
-        {
-          netdata: "system.io",
-          library: "easypiechart",
-          title: "Disk Read",
-          points: "300",
-          dimensions: "in",
-          commonUnits: "system.io.mainhead",
-          units: "MiB/s",
-          width: "60%",
-          maxValue: "1000",
-        },  
-        {
-          netdata: "system.io",
-          library: "easypiechart",
-          title: "Disk Write",
-          width: "60%",
-          points: "300",
-          dimensions: "out",
-          commonUnits: "system.io.mainhead",
-          units: "MiB/s",
-          color: "#EE7070",
-          maxValue: "1000",
-        },  
-        {
-          netdata: "system.io",
-          library: "gauge",
-          title: "I/O",
-          units: "Usage",
-          points: "420",
-          gaugeMaxValue: "1000",
-          color: "#EE7070",
-          width: "85%",
-        },
-        {
-          netdata: "system.ram",
-          library: "easypiechart",
-          title: "Used Ram",
-          units: "%",
-          dimensions: "used|buffers|active|wired",
-          color: "#e9c09c",
-          width: "60%",
-          maxValue: "100",
-          points: "600",
-          appendOptions: "percentage"
-        },
-        {
-          netdata: "system.net",
-          library: "easypiechart",
-          title: "Net Inbound  ",
-          units: "kilobits/s",
-          dimensions: "received",
-          width: "60%",
-          maxValue: "1000",
-        },
-        {
-          netdata: "system.net",
-          library: "easypiechart",
-          title: "Net Outbound",
-          units: "kilobits/s",
-          dimensions: "sent",
-          color: "#EE7070",
-          width: "60%",
-          maxValue: "1000",
-        },
-      ];
+    <script type="text/javascript">
+      var netdataTheme = "slate";
+      var netdataNoBootstrap = true;
     </script>
-    <script>
-      const params = new Proxy(new URLSearchParams(window.location.search), {
-        get: (searchParams, prop) => searchParams.get(prop),
-      });
-
-      //const { node_id } = params;
-      const node_id = "3b78c2f9-e9d5-4982-952e-23bae0fe9da1";
-      const colorPrimary = "#bff589";
-      const size = "140px";
-      const after = "-5";
-      const systemC = document.querySelector("#system");
-
-      systemCharts.forEach((chart) => {
-          const element = document.createElement("div");
-          element.setAttribute("data-netdata", chart.netdata);
-          element.setAttribute("data-host", `https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com`);
-          element.setAttribute("data-colors", chart.color || colorPrimary);
-          element.setAttribute("data-chart-library", chart.library);
-          element.setAttribute("data-height", size);
-          element.setAttribute("data-width", "100%");
-          element.setAttribute("data-units", chart.units);
-          element.setAttribute("data-after", after);
-          element.setAttribute("data-title", chart.title);
-
-          if (chart.width) {
-            element.setAttribute("data-width", chart.width);
-          }
-
-          if (chart.dimensions) {
-            element.setAttribute("data-dimensions", chart.dimensions);
-          }
-
-          if (chart.maxValue) {
-            element.setAttribute("data-easypiechart-max-value", chart.maxValue);
-          }
-
-          if (chart.gaugeMaxValue) {
-            element.setAttribute("data-gauge-max-value", chart.gaugeMaxValue);
-          }
-
-          if (chart.appendOptions) {
-            element.setAttribute("data-append-options", chart.appendOptions);
-          }
-
-          if (chart.commonUnits) {
-            element.setAttribute("data-common-units", chart.commonUnits);
-          }
-
-          if (chart.appendOptions) {
-            element.setAttribute("data-append-options", chart.appendOptions);
-          }
-
-          const card = document.createElement("article");
-          card.setAttribute("class", "card aspect-ratio");
-          card.appendChild(element);
-
-          system.appendChild(card);
-        }
-      );
+    <script type="text/javascript" src="./node.js">
     </script>
     <script
       type="text/javascript"
       src="https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com/dashboard.js"
     ></script>
     <script type="text/javascript">
-      var netdataNoBootstrap = true;
-      console.log("chartsLoaded!")
       NETDATA.options.current.stop_updates_when_focus_is_lost = false
     </script>
   </body>
