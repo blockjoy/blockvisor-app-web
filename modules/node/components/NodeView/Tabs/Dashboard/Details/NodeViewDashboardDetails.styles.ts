@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  dangerZone: css`
-    padding-top: 40px;
+  wrapper: css`
+    padding-top: 20px;
   `,
 };
