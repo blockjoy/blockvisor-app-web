@@ -10,7 +10,7 @@ import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, TableSkeleton } from '@shared/components';
 
 type Props = {
-  children: ReactNode;
+  children?: ReactNode;
   hideEditPanel?: boolean;
 };
 
