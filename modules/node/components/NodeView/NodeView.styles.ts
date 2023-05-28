@@ -38,6 +38,6 @@ export const styles = {
     text-transform: uppercase;
   `,
   loader: css`
-    padding: 15px 0 0;
+    padding: 35px 0 0;
   `,
 };
