@@ -61,7 +61,9 @@ export const NodeViewHeader = () => {
                   />
                 </div>
                 <div>
-                  <h2 css={styles.detailsHeader}>{node!.name}</h2>
+                  <h2 data-cy="node-details-title" css={styles.detailsHeader}>
+                    {node!.name}
+                  </h2>
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
                       <p>

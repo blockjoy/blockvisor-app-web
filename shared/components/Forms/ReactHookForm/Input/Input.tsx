@@ -26,6 +26,7 @@ type InputProps = {
   inputSize?: InputSize;
   shouldAutoFocus?: boolean;
   validationOptions?: RegisterOptions;
+  dataCy?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const Input = ({
@@ -40,6 +41,7 @@ export const Input = ({
   inputStyles,
   value,
   shouldAutoFocus,
+  dataCy,
   ...rest
 }: InputProps) => {
   const {
@@ -79,6 +81,7 @@ export const Input = ({
           css={[inputClasses]}
           disabled={disabled}
           value={value}
+          data-cy={dataCy}
           {...rest}
           {...register(name, {
             ...validationOptions,

@@ -20,7 +20,7 @@ describe('Nodes Page tests', () => {
       cy.url().should('be.equal', `${Cypress.config('baseUrl')}/launch-node`);
     });
 
-    it('Should launch a Helium Validator and redirect to nodes after deleting', () => {
+    it('Should launch a Helium Validator, stop and start node than redirect to nodes after deleting', () => {
       cy.login(
         Cypress.env('TEST_USER_EMAIL'),
         Cypress.env('TEST_USER_PASSWORD'),
@@ -39,6 +39,21 @@ describe('Nodes Page tests', () => {
       cy.get('[data-cy="nodeLauncher-launch-button"]').click();
 
       cy.waitForElement('[data-cy="node-details-title"]', 5000);
+
+      cy.get('[data-cy="node-action-button"]').click();
+      cy.get('[data-cy="node-stop-button"]').click();
+      cy.get('.Toastify__toast--success')
+        .should('be.visible')
+        .click()
+        .wait(1000);
+
+      cy.get('[data-cy="node-action-button"]').click();
+      cy.get('[data-cy="node-start-button"]').click();
+      cy.get('.Toastify__toast--success')
+        .should('be.visible')
+        .click()
+        .wait(1000);
+
       cy.get('[data-cy="node-details-title"]').then((element) => {
         const title = element.text();
 
@@ -52,6 +67,27 @@ describe('Nodes Page tests', () => {
           'be.visible',
         );
       });
+    });
+
+    it('Should launch a Helium Validator, add rules and remove them, than redirect to nodes after deleting', () => {
+      cy.login(
+        Cypress.env('TEST_USER_EMAIL'),
+        Cypress.env('TEST_USER_PASSWORD'),
+      );
+      cy.waitForElement('[data-cy="nodes-launchNode-button"]', 15000);
+      cy.get('[data-cy="nodes-launchNode-button"]').click();
+
+      cy.waitForElement('[data-cy="nodeLauncher-protocol-Helium"]', 15000);
+      cy.get('[data-cy="nodeLauncher-protocol-Helium"]').then((item) => {
+        return cy
+          .wrap(item)
+          .get('[data-cy="nodeLauncher-nodeType-button-Helium-Validator"]')
+          .click({ force: true });
+      });
+
+      cy.get('[data-cy="nodeLauncher-launch-button"]').click();
+
+      cy.waitForElement('[data-cy="node-details-title"]', 5000);
     });
 
     it('Should launch a Algorand Node and redirect to nodes after deleting', () => {

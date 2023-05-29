@@ -52,6 +52,7 @@ export const DeleteModal = ({
             name="elementNameToDelete"
             placeholder={`Type ${entityName?.toLowerCase()} name`}
             type="text"
+            dataCy="node-delete-confirm-input"
             validationOptions={{
               required: 'This is a mandatory field',
               validate: (name) => doNamesMatch(name),
@@ -64,6 +65,7 @@ export const DeleteModal = ({
               size="medium"
               style="warning"
               loading={isDeleting}
+              dataCy="node-delete-submit"
               customCss={[
                 css`
                   min-width: 125px;

@@ -86,6 +86,7 @@ Cypress.Commands.add('deleteOrganization', (orgName: string) => {
 });
 
 Cypress.Commands.add('deleteNode', (orgName: string) => {
+  cy.get('[data-cy="node-action-button"]').click();
   cy.get('[data-cy="node-delete-button"]').click();
   cy.get('[data-cy="node-delete-confirm-input"]').type(orgName);
   cy.get('[data-cy="node-delete-submit"]').click();

@@ -24,6 +24,7 @@ export const DropdownButton = ({
       type="button"
       css={styles.button}
       onClick={onClick}
+      data-cy="node-rules-dropdown"
     >
       {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
       {text}
