@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
+import { ITheme } from 'types/theme';
 
 export const styles = {
   columnEmpty: css`
@@ -20,9 +21,37 @@ export const styles = {
       min-width: 160px;
     }
   `,
-  description: css`
+  description: (theme: ITheme) => css`
     margin-top: 8px;
     color: var(--color-text-3);
     max-width: 300px;
+
+    a {
+      position: relative;
+      display: inline-block;
+      color: ${theme.colorDefault};
+
+      :hover {
+        color: ${theme.colorText};
+
+        ::after {
+          opacity: 1;
+          background: ${theme.colorText};
+        }
+      }
+
+      ::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: ${theme.colorDefault};
+        opacity: 0;
+        transition: 0.2s;
+      }
+    }
   `,
 };

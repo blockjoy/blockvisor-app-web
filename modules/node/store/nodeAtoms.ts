@@ -34,9 +34,9 @@ const isLoading = atom<LoadingState>({
   default: 'initializing',
 });
 
-const isLoadingActiveNode = atom<boolean>({
+const isLoadingActiveNode = atom<LoadingState>({
   key: 'node.loadingActiveNode',
-  default: true,
+  default: 'initializing',
 });
 
 const isFiltersOpen = atom<boolean>({

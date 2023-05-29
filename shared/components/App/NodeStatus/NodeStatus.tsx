@@ -3,7 +3,7 @@ import { styles } from './NodeStatus.styles';
 import { nodeStatusList } from '@shared/constants/lookups';
 import { NodeStatusIcon } from './NodeStatusIcon';
 
-export const getColor = (name: string, isOnline: boolean) => {
+export const getNodeStatusColor = (name: string, isOnline: boolean) => {
   if (name === 'Processing' || name === 'Provisioning') {
     return styles.statusColorGreen;
   }
@@ -29,14 +29,14 @@ export const NodeStatus: FC<Props> = ({ status, hasBorder = true }) => {
         styles.status,
         hasBorder && styles.statusBorder,
 
-        getColor(statusInfo?.name!, statusInfo?.isOnline!),
+        getNodeStatusColor(statusInfo?.name!, statusInfo?.isOnline!),
       ]}
     >
       <NodeStatusIcon size="12px" status={status} />
       <span
         css={[
           styles.statusText,
-          getColor(statusInfo?.name!, statusInfo?.isOnline!),
+          getNodeStatusColor(statusInfo?.name!, statusInfo?.isOnline!),
         ]}
       >
         {statusInfo?.name || 'Unknown'}

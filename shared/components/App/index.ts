@@ -12,3 +12,4 @@ export * from './NodeStatus/NodeStatus';
 export * from './NodeStatus/NodeStatusIcon';
 export * from './BlockchainIcon/BlockchainIcon';
 export * from './OrganizationPicker/OrganizationPicker';
+export * from './OrganizationSelect/OrganizationSelect';

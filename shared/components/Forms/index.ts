@@ -9,6 +9,7 @@ export * from './Labels/FormHeader';
 export * from './Labels/FormHeaderCaps';
 export * from './Labels/FormLabel';
 export * from './Labels/FormLabelCaps';
+export * from './Labels/FormText';
 
 export * from './ReactHookForm/Input/Input';
 export * from './ReactHookForm/Input/InputUtil';

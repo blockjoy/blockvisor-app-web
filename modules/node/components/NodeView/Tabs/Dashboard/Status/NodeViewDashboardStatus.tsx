@@ -3,7 +3,7 @@ import { useNodeView } from '@modules/node';
 import { FormHeaderCaps } from '@shared/components';
 import { styles } from './NodeViewDashboardStatus.styles';
 import { nodeStatusList } from '@shared/constants/lookups';
-import { getColor } from '@shared/components';
+import { getNodeStatusColor } from '@shared/components';
 
 const iconSize = '24px';
 
@@ -28,7 +28,7 @@ export const NodeViewDashboardStatus = () => {
           <var
             css={[
               styles.cardValue,
-              getColor(statusInfo!.name, statusInfo!.isOnline),
+              getNodeStatusColor(statusInfo!.name, statusInfo!.isOnline),
             ]}
           >
             {statusInfo?.name}
@@ -40,7 +40,10 @@ export const NodeViewDashboardStatus = () => {
           <var
             css={[
               styles.cardValue,
-              getColor(containerStatusInfo!.name, statusInfo!.isOnline),
+              getNodeStatusColor(
+                containerStatusInfo!.name,
+                statusInfo!.isOnline,
+              ),
             ]}
           >
             {containerStatusInfo?.name}
@@ -52,7 +55,10 @@ export const NodeViewDashboardStatus = () => {
           <var
             css={[
               styles.cardValue,
-              getColor(syncStatusInfo!.name, syncStatusInfo!.isOnline),
+              getNodeStatusColor(
+                syncStatusInfo!.name,
+                syncStatusInfo!.isOnline,
+              ),
             ]}
           >
             {syncStatusInfo?.name}
@@ -64,7 +70,10 @@ export const NodeViewDashboardStatus = () => {
           <var
             css={[
               styles.cardValue,
-              getColor(stakingStatusInfo!.name, stakingStatusInfo!.isOnline),
+              getNodeStatusColor(
+                stakingStatusInfo!.name,
+                stakingStatusInfo!.isOnline,
+              ),
             ]}
           >
             {stakingStatusInfo?.name}

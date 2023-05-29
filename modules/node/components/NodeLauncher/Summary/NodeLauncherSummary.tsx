@@ -10,8 +10,8 @@ import {
   NodeType,
   UiType,
 } from '@modules/grpc/library/blockjoy/v1/node';
-import { NodeLauncherOrgPicker } from './NodeLauncherOrgPicker';
-import { FormHeader, FormLabel } from '@shared/components';
+
+import { FormHeader, FormLabel, OrganizationSelect } from '@shared/components';
 import IconCheck from '@public/assets/icons/check-circle.svg';
 import IconClose from '@public/assets/icons/close.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
@@ -50,7 +50,7 @@ export const NodeLauncherSummary: FC<Props> = ({
     <div css={styles.wrapper}>
       <FormHeader>Launch</FormHeader>
       <FormLabel>Organization</FormLabel>
-      <NodeLauncherOrgPicker />
+      <OrganizationSelect />
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>

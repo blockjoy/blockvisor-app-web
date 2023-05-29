@@ -1,6 +1,6 @@
-import { FC, Suspense } from 'react';
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { getColor } from './NodeStatus';
+import { getNodeStatusColor } from './NodeStatus';
 import { nodeStatusList } from '@shared/constants/lookups';
 
 import { SvgIcon } from '@shared/components';
@@ -82,17 +82,22 @@ const getIcon = (status: number) => {
   return icons[status];
 };
 
-type Props = {
+type NodeStatusIconProps = {
   status: number;
   size: string;
 };
 
-export const NodeStatusIcon: FC<Props> = ({ status, size = '24px' }) => {
+export const NodeStatusIcon = ({
+  status,
+  size = '24px',
+}: NodeStatusIconProps) => {
   const statusInfo = nodeStatusList.find((s) => s.id === status);
   return (
     <Suspense fallback={null}>
       <SvgIcon
-        additionalStyles={[getColor(statusInfo!.name, statusInfo!.isOnline)]}
+        additionalStyles={[
+          getNodeStatusColor(statusInfo!.name, statusInfo!.isOnline),
+        ]}
         size={size}
       >
         {getIcon(status)}

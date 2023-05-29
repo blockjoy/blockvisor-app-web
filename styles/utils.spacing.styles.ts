@@ -6,6 +6,9 @@ export const divider = css`
 
 export const spacing = {
   bottom: {
+    auto: css`
+      margin-bottom: auto;
+    `,
     micro: css`
       margin-bottom: 4px;
     `,
@@ -35,6 +38,9 @@ export const spacing = {
     `,
   },
   top: {
+    auto: css`
+      margin-top: auto;
+    `,
     micro: css`
       margin-top: 4px;
     `,
@@ -64,6 +70,9 @@ export const spacing = {
     `,
   },
   left: {
+    auto: css`
+      margin-left: auto;
+    `,
     micro: css`
       margin-left: 4px;
     `,
@@ -93,6 +102,9 @@ export const spacing = {
     `,
   },
   right: {
+    auto: css`
+      margin-right: auto;
+    `,
     micro: css`
       margin-right: 4px;
     `,

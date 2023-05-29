@@ -24,24 +24,3 @@ type HostNode = {
   version: string;
   walletAddress: string;
 };
-
-type Host = {
-  cpuCount?: number;
-  createdAt?: {
-    nanos: number;
-    seconds: number;
-  };
-  created_at_datetime: string;
-  diskSize?: number;
-  id?: string;
-  ip?: string;
-  location?: string;
-  name?: string;
-  memSize?: number;
-  nodesList?: HostNode[];
-  orgId?: string;
-  os?: string;
-  osVersion?: string;
-  status: number;
-  version?: string;
-};

@@ -75,18 +75,18 @@ export const nodeStatusList = [
 ];
 
 export const hostStatusList = [
-  { id: 0, name: 'Undefined' },
-  { id: 1, name: 'Creating' },
-  { id: 2, name: 'Running' },
-  { id: 3, name: 'Starting' },
-  { id: 4, name: 'Stopping' },
-  { id: 5, name: 'Stopped' },
-  { id: 6, name: 'Upgrading' },
-  { id: 7, name: 'Upgraded' },
-  { id: 8, name: 'Deleting' },
-  { id: 9, name: 'Deleted' },
-  { id: 10, name: 'Installing' },
-  { id: 11, name: 'Snaphotting' },
+  { id: 0, name: 'Undefined', uuid: 'undefined' },
+  { id: 1, name: 'Creating', uuid: 'creating' },
+  { id: 2, name: 'Running', uuid: 'running' },
+  { id: 3, name: 'Starting', uuid: 'starting' },
+  { id: 4, name: 'Stopping', uuid: 'stopping' },
+  { id: 5, name: 'Stopped', uuid: 'stopped' },
+  { id: 6, name: 'Upgrading', uuid: 'upgrading' },
+  { id: 7, name: 'Upgraded', uuid: 'uprgraded' },
+  { id: 8, name: 'Deleting', uuid: 'deleting' },
+  { id: 9, name: 'Deleted', uuid: 'deleted' },
+  { id: 10, name: 'Installing', uuid: 'installing' },
+  { id: 11, name: 'Snaphotting', uuid: 'snaphotting' },
 ];
 
 export const nodeTypeProps = {

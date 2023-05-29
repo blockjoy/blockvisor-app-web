@@ -1,18 +1,17 @@
-import { FC } from 'react';
 import { reset } from 'styles/utils.reset.styles';
-import { styles } from './CopyNode.styles';
-import CopyIcon from '@public/assets/icons/copy-12.svg';
+import { styles } from './Copy.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { toast } from 'react-toastify';
+import CopyIcon from '@public/assets/icons/copy-12.svg';
 
-interface Props {
+interface CopyButtonProps {
   disabled?: boolean;
   value: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 const isClipboardApiSupported = () => !!(navigator && navigator.clipboard);
 
-export const CopyNode: FC<Props> = ({ disabled, children, value }) => {
+export const Copy = ({ disabled, children, value }: CopyButtonProps) => {
   const fallbackCopyToClipboard = (str: string) => {
     const el = document.createElement('textarea');
     el.value = str;
@@ -28,10 +27,10 @@ export const CopyNode: FC<Props> = ({ disabled, children, value }) => {
   function handleCopy() {
     if (isClipboardApiSupported()) {
       navigator.clipboard.writeText(value);
-      toast.success('Node ID Copied');
+      toast.success('Copied');
     } else {
       fallbackCopyToClipboard(value);
-      toast.success('Node ID Copied');
+      toast.success('Copied');
     }
   }
 
@@ -41,7 +40,7 @@ export const CopyNode: FC<Props> = ({ disabled, children, value }) => {
       disabled={disabled}
       css={[reset.button, styles.base, colors.text3]}
     >
-      <p css={styles.text}>{children}</p>
+      {children && <p css={styles.text}>{children}</p>}
       <CopyIcon />
     </button>
   );

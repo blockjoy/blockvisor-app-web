@@ -13,7 +13,7 @@ export const useNodeList = () => {
   const router = useRouter();
   const repository = useIdentityRepository();
 
-  const setIsLoading = useSetRecoilState(nodeAtoms.isLoading);
+  const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
   const setPreloadNodes = useSetRecoilState(nodeAtoms.preloadNodes);
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
@@ -123,6 +123,7 @@ export const useNodeList = () => {
   return {
     nodeList,
     loadNodes,
+    isLoading,
     // updateNodeList,
     addToNodeList,
     removeFromNodeList,

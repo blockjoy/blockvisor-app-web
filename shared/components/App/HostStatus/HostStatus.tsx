@@ -1,48 +1,36 @@
-import { FC } from 'react';
 import { styles } from './HostStatus.styles';
-import { hostStatusList as statusList } from 'shared/constants/lookups';
+import { hostStatusList } from '@shared/constants/lookups';
+import { HostStatusIcon } from './HostStatusIcon';
 
-import IconPending from 'public/assets/icons/host-pending-12.svg';
-import IconNormal from 'public/assets/icons/host-normal-12.svg';
-import IconLoaded from 'public/assets/icons/host-loaded-12.svg';
-import IconIssue from 'public/assets/icons/host-issue-12.svg';
-
-const getIcon = (name: string = '') => {
-  switch (name) {
-    case 'Creating':
-    case 'Starting':
-    case 'Running':
-    case 'Stopping':
-    case 'Upgrading':
-    case 'Deleting':
-    case 'Installing':
-    case 'Snapshotting':
-      return <IconPending />;
-    case 'Running':
-    case 'Broadcasting':
-      return <IconNormal />;
-    case 'Updgraded':
-      return <IconLoaded />;
-    case 'Undefined':
-    case 'Stopped':
-    case 'Deleted':
-      return <IconIssue />;
-    default:
-      return <IconNormal />;
+export const getHostStatusColor = (name: string) => {
+  if (name === 'Running') {
+    return styles.statusColorGreen;
   }
+
+  return styles.statusColorDefault;
 };
 
-type Props = {
+type HostStatusProps = {
   status: number;
+  hasBorder?: boolean;
 };
 
-export const HostStatus: FC<Props> = ({ status }) => {
-  const statusInfo = statusList.find((s) => s.id === status);
+export const HostStatus = ({ status, hasBorder = true }: HostStatusProps) => {
+  const statusInfo = hostStatusList.find((s) => s.id === status);
 
   return (
-    <span css={styles.status}>
-      {/* {getIcon(statusInfo?.name)} */}
-      <span css={styles.statusText}>{statusInfo?.name || 'Unknown'}</span>
+    <span
+      css={[
+        styles.status,
+        hasBorder && styles.statusBorder,
+
+        getHostStatusColor(statusInfo?.name!),
+      ]}
+    >
+      <HostStatusIcon size="12px" status={status} />
+      <span css={[styles.statusText, getHostStatusColor(statusInfo?.name!)]}>
+        {statusInfo?.name || 'Unknown'}
+      </span>
     </span>
   );
 };
