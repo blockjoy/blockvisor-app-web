@@ -15,13 +15,13 @@ export const useHostView = () => {
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [host, setHost] = useRecoilState(hostAtoms.activeHost);
 
-  const loadHost = async (id: string | string[] | undefined) => {
+  const loadHost = async (id: string) => {
     setIsLoading('initializing');
 
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
 
-    const host: any = await hostClient.getHost(org_id!);
-    console.log('HOST', host);
+    // const host: any = await hostClient.getHost(id);
+    // console.log('HOST', host);
 
     const hostMocked: any = DUMMY_HOSTS.find((host: any) => host.id === id);
     await new Promise((r) => setTimeout(r, 900));
