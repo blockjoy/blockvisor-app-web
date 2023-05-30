@@ -13,3 +13,6 @@ export * from './NodeStatus/NodeStatusIcon';
 export * from './BlockchainIcon/BlockchainIcon';
 export * from './OrganizationPicker/OrganizationPicker';
 export * from './OrganizationSelect/OrganizationSelect';
+export * from './Filters/FiltersHeader';
+export * from './Filters/FiltersHeaderIconText';
+export * from './Filters/FiltersBlock';

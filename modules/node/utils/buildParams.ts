@@ -1,5 +1,4 @@
 import { NodeStatus, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
-import { FilterItem } from '../store/nodeAtoms';
 
 export type FilterCriteria = {
   blockchain?: string[];

@@ -8,6 +8,15 @@ import { authClient, callWithTokenRefresh, getOptions } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
+export type UIFilterCriteria = {
+  hostStatus?: string[];
+};
+
+export type UIPagination = {
+  current_page: number;
+  items_per_page: number;
+};
+
 class HostClient {
   private client: HostServiceClient;
 
@@ -16,11 +25,16 @@ class HostClient {
     this.client = createClient(HostServiceDefinition, channel);
   }
 
-  async listHosts(orgId: string): Promise<Host[] | StatusResponse> {
+  async listHosts(
+    orgId: string,
+    filterCriteria: UIFilterCriteria,
+    pagination: UIPagination,
+  ): Promise<Host[] | StatusResponse> {
     const request = {
       orgId,
-      offset: 0,
+      offset: (pagination?.current_page - 1) * pagination?.items_per_page,
       limit: 10,
+      statuses: filterCriteria?.hostStatus?.map((f) => +f),
     };
 
     const response = await callWithTokenRefresh(

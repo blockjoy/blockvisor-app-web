@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/index';
 import { DUMMY_HOSTS } from '../mocks/host';
 import { hostClient } from '@modules/grpc/clients/hostClient';
+import { InitialQueryParams } from '../ui/HostUIHelpers';
+import { getInitialQueryParams } from '../ui/HostUIContext';
 
 export const useHostList = () => {
   const router = useRouter();
@@ -14,23 +16,60 @@ export const useHostList = () => {
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
 
+  const setPreloadNodes = useSetRecoilState(hostAtoms.preloadHosts);
+
+  const setHasMore = useSetRecoilState(hostAtoms.hasMoreHosts);
+
   const handleHostClick = (args: any) => {
     router.push(ROUTES.HOST(args.key));
   };
 
-  const loadHosts = async () => {
-    setIsLoading('initializing');
+  const loadHosts = async (queryParams?: InitialQueryParams) => {
+    if (!queryParams) {
+      const savedQueryParams = getInitialQueryParams();
+      queryParams = savedQueryParams;
+    }
+
+    const loadingState =
+      queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
+
+    setIsLoading(loadingState);
+
+    setHasMore(false);
 
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
 
-    const hostsAPI: any = await hostClient.listHosts(org_id!);
+    const hosts: any = await hostClient.listHosts(
+      org_id!,
+      queryParams?.filter,
+      queryParams?.pagination,
+    );
 
-    const hosts: any = DUMMY_HOSTS;
+    console.log('listHosts', hosts);
+    console.log('listHosts QUERY', {
+      org_id,
+      queryParams,
+    });
+
+    setPreloadNodes(hosts.length);
+
+    if (queryParams.pagination.current_page === 1) {
+      setHostList(hosts);
+    } else {
+      const newNodes = [...hostList, ...hosts];
+      setHostList(newNodes);
+    }
+
+    setHasMore(false);
+
+    setPreloadNodes(0);
+
+    const hostsMocked: any = DUMMY_HOSTS;
     await new Promise((r) => setTimeout(r, 300));
 
-    console.log('HOSTS', hosts);
+    console.log('HOSTS', hostsMocked);
 
-    setHostList(hosts);
+    setHostList(hostsMocked);
 
     setIsLoading('finished');
   };

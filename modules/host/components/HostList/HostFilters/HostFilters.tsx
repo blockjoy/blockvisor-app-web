@@ -1,39 +1,41 @@
-import { styles } from './nodeFilters.styles';
+import { styles } from './HostFilters.styles';
 import {
   Skeleton,
   SkeletonGrid,
   Scrollbar,
   SvgIcon,
-  FiltersHeader,
   FiltersBlock,
 } from '@shared/components';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { ChangeEvent, useMemo, useRef, useState } from 'react';
-
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
-import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
+
 import { useDefaultOrganization } from '@modules/organization';
-import { useFilters } from '@modules/node/hooks/useFilters';
+
 import { blockchainSelectors } from '@modules/node/store/blockchains';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
-import { nodeAtoms } from '@modules/node';
+import { FiltersHeader } from '@shared/components/App/Filters/FiltersHeader';
+import { hostAtoms } from '@modules/host/store/hostAtoms';
+import { hostSelectors } from '@modules/host/store/hostSelectors';
+import { useHostUIContext } from '@modules/host';
+import { useFilters } from '@modules/host/hooks/useFilters';
 
-export type NodeFiltersProps = {
+export type HostFiltersProps = {
   isLoading: LoadingState;
 };
 
-export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
-  const nodeUIContext = useNodeUIContext();
-  const nodeUIProps = useMemo(() => {
+export const HostFilters = ({ isLoading }: HostFiltersProps) => {
+  const hostUIContext = useHostUIContext();
+  const hostUIProps = useMemo(() => {
     return {
-      setQueryParams: nodeUIContext.setQueryParams,
-      queryParams: nodeUIContext.queryParams,
+      setQueryParams: hostUIContext.setQueryParams,
+      queryParams: hostUIContext.queryParams,
     };
-  }, [nodeUIContext]);
+  }, [hostUIContext]);
 
   const { filters, updateFilters, removeFilters, resetFilters } =
-    useFilters(nodeUIProps);
+    useFilters(hostUIProps);
 
   const { switchOrganization } = useSwitchOrganization();
   const { defaultOrganization } = useDefaultOrganization();
@@ -45,10 +47,10 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
   );
 
   const [isFiltersOpen, setFiltersOpen] = useRecoilState(
-    nodeAtoms.isFiltersOpen,
+    hostAtoms.isFiltersOpen,
   );
 
-  const filtersTotal = useRecoilValue(nodeAtoms.filtersTotal);
+  const filtersTotal = useRecoilValue(hostSelectors.filtersTotal);
 
   const [openFilterName, setOpenFilterName] =
     useState<string | 'Blockchain' | 'Status' | 'Type'>('');
@@ -113,8 +115,6 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
 
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
-
-    localStorage.setItem('nodeFiltersOpen', JSON.stringify(false));
   };
 
   if (isLoading === 'finished') isCompleted.current = true;
@@ -132,6 +132,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
         isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
+
       {!isCompleted.current ? (
         isFiltersOpen && (
           <div css={[styles.skeleton]}>

@@ -13,6 +13,7 @@ import {
 } from '@modules/organization';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider } from '@modules/mqtt';
+import { useHostList } from '@modules/host';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
   const { loadNodes, nodeList } = useNodeList();
+  const { loadHosts, hostList } = useHostList();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
@@ -39,6 +41,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     if (!organizations.length) getOrganizations();
     if (!blockchains?.length) getBlockchains();
     if (!nodeList?.length) loadNodes();
+    if (!hostList?.length) loadHosts();
     getReceivedInvitations(userEmail!);
   }, []);
 

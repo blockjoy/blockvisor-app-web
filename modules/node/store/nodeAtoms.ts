@@ -5,13 +5,6 @@ import { isMobile } from 'react-device-detect';
 import { localStorageEffect } from 'utils/store/persist';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
-export type FilterItem = {
-  name?: string | undefined;
-  id?: string | undefined;
-  isChecked?: boolean | undefined;
-  isOnline?: boolean | undefined;
-};
-
 const activeNode = atom<Node | null>({
   key: 'node.activeNode',
   default: null,

@@ -24,7 +24,9 @@ export const HostView = ({ children }: HostViewProps) => {
       loadHost(id);
     }
 
-    return () => unloadHost();
+    return () => {
+      if (router.isReady) unloadHost();
+    };
   }, [id]);
 
   return (
