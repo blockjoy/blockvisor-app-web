@@ -15,7 +15,7 @@ export const useHostView = () => {
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [host, setHost] = useRecoilState(hostAtoms.activeHost);
 
-  const loadHost = async (id: string) => {
+  const loadHost = async (id?: string | string[]) => {
     setIsLoading('initializing');
 
     const org_id = repository?.getIdentity()?.defaultOrganization?.id;
