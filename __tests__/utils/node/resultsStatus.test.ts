@@ -10,7 +10,7 @@ describe('resultsStatus', () => {
   it('should return filtered nodes', () => {
     const result = resultsStatus(1, {
       blockchain: ['1'],
-      node_status: ['123'],
+      nodeStatus: ['123'],
     });
     expect(result).toEqual({ isFiltered: true, isEmpty: false });
   });
