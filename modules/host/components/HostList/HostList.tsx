@@ -20,6 +20,7 @@ import {
 import IconUnion from '@public/assets/icons/union-16.svg';
 import { HostFilters } from './HostFilters/HostFilters';
 import { resultsStatus } from '@modules/host/utils/resultsStatus';
+import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 
 export const HostList = () => {
   const hostUIContext = useHostUIContext();
@@ -31,6 +32,8 @@ export const HostList = () => {
   }, [hostUIContext]);
 
   const { loadHosts, hostList, isLoading, handleHostClick } = useHostList();
+  const { provisionToken, provisionTokenLoadingState, getProvisionToken } =
+    useProvisionToken();
   const hasMoreHosts = useRecoilValue(hostAtoms.hasMoreHosts);
   const preloadHosts = useRecoilValue(hostAtoms.preloadHosts);
   const activeListType = useRecoilValue(hostAtoms.activeListType);
@@ -47,6 +50,10 @@ export const HostList = () => {
       currentQueryParams.current = hostUIProps.queryParams;
     }
   }, [hostUIProps.queryParams]);
+
+  useEffect(() => {
+    getProvisionToken();
+  }, []);
 
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
@@ -131,7 +138,11 @@ export const HostList = () => {
           )}
         </div>
         <div css={styles.quickEdit}>
-          <HostLauncher />
+          {provisionTokenLoadingState === 'initializing' ? (
+            <TableSkeleton />
+          ) : (
+            <HostLauncher token={provisionToken} />
+          )}
         </div>
       </div>
     </>

@@ -83,6 +83,57 @@ const filtersStatus = atom<FilterItem[]>({
   ],
 });
 
+const filtersMemory = atom<[number, number]>({
+  key: 'host.filters.memory',
+  default: [2, 512],
+  effects: [
+    ({ setSelf }) => {
+      const savedHostFilters =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('hostFilters')
+          : null;
+      if (savedHostFilters) {
+        const savedMemory = JSON.parse(savedHostFilters)['memory'];
+        if (savedMemory) setSelf(savedMemory);
+      }
+    },
+  ],
+});
+
+const filtersCPU = atom<[number, number]>({
+  key: 'host.filters.cpu',
+  default: [1, 64],
+  effects: [
+    ({ setSelf }) => {
+      const savedHostFilters =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('hostFilters')
+          : null;
+      if (savedHostFilters) {
+        const savedCPU = JSON.parse(savedHostFilters)['cpu'];
+        if (savedCPU) setSelf(savedCPU);
+      }
+    },
+  ],
+});
+
+const filtersSpace = atom<[number, number]>({
+  key: 'host.filters.space',
+  default: [256, 10240],
+  effects: [
+    ({ setSelf }) => {
+      const savedHostFilters =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem('hostFilters')
+          : null;
+      if (savedHostFilters) {
+        const savedSpace = JSON.parse(savedHostFilters)['space'];
+        if (savedSpace) setSelf(savedSpace);
+      }
+    },
+  ],
+});
+
 export const hostAtoms = {
   activeHost,
   isLoadingActiveHost,
@@ -97,4 +148,7 @@ export const hostAtoms = {
 
   isFiltersOpen,
   filtersStatus,
+  filtersMemory,
+  filtersCPU,
+  filtersSpace,
 };

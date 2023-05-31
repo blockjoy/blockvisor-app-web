@@ -16,3 +16,5 @@ export * from './OrganizationSelect/OrganizationSelect';
 export * from './Filters/FiltersHeader';
 export * from './Filters/FiltersHeaderIconText';
 export * from './Filters/FiltersBlock';
+export * from './Filters/FiltersRange';
+export * from './Filters/FiltersWrapper';

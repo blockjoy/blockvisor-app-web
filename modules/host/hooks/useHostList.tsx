@@ -3,7 +3,6 @@ import { useIdentityRepository } from '@modules/auth';
 import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/index';
-import { DUMMY_HOSTS } from '../mocks/host';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { InitialQueryParams } from '../ui/HostUIHelpers';
 import { getInitialQueryParams } from '../ui/HostUIContext';
@@ -45,12 +44,6 @@ export const useHostList = () => {
       queryParams?.pagination,
     );
 
-    console.log('listHosts', hosts);
-    console.log('listHosts QUERY', {
-      org_id,
-      queryParams,
-    });
-
     setPreloadNodes(hosts.length);
 
     if (queryParams.pagination.current_page === 1) {
@@ -63,13 +56,6 @@ export const useHostList = () => {
     setHasMore(false);
 
     setPreloadNodes(0);
-
-    const hostsMocked: any = DUMMY_HOSTS;
-    await new Promise((r) => setTimeout(r, 300));
-
-    console.log('HOSTS', hostsMocked);
-
-    setHostList(hostsMocked);
 
     setIsLoading('finished');
   };

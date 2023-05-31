@@ -5,6 +5,7 @@ import {
   Scrollbar,
   SvgIcon,
   FiltersBlock,
+  FiltersRange,
 } from '@shared/components';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { ChangeEvent, useMemo, useRef, useState } from 'react';
@@ -53,7 +54,7 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
   const filtersTotal = useRecoilValue(hostSelectors.filtersTotal);
 
   const [openFilterName, setOpenFilterName] =
-    useState<string | 'Blockchain' | 'Status' | 'Type'>('');
+    useState<string | 'Memory' | 'Status' | 'CPU Cores' | 'Disk space'>('');
 
   const isCompleted = useRef(false);
 
@@ -86,11 +87,16 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
     setFilterList(filtersList);
   };
 
-  const hasFiltersApplied = filters.some(
-    (filter) =>
-      filter.name !== 'Organization' &&
-      filter.filterList.some((l) => l.isChecked),
-  );
+  const handleTouched = () => setIsDirty(true);
+
+  const hasFiltersApplied = filters.some((filter: any) => {
+    if (filter.name === 'Organization') return false;
+    else if (filter.type === 'check') {
+      return filter.filterList.some((l: any) => l.isChecked);
+    } else if (filter.type === 'range') {
+      return filter.min !== filter.values[0] || filter.max !== filter.values[1];
+    }
+  });
 
   const handleResetFilters = () => {
     setIsDirty(false);
@@ -145,22 +151,42 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
       ) : (
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
           <Scrollbar additionalStyles={[styles.filters]}>
-            {filters.map((item) => (
-              <FiltersBlock
-                hasError={item.name === 'Blockchain' && hasBlockchainError}
-                isDisabled={item.isDisabled}
-                isOpen={item.name === openFilterName}
-                onPlusMinusClicked={handlePlusMinusClicked}
-                onFilterBlockClicked={handleFilterBlockClicked}
-                key={item.name}
-                name={item.name}
-                filterCount={item.filterCount}
-                filterList={item.filterList}
-                setFilterList={item?.setFilterList!}
-                setOrganization={switchOrganization}
-                onFilterChanged={handleFilterChanged}
-              />
-            ))}
+            {filters.map((item: any) => {
+              if (item.type === 'check')
+                return (
+                  <FiltersBlock
+                    hasError={item.name === 'Blockchain' && hasBlockchainError}
+                    isDisabled={item.isDisabled}
+                    isOpen={item.name === openFilterName}
+                    onPlusMinusClicked={handlePlusMinusClicked}
+                    onFilterBlockClicked={handleFilterBlockClicked}
+                    key={item.name}
+                    name={item.name}
+                    filterCount={item.filterCount}
+                    filterList={item.filterList}
+                    setFilterList={item?.setFilterList!}
+                    setOrganization={switchOrganization}
+                    onFilterChanged={handleFilterChanged}
+                  />
+                );
+              else if (item.type === 'range')
+                return (
+                  <FiltersRange
+                    name={item.name}
+                    label={item.label}
+                    step={item.step}
+                    min={item.min}
+                    max={item.max}
+                    values={item.values}
+                    setValues={item.setValues}
+                    isOpen={item.name === openFilterName}
+                    onPlusMinusClicked={handlePlusMinusClicked}
+                    onFilterBlockClicked={handleFilterBlockClicked}
+                    onStateChange={handleTouched}
+                  />
+                );
+              else return null;
+            })}
           </Scrollbar>
           <button
             css={styles.updateButton}

@@ -97,3 +97,16 @@ export const nodeTypeProps = {
   hostSelector: 'host-selector',
   nodeSelector: 'node-selector',
 };
+
+export const hostMemory = {
+  min: 2,
+  max: 512,
+};
+export const hostCPU = {
+  min: 1,
+  max: 64,
+};
+export const hostSpace = {
+  min: 256,
+  max: 10240,
+};

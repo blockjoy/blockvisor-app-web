@@ -27,14 +27,15 @@ class HostClient {
 
   async listHosts(
     orgId: string,
-    filterCriteria: UIFilterCriteria,
-    pagination: UIPagination,
+    filterCriteria?: UIFilterCriteria,
+    pagination?: UIPagination,
   ): Promise<Host[] | StatusResponse> {
     const request = {
       orgId,
-      offset: (pagination?.current_page - 1) * pagination?.items_per_page,
+      // offset: (pagination?.current_page - 1) * pagination?.items_per_page,
+      offset: 0,
       limit: 10,
-      statuses: filterCriteria?.hostStatus?.map((f) => +f),
+      // statuses: filterCriteria?.hostStatus?.map((f) => +f),
     };
 
     const response = await callWithTokenRefresh(
@@ -52,14 +53,6 @@ class HostClient {
       { id },
     );
     return response.host!;
-  }
-
-  async provision(): Promise<void | StatusResponse> {
-    const response = await callWithTokenRefresh(
-      this.client.provision.bind(this.client),
-      {},
-    );
-    return response;
   }
 }
 

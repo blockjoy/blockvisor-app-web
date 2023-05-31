@@ -49,6 +49,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     if (defaultOrganization?.id !== currentOrg.current) {
       currentOrg.current = defaultOrganization!.id;
       loadNodes();
+      loadHosts();
     }
   }, [defaultOrganization?.id]);
 

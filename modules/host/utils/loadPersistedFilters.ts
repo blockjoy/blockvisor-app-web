@@ -5,8 +5,14 @@ export const loadPersistedFilters = () => {
   const localStorageFilters = JSON.parse(localStorage.getItem('hostFilters')!);
 
   const status: FilterItem[] = localStorageFilters.status;
+  const memory: [number, number] = localStorageFilters.memory;
+  const cpu: [number, number] = localStorageFilters.cpu;
+  const space: [number, number] = localStorageFilters.space;
 
   return {
     status,
+    memory,
+    cpu,
+    space,
   };
 };

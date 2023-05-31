@@ -1,8 +1,10 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { Host } from "./host";
+import { Invitation } from "./invitation";
 import { Node } from "./node";
 import { Org } from "./org";
+import { User } from "./user";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -46,7 +48,19 @@ export interface NodeDeleted {
 export interface OrgMessage {
   created?: OrgCreated | undefined;
   updated?: OrgUpdated | undefined;
-  deleted?: OrgDeleted | undefined;
+  deleted?:
+    | OrgDeleted
+    | undefined;
+  /** Emitted when a new invitation for this organization has been created. */
+  invitationCreated?:
+    | InvitationCreated
+    | undefined;
+  /** Emitted when a new user joins this organization. */
+  invitationAccepted?:
+    | InvitationAccepted
+    | undefined;
+  /** Emitted when a user rejects an invitation for this organization. */
+  invitationDeclined?: InvitationDeclined | undefined;
 }
 
 export interface OrgCreated {
@@ -68,6 +82,34 @@ export interface OrgDeleted {
   deletedBy: string;
   deletedByName: string;
   deletedByEmail: string;
+}
+
+/**
+ * This message signals that an invitation has been created to invite someone
+ * into the organization specified by `org_id`.
+ */
+export interface InvitationCreated {
+  orgId: string;
+  invitation: Invitation | undefined;
+}
+
+/**
+ * This message signals that an invitation has been accepted for the current
+ * organization, and a new user has joined this org.
+ */
+export interface InvitationAccepted {
+  orgId: string;
+  invitation: Invitation | undefined;
+  user: User | undefined;
+}
+
+/**
+ * This message signals that an invitation has been declined for the current
+ * organization.
+ */
+export interface InvitationDeclined {
+  orgId: string;
+  invitation: Invitation | undefined;
 }
 
 export interface HostMessage {
@@ -431,7 +473,14 @@ export const NodeDeleted = {
 };
 
 function createBaseOrgMessage(): OrgMessage {
-  return { created: undefined, updated: undefined, deleted: undefined };
+  return {
+    created: undefined,
+    updated: undefined,
+    deleted: undefined,
+    invitationCreated: undefined,
+    invitationAccepted: undefined,
+    invitationDeclined: undefined,
+  };
 }
 
 export const OrgMessage = {
@@ -444,6 +493,15 @@ export const OrgMessage = {
     }
     if (message.deleted !== undefined) {
       OrgDeleted.encode(message.deleted, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.invitationCreated !== undefined) {
+      InvitationCreated.encode(message.invitationCreated, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.invitationAccepted !== undefined) {
+      InvitationAccepted.encode(message.invitationAccepted, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.invitationDeclined !== undefined) {
+      InvitationDeclined.encode(message.invitationDeclined, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -476,6 +534,27 @@ export const OrgMessage = {
 
           message.deleted = OrgDeleted.decode(reader, reader.uint32());
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.invitationCreated = InvitationCreated.decode(reader, reader.uint32());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.invitationAccepted = InvitationAccepted.decode(reader, reader.uint32());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.invitationDeclined = InvitationDeclined.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -499,6 +578,15 @@ export const OrgMessage = {
       : undefined;
     message.deleted = (object.deleted !== undefined && object.deleted !== null)
       ? OrgDeleted.fromPartial(object.deleted)
+      : undefined;
+    message.invitationCreated = (object.invitationCreated !== undefined && object.invitationCreated !== null)
+      ? InvitationCreated.fromPartial(object.invitationCreated)
+      : undefined;
+    message.invitationAccepted = (object.invitationAccepted !== undefined && object.invitationAccepted !== null)
+      ? InvitationAccepted.fromPartial(object.invitationAccepted)
+      : undefined;
+    message.invitationDeclined = (object.invitationDeclined !== undefined && object.invitationDeclined !== null)
+      ? InvitationDeclined.fromPartial(object.invitationDeclined)
       : undefined;
     return message;
   },
@@ -737,6 +825,194 @@ export const OrgDeleted = {
     message.deletedBy = object.deletedBy ?? "";
     message.deletedByName = object.deletedByName ?? "";
     message.deletedByEmail = object.deletedByEmail ?? "";
+    return message;
+  },
+};
+
+function createBaseInvitationCreated(): InvitationCreated {
+  return { orgId: "", invitation: undefined };
+}
+
+export const InvitationCreated = {
+  encode(message: InvitationCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    if (message.invitation !== undefined) {
+      Invitation.encode(message.invitation, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationCreated {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseInvitationCreated();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.invitation = Invitation.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<InvitationCreated>): InvitationCreated {
+    return InvitationCreated.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<InvitationCreated>): InvitationCreated {
+    const message = createBaseInvitationCreated();
+    message.orgId = object.orgId ?? "";
+    message.invitation = (object.invitation !== undefined && object.invitation !== null)
+      ? Invitation.fromPartial(object.invitation)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseInvitationAccepted(): InvitationAccepted {
+  return { orgId: "", invitation: undefined, user: undefined };
+}
+
+export const InvitationAccepted = {
+  encode(message: InvitationAccepted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    if (message.invitation !== undefined) {
+      Invitation.encode(message.invitation, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.user !== undefined) {
+      User.encode(message.user, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationAccepted {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseInvitationAccepted();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.invitation = Invitation.decode(reader, reader.uint32());
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user = User.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<InvitationAccepted>): InvitationAccepted {
+    return InvitationAccepted.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<InvitationAccepted>): InvitationAccepted {
+    const message = createBaseInvitationAccepted();
+    message.orgId = object.orgId ?? "";
+    message.invitation = (object.invitation !== undefined && object.invitation !== null)
+      ? Invitation.fromPartial(object.invitation)
+      : undefined;
+    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    return message;
+  },
+};
+
+function createBaseInvitationDeclined(): InvitationDeclined {
+  return { orgId: "", invitation: undefined };
+}
+
+export const InvitationDeclined = {
+  encode(message: InvitationDeclined, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    if (message.invitation !== undefined) {
+      Invitation.encode(message.invitation, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): InvitationDeclined {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseInvitationDeclined();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.invitation = Invitation.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<InvitationDeclined>): InvitationDeclined {
+    return InvitationDeclined.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<InvitationDeclined>): InvitationDeclined {
+    const message = createBaseInvitationDeclined();
+    message.orgId = object.orgId ?? "";
+    message.invitation = (object.invitation !== undefined && object.invitation !== null)
+      ? Invitation.fromPartial(object.invitation)
+      : undefined;
     return message;
   },
 };

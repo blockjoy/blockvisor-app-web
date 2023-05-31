@@ -11,6 +11,9 @@ export type Pagination = {
 
 export type InitialFilter = {
   hostStatus?: string[];
+  hostMemory: [number, number];
+  hostCPU: [number, number];
+  hostSpace: [number, number];
 };
 
 export type InitialQueryParams = {
@@ -32,5 +35,8 @@ export const initialQueryParams: InitialQueryParams = {
 
   filter: {
     hostStatus: [],
+    hostMemory: [2, 512],
+    hostCPU: [1, 64],
+    hostSpace: [256, 10240],
   },
 };

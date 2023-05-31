@@ -57,7 +57,7 @@ export const styles = {
     flex: 1 1 360px;
     min-width: 360px;
     max-width: 36px;
-    padding: 4px 0 20px 20px;
+    padding: 20px 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toLrg} {

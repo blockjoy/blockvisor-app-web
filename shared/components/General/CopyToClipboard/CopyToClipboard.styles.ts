@@ -1,23 +1,24 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (theme: ITheme) => css`
     position: relative;
     padding: 10px;
-    background: #3D3F3E;
+    background: ${theme.colorInput};
     border: 1px solid #F8FAF6;
     border: 1px solid rgb(248, 250, 246, .1);
     border-radius: 10px;
     display: flex;
     align-items: center;
   }`,
-  value: css`
+  value: (theme: ITheme) => css`
     padding: 5px 10px;
     font-size: 14px;
     color: #fff;
     border: none;
     outline: none;
-    background-color: #3D3F3E;
+    background-color: ${theme.colorInput};
     margin-right: auto;
   }`,
   button: css`

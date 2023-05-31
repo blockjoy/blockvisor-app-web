@@ -12,6 +12,7 @@ export const HostViewNodes = () => {
   const { nodeList, isLoading, handleNodeClick } = useNodeList();
   const { stopNode, startNode } = useNodeView();
   const host = useRecoilValue(hostAtoms.activeHost);
+  const isLoadingActiveHost = useRecoilValue(hostAtoms.isLoadingActiveHost);
 
   const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
 
@@ -24,9 +25,9 @@ export const HostViewNodes = () => {
 
   return (
     <>
-      {isLoading !== 'finished' ? (
+      {isLoading !== 'finished' && isLoadingActiveHost !== 'finished' ? (
         <TableSkeleton />
-      ) : !Boolean(hostNodes?.length) && !Boolean(nodeList?.length) ? (
+      ) : !Boolean(hostNodes?.length) ? (
         <EmptyColumn
           title="No Nodes."
           description={
