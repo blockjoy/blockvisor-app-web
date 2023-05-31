@@ -6,8 +6,8 @@ describe('buildParams', () => {
     const params = buildParams([], [], []);
     expect(params).toMatchObject({
       blockchain: [],
-      node_type: [],
-      node_status: [],
+      nodeType: [],
+      nodeStatus: [],
     });
   });
 
@@ -22,8 +22,8 @@ describe('buildParams', () => {
     );
     expect(params).toMatchObject({
       blockchain: ['1', '2'],
-      node_type: ['6'],
-      node_status: ['8'],
+      nodeType: ['6'],
+      nodeStatus: ['8'],
     });
   });
 });

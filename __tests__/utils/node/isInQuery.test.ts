@@ -17,8 +17,8 @@ describe('isInQuery', () => {
     vi.mock('@modules/node/utils/buildParams');
     vi.mocked(buildParams).mockReturnValue({
       blockchain: [],
-      node_type: [],
-      node_status: [],
+      nodeType: [],
+      nodeStatus: [],
     });
     const [only] = mockedNodesResponse;
     const result = isInQuery(only);
@@ -38,8 +38,8 @@ describe('isInQuery', () => {
     vi.mock('@modules/node/utils/buildParams');
     vi.mocked(buildParams).mockReturnValue({
       blockchain: ['1', 'b766f36a-4bdb-42a1-8cc1-edcfb343eb45'],
-      node_type: ['6'],
-      node_status: ['8'],
+      nodeType: ['6'],
+      nodeStatus: ['8'],
     });
     const [only] = mockedNodesResponse;
     const result = isInQuery(only);

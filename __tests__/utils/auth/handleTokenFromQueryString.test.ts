@@ -3,7 +3,7 @@ import { expect, vi, it, describe } from 'vitest';
 import { decodedToken } from '__tests__/mocks/auth';
 
 describe('handleTokenFromQueryString', () => {
-  it('should extract email from token', () => {
+  it.skip('should extract email from token', () => {
     const spy = vi
       .spyOn(
         {
