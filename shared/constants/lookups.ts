@@ -98,15 +98,36 @@ export const nodeTypeProps = {
   nodeSelector: 'node-selector',
 };
 
-export const hostMemory = {
-  min: 2,
-  max: 512,
+export const hostFiltersDefaults: {
+  memory: [number, number];
+  cpu: [number, number];
+  space: [number, number];
+} = {
+  memory: [2 * Math.pow(1024, 3), 512 * Math.pow(1024, 3)],
+  cpu: [1, 64],
+  space: [250 * Math.pow(1024, 3), 10 * Math.pow(1024, 4)],
 };
-export const hostCPU = {
-  min: 1,
-  max: 64,
+
+export const hostFiltersSteps = {
+  memory: 2 * Math.pow(1024, 3),
+  cpu: 1,
+  space: 250 * Math.pow(1024, 3),
 };
-export const hostSpace = {
-  min: 256,
-  max: 10240,
+
+export const hostFiltersCustomValues = {
+  space: [
+    250 * Math.pow(1024, 3),
+    500 * Math.pow(1024, 3),
+    750 * Math.pow(1024, 3),
+    1 * Math.pow(1024, 4),
+    2 * Math.pow(1024, 4),
+    3 * Math.pow(1024, 4),
+    4 * Math.pow(1024, 4),
+    5 * Math.pow(1024, 4),
+    6 * Math.pow(1024, 4),
+    7 * Math.pow(1024, 4),
+    8 * Math.pow(1024, 4),
+    9 * Math.pow(1024, 4),
+    10 * Math.pow(1024, 4),
+  ],
 };

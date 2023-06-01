@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Range, getTrackBackground } from 'react-range';
+import { SetterOrUpdater } from 'recoil';
 import { themeDefault } from 'themes';
 import { styles } from './RangeSlider.styles';
 
@@ -7,9 +9,10 @@ type RangeSliderProps = {
   min: number;
   max: number;
   values: [number, number];
-  setValues: any;
-  label?: string;
+  customValues?: [number, number];
+  setValues: SetterOrUpdater<[number, number]>;
   onStateChange: VoidFunction;
+  formatter: (value: number) => void;
 };
 
 export const RangeSlider = ({
@@ -17,21 +20,46 @@ export const RangeSlider = ({
   min,
   max,
   values,
+  customValues,
   setValues,
-  label,
   onStateChange,
+  formatter,
 }: RangeSliderProps) => {
+  const innerValuesDefaultFirst: number =
+    customValues?.findIndex(
+      (customValue: number) => customValue === values[0],
+    ) ?? values[0];
+  const innerValuesDefaultLast: number =
+    customValues?.findIndex(
+      (customValue: number) => customValue === values[1],
+    ) ?? values[1];
+
+  const innerValuesDefault: [number, number] = customValues
+    ? [innerValuesDefaultFirst, innerValuesDefaultLast]
+    : values;
+  const [innerValues, setInnerValues] =
+    useState<[number, number]>(innerValuesDefault);
+
+  const innerMin = customValues ? 0 : min;
+  const innerMax = customValues ? customValues.length - 1 : max;
+  const innerStep = customValues ? 1 : step;
+
+  const handleChange = (values: number[]) => {
+    setInnerValues(values as [number, number]);
+    if (customValues)
+      setValues([customValues[values[0]], customValues[values[1]]]);
+    else setValues(values as [number, number]);
+    onStateChange();
+  };
+
   return (
     <div css={styles.wrapper}>
       <Range
-        values={values}
-        step={step}
-        min={min}
-        max={max}
-        onChange={(values) => {
-          setValues(values);
-          onStateChange();
-        }}
+        step={innerStep}
+        min={innerMin}
+        max={innerMax}
+        values={innerValues}
+        onChange={handleChange}
         renderTrack={({ props, children }) => (
           <div
             onMouseDown={props.onMouseDown}
@@ -43,14 +71,14 @@ export const RangeSlider = ({
               css={styles.progress}
               style={{
                 background: getTrackBackground({
-                  values,
+                  values: innerValues,
                   colors: [
                     `${themeDefault.colorInput}`,
                     `${themeDefault.colorPrimary}`,
                     `${themeDefault.colorInput}`,
                   ],
-                  min,
-                  max,
+                  min: innerMin,
+                  max: innerMax,
                 }),
               }}
             >
@@ -69,7 +97,7 @@ export const RangeSlider = ({
         )}
       />
       <p css={styles.label}>
-        {`${values[0]}${label ?? ''} - ${values[1]}${label ?? ''}`}
+        {`${formatter(values[0])} - ${formatter(values[1])}`}
       </p>
     </div>
   );

@@ -1,3 +1,5 @@
+import { hostFiltersDefaults } from '@shared/constants/lookups';
+
 export type FilterCriteria = {
   hostStatus?: string[];
   hostMemory: [number, number];
@@ -17,9 +19,9 @@ export const buildParams = (
 
   const params: FilterCriteria = {
     hostStatus: statusFilters || [],
-    hostMemory: hostMemory || [2, 512],
-    hostCPU: hostCPU || [1, 64],
-    hostSpace: hostSpace || [256, 10240],
+    hostMemory: hostMemory || hostFiltersDefaults.memory,
+    hostCPU: hostCPU || hostFiltersDefaults.cpu,
+    hostSpace: hostSpace || hostFiltersDefaults.space,
   };
 
   return params;

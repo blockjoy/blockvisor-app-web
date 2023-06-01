@@ -173,16 +173,17 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
                 return (
                   <FiltersRange
                     name={item.name}
-                    label={item.label}
                     step={item.step}
                     min={item.min}
                     max={item.max}
                     values={item.values}
+                    customValues={item.customValues}
                     setValues={item.setValues}
                     isOpen={item.name === openFilterName}
                     onPlusMinusClicked={handlePlusMinusClicked}
                     onFilterBlockClicked={handleFilterBlockClicked}
                     onStateChange={handleTouched}
+                    formatter={item.formatter}
                   />
                 );
               else return null;

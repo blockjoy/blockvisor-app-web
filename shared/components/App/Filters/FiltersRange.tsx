@@ -1,10 +1,8 @@
 import { FiltersWrapper, RangeSlider } from '@shared/components';
 import { SetterOrUpdater } from 'recoil';
-import { styles } from './FiltersRange.styles';
 
 type FiltersRangeProps = {
   name: string;
-  label?: string;
   isDisabled?: boolean;
   step: number;
   min: number;
@@ -15,11 +13,12 @@ type FiltersRangeProps = {
   onPlusMinusClicked: (filterName: string, args1: boolean) => void;
   onFilterBlockClicked: (name: string) => void;
   onStateChange: VoidFunction;
+  formatter: (val: number) => void;
+  customValues?: [number, number];
 };
 
 export const FiltersRange = ({
   name,
-  label,
   isDisabled = false,
   step,
   min,
@@ -30,6 +29,8 @@ export const FiltersRange = ({
   onPlusMinusClicked,
   onFilterBlockClicked,
   onStateChange,
+  formatter,
+  customValues,
 }: FiltersRangeProps) => {
   return (
     <FiltersWrapper
@@ -46,13 +47,12 @@ export const FiltersRange = ({
           max={max}
           values={values}
           setValues={setValues}
-          label={label}
           onStateChange={onStateChange}
+          formatter={formatter}
+          customValues={customValues}
         />
       ) : (
-        <p css={styles.preview}>{`${values[0]}${label ?? ''} - ${values[1]}${
-          label ?? ''
-        }`}</p>
+        <>{`${formatter(values[0])} - ${formatter(values[1])}`}</>
       )}
     </FiltersWrapper>
   );

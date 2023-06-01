@@ -1,5 +1,5 @@
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { hostStatusList } from '@shared/constants/lookups';
+import { hostFiltersDefaults, hostStatusList } from '@shared/constants/lookups';
 import { isMobile } from 'react-device-detect';
 import { atom } from 'recoil';
 
@@ -85,7 +85,7 @@ const filtersStatus = atom<FilterItem[]>({
 
 const filtersMemory = atom<[number, number]>({
   key: 'host.filters.memory',
-  default: [2, 512],
+  default: hostFiltersDefaults.memory,
   effects: [
     ({ setSelf }) => {
       const savedHostFilters =
@@ -102,7 +102,7 @@ const filtersMemory = atom<[number, number]>({
 
 const filtersCPU = atom<[number, number]>({
   key: 'host.filters.cpu',
-  default: [1, 64],
+  default: hostFiltersDefaults.cpu,
   effects: [
     ({ setSelf }) => {
       const savedHostFilters =
@@ -119,7 +119,7 @@ const filtersCPU = atom<[number, number]>({
 
 const filtersSpace = atom<[number, number]>({
   key: 'host.filters.space',
-  default: [256, 10240],
+  default: hostFiltersDefaults.space,
   effects: [
     ({ setSelf }) => {
       const savedHostFilters =

@@ -3,6 +3,12 @@ import {
   useGetOrganizations,
 } from '@modules/organization';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
+import {
+  hostFiltersCustomValues,
+  hostFiltersDefaults,
+  hostFiltersSteps,
+} from '@shared/constants/lookups';
+import { formatters } from '@shared/index';
 import { isEqual } from 'lodash';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
@@ -38,15 +44,17 @@ export const useFilters = (hostUIProps: HostUIProps) => {
 
     const filter: InitialFilter = {
       hostStatus: [],
-      hostMemory: [2, 512],
-      hostCPU: [1, 64],
-      hostSpace: [256, 10240],
+      hostMemory: hostFiltersDefaults.memory,
+      hostCPU: hostFiltersDefaults.cpu,
+      hostSpace: hostFiltersDefaults.space,
     };
 
     filter.hostStatus = hostStatus !== undefined ? hostStatus : [];
-    filter.hostMemory = hostMemory !== undefined ? hostMemory : [2, 512];
-    filter.hostCPU = hostCPU !== undefined ? hostCPU : [1, 64];
-    filter.hostSpace = hostSpace !== undefined ? hostSpace : [256, 10240];
+    filter.hostMemory =
+      hostMemory !== undefined ? hostMemory : hostFiltersDefaults.memory;
+    filter.hostCPU = hostCPU !== undefined ? hostCPU : hostFiltersDefaults.cpu;
+    filter.hostSpace =
+      hostSpace !== undefined ? hostSpace : hostFiltersDefaults.space;
 
     newQueryParams.filter = filter;
     return newQueryParams;
@@ -87,15 +95,20 @@ export const useFilters = (hostUIProps: HostUIProps) => {
       isChecked: false,
     }));
     setFiltersStatus(filtersStatusCopy);
-    setFiltersMemory([2, 512]);
-    setFiltersCPU([1, 64]);
-    setFiltersSpace([256, 10240]);
+    setFiltersMemory(hostFiltersDefaults.memory);
+    setFiltersCPU(hostFiltersDefaults.cpu);
+    setFiltersSpace(hostFiltersDefaults.space);
 
     localStorage.removeItem('hostFilters');
   };
 
   const resetFilters = () => {
-    const params = buildParams([], [2, 512], [1, 64], [256, 10240]);
+    const params = buildParams(
+      [],
+      hostFiltersDefaults.memory,
+      hostFiltersDefaults.cpu,
+      hostFiltersDefaults.space,
+    );
     applyFilter(params);
   };
 
@@ -125,32 +138,36 @@ export const useFilters = (hostUIProps: HostUIProps) => {
       type: 'range',
       label: 'GB',
       isDisabled: false,
-      step: 2,
-      min: 2,
-      max: 512,
+      step: hostFiltersSteps.memory,
+      min: hostFiltersDefaults.memory[0],
+      max: hostFiltersDefaults.memory[1],
       values: filtersMemory,
       setValues: setFiltersMemory,
+      formatter: formatters.formatBytes,
     },
     {
       name: 'CPU Cores',
       type: 'range',
       isDisabled: false,
-      step: 1,
-      min: 1,
-      max: 64,
+      step: hostFiltersSteps.cpu,
+      min: hostFiltersDefaults.cpu[0],
+      max: hostFiltersDefaults.cpu[1],
       values: filtersCPU,
       setValues: setFiltersCPU,
+      formatter: formatters.plain,
     },
     {
       name: 'Disk space',
       type: 'range',
       label: 'GB',
       isDisabled: false,
-      step: 256,
-      min: 256,
-      max: 10240,
+      step: hostFiltersSteps.space,
+      min: hostFiltersDefaults.space[0],
+      max: hostFiltersDefaults.space[1],
       values: filtersSpace,
+      customValues: hostFiltersCustomValues.space,
       setValues: setFiltersSpace,
+      formatter: formatters.formatBytes,
     },
   ];
 

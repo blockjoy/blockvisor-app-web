@@ -1,3 +1,5 @@
+import { hostFiltersDefaults } from '@shared/constants/lookups';
+
 export type ItemsPerPage = {
   sm: number;
   lg: number;
@@ -35,8 +37,8 @@ export const initialQueryParams: InitialQueryParams = {
 
   filter: {
     hostStatus: [],
-    hostMemory: [2, 512],
-    hostCPU: [1, 64],
-    hostSpace: [256, 10240],
+    hostMemory: hostFiltersDefaults.memory,
+    hostCPU: hostFiltersDefaults.cpu,
+    hostSpace: hostFiltersDefaults.space,
   },
 };
