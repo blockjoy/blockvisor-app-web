@@ -1,7 +1,14 @@
+import { localStorageEffect } from 'utils/store/persist';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostFiltersDefaults, hostStatusList } from '@shared/constants/lookups';
 import { isMobile } from 'react-device-detect';
 import { atom } from 'recoil';
+
+const defaultHost = atom<Host | null>({
+  key: 'host.default',
+  default: null,
+  effects: [localStorageEffect('defaultHost')],
+});
 
 const activeHost = atom<Host | null>({
   key: 'host',
@@ -135,6 +142,8 @@ const filtersSpace = atom<[number, number]>({
 });
 
 export const hostAtoms = {
+  defaultHost,
+
   activeHost,
   isLoadingActiveHost,
 

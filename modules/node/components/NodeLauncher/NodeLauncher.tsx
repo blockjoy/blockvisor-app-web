@@ -18,8 +18,12 @@ import {
   NodeType,
   NodeServiceCreateRequest,
   FilteredIpAddr,
+  NodePlacement,
+  NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { hostAtoms } from '@modules/host';
+import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -30,6 +34,7 @@ export type NodeLauncherState = {
   network: string;
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];
+  placement: NodePlacement;
 };
 
 export type CreateNodeParams = {
@@ -54,6 +59,8 @@ export const NodeLauncher = () => {
 
   const [networkList, setNetworkList] = useState<string[]>([]);
 
+  const [selectedHost, setSelectedHost] = useState<Host | null>(null);
+
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -67,6 +74,7 @@ export const NodeLauncher = () => {
     network: '',
     allowIps: [],
     denyIps: [],
+    placement: {},
   });
 
   const handleProtocolSelected = (
@@ -140,6 +148,8 @@ export const NodeLauncher = () => {
     });
   };
 
+  const handleHostChanged = (host: Host | null) => setSelectedHost(host);
+
   const handleFileUploaded = (e: any) => {
     setServerError(undefined);
     const keyFilesCopy = [...node.keyFiles!];
@@ -181,7 +191,14 @@ export const NodeLauncher = () => {
       network: node.network,
       allowIps: node.allowIps,
       denyIps: node.denyIps,
-      placement: {},
+      placement: selectedHost
+        ? { hostId: selectedHost.id }
+        : {
+            scheduler: {
+              resource:
+                NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+            },
+          },
     };
 
     createNode(
@@ -261,6 +278,8 @@ export const NodeLauncher = () => {
             onFileUploaded={handleFileUploaded}
             onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
             onNodePropertyChanged={handleNodePropertyChanged}
+            selectedHost={selectedHost}
+            onHostChanged={handleHostChanged}
             networkList={networkList}
             nodeLauncherState={node}
           />

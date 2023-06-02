@@ -18,3 +18,4 @@ export * from './Filters/FiltersHeaderIconText';
 export * from './Filters/FiltersBlock';
 export * from './Filters/FiltersRange';
 export * from './Filters/FiltersWrapper';
+export * from './HostSelect/HostSelect';

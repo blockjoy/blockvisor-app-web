@@ -12,6 +12,8 @@ export const useHostList = () => {
 
   const repository = useIdentityRepository();
 
+  const [defaultHost, setDefaultHost] = useRecoilState(hostAtoms.defaultHost);
+
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
 
@@ -43,6 +45,8 @@ export const useHostList = () => {
       queryParams?.filter,
       queryParams?.pagination,
     );
+
+    if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
 
     setPreloadNodes(hosts.length);
 

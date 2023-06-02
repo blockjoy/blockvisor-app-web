@@ -22,7 +22,7 @@ export const styles = {
     @media ${breakpoints.fromLrg} {
       position: static;
       margin-left: 0;
-      padding: 4px 20px 20px 0;
+      padding: 0 20px 20px 0;
     }
   `,
   endMessage: css``,
