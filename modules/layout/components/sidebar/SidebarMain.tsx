@@ -74,7 +74,7 @@ export default () => {
                 <span
                   css={styles.linkInner}
                   className={`link-inner ${
-                    router.pathname.includes(item.path) ? 'active' : ''
+                    router.pathname.startsWith(item.path) ? 'active' : ''
                   }`}
                 >
                   <span

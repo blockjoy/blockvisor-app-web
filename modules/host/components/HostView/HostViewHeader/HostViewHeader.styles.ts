@@ -43,64 +43,6 @@ export const styles = {
       padding-top: 8px;
     }
   `,
-  actions: css`
-    display: flex;
-    gap: 8px;
-    margin-left: auto;
-
-    > button {
-      width: 86px;
-    }
-
-    @media ${breakpoints.toLrg} {
-      margin-left: 0;
-    }
-  `,
-  nodeId: css`
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  `,
-  blockchainIcon: (theme: ITheme) => css`
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-
-    > span {
-      width: 40px;
-      height: 40px;
-    }
-  `,
-  breadcrumb: css`
-    display: flex;
-  `,
-  nodesButton: (theme: ITheme) => css`
-    display: flex;
-    gap: 10px;
-    padding: 0;
-    background: transparent;
-    border: 0;
-    color: ${theme.colorDefault};
-    font-size: 18px;
-    cursor: pointer;
-
-    svg path {
-      fill: ${theme.colorLabel};
-    }
-
-    :hover {
-      color: ${theme.colorText};
-
-      svg path {
-        fill: ${theme.colorDefault};
-      }
-    }
-  `,
-  separator: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    margin-right: 8px;
-    margin-left: 8px;
-  `,
   hostStatus: (theme: ITheme) => css`
     display: flex;
     gap: 4px;

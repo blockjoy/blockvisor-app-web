@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import {
   DropdownMenu,
   DropdownButton,
@@ -6,10 +7,9 @@ import {
   Scrollbar,
   DropdownWrapper,
 } from '@shared/components';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { styles } from './HostSelect.styles';
-import { hostAtoms } from '@modules/host/store/hostAtoms';
+import { hostAtoms } from '@modules/host';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 
 type HostSelectProps = {

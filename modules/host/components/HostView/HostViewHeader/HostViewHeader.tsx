@@ -1,10 +1,10 @@
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import { HostStatus, Skeleton, SkeletonGrid } from '@shared/components';
+import { styles } from './HostViewHeader.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { styles } from './HostViewHeader.styles';
 import { wrapper } from 'styles/wrapper.styles';
-import { useHostView } from '@modules/host/hooks/useHostView';
+import { HostStatus, Skeleton, SkeletonGrid } from '@shared/components';
+import { useHostView } from '@modules/host';
 
 export const HostViewHeader = () => {
   const { host, isLoading } = useHostView();

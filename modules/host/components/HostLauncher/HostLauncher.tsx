@@ -10,13 +10,14 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 
 type HostLauncherProps = {
-  token: string | null;
+  token?: string;
 };
 
 export const HostLauncher = ({ token }: HostLauncherProps) => {
   const { resetProvisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
+  // TODO: Improve design and structure
   return (
     <div>
       <h3 css={styles.title}>Create host</h3>

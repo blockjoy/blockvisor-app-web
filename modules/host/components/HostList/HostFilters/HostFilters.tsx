@@ -1,3 +1,5 @@
+import { ChangeEvent, useMemo, useRef, useState } from 'react';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { styles } from './HostFilters.styles';
 import {
   Skeleton,
@@ -6,21 +8,18 @@ import {
   SvgIcon,
   FiltersBlock,
   FiltersRange,
+  FiltersHeader,
 } from '@shared/components';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
-import { ChangeEvent, useMemo, useRef, useState } from 'react';
+import { blockchainSelectors } from '@modules/node';
+import { useSwitchOrganization } from '@modules/organization';
+import {
+  hostAtoms,
+  hostSelectors,
+  useHostUIContext,
+  useFilters,
+} from '@modules/host';
 import IconClose from '@public/assets/icons/close-12.svg';
 import IconRefresh from '@public/assets/icons/refresh-12.svg';
-
-import { useDefaultOrganization } from '@modules/organization';
-
-import { blockchainSelectors } from '@modules/node/store/blockchains';
-import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
-import { FiltersHeader } from '@shared/components/App/Filters/FiltersHeader';
-import { hostAtoms } from '@modules/host/store/hostAtoms';
-import { hostSelectors } from '@modules/host/store/hostSelectors';
-import { useHostUIContext } from '@modules/host';
-import { useFilters } from '@modules/host/hooks/useFilters';
 
 export type HostFiltersProps = {
   isLoading: LoadingState;
@@ -39,7 +38,6 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
     useFilters(hostUIProps);
 
   const { switchOrganization } = useSwitchOrganization();
-  const { defaultOrganization } = useDefaultOrganization();
 
   const [isDirty, setIsDirty] = useState(false);
 

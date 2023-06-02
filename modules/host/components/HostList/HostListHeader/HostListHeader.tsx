@@ -5,8 +5,7 @@ import {
   Skeleton,
 } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import { hostAtoms } from '@modules/host/store/hostAtoms';
-import { hostSelectors } from '@modules/host/store/hostSelectors';
+import { hostAtoms, hostSelectors } from '@modules/host';
 
 export const HostListHeader = () => {
   const [activeListType, setActiveListType] = useRecoilState(
@@ -26,7 +25,7 @@ export const HostListHeader = () => {
 
   const handleFilterCollapseToggled = () => {
     setIsFiltersOpen(!isFiltersOpen);
-    localStorage.setItem('nodeFiltersOpen', JSON.stringify(true));
+    localStorage.setItem('hostFiltersOpen', JSON.stringify(true));
   };
 
   return (

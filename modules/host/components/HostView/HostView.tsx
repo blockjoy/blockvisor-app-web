@@ -1,12 +1,14 @@
-import { useHostView } from '@modules/host/hooks/useHostView';
-import { EmptyColumn, TableSkeleton } from '@shared/components';
-import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
-import { wrapper } from 'styles/wrapper.styles';
+import { useRouter } from 'next/router';
 import { styles } from './HostView.styles';
-import { HostViewHeader } from './HostViewHeader/HostViewHeader';
-import { HostViewTabs } from './HostViewTabs/HostViewTabs';
-import { HostViewTitle } from './HostViewTitle/HostViewTitle';
+import { wrapper } from 'styles/wrapper.styles';
+import { EmptyColumn, TableSkeleton } from '@shared/components';
+import {
+  useHostView,
+  HostViewHeader,
+  HostViewTabs,
+  HostViewTitle,
+} from '@modules/host';
 
 type HostViewProps = {
   children: ReactNode;

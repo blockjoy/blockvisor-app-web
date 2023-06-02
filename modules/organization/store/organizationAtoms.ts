@@ -216,9 +216,9 @@ const organizationReceivedInvitations = atom<any[]>({
   default: [],
 });
 
-const provisionToken = atom<string | null>({
+const provisionToken = atom<string>({
   key: 'organization.provisionToken',
-  default: null,
+  default: '',
 });
 
 const provisionTokenLoadingState = atom<LoadingState>({

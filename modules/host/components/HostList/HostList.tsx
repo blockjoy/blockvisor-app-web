@@ -4,23 +4,23 @@ import { useRecoilValue } from 'recoil';
 import { EmptyColumn, PageTitle, Table, TableGrid } from '@shared/components';
 import { styles } from './HostList.styles';
 import { TableSkeleton } from '@shared/index';
-import { useHostUIContext } from '../../ui/HostUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { NodeTitle } from '@modules/node';
 import {
   hostAtoms,
+  HostFilters,
   HostLauncher,
   HostListHeader,
   mapHostListToGird,
   mapHostListToRows,
+  resultsStatus,
   useHostList,
+  useHostUIContext,
 } from '@modules/host';
+import { useProvisionToken } from '@modules/organization';
 import IconUnion from '@public/assets/icons/union-16.svg';
-import { HostFilters } from './HostFilters/HostFilters';
-import { resultsStatus } from '@modules/host/utils/resultsStatus';
-import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 
 export const HostList = () => {
   const hostUIContext = useHostUIContext();

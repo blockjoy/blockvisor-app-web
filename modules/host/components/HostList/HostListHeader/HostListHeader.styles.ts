@@ -60,30 +60,4 @@ export const styles = {
   endBlock: css`
     flex: 0 0 auto;
   `,
-  total: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    flex: 1 1 auto;
-    text-align: right;
-    font-size: 13px;
-    white-space: nowrap;
-  `,
-  totalValue: (theme: ITheme) => css`
-    color: ${theme.colorText};
-  `,
-  iconButton: (theme: ITheme) => css`
-    display: block;
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    padding: 0 4px;
-
-    & path {
-      fill: ${theme.colorLabel};
-    }
-  `,
-  iconButtonActive: (theme: ITheme) => css`
-    & path {
-      fill: ${theme.colorText};
-    }
-  `,
 };

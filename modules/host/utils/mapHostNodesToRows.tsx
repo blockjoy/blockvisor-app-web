@@ -24,12 +24,12 @@ export const mapHostNodesToRows = (
       key: '3',
       width: '100px',
     },
-    {
-      name: '',
-      key: '4',
-      width: '100px',
-      textAlign: 'right',
-    },
+    // {
+    //   name: '',
+    //   key: '4',
+    //   width: '100px',
+    //   textAlign: 'right',
+    // },
   ];
 
   const rows = nodeList?.map((node: Node) => ({
@@ -59,32 +59,32 @@ export const mapHostNodesToRows = (
         key: '3',
         component: <NodeStatus status={node.status} />,
       },
-      {
-        key: '4',
-        component: (
-          <>
-            {handleAction && (
-              <ButtonGroup type="inline">
-                <Button
-                  style="secondary"
-                  size="small"
-                  disabled={true}
-                  onClick={() => handleAction('stop', node.id)}
-                >
-                  Stop
-                </Button>
-                <Button
-                  style="secondary"
-                  size="small"
-                  onClick={() => handleAction('start', node.id)}
-                >
-                  Start
-                </Button>
-              </ButtonGroup>
-            )}
-          </>
-        ),
-      },
+      // {
+      //   key: '4',
+      //   component: (
+      //     <>
+      //       {handleAction && (
+      //         <ButtonGroup type="inline">
+      //           <Button
+      //             style="secondary"
+      //             size="small"
+      //             disabled={true}
+      //             onClick={() => handleAction('stop', node.id)}
+      //           >
+      //             Stop
+      //           </Button>
+      //           <Button
+      //             style="secondary"
+      //             size="small"
+      //             onClick={() => handleAction('start', node.id)}
+      //           >
+      //             Start
+      //           </Button>
+      //         </ButtonGroup>
+      //       )}
+      //     </>
+      //   ),
+      // },
     ],
   }));
 

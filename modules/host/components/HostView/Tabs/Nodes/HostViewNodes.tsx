@@ -10,18 +10,18 @@ export const HostViewNodes = () => {
   const router = useRouter();
 
   const { nodeList, isLoading, handleNodeClick } = useNodeList();
-  const { stopNode, startNode } = useNodeView();
+  // const { stopNode, startNode } = useNodeView();
   const host = useRecoilValue(hostAtoms.activeHost);
   const isLoadingActiveHost = useRecoilValue(hostAtoms.isLoadingActiveHost);
 
   const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
 
-  const handleAction = (type: string, nodeId: string) => {
-    if (type === 'start') startNode(nodeId);
-    else if (type === 'stop') stopNode(nodeId);
-  };
+  // const handleAction = (type: string, nodeId: string) => {
+  //   if (type === 'start') startNode(nodeId);
+  //   else if (type === 'stop') stopNode(nodeId);
+  // };
 
-  const { headers, rows } = mapHostNodesToRows(hostNodes, handleAction);
+  const { headers, rows } = mapHostNodesToRows(hostNodes);
 
   return (
     <>

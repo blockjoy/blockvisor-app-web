@@ -3,7 +3,7 @@ import { styles } from './HostViewTitle.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { NodeTitle } from '@modules/node';
-import { useHostView } from '@modules/host/hooks/useHostView';
+import { useHostView } from '@modules/host';
 import IconUnion from '@public/assets/icons/union-16.svg';
 
 export const HostViewTitle = () => {
