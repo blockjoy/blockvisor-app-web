@@ -20,8 +20,6 @@ export const useNodeAdd = () => {
       return {
         ...rest,
         value: property?.value?.toString() || 'null',
-        description: '',
-        label: '',
         uiType: uiType,
       };
     });

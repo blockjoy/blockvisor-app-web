@@ -234,9 +234,7 @@ export const NodeLauncher = () => {
         uiType: property.uiType,
         disabled: property.disabled,
         required: property.required,
-        label: '',
-        description: '',
-        value: property.default,
+        value: property.default ?? '',
       }),
     );
 
