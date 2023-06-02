@@ -36,6 +36,7 @@ export const HostLauncher = ({ token }: HostLauncherProps) => {
         <Button
           style="outline"
           size="small"
+          disabled={provisionTokenLoadingState !== 'finished'}
           css={[spacing.top.medium, styles.button]}
           onClick={resetProvisionToken}
           loading={provisionTokenLoadingState !== 'finished'}
