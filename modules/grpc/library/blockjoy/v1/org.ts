@@ -94,6 +94,24 @@ export interface OrgServiceRemoveMemberRequest {
 export interface OrgServiceRemoveMemberResponse {
 }
 
+export interface OrgServiceGetProvisionTokenRequest {
+  userId: string;
+  orgId: string;
+}
+
+export interface OrgServiceGetProvisionTokenResponse {
+  token: string;
+}
+
+export interface OrgServiceResetProvisionTokenRequest {
+  userId: string;
+  orgId: string;
+}
+
+export interface OrgServiceResetProvisionTokenResponse {
+  token: string;
+}
+
 export interface OrgUser {
   userId: string;
   orgId: string;
@@ -775,6 +793,212 @@ export const OrgServiceRemoveMemberResponse = {
   },
 };
 
+function createBaseOrgServiceGetProvisionTokenRequest(): OrgServiceGetProvisionTokenRequest {
+  return { userId: "", orgId: "" };
+}
+
+export const OrgServiceGetProvisionTokenRequest = {
+  encode(message: OrgServiceGetProvisionTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.orgId !== "") {
+      writer.uint32(18).string(message.orgId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceGetProvisionTokenRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceGetProvisionTokenRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceGetProvisionTokenRequest>): OrgServiceGetProvisionTokenRequest {
+    return OrgServiceGetProvisionTokenRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceGetProvisionTokenRequest>): OrgServiceGetProvisionTokenRequest {
+    const message = createBaseOrgServiceGetProvisionTokenRequest();
+    message.userId = object.userId ?? "";
+    message.orgId = object.orgId ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceGetProvisionTokenResponse(): OrgServiceGetProvisionTokenResponse {
+  return { token: "" };
+}
+
+export const OrgServiceGetProvisionTokenResponse = {
+  encode(message: OrgServiceGetProvisionTokenResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.token !== "") {
+      writer.uint32(10).string(message.token);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceGetProvisionTokenResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceGetProvisionTokenResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceGetProvisionTokenResponse>): OrgServiceGetProvisionTokenResponse {
+    return OrgServiceGetProvisionTokenResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceGetProvisionTokenResponse>): OrgServiceGetProvisionTokenResponse {
+    const message = createBaseOrgServiceGetProvisionTokenResponse();
+    message.token = object.token ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceResetProvisionTokenRequest(): OrgServiceResetProvisionTokenRequest {
+  return { userId: "", orgId: "" };
+}
+
+export const OrgServiceResetProvisionTokenRequest = {
+  encode(message: OrgServiceResetProvisionTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.orgId !== "") {
+      writer.uint32(18).string(message.orgId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceResetProvisionTokenRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceResetProvisionTokenRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceResetProvisionTokenRequest>): OrgServiceResetProvisionTokenRequest {
+    return OrgServiceResetProvisionTokenRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceResetProvisionTokenRequest>): OrgServiceResetProvisionTokenRequest {
+    const message = createBaseOrgServiceResetProvisionTokenRequest();
+    message.userId = object.userId ?? "";
+    message.orgId = object.orgId ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceResetProvisionTokenResponse(): OrgServiceResetProvisionTokenResponse {
+  return { token: "" };
+}
+
+export const OrgServiceResetProvisionTokenResponse = {
+  encode(message: OrgServiceResetProvisionTokenResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.token !== "") {
+      writer.uint32(10).string(message.token);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceResetProvisionTokenResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceResetProvisionTokenResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceResetProvisionTokenResponse>): OrgServiceResetProvisionTokenResponse {
+    return OrgServiceResetProvisionTokenResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceResetProvisionTokenResponse>): OrgServiceResetProvisionTokenResponse {
+    const message = createBaseOrgServiceResetProvisionTokenResponse();
+    message.token = object.token ?? "";
+    return message;
+  },
+};
+
 function createBaseOrgUser(): OrgUser {
   return { userId: "", orgId: "", role: 0, name: "", email: "" };
 }
@@ -927,6 +1151,27 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Returns the host provision token for the provided user and organization. */
+    getProvisionToken: {
+      name: "GetProvisionToken",
+      requestType: OrgServiceGetProvisionTokenRequest,
+      requestStream: false,
+      responseType: OrgServiceGetProvisionTokenResponse,
+      responseStream: false,
+      options: {},
+    },
+    /**
+     * Regenerates and returns the host provision token for the provided user and
+     * organization.
+     */
+    resetProvisionToken: {
+      name: "ResetProvisionToken",
+      requestType: OrgServiceResetProvisionTokenRequest,
+      requestStream: false,
+      responseType: OrgServiceResetProvisionTokenResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -963,6 +1208,19 @@ export interface OrgServiceImplementation<CallContextExt = {}> {
     request: OrgServiceRemoveMemberRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceRemoveMemberResponse>>;
+  /** Returns the host provision token for the provided user and organization. */
+  getProvisionToken(
+    request: OrgServiceGetProvisionTokenRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<OrgServiceGetProvisionTokenResponse>>;
+  /**
+   * Regenerates and returns the host provision token for the provided user and
+   * organization.
+   */
+  resetProvisionToken(
+    request: OrgServiceResetProvisionTokenRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<OrgServiceResetProvisionTokenResponse>>;
 }
 
 export interface OrgServiceClient<CallOptionsExt = {}> {
@@ -998,6 +1256,19 @@ export interface OrgServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<OrgServiceRemoveMemberRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceRemoveMemberResponse>;
+  /** Returns the host provision token for the provided user and organization. */
+  getProvisionToken(
+    request: DeepPartial<OrgServiceGetProvisionTokenRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<OrgServiceGetProvisionTokenResponse>;
+  /**
+   * Regenerates and returns the host provision token for the provided user and
+   * organization.
+   */
+  resetProvisionToken(
+    request: DeepPartial<OrgServiceResetProvisionTokenRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<OrgServiceResetProvisionTokenResponse>;
 }
 
 declare var self: any | undefined;

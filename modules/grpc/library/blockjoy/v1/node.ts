@@ -226,6 +226,8 @@ export interface NodeServiceListRequest {
    * any of these blockchain ids will be returned.
    */
   blockchainIds: string[];
+  /** If this value is provided, only nodes running on this host are provided. */
+  hostId?: string | undefined;
 }
 
 /** This response will contain all the filtered nodes. */
@@ -356,12 +358,10 @@ export interface FilteredIpAddr {
 
 export interface NodeProperty {
   name: string;
-  label: string;
-  description: string;
   uiType: UiType;
   disabled: boolean;
   required: boolean;
-  value?: string | undefined;
+  value: string;
 }
 
 function createBaseNode(): Node {
@@ -1023,7 +1023,7 @@ export const NodeServiceGetResponse = {
 };
 
 function createBaseNodeServiceListRequest(): NodeServiceListRequest {
-  return { orgId: "", offset: 0, limit: 0, statuses: [], nodeTypes: [], blockchainIds: [] };
+  return { orgId: "", offset: 0, limit: 0, statuses: [], nodeTypes: [], blockchainIds: [], hostId: undefined };
 }
 
 export const NodeServiceListRequest = {
@@ -1049,6 +1049,9 @@ export const NodeServiceListRequest = {
     writer.ldelim();
     for (const v of message.blockchainIds) {
       writer.uint32(50).string(v!);
+    }
+    if (message.hostId !== undefined) {
+      writer.uint32(58).string(message.hostId);
     }
     return writer;
   },
@@ -1122,6 +1125,13 @@ export const NodeServiceListRequest = {
 
           message.blockchainIds.push(reader.string());
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1143,6 +1153,7 @@ export const NodeServiceListRequest = {
     message.statuses = object.statuses?.map((e) => e) || [];
     message.nodeTypes = object.nodeTypes?.map((e) => e) || [];
     message.blockchainIds = object.blockchainIds?.map((e) => e) || [];
+    message.hostId = object.hostId ?? undefined;
     return message;
   },
 };
@@ -1603,7 +1614,7 @@ export const FilteredIpAddr = {
 };
 
 function createBaseNodeProperty(): NodeProperty {
-  return { name: "", label: "", description: "", uiType: 0, disabled: false, required: false, value: undefined };
+  return { name: "", uiType: 0, disabled: false, required: false, value: "" };
 }
 
 export const NodeProperty = {
@@ -1611,23 +1622,17 @@ export const NodeProperty = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.label !== "") {
-      writer.uint32(18).string(message.label);
-    }
-    if (message.description !== "") {
-      writer.uint32(26).string(message.description);
-    }
     if (message.uiType !== 0) {
-      writer.uint32(32).int32(message.uiType);
+      writer.uint32(16).int32(message.uiType);
     }
     if (message.disabled === true) {
-      writer.uint32(40).bool(message.disabled);
+      writer.uint32(24).bool(message.disabled);
     }
     if (message.required === true) {
-      writer.uint32(48).bool(message.required);
+      writer.uint32(32).bool(message.required);
     }
-    if (message.value !== undefined) {
-      writer.uint32(58).string(message.value);
+    if (message.value !== "") {
+      writer.uint32(42).string(message.value);
     }
     return writer;
   },
@@ -1647,42 +1652,28 @@ export const NodeProperty = {
           message.name = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.label = reader.string();
+          message.uiType = reader.int32() as any;
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.description = reader.string();
+          message.disabled = reader.bool();
           continue;
         case 4:
           if (tag !== 32) {
             break;
           }
 
-          message.uiType = reader.int32() as any;
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.disabled = reader.bool();
-          continue;
-        case 6:
-          if (tag !== 48) {
-            break;
-          }
-
           message.required = reader.bool();
           continue;
-        case 7:
-          if (tag !== 58) {
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
@@ -1704,12 +1695,10 @@ export const NodeProperty = {
   fromPartial(object: DeepPartial<NodeProperty>): NodeProperty {
     const message = createBaseNodeProperty();
     message.name = object.name ?? "";
-    message.label = object.label ?? "";
-    message.description = object.description ?? "";
     message.uiType = object.uiType ?? 0;
     message.disabled = object.disabled ?? false;
     message.required = object.required ?? false;
-    message.value = object.value ?? undefined;
+    message.value = object.value ?? "";
     return message;
   },
 };

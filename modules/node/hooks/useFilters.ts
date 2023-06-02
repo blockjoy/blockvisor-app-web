@@ -5,7 +5,7 @@ import {
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { isEqual } from 'lodash';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { FilterItem, nodeAtoms } from '../store/nodeAtoms';
+import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeUIProps } from '../ui/NodeUIContext';
 import { InitialFilter, InitialQueryParams } from '../ui/NodeUIHelpers';
 import { buildParams } from '../utils';

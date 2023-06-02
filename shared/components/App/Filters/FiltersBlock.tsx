@@ -1,15 +1,14 @@
-import { FilterItem } from '@modules/node/store/nodeAtoms';
 import { Checkbox } from '@shared/components';
 import { ChangeEvent, FC, MouseEvent } from 'react';
 import { SetterOrUpdater } from 'recoil';
-import { styles } from './NodeFiltersBlock.styles';
+import { styles } from './FiltersBlock.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';
 import IconPlus from '@public/assets/icons/plus-12.svg';
 import IconMinus from '@public/assets/icons/minus-12.svg';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 
-type FilterBlock = {
+type FiltersBlockProps = {
   name: string;
   hasError: boolean;
   isOpen: boolean;
@@ -28,7 +27,7 @@ type FilterBlock = {
   ) => void;
 };
 
-export const NodeFiltersBlock: FC<FilterBlock> = ({
+export const FiltersBlock = ({
   name,
   hasError,
   isOpen,
@@ -40,7 +39,7 @@ export const NodeFiltersBlock: FC<FilterBlock> = ({
   onFilterChanged,
   setFilterList,
   setOrganization,
-}) => {
+}: FiltersBlockProps) => {
   const handleMinusClicked = (e: MouseEvent<HTMLLabelElement>) => {
     if (!isDisabled) {
       e.stopPropagation();

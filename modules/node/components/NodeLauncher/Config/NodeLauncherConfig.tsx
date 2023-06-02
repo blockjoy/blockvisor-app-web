@@ -1,4 +1,4 @@
-import { PillPicker, SvgIcon } from '@shared/components';
+import { HostSelect, PillPicker, SvgIcon } from '@shared/components';
 import { NodeTypeConfigLabel, FirewallDropdown } from '@modules/node';
 import { FC, Fragment } from 'react';
 import {
@@ -16,6 +16,7 @@ import IconInfo from '@public/assets/icons/info.svg';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeLauncherState } from '../NodeLauncher';
+import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 
 type Props = {
   isConfigValid: boolean | null;
@@ -23,9 +24,11 @@ type Props = {
   nodeFiles?: NodeFiles[];
   networkList: string[];
   nodeLauncherState: NodeLauncherState;
+  selectedHost: Host | null;
   onFileUploaded: (e: any) => void;
   onNodeConfigPropertyChanged: (e: any) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
+  onHostChanged: (host: Host | null) => void;
 };
 
 const renderControls = (
@@ -83,9 +86,11 @@ export const NodeLauncherConfig: FC<Props> = ({
   isConfigValid,
   networkList,
   nodeLauncherState,
+  selectedHost,
   onFileUploaded,
   onNodePropertyChanged,
   onNodeConfigPropertyChanged,
+  onHostChanged,
 }) => {
   const { network, properties, keyFiles } = nodeLauncherState;
 
@@ -121,6 +126,9 @@ export const NodeLauncherConfig: FC<Props> = ({
             Missing Network Configuration
           </div>
         )}
+
+        <FormLabel>Host</FormLabel>
+        <HostSelect selectedHost={selectedHost} onChange={onHostChanged} />
 
         <FormLabel>
           Firewall Rules{' '}

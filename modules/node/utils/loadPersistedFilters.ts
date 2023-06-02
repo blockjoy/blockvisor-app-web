@@ -1,5 +1,3 @@
-import { FilterItem } from '../store/nodeAtoms';
-
 export const loadPersistedFilters = () => {
   const nodeFilters = localStorage.getItem('nodeFilters');
   if (!nodeFilters) return null;

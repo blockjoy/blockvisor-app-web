@@ -4,6 +4,7 @@ import { styles } from './SidebarMain.styles';
 import { Badge } from '@shared/components';
 import IconNodes from '@public/assets/icons/box-12.svg';
 import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import IconUnion from '@public/assets/icons/union-16.svg';
 import IconRocket from '@public/assets/icons/rocket-12.svg';
 import IconChat from '@public/assets/icons/chat-12.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
@@ -26,6 +27,11 @@ const blocks = [
         path: '/organizations',
         icon: <IconOrganizations />,
         isOrganizations: true,
+      },
+      {
+        name: 'Hosts',
+        path: '/hosts',
+        icon: <IconUnion />,
       },
       {
         name: 'FAQ',
@@ -68,7 +74,7 @@ export default () => {
                 <span
                   css={styles.linkInner}
                   className={`link-inner ${
-                    router.pathname.includes(item.path) ? 'active' : ''
+                    router.pathname.startsWith(item.path) ? 'active' : ''
                   }`}
                 >
                   <span

@@ -6,7 +6,6 @@ import {
   Scrollbar,
   DropdownWrapper,
 } from '@shared/components';
-import { styles } from './NodeLauncherOrgPicker.styles';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
@@ -16,12 +15,13 @@ import { ROUTES } from '@shared/constants/routes';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import IconPlus from '@public/assets/icons/plus-12.svg';
+import { styles } from './OrganizationSelect.styles';
 
 type Props = {
   hideName?: boolean;
 };
 
-export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
+export const OrganizationSelect: FC<Props> = ({ hideName }) => {
   const router = useRouter();
 
   const allOrganizations = useRecoilValue(
@@ -67,20 +67,6 @@ export const NodeLauncherOrgPicker: FC<Props> = ({ hideName }) => {
         onClick={handleClick}
         isOpen={isOpen}
       />
-
-      {/* <button css={styles.select} onClick={handleClick}>
-        <span css={styles.bubble}>
-          {escapeHtml(defaultOrganization?.name?.toUpperCase()!)?.substring(
-            0,
-            1,
-          )}
-        </span>
-        {!hideName && (
-          <p css={styles.selectText}>
-            {escapeHtml(defaultOrganization?.name!)}
-          </p>
-        )}
-      </button> */}
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>

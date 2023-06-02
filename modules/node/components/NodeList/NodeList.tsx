@@ -96,10 +96,7 @@ export const NodeList = () => {
                     <h3 css={spacing.bottom.mediumSmall}>
                       Here is where your nodes will show, once you have some.
                     </h3>
-                    <a
-                      css={styles.launchNodeLink}
-                      onClick={() => router.push('/launch-node')}
-                    >
+                    <a onClick={() => router.push('/launch-node')}>
                       Launch a node to get started
                     </a>
                   </div>

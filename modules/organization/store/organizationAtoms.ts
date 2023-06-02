@@ -216,6 +216,16 @@ const organizationReceivedInvitations = atom<any[]>({
   default: [],
 });
 
+const provisionToken = atom<string>({
+  key: 'organization.provisionToken',
+  default: '',
+});
+
+const provisionTokenLoadingState = atom<LoadingState>({
+  key: 'organization.provisionToken.loadingState',
+  default: 'initializing',
+});
+
 export const organizationAtoms = {
   selectedOrganization,
   organizationsPageIndex,
@@ -240,4 +250,6 @@ export const organizationAtoms = {
   organizationSentInvitations,
   organizationSentInvitationsLoadingState,
   organizationReceivedInvitations,
+  provisionToken,
+  provisionTokenLoadingState,
 };

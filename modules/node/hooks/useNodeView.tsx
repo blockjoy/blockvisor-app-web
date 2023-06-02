@@ -81,7 +81,7 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args, onError: VoidFunction) => {
-    setIsLoading(true);
+    setIsLoading('initializing');
 
     let node: any;
 
@@ -91,7 +91,7 @@ export const useNodeView = (): Hook => {
       checkForApiError('GetNode', node);
       checkForTokenError(node);
     } catch (err) {
-      setIsLoading(false);
+      setIsLoading('finished');
       onError();
       return;
     }
@@ -101,7 +101,7 @@ export const useNodeView = (): Hook => {
 
   const unloadNode = () => {
     setNode(null);
-    setIsLoading(true);
+    setIsLoading('finished');
   };
 
   const updateNode = async (nodeRequest: NodeServiceUpdateRequest) => {
@@ -131,6 +131,6 @@ export const useNodeView = (): Hook => {
     updateNode,
     modifyNode,
     node,
-    isLoading,
+    isLoading: isLoading !== 'finished',
   };
 };

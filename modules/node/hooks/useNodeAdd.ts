@@ -4,7 +4,6 @@ import { useNodeList } from './useNodeList';
 import {
   NodeServiceCreateRequest,
   Node,
-  NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
   useDefaultOrganization,
@@ -29,8 +28,6 @@ export const useNodeAdd = () => {
       return {
         ...rest,
         value: property?.value?.toString() || 'null',
-        description: '',
-        label: '',
         uiType: uiType,
       };
     });
@@ -42,12 +39,6 @@ export const useNodeAdd = () => {
         ...nodeRequest,
         properties: nodeProperties,
         network: nodeRequest.network,
-        placement: {
-          scheduler: {
-            resource:
-              NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
-          },
-        },
       });
 
       const nodeId = response.id;

@@ -12,3 +12,5 @@ export * from './SvgIcon/SvgIcon';
 export * from './Scrollbar/Scrollbar';
 export * from './Modal/Modal';
 export * from './Portal/Portal';
+export * from './Copy/Copy';
+export * from './CopyToClipboard/CopyToClipboard';

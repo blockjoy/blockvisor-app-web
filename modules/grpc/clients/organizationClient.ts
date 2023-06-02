@@ -2,6 +2,8 @@ import {
   Org,
   OrgServiceClient,
   OrgServiceDefinition,
+  OrgServiceGetProvisionTokenResponse,
+  OrgServiceResetProvisionTokenResponse,
   OrgServiceUpdateResponse,
 } from '../library/blockjoy/v1/org';
 
@@ -94,6 +96,30 @@ class OrganizationClient {
         err,
         'grpcClient',
       );
+    }
+  }
+
+  async getProvisionToken(
+    userId: string,
+    orgId: string,
+  ): Promise<OrgServiceGetProvisionTokenResponse | StatusResponse> {
+    try {
+      await authClient.refreshToken();
+      return this.client.getProvisionToken({ userId, orgId }, getOptions());
+    } catch (err) {
+      return StatusResponseFactory.getHostProvisionResponse(err, 'grpcClient');
+    }
+  }
+
+  async resetProvisionToken(
+    userId: string,
+    orgId: string,
+  ): Promise<OrgServiceResetProvisionTokenResponse | StatusResponse> {
+    try {
+      await authClient.refreshToken();
+      return this.client.resetProvisionToken({ userId, orgId }, getOptions());
+    } catch (err) {
+      return StatusResponseFactory.getHostProvisionResponse(err, 'grpcClient');
     }
   }
 }

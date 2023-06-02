@@ -75,18 +75,18 @@ export const nodeStatusList = [
 ];
 
 export const hostStatusList = [
-  { id: 0, name: 'Undefined' },
-  { id: 1, name: 'Creating' },
-  { id: 2, name: 'Running' },
-  { id: 3, name: 'Starting' },
-  { id: 4, name: 'Stopping' },
-  { id: 5, name: 'Stopped' },
-  { id: 6, name: 'Upgrading' },
-  { id: 7, name: 'Upgraded' },
-  { id: 8, name: 'Deleting' },
-  { id: 9, name: 'Deleted' },
-  { id: 10, name: 'Installing' },
-  { id: 11, name: 'Snaphotting' },
+  { id: 0, name: 'Undefined', uuid: 'undefined' },
+  { id: 1, name: 'Creating', uuid: 'creating' },
+  { id: 2, name: 'Running', uuid: 'running' },
+  { id: 3, name: 'Starting', uuid: 'starting' },
+  { id: 4, name: 'Stopping', uuid: 'stopping' },
+  { id: 5, name: 'Stopped', uuid: 'stopped' },
+  { id: 6, name: 'Upgrading', uuid: 'upgrading' },
+  { id: 7, name: 'Upgraded', uuid: 'uprgraded' },
+  { id: 8, name: 'Deleting', uuid: 'deleting' },
+  { id: 9, name: 'Deleted', uuid: 'deleted' },
+  { id: 10, name: 'Installing', uuid: 'installing' },
+  { id: 11, name: 'Snaphotting', uuid: 'snaphotting' },
 ];
 
 export const nodeTypeProps = {
@@ -96,4 +96,38 @@ export const nodeTypeProps = {
   fileUpload: 'file-upload',
   hostSelector: 'host-selector',
   nodeSelector: 'node-selector',
+};
+
+export const hostFiltersDefaults: {
+  memory: [number, number];
+  cpu: [number, number];
+  space: [number, number];
+} = {
+  memory: [2 * Math.pow(1024, 3), 512 * Math.pow(1024, 3)],
+  cpu: [1, 64],
+  space: [250 * Math.pow(1024, 3), 10 * Math.pow(1024, 4)],
+};
+
+export const hostFiltersSteps = {
+  memory: 2 * Math.pow(1024, 3),
+  cpu: 1,
+  space: 250 * Math.pow(1024, 3),
+};
+
+export const hostFiltersCustomValues = {
+  space: [
+    250 * Math.pow(1024, 3),
+    500 * Math.pow(1024, 3),
+    750 * Math.pow(1024, 3),
+    1 * Math.pow(1024, 4),
+    2 * Math.pow(1024, 4),
+    3 * Math.pow(1024, 4),
+    4 * Math.pow(1024, 4),
+    5 * Math.pow(1024, 4),
+    6 * Math.pow(1024, 4),
+    7 * Math.pow(1024, 4),
+    8 * Math.pow(1024, 4),
+    9 * Math.pow(1024, 4),
+    10 * Math.pow(1024, 4),
+  ],
 };

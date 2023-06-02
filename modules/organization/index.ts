@@ -5,13 +5,7 @@ export * from './components/OrganizationView/OrganizationView';
 export * from './components/OrganizationView/OrganizationDetails/OrganizationDetails';
 export * from './components/OrganizationView/OrganizationMembers/OrganizationMembersView';
 export * from './components/OrganizationView/OrganizationMembers/OrganizationMembers';
-export * from './store/organizationAtoms';
-export * from './utils/typeGuards';
-export * from './utils/organizationDetails';
-export * from './utils/toRow';
-export * from './utils/getOrgMemberRole';
-export * from './utils/mapOrganizationsToRows';
-export * from './utils/getHandlerTableChange';
+
 export * from './hooks/useCreateOrganization';
 export * from './hooks/useGetOrganizations';
 export * from './hooks/useGetOrganization';
@@ -20,5 +14,16 @@ export * from './hooks/useDefaultOrganization';
 export * from './hooks/useUpdateOrganization';
 export * from './hooks/useInviteMembers';
 export * from './hooks/useInvitations';
+export * from './hooks/useProvisionToken';
 export * from './hooks/useResendInvitation';
+export * from './hooks/useSwitchOrganization';
 export * from './hooks/useUpdates';
+
+export * from './store/organizationAtoms';
+
+export * from './utils/typeGuards';
+export * from './utils/organizationDetails';
+export * from './utils/toRow';
+export * from './utils/getOrgMemberRole';
+export * from './utils/mapOrganizationsToRows';
+export * from './utils/getHandlerTableChange';

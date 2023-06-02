@@ -1,8 +1,11 @@
 import { styles } from './styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import { NodeFiltersHeaderIconText } from '../NodeFilters/NodeFiltersHeaderIconText';
-import { Skeleton, GridTableViewPicker } from '@shared/components';
+import {
+  Skeleton,
+  GridTableViewPicker,
+  FiltersHeaderIconText,
+} from '@shared/components';
 
 export const NodeListHeader = () => {
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
@@ -10,6 +13,8 @@ export const NodeListHeader = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
+
+  const filtersTotal = useRecoilValue(nodeAtoms.filtersTotal);
 
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
@@ -37,7 +42,7 @@ export const NodeListHeader = () => {
               onClick={handleFilterCollapseToggled}
               css={[styles.filterToggle, styles.endBlock]}
             >
-              <NodeFiltersHeaderIconText />
+              <FiltersHeaderIconText filtersTotal={filtersTotal} />
             </button>
           )}
         </div>
