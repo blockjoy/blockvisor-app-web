@@ -133,6 +133,8 @@ export interface HostServiceGetResponse {
 
 export interface HostServiceListRequest {
   orgId: string;
+  /** If this value is provided, only hosts with the given status are returned. */
+  status?: HostStatus | undefined;
 }
 
 export interface HostServiceListResponse {
@@ -142,10 +144,7 @@ export interface HostServiceListResponse {
 export interface HostServiceUpdateRequest {
   id: string;
   name?: string | undefined;
-  version?:
-    | string
-    | undefined;
-  /** optional string location = 4; */
+  version?: string | undefined;
   os?: string | undefined;
   osVersion?: string | undefined;
 }
@@ -729,13 +728,16 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: "" };
+  return { orgId: "", status: undefined };
 }
 
 export const HostServiceListRequest = {
   encode(message: HostServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.orgId !== "") {
       writer.uint32(10).string(message.orgId);
+    }
+    if (message.status !== undefined) {
+      writer.uint32(16).int32(message.status);
     }
     return writer;
   },
@@ -754,6 +756,13 @@ export const HostServiceListRequest = {
 
           message.orgId = reader.string();
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -770,6 +779,7 @@ export const HostServiceListRequest = {
   fromPartial(object: DeepPartial<HostServiceListRequest>): HostServiceListRequest {
     const message = createBaseHostServiceListRequest();
     message.orgId = object.orgId ?? "";
+    message.status = object.status ?? undefined;
     return message;
   },
 };
