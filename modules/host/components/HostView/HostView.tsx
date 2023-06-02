@@ -9,6 +9,7 @@ import {
   HostViewTabs,
   HostViewTitle,
 } from '@modules/host';
+import { useNodeList } from '@modules/node';
 
 type HostViewProps = {
   children: ReactNode;
@@ -19,10 +20,12 @@ export const HostView = ({ children }: HostViewProps) => {
   const { id } = router.query;
 
   const { host, loadHost, unloadHost, isLoading } = useHostView();
+  const { listNodesByHost } = useNodeList();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (router.isReady) {
+      listNodesByHost(id as string);
       loadHost(id);
     }
 

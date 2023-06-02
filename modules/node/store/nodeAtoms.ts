@@ -22,6 +22,18 @@ const nodeList = atom<Node[]>({
   // effects: [localStorageEffect('nodeList')],
 });
 
+const nodeListByHost = atom<Node[]>({
+  key: 'node.nodeListByHost',
+  default: [],
+  // TODO: fix a weird bug where the grpc error response gets dumped into this variable
+  // effects: [localStorageEffect('nodeList')],
+});
+
+const isLoadingNodeListByHost = atom<LoadingState>({
+  key: 'node.nodeListByHost.loading',
+  default: 'initializing',
+});
+
 const isLoading = atom<LoadingState>({
   key: 'node.loading',
   default: 'initializing',
@@ -267,4 +279,6 @@ export const nodeAtoms = {
   nodeMetricsLoadingState,
   totalNodes,
   preloadNodes,
+  nodeListByHost,
+  isLoadingNodeListByHost,
 };

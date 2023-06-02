@@ -19,6 +19,12 @@ export const useNodeList = () => {
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
 
+  const [nodeListByHost, setNodeListByHost] = useRecoilState(
+    nodeAtoms.nodeListByHost,
+  );
+  const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
+    useRecoilState(nodeAtoms.isLoadingNodeListByHost);
+
   const { loadMetrics } = useNodeMetrics();
 
   let total = 0;
@@ -90,6 +96,21 @@ export const useNodeList = () => {
     setIsLoading('finished');
   };
 
+  // TODO: improve/remove - maybe merge into loadNodes, but then we're in problem that if a user goes to the nodes in general
+  // and in the nodes screen a user will see only the nodes belonging to the specific host
+  // but we still don't have a default host, nor filter by hosts
+  const listNodesByHost = async (hostId: string) => {
+    setNodeListByHostLoadingState('initializing');
+
+    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
+
+    const nodes: any = await nodeClient.listNodesByHost(org_id!, hostId);
+
+    setNodeListByHost(nodes);
+
+    setNodeListByHostLoadingState('finished');
+  };
+
   // const updateNodeList = async (node: BlockjoyNode) => {
   //   if (isUpdated.current) return;
   //   const isInRoute = Boolean(router.query.created);
@@ -129,5 +150,9 @@ export const useNodeList = () => {
     removeFromNodeList,
     handleNodeClick,
     setIsLoading,
+
+    listNodesByHost,
+    nodeListByHost,
+    nodeListByHostLoadingState,
   };
 };
