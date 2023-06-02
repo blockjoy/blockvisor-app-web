@@ -1,5 +1,4 @@
 import { useRecoilValue } from 'recoil';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostAtoms, mapHostNodesToRows } from '@modules/host';
 import { useNodeList } from '@modules/node';
 import { Table, DetailsWrapper } from '@shared/components';
@@ -8,12 +7,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 
 export const HostViewDashboardNodes = () => {
-  const { nodeList, isLoading, handleNodeClick } = useNodeList();
+  const { nodeListByHost, nodeListByHostLoadingState, handleNodeClick } =
+    useNodeList();
   const host = useRecoilValue(hostAtoms.activeHost);
 
-  const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
-
-  const { headers, rows } = mapHostNodesToRows(hostNodes);
+  const { headers, rows } = mapHostNodesToRows(nodeListByHost);
 
   const linkHref = `${ROUTES.HOST(host?.id!)}/nodes`;
 
@@ -21,9 +19,10 @@ export const HostViewDashboardNodes = () => {
 
   return (
     <DetailsWrapper title="Hosts" href={linkHref}>
-      {isLoading !== 'finished' ? (
+      {nodeListByHostLoadingState !== 'finished' ? (
         <TableSkeleton />
-      ) : !Boolean(hostNodes?.length) && isLoading === 'finished' ? (
+      ) : !Boolean(nodeListByHost?.length) &&
+        nodeListByHostLoadingState === 'finished' ? (
         <EmptyColumn
           title="No Nodes."
           description={
@@ -39,7 +38,7 @@ export const HostViewDashboardNodes = () => {
         />
       ) : (
         <Table
-          isLoading={isLoading}
+          isLoading={nodeListByHostLoadingState}
           headers={headers}
           rows={rows}
           fixedRowHeight="120px"

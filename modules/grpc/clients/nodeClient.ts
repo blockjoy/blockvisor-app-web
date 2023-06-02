@@ -68,6 +68,25 @@ class NodeClient {
     return response.nodes;
   }
 
+  async listNodesByHost(
+    orgId: string,
+    hostId: string,
+  ): Promise<Node[] | StatusResponse> {
+    const request = {
+      orgId,
+      hostId,
+      offset: 0,
+      limit: 10,
+    };
+
+    const response = await callWithTokenRefresh(
+      this.client.list.bind(this.client),
+      request,
+    );
+
+    return response.nodes;
+  }
+
   async getNode(id: string): Promise<Node | StatusResponse> {
     await authClient.refreshToken();
     const response = await callWithTokenRefresh(
