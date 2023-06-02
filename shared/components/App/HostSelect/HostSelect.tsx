@@ -9,8 +9,8 @@ import {
 } from '@shared/components';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { styles } from './HostSelect.styles';
-import { hostAtoms } from '@modules/host';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { hostAtoms } from '@modules/host/store/hostAtoms';
 
 type HostSelectProps = {
   selectedHost: Host | null;
@@ -19,7 +19,6 @@ type HostSelectProps = {
 
 export const HostSelect = ({ selectedHost, onChange }: HostSelectProps) => {
   const hosts = useRecoilValue(hostAtoms.hostList);
-  console.log('hosts123', hosts);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 

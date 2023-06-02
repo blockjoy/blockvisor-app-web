@@ -7,7 +7,7 @@ import { reset } from 'styles/utils.reset.styles';
 import { SerializedStyles } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
-type Props = {
+type DropdownItemProps = {
   id?: string;
   href?: string;
   children?: ReactNode;
@@ -18,7 +18,7 @@ type Props = {
     | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
 };
-export function DropdownItem({
+export const DropdownItem = ({
   href,
   id,
   children,
@@ -26,7 +26,7 @@ export function DropdownItem({
   onButtonClick,
   additionalStyles,
   type = 'plain',
-}: Props) {
+}: DropdownItemProps) => {
   switch (type) {
     case 'link':
       return (
@@ -74,4 +74,4 @@ export function DropdownItem({
         </div>
       );
   }
-}
+};
