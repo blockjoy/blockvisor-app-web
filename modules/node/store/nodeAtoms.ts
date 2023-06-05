@@ -143,12 +143,11 @@ const filtersTypeTotal = selector<number>({
 const filtersStatus = atom<FilterItem[]>({
   key: 'node.filtersStatus',
   default: nodeStatusList
-    .filter((item) => item.id !== 0)
+    .filter((item) => item.id !== 0 && !item.type)
     .map((item) => ({
-      name: item.name,
+      name: item.name?.toLowerCase(),
       id: item.id?.toString(),
       isChecked: false,
-      isOnline: item.isOnline,
     })),
   effects: [
     ({ setSelf }) => {

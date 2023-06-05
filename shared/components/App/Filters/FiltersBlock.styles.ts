@@ -84,6 +84,7 @@ export const styles = {
   `,
   selectedFilterRowText: css`
     word-break: break-word;
+    text-transform: capitalize;
   `,
   checkedIcon: css`
     width: 18px;
