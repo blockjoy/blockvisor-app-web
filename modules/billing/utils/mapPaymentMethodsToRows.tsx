@@ -1,4 +1,4 @@
-import { Badge, Button, formatDate, SvgIcon } from '@shared/index';
+import { Badge, Button, formatters, SvgIcon } from '@shared/index';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { typo } from 'styles/utils.typography.styles';
 import { capitalize } from 'utils/capitalize';
@@ -6,7 +6,6 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 import { flex } from 'styles/utils.flex.styles';
 import IconClose from '@public/assets/icons/close-12.svg';
-import IconCheck from '@public/assets/icons/check-16.svg';
 import { spacing } from 'styles/utils.spacing.styles';
 import { CreditCardTypes } from '../constants/common';
 
@@ -89,7 +88,7 @@ export const mapPaymentMethodsToRows = (
         key: '2',
         component: (
           <>
-            <p>{formatDate(paymentMethod.created_at)}</p>
+            <p>{formatters.formatDate(paymentMethod.created_at)}</p>
           </>
         ),
       },

@@ -1,4 +1,4 @@
-import { formatCurrency } from '@shared/index';
+import { formatters } from '@shared/index';
 import { InvoiceEstimateLineItem } from 'chargebee-typescript/lib/resources';
 import { typo } from 'styles/utils.typography.styles';
 
@@ -49,7 +49,7 @@ export const mapEstimateItemsToRows = (
         key: '3',
         component: (
           <>
-            <p>{formatCurrency(item?.amount!)}</p>
+            <p>{formatters.formatCurrency(item?.amount!)}</p>
           </>
         ),
       },
@@ -89,7 +89,7 @@ export const mapEstimateItemsToRows = (
                 width: '100%',
               }}
             >
-              {formatCurrency(total!)}
+              {formatters.formatCurrency(total!)}
             </p>
           </>
         ),

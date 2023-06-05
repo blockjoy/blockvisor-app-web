@@ -12,7 +12,7 @@ import {
   RadioButton,
   RadioButtonGroup,
 } from '@shared/components';
-import { formatCurrency, formatDate, TableSkeleton } from '@shared/index';
+import { formatters, TableSkeleton } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
@@ -33,7 +33,7 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
   const activeItemPrice = useRef<ItemPrice | null>(null);
 
   useEffect(() => {
-    getItemPrices(plan?.id!);
+    getItemPrices({ id: plan?.id! });
 
     if (itemPrices) {
       const defaultItemPrice: ItemPrice = itemPrices?.find(
@@ -101,7 +101,7 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
             <div css={[flex.display.flex, flex.justify.between]}>
               <p css={styles.renewText}>
                 Your subscription will automatically renew on{' '}
-                {formatDate(calcNextAutoRenew(periodUnit))}
+                {formatters.formatDate(calcNextAutoRenew(periodUnit))}
               </p>
               <Switch
                 name="autoRenew"
@@ -132,7 +132,7 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
           <div css={[flex.display.flex, flex.justify.between]}>
             <p css={styles.headline}>Total</p>
             <p css={styles.totalPrice}>
-              {formatCurrency(activeItemPrice.current?.price!)}
+              {formatters.formatCurrency(activeItemPrice.current?.price!)}
             </p>
           </div>
           <div css={styles.buttons}>

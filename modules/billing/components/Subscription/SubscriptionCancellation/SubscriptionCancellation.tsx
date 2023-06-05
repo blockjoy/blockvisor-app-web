@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { useSubscription } from '@modules/billing/hooks/useSubscription';
 import { RadioButton } from '@shared/components/Forms/VanillaForm/RadioButton/RadioButton';
-import { Button, Input, formatDate } from '@shared/index';
+import { Button, Input, formatters } from '@shared/index';
 import { styles } from './SubscriptionCancellation.styles';
 import { RadioButtonGroup } from '@shared/components/Forms/VanillaForm/RadioButton/RadioButtonGroup';
 import { ButtonGroup } from '@shared/components/Buttons/ButtonGroup/ButtonGroup';
@@ -53,7 +53,7 @@ export const SubscriptionCancellation = ({
           <h5 css={styles.title}>Cancel at the end of term</h5>
           <p>
             The subscription will be terminated on{' '}
-            {formatDate(subscription.current_term_end)}.
+            {formatters.formatDate(subscription.current_term_end)}.
           </p>
         </RadioButton>
       </RadioButtonGroup>
