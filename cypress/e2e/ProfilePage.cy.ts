@@ -86,7 +86,7 @@ describe('Profile page', () => {
       cy.get('[data-cy="profile-signout-button"]').click();
       cy.wait(2000)
         .url()
-        .should('be.equal', `${Cypress.config('baseUrl')}/login`);
+        .should('be.equal', `${Cypress.config('baseUrl')}/login?redirect=%2F`);
     });
   });
 });
