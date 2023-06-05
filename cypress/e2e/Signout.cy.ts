@@ -17,7 +17,10 @@ describe('Signout Action', () => {
 
       cy.wait(2000)
         .url()
-        .should('be.equal', `${Cypress.config('baseUrl')}/login/*`);
+        .should(
+          'match',
+          new RegExp(`${Cypress.config('baseUrl')}/login(?:\\?redirect=%2F)?$`),
+        );
     });
   });
 });
