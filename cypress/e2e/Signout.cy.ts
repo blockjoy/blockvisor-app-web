@@ -17,7 +17,7 @@ describe('Signout Action', () => {
 
       cy.wait(2000)
         .url()
-        .should('be.equal', `${Cypress.config('baseUrl')}/login`);
+        .should('be.equal', `${Cypress.config('baseUrl')}/login/*`);
     });
   });
 });
