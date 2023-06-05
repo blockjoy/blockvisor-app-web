@@ -10,7 +10,7 @@ const activePlan = selectorFamily<Item | null, string>({
   get:
     (planId) =>
     ({ get }) => {
-      const plans = get(billingAtoms.plans);
+      const plans = get(billingAtoms.items);
 
       const activePlan = plans?.find((plan: Item) => plan.id === planId);
 

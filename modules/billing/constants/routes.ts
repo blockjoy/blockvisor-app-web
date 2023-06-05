@@ -48,7 +48,7 @@ export const BILLING_API_ROUTES = {
     cancel: `${BILLING_ROUTE}/subscriptions/cancel`,
     reactivate: `${BILLING_ROUTE}/subscriptions/reactivate`,
     restore: `${BILLING_ROUTE}/subscriptions/restore`,
-    item: { update: `${BILLING_ROUTE}/subscriptions/create` },
+    item: { update: `${BILLING_ROUTE}/subscriptions/items/update` },
     billingProfile: {
       update: `${BILLING_ROUTE}/subscriptions/billing-profile/update`,
     },
