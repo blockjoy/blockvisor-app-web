@@ -3,7 +3,7 @@ import { BILL_HEADERS, INVOICE_DATA_HEADERS } from '@shared/index';
 import { InvoiceLogo } from './InvoiceLogo';
 import { InvoiceQRCode } from './InvoiceQRCode';
 import { styles } from './InvoicePDF.styles';
-import { formatCurrency, formatDate } from '@shared/index';
+import { formatters } from '@shared/index';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 import { LineItem } from 'chargebee-typescript/lib/resources/invoice';
 
@@ -89,13 +89,13 @@ export const InvoicePDF = ({
             <Text style={styles.ellipsis}>{id}</Text>
           </View>
           <View style={styles.wLrg}>
-            <Text>{formatDate(date!)}</Text>
+            <Text>{formatters.formatDate(date!)}</Text>
           </View>
           <View style={styles.wLrg}>
             <Text>Due on receipt</Text>
           </View>
           <View style={styles.wLrg}>
-            <Text>{formatDate(due_date ? due_date : date!)}</Text>
+            <Text>{formatters.formatDate(due_date ? due_date : date!)}</Text>
           </View>
         </View>
       </View>
@@ -134,7 +134,7 @@ export const InvoicePDF = ({
             >
               <View key="1" style={[styles.wLrg, styles.pMed]}>
                 <Text style={styles.textSml}>
-                  {formatDate(lineItem.date_from)}
+                  {formatters.formatDate(lineItem.date_from)}
                 </Text>
               </View>
               <View key="2" style={[styles.wXLrg, styles.pMed]}>
@@ -151,7 +151,7 @@ export const InvoicePDF = ({
                 style={[styles.wSml, styles.textRight, styles.pMed]}
               >
                 <Text style={styles.textSml}>
-                  {formatCurrency(lineItem.amount!)}
+                  {formatters.formatCurrency(lineItem.amount!)}
                 </Text>
               </View>
               <View
@@ -159,7 +159,7 @@ export const InvoicePDF = ({
                 style={[styles.wSml, styles.textRight, styles.pMed]}
               >
                 <Text style={styles.textSml}>
-                  {formatCurrency(lineItem.amount!)}
+                  {formatters.formatCurrency(lineItem.amount!)}
                 </Text>
               </View>
             </View>
@@ -184,7 +184,7 @@ export const InvoicePDF = ({
         </View>
         <View style={styles.flex}>
           <Text style={[styles.textRight, styles.fontBold, styles.pyMed]}>
-            {formatCurrency(amount_due ? amount_due : amount_paid!)}
+            {formatters.formatCurrency(amount_due ? amount_due : amount_paid!)}
           </Text>
         </View>
       </View>

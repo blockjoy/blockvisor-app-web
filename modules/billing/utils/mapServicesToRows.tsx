@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate } from '@shared/index';
+import { formatters } from '@shared/index';
 import { InvoiceLineItem } from 'chargebee-typescript/lib/resources';
 import { typo } from 'styles/utils.typography.styles';
 
@@ -46,9 +46,9 @@ export const mapServicesToRows = (
         key: '2',
         component: (
           <>
-            <p>{`${formatDate(service?.date_from!)} - ${formatDate(
-              service?.date_to!,
-            )}`}</p>
+            <p>{`${formatters.formatDate(
+              service?.date_from!,
+            )} - ${formatters.formatDate(service?.date_to!)}`}</p>
           </>
         ),
       },
@@ -65,7 +65,7 @@ export const mapServicesToRows = (
         key: '4',
         component: (
           <>
-            <p>{formatCurrency(service?.amount!)}</p>
+            <p>{formatters.formatCurrency(service?.amount!)}</p>
           </>
         ),
       },
@@ -109,7 +109,7 @@ export const mapServicesToRows = (
                 width: '100%',
               }}
             >
-              {formatCurrency(total!)}
+              {formatters.formatCurrency(total!)}
             </p>
           </>
         ),

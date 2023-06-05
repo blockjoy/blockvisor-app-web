@@ -1,5 +1,5 @@
 import { Subscription } from 'chargebee-typescript/lib/resources';
-import { formatDate } from '@shared/index';
+import { formatters } from '@shared/index';
 import { SubscriptionStatus } from '@modules/billing';
 
 export const mapSubscriptionToDetails = (subscription: Subscription) => {
@@ -10,7 +10,7 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
     },
     {
       label: 'Activated at',
-      data: formatDate(subscription.activated_at!),
+      data: formatters.formatDate(subscription.activated_at!),
     },
     {
       label: 'Billing period',
