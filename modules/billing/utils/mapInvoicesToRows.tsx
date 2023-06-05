@@ -1,5 +1,5 @@
 import { Badge } from '@shared/components';
-import { formatCurrency, formatDate } from '@shared/index';
+import { formatters } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { InvoiceDownload } from '@modules/billing';
@@ -51,7 +51,7 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
         key: '2',
         component: (
           <>
-            <p>{formatDate(invoice?.date!)}</p>
+            <p>{formatters.formatDate(invoice?.date!)}</p>
           </>
         ),
       },
@@ -59,7 +59,7 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
         key: '3',
         component: (
           <>
-            <p>{formatCurrency(invoice?.total!)}</p>
+            <p>{formatters.formatCurrency(invoice?.total!)}</p>
           </>
         ),
       },

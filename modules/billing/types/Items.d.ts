@@ -4,5 +4,5 @@ interface IItemsHook {
   itemPrices: any;
   itemPricesLoadingState: any;
   getItems: VoidFunction;
-  getItemPrices: (itemId: string) => void;
+  getItemPrices: (params: { id: string; periodUnit?: string }) => void;
 }
