@@ -2,7 +2,6 @@ import {
   BackButton,
   DetailsView,
   EmptyColumn,
-  formatDate,
   PageHeader,
   PageSection,
   PageTitle,
@@ -10,6 +9,7 @@ import {
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
+  formatters,
 } from '@shared/index';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
@@ -58,7 +58,7 @@ export const InvoiceView = () => {
                     </h2>
                     <div css={styles.info}>
                       <IconCalendar />
-                      <span>{formatDate(invoice.date)}</span>
+                      <span>{formatters.formatDate(invoice.date)}</span>
                     </div>
                   </div>
                   <InvoiceDownload invoice={invoice} />

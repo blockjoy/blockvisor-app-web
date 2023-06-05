@@ -39,13 +39,17 @@ export const useItems = (): IItemsHook => {
     }
   };
 
-  const getItemPrices = async (itemId: string) => {
+  const getItemPrices = async (params: { id: string; periodUnit?: string }) => {
     setItemPricesLoadingState('initializing');
+
+    const { id, periodUnit } = params;
 
     try {
       const params: _item_price.item_price_list_params = {
-        item_id: { is: itemId },
+        item_id: { is: id },
       };
+
+      if (periodUnit) params['period_unit'] = { is: periodUnit };
 
       const response = await fetch(BILLING_API_ROUTES.items.prices.list, {
         method: 'POST',
@@ -58,6 +62,8 @@ export const useItems = (): IItemsHook => {
       const data = await response.json();
 
       setItemPrices(data);
+
+      return data;
     } catch (error) {
       console.error('Failed to fetch item prices', error);
     } finally {

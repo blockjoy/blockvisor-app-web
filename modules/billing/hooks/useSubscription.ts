@@ -1,9 +1,12 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { BILLING_API_ROUTES, billingAtoms, useItems } from '@modules/billing';
 import { organizationAtoms } from '@modules/organization';
 import { _subscription } from 'chargebee-typescript';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { blockchainsAtoms } from '@modules/node';
 
 // TODO: check where payment intent has to be included
 export const useSubscription = (): ISubscriptionHook => {
@@ -16,6 +19,10 @@ export const useSubscription = (): ISubscriptionHook => {
   );
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
+
+  const { getItemPrices } = useItems();
+
+  const blockchains = useRecoilValue(blockchainsAtoms.blockchains);
 
   const getSubscription = async (id: string) => {
     setSubscriptionLoadingState('initializing');
@@ -138,6 +145,8 @@ export const useSubscription = (): ISubscriptionHook => {
 
     const { type, payload } = action;
 
+    const { node }: { node: Node } = payload;
+
     const params: _subscription.update_for_items_params = {};
 
     const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
@@ -148,17 +157,35 @@ export const useSubscription = (): ISubscriptionHook => {
 
     console.log('SUBSCRIPTION ITEMS', subscription?.subscription_items);
 
-    // check if already exists ???
+    const nodeType = node.nodeType === 10 ? 'pruned' : '';
+    const region = 'apac';
+
+    const blockchain = blockchains.find(
+      (blockchain: Blockchain) => blockchain.id === node.blockchainId,
+    );
+
+    const SKU = `${blockchain?.name?.toLowerCase()}-${nodeType}-${region}`;
+
+    const billingPeriod = subscription?.billing_period_unit;
+
+    const itemPriceParams = {
+      id: SKU,
+      periodUnit: billingPeriod,
+    };
+
+    const itemPrice: any = await getItemPrices(itemPriceParams);
+    const itemPriceID: string = itemPrice?.length ? itemPrice[0].id : null;
+
     const subscriptionItem: SubscriptionItem | undefined =
       subscription?.subscription_items?.find(
-        (subItem: SubscriptionItem) => subItem.item_price_id === payload.item,
+        (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
       );
 
     switch (type) {
       case 'create':
         let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
           {
-            item_price_id: payload.item,
+            item_price_id: itemPriceID,
             quantity: subscriptionItem ? subscriptionItem?.quantity! + 1 : 1,
           };
 
@@ -169,7 +196,7 @@ export const useSubscription = (): ISubscriptionHook => {
         if (subscriptionItem?.quantity! > 1) {
           let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
             {
-              item_price_id: payload.item,
+              item_price_id: itemPriceID,
               quantity: subscriptionItem?.quantity! - 1,
             };
 

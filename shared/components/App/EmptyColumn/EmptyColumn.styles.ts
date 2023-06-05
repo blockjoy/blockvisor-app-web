@@ -27,7 +27,7 @@ export const styles = {
       justify-content: ${align === 'center' ? 'center' : 'flex-start'};
     }
   `,
-  description: css`
+  description: (theme: ITheme) => css`
     margin-top: 8px;
     color: var(--color-text-3);
     max-width: 300px;
