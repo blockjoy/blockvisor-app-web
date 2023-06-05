@@ -7,12 +7,14 @@ export const styles = {
     display: grid;
     gap: 16px;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 120px;
+    grid-auto-rows: 142px;
     margin-bottom: 40px;
-    max-width: 660px;
+    margin-right: 20px;
+    max-width: 820px;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toLrg} {
       grid-template-columns: repeat(2, 1fr);
+      margin-right: 0;
     }
   `,
   card: (theme: ITheme) => css`
@@ -20,7 +22,7 @@ export const styles = {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     background: ${theme.colorCard};
     border-radius: 6px;
     border: 1px solid ${theme.colorBorder};
@@ -29,6 +31,8 @@ export const styles = {
     font-style: normal;
     font-size: 14px;
     color: ${theme.colorDefault};
+    text-transform: capitalize;
+    margin-bottom: 6px;
   `,
   cardLabel: (theme: ITheme) => css`
     color: ${theme.colorLabel};

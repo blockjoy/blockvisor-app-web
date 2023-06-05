@@ -6,7 +6,7 @@ export const mapNodeToDashboardDetails = (node: Node) => {
   const details: { label: string; data: any | undefined }[] = [
     { label: 'HOST', data: node.hostName || 'Unknown' },
     { label: 'VERSION', data: node.version || 'Latest' },
-    { label: 'BLOCK HEIGHT', data: node.blockHeight || '-' },
+    { label: 'NODE ADDRESS', data: node.address || '-' },
   ];
 
   return details;

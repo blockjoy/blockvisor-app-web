@@ -1,3 +1,11 @@
+import {
+  NodeStatus,
+  ContainerStatus,
+  SyncStatus,
+  StakingStatus,
+} from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeStatusListItem } from '@shared/components';
+
 export const nodeTypeList = [
   { id: 4, name: 'API' },
   { id: 8, name: 'Beacon' },
@@ -24,22 +32,6 @@ export const nodeTypeConfigLabels = [
   { name: 'self-hosted', value: 'Self Hosted' },
 ];
 
-/*
-Unknown = 0,
-    Miner = 1,
-    Etl = 2,
-    Validator = 3,
-    Api = 4,
-    Oracle = 5,
-    Relay = 6,
-    Execution = 7,
-    Beacon = 8,
-    MevBoost = 9,
-    Node = 10,
-    FullNode = 11,
-    LightNode = 12,
- */
-
 export const blockchainsDisabled = [
   'Algorand',
   'Aptos',
@@ -53,25 +45,33 @@ export const blockchainsDisabled = [
   'Solana',
 ];
 
-export const nodeStatusList = [
-  { id: 1, name: 'Provisioning', uuid: 'provisioning', isOnline: true },
-  { id: 2, name: 'Broadcasting', uuid: 'broadcasting', isOnline: true },
-  { id: 3, name: 'Cancelled', uuid: 'cancelled', isOnline: true },
-  { id: 4, name: 'Delegating', uuid: 'delegating', isOnline: true },
-  { id: 5, name: 'Delinquent', uuid: 'delinquent', isOnline: true },
-  { id: 6, name: 'Disabled', uuid: 'disabled', isOnline: false },
-  { id: 7, name: 'Earning', uuid: 'earning', isOnline: true },
-  { id: 8, name: 'Electing', uuid: 'electing', isOnline: true },
-  { id: 9, name: 'Elected', uuid: 'elected', isOnline: true },
-  { id: 10, name: 'Exporting', uuid: 'exporting', isOnline: true },
-  { id: 11, name: 'Ingesting', uuid: 'ingesting', isOnline: true },
-  { id: 12, name: 'Mining', uuid: 'mining', isOnline: true },
-  { id: 13, name: 'Minting', uuid: 'minting', isOnline: true },
-  { id: 14, name: 'Processing', uuid: 'processing', isOnline: true },
-  { id: 15, name: 'Relaying', uuid: 'relaying', isOnline: true },
-  { id: 16, name: 'Removed', uuid: 'removed', isOnline: false },
-  { id: 17, name: 'Removing', uuid: 'removing', isOnline: false },
-  { id: 0, name: 'Undefined', uuid: 'undefined', isOnline: false },
+export const nodeStatusList: NodeStatusListItem[] = [
+  ...Object.entries(NodeStatus)
+    .filter((f) => +f[0] > -1)
+    .map(([id, name]) => ({
+      id: +id,
+      name: name?.toString().replace('NODE_STATUS_', ''),
+    })),
+  ...Object.entries(ContainerStatus)
+    .filter((f) => +f[0] > -1)
+    .map(([id, name]) => ({
+      id: +id,
+      name: name?.toString().replace('CONTAINER_STATUS_', ''),
+      type: 'container',
+    })),
+  ...Object.entries(SyncStatus)
+    .filter((f) => +f[0] > -1)
+    .map(([id, name]) => ({
+      id: +id,
+      name: name?.toString().replace('SYNC_STATUS_', ''),
+      type: 'sync',
+    })),
+  ...Object.entries(StakingStatus)
+    .filter((f) => +f[0] > -1)
+    .map(([id, name]) => ({
+      id: +id,
+      name: name?.toString().replace('STAKING_STATUS_', ''),
+    })),
 ];
 
 export const hostStatusList = [

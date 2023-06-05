@@ -1,9 +1,14 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { getNodeStatusColor } from './NodeStatus';
-import { nodeStatusList } from '@shared/constants/lookups';
+import {
+  getNodeStatusColor,
+  getNodeStatusInfo,
+  NodeStatusType,
+} from './NodeStatus';
 
 import { SvgIcon } from '@shared/components';
+
+const IconNode = dynamic(() => import('@public/assets/icons/box-12.svg'));
 
 const IconUndefined = dynamic(
   () => import('@public/assets/icons/nodeStatus/Undefined.svg'),
@@ -56,51 +61,82 @@ const IconRemoved = dynamic(
 const IconRemoving = dynamic(
   () => import('@public/assets/icons/nodeStatus/Removing.svg'),
 );
+const IconSynced = dynamic(
+  () => import('@public/assets/icons/nodeStatus/Synced.svg'),
+);
+const IconStopped = dynamic(
+  () => import('@public/assets/icons/nodeStatus/Stopped.svg'),
+);
+const IconUnspecified = dynamic(
+  () => import('@public/assets/icons/nodeStatus/Unspecified.svg'),
+);
 
-const icons = {
-  0: <IconUndefined />,
-  1: <IconProcessing />,
-  2: <IconBroadcasting />,
-  3: <IconCancelled />,
-  4: <IconDelegating />,
-  5: <IconDelinquent />,
-  6: <IconDisabled />,
-  7: <IconEarning />,
-  8: <IconElected />,
-  9: <IconElecting />,
-  10: <IconExporting />,
-  11: <IconIngesting />,
-  12: <IconMining />,
-  13: <IconMinting />,
-  14: <IconProcessing />,
-  15: <IconRelaying />,
-  16: <IconRemoved />,
-  17: <IconRemoving />,
-};
-
-const getIcon = (status: number) => {
-  return icons[status];
+const getIcon = (statusName: string) => {
+  if (statusName?.match(/RUNNING|SYNCED|FOLLOWER/g)) {
+    return <IconSynced />;
+  } else if (statusName?.match(/STOPPED/g)) {
+    return <IconStopped />;
+  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|SYNCED|STOPPED/g)) {
+    return <IconUnspecified />;
+  } else {
+    switch (statusName) {
+      case 'EARNING':
+        return <IconEarning />;
+      case 'BROADCASTING':
+        return <IconBroadcasting />;
+      case 'CANCELLED':
+        return <IconCancelled />;
+      case 'DELEGATING':
+        return <IconDelegating />;
+      case 'DELINQUENT':
+        return <IconDelinquent />;
+      case 'DISABLED':
+        return <IconDisabled />;
+      case 'ELECTED':
+        return <IconElected />;
+      case 'ELECTING':
+        return <IconElecting />;
+      case 'EXPORTING':
+        return <IconExporting />;
+      case 'INGESTING':
+        return <IconIngesting />;
+      case 'MINING':
+        return <IconMining />;
+      case 'MINTING':
+        return <IconMinting />;
+      case 'RELAYING':
+        return <IconRelaying />;
+      case 'REMOVED':
+        return <IconRemoved />;
+      case 'REMOVING':
+        return <IconRemoving />;
+      default:
+        return <IconProcessing />;
+    }
+  }
 };
 
 type NodeStatusIconProps = {
-  status: number;
+  status?: number;
+  type?: NodeStatusType;
   size: string;
 };
 
 export const NodeStatusIcon = ({
   status,
+  type,
   size = '24px',
 }: NodeStatusIconProps) => {
-  const statusInfo = nodeStatusList.find((s) => s.id === status);
+  const statusName = getNodeStatusInfo(status!, type)?.name;
+  console.log('statusName', statusName);
+
   return (
     <Suspense fallback={null}>
       <SvgIcon
-        additionalStyles={[
-          getNodeStatusColor(statusInfo!.name, statusInfo!.isOnline),
-        ]}
+        additionalStyles={[getNodeStatusColor(status!, type)]}
         size={size}
       >
-        {getIcon(status)}
+        {status === undefined ? <IconNode /> : getIcon(statusName!)}
       </SvgIcon>
     </Suspense>
   );

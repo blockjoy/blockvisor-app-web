@@ -1,9 +1,9 @@
-import { NodeStatusIcon } from '@shared/components';
+import { getNodeStatusInfo, NodeStatusIcon, SvgIcon } from '@shared/components';
 import { useNodeView } from '@modules/node';
 import { FormHeaderCaps } from '@shared/components';
 import { styles } from './NodeViewDashboardStatus.styles';
-import { nodeStatusList } from '@shared/constants/lookups';
 import { getNodeStatusColor } from '@shared/components';
+import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 
 const iconSize = '24px';
 
@@ -12,74 +12,78 @@ export const NodeViewDashboardStatus = () => {
 
   if (!node?.id) return null;
 
-  const statusInfo = nodeStatusList.find((s) => s.id === node.status),
-    containerStatusInfo = nodeStatusList.find(
-      (s) => s.id === node.containerStatus,
-    ),
-    syncStatusInfo = nodeStatusList.find((s) => s.id === node.syncStatus),
-    stakingStatusInfo = nodeStatusList.find((s) => s.id === node.stakingStatus);
-
   return (
     <>
       <FormHeaderCaps>Status</FormHeaderCaps>
       <div css={styles.wrapper}>
         <div css={styles.card}>
-          <NodeStatusIcon size={iconSize} status={node!.status} />
-          <var
-            css={[
-              styles.cardValue,
-              getNodeStatusColor(statusInfo!.name, statusInfo!.isOnline),
-            ]}
-          >
-            {statusInfo?.name}
-          </var>
-          <h3 css={styles.cardLabel}>Consensus</h3>
+          <SvgIcon size={iconSize}>
+            <IconBlockHeight />
+          </SvgIcon>
+          <var css={[styles.cardValue]}>{node.blockHeight || '-'}</var>
+          <h3 css={styles.cardLabel}>Block Height</h3>
         </div>
         <div css={styles.card}>
-          <NodeStatusIcon size={iconSize} status={node!.containerStatus} />
-          <var
-            css={[
-              styles.cardValue,
-              getNodeStatusColor(
-                containerStatusInfo!.name,
-                statusInfo!.isOnline,
-              ),
-            ]}
-          >
-            {containerStatusInfo?.name}
+          <NodeStatusIcon size={iconSize} status={node!.status} />
+          <var css={[styles.cardValue, getNodeStatusColor(node.status!)]}>
+            {getNodeStatusInfo(node.status)?.name?.toLocaleLowerCase()}
           </var>
           <h3 css={styles.cardLabel}>App Status</h3>
         </div>
         <div css={styles.card}>
-          <NodeStatusIcon size={iconSize} status={node!.syncStatus} />
+          <NodeStatusIcon
+            size={iconSize}
+            status={node!.containerStatus}
+            type="container"
+          />
           <var
             css={[
               styles.cardValue,
-              getNodeStatusColor(
-                syncStatusInfo!.name,
-                syncStatusInfo!.isOnline,
-              ),
+              getNodeStatusColor(node.containerStatus!, 'container'),
             ]}
           >
-            {syncStatusInfo?.name}
+            {getNodeStatusInfo(
+              node.containerStatus,
+              'container',
+            )?.name?.toLocaleLowerCase()}
+          </var>
+          <h3 css={styles.cardLabel}>Container Status</h3>
+        </div>
+        <div css={styles.card}>
+          <NodeStatusIcon
+            size={iconSize}
+            status={node!.syncStatus}
+            type="sync"
+          />
+          <var
+            css={[
+              styles.cardValue,
+              getNodeStatusColor(node.syncStatus, 'sync'),
+            ]}
+          >
+            {getNodeStatusInfo(
+              node.syncStatus,
+              'sync',
+            )?.name?.toLocaleLowerCase()}
           </var>
           <h3 css={styles.cardLabel}>Sync Status</h3>
         </div>
-        <div css={styles.card}>
-          <NodeStatusIcon size={iconSize} status={node!.stakingStatus!} />
+        {/* <div css={styles.card}>
+          <NodeStatusIcon
+            size={iconSize}
+            status={node!.stakingStatus!}
+            type="staking"
+          />
           <var
             css={[
               styles.cardValue,
-              getNodeStatusColor(
-                stakingStatusInfo!.name,
-                stakingStatusInfo!.isOnline,
-              ),
+              getNodeStatusColor(node.stakingStatus!, 'staking'),
             ]}
           >
-            {stakingStatusInfo?.name}
+            {getNodeStatusName(node.stakingStatus!, 'staking')}
           </var>
-          <h3 css={styles.cardLabel}>Staking Status</h3>
-        </div>
+          <h3 css={styles.cardLabel}>Staking</h3>
+        </div> */}
       </div>
     </>
   );
