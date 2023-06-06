@@ -33,7 +33,6 @@ export const styles = {
       ${p.noWrap && 'white-space: nowrap;'};
       transition-property: opacity;
       transition-duration: 0.01s;
-      transition-delay: 0.8s;
     `,
   tooltipHidden: css`
     @media ${breakpoints.toXlrg} {
