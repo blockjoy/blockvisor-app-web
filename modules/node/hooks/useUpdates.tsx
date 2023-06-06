@@ -59,7 +59,7 @@ export const useUpdates = () => {
 
         if (mqttNode?.id === activeNode?.id) {
           modifyNode(payloadDeserialized.updated?.node!);
-          showNotification(type, `${updatedByName} just updated a node`);
+          // showNotification(type, `${updatedByName} just updated a node`);
         }
 
         break;

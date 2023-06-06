@@ -119,7 +119,7 @@ export const styles = {
       white-space: nowrap;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.001s 0.5s;
+      transition: opacity 0.001s;
     }
   `,
   linkIcon: css`

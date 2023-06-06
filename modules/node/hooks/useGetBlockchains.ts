@@ -1,8 +1,20 @@
 import { blockchainClient } from '@modules/grpc';
-import { isStatusResponse } from '@modules/organization';
 import { useRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { blockchainsAtoms } from '../store/blockchains';
+
+// TODO: REMOVE THIS HORRIFIC FUNCTION TO REMOVE DUPLICATE NODETYPES
+const removeDuplicateNodeTypes = (blockchains: any[]) => {
+  blockchains.forEach((b: any) => {
+    let tempNodeTypes: any[] = [];
+    b.nodesTypes.forEach((type: any) => {
+      if (!tempNodeTypes.some((t) => t.nodeType === type.nodeType)) {
+        tempNodeTypes.push(type);
+      }
+    });
+    b.nodesTypes = tempNodeTypes;
+  });
+};
 
 export function useGetBlockchains() {
   const [blockchains, setBlockchains] = useRecoilState(
@@ -14,14 +26,13 @@ export function useGetBlockchains() {
 
   const getBlockchains = async () => {
     setLoadingState('loading');
-    const response: any = await blockchainClient.getBlockchains();
+    const blockchains: any = await blockchainClient.getBlockchains();
+    console.log('getBlockchains', blockchains);
+    checkForTokenError(blockchains);
 
-    console.log('getBlockchains', response);
-
-    checkForTokenError(response);
-
-    if (!isStatusResponse(response)) {
-      setBlockchains(response);
+    if (blockchains?.length) {
+      removeDuplicateNodeTypes(blockchains);
+      setBlockchains(blockchains);
       setLoadingState('finished');
     } else {
       setBlockchains([]);
