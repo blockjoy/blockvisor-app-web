@@ -47,7 +47,7 @@ export const NodeViewDashboardStatus = () => {
               'container',
             )?.name?.toLocaleLowerCase()}
           </var>
-          <h3 css={styles.cardLabel}>Container Status</h3>
+          <h3 css={styles.cardLabel}>Node Status</h3>
         </div>
         <div css={styles.card}>
           <NodeStatusIcon
