@@ -16,7 +16,7 @@ export const useUpdates = () => {
   const user = useRecoilValue(authAtoms.user);
 
   const { addToNodeList, removeFromNodeList } = useNodeList();
-  const { unloadNode, modifyNode } = useNodeView();
+  const { unloadNode, modifyNode, node: activeNode } = useNodeView();
 
   const handleNodeUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -49,14 +49,19 @@ export const useUpdates = () => {
           payloadDeserialized.updated,
         );
 
-        const { updatedBy, updatedByName }: NodeUpdated =
-          payloadDeserialized.updated!;
+        const {
+          updatedBy,
+          updatedByName,
+          node: mqttNode,
+        }: NodeUpdated = payloadDeserialized.updated!;
 
         if (updatedBy === user?.id) break;
 
-        modifyNode(payloadDeserialized.updated?.node!);
+        if (mqttNode?.id === activeNode?.id) {
+          modifyNode(payloadDeserialized.updated?.node!);
+          showNotification(type, `${updatedByName} just updated a node`);
+        }
 
-        showNotification(type, `${updatedByName} just updated a node`);
         break;
       }
       case !!payloadDeserialized.deleted: {
