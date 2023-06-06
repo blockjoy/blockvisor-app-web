@@ -81,8 +81,6 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args, onError: VoidFunction) => {
-    setIsLoading('initializing');
-
     let node: any;
 
     try {
@@ -101,7 +99,7 @@ export const useNodeView = (): Hook => {
 
   const unloadNode = () => {
     setNode(null);
-    setIsLoading('finished');
+    setIsLoading('loading');
   };
 
   const updateNode = async (nodeRequest: NodeServiceUpdateRequest) => {

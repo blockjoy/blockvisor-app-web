@@ -5,10 +5,9 @@ import { rgba } from 'polished';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
+    flex: 1 1 400px;
     padding: 10px 16px 10px 0;
     margin-left: -16px;
-    width: 440px;
-    max-width: 440px;
     border-right: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {
@@ -200,26 +199,39 @@ export const styles = {
     }
 
     @media ${breakpoints.fromMed} {
-      :is(:hover, .active) {
+      &:hover:not(.active) {
+        opacity: 0.9;
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
 
-      :is(:hover, .active) div {
+      &.active {
         opacity: 1;
-        visibility: visible;
       }
 
-      :is(:hover, .active) span {
+      :is(:hover, .active) > :is(.node-type-buttons, span) {
+        visibility: visible;
+        scale: 1;
+        position: relative;
+      }
+
+      &:hover .node-type-buttons {
+        opacity: 0.9;
+      }
+
+      :hover span {
+        opacity: 0.9;
+      }
+
+      &.active span {
+        opacity: 1;
+      }
+
+      &.active .node-type-buttons {
         opacity: 1;
       }
 
       :is(:hover, .active) path {
         fill: ${theme.colorPrimary};
-      }
-
-      :is(:hover, .active) .node-type-buttons {
-        scale: 1;
-        position: relative;
       }
     }
   `,
