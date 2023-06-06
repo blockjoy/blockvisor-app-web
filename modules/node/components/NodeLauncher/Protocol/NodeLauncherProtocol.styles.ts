@@ -6,6 +6,7 @@ import { rgba } from 'polished';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     flex: 1 1 400px;
+    max-width: 33%;
     padding: 10px 16px 10px 0;
     margin-left: -16px;
     border-right: 1px solid ${theme.colorBorder};
