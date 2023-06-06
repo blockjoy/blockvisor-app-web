@@ -7,7 +7,7 @@ export const styles = {
     display: grid;
     gap: 16px;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 142px;
+    grid-auto-rows: 132px;
     margin-bottom: 40px;
     margin-right: 20px;
     max-width: 820px;
@@ -26,18 +26,23 @@ export const styles = {
     background: ${theme.colorCard};
     border-radius: 6px;
     border: 1px solid ${theme.colorBorder};
+    padding-top: 14px;
   `,
   cardValue: (theme: ITheme) => css`
     font-style: normal;
     font-size: 14px;
     color: ${theme.colorDefault};
     text-transform: capitalize;
-    margin-bottom: 6px;
+    margin-bottom: 0px;
   `,
   cardLabel: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
     color: ${theme.colorLabel};
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 10px;
+    text-align: center;
+    min-height: 30px;
   `,
 };

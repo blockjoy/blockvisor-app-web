@@ -128,8 +128,6 @@ export const NodeStatusIcon = ({
   size = '24px',
 }: NodeStatusIconProps) => {
   const statusName = getNodeStatusInfo(status!, type)?.name;
-  console.log('statusName', statusName);
-
   return (
     <Suspense fallback={null}>
       <SvgIcon
