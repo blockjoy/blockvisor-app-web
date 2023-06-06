@@ -25,7 +25,6 @@ export const styles = {
       opacity: 1;
     }
   `,
-  wrapperEmpty: css``,
   disabledBlockchains: css`
     @media ${breakpoints.toXlrg} {
       display: none;

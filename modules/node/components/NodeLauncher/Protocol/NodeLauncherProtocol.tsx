@@ -68,14 +68,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
   };
 
   return (
-    <div
-      css={[
-        styles.wrapper,
-        !filteredBlockchains?.length || !activeNodeTypeId
-          ? styles.wrapperEmpty
-          : null,
-      ]}
-    >
+    <div css={styles.wrapper}>
       <div>
         <div css={styles.searchWrapper}>
           <input
