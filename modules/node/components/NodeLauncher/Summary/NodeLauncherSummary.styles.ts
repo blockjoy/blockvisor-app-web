@@ -21,7 +21,6 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     padding: 10px 0 10px 24px;
     flex: 1 1 400px;
-    max-width: 500px;
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {

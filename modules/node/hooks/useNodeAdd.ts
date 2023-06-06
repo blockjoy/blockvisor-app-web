@@ -46,7 +46,6 @@ export const useNodeAdd = () => {
       await keyFileClient.create(nodeId, keyFiles);
 
       // Update organization node count
-
       const activeOrganization = organizations.find(
         (org) => org.id === defaultOrganization?.id,
       );
@@ -60,21 +59,9 @@ export const useNodeAdd = () => {
       loadNodes();
       onSuccess(nodeId);
     } catch (err: any) {
-      onError(err.toString());
+      console.log('Error Launching Node', err);
+      onError('Error launching node, an unknown error occurred.');
     }
-
-    // try {
-
-    // } catch (err) {
-    //   let errorMessage =
-    //     'Error launching node, please contact our support team.';
-    //   if (response?.message?.includes('No free IP available')) {
-    //     errorMessage = 'Error launching node, no free IP address available.';
-    //   } else if (response?.message?.includes('User node quota exceeded')) {
-    //     errorMessage = 'Unable to launch, node quota exceeded.';
-    //   }
-    //   onError(errorMessage);
-    // }
   };
 
   return {
