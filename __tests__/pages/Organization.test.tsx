@@ -12,12 +12,7 @@ import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrgani
 import { routerMockBuilder } from '__tests__/mocks/router';
 import { mockedNodesResponse } from '__tests__/mocks/nodes';
 import { mockeOrganizationsResponse } from '__tests__/mocks/organizations';
-import { mockedMembersResponse } from '__tests__/mocks/members';
-import {
-  invitationClient,
-  nodeClient,
-  organizationClient,
-} from '@modules/grpc';
+import { nodeClient } from '@modules/grpc';
 
 describe('Single Organization Page', () => {
   beforeEach(() => {
