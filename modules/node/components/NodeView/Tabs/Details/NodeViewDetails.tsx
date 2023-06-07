@@ -13,9 +13,10 @@ export const NodeViewDetails = () => {
         <FormHeaderCaps noBottomMargin>Main</FormHeaderCaps>
         <DetailsTable bodyElements={mapNodeToDetails(node!)} />
       </section>
-
-      <FormHeaderCaps noBottomMargin>Configuration</FormHeaderCaps>
-      <DetailsTable bodyElements={mapNodeConfigToDetails(node!)} />
+      <section css={styles.section}>
+        <FormHeaderCaps noBottomMargin>Configuration</FormHeaderCaps>
+        <DetailsTable bodyElements={mapNodeConfigToDetails(node!)} />
+      </section>
     </>
   );
 };

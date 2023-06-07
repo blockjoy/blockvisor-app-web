@@ -9,7 +9,6 @@ export const styles = {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 132px;
     margin-bottom: 40px;
-    margin-right: 20px;
     max-width: 820px;
 
     @media ${breakpoints.toLrg} {
