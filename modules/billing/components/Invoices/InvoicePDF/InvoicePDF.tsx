@@ -1,7 +1,6 @@
 import { Page, Text, View, Document } from '@react-pdf/renderer';
 import { BILL_HEADERS, INVOICE_DATA_HEADERS } from '@shared/index';
 import { InvoiceLogo } from './InvoiceLogo';
-import { InvoiceQRCode } from './InvoiceQRCode';
 import { styles } from './InvoicePDF.styles';
 import { formatters } from '@shared/index';
 import { Invoice } from 'chargebee-typescript/lib/resources';
@@ -27,10 +26,6 @@ export const InvoicePDF = ({
       >
         <View style={[styles.flex, styles.h40]}>
           <InvoiceLogo />
-        </View>
-
-        <View style={[styles.w40, styles.h40]}>
-          <InvoiceQRCode />
         </View>
       </View>
 

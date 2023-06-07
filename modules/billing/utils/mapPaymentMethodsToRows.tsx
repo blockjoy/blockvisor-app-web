@@ -24,21 +24,26 @@ export const mapPaymentMethodsToRows = (
     {
       name: 'Name',
       key: '1',
-      width: '150px',
+      width: '200px',
+    },
+    {
+      name: 'Billing Info',
+      key: '2',
+      width: '200px',
     },
     {
       name: 'Added',
-      key: '2',
-      width: '100px',
-    },
-    {
-      name: 'Status',
       key: '3',
       width: '100px',
     },
     {
-      name: '',
+      name: 'Status',
       key: '4',
+      width: '70px',
+    },
+    {
+      name: '',
+      key: '5',
       width: '50px',
       minWidth: '50px',
       maxWidth: '50px',
@@ -88,7 +93,16 @@ export const mapPaymentMethodsToRows = (
         key: '2',
         component: (
           <>
-            <p>{formatters.formatDate(paymentMethod.created_at)}</p>
+            {paymentMethod.card?.billing_addr1 ? (
+              <p>
+                {paymentMethod.card?.billing_addr1}
+                <br />
+                {paymentMethod.card?.billing_city},{' '}
+                {paymentMethod.card?.billing_zip}
+              </p>
+            ) : (
+              '-'
+            )}
           </>
         ),
       },
@@ -96,12 +110,20 @@ export const mapPaymentMethodsToRows = (
         key: '3',
         component: (
           <>
-            <p>{capitalize(paymentMethod.status)}</p>
+            <p>{formatters.formatDate(paymentMethod.created_at)}</p>
           </>
         ),
       },
       {
         key: '4',
+        component: (
+          <>
+            <p>{capitalize(paymentMethod.status)}</p>
+          </>
+        ),
+      },
+      {
+        key: '5',
         component: (
           <>
             <Button
