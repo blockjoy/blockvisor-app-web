@@ -12,6 +12,9 @@ export const BILLING_API_ROUTES = {
     billingInfo: {
       update: `${BILLING_ROUTE}/customers/billing-info/update`,
     },
+    payment: {
+      update: `${BILLING_ROUTE}/customers/payment/update`,
+    },
   },
   estimates: {
     get: `${BILLING_ROUTE}/estimates/get`,

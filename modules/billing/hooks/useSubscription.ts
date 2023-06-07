@@ -54,9 +54,11 @@ export const useSubscription = (): ISubscriptionHook => {
   const createSubscription = async ({
     itemPriceId,
     autoRenew,
+    paymentMethodId,
   }: {
     itemPriceId: string;
     autoRenew: string;
+    paymentMethodId: string;
   }) => {
     setSubscriptionLoadingState('initializing');
 
@@ -79,6 +81,7 @@ export const useSubscription = (): ISubscriptionHook => {
         params: {
           id: defaultOrganization?.id!,
           auto_collection: autoRenewValue,
+          payment_source_id: paymentMethodId,
           subscription_items: subscriptionItems,
         },
       };
@@ -349,6 +352,8 @@ export const useSubscription = (): ISubscriptionHook => {
       );
 
       const data: Subscription = await response.json();
+
+      console.log('data123', data);
 
       setSubscription(data);
     } catch (error) {

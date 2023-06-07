@@ -10,8 +10,8 @@ import {
 import { toast } from 'react-toastify';
 
 export const useBillingAddressForm = (
-  billingAddress: CustomerBillingAddress | null,
   actions: BillingAddressActions,
+  billingAddress?: CustomerBillingAddress | null,
 ): IBillingAddressFormHook => {
   const [loading, setLoading] = useState(false);
 

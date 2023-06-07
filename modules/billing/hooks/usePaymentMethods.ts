@@ -1,10 +1,6 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  BILLING_API_ROUTES,
-  Subscription,
-  billingAtoms,
-} from '@modules/billing';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
 import { _payment_source } from 'chargebee-typescript';
 
 export const usePaymentMethods = (): IPaymentMethodsHook => {
@@ -20,8 +16,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
   const [paymentMethodLoadingState, setPaymentMethodLoadingState] =
     useRecoilState(billingAtoms.paymentMethodLoadingState);
 
-  const customer = useRecoilValue(billingAtoms.customer);
-  const subscription = useRecoilValue(billingAtoms.subscription);
+  const [customer, setCustomer] = useRecoilState(billingAtoms.customer);
 
   const getPaymentMethods = async (
     params: _payment_source.payment_source_list_params,
@@ -69,7 +64,10 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     }
   };
 
-  const createPaymentMethod = async (paymentIntentId: string) => {
+  const createPaymentMethod = async (
+    paymentIntentId: string,
+    onSuccess: (paymentSourceId: string) => void,
+  ) => {
     setPaymentMethodsLoadingState('initializing');
 
     try {
@@ -93,6 +91,8 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
       const newPaymentMethods = [...paymentMethods, data];
 
       setPaymentMethods(newPaymentMethods);
+
+      onSuccess(data?.id);
     } catch (error) {
       console.error('Failed to create payment method', error);
     } finally {
@@ -114,13 +114,19 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
         body: JSON.stringify(params),
       });
 
-      const data: PaymentSource = await response.json();
+      const data: { customer: Customer; paymentSource: PaymentSource } =
+        await response.json();
+
+      const { customer, paymentSource } = data;
 
       const newPaymentMethods = paymentMethods?.filter(
-        (paymentMethod: PaymentSource) => paymentMethod.id !== data?.id,
+        (paymentMethod: PaymentSource) =>
+          paymentMethod.id !== paymentSource?.id,
       );
 
       setPaymentMethods(newPaymentMethods);
+
+      setCustomer(customer);
     } catch (error) {
       console.error('Failed to delete payment method', error);
     } finally {

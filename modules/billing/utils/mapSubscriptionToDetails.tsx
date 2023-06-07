@@ -20,5 +20,11 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
       label: 'Status',
       data: <p>{SubscriptionStatus[subscription.status]}</p>,
     },
+    {
+      label: 'Auto renew',
+      data: (
+        <p>{subscription.auto_collection === 'on' ? 'Enabled' : 'Disabled'}</p>
+      ),
+    },
   ];
 };
