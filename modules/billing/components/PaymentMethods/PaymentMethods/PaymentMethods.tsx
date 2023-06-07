@@ -7,10 +7,14 @@ import {
   usePaymentMethods,
   mapPaymentMethodsToRows,
   PaymentMethodDialog,
-  CreditCardForm,
 } from '@modules/billing';
+import { useRouter } from 'next/router';
+import { PaymentMethodForm } from '../PaymentMethodForm/PaymentMethodForm';
 
 export const PaymentMethods = () => {
+  const router = useRouter();
+  const { add } = router.query;
+
   const {
     paymentMethods,
     getPaymentMethods,
@@ -24,6 +28,10 @@ export const PaymentMethods = () => {
     useState<string | 'list' | 'dialog'>('list');
 
   const [activePaymentMethod, setActivePaymentMethod] = useState<any>(null);
+
+  useEffect(() => {
+    if (router.isReady && add) setIsAdding(true);
+  }, [router.isReady, add]);
 
   useEffect(() => {
     getPaymentMethods({
@@ -85,8 +93,6 @@ export const PaymentMethods = () => {
       </Button>
     </>
   ) : (
-    <>
-      <CreditCardForm handleCancel={handleCancel} />
-    </>
+    <PaymentMethodForm handleCancel={handleCancel} />
   );
 };

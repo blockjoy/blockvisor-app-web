@@ -18,8 +18,13 @@ export const mapEstimateItemsToRows = (
       width: '100px',
     },
     {
-      name: 'Price',
+      name: 'Unit price',
       key: '3',
+      width: '150px',
+    },
+    {
+      name: 'Total price',
+      key: '4',
       width: '150px',
     },
   ];
@@ -49,6 +54,14 @@ export const mapEstimateItemsToRows = (
         key: '3',
         component: (
           <>
+            <p>{formatters.formatCurrency(item?.unit_amount!)}</p>
+          </>
+        ),
+      },
+      {
+        key: '4',
+        component: (
+          <>
             <p>{formatters.formatCurrency(item?.amount!)}</p>
           </>
         ),
@@ -65,6 +78,10 @@ export const mapEstimateItemsToRows = (
       },
       {
         key: '2',
+        component: null,
+      },
+      {
+        key: '3',
         component: (
           <>
             <p
@@ -80,7 +97,7 @@ export const mapEstimateItemsToRows = (
         ),
       },
       {
-        key: '3',
+        key: '4',
         component: (
           <>
             <p

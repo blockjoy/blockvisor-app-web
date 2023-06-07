@@ -9,6 +9,7 @@ export * from './components/BillingInfo/BillingContacts/BillingContactForm/Billi
 export * from './components/BillingInfo/BillingContacts/BillingContacts';
 export * from './components/BillingInfo/BillingContacts/BillingContactsList/BillingContactsList';
 export * from './components/BillingInfo/BillingContacts/BillingContactsPreview/BillingContactsPreview';
+export * from './components/BillingInfo/BillingAddress/BillingAddressSelect/BillingAddressSelect';
 
 export * from './components/Invoices/Invoices';
 export * from './components/Invoices/InvoiceView/InvoiceView';
@@ -19,8 +20,10 @@ export * from './components/Invoices/InvoicePDF/InvoicePDF';
 
 export * from './components/PaymentMethods/CreditCardForm/CreditCardForm';
 export * from './components/PaymentMethods/PaymentMethodDialog/PaymentMethodDialog';
+export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelect';
 export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelector';
 export * from './components/PaymentMethods/PaymentPreview/PaymentPreview';
+export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
 
 export * from './components/Subscription/PlanSelect/PlanSelect';
 export * from './components/Subscription/SinglePlan/SinglePlan';

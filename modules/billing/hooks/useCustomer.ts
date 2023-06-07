@@ -68,5 +68,34 @@ export const useCustomer = (): ICustomerHook => {
     } catch (error) {}
   };
 
-  return { customer, customerLoadingState, getCustomer, createCustomer };
+  const assignPaymentRole = async (
+    params: _customer.assign_payment_role_params,
+  ) => {
+    try {
+      const response = await fetch(BILLING_API_ROUTES.customer.payment.update, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerId: customer?.id, params }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error creating Chargebee customer');
+      }
+
+      const data = await response.json();
+
+      setCustomer(data);
+    } catch (error) {}
+  };
+
+  return {
+    customer,
+    customerLoadingState,
+    getCustomer,
+    createCustomer,
+
+    assignPaymentRole,
+  };
 };
