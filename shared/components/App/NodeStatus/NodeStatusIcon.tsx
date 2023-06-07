@@ -70,9 +70,12 @@ const IconStopped = dynamic(
 const IconUnspecified = dynamic(
   () => import('@public/assets/icons/nodeStatus/Unspecified.svg'),
 );
+const IconRunning = dynamic(
+  () => import('@public/assets/icons/nodeStatus/Running.svg'),
+);
 
 const getIcon = (statusName: string) => {
-  if (statusName?.match(/RUNNING|SYNCED|FOLLOWER/g)) {
+  if (statusName?.match(/SYNCED|FOLLOWER/g)) {
     return <IconSynced />;
   } else if (statusName?.match(/STOPPED/g)) {
     return <IconStopped />;
@@ -110,6 +113,8 @@ const getIcon = (statusName: string) => {
         return <IconRemoved />;
       case 'REMOVING':
         return <IconRemoving />;
+      case 'RUNNING':
+        return <IconRunning />;
       default:
         return <IconProcessing />;
     }
