@@ -20,7 +20,7 @@ export const SubscriptionInfo = ({
   return (
     <>
       <DetailsTable bodyElements={subscriptionData} />
-      <ButtonGroup type="flex">
+      <ButtonGroup type="flex" additionalStyles={[spacing.top.large]}>
         {subscription?.status === 'active' && (
           <Button style="outline" size="small" onClick={handleCancellation}>
             Cancel subscription

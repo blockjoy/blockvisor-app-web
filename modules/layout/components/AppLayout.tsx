@@ -14,7 +14,7 @@ import {
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
-import { useCustomer, useSubscription } from '@modules/billing';
+import { Subscription, useCustomer, useSubscription } from '@modules/billing';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -31,7 +31,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const userEmail = repository?.getIdentity()?.email;
 
   const { customer, getCustomer } = useCustomer();
-  const { getSubscription } = useSubscription();
+  const { subscription, getSubscription } = useSubscription();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();

@@ -7,14 +7,18 @@ import {
 } from '@shared/components';
 import {
   usePaymentMethods,
-  useSubscription,
   mapCardToDetails,
   PaymentMethodsSelector,
+  billingAtoms,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
+import { useRecoilValue } from 'recoil';
 
 export const PaymentPreview = () => {
-  const { subscription, subscriptionLoadingState } = useSubscription();
+  const subscription = useRecoilValue(billingAtoms.subscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
+  );
   const { paymentMethod, paymentMethodLoadingState, getPaymentMethod } =
     usePaymentMethods();
 

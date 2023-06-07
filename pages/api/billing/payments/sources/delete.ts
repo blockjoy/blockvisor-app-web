@@ -1,19 +1,24 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
-const createPaymentSource = async (id: string): Promise<PaymentSource> => {
+const deletePaymentSource = async (
+  id: string,
+): Promise<{ customer: Customer; paymentSource: PaymentSource }> => {
   return new Promise((resolve, reject) => {
     chargebee.payment_source
       .delete(id)
       .request(function (
         error: any,
-        result: { payment_source: PaymentSource },
+        result: { customer: Customer; payment_source: PaymentSource },
       ) {
         if (error) {
           reject(error);
         } else {
-          resolve(result.payment_source);
+          resolve({
+            customer: result.customer,
+            paymentSource: result.payment_source,
+          });
         }
       });
   });
@@ -26,7 +31,7 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const { id } = req.body as { id: string };
-      const response = await createPaymentSource(id);
+      const response = await deletePaymentSource(id);
 
       res.status(200).json(response);
     } catch (error: any) {
