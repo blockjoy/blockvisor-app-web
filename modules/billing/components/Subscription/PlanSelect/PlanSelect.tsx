@@ -1,10 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
-import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
+import { useEffect, useState } from 'react';
+import {
+  Item,
+  ItemPrice,
+  PaymentSource,
+} from 'chargebee-typescript/lib/resources';
 import {
   calcNextAutoRenew,
   useItems,
   useSubscription,
   BILLING_PLAN_FEATURES,
+  billingAtoms,
+  PaymentMethodsSelect,
+  usePaymentMethods,
 } from '@modules/billing';
 import {
   Button,
@@ -17,6 +24,7 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';
+import { useRecoilValue } from 'recoil';
 
 export type PlanSelectProps = {
   plan: Item | null;
@@ -26,40 +34,45 @@ export type PlanSelectProps = {
 export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
   const { createSubscription, subscriptionLoadingState } = useSubscription();
   const { itemPrices, itemPricesLoadingState, getItemPrices } = useItems();
+  const { getPaymentMethods } = usePaymentMethods();
+
+  const customer = useRecoilValue(billingAtoms.customer);
 
   const [periodUnit, setPeriodUnit] = useState<string>('year');
   const [autoRenew, setAutoRenew] = useState<boolean>(true);
-
-  const activeItemPrice = useRef<ItemPrice | null>(null);
+  const [paymentMethodId, setPaymentMethodId] = useState<string | undefined>(
+    customer?.primary_payment_source_id,
+  );
 
   useEffect(() => {
     getItemPrices({ id: plan?.id! });
 
-    if (itemPrices) {
-      const defaultItemPrice: ItemPrice = itemPrices?.find(
-        (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
-      );
-      activeItemPrice.current = defaultItemPrice;
-    }
+    getPaymentMethods({
+      customer_id: { is: customer?.id },
+      type: { is: 'card' },
+    });
   }, []);
+
+  const activeItemPrice: ItemPrice = itemPrices?.find(
+    (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
+  );
 
   const handlePeriodUnit = (e: any) => {
     const { value } = e.target;
     setPeriodUnit(value);
-
-    const selectedItemPrice: ItemPrice = itemPrices?.find(
-      (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
-    );
-
-    activeItemPrice.current = selectedItemPrice;
   };
 
   const handleAutoRenew = () => setAutoRenew(!autoRenew);
 
+  const handlePaymentMethod = (paymentMethod: PaymentSource) => {
+    setPaymentMethodId(paymentMethod.id);
+  };
+
   const handleSubscription = () => {
     createSubscription({
-      itemPriceId: activeItemPrice.current?.id,
+      itemPriceId: activeItemPrice?.id,
       autoRenew,
+      paymentMethodId,
     });
   };
 
@@ -114,6 +127,13 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
             </div>
           </div>
           <div css={spacing.bottom.medium}>
+            <h3 css={styles.headline}>Payment Method</h3>
+            <PaymentMethodsSelect
+              primaryId={paymentMethodId}
+              handlePaymentMethod={handlePaymentMethod}
+            />
+          </div>
+          <div css={spacing.bottom.medium}>
             <h3 css={styles.headline}>What you get</h3>
             <ul css={styles.features}>
               {BILLING_PLAN_FEATURES.map(
@@ -132,7 +152,7 @@ export const PlanSelect = ({ plan, handleCancel }: PlanSelectProps) => {
           <div css={[flex.display.flex, flex.justify.between]}>
             <p css={styles.headline}>Total</p>
             <p css={styles.totalPrice}>
-              {formatters.formatCurrency(activeItemPrice.current?.price!)}
+              {formatters.formatCurrency(activeItemPrice?.price!)}
             </p>
           </div>
           <div css={styles.buttons}>

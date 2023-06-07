@@ -9,7 +9,7 @@ import { ButtonGroup } from '@shared/components/Buttons/ButtonGroup/ButtonGroup'
 
 export type BillingAddressFormProps = {
   actions: BillingAddressActions;
-  billingAddress: CustomerBillingAddress | null;
+  billingAddress?: CustomerBillingAddress | null;
 };
 
 export const BillingAddressForm = ({
@@ -29,7 +29,7 @@ export const BillingAddressForm = ({
     cityController,
     countryController,
     postalController,
-  } = useBillingAddressForm(billingAddress, actions);
+  } = useBillingAddressForm(actions, billingAddress);
 
   return (
     <FormProvider {...form}>
