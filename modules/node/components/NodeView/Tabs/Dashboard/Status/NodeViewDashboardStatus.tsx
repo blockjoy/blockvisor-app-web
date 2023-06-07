@@ -20,7 +20,7 @@ export const NodeViewDashboardStatus = () => {
           <SvgIcon size={iconSize}>
             <IconBlockHeight />
           </SvgIcon>
-          <var css={[styles.cardValue]}>{node.blockHeight || '-'}</var>
+          <var css={[styles.cardValue]}>{node.blockHeight ?? '-'}</var>
           <h3 css={styles.cardLabel}>Block Height</h3>
         </div>
         <div css={styles.card}>
