@@ -23,15 +23,15 @@ const blocks = [
         icon: <IconRocket />,
       },
       {
+        name: 'Hosts',
+        path: '/hosts',
+        icon: <IconUnion />,
+      },
+      {
         name: 'Organizations',
         path: '/organizations',
         icon: <IconOrganizations />,
         isOrganizations: true,
-      },
-      {
-        name: 'Hosts',
-        path: '/hosts',
-        icon: <IconUnion />,
       },
       {
         name: 'FAQ',

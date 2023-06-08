@@ -49,7 +49,7 @@ export const styles = {
     border: 1px solid transparent;
     min-width: 0;
     padding: 16px;
-    background: rgba(248, 250, 246, 0.03);
+    background: ${theme.colorCard};
     cursor: pointer;
 
     @media ${breakpoints.fromLrg} {
@@ -65,7 +65,8 @@ export const styles = {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    line-height: 1.6;
   `,
 
   cellRight: css`

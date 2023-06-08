@@ -54,10 +54,10 @@ export const styles = {
     }
   `,
   quickEdit: (theme: ITheme) => css`
-    flex: 1 1 360px;
-    min-width: 360px;
+    flex: 1 1 320px;
+    min-width: 320px;
     max-width: 36px;
-    padding: 20px 0 20px 20px;
+    padding: 0 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toLrg} {

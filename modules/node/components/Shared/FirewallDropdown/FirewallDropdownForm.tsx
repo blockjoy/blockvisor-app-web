@@ -64,7 +64,6 @@ export const FirewallDropdownForm: FC<Props> = ({
 
   useLayoutEffect(() => {
     if (isOpen) {
-      console.log('toggling is open');
       ipRef?.current?.focus();
     }
   }, [isOpen]);

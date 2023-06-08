@@ -24,8 +24,6 @@ export const OrganizationInvitations = () => {
   );
 
   const handleAcceptInvitation = (invitationId: string) => {
-    console.log('acceptInvitation', invitationId, userEmail);
-
     acceptInvitation(invitationId, () => {
       getOrganizations();
       getReceivedInvitations(userEmail!);

@@ -101,8 +101,8 @@ export const NodeLauncherProtocol: FC<Props> = ({
           <>
             {!filteredBlockchains?.length ? (
               <EmptyColumn
-                title="No Blockchains"
-                description="Please refine your search"
+                title="No Blockchains."
+                description="Please refine your search."
               />
             ) : (
               filteredBlockchains?.map((b, index) => (

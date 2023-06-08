@@ -45,12 +45,12 @@ export const HostListHeader = () => {
         </div>
       )}
 
-      <div css={[styles.endBlock, styles.listTypePicker]}>
+      {/* <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleActiveListType}
           activeListType={activeListType}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

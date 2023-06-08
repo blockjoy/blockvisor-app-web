@@ -60,7 +60,6 @@ export const styles = {
     flex-direction: column;
     gap: 8px;
     max-height: 122px;
-    padding-top: 16px;
     overflow: hidden;
   `,
   checkboxListShowAll: css`

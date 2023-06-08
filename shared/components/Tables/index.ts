@@ -2,7 +2,7 @@ export * from './TableGrid/TableGrid';
 export * from './TableGrid/TableGridCell';
 export * from './Table/Table';
 export * from './Table/TableSkeleton';
-export * from './Table/TableBlockNodes';
+export * from './Table/TableBlock';
 export * from './Pagination/Pagination';
 export * from './GridTableViewPicker/GridTableViewPicker';
 export * from './DetailsTable/DetailsTable';

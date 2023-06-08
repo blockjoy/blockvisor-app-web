@@ -19,8 +19,6 @@ export function useInvitations() {
   );
 
   const getReceivedInvitations = async (inviteeEmail: string) => {
-    console.log('getReceivedInvitations', inviteeEmail);
-
     const response: any = await invitationClient.receivedInvitations(
       inviteeEmail,
     );

@@ -53,18 +53,10 @@ export async function fetchFAQ(): Promise<ResponseData> {
   try {
     const responses = await Promise.all(requests);
     const responsesData = await Promise.all(responses.map((res) => res.json()));
-
-    // console.log('responsesData', responsesData);
-
     const filteredData = responsesData.filter(
       (rd: any) => rd.data && !rd.error && rd.data.visibility === 'visible',
     );
-
-    console.log('filteredData', responsesData);
-
     data = filteredData.map((fd: any) => fd.data);
-
-    console.log('data', data);
   } catch (error) {
     throw new Error(`Error. Fetching single Article: ${error}`);
   }

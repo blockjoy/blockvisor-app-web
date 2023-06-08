@@ -35,7 +35,7 @@ export const styles = {
     color: ${theme.colorDanger};
     border-color: ${theme.colorDanger};
 
-    & path {
+    svg :is(path, circle, rect) {
       fill: ${theme.colorDanger};
     }
   `,
@@ -43,7 +43,7 @@ export const styles = {
     color: ${theme.colorDefault};
     border-color: ${theme.colorDefault};
 
-    & path {
+    svg :is(path, circle, rect) {
       fill: ${theme.colorDefault};
     }
   `,

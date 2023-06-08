@@ -1,11 +1,3 @@
-import {
-  NodeStatus,
-  ContainerStatus,
-  SyncStatus,
-  StakingStatus,
-} from '@modules/grpc/library/blockjoy/v1/node';
-import { NodeStatusListItem } from '@shared/components';
-
 export const nodeTypeList = [
   { id: 4, name: 'API' },
   { id: 8, name: 'Beacon' },
@@ -43,50 +35,6 @@ export const blockchainsDisabled = [
   'Pocket',
   'Polygon',
   'Solana',
-];
-
-export const nodeStatusList: NodeStatusListItem[] = [
-  ...Object.entries(NodeStatus)
-    .filter((f) => +f[0] > -1)
-    .map(([id, name]) => ({
-      id: +id,
-      name: name?.toString().replace('NODE_STATUS_', ''),
-    })),
-  ...Object.entries(ContainerStatus)
-    .filter((f) => +f[0] > -1)
-    .map(([id, name]) => ({
-      id: +id,
-      name: name?.toString().replace('CONTAINER_STATUS_', ''),
-      type: 'container',
-    })),
-  ...Object.entries(SyncStatus)
-    .filter((f) => +f[0] > -1)
-    .map(([id, name]) => ({
-      id: +id,
-      name: name?.toString().replace('SYNC_STATUS_', ''),
-      type: 'sync',
-    })),
-  ...Object.entries(StakingStatus)
-    .filter((f) => +f[0] > -1)
-    .map(([id, name]) => ({
-      id: +id,
-      name: name?.toString().replace('STAKING_STATUS_', ''),
-    })),
-];
-
-export const hostStatusList = [
-  { id: 0, name: 'Undefined', uuid: 'undefined' },
-  { id: 1, name: 'Creating', uuid: 'creating' },
-  { id: 2, name: 'Running', uuid: 'running' },
-  { id: 3, name: 'Starting', uuid: 'starting' },
-  { id: 4, name: 'Stopping', uuid: 'stopping' },
-  { id: 5, name: 'Stopped', uuid: 'stopped' },
-  { id: 6, name: 'Upgrading', uuid: 'upgrading' },
-  { id: 7, name: 'Upgraded', uuid: 'uprgraded' },
-  { id: 8, name: 'Deleting', uuid: 'deleting' },
-  { id: 9, name: 'Deleted', uuid: 'deleted' },
-  { id: 10, name: 'Installing', uuid: 'installing' },
-  { id: 11, name: 'Snaphotting', uuid: 'snaphotting' },
 ];
 
 export const nodeTypeProps = {

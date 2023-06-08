@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { getHostStatusColor, SvgIcon } from '@shared/components';
-import { hostStatusList } from '@shared/constants/lookups';
+import { hostStatusList } from '@shared/constants/hostStatusList';
 
 const IconUndefined = dynamic(
-  () => import('@public/assets/icons/hostStatus/Undefined.svg'),
+  () => import('@public/assets/icons/nodeStatus/Unspecified.svg'),
 );
 const IconCreating = dynamic(
   () => import('@public/assets/icons/hostStatus/Creating.svg'),

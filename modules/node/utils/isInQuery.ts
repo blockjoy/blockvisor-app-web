@@ -1,4 +1,4 @@
-import { nodeStatusList } from '@shared/constants/lookups';
+import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { buildParams } from './buildParams';
 import { loadPersistedFilters } from './loadPersistedFilters';
 

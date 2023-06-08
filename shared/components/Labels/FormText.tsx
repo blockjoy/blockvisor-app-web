@@ -6,6 +6,7 @@ const styles = {
   label: (theme: ITheme) => css`
     margin-bottom: 12px;
     font-size: 14px;
+    line-height: 1.7;
     display: flex;
     gap: 8px;
     color: ${theme.colorText};

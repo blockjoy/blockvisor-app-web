@@ -67,15 +67,16 @@ export const RangeSlider = ({
             css={styles.slider}
           >
             <div
+              className="track"
               ref={props.ref}
               css={styles.progress}
               style={{
                 background: getTrackBackground({
                   values: innerValues,
                   colors: [
-                    `${themeDefault.colorInput}`,
+                    `${themeDefault.colorBorder}`,
                     `${themeDefault.colorPrimary}`,
-                    `${themeDefault.colorInput}`,
+                    `${themeDefault.colorBorder}`,
                   ],
                   min: innerMin,
                   max: innerMax,

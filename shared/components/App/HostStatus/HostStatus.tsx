@@ -1,13 +1,24 @@
 import { styles } from './HostStatus.styles';
-import { hostStatusList } from '@shared/constants/lookups';
+import { hostStatusList } from '@shared/constants/hostStatusList';
 import { HostStatusIcon } from './HostStatusIcon';
 
-export const getHostStatusColor = (name: string) => {
-  if (name === 'Running') {
-    return styles.statusColorGreen;
-  }
+// export const getHostStatusColor = (name: string) => {
+//   if (name === 'Running') {
+//     return styles.statusColorGreen;
+//   }
 
-  return styles.statusColorDefault;
+//   return styles.statusColorDefault;
+// };
+
+export const getHostStatusColor = (name: string) => {
+  if (name?.match(/RUNNING|INSTALLING/g)) {
+    console.log('getting in here', name);
+    return styles.statusColorGreen;
+  } else if (name?.match(/UNSPECIFIED|UNDEFINED|STOPPED/g)) {
+    return styles.statusColorRed;
+  } else {
+    return styles.statusColorDefault;
+  }
 };
 
 type HostStatusProps = {
@@ -17,14 +28,13 @@ type HostStatusProps = {
 
 export const HostStatus = ({ status, hasBorder = true }: HostStatusProps) => {
   const statusInfo = hostStatusList.find((s) => s.id === status);
-
   return (
     <span
       css={[
         styles.status,
         hasBorder && styles.statusBorder,
 
-        getHostStatusColor(statusInfo?.name!),
+        getHostStatusColor(statusInfo?.name?.toUpperCase()!),
       ]}
     >
       <HostStatusIcon size="12px" status={status} />

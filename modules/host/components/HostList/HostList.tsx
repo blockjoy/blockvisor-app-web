@@ -97,7 +97,7 @@ export const HostList = () => {
               title="No Hosts."
               description={
                 isFiltered && isEmpty ? (
-                  'Reset filters.'
+                  'Nothing to see here.'
                 ) : (
                   <div>
                     <h3 css={spacing.bottom.mediumSmall}>
@@ -125,7 +125,6 @@ export const HostList = () => {
                   isLoading={isLoading}
                   headers={headers}
                   rows={rows}
-                  fixedRowHeight="120px"
                   onRowClick={handleHostClick}
                   preload={preloadHosts}
                 />
@@ -139,7 +138,9 @@ export const HostList = () => {
         </div>
         <div css={styles.quickEdit}>
           {provisionTokenLoadingState === 'initializing' ? (
-            <TableSkeleton />
+            <div css={spacing.top.large}>
+              <TableSkeleton />
+            </div>
           ) : (
             <HostLauncher token={provisionToken} />
           )}

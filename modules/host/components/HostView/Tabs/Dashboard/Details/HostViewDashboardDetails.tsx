@@ -1,4 +1,4 @@
-import { DetailsTable, DetailsWrapper } from '@shared/components';
+import { DetailsTable, FormHeaderCaps } from '@shared/components';
 import { useHostView, mapHostToDashboardDetails } from '@modules/host';
 import { ROUTES } from '@shared/index';
 
@@ -7,11 +7,14 @@ export const HostViewDashboardDetails = () => {
 
   const details = mapHostToDashboardDetails(host!);
 
-  const linkHref = `${ROUTES.HOST(host?.id!)}/details`;
+  const viewAllLink = `${ROUTES.HOST(host?.id!)}/details`;
 
   return (
-    <DetailsWrapper title="Details" href={linkHref}>
+    <section>
+      <FormHeaderCaps noBottomMargin viewAllLink={viewAllLink}>
+        Details
+      </FormHeaderCaps>
       <DetailsTable bodyElements={details} />
-    </DetailsWrapper>
+    </section>
   );
 };
