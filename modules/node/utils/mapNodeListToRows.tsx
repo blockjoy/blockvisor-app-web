@@ -9,8 +9,8 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       name: '',
       key: '1',
       width: '40px',
-      minWidth: '40px',
-      maxWidth: '40px',
+      minWidth: '60px',
+      maxWidth: '100px',
     },
     {
       name: 'Name',
@@ -51,7 +51,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       {
         key: '3',
         component: (
-          <span style={{ fontSize: '14px' }}>
+          <span style={{ fontSize: '14px', whiteSpace: 'nowrap' }}>
             {formatDistanceToNow(new Date(node.createdAt!))}
           </span>
         ),

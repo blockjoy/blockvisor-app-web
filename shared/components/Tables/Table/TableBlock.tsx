@@ -23,6 +23,10 @@ const styles = {
   id: (theme: ITheme) => css`
     color: ${theme.colorDefault};
     margin-bottom: 6px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 80%;
   `,
   address: (theme: ITheme) => css`
     color: ${theme.colorLabel};

@@ -73,7 +73,7 @@ const filtersStatus = atom<FilterItem[]>({
   default: hostStatusList
     .filter((item) => item.id !== 0)
     .map((item) => ({
-      name: item.name,
+      name: item.name?.toLowerCase(),
       id: item.id?.toString(),
       isChecked: false,
     })),

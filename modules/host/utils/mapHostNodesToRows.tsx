@@ -11,18 +11,16 @@ export const mapHostNodesToRows = (
       name: '',
       key: '1',
       width: '40px',
-      minWidth: '40px',
-      maxWidth: '40px',
+      minWidth: '60px',
+      maxWidth: '100px',
     },
     {
       name: 'Name',
       key: '2',
-      width: '200px',
     },
     {
       name: 'Status',
       key: '3',
-      width: '100px',
     },
     // {
     //   name: '',
