@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { hostAtoms, mapHostNodesToRows } from '@modules/host';
 import { useNodeList } from '@modules/node';
-import { Table, DetailsWrapper } from '@shared/components';
+import { Table, FormHeaderCaps } from '@shared/components';
 import { EmptyColumn, ROUTES, TableSkeleton } from '@shared/index';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
@@ -13,12 +13,15 @@ export const HostViewDashboardNodes = () => {
 
   const { headers, rows } = mapHostNodesToRows(nodeListByHost);
 
-  const linkHref = `${ROUTES.HOST(host?.id!)}/nodes`;
+  const viewAllLink = `${ROUTES.HOST(host?.id!)}/nodes`;
 
   const router = useRouter();
 
   return (
-    <DetailsWrapper title="Hosts" href={linkHref}>
+    <>
+      <FormHeaderCaps noBottomMargin viewAllLink={viewAllLink}>
+        Nodes
+      </FormHeaderCaps>
       {nodeListByHostLoadingState !== 'finished' ? (
         <TableSkeleton />
       ) : !Boolean(nodeListByHost?.length) &&
@@ -45,6 +48,6 @@ export const HostViewDashboardNodes = () => {
           onRowClick={handleNodeClick}
         />
       )}
-    </DetailsWrapper>
+    </>
   );
 };

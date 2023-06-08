@@ -285,8 +285,8 @@ export const NodeLauncher = () => {
         {!node.blockchainId && !node.nodeType && (
           <div css={styles.empty}>
             <EmptyColumn
-              title="Launch a Node"
-              description="Select a protocol to get started"
+              title="Launch a Node."
+              description="Select a protocol to get started."
             />
           </div>
         )}

@@ -1,4 +1,4 @@
-import { TableBlockNodes, Button, ButtonGroup } from '@shared/components';
+import { TableBlock } from '@shared/components';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
@@ -47,11 +47,7 @@ export const mapHostNodesToRows = (
         key: '2',
         component: (
           <>
-            <TableBlockNodes
-              id={node.id}
-              name={node.name}
-              address={node?.ip!}
-            />
+            <TableBlock id={node.id} name={node.name} address={node?.ip!} />
           </>
         ),
       },

@@ -3,6 +3,8 @@ import {
   Button,
   CopyToClipboard,
   FormHeader,
+  FormHeaderCaps,
+  FormLabelCaps,
   FormText,
   OrganizationSelect,
 } from '@shared/components';
@@ -20,34 +22,42 @@ export const HostLauncher = ({ token }: HostLauncherProps) => {
   // TODO: Improve design and structure
   return (
     <div>
-      <h3 css={styles.title}>Create host</h3>
-      <div>
-        <FormHeader>Select an organization</FormHeader>
-        <OrganizationSelect />
-      </div>
-      <div>
-        <FormHeader>Run terminal command</FormHeader>
-        <FormText>
-          Launch a new host by running this command on any server
-        </FormText>
-
-        <CopyToClipboard value={`bvup ${token}`} />
-
-        <Button
-          style="outline"
-          size="small"
-          disabled={provisionTokenLoadingState !== 'finished'}
-          css={[spacing.top.medium, styles.button]}
-          onClick={resetProvisionToken}
-          loading={provisionTokenLoadingState !== 'finished'}
-        >
-          Regenerate
-        </Button>
-      </div>
-      <div css={spacing.top.medium}>
-        <FormHeader>Sit back and wait</FormHeader>
-        <FormText>We expect this host to be ready in 4 minutes</FormText>
-      </div>
+      <header css={styles.header}>
+        <FormHeaderCaps noBottomMargin>LAUNCH HOST</FormHeaderCaps>
+      </header>
+      <ul css={styles.timeline}>
+        <li>
+          <div>
+            <FormLabelCaps>Select Organization</FormLabelCaps>
+            <OrganizationSelect />
+          </div>
+        </li>
+        <li>
+          <div css={spacing.bottom.large}>
+            <FormLabelCaps>Run terminal command</FormLabelCaps>
+            <FormText>
+              Launch a new host by running this command on any server
+            </FormText>
+            <CopyToClipboard value={`bvup ${token}`} />
+            <Button
+              style="outline"
+              size="small"
+              disabled={provisionTokenLoadingState !== 'finished'}
+              css={[spacing.top.medium, styles.button]}
+              onClick={resetProvisionToken}
+              loading={provisionTokenLoadingState !== 'finished'}
+            >
+              Regenerate
+            </Button>
+          </div>
+        </li>
+        <li>
+          <div>
+            <FormLabelCaps>Sit back and wait</FormLabelCaps>
+            <FormText>We expect this host to be ready in 4 minutes</FormText>
+          </div>
+        </li>
+      </ul>
     </div>
   );
 };

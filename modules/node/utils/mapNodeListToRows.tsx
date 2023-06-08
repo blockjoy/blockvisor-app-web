@@ -1,4 +1,4 @@
-import { TableBlockNodes } from '@shared/components';
+import { TableBlock } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
@@ -44,11 +44,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
         key: '2',
         component: (
           <>
-            <TableBlockNodes
-              id={node.id}
-              name={node.name}
-              address={node?.ip!}
-            />
+            <TableBlock id={node.id} name={node.name} address={node?.ip!} />
           </>
         ),
       },

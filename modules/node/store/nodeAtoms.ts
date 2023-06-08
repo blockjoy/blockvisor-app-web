@@ -1,5 +1,6 @@
 import { atom, selector } from 'recoil';
-import { nodeStatusList, nodeTypeList } from '@shared/constants/lookups';
+import { nodeTypeList } from '@shared/constants/lookups';
+import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { blockchainsAtoms } from './blockchains';
 import { isMobile } from 'react-device-detect';
 import { localStorageEffect } from 'utils/store/persist';

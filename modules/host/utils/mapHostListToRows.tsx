@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { HostStatus, NodeStatus, TableBlockNodes } from '@shared/components';
+import { HostStatus, TableBlock } from '@shared/components';
 
 export const mapHostListToRows = (hostList?: Host[]) => {
   const headers: TableHeader[] = [
@@ -28,18 +28,14 @@ export const mapHostListToRows = (hostList?: Host[]) => {
         key: '1',
         component: (
           <>
-            <TableBlockNodes
-              id={host.id}
-              name={host.name}
-              address={host?.ip!}
-            />
+            <TableBlock name={host.name} address={host?.ip!} />
           </>
         ),
       },
       {
         key: '2',
         component: (
-          <span style={{ fontSize: '14px' }}>
+          <span style={{ fontSize: '14px', whiteSpace: 'nowrap' }}>
             {formatDistanceToNow(new Date(host.createdAt!), {
               addSuffix: true,
             })}

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { styles } from './NodeStatus.styles';
-import { nodeStatusList } from '@shared/constants/lookups';
+import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { NodeStatusIcon } from './NodeStatusIcon';
 
 export type NodeStatusType = 'container' | 'sync' | 'staking';

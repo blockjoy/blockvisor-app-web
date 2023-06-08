@@ -4,14 +4,18 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     position: relative;
-    padding: 10px;
+    padding: 14px 16px;
     background: ${theme.colorInput};
-    border: 1px solid #F8FAF6;
-    border: 1px solid rgb(248, 250, 246, .1);
-    border-radius: 10px;
+    border-radius: 6px;
+    border: 1px solid ${theme.colorInput};
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    &,
+    path {
+      transition: 0.3s;
+    }
 
     path {
       color: ${theme.colorLabel};
@@ -19,6 +23,8 @@ export const styles = {
 
     :hover,
     :active {
+      border-color: ${theme.colorBorderGrey};
+
       path {
         color: ${theme.colorText};
       }

@@ -9,9 +9,6 @@ import {
 
 export const mapNodeConfigToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
-
-  console.log('nodeProperties', node.properties);
-
   const details: {
     id: string;
     label: string | ReactNode;

@@ -1,5 +1,7 @@
 import { FiltersWrapper, RangeSlider } from '@shared/components';
+import { useEffect, useState } from 'react';
 import { SetterOrUpdater } from 'recoil';
+import { styles } from './FiltersRange.styles';
 
 type FiltersRangeProps = {
   name: string;
@@ -32,6 +34,16 @@ export const FiltersRange = ({
   formatter,
   customValues,
 }: FiltersRangeProps) => {
+  const [isFiltered, setIsFiltered] = useState(false);
+
+  useEffect(() => {
+    if (values[0] !== min || values[1] !== max) {
+      setIsFiltered(true);
+    } else {
+      if (isFiltered) setIsFiltered(false);
+    }
+  }, [values]);
+
   return (
     <FiltersWrapper
       name={name}
@@ -51,9 +63,11 @@ export const FiltersRange = ({
           formatter={formatter}
           customValues={customValues}
         />
-      ) : (
-        <>{`${formatter(values[0])} - ${formatter(values[1])}`}</>
-      )}
+      ) : isFiltered ? (
+        <p css={styles.preview}>
+          {`${formatter(values[0])} - ${formatter(values[1])}`}
+        </p>
+      ) : null}
     </FiltersWrapper>
   );
 };

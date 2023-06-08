@@ -1,6 +1,7 @@
 import { localStorageEffect } from 'utils/store/persist';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { hostFiltersDefaults, hostStatusList } from '@shared/constants/lookups';
+import { hostFiltersDefaults } from '@shared/constants/lookups';
+import { hostStatusList } from '@shared/constants/hostStatusList';
 import { isMobile } from 'react-device-detect';
 import { atom } from 'recoil';
 
@@ -42,7 +43,7 @@ const preloadHosts = atom<number>({
 
 const activeListType = atom<string | 'table' | 'grid'>({
   key: 'host.list.type',
-  default: 'grid',
+  default: 'table',
 });
 
 const isFiltersOpen = atom<boolean>({
