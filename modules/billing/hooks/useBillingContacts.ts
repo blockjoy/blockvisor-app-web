@@ -12,6 +12,8 @@ export const useBillingContacts = (): IBillingContactsHook => {
 
   const customer = useRecoilValue(billingAtoms.customer);
 
+  const subscription = useRecoilValue(billingAtoms.subscription);
+
   const getBillingContacts = async () => {
     setBillingContactsLoadingState('initializing');
 
@@ -21,7 +23,10 @@ export const useBillingContacts = (): IBillingContactsHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: customer?.id }),
+        body: JSON.stringify({
+          customerId: customer?.id,
+          subscriptionId: subscription?.id,
+        }),
       });
 
       const data: Contact[] = await response.json();
@@ -43,6 +48,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
         email,
         enabled: true,
         send_billing_email: true,
+        label: subscription?.id,
       };
 
       const response = await fetch(

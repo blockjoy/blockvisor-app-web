@@ -7,10 +7,16 @@ import {
   Invoices,
   PaymentPreview,
   useSubscription,
+  BillingContacts,
 } from '@modules/billing/';
+import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 
-// TODO: Don't show PaymentPreview and Invoices Tab if there is no subscription
-export const Billing = () => {
+type BillingProps = {
+  items: Item[];
+  itemPrices: ItemPrice[];
+};
+
+export const Billing = ({ items, itemPrices }: BillingProps) => {
   const { push } = useRouter();
   const { subscription } = useSubscription();
 
@@ -22,7 +28,7 @@ export const Billing = () => {
           value: '1',
           component: (
             <PageSection bottomBorder={false}>
-              <Subscription />
+              <Subscription items={items} itemPrices={itemPrices} />
             </PageSection>
           ),
         },
@@ -36,8 +42,17 @@ export const Billing = () => {
           ),
         },
         {
-          label: 'Invoice History',
+          label: 'Billing Contacts',
           value: '3',
+          component: (
+            <PageSection bottomBorder={false}>
+              <BillingContacts />
+            </PageSection>
+          ),
+        },
+        {
+          label: 'Invoice History',
+          value: '4',
           component: (
             <PageSection bottomBorder={false}>
               <Invoices />

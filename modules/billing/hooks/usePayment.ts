@@ -23,7 +23,7 @@ export const usePayment = () => {
     })
       .then((response) => response.json())
       .catch((err) => {
-        console.log('error', err);
+        console.log('Error while creating a payment intent', err);
       });
   };
 

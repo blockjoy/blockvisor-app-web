@@ -25,16 +25,27 @@ const listPaymentSources = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PaymentSource[] | { message: string }>,
+  res: NextApiResponse<PaymentSource[] | [] | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {
       const params = req.body as _payment_source.payment_source_list_params;
+      if (!params.customer_id || Object.keys(params.customer_id).length === 0)
+        throw new Error('No Customer ID provided');
+
       const response = await listPaymentSources(params);
 
       res.status(200).json(response);
     } catch (error: any) {
-      res.status(error.http_status_code || 500).json(error);
+      if (error.message === 'No Customer ID provided') {
+        // Handling the 'No Customer ID provided' error specifically
+        res.status(200).json([]);
+      } else {
+        // Handling any other errors
+        res
+          .status(error.http_status_code || 500)
+          .json({ message: error.message });
+      }
     }
   } else {
     res.setHeader('Allow', ['POST']);
