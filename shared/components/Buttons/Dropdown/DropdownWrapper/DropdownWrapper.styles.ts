@@ -21,7 +21,8 @@ export const styles = {
           fill: ${theme.colorText};
         }
 
-        p {
+        p,
+        span {
           color: ${theme.colorText};
         }
         border-color: ${theme.colorLabel};
@@ -32,7 +33,8 @@ export const styles = {
       span {
         color: ${theme.colorDefault};
       }
-      p {
+      p,
+      span {
         color: ${theme.colorText};
       }
     }

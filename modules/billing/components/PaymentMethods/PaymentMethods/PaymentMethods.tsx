@@ -34,10 +34,7 @@ export const PaymentMethods = () => {
   }, [router.isReady, add]);
 
   useEffect(() => {
-    getPaymentMethods({
-      customer_id: { is: customer?.id },
-      type: { is: 'card' },
-    });
+    getPaymentMethods();
   }, []);
 
   const handleAdding = () => setIsAdding(true);

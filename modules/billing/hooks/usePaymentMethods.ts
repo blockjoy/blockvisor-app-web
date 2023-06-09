@@ -18,10 +18,13 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
   const [customer, setCustomer] = useRecoilState(billingAtoms.customer);
 
-  const getPaymentMethods = async (
-    params: _payment_source.payment_source_list_params,
-  ) => {
+  const getPaymentMethods = async () => {
     setPaymentMethodsLoadingState('initializing');
+
+    const params: _payment_source.payment_source_list_params = {
+      customer_id: { is: customer?.id },
+      type: { is: 'card' },
+    };
 
     try {
       const response = await fetch(BILLING_API_ROUTES.payments.sources.list, {
@@ -32,9 +35,15 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
         body: JSON.stringify(params),
       });
 
-      const data: PaymentSource[] = await response.json();
-
-      setPaymentMethods(data);
+      if (!response.ok) {
+        console.error(
+          `Failed to fetch payment methods. Status: ${response.status}, Status Text: ${response.statusText}`,
+        );
+        setPaymentMethods([]);
+      } else {
+        const data: PaymentSource[] = await response.json();
+        setPaymentMethods(data);
+      }
     } catch (error) {
       console.error('Failed to fetch payment methods', error);
     } finally {
@@ -65,6 +74,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
   };
 
   const createPaymentMethod = async (
+    customerId: string,
     paymentIntentId: string,
     onSuccess: (paymentSourceId: string) => void,
   ) => {
@@ -72,7 +82,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
     try {
       const params: _payment_source.create_using_payment_intent_params = {
-        customer_id: customer?.id!,
+        customer_id: customer?.id ? customer.id : customerId,
         payment_intent: {
           id: paymentIntentId,
         },

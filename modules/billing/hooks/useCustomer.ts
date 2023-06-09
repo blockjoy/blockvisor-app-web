@@ -13,36 +13,26 @@ export const useCustomer = (): ICustomerHook => {
 
   const getCustomer = async (customerId: string) => {
     setCustomerLoadingState('initializing');
-    const response = await fetch(BILLING_API_ROUTES.customer.get, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(customerId),
-    });
 
-    const data = await response.json();
-    console.log('Chargebee customer loaded:', data);
+    try {
+      const response = await fetch(BILLING_API_ROUTES.customer.get, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(customerId),
+      });
 
-    if (!response.ok) {
-      if (data.error_code === 'resource_not_found') {
-        // TODO: implemented for the already existing customers, should be removed
-        const user = repository?.getIdentity();
-        await createCustomer({
-          id: user?.id,
-          first_name: user?.firstName,
-          last_name: user?.lastName,
-          email: user?.email,
-        });
+      const data = await response.json();
 
+      if (!response.ok) {
+        setCustomer(null);
         return;
       }
-
-      setCustomerLoadingState('finished');
-      throw new Error('Error getting Chargebee customer');
+      setCustomer(data);
+    } catch (error: any) {
+      console.log('Error while fetching a customer', error);
     }
-
-    setCustomer(data);
 
     setCustomerLoadingState('finished');
   };
@@ -62,10 +52,13 @@ export const useCustomer = (): ICustomerHook => {
       }
 
       const customer = await response.json();
-      console.log('Chargebee customer created:', customer);
 
       setCustomer(customer);
-    } catch (error) {}
+
+      return customer;
+    } catch (error) {
+      console.log('Error while creating a customer', error);
+    }
   };
 
   const assignPaymentRole = async (

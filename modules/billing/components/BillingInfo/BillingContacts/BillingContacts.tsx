@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { styles } from './BillingContacts.styles';
 import {
@@ -7,11 +7,16 @@ import {
   useBillingContacts,
   checkIfExists,
 } from '@modules/billing';
-import { Button } from '@shared/components';
+import { Button, TableSkeleton } from '@shared/components';
 
 export const BillingContacts = () => {
-  const { billingContacts, addBillingContact, removeBillingContact } =
-    useBillingContacts();
+  const {
+    billingContacts,
+    billingContactsLoadingState,
+    addBillingContact,
+    removeBillingContact,
+    getBillingContacts,
+  } = useBillingContacts();
 
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
 
@@ -32,12 +37,18 @@ export const BillingContacts = () => {
     setActiveView('list');
   };
 
+  useEffect(() => {
+    getBillingContacts();
+  }, []);
+
   const actions: BillingContactsActions = {
     add: handleNewBillingContact,
     cancel: handleCancel,
   };
 
-  return activeView === 'list' ? (
+  return billingContactsLoadingState !== 'finished' ? (
+    <TableSkeleton />
+  ) : activeView === 'list' ? (
     <div css={styles.wrapper}>
       {!billingContacts.length ? (
         <p>

@@ -26,7 +26,7 @@ export const BillingAddressPreview = ({
       <span>{company}</span>
       <span>{line1}</span>
       <span>
-        {state}, {city} {zip}
+        {city}, {zip}
       </span>
       <span>{country}</span>
     </div>

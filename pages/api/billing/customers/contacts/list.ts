@@ -1,12 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { _contact } from 'chargebee-typescript';
-import { Customer, Contact } from 'chargebee-typescript/lib/resources';
+import { Contact } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
-const listContacts = async (customerData: Customer): Promise<Contact[]> => {
+const listContacts = async (params: {
+  customerId: string;
+  subscriptionId: string;
+}): Promise<Contact[]> => {
   return new Promise((resolve, reject) => {
     chargebee.customer
-      .contacts_for_customer(customerData.id)
+      .contacts_for_customer(params.customerId)
       .request(function (error: any, result: { list: Contact[] }) {
         if (error) {
           reject(error);
@@ -15,7 +18,11 @@ const listContacts = async (customerData: Customer): Promise<Contact[]> => {
             (listItem: any) => listItem.contact as Contact,
           );
 
-          resolve(contacts);
+          const filteredContacts = contacts.filter((contact: Contact) =>
+            contact.label?.split(',').includes(params.subscriptionId),
+          );
+
+          resolve(filteredContacts);
         }
       });
   });
@@ -27,8 +34,8 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const customerData = req.body as any;
-      const response = await listContacts(customerData);
+      const params = req.body as { customerId: string; subscriptionId: string };
+      const response = await listContacts(params);
 
       res.status(200).json(response);
     } catch (error: any) {
