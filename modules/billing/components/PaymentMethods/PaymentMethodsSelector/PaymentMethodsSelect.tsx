@@ -12,7 +12,7 @@ import { useRecoilValue } from 'recoil';
 import { styles } from './PaymentMethodsSelect.styles';
 import IconPlus from '@public/assets/icons/plus-12.svg';
 import { useRouter } from 'next/router';
-import { ROUTES } from '@shared/index';
+import { Badge, ROUTES } from '@shared/index';
 
 type PaymentMethodsSelectProps = {
   primaryId?: string;
@@ -24,12 +24,12 @@ export const PaymentMethodsSelect = ({
   handlePaymentMethod,
 }: PaymentMethodsSelectProps) => {
   const router = useRouter();
+  const customer = useRecoilValue(billingAtoms.customer);
+  const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleClose = () => setIsOpen(!isOpen);
-
-  const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const handleSelect = (paymentMethod: PaymentSource) => {
     handlePaymentMethod(paymentMethod);
@@ -60,8 +60,21 @@ export const PaymentMethodsSelect = ({
           <p>
             {activePaymentMethod ? (
               <>
-                {CreditCardTypes[activePaymentMethod.card?.brand!]} ***
-                {activePaymentMethod.card?.last4}
+                <span css={styles.title}>
+                  {CreditCardTypes[activePaymentMethod.card?.brand!]} ***
+                  {activePaymentMethod.card?.last4}
+                </span>
+                {customer?.primary_payment_source_id ===
+                  activePaymentMethod.id &&
+                  paymentMethods?.length > 1 && (
+                    <Badge
+                      color="primary"
+                      style="outline"
+                      customCss={[styles.badge]}
+                    >
+                      Primary
+                    </Badge>
+                  )}
               </>
             ) : (
               'Select payment method'
@@ -84,8 +97,21 @@ export const PaymentMethodsSelect = ({
                     onButtonClick={() => handleSelect(paymentMethod)}
                   >
                     <p css={styles.active}>
-                      {CreditCardTypes[paymentMethod.card?.brand!]} ***
-                      {paymentMethod.card?.last4}
+                      <span css={styles.title}>
+                        {CreditCardTypes[paymentMethod.card?.brand!]} ***
+                        {paymentMethod.card?.last4}
+                      </span>
+                      {customer?.primary_payment_source_id ===
+                        paymentMethod.id &&
+                        paymentMethods?.length > 1 && (
+                          <Badge
+                            color="primary"
+                            style="outline"
+                            customCss={[styles.badge]}
+                          >
+                            Primary
+                          </Badge>
+                        )}
                     </p>
                   </DropdownItem>
                 </li>

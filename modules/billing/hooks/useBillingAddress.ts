@@ -14,16 +14,19 @@ export const useBillingAddress = (): IBillingAddressHook => {
     billingAtoms.customerLoadingState,
   );
 
-  const addBillingAddress = async ({
-    firstName,
-    lastName,
-    company,
-    address,
-    city,
-    country,
-    region,
-    postal,
-  }: BillingAddressForm) => {
+  const addBillingAddress = async (
+    customerId: string,
+    {
+      firstName,
+      lastName,
+      company,
+      address,
+      city,
+      country,
+      region,
+      postal,
+    }: BillingAddressParams,
+  ) => {
     setCustomerLoadingState('loading');
 
     try {
@@ -47,7 +50,7 @@ export const useBillingAddress = (): IBillingAddressHook => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            customerId: customer?.id,
+            customerId: customer?.id ? customer.id : customerId,
             billingInfo: updatedBillingInfo,
           }),
         },

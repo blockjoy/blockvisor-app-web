@@ -30,7 +30,8 @@ export const styles = {
       span {
         color: ${theme.colorDefault};
       }
-      p {
+      p,
+      span {
         color: ${theme.colorText};
       }
     }

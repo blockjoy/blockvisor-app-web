@@ -27,9 +27,10 @@ type PaymentMethodFormProps = {
 };
 
 export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
-  const loading = useRecoilValue(billingAtoms.paymentMethodLoadingState);
+  const loading = useRecoilValue(billingAtoms.addPaymentMethodLoadingState);
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const error = useRecoilValue(billingAtoms.paymentMethodError);
+  const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const cardRef = useRef<any>(null);
 
@@ -51,7 +52,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const { assignPaymentRole } = useCustomer();
 
   const handleSucces = (paymentSourceId: string) => {
-    if (primary)
+    if (primary || !paymentMethods.length)
       assignPaymentRole({
         payment_source_id: paymentSourceId,
         role: 'primary',
@@ -60,15 +61,30 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   };
 
   const handleSubmit = () => {
+    const firstName =
+      activeView === 'action'
+        ? cardHolder.firstName
+        : billingAddress?.first_name;
+    const lastName =
+      activeView === 'action' ? cardHolder.lastName : billingAddress?.last_name;
+    const addressLine1 =
+      activeView === 'action' ? billingInfo.address : billingAddress?.line1;
+    const city =
+      activeView === 'action' ? billingInfo.city : billingAddress?.city;
+    const zip =
+      activeView === 'action' ? billingInfo.postal : billingAddress?.zip;
+    const countryCode =
+      activeView === 'action' ? billingInfo.country : billingAddress?.country;
+
     const additionalData = {
       billingAddress: {
-        firstName: cardHolder.firstName,
-        lastName: cardHolder.lastName,
-        addressLine1: billingInfo.address,
+        firstName,
+        lastName,
+        addressLine1,
         addressLine2: '',
-        city: billingInfo.city,
-        zip: billingInfo.postal,
-        countryCode: billingInfo.country,
+        city,
+        zip,
+        countryCode,
         state: '',
         stateCode: '',
       },
@@ -97,14 +113,16 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
         setCardHolder={setCardHolder}
       />
 
-      <Checkbox
-        id="primary"
-        name="primary"
-        checked={primary}
-        onChange={handlePrimary}
-      >
-        Save as primary
-      </Checkbox>
+      {paymentMethods && paymentMethods.length ? (
+        <Checkbox
+          id="primary"
+          name="primary"
+          checked={primary}
+          onChange={handlePrimary}
+        >
+          Save as primary
+        </Checkbox>
+      ) : null}
 
       <div css={spacing.top.large}>
         <div css={[flex.display.flex, flex.direction.row]}>

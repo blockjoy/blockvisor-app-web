@@ -11,10 +11,10 @@ export enum CreditCardTypes {
 }
 
 export enum SubscriptionStatus {
-  future = 'Future',
-  in_trial = 'In trial',
-  active = 'Active',
-  non_renewing = 'Non renewing',
-  paused = 'Paused',
-  cancelled = 'Cancelled',
+  future = 'future',
+  in_trial = 'in trial',
+  active = 'active',
+  non_renewing = 'non renewing',
+  paused = 'paused',
+  cancelled = 'cancelled',
 }

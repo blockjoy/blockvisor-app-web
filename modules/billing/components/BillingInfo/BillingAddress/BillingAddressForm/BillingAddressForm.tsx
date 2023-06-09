@@ -31,6 +31,9 @@ export const BillingAddressForm = ({
     postalController,
   } = useBillingAddressForm(actions, billingAddress);
 
+  const { formState } = form;
+  const { isValid } = formState;
+
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} css={styles.wrapper}>
@@ -56,7 +59,7 @@ export const BillingAddressForm = ({
                 placeholder="Last Name"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={1}
+                tabIndex={2}
                 {...lastNameController.field}
                 ref={null}
                 validationOptions={{
@@ -71,7 +74,7 @@ export const BillingAddressForm = ({
               placeholder="Company"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={2}
+              tabIndex={3}
               {...companyController.field}
               ref={null}
             />
@@ -82,7 +85,7 @@ export const BillingAddressForm = ({
               placeholder="Address"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={3}
+              tabIndex={4}
               {...addressController.field}
               ref={null}
               validationOptions={{
@@ -94,6 +97,7 @@ export const BillingAddressForm = ({
             <Controller
               {...countryController.field}
               rules={{ required: 'Country is required' }}
+              tabIndex={5}
               render={({ field: { name, onChange, value } }) => (
                 <CountrySelector
                   name={name}
@@ -112,7 +116,7 @@ export const BillingAddressForm = ({
                 placeholder="City"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={4}
+                tabIndex={6}
                 {...cityController.field}
                 ref={null}
                 validationOptions={{
@@ -142,7 +146,8 @@ export const BillingAddressForm = ({
             style="secondary"
             size="small"
             type="submit"
-            tabIndex={9}
+            tabIndex={8}
+            disabled={!isValid}
           >
             {billingAddress ? 'Update' : 'Add'}
           </Button>
@@ -150,7 +155,7 @@ export const BillingAddressForm = ({
             onClick={() => actions.cancel()}
             style="outline"
             size="small"
-            tabIndex={10}
+            tabIndex={9}
           >
             Cancel
           </Button>

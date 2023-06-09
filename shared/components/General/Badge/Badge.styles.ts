@@ -16,6 +16,10 @@ export const styles = {
     cursor: default;
     line-height: 1;
   `,
+  default: (theme: ITheme) => css`
+    color: ${theme.colorTextGrey};
+    border-color: ${theme.colorTextGrey};
+  `,
   primary: (theme: ITheme) => css`
     color: ${theme.colorPrimary};
     border-color: ${theme.colorPrimary};

@@ -59,4 +59,10 @@ export const styles = {
       }
     }
   `,
+  title: css`
+    vertical-align: middle;
+  `,
+  badge: css`
+    margin-left: 5px;
+  `,
 };
