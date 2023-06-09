@@ -8,7 +8,7 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { blockchainsAtoms } from '@modules/node';
 
-// TODO: check where payment intent has to be included
+// TODO: check whether payment intent has to be included
 export const useSubscription = (): ISubscriptionHook => {
   const customer = useRecoilValue(billingAtoms.customer);
   const defaultOrganization = useRecoilValue(
@@ -37,11 +37,6 @@ export const useSubscription = (): ISubscriptionHook => {
       });
 
       const data = await response.json();
-
-      if (data.error_code) {
-        setSubscription(null);
-        return;
-      }
 
       setSubscription(data);
     } catch (error) {
@@ -116,12 +111,6 @@ export const useSubscription = (): ISubscriptionHook => {
         params: {},
       };
 
-      console.log(
-        '%csubscriptionProperties',
-        'color: #f00',
-        subscriptionProperties,
-      );
-
       const response = await fetch(BILLING_API_ROUTES.subsriptions.update, {
         method: 'POST',
         headers: {
@@ -154,11 +143,6 @@ export const useSubscription = (): ISubscriptionHook => {
 
     const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
       [];
-
-    console.log('TYPE', type);
-    console.log('PAYLOAD', payload);
-
-    console.log('SUBSCRIPTION ITEMS', subscription?.subscription_items);
 
     const nodeType = node.nodeType === 10 ? 'pruned' : '';
     const region = 'apac';
@@ -230,12 +214,6 @@ export const useSubscription = (): ISubscriptionHook => {
       params: params,
     };
 
-    console.log(
-      '%csubscriptionProperties',
-      'color: #f00',
-      subscriptionProperties,
-    );
-
     const response = await fetch(BILLING_API_ROUTES.subsriptions.item.update, {
       method: 'POST',
       headers: {
@@ -245,8 +223,6 @@ export const useSubscription = (): ISubscriptionHook => {
     });
 
     const updatedSubscriptionData: Subscription = await response.json();
-
-    console.log('Subscription [RESPONSE]', updatedSubscriptionData);
 
     setSubscription(updatedSubscriptionData);
     setSubscriptionLoadingState('finished');
@@ -352,8 +328,6 @@ export const useSubscription = (): ISubscriptionHook => {
       );
 
       const data: Subscription = await response.json();
-
-      console.log('data123', data);
 
       setSubscription(data);
     } catch (error) {

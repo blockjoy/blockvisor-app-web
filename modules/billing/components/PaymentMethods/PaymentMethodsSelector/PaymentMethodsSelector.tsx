@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import {
-  CreditCardTypes,
   PaymentMethodsSelect,
   useCustomer,
   usePaymentMethods,
@@ -14,7 +13,6 @@ import {
   TableSkeleton,
 } from '@shared/components';
 import { styles } from './PaymentMethodsSelector.styles';
-import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 
 type PaymentMethodsSelectorProps = {
@@ -34,13 +32,9 @@ export const PaymentMethodsSelector = ({
 
   const { paymentMethodsLoadingState, getPaymentMethods } = usePaymentMethods();
   const { updateBillingProfile } = useSubscription();
-  const { customer } = useCustomer();
 
   useEffect(() => {
-    getPaymentMethods({
-      customer_id: { is: customer?.id },
-      type: { is: 'card' },
-    });
+    getPaymentMethods();
   }, []);
 
   const handleSelect = (paymentMethod: PaymentSource) => {
@@ -58,7 +52,7 @@ export const PaymentMethodsSelector = ({
       {paymentMethodsLoadingState !== 'finished' ? (
         <TableSkeleton />
       ) : (
-        <>
+        <div css={styles.wrapper}>
           <InputLabel
             css={[typo.base]}
             labelSize="medium"
@@ -79,7 +73,7 @@ export const PaymentMethodsSelector = ({
               Cancel
             </Button>
           </ButtonGroup>
-        </>
+        </div>
       )}
     </>
   );

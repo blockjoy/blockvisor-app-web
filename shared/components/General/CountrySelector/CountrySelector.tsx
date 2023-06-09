@@ -1,53 +1,54 @@
-const countryList = require('country-list');
-
 import { useState } from 'react';
-
-import { Scrollbar } from '../Scrollbar/Scrollbar';
-import { styles } from './CountrySelector.styles';
-
+import countryList, { Country } from 'country-list';
 import { SerializedStyles } from '@emotion/react';
+import { styles } from './CountrySelector.styles';
 import {
   DropdownButton,
   DropdownItem,
   DropdownMenu,
   DropdownWrapper,
   InputLabel,
+  Scrollbar,
 } from '@shared/components';
 
-const COUNTRIES = countryList.getCodeList();
+const COUNTRIES = countryList
+  .getData()
+  .sort((a: Country, b: Country) => a.name.localeCompare(b.name));
 
 export type CountrySelectorProps = {
   name: string;
   value: string;
+  onChange: (value: string) => void;
   inputSize?: InputSize;
   label?: string;
   labelStyles?: SerializedStyles[];
   disabled?: boolean;
-  onChange: (value: string) => void;
 };
 
 export const CountrySelector = ({
   name,
   value,
+  onChange,
   inputSize,
   label,
   labelStyles,
   disabled,
-  onChange,
 }: CountrySelectorProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const defaultCountry = COUNTRIES[value?.toLocaleLowerCase()] ?? null;
-  const [activeCountryName, setActiveCountryName] =
-    useState<string | null>(defaultCountry);
+  const defaultCountry =
+    COUNTRIES.find((country: Country) => country.code === value) ?? null;
+
+  const [activeCountryName, setActiveCountryName] = useState<string | null>(
+    defaultCountry?.name!,
+  );
 
   const handleClose = () => setIsOpen(!isOpen);
 
-  const handleChange = (country: any) => {
-    const [[countryKey, countryValue]]: string[][] = Object.entries(country);
-
-    onChange(countryKey.toUpperCase());
-    setActiveCountryName(countryValue);
+  const handleChange = (e: any, country: Country) => {
+    e.preventDefault();
+    onChange(country.code);
+    setActiveCountryName(country.name);
     handleClose();
   };
 
@@ -78,19 +79,15 @@ export const CountrySelector = ({
         <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
           <Scrollbar additionalStyles={[styles.dropdownInner]}>
             <ul>
-              {Object.keys(COUNTRIES)?.map((countryKey: string) => {
-                const countryName = COUNTRIES[countryKey];
-
+              {COUNTRIES.map((country: Country) => {
                 return (
-                  <li key={countryKey}>
+                  <li key={country.name}>
                     <DropdownItem
                       size="medium"
                       type="button"
-                      onButtonClick={() =>
-                        handleChange({ [countryKey]: countryName })
-                      }
+                      onButtonClick={(e) => handleChange(e, country)}
                     >
-                      <p css={styles.activeOrg}>{countryName}</p>
+                      <p css={styles.activeOrg}>{country.name}</p>
                     </DropdownItem>
                   </li>
                 );

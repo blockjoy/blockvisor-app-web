@@ -1,38 +1,20 @@
 import { DetailsView, TableSkeleton } from '@shared/components';
-import {
-  BillingAddress,
-  BillingContacts,
-  useBillingAddress,
-  useBillingContacts,
-} from '@modules/billing';
-import { useEffect } from 'react';
+import { BillingAddress, billingAtoms } from '@modules/billing';
+import { useRecoilValue } from 'recoil';
 
 export const BillingInfo = () => {
-  const { billingAddressLoadingState } = useBillingAddress();
-  const { getBillingContacts, billingContactsLoadingState } =
-    useBillingContacts();
-
-  useEffect(() => {
-    getBillingContacts();
-  }, []);
+  const billingAddressLoadingState = useRecoilValue(
+    billingAtoms.billingAddressLoadingState,
+  );
 
   return (
     <>
       {billingAddressLoadingState !== 'finished' ? (
         <TableSkeleton />
       ) : (
-        <div>
-          <DetailsView headline="Billing Address">
-            <BillingAddress />
-          </DetailsView>
-          <DetailsView headline="Billing Contacts">
-            {billingContactsLoadingState !== 'finished' ? (
-              <TableSkeleton />
-            ) : (
-              <BillingContacts />
-            )}
-          </DetailsView>
-        </div>
+        <DetailsView headline="Billing Address">
+          <BillingAddress />
+        </DetailsView>
       )}
     </>
   );

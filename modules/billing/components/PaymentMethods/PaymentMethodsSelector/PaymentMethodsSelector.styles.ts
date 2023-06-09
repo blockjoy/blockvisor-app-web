@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
-import { ITheme } from 'types/theme';
 
 export const styles = {
+  wrapper: css`
+    max-width: 500px;
+  `,
   active: css`
     overflow: hidden;
     text-overflow: ellipsis;

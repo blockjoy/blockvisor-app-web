@@ -2,8 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 import { Subscription, Card } from 'chargebee-typescript/lib/resources';
 
-const getSubscription = async (id: string): Promise<Subscription> => {
-  console.log('xxx123', id);
+const getSubscription = async (id: string): Promise<Subscription | null> => {
   return new Promise((resolve, reject) => {
     chargebee.subscription.retrieve(id).request(function (
       error: any,
@@ -12,9 +11,9 @@ const getSubscription = async (id: string): Promise<Subscription> => {
         card: Card;
       },
     ) {
-      // TODO resource_not_found throws an error
       if (error) {
-        reject(error);
+        if (error.error_code === 'resource_not_found') resolve(null);
+        else reject(error);
       } else {
         const subscription = result.subscription as Subscription;
         const card = result.card as Card;
@@ -32,7 +31,7 @@ const getSubscription = async (id: string): Promise<Subscription> => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Subscription | { message: string }>,
+  res: NextApiResponse<Subscription | null | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {

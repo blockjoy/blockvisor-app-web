@@ -1,11 +1,12 @@
+import { ReactNode } from 'react';
+import type { GetServerSidePropsContext, PreviewData } from 'next';
 import { InvoiceView } from '@modules/billing';
 import { AppLayout } from '@modules/layout';
-import type { GetServerSidePropsContext, PreviewData } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
 const Invoice = () => <InvoiceView />;
 
-Invoice.getLayout = function getLayout(page: any) {
+Invoice.getLayout = function getLayout(page: ReactNode) {
   return <AppLayout pageTitle="Invoice">{page}</AppLayout>;
 };
 

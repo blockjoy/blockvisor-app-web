@@ -37,8 +37,6 @@ export function RegisterForm() {
   const router = useRouter();
   const { invited, token } = router.query;
 
-  const { createCustomer } = useCustomer();
-
   const form = useForm<RegisterForm>({
     mode: 'all',
     reValidateMode: 'onBlur',

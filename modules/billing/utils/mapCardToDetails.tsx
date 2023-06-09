@@ -5,27 +5,33 @@ export const mapCardToDetails = (card: Card) => {
   const details: any[] = [
     {
       label: 'TYPE',
-      data: (
-        <>
-          <b>{capitalize(card?.brand)}</b>
-        </>
-      ),
+      data: <p>{capitalize(card?.brand)}</p>,
     },
     {
       label: 'Number',
-      data: (
-        <>
-          <b>{card?.masked_number}</b>
-        </>
-      ),
+      data: <p>{card?.masked_number}</p>,
     },
     {
       label: 'Expiry',
       data: (
+        <p>
+          {card?.expiry_month}/{card?.expiry_year}
+        </p>
+      ),
+    },
+    {
+      label: 'Billing Info',
+      data: (
         <>
-          <b>
-            {card?.expiry_month}/{card?.expiry_year}
-          </b>
+          {card?.billing_addr1 ? (
+            <p>
+              {card?.billing_addr1}
+              <br />
+              {card?.billing_zip} {card?.billing_city}, {card?.billing_country}
+            </p>
+          ) : (
+            '-'
+          )}
         </>
       ),
     },
