@@ -1,5 +1,5 @@
-import LogoLarge from '@public/assets/icons/blockjoy-logo-large.svg';
-import LogoSmall from '@public/assets/icons/blockjoy-logo-small.svg';
+import LogoLarge from '@public/assets/icons/app/BlockJoyLogoLarge.svg';
+import LogoSmall from '@public/assets/icons/app/BlockJoyLogoSmall.svg';
 import {
   logo,
   logoLink,

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { SvgIcon } from '@shared/components';
 import { ITheme } from 'types/theme';
 import { ReactNode } from 'react';
-import IconNodes from '@public/assets/icons/box-12.svg';
+import IconNodes from '@public/assets/icons/app/Node.svg';
 
 const styles = {
   wrapper: (theme: ITheme) => css`

@@ -9,7 +9,7 @@ import { FirewallDropdownHeader } from './FirewallDropdownHeader';
 import { FirewallDropdownForm } from './FirewallDropdownForm';
 import { FirewallDropdownItems } from './FirewallDropdownItems';
 import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
-import IconFirewall from '@public/assets/icons/firewall.svg';
+import IconFirewall from '@public/assets/icons/app/Firewall.svg';
 
 type Props = {
   deniedIps: FilteredIpAddr[];

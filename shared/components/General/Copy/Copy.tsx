@@ -1,7 +1,7 @@
 import { reset } from 'styles/utils.reset.styles';
 import { styles } from './Copy.styles';
 import { colors } from 'styles/utils.colors.styles';
-import CopyIcon from '@public/assets/icons/copy-12.svg';
+import CopyIcon from '@public/assets/icons/common/Copy.svg';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
 
 interface CopyButtonProps {

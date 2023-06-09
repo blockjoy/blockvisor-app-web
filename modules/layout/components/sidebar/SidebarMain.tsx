@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { styles } from './SidebarMain.styles';
 import { Badge } from '@shared/components';
-import IconNodes from '@public/assets/icons/box-12.svg';
-import IconOrganizations from '@public/assets/icons/organization-16.svg';
-import IconUnion from '@public/assets/icons/union-16.svg';
-import IconRocket from '@public/assets/icons/rocket-12.svg';
-import IconChat from '@public/assets/icons/chat-12.svg';
+import IconNodes from '@public/assets/icons/app/Node.svg';
+import IconOrganizations from '@public/assets/icons/app/Organization.svg';
+import IconHost from '@public/assets/icons/app/Host.svg';
+import IconRocket from '@public/assets/icons/app/Rocket.svg';
+import IconChat from '@public/assets/icons/common/Chat.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
@@ -25,7 +25,7 @@ const blocks = [
       {
         name: 'Hosts',
         path: '/hosts',
-        icon: <IconUnion />,
+        icon: <IconHost />,
       },
       {
         name: 'Organizations',

@@ -12,7 +12,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeLauncherConfig.styles';
-import IconInfo from '@public/assets/icons/info.svg';
+import IconInfo from '@public/assets/icons/common/Info.svg';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeLauncherState } from '../NodeLauncher';

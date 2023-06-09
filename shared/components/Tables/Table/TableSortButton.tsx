@@ -1,8 +1,8 @@
 import { styles } from './TableSortButton.styles';
 import { SvgIcon } from '@shared/components';
-import IconSort from '@public/assets/icons/sort.svg';
-import IconSortAsc from '@public/assets/icons/sort-asc.svg';
-import IconSortDesc from '@public/assets/icons/sort-desc.svg';
+import IconSort from '@public/assets/icons/common/Sort.svg';
+import IconSortAsc from '@public/assets/icons/common/SortAsc.svg';
+import IconSortDesc from '@public/assets/icons/common/SortDesc.svg';
 
 type Props = {
   children?: React.ReactNode;

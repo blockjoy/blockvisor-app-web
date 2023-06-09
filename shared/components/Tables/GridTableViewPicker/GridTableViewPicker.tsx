@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import { styles } from './GridTableViewPicker.styles';
-import IconTable from '@public/assets/icons/table-12.svg';
-import IconGrid from '@public/assets/icons/grid-12.svg';
+import IconTable from '@public/assets/icons/common/Table.svg';
+import IconGrid from '@public/assets/icons/common/Grid.svg';
 
 type IconButtonProps = {
   activeListType: string | 'table' | 'grid';

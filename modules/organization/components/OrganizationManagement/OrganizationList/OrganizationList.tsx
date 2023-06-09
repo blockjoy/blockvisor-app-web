@@ -11,7 +11,7 @@ import { organizationAtoms } from '@modules/organization/store/organizationAtoms
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { OrganizationAdd } from './OrganizationAdd/OrganizationAdd';
-import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 
 export const OrganizationsList = () => {
   const organizationUIContext = useOrganizationsUIContext();

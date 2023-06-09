@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
-import IconClose from '@public/assets/icons/close-12.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
 import {
   Permissions,
   useHasPermissions,

@@ -18,8 +18,8 @@ import {
   useHostUIContext,
   useFilters,
 } from '@modules/host';
-import IconClose from '@public/assets/icons/close-12.svg';
-import IconRefresh from '@public/assets/icons/refresh-12.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
+import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 
 export type HostFiltersProps = {
   isLoading: LoadingState;

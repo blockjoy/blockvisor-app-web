@@ -1,6 +1,6 @@
 import { styles } from './Pagination.styles';
-import IconPageFirst from '@public/assets/icons/page-first.svg';
-import IconPageLast from '@public/assets/icons/page-last.svg';
+import IconPageFirst from '@public/assets/icons/common/PageFirst.svg';
+import IconPageLast from '@public/assets/icons/common/PageLast.svg';
 
 type PaginationProps = {
   onPageClicked: (index: number) => void;

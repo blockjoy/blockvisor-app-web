@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { NodeTitle } from '@modules/node';
 import { useHostView } from '@modules/host';
-import IconUnion from '@public/assets/icons/union-16.svg';
+import IconHost from '@public/assets/icons/app/Host.svg';
 
 export const HostViewTitle = () => {
   const router = useRouter();
@@ -17,7 +17,7 @@ export const HostViewTitle = () => {
     <PageTitle>
       <div css={styles.breadcrumb}>
         <button onClick={handleNodesClicked} css={styles.nodesButton}>
-          <NodeTitle titleText="Hosts" icon={<IconUnion />} />
+          <NodeTitle titleText="Hosts" icon={<IconHost />} />
         </button>
         <span css={styles.separator}>/</span>
         {isLoading !== 'finished' && !host?.id ? (

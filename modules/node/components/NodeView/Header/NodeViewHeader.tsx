@@ -11,7 +11,7 @@ import { styles } from './NodeViewHeader.styles';
 import { BlockchainIcon } from '@shared/components';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { useNodeView } from '@modules/node';
-import IconNodes from '@public/assets/icons/box-12.svg';
+import IconNodes from '@public/assets/icons/app/Node.svg';
 import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
 import { NodeViewHeaderDelete } from './Delete/NodeViewHeaderDelete';
 import { nodeTypeList } from '@shared/constants/lookups';

@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import IconPlus from '@public/assets/icons/plus-12.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
 import { styles } from './OrganizationSelect.styles';
 
 type Props = {

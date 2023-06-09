@@ -1,5 +1,5 @@
 import { styles } from './BlockjoyLogo.styles';
-import LogoSmall from '@public/assets/icons/blockjoy-logo-beta.svg';
+import LogoSmall from '@public/assets/icons/app/BlockJoyLogoBeta.svg';
 import { FC } from 'react';
 
 type Props = {

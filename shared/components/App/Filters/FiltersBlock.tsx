@@ -2,9 +2,9 @@ import { Checkbox } from '@shared/components';
 import { ChangeEvent, FC, MouseEvent } from 'react';
 import { SetterOrUpdater } from 'recoil';
 import { styles } from './FiltersBlock.styles';
-import IconCheck from '@public/assets/icons/check-16.svg';
-import IconPlus from '@public/assets/icons/plus-12.svg';
-import IconMinus from '@public/assets/icons/minus-12.svg';
+import IconCheck from '@public/assets/icons/common/Check.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
+import IconMinus from '@public/assets/icons/common/Minus.svg';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 

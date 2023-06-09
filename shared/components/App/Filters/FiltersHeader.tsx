@@ -1,7 +1,7 @@
 import { styles } from './FiltersHeader.styles';
-import IconPlus from '@public/assets/icons/plus-12.svg';
-import IconMinus from '@public/assets/icons/minus-12.svg';
-import IconClose from '@public/assets/icons/arrow-left-12.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
+import IconMinus from '@public/assets/icons/common/Minus.svg';
+import IconClose from '@public/assets/icons/common/ArrowLeft.svg';
 import { FiltersHeaderIconText } from './FiltersHeaderIconText';
 import { Skeleton } from '@shared/components';
 

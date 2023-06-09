@@ -1,9 +1,8 @@
 import { sidebarOpen, layoutState } from '@modules/layout/store/layoutAtoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { styles } from './Burger.styles';
-import BurgerOpen from '@public/assets/icons/burger-open.svg';
-import BurgerClosed from '@public/assets/icons/burger-closed.svg';
-import BurgerHide from '@public/assets/icons/burger-hide.svg';
+import BurgerClosed from '@public/assets/icons/common/BurgerClosed.svg';
+import BurgerHide from '@public/assets/icons/common/BurgerHide.svg';
 
 export const Burger = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);

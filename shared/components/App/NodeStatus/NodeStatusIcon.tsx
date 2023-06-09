@@ -8,7 +8,7 @@ import {
 
 import { SvgIcon } from '@shared/components';
 
-const IconNode = dynamic(() => import('@public/assets/icons/box-12.svg'));
+const IconNode = dynamic(() => import('@public/assets/icons/app/Node.svg'));
 
 const IconUndefined = dynamic(
   () => import('@public/assets/icons/nodeStatus/Undefined.svg'),
@@ -73,6 +73,9 @@ const IconUnspecified = dynamic(
 const IconRunning = dynamic(
   () => import('@public/assets/icons/nodeStatus/Running.svg'),
 );
+const IconSyncing = dynamic(
+  () => import('@public/assets/icons/nodeStatus/Syncing.svg'),
+);
 
 const getIcon = (statusName: string) => {
   if (statusName?.match(/SYNCED|FOLLOWER/g)) {
@@ -115,6 +118,8 @@ const getIcon = (statusName: string) => {
         return <IconRemoving />;
       case 'RUNNING':
         return <IconRunning />;
+      case 'SYNCING':
+        return <IconSyncing />;
       default:
         return <IconProcessing />;
     }

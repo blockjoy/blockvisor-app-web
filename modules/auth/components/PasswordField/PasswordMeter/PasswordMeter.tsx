@@ -1,7 +1,7 @@
 import { PasswordTracker } from '@modules/auth/hooks/usePasswordStrength';
 import { SvgIcon } from '@shared/components';
 import { isMobile } from 'react-device-detect';
-import IconInfo from '@public/assets/icons/info.svg';
+import IconInfo from '@public/assets/icons/common/Info.svg';
 import { styles } from './PasswordMeter.styles';
 import { useLayoutEffect, useRef, useState } from 'react';
 

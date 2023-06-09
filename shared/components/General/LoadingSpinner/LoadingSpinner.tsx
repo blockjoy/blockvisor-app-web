@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './spinner.styles';
-import SpinnerIcon from '@public/assets/icons/spinner.svg';
+import SpinnerIcon from '@public/assets/icons/app/Spinner.svg';
 import anime from 'animejs';
 
 interface Props {

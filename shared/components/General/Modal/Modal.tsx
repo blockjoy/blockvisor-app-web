@@ -2,7 +2,7 @@ import { styles } from './Modal.styles';
 import { ReactNode, useEffect, useRef } from 'react';
 import { Portal, SvgIcon } from '@shared/components';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
-import IconClose from '@public/assets/icons/close-12.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
 
 type Props = {
   isOpen?: boolean;

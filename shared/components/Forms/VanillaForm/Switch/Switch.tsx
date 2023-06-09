@@ -1,6 +1,6 @@
 import { ChangeEvent, FC } from 'react';
 import { styles } from './Switch.styles';
-import IconLock from '@public/assets/icons/lock-12.svg';
+import IconLock from '@public/assets/icons/common/Lock.svg';
 import { Tooltip } from '@shared/components';
 
 type Props = {
