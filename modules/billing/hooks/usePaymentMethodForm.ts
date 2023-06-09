@@ -1,17 +1,45 @@
-import { PaymentIntent } from 'chargebee-typescript/lib/resources';
+import { useIdentityRepository } from '@modules/auth';
+import { Customer, PaymentIntent } from 'chargebee-typescript/lib/resources';
 import { useSetRecoilState } from 'recoil';
 import { billingAtoms } from '../store/billingAtoms';
+import { useCustomer } from './useCustomer';
 import { usePayment } from './usePayment';
 import { usePaymentMethods } from './usePaymentMethods';
 
 export const usePaymentMethodForm = (): any => {
+  const setError = useSetRecoilState(billingAtoms.paymentMethodError);
+  const setLoadingState = useSetRecoilState(
+    billingAtoms.addPaymentMethodLoadingState,
+  );
+
   const { createIntent } = usePayment();
   const { createPaymentMethod } = usePaymentMethods();
-  const setError = useSetRecoilState(billingAtoms.paymentMethodError);
+  const { customer, createCustomer } = useCustomer();
 
-  const setLoadingState = useSetRecoilState(
-    billingAtoms.paymentMethodLoadingState,
-  );
+  const repository = useIdentityRepository();
+  const user = repository?.getIdentity();
+
+  const handleCustomerCheck = async () => {
+    if (!customer) {
+      try {
+        const newCustomer = await createCustomer({
+          id: user?.id,
+          first_name: user?.firstName,
+          last_name: user?.lastName,
+          email: user?.email,
+        });
+        return newCustomer;
+      } catch (error) {
+        console.log(
+          'Error while creating a customer in handlePaymentCreation',
+          error,
+        );
+        return;
+      }
+    }
+
+    return customer;
+  };
 
   const onSubmit = async (
     cardRef: any,
@@ -29,24 +57,20 @@ export const usePaymentMethodForm = (): any => {
     setError(null);
 
     try {
+      const customerData: Customer = await handleCustomerCheck();
       const intent: PaymentIntent = await createIntent();
 
-      cardRef.current
-        .authorizeWith3ds(intent, additionalData)
-        .then((data: PaymentIntent) => {
-          console.log('authorizeWith3ds Data', data);
-
-          createPaymentMethod(data.id, onSuccess);
-        })
-        .catch((error: any) => {
-          setError(JSON.stringify(error));
-          console.log('authorizeWith3ds Error', error);
-        })
-        .finally(() => {
-          setLoadingState('finished');
-        });
-
-      return;
+      try {
+        const data: PaymentIntent = await cardRef.current.authorizeWith3ds(
+          intent,
+          additionalData,
+        );
+        await createPaymentMethod(customerData.id, data.id, onSuccess);
+      } catch (error: any) {
+        setError(JSON.stringify(error));
+      } finally {
+        setLoadingState('finished');
+      }
     } catch (error: any) {
       setError('true');
     }

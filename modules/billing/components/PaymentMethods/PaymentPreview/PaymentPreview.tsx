@@ -50,7 +50,7 @@ export const PaymentPreview = () => {
                   onClick={handleUpdate}
                   css={spacing.top.medium}
                 >
-                  Change
+                  Update Payment Source
                 </Button>
               </>
             ) : (

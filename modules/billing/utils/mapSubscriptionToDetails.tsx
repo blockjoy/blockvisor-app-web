@@ -1,6 +1,19 @@
 import { Subscription } from 'chargebee-typescript/lib/resources';
-import { formatters } from '@shared/index';
+import { Badge, formatters } from '@shared/index';
 import { SubscriptionStatus } from '@modules/billing';
+
+export const getSubscriptionStatusColor = (name: string) => {
+  switch (name) {
+    case 'active':
+      return 'primary';
+    case 'cancelled':
+      return 'secondary';
+    case 'non_renewing':
+      return 'note';
+    default:
+      return 'default';
+  }
+};
 
 export const mapSubscriptionToDetails = (subscription: Subscription) => {
   return [
@@ -18,7 +31,14 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
     },
     {
       label: 'Status',
-      data: <p>{SubscriptionStatus[subscription.status]}</p>,
+      data: (
+        <Badge
+          color={getSubscriptionStatusColor(subscription.status)}
+          style="outline"
+        >
+          {SubscriptionStatus[subscription.status]}
+        </Badge>
+      ),
     },
     {
       label: 'Auto renew',

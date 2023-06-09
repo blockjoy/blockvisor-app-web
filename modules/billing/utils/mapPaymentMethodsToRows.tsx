@@ -97,8 +97,9 @@ export const mapPaymentMethodsToRows = (
               <p>
                 {paymentMethod.card?.billing_addr1}
                 <br />
+                {paymentMethod.card?.billing_zip}{' '}
                 {paymentMethod.card?.billing_city},{' '}
-                {paymentMethod.card?.billing_zip}
+                {paymentMethod.card?.billing_country}
               </p>
             ) : (
               '-'

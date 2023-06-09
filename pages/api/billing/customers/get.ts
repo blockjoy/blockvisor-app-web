@@ -1,15 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { _customer } from 'chargebee-typescript';
-import { Card, Customer } from 'chargebee-typescript/lib/resources';
+import { Customer } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
-const getCustomer = async (customerId: string): Promise<Customer> => {
+const getCustomer = async (customerId: string): Promise<Customer | null> => {
   return new Promise((resolve, reject) => {
     chargebee.customer
       .retrieve(customerId)
       .request(function (error: any, result: { customer: Customer }) {
         if (error) {
-          reject(error);
+          if (error.error_code === 'resource_not_found') resolve(null);
+          else reject(error);
         } else {
           resolve(result.customer);
         }
@@ -19,7 +20,7 @@ const getCustomer = async (customerId: string): Promise<Customer> => {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Customer | { message: string }>,
+  res: NextApiResponse<Customer | null | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {

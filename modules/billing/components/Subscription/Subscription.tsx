@@ -1,30 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Item } from 'chargebee-typescript/lib/resources';
+import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import {
   SubscriptionPreview,
   PlanSelect,
   SinglePlan,
   billingAtoms,
-  useItems,
+  usePaymentMethods,
 } from '@modules/billing';
 import { EmptyColumn, TableSkeleton } from '@shared/components';
 import { styles } from './Subscription.styles';
 
-export const Subscription = () => {
+type SubscriptionProps = {
+  items: Item[];
+  itemPrices: ItemPrice[];
+};
+
+export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
   const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
 
+  const { getPaymentMethods } = usePaymentMethods();
+
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
   const [activePlan, setActivePlan] = useState<Item | null>(null);
-
-  const { items, getItems } = useItems();
-
-  useEffect(() => {
-    getItems();
-  }, []);
 
   const handleSelect = (plan: any) => {
     setActiveView('action');
@@ -32,6 +33,10 @@ export const Subscription = () => {
   };
 
   const handleCancel = () => setActiveView('list');
+
+  useEffect(() => {
+    if (!subscription) getPaymentMethods();
+  }, []);
 
   return (
     <div css={styles.wrapper}>
@@ -59,7 +64,11 @@ export const Subscription = () => {
           )}
         </>
       ) : (
-        <PlanSelect plan={activePlan} handleCancel={handleCancel} />
+        <PlanSelect
+          plan={activePlan}
+          handleCancel={handleCancel}
+          itemPrices={itemPrices}
+        />
       )}
     </div>
   );

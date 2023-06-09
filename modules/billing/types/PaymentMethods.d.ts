@@ -4,8 +4,9 @@ interface IPaymentMethodsHook {
   paymentMethodsLoadingState: LoadingState;
   paymentMethodLoadingState: LoadingState;
   getPaymentMethod: (params: any) => void;
-  getPaymentMethods: (params: any) => void;
+  getPaymentMethods: VoidFunction;
   createPaymentMethod: (
+    customerId: string,
     paymentIntentId: string,
     onSuccess: VoidFunction,
   ) => void;

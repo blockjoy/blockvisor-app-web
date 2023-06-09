@@ -44,6 +44,11 @@ const paymentMethodError = atom<string | null>({
 
 const paymentMethodLoadingState = atom<LoadingState>({
   key: 'billing.paymentMethod.loadingState',
+  default: 'initializing',
+});
+
+const addPaymentMethodLoadingState = atom<LoadingState>({
+  key: 'billing.paymentMethod.add.loadingState',
   default: 'finished',
 });
 
@@ -59,7 +64,7 @@ const billingContacts = atom<Contact[]>({
 
 const billingContactsLoadingState = atom<LoadingState>({
   key: 'billing.contacts.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const invoice = atom<Invoice | null>({
@@ -129,6 +134,7 @@ export const billingAtoms = {
 
   paymentMethod,
   paymentMethodLoadingState,
+  addPaymentMethodLoadingState,
   paymentMethodError,
 
   paymentMethods,
