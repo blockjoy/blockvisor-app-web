@@ -16,7 +16,7 @@ import {
   mapOrganizationMembersToRows,
   Member,
 } from '@modules/organization/utils/mapOrganizationMembersToRows';
-import PersonIcon from '@public/assets/icons/person-12.svg';
+import PersonIcon from '@public/assets/icons/common/Person.svg';
 import { toast } from 'react-toastify';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { OrganizationDialog } from './OrganizationDialog/OrganizationDialog';

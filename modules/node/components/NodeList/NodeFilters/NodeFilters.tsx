@@ -10,8 +10,8 @@ import {
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { ChangeEvent, useMemo, useRef, useState } from 'react';
 
-import IconClose from '@public/assets/icons/close-12.svg';
-import IconRefresh from '@public/assets/icons/refresh-12.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
+import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
 import { useDefaultOrganization } from '@modules/organization';
 import { useFilters } from '@modules/node/hooks/useFilters';

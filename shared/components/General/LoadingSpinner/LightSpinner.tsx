@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './spinner.styles';
-import SpinnerLightIcon from '@public/assets/icons/SpinnerLight.svg';
+import SpinnerLightIcon from '@public/assets/icons/app/SpinnerLight.svg';
 import { styles as lightSpinnerStyles } from './LightSpinner.styles';
 import { styles as defaulSpinnerStyles } from './spinner.styles';
 

@@ -1,5 +1,5 @@
 import { styles } from './PageTitleLaunchNode.styles';
-import IconRocket from '@public/assets/icons/rocket-12.svg';
+import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { useRouter } from 'next/router';
 
 export const PageTitleLaunchNode = () => {

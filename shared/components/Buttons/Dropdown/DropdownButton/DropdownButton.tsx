@@ -1,8 +1,7 @@
 import { SvgIcon } from '@shared/components';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { styles } from './DropdownButton.styles';
-import IconArrow from '@public/assets/icons/arrow-right-12.svg';
-import IconFirewall from '@public/assets/icons/firewall.svg';
+import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
 
 type Props = {
   isOpen: boolean;

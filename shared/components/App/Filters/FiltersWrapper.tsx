@@ -1,5 +1,5 @@
-import IconPlus from '@public/assets/icons/plus-12.svg';
-import IconMinus from '@public/assets/icons/minus-12.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
+import IconMinus from '@public/assets/icons/common/Minus.svg';
 import { MouseEvent, ReactNode } from 'react';
 import { styles } from './FiltersWrapper.styles';
 

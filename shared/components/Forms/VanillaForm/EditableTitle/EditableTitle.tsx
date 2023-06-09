@@ -7,8 +7,8 @@ import {
   useState,
 } from 'react';
 import { styles } from './EditableTitle.styles';
-import IconPencil from '@public/assets/icons/pencil-12.svg';
-import IconClose from '@public/assets/icons/close-12.svg';
+import IconPencil from '@public/assets/icons/common/Pencil.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
 import { Button } from '../../../Buttons/Button/Button';
 import { css } from '@emotion/react';
 import { SvgIcon } from '../../../General/SvgIcon/SvgIcon';

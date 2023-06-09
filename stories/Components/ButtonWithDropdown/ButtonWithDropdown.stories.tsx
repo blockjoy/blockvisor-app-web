@@ -1,6 +1,6 @@
 import { ButtonWithDropdown, DropdownItem } from '@shared/components';
-import IconCog from '@public/assets/icons/cog-12.svg';
-import IconDoor from '@public/assets/icons/door-12.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
+import IconDoor from '@public/assets/icons/common/Door.svg';
 import { ComponentStory } from '@storybook/react';
 import { reset } from 'styles/utils.reset.styles';
 import { divider } from 'styles/utils.spacing.styles';

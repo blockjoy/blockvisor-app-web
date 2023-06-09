@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { authAtoms, useSignOut } from '@modules/auth';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
-import IconDoor from '@public/assets/icons/door-12.svg';
+import IconDoor from '@public/assets/icons/common/Door.svg';
 import { ProfileForm } from './ProfileForm/ProfileForm';
 import { ProfileChangePassword } from './ProfileChangePassword/ProfileChangePassword';
 import { styles } from './Profile.styles';

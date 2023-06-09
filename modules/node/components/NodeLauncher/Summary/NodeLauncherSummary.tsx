@@ -10,12 +10,11 @@ import {
   NodeType,
   UiType,
 } from '@modules/grpc/library/blockjoy/v1/node';
-
 import { FormHeader, FormLabel, OrganizationSelect } from '@shared/components';
-import IconCheck from '@public/assets/icons/check-circle.svg';
-import IconClose from '@public/assets/icons/close.svg';
-import IconRocket from '@public/assets/icons/rocket-12.svg';
-import IconCog from '@public/assets/icons/cog-12.svg';
+import IconCheck from '@public/assets/icons/common/CheckCircle.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
+import IconRocket from '@public/assets/icons/app/Rocket.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
 type Props = {
   serverError: string;

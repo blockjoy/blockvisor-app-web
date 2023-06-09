@@ -1,7 +1,7 @@
 import { Scrollbar, SvgIcon } from '@shared/components';
 import { FC } from 'react';
 import { styles } from './FirewallDropdownItems.styles';
-import IconTrash from '@public/assets/icons/trash.svg';
+import IconTrash from '@public/assets/icons/common/Trash.svg';
 
 type Props = {
   items: FilteredIpAddr[];

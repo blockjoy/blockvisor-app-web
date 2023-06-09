@@ -1,7 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { styles } from './tableGrid.styles';
-import IconMore from '@public/assets/icons/more-16.svg';
-import IconBitcoin from '@public/assets/icons/bitcoin-20.svg';
+import IconMore from '@public/assets/icons/common/More.svg';
 
 type Props = {
   onCellClick: VoidFunction;

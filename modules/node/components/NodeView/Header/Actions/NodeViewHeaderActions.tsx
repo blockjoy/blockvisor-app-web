@@ -3,11 +3,11 @@ import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { useRef, useState } from 'react';
 import { styles } from './NodeViewHeaderActions.styles';
 import { useNodeView } from '@modules/node';
-import IconCog from '@public/assets/icons/cog.svg';
-import IconArrow from '@public/assets/icons/arrow-right-12.svg';
-import IconDelete from '@public/assets/icons/trash.svg';
-import IconStop from '@public/assets/icons/stop.svg';
-import IconStart from '@public/assets/icons/start.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
+import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
+import IconDelete from '@public/assets/icons/common/Trash.svg';
+import IconStop from '@public/assets/icons/app/NodeStop.svg';
+import IconStart from '@public/assets/icons/app/NodeStart.svg';
 
 type Props = {
   onDeleteClicked: VoidFunction;

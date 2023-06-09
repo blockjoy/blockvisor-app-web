@@ -8,7 +8,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { blockchainsDisabled } from '@shared/constants/lookups';
 import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import IconSearch from '@public/assets/icons/search-16.svg';
+import IconSearch from '@public/assets/icons/common/Search.svg';
 
 type Props = {
   onProtocolSelected: (

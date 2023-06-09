@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import IconBack from '@public/assets/icons/arrow-left-12.svg';
+import IconBack from '@public/assets/icons/common/ArrowLeft.svg';
 import router from 'next/router';
 import { Button } from '../Button/Button';
 

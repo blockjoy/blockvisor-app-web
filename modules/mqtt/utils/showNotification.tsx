@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { toast } from 'react-toastify';
-import IconNodes from '@public/assets/icons/box-12.svg';
-import IconOrganizations from '@public/assets/icons/organization-16.svg';
+import IconNodes from '@public/assets/icons/app/Node.svg';
+import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 
 export const showNotification = (
   type: Channel,

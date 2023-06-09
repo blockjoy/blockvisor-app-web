@@ -1,4 +1,4 @@
-import IconFilter from '@public/assets/icons/filter-1-12.svg';
+import IconFilter from '@public/assets/icons/common/Filter.svg';
 import { styles } from './FiltersHeaderIconText.styles';
 
 type FiltersHeaderIconTextProps = {

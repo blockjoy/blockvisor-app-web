@@ -1,7 +1,7 @@
 import { FC, useRef, useState } from 'react';
-import IconArrow from '@public/assets/icons/arrow-right-12.svg';
-import IconPlus from '@public/assets/icons/plus-12.svg';
-import IconInfo from '@public/assets/icons/info.svg';
+import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
+import IconInfo from '@public/assets/icons/common/Info.svg';
 import {
   Badge,
   DropdownMenu,

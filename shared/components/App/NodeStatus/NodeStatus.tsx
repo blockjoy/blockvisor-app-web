@@ -32,7 +32,7 @@ export const getNodeStatusInfo = (status: number, type?: NodeStatusType) => {
 export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
   const statusName = getNodeStatusInfo(status, type)?.name!;
 
-  if (statusName?.match(/RUNNING|SYNCED|FOLLOWER|BROADCASTING/g)) {
+  if (statusName?.match(/RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING/g)) {
     return styles.statusColorGreen;
   } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|STOPPED/g)) {
     return styles.statusColorRed;

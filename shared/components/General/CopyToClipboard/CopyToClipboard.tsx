@@ -1,6 +1,6 @@
 import { styles } from './CopyToClipboard.styles';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
-import CopyIcon from '@public/assets/icons/copy-12.svg';
+import CopyIcon from '@public/assets/icons/common/Copy.svg';
 
 type CopyToClipboardProps = {
   value: string;

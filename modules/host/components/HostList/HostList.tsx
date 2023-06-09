@@ -20,7 +20,7 @@ import {
   useHostUIContext,
 } from '@modules/host';
 import { useProvisionToken } from '@modules/organization';
-import IconUnion from '@public/assets/icons/union-16.svg';
+import IconHost from '@public/assets/icons/app/Host.svg';
 
 export const HostList = () => {
   const hostUIContext = useHostUIContext();
@@ -83,7 +83,7 @@ export const HostList = () => {
   return (
     <>
       <PageTitle>
-        <NodeTitle icon={<IconUnion />} titleText="Hosts" />
+        <NodeTitle icon={<IconHost />} titleText="Hosts" />
       </PageTitle>
       <div css={[styles.wrapper, wrapper.main]}>
         <HostFilters isLoading={isLoading} />
