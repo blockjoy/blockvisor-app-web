@@ -60,15 +60,15 @@ export const useBillingContacts = (): IBillingContactsHook => {
           },
           body: JSON.stringify({
             customerId: customer?.id,
+            subscriptionId: subscription?.id,
             contact: newBillingContact,
           }),
         },
       );
 
-      const data: Customer | null = await response.json();
-      const newBillingContacts: Contact[] = data?.contacts ?? [];
+      const data: Contact[] | [] = await response.json();
 
-      setBillingContacts(newBillingContacts);
+      setBillingContacts(data);
     } catch (error) {
       console.error('Failed to fetch payment methods', error);
     } finally {
@@ -89,15 +89,15 @@ export const useBillingContacts = (): IBillingContactsHook => {
           },
           body: JSON.stringify({
             customerId: customer?.id,
+            subscriptionId: subscription?.id,
             contact: { id },
           }),
         },
       );
 
-      const data: Customer | null = await response.json();
-      const newBillingContacts: Contact[] = data?.contacts ?? [];
+      const data: Contact[] | [] = await response.json();
 
-      setBillingContacts(newBillingContacts);
+      setBillingContacts(data);
     } catch (error) {
       console.error('Failed to fetch payment methods', error);
     } finally {

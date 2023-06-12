@@ -10,6 +10,11 @@ export enum Permissions {
   CREATE_MEMBER,
   UPDATE_MEMBER,
   DELETE_MEMBER,
+
+  READ_BILLING,
+  CREATE_BILLING,
+  UPDATE_BILLING,
+  DELETE_BILLING,
 }
 
 export const USER_ROLES: {
@@ -45,6 +50,11 @@ export const PERMISSIONS: {
     Permissions.CREATE_MEMBER,
     Permissions.UPDATE_MEMBER,
     Permissions.DELETE_MEMBER,
+
+    Permissions.READ_BILLING,
+    Permissions.CREATE_BILLING,
+    Permissions.UPDATE_BILLING,
+    Permissions.DELETE_BILLING,
   ],
   [OrgRole.ORG_ROLE_ADMIN]: [
     Permissions.READ_ORGANIZATION,
@@ -55,7 +65,12 @@ export const PERMISSIONS: {
     Permissions.READ_MEMBER,
     Permissions.CREATE_MEMBER,
     Permissions.UPDATE_MEMBER,
+<<<<<<< HEAD
     Permissions.DELETE_MEMBER,
+=======
+
+    Permissions.READ_BILLING,
+>>>>>>> 3d14770e (feat: sc-1581 implemented basic billing permissions; fixed bugs in the ui)
   ],
 };
 

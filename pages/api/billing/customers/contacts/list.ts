@@ -19,7 +19,7 @@ const listContacts = async (params: {
           );
 
           const filteredContacts = contacts.filter((contact: Contact) =>
-            contact.label?.split(',').includes(params.subscriptionId),
+            contact.label?.split('|').includes(params.subscriptionId),
           );
 
           resolve(filteredContacts);

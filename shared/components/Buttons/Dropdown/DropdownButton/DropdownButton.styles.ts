@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -32,6 +31,9 @@ export const styles = {
     p {
       color: ${theme.colorDefault};
     }
+  `,
+  buttonInput: (theme: ITheme) => css`
+    background-color: ${theme.colorInput};
   `,
   icon: (theme: ITheme) => css`
     position: absolute;

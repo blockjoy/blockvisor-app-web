@@ -1,14 +1,15 @@
-import { SvgIcon } from '@shared/components';
 import { ReactNode } from 'react';
+import { SvgIcon } from '@shared/components';
 import { styles } from './DropdownButton.styles';
-import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
+import IconArrow from '@public/assets/icons/arrow-right-12.svg';
 
 type Props = {
   disabled?: boolean;
   isOpen: boolean;
   text: string | ReactNode;
-  icon?: ReactNode;
   onClick: VoidFunction;
+  icon?: ReactNode;
+  type?: 'input' | 'default';
 };
 
 export const DropdownButton = ({
@@ -17,12 +18,13 @@ export const DropdownButton = ({
   onClick,
   text,
   isOpen,
+  type,
 }: Props) => {
   return (
     <button
       disabled={disabled}
       type="button"
-      css={styles.button}
+      css={[styles.button, type === 'input' && styles.buttonInput]}
       onClick={onClick}
     >
       {icon && <SvgIcon size="16px">{icon}</SvgIcon>}

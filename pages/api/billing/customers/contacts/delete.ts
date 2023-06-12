@@ -1,16 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { _customer } from 'chargebee-typescript';
-import {
-  Card,
-  Customer,
-  CustomerBillingAddress,
-} from 'chargebee-typescript/lib/resources';
+import { Contact, Customer } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
 const deleteContact = async (
   customerId: string,
-  contact: any,
-): Promise<Customer> => {
+  subscriptionId: string,
+  contact: _customer.contact_delete_contact_params,
+): Promise<Contact[]> => {
   return new Promise((resolve, reject) => {
     chargebee.customer
       .delete_contact(customerId, { contact })
@@ -18,7 +15,13 @@ const deleteContact = async (
         if (error) {
           reject(error);
         } else {
-          resolve(result.customer);
+          const contacts = result.customer.contacts;
+
+          const filteredContacts =
+            contacts?.filter((contact: Contact) =>
+              contact.label?.split('|').includes(subscriptionId),
+            ) ?? [];
+          resolve(filteredContacts);
         }
       });
   });
@@ -26,13 +29,17 @@ const deleteContact = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Customer | { message: string }>,
+  res: NextApiResponse<Contact[] | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {
-      const { customerId, contact } = req.body as any;
+      const { customerId, subscriptionId, contact } = req.body as {
+        customerId: string;
+        subscriptionId: string;
+        contact: _customer.contact_delete_contact_params;
+      };
 
-      const response = await deleteContact(customerId, contact);
+      const response = await deleteContact(customerId, subscriptionId, contact);
 
       res.status(200).json(response);
     } catch (error: any) {
