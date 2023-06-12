@@ -1,3 +1,4 @@
+import { getName } from 'country-list';
 import { CustomerBillingAddress } from 'chargebee-typescript/lib/resources';
 import { styles } from './BillingAddressPreview.styles';
 import { BillingAddress as InvoiceBillingAddress } from 'chargebee-typescript/lib/resources/invoice';
@@ -28,7 +29,7 @@ export const BillingAddressPreview = ({
       <span>
         {city}, {zip}
       </span>
-      <span>{country}</span>
+      {country && <span>{getName(country)}</span>}
     </div>
   );
 };

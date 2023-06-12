@@ -1,7 +1,8 @@
-import { PageSection, PageTitle } from '@shared/components';
-import { useMemo } from 'react';
-import { Tabs, useTabs } from '@shared/index';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
+import { PageSection, PageTitle } from '@shared/components';
+import { Tabs, useTabs } from '@shared/index';
 import {
   Subscription,
   Invoices,
@@ -10,6 +11,13 @@ import {
   BillingContacts,
 } from '@modules/billing/';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
+import {
+  useHasPermissions,
+  useIdentityRepository,
+  Permissions,
+} from '@modules/auth';
+import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+import { organizationSelectors } from '@modules/organization/store/organizationSelectors';
 
 type BillingProps = {
   items: Item[];
@@ -19,6 +27,18 @@ type BillingProps = {
 export const Billing = ({ items, itemPrices }: BillingProps) => {
   const { push } = useRouter();
   const { subscription } = useSubscription();
+
+  const repository = useIdentityRepository();
+  const user = repository?.getIdentity();
+
+  const userRoleInOrganization: OrgRole = useRecoilValue(
+    organizationSelectors.userRoleInOrganization(user?.id),
+  );
+
+  const canReadBilling: boolean = useHasPermissions(
+    userRoleInOrganization,
+    Permissions.READ_BILLING,
+  );
 
   const tabItems = useMemo(
     () =>
@@ -59,7 +79,9 @@ export const Billing = ({ items, itemPrices }: BillingProps) => {
             </PageSection>
           ),
         },
-      ].filter((tabItem) => tabItem.value === '1' || subscription),
+      ].filter(
+        (tabItem) => tabItem.value === '1' || (subscription && canReadBilling),
+      ),
     [subscription],
   );
   const { activeTab, setActiveTab } = useTabs(tabItems.length);

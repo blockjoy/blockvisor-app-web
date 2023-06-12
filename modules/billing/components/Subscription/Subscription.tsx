@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import {
@@ -6,10 +6,16 @@ import {
   PlanSelect,
   SinglePlan,
   billingAtoms,
-  usePaymentMethods,
 } from '@modules/billing';
-import { EmptyColumn, TableSkeleton } from '@shared/components';
+import { Alert, EmptyColumn, TableSkeleton } from '@shared/components';
 import { styles } from './Subscription.styles';
+import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+import { organizationSelectors } from '@modules/organization/store/organizationSelectors';
+import {
+  useHasPermissions,
+  Permissions,
+  useIdentityRepository,
+} from '@modules/auth';
 
 type SubscriptionProps = {
   items: Item[];
@@ -22,8 +28,6 @@ export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
     billingAtoms.subscriptionLoadingState,
   );
 
-  const { getPaymentMethods } = usePaymentMethods();
-
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
   const [activePlan, setActivePlan] = useState<Item | null>(null);
 
@@ -34,15 +38,31 @@ export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
 
   const handleCancel = () => setActiveView('list');
 
-  useEffect(() => {
-    if (!subscription) getPaymentMethods();
-  }, []);
+  const repository = useIdentityRepository();
+  const user = repository?.getIdentity();
+
+  const userRoleInOrganization: OrgRole = useRecoilValue(
+    organizationSelectors.userRoleInOrganization(user?.id),
+  );
+
+  const canReadBilling: boolean = useHasPermissions(
+    userRoleInOrganization,
+    Permissions.READ_BILLING,
+  );
+
+  if (!canReadBilling)
+    return (
+      <Alert>
+        You don't have access to read the current organization billing plan! Try
+        switching the organization.
+      </Alert>
+    );
+
+  if (subscriptionLoadingState !== 'finished') return <TableSkeleton />;
 
   return (
     <div css={styles.wrapper}>
-      {subscriptionLoadingState !== 'finished' ? (
-        <TableSkeleton />
-      ) : subscription ? (
+      {subscription ? (
         <SubscriptionPreview />
       ) : activeView === 'list' ? (
         <>

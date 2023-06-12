@@ -51,6 +51,9 @@ export const styles = {
       border-color: ${theme.colorLabel};
     }
   `,
+  buttonInput: (theme: ITheme) => css`
+    background-color: ${theme.colorInput};
+  `,
   icon: (theme: ITheme) => css`
     position: absolute;
     top: 50%;

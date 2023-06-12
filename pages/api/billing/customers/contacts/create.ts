@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { _customer } from 'chargebee-typescript';
-import { Customer } from 'chargebee-typescript/lib/resources';
+import { Contact, Customer } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 
 const createContact = async (
   customerId: string,
+  subscriptionId: string,
   contact: _customer.contact_add_contact_params,
-): Promise<Customer> => {
+): Promise<Contact[]> => {
   return new Promise((resolve, reject) => {
     chargebee.customer
       .add_contact(customerId, { contact })
@@ -14,7 +15,13 @@ const createContact = async (
         if (error) {
           reject(error);
         } else {
-          resolve(result.customer);
+          const contacts = result.customer.contacts;
+
+          const filteredContacts =
+            contacts?.filter((contact: Contact) =>
+              contact.label?.split('|').includes(subscriptionId),
+            ) ?? [];
+          resolve(filteredContacts);
         }
       });
   });
@@ -22,16 +29,17 @@ const createContact = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Customer | { message: string }>,
+  res: NextApiResponse<Contact[] | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {
-      const { customerId, contact } = req.body as {
+      const { customerId, subscriptionId, contact } = req.body as {
         customerId: string;
+        subscriptionId: string;
         contact: _customer.contact_add_contact_params;
       };
 
-      const response = await createContact(customerId, contact);
+      const response = await createContact(customerId, subscriptionId, contact);
 
       res.status(200).json(response);
     } catch (error: any) {
