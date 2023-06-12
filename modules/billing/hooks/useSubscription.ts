@@ -8,7 +8,6 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { blockchainsAtoms } from '@modules/node';
 
-// TODO: check whether payment intent has to be included
 export const useSubscription = (): ISubscriptionHook => {
   const customer = useRecoilValue(billingAtoms.customer);
   const defaultOrganization = useRecoilValue(
