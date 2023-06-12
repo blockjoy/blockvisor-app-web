@@ -37,15 +37,20 @@ export const PlanSelect = ({
   itemPrices,
 }: PlanSelectProps) => {
   const { createSubscription, subscriptionLoadingState } = useSubscription();
+  const { paymentMethods, getPaymentMethods, paymentMethodsLoadingState } =
+    usePaymentMethods();
 
   const customer = useRecoilValue(billingAtoms.customer);
-  const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const [periodUnit, setPeriodUnit] = useState<string>('year');
   const [autoRenew, setAutoRenew] = useState<boolean>(true);
   const [paymentMethodId, setPaymentMethodId] = useState<string | undefined>(
     customer?.primary_payment_source_id,
   );
+
+  useEffect(() => {
+    getPaymentMethods();
+  }, []);
 
   const activeItemPrice: ItemPrice | undefined = itemPrices?.find(
     (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
@@ -69,6 +74,8 @@ export const PlanSelect = ({
       paymentMethodId,
     });
   };
+
+  if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
 
   return (
     <div css={styles.wrapper}>
