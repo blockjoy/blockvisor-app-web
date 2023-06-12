@@ -36,6 +36,9 @@ export const styles = {
       padding-right: 20px;
     }
   `,
+  buttonInput: (theme: ITheme) => css`
+    background-color: ${theme.colorInput};
+  `,
   icon: (theme: ITheme) => css`
     position: absolute;
     top: 50%;

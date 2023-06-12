@@ -74,6 +74,7 @@ export const CountrySelector = ({
           text={<p>{value ? activeCountryName : 'Select country'}</p>}
           onClick={handleClose}
           isOpen={isOpen}
+          type="input"
         />
 
         <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
@@ -87,7 +88,7 @@ export const CountrySelector = ({
                       type="button"
                       onButtonClick={(e) => handleChange(e, country)}
                     >
-                      <p css={styles.activeOrg}>{country.name}</p>
+                      <p css={styles.active}>{country.name}</p>
                     </DropdownItem>
                   </li>
                 );

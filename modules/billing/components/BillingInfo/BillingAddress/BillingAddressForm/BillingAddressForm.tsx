@@ -98,6 +98,7 @@ export const BillingAddressForm = ({
               {...countryController.field}
               rules={{ required: 'Country is required' }}
               tabIndex={5}
+              ref={null}
               render={({ field: { name, onChange, value } }) => (
                 <CountrySelector
                   name={name}
