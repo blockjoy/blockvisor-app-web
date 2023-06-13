@@ -2,14 +2,15 @@ import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken
 import {
   Button,
   CopyToClipboard,
-  FormHeader,
   FormHeaderCaps,
   FormLabelCaps,
   FormText,
   OrganizationSelect,
+  SvgIcon,
 } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
+import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 
 type HostLauncherProps = {
   token?: string;
@@ -19,7 +20,6 @@ export const HostLauncher = ({ token }: HostLauncherProps) => {
   const { resetProvisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
-  // TODO: Improve design and structure
   return (
     <div>
       <header css={styles.header}>
@@ -47,6 +47,9 @@ export const HostLauncher = ({ token }: HostLauncherProps) => {
               onClick={resetProvisionToken}
               loading={provisionTokenLoadingState !== 'finished'}
             >
+              <SvgIcon>
+                <IconRefresh />
+              </SvgIcon>
               Regenerate
             </Button>
           </div>

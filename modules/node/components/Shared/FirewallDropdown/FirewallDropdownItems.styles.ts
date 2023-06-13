@@ -24,7 +24,7 @@ export const styles = {
       }
     }
 
-    tr td:first-child {
+    tr td:first-of-type {
       width: 116px;
       padding-left: 8px;
     }

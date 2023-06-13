@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
+import { rgba } from 'polished';
 import { typo } from 'styles/utils.typography.styles';
 import { ITheme } from 'types/theme';
 
 const buttonStyle = {
-  primary: css`
+  primary: (theme: ITheme) => css`
     background-color: var(--color-primary);
     color: var(--color-foreground-secondary);
     box-shadow: 0px 0px 0px 3px var(--color-primary-o0);
@@ -14,8 +15,13 @@ const buttonStyle = {
     :focus {
       box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
     }
+
+    .button-spinner {
+      border-color: ${rgba(theme.colorPrimaryText || '#000', 0.16)};
+      border-top-color: ${rgba(theme.colorPrimaryText || '#000', 0.6)};
+    }
   `,
-  secondary: css`
+  secondary: (theme: ITheme) => css`
     background-color: var(--color-secondary);
     color: var(--color-foreground-secondary);
     box-shadow: 0px 0px 0px 3px var(--color-secondary-o0);
@@ -25,6 +31,11 @@ const buttonStyle = {
     :active,
     :focus {
       box-shadow: 0px 0px 0px 3px var(--color-secondary-o30);
+    }
+
+    .button-spinner {
+      border-color: ${rgba(theme.colorPrimaryText || '#000', 0.1)};
+      border-top-color: ${rgba(theme.colorPrimaryText || '#000', 0.6)};
     }
   `,
   outline: css`
@@ -98,6 +109,7 @@ const buttonStyle = {
 
 const button = css`
   position: relative;
+  overflow: hidden;
   font-weight: var(--font-weight-bold);
   position: relative;
   justify-content: center;
@@ -144,6 +156,8 @@ const buttonSize = {
   small: css`
     padding: 6px 16px;
     height: 32px;
+    max-height: 32px;
+    min-height: 32px;
     ${typo.buttonSmall}
   `,
   medium: css`

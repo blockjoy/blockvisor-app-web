@@ -22,7 +22,7 @@ export const NodeListHeader = () => {
 
   const handleFilterCollapseToggled = () => {
     setIsFiltersOpen(!isFiltersOpen);
-    localStorage.setItem('nodeFiltersOpen', JSON.stringify(true));
+    localStorage.setItem('nodeFiltersOpen', JSON.stringify(!isFiltersOpen));
   };
 
   const handleGridTableViewChanged = (type: string) => {
@@ -47,21 +47,6 @@ export const NodeListHeader = () => {
           )}
         </div>
       )}
-
-      {/* <div css={styles.endBlock}>
-        <NodeMetrics />
-      </div> */}
-
-      {/* <span css={styles.total}>
-        {isLoading ? (
-          <Skeleton margin="0 0 0 auto" />
-        ) : (
-          <>
-            Total: <span css={styles.totalValue}>{totalNodes} </span>
-            {totalNodes === 1 ? 'node' : 'nodes'}
-          </>
-        )}
-      </span> */}
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker

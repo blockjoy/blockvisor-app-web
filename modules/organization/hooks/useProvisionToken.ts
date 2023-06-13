@@ -15,8 +15,6 @@ export const useProvisionToken = () => {
     const userId = repository?.getIdentity()?.id;
     const orgId = repository?.getIdentity()?.defaultOrganization?.id;
 
-    setProvisionTokenLoadingState('initializing');
-
     try {
       const response: any = await organizationClient.getProvisionToken(
         userId!,
@@ -26,8 +24,6 @@ export const useProvisionToken = () => {
       setProvisionToken(response.token);
     } catch (error: any) {
       console.log('error', error);
-    } finally {
-      setProvisionTokenLoadingState('finished');
     }
   };
 

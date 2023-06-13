@@ -10,6 +10,7 @@ import {
   organizationAtoms,
   useGetOrganizations,
   useInvitations,
+  useProvisionToken,
 } from '@modules/organization';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider } from '@modules/mqtt';
@@ -32,6 +33,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getBlockchains, blockchains } = useGetBlockchains();
   const { loadNodes, nodeList } = useNodeList();
   const { loadHosts, hostList } = useHostList();
+  const { getProvisionToken, provisionToken } = useProvisionToken();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
@@ -39,23 +41,20 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   useEffect(() => {
     if (!organizations.length) getOrganizations();
-    if (!blockchains?.length) getBlockchains();
-    if (!nodeList?.length) loadNodes();
-    if (!hostList?.length) loadHosts();
     getReceivedInvitations(userEmail!);
   }, []);
 
   useEffect(() => {
+    if (!provisionToken) {
+      getProvisionToken();
+    }
+    if (!blockchains?.length) {
+      getBlockchains();
+    }
     if (defaultOrganization?.id !== currentOrg.current) {
       currentOrg.current = defaultOrganization!.id;
       loadNodes();
       loadHosts();
-    }
-  }, [defaultOrganization?.id]);
-
-  useEffect(() => {
-    if (!blockchains?.length) {
-      getBlockchains();
     }
   }, [defaultOrganization?.id]);
 

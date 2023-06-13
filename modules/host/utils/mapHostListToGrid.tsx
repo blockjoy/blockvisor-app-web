@@ -1,4 +1,4 @@
-import { TableGridCell, HostStatus } from '@shared/components';
+import { TableGridCell, HostStatus, HostIcon } from '@shared/components';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 
 export const mapHostListToGird = (
@@ -13,7 +13,7 @@ export const mapHostListToGird = (
           key={host.id}
           onCellClick={() => onCellClick({ key: host.id })}
           cellTitle={host.name}
-          cellIcon={null}
+          cellIcon={<HostIcon size="14px" status={host.status} />}
           cellStatus={<HostStatus status={host.status} />}
           cellType={host.ip}
         />

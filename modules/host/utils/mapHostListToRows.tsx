@@ -1,22 +1,28 @@
-import { formatDistanceToNow } from 'date-fns';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { HostStatus, TableBlock } from '@shared/components';
+import { HostIcon, HostStatus, TableBlock } from '@shared/components';
 
 export const mapHostListToRows = (hostList?: Host[]) => {
   const headers: TableHeader[] = [
     {
-      name: 'Name',
+      name: '',
       key: '1',
+      width: '40px',
+      minWidth: '60px',
+      maxWidth: '100px',
+    },
+    {
+      name: 'Name',
+      key: '2',
       width: '300px',
     },
     {
-      name: 'Added',
-      key: '2',
+      name: 'Version',
+      key: '3',
       width: '200px',
     },
     {
       name: 'Status',
-      key: '3',
+      key: '4',
       width: '200px',
     },
   ];
@@ -26,24 +32,23 @@ export const mapHostListToRows = (hostList?: Host[]) => {
     cells: [
       {
         key: '1',
-        component: (
-          <>
-            <TableBlock name={host.name} address={host?.ip!} />
-          </>
-        ),
+        component: <HostIcon status={host.status} size="14px" />,
       },
       {
         key: '2',
         component: (
-          <span style={{ fontSize: '14px', whiteSpace: 'nowrap' }}>
-            {formatDistanceToNow(new Date(host.createdAt!), {
-              addSuffix: true,
-            })}
-          </span>
+          <TableBlock
+            name={host.name}
+            address={`${host?.os} ${host?.osVersion}`}
+          />
         ),
       },
       {
         key: '3',
+        component: <>{host.version}</>,
+      },
+      {
+        key: '4',
         component: <HostStatus status={host.status} />,
       },
     ],
