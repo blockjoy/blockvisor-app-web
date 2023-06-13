@@ -9,9 +9,7 @@ const IconUndefined = dynamic(
 const IconCreating = dynamic(
   () => import('@public/assets/icons/hostStatus/Creating.svg'),
 );
-const IconRunning = dynamic(
-  () => import('@public/assets/icons/hostStatus/Running.svg'),
-);
+const IconRunning = dynamic(() => import('@public/assets/icons/app/Host.svg'));
 const IconStarting = dynamic(
   () => import('@public/assets/icons/hostStatus/Starting.svg'),
 );
@@ -41,9 +39,9 @@ const IconSnaphotting = dynamic(
 );
 
 const icons = {
-  0: <IconUndefined />,
+  2: <IconUndefined />,
   1: <IconCreating />,
-  2: <IconRunning />,
+  0: <IconRunning />,
   3: <IconStarting />,
   4: <IconStopping />,
   5: <IconStopped />,
