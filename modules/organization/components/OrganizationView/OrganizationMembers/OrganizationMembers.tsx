@@ -30,6 +30,7 @@ import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembers
 import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
 import { useRouter } from 'next/router';
 import { useIdentity } from '@modules/auth';
+import { mapMembersAndInvitations } from '@modules/organization/utils/mapMembersAndInvitations';
 
 export const Members = () => {
   const router = useRouter();
@@ -45,27 +46,18 @@ export const Members = () => {
     };
   }, [OrganizationMembersUIContext]);
 
-  const membersAndInvitations = useRecoilValue(
-    organizationAtoms.organizationMembersAndInvitations(
-      organizationMembersUIProps.queryParams,
-    ),
-  );
-
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
-  const members = selectedOrganization?.members;
-  // const members = useRecoilValue(organizationAtoms.organizationMembers);
-  const invitations = useRecoilValue(
+  const { members } = selectedOrganization!;
+
+  const sentInvitations = useRecoilValue(
     organizationAtoms.organizationSentInvitations,
   );
 
-  const membersAndInvitationsActiveCount = useRecoilValue(
-    organizationAtoms.organizationMembersAndInvitationsFiltered(
-      organizationMembersUIProps.queryParams,
-    ),
-  ).length;
+  const membersAndInvitationsActiveCount =
+    sentInvitations?.length + selectedOrganization?.memberCount!;
 
   const { inviteMembers } = useInviteMembers();
 
@@ -91,7 +83,7 @@ export const Members = () => {
 
     const isMemberOrInvited = checkIfExists(
       members!,
-      invitations!,
+      sentInvitations!,
       email!?.toLowerCase(),
     );
 
@@ -130,11 +122,11 @@ export const Members = () => {
       setActiveMember(null);
     },
     resend: (orgMember: Member) =>
-      resendInvitation(orgMember.email!, orgMember.invitation_id!),
+      resendInvitation(orgMember.email!, orgMember.invitationId!),
   };
 
   const { headers, rows } = mapOrganizationMembersToRows(
-    membersAndInvitations,
+    mapMembersAndInvitations(members?.concat(sentInvitations as any)),
     methods,
   );
 

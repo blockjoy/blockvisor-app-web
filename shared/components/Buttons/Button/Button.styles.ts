@@ -109,7 +109,6 @@ const buttonStyle = {
 
 const button = css`
   position: relative;
-  overflow: hidden;
   font-weight: var(--font-weight-bold);
   position: relative;
   justify-content: center;

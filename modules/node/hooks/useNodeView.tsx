@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { nodeClient, commandClient } from '@modules/grpc';
-import { useRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
 import { checkForTokenError } from 'utils/checkForTokenError';
@@ -27,6 +27,7 @@ type Hook = {
   isLoading: boolean;
   unloadNode: any;
   node: Node | null;
+  setIsLoading: SetterOrUpdater<LoadingState>;
 };
 
 const convertRouteParamToString = (id: Args) => {
@@ -88,19 +89,16 @@ export const useNodeView = (): Hook => {
       node = await nodeClient.getNode(nodeId);
       checkForApiError('GetNode', node);
       checkForTokenError(node);
+      setNode(node);
     } catch (err) {
-      setIsLoading('finished');
       onError();
       return;
+    } finally {
+      setIsLoading('finished');
     }
-
-    setNode(node);
   };
 
-  const unloadNode = () => {
-    setNode(null);
-    setIsLoading('loading');
-  };
+  const unloadNode = () => setNode(null);
 
   const updateNode = async (nodeRequest: NodeServiceUpdateRequest) => {
     try {
@@ -130,5 +128,6 @@ export const useNodeView = (): Hook => {
     modifyNode,
     node,
     isLoading: isLoading !== 'finished',
+    setIsLoading,
   };
 };

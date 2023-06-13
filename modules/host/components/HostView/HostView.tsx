@@ -23,12 +23,13 @@ export const HostView = ({ children }: HostViewProps) => {
   const { listNodesByHost } = useNodeList();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    if (router.isReady) {
-      listNodesByHost(id as string);
-      loadHost(id);
-    }
-
+    (async () => {
+      window.scrollTo(0, 0);
+      if (router.isReady) {
+        await listNodesByHost(id as string);
+        loadHost(id);
+      }
+    })();
     return () => {
       if (router.isReady) unloadHost();
     };

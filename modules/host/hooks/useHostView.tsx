@@ -19,7 +19,7 @@ export const useHostView = () => {
 
   const unloadHost = () => {
     setHost(null);
-    setIsLoading('finished');
+    setIsLoading('loading');
   };
 
   return {

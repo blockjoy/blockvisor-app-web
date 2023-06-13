@@ -57,9 +57,7 @@ export function useInvitations() {
   };
 
   const revokeInvitation = async ({
-    token,
     invitationId,
-    email,
   }: {
     token?: string;
     invitationId?: string;

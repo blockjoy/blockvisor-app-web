@@ -19,7 +19,7 @@ export type DialogProps = {
 };
 
 export function OrganizationDialog({
-  activeMember: { email, invitation_id, user_id, org_id },
+  activeMember: { email, invitationId, userId, orgId },
   activeAction,
   onHide,
 }: DialogProps) {
@@ -31,11 +31,11 @@ export function OrganizationDialog({
   const { removeMemberFromOrganization } = useRemoveMember();
 
   const handleRevokeInvitation = async () => {
-    await revokeInvitation({ invitationId: invitation_id, email });
+    await revokeInvitation({ invitationId });
   };
 
   const handleRemoveMember = async () => {
-    await removeMemberFromOrganization(user_id!, org_id!);
+    await removeMemberFromOrganization(userId!, orgId!);
   };
 
   const handleSubmit = () => {
