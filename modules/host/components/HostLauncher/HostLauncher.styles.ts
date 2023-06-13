@@ -7,8 +7,12 @@ export const styles = {
     align-items: center;
     height: 72px;
   `,
-  button: css`
-    min-width: 120px;
+  button: (theme: ITheme) => css`
+    min-width: 150px;
+
+    svg path {
+      fill: ${theme.colorText};
+    }
   `,
   timeline: (theme: ITheme) => css`
     counter-reset: steps;

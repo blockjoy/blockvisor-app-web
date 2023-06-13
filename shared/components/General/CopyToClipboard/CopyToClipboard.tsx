@@ -8,7 +8,6 @@ type CopyToClipboardProps = {
 
 export const CopyToClipboard = ({ value }: CopyToClipboardProps) => {
   const handleCopy = () => copyToClipboard(value);
-
   return (
     <>
       <div css={styles.wrapper} onClick={handleCopy}>

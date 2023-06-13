@@ -66,8 +66,6 @@ export const useFilters = (hostUIProps: HostUIProps) => {
       newQueryParams.pagination.current_page = 1;
       hostUIProps.setQueryParams(newQueryParams);
     }
-
-    console.log('newQueryParams', newQueryParams);
   };
 
   const updateFilters = () => {

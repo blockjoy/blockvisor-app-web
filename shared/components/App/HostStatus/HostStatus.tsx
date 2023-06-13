@@ -2,17 +2,8 @@ import { styles } from './HostStatus.styles';
 import { hostStatusList } from '@shared/constants/hostStatusList';
 import { HostStatusIcon } from './HostStatusIcon';
 
-// export const getHostStatusColor = (name: string) => {
-//   if (name === 'Running') {
-//     return styles.statusColorGreen;
-//   }
-
-//   return styles.statusColorDefault;
-// };
-
 export const getHostStatusColor = (name: string) => {
   if (name?.match(/RUNNING|INSTALLING/g)) {
-    console.log('getting in here', name);
     return styles.statusColorGreen;
   } else if (name?.match(/UNSPECIFIED|UNDEFINED|STOPPED/g)) {
     return styles.statusColorRed;
@@ -21,13 +12,16 @@ export const getHostStatusColor = (name: string) => {
   }
 };
 
+export const getHostStatusInfo = (status: number) =>
+  hostStatusList.find((l) => l.id === status);
+
 type HostStatusProps = {
   status: number;
   hasBorder?: boolean;
 };
 
 export const HostStatus = ({ status, hasBorder = true }: HostStatusProps) => {
-  const statusInfo = hostStatusList.find((s) => s.id === status);
+  const statusInfo = getHostStatusInfo(status);
   return (
     <span
       css={[

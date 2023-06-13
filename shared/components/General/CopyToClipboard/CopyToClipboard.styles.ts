@@ -29,7 +29,7 @@ export const styles = {
         color: ${theme.colorText};
       }
     }
-  }`,
+  `,
   value: (theme: ITheme) => css`
     padding: 5px 10px;
     font-size: 14px;
@@ -38,5 +38,5 @@ export const styles = {
     outline: none;
     background-color: ${theme.colorInput};
     margin-right: auto;
-  }`,
+  `,
 };

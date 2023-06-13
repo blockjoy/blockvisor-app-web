@@ -28,11 +28,9 @@ export const styles = {
   `,
 
   cellIcon: (theme: ITheme) => css`
-    width: 36px;
-    min-width: 36px;
-    flex: 0 0 36px;
     align-self: flex-start;
     margin-top: 16px;
+    margin-right: 8px;
 
     > svg {
     }
@@ -67,6 +65,7 @@ export const styles = {
     gap: 8px;
     margin-bottom: 4px;
     line-height: 1.6;
+    white-space: nowrap;
   `,
 
   cellRight: css`

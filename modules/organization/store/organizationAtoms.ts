@@ -223,7 +223,7 @@ const provisionToken = atom<string>({
 
 const provisionTokenLoadingState = atom<LoadingState>({
   key: 'organization.provisionToken.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 export const organizationAtoms = {

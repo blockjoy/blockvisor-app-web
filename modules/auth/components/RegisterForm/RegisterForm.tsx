@@ -20,7 +20,6 @@ type RegisterForm = {
   lastName: string;
   email: string;
   password: string;
-  // confirmPassword: string;
 };
 
 type ActiveType = {
@@ -59,13 +58,7 @@ export function RegisterForm() {
   const { setPassword } = usePasswordStrength();
 
   const onSubmit = handleSubmit(
-    async ({
-      email,
-      password,
-      //confirmPassword,
-      firstName,
-      lastName,
-    }) => {
+    async ({ email, password, firstName, lastName }) => {
       setIsLoading(true);
       const response: any = await userClient.createUser({
         firstName,
@@ -73,10 +66,7 @@ export function RegisterForm() {
         email,
         password,
         passwordConfirmation: password,
-        // password_confirmation: confirmPassword,
       });
-
-      console.log('signup', response);
 
       if (isStatusResponse(response)) {
         setRegisterError(getError(response.message));

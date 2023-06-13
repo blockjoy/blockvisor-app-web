@@ -25,7 +25,7 @@ export const HostListHeader = () => {
 
   const handleFilterCollapseToggled = () => {
     setIsFiltersOpen(!isFiltersOpen);
-    localStorage.setItem('hostFiltersOpen', JSON.stringify(true));
+    localStorage.setItem('hostFiltersOpen', JSON.stringify(!isFiltersOpen));
   };
 
   return (
@@ -44,13 +44,12 @@ export const HostListHeader = () => {
           )}
         </div>
       )}
-
-      {/* <div css={[styles.endBlock, styles.listTypePicker]}>
+      <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleActiveListType}
           activeListType={activeListType}
         />
-      </div> */}
+      </div>
     </div>
   );
 };

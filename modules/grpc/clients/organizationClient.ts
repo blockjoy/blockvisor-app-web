@@ -29,7 +29,6 @@ class OrganizationClient {
     try {
       await authClient.refreshToken();
       const response = await this.client.get({ id }, getOptions());
-      console.log('getOrg', response);
       return response.org!;
     } catch (err) {
       return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');

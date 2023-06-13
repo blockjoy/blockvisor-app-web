@@ -51,16 +51,12 @@ export const styles = {
       opacity: 1;
     }
 
+    tr:hover {
+      opacity: 1;
+    }
+
     tr path {
       transition: 0.3s;
-    }
-
-    tr:hover td:first-of-type path {
-      fill: ${theme.colorPrimary};
-    }
-
-    & .has-hover-color {
-      transition: color 0.3s;
     }
 
     & td {
@@ -78,19 +74,11 @@ export const styles = {
       }
     }
 
-    & tr:hover .has-hover-color {
-      color: ${theme.colorPrimary};
-    }
-
     & tbody tr {
       position: relative;
       border-bottom: 1px solid ${theme.colorBorder};
+      opacity: 0.8;
       transition: 0.3s;
-    }
-
-    & .danger span,
-    & tr:hover.danger .has-hover-color {
-      color: ${theme.colorDanger};
     }
   `,
   rowFancyUnderlineHover: css`
@@ -128,9 +116,9 @@ export const styles = {
     opacity: 0;
     background: linear-gradient(
       90deg,
-      ${rgba(theme.colorPrimary || '#000', 0)},
-      ${theme.colorPrimary},
-      ${rgba(theme.colorPrimary || '#000', 0)}
+      ${rgba(theme.colorText || '#fff', 0)},
+      ${theme.colorText},
+      ${rgba(theme.colorText || '#fff', 0)}
     );
     transition: 0.4s;
   `,

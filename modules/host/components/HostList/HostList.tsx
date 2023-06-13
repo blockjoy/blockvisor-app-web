@@ -137,13 +137,7 @@ export const HostList = () => {
           )}
         </div>
         <div css={styles.quickEdit}>
-          {provisionTokenLoadingState === 'initializing' ? (
-            <div css={spacing.top.large}>
-              <TableSkeleton />
-            </div>
-          ) : (
-            <HostLauncher token={provisionToken} />
-          )}
+          <HostLauncher token={provisionToken} />
         </div>
       </div>
     </>

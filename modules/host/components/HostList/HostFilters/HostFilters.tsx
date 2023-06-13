@@ -119,6 +119,7 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
 
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
+    localStorage.setItem('hostFiltersOpen', JSON.stringify(!isFiltersOpen));
   };
 
   if (isLoading === 'finished') isCompleted.current = true;
@@ -170,6 +171,7 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
               else if (item.type === 'range')
                 return (
                   <FiltersRange
+                    key={item.name}
                     name={item.name}
                     step={item.step}
                     min={item.min}

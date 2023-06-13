@@ -9,8 +9,8 @@ import {
 import { reset } from 'styles/utils.reset.styles';
 import { SerializedStyles } from '@emotion/serialize';
 import Link from 'next/link';
-import { LightSpinner } from '../../General/LoadingSpinner';
 import { Tooltip } from '@shared/components';
+import { ButtonSpinner } from './ButtonSpinner';
 
 type Props = {
   id?: string;
@@ -74,7 +74,7 @@ export function Button({
       css={buttonStyles}
       onClick={onClick}
     >
-      {loading ? <LightSpinner size={size} /> : children}
+      {loading ? <ButtonSpinner size={size} /> : children}
       {tooltip && <Tooltip noWrap hideOnMobile top="-18px" tooltip={tooltip} />}
     </button>
   );

@@ -36,7 +36,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
         key: '1',
         component: (
           <div style={{ marginTop: '4px', marginLeft: '8px' }}>
-            <BlockchainIcon size="32px" blockchainName={node.blockchainName} />
+            <BlockchainIcon size="36px" blockchainName={node.blockchainName} />
           </div>
         ),
       },
