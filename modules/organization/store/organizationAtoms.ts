@@ -1,14 +1,9 @@
 import { atom, selector, selectorFamily } from 'recoil';
 import { paginate, sort, filter } from '@shared/components';
-import { InitialQueryParams as InitialQueryParamsMembers } from '../ui/OrganizationMembersUIHelpers';
 import {
   InitialQueryParams as InitialQueryParamsOrganizations,
   initialQueryParams,
 } from '../ui/OrganizationsUIHelpers';
-import {
-  mapMembersAndInvitations,
-  MemberAndInvitation,
-} from '../utils/mapMembersAndInvitations';
 import { localStorageEffect } from 'utils/store/persist';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
@@ -138,54 +133,6 @@ const organizationsActive = selectorFamily<
     },
 });
 
-const organizationMembersAndInvitationsFiltered = selectorFamily<
-  MemberAndInvitation[],
-  InitialQueryParamsMembers
->({
-  key: 'organizations.members.filtered',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgMembers = get(selectedOrganization)?.members;
-      const allInvitations = get(organizationSentInvitations);
-
-      const all = allOrgMembers?.concat(allInvitations as any);
-      const mappedAll = mapMembersAndInvitations(all);
-      const { sorting } = queryParams;
-
-      const sortedAll = sort(mappedAll, sorting);
-      return sortedAll;
-    },
-});
-
-const organizationMembersAndInvitations = selectorFamily<
-  MemberAndInvitation[],
-  InitialQueryParamsMembers
->({
-  key: 'organizations.members.active',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgMembers = get(
-        organizationMembersAndInvitationsFiltered(queryParams),
-      );
-      const { pagination } = queryParams;
-
-      const paginatedAll = paginate(allOrgMembers, pagination);
-      return paginatedAll;
-    },
-});
-
-const organizationMembersAndInvitationsTotal = selector<number>({
-  key: 'organizations.members.total',
-  get: ({ get }) => {
-    const allOrgMembers = get(selectedOrganization)?.members;
-    const allInvitations = get(organizationSentInvitations);
-
-    return allOrgMembers?.length! + allInvitations.length;
-  },
-});
-
 const organizationMembersPageIndex = atom<number>({
   key: 'organization.member.pageIndex',
   default: 0,
@@ -241,9 +188,6 @@ export const organizationAtoms = {
   organizationMemberCount,
   organisationCount,
   defaultOrganization,
-  organizationMembersAndInvitations,
-  organizationMembersAndInvitationsFiltered,
-  organizationMembersAndInvitationsTotal,
   organizationMemberLoadingState,
   organizationMembersLoadingState,
   organizationMembersPageIndex,

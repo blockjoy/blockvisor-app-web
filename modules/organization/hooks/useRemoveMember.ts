@@ -1,5 +1,4 @@
 import { organizationClient } from '@modules/grpc';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -17,33 +16,27 @@ export function useRemoveMember() {
     organizationAtoms.allOrganizations,
   );
 
-  const organizationMembers = organization?.members;
+  const removeMemberFromList = (userId: string) => {
+    if (organization) {
+      const organizationCopy = { ...organization };
 
-  const decrementMemberCount = () => {
-    const newOrg: Org = {
-      ...organization!,
-      memberCount: organization?.memberCount! - 1,
-    };
+      const members = organizationCopy.members!.filter(
+        (member: any) => member?.userId !== userId,
+      );
 
-    const organizationsCopy = [...organizations];
+      organizationCopy.members = members;
+      organizationCopy.memberCount = organizationCopy.memberCount - 1;
 
-    const index = organizations.findIndex((org) => org.id === newOrg.id);
+      // update all organizations list
+      const organizationsCopy = [...organizations];
+      const index = organizations.findIndex(
+        (org) => org.id === organizationCopy.id,
+      );
+      organizationsCopy[index] = organizationCopy;
 
-    organizationsCopy[index] = newOrg;
-
-    setOrganizations(organizationsCopy);
-    setOrganization(newOrg);
-  };
-
-  const removeMemberFromList = (user_id: string) => {
-    const newOrganizationMembers = organizationMembers!.filter(
-      (member: any) => member?.userId !== user_id,
-    );
-
-    setOrganization({
-      ...organization!,
-      members: newOrganizationMembers,
-    });
+      setOrganization(organizationCopy);
+      setOrganizations(organizationsCopy);
+    }
   };
 
   const removeMemberFromOrganization = async (
@@ -51,17 +44,15 @@ export function useRemoveMember() {
     orgId: string,
   ) => {
     setIsLoading('loading');
-    const response = await organizationClient.removeMember(userId, orgId);
-
-    if (response) {
+    try {
+      await organizationClient.removeMember(userId, orgId);
       removeMemberFromList(userId);
-      decrementMemberCount();
       toast.success('Member Removed');
-    } else {
+    } catch (err) {
       toast.error('Error while removing');
+    } finally {
+      setIsLoading('finished');
     }
-
-    setIsLoading('finished');
   };
 
   return {

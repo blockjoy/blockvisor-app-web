@@ -21,7 +21,7 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { node, loadNode, unloadNode, isLoading } = useNodeView();
+  const { node, loadNode, unloadNode, isLoading, setIsLoading } = useNodeView();
 
   const handleNodeError = () => setNodeError(true);
 
@@ -30,7 +30,11 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
       loadNode(id, handleNodeError);
       setIsDeleting(false);
     }
-    return () => unloadNode();
+
+    return () => {
+      setIsLoading('loading');
+      unloadNode();
+    };
   }, [id]);
 
   return (

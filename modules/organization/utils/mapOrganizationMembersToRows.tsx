@@ -20,10 +20,10 @@ export enum Action {
 }
 
 export type Member = {
-  user_id?: string | undefined;
-  org_id?: string | undefined;
+  userId?: string | undefined;
+  orgId?: string | undefined;
   email?: string;
-  invitation_id?: string | undefined;
+  invitationId?: string | undefined;
   isPending?: boolean;
 };
 
@@ -54,23 +54,23 @@ export const mapOrganizationMembersToRows = (
   );
 
   const handleRemoveMember = async (
-    user_id: string,
-    org_id: string,
+    userId: string,
+    orgId: string,
     email: string,
   ) => {
-    methods?.action(Action.remove, { user_id, org_id, email });
+    methods?.action(Action.remove, { userId, orgId, email });
   };
 
-  const handleRevokeInvitation = (invitation_id: string, email: string) => {
-    methods?.action(Action.revoke, { invitation_id, email });
+  const handleRevokeInvitation = (invitationId: string, email: string) => {
+    methods?.action(Action.revoke, { invitationId, email });
   };
 
   const handleResendInvitation = (
-    invitation_id: string,
+    invitationId: string,
     email: string,
-    org_id: string,
+    orgId: string,
   ) => {
-    methods?.resend({ invitation_id, email, org_id });
+    methods?.resend({ invitationId, email, orgId });
   };
 
   const headers = [
@@ -83,11 +83,6 @@ export const mapOrganizationMembersToRows = (
       dataField: 'email',
       sort: true,
     },
-    // {
-    //   name: 'Joined',
-    //   key: '2',
-    //   width: '55%',
-    // },
     {
       name: '',
       key: '2',
@@ -127,20 +122,6 @@ export const mapOrganizationMembersToRows = (
             </div>
           ),
         },
-        // {
-        //   key: '2',
-        //   component: (
-        //     <>
-        //       {member.createdAt && (
-        //         <p>
-        //           {formatDistanceToNow(new Date(member.createdAt || ''), {
-        //             addSuffix: true,
-        //           })}
-        //         </p>
-        //       )}
-        //     </>
-        //   ),
-        // },
         {
           key: '3',
           component:

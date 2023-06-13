@@ -1,5 +1,4 @@
 import { organizationClient } from '@modules/grpc';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -25,17 +24,14 @@ export function useGetOrganization() {
   const getOrganization = async (id: string) => {
     setIsLoading('initializing');
 
-    let organization: Org | undefined;
-
-    organization = allOrganizations.find((o: any) => o.id === id);
+    let organization: any = allOrganizations.find((o: any) => o.id === id);
 
     if (organization) {
       setOrganization(organization);
     } else {
-      const response: any = await organizationClient.getOrganization(id);
-      organization = response;
+      organization = await organizationClient.getOrganization(id);
       checkForTokenError(organization);
-      setOrganization(response);
+      setOrganization(organization);
     }
 
     switchOrganization(organization!.id, organization!.name);

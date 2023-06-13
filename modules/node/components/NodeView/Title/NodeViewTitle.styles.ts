@@ -17,7 +17,10 @@ export const styles = {
     }
 
     p {
+      display: flex;
+      align-items: center;
       line-height: 1.1;
+      white-space: nowrap;
     }
   `,
   nodesButton: (theme: ITheme) => css`
