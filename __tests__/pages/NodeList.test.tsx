@@ -19,8 +19,7 @@ beforeEach(() => {
     routerMockBuilder({ isReady: true, pathname: '/nodes' }),
   );
 
-  vi.mock('@modules/grpc/blockchainClient');
-
+  vi.mock('@modules/grpc/clients/organizationClient');
   vi.mocked(organizationClient.getOrganizations).mockImplementationOnce(
     async () => mockeOrganizationsResponse,
   );
@@ -70,6 +69,22 @@ describe('Node List Page', () => {
   });
 
   it('Should display one Ethereum node', async () => {
+    vi.mocked(nodeClient.listNodes).mockImplementationOnce(
+      async () => mockedNodesResponse,
+    );
+    render(
+      <AppLayout pageTitle="Nodes">
+        <NodeUIProvider>
+          <NodeList />
+        </NodeUIProvider>
+      </AppLayout>,
+    );
+    await waitFor(() => {
+      expect(screen.getByDataCy('nodeList-Ethereum-Validator')).toBeTruthy();
+    });
+  });
+
+  it('Should display no Ethereum node, when the filter is to other node type', async () => {
     vi.mocked(nodeClient.listNodes).mockImplementationOnce(
       async () => mockedNodesResponse,
     );

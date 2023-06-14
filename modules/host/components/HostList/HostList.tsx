@@ -99,9 +99,10 @@ export const HostList = () => {
           <HostListHeader />
 
           {isLoading === 'initializing' ? (
-            <TableSkeleton />
+            <TableSkeleton dataCy="hostList-skeleton" />
           ) : !Boolean(hostList?.length) && isLoading === 'finished' ? (
             <EmptyColumn
+              dataCy="hostList-empty"
               title="No Hosts."
               description={
                 isFiltered && isEmpty ? (
