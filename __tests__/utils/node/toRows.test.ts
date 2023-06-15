@@ -14,8 +14,8 @@ describe('mapNodeListToRows', () => {
           name: '',
           key: '1',
           width: '40px',
-          minWidth: '40px',
-          maxWidth: '40px',
+          minWidth: '60px',
+          maxWidth: '100px',
         },
         {
           name: 'Name',
