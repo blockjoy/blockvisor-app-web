@@ -1,38 +1,33 @@
-var systemCharts = [
-  // {
-  //   netdata: "system.load",
-  //   library: "gauge",
-  //   title: "LOAD",
-  //   units: "",
-  //   points: "420",
-  //   dimensions: "load1",
-  //   gaugeMaxValue: "20",
-  //   width: "75%",
-  // },  
+const loadSidePanelCharts = [
   {
     netdata: "system.load",
     library: "easypiechart",
-    title: "LOAD",
+    title: "",
     units: "Average",
     dimensions: "load1",
-    width: "65%",
+    width: "180px",
+    height: "180px", 
     maxValue: "20",
   },
-  // {
-  //   netdata: "system.cpu",
-  //   library: "gauge",
-  //   title: "CPU",
-  //   units: "",
-  //   points: "420",
-  //   gaugeMaxValue: "100",
-  //   width: "75%",
-  // },
+  {
+    netdata: "system.load",
+    dygraphValueRange: "[0, 100]",
+    width: "280px",
+    height: "44px",
+    color: "#bff589",
+    decimalDigits: "-1",
+    dimensions: "load1",
+    dygraphSparkline: "sparkline"
+  }
+];
+
+const systemCharts = [
   {
     netdata: "system.cpu",
     library: "easypiechart",
     title: "CPU",
     units: "%",
-    width: "65%",
+    width: "75%",
     maxValue: "100",
     points: "300",
   },
@@ -44,14 +39,14 @@ var systemCharts = [
     dimensions: "in",
     commonUnits: "system.io.mainhead",
     units: "MiB/s",
-    width: "65%",
+    width: "75%",
     maxValue: "1000",
   },  
   {
     netdata: "system.io",
     library: "easypiechart",
     title: "Disk Write",
-    width: "65%",
+    width: "75%",
     points: "300",
     dimensions: "out",
     commonUnits: "system.io.mainhead",
@@ -69,7 +64,7 @@ var systemCharts = [
     appendOptions: "percentage",
     dimensions: "used",
     color: "#e9c09c",
-    width: "65%",
+    width: "75%",
   },
   {
     netdata: "system.ram",
@@ -78,7 +73,7 @@ var systemCharts = [
     units: "%",
     dimensions: "used|buffers|active|wired",
     color: "#e9c09c",
-    width: "65%",
+    width: "75%",
     maxValue: "100",
     points: "600",
     appendOptions: "percentage"
@@ -89,7 +84,7 @@ var systemCharts = [
     title: "Net Inbound",
     units: "kilobits/s",
     dimensions: "received",
-    width: "65%",
+    width: "75%",
     maxValue: "1000",
   },
   {
@@ -99,70 +94,150 @@ var systemCharts = [
     units: "kilobits/s",
     dimensions: "sent",
     color: "#EE7070",
-    width: "65%",
+    width: "75%",
     maxValue: "1000",
   },
 ];
+
+const loadCharts = [
+  {
+    netdata: "system.load",
+    dygraphValueRange: "[0, 100]",
+    width: "100%",
+    height: "230px",
+    color: "#bff589 #e9af3a #EE7070",
+    decimalDigits: "-1",
+    legendPosition: "bottom"
+  }
+];
+
+const colorPrimary = "#bff589";
+const size = "140px";
+const after = "-600";
+
+const createChart = (chart) => {
+  const element = document.createElement("div");
+  element.setAttribute("data-netdata", chart.netdata);
+  element.setAttribute("data-host", `https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com`);
+  element.setAttribute("data-colors", chart.color || colorPrimary);
+  element.setAttribute("data-height", size);
+  element.setAttribute("data-width", "100%");
+  element.setAttribute("data-units", chart.units);
+  element.setAttribute("data-after", after);
+  element.setAttribute("data-title", "");
+
+  if (chart.library) {
+    element.setAttribute("data-chart-library", chart.library);
+  }
+
+  if (chart.width) {
+    element.setAttribute("data-width", chart.width);
+  }
+
+  if (chart.height) {
+    element.setAttribute("data-height", chart.height);
+  }
+
+  if (chart.dimensions) {
+    element.setAttribute("data-dimensions", chart.dimensions);
+  }
+
+  if (chart.maxValue) {
+    element.setAttribute("data-easypiechart-max-value", chart.maxValue);
+  }
+
+  if (chart.gaugeMaxValue) {
+    element.setAttribute("data-gauge-max-value", chart.gaugeMaxValue);
+  }
+
+  if (chart.appendOptions) {
+    element.setAttribute("data-append-options", chart.appendOptions);
+  }
+
+  if (chart.commonUnits) {
+    element.setAttribute("data-common-units", chart.commonUnits);
+  }
+
+  if (chart.appendOptions) {
+    element.setAttribute("data-append-options", chart.appendOptions);
+  }
+
+  if (chart.dygraphValueRange) {
+    element.setAttribute("data-dygraph-value-range", chart.dygraphValueRange);
+  }
+
+  if (chart.dygraphSparkline) {
+    element.setAttribute("data-dygraph-theme", "sparkline");
+  }
+
+  if (chart.decimalDigits) {
+    element.setAttribute("data-decimal-digits", chart.decimalDigits);
+  }
+
+  if (chart.legendPosition) {
+    element.setAttribute("data-legend-position", chart.legendPosition);
+  }
+
+  return element;
+}
 
 const onLoad = () => {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
 
-  //const { node_id } = params;
-  const node_id = "3b78c2f9-e9d5-4982-952e-23bae0fe9da1";
-  const colorPrimary = "#bff589";
-  const size = "140px";
-  const after = "-600";
-  const system = document.querySelector("#system");
+  const { node_id, is_side_panel } = params;
 
-  systemCharts.forEach((chart) => {
-    const element = document.createElement("div");
-    element.setAttribute("data-netdata", chart.netdata);
-    element.setAttribute("data-host", `https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com`);
-    element.setAttribute("data-colors", chart.color || colorPrimary);
-    element.setAttribute("data-chart-library", chart.library);
-    element.setAttribute("data-height", size);
-    element.setAttribute("data-width", "100%");
-    element.setAttribute("data-units", chart.units);
-    element.setAttribute("data-after", after);
-    element.setAttribute("data-title", chart.title);
+  // const node_id = "3b78c2f9-e9d5-4982-952e-23bae0fe9da1";
 
-    if (chart.width) {
-      element.setAttribute("data-width", chart.width);
-    }
+  const system = document.querySelector("#system"),
+        load = document.querySelector("#load");
+        sidePanel = document.querySelector("#sidePanel");
 
-    if (chart.dimensions) {
-      element.setAttribute("data-dimensions", chart.dimensions);
-    }
+  console.log("params", params.is_side_panel);
 
-    if (chart.maxValue) {
-      element.setAttribute("data-easypiechart-max-value", chart.maxValue);
-    }
+  if (is_side_panel === "true") {
+    document.body.classList.add("is-side-panel");
+    const main = document.querySelector("main");
+    document.body.removeChild(main);
+    loadSidePanelCharts.forEach((chart) => {
+      const element = createChart(chart);
+      sidePanel.appendChild(element);
+    });  
+  } else {
+    const aside = document.querySelector("aside");
+    document.body.removeChild(aside);
 
-    if (chart.gaugeMaxValue) {
-      element.setAttribute("data-gauge-max-value", chart.gaugeMaxValue);
-    }
+    systemCharts.forEach((chart) => {
 
-    if (chart.appendOptions) {
-      element.setAttribute("data-append-options", chart.appendOptions);
-    }
+      const card = document.createElement("article");
+      card.setAttribute("class", "card");
 
-    if (chart.commonUnits) {
-      element.setAttribute("data-common-units", chart.commonUnits);
-    }
+      const h2 = document.createElement("h2");
+      h2.setAttribute("class", "card-header");
+      h2.innerText = chart.title;
 
-    if (chart.appendOptions) {
-      element.setAttribute("data-append-options", chart.appendOptions);
-    }
+      card.appendChild(h2);
 
-    const card = document.createElement("article");
-    card.setAttribute("class", "card aspect-ratio");
-    card.appendChild(element);
+      const element = createChart(chart);
+      card.appendChild(element);
+  
+      system.appendChild(card);
+    });
 
-    system.appendChild(card);
+    loadCharts.forEach((chart) => {
+
+      const card = document.createElement("article");
+      card.setAttribute("class", "card");
+
+      const element = createChart(chart);
+      card.appendChild(element);
+
+      load.appendChild(card);
+    });
   }
-);
+
+  
 }
 
 

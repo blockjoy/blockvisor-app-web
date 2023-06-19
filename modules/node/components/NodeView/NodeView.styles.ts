@@ -11,6 +11,7 @@ export const styles = {
     @media ${breakpoints.fromLrg} {
       flex-direction: row;
       height: 100%;
+      padding-bottom: 20px;
     }
   `,
   content: css`
@@ -19,12 +20,12 @@ export const styles = {
     flex: 1 1 auto;
   `,
   quickEdit: (theme: ITheme) => css`
-    flex: 1 1 360px;
-    max-width: 360px;
-    padding: 20px 0 20px 20px;
+    flex: 1 1 420px;
+    max-width: 420px;
+    padding: 0 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
 
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       border-left: 0;
       border-top: 1px solid ${theme.colorBorder};
       padding: 20px 0 0 0;

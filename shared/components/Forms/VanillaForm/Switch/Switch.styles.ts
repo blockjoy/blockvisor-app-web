@@ -6,7 +6,6 @@ export const styles = {
   wrapper: css`
     position: relative;
     display: inline-block;
-    margin-bottom: 20px;
 
     :hover .tooltip {
       opacity: 1;
@@ -27,14 +26,14 @@ export const styles = {
     }
 
     :checked ~ .switch .handle {
-      translate: 40px 0;
+      translate: 32px 0;
       background: ${theme.colorPrimary};
     }
   `,
   switch: (theme: ITheme) => css`
     display: block;
-    width: 70px;
-    height: 30px;
+    width: 60px;
+    height: 28px;
     padding: 3px;
     border-radius: 15px;
     border: 1px solid ${theme.colorDefault};
@@ -45,8 +44,8 @@ export const styles = {
     content: '';
     display: grid;
     place-items: center;
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: ${theme.colorDefault};
     transition: translate 0.3s;

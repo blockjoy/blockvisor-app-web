@@ -40,7 +40,7 @@ export const useNodeView = (): Hook => {
     nodeAtoms.isLoadingActiveNode,
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-  const { removeFromNodeList } = useNodeList();
+  const { removeFromNodeList, nodeList } = useNodeList();
   const { organizations } = useGetOrganizations();
   const { defaultOrganization } = useDefaultOrganization();
   const { modifyOrganization } = useUpdateOrganization();
@@ -82,11 +82,15 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args, onError: VoidFunction) => {
-    let node: any;
+    if (nodeList.findIndex((n) => n.id === id) > -1) {
+      setIsLoading('finished');
+      setNode(nodeList.find((n) => n.id === id)!);
+      return;
+    }
 
     try {
       const nodeId = convertRouteParamToString(id);
-      node = await nodeClient.getNode(nodeId);
+      const node: any = await nodeClient.getNode(nodeId);
       checkForApiError('GetNode', node);
       checkForTokenError(node);
       setNode(node);
@@ -94,7 +98,6 @@ export const useNodeView = (): Hook => {
       onError();
       return;
     } finally {
-      setIsLoading('finished');
     }
   };
 

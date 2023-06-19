@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
+import { ReactNode } from 'react';
 import { ITheme } from 'types/theme';
 
 type Props = {
   id?: string;
-  address: string;
+  address: string | ReactNode;
   name: string;
 };
 
@@ -30,6 +31,10 @@ const styles = {
   `,
   address: (theme: ITheme) => css`
     color: ${theme.colorLabel};
+
+    svg :is(path) {
+      fill: ${theme.colorLabel};
+    }
   `,
 };
 

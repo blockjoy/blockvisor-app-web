@@ -17,6 +17,10 @@ export const styles = {
       color: ${theme.colorText};
     }
 
+    td svg path {
+      fill: ${theme.colorText};
+    }
+
     td a::after {
       content: '';
       position: absolute;

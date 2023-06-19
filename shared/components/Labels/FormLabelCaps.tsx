@@ -10,8 +10,19 @@ const styles = {
     letter-spacing: 1px;
     margin-bottom: 16px;
   `,
+  h4NoBottomMargin: css`
+    margin-bottom: 0;
+  `,
 };
 
-export const FormLabelCaps: FC<PropsWithChildren> = ({ children }) => {
-  return <h4 css={styles.h4}>{children}</h4>;
+type Props = {
+  noBottomMargin?: boolean;
+} & PropsWithChildren;
+
+export const FormLabelCaps: FC<Props> = ({ children, noBottomMargin }) => {
+  return (
+    <h4 css={[styles.h4, noBottomMargin && styles.h4NoBottomMargin]}>
+      {children}
+    </h4>
+  );
 };

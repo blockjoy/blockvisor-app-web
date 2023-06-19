@@ -7,7 +7,7 @@ export const styles = {
     display: grid;
     gap: 16px;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 132px;
+    grid-auto-rows: 152px;
     margin-bottom: 40px;
     max-width: 820px;
 
@@ -24,7 +24,6 @@ export const styles = {
     gap: 8px;
     background: ${theme.colorCard};
     border-radius: 6px;
-    border: 1px solid ${theme.colorBorder};
     padding-top: 14px;
   `,
   cardValue: (theme: ITheme) => css`
