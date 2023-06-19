@@ -11,8 +11,8 @@ import {
   UiType,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { FormHeader, FormLabel, OrganizationSelect } from '@shared/components';
-import IconCheck from '@public/assets/icons/common/CheckCircle.svg';
-import IconClose from '@public/assets/icons/common/Close.svg';
+import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
+import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 
@@ -62,7 +62,7 @@ export const NodeLauncherSummary: FC<Props> = ({
             <ul css={styles.summaryList}>
               <li>
                 <span css={styles.summaryIcon}>
-                  <IconCheck />
+                  <IconCheckCircle />
                 </span>
                 <div>
                   <label>Blockchain</label>
@@ -74,7 +74,7 @@ export const NodeLauncherSummary: FC<Props> = ({
               </li>
               <li>
                 <span css={styles.summaryIcon}>
-                  <IconCheck />
+                  <IconCheckCircle />
                 </span>
                 <div>
                   <label>Type</label>
@@ -87,11 +87,11 @@ export const NodeLauncherSummary: FC<Props> = ({
               <li>
                 {isConfigValid ? (
                   <span css={styles.summaryIcon}>
-                    <IconCheck />
+                    <IconCheckCircle />
                   </span>
                 ) : (
-                  <span css={styles.summaryIconClose}>
-                    <IconClose />
+                  <span css={styles.summaryIcon}>
+                    <IconUncheckCircle />
                   </span>
                 )}
 

@@ -75,22 +75,8 @@ export const styles = {
     }
   `,
   summaryIcon: (theme: ITheme) => css`
-    height: 30px;
-    width: 30px;
-    path {
-      fill: ${theme.colorPrimary};
-    }
-  `,
-  summaryIconClose: (theme: ITheme) => css`
-    width: 30px;
-    height: 30px;
-    padding: 3px;
-    display: grid;
-    place-items: center;
-
-    path {
-      fill: ${theme.colorDanger};
-    }
+    height: 24px;
+    width: 24px;
   `,
   createButton: (theme: ITheme) => css`
     position: relative;

@@ -6,11 +6,15 @@ export const styles = {
   wrapper: css`
     position: relative;
     display: inline-block;
+    margin-bottom: 20px;
 
     :hover .tooltip {
       opacity: 1;
       visibility: visible;
     }
+  `,
+  wrapperNoBottomMargin: css`
+    margin-bottom: 0;
   `,
   input: (theme: ITheme) => css`
     position: absolute;
