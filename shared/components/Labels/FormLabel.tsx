@@ -7,6 +7,7 @@ const styles = {
     margin-bottom: 12px;
     font-size: 14px;
     display: flex;
+    align-items: center;
     gap: 8px;
     color: ${theme.colorLabel};
   `,

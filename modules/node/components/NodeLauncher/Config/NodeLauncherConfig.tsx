@@ -49,7 +49,7 @@ const renderControls = (
           placeholder="Upload validator keys"
         />
       );
-    case UiType.UI_TYPE_TEXT:
+    case UiType.UI_TYPE_PASSWORD:
       return (
         <Textbox
           tabIndex={5}
@@ -98,16 +98,6 @@ export const NodeLauncherConfig: FC<Props> = ({
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
-        {/* <Alert isSuccess={isConfigValid!}>
-          {isConfigValid === null ? (
-            <Skeleton />
-          ) : isConfigValid === true ? (
-            'All systems GO!'
-          ) : (
-            'Node requires configuration information.'
-          )}
-        </Alert> */}
-
         {isConfigValid !== null && !!networkList?.length && (
           <>
             <FormLabel>Network</FormLabel>

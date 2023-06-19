@@ -18,8 +18,7 @@ export const styles = {
   requiredAsterix: (theme: ITheme) => css`
     display: inline-block;
     color: ${theme.colorDanger};
-    margin-left: 10px;
-    translate: 0 5px;
+    transform: translateY(4px);
     font-size: 20px;
   `,
 };

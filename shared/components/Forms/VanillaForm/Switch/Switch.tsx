@@ -9,6 +9,7 @@ type Props = {
   tabIndex?: number;
   tooltip?: string;
   disabled: boolean;
+  noBottomMargin?: boolean;
   onPropertyChanged: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -19,9 +20,10 @@ export const Switch: FC<Props> = ({
   name,
   checked,
   tabIndex,
+  noBottomMargin,
 }) => {
   return (
-    <div css={styles.wrapper}>
+    <div css={[styles.wrapper, noBottomMargin && styles.wrapperNoBottomMargin]}>
       <label tabIndex={tabIndex}>
         <input
           disabled={disabled}

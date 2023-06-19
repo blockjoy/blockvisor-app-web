@@ -1,8 +1,10 @@
 import Image from 'next/image';
-import { Fragment, MouseEventHandler, useCallback } from 'react';
+import { Fragment, useCallback } from 'react';
 import { useDropzone, FileWithPath } from 'react-dropzone';
 import { styles } from './FileUpload.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { SvgIcon } from '@shared/components';
+import IconUpload from '@public/assets/icons/common/Upload.svg';
 
 type Props = {
   name: string;
@@ -68,13 +70,9 @@ export function FileUpload({
         ))
       ) : (
         <>
-          <Image
-            src="/assets/icons/upload-24.svg"
-            alt="Upload icon"
-            layout="fixed"
-            width={24}
-            height={24}
-          />
+          <SvgIcon size="18px">
+            <IconUpload />
+          </SvgIcon>
           <p css={[styles.text, typo.small]}>{placeholder}</p>
         </>
       )}
