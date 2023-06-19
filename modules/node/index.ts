@@ -3,6 +3,7 @@ export * from './components/NodeView/NodeView';
 export * from './components/NodeView/Tabs/Dashboard/NodeViewDashboard';
 export * from './components/NodeView/Tabs/Metrics/NodeViewMetrics';
 export * from './components/NodeView/Tabs/Details/NodeViewDetails';
+export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/NodeLauncher/NodeLauncher';
 export * from './components/Shared';
 export * from './hooks/useNodeAdd';

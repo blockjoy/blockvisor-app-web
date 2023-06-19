@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 import { getHostStatusInfo, getHostStatusColor } from '@shared/components';
 
 type Props = {
-  status: number;
+  status?: number;
   size?: string;
 };
 
@@ -22,7 +22,7 @@ const styles = {
   `,
 };
 
-export const HostIcon = ({ status, size = '14px' }: Props) => (
+export const HostIcon = ({ status = 1, size = '14px' }: Props) => (
   <span
     css={[styles.icon, getHostStatusColor(getHostStatusInfo(status)?.name!)]}
   >

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { NodeViewTitle } from './Title/NodeViewTitle';
 import { NodeViewHeader } from './Header/NodeViewHeader';
-import { NodeViewEdit } from './Edit/NodeViewEdit';
+import { FormHeaderCaps, NetdataDashboard } from '@shared/components';
 import { NodeViewTabs } from './Tabs/NodeViewTabs';
 import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, TableSkeleton } from '@shared/components';
@@ -64,7 +64,8 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
                   <div css={styles.content}>{children}</div>
                   {!hideEditPanel && (
                     <div css={styles.quickEdit}>
-                      <NodeViewEdit />
+                      <FormHeaderCaps>Overview</FormHeaderCaps>
+                      <NetdataDashboard nodeId={node.id} isSidePanel />
                     </div>
                   )}
                 </>

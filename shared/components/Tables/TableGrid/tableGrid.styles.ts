@@ -7,7 +7,7 @@ export const styles = {
     display: grid;
     gap: 16px;
     grid-template-columns: 1fr;
-    grid-auto-rows: 140px;
+    grid-auto-rows: 160px;
     padding: 0 0 20px;
 
     @media ${breakpoints.fromSml} {
@@ -46,7 +46,7 @@ export const styles = {
     border-radius: 4px;
     border: 1px solid transparent;
     min-width: 0;
-    padding: 16px;
+    padding: 16px 24px;
     background: ${theme.colorCard};
     cursor: pointer;
 
@@ -100,5 +100,9 @@ export const styles = {
     color: ${theme.colorLabel};
     margin-bottom: 16px;
     font-size: 13px;
+
+    svg path {
+      fill: ${theme.colorLabel};
+    }
   `,
 };

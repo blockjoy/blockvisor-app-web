@@ -10,7 +10,6 @@ export const styles = {
     position: relative;
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
     font-size: 16px;
 
     :hover,

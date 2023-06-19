@@ -1,8 +1,8 @@
 import { AppLayout } from '@modules/layout';
 import { NodeView } from '@modules/node';
-import { NodeViewMetrics } from '@modules/node';
+import { NodeViewSettings } from '@modules/node';
 
-const Component = () => <NodeViewMetrics />;
+const Component = () => <NodeViewSettings />;
 
 Component.getLayout = function getLayout(page: any) {
   return (

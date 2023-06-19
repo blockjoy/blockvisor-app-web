@@ -6,7 +6,7 @@ type Props = {
   onCellClick: VoidFunction;
   cellTitle: string;
   cellStatus: ReactNode;
-  cellType?: string;
+  cellType?: string | ReactNode;
   cellEarnings?: number;
   cellIcon: ReactNode;
   cellEarningsDirection?: string | 'up' | 'down' | '-';
