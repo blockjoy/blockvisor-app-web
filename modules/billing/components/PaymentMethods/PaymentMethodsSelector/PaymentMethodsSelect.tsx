@@ -1,4 +1,8 @@
-import { billingAtoms, CreditCardTypes } from '@modules/billing';
+import {
+  billingAtoms,
+  billingSelectors,
+  CreditCardTypes,
+} from '@modules/billing';
 import {
   DropdownButton,
   DropdownItem,
@@ -24,7 +28,7 @@ export const PaymentMethodsSelect = ({
   handlePaymentMethod,
 }: PaymentMethodsSelectProps) => {
   const router = useRouter();
-  const customer = useRecoilValue(billingAtoms.customer);
+  const customer = useRecoilValue(billingSelectors.customer);
   const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);

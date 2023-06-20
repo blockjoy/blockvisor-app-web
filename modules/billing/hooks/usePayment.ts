@@ -1,10 +1,9 @@
 import { useRecoilValue } from 'recoil';
-import { billingAtoms } from '../store/billingAtoms';
-import { BILLING_API_ROUTES } from '../constants/routes';
+import { billingSelectors, BILLING_API_ROUTES } from '@modules/billing';
 import { _payment_intent } from 'chargebee-typescript';
 
 export const usePayment = () => {
-  const customer = useRecoilValue(billingAtoms.customer);
+  const customer = useRecoilValue(billingSelectors.customer);
 
   const createIntent = async () => {
     const params: _payment_intent.create_params = {

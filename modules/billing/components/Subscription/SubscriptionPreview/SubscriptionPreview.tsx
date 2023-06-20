@@ -3,17 +3,28 @@ import { useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
 import { DetailsView, TableSkeleton } from '@shared/components';
 import { styles } from './SubscriptionPreview.styles';
-import { SubscriptionInfo } from './SubscriptionInfo/SubscriptionInfo';
-import { SubscriptionItems } from './SubscriptionItems/SubscriptionItems';
-import { useEstimates, SubscriptionCancellation } from '@modules/billing';
-import { billingAtoms } from '@modules/billing/store/billingAtoms';
+import {
+  useEstimates,
+  SubscriptionCancellation,
+  billingAtoms,
+  billingSelectors,
+  SubscriptionInfo,
+  SubscriptionItems,
+} from '@modules/billing';
+import { useRouter } from 'next/router';
 
 export const SubscriptionPreview = () => {
-  const subscription = useRecoilValue(billingAtoms.subscription);
-  const subscriptionLoadingState = useRecoilValue(
-    billingAtoms.subscriptionLoadingState,
+  const {
+    query: { id },
+  } = useRouter();
+
+  const subscription = useRecoilValue(
+    billingSelectors.subscriptions[id as string],
   );
-  const { estimateLoadingState, getEstimate } = useEstimates();
+  const subscriptionsLoadingState = useRecoilValue(
+    billingAtoms.subscriptionsLoadingState,
+  );
+  const { estimateLoadingState, getEstimate } = useEstimates(subscription?.id!);
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
 
   useEffect(() => {
@@ -26,7 +37,7 @@ export const SubscriptionPreview = () => {
   return (
     <div css={styles.wrapper}>
       {estimateLoadingState !== 'finished' ||
-      subscriptionLoadingState !== 'finished' ? (
+      subscriptionsLoadingState !== 'finished' ? (
         <TableSkeleton />
       ) : activeView === 'list' ? (
         <>

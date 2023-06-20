@@ -15,9 +15,9 @@ const updateSubscriptionItems = async (
       },
     ) {
       if (error) {
+        console.log('error123', error);
         reject(error);
       } else {
-        console.log(`${result}`);
         resolve(result.subscription);
       }
     });

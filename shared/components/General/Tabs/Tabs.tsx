@@ -5,9 +5,11 @@ import { styles } from './Tabs.styles';
 
 type Props = {
   activeTab: string;
-  tabItems: Array<{ value: string; label: string; component: ReactNode }>;
+  tabItems: Array<TabItem>;
   onTabClick: (tabValue: string) => void;
 };
+
+export type TabItem = { value: string; label: string; component: ReactNode };
 
 export function Tabs({ tabItems, activeTab, onTabClick }: Props) {
   return (

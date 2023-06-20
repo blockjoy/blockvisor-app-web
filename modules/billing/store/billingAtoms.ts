@@ -1,20 +1,30 @@
 import { atom } from 'recoil';
 import {
   Contact,
-  Customer,
   Estimate,
   Invoice,
   Item,
   ItemPrice,
   PaymentSource,
-  Subscription,
 } from 'chargebee-typescript/lib/resources';
 import { localStorageEffect } from 'utils/store/persist';
 
-const customer = atom<Customer | null>({
-  key: 'billing.customer',
-  default: null,
-  effects: [localStorageEffect('customer')],
+const billing = atom<BillingState>({
+  key: 'billing',
+  default: {
+    customer: null,
+    subscriptions: {
+      'hosted-nodes': null,
+      'self-managed-hosts': null,
+      'fully-managed-hosts': null,
+    },
+  },
+  effects: [localStorageEffect('billing')],
+});
+
+const subscriptionsLoadingState = atom<LoadingState>({
+  key: 'billing.subscriptions.loadingState',
+  default: 'finished',
 });
 
 const customerLoadingState = atom<LoadingState>({
@@ -107,17 +117,6 @@ const itemPricesLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const subscription = atom<Subscription | null>({
-  key: 'billing.subscription',
-  default: null,
-  effects: [localStorageEffect('subscription')],
-});
-
-const subscriptionLoadingState = atom<LoadingState>({
-  key: 'billing.subscription.loadingState',
-  default: 'finished',
-});
-
 const estimate = atom<Estimate | null>({
   key: 'billing.estimate',
   default: null,
@@ -128,8 +127,14 @@ const estimateLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const subscriptionLoadingState = atom<LoadingState>({
+  key: 'billing.subscription.loadingState',
+  default: 'finished',
+});
+
 export const billingAtoms = {
-  customer,
+  billing,
+
   customerLoadingState,
 
   paymentMethod,
@@ -159,6 +164,6 @@ export const billingAtoms = {
   invoices,
   invoicesLoadingState,
 
-  subscription,
   subscriptionLoadingState,
+  subscriptionsLoadingState,
 };
