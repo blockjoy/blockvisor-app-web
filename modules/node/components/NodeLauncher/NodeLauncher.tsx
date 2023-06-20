@@ -23,7 +23,7 @@ import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain'
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
-import { useSubscription } from '@modules/billing';
+import { useUpdateSubscription } from '@modules/billing';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -51,7 +51,7 @@ export type CreateNodeParams = {
 
 export const NodeLauncher = () => {
   const router = useRouter();
-  const { updateSubscriptionItems } = useSubscription();
+  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();

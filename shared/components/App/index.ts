@@ -24,3 +24,4 @@ export * from './Filters/FiltersWrapper';
 export * from './HostSelect/HostSelect';
 export * from './HostIcon/HostIcon';
 export * from './DeleteModal/DeleteModal';
+export * from './Page/ProfileDropdown/ProfileDropdown';

@@ -6,6 +6,7 @@ import {
   PlanSelect,
   SinglePlan,
   billingAtoms,
+  billingSelectors,
 } from '@modules/billing';
 import { Alert, EmptyColumn, TableSkeleton } from '@shared/components';
 import { styles } from './Subscription.styles';
@@ -18,14 +19,14 @@ import {
 } from '@modules/auth';
 
 type SubscriptionProps = {
-  items: Item[];
+  item: Item;
   itemPrices: ItemPrice[];
 };
 
-export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
-  const subscription = useRecoilValue(billingAtoms.subscription);
-  const subscriptionLoadingState = useRecoilValue(
-    billingAtoms.subscriptionLoadingState,
+export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
+  const subscription = useRecoilValue(billingSelectors.subscriptions[item.id]);
+  const subscriptionsLoadingState = useRecoilValue(
+    billingAtoms.subscriptionsLoadingState,
   );
 
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
@@ -50,6 +51,8 @@ export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
     Permissions.READ_BILLING,
   );
 
+  if (subscriptionsLoadingState !== 'finished') return <TableSkeleton />;
+
   if (!canReadBilling)
     return (
       <Alert>
@@ -57,8 +60,6 @@ export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
         switching the organization.
       </Alert>
     );
-
-  if (subscriptionLoadingState !== 'finished') return <TableSkeleton />;
 
   return (
     <div css={styles.wrapper}>
@@ -79,9 +80,7 @@ export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
             align="left"
             additionalStyles={styles.emptyColumn}
           />
-          {items?.length && (
-            <SinglePlan plan={items[0]} handleSelect={handleSelect} />
-          )}
+          {item && <SinglePlan item={item} handleSelect={handleSelect} />}
         </>
       ) : (
         <PlanSelect

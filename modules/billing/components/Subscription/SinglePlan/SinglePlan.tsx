@@ -5,15 +5,15 @@ import { Item } from 'chargebee-typescript/lib/resources';
 import { BILLING_PLAN_FEATURES } from '@modules/billing/constants/billing';
 
 export type SinglePlanProps = {
-  plan: Item;
+  item: Item;
   handleSelect: (plan: any) => void;
 };
 
-export const SinglePlan = ({ plan, handleSelect }: SinglePlanProps) => {
+export const SinglePlan = ({ item, handleSelect }: SinglePlanProps) => {
   return (
-    <div css={[styles.wrapper, plan.metadata.featured && styles.featured]}>
+    <div css={styles.wrapper}>
       <div css={styles.titleWrapper}>
-        <span css={styles.title}>{plan?.external_name}</span>
+        <span css={styles.title}>{item?.external_name}</span>
       </div>
 
       <div css={styles.pricing}>
@@ -26,7 +26,7 @@ export const SinglePlan = ({ plan, handleSelect }: SinglePlanProps) => {
       </div>
 
       <div css={styles.priceInfo}>
-        <p>{plan.description}</p>
+        <p>{item.description}</p>
       </div>
 
       <div css={styles.listContainer}>
@@ -42,10 +42,7 @@ export const SinglePlan = ({ plan, handleSelect }: SinglePlanProps) => {
         </ul>
       </div>
       {/* TODO: add prevent if no payment method has been added */}
-      <Button
-        style={plan.metadata.featured ? 'secondary' : 'outline'}
-        onClick={() => handleSelect(plan)}
-      >
+      <Button style="outline" onClick={() => handleSelect(item)}>
         Select plan
       </Button>
     </div>
