@@ -15,7 +15,6 @@ const createPaymentSource = async (
         result: { payment_source: PaymentSource },
       ) {
         if (error) {
-          console.log('error123', error);
           reject(error);
         } else {
           resolve(result.payment_source);
@@ -32,7 +31,6 @@ export default async function handler(
     try {
       const params =
         req.body as _payment_source.create_using_payment_intent_params;
-      console.log('param123', params);
       const response = await createPaymentSource(params);
 
       res.status(200).json(response);

@@ -1,12 +1,22 @@
 interface ISubscriptionHook {
-  subscription: any | null;
   subscriptionLoadingState: LoadingState;
   getSubscription: (subscriptionId: string) => void;
-  createSubscription: (subscriptionInputParams: any) => void;
-  updateSubscription: (subscription: any) => void;
-  updateSubscriptionItems: (subscription: any) => void;
-  cancelSubscription: (params: any) => void;
-  restoreSubscription: VoidFunction;
-  reactivateSubscription: VoidFunction;
-  updateBillingProfile: (paymentMethodId: string) => void;
+  createSubscription: (subscriptionInputParams: {
+    itemId: string;
+    itemPriceId: string;
+    autoRenew: string;
+    paymentMethodId: string;
+  }) => void;
+  updateSubscription: (id: string) => void;
+  cancelSubscription: (
+    id: string,
+    params: _subscription.update_for_items_params,
+  ) => void;
+  restoreSubscription: (id: string) => void;
+  reactivateSubscription: (id: string) => void;
+  updateBillingProfile: (id: string, params) => void;
+}
+interface IUpdateSubscriptionHook {
+  subscriptionLoadingState: LoadingState;
+  updateSubscriptionItems: (action: { type: string; payload: any }) => void;
 }

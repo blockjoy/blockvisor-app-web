@@ -4,3 +4,9 @@ export const BILLING_PLAN_FEATURES: string[] = [
   'Unlimited Organizations',
   'Unlimited Collaborators',
 ];
+
+export const SUBSCRIPTION_TYPES = [
+  'hosted-nodes',
+  'self-managed-hosts',
+  'fully-managed-hosts',
+];
