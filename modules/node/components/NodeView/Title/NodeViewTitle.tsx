@@ -18,7 +18,6 @@ export const NodeViewTitle = () => {
           <NodeTitle />
         </button>
         <span css={styles.separator}>/</span>
-
         {isLoading && !node?.id ? (
           <Skeleton width="80px" />
         ) : !isLoading && !node?.id ? (

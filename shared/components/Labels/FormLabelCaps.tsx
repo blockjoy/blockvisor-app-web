@@ -6,7 +6,7 @@ const styles = {
   h4: (theme: ITheme) => css`
     color: ${theme.colorDefault};
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 1px;
     margin-bottom: 16px;
   `,

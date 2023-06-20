@@ -46,7 +46,7 @@ export const styles = {
       height: 60%;
     }
 
-    path {
+    svg > g > path {
       fill: ${theme.colorPrimaryText};
     }
   `,
