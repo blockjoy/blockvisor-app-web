@@ -9,7 +9,7 @@ import {
   calcNextAutoRenew,
   useSubscription,
   BILLING_PLAN_FEATURES,
-  billingAtoms,
+  billingSelectors,
   PaymentMethodsSelect,
   usePaymentMethods,
 } from '@modules/billing';
@@ -40,7 +40,7 @@ export const PlanSelect = ({
   const { paymentMethods, getPaymentMethods, paymentMethodsLoadingState } =
     usePaymentMethods();
 
-  const customer = useRecoilValue(billingAtoms.customer);
+  const customer = useRecoilValue(billingSelectors.customer);
 
   const [periodUnit, setPeriodUnit] = useState<string>('year');
   const [autoRenew, setAutoRenew] = useState<boolean>(true);
@@ -69,6 +69,7 @@ export const PlanSelect = ({
 
   const handleSubscription = () => {
     createSubscription({
+      itemId: activeItemPrice?.item_id,
       itemPriceId: activeItemPrice?.id,
       autoRenew,
       paymentMethodId,

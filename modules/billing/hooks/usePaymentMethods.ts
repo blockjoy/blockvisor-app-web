@@ -1,5 +1,9 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import { useRecoilState } from 'recoil';
+import {
+  BILLING_API_ROUTES,
+  billingAtoms,
+  billingSelectors,
+} from '@modules/billing';
 import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
 import { _payment_source } from 'chargebee-typescript';
 
@@ -16,7 +20,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
   const [paymentMethodLoadingState, setPaymentMethodLoadingState] =
     useRecoilState(billingAtoms.paymentMethodLoadingState);
 
-  const [customer, setCustomer] = useRecoilState(billingAtoms.customer);
+  const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
 
   const getPaymentMethods = async () => {
     setPaymentMethodsLoadingState('initializing');

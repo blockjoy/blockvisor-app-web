@@ -1,21 +1,43 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms, useItems } from '@modules/billing';
-import { organizationAtoms } from '@modules/organization';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  BILLING_API_ROUTES,
+  billingAtoms,
+  billingSelectors,
+  useItems,
+} from '@modules/billing';
 import { _subscription } from 'chargebee-typescript';
-import { Subscription } from 'chargebee-typescript/lib/resources';
-import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { blockchainsAtoms } from '@modules/node';
+import { organizationAtoms } from '@modules/organization';
+import { Subscription } from 'chargebee-typescript/lib/resources';
+
+interface ExtendedCreateWithItemsParams
+  extends _subscription.create_with_items_params {
+  cf_plan: string;
+  cf_organization_id: string;
+}
 
 export const useSubscription = (): ISubscriptionHook => {
-  const customer = useRecoilValue(billingAtoms.customer);
+  const customer = useRecoilValue(billingSelectors.customer);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-  const [subscription, setSubscription] = useRecoilState(
-    billingAtoms.subscription,
+
+  const setHostedNodes = useSetRecoilState(
+    billingSelectors.subscriptions['hosted-nodes'],
   );
+  const setSelfManagedHosts = useSetRecoilState(
+    billingSelectors.subscriptions['self-managed-hosts'],
+  );
+  const setFullyManagedHosts = useSetRecoilState(
+    billingSelectors.subscriptions['fully-managed-hosts'],
+  );
+
+  const setters = {
+    'hosted-nodes': setHostedNodes,
+    'self-managed-hosts': setSelfManagedHosts,
+    'fully-managed-hosts': setFullyManagedHosts,
+  };
+
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
 
@@ -37,7 +59,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data = await response.json();
 
-      setSubscription(data);
+      if (data.cf_plan) setters[data.cf_plan](data);
     } catch (error) {
       console.error('Failed to fetch subscription', error);
     } finally {
@@ -46,10 +68,12 @@ export const useSubscription = (): ISubscriptionHook => {
   };
 
   const createSubscription = async ({
+    itemId,
     itemPriceId,
     autoRenew,
     paymentMethodId,
   }: {
+    itemId: string;
     itemPriceId: string;
     autoRenew: string;
     paymentMethodId: string;
@@ -69,14 +93,15 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const params: {
         id: string;
-        params: _subscription.create_with_items_params;
+        params: ExtendedCreateWithItemsParams;
       } = {
         id: customer?.id!,
         params: {
-          id: defaultOrganization?.id!,
           auto_collection: autoRenewValue,
           payment_source_id: paymentMethodId,
           subscription_items: subscriptionItems,
+          cf_plan: itemId,
+          cf_organization_id: defaultOrganization?.id!,
         },
       };
 
@@ -90,7 +115,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data: Subscription = await response.json();
 
-      setSubscription(data);
+      setters[data.cf_plan!](data);
     } catch (error) {
       console.error('Failed to create the subscription', error);
     } finally {
@@ -98,7 +123,7 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
-  const updateSubscription = async () => {
+  const updateSubscription = async (id: string) => {
     setSubscriptionLoadingState('initializing');
 
     try {
@@ -106,7 +131,7 @@ export const useSubscription = (): ISubscriptionHook => {
         id: string;
         params: _subscription.update_params;
       } = {
-        id: subscription?.id!,
+        id,
         params: {},
       };
 
@@ -120,7 +145,8 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const updatedSubscriptionData: Subscription = await response.json();
 
-      setSubscription(updatedSubscriptionData);
+      if (updatedSubscriptionData.cf_plan)
+        setters[updatedSubscriptionData.cf_plan](updatedSubscriptionData);
     } catch (error) {
       console.error('Failed to CREATE subscription', error);
     } finally {
@@ -128,106 +154,10 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
-  const updateSubscriptionItems = async (action: {
-    type: string;
-    payload: any;
-  }) => {
-    setSubscriptionLoadingState('initializing');
-
-    const { type, payload } = action;
-
-    const { node }: { node: Node } = payload;
-
-    const params: _subscription.update_for_items_params = {};
-
-    const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
-      [];
-
-    const nodeType = node.nodeType === 10 ? 'pruned' : '';
-    const region = 'apac';
-
-    const blockchain = blockchains.find(
-      (blockchain: Blockchain) => blockchain.id === node.blockchainId,
-    );
-
-    const SKU = `${blockchain?.name?.toLowerCase()}-${nodeType}-${region}`;
-
-    const billingPeriod = subscription?.billing_period_unit;
-
-    const itemPriceParams = {
-      id: SKU,
-      periodUnit: billingPeriod,
-    };
-
-    const itemPrice: any = await getItemPrices(itemPriceParams);
-    const itemPriceID: string = itemPrice?.length ? itemPrice[0].id : null;
-
-    const subscriptionItem: SubscriptionItem | undefined =
-      subscription?.subscription_items?.find(
-        (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
-      );
-
-    switch (type) {
-      case 'create':
-        let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
-          {
-            item_price_id: itemPriceID,
-            quantity: subscriptionItem ? subscriptionItem?.quantity! + 1 : 1,
-          };
-
-        subscriptionItems?.push(newSubscriptionItem!);
-        break;
-
-      case 'delete':
-        if (subscriptionItem?.quantity! > 1) {
-          let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
-            {
-              item_price_id: itemPriceID,
-              quantity: subscriptionItem?.quantity! - 1,
-            };
-
-          subscriptionItems?.push(newSubscriptionItem!);
-        } else {
-          subscriptionItems.push(
-            ...subscription?.subscription_items?.filter(
-              (
-                subItem: _subscription.subscription_items_update_for_items_params,
-              ) => subItem.item_price_id !== subscriptionItem?.item_price_id!,
-            )!,
-          );
-
-          params.replace_items_list = true;
-        }
-        break;
-      default:
-        break;
-    }
-
-    params.subscription_items = subscriptionItems;
-
-    const subscriptionProperties: {
-      id: string;
-      params: _subscription.update_for_items_params;
-    } = {
-      id: subscription?.id!,
-      params: params,
-    };
-
-    const response = await fetch(BILLING_API_ROUTES.subsriptions.item.update, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(subscriptionProperties),
-    });
-
-    const updatedSubscriptionData: Subscription = await response.json();
-
-    setSubscription(updatedSubscriptionData);
-    setSubscriptionLoadingState('finished');
-  };
-
-  const cancelSubscription = async ({ endOfTerm }: { endOfTerm: boolean }) => {
+  const cancelSubscription = async (
+    id: string,
+    { endOfTerm }: { endOfTerm: boolean },
+  ) => {
     setSubscriptionLoadingState('initializing');
 
     try {
@@ -235,7 +165,7 @@ export const useSubscription = (): ISubscriptionHook => {
         id: string;
         params: _subscription.cancel_for_items_params;
       } = {
-        id: subscription?.id!,
+        id,
         params: {
           end_of_term: endOfTerm,
         },
@@ -251,7 +181,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data: Subscription = await response.json();
 
-      setSubscription(data);
+      if (data.cf_plan) setters[data.cf_plan](data);
     } catch (error) {
       console.error('Failed to CANCEL subscription', error);
     } finally {
@@ -259,7 +189,7 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
-  const restoreSubscription = async () => {
+  const restoreSubscription = async (id: string) => {
     setSubscriptionLoadingState('initializing');
 
     try {
@@ -268,12 +198,12 @@ export const useSubscription = (): ISubscriptionHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ subscriptionId: subscription?.id }),
+        body: JSON.stringify({ subscriptionId: id }),
       });
 
       const data: Subscription = await response.json();
 
-      setSubscription(data);
+      setters[data.cf_plan!](data);
     } catch (error) {
       console.error('Failed to RESTORE subscription', error);
     } finally {
@@ -281,7 +211,7 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
-  const reactivateSubscription = async () => {
+  const reactivateSubscription = async (id: string) => {
     setSubscriptionLoadingState('initializing');
 
     try {
@@ -290,12 +220,12 @@ export const useSubscription = (): ISubscriptionHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ subscriptionId: subscription?.id }),
+        body: JSON.stringify({ subscriptionId: id }),
       });
 
       const data: Subscription = await response.json();
 
-      setSubscription(data);
+      if (data.cf_plan) setters[data.cf_plan](data);
     } catch (error) {
       console.error('Failed to REACTIVATE subscription', error);
     } finally {
@@ -303,12 +233,20 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
-  const updateBillingProfile = async (paymentMethodId: string) => {
+  const updateBillingProfile = async (
+    id: string,
+    updateParams: { paymentMethodId: string },
+  ) => {
     setSubscriptionLoadingState('initializing');
 
+    const { paymentMethodId } = updateParams;
+
     try {
-      const params = {
-        id: subscription?.id,
+      const params: {
+        id: string;
+        params: _subscription.override_billing_profile_params;
+      } = {
+        id,
         params: {
           payment_source_id: paymentMethodId,
           auto_collection: 'on',
@@ -328,7 +266,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data: Subscription = await response.json();
 
-      setSubscription(data);
+      if (data.cf_plan) setters[data.cf_plan](data);
     } catch (error) {
       console.error('Failed to REACTIVATE subscription', error);
     } finally {
@@ -337,13 +275,11 @@ export const useSubscription = (): ISubscriptionHook => {
   };
 
   return {
-    subscription,
     subscriptionLoadingState,
 
     getSubscription,
     createSubscription,
     updateSubscription,
-    updateSubscriptionItems,
     cancelSubscription,
     restoreSubscription,
     reactivateSubscription,

@@ -1,18 +1,29 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import {
+  BILLING_API_ROUTES,
+  billingAtoms,
+  billingSelectors,
+} from '@modules/billing';
 import { _customer } from 'chargebee-typescript';
-import { Contact, Customer } from 'chargebee-typescript/lib/resources';
+import { Contact } from 'chargebee-typescript/lib/resources';
+import { useRouter } from 'next/router';
 
 export const useBillingContacts = (): IBillingContactsHook => {
+  const {
+    query: { id },
+  } = useRouter();
+
   const [billingContacts, setBillingContacts] = useRecoilState(
     billingAtoms.billingContacts,
   );
   const [billingContactsLoadingState, setBillingContactsLoadingState] =
     useRecoilState(billingAtoms.billingContactsLoadingState);
 
-  const customer = useRecoilValue(billingAtoms.customer);
+  const customer = useRecoilValue(billingSelectors.customer);
 
-  const subscription = useRecoilValue(billingAtoms.subscription);
+  const subscription = useRecoilValue(
+    billingSelectors.subscriptions[id as string],
+  );
 
   const getBillingContacts = async () => {
     setBillingContactsLoadingState('initializing');

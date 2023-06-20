@@ -9,7 +9,7 @@ import { _customer } from 'chargebee-typescript';
 
 export const useBillingAddress = (): IBillingAddressHook => {
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
-  const [customer, setCustomer] = useRecoilState(billingAtoms.customer);
+  const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
   const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
     billingAtoms.customerLoadingState,
   );

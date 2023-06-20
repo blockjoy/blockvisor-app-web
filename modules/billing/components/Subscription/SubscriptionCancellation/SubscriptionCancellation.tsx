@@ -1,10 +1,15 @@
 import { ChangeEvent, useState } from 'react';
-import { useSubscription } from '@modules/billing/hooks/useSubscription';
-import { RadioButton } from '@shared/components/Forms/VanillaForm/RadioButton/RadioButton';
-import { Button, Input, formatters } from '@shared/index';
+import { formatters } from '@shared/index';
 import { styles } from './SubscriptionCancellation.styles';
-import { RadioButtonGroup } from '@shared/components/Forms/VanillaForm/RadioButton/RadioButtonGroup';
-import { ButtonGroup } from '@shared/components/Buttons/ButtonGroup/ButtonGroup';
+import {
+  ButtonGroup,
+  RadioButtonGroup,
+  RadioButton,
+  Button,
+} from '@shared/components';
+import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
+import { billingSelectors, useSubscription } from '@modules/billing';
 
 type SubscriptionCancellationProps = {
   handleBack: VoidFunction;
@@ -15,11 +20,18 @@ export const SubscriptionCancellation = ({
 }: SubscriptionCancellationProps) => {
   const [endOfTerm, setEndOfTerm] = useState<boolean>(true);
 
-  const { subscription, cancelSubscription, subscriptionLoadingState } =
-    useSubscription();
+  const { cancelSubscription, subscriptionLoadingState } = useSubscription();
+
+  const {
+    query: { id },
+  } = useRouter();
+
+  const subscription = useRecoilValue(
+    billingSelectors.subscriptions[id as string],
+  );
 
   const handleCancellation = () => {
-    cancelSubscription({ endOfTerm });
+    cancelSubscription(subscription?.id!, { endOfTerm });
     handleBack();
   };
 
@@ -53,7 +65,7 @@ export const SubscriptionCancellation = ({
           <h5 css={styles.title}>Cancel at the end of term</h5>
           <p>
             The subscription will be terminated on{' '}
-            {formatters.formatDate(subscription.current_term_end)}.
+            {formatters.formatDate(subscription?.current_term_end!)}.
           </p>
         </RadioButton>
       </RadioButtonGroup>

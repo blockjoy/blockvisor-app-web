@@ -19,7 +19,7 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
   return [
     {
       label: 'Active Plan',
-      data: 'Single Node',
+      data: subscription.cf_plan,
     },
     {
       label: 'Activated at',

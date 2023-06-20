@@ -1,12 +1,13 @@
 import { useRecoilState } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import {
+  BILLING_API_ROUTES,
+  billingAtoms,
+  billingSelectors,
+} from '@modules/billing';
 import { _customer } from 'chargebee-typescript';
-import { useIdentityRepository } from '@modules/auth';
 
 export const useCustomer = (): ICustomerHook => {
-  const repository = useIdentityRepository();
-
-  const [customer, setCustomer] = useRecoilState(billingAtoms.customer);
+  const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
   const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
     billingAtoms.billingAddressLoadingState,
   );
@@ -25,11 +26,7 @@ export const useCustomer = (): ICustomerHook => {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        setCustomer(null);
-        return;
-      }
-      setCustomer(data);
+      setCustomer(!response.ok ? null : data);
     } catch (error: any) {
       console.log('Error while fetching a customer', error);
     }

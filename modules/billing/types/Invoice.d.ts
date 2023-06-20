@@ -1,9 +1,12 @@
 interface IInvoiceHook {
-  invoice: any | null;
-  invoices: any[];
+  invoice: Invoice;
   invoiceLoadingState: LoadingState;
-  invoicesLoadingState: LoadingState;
   getInvoice: (invoiceId: RouterId) => void;
-  getInvoices: VoidFunction;
   unloadInvoice: VoidFunction;
+}
+
+interface IInvoicesHook {
+  invoices: Invoice[];
+  invoicesLoadingState: LoadingState;
+  getInvoices: VoidFunction;
 }

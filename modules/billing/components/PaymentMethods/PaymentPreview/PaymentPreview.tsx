@@ -10,12 +10,20 @@ import {
   mapCardToDetails,
   PaymentMethodsSelector,
   billingAtoms,
+  billingSelectors,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
 
 export const PaymentPreview = () => {
-  const subscription = useRecoilValue(billingAtoms.subscription);
+  const {
+    query: { id },
+  } = useRouter();
+
+  const subscription = useRecoilValue(
+    billingSelectors.subscriptions[id as string],
+  );
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
@@ -55,6 +63,7 @@ export const PaymentPreview = () => {
               </>
             ) : (
               <PaymentMethodsSelector
+                subscriptionId={subscription?.id!}
                 currentPaymentMethod={paymentMethod}
                 onHide={onHide}
               />
