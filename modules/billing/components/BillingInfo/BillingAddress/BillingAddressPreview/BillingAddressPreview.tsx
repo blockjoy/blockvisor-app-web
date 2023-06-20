@@ -24,12 +24,16 @@ export const BillingAddressPreview = ({
       <span>
         {first_name} {last_name}
       </span>
-      <span>{company}</span>
-      <span>{line1}</span>
-      <span>
-        {city}, {zip}
-      </span>
-      {country && <span>{getName(country)}</span>}
+      {line1 && (
+        <>
+          <span>{company}</span>
+          <span>{line1}</span>
+          <span>
+            {city}, {zip}
+          </span>
+          {country && <span>{getName(country)}</span>}
+        </>
+      )}
     </div>
   );
 };

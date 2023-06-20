@@ -34,6 +34,7 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
 import { useSubscription } from '@modules/billing';
+import { useUpdateSubscription } from '@modules/billing';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -60,7 +61,7 @@ export type CreateNodeParams = {
 
 export const NodeLauncher = () => {
   const router = useRouter();
-  const { updateSubscriptionItems } = useSubscription();
+  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();

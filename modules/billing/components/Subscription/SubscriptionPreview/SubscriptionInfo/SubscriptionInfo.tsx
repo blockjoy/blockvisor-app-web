@@ -1,7 +1,9 @@
 import { useSubscription } from '@modules/billing/hooks/useSubscription';
-import { mapSubscriptionToDetails } from '@modules/billing';
+import { billingSelectors, mapSubscriptionToDetails } from '@modules/billing';
 import { ButtonGroup, Button, DetailsTable } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
+import { useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
 
 type SubscriptionInfoProps = {
   handleCancellation: VoidFunction;
@@ -10,12 +12,21 @@ type SubscriptionInfoProps = {
 export const SubscriptionInfo = ({
   handleCancellation,
 }: SubscriptionInfoProps) => {
-  const { subscription, restoreSubscription, reactivateSubscription } =
-    useSubscription();
-  const subscriptionData = mapSubscriptionToDetails(subscription);
+  const {
+    query: { id },
+  } = useRouter();
 
-  const handleRestoreSubscription = () => restoreSubscription();
-  const handleReactivateSubscription = () => reactivateSubscription();
+  const subscription = useRecoilValue(
+    billingSelectors.subscriptions[id as string],
+  );
+
+  const { restoreSubscription, reactivateSubscription } = useSubscription();
+  const subscriptionData = mapSubscriptionToDetails(subscription!);
+
+  const handleRestoreSubscription = () =>
+    restoreSubscription(subscription?.id!);
+  const handleReactivateSubscription = () =>
+    reactivateSubscription(subscription?.id!);
 
   return (
     <>

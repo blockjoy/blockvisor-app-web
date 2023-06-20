@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { Button, Table, TableSkeleton } from '@shared/index';
 import { styles } from './PaymentMethods.styles';
 import {
-  billingAtoms,
+  billingSelectors,
   usePaymentMethods,
   mapPaymentMethodsToRows,
   PaymentMethodDialog,
@@ -22,7 +22,7 @@ export const PaymentMethods = () => {
     deletePaymentMethod,
   } = usePaymentMethods();
 
-  const customer = useRecoilValue(billingAtoms.customer);
+  const customer = useRecoilValue(billingSelectors.customer);
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [activeView, setActiveView] =
     useState<string | 'list' | 'dialog'>('list');

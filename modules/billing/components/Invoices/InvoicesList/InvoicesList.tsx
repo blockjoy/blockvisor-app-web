@@ -5,8 +5,11 @@ import { useEffect } from 'react';
 
 export const InvoicesTable = () => {
   const router = useRouter();
+  const { id } = router.query;
 
-  const { invoices, getInvoices, invoicesLoadingState } = useInvoices();
+  const { invoices, getInvoices, invoicesLoadingState } = useInvoices(
+    id as string,
+  );
 
   useEffect(() => {
     getInvoices();

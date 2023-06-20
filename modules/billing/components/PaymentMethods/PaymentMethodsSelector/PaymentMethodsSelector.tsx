@@ -16,11 +16,13 @@ import { styles } from './PaymentMethodsSelector.styles';
 import { typo } from 'styles/utils.typography.styles';
 
 type PaymentMethodsSelectorProps = {
+  subscriptionId: string;
   currentPaymentMethod: PaymentSource;
   onHide: VoidFunction;
 };
 
 export const PaymentMethodsSelector = ({
+  subscriptionId,
   currentPaymentMethod,
   onHide,
 }: PaymentMethodsSelectorProps) => {
@@ -43,7 +45,9 @@ export const PaymentMethodsSelector = ({
   };
 
   const handleConfirm = () => {
-    updateBillingProfile(activePaymentMethod?.id);
+    updateBillingProfile(subscriptionId, {
+      paymentMethodId: activePaymentMethod?.id,
+    });
     onHide();
   };
 
