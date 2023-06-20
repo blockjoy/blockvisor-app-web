@@ -38,4 +38,7 @@ export const styles = {
       }
     }
   `,
+  wrapperNoBottomMargin: css`
+    margin-bottom: 0;
+  `,
 };

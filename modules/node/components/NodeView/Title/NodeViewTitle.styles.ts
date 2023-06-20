@@ -9,19 +9,6 @@ export const styles = {
     @media ${breakpoints.toXlrg} {
       max-width: 240px;
     }
-
-    button {
-      svg {
-        min-width: 12px;
-      }
-    }
-
-    p {
-      display: flex;
-      align-items: center;
-      line-height: 1.1;
-      white-space: nowrap;
-    }
   `,
   nodesButton: (theme: ITheme) => css`
     background: transparent;

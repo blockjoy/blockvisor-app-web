@@ -35,16 +35,20 @@ export const NodeViewSettings = () => {
     <div css={styles.wrapper}>
       <FormHeaderCaps>Config</FormHeaderCaps>
       <div css={styles.row}>
-        <FormLabelCaps>Firewall Rules</FormLabelCaps>
-        <FirewallDropdown
-          onPropertyChanged={handleFirewallChanged}
-          allowedIps={node!.allowIps}
-          deniedIps={node!.denyIps}
-        />
+        <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
+        <div css={styles.firewallWrapper}>
+          <FirewallDropdown
+            noBottomMargin
+            onPropertyChanged={handleFirewallChanged}
+            allowedIps={node!.allowIps}
+            deniedIps={node!.denyIps}
+          />
+        </div>
       </div>
       <div css={styles.row}>
-        <FormLabelCaps>Auto Updates</FormLabelCaps>
+        <FormLabelCaps noBottomMargin>Auto Updates</FormLabelCaps>
         <Switch
+          noBottomMargin
           checked={node!.selfUpdate}
           tooltip=""
           disabled={false}

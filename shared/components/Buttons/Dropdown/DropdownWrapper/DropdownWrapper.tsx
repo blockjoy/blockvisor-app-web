@@ -7,6 +7,7 @@ type Props = {
   isOpen: boolean;
   onClose: VoidFunction;
   children: ReactNode;
+  noBottomMargin?: boolean;
 };
 
 export const DropdownWrapper = ({
@@ -14,13 +15,14 @@ export const DropdownWrapper = ({
   isOpen,
   onClose,
   children,
+  noBottomMargin,
 }: Props) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   useClickOutside<HTMLDivElement>(dropdownRef, onClose);
   return (
     <div
       className={`${!isEmpty ? 'not-empty' : ''} ${isOpen ? 'is-open' : ''}`}
-      css={[styles.wrapper]}
+      css={[styles.wrapper, noBottomMargin && styles.wrapperNoBottomMargin]}
       ref={dropdownRef}
     >
       {children}

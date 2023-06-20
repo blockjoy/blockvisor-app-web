@@ -15,12 +15,14 @@ type Props = {
   deniedIps: FilteredIpAddr[];
   allowedIps: FilteredIpAddr[];
   onPropertyChanged: (name: string, value: FilteredIpAddr[]) => void;
+  noBottomMargin?: boolean;
 };
 
 export const FirewallDropdown: FC<Props> = ({
   allowedIps,
   deniedIps,
   onPropertyChanged,
+  noBottomMargin,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -64,6 +66,7 @@ export const FirewallDropdown: FC<Props> = ({
 
   return (
     <DropdownWrapper
+      noBottomMargin={noBottomMargin}
       isEmpty={isEmpty}
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}

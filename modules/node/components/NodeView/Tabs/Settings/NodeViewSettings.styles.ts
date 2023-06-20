@@ -10,13 +10,14 @@ export const styles = {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 10px;
     padding: 16px 0;
     border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromXLrg} {
       flex-direction: row;
       align-items: center;
+      gap: 0;
       height: 72px;
       padding: 0;
 
@@ -24,6 +25,12 @@ export const styles = {
         width: 200px;
         flex: 0 0 200px;
       }
+    }
+  `,
+  firewallWrapper: css`
+    width: 100%;
+    @media ${breakpoints.fromMed} {
+      width: 400px;
     }
   `,
 };
