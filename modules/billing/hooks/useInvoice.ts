@@ -30,6 +30,25 @@ export const useInvoice = (): IInvoiceHook => {
     }
   };
 
+  const getInvoicePDF = async (id: string) => {
+    try {
+      const response = await fetch(BILLING_API_ROUTES.invoices.pdf.get, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      const data: Invoice = await response.json();
+
+      return data;
+    } catch (error) {
+      console.error(`Failed to fetch invoice pdf with id: ${id}`, error);
+      return null;
+    }
+  };
+
   const unloadInvoice = () => {
     setInvoice(null);
   };
@@ -39,6 +58,7 @@ export const useInvoice = (): IInvoiceHook => {
     invoiceLoadingState,
 
     getInvoice,
+    getInvoicePDF,
 
     unloadInvoice,
   };

@@ -22,6 +22,9 @@ export const BILLING_API_ROUTES = {
   invoices: {
     get: `${BILLING_API_ROUTE}/invoices/get`,
     list: `${BILLING_API_ROUTE}/invoices/list`,
+    pdf: {
+      get: `${BILLING_API_ROUTE}/invoices/pdf/get`,
+    },
   },
   items: {
     get: `${BILLING_API_ROUTE}/items/get`,
