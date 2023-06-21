@@ -9,13 +9,16 @@ async function postData<T = any>(
     | _item_price.item_price_list_params
     | { id: string },
 ): Promise<T> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_URL}${url}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_URL || process.env.VERCEL_URL}${url}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
+  );
 
   if (!response.ok) {
     throw new Error(response.statusText);
