@@ -32,24 +32,22 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
 
   const updateSubscriptionItems = async (action: {
     type: string;
-    payload: any;
+    payload: { node?: Node };
   }) => {
     setSubscriptionLoadingState('initializing');
 
     const { type, payload } = action;
-
-    const { node }: { node: Node } = payload;
+    const { node } = payload;
 
     const params: _subscription.update_for_items_params = {};
-
     const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
       [];
 
-    const nodeType = node.nodeType === 10 ? 'pruned' : '';
+    const nodeType = node?.nodeType === 10 ? 'pruned' : '';
     const region = 'apac';
 
     const blockchain = blockchains.find(
-      (blockchain: Blockchain) => blockchain.id === node.blockchainId,
+      (blockchain: Blockchain) => blockchain.id === node?.blockchainId,
     );
 
     const SKU = `${blockchain?.name?.toLowerCase()}-${nodeType}-${region}`;
@@ -62,9 +60,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     };
 
     const itemPrice: any = await getItemPrices(itemPriceParams);
-    console.log('itemPrice123', itemPrice);
     const itemPriceID: string = itemPrice?.length ? itemPrice[0].id : null;
-    console.log('itemPriceID123', itemPriceID);
 
     const subscriptionItem: SubscriptionItem | undefined =
       hostedNodes?.subscription_items?.find(
@@ -117,8 +113,6 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
       params: params,
     };
 
-    console.log('subscriptionProperties123', subscriptionProperties);
-
     const response = await fetch(BILLING_API_ROUTES.subsriptions.item.update, {
       method: 'POST',
       headers: {
@@ -128,8 +122,6 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     });
 
     const updatedSubscriptionData: Subscription = await response.json();
-
-    console.log('updatedSubscriptionData123', updatedSubscriptionData);
 
     setHostedNodes(updatedSubscriptionData);
     setSubscriptionLoadingState('finished');

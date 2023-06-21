@@ -11,7 +11,15 @@ export type InvoicePDFProps = {
 };
 
 export const InvoicePDF = ({
-  invoice: { id, amount_due, amount_paid, date, due_date, line_items },
+  invoice: {
+    id,
+    amount_due,
+    amount_paid,
+    date,
+    due_date,
+    line_items,
+    billing_address,
+  },
 }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -54,8 +62,11 @@ export const InvoicePDF = ({
           Bill to
         </Text>
         <View style={styles.textSml}>
-          <Text>crypto.com</Text>
-          <Text>email id- carson.yan@crypto.com</Text>
+          <Text>
+            {billing_address?.first_name}
+            {billing_address?.first_name && billing_address?.last_name && ' '}
+            {billing_address?.last_name}
+          </Text>
         </View>
       </View>
 

@@ -2,7 +2,7 @@ import { Badge } from '@shared/components';
 import { formatters } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { InvoiceDownload } from '@modules/billing';
+import { InvoiceDownloadPDF } from '@modules/billing';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 
 export const mapInvoicesToRows = (invoices?: Invoice[]) => {
@@ -81,7 +81,7 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
         component: (
           <>
             <div css={[flex.display.flex]}>
-              <InvoiceDownload invoice={invoice} />
+              <InvoiceDownloadPDF invoice={invoice} />
             </div>
           </>
         ),
