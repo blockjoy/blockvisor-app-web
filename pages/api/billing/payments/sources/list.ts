@@ -25,7 +25,7 @@ const listPaymentSources = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PaymentSource[] | [] | { message: string }>,
+  res: NextApiResponse<PaymentSource[] | { message: string }>,
 ) {
   if (req.method === 'POST') {
     try {
