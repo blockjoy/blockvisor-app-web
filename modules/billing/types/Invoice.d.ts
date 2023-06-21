@@ -1,7 +1,8 @@
 interface IInvoiceHook {
   invoice: Invoice;
   invoiceLoadingState: LoadingState;
-  getInvoice: (invoiceId: RouterId) => void;
+  getInvoice: (id: RouterId) => void;
+  getInvoicePDF: (id: RouterId) => void;
   unloadInvoice: VoidFunction;
 }
 
