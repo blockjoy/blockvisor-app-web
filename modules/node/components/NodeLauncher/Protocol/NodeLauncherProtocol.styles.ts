@@ -5,8 +5,11 @@ import { rgba } from 'polished';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
+    display: flex;
+    flex-direction: column;
     flex: 1 1 400px;
     max-width: 33%;
+    max-height: calc(100vh - 72px);
     padding: 10px 16px 10px 0;
     margin-left: -16px;
     border-right: 1px solid ${theme.colorBorder};
@@ -24,6 +27,10 @@ export const styles = {
     div:hover .row:hover {
       opacity: 1;
     }
+  `,
+  scrollbar: css`
+    flex: 1 1 auto;
+    min-height: 0;
   `,
   disabledBlockchains: css`
     @media ${breakpoints.toXlrg} {
