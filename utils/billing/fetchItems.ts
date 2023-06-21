@@ -10,7 +10,9 @@ async function postData<T = any>(
     | { id: string },
 ): Promise<T> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL || process.env.VERCEL_URL}${url}`,
+    `${
+      process.env.NEXT_PUBLIC_URL || 'https://' + process.env.VERCEL_URL
+    }${url}`,
     {
       method: 'POST',
       headers: {
