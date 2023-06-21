@@ -3,10 +3,8 @@ import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
-  useItems,
 } from '@modules/billing';
 import { _subscription } from 'chargebee-typescript';
-import { blockchainsAtoms } from '@modules/node';
 import { organizationAtoms } from '@modules/organization';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 
@@ -40,10 +38,6 @@ export const useSubscription = (): ISubscriptionHook => {
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
-
-  const { getItemPrices } = useItems();
-
-  const blockchains = useRecoilValue(blockchainsAtoms.blockchains);
 
   const getSubscription = async (id: string) => {
     setSubscriptionLoadingState('initializing');

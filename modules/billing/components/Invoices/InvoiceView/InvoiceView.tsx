@@ -14,10 +14,9 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
 import IconCalendar from '@public/assets/icons/calendar-12.svg';
-
 import {
   BillingAddressPreview,
-  InvoiceDownload,
+  InvoiceDownloadPDF,
   Services,
   useInvoice,
   billingSelectors,
@@ -73,7 +72,7 @@ export const InvoiceView = () => {
                         <span>{formatters.formatDate(invoice.date)}</span>
                       </div>
                     </div>
-                    <InvoiceDownload invoice={invoice} />
+                    <InvoiceDownloadPDF invoice={invoice} />
                   </div>
                   <div css={styles.details}>
                     <DetailsView headline="Invoice recepient">
