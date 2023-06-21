@@ -1,12 +1,7 @@
 interface ISubscriptionHook {
   subscriptionLoadingState: LoadingState;
   getSubscription: (subscriptionId: string) => void;
-  createSubscription: (subscriptionInputParams: {
-    itemId: string;
-    itemPriceId: string;
-    autoRenew: string;
-    paymentMethodId: string;
-  }) => void;
+  createSubscription: (subscriptionInputParams: any) => void;
   updateSubscription: (id: string) => void;
   cancelSubscription: (
     id: string,
