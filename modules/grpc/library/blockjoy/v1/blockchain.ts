@@ -6,16 +6,6 @@ import { NodeType, UiType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
-export enum BlockchainStatus {
-  BLOCKCHAIN_STATUS_UNSPECIFIED = 0,
-  BLOCKCHAIN_STATUS_DEVELOPMENT = 1,
-  BLOCKCHAIN_STATUS_ALPHA = 2,
-  BLOCKCHAIN_STATUS_BETA = 3,
-  BLOCKCHAIN_STATUS_PRODUCTION = 4,
-  BLOCKCHAIN_STATUS_DELETED = 5,
-  UNRECOGNIZED = -1,
-}
-
 export enum BlockchainNetworkType {
   BLOCKCHAIN_NETWORK_TYPE_UNSPECIFIED = 0,
   BLOCKCHAIN_NETWORK_TYPE_DEV = 1,
@@ -28,7 +18,6 @@ export interface Blockchain {
   id: string;
   name: string;
   description: string;
-  status: BlockchainStatus;
   projectUrl?: string | undefined;
   repoUrl?: string | undefined;
   version?: string | undefined;
@@ -84,7 +73,6 @@ function createBaseBlockchain(): Blockchain {
     id: "",
     name: "",
     description: "",
-    status: 0,
     projectUrl: undefined,
     repoUrl: undefined,
     version: undefined,
@@ -106,29 +94,26 @@ export const Blockchain = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.status !== 0) {
-      writer.uint32(32).int32(message.status);
-    }
     if (message.projectUrl !== undefined) {
-      writer.uint32(42).string(message.projectUrl);
+      writer.uint32(34).string(message.projectUrl);
     }
     if (message.repoUrl !== undefined) {
-      writer.uint32(50).string(message.repoUrl);
+      writer.uint32(42).string(message.repoUrl);
     }
     if (message.version !== undefined) {
-      writer.uint32(58).string(message.version);
+      writer.uint32(50).string(message.version);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(66).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(58).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(66).fork()).ldelim();
     }
     for (const v of message.nodesTypes) {
-      SupportedNodeType.encode(v!, writer.uint32(82).fork()).ldelim();
+      SupportedNodeType.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     for (const v of message.networks) {
-      BlockchainNetwork.encode(v!, writer.uint32(90).fork()).ldelim();
+      BlockchainNetwork.encode(v!, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -162,56 +147,49 @@ export const Blockchain = {
           message.description = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.status = reader.int32() as any;
+          message.projectUrl = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.projectUrl = reader.string();
+          message.repoUrl = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.repoUrl = reader.string();
+          message.version = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.version = reader.string();
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.nodesTypes.push(SupportedNodeType.decode(reader, reader.uint32()));
           continue;
         case 10:
           if (tag !== 82) {
-            break;
-          }
-
-          message.nodesTypes.push(SupportedNodeType.decode(reader, reader.uint32()));
-          continue;
-        case 11:
-          if (tag !== 90) {
             break;
           }
 
@@ -235,7 +213,6 @@ export const Blockchain = {
     message.id = object.id ?? "";
     message.name = object.name ?? "";
     message.description = object.description ?? "";
-    message.status = object.status ?? 0;
     message.projectUrl = object.projectUrl ?? undefined;
     message.repoUrl = object.repoUrl ?? undefined;
     message.version = object.version ?? undefined;

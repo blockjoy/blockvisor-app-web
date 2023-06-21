@@ -1,8 +1,6 @@
 import { useIdentity } from '@modules/auth';
-// import { useRefreshToken } from '@modules/auth/hooks/useRefreshToken';
 import { LoadingSpinner, PUBLIC_ROUTES, ROUTES } from '@shared/index';
 import { useEffect, useState } from 'react';
-//import { authClient } from '@modules/grpc';
 
 interface Props {
   router: any;
@@ -12,11 +10,14 @@ interface Props {
 export function PrivateRoute({ router, children }: Props) {
   const { isLoggedIn, isLoading } = useIdentity();
   const [authorized, setAuthorized] = useState(false);
-  // const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
 
   const isPrivateRoute = !PUBLIC_ROUTES.some((r) => router.asPath.includes(r));
 
   useEffect(() => {
+    if (!router.state) {
+      return;
+    }
+
     authCheck(isLoggedIn);
 
     const hideContent = () => {
@@ -34,19 +35,13 @@ export function PrivateRoute({ router, children }: Props) {
     }
   }, [isLoggedIn]);
 
-  // useEffect(() => {
-  //   if (isLoggedIn) authClient.refreshToken();
-  //   // return () => {
-  //   //   removeRefreshTokenCall();
-  //   // };
-  // });
-
   function authCheck(loggedIn: boolean): any {
     if (!loggedIn && isPrivateRoute) {
       setAuthorized(false);
+      const redirect = router._inFlightRoute || router.asPath;
       router.push({
         pathname: ROUTES.LOGIN,
-        query: { redirect: router.asPath },
+        query: { redirect },
       });
     } else {
       setAuthorized(true);

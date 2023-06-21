@@ -6,15 +6,6 @@ import { NodeType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
-/** Define config status */
-export enum ContainerImageStatus {
-  CONTAINER_IMAGE_STATUS_UNSPECIFIED = 0,
-  CONTAINER_IMAGE_STATUS_DEVELOPMENT = 1,
-  CONTAINER_IMAGE_STATUS_UNSTABLE = 2,
-  CONTAINER_IMAGE_STATUS_STABLE = 3,
-  UNRECOGNIZED = -1,
-}
-
 export enum Action {
   ACTION_UNSPECIFIED = 0,
   ACTION_ALLOW = 1,
@@ -158,6 +149,7 @@ export interface NodeCreate {
   selfUpdate: boolean;
   properties: Parameter[];
   rules: Rule[];
+  network: string;
 }
 
 export interface NodeDelete {
@@ -175,14 +167,13 @@ export interface ContainerImage {
   nodeType: NodeType;
   /** semantic version string of the node type version */
   nodeVersion: string;
-  status: ContainerImageStatus;
 }
 
 export interface Rule {
   name: string;
   action: Action;
   direction: Direction;
-  protocol?: Protocol | undefined;
+  protocol: Protocol;
   ips?: string | undefined;
   ports: number[];
 }
@@ -1256,6 +1247,7 @@ function createBaseNodeCreate(): NodeCreate {
     selfUpdate: false,
     properties: [],
     rules: [],
+    network: "",
   };
 }
 
@@ -1287,6 +1279,9 @@ export const NodeCreate = {
     }
     for (const v of message.rules) {
       Rule.encode(v!, writer.uint32(74).fork()).ldelim();
+    }
+    if (message.network !== "") {
+      writer.uint32(82).string(message.network);
     }
     return writer;
   },
@@ -1361,6 +1356,13 @@ export const NodeCreate = {
 
           message.rules.push(Rule.decode(reader, reader.uint32()));
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1387,6 +1389,7 @@ export const NodeCreate = {
     message.selfUpdate = object.selfUpdate ?? false;
     message.properties = object.properties?.map((e) => Parameter.fromPartial(e)) || [];
     message.rules = object.rules?.map((e) => Rule.fromPartial(e)) || [];
+    message.network = object.network ?? "";
     return message;
   },
 };
@@ -1484,7 +1487,7 @@ export const Parameter = {
 };
 
 function createBaseContainerImage(): ContainerImage {
-  return { protocol: "", nodeType: 0, nodeVersion: "", status: 0 };
+  return { protocol: "", nodeType: 0, nodeVersion: "" };
 }
 
 export const ContainerImage = {
@@ -1497,9 +1500,6 @@ export const ContainerImage = {
     }
     if (message.nodeVersion !== "") {
       writer.uint32(26).string(message.nodeVersion);
-    }
-    if (message.status !== 0) {
-      writer.uint32(32).int32(message.status);
     }
     return writer;
   },
@@ -1532,13 +1532,6 @@ export const ContainerImage = {
 
           message.nodeVersion = reader.string();
           continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.status = reader.int32() as any;
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1557,13 +1550,12 @@ export const ContainerImage = {
     message.protocol = object.protocol ?? "";
     message.nodeType = object.nodeType ?? 0;
     message.nodeVersion = object.nodeVersion ?? "";
-    message.status = object.status ?? 0;
     return message;
   },
 };
 
 function createBaseRule(): Rule {
-  return { name: "", action: 0, direction: 0, protocol: undefined, ips: undefined, ports: [] };
+  return { name: "", action: 0, direction: 0, protocol: 0, ips: undefined, ports: [] };
 }
 
 export const Rule = {
@@ -1577,7 +1569,7 @@ export const Rule = {
     if (message.direction !== 0) {
       writer.uint32(24).int32(message.direction);
     }
-    if (message.protocol !== undefined) {
+    if (message.protocol !== 0) {
       writer.uint32(32).int32(message.protocol);
     }
     if (message.ips !== undefined) {
@@ -1668,7 +1660,7 @@ export const Rule = {
     message.name = object.name ?? "";
     message.action = object.action ?? 0;
     message.direction = object.direction ?? 0;
-    message.protocol = object.protocol ?? undefined;
+    message.protocol = object.protocol ?? 0;
     message.ips = object.ips ?? undefined;
     message.ports = object.ports?.map((e) => e) || [];
     return message;

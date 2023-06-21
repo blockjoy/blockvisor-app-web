@@ -1,11 +1,15 @@
 import { useGetBlockchains } from '@modules/node';
-import { BlockchainIcon, TableSkeleton, EmptyColumn } from '@shared/components';
+import {
+  BlockchainIcon,
+  TableSkeleton,
+  EmptyColumn,
+  Scrollbar,
+} from '@shared/components';
 import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { blockchainsDisabled } from '@shared/constants/lookups';
 import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import IconSearch from '@public/assets/icons/common/Search.svg';
@@ -30,9 +34,8 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
   const [keyword, setKeyword] = useState<string>('');
 
-  const filteredBlockchains = blockchains?.filter(
-    (b) =>
-      b.status !== 0 && b.name?.toLowerCase().includes(keyword.toLowerCase()),
+  const filteredBlockchains = blockchains?.filter((b) =>
+    b.name?.toLowerCase().includes(keyword.toLowerCase()),
   );
 
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +72,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
   return (
     <div css={styles.wrapper}>
-      <div>
+      <>
         <div css={styles.searchWrapper}>
           <input
             tabIndex={1}
@@ -98,7 +101,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
             Error loading data, please contact our support team.
           </div>
         ) : (
-          <>
+          <Scrollbar additionalStyles={[styles.scrollbar]}>
             {!filteredBlockchains?.length ? (
               <EmptyColumn
                 title="No Blockchains."
@@ -119,9 +122,9 @@ export const NodeLauncherProtocol: FC<Props> = ({
                       blockchainName={b.name}
                     />
                     <span css={styles.name}>
-                      <span className="beta-badge" css={styles.betaBadge}>
+                      {/* <span className="beta-badge" css={styles.betaBadge}>
                         BETA
-                      </span>
+                      </span> */}
                       {b.name}
                     </span>
                   </span>
@@ -152,7 +155,7 @@ export const NodeLauncherProtocol: FC<Props> = ({
                 </div>
               ))
             )}
-            <div css={styles.disabledBlockchains}>
+            {/* <div css={styles.disabledBlockchains}>
               {!keyword &&
                 blockchainsDisabled
                   ?.filter(
@@ -176,10 +179,10 @@ export const NodeLauncherProtocol: FC<Props> = ({
                       </span>
                     </div>
                   ))}
-            </div>
-          </>
+            </div> */}
+          </Scrollbar>
         )}
-      </div>
+      </>
     </div>
   );
 };
