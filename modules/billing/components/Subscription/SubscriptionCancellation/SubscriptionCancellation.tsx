@@ -7,7 +7,6 @@ import {
   RadioButton,
   Button,
 } from '@shared/components';
-import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { billingSelectors, useSubscription } from '@modules/billing';
 
@@ -22,16 +21,10 @@ export const SubscriptionCancellation = ({
 
   const { cancelSubscription, subscriptionLoadingState } = useSubscription();
 
-  const {
-    query: { id },
-  } = useRouter();
-
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptions[id as string],
-  );
+  const subscription = useRecoilValue(billingSelectors.subscription);
 
   const handleCancellation = () => {
-    cancelSubscription(subscription?.id!, { endOfTerm });
+    cancelSubscription({ endOfTerm });
     handleBack();
   };
 
@@ -70,9 +63,6 @@ export const SubscriptionCancellation = ({
         </RadioButton>
       </RadioButtonGroup>
       <ButtonGroup type="flex">
-        <Button style="outline" size="small" onClick={handleBack}>
-          Back
-        </Button>
         <Button
           loading={subscriptionLoadingState !== 'finished'}
           size="small"
@@ -82,6 +72,9 @@ export const SubscriptionCancellation = ({
           onClick={handleCancellation}
         >
           Cancel subscription
+        </Button>
+        <Button style="outline" size="small" onClick={handleBack}>
+          Back
         </Button>
       </ButtonGroup>
     </div>

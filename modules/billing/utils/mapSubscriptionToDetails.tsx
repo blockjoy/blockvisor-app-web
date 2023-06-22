@@ -18,10 +18,6 @@ export const getSubscriptionStatusColor = (name: string) => {
 export const mapSubscriptionToDetails = (subscription: Subscription) => {
   return [
     {
-      label: 'Active Plan',
-      data: subscription.cf_plan,
-    },
-    {
       label: 'Activated at',
       data: formatters.formatDate(subscription.activated_at!),
     },

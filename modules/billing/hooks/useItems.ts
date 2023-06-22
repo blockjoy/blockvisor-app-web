@@ -18,7 +18,7 @@ export const useItems = (): IItemsHook => {
 
     try {
       const params: _item.item_list_params = {
-        id: { is: 'hosted-nodes' },
+        id: { is: 'standard' },
       };
 
       const response = await fetch(BILLING_API_ROUTES.items.list, {

@@ -6,24 +6,19 @@ import {
   PaymentSource,
 } from 'chargebee-typescript/lib/resources';
 import {
-  calcNextAutoRenew,
   useSubscription,
   BILLING_PLAN_FEATURES,
   billingSelectors,
   PaymentMethodsSelect,
   usePaymentMethods,
 } from '@modules/billing';
-import {
-  Button,
-  Switch,
-  RadioButton,
-  RadioButtonGroup,
-} from '@shared/components';
+import { Button } from '@shared/components';
 import { formatters, TableSkeleton } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
 import IconCheck from '@public/assets/icons/check-16.svg';
+import { PlanParams } from './PlanParams/PlanParams';
 
 export type PlanSelectProps = {
   plan: Item | null;
@@ -69,7 +64,6 @@ export const PlanSelect = ({
 
   const handleSubscription = () => {
     createSubscription({
-      itemId: activeItemPrice?.item_id,
       itemPriceId: activeItemPrice?.id,
       autoRenew,
       paymentMethodId,
@@ -84,46 +78,12 @@ export const PlanSelect = ({
         <p css={styles.planTitle}>{plan?.external_name}</p>
       </div>
       <div css={[divider, spacing.bottom.medium]}></div>
-      <div css={spacing.bottom.large}>
-        <h3 css={styles.headline}>Billing period</h3>
-        <RadioButtonGroup>
-          <RadioButton
-            id="month"
-            name="periodUnit"
-            value="month"
-            selectedValue={periodUnit}
-            onChange={handlePeriodUnit}
-          >
-            Monthly
-          </RadioButton>
-          <RadioButton
-            id="year"
-            name="periodUnit"
-            value="year"
-            selectedValue={periodUnit}
-            onChange={handlePeriodUnit}
-          >
-            Yearly
-          </RadioButton>
-        </RadioButtonGroup>
-      </div>
-      <div css={spacing.bottom.large}>
-        <h3 css={styles.headline}>Auto renew</h3>
-        <div css={[flex.display.flex, flex.justify.between]}>
-          <p css={styles.renewText}>
-            Your subscription will automatically renew on{' '}
-            {formatters.formatDate(calcNextAutoRenew(periodUnit))}
-          </p>
-          <Switch
-            name="autoRenew"
-            additionalStyles={styles.renewSwitch}
-            disabled={false}
-            tooltip="Subscription's auto renewal"
-            checked={autoRenew}
-            onPropertyChanged={handleAutoRenew}
-          />
-        </div>
-      </div>
+      <PlanParams
+        periodUnit={periodUnit}
+        handlePeriodUnit={handlePeriodUnit}
+        autoRenew={autoRenew}
+        handleAutoRenew={handleAutoRenew}
+      />
       <div css={spacing.bottom.medium}>
         <h3 css={styles.headline}>Payment Method</h3>
         <PaymentMethodsSelect

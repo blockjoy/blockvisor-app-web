@@ -34,60 +34,61 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
     },
   ];
 
-  const rows: Row[] = invoices!.map((invoice: Invoice) => ({
-    key: invoice.id,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-              {invoice.id}
-            </p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>{formatters.formatDate(invoice?.date!)}</p>
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <>
-            <p>{formatters.formatCurrency(invoice?.total!)}</p>
-          </>
-        ),
-      },
-      {
-        key: '4',
-        component: (
-          <>
-            <Badge
-              color={`${invoice.status === 'paid' ? 'primary' : 'note'}`}
-              style="outline"
-            >
-              {invoice.status}
-            </Badge>
-          </>
-        ),
-      },
-      {
-        key: '5',
-        component: (
-          <>
-            <div css={[flex.display.flex]}>
-              <InvoiceDownloadPDF invoice={invoice} />
-            </div>
-          </>
-        ),
-      },
-    ],
-  }));
+  const rows: Row[] =
+    invoices?.map((invoice: Invoice) => ({
+      key: invoice.id,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <>
+              <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+                {invoice.id}
+              </p>
+            </>
+          ),
+        },
+        {
+          key: '2',
+          component: (
+            <>
+              <p>{formatters.formatDate(invoice?.date!)}</p>
+            </>
+          ),
+        },
+        {
+          key: '3',
+          component: (
+            <>
+              <p>{formatters.formatCurrency(invoice?.total!)}</p>
+            </>
+          ),
+        },
+        {
+          key: '4',
+          component: (
+            <>
+              <Badge
+                color={`${invoice.status === 'paid' ? 'primary' : 'note'}`}
+                style="outline"
+              >
+                {invoice.status}
+              </Badge>
+            </>
+          ),
+        },
+        {
+          key: '5',
+          component: (
+            <>
+              <div css={[flex.display.flex]}>
+                <InvoiceDownloadPDF invoice={invoice} />
+              </div>
+            </>
+          ),
+        },
+      ],
+    })) ?? [];
 
   return {
     rows,

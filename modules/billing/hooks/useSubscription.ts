@@ -10,7 +10,6 @@ import { Subscription } from 'chargebee-typescript/lib/resources';
 
 interface ExtendedCreateWithItemsParams
   extends _subscription.create_with_items_params {
-  cf_plan: string;
   cf_organization_id: string;
 }
 
@@ -20,21 +19,9 @@ export const useSubscription = (): ISubscriptionHook => {
     organizationAtoms.defaultOrganization,
   );
 
-  const setHostedNodes = useSetRecoilState(
-    billingSelectors.subscriptions['hosted-nodes'],
+  const [subscription, setSubscription] = useRecoilState(
+    billingSelectors.subscription,
   );
-  const setSelfManagedHosts = useSetRecoilState(
-    billingSelectors.subscriptions['self-managed-hosts'],
-  );
-  const setFullyManagedHosts = useSetRecoilState(
-    billingSelectors.subscriptions['fully-managed-hosts'],
-  );
-
-  const setters = {
-    'hosted-nodes': setHostedNodes,
-    'self-managed-hosts': setSelfManagedHosts,
-    'fully-managed-hosts': setFullyManagedHosts,
-  };
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
@@ -43,7 +30,7 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.subsriptions.get, {
+      const response = await fetch(BILLING_API_ROUTES.subscriptions.get, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +40,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data = await response.json();
 
-      if (data.cf_plan) setters[data.cf_plan](data);
+      setSubscription(data);
     } catch (error) {
       console.error('Failed to fetch subscription', error);
     } finally {
@@ -62,12 +49,10 @@ export const useSubscription = (): ISubscriptionHook => {
   };
 
   const createSubscription = async ({
-    itemId,
     itemPriceId,
     autoRenew,
     paymentMethodId,
   }: {
-    itemId: string;
     itemPriceId: string;
     autoRenew: string;
     paymentMethodId: string;
@@ -91,15 +76,15 @@ export const useSubscription = (): ISubscriptionHook => {
       } = {
         id: customer?.id!,
         params: {
+          id: defaultOrganization?.id!,
           auto_collection: autoRenewValue,
           payment_source_id: paymentMethodId,
           subscription_items: subscriptionItems,
-          cf_plan: itemId,
           cf_organization_id: defaultOrganization?.id!,
         },
       };
 
-      const response = await fetch(BILLING_API_ROUTES.subsriptions.create, {
+      const response = await fetch(BILLING_API_ROUTES.subscriptions.create, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +94,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data: Subscription = await response.json();
 
-      setters[data.cf_plan!](data);
+      setSubscription(data);
     } catch (error) {
       console.error('Failed to create the subscription', error);
     } finally {
@@ -117,55 +102,21 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
-  const updateSubscription = async (id: string) => {
-    setSubscriptionLoadingState('initializing');
-
-    try {
-      const subscriptionProperties: {
-        id: string;
-        params: _subscription.update_params;
-      } = {
-        id,
-        params: {},
-      };
-
-      const response = await fetch(BILLING_API_ROUTES.subsriptions.update, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(subscriptionProperties),
-      });
-
-      const updatedSubscriptionData: Subscription = await response.json();
-
-      if (updatedSubscriptionData.cf_plan)
-        setters[updatedSubscriptionData.cf_plan](updatedSubscriptionData);
-    } catch (error) {
-      console.error('Failed to CREATE subscription', error);
-    } finally {
-      setSubscriptionLoadingState('finished');
-    }
-  };
-
-  const cancelSubscription = async (
-    id: string,
-    { endOfTerm }: { endOfTerm: boolean },
+  const updateSubscription = async (
+    params: _subscription.update_for_items_params,
   ) => {
     setSubscriptionLoadingState('initializing');
 
     try {
       const subscriptionProperties: {
         id: string;
-        params: _subscription.cancel_for_items_params;
+        params: _subscription.update_for_items_params;
       } = {
-        id,
-        params: {
-          end_of_term: endOfTerm,
-        },
+        id: subscription?.id!,
+        params,
       };
 
-      const response = await fetch(BILLING_API_ROUTES.subsriptions.cancel, {
+      const response = await fetch(BILLING_API_ROUTES.subscriptions.update, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -175,7 +126,39 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data: Subscription = await response.json();
 
-      if (data.cf_plan) setters[data.cf_plan](data);
+      setSubscription(data);
+    } catch (error) {
+      console.error('Failed to CREATE subscription', error);
+    } finally {
+      setSubscriptionLoadingState('finished');
+    }
+  };
+
+  const cancelSubscription = async ({ endOfTerm }: { endOfTerm: boolean }) => {
+    setSubscriptionLoadingState('initializing');
+
+    try {
+      const subscriptionProperties: {
+        id: string;
+        params: _subscription.cancel_for_items_params;
+      } = {
+        id: subscription?.id!,
+        params: {
+          end_of_term: endOfTerm,
+        },
+      };
+
+      const response = await fetch(BILLING_API_ROUTES.subscriptions.cancel, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(subscriptionProperties),
+      });
+
+      const data: Subscription = await response.json();
+
+      setSubscription(data);
     } catch (error) {
       console.error('Failed to CANCEL subscription', error);
     } finally {
@@ -187,7 +170,7 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.subsriptions.restore, {
+      const response = await fetch(BILLING_API_ROUTES.subscriptions.restore, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -197,7 +180,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data: Subscription = await response.json();
 
-      setters[data.cf_plan!](data);
+      setSubscription(data);
     } catch (error) {
       console.error('Failed to RESTORE subscription', error);
     } finally {
@@ -209,17 +192,20 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.subsriptions.reactivate, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        BILLING_API_ROUTES.subscriptions.reactivate,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ subscriptionId: id }),
         },
-        body: JSON.stringify({ subscriptionId: id }),
-      });
+      );
 
       const data: Subscription = await response.json();
 
-      if (data.cf_plan) setters[data.cf_plan](data);
+      setSubscription(data);
     } catch (error) {
       console.error('Failed to REACTIVATE subscription', error);
     } finally {
@@ -248,7 +234,7 @@ export const useSubscription = (): ISubscriptionHook => {
       };
 
       const response = await fetch(
-        BILLING_API_ROUTES.subsriptions.billingProfile.update,
+        BILLING_API_ROUTES.subscriptions.billingProfile.update,
         {
           method: 'POST',
           headers: {
@@ -260,7 +246,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       const data: Subscription = await response.json();
 
-      if (data.cf_plan) setters[data.cf_plan](data);
+      setSubscription(data);
     } catch (error) {
       console.error('Failed to REACTIVATE subscription', error);
     } finally {
