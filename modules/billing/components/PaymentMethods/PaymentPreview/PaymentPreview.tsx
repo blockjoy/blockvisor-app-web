@@ -14,16 +14,9 @@ import {
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilValue } from 'recoil';
-import { useRouter } from 'next/router';
 
 export const PaymentPreview = () => {
-  const {
-    query: { id },
-  } = useRouter();
-
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptions[id as string],
-  );
+  const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
@@ -46,7 +39,7 @@ export const PaymentPreview = () => {
         <TableSkeleton />
       ) : (
         <>
-          <DetailsView headline="Payment methods">
+          <DetailsView headline="Payment method">
             {activeView === 'list' ? (
               <>
                 <DetailsTable

@@ -1,12 +1,9 @@
 interface ISubscriptionHook {
   subscriptionLoadingState: LoadingState;
   getSubscription: (subscriptionId: string) => void;
-  createSubscription: (subscriptionInputParams: any) => void;
-  updateSubscription: (id: string) => void;
-  cancelSubscription: (
-    id: string,
-    params: _subscription.update_for_items_params,
-  ) => void;
+  createSubscription: (params: _subscription.create_with_items_params) => void;
+  updateSubscription: (params: _subscription.update_for_items_params) => void;
+  cancelSubscription: (params: _subscription.update_for_items_params) => void;
   restoreSubscription: (id: string) => void;
   reactivateSubscription: (id: string) => void;
   updateBillingProfile: (id: string, params) => void;

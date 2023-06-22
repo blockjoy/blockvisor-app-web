@@ -21,9 +21,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
 
   const customer = useRecoilValue(billingSelectors.customer);
 
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptions[id as string],
-  );
+  const subscription = useRecoilValue(billingSelectors.subscription);
 
   const getBillingContacts = async () => {
     setBillingContactsLoadingState('initializing');

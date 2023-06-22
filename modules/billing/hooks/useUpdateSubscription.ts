@@ -13,14 +13,8 @@ import { blockchainsAtoms } from '@modules/node';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 
 export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
-  const [hostedNodes, setHostedNodes] = useRecoilState(
-    billingSelectors.subscriptions['hosted-nodes'],
-  );
-  const [selfManagedHosts, setSelfManagedHosts] = useRecoilState(
-    billingSelectors.subscriptions['self-managed-hosts'],
-  );
-  const [fullyManagedHosts, setFullyManagedHosts] = useRecoilState(
-    billingSelectors.subscriptions['fully-managed-hosts'],
+  const [subscription, setSubscription] = useRecoilState(
+    billingSelectors.subscription,
   );
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
@@ -52,7 +46,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
 
     const SKU = `${blockchain?.name?.toLowerCase()}-${nodeType}-${region}`;
 
-    const billingPeriod = hostedNodes?.billing_period_unit;
+    const billingPeriod = subscription?.billing_period_unit;
 
     const itemPriceParams = {
       id: SKU,
@@ -63,7 +57,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     const itemPriceID: string = itemPrice?.length ? itemPrice[0].id : null;
 
     const subscriptionItem: SubscriptionItem | undefined =
-      hostedNodes?.subscription_items?.find(
+      subscription?.subscription_items?.find(
         (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
       );
 
@@ -89,7 +83,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
           subscriptionItems?.push(newSubscriptionItem!);
         } else {
           subscriptionItems.push(
-            ...hostedNodes?.subscription_items?.filter(
+            ...subscription?.subscription_items?.filter(
               (
                 subItem: _subscription.subscription_items_update_for_items_params,
               ) => subItem.item_price_id !== subscriptionItem?.item_price_id!,
@@ -109,11 +103,11 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
       id: string;
       params: _subscription.update_for_items_params;
     } = {
-      id: hostedNodes?.id!,
+      id: subscription?.id!,
       params: params,
     };
 
-    const response = await fetch(BILLING_API_ROUTES.subsriptions.item.update, {
+    const response = await fetch(BILLING_API_ROUTES.subscriptions.update, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +117,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
 
     const updatedSubscriptionData: Subscription = await response.json();
 
-    setHostedNodes(updatedSubscriptionData);
+    setSubscription(updatedSubscriptionData);
     setSubscriptionLoadingState('finished');
   };
 

@@ -69,7 +69,6 @@ export type CreateNodeParams = {
 
 export const NodeLauncher = () => {
   const router = useRouter();
-  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();

@@ -4,15 +4,10 @@ import {
   billingSelectors,
 } from '@modules/billing';
 import { Table } from '@shared/index';
-import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
 export const SubscriptionItems = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptions[id as string],
-  );
+  const subscription = useRecoilValue(billingSelectors.subscription);
 
   const { estimate } = useEstimates(subscription?.id! as string);
 

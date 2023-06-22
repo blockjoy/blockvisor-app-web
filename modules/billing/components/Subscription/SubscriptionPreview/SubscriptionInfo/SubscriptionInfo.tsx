@@ -3,22 +3,17 @@ import { billingSelectors, mapSubscriptionToDetails } from '@modules/billing';
 import { ButtonGroup, Button, DetailsTable } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilValue } from 'recoil';
-import { useRouter } from 'next/router';
 
 type SubscriptionInfoProps = {
+  handleUpdate: VoidFunction;
   handleCancellation: VoidFunction;
 };
 
 export const SubscriptionInfo = ({
+  handleUpdate,
   handleCancellation,
 }: SubscriptionInfoProps) => {
-  const {
-    query: { id },
-  } = useRouter();
-
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptions[id as string],
-  );
+  const subscription = useRecoilValue(billingSelectors.subscription);
 
   const { restoreSubscription, reactivateSubscription } = useSubscription();
   const subscriptionData = mapSubscriptionToDetails(subscription!);
@@ -33,9 +28,14 @@ export const SubscriptionInfo = ({
       <DetailsTable bodyElements={subscriptionData} />
       <ButtonGroup type="flex" additionalStyles={[spacing.top.large]}>
         {subscription?.status === 'active' && (
-          <Button style="outline" size="small" onClick={handleCancellation}>
-            Cancel subscription
-          </Button>
+          <ButtonGroup type="flex">
+            <Button style="secondary" size="small" onClick={handleUpdate}>
+              Update subscription
+            </Button>
+            <Button style="outline" size="small" onClick={handleCancellation}>
+              Cancel subscription
+            </Button>
+          </ButtonGroup>
         )}
         {subscription?.status === 'non_renewing' && (
           <Button

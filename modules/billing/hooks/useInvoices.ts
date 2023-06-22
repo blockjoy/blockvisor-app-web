@@ -6,10 +6,8 @@ import {
 } from '@modules/billing';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 
-export const useInvoices = (subscriptionId: string): IInvoicesHook => {
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptions[subscriptionId],
-  );
+export const useInvoices = (): IInvoicesHook => {
+  const subscription = useRecoilValue(billingSelectors.subscription);
   const [invoices, setInvoices] = useRecoilState(billingAtoms.invoices);
   const [invoicesLoadingState, setInvoicesLoadingState] = useRecoilState(
     billingAtoms.invoicesLoadingState,

@@ -19,11 +19,9 @@ import {
   InvoiceDownloadPDF,
   Services,
   useInvoice,
-  billingSelectors,
 } from '@modules/billing';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
 
 export const InvoiceView = () => {
   const router = useRouter();
@@ -31,10 +29,6 @@ export const InvoiceView = () => {
 
   const { invoice, getInvoice, invoiceLoadingState, unloadInvoice } =
     useInvoice();
-
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptionById(invoice?.subscription_id),
-  );
 
   useEffect(() => {
     if (router.isReady) {
@@ -50,11 +44,7 @@ export const InvoiceView = () => {
       <PageSection bottomBorder={false} topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>
-            <BackButton
-              backUrl={`${ROUTES.BILLING}${
-                subscription ? '/' + subscription?.cf_plan : ''
-              }/?tab=4`}
-            />
+            <BackButton backUrl={`${ROUTES.BILLING}/?tab=4`} />
           </PageHeader>
         </div>
         <div css={spacing.top.medium}>
