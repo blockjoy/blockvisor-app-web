@@ -1,81 +1,61 @@
-import { BILLING_API_ROUTES } from '@modules/billing';
 import { _item, _item_price } from 'chargebee-typescript';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
+import { chargebee } from './chargebeeInstance';
 
-async function postData<T = any>(
-  url: string,
-  data:
-    | _item.item_list_params
-    | _item_price.item_price_list_params
-    | { id: string },
-): Promise<T> {
-  console.log(
-    'URL123',
-    `${
-      process.env.NEXT_PUBLIC_URL || 'https://' + process.env.VERCEL_URL
-    }${url}`,
-  );
-
-  try {
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_URL || 'https://' + process.env.VERCEL_URL
-      }${url}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      },
-    );
-
-    console.log('response123', response);
-
-    if (!response.ok) {
-      console.error('Fetch Error:', response.statusText);
-      throw new Error(response.statusText);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Fetch Error:', error);
-    throw error;
-  }
-}
-
-export async function fetchItem(params: { id: string }): Promise<{
-  item: Item;
+export async function fetchItems(id: string): Promise<{
+  item: Item | null;
   itemPrices: ItemPrice[];
 }> {
-  const item: Item = await postData(BILLING_API_ROUTES.items.get, params);
+  const item: Item | null = await getItem(id);
 
   const itemPricesParams: _item_price.item_price_list_params = {
-    item_id: { is: item.id },
+    item_id: { is: item?.id },
   };
 
-  const itemPrices: ItemPrice[] = await postData(
-    BILLING_API_ROUTES.items.prices.list,
-    itemPricesParams,
-  );
+  const itemPrices: ItemPrice[] = await listItemPrices(itemPricesParams);
 
   return { item, itemPrices };
 }
 
-export async function fetchItems(params: _item.item_list_params): Promise<{
-  items: Item[];
-  itemPrices: ItemPrice[];
-}> {
-  const items: Item[] = await postData(BILLING_API_ROUTES.items.list, params);
+export async function getItem(id: string): Promise<Item | null> {
+  try {
+    return new Promise((resolve, reject) => {
+      chargebee.item
+        .retrieve(id)
+        .request(function (error: any, result: { item: Item }) {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(JSON.parse(JSON.stringify(result.item)));
+          }
+        });
+    });
+  } catch (error: any) {
+    console.error('Error', error);
+    return Promise.reject(error);
+  }
+}
 
-  const itemPricesParams: _item_price.item_price_list_params = {
-    item_id: { is: items[0].id },
-  };
-
-  const itemPrices: ItemPrice[] = await postData(
-    BILLING_API_ROUTES.items.prices.list,
-    itemPricesParams,
-  );
-
-  return { items, itemPrices };
+export async function listItemPrices(
+  params: _item_price.item_price_list_params,
+): Promise<ItemPrice[]> {
+  try {
+    return new Promise((resolve, reject) => {
+      chargebee.item_price
+        .list(params)
+        .request(function (error: any, result: { list: ItemPrice[] }) {
+          if (error) {
+            reject(error);
+          } else {
+            const itemPrices = result.list.map(
+              (listItem: any) => listItem.item_price as ItemPrice,
+            );
+            resolve(JSON.parse(JSON.stringify(itemPrices)));
+          }
+        });
+    });
+  } catch (error: any) {
+    console.error('Error', error);
+    return Promise.reject(error);
+  }
 }
