@@ -24,46 +24,47 @@ export const mapBillingContactsToRows = (
     },
   ];
 
-  const rows: Row[] = billingContacts!.map((contact: any, idx: number) => ({
-    key: contact.id ?? `${idx}`,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p>{contact.first_name}</p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>{contact.email}</p>
-          </>
-        ),
-      },
+  const rows: Row[] =
+    billingContacts?.map((contact: any, idx: number) => ({
+      key: contact.id ?? `${idx}`,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <>
+              <p>{contact.first_name}</p>
+            </>
+          ),
+        },
+        {
+          key: '2',
+          component: (
+            <>
+              <p>{contact.email}</p>
+            </>
+          ),
+        },
 
-      {
-        key: '3',
-        component: (
-          <>
-            <Button
-              type="button"
-              tooltip="Remove"
-              style="icon"
-              size="medium"
-              onClick={() => handleRemove(contact)}
-            >
-              <SvgIcon size="20px">
-                <IconClose />
-              </SvgIcon>
-            </Button>
-          </>
-        ),
-      },
-    ],
-  }));
+        {
+          key: '3',
+          component: (
+            <>
+              <Button
+                type="button"
+                tooltip="Remove"
+                style="icon"
+                size="medium"
+                onClick={() => handleRemove(contact)}
+              >
+                <SvgIcon size="20px">
+                  <IconClose />
+                </SvgIcon>
+              </Button>
+            </>
+          ),
+        },
+      ],
+    })) ?? [];
 
   return {
     rows,

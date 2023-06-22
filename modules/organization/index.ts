@@ -22,7 +22,11 @@ export * from './hooks/useSwitchOrganization';
 export * from './hooks/useUpdates';
 
 export * from './store/organizationAtoms';
+<<<<<<< HEAD
 export * from './store/invitationAtoms';
+=======
+export * from './store/organizationSelectors';
+>>>>>>> dde74abd (feat: sc-1643 multiple subscriptions revert + improvements)
 
 export * from './utils/typeGuards';
 export * from './utils/mapOrganizationDetails';

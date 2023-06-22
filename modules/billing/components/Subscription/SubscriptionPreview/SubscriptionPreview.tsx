@@ -10,45 +10,48 @@ import {
   billingSelectors,
   SubscriptionInfo,
   SubscriptionItems,
+  SubscriptionUpdate,
 } from '@modules/billing';
-import { useRouter } from 'next/router';
 
 export const SubscriptionPreview = () => {
-  const {
-    query: { id },
-  } = useRouter();
-
-  const subscription = useRecoilValue(
-    billingSelectors.subscriptions[id as string],
-  );
-  const subscriptionsLoadingState = useRecoilValue(
-    billingAtoms.subscriptionsLoadingState,
+  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
   );
   const { estimateLoadingState, getEstimate } = useEstimates(subscription?.id!);
-  const [activeView, setActiveView] = useState<'list' | 'action'>('list');
+  const [activeView, setActiveView] =
+    useState<'view' | 'cancel' | 'update'>('view');
 
   useEffect(() => {
     if (subscription?.status === 'active') getEstimate();
   }, []);
 
-  const handleCancellation = () => setActiveView('action');
-  const handleBack = () => setActiveView('list');
+  const handleCancellation = () => setActiveView('cancel');
+  const handleUpdate = () => setActiveView('update');
+  const handleBack = () => setActiveView('view');
 
   return (
     <div css={styles.wrapper}>
       {estimateLoadingState !== 'finished' ||
-      subscriptionsLoadingState !== 'finished' ? (
+      subscriptionLoadingState !== 'finished' ? (
         <TableSkeleton />
-      ) : activeView === 'list' ? (
+      ) : activeView === 'view' ? (
         <>
           <DetailsView headline="Info">
-            <SubscriptionInfo handleCancellation={handleCancellation} />
+            <SubscriptionInfo
+              handleCancellation={handleCancellation}
+              handleUpdate={handleUpdate}
+            />
           </DetailsView>
           {subscription?.status === 'active' && (
-            <DetailsView headline="Items">
+            <DetailsView headline="Estimates">
               <SubscriptionItems />
             </DetailsView>
           )}
+        </>
+      ) : activeView === 'update' ? (
+        <>
+          <SubscriptionUpdate handleBack={handleBack} />
         </>
       ) : (
         <>
