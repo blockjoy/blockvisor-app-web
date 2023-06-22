@@ -22,8 +22,11 @@ async function postData<T = any>(
     },
   );
 
+  console.log('response123', response);
+
   if (!response.ok) {
-    throw new Error(response.statusText);
+    console.log('errorroror123', response);
+    // throw new Error(response.statusText);
   }
 
   return await response.json();
@@ -33,8 +36,7 @@ export async function fetchItem(params: { id: string }): Promise<{
   item: Item;
   itemPrices: ItemPrice[];
 }> {
-  const { id } = params;
-  const item: Item = await postData(BILLING_API_ROUTES.items.get, { id });
+  const item: Item = await postData(BILLING_API_ROUTES.items.get, params);
 
   const itemPricesParams: _item_price.item_price_list_params = {
     item_id: { is: item.id },
