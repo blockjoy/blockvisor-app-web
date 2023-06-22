@@ -39,9 +39,9 @@ const IconSnaphotting = dynamic(
 );
 
 const icons = {
-  2: <IconUndefined />,
+  0: <IconUndefined />,
   1: <IconCreating />,
-  0: <IconRunning />,
+  2: <IconRunning />,
   3: <IconStarting />,
   4: <IconStopping />,
   5: <IconStopped />,

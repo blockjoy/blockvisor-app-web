@@ -4,9 +4,9 @@ import {
 } from '@modules/organization';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import {
-  hostFiltersCustomValues,
+  // hostFiltersCustomValues,
   hostFiltersDefaults,
-  hostFiltersSteps,
+  // hostFiltersSteps,
 } from '@shared/constants/lookups';
 import { formatters } from '@shared/index';
 import { isEqual } from 'lodash';
@@ -25,7 +25,7 @@ export const useFilters = (hostUIProps: HostUIProps) => {
   const [filtersStatus, setFiltersStatus] = useRecoilState(
     hostAtoms.filtersStatus,
   );
-  const filtersStatusTotal = useRecoilValue(hostSelectors.filtersStatusTotal);
+  // const filtersStatusTotal = useRecoilValue(hostSelectors.filtersStatusTotal);
 
   const [filtersMemory, setFiltersMemory] = useRecoilState(
     hostAtoms.filtersMemory,
@@ -110,6 +110,7 @@ export const useFilters = (hostUIProps: HostUIProps) => {
     applyFilter(params);
   };
 
+  // TODO: ADD FILTERS BACK IN ONCE LUUK IMPLEMENTS THEM
   const filters: any = [
     {
       name: 'Organization',
@@ -123,50 +124,50 @@ export const useFilters = (hostUIProps: HostUIProps) => {
       })),
       switchOrganization,
     },
-    {
-      name: 'Status',
-      type: 'check',
-      isDisabled: false,
-      filterCount: filtersStatusTotal,
-      filterList: filtersStatus,
-      setFilterList: setFiltersStatus,
-    },
-    {
-      name: 'Memory',
-      type: 'range',
-      label: 'GB',
-      isDisabled: false,
-      step: hostFiltersSteps.memory,
-      min: hostFiltersDefaults.memory[0],
-      max: hostFiltersDefaults.memory[1],
-      values: filtersMemory,
-      setValues: setFiltersMemory,
-      formatter: formatters.formatBytes,
-    },
-    {
-      name: 'CPU Cores',
-      type: 'range',
-      isDisabled: false,
-      step: hostFiltersSteps.cpu,
-      min: hostFiltersDefaults.cpu[0],
-      max: hostFiltersDefaults.cpu[1],
-      values: filtersCPU,
-      setValues: setFiltersCPU,
-      formatter: formatters.plain,
-    },
-    {
-      name: 'Disk space',
-      type: 'range',
-      label: 'GB',
-      isDisabled: false,
-      step: hostFiltersSteps.space,
-      min: hostFiltersDefaults.space[0],
-      max: hostFiltersDefaults.space[1],
-      values: filtersSpace,
-      customValues: hostFiltersCustomValues.space,
-      setValues: setFiltersSpace,
-      formatter: formatters.formatBytes,
-    },
+    // {
+    //   name: 'Status',
+    //   type: 'check',
+    //   isDisabled: false,
+    //   filterCount: filtersStatusTotal,
+    //   filterList: filtersStatus,
+    //   setFilterList: setFiltersStatus,
+    // },
+    // {
+    //   name: 'Memory',
+    //   type: 'range',
+    //   label: 'GB',
+    //   isDisabled: false,
+    //   step: hostFiltersSteps.memory,
+    //   min: hostFiltersDefaults.memory[0],
+    //   max: hostFiltersDefaults.memory[1],
+    //   values: filtersMemory,
+    //   setValues: setFiltersMemory,
+    //   formatter: formatters.formatBytes,
+    // },
+    // {
+    //   name: 'CPU Cores',
+    //   type: 'range',
+    //   isDisabled: false,
+    //   step: hostFiltersSteps.cpu,
+    //   min: hostFiltersDefaults.cpu[0],
+    //   max: hostFiltersDefaults.cpu[1],
+    //   values: filtersCPU,
+    //   setValues: setFiltersCPU,
+    //   formatter: formatters.plain,
+    // },
+    // {
+    //   name: 'Disk space',
+    //   type: 'range',
+    //   label: 'GB',
+    //   isDisabled: false,
+    //   step: hostFiltersSteps.space,
+    //   min: hostFiltersDefaults.space[0],
+    //   max: hostFiltersDefaults.space[1],
+    //   values: filtersSpace,
+    //   customValues: hostFiltersCustomValues.space,
+    //   setValues: setFiltersSpace,
+    //   formatter: formatters.formatBytes,
+    // },
   ];
 
   return {
