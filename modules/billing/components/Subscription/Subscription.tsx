@@ -19,11 +19,11 @@ import {
 } from '@modules/auth';
 
 type SubscriptionProps = {
-  items: Item[];
+  item: Item;
   itemPrices: ItemPrice[];
 };
 
-export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
+export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
@@ -80,9 +80,7 @@ export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
             align="left"
             additionalStyles={styles.emptyColumn}
           />
-          {items?.length && (
-            <SinglePlan item={items[0]} handleSelect={handleSelect} />
-          )}
+          {item && <SinglePlan item={item} handleSelect={handleSelect} />}
         </>
       ) : (
         <PlanSelect
