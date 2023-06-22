@@ -1,7 +1,6 @@
 import { useIdentityRepository } from '@modules/auth';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
-import { readToken } from '@shared/utils/readToken';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 
 export function useDefaultOrganization() {
@@ -16,7 +15,7 @@ export function useDefaultOrganization() {
   const getDefaultOrganization = async (organizations: Org[]) => {
     setLoadingState('loading');
 
-    // TODO: store default organization is api/localStorage
+    // TODO: store default organization in api/localStorage
     const organization = organizations[0];
 
     const orgName = organization?.name ?? '';

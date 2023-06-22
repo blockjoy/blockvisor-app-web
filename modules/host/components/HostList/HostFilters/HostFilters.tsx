@@ -11,15 +11,18 @@ import {
   FiltersHeader,
 } from '@shared/components';
 import { blockchainSelectors } from '@modules/node';
-import { useSwitchOrganization } from '@modules/organization';
+import {
+  useDefaultOrganization,
+  useSwitchOrganization,
+} from '@modules/organization';
 import {
   hostAtoms,
   hostSelectors,
   useHostUIContext,
   useFilters,
 } from '@modules/host';
-import IconClose from '@public/assets/icons/common/Close.svg';
-import IconRefresh from '@public/assets/icons/common/Refresh.svg';
+// import IconClose from '@public/assets/icons/common/Close.svg';
+// import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 
 export type HostFiltersProps = {
   isLoading: LoadingState;
@@ -33,6 +36,8 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
       queryParams: hostUIContext.queryParams,
     };
   }, [hostUIContext]);
+
+  const { defaultOrganization } = useDefaultOrganization();
 
   const { filters, updateFilters, removeFilters, resetFilters } =
     useFilters(hostUIProps);
@@ -67,7 +72,11 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
 
     if (!setFilterList) {
       const foundOrg = list.find((item) => item.id === e.target.id);
-      switchOrganization(foundOrg?.id!, foundOrg?.name!);
+
+      if (defaultOrganization!.id !== foundOrg!.id) {
+        switchOrganization(foundOrg?.id!, foundOrg?.name!);
+      }
+
       return;
     }
 
@@ -87,26 +96,27 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
 
   const handleTouched = () => setIsDirty(true);
 
-  const hasFiltersApplied = filters.some((filter: any) => {
-    if (filter.name === 'Organization') return false;
-    else if (filter.type === 'check') {
-      return filter.filterList.some((l: any) => l.isChecked);
-    } else if (filter.type === 'range') {
-      return filter.min !== filter.values[0] || filter.max !== filter.values[1];
-    }
-  });
+  // TODO: ADD BACK IN ONCE LUUK HAS IMPLEMENTED THEM
+  // const hasFiltersApplied = filters.some((filter: any) => {
+  //   if (filter.name === 'Organization') return false;
+  //   else if (filter.type === 'check') {
+  //     return filter.filterList.some((l: any) => l.isChecked);
+  //   } else if (filter.type === 'range') {
+  //     return filter.min !== filter.values[0] || filter.max !== filter.values[1];
+  //   }
+  // });
 
-  const handleResetFilters = () => {
-    setIsDirty(false);
-    resetFilters();
-    removeFilters();
-    setOpenFilterName('');
-  };
+  // const handleResetFilters = () => {
+  //   setIsDirty(false);
+  //   resetFilters();
+  //   removeFilters();
+  //   setOpenFilterName('');
+  // };
 
-  const handleUpdateClicked = () => {
-    updateFilters();
-    setIsDirty(false);
-  };
+  // const handleUpdateClicked = () => {
+  //   updateFilters();
+  //   setIsDirty(false);
+  // };
 
   const handleFilterBlockClicked = (filterName: string) => {
     setOpenFilterName(filterName);
@@ -189,7 +199,8 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
               else return null;
             })}
           </Scrollbar>
-          <button
+          {/* TODO: ADD BACK IN ONCE LUUK HAS IMPLEMENTED THEM */}
+          {/* <button
             css={styles.updateButton}
             type="button"
             disabled={!isDirty}
@@ -209,7 +220,7 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
               </SvgIcon>
               Reset Filters
             </button>
-          )}
+          )} */}
         </div>
       )}
     </div>

@@ -1,18 +1,13 @@
 import { useGetBlockchains } from '@modules/node';
-import {
-  BlockchainIcon,
-  TableSkeleton,
-  EmptyColumn,
-  Scrollbar,
-} from '@shared/components';
+import { TableSkeleton, Scrollbar } from '@shared/components';
 import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
-import { nodeTypeList } from '@shared/constants/lookups';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
-import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import IconSearch from '@public/assets/icons/common/Search.svg';
+import { NodeLauncherProtocolBlockchains } from './NodeLauncherProtocolBlockchains';
+import { isMobile } from 'react-device-detect';
 
 type Props = {
   onProtocolSelected: (
@@ -34,41 +29,18 @@ export const NodeLauncherProtocol: FC<Props> = ({
 
   const [keyword, setKeyword] = useState<string>('');
 
-  const filteredBlockchains = blockchains?.filter((b) =>
-    b.name?.toLowerCase().includes(keyword.toLowerCase()),
-  );
-
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
 
-  const handleProtocolSelected = (
-    blockchainId: string,
-    nodeTypeId: NodeType,
-  ) => {
-    const blockchainsCopy = [...blockchains];
-
-    const foundActiveNodeType = blockchainsCopy?.find(
-      (b) => b.id === blockchainId,
-    );
-
-    const foundActiveSupportedNodeType = foundActiveNodeType?.nodesTypes!.find(
-      (n: SupportedNodeType) => n.nodeType === nodeTypeId,
-    );
-
-    onProtocolSelected(
-      blockchainId,
-      nodeTypeId,
-      foundActiveSupportedNodeType?.properties.map((property) => ({
-        name: property.name,
-        uiType: property.uiType,
-        disabled: property.disabled,
-        required: property.required,
-        value: property.default ?? '',
-      }))!,
-      foundActiveSupportedNodeType?.version!,
-    );
-  };
+  const BlockchainsComponent = () => (
+    <NodeLauncherProtocolBlockchains
+      onProtocolSelected={onProtocolSelected}
+      activeBlockchainId={activeBlockchainId}
+      activeNodeTypeId={activeNodeTypeId}
+      keyword={keyword}
+    />
+  );
 
   return (
     <div css={styles.wrapper}>
@@ -100,61 +72,11 @@ export const NodeLauncherProtocol: FC<Props> = ({
           >
             Error loading data, please contact our support team.
           </div>
+        ) : isMobile ? (
+          <BlockchainsComponent />
         ) : (
           <Scrollbar additionalStyles={[styles.scrollbar]}>
-            {!filteredBlockchains?.length ? (
-              <EmptyColumn
-                title="No Blockchains."
-                description="Please refine your search."
-              />
-            ) : (
-              filteredBlockchains?.map((b, index) => (
-                <div
-                  tabIndex={activeNodeTypeId ? -1 : index + 1}
-                  key={b.id}
-                  css={[styles.row, styles.rowHover]}
-                  className={b.id === activeBlockchainId ? 'active row' : 'row'}
-                >
-                  <span css={styles.blockchainWrapper}>
-                    <BlockchainIcon
-                      size="28px"
-                      hideTooltip
-                      blockchainName={b.name}
-                    />
-                    <span css={styles.name}>
-                      {/* <span className="beta-badge" css={styles.betaBadge}>
-                        BETA
-                      </span> */}
-                      {b.name}
-                    </span>
-                  </span>
-                  <div
-                    css={styles.nodeTypeButtons}
-                    className="node-type-buttons"
-                  >
-                    {b.nodesTypes.map((type: SupportedNodeType) => (
-                      <button
-                        tabIndex={activeNodeTypeId ? -1 : index + 1}
-                        key={type.nodeType}
-                        className={
-                          type.nodeType === activeNodeTypeId &&
-                          b.id === activeBlockchainId
-                            ? 'active'
-                            : ''
-                        }
-                        onClick={() =>
-                          handleProtocolSelected(b.id!, type.nodeType)
-                        }
-                        type="button"
-                        css={styles.createButton}
-                      >
-                        {nodeTypeList.find((n) => n.id === type.nodeType)?.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
+            <BlockchainsComponent />
             {/* <div css={styles.disabledBlockchains}>
               {!keyword &&
                 blockchainsDisabled
