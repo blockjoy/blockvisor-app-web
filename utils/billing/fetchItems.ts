@@ -9,27 +9,39 @@ async function postData<T = any>(
     | _item_price.item_price_list_params
     | { id: string },
 ): Promise<T> {
-  const response = await fetch(
+  console.log(
+    'URL123',
     `${
       process.env.NEXT_PUBLIC_URL || 'https://' + process.env.VERCEL_URL
     }${url}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    },
   );
 
-  console.log('response123', response);
+  try {
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_URL || 'https://' + process.env.VERCEL_URL
+      }${url}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      },
+    );
 
-  if (!response.ok) {
-    console.log('errorroror123', response);
-    // throw new Error(response.statusText);
+    console.log('response123', response);
+
+    if (!response.ok) {
+      console.error('Fetch Error:', response.statusText);
+      throw new Error(response.statusText);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Fetch Error:', error);
+    throw error;
   }
-
-  return await response.json();
 }
 
 export async function fetchItem(params: { id: string }): Promise<{
