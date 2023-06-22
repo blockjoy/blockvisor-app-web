@@ -20,7 +20,7 @@ Billing.getLayout = function getLayout(page: ReactNode) {
 
 export async function getStaticProps() {
   const params: _item.item_list_params = {
-    item_family_id: { is: 'default' },
+    id: { is: 'standard' },
   };
 
   const { items, itemPrices } = await fetchItems(params);

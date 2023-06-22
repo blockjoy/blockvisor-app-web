@@ -29,45 +29,46 @@ export const mapEstimateItemsToRows = (
     },
   ];
 
-  const rows: Row[] = items!.map((item: InvoiceEstimateLineItem) => ({
-    key: item?.id!,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <>
-            <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-              {item?.description}
-            </p>
-          </>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            <p>{item?.quantity}</p>
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <>
-            <p>{formatters.formatCurrency(item?.unit_amount!)}</p>
-          </>
-        ),
-      },
-      {
-        key: '4',
-        component: (
-          <>
-            <p>{formatters.formatCurrency(item?.amount!)}</p>
-          </>
-        ),
-      },
-    ],
-  }));
+  const rows: Row[] =
+    items?.map((item: InvoiceEstimateLineItem) => ({
+      key: item?.id!,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <>
+              <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+                {item?.description}
+              </p>
+            </>
+          ),
+        },
+        {
+          key: '2',
+          component: (
+            <>
+              <p>{item?.quantity}</p>
+            </>
+          ),
+        },
+        {
+          key: '3',
+          component: (
+            <>
+              <p>{formatters.formatCurrency(item?.unit_amount!)}</p>
+            </>
+          ),
+        },
+        {
+          key: '4',
+          component: (
+            <>
+              <p>{formatters.formatCurrency(item?.amount!)}</p>
+            </>
+          ),
+        },
+      ],
+    })) ?? [];
 
   const totalRow = {
     key: 'total',

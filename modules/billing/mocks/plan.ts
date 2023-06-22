@@ -1,5 +1,5 @@
 export const BILLING_PLAN = {
-  id: 'hosted-nodes',
+  id: 'standard',
   object: 'plan',
   active: true,
   aggregate_usage: null,

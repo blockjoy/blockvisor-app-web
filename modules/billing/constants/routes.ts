@@ -48,7 +48,7 @@ export const BILLING_API_ROUTES = {
     get: `${BILLING_API_ROUTE}/plans/get`,
     list: `${BILLING_API_ROUTE}/plans/list`,
   },
-  subsriptions: {
+  subscriptions: {
     get: `${BILLING_API_ROUTE}/subscriptions/get`,
     list: `${BILLING_API_ROUTE}/subscriptions/list`,
     create: `${BILLING_API_ROUTE}/subscriptions/create`,
@@ -56,7 +56,6 @@ export const BILLING_API_ROUTES = {
     cancel: `${BILLING_API_ROUTE}/subscriptions/cancel`,
     reactivate: `${BILLING_API_ROUTE}/subscriptions/reactivate`,
     restore: `${BILLING_API_ROUTE}/subscriptions/restore`,
-    item: { update: `${BILLING_API_ROUTE}/subscriptions/items/update` },
     billingProfile: {
       update: `${BILLING_API_ROUTE}/subscriptions/billing-profile/update`,
     },
