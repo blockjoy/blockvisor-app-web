@@ -6,12 +6,12 @@ import { Billing as BillingView } from '@modules/billing';
 import { fetchItems } from 'utils/billing/fetchItems';
 
 type BillingProps = {
-  items: Item[];
+  item: Item;
   itemPrices: ItemPrice[];
 };
 
-const Billing = ({ items, itemPrices }: BillingProps) => (
-  <BillingView items={items} itemPrices={itemPrices} />
+const Billing = ({ item, itemPrices }: BillingProps) => (
+  <BillingView item={item} itemPrices={itemPrices} />
 );
 
 Billing.getLayout = function getLayout(page: ReactNode) {
@@ -19,13 +19,14 @@ Billing.getLayout = function getLayout(page: ReactNode) {
 };
 
 export async function getStaticProps() {
-  const params: _item.item_list_params = {
-    id: { is: 'standard' },
-  };
+  try {
+    const { item, itemPrices } = await fetchItems('standard');
 
-  const { items, itemPrices } = await fetchItems(params);
-
-  return { props: { items, itemPrices } };
+    return { props: { item, itemPrices } };
+  } catch (error) {
+    console.error('Failed to fetch items:', error);
+    return { props: { item: null, itemPrices: [] } };
+  }
 }
 
 export default Billing;

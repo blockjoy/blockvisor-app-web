@@ -20,11 +20,11 @@ import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization';
 
 type BillingProps = {
-  items: Item[];
+  item: Item;
   itemPrices: ItemPrice[];
 };
 
-export const Billing = ({ items, itemPrices }: BillingProps) => {
+export const Billing = ({ item, itemPrices }: BillingProps) => {
   const { push } = useRouter();
   const subscription = useRecoilValue(billingSelectors.subscription);
 
@@ -48,7 +48,7 @@ export const Billing = ({ items, itemPrices }: BillingProps) => {
           value: '1',
           component: (
             <PageSection bottomBorder={false}>
-              <Subscription items={items} itemPrices={itemPrices} />
+              <Subscription item={item} itemPrices={itemPrices} />
             </PageSection>
           ),
         },
