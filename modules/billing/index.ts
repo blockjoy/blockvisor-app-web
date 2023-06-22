@@ -35,6 +35,7 @@ export * from './components/Subscription/SubscriptionCancellation/SubscriptionCa
 export * from './components/Subscription/SubscriptionPreview/SubscriptionInfo/SubscriptionInfo';
 export * from './components/Subscription/SubscriptionPreview/SubscriptionItems/SubscriptionItems';
 export * from './components/Subscription/SubscriptionPreview/SubscriptionPreview';
+export * from './components/Subscription/SubscriptionUpdate/SubscriptionUpdate';
 
 export * from './constants/billing';
 export * from './constants/chargebee';
@@ -56,7 +57,6 @@ export * from './hooks/usePayment';
 export * from './hooks/usePaymentMethods';
 export * from './hooks/useSubscription';
 export * from './hooks/useUpdateSubscription';
-export * from './hooks/useSubscriptions';
 
 export * from './store/billingAtoms';
 export * from './store/billingSelectors';

@@ -19,25 +19,25 @@ import {
 } from '@modules/auth';
 
 type SubscriptionProps = {
-  item: Item;
+  items: Item[];
   itemPrices: ItemPrice[];
 };
 
-export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
-  const subscription = useRecoilValue(billingSelectors.subscriptions[item.id]);
-  const subscriptionsLoadingState = useRecoilValue(
-    billingAtoms.subscriptionsLoadingState,
+export const Subscription = ({ items, itemPrices }: SubscriptionProps) => {
+  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
   );
 
-  const [activeView, setActiveView] = useState<'list' | 'action'>('list');
+  const [activeView, setActiveView] = useState<'view' | 'cancel'>('view');
   const [activePlan, setActivePlan] = useState<Item | null>(null);
 
   const handleSelect = (plan: any) => {
-    setActiveView('action');
+    setActiveView('cancel');
     setActivePlan(plan);
   };
 
-  const handleCancel = () => setActiveView('list');
+  const handleCancel = () => setActiveView('view');
 
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
@@ -51,7 +51,7 @@ export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
     Permissions.READ_BILLING,
   );
 
-  if (subscriptionsLoadingState !== 'finished') return <TableSkeleton />;
+  if (subscriptionLoadingState !== 'finished') return <TableSkeleton />;
 
   if (!canReadBilling)
     return (
@@ -65,7 +65,7 @@ export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
     <div css={styles.wrapper}>
       {subscription ? (
         <SubscriptionPreview />
-      ) : activeView === 'list' ? (
+      ) : activeView === 'view' ? (
         <>
           <EmptyColumn
             title="You Have No Active Plans."
@@ -80,7 +80,9 @@ export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
             align="left"
             additionalStyles={styles.emptyColumn}
           />
-          {item && <SinglePlan item={item} handleSelect={handleSelect} />}
+          {items?.length && (
+            <SinglePlan item={items[0]} handleSelect={handleSelect} />
+          )}
         </>
       ) : (
         <PlanSelect

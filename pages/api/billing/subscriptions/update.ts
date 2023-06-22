@@ -3,12 +3,12 @@ import { chargebee } from 'utils/billing/chargebeeInstance';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 import { _subscription } from 'chargebee-typescript';
 
-const updateSubscription = async (
+const updateSubscriptionItems = async (
   id: string,
-  params: _subscription.update_params,
+  params: _subscription.update_for_items_params,
 ): Promise<Subscription> => {
   return new Promise((resolve, reject) => {
-    chargebee.subscription.update(id, params).request(function (
+    chargebee.subscription.update_for_items(id, params).request(function (
       error: any,
       result: {
         subscription: Subscription;
@@ -29,12 +29,8 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { id, params } = req.body as {
-        id: string;
-        params: _subscription.update_params;
-      };
-
-      const response = await updateSubscription(id, params);
+      const { id, params } = req.body as any;
+      const response = await updateSubscriptionItems(id, params);
 
       res.status(200).json(response);
     } catch (error: any) {

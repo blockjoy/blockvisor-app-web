@@ -14,7 +14,7 @@ import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { PasswordToggle } from '@modules/auth';
-import { useCustomer, useSubscriptions } from '@modules/billing';
+import { useCustomer, useSubscription } from '@modules/billing';
 
 type LoginForm = {
   email: string;
@@ -37,7 +37,7 @@ export function LoginForm() {
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getBlockchains } = useGetBlockchains();
   const { getCustomer } = useCustomer();
-  const { getSubscriptions } = useSubscriptions();
+  const { getSubscription } = useSubscription();
 
   const repository = useIdentityRepository();
 
@@ -70,7 +70,8 @@ export function LoginForm() {
       const usr_id = repository?.getIdentity()?.id;
       await getCustomer(usr_id!);
 
-      await getSubscriptions();
+      const org_id = repository?.getIdentity()?.defaultOrganization?.id;
+      await getSubscription(org_id!);
 
       getBlockchains();
       handleRedirect();
