@@ -53,7 +53,6 @@ export const OrganizationAdd: FC<Props> = ({ setIsAdding }) => {
 
   const handleCancel = () => {
     setIsAdding(false);
-    router.push(ROUTES.ORGANIZATIONS);
   };
 
   return (

@@ -1,10 +1,10 @@
 export * from './components/OrganizationManagement/OrganizationManagement';
 export * from './components/OrganizationManagement/OrganizationList/OrganizationList';
 export * from './components/OrganizationManagement/OrganizationList/OrganizationAdd/OrganizationAdd';
-export * from './components/OrganizationView/OrganizationView';
-export * from './components/OrganizationView/OrganizationDetails/OrganizationDetails';
-export * from './components/OrganizationView/OrganizationMembers/OrganizationMembersView';
-export * from './components/OrganizationView/OrganizationMembers/OrganizationMembers';
+export * from './components/OrganizationManagement/OrganizationView/OrganizationView';
+export * from './components/OrganizationManagement/OrganizationView/Tabs/OrganizationDetails/OrganizationDetails';
+export * from './components/OrganizationManagement/OrganizationView/Tabs/OrganizationMembers/OrganizationMembersView';
+export * from './components/OrganizationManagement/OrganizationView/Tabs/OrganizationMembers/OrganizationMembers';
 
 export * from './hooks/useCreateOrganization';
 export * from './hooks/useGetOrganizations';
