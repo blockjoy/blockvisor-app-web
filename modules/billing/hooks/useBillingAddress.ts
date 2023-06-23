@@ -60,7 +60,7 @@ export const useBillingAddress = (): IBillingAddressHook => {
 
       setCustomer(data);
     } catch (error) {
-      console.error('Failed to fetch payment methods', error);
+      console.error('Failed to create billing address', error);
     } finally {
       setCustomerLoadingState('finished');
     }
