@@ -72,7 +72,7 @@ export const usePaymentMethodForm = (): any => {
         setLoadingState('finished');
       }
     } catch (error: any) {
-      setError('true');
+      setError(JSON.stringify(error));
     }
   };
 

@@ -12,11 +12,15 @@ import {
 } from '@shared/components/Forms/ReactHookForm/Input/InputLabel.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { ChangeEvent } from 'react';
-import { CountrySelector } from '@shared/components';
+import { Checkbox, CountrySelector } from '@shared/components';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
+import { billingSelectors } from '@modules/billing';
 
 type PaymentMethodInfoFormProps = {
-  billingInfo: any;
-  setBillingInfo: any;
+  billingInfo: BillingInfoData;
+  setBillingInfo: SetterOrUpdater<BillingInfoData>;
+  isDefaultAddress: boolean;
+  handleIsDefaultAddress: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export type BillingInfoData = {
@@ -29,7 +33,11 @@ export type BillingInfoData = {
 export const PaymentMethodInfoForm = ({
   billingInfo,
   setBillingInfo,
+  isDefaultAddress,
+  handleIsDefaultAddress,
 }: PaymentMethodInfoFormProps) => {
+  const billingAddress = useRecoilValue(billingSelectors.billingAddress);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -107,6 +115,18 @@ export const PaymentMethodInfoForm = ({
             />
           </div>
         </div>
+      </div>
+
+      <div css={[styles.formItem]}>
+        <Checkbox
+          id="default-address"
+          name="default-address"
+          checked={isDefaultAddress || !billingAddress}
+          disabled={!billingAddress}
+          onChange={handleIsDefaultAddress}
+        >
+          Save as default
+        </Checkbox>
       </div>
     </>
   );
