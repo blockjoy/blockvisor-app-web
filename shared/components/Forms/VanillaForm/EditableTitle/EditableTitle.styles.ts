@@ -6,7 +6,6 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
   `,
   input: (theme: ITheme) => css`
     background: transparent;
