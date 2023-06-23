@@ -19,14 +19,14 @@ interface IBillingAddressFormHook {
 }
 
 type BillingAddressParams = {
-  firstName: string;
-  lastName: string;
-  company: string;
-  address: string;
-  city: string;
-  country: string;
-  region: string;
-  postal: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  region?: string;
+  postal?: string;
 };
 
 type BillingAddressActions = {
