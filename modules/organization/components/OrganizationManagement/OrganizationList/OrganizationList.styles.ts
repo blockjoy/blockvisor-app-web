@@ -18,10 +18,7 @@ export const styles = {
     justify-content: space-between;
     color: ${theme.colorDefault};
     height: 38px;
-
-    @media ${breakpoints.fromXLrg} {
-      justify-content: flex-start;
-    }
+    font-size: 16px;
   `,
   addIcon: (theme: ITheme) => css`
     display: grid;

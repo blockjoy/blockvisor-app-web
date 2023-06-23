@@ -8,7 +8,9 @@ export const styles = {
     display: flex;
   `,
   leftWrapper: (theme: ITheme) => css`
-    flex: 0 0 320px;
+    flex: 0 0 300px;
+    max-width: 300px;
+    padding-right: 30px;
     border-right: 1px solid ${theme.colorBorder};
     /* display: flex;
 

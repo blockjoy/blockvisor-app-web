@@ -35,6 +35,7 @@ import { nodeClient } from '@modules/grpc';
 import { OrganizationMembersView } from '@modules/organization/components/OrganizationManagement/OrganizationView/Tabs/OrganizationMembers/OrganizationMembersView';
 
 import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
+import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 
 export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -76,34 +77,30 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
   return (
     <>
       <OrganizationViewHeader />
-      <PageSection bottomBorder={false}>
-        {/* <div css={spacing.top.medium}>
+      {/* <div css={spacing.top.medium}>
           <BackButton backUrl={ROUTES.ORGANIZATIONS} />
         </div> */}
-        {false ? (
-          <div css={spacing.top.medium}>
-            <SkeletonGrid padding="10px 0 70px">
-              <Skeleton width="260px" />
-              <Skeleton width="180px" />
-            </SkeletonGrid>
-            <TableSkeleton />
-          </div>
-        ) : organization === null ? (
-          <EmptyColumn
-            title="Organization Not Found"
-            description="No organization exists with this ID"
-          />
-        ) : (
-          <div css={spacing.top.medium}>
-            {/* {organization?.name?.length && (
-              
-            )} */}
-            {/* <DetailsTable bodyElements={details ?? []} />
-            <div css={[spacing.top.xLarge]} />
-            <OrganizationMembersView /> */}
-          </div>
-        )}
-      </PageSection>
+      {false ? (
+        <div css={spacing.top.medium}>
+          <SkeletonGrid padding="10px 0 70px">
+            <Skeleton width="260px" />
+            <Skeleton width="180px" />
+          </SkeletonGrid>
+          <TableSkeleton />
+        </div>
+      ) : organization === null ? (
+        <EmptyColumn
+          title="Organization Not Found"
+          description="No organization exists with this ID"
+        />
+      ) : (
+        <>
+          <OrganizationViewTabs />
+          <PageSection bottomBorder={false} topPadding={false}>
+            {children}
+          </PageSection>
+        </>
+      )}
       {/* {!isLoadingOrg && organization !== null && !organization?.personal && (
         <PageSection bottomBorder={false}>
           <DangerZone

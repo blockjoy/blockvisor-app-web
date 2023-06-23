@@ -5,6 +5,7 @@ export * from './components/OrganizationManagement/OrganizationView/Organization
 export * from './components/OrganizationManagement/OrganizationView/Tabs/OrganizationDetails/OrganizationDetails';
 export * from './components/OrganizationManagement/OrganizationView/Tabs/OrganizationMembers/OrganizationMembersView';
 export * from './components/OrganizationManagement/OrganizationView/Tabs/OrganizationMembers/OrganizationMembers';
+export * from './components/OrganizationManagement/OrganizationView/Tabs/OrganizationNodes/OrganizationNodes';
 
 export * from './hooks/useCreateOrganization';
 export * from './hooks/useGetOrganizations';
