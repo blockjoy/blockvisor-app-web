@@ -141,8 +141,7 @@ export const Members = () => {
 
   return (
     <>
-      <h2 css={[styles.h2, spacing.bottom.large]}>
-        Members
+      <div css={spacing.bottom.large}>
         {activeView === 'list' &&
           canCreateMember &&
           !selectedOrganization?.personal && (
@@ -155,7 +154,7 @@ export const Members = () => {
               Add Member
             </Button>
           )}
-      </h2>
+      </div>
       {activeView === 'invite' && (
         <OrganizationInvite
           isInviting={isInviting}
