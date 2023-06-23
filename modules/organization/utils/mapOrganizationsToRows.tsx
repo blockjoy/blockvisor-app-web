@@ -12,9 +12,9 @@ export const mapOrganizationsToRows = (
     {
       name: 'Org. Name',
       key: '1',
-      minWidth: '300px',
-      maxWidth: '300px',
-      width: '300px',
+      minWidth: '100%',
+      maxWidth: '100%',
+      width: '100%',
       dataField: 'name',
       sort: true,
     },

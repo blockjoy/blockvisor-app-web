@@ -40,17 +40,14 @@ export const OrganizationsList = () => {
   return (
     <div css={styles.wrapper}>
       <header css={[styles.header, spacing.bottom.large]}>
-        All Organizations
+        Find an Organization
         {!isAdding && (
           <Button
             size="small"
-            style="outline"
+            style="secondary"
             onClick={() => setIsAdding(true)}
           >
-            <span css={styles.addIcon}>
-              <IconOrganizations />
-            </span>
-            Add New
+            Add
           </Button>
         )}
       </header>

@@ -7,13 +7,12 @@ export const OrganizationViewTabs = () => {
   const { query, asPath } = useRouter();
 
   const createPath = (path: string) =>
-    `/nodes/${query.id}${path ? `/${path}` : ''}`;
+    `/organizations/${query.id}${path ? `/${path}` : ''}`;
 
   const tabs = [
     { href: createPath(''), name: 'Details' },
     { href: createPath('members'), name: 'Members' },
-    { href: createPath('settings'), name: 'Settings' },
-    { href: createPath('metrics'), name: 'Metrics' },
+    { href: createPath('nodes'), name: 'Nodes' },
   ];
 
   const isActive = (href: string) => {
