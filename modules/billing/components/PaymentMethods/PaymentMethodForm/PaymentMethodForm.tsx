@@ -13,6 +13,7 @@ import {
   CardHolder,
   CreditCardForm,
   PaymentMethodInfoForm,
+  useBillingAddress,
   useCustomer,
 } from '@modules/billing';
 import { useRecoilValue } from 'recoil';
@@ -47,16 +48,21 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   });
 
   const [primary, setPrimary] = useState<boolean>(false);
+  const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
 
   const { onSubmit } = usePaymentMethodForm();
   const { assignPaymentRole } = useCustomer();
+  const { addBillingAddress } = useBillingAddress();
 
-  const handleSucces = (paymentSourceId: string) => {
-    if (primary || !paymentMethods.length)
+  const handleSucces = (paymentSourceId: string, customerId: string) => {
+    if (primary && paymentMethods.length)
       assignPaymentRole({
         payment_source_id: paymentSourceId,
         role: 'primary',
       });
+    if (isDefaultAddress || !billingAddress)
+      addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
+
     handleCancel();
   };
 
@@ -104,6 +110,11 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     setPrimary(!primary);
   };
 
+  const handleIsDefaultAddress = (e: ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    setIsDefaultAddress(!primary);
+  };
+
   return (
     <div css={styles.wrapper}>
       <h4 css={styles.headline}>CARD DETAILS</h4>
@@ -113,16 +124,15 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
         setCardHolder={setCardHolder}
       />
 
-      {paymentMethods && paymentMethods.length ? (
-        <Checkbox
-          id="primary"
-          name="primary"
-          checked={primary}
-          onChange={handlePrimary}
-        >
-          Save as primary
-        </Checkbox>
-      ) : null}
+      <Checkbox
+        id="primary"
+        name="primary"
+        checked={primary || !(paymentMethods && paymentMethods.length)}
+        disabled={!(paymentMethods && paymentMethods.length)}
+        onChange={handlePrimary}
+      >
+        Save as primary
+      </Checkbox>
 
       <div css={spacing.top.large}>
         <div css={[flex.display.flex, flex.direction.row]}>
@@ -148,6 +158,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
             <PaymentMethodInfoForm
               billingInfo={billingInfo}
               setBillingInfo={setBillingInfo}
+              isDefaultAddress={isDefaultAddress}
+              handleIsDefaultAddress={handleIsDefaultAddress}
             />
           </div>
         )}
