@@ -10,42 +10,17 @@ import IconChat from '@public/assets/icons/common/Chat.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
-import { organizationAtoms } from '@modules/organization';
-
-const blocks = [
-  {
-    title: 'BLOCKVISOR',
-    items: [
-      { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
-      {
-        name: 'Launch Node',
-        path: '/launch-node',
-        icon: <IconRocket />,
-      },
-      {
-        name: 'Hosts',
-        path: '/hosts',
-        icon: <IconHost />,
-      },
-      {
-        name: 'Organizations',
-        path: '/organizations',
-        icon: <IconOrganizations />,
-        isOrganizations: true,
-      },
-      {
-        name: 'FAQ',
-        path: '/faq',
-        icon: <IconChat />,
-      },
-    ],
-  },
-];
+import {
+  organizationAtoms,
+  useDefaultOrganization,
+} from '@modules/organization';
 
 export default () => {
   const router = useRouter();
 
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+
+  const { defaultOrganization } = useDefaultOrganization();
 
   const invitationCount = useRecoilValue(
     organizationAtoms.organizationReceivedInvitations,
@@ -56,6 +31,36 @@ export default () => {
       setIsSidebarOpen(false);
     }
   };
+
+  const blocks = [
+    {
+      title: 'BLOCKVISOR',
+      items: [
+        { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
+        {
+          name: 'Launch Node',
+          path: '/launch-node',
+          icon: <IconRocket />,
+        },
+        {
+          name: 'Hosts',
+          path: '/hosts',
+          icon: <IconHost />,
+        },
+        {
+          name: 'Organizations',
+          path: `/organizations/${defaultOrganization?.id}`,
+          icon: <IconOrganizations />,
+          isOrganizations: true,
+        },
+        {
+          name: 'FAQ',
+          path: '/faq',
+          icon: <IconChat />,
+        },
+      ],
+    },
+  ];
 
   return (
     <main css={[styles.wrapper]}>
@@ -74,7 +79,9 @@ export default () => {
                 <span
                   css={styles.linkInner}
                   className={`link-inner ${
-                    router.pathname.startsWith(item.path) ? 'active' : ''
+                    router.pathname.startsWith(item.path.substring(0, 3))
+                      ? 'active'
+                      : ''
                   }`}
                 >
                   <span

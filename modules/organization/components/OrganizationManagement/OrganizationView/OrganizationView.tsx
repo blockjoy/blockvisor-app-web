@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import router, { useRouter } from 'next/router';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { BackButton } from '@shared/components/Buttons/BackButton/BackButton';
 import { queryAsString } from '@shared/utils/query';
 import { toast } from 'react-toastify';
@@ -21,6 +21,7 @@ import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrga
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import {
   getOrgMemberRole,
+  useDefaultOrganization,
   useInvitations,
   useUpdateOrganization,
 } from '@modules/organization';
@@ -31,9 +32,11 @@ import {
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
 import { PageHeader, ROUTES } from '@shared/index';
 import { nodeClient } from '@modules/grpc';
-import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
+import { OrganizationMembersView } from '@modules/organization/components/OrganizationManagement/OrganizationView/Tabs/OrganizationMembers/OrganizationMembersView';
 
-export const OrganizationView = () => {
+import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
+
+export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const { id } = router.query;
   const {
@@ -61,44 +64,6 @@ export const OrganizationView = () => {
 
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-  const handleSaveClicked = async (newOrganizationName: string) => {
-    setIsSavingOrganization(true);
-    try {
-      await updateOrganization(id?.toString()!, newOrganizationName);
-      setIsSavingOrganization(false);
-      toast.success('Organization Updated');
-    } catch (err: any) {
-      setIsSavingOrganization(false);
-    }
-  };
-
-  const handleEditClicked = () => {
-    setIsSavingOrganization(null);
-  };
-
-  const role = getOrgMemberRole(organization!, user?.id!);
-
-  const canUpdateOrganization: boolean = useHasPermissions(
-    role,
-    Permissions.UPDATE_ORGANIZATION,
-  );
-
-  const canDeleteOrganization: boolean = useHasPermissions(
-    role,
-    Permissions.DELETE_ORGANIZATION,
-  );
-
-  const action = canDeleteOrganization ? 'delete' : 'leave';
-
-  const handleAction = async () => {
-    setIsDeleting(true);
-    if (canDeleteOrganization) {
-      await deleteOrganization(queryAsString(id));
-    } else {
-      await leaveOrganization(queryAsString(id));
-    }
-  };
-
   useEffect(() => {
     if (router.isReady) {
       setIsDeleting(false);
@@ -106,29 +71,16 @@ export const OrganizationView = () => {
       getOrganization(queryAsString(id));
       getSentInvitations(queryAsString(id));
     }
-
-    return () => {
-      setIsLoading('initializing');
-      setSentInvitationsLoadingState('initializing');
-      setOrganization(null);
-      setSentInvitationsLoadingState('initializing');
-    };
-  }, [router.isReady]);
-
-  const details = getOrganizationDetails(organization);
-  const isLoadingOrg =
-    isLoading !== 'finished' ||
-    sentInvitationsLoadingState !== 'finished' ||
-    organization?.nodeCount === null;
+  }, [id, router.isReady]);
 
   return (
     <>
-      <PageTitle title="Organizations" />
+      <OrganizationViewHeader />
       <PageSection bottomBorder={false}>
-        <div css={spacing.top.medium}>
+        {/* <div css={spacing.top.medium}>
           <BackButton backUrl={ROUTES.ORGANIZATIONS} />
-        </div>
-        {isLoadingOrg ? (
+        </div> */}
+        {false ? (
           <div css={spacing.top.medium}>
             <SkeletonGrid padding="10px 0 70px">
               <Skeleton width="260px" />
@@ -143,23 +95,16 @@ export const OrganizationView = () => {
           />
         ) : (
           <div css={spacing.top.medium}>
-            {organization?.name?.length && (
-              <EditableTitle
-                isLoading={isLoadingOrg}
-                isSaving={isSavingOrganization!}
-                initialValue={organization?.name!}
-                onSaveClicked={handleSaveClicked}
-                onEditClicked={handleEditClicked}
-                canUpdate={canUpdateOrganization && !organization?.personal}
-              />
-            )}
-            <DetailsTable bodyElements={details ?? []} />
+            {/* {organization?.name?.length && (
+              
+            )} */}
+            {/* <DetailsTable bodyElements={details ?? []} />
             <div css={[spacing.top.xLarge]} />
-            <OrganizationMembersView />
+            <OrganizationMembersView /> */}
           </div>
         )}
       </PageSection>
-      {!isLoadingOrg && organization !== null && !organization?.personal && (
+      {/* {!isLoadingOrg && organization !== null && !organization?.personal && (
         <PageSection bottomBorder={false}>
           <DangerZone
             elementName="Organization"
@@ -174,7 +119,7 @@ export const OrganizationView = () => {
             }
           ></DangerZone>
         </PageSection>
-      )}
+      )} */}
     </>
   );
 };

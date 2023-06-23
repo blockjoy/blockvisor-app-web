@@ -15,6 +15,7 @@ export const styles = {
   tooltip: (p: TooltipStyleProps) => (theme: ITheme) =>
     css`
       position: absolute;
+      z-index: 10;
       top: ${p.top};
       right: ${p.right};
       bottom: ${p.bottom};
