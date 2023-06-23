@@ -30,6 +30,10 @@ const IconCardano = dynamic(
   () => import(`@public/assets/icons/blockchain/Cardano.svg`),
 );
 
+const IconCelo = dynamic(
+  () => import(`@public/assets/icons/blockchain/Celo.svg`),
+);
+
 const IconEthereum = dynamic(
   () => import(`@public/assets/icons/blockchain/Ethereum.svg`),
 );
@@ -91,6 +95,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'cardano':
       Component = IconCardano;
+      break;
+    case 'celo':
+      Component = IconCelo;
       break;
     case 'ethereum':
     case 'ethereum pos':
