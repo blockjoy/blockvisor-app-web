@@ -80,7 +80,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
   const createPaymentMethod = async (
     customerId: string,
     paymentIntentId: string,
-    onSuccess: (paymentSourceId: string) => void,
+    onSuccess: (paymentSourceId: string, customerId: string) => void,
   ) => {
     setPaymentMethodsLoadingState('initializing');
 
@@ -106,7 +106,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
       setPaymentMethods(newPaymentMethods);
 
-      onSuccess(data?.id);
+      onSuccess(data?.id, data?.customer_id);
     } catch (error) {
       console.error('Failed to create payment method', error);
     } finally {
