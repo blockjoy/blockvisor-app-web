@@ -1,6 +1,6 @@
 import { useInvoice } from '@modules/billing';
-import { Button } from '@shared/components';
-import IconDownload from '@public/assets/icons/download-12.svg';
+import { Button, SvgIcon } from '@shared/components';
+import IconDownload from '@public/assets/icons/common/Download.svg';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 import { styles } from './InvoiceDownload.styles';
 import { useState } from 'react';
@@ -40,7 +40,9 @@ export const InvoiceDownloadPDF = ({ invoice }: InvoiceDownloadPDFProps) => {
       loading={isLoading !== 'finished'}
       onClick={(e) => handleInvoicePDF(e, invoice.id)}
     >
-      <IconDownload />
+      <SvgIcon size="12px">
+        <IconDownload />
+      </SvgIcon>
       <span>Download</span>
     </Button>
   );
