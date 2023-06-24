@@ -1,6 +1,6 @@
 import { styles } from './SinglePlan.styles';
-import { Button } from '@shared/index';
-import IconCheckmark from '@public/assets/icons/checkmark-12.svg';
+import { Button, SvgIcon } from '@shared/index';
+import IconCheckmark from '@public/assets/icons/common/Checkmark.svg';
 import { Item } from 'chargebee-typescript/lib/resources';
 import { BILLING_PLAN_FEATURES } from '@modules/billing/constants/billing';
 
@@ -34,7 +34,9 @@ export const SinglePlan = ({ item, handleSelect }: SinglePlanProps) => {
           {BILLING_PLAN_FEATURES.map(
             (feature: string, featureIndex: number) => (
               <li key={featureIndex} css={styles.listItem}>
-                <IconCheckmark />
+                <SvgIcon size="12px">
+                  <IconCheckmark />
+                </SvgIcon>
                 <span>{feature}</span>
               </li>
             ),

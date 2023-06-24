@@ -5,7 +5,7 @@ import { capitalize } from 'utils/capitalize';
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 import { flex } from 'styles/utils.flex.styles';
-import IconClose from '@public/assets/icons/close-12.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
 import { spacing } from 'styles/utils.spacing.styles';
 import { CreditCardTypes } from '../constants/common';
 
