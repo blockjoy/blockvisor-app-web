@@ -15,7 +15,7 @@ import { BillingAddress } from 'chargebee-typescript/lib/resources/customer';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './BillingAddressSelect.styles';
-import IconPlus from '@public/assets/icons/plus-12.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
 
 type BillingAddressSelectProps = {
   handlePaymentBillingAddress: (billingAddress: BillingAddress) => void;

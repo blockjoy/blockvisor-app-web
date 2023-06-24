@@ -14,7 +14,7 @@ import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './PaymentMethodsSelect.styles';
-import IconPlus from '@public/assets/icons/plus-12.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
 import { useRouter } from 'next/router';
 import { Badge, ROUTES } from '@shared/index';
 

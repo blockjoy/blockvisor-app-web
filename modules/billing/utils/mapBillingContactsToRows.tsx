@@ -1,5 +1,5 @@
 import { Button, SvgIcon } from '@shared/components';
-import IconClose from '@public/assets/icons/close-12.svg';
+import IconClose from '@public/assets/icons/common/Close.svg';
 import { Contact } from 'chargebee-typescript/lib/resources/customer';
 
 export const mapBillingContactsToRows = (

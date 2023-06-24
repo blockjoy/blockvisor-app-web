@@ -8,8 +8,9 @@ import {
   buttonStyle,
   button,
 } from '../../../../../shared/components/Buttons/Button/Button.styles';
-import IconDownload from '@public/assets/icons/download-12.svg';
+import IconDownload from '@public/assets/icons/common/Download.svg';
 import { Invoice } from 'chargebee-typescript/lib/resources';
+import { SvgIcon } from '@shared/components';
 
 export type InvoiceDownloadProps = {
   invoice: Invoice;
@@ -36,7 +37,9 @@ export const InvoiceDownload = ({ invoice }: InvoiceDownloadProps) => {
         buttonStyle['outline'],
       ]}
     >
-      <IconDownload />
+      <SvgIcon size="12px">
+        <IconDownload />
+      </SvgIcon>
       <span>Download</span>
     </PDFDownloadLink>
   );
