@@ -58,13 +58,12 @@ export const styles = {
     font-size: 14px;
     padding: 12px 0;
     border-top: 1px solid ${theme.colorBorderGrey};
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 10px;
 
     &:not(:last-child) {
       margin-bottom: 5px;
-    }
-
-    span:first-of-type {
-      margin-left: 12px;
     }
   `,
 };

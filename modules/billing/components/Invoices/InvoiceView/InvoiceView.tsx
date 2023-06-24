@@ -10,10 +10,11 @@ import {
   SkeletonGrid,
   TableSkeleton,
   formatters,
+  SvgIcon,
 } from '@shared/index';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
-import IconCalendar from '@public/assets/icons/calendar-12.svg';
+import IconCalendar from '@public/assets/icons/common/Calendar.svg';
 import {
   BillingAddressPreview,
   InvoiceDownloadPDF,
@@ -58,7 +59,9 @@ export const InvoiceView = () => {
                         Invoice <b>{`${invoice.id}`}</b>
                       </h2>
                       <div css={styles.info}>
-                        <IconCalendar />
+                        <SvgIcon size="10px">
+                          <IconCalendar />
+                        </SvgIcon>
                         <span>{formatters.formatDate(invoice.date)}</span>
                       </div>
                     </div>
