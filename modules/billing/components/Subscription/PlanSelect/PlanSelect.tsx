@@ -17,7 +17,7 @@ import { formatters, TableSkeleton } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
-import IconCheck from '@public/assets/icons/check-16.svg';
+import IconCheck from '@public/assets/icons/common/Check.svg';
 import { PlanParams } from './PlanParams/PlanParams';
 
 export type PlanSelectProps = {
