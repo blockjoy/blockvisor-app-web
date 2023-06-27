@@ -4,7 +4,7 @@ import { _item, _item_price } from 'chargebee-typescript';
 
 export const useItems = (): IItemsHook => {
   const [items, setItems] = useRecoilState(billingAtoms.items);
-  const [itemsLoadingState, setitemsLoadingState] = useRecoilState(
+  const [itemsLoadingState, setItemsLoadingState] = useRecoilState(
     billingAtoms.itemsLoadingState,
   );
 
@@ -13,8 +13,29 @@ export const useItems = (): IItemsHook => {
     billingAtoms.itemPricesLoadingState,
   );
 
+  const getItem = async () => {
+    setItemsLoadingState('initializing');
+
+    try {
+      const response = await fetch(BILLING_API_ROUTES.items.get, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: 'standard' }),
+      });
+
+      const data = await response.json();
+      setItems(data);
+    } catch (error) {
+      console.error('Failed to fetch item', error);
+    } finally {
+      setItemsLoadingState('finished');
+    }
+  };
+
   const getItems = async () => {
-    setitemsLoadingState('initializing');
+    setItemsLoadingState('initializing');
 
     try {
       const params: _item.item_list_params = {
@@ -33,9 +54,9 @@ export const useItems = (): IItemsHook => {
 
       setItems(data);
     } catch (error) {
-      console.error('Failed to fetch item prices', error);
+      console.error('Failed to fetch items', error);
     } finally {
-      setitemsLoadingState('finished');
+      setItemsLoadingState('finished');
     }
   };
 
@@ -78,6 +99,7 @@ export const useItems = (): IItemsHook => {
     itemPrices,
     itemPricesLoadingState,
 
+    getItem,
     getItems,
     getItemPrices,
   };

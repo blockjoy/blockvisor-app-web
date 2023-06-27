@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { chargebee } from 'utils/billing/chargebeeInstance';
-import { Subscription } from 'chargebee-typescript/lib/resources';
+import { Card, Subscription } from 'chargebee-typescript/lib/resources';
 import { _subscription } from 'chargebee-typescript';
 
 const updateSubscriptionItems = async (
@@ -12,12 +12,21 @@ const updateSubscriptionItems = async (
       error: any,
       result: {
         subscription: Subscription;
+        card: Card;
       },
     ) {
       if (error) {
         reject(error);
       } else {
-        resolve(result.subscription);
+        const subscription = result.subscription as Subscription;
+        const card = result.card as Card;
+
+        const updatedSubscriptionData = {
+          ...subscription,
+          payment_source_id: card.payment_source_id!,
+        } as Subscription;
+
+        resolve(updatedSubscriptionData);
       }
     });
   });

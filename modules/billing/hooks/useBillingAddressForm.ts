@@ -18,10 +18,7 @@ export const useBillingAddressForm = (
   actions: BillingAddressActions,
   billingAddress?: CustomerBillingAddress | null,
 ): IBillingAddressFormHook => {
-  const { customer, createCustomer } = useCustomer();
-
-  const identity = useIdentityRepository();
-  const user = identity?.getIdentity();
+  const { provideCustomer } = useCustomer();
 
   const [loading, setLoading] = useState(false);
 
@@ -38,28 +35,6 @@ export const useBillingAddressForm = (
       },
     });
 
-  const handleCustomerCheck = async () => {
-    if (!customer) {
-      try {
-        const newCustomer = await createCustomer({
-          id: user?.id,
-          first_name: user?.firstName,
-          last_name: user?.lastName,
-          email: user?.email,
-        });
-        return newCustomer;
-      } catch (error) {
-        console.log(
-          'Error while creating a customer in handlePaymentCreation',
-          error,
-        );
-        return;
-      }
-    }
-
-    return customer;
-  };
-
   const onSubmit: SubmitHandler<BillingAddressParams> = async ({
     firstName,
     lastName,
@@ -72,7 +47,7 @@ export const useBillingAddressForm = (
   }: BillingAddressParams) => {
     setLoading(true);
 
-    const customerData: Customer = await handleCustomerCheck();
+    const customerData: Customer = await provideCustomer();
 
     try {
       await actions.add(customerData.id, {

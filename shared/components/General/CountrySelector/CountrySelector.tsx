@@ -71,7 +71,11 @@ export const CountrySelector = ({
         onClose={() => setIsOpen(false)}
       >
         <DropdownButton
-          text={<p>{value ? activeCountryName : 'Select country'}</p>}
+          text={
+            <p css={!value ? styles.placeholder : ''}>
+              {value ? activeCountryName : 'Select country'}
+            </p>
+          }
           onClick={handleClose}
           isOpen={isOpen}
           type="input"
