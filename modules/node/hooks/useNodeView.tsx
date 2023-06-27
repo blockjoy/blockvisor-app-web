@@ -16,6 +16,7 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useHostList, useHostUpdate, useHostView } from '@modules/host';
+import { useUpdateSubscription } from '@modules/billing';
 
 type Args = string | string[] | undefined;
 
@@ -49,6 +50,7 @@ export const useNodeView = (): Hook => {
   const { host } = useHostView();
   const { hostList } = useHostList();
   const { modifyHost } = useHostUpdate();
+  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const deleteNode = async (
     id: Args,
@@ -59,6 +61,13 @@ export const useNodeView = (): Hook => {
     removeFromNodeList(uuid);
     await nodeClient.deleteNode(uuid);
 
+    // Remove node from the subscription
+    updateSubscriptionItems({
+      type: 'delete',
+      payload: { node },
+    });
+
+    // Update organization node count
     const activeOrganization = organizations.find(
       (org) => org.id === defaultOrganization?.id,
     );

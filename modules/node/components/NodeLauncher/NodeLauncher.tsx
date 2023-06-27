@@ -8,6 +8,11 @@ import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
 import { EmptyColumn, PageTitle, sort } from '@shared/components';
 import { useDefaultOrganization } from '@modules/organization';
+import { useRecoilValue } from 'recoil';
+import {
+  organizationAtoms,
+  organizationSelectors,
+} from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import {
@@ -24,6 +29,9 @@ import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { useUpdateSubscription } from '@modules/billing';
+import { billingSelectors, PaymentRequired } from '@modules/billing';
+import { Permissions, useHasPermissions } from '@modules/auth';
+import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -56,6 +64,8 @@ export const NodeLauncher = () => {
   const { createNode } = useNodeAdd();
 
   const [hasRegionListError, setHasRegionListError] = useState(true);
+  const [activeView, setActiveView] = useState<'view' | 'action'>('view');
+
   const [serverError, setServerError] = useState<string>();
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [networkList, setNetworkList] = useState<string[]>([]);
@@ -63,6 +73,18 @@ export const NodeLauncher = () => {
   const [selectedHost, setSelectedHost] = useState<Host | null>(null);
 
   const { defaultOrganization } = useDefaultOrganization();
+  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
+
+  const userRoleInOrganization: OrgRole = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
+
+  const canAddNode: boolean = useHasPermissions(
+    userRoleInOrganization,
+    Permissions.CREATE_NODE,
+  );
+
+  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -200,6 +222,16 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
+    if (!hasPaymentMethod) {
+      setActiveView('action');
+      setFulfilRequirements(false);
+      return;
+    }
+
+    setFulfilRequirements(true);
+  };
+
+  const handleNodeCreation = () => {
     setIsCreating(true);
 
     const mergedFiles: File[] = [];
@@ -246,6 +278,12 @@ export const NodeLauncher = () => {
       },
       (error: string) => setServerError(error!),
     );
+  };
+
+  const handleHidingPortal = () => setActiveView('view');
+  const handleSubmitPayment = () => {
+    setActiveView('view');
+    setFulfilRequirements(true);
   };
 
   useEffect(() => {
@@ -311,6 +349,12 @@ export const NodeLauncher = () => {
     Mixpanel.track('Launch Node - Opened');
   }, []);
 
+  useEffect(() => {
+    if (fulfilRequirements) {
+      handleNodeCreation();
+    }
+  }, [fulfilRequirements]);
+
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
@@ -351,11 +395,18 @@ export const NodeLauncher = () => {
             selectedHost={selectedHost}
             onHostChanged={handleHostChanged}
             onNodePropertyChanged={handleNodePropertyChanged}
+            canAddNode={canAddNode}
             onCreateNodeClicked={handleCreateNodeClicked}
             onRegionsLoaded={handleRegionsLoaded}
           />
         )}
       </div>
+      {activeView === 'action' && (
+        <PaymentRequired
+          onHide={handleHidingPortal}
+          handleSubmit={handleSubmitPayment}
+        />
+      )}
     </>
   );
 };

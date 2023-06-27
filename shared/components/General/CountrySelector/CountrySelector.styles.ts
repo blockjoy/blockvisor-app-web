@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export const styles = {
   active: css`
@@ -21,5 +22,8 @@ export const styles = {
     ::-webkit-scrollbar-track {
       background: rgb(255 255 255 / 5%);
     }
+  `,
+  placeholder: (theme: ITheme) => css`
+    color: ${theme.colorPlaceholder} !important;
   `,
 };

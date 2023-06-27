@@ -7,9 +7,9 @@ import {
   usePaymentMethods,
   mapPaymentMethodsToRows,
   PaymentMethodDialog,
+  PaymentMethodForm,
 } from '@modules/billing';
 import { useRouter } from 'next/router';
-import { PaymentMethodForm } from '../PaymentMethodForm/PaymentMethodForm';
 
 export const PaymentMethods = () => {
   const router = useRouter();

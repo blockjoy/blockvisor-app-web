@@ -11,6 +11,7 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useHostList, useHostUpdate } from '@modules/host';
+import { useUpdateSubscription } from '@modules/billing';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
@@ -19,6 +20,7 @@ export const useNodeAdd = () => {
   const { modifyOrganization } = useUpdateOrganization();
   const { modifyHost } = useHostUpdate();
   const { hostList } = useHostList();
+  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const createNode = async (
     nodeRequest: NodeServiceCreateRequest,
@@ -45,6 +47,12 @@ export const useNodeAdd = () => {
       });
 
       const nodeId = response.id;
+
+      // Add node to the subscription
+      await updateSubscriptionItems({
+        type: 'create',
+        payload: { node: response },
+      });
 
       await keyFileClient.create(nodeId, keyFiles);
 

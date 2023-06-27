@@ -7,6 +7,7 @@ interface ISubscriptionHook {
   restoreSubscription: (id: string) => void;
   reactivateSubscription: (id: string) => void;
   updateBillingProfile: (id: string, params) => void;
+  provideSubscription: () => Promise<Subscription | null>;
 }
 interface IUpdateSubscriptionHook {
   subscriptionLoadingState: LoadingState;

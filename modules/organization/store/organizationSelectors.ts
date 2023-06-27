@@ -1,25 +1,27 @@
 import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
-import { selectorFamily } from 'recoil';
+import { selector } from 'recoil';
 import { organizationAtoms } from './organizationAtoms';
 import { getOrgMemberRole } from '../utils/getOrgMemberRole';
+import { authAtoms } from '@modules/auth';
 
-const userRoleInOrganization = selectorFamily<OrgRole, string>({
+const userRoleInOrganization = selector<OrgRole>({
   key: 'organizations.user.role',
-  get:
-    (userId: string) =>
-    ({ get }) => {
-      const defaultOrganization = get(organizationAtoms.defaultOrganization);
-      const allOrgs = get(organizationAtoms.allOrganizations);
+  get: ({ get }) => {
+    const user = get(authAtoms.user);
 
-      const activeOrg =
-        allOrgs.find(
-          (organization: Org) => organization.id === defaultOrganization?.id,
-        ) ?? null;
+    const defaultOrganization = get(organizationAtoms.defaultOrganization);
 
-      const role = getOrgMemberRole(activeOrg!, userId);
+    const allOrgs = get(organizationAtoms.allOrganizations);
 
-      return role;
-    },
+    const activeOrg =
+      allOrgs.find(
+        (organization: Org) => organization.id === defaultOrganization?.id,
+      ) ?? null;
+
+    const role = getOrgMemberRole(activeOrg!, user?.id!);
+
+    return role;
+  },
 });
 
 export const organizationSelectors: any = {

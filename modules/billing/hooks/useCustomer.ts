@@ -5,8 +5,13 @@ import {
   billingSelectors,
 } from '@modules/billing';
 import { _customer } from 'chargebee-typescript';
+import { useIdentityRepository } from '@modules/auth';
+import { Customer } from 'chargebee-typescript/lib/resources';
 
 export const useCustomer = (): ICustomerHook => {
+  const repository = useIdentityRepository();
+  const user = repository?.getIdentity();
+
   const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
   const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
     billingAtoms.billingAddressLoadingState,
@@ -80,6 +85,28 @@ export const useCustomer = (): ICustomerHook => {
     } catch (error) {}
   };
 
+  const provideCustomer = async (): Promise<Customer | null> => {
+    if (!customer) {
+      try {
+        const newCustomer = await createCustomer({
+          id: user?.id,
+          first_name: user?.firstName,
+          last_name: user?.lastName,
+          email: user?.email,
+        });
+        return newCustomer;
+      } catch (error) {
+        console.log(
+          'Error while creating a customer in handlePaymentCreation',
+          error,
+        );
+        return null;
+      }
+    }
+
+    return customer;
+  };
+
   return {
     customer,
     customerLoadingState,
@@ -87,5 +114,7 @@ export const useCustomer = (): ICustomerHook => {
     createCustomer,
 
     assignPaymentRole,
+
+    provideCustomer,
   };
 };

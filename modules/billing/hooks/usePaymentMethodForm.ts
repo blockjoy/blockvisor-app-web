@@ -1,4 +1,3 @@
-import { useIdentityRepository } from '@modules/auth';
 import { Customer, PaymentIntent } from 'chargebee-typescript/lib/resources';
 import { useSetRecoilState } from 'recoil';
 import { billingAtoms } from '../store/billingAtoms';
@@ -14,32 +13,7 @@ export const usePaymentMethodForm = (): any => {
 
   const { createIntent } = usePayment();
   const { createPaymentMethod } = usePaymentMethods();
-  const { customer, createCustomer } = useCustomer();
-
-  const repository = useIdentityRepository();
-  const user = repository?.getIdentity();
-
-  const handleCustomerCheck = async () => {
-    if (!customer) {
-      try {
-        const newCustomer = await createCustomer({
-          id: user?.id,
-          first_name: user?.firstName,
-          last_name: user?.lastName,
-          email: user?.email,
-        });
-        return newCustomer;
-      } catch (error) {
-        console.log(
-          'Error while creating a customer in handlePaymentCreation',
-          error,
-        );
-        return;
-      }
-    }
-
-    return customer;
-  };
+  const { provideCustomer } = useCustomer();
 
   const onSubmit = async (
     cardRef: any,
@@ -57,7 +31,7 @@ export const usePaymentMethodForm = (): any => {
     setError(null);
 
     try {
-      const customerData: Customer = await handleCustomerCheck();
+      const customerData: Customer | null = await provideCustomer();
       const intent: PaymentIntent = await createIntent();
 
       try {
@@ -65,7 +39,7 @@ export const usePaymentMethodForm = (): any => {
           intent,
           additionalData,
         );
-        await createPaymentMethod(customerData.id, data.id, onSuccess);
+        await createPaymentMethod(customerData?.id!, data.id, onSuccess);
       } catch (error: any) {
         setError(JSON.stringify(error));
       } finally {

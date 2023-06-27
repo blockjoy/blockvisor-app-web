@@ -17,6 +17,7 @@ import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { billingSelectors } from '@modules/billing';
 
 type PaymentMethodInfoFormProps = {
+  type?: 'simple' | 'default';
   billingInfo: BillingInfoData;
   setBillingInfo: SetterOrUpdater<BillingInfoData>;
   isDefaultAddress: boolean;
@@ -31,6 +32,7 @@ export type BillingInfoData = {
 };
 
 export const PaymentMethodInfoForm = ({
+  type = 'default',
   billingInfo,
   setBillingInfo,
   isDefaultAddress,
@@ -57,9 +59,11 @@ export const PaymentMethodInfoForm = ({
   return (
     <>
       <div css={[styles.formItem]}>
-        <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-          Address
-        </label>
+        {type === 'default' && (
+          <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+            Address
+          </label>
+        )}
         <div css={[inputWrapper]}>
           <input
             name="address"
@@ -72,9 +76,11 @@ export const PaymentMethodInfoForm = ({
         </div>
       </div>
       <div css={[styles.formItem]}>
-        <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-          Country
-        </label>
+        {type === 'default' && (
+          <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+            Country
+          </label>
+        )}
         <div css={[inputWrapper]}>
           <CountrySelector
             name="country"
@@ -86,9 +92,11 @@ export const PaymentMethodInfoForm = ({
       </div>
       <div css={[styles.formItem, styles.formRow]}>
         <div css={[flex.display.flex, flex.direction.column, flex.basis.b100]}>
-          <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-            City
-          </label>
+          {type === 'default' && (
+            <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+              City
+            </label>
+          )}
           <div css={[inputWrapper]}>
             <input
               name="city"
@@ -101,9 +109,11 @@ export const PaymentMethodInfoForm = ({
           </div>
         </div>
         <div css={[flex.display.flex, flex.direction.column, flex.basis.b100]}>
-          <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-            Postal code
-          </label>
+          {type === 'default' && (
+            <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+              Postal code
+            </label>
+          )}
           <div css={[inputWrapper]}>
             <input
               name="postal"
@@ -117,17 +127,19 @@ export const PaymentMethodInfoForm = ({
         </div>
       </div>
 
-      <div css={[styles.formItem]}>
-        <Checkbox
-          id="default-address"
-          name="default-address"
-          checked={isDefaultAddress || !billingAddress}
-          disabled={!billingAddress}
-          onChange={handleIsDefaultAddress}
-        >
-          Save as default
-        </Checkbox>
-      </div>
+      {type === 'default' && (
+        <div css={[styles.formItem]}>
+          <Checkbox
+            id="default-address"
+            name="default-address"
+            checked={isDefaultAddress || !billingAddress}
+            disabled={!billingAddress}
+            onChange={handleIsDefaultAddress}
+          >
+            Save as default
+          </Checkbox>
+        </div>
+      )}
     </>
   );
 };

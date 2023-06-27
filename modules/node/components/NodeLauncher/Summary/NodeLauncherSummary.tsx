@@ -23,6 +23,7 @@ type Props = {
   hasNetworkList: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean | null;
+  canAddNode: boolean;
   isCreating: boolean;
   selectedHost: Host | null;
   nodeLauncherState: NodeLauncherState;
@@ -38,6 +39,7 @@ export const NodeLauncherSummary: FC<Props> = ({
   hasNetworkList,
   isNodeValid,
   isConfigValid,
+  canAddNode,
   isCreating,
   selectedHost,
   nodeLauncherState,
@@ -72,9 +74,11 @@ export const NodeLauncherSummary: FC<Props> = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
-        {!hasNetworkList ? (
+        {!hasNetworkList || !canAddNode ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
-            Cannot launch node, missing network configuration.{' '}
+            {!canAddNode
+              ? 'Cannot launch node due to insufficient permissions'
+              : 'Cannot launch node, missing network configuration'}
           </div>
         ) : (
           <>
@@ -161,6 +165,7 @@ export const NodeLauncherSummary: FC<Props> = ({
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
+            !canAddNode ||
             Boolean(serverError) ||
             isCreating
           }
