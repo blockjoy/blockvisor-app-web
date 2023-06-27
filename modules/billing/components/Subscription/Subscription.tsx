@@ -39,11 +39,8 @@ export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
 
   const handleCancel = () => setActiveView('view');
 
-  const repository = useIdentityRepository();
-  const user = repository?.getIdentity();
-
   const userRoleInOrganization: OrgRole = useRecoilValue(
-    organizationSelectors.userRoleInOrganization(user?.id),
+    organizationSelectors.userRoleInOrganization,
   );
 
   const canReadBilling: boolean = useHasPermissions(

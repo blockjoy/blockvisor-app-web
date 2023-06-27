@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
@@ -95,6 +95,8 @@ export const useSubscription = (): ISubscriptionHook => {
       const data: Subscription = await response.json();
 
       setSubscription(data);
+
+      return data;
     } catch (error) {
       console.error('Failed to create the subscription', error);
     } finally {
@@ -254,6 +256,28 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
+  const provideSubscription = async (): Promise<Subscription | null> => {
+    if (!subscription) {
+      try {
+        const newSubscription = await createSubscription({
+          itemPriceId: 'standard-USD-Monthly',
+          autoRenew: 'on',
+          paymentMethodId: customer?.primary_payment_source_id!,
+        });
+
+        return newSubscription || null;
+      } catch (error) {
+        console.log(
+          'Error while creating a customer in handlePaymentCreation',
+          error,
+        );
+        return null;
+      }
+    }
+
+    return subscription;
+  };
+
   return {
     subscriptionLoadingState,
 
@@ -265,5 +289,7 @@ export const useSubscription = (): ISubscriptionHook => {
     reactivateSubscription,
 
     updateBillingProfile,
+
+    provideSubscription,
   };
 };

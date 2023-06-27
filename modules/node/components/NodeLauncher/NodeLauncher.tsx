@@ -35,6 +35,9 @@ import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
 import { useSubscription } from '@modules/billing';
 import { useUpdateSubscription } from '@modules/billing';
+import { billingSelectors, PaymentRequired } from '@modules/billing';
+import { Permissions, useHasPermissions } from '@modules/auth';
+import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -77,6 +80,18 @@ export const NodeLauncher = () => {
   const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
 
   const { defaultOrganization } = useDefaultOrganization();
+  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
+
+  const userRoleInOrganization: OrgRole = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
+
+  const canAddNode: boolean = useHasPermissions(
+    userRoleInOrganization,
+    Permissions.CREATE_NODE,
+  );
+
+  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
   const { hasPermission } = usePermissions();
 
@@ -211,6 +226,16 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
+    if (!hasPaymentMethod) {
+      setActiveView('action');
+      setFulfilRequirements(false);
+      return;
+    }
+
+    setFulfilRequirements(true);
+  };
+
+  const handleNodeCreation = () => {
     setIsCreating(true);
 
     const params: NodeServiceCreateRequest = {
@@ -243,6 +268,28 @@ export const NodeLauncher = () => {
     );
   };
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
+
+  const canAddNode: boolean = useHasPermissions(
+    userRole,
+    userRoleInOrganization,
+    Permissions.CREATE_NODE,
+  );
+=======
+  const handleHidingPortal = () => setActiveView('view');
+  const handleSubmitPayment = () => {
+    setActiveView('view');
+    setFulfilRequirements(true);
+  };
+>>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
+
+>>>>>>> 034b89a5 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
   useEffect(() => {
     const activeBlockchain = blockchains.find(
       (b) => b.id === node.blockchainId,
@@ -298,6 +345,12 @@ export const NodeLauncher = () => {
     Mixpanel.track('Launch Node - Opened');
   }, []);
 
+  useEffect(() => {
+    if (fulfilRequirements) {
+      handleNodeCreation();
+    }
+  }, [fulfilRequirements]);
+
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
@@ -340,12 +393,23 @@ export const NodeLauncher = () => {
             selectedHost={selectedHost}
             canAddNode={canAddNode}
             onHostChanged={handleHostChanged}
+<<<<<<< HEAD
             onRegionChanged={handleRegionChanged}
+=======
+            onNodePropertyChanged={handleNodePropertyChanged}
+            canAddNode={canAddNode}
+>>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
             onCreateNodeClicked={handleCreateNodeClicked}
             onRegionsLoaded={handleRegionsLoaded}
           />
         )}
       </div>
+      {activeView === 'action' && (
+        <PaymentRequired
+          onHide={handleHidingPortal}
+          handleSubmit={handleSubmitPayment}
+        />
+      )}
     </>
   );
 };
