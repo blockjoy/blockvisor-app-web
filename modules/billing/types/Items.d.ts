@@ -1,8 +1,9 @@
 interface IItemsHook {
-  items: any;
-  itemsLoadingState: any;
-  itemPrices: any;
-  itemPricesLoadingState: any;
+  items: Item[] | null;
+  itemsLoadingState: LoadingState;
+  itemPrices: ItemPrice[] | null;
+  itemPricesLoadingState: LoadingState;
+  getItem: VoidFunction;
   getItems: VoidFunction;
   getItemPrices: (params: { id: string; periodUnit?: string }) => void;
 }

@@ -4,6 +4,7 @@ import {
   CustomerBillingAddress,
   Item,
 } from 'chargebee-typescript/lib/resources';
+import { organizationAtoms } from '@modules/organization';
 
 const activePlan = selectorFamily<Item | null, string>({
   key: 'billing.plan.active',
@@ -27,6 +28,19 @@ const customer = selector({
     })),
 });
 
+const billingAddress = selector<CustomerBillingAddress | null>({
+  key: 'billing.billingAddress',
+  get: ({ get }) => {
+    const customerVal = get(customer);
+    if (!customerVal) return null;
+
+    const billingAddress = customerVal.billing_address;
+    if (!billingAddress) return null;
+
+    return billingAddress;
+  },
+});
+
 const subscription = selector({
   key: 'billing.subscription',
   get: ({ get }) => get(billingAtoms.billing).subscription,
@@ -37,17 +51,27 @@ const subscription = selector({
     })),
 });
 
-const billingAddress = selector<CustomerBillingAddress | null>({
-  key: 'billing.billingAddress',
+const hasPaymentMethod = selector<boolean>({
+  key: 'billing.hasPaymentMethod',
   get: ({ get }) => {
-    const customerVal = get(customer);
+    const customer = get(billingAtoms.billing).customer;
+    if (!customer) return false;
+    if (!customer?.primary_payment_source_id) return false;
 
-    if (!customerVal) return null;
+    return true;
+  },
+});
 
-    const billingAddress = customerVal.billing_address;
-    if (!billingAddress) return null;
+const isSubscribed = selector<boolean>({
+  key: 'billing.isSubscribed',
+  get: ({ get }) => {
+    const defaultOrganization = get(organizationAtoms.defaultOrganization);
+    const subscription = get(billingAtoms.billing).subscription;
 
-    return billingAddress;
+    return (
+      subscription?.status === 'active' &&
+      subscription.cf_organization_id === defaultOrganization?.id
+    );
   },
 });
 
@@ -55,5 +79,7 @@ export const billingSelectors = {
   activePlan,
   billingAddress,
   customer,
+  hasPaymentMethod,
   subscription,
+  isSubscribed,
 };

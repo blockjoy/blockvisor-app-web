@@ -23,10 +23,12 @@ export * from './components/Overview/Overview';
 
 export * from './components/PaymentMethods/CreditCardForm/CreditCardForm';
 export * from './components/PaymentMethods/PaymentMethodDialog/PaymentMethodDialog';
+export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
 export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelect';
 export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelector';
 export * from './components/PaymentMethods/PaymentPreview/PaymentPreview';
 export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
+export * from './components/PaymentMethods/PaymentRequired/PaymentRequired';
 
 export * from './components/Subscription/PlanSelect/PlanSelect';
 export * from './components/Subscription/SinglePlan/SinglePlan';
@@ -55,6 +57,7 @@ export * from './hooks/useInvoices';
 export * from './hooks/useItems';
 export * from './hooks/usePayment';
 export * from './hooks/usePaymentMethods';
+export * from './hooks/usePaymentMethodForm';
 export * from './hooks/useSubscription';
 export * from './hooks/useUpdateSubscription';
 

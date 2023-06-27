@@ -1,3 +1,4 @@
+import { useRecoilValue } from 'recoil';
 import { Button, Checkbox } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
@@ -15,9 +16,8 @@ import {
   PaymentMethodInfoForm,
   useBillingAddress,
   useCustomer,
+  usePaymentMethodForm,
 } from '@modules/billing';
-import { useRecoilValue } from 'recoil';
-import { usePaymentMethodForm } from '@modules/billing/hooks/usePaymentMethodForm';
 import { ChangeEvent, useRef, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';

@@ -1,3 +1,5 @@
+import { themeDefault } from 'themes';
+
 export const CHARGEBEE_OPTIONS = {
   // Custom classes - applied on container elements based on field's state
   classes: {
@@ -20,11 +22,11 @@ export const CHARGEBEE_OPTIONS = {
       },
 
       '::placeholder': {
-        color: '#757575',
+        color: themeDefault.colorPlaceholder,
       },
 
       ':focus::placeholder': {
-        color: '#757575',
+        color: themeDefault.colorPlaceholder,
       },
     },
 
@@ -35,6 +37,7 @@ export const CHARGEBEE_OPTIONS = {
       ':focus': {
         color: '#e44d5f',
       },
+
       '::placeholder': {
         color: '#FFCCA5',
       },
