@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { selector } from 'recoil';
 import { Org, OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationAtoms } from '@modules/organization';
@@ -19,6 +20,31 @@ const defaultOrganization = selector<Org | null>({
       ) ?? null;
 
     return activeOrg;
+=======
+import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+import { selector } from 'recoil';
+import { organizationAtoms } from './organizationAtoms';
+import { getOrgMemberRole } from '../utils/getOrgMemberRole';
+import { authAtoms } from '@modules/auth';
+
+const userRoleInOrganization = selector<OrgRole>({
+  key: 'organizations.user.role',
+  get: ({ get }) => {
+    const user = get(authAtoms.user);
+
+    const defaultOrganization = get(organizationAtoms.defaultOrganization);
+
+    const allOrgs = get(organizationAtoms.allOrganizations);
+
+    const activeOrg =
+      allOrgs.find(
+        (organization: Org) => organization.id === defaultOrganization?.id,
+      ) ?? null;
+
+    const role = getOrgMemberRole(activeOrg!, user?.id!);
+
+    return role;
+>>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
   },
 });
 
