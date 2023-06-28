@@ -1,22 +1,19 @@
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { PageSection, PageTitle } from '@shared/components';
-import { ROUTES, Tabs, useTabs } from '@shared/index';
+import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
+import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+import { PageSection, PageTitle, Tabs } from '@shared/components';
+import { ROUTES, useTabs } from '@shared/index';
 import {
   Subscription,
   Invoices,
   PaymentPreview,
   BillingContacts,
   billingSelectors,
-} from '@modules/billing/';
-import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
-import {
-  useHasPermissions,
-  useIdentityRepository,
-  Permissions,
-} from '@modules/auth';
-import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+  billingAtoms,
+} from '@modules/billing';
+import { useHasPermissions, Permissions } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
 
 type BillingProps = {
@@ -27,6 +24,9 @@ type BillingProps = {
 export const Billing = ({ item, itemPrices }: BillingProps) => {
   const { push } = useRouter();
   const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
+  );
 
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
@@ -102,6 +102,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         activeTab={activeTab}
         onTabClick={handleClick}
         tabItems={tabItems}
+        isLoading={subscriptionLoadingState !== 'finished'}
       />
     </>
   );

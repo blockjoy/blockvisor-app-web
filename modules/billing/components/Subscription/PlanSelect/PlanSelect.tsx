@@ -12,7 +12,7 @@ import {
   PaymentMethodsSelect,
   usePaymentMethods,
 } from '@modules/billing';
-import { Button } from '@shared/components';
+import { Alert, Button, ButtonGroup } from '@shared/components';
 import { formatters, TableSkeleton } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
@@ -113,7 +113,12 @@ export const PlanSelect = ({
           {formatters.formatCurrency(activeItemPrice?.price!)}
         </p>
       </div>
-      <div css={styles.buttons}>
+      {(!paymentMethodId || !paymentMethods.length) && (
+        <div css={spacing.top.medium}>
+          <Alert>Please update your payment information.</Alert>
+        </div>
+      )}
+      <ButtonGroup type="flex">
         <Button
           style="secondary"
           size="medium"
@@ -127,7 +132,7 @@ export const PlanSelect = ({
         <Button style="outline" size="medium" onClick={handleCancel}>
           Cancel
         </Button>
-      </div>
+      </ButtonGroup>
     </div>
   );
 };

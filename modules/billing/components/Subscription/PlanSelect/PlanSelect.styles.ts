@@ -29,12 +29,6 @@ export const styles = {
     font-size: 24px;
     font-weight: 700;
   `,
-  buttons: css`
-    margin-top: 12px;
-    display: flex;
-    flex-flow: row nowrap;
-    gap: 10px;
-  `,
   button: css`
     min-width: 120px;
   `,

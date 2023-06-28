@@ -40,4 +40,9 @@ export const styles = {
   tabComponent: css`
     padding-top: 30px;
   `,
+  loading: css`
+    display: flex;
+    align-items: center;
+    height: 60px;
+  `,
 };

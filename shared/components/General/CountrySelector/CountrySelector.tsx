@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import countryList, { Country } from 'country-list';
 import { SerializedStyles } from '@emotion/react';
 import { styles } from './CountrySelector.styles';
@@ -10,6 +10,7 @@ import {
   InputLabel,
   Scrollbar,
 } from '@shared/components';
+import { CountrySearch } from './CountrySearch/CountrySearch';
 
 const COUNTRIES = countryList
   .getData()
@@ -35,22 +36,43 @@ export const CountrySelector = ({
   disabled,
 }: CountrySelectorProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const countrySearchRef = useRef<HTMLInputElement>(null);
 
   const defaultCountry =
     COUNTRIES.find((country: Country) => country.code === value) ?? null;
+
+  const [filteredCountries, setFilteredCountries] =
+    useState<Country[]>(COUNTRIES);
 
   const [activeCountryName, setActiveCountryName] = useState<string | null>(
     defaultCountry?.name!,
   );
 
-  const handleClose = () => setIsOpen(!isOpen);
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleChange = (e: any, country: Country) => {
     e.preventDefault();
     onChange(country.code);
     setActiveCountryName(country.name);
-    handleClose();
+    toggleDropdown();
   };
+
+  const handleCountrySearch = (e: any) => {
+    const searchValue = e.target.value.trim();
+    const listOfFilteredCountries = COUNTRIES.filter((country: Country) =>
+      country.name.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+
+    setFilteredCountries(listOfFilteredCountries);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isOpen && countrySearchRef.current) {
+        countrySearchRef?.current?.focus();
+      }
+    }, 100);
+  }, [isOpen]);
 
   return (
     <>
@@ -76,27 +98,35 @@ export const CountrySelector = ({
               {value ? activeCountryName : 'Select country'}
             </p>
           }
-          onClick={handleClose}
+          onClick={toggleDropdown}
           isOpen={isOpen}
           type="input"
         />
 
         <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
+          <CountrySearch
+            ref={countrySearchRef}
+            handleChange={handleCountrySearch}
+          />
           <Scrollbar additionalStyles={[styles.dropdownInner]}>
             <ul>
-              {COUNTRIES.map((country: Country) => {
-                return (
-                  <li key={country.name}>
-                    <DropdownItem
-                      size="medium"
-                      type="button"
-                      onButtonClick={(e) => handleChange(e, country)}
-                    >
-                      <p css={styles.active}>{country.name}</p>
-                    </DropdownItem>
-                  </li>
-                );
-              })}
+              {filteredCountries.length ? (
+                filteredCountries.map((country: Country) => {
+                  return (
+                    <li key={country.name}>
+                      <DropdownItem
+                        size="medium"
+                        type="button"
+                        onButtonClick={(e) => handleChange(e, country)}
+                      >
+                        <p css={styles.active}>{country.name}</p>
+                      </DropdownItem>
+                    </li>
+                  );
+                })
+              ) : (
+                <p css={styles.noResults}>No results found</p>
+              )}
             </ul>
           </Scrollbar>
         </DropdownMenu>
