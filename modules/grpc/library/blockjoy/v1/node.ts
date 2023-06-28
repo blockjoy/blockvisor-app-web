@@ -102,9 +102,12 @@ export enum UiType {
 export interface Node {
   id: string;
   orgId: string;
+  orgName: string;
   hostId: string;
   hostName: string;
+  hostOrgId: string;
   blockchainId: string;
+  blockchainName: string;
   name: string;
   /**
    * The P2P address of the node on the blockchain. This field is only set as
@@ -112,7 +115,7 @@ export interface Node {
    */
   address?: string | undefined;
   version: string;
-  ip?: string | undefined;
+  ip: string;
   nodeType: NodeType;
   properties: NodeProperty[];
   blockHeight?: number | undefined;
@@ -125,9 +128,6 @@ export interface Node {
   ipGateway: string;
   selfUpdate: boolean;
   network: string;
-  blockchainName?:
-    | string
-    | undefined;
   /**
    * The id of the user that created this node. For the earliest nodes we
    * created, this field was not tracked and is therefore not populated.
@@ -369,13 +369,16 @@ function createBaseNode(): Node {
   return {
     id: "",
     orgId: "",
+    orgName: "",
     hostId: "",
     hostName: "",
+    hostOrgId: "",
     blockchainId: "",
+    blockchainName: "",
     name: "",
     address: undefined,
     version: "",
-    ip: undefined,
+    ip: "",
     nodeType: 0,
     properties: [],
     blockHeight: undefined,
@@ -388,7 +391,6 @@ function createBaseNode(): Node {
     ipGateway: "",
     selfUpdate: false,
     network: "",
-    blockchainName: undefined,
     createdBy: undefined,
     createdByName: undefined,
     createdByEmail: undefined,
@@ -406,83 +408,89 @@ export const Node = {
     if (message.orgId !== "") {
       writer.uint32(18).string(message.orgId);
     }
+    if (message.orgName !== "") {
+      writer.uint32(26).string(message.orgName);
+    }
     if (message.hostId !== "") {
-      writer.uint32(26).string(message.hostId);
+      writer.uint32(34).string(message.hostId);
     }
     if (message.hostName !== "") {
-      writer.uint32(34).string(message.hostName);
+      writer.uint32(42).string(message.hostName);
+    }
+    if (message.hostOrgId !== "") {
+      writer.uint32(50).string(message.hostOrgId);
     }
     if (message.blockchainId !== "") {
-      writer.uint32(42).string(message.blockchainId);
+      writer.uint32(58).string(message.blockchainId);
+    }
+    if (message.blockchainName !== "") {
+      writer.uint32(66).string(message.blockchainName);
     }
     if (message.name !== "") {
-      writer.uint32(50).string(message.name);
+      writer.uint32(74).string(message.name);
     }
     if (message.address !== undefined) {
-      writer.uint32(58).string(message.address);
+      writer.uint32(82).string(message.address);
     }
     if (message.version !== "") {
-      writer.uint32(66).string(message.version);
+      writer.uint32(90).string(message.version);
     }
-    if (message.ip !== undefined) {
-      writer.uint32(74).string(message.ip);
+    if (message.ip !== "") {
+      writer.uint32(98).string(message.ip);
     }
     if (message.nodeType !== 0) {
-      writer.uint32(80).int32(message.nodeType);
+      writer.uint32(104).int32(message.nodeType);
     }
     for (const v of message.properties) {
-      NodeProperty.encode(v!, writer.uint32(90).fork()).ldelim();
+      NodeProperty.encode(v!, writer.uint32(114).fork()).ldelim();
     }
     if (message.blockHeight !== undefined) {
-      writer.uint32(104).uint64(message.blockHeight);
+      writer.uint32(120).uint64(message.blockHeight);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(122).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(130).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(130).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(138).fork()).ldelim();
     }
     if (message.status !== 0) {
-      writer.uint32(136).int32(message.status);
+      writer.uint32(144).int32(message.status);
     }
     if (message.syncStatus !== 0) {
-      writer.uint32(144).int32(message.syncStatus);
+      writer.uint32(152).int32(message.syncStatus);
     }
     if (message.containerStatus !== 0) {
-      writer.uint32(96).int32(message.containerStatus);
+      writer.uint32(160).int32(message.containerStatus);
     }
     if (message.stakingStatus !== undefined) {
-      writer.uint32(152).int32(message.stakingStatus);
+      writer.uint32(168).int32(message.stakingStatus);
     }
     if (message.ipGateway !== "") {
-      writer.uint32(162).string(message.ipGateway);
+      writer.uint32(178).string(message.ipGateway);
     }
     if (message.selfUpdate === true) {
-      writer.uint32(168).bool(message.selfUpdate);
+      writer.uint32(184).bool(message.selfUpdate);
     }
     if (message.network !== "") {
-      writer.uint32(178).string(message.network);
-    }
-    if (message.blockchainName !== undefined) {
-      writer.uint32(186).string(message.blockchainName);
+      writer.uint32(194).string(message.network);
     }
     if (message.createdBy !== undefined) {
-      writer.uint32(194).string(message.createdBy);
+      writer.uint32(202).string(message.createdBy);
     }
     if (message.createdByName !== undefined) {
-      writer.uint32(202).string(message.createdByName);
+      writer.uint32(210).string(message.createdByName);
     }
     if (message.createdByEmail !== undefined) {
-      writer.uint32(210).string(message.createdByEmail);
+      writer.uint32(218).string(message.createdByEmail);
     }
     for (const v of message.allowIps) {
-      FilteredIpAddr.encode(v!, writer.uint32(218).fork()).ldelim();
-    }
-    for (const v of message.denyIps) {
       FilteredIpAddr.encode(v!, writer.uint32(226).fork()).ldelim();
     }
+    for (const v of message.denyIps) {
+      FilteredIpAddr.encode(v!, writer.uint32(234).fork()).ldelim();
+    }
     if (message.placement !== undefined) {
-      NodePlacement.encode(message.placement, writer.uint32(234).fork()).ldelim();
+      NodePlacement.encode(message.placement, writer.uint32(242).fork()).ldelim();
     }
     return writer;
   },
@@ -513,178 +521,192 @@ export const Node = {
             break;
           }
 
-          message.hostId = reader.string();
+          message.orgName = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.hostName = reader.string();
+          message.hostId = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.blockchainId = reader.string();
+          message.hostName = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.name = reader.string();
+          message.hostOrgId = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.address = reader.string();
+          message.blockchainId = reader.string();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.version = reader.string();
+          message.blockchainName = reader.string();
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.ip = reader.string();
+          message.name = reader.string();
           continue;
         case 10:
-          if (tag !== 80) {
+          if (tag !== 82) {
             break;
           }
 
-          message.nodeType = reader.int32() as any;
+          message.address = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.properties.push(NodeProperty.decode(reader, reader.uint32()));
+          message.version = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.ip = reader.string();
           continue;
         case 13:
           if (tag !== 104) {
             break;
           }
 
-          message.blockHeight = longToNumber(reader.uint64() as Long);
+          message.nodeType = reader.int32() as any;
           continue;
-        case 15:
-          if (tag !== 122) {
+        case 14:
+          if (tag !== 114) {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.properties.push(NodeProperty.decode(reader, reader.uint32()));
+          continue;
+        case 15:
+          if (tag !== 120) {
+            break;
+          }
+
+          message.blockHeight = longToNumber(reader.uint64() as Long);
           continue;
         case 16:
           if (tag !== 130) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 17:
-          if (tag !== 136) {
+          if (tag !== 138) {
             break;
           }
 
-          message.status = reader.int32() as any;
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 18:
           if (tag !== 144) {
             break;
           }
 
-          message.syncStatus = reader.int32() as any;
-          continue;
-        case 12:
-          if (tag !== 96) {
-            break;
-          }
-
-          message.containerStatus = reader.int32() as any;
+          message.status = reader.int32() as any;
           continue;
         case 19:
           if (tag !== 152) {
             break;
           }
 
-          message.stakingStatus = reader.int32() as any;
+          message.syncStatus = reader.int32() as any;
           continue;
         case 20:
-          if (tag !== 162) {
+          if (tag !== 160) {
             break;
           }
 
-          message.ipGateway = reader.string();
+          message.containerStatus = reader.int32() as any;
           continue;
         case 21:
           if (tag !== 168) {
             break;
           }
 
-          message.selfUpdate = reader.bool();
+          message.stakingStatus = reader.int32() as any;
           continue;
         case 22:
           if (tag !== 178) {
             break;
           }
 
-          message.network = reader.string();
+          message.ipGateway = reader.string();
           continue;
         case 23:
-          if (tag !== 186) {
+          if (tag !== 184) {
             break;
           }
 
-          message.blockchainName = reader.string();
+          message.selfUpdate = reader.bool();
           continue;
         case 24:
           if (tag !== 194) {
             break;
           }
 
-          message.createdBy = reader.string();
+          message.network = reader.string();
           continue;
         case 25:
           if (tag !== 202) {
             break;
           }
 
-          message.createdByName = reader.string();
+          message.createdBy = reader.string();
           continue;
         case 26:
           if (tag !== 210) {
             break;
           }
 
-          message.createdByEmail = reader.string();
+          message.createdByName = reader.string();
           continue;
         case 27:
           if (tag !== 218) {
             break;
           }
 
-          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          message.createdByEmail = reader.string();
           continue;
         case 28:
           if (tag !== 226) {
             break;
           }
 
-          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
           continue;
         case 29:
           if (tag !== 234) {
+            break;
+          }
+
+          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          continue;
+        case 30:
+          if (tag !== 242) {
             break;
           }
 
@@ -707,13 +729,16 @@ export const Node = {
     const message = createBaseNode();
     message.id = object.id ?? "";
     message.orgId = object.orgId ?? "";
+    message.orgName = object.orgName ?? "";
     message.hostId = object.hostId ?? "";
     message.hostName = object.hostName ?? "";
+    message.hostOrgId = object.hostOrgId ?? "";
     message.blockchainId = object.blockchainId ?? "";
+    message.blockchainName = object.blockchainName ?? "";
     message.name = object.name ?? "";
     message.address = object.address ?? undefined;
     message.version = object.version ?? "";
-    message.ip = object.ip ?? undefined;
+    message.ip = object.ip ?? "";
     message.nodeType = object.nodeType ?? 0;
     message.properties = object.properties?.map((e) => NodeProperty.fromPartial(e)) || [];
     message.blockHeight = object.blockHeight ?? undefined;
@@ -726,7 +751,6 @@ export const Node = {
     message.ipGateway = object.ipGateway ?? "";
     message.selfUpdate = object.selfUpdate ?? false;
     message.network = object.network ?? "";
-    message.blockchainName = object.blockchainName ?? undefined;
     message.createdBy = object.createdBy ?? undefined;
     message.createdByName = object.createdByName ?? undefined;
     message.createdByEmail = object.createdByEmail ?? undefined;
