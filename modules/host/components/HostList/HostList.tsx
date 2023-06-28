@@ -82,9 +82,7 @@ export const HostList = () => {
 
   return (
     <>
-      <PageTitle>
-        <NodeTitle icon={<IconHost />} titleText="Hosts" />
-      </PageTitle>
+      <PageTitle title="Hosts" icon={<IconHost />} />
       <div css={[styles.wrapper, wrapper.main]}>
         <HostFilters isLoading={isLoading} />
         <div css={styles.listWrapper}>

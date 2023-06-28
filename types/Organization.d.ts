@@ -1,8 +1,6 @@
 interface IDeleteOrganizationHook {
-  loading: boolean;
-  deleteOrganization: (id: string) => void;
+  deleteOrganization: (id: string, callback: VoidFunction) => void;
   removeOrganization: (id: string) => void;
-  setLoadingState: SetterOrUpdater<LoadingState>;
 }
 
 interface IUpdateOrganizationHook {

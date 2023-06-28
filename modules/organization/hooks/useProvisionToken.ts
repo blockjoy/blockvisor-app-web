@@ -1,7 +1,9 @@
 import { useIdentityRepository } from '@modules/auth';
 import { organizationClient } from '@modules/grpc';
 import { useRecoilState } from 'recoil';
+import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
+import { useDefaultOrganization } from './useDefaultOrganization';
 
 export const useProvisionToken = () => {
   const repository = useIdentityRepository();
@@ -11,25 +13,25 @@ export const useProvisionToken = () => {
   const [provisionTokenLoadingState, setProvisionTokenLoadingState] =
     useRecoilState(organizationAtoms.provisionTokenLoadingState);
 
+  const { defaultOrganization } = useDefaultOrganization();
+
+  const orgId = defaultOrganization?.id;
+
   const getProvisionToken = async () => {
     const userId = repository?.getIdentity()?.id;
-    const orgId = repository?.getIdentity()?.defaultOrganization?.id;
 
-    try {
-      const response: any = await organizationClient.getProvisionToken(
-        userId!,
-        orgId!,
-      );
+    const response: any = await organizationClient.getProvisionToken(
+      userId!,
+      orgId!,
+    );
 
-      setProvisionToken(response.token);
-    } catch (error: any) {
-      console.log('error', error);
-    }
+    checkForTokenError(response);
+
+    setProvisionToken(response.token);
   };
 
   const resetProvisionToken = async () => {
     const userId = repository?.getIdentity()?.id;
-    const orgId = repository?.getIdentity()?.defaultOrganization?.id;
 
     setProvisionTokenLoadingState('loading');
 

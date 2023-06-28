@@ -2,15 +2,16 @@ import { AppLayout } from '@modules/layout';
 import {
   OrganizationManagement,
   OrganizationView,
-  OrganizationDetails,
+  OrganizationMembersView,
 } from '@modules/organization';
 import { OrganizationsUIProvider } from '@modules/organization/ui/OrganizationsUIContext';
+import { isMobile } from 'react-device-detect';
 
 const Organizations = () => (
   <OrganizationsUIProvider>
-    <OrganizationManagement>
+    <OrganizationManagement isListOnly={isMobile}>
       <OrganizationView>
-        <OrganizationDetails />
+        <OrganizationMembersView />
       </OrganizationView>
     </OrganizationManagement>
   </OrganizationsUIProvider>

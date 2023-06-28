@@ -16,7 +16,7 @@ import { wrapper } from 'styles/wrapper.styles';
 import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
 import { mapNodeListToRows } from '@modules/node/utils';
-import { NodeTitle } from '@modules/node';
+import IconNode from '@public/assets/icons/app/Node.svg';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -76,9 +76,7 @@ export const NodeList = () => {
 
   return (
     <>
-      <PageTitle>
-        <NodeTitle />
-      </PageTitle>
+      <PageTitle title="Nodes" icon={<IconNode />} />
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters isLoading={isLoading} />
         <div css={styles.nodeListWrapper}>

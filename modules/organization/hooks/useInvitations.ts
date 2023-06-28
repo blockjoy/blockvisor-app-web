@@ -2,20 +2,19 @@ import { invitationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
-import { organizationAtoms } from '../store/organizationAtoms';
+import { invitationAtoms } from '@modules/organization';
 import { isStatusResponse } from '../utils/typeGuards';
 
 export function useInvitations() {
   const [sentInvitations, setSentInvitations] = useRecoilState(
-    organizationAtoms.organizationSentInvitations,
+    invitationAtoms.sentInvitations,
   );
 
-  const [isLoading, setIsLoading] = useRecoilState(
-    organizationAtoms.organizationSentInvitationsLoadingState,
-  );
+  const [sentInvitationsLoadingState, setSentInvitationsLoadingState] =
+    useRecoilState(invitationAtoms.sentInvitationsLoadingState);
 
   const setReceivedInvitations = useSetRecoilState(
-    organizationAtoms.organizationReceivedInvitations,
+    invitationAtoms.receivedInvitations,
   );
 
   const getReceivedInvitations = async (inviteeEmail: string) => {
@@ -34,8 +33,7 @@ export function useInvitations() {
     } else {
       setSentInvitations(response);
     }
-
-    setIsLoading('finished');
+    setSentInvitationsLoadingState('finished');
   };
 
   const acceptInvitation = async (
@@ -82,7 +80,7 @@ export function useInvitations() {
     acceptInvitation,
     declineInvitation,
     revokeInvitation,
-    isLoading,
-    setIsLoading,
+    sentInvitationsLoadingState,
+    setSentInvitationsLoadingState,
   };
 }

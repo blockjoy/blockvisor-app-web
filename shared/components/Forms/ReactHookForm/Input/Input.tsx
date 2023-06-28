@@ -79,10 +79,10 @@ export const Input = ({
           css={[inputClasses]}
           disabled={disabled}
           value={value}
-          {...rest}
           {...register(name, {
             ...validationOptions,
           })}
+          {...rest}
         />
         <InputUtil position="right">{rightIcon}</InputUtil>
       </div>
