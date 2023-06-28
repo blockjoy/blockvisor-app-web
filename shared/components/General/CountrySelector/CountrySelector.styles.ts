@@ -26,4 +26,7 @@ export const styles = {
   placeholder: (theme: ITheme) => css`
     color: ${theme.colorPlaceholder} !important;
   `,
+  noResults: css`
+    padding: 12px;
+  `,
 };
