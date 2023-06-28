@@ -41,17 +41,11 @@ export interface Host {
    * The number of logical cores the machine has, _not_ the number of physical
    * cores.
    */
-  cpuCount?:
-    | number
-    | undefined;
+  cpuCount: number;
   /** The amount of physical memory the machine has. */
-  memSizeBytes?:
-    | number
-    | undefined;
+  memSizeBytes: number;
   /** The size of the physical disks the machine has. */
-  diskSizeBytes?:
-    | number
-    | undefined;
+  diskSizeBytes: number;
   /** The operating system running on the machine, i.e. "BSD" or "Linux". */
   os: string;
   /** The version of said operating system running on the host. */
@@ -68,19 +62,17 @@ export interface Host {
     | Date
     | undefined;
   /** The lowest ip address that this host may assign to a node. */
-  ipRangeFrom?:
-    | string
-    | undefined;
+  ipRangeFrom: string;
   /** The highest ip address that this host may assign to a node. */
-  ipRangeTo?:
-    | string
-    | undefined;
+  ipRangeTo: string;
   /** The ip gateway of this host. */
-  ipGateway?:
-    | string
-    | undefined;
+  ipGateway: string;
   /** The organization that this host belongs to. */
-  orgId?: string | undefined;
+  orgId: string;
+  /** The number of nodes on this host. */
+  nodeCount: number;
+  /** The name of the organization that this host belongs to. */
+  orgName: string;
 }
 
 export interface HostServiceCreateRequest {
@@ -164,18 +156,20 @@ function createBaseHost(): Host {
     id: "",
     name: "",
     version: "",
-    cpuCount: undefined,
-    memSizeBytes: undefined,
-    diskSizeBytes: undefined,
+    cpuCount: 0,
+    memSizeBytes: 0,
+    diskSizeBytes: 0,
     os: "",
     osVersion: "",
     ip: "",
     status: 0,
     createdAt: undefined,
-    ipRangeFrom: undefined,
-    ipRangeTo: undefined,
-    ipGateway: undefined,
-    orgId: undefined,
+    ipRangeFrom: "",
+    ipRangeTo: "",
+    ipGateway: "",
+    orgId: "",
+    nodeCount: 0,
+    orgName: "",
   };
 }
 
@@ -190,13 +184,13 @@ export const Host = {
     if (message.version !== "") {
       writer.uint32(26).string(message.version);
     }
-    if (message.cpuCount !== undefined) {
+    if (message.cpuCount !== 0) {
       writer.uint32(40).uint64(message.cpuCount);
     }
-    if (message.memSizeBytes !== undefined) {
+    if (message.memSizeBytes !== 0) {
       writer.uint32(48).uint64(message.memSizeBytes);
     }
-    if (message.diskSizeBytes !== undefined) {
+    if (message.diskSizeBytes !== 0) {
       writer.uint32(56).uint64(message.diskSizeBytes);
     }
     if (message.os !== "") {
@@ -214,17 +208,23 @@ export const Host = {
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(98).fork()).ldelim();
     }
-    if (message.ipRangeFrom !== undefined) {
+    if (message.ipRangeFrom !== "") {
       writer.uint32(106).string(message.ipRangeFrom);
     }
-    if (message.ipRangeTo !== undefined) {
+    if (message.ipRangeTo !== "") {
       writer.uint32(114).string(message.ipRangeTo);
     }
-    if (message.ipGateway !== undefined) {
+    if (message.ipGateway !== "") {
       writer.uint32(122).string(message.ipGateway);
     }
-    if (message.orgId !== undefined) {
+    if (message.orgId !== "") {
       writer.uint32(130).string(message.orgId);
+    }
+    if (message.nodeCount !== 0) {
+      writer.uint32(136).uint64(message.nodeCount);
+    }
+    if (message.orgName !== "") {
+      writer.uint32(146).string(message.orgName);
     }
     return writer;
   },
@@ -341,6 +341,20 @@ export const Host = {
 
           message.orgId = reader.string();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.nodeCount = longToNumber(reader.uint64() as Long);
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.orgName = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -359,18 +373,20 @@ export const Host = {
     message.id = object.id ?? "";
     message.name = object.name ?? "";
     message.version = object.version ?? "";
-    message.cpuCount = object.cpuCount ?? undefined;
-    message.memSizeBytes = object.memSizeBytes ?? undefined;
-    message.diskSizeBytes = object.diskSizeBytes ?? undefined;
+    message.cpuCount = object.cpuCount ?? 0;
+    message.memSizeBytes = object.memSizeBytes ?? 0;
+    message.diskSizeBytes = object.diskSizeBytes ?? 0;
     message.os = object.os ?? "";
     message.osVersion = object.osVersion ?? "";
     message.ip = object.ip ?? "";
     message.status = object.status ?? 0;
     message.createdAt = object.createdAt ?? undefined;
-    message.ipRangeFrom = object.ipRangeFrom ?? undefined;
-    message.ipRangeTo = object.ipRangeTo ?? undefined;
-    message.ipGateway = object.ipGateway ?? undefined;
-    message.orgId = object.orgId ?? undefined;
+    message.ipRangeFrom = object.ipRangeFrom ?? "";
+    message.ipRangeTo = object.ipRangeTo ?? "";
+    message.ipGateway = object.ipGateway ?? "";
+    message.orgId = object.orgId ?? "";
+    message.nodeCount = object.nodeCount ?? 0;
+    message.orgName = object.orgName ?? "";
     return message;
   },
 };
