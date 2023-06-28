@@ -111,8 +111,7 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       position: absolute;
       left: 110%;
-      background: ${rgba(theme.colorTooltip, 0.85)};
-      backdrop-filter: blur(10px);
+      background: ${theme.colorTooltip};
       padding: 6px 10px;
       font-size: 12px;
       border-radius: 4px;

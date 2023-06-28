@@ -1,6 +1,7 @@
 export * from './TableGrid/TableGrid';
 export * from './TableGrid/TableGridCell';
 export * from './Table/Table';
+export * from './TableAdd/TableAdd';
 export * from './Table/TableSkeleton';
 export * from './Table/TableBlock';
 export * from './Pagination/Pagination';

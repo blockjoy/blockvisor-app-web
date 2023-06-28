@@ -12,7 +12,7 @@ export const styles = {
       fill: ${theme.colorLightGrey};
     }
 
-    path {
+    svg path {
       fill: ${theme.colorLabel};
     }
 

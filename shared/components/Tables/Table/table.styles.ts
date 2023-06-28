@@ -74,6 +74,10 @@ export const styles = {
       }
     }
 
+    td:last-of-type {
+      padding-right: 10px;
+    }
+
     & tbody tr {
       position: relative;
       border-bottom: 1px solid ${theme.colorBorder};

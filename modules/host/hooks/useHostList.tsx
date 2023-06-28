@@ -6,11 +6,14 @@ import { ROUTES } from '@shared/index';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { InitialQueryParams } from '../ui/HostUIHelpers';
 import { getInitialQueryParams } from '../ui/HostUIContext';
+import { useDefaultOrganization } from '@modules/organization';
 
 export const useHostList = () => {
   const router = useRouter();
 
   const repository = useIdentityRepository();
+
+  const orgId = useDefaultOrganization()?.defaultOrganization?.id!;
 
   const [defaultHost, setDefaultHost] = useRecoilState(hostAtoms.defaultHost);
 
@@ -38,10 +41,8 @@ export const useHostList = () => {
 
     setHasMore(false);
 
-    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
-
     const hosts: any = await hostClient.listHosts(
-      org_id!,
+      orgId!,
       queryParams?.filter,
       queryParams?.pagination,
     );

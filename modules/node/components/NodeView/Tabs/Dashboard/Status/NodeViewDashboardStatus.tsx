@@ -17,7 +17,7 @@ export const NodeViewDashboardStatus = () => {
       <FormHeaderCaps>Status</FormHeaderCaps>
       <div css={styles.wrapper}>
         <div css={styles.card}>
-          <SvgIcon size={iconSize}>
+          <SvgIcon isDefaultColor size={iconSize}>
             <IconBlockHeight />
           </SvgIcon>
           <var css={[styles.cardValue]}>{node.blockHeight ?? '-'}</var>

@@ -4,6 +4,7 @@ import {
   buttonSize,
   buttonDisplay,
   buttonStyle,
+  buttonTooltip,
   button,
 } from './Button.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -75,7 +76,9 @@ export function Button({
       onClick={onClick}
     >
       {loading ? <ButtonSpinner size={size} /> : children}
-      {tooltip && <Tooltip noWrap hideOnMobile top="-18px" tooltip={tooltip} />}
+      {tooltip && (
+        <Tooltip noWrap hideOnMobile left="50%" top="-30px" tooltip={tooltip} />
+      )}
     </button>
   );
 }

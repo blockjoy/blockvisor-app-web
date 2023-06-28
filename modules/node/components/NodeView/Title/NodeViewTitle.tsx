@@ -1,8 +1,8 @@
-import { Copy, PageTitle, Skeleton } from '@shared/components';
-import { styles } from './NodeViewTitle.styles';
+import { PageTitle } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { useNodeView, NodeTitle } from '@modules/node';
+import { useNodeView } from '@modules/node';
+import IconNode from '@public/assets/icons/app/Node.svg';
 
 export const NodeViewTitle = () => {
   const router = useRouter();
@@ -12,20 +12,13 @@ export const NodeViewTitle = () => {
   const handleNodesClicked = () => router.push(ROUTES.NODES);
 
   return (
-    <PageTitle>
-      <div css={styles.breadcrumb}>
-        <button onClick={handleNodesClicked} css={styles.nodesButton}>
-          <NodeTitle />
-        </button>
-        <span css={styles.separator}>/</span>
-        {isLoading && !node?.id ? (
-          <Skeleton width="80px" />
-        ) : !isLoading && !node?.id ? (
-          <p>Node not found</p>
-        ) : (
-          <Copy value={node?.id!}>{node?.id}</Copy>
-        )}
-      </div>
-    </PageTitle>
+    <PageTitle
+      title="Nodes"
+      icon={<IconNode />}
+      onTitleClick={handleNodesClicked}
+      isLoading={isLoading}
+      childTitle={node?.id}
+      canCopyChild
+    />
   );
 };

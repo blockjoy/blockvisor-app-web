@@ -1,13 +1,12 @@
 import { styles } from './NodeLauncher.styles';
 import { useEffect, useRef, useState } from 'react';
-import { NodeLauncherTitle } from './Title/NodeLauncherTitle';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
 import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
 import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
-import { EmptyColumn } from '@shared/components';
+import { EmptyColumn, PageTitle } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
@@ -22,8 +21,8 @@ import {
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { hostAtoms } from '@modules/host';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -263,7 +262,7 @@ export const NodeLauncher = () => {
 
   return (
     <>
-      <NodeLauncherTitle />
+      <PageTitle title="Launch Node" icon={<IconRocket />} />
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeLauncherProtocol
           onProtocolSelected={handleProtocolSelected}
