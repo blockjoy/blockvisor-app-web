@@ -11,7 +11,7 @@ export interface DiscoveryServiceServicesRequest {
 /** All relevant service URLs */
 export interface DiscoveryServiceServicesResponse {
   keyServiceUrl: string;
-  registryUrl: string;
+  /** This is the address of the MQTT server. */
   notificationUrl: string;
 }
 
@@ -51,16 +51,13 @@ export const DiscoveryServiceServicesRequest = {
 };
 
 function createBaseDiscoveryServiceServicesResponse(): DiscoveryServiceServicesResponse {
-  return { keyServiceUrl: "", registryUrl: "", notificationUrl: "" };
+  return { keyServiceUrl: "", notificationUrl: "" };
 }
 
 export const DiscoveryServiceServicesResponse = {
   encode(message: DiscoveryServiceServicesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.keyServiceUrl !== "") {
       writer.uint32(10).string(message.keyServiceUrl);
-    }
-    if (message.registryUrl !== "") {
-      writer.uint32(18).string(message.registryUrl);
     }
     if (message.notificationUrl !== "") {
       writer.uint32(26).string(message.notificationUrl);
@@ -81,13 +78,6 @@ export const DiscoveryServiceServicesResponse = {
           }
 
           message.keyServiceUrl = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.registryUrl = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -112,7 +102,6 @@ export const DiscoveryServiceServicesResponse = {
   fromPartial(object: DeepPartial<DiscoveryServiceServicesResponse>): DiscoveryServiceServicesResponse {
     const message = createBaseDiscoveryServiceServicesResponse();
     message.keyServiceUrl = object.keyServiceUrl ?? "";
-    message.registryUrl = object.registryUrl ?? "";
     message.notificationUrl = object.notificationUrl ?? "";
     return message;
   },
