@@ -125,7 +125,7 @@ const estimateLoadingState = atom<LoadingState>({
 
 const subscriptionLoadingState = atom<LoadingState>({
   key: 'billing.subscription.loadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 export const billingAtoms = {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import {
@@ -17,6 +17,7 @@ import {
   Permissions,
   useIdentityRepository,
 } from '@modules/auth';
+import { useRouter } from 'next/router';
 
 type SubscriptionProps = {
   item: Item;
@@ -24,20 +25,22 @@ type SubscriptionProps = {
 };
 
 export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
+  const router = useRouter();
   const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
 
-  const [activeView, setActiveView] = useState<'view' | 'cancel'>('view');
-  const [activePlan, setActivePlan] = useState<Item | null>(null);
+  const [activeView, setActiveView] =
+    useState<'default' | 'preview'>('default');
+  const [activePlan, setActivePlan] = useState<Item | null>(item);
 
   const handleSelect = (plan: any) => {
-    setActiveView('cancel');
+    setActiveView('preview');
     setActivePlan(plan);
   };
 
-  const handleCancel = () => setActiveView('view');
+  const handleCancel = () => setActiveView('default');
 
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
@@ -47,6 +50,10 @@ export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
     userRoleInOrganization,
     Permissions.READ_BILLING,
   );
+
+  useEffect(() => {
+    if (router.isReady && router.query.added) setActiveView('preview');
+  }, [router.isReady, router.query.added]);
 
   if (subscriptionLoadingState !== 'finished') return <TableSkeleton />;
 
@@ -62,7 +69,7 @@ export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
     <div css={styles.wrapper}>
       {subscription ? (
         <SubscriptionPreview />
-      ) : activeView === 'view' ? (
+      ) : activeView === 'default' ? (
         <>
           <EmptyColumn
             title="You Have No Active Plans."
