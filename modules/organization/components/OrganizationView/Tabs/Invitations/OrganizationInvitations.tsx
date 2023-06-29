@@ -1,12 +1,11 @@
-import { FormHeaderCaps, Table, withQuery } from '@shared/index';
-import { useMemo, useState } from 'react';
+import { Table, withQuery } from '@shared/index';
+import { useEffect, useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   getHandlerTableChange,
   useInvitations,
   useResendInvitation,
   OrganizationDialog,
-  organizationAtoms,
   invitationAtoms,
 } from '@modules/organization';
 import {

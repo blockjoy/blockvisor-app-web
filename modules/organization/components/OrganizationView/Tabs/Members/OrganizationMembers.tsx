@@ -69,7 +69,7 @@ export const OrganizationMembers = () => {
 
   const MembersTable = withQuery(Table);
 
-  // reset currentPage when org ID changes
+  // reset currentPage to first page, when org ID changes
   useEffect(() => {
     organizationMembersUIProps.setQueryParams({
       ...OrganizationMembersUIContext.queryParams,
