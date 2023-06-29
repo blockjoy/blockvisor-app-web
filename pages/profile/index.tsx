@@ -4,7 +4,7 @@ import { Profile as ProfileView } from '@modules/profile/components/Profile';
 const Profile = () => <ProfileView />;
 
 Profile.getLayout = function getLayout(page: any) {
-  return <AppLayout pageTitle="Profile">{page}</AppLayout>;
+  return <AppLayout>{page}</AppLayout>;
 };
 
 export default Profile;
