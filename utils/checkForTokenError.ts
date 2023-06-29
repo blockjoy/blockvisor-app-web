@@ -1,9 +1,5 @@
 export const checkForTokenError = (response: any) => {
-  console.log('checking for token error');
-  if (
-    response?.message?.includes('JWT') ||
-    response?.message?.includes('PERMISSION_DENIED')
-  ) {
+  if (response?.message?.includes('JWT')) {
     localStorage.clear();
     window.location.href = '/';
   }
