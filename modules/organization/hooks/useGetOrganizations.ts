@@ -9,8 +9,6 @@ export function useGetOrganizations() {
     organizationAtoms.allOrganizations,
   );
 
-  const total = useRecoilValue(organizationAtoms.organisationCount);
-
   const [isLoading, setIsLoading] = useRecoilState(
     organizationAtoms.organizationsLoadingState,
   );
@@ -46,7 +44,6 @@ export function useGetOrganizations() {
 
   return {
     organizations,
-    total,
     getOrganizations,
     removeFromOrganizations,
     addToOrganizations,

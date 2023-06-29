@@ -4,7 +4,6 @@ import { checkForApiError } from 'utils/checkForApiError';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useSwitchOrganization } from './useSwitchOrganization';
-import { initialQueryParams } from '@modules/organization';
 
 export function useGetOrganization() {
   const { switchOrganization } = useSwitchOrganization();
@@ -17,10 +16,6 @@ export function useGetOrganization() {
 
   const [isLoading, setIsLoading] = useRecoilState(
     organizationAtoms.organizationLoadingState,
-  );
-
-  const [membersPageIndex, setMembersPageIndex] = useRecoilState(
-    organizationAtoms.organizationMembersPageIndex,
   );
 
   const getOrganization = async (id: string) => {
@@ -44,10 +39,8 @@ export function useGetOrganization() {
   return {
     organization,
     isLoading,
-    membersPageIndex,
     getOrganization,
     setOrganization,
     setIsLoading,
-    setMembersPageIndex,
   };
 }

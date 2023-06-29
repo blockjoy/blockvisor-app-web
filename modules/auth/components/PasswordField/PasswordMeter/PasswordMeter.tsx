@@ -78,7 +78,7 @@ export const PasswordMeter = ({
                   !isCompact && !isMobile ? styles.infoButtonHidden : null,
                 ]}
               >
-                <SvgIcon>
+                <SvgIcon isDefaultColor>
                   <IconInfo />
                 </SvgIcon>
               </button>
