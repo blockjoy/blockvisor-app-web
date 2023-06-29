@@ -59,24 +59,6 @@ const organizationLoadingState = atom<LoadingState>({
   default: 'loading',
 });
 
-const organizationMemberCount = selector({
-  key: 'organization.memberCount',
-  get: ({ get }) => {
-    const organisations = get(allOrganizations);
-
-    return organisations.reduce((acc, org) => acc + (org?.memberCount ?? 0), 0);
-  },
-});
-
-const organisationCount = selector({
-  key: 'organization.count',
-  get: ({ get }) => {
-    const organizations = get(allOrganizations);
-
-    return organizations.length;
-  },
-});
-
 const organizationsFiltered = selectorFamily<
   Org[],
   InitialQueryParamsOrganizations
@@ -104,6 +86,7 @@ const organizationsActive = selectorFamily<
     (queryParams) =>
     ({ get }) => {
       const allOrgs = get(organizationsFiltered(queryParams));
+
       const { pagination } = queryParams;
 
       const paginatedOrganizations = paginate(allOrgs, pagination);
@@ -139,18 +122,8 @@ const organizationMembersActive = selectorFamily<
     },
 });
 
-const organizationMembersPageIndex = atom<number>({
-  key: 'organization.member.pageIndex',
-  default: 0,
-});
-
 const organizationMemberLoadingState = atom<LoadingState>({
   key: 'organization.member.loadingState',
-  default: 'initializing',
-});
-
-const organizationMembersLoadingState = atom<LoadingState>({
-  key: 'organization.members.loadingState',
   default: 'initializing',
 });
 
@@ -174,13 +147,9 @@ export const organizationAtoms = {
   organizationsFilters,
   organizationsFiltered,
   organizationsActive,
-  organizationMemberCount,
   organizationMembersActive,
-  organisationCount,
   defaultOrganization,
   organizationMemberLoadingState,
-  organizationMembersLoadingState,
-  organizationMembersPageIndex,
   provisionToken,
   provisionTokenLoadingState,
 };

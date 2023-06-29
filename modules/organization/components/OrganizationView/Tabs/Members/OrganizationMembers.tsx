@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   getHandlerTableChange,
   organizationAtoms,
@@ -36,8 +36,6 @@ export const OrganizationMembers = () => {
 
   const { resendInvitation } = useResendInvitation();
 
-  // TOOD: remove after fixed bug in API (return org the invitation's id in response)
-
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
 
@@ -62,6 +60,7 @@ export const OrganizationMembers = () => {
   const { headers, rows } = mapOrganizationMembersToRows(members, methods);
 
   const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
+    console.log('table changed');
     getHandlerTableChange(organizationMembersUIProps.setQueryParams)(
       type,
       queryParams,
@@ -69,6 +68,17 @@ export const OrganizationMembers = () => {
   };
 
   const MembersTable = withQuery(Table);
+
+  // reset currentPage when org ID changes
+  useEffect(() => {
+    organizationMembersUIProps.setQueryParams({
+      ...OrganizationMembersUIContext.queryParams,
+      pagination: {
+        ...OrganizationMembersUIContext.queryParams.pagination,
+        currentPage: 1,
+      },
+    });
+  }, [selectedOrganization?.id]);
 
   return (
     <section>
