@@ -15,7 +15,7 @@ export const BackButton = ({ backUrl }: BackButtonProps) => {
   }
 
   return (
-    <Button style="outline" size="small" onClick={handleClick}>
+    <Button style="outline" display="inline" size="small" onClick={handleClick}>
       <IconBack /> Back
     </Button>
   );

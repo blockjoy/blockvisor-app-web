@@ -3,11 +3,10 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import { queryAsString } from '@shared/utils/query';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
-  Skeleton,
-  SkeletonGrid,
   TableSkeleton,
   EmptyColumn,
   TableAdd,
+  BackButton,
 } from '@shared/components';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import {
@@ -32,6 +31,7 @@ import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { toast } from 'react-toastify';
 import { isValidEmail } from '@shared/index';
 import { createPath } from '@modules/organization/utils/createPath';
+import { isMobile } from 'react-device-detect';
 
 export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -110,6 +110,11 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
 
   return (
     <>
+      {isMobile && (
+        <div css={spacing.top.medium}>
+          <BackButton backUrl="/organizations" />
+        </div>
+      )}
       <OrganizationViewHeader />
       {isLoading === 'loading' ? (
         <div css={spacing.top.medium}>
@@ -147,8 +152,6 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
             <div css={styles.rightWrapper}>
               <OrganizationDetails />
             </div>
-            {/* <OrganizationViewTabs />
-         {children} */}
           </section>
         </>
       )}
