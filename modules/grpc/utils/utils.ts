@@ -22,12 +22,19 @@ export const handleError = (error: any) => {
 
 export const setTokenValue = (token: string) => {
   localStorage.setItem('accessTokenExpiry', readToken(token).exp);
-  const identity = localStorage.getItem('identity');
+  const identity = getIdentity();
   if (identity) {
     const parsedIdentity = JSON.parse(identity);
     parsedIdentity.accessToken = token;
     const updatedIdentityString = JSON.stringify(parsedIdentity);
-    localStorage.setItem('identity', updatedIdentityString);
+    window.localStorage.setItem('identity', updatedIdentityString);
+  } else {
+    window.localStorage.setItem(
+      'identity',
+      JSON.stringify({
+        accessToken: token,
+      }),
+    );
   }
 };
 
