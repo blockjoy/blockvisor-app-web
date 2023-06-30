@@ -53,10 +53,8 @@ export const NodeViewHeader: FC = () => {
                   <h2 css={styles.detailsHeader}>{node!.name}</h2>
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
-                      <SvgIcon size="12px">
-                        <IconNodes />
-                      </SvgIcon>
                       <p>
+                        {node.blockchainName}{' '}
                         {
                           nodeTypeList.find((t) => t.id === node!.nodeType)
                             ?.name

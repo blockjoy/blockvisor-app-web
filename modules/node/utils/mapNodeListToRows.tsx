@@ -1,7 +1,7 @@
 import { TableBlock } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { Node, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const mapNodeListToRows = (nodeList?: Node[]) => {
   const headers: TableHeader[] = [
@@ -44,7 +44,13 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
         key: '2',
         component: (
           <>
-            <TableBlock id={node.id} name={node.name} address={node?.ip!} />
+            <TableBlock
+              id={`${node.blockchainName} ${NodeType[node.nodeType]
+                .replace('NODE_TYPE_', '')
+                .toLowerCase()}`}
+              name={node.name}
+              address={node?.ip!}
+            />
           </>
         ),
       },
@@ -52,7 +58,9 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
         key: '3',
         component: (
           <span style={{ fontSize: '14px', whiteSpace: 'nowrap' }}>
-            {formatDistanceToNow(new Date(node.createdAt!))}
+            {formatDistanceToNow(new Date(node.createdAt!), {
+              addSuffix: true,
+            })}
           </span>
         ),
       },

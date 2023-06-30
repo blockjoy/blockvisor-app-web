@@ -2,6 +2,7 @@ export * from './Chat/Chat';
 export * from './DangerZone/DangerZone';
 export * from './Skeleton/Skeleton';
 export * from './Skeleton/SkeletonGrid';
+export * from './Skeleton/SkeletonView';
 export * from './LoadingSpinner/LoadingSpinner';
 export * from './Tabs/Tabs';
 export * from './Alert/Alert';

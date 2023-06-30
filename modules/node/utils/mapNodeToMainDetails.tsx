@@ -9,8 +9,15 @@ export const mapNodeToMainDetails = (node: Node) => {
     {
       label: 'HOST',
       data:
-        <Link href={ROUTES.HOST(node.hostId)}>{node.hostName}</Link> ||
-        'Unknown',
+        node.orgId === node.hostOrgId ? (
+          <Link href={ROUTES.HOST(node.hostId)}>{node.hostName}</Link>
+        ) : (
+          node.hostName
+        ),
+    },
+    {
+      label: 'Organization',
+      data: <Link href={ROUTES.ORGANIZATION(node.orgId)}>{node.orgName}</Link>,
     },
     { label: 'VERSION', data: node.version || 'Latest' },
     { label: 'NODE ADDRESS', data: node.address || '-' },
