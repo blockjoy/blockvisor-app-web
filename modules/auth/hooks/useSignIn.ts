@@ -24,9 +24,17 @@ export function useSignIn() {
     });
 
     const tokenObject: any = readToken(accessToken);
+
+    console.log('tokenObject', tokenObject);
+
     const userId = tokenObject.resource_id;
 
+    console.log('trying to get user data', userId);
+
     const userData: any = await userClient.getUser(userId);
+
+    console.log('userData', userData);
+
     repository?.updateIdentity(userData);
     setUser((current) => ({
       ...current,
