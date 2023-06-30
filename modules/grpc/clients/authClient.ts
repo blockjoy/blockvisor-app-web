@@ -49,7 +49,7 @@ class AuthClient {
     }
   }
 
-  async registration_confirmation(token: string): Promise<void> {
+  async registration_confirmation(token: string): Promise<string> {
     const authHeader = {
       metadata: Metadata({
         authorization: `Bearer ${token}`,
@@ -59,6 +59,7 @@ class AuthClient {
       const response = await this.client.confirm({}, authHeader);
       console.log('token from confirmation', response);
       setTokenValue(response.token);
+      return response.token;
     } catch (err) {
       return handleError(err);
     }
