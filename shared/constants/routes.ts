@@ -15,13 +15,14 @@ export const ROUTES = {
 };
 
 export const PUBLIC_ROUTES = [
-  '/login',
-  '/password_reset',
-  '/register',
-  '/accept-invite',
-  '/invite-registered',
-  '/decline-invite',
-  '/verified',
-  '/verify',
-  '/forgot-password',
+  // '/login',
+  // '/password_reset',
+  // '/register',
+  // '/accept-invite',
+  // '/invite-registered',
+  // '/decline-invite',
+  // '/verified',
+  // '/verify',
+  // '/forgot-password',
+  '/closed',
 ];

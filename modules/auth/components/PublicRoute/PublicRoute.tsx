@@ -16,7 +16,7 @@ export function PublicRoute({ children }: Props) {
 
   useEffect(() => {
     if (router.isReady && isLoggedIn) {
-      router.push(redirect?.toString() || ROUTES.DEFAULT);
+      router.push('/closed');
     }
   }, [router.isReady]);
 

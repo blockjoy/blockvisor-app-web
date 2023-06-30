@@ -36,8 +36,7 @@ export function PrivateRoute({ router, children }: Props) {
     if (!loggedIn && isPrivateRoute) {
       setAuthorized(false);
       router.push({
-        pathname: ROUTES.LOGIN,
-        query: { redirect: router.asPath },
+        pathname: '/closed',
       });
     } else {
       setAuthorized(true);
