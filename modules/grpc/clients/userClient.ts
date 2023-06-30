@@ -28,7 +28,13 @@ class UserClient {
   async getUser(id: string): Promise<User | StatusResponse> {
     try {
       await authClient.refreshToken();
+
+      console.log('getUserRequest', { id });
+
       const response = await this.client.get({ id }, getOptions());
+
+      console.log('getUserResponse', response);
+
       return response.user!;
     } catch (err) {
       return StatusResponseFactory.getUserResponse(err, 'grpcClient');
