@@ -20,10 +20,10 @@ const Verified: NextPage = () => {
             token?.toString()!,
           );
           signIn(undefined, accessToken);
-          router.push({
-            pathname: ROUTES.NODES,
-            query: { verified: true },
-          });
+          // router.push({
+          //   pathname: ROUTES.NODES,
+          //   query: { verified: true },
+          // });
         } catch (err: any) {
           toast.error('Error Verifying');
           return;
