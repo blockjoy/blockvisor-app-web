@@ -14,11 +14,11 @@ export function PublicRoute({ children }: Props) {
   const { redirect } = router.query;
   const { isLoggedIn } = useIdentity();
 
-  // useEffect(() => {
-  //   if (router.isReady && isLoggedIn) {
-  //     router.push(redirect?.toString() || ROUTES.DEFAULT);
-  //   }
-  // }, [router.isReady]);
+  useEffect(() => {
+    if (router.isReady && isLoggedIn) {
+      router.push(redirect?.toString() || ROUTES.DEFAULT);
+    }
+  }, [router.isReady]);
 
   return (
     <>

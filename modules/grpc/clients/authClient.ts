@@ -57,7 +57,6 @@ class AuthClient {
     };
     try {
       const response = await this.client.confirm({}, authHeader);
-      console.log('token from confirmation', response);
       return response.token;
     } catch (err) {
       return handleError(err);

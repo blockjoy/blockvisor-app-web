@@ -39,10 +39,10 @@ export function PrivateRoute({ router, children }: Props) {
     if (!loggedIn && isPrivateRoute) {
       setAuthorized(false);
       const redirect = router._inFlightRoute || router.asPath;
-      // router.push({
-      //   pathname: ROUTES.LOGIN,
-      //   query: { redirect },
-      // });
+      router.push({
+        pathname: ROUTES.LOGIN,
+        query: { redirect },
+      });
     } else {
       setAuthorized(true);
     }
