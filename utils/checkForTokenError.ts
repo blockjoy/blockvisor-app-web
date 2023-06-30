@@ -1,6 +1,7 @@
 export const checkForTokenError = (response: any) => {
   if (response?.message?.includes('JWT')) {
-    localStorage.clear();
-    window.location.href = '/';
+    console.log('JWT Error', response.message);
+    // localStorage.clear();
+    // window.location.href = '/';
   }
 };
