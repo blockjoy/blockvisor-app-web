@@ -24,7 +24,7 @@ export * from './store/organizationAtoms';
 export * from './store/invitationAtoms';
 
 export * from './utils/typeGuards';
-export * from './utils/organizationDetails';
+export * from './utils/mapOrganizationDetails';
 export * from './utils/toRow';
 export * from './utils/getOrgMemberRole';
 export * from './utils/mapOrganizationsToRows';

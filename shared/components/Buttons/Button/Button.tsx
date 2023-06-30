@@ -66,7 +66,7 @@ export function Button({
     );
   }
 
-  return (
+  const ButtonComponent = () => (
     <button
       disabled={disabled}
       {...rest}
@@ -76,9 +76,15 @@ export function Button({
       onClick={onClick}
     >
       {loading ? <ButtonSpinner size={size} /> : children}
-      {tooltip && (
-        <Tooltip noWrap hideOnMobile left="50%" top="-30px" tooltip={tooltip} />
-      )}
     </button>
+  );
+
+  return tooltip ? (
+    <div css={buttonTooltip}>
+      <Tooltip noWrap hideOnMobile left="50%" top="-30px" tooltip={tooltip} />
+      <ButtonComponent />
+    </div>
+  ) : (
+    <ButtonComponent />
   );
 }

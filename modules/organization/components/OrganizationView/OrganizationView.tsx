@@ -3,10 +3,10 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import { queryAsString } from '@shared/utils/query';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
-  TableSkeleton,
   EmptyColumn,
   TableAdd,
   BackButton,
+  SkeletonView,
 } from '@shared/components';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import {
@@ -118,7 +118,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
       <OrganizationViewHeader />
       {isLoading === 'loading' ? (
         <div css={spacing.top.medium}>
-          <TableSkeleton />
+          <SkeletonView />
         </div>
       ) : isLoading !== 'initializing' && organization === null ? (
         <EmptyColumn

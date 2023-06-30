@@ -1,5 +1,5 @@
 import { useIdentity } from '@modules/auth';
-import { getOrganizationDetails } from '@modules/organization';
+import { mapOrganizationDetails } from '@modules/organization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import { DetailsTable, FormHeaderCaps } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -9,7 +9,7 @@ export function OrganizationDetails() {
 
   const { user } = useIdentity();
 
-  const details = getOrganizationDetails(organization, user?.id!);
+  const details = mapOrganizationDetails(organization, user?.id!);
 
   return (
     <section css={spacing.top.small}>

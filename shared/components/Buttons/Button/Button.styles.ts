@@ -137,6 +137,7 @@ const button = css`
 
 const buttonTooltip = css`
   position: relative;
+  display: inline-block;
 
   :hover .tooltip {
     opacity: 1;

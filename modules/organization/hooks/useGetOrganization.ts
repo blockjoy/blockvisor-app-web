@@ -27,7 +27,6 @@ export function useGetOrganization() {
       organization = await organizationClient.getOrganization(id);
       checkForTokenError(organization);
       checkForApiError('organization', organization);
-      console.log('organization', organization);
       setOrganization(organization);
     }
 

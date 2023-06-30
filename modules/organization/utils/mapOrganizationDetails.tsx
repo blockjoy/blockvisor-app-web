@@ -1,12 +1,12 @@
 import { USER_ROLES } from '@modules/auth/hooks/useHasPermissions';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { SvgIcon } from '@shared/components';
 import { getOrgMemberRole } from './getOrgMemberRole';
 import Link from 'next/link';
 import IconInfo from '@public/assets/icons/common/Info.svg';
 import { ROUTES } from '@shared/constants/routes';
 
-export function getOrganizationDetails(org: Org | null, userId: string) {
+export function mapOrganizationDetails(org: Org | null, userId: string) {
   if (!org) {
     return null;
   }
@@ -14,6 +14,10 @@ export function getOrganizationDetails(org: Org | null, userId: string) {
   const role = USER_ROLES[getOrgMemberRole(org!, userId)];
 
   const details = [
+    {
+      label: 'Owner',
+      data: org.members.find((m) => m.role === OrgRole.ORG_ROLE_OWNER)?.email,
+    },
     { label: 'MEMBERS', data: org?.memberCount },
     {
       label: 'NODES',
