@@ -4,22 +4,26 @@ import { useEffect } from 'react';
 import { authClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { ROUTES } from '@shared/constants/routes';
-import { useIdentityRepository } from '@modules/auth';
+import { useIdentityRepository, useSignIn } from '@modules/auth';
 
 const Verified: NextPage = () => {
   const router = useRouter();
+
+  const signIn = useSignIn();
 
   useEffect(() => {
     if (router.isReady) {
       const { token } = router.query;
       (async () => {
         try {
-          await authClient.registration_confirmation(token?.toString()!);
-
-          // router.push({
-          //   pathname: ROUTES.NODES,
-          //   query: { verified: true },
-          // });
+          const accessToken = await authClient.registration_confirmation(
+            token?.toString()!,
+          );
+          signIn(undefined, accessToken);
+          router.push({
+            pathname: ROUTES.NODES,
+            query: { verified: true },
+          });
         } catch (err: any) {
           toast.error('Error Verifying');
           return;
