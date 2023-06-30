@@ -107,11 +107,11 @@ export const styles = {
     align-items: center;
 
     svg > path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
 
     p {
-      color: ${theme.colorLabel};
+      color: ${theme.colorDefault};
       font-size: 14px;
     }
   `,

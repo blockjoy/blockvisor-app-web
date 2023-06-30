@@ -27,6 +27,7 @@ const styles = {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    text-transform: capitalize;
     max-width: 80%;
   `,
   address: (theme: ITheme) => css`

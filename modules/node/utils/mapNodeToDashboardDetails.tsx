@@ -9,8 +9,11 @@ export const mapNodeToDashboardDetails = (node: Node) => {
     {
       label: 'HOST',
       data:
-        <Link href={ROUTES.HOST(node.hostId)}>{node.hostName}</Link> ||
-        'Unknown',
+        node.orgId === node.hostOrgId ? (
+          <Link href={ROUTES.HOST(node.hostId)}>{node.hostName}</Link>
+        ) : (
+          node.hostName
+        ),
     },
     { label: 'VERSION', data: node.version || 'Latest' },
     { label: 'NODE ADDRESS', data: node.address || '-' },

@@ -100,6 +100,7 @@ export const styles = {
     color: ${theme.colorLabel};
     margin-bottom: 16px;
     font-size: 13px;
+    text-transform: capitalize;
 
     svg path {
       fill: ${theme.colorLabel};

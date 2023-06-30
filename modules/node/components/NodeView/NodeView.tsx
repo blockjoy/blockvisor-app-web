@@ -7,7 +7,7 @@ import { NodeViewHeader } from './Header/NodeViewHeader';
 import { FormHeaderCaps, NetdataDashboard } from '@shared/components';
 import { NodeViewTabs } from './Tabs/NodeViewTabs';
 import { wrapper } from 'styles/wrapper.styles';
-import { EmptyColumn, TableSkeleton } from '@shared/components';
+import { EmptyColumn, SkeletonView } from '@shared/components';
 
 type Props = {
   children?: ReactNode;
@@ -43,7 +43,7 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
       {isLoading && !node?.id && (
         <div css={[styles.wrapper, wrapper.main]}>
           <div css={styles.loader}>
-            <TableSkeleton />
+            <SkeletonView />
           </div>
         </div>
       )}
