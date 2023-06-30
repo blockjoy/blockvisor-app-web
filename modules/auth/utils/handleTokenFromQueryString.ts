@@ -17,5 +17,5 @@ export const handleTokenFromQueryString = async (
   } catch (error) {
     console.log('error reading token', error);
   }
-  removeTokenFromUrl();
+  //removeTokenFromUrl();
 };

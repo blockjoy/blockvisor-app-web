@@ -60,13 +60,16 @@ export function RegisterForm() {
   const onSubmit = handleSubmit(
     async ({ email, password, firstName, lastName }) => {
       setIsLoading(true);
-      const response: any = await userClient.createUser({
-        firstName,
-        lastName,
-        email,
-        password,
-        passwordConfirmation: password,
-      });
+      const response: any = await userClient.createUser(
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+          passwordConfirmation: password,
+        },
+        token as string,
+      );
 
       if (isStatusResponse(response)) {
         setRegisterError(getError(response.message));
