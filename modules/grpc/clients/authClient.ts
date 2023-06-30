@@ -49,9 +49,7 @@ class AuthClient {
     }
   }
 
-  async registration_confirmation(
-    token: string,
-  ): Promise<string | StatusResponse> {
+  async registration_confirmation(token: string): Promise<string> {
     const authHeader = {
       metadata: Metadata({
         authorization: `Bearer ${token}`,
@@ -61,7 +59,7 @@ class AuthClient {
       const response = await this.client.confirm({}, authHeader);
       return response.token;
     } catch (err) {
-      return StatusResponseFactory.registrationConfirmation(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
