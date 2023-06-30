@@ -16,10 +16,10 @@ const Verified: NextPage = () => {
         try {
           await authClient.registration_confirmation(token?.toString()!);
 
-          router.push({
-            pathname: ROUTES.NODES,
-            query: { verified: true },
-          });
+          // router.push({
+          //   pathname: ROUTES.NODES,
+          //   query: { verified: true },
+          // });
         } catch (err: any) {
           toast.error('Error Verifying');
           return;
