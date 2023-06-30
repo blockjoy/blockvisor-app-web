@@ -19,11 +19,12 @@ const Verified: NextPage = () => {
           const accessToken = await authClient.registration_confirmation(
             token?.toString()!,
           );
+          console.log('token from confirmation', accessToken);
           signIn(undefined, accessToken);
-          router.push({
-            pathname: ROUTES.NODES,
-            query: { verified: true },
-          });
+          // router.push({
+          //   pathname: ROUTES.NODES,
+          //   query: { verified: true },
+          // });
         } catch (err: any) {
           toast.error('Error Verifying');
           return;
