@@ -9,23 +9,12 @@ import { useIdentityRepository } from '@modules/auth';
 const Verified: NextPage = () => {
   const router = useRouter();
 
-  const repository = useIdentityRepository();
-
   useEffect(() => {
     if (router.isReady) {
       const { token } = router.query;
       (async () => {
         try {
-          const accessToken = await authClient.registration_confirmation(
-            token?.toString()!,
-          );
-
-          console.log('accessToken', accessToken);
-
-          repository?.saveIdentity({
-            accessToken,
-            verified: true,
-          });
+          await authClient.registration_confirmation(token?.toString()!);
 
           router.push({
             pathname: ROUTES.NODES,
