@@ -1,21 +1,13 @@
-import { AllOrganizationsTable } from './OrganizationListTable';
 import { styles } from './OrganizationList.styles';
 import { useRecoilValue } from 'recoil';
 import {
   useDefaultOrganization,
   useGetOrganizations,
 } from '@modules/organization';
-import {
-  Badge,
-  Scrollbar,
-  Skeleton,
-  SkeletonGrid,
-  TableSkeleton,
-} from '@shared/components';
+import { Badge, Scrollbar, Skeleton, SkeletonGrid } from '@shared/components';
 import { useOrganizationsUIContext } from '@modules/organization/ui/OrganizationsUIContext';
 import { useMemo } from 'react';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { OrganizationListHeader } from '@modules/organization';
@@ -34,18 +26,10 @@ export const OrganizationsList = () => {
 
   const { isLoading } = useGetOrganizations();
 
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const toggleSearchTerm = (value: string) => setSearchTerm(value);
-
   const { defaultOrganization } = useDefaultOrganization();
 
   const organizationsActive = useRecoilValue(
     organizationAtoms.organizationsActive(organizationUIProps.queryParams),
-  );
-
-  const filteredOrgz = organizationsActive.filter((org) =>
-    org.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleRowClicked = (id: string) => {
@@ -63,7 +47,7 @@ export const OrganizationsList = () => {
         </SkeletonGrid>
       ) : (
         <Scrollbar additionalStyles={[styles.scrollbar]}>
-          {filteredOrgz?.map((org) => {
+          {organizationsActive?.map((org) => {
             const isActive = defaultOrganization?.id === org.id;
             return (
               <button

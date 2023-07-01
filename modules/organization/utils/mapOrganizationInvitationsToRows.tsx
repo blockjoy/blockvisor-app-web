@@ -1,7 +1,6 @@
 import { useIdentityRepository } from '@modules/auth';
 import { Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
-import { spacing } from 'styles/utils.spacing.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import {
@@ -55,14 +54,6 @@ export const mapOrganizationInvitationsToRows = (
     getOrgMemberRole(selectedOrganization!, userId!),
     Permissions.DELETE_MEMBER,
   );
-
-  const handleRemoveMember = async (
-    userId: string,
-    orgId: string,
-    email: string,
-  ) => {
-    methods?.action(Action.remove, { userId, orgId, email });
-  };
 
   const handleRevokeInvitation = (invitationId: string, email: string) => {
     methods?.action(Action.revoke, { invitationId, email });

@@ -9,7 +9,6 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { MemberAndInvitation } from './mapMembersAndInvitations';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { getOrgMemberRole } from './getOrgMemberRole';
 import { OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
@@ -45,10 +44,6 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  const canCreateMember: boolean = useHasPermissions(
-    getOrgMemberRole(selectedOrganization!, userId!),
-    Permissions.CREATE_MEMBER,
-  );
   const canRemoveMember: boolean = useHasPermissions(
     getOrgMemberRole(selectedOrganization!, userId!),
     Permissions.DELETE_MEMBER,

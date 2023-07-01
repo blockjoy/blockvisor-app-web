@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { authClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { ROUTES } from '@shared/constants/routes';
-import { useIdentityRepository, useSignIn } from '@modules/auth';
+import { useSignIn } from '@modules/auth';
 
 const Verified: NextPage = () => {
   const router = useRouter();
