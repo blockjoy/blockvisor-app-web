@@ -58,7 +58,7 @@ export const NodeViewHeaderActions = ({ onDeleteClicked }: Props) => {
               size="medium"
               type="button"
             >
-              <SvgIcon size="12px">
+              <SvgIcon isDefaultColor size="12px">
                 <IconStop />
               </SvgIcon>
               <p css={styles.dropdownText}>Stop</p>
@@ -70,7 +70,7 @@ export const NodeViewHeaderActions = ({ onDeleteClicked }: Props) => {
               size="medium"
               type="button"
             >
-              <SvgIcon size="12px">
+              <SvgIcon isDefaultColor size="12px">
                 <IconStart />
               </SvgIcon>
               <p css={styles.dropdownText}>Start</p>

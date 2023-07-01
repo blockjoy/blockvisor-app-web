@@ -11,6 +11,7 @@ import { styles } from './Profile.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
+import IconPerson from '@public/assets/icons/common/Person.svg';
 
 export const Profile = () => {
   const user = useRecoilValue(authAtoms.user);
@@ -88,7 +89,7 @@ export const Profile = () => {
   };
   return (
     <>
-      <PageTitle title="Profile" />
+      <PageTitle title="Profile" icon={<IconPerson />} />
       <Tabs
         activeTab={activeTab}
         onTabClick={handleClick}

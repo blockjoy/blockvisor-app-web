@@ -5,6 +5,7 @@ import { isSafari } from 'react-device-detect';
 import { TableSortButton } from './TableSortButton';
 
 export type TableProps = {
+  hideHeader?: boolean;
   headers?: TableHeader[];
   rows?: Row[];
   onRowClick?: (arg0: Row) => void;
@@ -17,6 +18,7 @@ export type TableProps = {
 };
 
 export const Table = ({
+  hideHeader,
   headers = [],
   rows = [],
   onRowClick,
@@ -42,7 +44,7 @@ export const Table = ({
           fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
         ]}
       >
-        {headers && rows?.length > 0 && (
+        {!hideHeader && headers && rows?.length > 0 && (
           <thead>
             <tr>
               {headers.map(
@@ -95,7 +97,9 @@ export const Table = ({
                 key={tr.key}
                 className={tr.isDanger ? 'danger' : ''}
                 css={[
-                  !isSafari
+                  !!!onRowClick
+                    ? null
+                    : !isSafari
                     ? styles.rowFancyUnderlineHover
                     : styles.rowBasicUnderlineHover,
                 ]}
@@ -109,11 +113,11 @@ export const Table = ({
                         headers[index]?.isHiddenOnMobile &&
                         styles.hiddenOnMobile,
                       verticalAlign ? styles[verticalAlign] : styles.middle,
-                      styles.textAlign(headers[index].textAlign || 'left'),
+                      styles.textAlign(headers[index]?.textAlign || 'left'),
                       css`
-                        width: ${headers[index].width};
-                        min-width: ${headers[index].minWidth};
-                        max-width: ${headers[index].maxWidth};
+                        width: ${headers[index]?.width};
+                        min-width: ${headers[index]?.minWidth};
+                        max-width: ${headers[index]?.maxWidth};
                       `,
                     ]}
                   >

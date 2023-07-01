@@ -6,12 +6,13 @@ import { organizationAtoms } from '../store/organizationAtoms';
 import { useDeleteOrganization } from './useDeleteOrganization';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
 import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { invitationAtoms } from '../store/invitationAtoms';
 
 export function useUpdateMembers(): IUpdateMembersHook {
   const router = useRouter();
 
   const [sentInvitations, setSentInvitations] = useRecoilState(
-    organizationAtoms.organizationSentInvitations,
+    invitationAtoms.sentInvitations,
   );
   const user = useRecoilValue(authAtoms.user);
   const [selectedOrganization, setSelectedOrganization] = useRecoilState(

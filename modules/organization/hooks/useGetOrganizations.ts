@@ -9,8 +9,6 @@ export function useGetOrganizations() {
     organizationAtoms.allOrganizations,
   );
 
-  const total = useRecoilValue(organizationAtoms.organisationCount);
-
   const [isLoading, setIsLoading] = useRecoilState(
     organizationAtoms.organizationsLoadingState,
   );
@@ -20,8 +18,6 @@ export function useGetOrganizations() {
   const getOrganizations = async (init?: boolean) => {
     setIsLoading('initializing');
     const organizations: any = await organizationClient.getOrganizations();
-
-    console.log('getOrganizations', organizations);
 
     checkForTokenError(organizations);
     setOrganizations(organizations);
@@ -46,7 +42,6 @@ export function useGetOrganizations() {
 
   return {
     organizations,
-    total,
     getOrganizations,
     removeFromOrganizations,
     addToOrganizations,

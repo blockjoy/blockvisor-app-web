@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
-import { rgba } from 'polished';
 
 type TooltipStyleProps = {
   top?: string;
@@ -20,17 +19,16 @@ export const styles = {
       right: ${p.right};
       bottom: ${p.bottom};
       left: ${p.left};
-      translate: 0 -18px;
-      background: ${rgba(theme.colorTooltip, 0.55)};
-      backdrop-filter: blur(10px);
+      translate: -50% 0;
+      background: ${theme.colorTooltip};
       padding: 2px 10px;
       font-size: 12px;
       border-radius: 4px;
       color: ${theme.colorText};
       opacity: 0;
+      visibility: hidden;
       line-height: 1.625;
       word-break: break-word;
-      visibility: hidden;
       ${p.noWrap && 'white-space: nowrap;'};
       transition-property: opacity;
       transition-duration: 0.01s;

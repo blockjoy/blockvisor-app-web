@@ -10,10 +10,8 @@ import IconChat from '@public/assets/icons/common/Chat.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
-import {
-  organizationAtoms,
-  useDefaultOrganization,
-} from '@modules/organization';
+import { invitationAtoms, useDefaultOrganization } from '@modules/organization';
+import { isMobile } from 'react-device-detect';
 
 export default () => {
   const router = useRouter();
@@ -23,7 +21,7 @@ export default () => {
   const { defaultOrganization } = useDefaultOrganization();
 
   const invitationCount = useRecoilValue(
-    organizationAtoms.organizationReceivedInvitations,
+    invitationAtoms.receivedInvitations,
   )?.length;
 
   const handleLinkClicked = () => {
@@ -49,7 +47,9 @@ export default () => {
         },
         {
           name: 'Organizations',
-          path: `/organizations/${defaultOrganization?.id}`,
+          path: isMobile
+            ? '/organizations'
+            : `/organizations/${defaultOrganization?.id}`,
           icon: <IconOrganizations />,
           isOrganizations: true,
         },

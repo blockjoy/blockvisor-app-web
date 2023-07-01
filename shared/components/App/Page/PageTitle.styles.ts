@@ -29,9 +29,58 @@ export const styles = {
     justify-content: space-between;
     align-items: center;
   `,
-  actions: css`
+  breadcrumb: css`
+    display: flex;
+
     @media ${breakpoints.toXlrg} {
-      display: none;
+      max-width: 240px;
     }
+  `,
+  button: (theme: ITheme) => css`
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+
+    p {
+      color: ${theme.colorDefault};
+    }
+
+    svg > path {
+      fill: ${theme.colorLabel};
+    }
+
+    :is(p, path) {
+      transition: 0.3s;
+    }
+
+    :hover {
+      p {
+        color: ${theme.colorText};
+      }
+
+      svg path {
+        fill: ${theme.colorDefault};
+      }
+    }
+  `,
+  title: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 18px;
+    color: ${theme.colorText};
+
+    svg > path {
+      fill: ${theme.colorLabel};
+    }
+  `,
+  separator: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    color: ${theme.colorLabel};
+    padding-right: 8px;
+    padding-left: 8px;
+    height: 22px;
   `,
 };

@@ -15,8 +15,8 @@ export const breakpoints = {
   toXlrg: 'screen and (max-width: 1199px)',
   fromHuge: 'screen and (min-width: 1360px)',
   toHuge: 'screen and (max-width: 1359px)',
-  fromXHuge: 'screen and (min-width: 2000px)',
-  toXHuge: 'screen and (max-width: 1999px)',
+  fromXHuge: 'screen and (min-width: 1600px)',
+  toXHuge: 'screen and (max-width: 1599px)',
 };
 
 /**
