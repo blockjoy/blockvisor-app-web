@@ -4,9 +4,9 @@ import {
   InitialQueryParams as InitialQueryParamsOrganizations,
   initialQueryParams,
 } from '../ui/OrganizationsUIHelpers';
+import { InitialQueryParams as InitialQueryParamsOrganizationMembers } from '../ui/OrganizationMembersUIHelpers';
 import { localStorageEffect } from 'utils/store/persist';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
-import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
+import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 
 const selectedOrganization = atom<Org | null>({
   key: 'organization.current',
@@ -16,18 +16,7 @@ const selectedOrganization = atom<Org | null>({
 const defaultOrganization = atom<{ name: string; id: string } | null>({
   key: 'organization.default',
   default: null,
-  effects: [
-    ({ setSelf }) => {
-      const savedIdentity =
-        typeof window !== 'undefined'
-          ? window.localStorage.getItem('identity')
-          : null;
-      if (savedIdentity) {
-        const defaultOrg = JSON.parse(savedIdentity)['defaultOrganization'];
-        if (defaultOrg) setSelf(defaultOrg);
-      }
-    },
-  ],
+  effects: [localStorageEffect('defaultOrganization')],
 });
 
 const organizationsPageIndex = atom<number>({
@@ -67,35 +56,7 @@ const organizationsLoadingState = atom<LoadingState>({
 
 const organizationLoadingState = atom<LoadingState>({
   key: 'organization.loadingState',
-  default: 'initializing',
-});
-
-const organizationDefaultLoadingState = atom<LoadingState>({
-  key: 'organization.defaultOrgloadingState',
-  default: 'initializing',
-});
-
-const organizationDeleteLoadingState = atom<LoadingState>({
-  key: 'organization.organizationDeleteLoadingState',
-  default: 'initializing',
-});
-
-const organizationMemberCount = selector({
-  key: 'organization.memberCount',
-  get: ({ get }) => {
-    const organisations = get(allOrganizations);
-
-    return organisations.reduce((acc, org) => acc + (org?.memberCount ?? 0), 0);
-  },
-});
-
-const organisationCount = selector({
-  key: 'organization.count',
-  get: ({ get }) => {
-    const organizations = get(allOrganizations);
-
-    return organizations.length;
-  },
+  default: 'loading',
 });
 
 const organizationsFiltered = selectorFamily<
@@ -125,6 +86,7 @@ const organizationsActive = selectorFamily<
     (queryParams) =>
     ({ get }) => {
       const allOrgs = get(organizationsFiltered(queryParams));
+
       const { pagination } = queryParams;
 
       const paginatedOrganizations = paginate(allOrgs, pagination);
@@ -133,34 +95,36 @@ const organizationsActive = selectorFamily<
     },
 });
 
-const organizationMembersPageIndex = atom<number>({
-  key: 'organization.member.pageIndex',
-  default: 0,
+const organizationMembersActive = selectorFamily<
+  OrgUser[],
+  InitialQueryParamsOrganizationMembers
+>({
+  key: 'organizations.active',
+  get:
+    (queryParams) =>
+    ({ get }) => {
+      const org = get(selectedOrganization);
+
+      const { pagination } = queryParams;
+
+      if (!org?.members) {
+        return [];
+      }
+
+      const sorted = sort(org?.members, {
+        field: 'email',
+        order: 'asc',
+      });
+
+      const paginated = paginate(sorted, pagination);
+
+      return paginated;
+    },
 });
 
 const organizationMemberLoadingState = atom<LoadingState>({
   key: 'organization.member.loadingState',
   default: 'initializing',
-});
-
-const organizationMembersLoadingState = atom<LoadingState>({
-  key: 'organization.members.loadingState',
-  default: 'initializing',
-});
-
-const organizationSentInvitations = atom<Invitation[]>({
-  key: 'organizationSentInvitations',
-  default: [],
-});
-
-const organizationSentInvitationsLoadingState = atom<LoadingState>({
-  key: 'organizationSentInvitations.loadingState',
-  default: 'initializing',
-});
-
-const organizationReceivedInvitations = atom<any[]>({
-  key: 'organizationReceivedInvitations',
-  default: [],
 });
 
 const provisionToken = atom<string>({
@@ -177,23 +141,15 @@ export const organizationAtoms = {
   selectedOrganization,
   organizationsPageIndex,
   organizationLoadingState,
-  organizationDeleteLoadingState,
-  organizationDefaultLoadingState,
   organizationsLoadingState,
   allOrganizations,
   allOrganizationsSorted,
   organizationsFilters,
   organizationsFiltered,
   organizationsActive,
-  organizationMemberCount,
-  organisationCount,
+  organizationMembersActive,
   defaultOrganization,
   organizationMemberLoadingState,
-  organizationMembersLoadingState,
-  organizationMembersPageIndex,
-  organizationSentInvitations,
-  organizationSentInvitationsLoadingState,
-  organizationReceivedInvitations,
   provisionToken,
   provisionTokenLoadingState,
 };

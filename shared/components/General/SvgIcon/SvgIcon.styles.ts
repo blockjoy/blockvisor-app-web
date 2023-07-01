@@ -6,11 +6,14 @@ export const styles = {
     position: relative;
     display: grid;
     place-items: center;
-
-    > svg :is(path, circle, rect) {
+  `,
+  iconDefault: (theme: ITheme) => css`
+    > svg :is(path, rect) {
       fill: ${theme.colorDefault};
     }
-
+  `,
+  iconTooltip: css`
+    position: relative;
     :hover .tooltip {
       opacity: 1;
       visibility: visible;

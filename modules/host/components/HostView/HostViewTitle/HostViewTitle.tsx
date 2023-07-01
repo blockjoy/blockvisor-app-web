@@ -11,23 +11,16 @@ export const HostViewTitle = () => {
 
   const { host, isLoading } = useHostView();
 
-  const handleNodesClicked = () => router.push(ROUTES.HOSTS);
+  const handleHostsClicked = () => router.push(ROUTES.HOSTS);
 
   return (
-    <PageTitle>
-      <div css={styles.breadcrumb}>
-        <button onClick={handleNodesClicked} css={styles.nodesButton}>
-          <NodeTitle titleText="Hosts" icon={<IconHost />} />
-        </button>
-        <span css={styles.separator}>/</span>
-        {isLoading !== 'finished' && !host?.id ? (
-          <Skeleton width="80px" />
-        ) : !isLoading && !host?.id ? (
-          <p>Host not found</p>
-        ) : (
-          <Copy value={host?.id!}>{host?.id}</Copy>
-        )}
-      </div>
-    </PageTitle>
+    <PageTitle
+      title="Hosts"
+      onTitleClick={handleHostsClicked}
+      childTitle={host?.id}
+      icon={<IconHost />}
+      isLoading={isLoading === 'loading'}
+      canCopyChild
+    />
   );
 };

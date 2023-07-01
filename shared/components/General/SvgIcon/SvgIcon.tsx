@@ -8,6 +8,7 @@ type Props = {
   additionalStyles?: ((theme: ITheme) => SerializedStyles)[] | undefined;
   size?: string;
   tooltip?: string;
+  isDefaultColor?: boolean;
 };
 
 export const SvgIcon: React.FC<Props> = ({
@@ -15,25 +16,38 @@ export const SvgIcon: React.FC<Props> = ({
   size = '16px',
   tooltip,
   additionalStyles,
-}) => (
-  <span
-    css={[styles.icon, additionalStyles ?? '']}
-    style={{ width: size, minWidth: size, height: size, minHeight: size }}
-  >
-    {tooltip && (
-      <Tooltip
-        customCss={[
-          css`
-            min-width: 180px;
-            max-width: 180px;
-            transition-delay: 0.6s;
-            background: rgb(0 0 0 / 42%);
-          `,
-        ]}
-        bottom="6px"
-        tooltip={tooltip}
-      />
-    )}
-    {children}
-  </span>
-);
+  isDefaultColor,
+}) => {
+  const SvgIconComponent = () => (
+    <span
+      css={[
+        styles.icon,
+        isDefaultColor && styles.iconDefault,
+        additionalStyles ?? '',
+      ]}
+      style={{ width: size, minWidth: size, height: size, minHeight: size }}
+    >
+      {children}
+    </span>
+  );
+
+  return tooltip ? (
+    <span css={styles.iconTooltip}>
+      <SvgIconComponent />
+      {tooltip && (
+        <Tooltip
+          customCss={[
+            css`
+              min-width: 180px;
+              max-width: 180px;
+            `,
+          ]}
+          bottom={`calc(${size} + 10px)`}
+          tooltip={tooltip}
+        />
+      )}
+    </span>
+  ) : (
+    <SvgIconComponent />
+  );
+};

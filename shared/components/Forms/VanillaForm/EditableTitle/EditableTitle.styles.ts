@@ -6,14 +6,16 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
   `,
   input: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
     background: transparent;
     font-size: 24px;
     outline: none;
     min-height: 50px;
     min-width: 0;
+    margin-right: 11px;
     color: ${theme.colorText};
     -webkit-text-fill-color: ${theme.colorText};
     opacity: 1; /* required on iOS */

@@ -4,6 +4,7 @@ import {
   buttonSize,
   buttonDisplay,
   buttonStyle,
+  buttonTooltip,
   button,
 } from './Button.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -65,7 +66,7 @@ export function Button({
     );
   }
 
-  return (
+  const ButtonComponent = () => (
     <button
       disabled={disabled}
       {...rest}
@@ -75,7 +76,15 @@ export function Button({
       onClick={onClick}
     >
       {loading ? <ButtonSpinner size={size} /> : children}
-      {tooltip && <Tooltip noWrap hideOnMobile top="-18px" tooltip={tooltip} />}
     </button>
+  );
+
+  return tooltip ? (
+    <div css={buttonTooltip}>
+      <Tooltip noWrap hideOnMobile left="50%" top="-30px" tooltip={tooltip} />
+      <ButtonComponent />
+    </div>
+  ) : (
+    <ButtonComponent />
   );
 }

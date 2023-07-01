@@ -8,6 +8,7 @@ import { Toast } from './toast/Toast';
 import { useIdentityRepository } from '@modules/auth';
 import {
   organizationAtoms,
+  useDefaultOrganization,
   useGetOrganizations,
   useInvitations,
   useProvisionToken,
@@ -31,16 +32,16 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
-  const { loadNodes, nodeList } = useNodeList();
-  const { loadHosts, hostList } = useHostList();
+  const { loadNodes } = useNodeList();
+  const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
+  const { defaultOrganization, getDefaultOrganization } =
+    useDefaultOrganization();
 
   useEffect(() => {
     if (!organizations.length) getOrganizations();
+    if (!defaultOrganization?.id) getDefaultOrganization(organizations);
     getReceivedInvitations(userEmail!);
   }, []);
 

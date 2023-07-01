@@ -122,7 +122,10 @@ export const NodeLauncherConfig: FC<Props> = ({
 
         <FormLabel>
           Firewall Rules{' '}
-          <SvgIcon tooltip="Add IP addresses that are allowed/denied">
+          <SvgIcon
+            isDefaultColor
+            tooltip="Add IP addresses that are allowed/denied"
+          >
             <IconInfo />
           </SvgIcon>
         </FormLabel>

@@ -8,10 +8,13 @@ import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useNodeMetrics } from './useNodeMetrics';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { ROUTES } from '@shared/constants/routes';
+import { useDefaultOrganization } from '@modules/organization';
 
 export const useNodeList = () => {
   const router = useRouter();
   const repository = useIdentityRepository();
+
+  const orgId = useDefaultOrganization().defaultOrganization?.id;
 
   const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
   const setPreloadNodes = useSetRecoilState(nodeAtoms.preloadNodes);
@@ -51,10 +54,8 @@ export const useNodeList = () => {
 
     setHasMore(false);
 
-    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
-
     const nodes: any = await nodeClient.listNodes(
-      org_id!,
+      orgId!,
       queryParams.filter,
       queryParams.pagination,
     );
@@ -102,28 +103,12 @@ export const useNodeList = () => {
   const listNodesByHost = async (hostId: string) => {
     setNodeListByHostLoadingState('initializing');
 
-    const org_id = repository?.getIdentity()?.defaultOrganization?.id;
-
-    const nodes: any = await nodeClient.listNodesByHost(org_id!, hostId);
+    const nodes: any = await nodeClient.listNodesByHost(orgId!, hostId);
 
     setNodeListByHost(nodes);
 
     setNodeListByHostLoadingState('finished');
   };
-
-  // const updateNodeList = async (node: BlockjoyNode) => {
-  //   if (isUpdated.current) return;
-  //   const isInRoute = Boolean(router.query.created);
-  //   if (!isInRoute) return;
-  //   const isInTheList = nodeList.some((nl) => nl.id === node.id);
-  //   const isInTheQuery = isInQuery(node);
-  //   if (!isInTheList && isInTheQuery) {
-  //     setNodeList((prevNodeList) => [node, ...prevNodeList]);
-  //   }
-  //   await loadMetrics();
-  //   removeQueryParams(router, ['created']);
-  //   isUpdated.current = true;
-  // };
 
   const addToNodeList = async (node: any) => {
     const newNodeList = [...nodeList, node];
@@ -145,12 +130,10 @@ export const useNodeList = () => {
     nodeList,
     loadNodes,
     isLoading,
-    // updateNodeList,
     addToNodeList,
     removeFromNodeList,
     handleNodeClick,
     setIsLoading,
-
     listNodesByHost,
     nodeListByHost,
     nodeListByHostLoadingState,

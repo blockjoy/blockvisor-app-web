@@ -1,4 +1,5 @@
 import { Filtering, Pagination } from '@shared/components';
+import { useEffect } from 'react';
 import { TableEmpty } from '../TableEmpty';
 
 export const withQuery = (Component: any) => {
@@ -49,6 +50,22 @@ export const withQuery = (Component: any) => {
 
       onTableChange('filter', updatedProperties);
     };
+
+    // check if currentPage needs to change
+    useEffect(() => {
+      const { currentPage, itemsPerPage } = properties.pagination;
+      const pageCount = Math.ceil(total / itemsPerPage!);
+
+      if (currentPage! > pageCount) {
+        onTableChange('pagination', {
+          ...properties,
+          pagination: {
+            ...properties.pagination,
+            currentPage: 1,
+          },
+        });
+      }
+    }, [total]);
 
     return (
       <>

@@ -1,179 +1,159 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { BackButton } from '@shared/components/Buttons/BackButton/BackButton';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { queryAsString } from '@shared/utils/query';
-import { toast } from 'react-toastify';
-import { getOrganizationDetails } from '@modules/organization/utils/organizationDetails';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
-  DangerZone,
-  DetailsTable,
-  PageTitle,
-  PageSection,
-  Skeleton,
-  SkeletonGrid,
-  TableSkeleton,
-  EditableTitle,
   EmptyColumn,
+  TableAdd,
+  BackButton,
+  SkeletonView,
 } from '@shared/components';
-import { useIdentity } from '@modules/auth';
-import { useDeleteOrganization } from '@modules/organization/hooks/useDeleteOrganization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import {
   getOrgMemberRole,
+  invitationAtoms,
+  organizationAtoms,
+  OrganizationDetails,
   useInvitations,
-  useUpdateOrganization,
+  useInviteMembers,
 } from '@modules/organization';
+import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
+import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
+import { styles } from './OrganizationView.styles';
+import { useRecoilValue } from 'recoil';
+import { useIdentity } from '@modules/auth';
 import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { PageHeader, ROUTES } from '@shared/index';
-import { nodeClient } from '@modules/grpc';
-import { OrganizationMembersView } from '@modules/organization/components/OrganizationView/OrganizationMembers/OrganizationMembersView';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { checkIfExists } from '@modules/organization/utils/checkIfExists';
+import { toast } from 'react-toastify';
+import { isValidEmail } from '@shared/index';
+import { createPath } from '@modules/organization/utils/createPath';
+import { isMobile } from 'react-device-detect';
 
-export const OrganizationView = () => {
+export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const { id } = router.query;
-  const {
-    getOrganization,
-    setOrganization,
-    organization,
-    isLoading,
-    setIsLoading,
-  } = useGetOrganization();
+  const { getOrganization, organization, isLoading, setIsLoading } =
+    useGetOrganization();
 
-  const { deleteOrganization } = useDeleteOrganization();
-  const { updateOrganization } = useUpdateOrganization();
-  const { leaveOrganization } = useLeaveOrganization();
+  const form = useForm<{ email: string }>();
+
+  const { getSentInvitations, setSentInvitationsLoadingState } =
+    useInvitations();
+
+  const selectedOrganization = useRecoilValue(
+    organizationAtoms.selectedOrganization,
+  );
 
   const { user } = useIdentity();
 
-  const {
-    getSentInvitations,
-    isLoading: sentInvitationsLoadingState,
-    setIsLoading: setSentInvitationsLoadingState,
-  } = useInvitations();
+  const role = getOrgMemberRole(selectedOrganization!, user?.id!);
 
-  const [isSavingOrganization, setIsSavingOrganization] =
-    useState<boolean | null>(null);
-
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
-
-  const handleSaveClicked = async (newOrganizationName: string) => {
-    setIsSavingOrganization(true);
-    try {
-      await updateOrganization(id?.toString()!, newOrganizationName);
-      setIsSavingOrganization(false);
-      toast.success('Organization Updated');
-    } catch (err: any) {
-      setIsSavingOrganization(false);
-    }
-  };
-
-  const handleEditClicked = () => {
-    setIsSavingOrganization(null);
-  };
-
-  const role = getOrgMemberRole(organization!, user?.id!);
-
-  const canUpdateOrganization: boolean = useHasPermissions(
+  const canCreateMember: boolean = useHasPermissions(
     role,
-    Permissions.UPDATE_ORGANIZATION,
+    Permissions.CREATE_MEMBER,
   );
 
-  const canDeleteOrganization: boolean = useHasPermissions(
-    role,
-    Permissions.DELETE_ORGANIZATION,
-  );
+  const [isInviting, setIsInviting] = useState<boolean>(false);
 
-  const action = canDeleteOrganization ? 'delete' : 'leave';
+  const members = selectedOrganization?.members;
 
-  const handleAction = async () => {
-    setIsDeleting(true);
-    if (canDeleteOrganization) {
-      await deleteOrganization(queryAsString(id));
+  const sentInvitations = useRecoilValue(invitationAtoms.sentInvitations);
+
+  const { inviteMembers } = useInviteMembers();
+
+  const handleInviteClicked = (email: string) => {
+    setIsInviting(true);
+
+    const isMemberOrInvited = checkIfExists(
+      members!,
+      sentInvitations!,
+      email!?.toLowerCase(),
+    );
+
+    if (!isMemberOrInvited) {
+      inviteMembers(email!, () => {
+        form.reset();
+        getSentInvitations(id!);
+        setIsInviting(false);
+        router.push(createPath(id as string, 'invitations'));
+      });
     } else {
-      await leaveOrganization(queryAsString(id));
+      setIsInviting(false);
+      if (isMemberOrInvited === 'member') {
+        toast.error('Already a member');
+      } else {
+        toast.error('Already invited');
+      }
     }
+  };
+
+  const onSubmit: SubmitHandler<{ email: string }> = async ({ email }) => {
+    handleInviteClicked(email);
   };
 
   useEffect(() => {
-    if (router.isReady) {
-      setIsDeleting(false);
-      setIsSavingOrganization(false);
-      getOrganization(queryAsString(id));
-      getSentInvitations(queryAsString(id));
-    }
-
+    (async () => {
+      if (router.isReady) {
+        getOrganization(queryAsString(id));
+        getSentInvitations(queryAsString(id));
+      }
+    })();
     return () => {
-      setIsLoading('initializing');
-      setSentInvitationsLoadingState('initializing');
-      setOrganization(null);
-      setSentInvitationsLoadingState('initializing');
+      setIsLoading('loading');
+      setSentInvitationsLoadingState('loading');
     };
-  }, [router.isReady]);
-
-  const details = getOrganizationDetails(organization);
-  const isLoadingOrg =
-    isLoading !== 'finished' ||
-    sentInvitationsLoadingState !== 'finished' ||
-    organization?.nodeCount === null;
+  }, [id, router.isReady]);
 
   return (
     <>
-      <PageTitle title="Organizations" />
-      <PageSection bottomBorder={false}>
+      {isMobile && (
         <div css={spacing.top.medium}>
-          <BackButton backUrl={ROUTES.ORGANIZATIONS} />
+          <BackButton backUrl="/organizations" />
         </div>
-        {isLoadingOrg ? (
-          <div css={spacing.top.medium}>
-            <SkeletonGrid padding="10px 0 70px">
-              <Skeleton width="260px" />
-              <Skeleton width="180px" />
-            </SkeletonGrid>
-            <TableSkeleton />
-          </div>
-        ) : organization === null ? (
-          <EmptyColumn
-            title="Organization Not Found"
-            description="No organization exists with this ID"
-          />
-        ) : (
-          <div css={spacing.top.medium}>
-            {organization?.name?.length && (
-              <EditableTitle
-                isLoading={isLoadingOrg}
-                isSaving={isSavingOrganization!}
-                initialValue={organization?.name!}
-                onSaveClicked={handleSaveClicked}
-                onEditClicked={handleEditClicked}
-                canUpdate={canUpdateOrganization && !organization?.personal}
-              />
-            )}
-            <DetailsTable bodyElements={details ?? []} />
-            <div css={[spacing.top.xLarge]} />
-            <OrganizationMembersView />
-          </div>
-        )}
-      </PageSection>
-      {!isLoadingOrg && organization !== null && !organization?.personal && (
-        <PageSection bottomBorder={false}>
-          <DangerZone
-            elementName="Organization"
-            elementNameToCompare={organization?.name ?? ''}
-            activeAction={action}
-            handleAction={handleAction}
-            isLoading={isDeleting}
-            isDisabled={
-              action === 'delete' &&
-              organization.nodeCount !== null &&
-              organization.nodeCount! > 0
-            }
-          ></DangerZone>
-        </PageSection>
+      )}
+      <OrganizationViewHeader />
+      {isLoading === 'loading' ? (
+        <div css={spacing.top.medium}>
+          <SkeletonView />
+        </div>
+      ) : isLoading !== 'initializing' && organization === null ? (
+        <EmptyColumn
+          title="Organization Not Found"
+          description="No organization exists with this ID"
+        />
+      ) : (
+        <>
+          <OrganizationViewTabs />
+          <section css={styles.wrapper}>
+            <div css={styles.leftWrapper}>
+              {canCreateMember && (
+                <TableAdd
+                  field="email"
+                  placeholder="Invite Member"
+                  placeholderFocused="Enter an email address"
+                  onSubmit={onSubmit}
+                  isLoading={isInviting}
+                  form={form}
+                  validationOptions={{
+                    required: 'An email address is required',
+                    pattern: {
+                      value: isValidEmail(),
+                      message: 'Email format is not correct',
+                    },
+                  }}
+                />
+              )}
+              {children}
+            </div>
+            <div css={styles.rightWrapper}>
+              <OrganizationDetails />
+            </div>
+          </section>
+        </>
       )}
     </>
   );

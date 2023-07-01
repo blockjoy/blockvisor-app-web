@@ -34,7 +34,6 @@ export const EditableTitle: FC<Props> = ({
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(true);
   const [isDirty, setIsDirty] = useState<boolean>(false);
-  const [characterCount, setCharacterCount] = useState<number>(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const inputValue = useRef<string>('');
@@ -46,24 +45,20 @@ export const EditableTitle: FC<Props> = ({
       inputRef.current.focus();
       inputRef.current.value = initialValue;
       inputValue.current = initialValue;
-      setCharacterCount(escapeHtml(initialValue)?.length + 1);
     }
 
     setIsEditMode(!isEditMode);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
-    inputValue.current = value;
-    setCharacterCount(escapeHtml(value)?.length + 1);
-    setIsValid(value?.length > 0);
-    setIsDirty(escapeHtml(value) !== escapeHtml(initialValue));
+    const { innerText } = e.target;
+    inputValue.current = innerText;
+    setIsValid(innerText?.length > 0);
+    setIsDirty(escapeHtml(innerText) !== escapeHtml(initialValue));
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!['Enter'].includes(e.key)) return;
-
     handleSaveClicked();
   };
 
@@ -73,7 +68,6 @@ export const EditableTitle: FC<Props> = ({
 
   useEffect(() => {
     inputValue.current = initialValue;
-    setCharacterCount(escapeHtml(initialValue)?.length + 1);
   }, []);
 
   useEffect(() => {
@@ -91,18 +85,17 @@ export const EditableTitle: FC<Props> = ({
   return (
     <div css={styles.wrapper}>
       {isEditMode ? (
-        <input
-          autoComplete={'off'}
+        <div
+          contentEditable
           spellCheck={false}
           ref={inputRef}
-          disabled={!isEditMode}
-          placeholder=""
-          size={characterCount}
           css={[styles.input, isEditMode && styles.inputEditable]}
-          defaultValue={escapeHtml(initialValue)}
-          onChange={handleChange}
+          onInput={handleChange}
           onKeyDown={handleKeyDown}
-        />
+          suppressContentEditableWarning
+        >
+          {initialValue}
+        </div>
       ) : (
         <span css={styles.span}>{escapeHtml(initialValue)}</span>
       )}

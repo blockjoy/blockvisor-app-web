@@ -27,9 +27,7 @@ const buttonStyle = {
     box-shadow: 0px 0px 0px 3px var(--color-secondary-o0);
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
-    :hover,
-    :active,
-    :focus {
+    :not(:disabled):is(:hover, :active, :focus) {
       box-shadow: 0px 0px 0px 3px var(--color-secondary-o30);
     }
 
@@ -60,16 +58,18 @@ const buttonStyle = {
       background-color: var(--color-text-5-o3);
     }
   `,
-  warning: css`
-    background-color: var(--color-utility-warning);
-    color: var(--color-foreground-primary);
+  warning: (theme: ITheme) => css`
+    background-color: ${theme.colorDanger};
+    color: ${theme.colorText};
     box-shadow: 0px 0px 0px 3px var(--color-utility-warning-o0);
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
-    :hover,
-    :active,
-    :focus {
+    :not(:disabled):is(:hover, :active, :focus) {
       box-shadow: 0px 0px 0px 3px var(--color-utility-warning-o30);
+    }
+
+    svg > path {
+      fill: ${theme.colorText};
     }
   `,
   basic: css`
@@ -81,6 +81,8 @@ const buttonStyle = {
     place-items: center;
     width: 34px;
     height: 34px;
+    max-width: 34px;
+    min-height: 34px;
     padding: 0;
     background: transparent;
     border: 0;
@@ -126,6 +128,16 @@ const button = css`
     cursor: not-allowed;
     opacity: 0.5;
   }
+
+  :hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+`;
+
+const buttonTooltip = css`
+  position: relative;
+  display: inline-block;
 
   :hover .tooltip {
     opacity: 1;
@@ -204,4 +216,5 @@ export {
   buttonLight,
   buttonLightO10,
   buttonStyle,
+  buttonTooltip,
 };

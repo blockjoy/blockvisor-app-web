@@ -12,8 +12,8 @@ export const styles = {
       fill: ${theme.colorLightGrey};
     }
 
-    path {
-      fill: ${theme.colorLabel};
+    svg path {
+      fill: ${theme.colorDefault};
     }
 
     :hover .tooltip {

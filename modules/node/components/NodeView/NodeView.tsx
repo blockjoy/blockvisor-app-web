@@ -40,6 +40,7 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
   return (
     <>
       <NodeViewTitle />
+
       {isLoading && !node?.id && (
         <div css={[styles.wrapper, wrapper.main]}>
           <div css={styles.loader}>

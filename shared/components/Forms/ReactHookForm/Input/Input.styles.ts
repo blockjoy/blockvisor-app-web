@@ -48,7 +48,8 @@ const inputFieldError = css`
 
 const inputTypesStyle: Record<InputSize, SerializedStyles> = {
   small: css`
-    padding: 8px 12px;
+    padding: 0 12px;
+    height: 32px;
   `,
   medium: css`
     padding: 12px 12px;

@@ -2,6 +2,7 @@ import { styles } from './Faq.styles';
 import { EmptyColumn, PageSection, PageTitle } from '@shared/components';
 import { Fragment } from 'react';
 import { readMarkdown } from 'utils/readMarkdown';
+import IconChat from '@public/assets/icons/common/Chat.svg';
 
 export type FaqProps = {
   faqs: FAQ[];
@@ -10,7 +11,7 @@ export type FaqProps = {
 export const Faq = ({ faqs }: FaqProps) => {
   return (
     <>
-      <PageTitle title="FAQ" />
+      <PageTitle title="FAQ" icon={<IconChat />} />
       <PageSection>
         <div css={styles.wrapper}>
           <header css={styles.header}>Frequently Asked Questions</header>

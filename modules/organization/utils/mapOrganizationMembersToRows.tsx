@@ -9,9 +9,9 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { MemberAndInvitation } from './mapMembersAndInvitations';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { getOrgMemberRole } from './getOrgMemberRole';
+import { OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 
 export enum Action {
   revoke = 'revoke',
@@ -34,7 +34,7 @@ export type Methods = {
 };
 
 export const mapOrganizationMembersToRows = (
-  membersAndInvitations?: MemberAndInvitation[],
+  members?: OrgUser[],
   methods?: Methods,
 ) => {
   const repository = useIdentityRepository();
@@ -44,10 +44,6 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  const canCreateMember: boolean = useHasPermissions(
-    getOrgMemberRole(selectedOrganization!, userId!),
-    Permissions.CREATE_MEMBER,
-  );
   const canRemoveMember: boolean = useHasPermissions(
     getOrgMemberRole(selectedOrganization!, userId!),
     Permissions.DELETE_MEMBER,
@@ -59,18 +55,6 @@ export const mapOrganizationMembersToRows = (
     email: string,
   ) => {
     methods?.action(Action.remove, { userId, orgId, email });
-  };
-
-  const handleRevokeInvitation = (invitationId: string, email: string) => {
-    methods?.action(Action.revoke, { invitationId, email });
-  };
-
-  const handleResendInvitation = (
-    invitationId: string,
-    email: string,
-    orgId: string,
-  ) => {
-    methods?.resend({ invitationId, email, orgId });
   };
 
   const headers = [
@@ -85,14 +69,6 @@ export const mapOrganizationMembersToRows = (
     },
     {
       name: '',
-      key: '2',
-      width: '60px',
-      minWidth: '60px',
-      maxWidth: '60px',
-      textAlign: 'right',
-    },
-    {
-      name: '',
       key: '3',
       width: '50px',
       minWidth: '50px',
@@ -101,102 +77,56 @@ export const mapOrganizationMembersToRows = (
     },
   ];
 
-  const rows = membersAndInvitations?.map(
-    (member: MemberAndInvitation, idx: number) => ({
-      key: member.id ?? `${idx}`,
-      cells: [
-        {
-          key: '1',
-          component: (
-            <div css={flex.display.inline}>
-              <p>{escapeHtml(member.email!)}</p>
-              {member.isPending && (
-                <Badge
-                  color="note"
-                  style="outline"
-                  customCss={[spacing.left.small]}
-                >
-                  Pending
-                </Badge>
-              )}
-            </div>
-          ),
-        },
-        {
-          key: '3',
-          component:
-            member.isPending && canCreateMember ? (
-              <span
-                css={spacing.right.medium}
-                style={{ textAlign: 'right', width: '100%', display: 'block' }}
+  const rows = members?.map((member: OrgUser, idx: number) => ({
+    key: member.userId ?? `${idx}`,
+    cells: [
+      {
+        key: '1',
+        component: (
+          <div css={[flex.display.inline, flex.align.center]}>
+            <p>{escapeHtml(member.email!)}</p>
+            {member.role === OrgRole.ORG_ROLE_OWNER && (
+              <Badge
+                color="primary"
+                style="outline"
+                customCss={[spacing.left.small]}
               >
-                <Button
-                  type="button"
-                  onClick={() =>
-                    handleResendInvitation(
-                      member.invitationId!,
-                      member.email!,
-                      selectedOrganization?.id!,
-                    )
-                  }
-                  style="outline"
-                  size="small"
-                >
-                  Resend
-                </Button>
-              </span>
-            ) : null,
-        },
-        {
-          key: '4',
-          component: (
-            <>
-              {canRemoveMember ? (
-                !member.isPending ? (
-                  member.id !== userId && (
-                    <Button
-                      type="button"
-                      tooltip="Remove"
-                      style="icon"
-                      size="medium"
-                      onClick={() =>
-                        handleRemoveMember(
-                          member?.id!,
-                          selectedOrganization?.id!,
-                          member?.email!,
-                        )
-                      }
-                    >
-                      <SvgIcon size="20px">
-                        <IconClose />
-                      </SvgIcon>
-                    </Button>
+                Owner
+              </Badge>
+            )}
+          </div>
+        ),
+      },
+      {
+        key: '2',
+        component: (
+          <>
+            {canRemoveMember &&
+            !selectedOrganization?.personal &&
+            member.userId !== userId ? (
+              <Button
+                type="button"
+                tooltip="Remove"
+                style="icon"
+                size="medium"
+                onClick={() =>
+                  handleRemoveMember(
+                    member?.userId!,
+                    selectedOrganization?.id!,
+                    member?.email!,
                   )
-                ) : (
-                  <Button
-                    type="button"
-                    tooltip="Cancel"
-                    style="icon"
-                    size="medium"
-                    onClick={() =>
-                      handleRevokeInvitation(
-                        member?.invitationId!,
-                        member?.email!,
-                      )
-                    }
-                  >
-                    <SvgIcon size="20px">
-                      <IconClose />
-                    </SvgIcon>
-                  </Button>
-                )
-              ) : null}
-            </>
-          ),
-        },
-      ],
-    }),
-  );
+                }
+              >
+                <SvgIcon size="20px">
+                  <IconClose />
+                </SvgIcon>
+              </Button>
+            ) : null}
+          </>
+        ),
+      },
+    ],
+  }));
 
   return {
     rows,

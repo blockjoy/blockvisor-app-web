@@ -21,7 +21,7 @@ export const themeDefault: ITheme = {
   colorPlaceholder: '#A5A8A3',
   colorBackground: '#222524',
   colorLightGrey: '#e7e7e7',
-  colorDanger: '#EE7070',
+  colorDanger: '#e66765',
   colorNote: '#e9af3a',
   colorOverlay: '#363a39',
   colorSuccess: '#85F550',
