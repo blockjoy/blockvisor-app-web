@@ -16,6 +16,11 @@ export const useProvisionToken = () => {
     const orgId = repository?.getIdentity()?.defaultOrganization?.id;
 
     try {
+      console.log('getProvisionToken', {
+        userId,
+        orgId,
+      });
+
       const response: any = await organizationClient.getProvisionToken(
         userId!,
         orgId!,

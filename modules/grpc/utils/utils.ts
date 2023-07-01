@@ -28,13 +28,6 @@ export const setTokenValue = (token: string) => {
     parsedIdentity.accessToken = token;
     const updatedIdentityString = JSON.stringify(parsedIdentity);
     window.localStorage.setItem('identity', updatedIdentityString);
-  } else {
-    window.localStorage.setItem(
-      'identity',
-      JSON.stringify({
-        accessToken: token,
-      }),
-    );
   }
 };
 

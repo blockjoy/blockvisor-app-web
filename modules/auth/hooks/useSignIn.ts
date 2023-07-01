@@ -3,7 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
 import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
-import { isStatusResponse } from '@modules/organization';
+import { isStatusResponse, useGetOrganizations } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
 
 type SignInParams = {
@@ -15,8 +15,9 @@ export function useSignIn() {
   const setUser = useSetRecoilState(authAtoms.user);
   const repository = useIdentityRepository();
 
-  const handleSuccess = async (accessToken: string) => {
-    // authClient.setTokenValue(accessToken);
+  const { getOrganizations } = useGetOrganizations();
+
+  const handleSuccess = async (accessToken: string, init?: boolean) => {
     repository?.saveIdentity({
       accessToken,
       // for demo purposes only, this will be set December 2045
@@ -24,9 +25,7 @@ export function useSignIn() {
     });
 
     const tokenObject: any = readToken(accessToken);
-
     const userId = tokenObject.resource_id;
-
     const userData: any = await userClient.getUser(userId);
 
     repository?.updateIdentity(userData);
@@ -35,11 +34,15 @@ export function useSignIn() {
       ...userData,
       accessToken,
     }));
+
+    if (init) {
+      await getOrganizations(true);
+    }
   };
 
   const signIn = async (params?: SignInParams, token?: string) => {
     if (token) {
-      handleSuccess(token);
+      await handleSuccess(token, true);
       return;
     }
 

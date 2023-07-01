@@ -59,6 +59,8 @@ export const useNodeList = () => {
       queryParams.pagination,
     );
 
+    console.log('nodes', nodes);
+
     checkForTokenError(nodes);
 
     setPreloadNodes(nodes.length);
