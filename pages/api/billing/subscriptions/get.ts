@@ -16,14 +16,18 @@ const getSubscription = async (id: string): Promise<Subscription | null> => {
         else reject(error);
       } else {
         const subscription = result.subscription as Subscription;
-        const card = result.card as Card;
+        let resultSubscription = subscription;
 
-        const updatedSubscriptionData = {
-          ...subscription,
-          payment_source_id: card.payment_source_id!,
-        } as Subscription;
+        if (!subscription.payment_source_id) {
+          const card = result.card as Card;
 
-        resolve(updatedSubscriptionData);
+          resultSubscription = {
+            ...subscription,
+            payment_source_id: card.payment_source_id!,
+          } as Subscription;
+        }
+
+        resolve(resultSubscription);
       }
     });
   });

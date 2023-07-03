@@ -16,14 +16,24 @@ import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { PermissionsCreateNode } from '@modules/auth/hooks/useHasPermissions';
 
-type Props = {
+const ERROR_MESSAGES = {
+  [PermissionsCreateNode.NoPermissions]:
+    'Cannot launch node due to insufficient permissions',
+  [PermissionsCreateNode.NoSubscription]:
+    'Cannot launch node. Contact organization owner to upgrade subscription',
+  [PermissionsCreateNode.NoPaymentMethod]:
+    'Cannot launch node. Contact organization owner to add payment method',
+};
+
+type NodeLauncherSummaryProps = {
   serverError: string;
   hasAddedFiles: boolean;
   hasNetworkList: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean | null;
-  canAddNode: boolean;
+  canAddNode: PermissionsCreateNode;
   isCreating: boolean;
   selectedHost: Host | null;
   nodeLauncherState: NodeLauncherState;
@@ -33,7 +43,7 @@ type Props = {
   onRegionsLoaded: (region: string) => void;
 };
 
-export const NodeLauncherSummary: FC<Props> = ({
+export const NodeLauncherSummary = ({
   serverError,
   hasAddedFiles,
   hasNetworkList,
@@ -47,7 +57,7 @@ export const NodeLauncherSummary: FC<Props> = ({
   onHostChanged,
   onNodePropertyChanged,
   onRegionsLoaded,
-}) => {
+}: NodeLauncherSummaryProps) => {
   const { blockchains } = useGetBlockchains();
 
   if (isConfigValid === null) return null;
@@ -74,10 +84,10 @@ export const NodeLauncherSummary: FC<Props> = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
-        {!hasNetworkList || !canAddNode ? (
+        {!hasNetworkList || canAddNode !== PermissionsCreateNode.Granted ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
-            {!canAddNode
-              ? 'Cannot launch node due to insufficient permissions'
+            {canAddNode !== PermissionsCreateNode.Granted
+              ? ERROR_MESSAGES[canAddNode]
               : 'Cannot launch node, missing network configuration'}
           </div>
         ) : (
@@ -165,7 +175,7 @@ export const NodeLauncherSummary: FC<Props> = ({
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
-            !canAddNode ||
+            canAddNode !== PermissionsCreateNode.Granted ||
             Boolean(serverError) ||
             isCreating
           }

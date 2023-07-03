@@ -13,6 +13,11 @@ export const nodeTypeList = [
   { id: 3, name: 'Validator' },
 ];
 
+// TODO: merge with nodeTypeList
+export const nodeTypes = {
+  10: 'A',
+};
+
 export const nodeTypeConfigLabels = [
   { name: 'keystore-file', value: 'Validator Key Upload' },
   { name: 'keystore-file-1', value: 'Key Upload 1' },
@@ -23,6 +28,8 @@ export const nodeTypeConfigLabels = [
   { name: 'mev-boost', value: 'MEV Boost' },
   { name: 'self-hosted', value: 'Self Hosted' },
 ];
+
+export const blockchainList = [{ abbreviation: 'ERI', name: 'Erigon' }];
 
 export const blockchainsDisabled = [
   'Algorand',

@@ -12,6 +12,7 @@ import {
 } from '@modules/organization';
 import { useHostList, useHostUpdate } from '@modules/host';
 import { useUpdateSubscription } from '@modules/billing';
+import { generateError, useUpdateSubscription } from '@modules/billing';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
@@ -40,19 +41,26 @@ export const useNodeAdd = () => {
     console.log('createNode Request', nodeRequest);
 
     try {
-      const response: Node = await nodeClient.createNode({
+      const nodeParams = {
         ...nodeRequest,
         properties: nodeProperties,
         network: nodeRequest.network,
-      });
+      };
+
+      try {
+        await updateSubscriptionItems({
+          type: 'create',
+          payload: { node: nodeParams },
+        });
+      } catch (error: any) {
+        const errorMessage = generateError(error);
+        onError(errorMessage);
+        return;
+      }
+
+      const response: Node = await nodeClient.createNode(nodeParams);
 
       const nodeId = response.id;
-
-      // Add node to the subscription
-      await updateSubscriptionItems({
-        type: 'create',
-        payload: { node: response },
-      });
 
       await keyFileClient.create(nodeId, keyFiles);
 
