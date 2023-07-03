@@ -110,6 +110,7 @@ body.is-side-panel {
 aside {
   flex: 1 1 300px;
   max-width: 300px;
+  padding-top: 20px;
 }
 
 body.is-side-panel aside {
