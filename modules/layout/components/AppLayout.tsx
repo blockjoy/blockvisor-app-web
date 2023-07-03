@@ -35,14 +35,11 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
-
-  const { defaultOrganization, getDefaultOrganization } =
-    useDefaultOrganization();
+  const { defaultOrganization } = useDefaultOrganization();
 
   useEffect(() => {
     (async () => {
-      if (!organizations.length) await getOrganizations();
-      if (!defaultOrganization?.id) await getDefaultOrganization(organizations);
+      if (!organizations.length) await getOrganizations(true);
       await getReceivedInvitations(userEmail!);
     })();
   }, []);

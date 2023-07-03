@@ -9,7 +9,15 @@ export function useDefaultOrganization() {
 
   const getDefaultOrganization = async (organizations: Org[]) => {
     console.log('gettingDefaultOrganization', organizations);
-    if (!defaultOrganization && organizations?.length) {
+
+    const doesLocalStorageDefaultOrgExistInList = organizations.find(
+      (org) => org.id === defaultOrganization!.id,
+    );
+
+    if (
+      organizations?.length &&
+      (!defaultOrganization || !doesLocalStorageDefaultOrgExistInList)
+    ) {
       const organization = organizations[0];
       setDefaultOrganization({
         name: organization.name,
