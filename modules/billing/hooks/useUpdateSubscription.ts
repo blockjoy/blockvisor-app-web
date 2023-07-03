@@ -1,10 +1,12 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
   useItems,
   useSubscription,
+  matchSKU,
+  fetchBilling,
 } from '@modules/billing';
 import { _subscription } from 'chargebee-typescript';
 import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
@@ -14,9 +16,7 @@ import { blockchainsAtoms } from '@modules/node';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 
 export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
-  const [subscription, setSubscription] = useRecoilState(
-    billingSelectors.subscription,
-  );
+  const setSubscription = useSetRecoilState(billingSelectors.subscription);
 
   const { provideSubscription } = useSubscription();
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
@@ -31,12 +31,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     payload: { node?: Node };
   }) => {
     setSubscriptionLoadingState('initializing');
-    let activeSubscription = subscription;
-
-    if (!subscription) {
-      const newSubscription = await provideSubscription();
-      activeSubscription = newSubscription;
-    }
+    const subscription = await provideSubscription();
 
     const { type, payload } = action;
     const { node } = payload;
@@ -45,16 +40,13 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
       [];
 
-    const nodeType = node?.nodeType === 10 ? 'pruned' : '';
-    const region = 'apac';
-
     const blockchain = blockchains.find(
       (blockchain: Blockchain) => blockchain.id === node?.blockchainId,
     );
 
-    const SKU = `${blockchain?.name?.toLowerCase()}-${nodeType}-${region}`;
+    const SKU = matchSKU(blockchain!, node!);
 
-    const billingPeriod = activeSubscription?.billing_period_unit;
+    const billingPeriod = subscription?.billing_period_unit;
 
     const itemPriceParams = {
       id: SKU,
@@ -65,7 +57,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     const itemPriceID: string = itemPrice?.length ? itemPrice[0].id : null;
 
     const subscriptionItem: SubscriptionItem | undefined =
-      activeSubscription?.subscription_items?.find(
+      subscription?.subscription_items?.find(
         (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
       );
 
@@ -91,7 +83,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
           subscriptionItems?.push(newSubscriptionItem!);
         } else {
           subscriptionItems.push(
-            ...activeSubscription?.subscription_items?.filter(
+            ...subscription?.subscription_items?.filter(
               (
                 subItem: _subscription.subscription_items_update_for_items_params,
               ) => subItem.item_price_id !== subscriptionItem?.item_price_id!,
@@ -111,22 +103,22 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
       id: string;
       params: _subscription.update_for_items_params;
     } = {
-      id: activeSubscription?.id!,
+      id: subscription?.id!,
       params: params,
     };
 
-    const response = await fetch(BILLING_API_ROUTES.subscriptions.update, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(subscriptionProperties),
-    });
+    try {
+      const data: Subscription = await fetchBilling(
+        BILLING_API_ROUTES.subscriptions.update,
+        subscriptionProperties,
+      );
 
-    const updatedSubscriptionData: Subscription = await response.json();
-
-    setSubscription(updatedSubscriptionData);
-    setSubscriptionLoadingState('finished');
+      setSubscription(data);
+    } catch (error: any) {
+      throw error;
+    } finally {
+      setSubscriptionLoadingState('finished');
+    }
   };
 
   return {

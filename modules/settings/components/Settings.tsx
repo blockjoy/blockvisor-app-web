@@ -46,7 +46,7 @@ export const Settings = () => {
   };
   return (
     <>
-      <PageTitle title="Profile" />
+      <PageTitle title="Settings" />
       <Tabs
         activeTab={activeTab}
         onTabClick={handleClick}

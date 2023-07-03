@@ -123,7 +123,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
   const handleIsDefaultAddress = (e: ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    setIsDefaultAddress(!primary);
+    setIsDefaultAddress(!isDefaultAddress);
   };
 
   return (

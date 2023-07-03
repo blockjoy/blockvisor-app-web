@@ -14,15 +14,15 @@ export const PaymentRequired = ({
   onHide,
   handleSubmit,
 }: PaymentRequiredProps) => {
-  // const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setIsModalVisible(true);
-  //   }, 100);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsModalVisible(true);
+    }, 100);
 
-  //   return () => clearTimeout(timer);
-  // }, []);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Modal portalId="modal-root" isOpen={true} handleClose={onHide}>
@@ -33,11 +33,12 @@ export const PaymentRequired = ({
         <p>Creating a Node requires a payment method.</p>
         <p>Please enter your payment details to continue.</p>
       </div>
-      {/* {isModalVisible && <PaymentMethodFormSimple handleCancel={onHide} />} */}
-      <PaymentMethodFormSimple
-        handleSubmit={handleSubmit}
-        handleCancel={onHide}
-      />
+      {isModalVisible && (
+        <PaymentMethodFormSimple
+          handleSubmit={handleSubmit}
+          handleCancel={onHide}
+        />
+      )}
     </Modal>
   );
 };

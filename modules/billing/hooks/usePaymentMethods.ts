@@ -1,8 +1,9 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
+  useSubscription,
 } from '@modules/billing';
 import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
 import { _payment_source } from 'chargebee-typescript';
@@ -21,6 +22,9 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     useRecoilState(billingAtoms.paymentMethodLoadingState);
 
   const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
+
+  const subscription = useRecoilValue(billingSelectors.subscription);
+  const { getSubscription } = useSubscription();
 
   const getPaymentMethods = async () => {
     setPaymentMethodsLoadingState('initializing');
@@ -100,13 +104,18 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
         body: JSON.stringify(params),
       });
 
-      const data: PaymentSource = await response.json();
+      const data: { paymentSource: PaymentSource; customer: Customer } =
+        await response.json();
 
-      const newPaymentMethods = [...paymentMethods, data];
+      const { paymentSource, customer: customerData } = data;
+
+      const newPaymentMethods = [...paymentMethods, paymentSource];
 
       setPaymentMethods(newPaymentMethods);
 
-      onSuccess(data?.id, data?.customer_id);
+      setCustomer(customerData);
+
+      onSuccess(paymentSource?.id, customerData.id);
     } catch (error) {
       console.error('Failed to create payment method', error);
     } finally {
@@ -131,7 +140,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
       const data: { customer: Customer; paymentSource: PaymentSource } =
         await response.json();
 
-      const { customer, paymentSource } = data;
+      const { paymentSource, customer: customerData } = data;
 
       const newPaymentMethods = paymentMethods?.filter(
         (paymentMethod: PaymentSource) =>
@@ -140,7 +149,10 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
       setPaymentMethods(newPaymentMethods);
 
-      setCustomer(customer);
+      setCustomer(customerData);
+
+      if (subscription?.payment_source_id === id)
+        getSubscription(subscription?.id);
     } catch (error) {
       console.error('Failed to delete payment method', error);
     } finally {
