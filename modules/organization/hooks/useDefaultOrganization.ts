@@ -11,7 +11,7 @@ export function useDefaultOrganization() {
     console.log('gettingDefaultOrganization', organizations);
 
     const doesLocalStorageDefaultOrgExistInList = organizations.find(
-      (org) => org.id === defaultOrganization!.id,
+      (org) => org.id === defaultOrganization?.id,
     );
 
     if (
