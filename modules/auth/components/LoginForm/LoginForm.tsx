@@ -1,7 +1,8 @@
+import { useRecoilValue } from 'recoil';
 import { useIdentityRepository, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetBlockchains } from '@modules/node';
-import { useGetOrganizations } from '@modules/organization';
+import { organizationAtoms, useGetOrganizations } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { isValidEmail } from '@shared/utils/validation';
@@ -23,6 +24,9 @@ type LoginForm = {
 
 export function LoginForm() {
   const { getOrganizations } = useGetOrganizations();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const router = useRouter();
   const { verified, redirect, forgot, invitation_id, invited } = router.query;
   const signIn = useSignIn();
@@ -38,7 +42,6 @@ export function LoginForm() {
   const { getBlockchains } = useGetBlockchains();
   const { getCustomer } = useCustomer();
   const { getSubscription } = useSubscription();
-
   const repository = useIdentityRepository();
 
   const handleIconClick = () => {
@@ -70,8 +73,7 @@ export function LoginForm() {
       const usr_id = repository?.getIdentity()?.id;
       await getCustomer(usr_id!);
 
-      const org_id = repository?.getIdentity()?.defaultOrganization?.id;
-      await getSubscription(org_id!);
+      await getSubscription(defaultOrganization?.id!);
 
       getBlockchains();
       handleRedirect();
