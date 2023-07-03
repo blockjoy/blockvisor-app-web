@@ -1,6 +1,6 @@
 export const checkForTokenError = (response: any) => {
   if (response?.message?.includes('JWT')) {
-    localStorage.clear();
+    localStorage.removeItem('identity');
     window.location.href = '/';
   }
 };

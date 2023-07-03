@@ -7,6 +7,7 @@ import {
 import {
   authClient,
   checkForRefreshTokenError,
+  getIdentity,
   getOptions,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';

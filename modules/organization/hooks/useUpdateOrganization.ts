@@ -5,7 +5,7 @@ import { organizationClient } from '@modules/grpc';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useGetOrganization } from './useGetOrganization';
-import { useSetDefaultOrganization } from './useSetDefaultOrganization';
+import { useDefaultOrganization } from './useDefaultOrganization';
 
 export function useUpdateOrganization(): IUpdateOrganizationHook {
   const [selectedOrganization, setSelectedOrganization] = useRecoilState(
@@ -14,7 +14,7 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
   const [allOrganizations, setAllOrganizations] = useRecoilState(
     organizationAtoms.allOrganizations,
   );
-  const { setDefaultOrganization } = useSetDefaultOrganization();
+  const { setDefaultOrganization } = useDefaultOrganization();
 
   const { setOrganization } = useGetOrganization();
 
@@ -63,10 +63,10 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
       defaultOrganization?.id === updatedOrganization?.id &&
       updatedOrganization?.name
     ) {
-      setDefaultOrganization(
-        defaultOrganization?.id ?? '',
-        updatedOrganization.name,
-      );
+      setDefaultOrganization({
+        id: defaultOrganization?.id ?? '',
+        name: updatedOrganization.name,
+      });
     }
   };
 

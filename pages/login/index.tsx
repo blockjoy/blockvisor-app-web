@@ -7,7 +7,7 @@ const Login: NextPage = () => {
     <PublicRoute>
       <Layout title="Login">
         <LoginForm />
-        <LoginFooter />
+        {/* <LoginFooter /> */}
       </Layout>
     </PublicRoute>
   );

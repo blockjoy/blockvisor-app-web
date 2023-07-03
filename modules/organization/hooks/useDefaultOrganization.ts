@@ -1,4 +1,3 @@
-import { useIdentityRepository } from '@modules/auth';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -9,7 +8,8 @@ export function useDefaultOrganization() {
   );
 
   const getDefaultOrganization = async (organizations: Org[]) => {
-    if (!defaultOrganization) {
+    console.log('gettingDefaultOrganization', organizations);
+    if (!defaultOrganization && organizations?.length) {
       const organization = organizations[0];
       setDefaultOrganization({
         name: organization.name,
@@ -21,5 +21,6 @@ export function useDefaultOrganization() {
   return {
     defaultOrganization,
     getDefaultOrganization,
+    setDefaultOrganization,
   };
 }

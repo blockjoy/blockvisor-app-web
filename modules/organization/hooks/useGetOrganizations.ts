@@ -22,7 +22,7 @@ export function useGetOrganizations() {
     checkForTokenError(organizations);
     setOrganizations(organizations);
 
-    if (init) getDefaultOrganization(organizations);
+    if (init) await getDefaultOrganization(organizations);
 
     setIsLoading('finished');
   };
