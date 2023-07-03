@@ -3,6 +3,7 @@ import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
+  fetchBilling,
 } from '@modules/billing';
 import { _subscription } from 'chargebee-typescript';
 import { organizationAtoms } from '@modules/organization';
@@ -30,15 +31,9 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.subscriptions.get, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
+      const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.get, {
+        id,
       });
-
-      const data = await response.json();
 
       setSubscription(data);
     } catch (error) {
@@ -59,40 +54,34 @@ export const useSubscription = (): ISubscriptionHook => {
   }) => {
     setSubscriptionLoadingState('initializing');
 
+    const autoRenewValue: string = autoRenew ? 'on' : 'off';
+
+    const subscriptionItems: _subscription.subscription_items_create_with_items_params[] =
+      [
+        {
+          item_price_id: itemPriceId,
+          quantity: 1,
+        },
+      ];
+
+    const params: {
+      id: string;
+      params: ExtendedCreateWithItemsParams;
+    } = {
+      id: customer?.id!,
+      params: {
+        auto_collection: autoRenewValue,
+        payment_source_id: paymentMethodId,
+        subscription_items: subscriptionItems,
+        cf_organization_id: defaultOrganization?.id!,
+      },
+    };
+
     try {
-      const autoRenewValue: string = autoRenew ? 'on' : 'off';
-
-      const subscriptionItems: _subscription.subscription_items_create_with_items_params[] =
-        [
-          {
-            item_price_id: itemPriceId,
-            quantity: 1,
-          },
-        ];
-
-      const params: {
-        id: string;
-        params: ExtendedCreateWithItemsParams;
-      } = {
-        id: customer?.id!,
-        params: {
-          id: defaultOrganization?.id!,
-          auto_collection: autoRenewValue,
-          payment_source_id: paymentMethodId,
-          subscription_items: subscriptionItems,
-          cf_organization_id: defaultOrganization?.id!,
-        },
-      };
-
-      const response = await fetch(BILLING_API_ROUTES.subscriptions.create, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(params),
-      });
-
-      const data: Subscription = await response.json();
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.subscriptions.create,
+        params,
+      );
 
       setSubscription(data);
 
@@ -109,24 +98,19 @@ export const useSubscription = (): ISubscriptionHook => {
   ) => {
     setSubscriptionLoadingState('initializing');
 
+    const subscriptionProperties: {
+      id: string;
+      params: _subscription.update_for_items_params;
+    } = {
+      id: subscription?.id!,
+      params,
+    };
+
     try {
-      const subscriptionProperties: {
-        id: string;
-        params: _subscription.update_for_items_params;
-      } = {
-        id: subscription?.id!,
-        params,
-      };
-
-      const response = await fetch(BILLING_API_ROUTES.subscriptions.update, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(subscriptionProperties),
-      });
-
-      const data: Subscription = await response.json();
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.subscriptions.update,
+        subscriptionProperties,
+      );
 
       setSubscription(data);
     } catch (error) {
@@ -139,30 +123,25 @@ export const useSubscription = (): ISubscriptionHook => {
   const cancelSubscription = async ({ endOfTerm }: { endOfTerm: boolean }) => {
     setSubscriptionLoadingState('initializing');
 
+    const subscriptionProperties: {
+      id: string;
+      params: _subscription.cancel_for_items_params;
+    } = {
+      id: subscription?.id!,
+      params: {
+        end_of_term: endOfTerm,
+      },
+    };
+
     try {
-      const subscriptionProperties: {
-        id: string;
-        params: _subscription.cancel_for_items_params;
-      } = {
-        id: subscription?.id!,
-        params: {
-          end_of_term: endOfTerm,
-        },
-      };
-
-      const response = await fetch(BILLING_API_ROUTES.subscriptions.cancel, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(subscriptionProperties),
-      });
-
-      const data: Subscription = await response.json();
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.subscriptions.cancel,
+        subscriptionProperties,
+      );
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to CANCEL subscription', error);
+      console.error('Failed to cancel subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -172,19 +151,14 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.subscriptions.restore, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ subscriptionId: id }),
-      });
-
-      const data: Subscription = await response.json();
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.subscriptions.restore,
+        { subscriptionId: id },
+      );
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to RESTORE subscription', error);
+      console.error('Failed to restore subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -194,22 +168,14 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
-      const response = await fetch(
+      const data = await fetchBilling(
         BILLING_API_ROUTES.subscriptions.reactivate,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ subscriptionId: id }),
-        },
+        { subscriptionId: id },
       );
-
-      const data: Subscription = await response.json();
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to REACTIVATE subscription', error);
+      console.error('Failed to reactivate subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -223,34 +189,26 @@ export const useSubscription = (): ISubscriptionHook => {
 
     const { paymentMethodId } = updateParams;
 
+    const params: {
+      id: string;
+      params: _subscription.override_billing_profile_params;
+    } = {
+      id,
+      params: {
+        payment_source_id: paymentMethodId,
+        auto_collection: 'on',
+      },
+    };
+
     try {
-      const params: {
-        id: string;
-        params: _subscription.override_billing_profile_params;
-      } = {
-        id,
-        params: {
-          payment_source_id: paymentMethodId,
-          auto_collection: 'on',
-        },
-      };
-
-      const response = await fetch(
+      const data = await fetchBilling(
         BILLING_API_ROUTES.subscriptions.billingProfile.update,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(params),
-        },
+        params,
       );
-
-      const data: Subscription = await response.json();
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to REACTIVATE subscription', error);
+      console.error('Failed to update the billing profile', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -267,10 +225,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
         return newSubscription || null;
       } catch (error) {
-        console.log(
-          'Error while creating a customer in handlePaymentCreation',
-          error,
-        );
+        console.log('Failed to provide Subscription', error);
         return null;
       }
     }

@@ -4,20 +4,20 @@ import { chargebee } from 'utils/billing/chargebeeInstance';
 
 const deletePaymentSource = async (
   id: string,
-): Promise<{ customer: Customer; paymentSource: PaymentSource }> => {
+): Promise<{ paymentSource: PaymentSource; customer: Customer }> => {
   return new Promise((resolve, reject) => {
     chargebee.payment_source
       .delete(id)
       .request(function (
         error: any,
-        result: { customer: Customer; payment_source: PaymentSource },
+        result: { payment_source: PaymentSource; customer: Customer },
       ) {
         if (error) {
           reject(error);
         } else {
           resolve({
-            customer: result.customer,
             paymentSource: result.payment_source,
+            customer: result.customer,
           });
         }
       });
