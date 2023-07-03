@@ -28,6 +28,7 @@ export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethods
 export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelector';
 export * from './components/PaymentMethods/PaymentPreview/PaymentPreview';
 export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
+export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
 export * from './components/PaymentMethods/PaymentRequired/PaymentRequired';
 
 export * from './components/Subscription/PlanSelect/PlanSelect';
@@ -71,6 +72,8 @@ export * from './ui/InvoicesUIHelpers';
 export * from './utils/calcNextRenewDate';
 export * from './utils/calcPlanPrice';
 export * from './utils/checkIfExists';
+export * from './utils/fetchBilling';
+export * from './utils/generateError';
 export * from './utils/handleCreditCardInfo';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapCardToDetails';
@@ -79,3 +82,4 @@ export * from './utils/mapInvoicesToRows';
 export * from './utils/mapPaymentMethodsToRows';
 export * from './utils/mapServicesToRows';
 export * from './utils/mapSubscriptionToDetails';
+export * from './utils/matchSKU';

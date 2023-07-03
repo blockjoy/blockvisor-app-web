@@ -36,7 +36,10 @@ import { useHostList } from '@modules/host';
 import { useSubscription } from '@modules/billing';
 import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
-import { Permissions, useHasPermissions } from '@modules/auth';
+import {
+  PermissionsCreateNode,
+  useHasPermissionsToCreateNode,
+} from '@modules/auth';
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 
 export type NodeLauncherState = {
@@ -82,13 +85,17 @@ export const NodeLauncher = () => {
   const { defaultOrganization } = useDefaultOrganization();
   const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
 
+  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
+  const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
+
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canAddNode: boolean = useHasPermissions(
+  const canAddNode: PermissionsCreateNode = useHasPermissionsToCreateNode(
     userRoleInOrganization,
-    Permissions.CREATE_NODE,
+    hasPaymentMethod,
+    hasSubscription,
   );
 
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
@@ -264,7 +271,10 @@ export const NodeLauncher = () => {
         Mixpanel.track('Launch Node - Node Launched');
         router.push(ROUTES.NODES);
       },
-      (error: string) => setServerError(error!),
+      (error: string) => {
+        setServerError(error!);
+        setIsCreating(false);
+      },
     );
   };
 
