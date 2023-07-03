@@ -24,9 +24,8 @@ export const setTokenValue = (token: string) => {
   localStorage.setItem('accessTokenExpiry', readToken(token).exp);
   const identity = getIdentity();
   if (identity) {
-    const parsedIdentity = JSON.parse(identity);
-    parsedIdentity.accessToken = token;
-    const updatedIdentityString = JSON.stringify(parsedIdentity);
+    identity.accessToken = token;
+    const updatedIdentityString = JSON.stringify(identity);
     window.localStorage.setItem('identity', updatedIdentityString);
   }
 };
