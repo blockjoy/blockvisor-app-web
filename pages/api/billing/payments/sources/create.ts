@@ -2,22 +2,25 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { _payment_intent, _payment_source } from 'chargebee-typescript';
 import { chargebee } from 'utils/billing/chargebeeInstance';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
 
 const createPaymentSource = async (
   params: _payment_source.create_using_payment_intent_params,
-): Promise<PaymentSource> => {
+): Promise<{ paymentSource: PaymentSource; customer: Customer }> => {
   return new Promise((resolve, reject) => {
     chargebee.payment_source
       .create_using_payment_intent(params)
       .request(function (
         error: any,
-        result: { payment_source: PaymentSource },
+        result: { payment_source: PaymentSource; customer: Customer },
       ) {
         if (error) {
           reject(error);
         } else {
-          resolve(result.payment_source);
+          resolve({
+            paymentSource: result.payment_source,
+            customer: result.customer,
+          });
         }
       });
   });
@@ -38,7 +41,6 @@ export default async function handler(
       res.status(error.http_status_code || 500).json(error);
     }
   } else {
-    // Handle any other HTTP methods
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }

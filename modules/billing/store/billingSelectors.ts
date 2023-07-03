@@ -62,8 +62,8 @@ const hasPaymentMethod = selector<boolean>({
   },
 });
 
-const isSubscribed = selector<boolean>({
-  key: 'billing.isSubscribed',
+const hasSubscription = selector<boolean>({
+  key: 'billing.hasSubscription',
   get: ({ get }) => {
     const defaultOrganization = get(organizationAtoms.defaultOrganization);
     const subscription = get(billingAtoms.billing).subscription;
@@ -81,5 +81,5 @@ export const billingSelectors = {
   customer,
   hasPaymentMethod,
   subscription,
-  isSubscribed,
+  hasSubscription,
 };
