@@ -40,16 +40,18 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     useDefaultOrganization();
 
   useEffect(() => {
-    if (!organizations.length) getOrganizations();
-    if (!defaultOrganization?.id) getDefaultOrganization(organizations);
-    getReceivedInvitations(userEmail!);
+    (async () => {
+      if (!organizations.length) await getOrganizations();
+      if (!defaultOrganization?.id) await getDefaultOrganization(organizations);
+      await getReceivedInvitations(userEmail!);
+    })();
   }, []);
 
   useEffect(() => {
-    if (!provisionToken) {
+    if (!provisionToken && defaultOrganization?.id) {
       getProvisionToken();
     }
-    if (!blockchains?.length) {
+    if (!blockchains?.length && defaultOrganization?.id) {
       getBlockchains();
     }
     if (defaultOrganization?.id !== currentOrg.current) {
@@ -73,7 +75,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       <Sidebar />
       <Toast />
       <MqttUIProvider>
-        <Page isFlex={isPageFlex}>{children}</Page>
+        {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
       </MqttUIProvider>
     </>
   );

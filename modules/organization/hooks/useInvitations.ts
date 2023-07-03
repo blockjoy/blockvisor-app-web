@@ -1,8 +1,8 @@
 import { invitationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
-import { invitationAtoms } from '@modules/organization';
+import { invitationAtoms, useDefaultOrganization } from '@modules/organization';
 import { isStatusResponse } from '../utils/typeGuards';
 
 export function useInvitations() {
@@ -13,7 +13,7 @@ export function useInvitations() {
   const [sentInvitationsLoadingState, setSentInvitationsLoadingState] =
     useRecoilState(invitationAtoms.sentInvitationsLoadingState);
 
-  const setReceivedInvitations = useSetRecoilState(
+  const [receivedInvitations, setReceivedInvitations] = useRecoilState(
     invitationAtoms.receivedInvitations,
   );
 
@@ -38,11 +38,13 @@ export function useInvitations() {
 
   const acceptInvitation = async (
     invitationId: string,
-    onSuccess: VoidFunction,
+    onSuccess?: VoidFunction,
   ) => {
     await invitationClient.acceptInvitation(invitationId);
-    toast.success('Invitation Accepted');
-    onSuccess();
+
+    // TODO: set default organization
+
+    if (onSuccess) onSuccess();
   };
 
   const declineInvitation = async (
@@ -75,6 +77,7 @@ export function useInvitations() {
 
   return {
     getReceivedInvitations,
+    receivedInvitations,
     sentInvitations,
     getSentInvitations,
     acceptInvitation,

@@ -1,13 +1,13 @@
+import { useDefaultOrganization } from './useDefaultOrganization';
 import { useProvisionToken } from './useProvisionToken';
-import { useSetDefaultOrganization } from './useSetDefaultOrganization';
 
 export function useSwitchOrganization() {
-  const { setDefaultOrganization } = useSetDefaultOrganization();
+  const { setDefaultOrganization } = useDefaultOrganization();
   const { getProvisionToken } = useProvisionToken();
 
-  const switchOrganization = async (orgId: string, orgName: string) => {
+  const switchOrganization = async (id: string, name: string) => {
     try {
-      setDefaultOrganization(orgId, orgName);
+      setDefaultOrganization({ id, name });
       getProvisionToken();
     } catch (error) {
       console.log('Error changing organization: ', error);

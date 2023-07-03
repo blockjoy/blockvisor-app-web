@@ -12,7 +12,6 @@ export const useIdentity = () => {
 
   return {
     isLoggedIn: Boolean(user?.accessToken),
-    isVerified: Boolean(user?.verified),
     isLoading: loading === 'initializing',
     isDone: loading === 'finished',
     user,
