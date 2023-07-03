@@ -11,7 +11,7 @@ export const NetdataDashboard = ({ nodeId, isSidePanel }: Props) => {
   const [state, setState] = useState({
     url: '',
     width: '100%',
-    height: '100%',
+    height: '1600px',
     isLoading: true,
   });
 
