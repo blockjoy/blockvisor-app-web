@@ -39,6 +39,7 @@ export * from './components/Subscription/SubscriptionPreview/SubscriptionInfo/Su
 export * from './components/Subscription/SubscriptionPreview/SubscriptionItems/SubscriptionItems';
 export * from './components/Subscription/SubscriptionPreview/SubscriptionPreview';
 export * from './components/Subscription/SubscriptionUpdate/SubscriptionUpdate';
+export * from './components/Subscription/PlanSelect/PlanParams/PlanParams';
 
 export * from './constants/billing';
 export * from './constants/chargebee';

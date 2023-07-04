@@ -1,15 +1,17 @@
+import { ChangeEvent } from 'react';
+import { useRecoilValue } from 'recoil';
 import { formatters } from '@shared/index';
 import { RadioButton, RadioButtonGroup, Switch } from '@shared/components';
-import { calcNextAutoRenew } from '@modules/billing';
+import { billingSelectors, calcNextAutoRenew } from '@modules/billing';
 import { styles } from './PlanParams.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 
-type PlanParams = {
-  periodUnit?: any;
-  handlePeriodUnit?: any;
-  autoRenew?: any;
-  handleAutoRenew?: any;
+type PlanParamsProps = {
+  periodUnit?: string;
+  handlePeriodUnit?: (e: ChangeEvent<HTMLInputElement>) => void;
+  autoRenew?: boolean;
+  handleAutoRenew?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const PlanParams = ({
@@ -17,10 +19,12 @@ export const PlanParams = ({
   handlePeriodUnit,
   autoRenew,
   handleAutoRenew,
-}: PlanParams) => {
+}: PlanParamsProps) => {
+  const subscription = useRecoilValue(billingSelectors.subscription);
+
   return (
     <>
-      {handlePeriodUnit && (
+      {handlePeriodUnit && subscription?.billing_period_unit === 'month' && (
         <div css={spacing.bottom.large}>
           <h3 css={styles.headline}>Billing period</h3>
           <RadioButtonGroup>
@@ -45,23 +49,27 @@ export const PlanParams = ({
           </RadioButtonGroup>
         </div>
       )}
-      <div css={spacing.bottom.large}>
-        <h3 css={styles.headline}>Auto renew</h3>
-        <div css={[flex.display.flex, flex.justify.between]}>
-          <p css={styles.renewText}>
-            Your subscription will automatically renew on{' '}
-            {formatters.formatDate(calcNextAutoRenew(periodUnit))}
-          </p>
-          <Switch
-            name="autoRenew"
-            additionalStyles={styles.renewSwitch}
-            disabled={false}
-            tooltip="Subscription's auto renewal"
-            checked={autoRenew}
-            onPropertyChanged={handleAutoRenew}
-          />
+      {autoRenew !== undefined && handleAutoRenew !== undefined && (
+        <div css={spacing.bottom.large}>
+          <h3 css={styles.headline}>Auto renew</h3>
+          <div css={[flex.display.flex, flex.justify.between]}>
+            {periodUnit && (
+              <p css={styles.renewText}>
+                Your subscription will automatically renew on{' '}
+                {formatters.formatDate(calcNextAutoRenew(periodUnit))}
+              </p>
+            )}
+            <Switch
+              name="autoRenew"
+              additionalStyles={styles.renewSwitch}
+              disabled={false}
+              tooltip="Subscription's auto renewal"
+              checked={autoRenew}
+              onPropertyChanged={handleAutoRenew}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
