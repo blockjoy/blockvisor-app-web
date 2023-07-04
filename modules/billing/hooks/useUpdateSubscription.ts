@@ -13,7 +13,7 @@ import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscriptio
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { blockchainsAtoms } from '@modules/node';
-import { Subscription } from 'chargebee-typescript/lib/resources';
+import { ItemPrice, Subscription } from 'chargebee-typescript/lib/resources';
 
 export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
   const setSubscription = useSetRecoilState(billingSelectors.subscription);
@@ -104,7 +104,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
       params: _subscription.update_for_items_params;
     } = {
       id: subscription?.id!,
-      params: params,
+      params,
     };
 
     try {
@@ -121,9 +121,53 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     }
   };
 
+  const generateParams = async (
+    autoRenew: boolean,
+    periodUnit: string,
+    itemPrices: ItemPrice[],
+  ) => {
+    const params: _subscription.update_for_items_params = {};
+
+    const subscription = await provideSubscription();
+
+    params.auto_collection = autoRenew ? 'on' : 'off';
+
+    if (periodUnit === 'year' && subscription?.billing_period_unit !== 'year') {
+      const activeItemPrice = itemPrices.find(
+        (itemPrice: ItemPrice) =>
+          itemPrice.period_unit === subscription.billing_period_unit,
+      );
+      const newItemPrice = itemPrices.find(
+        (itemPrice: ItemPrice) =>
+          itemPrice.period_unit !== subscription.billing_period_unit,
+      );
+
+      const updatedSubscriptionItems =
+        subscription?.subscription_items?.filter(
+          (subscriptionItem: SubscriptionItem) =>
+            subscriptionItem.item_price_id !== activeItemPrice?.id,
+        ) ?? [];
+
+      const yearlySubscriptionItem: _subscription.subscription_items_update_for_items_params =
+        {
+          item_price_id: newItemPrice?.id!,
+          quantity: 1,
+        };
+
+      updatedSubscriptionItems.push(yearlySubscriptionItem);
+
+      params.subscription_items = updatedSubscriptionItems;
+      params.replace_items_list = true;
+    }
+
+    return params;
+  };
+
   return {
     subscriptionLoadingState,
 
     updateSubscriptionItems,
+
+    generateParams,
   };
 };

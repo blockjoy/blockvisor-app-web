@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
+import { ItemPrice } from 'chargebee-typescript/lib/resources';
 import { DetailsView, TableSkeleton } from '@shared/components';
 import { styles } from './SubscriptionPreview.styles';
 import {
@@ -13,7 +14,13 @@ import {
   SubscriptionUpdate,
 } from '@modules/billing';
 
-export const SubscriptionPreview = () => {
+type SubscriptionPreviewProps = {
+  itemPrices: ItemPrice[];
+};
+
+export const SubscriptionPreview = ({
+  itemPrices,
+}: SubscriptionPreviewProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
@@ -51,7 +58,7 @@ export const SubscriptionPreview = () => {
         </>
       ) : activeView === 'update' ? (
         <>
-          <SubscriptionUpdate handleBack={handleBack} />
+          <SubscriptionUpdate handleBack={handleBack} itemPrices={itemPrices} />
         </>
       ) : (
         <>
