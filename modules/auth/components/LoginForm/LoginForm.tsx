@@ -1,9 +1,8 @@
-import { useRecoilValue } from 'recoil';
 import { useIdentityRepository, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { useGetBlockchains } from '@modules/node';
-import { organizationAtoms, useGetOrganizations } from '@modules/organization';
+import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { isValidEmail } from '@shared/utils/validation';
@@ -17,6 +16,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { PasswordToggle } from '@modules/auth';
 import { useCustomer, useSubscription } from '@modules/billing';
+import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
 
 type LoginForm = {
   email: string;
@@ -25,9 +25,6 @@ type LoginForm = {
 
 export function LoginForm() {
   const { getOrganizations } = useGetOrganizations();
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
   const router = useRouter();
   const { invited, verified, redirect, forgot, token } = router.query;
   const signIn = useSignIn();
@@ -66,10 +63,13 @@ export function LoginForm() {
       await signIn({ email, password });
       await getOrganizations(true);
 
-      const usr_id = repository?.getIdentity()?.id;
-      await getCustomer(usr_id!);
+      const userId = repository?.getIdentity()?.id;
+      await getCustomer(userId!);
 
-      await getSubscription(defaultOrganization?.id!);
+      const defaultOrganization: DefaultOrganization = fetchFromLocalStorage(
+        'defaultOrganization',
+      );
+      await getSubscription(defaultOrganization?.id);
 
       getBlockchains();
       handleRedirect();

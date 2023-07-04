@@ -47,16 +47,18 @@ export const useNodeAdd = () => {
         network: nodeRequest.network,
       };
 
-      try {
-        await updateSubscriptionItems({
-          type: 'create',
-          payload: { node: nodeParams },
-        });
-      } catch (error: any) {
-        const errorMessage = generateError(error);
-        onError(errorMessage);
-        return;
-      }
+      // Only add to subscription if node is not hosted
+      if (!nodeRequest.placement?.hostId)
+        try {
+          await updateSubscriptionItems({
+            type: 'create',
+            payload: { node: nodeParams },
+          });
+        } catch (error: any) {
+          const errorMessage = generateError(error);
+          onError(errorMessage);
+          return;
+        }
 
       const response: Node = await nodeClient.createNode(nodeParams);
 

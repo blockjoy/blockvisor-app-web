@@ -12,4 +12,9 @@ interface ISubscriptionHook {
 interface IUpdateSubscriptionHook {
   subscriptionLoadingState: LoadingState;
   updateSubscriptionItems: (action: { type: string; payload: any }) => void;
+  generateParams: (
+    autoRenew: boolean,
+    periodUnit: string,
+    itemPrices: ItemPrice[],
+  ) => _subscription.update_for_items_params;
 }
