@@ -43,11 +43,6 @@ body.is-side-panel {
   padding: 0;
 }
 
-html,
-body {
-  height: 100%;
-}
-
 #preloader {
   position: fixed;
   z-index: 2;
@@ -115,6 +110,7 @@ body {
 aside {
   flex: 1 1 300px;
   max-width: 300px;
+  padding-top: 20px;
 }
 
 body.is-side-panel aside {
@@ -124,17 +120,6 @@ body.is-side-panel aside {
 
 main {
   flex: 1 1 auto;
-}
-
-html::-webkit-scrollbar {
-}
-
-::-webkit-scrollbar-track {
-  background: yellow;
-}
-
-::-webkit-scrollbar-thumb {
-  background: red;
 }
 
 #system {
@@ -162,25 +147,6 @@ html::-webkit-scrollbar {
   }
 }
 
-#sidePanel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
-
-aside {
-  width: 100%;
-  border-radius: 6px;
-}
-
-aside,
-.card {
-  border-radius: 6px;
-  padding: 40px 30px;
-}
-
 .card {
   position: relative;
   display: flex;
@@ -188,6 +154,8 @@ aside,
   justify-content: flex-start;
   flex-direction: column;
   height: 220px;
+  border-radius: 6px;
+  padding: 40px 30px;
   background: #272a29;
 }
 
@@ -199,7 +167,7 @@ aside,
 .card-header {
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #a7a7a7;
+  color: #5F615D;
   font-size: 11px;
   font-weight: 400;
   margin: 0 0 30px;
@@ -236,7 +204,6 @@ header {
   text-transform: uppercase;
   font-size: 11px;
   letter-spacing: 1px;
-  margin: 0 0 16px;
   font-family: "Styrene A LC" !important;
 }
 
@@ -251,7 +218,8 @@ body .gaugeChartLabel,
 body .gaugeChartUnits,
 body .dygraph-label,
 body .dygraph-axis-label,
-body .netdata-chart-legend {
+body .netdata-chart-legend,
+body .netdata-container[data-chart-library] {
   font-family: "Styrene A LC" !important;
   font-weight: 400 !important;
 }
@@ -289,4 +257,26 @@ body .netdata-message {
 body .netdata-legend-toolbox,
 body .netdata-legend-resize-handler {
   display: none !important;
+}
+
+body .netdata-container[data-chart-library] {
+  font-size: 40px;
+  color: #f9f9f9;
+}
+
+/* side panel styles */
+
+.charts {
+  display: flex;
+  gap: 20px;
+}
+
+.charts > div:first-child {
+  min-width: 110px;
+}
+
+.row {
+  border-bottom: 1px solid #363938;
+  margin-bottom: 24px;
+  padding-bottom: 10px;
 }

@@ -1,23 +1,78 @@
+
+const sidePanelTextonlyWidth = "150px",
+      sidePanelTextonlyHeight = "60px",
+      sidePanelSparklineHeight = "44px";
+
 const loadSidePanelCharts = [
   {
-    netdata: "system.load",
-    library: "easypiechart",
-    title: "",
-    units: "Average",
-    dimensions: "load1",
-    width: "180px",
-    height: "180px", 
-    maxValue: "20",
+    title: "Load Avg.",
+    charts: [
+      {
+        netdata: "system.load",
+        library: "textonly",
+        title: "",
+        textonlyDecimalPlaces: "2",
+        dimensions: "load1",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "system.load",
+        dygraphValueRange: "[0, 100]",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        color: "#bff589",
+        decimalDigits: "-1",
+        dimensions: "load1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
   },
   {
-    netdata: "system.load",
-    dygraphValueRange: "[0, 100]",
-    width: "280px",
-    height: "44px",
-    color: "#bff589",
-    decimalDigits: "-1",
-    dimensions: "load1",
-    dygraphSparkline: "sparkline"
+    title: "CPU",
+    charts: [
+      {
+        netdata: "system.cpu",
+        library: "textonly",
+        title: "",
+        textonlyDecimalPlaces: "1",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "system.cpu",
+        dygraphValueRange: "[0, 100]",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        color: "#5F615D #5F615D #5F615D #5F615D #5F615D #5F615D #bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
+  },
+  {
+    title: "Disk Write",
+    charts: [
+      {
+        netdata: "system.io",
+        library: "textonly",
+        title: "",
+        dimensions: "out",
+        textonlyDecimalPlaces: "1",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "system.io",
+        dygraphValueRange: "[0, 100]",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        dimensions: "out",
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
   }
 ];
 
@@ -178,6 +233,10 @@ const createChart = (chart) => {
     element.setAttribute("data-legend-position", chart.legendPosition);
   }
 
+  if (chart.textonlyDecimalPlaces) {
+    element.setAttribute("data-textonly-decimal-places", chart.textonlyDecimalPlaces);
+  }
+
   return element;
 }
 
@@ -200,10 +259,29 @@ const onLoad = () => {
     document.body.classList.add("is-side-panel");
     const main = document.querySelector("main");
     document.body.removeChild(main);
-    loadSidePanelCharts.forEach((chart) => {
-      const element = createChart(chart);
-      sidePanel.appendChild(element);
-    });  
+
+    loadSidePanelCharts.forEach((block) => {
+
+      const row = document.createElement("div");
+      row.setAttribute("class", "row");
+
+      const header = document.createElement("header");
+      header.innerText = block.title;
+
+      const charts = document.createElement("div");
+      charts.setAttribute("class", "charts");
+
+      row.appendChild(header);
+      row.appendChild(charts);
+
+      block.charts.forEach((chart) => {
+        const element = createChart(chart);
+        charts.appendChild(element);
+      });  
+
+      sidePanel.appendChild(row);
+    });
+  
   } else {
     const aside = document.querySelector("aside");
     document.body.removeChild(aside);
