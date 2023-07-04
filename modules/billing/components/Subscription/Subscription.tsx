@@ -12,11 +12,7 @@ import { Alert, EmptyColumn, TableSkeleton } from '@shared/components';
 import { styles } from './Subscription.styles';
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization/store/organizationSelectors';
-import {
-  useHasPermissions,
-  Permissions,
-  useIdentityRepository,
-} from '@modules/auth';
+import { useHasPermissions, Permissions } from '@modules/auth';
 import { useRouter } from 'next/router';
 
 type SubscriptionProps = {
@@ -68,7 +64,7 @@ export const Subscription = ({ item, itemPrices }: SubscriptionProps) => {
   return (
     <div css={styles.wrapper}>
       {subscription ? (
-        <SubscriptionPreview />
+        <SubscriptionPreview itemPrices={itemPrices} />
       ) : activeView === 'default' ? (
         <>
           <EmptyColumn

@@ -41,7 +41,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
     () =>
       [
         {
-          label: 'Plan',
+          label: subscription ? 'Subscription' : 'Plan',
           value: '1',
           component: (
             <PageSection bottomBorder={false}>
