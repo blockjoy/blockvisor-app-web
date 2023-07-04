@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   Item,
@@ -11,6 +11,7 @@ import {
   billingSelectors,
   PaymentMethodsSelect,
   usePaymentMethods,
+  PlanParams,
 } from '@modules/billing';
 import { Alert, Button, ButtonGroup } from '@shared/components';
 import { formatters, TableSkeleton } from '@shared/index';
@@ -18,7 +19,6 @@ import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanSelect.styles';
 import IconCheck from '@public/assets/icons/common/Check.svg';
-import { PlanParams } from './PlanParams/PlanParams';
 
 export type PlanSelectProps = {
   plan: Item | null;
@@ -51,7 +51,7 @@ export const PlanSelect = ({
     (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
   );
 
-  const handlePeriodUnit = (e: any) => {
+  const handlePeriodUnit = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setPeriodUnit(value);
   };

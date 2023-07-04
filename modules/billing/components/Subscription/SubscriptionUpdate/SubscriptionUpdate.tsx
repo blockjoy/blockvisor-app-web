@@ -1,47 +1,58 @@
+import { ChangeEvent, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { _subscription } from 'chargebee-typescript';
+import { ItemPrice } from 'chargebee-typescript/lib/resources';
+import { PlanParams, useUpdateSubscription } from '@modules/billing';
 import { useSubscription } from '@modules/billing/hooks/useSubscription';
 import { billingAtoms } from '@modules/billing/store/billingAtoms';
 import { billingSelectors } from '@modules/billing/store/billingSelectors';
 import { Button, ButtonGroup } from '@shared/components';
-import { _subscription } from 'chargebee-typescript';
-import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { PlanParams } from '../PlanSelect/PlanParams/PlanParams';
 import { styles } from './SubscriptionUpdate.styles';
 
 type SubscriptionUpdateProps = {
   handleBack: VoidFunction;
+  itemPrices: ItemPrice[];
 };
 
-export const SubscriptionUpdate = ({ handleBack }: SubscriptionUpdateProps) => {
+export const SubscriptionUpdate = ({
+  handleBack,
+  itemPrices,
+}: SubscriptionUpdateProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
 
+  const [periodUnit, setPeriodUnit] = useState<string>(
+    subscription?.billing_period_unit!,
+  );
   const [autoRenew, setAutoRenew] = useState<boolean>(
     subscription?.auto_collection === 'on',
   );
 
   const { updateSubscription } = useSubscription();
+  const { generateParams } = useUpdateSubscription();
 
-  const handleUpdate = () => {
-    const autoRenewValue: string = autoRenew ? 'on' : 'off';
+  const handleUpdate = async () => {
+    const params = await generateParams(autoRenew, periodUnit, itemPrices);
 
-    const params: _subscription.update_for_items_params = {
-      auto_collection: autoRenewValue,
-    };
     updateSubscription(params);
     handleBack();
   };
 
   const handleAutoRenew = () => setAutoRenew(!autoRenew);
+  const handlePeriodUnit = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setPeriodUnit(value);
+  };
 
   return (
     <div css={styles.wrapper}>
       <PlanParams
         autoRenew={autoRenew}
         handleAutoRenew={handleAutoRenew}
-        periodUnit={subscription?.billing_period_unit}
+        periodUnit={periodUnit}
+        handlePeriodUnit={handlePeriodUnit}
       />
       <ButtonGroup type="flex">
         <Button

@@ -70,6 +70,7 @@ export const useSubscription = (): ISubscriptionHook => {
     } = {
       id: customer?.id!,
       params: {
+        id: defaultOrganization?.id!,
         auto_collection: autoRenewValue,
         payment_source_id: paymentMethodId,
         subscription_items: subscriptionItems,
