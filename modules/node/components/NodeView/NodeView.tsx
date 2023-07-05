@@ -65,7 +65,7 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
                   <div css={styles.content}>{children}</div>
                   {!hideEditPanel && (
                     <div css={styles.quickEdit}>
-                      <FormHeaderCaps>Overview</FormHeaderCaps>
+                      <FormHeaderCaps>Metrics</FormHeaderCaps>
                       <NetdataDashboard nodeId={node.id} isSidePanel />
                     </div>
                   )}

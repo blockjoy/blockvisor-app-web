@@ -11,6 +11,7 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
+import { useDefaultOrganization } from '@modules/organization';
 
 type HostLauncherProps = {
   token?: string;
@@ -19,6 +20,8 @@ type HostLauncherProps = {
 export const HostLauncher = ({ token }: HostLauncherProps) => {
   const { resetProvisionToken, provisionTokenLoadingState } =
     useProvisionToken();
+
+  const { defaultOrganization } = useDefaultOrganization();
 
   return (
     <div>
@@ -44,7 +47,7 @@ export const HostLauncher = ({ token }: HostLauncherProps) => {
               size="small"
               disabled={provisionTokenLoadingState !== 'finished'}
               css={[spacing.top.medium, styles.button]}
-              onClick={resetProvisionToken}
+              onClick={() => resetProvisionToken(defaultOrganization?.id!)}
               loading={provisionTokenLoadingState !== 'finished'}
             >
               <SvgIcon>

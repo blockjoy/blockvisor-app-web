@@ -40,9 +40,6 @@ export function useUpdateMembers(): IUpdateMembersHook {
 
       if (isRemovedCurrentUser) {
         removeOrganization(org?.id!);
-
-        if (selectedOrganization && selectedOrganization.id === org?.id)
-          router.push(ROUTES.ORGANIZATIONS);
       }
     }
 
@@ -57,11 +54,10 @@ export function useUpdateMembers(): IUpdateMembersHook {
       },
     );
 
-    const selectedOrganizationCopy = { ...selectedOrganization };
-
+    const selectedOrganizationCopy = { ...selectedOrganization! };
     selectedOrganizationCopy.members = newMembers;
 
-    // setSelectedOrganization(selectedOrganizationCopy);
+    setSelectedOrganization(selectedOrganizationCopy);
     setSentInvitations(newInvitations);
   };
 

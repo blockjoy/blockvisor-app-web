@@ -49,7 +49,7 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       },
       {
         key: '4',
-        component: <HostStatus status={host.status} />,
+        component: <HostStatus />,
       },
     ],
   }));

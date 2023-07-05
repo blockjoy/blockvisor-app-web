@@ -6,11 +6,7 @@ import { hostAtoms } from './hostAtoms';
 const filtersTotal = selector<number>({
   key: 'host.filters.total',
   get: ({ get }) => {
-    const filtersStatusTotal = get(hostAtoms.filtersStatus).some(
-      (s) => s.isChecked,
-    );
-
-    let total = [filtersStatusTotal].filter(Boolean).length + 1;
+    let total = 0;
 
     const filtersMemory = get(hostAtoms.filtersMemory);
     if (!isEqual(filtersMemory, hostFiltersDefaults.memory)) total++;
@@ -25,18 +21,6 @@ const filtersTotal = selector<number>({
   },
 });
 
-const filtersStatusTotal = selector<number>({
-  key: 'host.filters.status.total',
-  get: ({ get }) => {
-    const filtersStatusAll = get(hostAtoms.filtersStatus);
-    const filtersStatusTotal = filtersStatusAll?.filter(
-      (item) => item.isChecked,
-    ).length;
-    return filtersStatusTotal;
-  },
-});
-
 export const hostSelectors = {
   filtersTotal,
-  filtersStatusTotal,
 };

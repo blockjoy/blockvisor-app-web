@@ -8,7 +8,7 @@ export function useSwitchOrganization() {
   const switchOrganization = async (id: string, name: string) => {
     try {
       setDefaultOrganization({ id, name });
-      getProvisionToken();
+      getProvisionToken(id);
     } catch (error) {
       console.log('Error changing organization: ', error);
     }

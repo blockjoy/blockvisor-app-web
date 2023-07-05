@@ -12,6 +12,4 @@ const Template: ComponentStory<typeof HostStatus> = (args) => {
 
 export const Default = Template.bind({});
 
-Default.args = {
-  status: 1,
-};
+Default.args = {};

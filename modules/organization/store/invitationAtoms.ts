@@ -35,7 +35,7 @@ const sentInvitationsLoadingState = atom<LoadingState>({
   default: 'loading',
 });
 
-const receivedInvitations = atom<any[]>({
+const receivedInvitations = atom<Invitation[]>({
   key: 'organizationReceivedInvitations',
   default: [],
 });

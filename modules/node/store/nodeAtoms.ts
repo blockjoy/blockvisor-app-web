@@ -19,15 +19,16 @@ const activeListType = atom<string | 'table' | 'grid'>({
 const nodeList = atom<Node[]>({
   key: 'node.nodeList',
   default: [],
-  // TODO: fix a weird bug where the grpc error response gets dumped into this variable
-  // effects: [localStorageEffect('nodeList')],
+});
+
+const nodeCount = atom<number>({
+  key: 'node.nodeCount',
+  default: 0,
 });
 
 const nodeListByHost = atom<Node[]>({
   key: 'node.nodeListByHost',
   default: [],
-  // TODO: fix a weird bug where the grpc error response gets dumped into this variable
-  // effects: [localStorageEffect('nodeList')],
 });
 
 const isLoadingNodeListByHost = atom<LoadingState>({
@@ -247,11 +248,6 @@ const nodeMetrics = atom<any>({
   default: {},
 });
 
-const totalNodes = atom<number | null>({
-  key: 'node.total',
-  default: null,
-});
-
 const preloadNodes = atom<number>({
   key: 'node.loadingTotal',
   default: 0,
@@ -260,6 +256,7 @@ const preloadNodes = atom<number>({
 export const nodeAtoms = {
   activeNode,
   nodeList,
+  nodeCount,
   isLoading,
   isLoadingActiveNode,
   isFiltersOpen,
@@ -277,7 +274,6 @@ export const nodeAtoms = {
   hasMoreNodes,
   nodeMetrics,
   nodeMetricsLoadingState,
-  totalNodes,
   preloadNodes,
   nodeListByHost,
   isLoadingNodeListByHost,

@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { nodeClient, commandClient } from '@modules/grpc';
+import { nodeClient } from '@modules/grpc';
 import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
@@ -7,7 +7,7 @@ import { checkForTokenError } from 'utils/checkForTokenError';
 import { checkForApiError } from 'utils/checkForApiError';
 import {
   Node,
-  NodeServiceUpdateRequest,
+  NodeServiceUpdateConfigRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
   useDefaultOrganization,
@@ -23,7 +23,7 @@ type Hook = {
   stopNode: (nodeId: Args) => void;
   startNode: (nodeId: Args) => void;
   modifyNode: (node: Node) => void;
-  updateNode: (node: NodeServiceUpdateRequest) => void;
+  updateNode: (node: NodeServiceUpdateConfigRequest) => void;
   isLoading: boolean;
   unloadNode: any;
   node: Node | null;
@@ -62,7 +62,7 @@ export const useNodeView = (): Hook => {
 
   const stopNode = async (nodeId: Args) => {
     try {
-      await commandClient.create('stopNode', convertRouteParamToString(nodeId));
+      await nodeClient.stopNode(convertRouteParamToString(nodeId));
       toast.success(`Node Stopped`);
     } catch (err) {
       toast.error(`Node Stop Failed`);
@@ -71,10 +71,7 @@ export const useNodeView = (): Hook => {
 
   const startNode = async (nodeId: Args) => {
     try {
-      await commandClient.create(
-        'startNode',
-        convertRouteParamToString(nodeId),
-      );
+      await nodeClient.startNode(convertRouteParamToString(nodeId));
       toast.success(`Node Started`);
     } catch (err) {
       toast.error(`Node Start Failed`);
@@ -94,7 +91,9 @@ export const useNodeView = (): Hook => {
       checkForApiError('GetNode', node);
       checkForTokenError(node);
       setNode(node);
+      setIsLoading('finished');
     } catch (err) {
+      setIsLoading('finished');
       onError();
       return;
     } finally {
@@ -103,7 +102,7 @@ export const useNodeView = (): Hook => {
 
   const unloadNode = () => setNode(null);
 
-  const updateNode = async (nodeRequest: NodeServiceUpdateRequest) => {
+  const updateNode = async (nodeRequest: NodeServiceUpdateConfigRequest) => {
     try {
       await nodeClient.updateNode(nodeRequest);
       setNode({

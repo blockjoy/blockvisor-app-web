@@ -4,9 +4,9 @@ import {
   HostServiceDefinition,
 } from '../library/blockjoy/v1/host';
 
-import { authClient, callWithTokenRefresh, getOptions } from '@modules/grpc';
+import { authClient, callWithTokenRefresh, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { StatusResponse, StatusResponseFactory } from '../status_response';
+import { StatusResponse } from '../status_response';
 
 export type UIFilterCriteria = {
   hostStatus?: string[];
@@ -29,7 +29,7 @@ class HostClient {
     orgId: string,
     filterCriteria?: UIFilterCriteria,
     pagination?: UIPagination,
-  ): Promise<Host[] | StatusResponse> {
+  ): Promise<Host[]> {
     const request = {
       orgId,
       // offset: (pagination?.current_page - 1) * pagination?.items_per_page,
@@ -38,12 +38,18 @@ class HostClient {
       // statuses: filterCriteria?.hostStatus?.map((f) => +f),
     };
 
-    const response = await callWithTokenRefresh(
-      this.client.list.bind(this.client),
-      request,
-    );
+    console.log('listHostsRequest', request);
 
-    return response.hosts;
+    try {
+      const response = await callWithTokenRefresh(
+        this.client.list.bind(this.client),
+        request,
+      );
+      console.log('listHostsResponse', response);
+      return response.hosts;
+    } catch (err) {
+      return handleError(err);
+    }
   }
 
   async getHost(id: string): Promise<Host | StatusResponse> {

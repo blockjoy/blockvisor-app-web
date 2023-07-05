@@ -41,11 +41,12 @@ class InvitationClient {
   }
 
   async declineInvitation(
-    invitationId?: string,
+    invitationId: string,
+    token?: string,
   ): Promise<void | StatusResponse> {
+    await authClient.refreshToken();
     try {
-      await authClient.refreshToken();
-      await this.client.decline({ invitationId }, getOptions());
+      await this.client.decline({ invitationId }, getOptions(token));
     } catch (err) {
       return StatusResponseFactory.declineInvitation(err, 'grpcClient');
     }

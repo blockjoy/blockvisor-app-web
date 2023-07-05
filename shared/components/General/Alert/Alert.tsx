@@ -3,13 +3,23 @@ import { styles } from './Alert.styles';
 
 type Props = {
   isSuccess?: boolean;
+  isRounded?: boolean;
   children: ReactNode;
   width?: string;
 };
 
-export const Alert: FC<Props> = ({ isSuccess, children, width = '100%' }) => (
+export const Alert: FC<Props> = ({
+  isSuccess,
+  isRounded,
+  children,
+  width = '100%',
+}) => (
   <div
-    css={[styles.alert, isSuccess ? styles.alertSuccess : styles.alertDanger]}
+    css={[
+      styles.alert,
+      isSuccess ? styles.alertSuccess : styles.alertDanger,
+      isRounded && styles.alertRounded,
+    ]}
     style={{ maxWidth: width }}
   >
     {children}

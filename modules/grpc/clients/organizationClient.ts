@@ -25,13 +25,13 @@ class OrganizationClient {
     this.client = createClient(OrgServiceDefinition, channel);
   }
 
-  async getOrganization(id: string): Promise<Org | StatusResponse> {
+  async getOrganization(id: string): Promise<Org> {
     try {
       await authClient.refreshToken();
       const response = await this.client.get({ id }, getOptions());
       return response.org!;
     } catch (err) {
-      return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
@@ -101,12 +101,12 @@ class OrganizationClient {
   async getProvisionToken(
     userId: string,
     orgId: string,
-  ): Promise<OrgServiceGetProvisionTokenResponse | StatusResponse> {
+  ): Promise<OrgServiceGetProvisionTokenResponse> {
     try {
       await authClient.refreshToken();
       return this.client.getProvisionToken({ userId, orgId }, getOptions());
     } catch (err) {
-      return StatusResponseFactory.getHostProvisionResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 

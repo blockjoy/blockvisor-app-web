@@ -3,11 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
 import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
-import {
-  isStatusResponse,
-  useGetOrganizations,
-  useInvitations,
-} from '@modules/organization';
+import { isStatusResponse } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
 
 type SignInParams = {
@@ -19,17 +15,8 @@ export function useSignIn() {
   const setUser = useSetRecoilState(authAtoms.user);
   const repository = useIdentityRepository();
 
-  const { getOrganizations } = useGetOrganizations();
-
-  //const { acceptInvitation, receivedInvitations } = useInvitations();
-
-  const handleSuccess = async (
-    accessToken: string,
-    init?: boolean,
-    isInvited?: boolean,
-  ) => {
-    // for grpc
-    setTokenValue(accessToken);
+  const handleSuccess = async (accessToken: string) => {
+    setTokenValue(accessToken); // for grpc
 
     repository?.saveIdentity({
       accessToken,
@@ -46,26 +33,11 @@ export function useSignIn() {
       ...userData,
       accessToken,
     }));
-
-    if (init) {
-      await getOrganizations(true);
-    }
-
-    // TODO: Need to get the invitation_id in token
-    // if (isInvited) {
-    //   console.log('receivedInvitations in useSignIn', receivedInvitations);
-    //   if (receivedInvitations?.length === 1) {
-    //     const invitation = receivedInvitations[0];
-    //     await acceptInvitation(invitation.id);
-    //   } else {
-    //     console.log('NO RECEIVED INVITATIONS');
-    //   }
-    // }
   };
 
   const signIn = async (params?: SignInParams, token?: string) => {
     if (token) {
-      await handleSuccess(token, true, true);
+      await handleSuccess(token);
       return;
     }
 
