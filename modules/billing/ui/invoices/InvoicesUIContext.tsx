@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { isEqual, isFunction } from 'lodash';
 import { InitialQueryParams, initialQueryParams } from './InvoicesUIHelpers';
+import { numOfItemsPerPage } from '@shared/index';
 
 export type SetQueryParams = (nextQueryParams: InitialQueryParams) => void;
 
@@ -18,6 +19,18 @@ const InvoicesUIContext = createContext<InvoicesUIContext>(
   {} as InvoicesUIContext,
 );
 
+export const getInitialQueryParams = () => {
+  const itemsPerPage = numOfItemsPerPage();
+
+  return {
+    ...initialQueryParams,
+    pagination: {
+      ...initialQueryParams.pagination,
+      itemsPerPage,
+    },
+  };
+};
+
 export function useInvoicesUIContext() {
   return useContext(InvoicesUIContext);
 }
@@ -25,7 +38,7 @@ export function useInvoicesUIContext() {
 export const InvoicesUIConsumer = InvoicesUIContext.Consumer;
 
 export function InvoicesUIProvider({ children }: InvoicesUIProvider) {
-  const initialQueryParamsValue: InitialQueryParams = initialQueryParams;
+  const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
 
   const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
     initialQueryParamsValue,

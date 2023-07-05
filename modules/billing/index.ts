@@ -67,8 +67,8 @@ export * from './store/billingAtoms';
 export * from './store/billingSelectors';
 
 export * from './ui/BillingUIContext';
-export * from './ui/InvoicesUIContext';
-export * from './ui/InvoicesUIHelpers';
+export * from './ui/invoices/InvoicesUIContext';
+export * from './ui/invoices/InvoicesUIHelpers';
 
 export * from './utils/calcNextRenewDate';
 export * from './utils/calcPlanPrice';
