@@ -1,3 +1,5 @@
+import { itemsPerPage } from '@shared/index';
+
 export type ItemsPerPage = {
   sm: number;
   lg: number;
@@ -19,13 +21,6 @@ export type InitialFilter = {
 export type InitialQueryParams = {
   pagination: Pagination;
   filter: InitialFilter;
-};
-
-export const itemsPerPage = {
-  sm: 18,
-  lg: 36,
-  xl: 48,
-  xxl: 100,
 };
 
 export const initialQueryParams: InitialQueryParams = {
