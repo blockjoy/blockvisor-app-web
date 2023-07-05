@@ -1,8 +1,7 @@
-import { Table, withQuery } from '@shared/components';
+import { getHandlerTableChange, Table, withQuery } from '@shared/components';
 import { useEffect, useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
-  getHandlerTableChange,
   useInvitations,
   useResendInvitation,
   OrganizationDialog,

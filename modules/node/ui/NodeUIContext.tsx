@@ -2,11 +2,8 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
 import { InitialQueryParams, initialQueryParams } from './NodeUIHelpers';
-import {
-  buildParams,
-  loadPersistedFilters,
-  numOfItemsPerPage,
-} from '@modules/node/utils';
+import { buildParams, loadPersistedFilters } from '@modules/node/utils';
+import { numOfItemsPerPage } from '@shared/index';
 
 type NodeUIContext = {
   queryParams: InitialQueryParams;

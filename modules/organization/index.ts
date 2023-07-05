@@ -33,6 +33,5 @@ export * from './store/organizationSelectors';
 export * from './utils/typeGuards';
 export * from './utils/mapOrganizationDetails';
 export * from './utils/mapOrganizationsToRows';
-export * from './utils/getHandlerTableChange';
 
 export * from './ui/OrganizationMembersUIHelpers';
