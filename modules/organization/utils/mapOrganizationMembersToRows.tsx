@@ -101,9 +101,7 @@ export const mapOrganizationMembersToRows = (
         key: '2',
         component: (
           <>
-            {canRemoveMember &&
-            !selectedOrganization?.personal &&
-            member.userId !== userId ? (
+            {canRemoveMember && member.userId !== userId ? (
               <Button
                 type="button"
                 tooltip="Remove"
