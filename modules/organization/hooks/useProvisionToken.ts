@@ -13,24 +13,24 @@ export const useProvisionToken = () => {
   const [provisionTokenLoadingState, setProvisionTokenLoadingState] =
     useRecoilState(organizationAtoms.provisionTokenLoadingState);
 
-  const { defaultOrganization } = useDefaultOrganization();
-
-  const orgId = defaultOrganization?.id;
-
-  const getProvisionToken = async () => {
+  const getProvisionToken = async (orgId: string) => {
     const userId = repository?.getIdentity()?.id;
 
-    const response: any = await organizationClient.getProvisionToken(
-      userId!,
-      orgId!,
-    );
+    try {
+      const response: any = await organizationClient.getProvisionToken(
+        userId!,
+        orgId!,
+      );
 
-    checkForTokenError(response);
-
-    setProvisionToken(response.token);
+      checkForTokenError(response);
+      setProvisionToken(response.token);
+    } catch (err) {
+      console.log('getProvisionTokenError', err);
+      // do nothing
+    }
   };
 
-  const resetProvisionToken = async () => {
+  const resetProvisionToken = async (orgId: string) => {
     const userId = repository?.getIdentity()?.id;
 
     setProvisionTokenLoadingState('loading');

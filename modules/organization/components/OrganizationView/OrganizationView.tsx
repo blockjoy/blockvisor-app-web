@@ -112,7 +112,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     <>
       {isMobile && (
         <div css={spacing.top.medium}>
-          <BackButton backUrl="/organizations" />
+          <BackButton />
         </div>
       )}
       <OrganizationViewHeader />
@@ -120,7 +120,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
         <div css={spacing.top.medium}>
           <SkeletonView />
         </div>
-      ) : isLoading !== 'initializing' && organization === null ? (
+      ) : isLoading === 'finished' && organization === null ? (
         <EmptyColumn
           title="Organization Not Found"
           description="No organization exists with this ID"
@@ -132,6 +132,8 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
             <div css={styles.leftWrapper}>
               {canCreateMember && (
                 <TableAdd
+                  buttonText="Invite"
+                  buttonWidth="70px"
                   field="email"
                   placeholder="Invite Member"
                   placeholderFocused="Enter an email address"

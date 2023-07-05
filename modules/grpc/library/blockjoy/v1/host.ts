@@ -13,23 +13,6 @@ export enum HostConnectionStatus {
   UNRECOGNIZED = -1,
 }
 
-/** Possible states the container is described with */
-export enum HostStatus {
-  HOST_STATUS_UNSPECIFIED = 0,
-  HOST_STATUS_CREATING = 1,
-  HOST_STATUS_RUNNING = 2,
-  HOST_STATUS_STARTING = 3,
-  HOST_STATUS_STOPPING = 4,
-  HOST_STATUS_STOPPED = 5,
-  HOST_STATUS_UPGRADING = 6,
-  HOST_STATUS_UPGRADED = 7,
-  HOST_STATUS_DELETING = 8,
-  HOST_STATUS_DELETED = 9,
-  HOST_STATUS_INSTALLING = 10,
-  HOST_STATUS_SNAPSHOTTING = 11,
-  UNRECOGNIZED = -1,
-}
-
 export interface Host {
   /** This is the id of the host. */
   id: string;
@@ -52,8 +35,6 @@ export interface Host {
   osVersion: string;
   /** The ip address on which the machine is reachable. */
   ip: string;
-  /** Current status of the machine, or `UNSPECIFIED`. */
-  status: HostStatus;
   /**
    * The moment this host was created. Corresponds to the moment that the
    * host_provision was
@@ -125,12 +106,19 @@ export interface HostServiceGetResponse {
 
 export interface HostServiceListRequest {
   orgId: string;
-  /** If this value is provided, only hosts with the given status are returned. */
-  status?: HostStatus | undefined;
+  /** The number of items to be skipped over. */
+  offset: number;
+  /**
+   * The number of items that will be returned. Together with offset, you can
+   * use this to get pagination.
+   */
+  limit: number;
 }
 
 export interface HostServiceListResponse {
   hosts: Host[];
+  /** The total number of hosts matching your query. */
+  hostCount: number;
 }
 
 export interface HostServiceUpdateRequest {
@@ -142,6 +130,27 @@ export interface HostServiceUpdateRequest {
 }
 
 export interface HostServiceUpdateResponse {
+}
+
+export interface HostServiceStartRequest {
+  id: string;
+}
+
+export interface HostServiceStartResponse {
+}
+
+export interface HostServiceStopRequest {
+  id: string;
+}
+
+export interface HostServiceStopResponse {
+}
+
+export interface HostServiceRestartRequest {
+  id: string;
+}
+
+export interface HostServiceRestartResponse {
 }
 
 export interface HostServiceDeleteRequest {
@@ -162,7 +171,6 @@ function createBaseHost(): Host {
     os: "",
     osVersion: "",
     ip: "",
-    status: 0,
     createdAt: undefined,
     ipRangeFrom: "",
     ipRangeTo: "",
@@ -201,9 +209,6 @@ export const Host = {
     }
     if (message.ip !== "") {
       writer.uint32(82).string(message.ip);
-    }
-    if (message.status !== 0) {
-      writer.uint32(88).int32(message.status);
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(98).fork()).ldelim();
@@ -299,13 +304,6 @@ export const Host = {
 
           message.ip = reader.string();
           continue;
-        case 11:
-          if (tag !== 88) {
-            break;
-          }
-
-          message.status = reader.int32() as any;
-          continue;
         case 12:
           if (tag !== 98) {
             break;
@@ -379,7 +377,6 @@ export const Host = {
     message.os = object.os ?? "";
     message.osVersion = object.osVersion ?? "";
     message.ip = object.ip ?? "";
-    message.status = object.status ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     message.ipRangeFrom = object.ipRangeFrom ?? "";
     message.ipRangeTo = object.ipRangeTo ?? "";
@@ -744,7 +741,7 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: "", status: undefined };
+  return { orgId: "", offset: 0, limit: 0 };
 }
 
 export const HostServiceListRequest = {
@@ -752,8 +749,11 @@ export const HostServiceListRequest = {
     if (message.orgId !== "") {
       writer.uint32(10).string(message.orgId);
     }
-    if (message.status !== undefined) {
-      writer.uint32(16).int32(message.status);
+    if (message.offset !== 0) {
+      writer.uint32(16).uint64(message.offset);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(24).uint64(message.limit);
     }
     return writer;
   },
@@ -777,7 +777,14 @@ export const HostServiceListRequest = {
             break;
           }
 
-          message.status = reader.int32() as any;
+          message.offset = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.limit = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -795,19 +802,23 @@ export const HostServiceListRequest = {
   fromPartial(object: DeepPartial<HostServiceListRequest>): HostServiceListRequest {
     const message = createBaseHostServiceListRequest();
     message.orgId = object.orgId ?? "";
-    message.status = object.status ?? undefined;
+    message.offset = object.offset ?? 0;
+    message.limit = object.limit ?? 0;
     return message;
   },
 };
 
 function createBaseHostServiceListResponse(): HostServiceListResponse {
-  return { hosts: [] };
+  return { hosts: [], hostCount: 0 };
 }
 
 export const HostServiceListResponse = {
   encode(message: HostServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.hosts) {
       Host.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.hostCount !== 0) {
+      writer.uint32(16).uint64(message.hostCount);
     }
     return writer;
   },
@@ -826,6 +837,13 @@ export const HostServiceListResponse = {
 
           message.hosts.push(Host.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.hostCount = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -842,6 +860,7 @@ export const HostServiceListResponse = {
   fromPartial(object: DeepPartial<HostServiceListResponse>): HostServiceListResponse {
     const message = createBaseHostServiceListResponse();
     message.hosts = object.hosts?.map((e) => Host.fromPartial(e)) || [];
+    message.hostCount = object.hostCount ?? 0;
     return message;
   },
 };
@@ -971,6 +990,249 @@ export const HostServiceUpdateResponse = {
   },
 };
 
+function createBaseHostServiceStartRequest(): HostServiceStartRequest {
+  return { id: "" };
+}
+
+export const HostServiceStartRequest = {
+  encode(message: HostServiceStartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceStartRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceStartRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceStartRequest>): HostServiceStartRequest {
+    return HostServiceStartRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceStartRequest>): HostServiceStartRequest {
+    const message = createBaseHostServiceStartRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseHostServiceStartResponse(): HostServiceStartResponse {
+  return {};
+}
+
+export const HostServiceStartResponse = {
+  encode(_: HostServiceStartResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceStartResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceStartResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceStartResponse>): HostServiceStartResponse {
+    return HostServiceStartResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<HostServiceStartResponse>): HostServiceStartResponse {
+    const message = createBaseHostServiceStartResponse();
+    return message;
+  },
+};
+
+function createBaseHostServiceStopRequest(): HostServiceStopRequest {
+  return { id: "" };
+}
+
+export const HostServiceStopRequest = {
+  encode(message: HostServiceStopRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceStopRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceStopRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceStopRequest>): HostServiceStopRequest {
+    return HostServiceStopRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceStopRequest>): HostServiceStopRequest {
+    const message = createBaseHostServiceStopRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseHostServiceStopResponse(): HostServiceStopResponse {
+  return {};
+}
+
+export const HostServiceStopResponse = {
+  encode(_: HostServiceStopResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceStopResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceStopResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceStopResponse>): HostServiceStopResponse {
+    return HostServiceStopResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<HostServiceStopResponse>): HostServiceStopResponse {
+    const message = createBaseHostServiceStopResponse();
+    return message;
+  },
+};
+
+function createBaseHostServiceRestartRequest(): HostServiceRestartRequest {
+  return { id: "" };
+}
+
+export const HostServiceRestartRequest = {
+  encode(message: HostServiceRestartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceRestartRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceRestartRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceRestartRequest>): HostServiceRestartRequest {
+    return HostServiceRestartRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceRestartRequest>): HostServiceRestartRequest {
+    const message = createBaseHostServiceRestartRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseHostServiceRestartResponse(): HostServiceRestartResponse {
+  return {};
+}
+
+export const HostServiceRestartResponse = {
+  encode(_: HostServiceRestartResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceRestartResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceRestartResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceRestartResponse>): HostServiceRestartResponse {
+    return HostServiceRestartResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<HostServiceRestartResponse>): HostServiceRestartResponse {
+    const message = createBaseHostServiceRestartResponse();
+    return message;
+  },
+};
+
 function createBaseHostServiceDeleteRequest(): HostServiceDeleteRequest {
   return { id: "" };
 }
@@ -1083,12 +1345,42 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Update a single host */
+    /**
+     * Update a single host
+     * This shall be used only by Host.
+     */
     update: {
       name: "Update",
       requestType: HostServiceUpdateRequest,
       requestStream: false,
       responseType: HostServiceUpdateResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Start a single host */
+    start: {
+      name: "Start",
+      requestType: HostServiceStartRequest,
+      requestStream: false,
+      responseType: HostServiceStartResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Stop a single host */
+    stop: {
+      name: "Stop",
+      requestType: HostServiceStopRequest,
+      requestStream: false,
+      responseType: HostServiceStopResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Restart a single host */
+    restart: {
+      name: "Restart",
+      requestType: HostServiceRestartRequest,
+      requestStream: false,
+      responseType: HostServiceRestartResponse,
       responseStream: false,
       options: {},
     },
@@ -1118,11 +1410,29 @@ export interface HostServiceImplementation<CallContextExt = {}> {
     request: HostServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceListResponse>>;
-  /** Update a single host */
+  /**
+   * Update a single host
+   * This shall be used only by Host.
+   */
   update(
     request: HostServiceUpdateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceUpdateResponse>>;
+  /** Start a single host */
+  start(
+    request: HostServiceStartRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceStartResponse>>;
+  /** Stop a single host */
+  stop(
+    request: HostServiceStopRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceStopResponse>>;
+  /** Restart a single host */
+  restart(
+    request: HostServiceRestartRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceRestartResponse>>;
   /** Delete a single host */
   delete(
     request: HostServiceDeleteRequest,
@@ -1144,11 +1454,29 @@ export interface HostServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<HostServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceListResponse>;
-  /** Update a single host */
+  /**
+   * Update a single host
+   * This shall be used only by Host.
+   */
   update(
     request: DeepPartial<HostServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceUpdateResponse>;
+  /** Start a single host */
+  start(
+    request: DeepPartial<HostServiceStartRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceStartResponse>;
+  /** Stop a single host */
+  stop(
+    request: DeepPartial<HostServiceStopRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceStopResponse>;
+  /** Restart a single host */
+  restart(
+    request: DeepPartial<HostServiceRestartRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceRestartResponse>;
   /** Delete a single host */
   delete(
     request: DeepPartial<HostServiceDeleteRequest>,

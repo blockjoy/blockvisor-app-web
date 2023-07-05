@@ -24,7 +24,7 @@ export const HostViewHeader = () => {
                   <h2 css={styles.detailsHeader}>{host!.name}</h2>
                   <div css={styles.detailsFooter}>
                     <div css={[styles.hostStatus]}>
-                      <HostStatus status={host.status} hasBorder={false} />
+                      <HostStatus hasBorder={false} />
                     </div>
 
                     {host!.ip && (

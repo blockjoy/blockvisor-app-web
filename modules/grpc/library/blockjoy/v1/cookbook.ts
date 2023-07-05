@@ -5,15 +5,6 @@ import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "blockjoy.v1";
 
-/** Define staging status. */
-export enum StatusName {
-  STATUS_NAME_UNSPECIFIED = 0,
-  STATUS_NAME_DEVELOPMENT = 1,
-  STATUS_NAME_UNSTABLE = 2,
-  STATUS_NAME_STABLE = 3,
-  UNRECOGNIZED = -1,
-}
-
 export enum NetType {
   NET_TYPE_UNSPECIFIED = 0,
   NET_TYPE_DEV = 1,
@@ -83,7 +74,6 @@ export interface BundleServiceRetrieveResponse {
 }
 
 export interface BundleServiceListBundleVersionsRequest {
-  status: StatusName;
 }
 
 export interface BundleServiceListBundleVersionsResponse {
@@ -105,8 +95,6 @@ export interface ConfigIdentifier {
   nodeType: string;
   /** semantic version string of the node type version. */
   nodeVersion: string;
-  /** Does defined tuple have the requested tag assigned. */
-  status: StatusName;
 }
 
 export interface BundleIdentifier {
@@ -824,14 +812,11 @@ export const BundleServiceRetrieveResponse = {
 };
 
 function createBaseBundleServiceListBundleVersionsRequest(): BundleServiceListBundleVersionsRequest {
-  return { status: 0 };
+  return {};
 }
 
 export const BundleServiceListBundleVersionsRequest = {
-  encode(message: BundleServiceListBundleVersionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.status !== 0) {
-      writer.uint32(8).int32(message.status);
-    }
+  encode(_: BundleServiceListBundleVersionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
@@ -842,13 +827,6 @@ export const BundleServiceListBundleVersionsRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.status = reader.int32() as any;
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -862,9 +840,8 @@ export const BundleServiceListBundleVersionsRequest = {
     return BundleServiceListBundleVersionsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<BundleServiceListBundleVersionsRequest>): BundleServiceListBundleVersionsRequest {
+  fromPartial(_: DeepPartial<BundleServiceListBundleVersionsRequest>): BundleServiceListBundleVersionsRequest {
     const message = createBaseBundleServiceListBundleVersionsRequest();
-    message.status = object.status ?? 0;
     return message;
   },
 };
@@ -997,7 +974,7 @@ export const BundleServiceDeleteResponse = {
 };
 
 function createBaseConfigIdentifier(): ConfigIdentifier {
-  return { protocol: "", nodeType: "", nodeVersion: "", status: 0 };
+  return { protocol: "", nodeType: "", nodeVersion: "" };
 }
 
 export const ConfigIdentifier = {
@@ -1010,9 +987,6 @@ export const ConfigIdentifier = {
     }
     if (message.nodeVersion !== "") {
       writer.uint32(26).string(message.nodeVersion);
-    }
-    if (message.status !== 0) {
-      writer.uint32(32).int32(message.status);
     }
     return writer;
   },
@@ -1045,13 +1019,6 @@ export const ConfigIdentifier = {
 
           message.nodeVersion = reader.string();
           continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.status = reader.int32() as any;
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1070,7 +1037,6 @@ export const ConfigIdentifier = {
     message.protocol = object.protocol ?? "";
     message.nodeType = object.nodeType ?? "";
     message.nodeVersion = object.nodeVersion ?? "";
-    message.status = object.status ?? 0;
     return message;
   },
 };

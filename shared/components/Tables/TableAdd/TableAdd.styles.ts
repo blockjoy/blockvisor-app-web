@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -20,10 +19,10 @@ export const styles = {
     transform: translateY(-50%);
   `,
 
-  input: (theme: ITheme) => css`
+  input: (theme: ITheme, buttonWidth: string) => css`
     border: 0;
     background: transparent;
-    padding: 0 70px 0 0;
+    padding: 0 calc(${buttonWidth} + 10px) 0 0;
     height: 72px;
     width: 100%;
     border-radius: 0;

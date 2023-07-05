@@ -19,7 +19,10 @@ import {
   useHostList,
   useHostUIContext,
 } from '@modules/host';
-import { useProvisionToken } from '@modules/organization';
+import {
+  useDefaultOrganization,
+  useProvisionToken,
+} from '@modules/organization';
 import IconHost from '@public/assets/icons/app/Host.svg';
 
 export const HostList = () => {
@@ -34,6 +37,7 @@ export const HostList = () => {
   const { loadHosts, hostList, isLoading, handleHostClick } = useHostList();
   const { provisionToken, provisionTokenLoadingState, getProvisionToken } =
     useProvisionToken();
+  const { defaultOrganization } = useDefaultOrganization();
   const hasMoreHosts = useRecoilValue(hostAtoms.hasMoreHosts);
   const preloadHosts = useRecoilValue(hostAtoms.preloadHosts);
   const activeListType = useRecoilValue(hostAtoms.activeListType);
@@ -52,7 +56,7 @@ export const HostList = () => {
   }, [hostUIProps.queryParams]);
 
   useEffect(() => {
-    getProvisionToken();
+    getProvisionToken(defaultOrganization?.id!);
   }, []);
 
   const updateQueryParams = async () => {

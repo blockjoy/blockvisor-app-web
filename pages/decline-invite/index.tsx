@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { invitationClient } from '@modules/grpc';
 import { Layout } from '@shared/components';
+import { readToken } from '@shared/utils/readToken';
 
 const AcceptInvite: NextPage = () => {
   const router = useRouter();
@@ -10,16 +11,14 @@ const AcceptInvite: NextPage = () => {
   useEffect(() => {
     if (router.isReady) {
       const { token } = router.query;
-
-      // (async () => {
-      //   const response: any = await invitationClient.declineInvitation({
-      //     token: token?.toString()!,
-      //   });
-
-      //   if (response.code === 20) {
-      //     return;
-      //   }
-      // })();
+      const tokenObject = readToken(token as string);
+      const { invitation_id } = tokenObject.data;
+      (async () => {
+        await invitationClient.declineInvitation(
+          invitation_id,
+          token as string,
+        );
+      })();
     }
   }, [router.isReady]);
 

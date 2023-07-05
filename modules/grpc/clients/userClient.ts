@@ -3,7 +3,7 @@ import {
   UserServiceClient,
   UserServiceDefinition,
 } from '../library/blockjoy/v1/user';
-import { getOptions } from '@modules/grpc';
+import { getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient, Metadata } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -25,13 +25,13 @@ class UserClient {
     this.client = createClient(UserServiceDefinition, channel);
   }
 
-  async getUser(id: string): Promise<User | StatusResponse> {
+  async getUser(id: string): Promise<User> {
     try {
       await authClient.refreshToken();
       const response = await this.client.get({ id }, getOptions());
       return response.user!;
     } catch (err) {
-      return StatusResponseFactory.getUserResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 

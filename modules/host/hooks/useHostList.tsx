@@ -1,5 +1,4 @@
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import { useIdentityRepository } from '@modules/auth';
 import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/index';
@@ -10,8 +9,6 @@ import { useDefaultOrganization } from '@modules/organization';
 
 export const useHostList = () => {
   const router = useRouter();
-
-  const repository = useIdentityRepository();
 
   const orgId = useDefaultOrganization()?.defaultOrganization?.id!;
 
@@ -41,28 +38,28 @@ export const useHostList = () => {
 
     setHasMore(false);
 
-    const hosts: any = await hostClient.listHosts(
-      orgId!,
-      queryParams?.filter,
-      queryParams?.pagination,
-    );
+    try {
+      const hosts: any = await hostClient.listHosts(
+        orgId!,
+        queryParams?.filter,
+        queryParams?.pagination,
+      );
 
-    if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
+      if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
+      setPreloadNodes(hosts.length);
+      if (queryParams.pagination.current_page === 1) {
+        setHostList(hosts);
+      } else {
+        const newNodes = [...hostList, ...hosts];
+        setHostList(newNodes);
+      }
 
-    setPreloadNodes(hosts.length);
-
-    if (queryParams.pagination.current_page === 1) {
-      setHostList(hosts);
-    } else {
-      const newNodes = [...hostList, ...hosts];
-      setHostList(newNodes);
+      setHasMore(false);
+      setPreloadNodes(0);
+      setIsLoading('finished');
+    } catch (err) {
+      setIsLoading('finished');
     }
-
-    setHasMore(false);
-
-    setPreloadNodes(0);
-
-    setIsLoading('finished');
   };
 
   return {

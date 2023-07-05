@@ -5,14 +5,17 @@ import {
   Skeleton,
   GridTableViewPicker,
   FiltersHeaderIconText,
+  Alert,
 } from '@shared/components';
+import { useNodeList } from '@modules/node/hooks/useNodeList';
 
 export const NodeListHeader = () => {
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
-  const totalNodes = useRecoilValue(nodeAtoms.totalNodes);
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
+
+  const { nodeCount } = useNodeList();
 
   const filtersTotal = useRecoilValue(nodeAtoms.filtersTotal);
 
@@ -47,6 +50,10 @@ export const NodeListHeader = () => {
           )}
         </div>
       )}
+
+      <Alert isRounded isSuccess={nodeCount > 0}>
+        {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
+      </Alert>
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker

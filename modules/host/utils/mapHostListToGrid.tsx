@@ -19,7 +19,7 @@ export const mapHostListToGird = (
           onCellClick={() => onCellClick({ key: host.id })}
           cellTitle={host.name}
           cellIcon={<HostIcon />}
-          cellStatus={<HostStatus status={host.status} />}
+          cellStatus={<HostStatus />}
           cellType={<HostOs os={host.os} osVersion={host.osVersion} />}
         />
       ),

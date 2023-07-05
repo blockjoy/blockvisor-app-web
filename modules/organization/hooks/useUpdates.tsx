@@ -7,18 +7,40 @@ import {
 import {
   useUpdateOrganization,
   useDeleteOrganization,
+  useGetOrganizations,
+  useDefaultOrganization,
 } from '@modules/organization';
 import { showNotification } from '@modules/mqtt';
 import { useRecoilValue } from 'recoil';
 import { authAtoms } from '@modules/auth';
 import { useUpdateMembers } from './useUpdateMembers';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/constants/routes';
 
 export const useUpdates = () => {
   const user = useRecoilValue(authAtoms.user);
+  const router = useRouter();
 
   const { modifyOrganization } = useUpdateOrganization();
   const { removeOrganization } = useDeleteOrganization();
   const { updateMembersList } = useUpdateMembers();
+  const { getOrganizations } = useGetOrganizations();
+  const { defaultOrganization, setDefaultOrganization } =
+    useDefaultOrganization();
+  const { organizations } = useGetOrganizations();
+
+  const kickFromOrganization = () => {
+    const newOrg = organizations[0];
+
+    setDefaultOrganization({
+      id: newOrg.id,
+      name: newOrg.name,
+    });
+
+    if (router.pathname.includes('/organizations/')) {
+      router.push(ROUTES.ORGANIZATION(newOrg.id));
+    }
+  };
 
   const handleOrganizationUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -56,7 +78,19 @@ export const useUpdates = () => {
 
         updateMembersList(org!);
 
-        showNotification(type, `${updatedByName} just updated an organization`);
+        if (!org?.members.find((m) => m.userId === user?.id)) {
+          showNotification(
+            type,
+            `You've just been removed from ${org?.name} organization`,
+          );
+          kickFromOrganization();
+        } else {
+          showNotification(
+            type,
+            `${updatedByName} just updated an organization`,
+          );
+        }
+
         break;
       }
 
@@ -73,7 +107,19 @@ export const useUpdates = () => {
 
         removeOrganization(orgId);
 
-        showNotification(type, `${deletedByName} just deleted an organization`);
+        if (orgId === defaultOrganization?.id) {
+          showNotification(
+            type,
+            `${deletedByName} just deleted your default organization`,
+          );
+          kickFromOrganization();
+        } else {
+          showNotification(
+            type,
+            `${deletedByName} just deleted an organization`,
+          );
+        }
+
         break;
       }
 

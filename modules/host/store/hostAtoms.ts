@@ -1,7 +1,6 @@
 import { localStorageEffect } from 'utils/store/persist';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostFiltersDefaults } from '@shared/constants/lookups';
-import { hostStatusList } from '@shared/constants/hostStatusList';
 import { isMobile } from 'react-device-detect';
 import { atom } from 'recoil';
 
@@ -64,29 +63,6 @@ const isFiltersOpen = atom<boolean>({
         ? JSON.parse(savedHostFiltersToggle)
         : true;
       setSelf(isFiltersOpenValue);
-    },
-  ],
-});
-
-const filtersStatus = atom<FilterItem[]>({
-  key: 'host.filters.status',
-  default: hostStatusList
-    .filter((item) => item.id !== 0)
-    .map((item) => ({
-      name: item.name?.toLowerCase(),
-      id: item.id?.toString(),
-      isChecked: false,
-    })),
-  effects: [
-    ({ setSelf }) => {
-      const savedHostFilters =
-        typeof window !== 'undefined'
-          ? window.localStorage.getItem('hostFilters')
-          : null;
-      if (savedHostFilters) {
-        const savedStatus = JSON.parse(savedHostFilters)['status'];
-        if (savedStatus) setSelf(savedStatus);
-      }
     },
   ],
 });
@@ -157,7 +133,6 @@ export const hostAtoms = {
   activeListType,
 
   isFiltersOpen,
-  filtersStatus,
   filtersMemory,
   filtersCPU,
   filtersSpace,

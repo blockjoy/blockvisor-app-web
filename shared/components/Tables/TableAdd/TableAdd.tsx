@@ -1,4 +1,4 @@
-import { useTheme } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import { Button, Input } from '@shared/components';
 import { useState } from 'react';
 import {
@@ -13,6 +13,8 @@ import { styles } from './TableAdd.styles';
 type Props = {
   placeholder?: string;
   placeholderFocused?: string;
+  buttonText?: string;
+  buttonWidth?: string;
   isLoading: boolean;
   onSubmit: SubmitHandler<any>;
   form: UseFormReturn<any, any>;
@@ -24,6 +26,8 @@ export const TableAdd = ({
   form,
   field,
   isLoading,
+  buttonText = 'Add',
+  buttonWidth = '58px',
   onSubmit,
   placeholder = 'New Organization',
   placeholderFocused,
@@ -31,10 +35,18 @@ export const TableAdd = ({
 }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
   const theme = useTheme();
+
+  const handleSubmit = form.handleSubmit(async (values) => {
+    if (!form.formState.isSubmitted)
+      onSubmit({
+        [field]: values[field],
+      });
+  });
+
   return (
     <>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} css={styles.wrapper}>
+        <form onSubmit={handleSubmit} css={styles.wrapper}>
           <Input
             placeholder={
               isFocused && placeholderFocused ? placeholderFocused : placeholder
@@ -42,7 +54,7 @@ export const TableAdd = ({
             name={field}
             type="text"
             inputSize="small"
-            inputStyles={[styles.input(theme)]}
+            inputStyles={[styles.input(theme, buttonWidth)]}
             autoComplete="off"
             required
             validationOptions={validationOptions}
@@ -56,8 +68,11 @@ export const TableAdd = ({
               style="secondary"
               size="small"
               type="submit"
+              css={css`
+                width: ${buttonWidth};
+              `}
             >
-              Add
+              {buttonText}
             </Button>
           </div>
         </form>
