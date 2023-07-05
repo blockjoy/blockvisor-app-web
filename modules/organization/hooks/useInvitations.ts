@@ -2,8 +2,9 @@ import { invitationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
-import { invitationAtoms, useDefaultOrganization } from '@modules/organization';
+import { invitationAtoms } from '@modules/organization';
 import { isStatusResponse } from '../utils/typeGuards';
+import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
 
 export function useInvitations() {
   const [sentInvitations, setSentInvitations] = useRecoilState(
@@ -37,13 +38,10 @@ export function useInvitations() {
   };
 
   const acceptInvitation = async (
-    invitationId: string,
+    invitation: Invitation,
     onSuccess?: VoidFunction,
   ) => {
-    await invitationClient.acceptInvitation(invitationId);
-
-    // TODO: set default organization
-
+    await invitationClient.acceptInvitation(invitation.id);
     if (onSuccess) onSuccess();
   };
 

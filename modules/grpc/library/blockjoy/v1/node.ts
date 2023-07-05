@@ -235,27 +235,17 @@ export interface NodeServiceListRequest {
 export interface NodeServiceListResponse {
   /** The nodes that match the filter will be placed in this field. */
   nodes: Node[];
+  /** The total number of nodes matching your query. */
+  nodeCount: number;
 }
 
-/** This request is used for updating a node. */
-export interface NodeServiceUpdateRequest {
+/** This request is used for updating a node configuration. */
+export interface NodeServiceUpdateConfigRequest {
   /** The UUID of the node that you want to update. */
   id: string;
-  /** The version of the blockchain software that should now be ran on the node. */
-  version?:
-    | string
-    | undefined;
   /** Whether or not the node software should update itself. */
   selfUpdate?:
     | boolean
-    | undefined;
-  /** Set the container status field to this value. */
-  containerStatus?:
-    | ContainerStatus
-    | undefined;
-  /** Update the P2P address of the blockchain node. */
-  address?:
-    | string
     | undefined;
   /** A list of ip addresses allowed to access public ports on this node. */
   allowIps: FilteredIpAddr[];
@@ -263,7 +253,47 @@ export interface NodeServiceUpdateRequest {
   denyIps: FilteredIpAddr[];
 }
 
-export interface NodeServiceUpdateResponse {
+export interface NodeServiceUpdateConfigResponse {
+}
+
+/** This request is used for updating a node status. */
+export interface NodeServiceUpdateStatusRequest {
+  /** The UUID of the node that you want to update. */
+  id: string;
+  /** The version of the blockchain software that should now be ran on the node. */
+  version?:
+    | string
+    | undefined;
+  /** Set the container status field to this value. */
+  containerStatus?:
+    | ContainerStatus
+    | undefined;
+  /** Update the P2P address of the blockchain node. */
+  address?: string | undefined;
+}
+
+export interface NodeServiceUpdateStatusResponse {
+}
+
+export interface NodeServiceStartRequest {
+  id: string;
+}
+
+export interface NodeServiceStartResponse {
+}
+
+export interface NodeServiceStopRequest {
+  id: string;
+}
+
+export interface NodeServiceStopResponse {
+}
+
+export interface NodeServiceRestartRequest {
+  id: string;
+}
+
+export interface NodeServiceRestartResponse {
 }
 
 export interface NodeServiceDeleteRequest {
@@ -1184,13 +1214,16 @@ export const NodeServiceListRequest = {
 };
 
 function createBaseNodeServiceListResponse(): NodeServiceListResponse {
-  return { nodes: [] };
+  return { nodes: [], nodeCount: 0 };
 }
 
 export const NodeServiceListResponse = {
   encode(message: NodeServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.nodes) {
       Node.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.nodeCount !== 0) {
+      writer.uint32(16).uint64(message.nodeCount);
     }
     return writer;
   },
@@ -1209,6 +1242,13 @@ export const NodeServiceListResponse = {
 
           message.nodes.push(Node.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.nodeCount = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1225,52 +1265,150 @@ export const NodeServiceListResponse = {
   fromPartial(object: DeepPartial<NodeServiceListResponse>): NodeServiceListResponse {
     const message = createBaseNodeServiceListResponse();
     message.nodes = object.nodes?.map((e) => Node.fromPartial(e)) || [];
+    message.nodeCount = object.nodeCount ?? 0;
     return message;
   },
 };
 
-function createBaseNodeServiceUpdateRequest(): NodeServiceUpdateRequest {
-  return {
-    id: "",
-    version: undefined,
-    selfUpdate: undefined,
-    containerStatus: undefined,
-    address: undefined,
-    allowIps: [],
-    denyIps: [],
-  };
+function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
+  return { id: "", selfUpdate: undefined, allowIps: [], denyIps: [] };
 }
 
-export const NodeServiceUpdateRequest = {
-  encode(message: NodeServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const NodeServiceUpdateConfigRequest = {
+  encode(message: NodeServiceUpdateConfigRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.selfUpdate !== undefined) {
+      writer.uint32(16).bool(message.selfUpdate);
+    }
+    for (const v of message.allowIps) {
+      FilteredIpAddr.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.denyIps) {
+      FilteredIpAddr.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateConfigRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpdateConfigRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.selfUpdate = reader.bool();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpdateConfigRequest>): NodeServiceUpdateConfigRequest {
+    return NodeServiceUpdateConfigRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceUpdateConfigRequest>): NodeServiceUpdateConfigRequest {
+    const message = createBaseNodeServiceUpdateConfigRequest();
+    message.id = object.id ?? "";
+    message.selfUpdate = object.selfUpdate ?? undefined;
+    message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseNodeServiceUpdateConfigResponse(): NodeServiceUpdateConfigResponse {
+  return {};
+}
+
+export const NodeServiceUpdateConfigResponse = {
+  encode(_: NodeServiceUpdateConfigResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateConfigResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpdateConfigResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpdateConfigResponse>): NodeServiceUpdateConfigResponse {
+    return NodeServiceUpdateConfigResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceUpdateConfigResponse>): NodeServiceUpdateConfigResponse {
+    const message = createBaseNodeServiceUpdateConfigResponse();
+    return message;
+  },
+};
+
+function createBaseNodeServiceUpdateStatusRequest(): NodeServiceUpdateStatusRequest {
+  return { id: "", version: undefined, containerStatus: undefined, address: undefined };
+}
+
+export const NodeServiceUpdateStatusRequest = {
+  encode(message: NodeServiceUpdateStatusRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.version !== undefined) {
       writer.uint32(18).string(message.version);
     }
-    if (message.selfUpdate !== undefined) {
-      writer.uint32(32).bool(message.selfUpdate);
-    }
     if (message.containerStatus !== undefined) {
-      writer.uint32(40).int32(message.containerStatus);
+      writer.uint32(24).int32(message.containerStatus);
     }
     if (message.address !== undefined) {
-      writer.uint32(50).string(message.address);
-    }
-    for (const v of message.allowIps) {
-      FilteredIpAddr.encode(v!, writer.uint32(58).fork()).ldelim();
-    }
-    for (const v of message.denyIps) {
-      FilteredIpAddr.encode(v!, writer.uint32(66).fork()).ldelim();
+      writer.uint32(34).string(message.address);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateStatusRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeServiceUpdateRequest();
+    const message = createBaseNodeServiceUpdateStatusRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1288,40 +1426,19 @@ export const NodeServiceUpdateRequest = {
 
           message.version = reader.string();
           continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.selfUpdate = reader.bool();
-          continue;
-        case 5:
-          if (tag !== 40) {
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.containerStatus = reader.int32() as any;
           continue;
-        case 6:
-          if (tag !== 50) {
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
           message.address = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1332,36 +1449,33 @@ export const NodeServiceUpdateRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceUpdateRequest>): NodeServiceUpdateRequest {
-    return NodeServiceUpdateRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<NodeServiceUpdateStatusRequest>): NodeServiceUpdateStatusRequest {
+    return NodeServiceUpdateStatusRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceUpdateRequest>): NodeServiceUpdateRequest {
-    const message = createBaseNodeServiceUpdateRequest();
+  fromPartial(object: DeepPartial<NodeServiceUpdateStatusRequest>): NodeServiceUpdateStatusRequest {
+    const message = createBaseNodeServiceUpdateStatusRequest();
     message.id = object.id ?? "";
     message.version = object.version ?? undefined;
-    message.selfUpdate = object.selfUpdate ?? undefined;
     message.containerStatus = object.containerStatus ?? undefined;
     message.address = object.address ?? undefined;
-    message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
-    message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseNodeServiceUpdateResponse(): NodeServiceUpdateResponse {
+function createBaseNodeServiceUpdateStatusResponse(): NodeServiceUpdateStatusResponse {
   return {};
 }
 
-export const NodeServiceUpdateResponse = {
-  encode(_: NodeServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const NodeServiceUpdateStatusResponse = {
+  encode(_: NodeServiceUpdateStatusResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateStatusResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeServiceUpdateResponse();
+    const message = createBaseNodeServiceUpdateStatusResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1374,12 +1488,255 @@ export const NodeServiceUpdateResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceUpdateResponse>): NodeServiceUpdateResponse {
-    return NodeServiceUpdateResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<NodeServiceUpdateStatusResponse>): NodeServiceUpdateStatusResponse {
+    return NodeServiceUpdateStatusResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceUpdateResponse>): NodeServiceUpdateResponse {
-    const message = createBaseNodeServiceUpdateResponse();
+  fromPartial(_: DeepPartial<NodeServiceUpdateStatusResponse>): NodeServiceUpdateStatusResponse {
+    const message = createBaseNodeServiceUpdateStatusResponse();
+    return message;
+  },
+};
+
+function createBaseNodeServiceStartRequest(): NodeServiceStartRequest {
+  return { id: "" };
+}
+
+export const NodeServiceStartRequest = {
+  encode(message: NodeServiceStartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStartRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceStartRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceStartRequest>): NodeServiceStartRequest {
+    return NodeServiceStartRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceStartRequest>): NodeServiceStartRequest {
+    const message = createBaseNodeServiceStartRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceStartResponse(): NodeServiceStartResponse {
+  return {};
+}
+
+export const NodeServiceStartResponse = {
+  encode(_: NodeServiceStartResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStartResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceStartResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceStartResponse>): NodeServiceStartResponse {
+    return NodeServiceStartResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceStartResponse>): NodeServiceStartResponse {
+    const message = createBaseNodeServiceStartResponse();
+    return message;
+  },
+};
+
+function createBaseNodeServiceStopRequest(): NodeServiceStopRequest {
+  return { id: "" };
+}
+
+export const NodeServiceStopRequest = {
+  encode(message: NodeServiceStopRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStopRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceStopRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceStopRequest>): NodeServiceStopRequest {
+    return NodeServiceStopRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceStopRequest>): NodeServiceStopRequest {
+    const message = createBaseNodeServiceStopRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceStopResponse(): NodeServiceStopResponse {
+  return {};
+}
+
+export const NodeServiceStopResponse = {
+  encode(_: NodeServiceStopResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStopResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceStopResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceStopResponse>): NodeServiceStopResponse {
+    return NodeServiceStopResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceStopResponse>): NodeServiceStopResponse {
+    const message = createBaseNodeServiceStopResponse();
+    return message;
+  },
+};
+
+function createBaseNodeServiceRestartRequest(): NodeServiceRestartRequest {
+  return { id: "" };
+}
+
+export const NodeServiceRestartRequest = {
+  encode(message: NodeServiceRestartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceRestartRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceRestartRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceRestartRequest>): NodeServiceRestartRequest {
+    return NodeServiceRestartRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceRestartRequest>): NodeServiceRestartRequest {
+    const message = createBaseNodeServiceRestartRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceRestartResponse(): NodeServiceRestartResponse {
+  return {};
+}
+
+export const NodeServiceRestartResponse = {
+  encode(_: NodeServiceRestartResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceRestartResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceRestartResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceRestartResponse>): NodeServiceRestartResponse {
+    return NodeServiceRestartResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceRestartResponse>): NodeServiceRestartResponse {
+    const message = createBaseNodeServiceRestartResponse();
     return message;
   },
 };
@@ -1760,12 +2117,51 @@ export const NodeServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Update a single blockchain node */
-    update: {
-      name: "Update",
-      requestType: NodeServiceUpdateRequest,
+    /** Update a single blockchain node configuration */
+    updateConfig: {
+      name: "UpdateConfig",
+      requestType: NodeServiceUpdateConfigRequest,
       requestStream: false,
-      responseType: NodeServiceUpdateResponse,
+      responseType: NodeServiceUpdateConfigResponse,
+      responseStream: false,
+      options: {},
+    },
+    /**
+     * Update a single blockchain node status.
+     * This shall be used only by Host running the Node.
+     */
+    updateStatus: {
+      name: "UpdateStatus",
+      requestType: NodeServiceUpdateStatusRequest,
+      requestStream: false,
+      responseType: NodeServiceUpdateStatusResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Start a single node */
+    start: {
+      name: "Start",
+      requestType: NodeServiceStartRequest,
+      requestStream: false,
+      responseType: NodeServiceStartResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Stop a single node */
+    stop: {
+      name: "Stop",
+      requestType: NodeServiceStopRequest,
+      requestStream: false,
+      responseType: NodeServiceStopResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Restart a single node */
+    restart: {
+      name: "Restart",
+      requestType: NodeServiceRestartRequest,
+      requestStream: false,
+      responseType: NodeServiceRestartResponse,
       responseStream: false,
       options: {},
     },
@@ -1797,11 +2193,34 @@ export interface NodeServiceImplementation<CallContextExt = {}> {
     request: NodeServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<NodeServiceListResponse>>;
-  /** Update a single blockchain node */
-  update(
-    request: NodeServiceUpdateRequest,
+  /** Update a single blockchain node configuration */
+  updateConfig(
+    request: NodeServiceUpdateConfigRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<NodeServiceUpdateResponse>>;
+  ): Promise<DeepPartial<NodeServiceUpdateConfigResponse>>;
+  /**
+   * Update a single blockchain node status.
+   * This shall be used only by Host running the Node.
+   */
+  updateStatus(
+    request: NodeServiceUpdateStatusRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<NodeServiceUpdateStatusResponse>>;
+  /** Start a single node */
+  start(
+    request: NodeServiceStartRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<NodeServiceStartResponse>>;
+  /** Stop a single node */
+  stop(
+    request: NodeServiceStopRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<NodeServiceStopResponse>>;
+  /** Restart a single node */
+  restart(
+    request: NodeServiceRestartRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<NodeServiceRestartResponse>>;
   /** Delete a single node */
   delete(
     request: NodeServiceDeleteRequest,
@@ -1825,11 +2244,34 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<NodeServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<NodeServiceListResponse>;
-  /** Update a single blockchain node */
-  update(
-    request: DeepPartial<NodeServiceUpdateRequest>,
+  /** Update a single blockchain node configuration */
+  updateConfig(
+    request: DeepPartial<NodeServiceUpdateConfigRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<NodeServiceUpdateResponse>;
+  ): Promise<NodeServiceUpdateConfigResponse>;
+  /**
+   * Update a single blockchain node status.
+   * This shall be used only by Host running the Node.
+   */
+  updateStatus(
+    request: DeepPartial<NodeServiceUpdateStatusRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<NodeServiceUpdateStatusResponse>;
+  /** Start a single node */
+  start(
+    request: DeepPartial<NodeServiceStartRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<NodeServiceStartResponse>;
+  /** Stop a single node */
+  stop(
+    request: DeepPartial<NodeServiceStopRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<NodeServiceStopResponse>;
+  /** Restart a single node */
+  restart(
+    request: DeepPartial<NodeServiceRestartRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<NodeServiceRestartResponse>;
   /** Delete a single node */
   delete(
     request: DeepPartial<NodeServiceDeleteRequest>,

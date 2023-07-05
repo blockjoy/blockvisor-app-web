@@ -16,6 +16,5 @@ export * from './hooks/useFilters';
 export * from './hooks/useGetBlockchains';
 export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeList';
-export * from './hooks/useNodeMetrics';
 export * from './hooks/useNodeView';
 export * from './hooks/useUpdates';

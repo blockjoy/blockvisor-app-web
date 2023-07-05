@@ -12,7 +12,6 @@ export const styles = {
     color: ${theme.colorText};
     font-size: 13px;
     margin: 0 0 24px;
-    width: 100%;
 
     ::after {
       content: '';
@@ -36,5 +35,13 @@ export const styles = {
     ::after {
       background: ${theme.colorDanger};
     }
+  `,
+  alertRounded: css`
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    height: 40px;
+    padding: 0 24px 0 36px;
+    margin-bottom: 0;
   `,
 };

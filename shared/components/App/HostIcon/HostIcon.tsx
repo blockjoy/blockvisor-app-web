@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import { SvgIcon } from '@shared/components';
 import { ITheme } from 'types/theme';
-import { getHostStatusInfo, getHostStatusColor } from '@shared/components';
 
 type Props = {
   status?: number;
@@ -15,18 +14,12 @@ const styles = {
     padding: 12px;
     border-radius: 50%;
     background: ${theme.colorLightGrey};
-
-    path {
-      fill: ${theme.colorLabel};
-    }
   `,
 };
 
 export const HostIcon = ({ status = 1, size = '14px' }: Props) => (
-  <span
-    css={[styles.icon, getHostStatusColor(getHostStatusInfo(status)?.name!)]}
-  >
-    <SvgIcon size={size}>
+  <span css={[styles.icon]}>
+    <SvgIcon size={size} isDefaultColor>
       <IconHost />
     </SvgIcon>
   </span>

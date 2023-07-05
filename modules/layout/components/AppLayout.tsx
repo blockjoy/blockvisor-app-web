@@ -46,12 +46,15 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   useEffect(() => {
     if (!provisionToken && defaultOrganization?.id) {
-      getProvisionToken();
+      getProvisionToken(defaultOrganization?.id);
     }
     if (!blockchains?.length && defaultOrganization?.id) {
       getBlockchains();
     }
-    if (defaultOrganization?.id !== currentOrg.current) {
+    if (
+      defaultOrganization?.id !== currentOrg.current &&
+      defaultOrganization?.id
+    ) {
       currentOrg.current = defaultOrganization!.id;
       loadNodes();
       loadHosts();

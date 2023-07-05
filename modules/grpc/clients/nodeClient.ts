@@ -5,8 +5,8 @@ import {
   NodeServiceCreateRequest,
   NodeServiceClient,
   NodeServiceDefinition,
-  NodeStatus,
-  NodeServiceUpdateRequest,
+  NodeServiceUpdateConfigRequest,
+  NodeServiceListResponse,
 } from '../library/blockjoy/v1/node';
 
 import {
@@ -50,7 +50,7 @@ class NodeClient {
     orgId: string,
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
-  ): Promise<Node[] | StatusResponse> {
+  ): Promise<NodeServiceListResponse> {
     const request = {
       orgId,
       offset: 0,
@@ -60,12 +60,18 @@ class NodeClient {
       blockchainIds: filter_criteria?.blockchain,
     };
 
-    const response = await callWithTokenRefresh(
-      this.client.list.bind(this.client),
-      request,
-    );
+    console.log('listNodesRequest', request);
 
-    return response.nodes;
+    try {
+      const response = await callWithTokenRefresh(
+        this.client.list.bind(this.client),
+        request,
+      );
+      console.log('listNodesResponse', response);
+      return response;
+    } catch (err) {
+      return handleError(err);
+    }
   }
 
   async listNodesByHost(
@@ -106,10 +112,10 @@ class NodeClient {
     }
   }
 
-  async updateNode(node: NodeServiceUpdateRequest): Promise<void> {
+  async updateNode(node: NodeServiceUpdateConfigRequest): Promise<void> {
     try {
       await authClient.refreshToken();
-      await this.client.update(node, getOptions());
+      await this.client.updateConfig(node, getOptions());
     } catch (err) {
       return handleError(err);
     }
@@ -121,6 +127,24 @@ class NodeClient {
       await this.client.delete({ id: nodeId }, getOptions());
     } catch (err) {
       return StatusResponseFactory.deleteNodeResponse(err, 'grpcClient');
+    }
+  }
+
+  async stopNode(nodeId: string): Promise<void> {
+    try {
+      await authClient.refreshToken();
+      await this.client.stop({ id: nodeId }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async startNode(nodeId: string): Promise<void> {
+    try {
+      await authClient.refreshToken();
+      await this.client.start({ id: nodeId }, getOptions());
+    } catch (err) {
+      return handleError(err);
     }
   }
 }

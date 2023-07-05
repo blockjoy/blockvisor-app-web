@@ -58,7 +58,7 @@ export const OrganizationViewHeaderDelete = ({
             style={{ maxWidth: '380px' }}
             labelStyles={[display.visuallyHidden]}
             name="elementNameToDelete"
-            placeholder={`Type Node name`}
+            placeholder={`Type Organization name`}
             type="text"
             validationOptions={{
               required: 'This is a mandatory field',

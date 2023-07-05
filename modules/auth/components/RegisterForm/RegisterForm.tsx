@@ -22,11 +22,6 @@ type RegisterForm = {
   password: string;
 };
 
-type ActiveType = {
-  password: string;
-  confirmPassword: string;
-};
-
 const getError = (message: string) => {
   // temporary getError method based on message
   if (message?.toLowerCase()?.includes('duplicate')) {
@@ -38,18 +33,13 @@ const getError = (message: string) => {
 
 export function RegisterForm() {
   const router = useRouter();
-  const { invited, token } = router.query;
+  const { token } = router.query;
 
   const form = useForm<RegisterForm>({
     mode: 'all',
     reValidateMode: 'onBlur',
   });
-  const [activeType, setActiveType] = useState<
-    Record<keyof ActiveType, 'password' | 'text'>
-  >({
-    confirmPassword: 'password',
-    password: 'password',
-  });
+
   const [registerError, setRegisterError] = useState<string | undefined>();
   const [loading, setIsLoading] = useState(false);
   const { handleSubmit, setValue, formState, watch } = form;
@@ -98,9 +88,10 @@ export function RegisterForm() {
 
   return (
     <>
-      {invited && (
+      {token && (
         <Alert isSuccess>
-          You've been invited, please create an account to accept.
+          You've been invited to a BlockJoy organization. Please create an
+          account to accept.
         </Alert>
       )}
       <FormProvider {...form}>
@@ -155,32 +146,6 @@ export function RegisterForm() {
                 placeholder="Password"
               />
             </li>
-            {/* <li css={[spacing.bottom.medium]}>
-              <Input
-                tabIndex={5}
-                labelStyles={[display.visuallyHidden]}
-                disabled={loading}
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                type={activeType['confirmPassword']}
-                validationOptions={{
-                  required: 'You must confirm your password',
-                  validate: (value) => {
-                    if (watch('password') != value) {
-                      return 'Passwords do not match';
-                    }
-                  },
-                }}
-                rightIcon={
-                  <PasswordToggle
-                    tabIndex={0}
-                    name="confirmPassword"
-                    activeType={activeType['confirmPassword']}
-                    onClick={handleIconClick}
-                  />
-                }
-              />
-            </li> */}
           </ul>
           <Button
             tabIndex={6}

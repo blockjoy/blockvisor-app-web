@@ -22,11 +22,6 @@ export const useFilters = (hostUIProps: HostUIProps) => {
   const { defaultOrganization } = useDefaultOrganization();
   const { switchOrganization } = useSwitchOrganization();
 
-  const [filtersStatus, setFiltersStatus] = useRecoilState(
-    hostAtoms.filtersStatus,
-  );
-  // const filtersStatusTotal = useRecoilValue(hostSelectors.filtersStatusTotal);
-
   const [filtersMemory, setFiltersMemory] = useRecoilState(
     hostAtoms.filtersMemory,
   );
@@ -69,16 +64,10 @@ export const useFilters = (hostUIProps: HostUIProps) => {
   };
 
   const updateFilters = () => {
-    const params = buildParams(
-      filtersStatus,
-      filtersMemory,
-      filtersCPU,
-      filtersSpace,
-    );
+    const params = buildParams(filtersMemory, filtersCPU, filtersSpace);
     applyFilter(params);
 
     const filtersToUpdate = {
-      status: filtersStatus,
       memory: filtersMemory,
       cpu: filtersCPU,
       space: filtersSpace,
@@ -88,11 +77,6 @@ export const useFilters = (hostUIProps: HostUIProps) => {
   };
 
   const removeFilters = () => {
-    let filtersStatusCopy = filtersStatus.map((item) => ({
-      ...item,
-      isChecked: false,
-    }));
-    setFiltersStatus(filtersStatusCopy);
     setFiltersMemory(hostFiltersDefaults.memory);
     setFiltersCPU(hostFiltersDefaults.cpu);
     setFiltersSpace(hostFiltersDefaults.space);
@@ -102,7 +86,6 @@ export const useFilters = (hostUIProps: HostUIProps) => {
 
   const resetFilters = () => {
     const params = buildParams(
-      [],
       hostFiltersDefaults.memory,
       hostFiltersDefaults.cpu,
       hostFiltersDefaults.space,

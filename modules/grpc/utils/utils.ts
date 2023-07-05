@@ -8,10 +8,10 @@ export const getIdentity = () => {
   return identity;
 };
 
-export const getOptions = () => {
+export const getOptions = (token?: string) => {
   return {
     metadata: Metadata({
-      authorization: `Bearer ${getIdentity().accessToken}`,
+      authorization: `Bearer ${token || getIdentity().accessToken}`,
     }),
   };
 };

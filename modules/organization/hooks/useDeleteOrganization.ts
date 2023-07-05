@@ -5,9 +5,7 @@ import { useGetOrganizations } from './useGetOrganizations';
 import { useSwitchOrganization } from './useSwitchOrganization';
 
 export function useDeleteOrganization(): IDeleteOrganizationHook {
-  const { organizations, removeFromOrganizations } = useGetOrganizations();
-  const { switchOrganization } = useSwitchOrganization();
-
+  const { removeFromOrganizations } = useGetOrganizations();
   const deleteOrganization = async (id: string, callback?: VoidFunction) => {
     try {
       await organizationClient.deleteOrganization(id);
@@ -22,12 +20,7 @@ export function useDeleteOrganization(): IDeleteOrganizationHook {
     }
   };
 
-  const removeOrganization = (id: string) => {
-    removeFromOrganizations(id);
-
-    const newActiveOrganization = organizations[0];
-    switchOrganization(newActiveOrganization.id!, newActiveOrganization.name!);
-  };
+  const removeOrganization = (id: string) => removeFromOrganizations(id);
 
   return {
     deleteOrganization,

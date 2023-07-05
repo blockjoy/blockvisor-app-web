@@ -1,4 +1,3 @@
-import { HostSelect, PillPicker, SvgIcon } from '@shared/components';
 import { NodeTypeConfigLabel, FirewallDropdown } from '@modules/node';
 import { FC, Fragment } from 'react';
 import {
@@ -7,6 +6,9 @@ import {
   Switch,
   FormLabel,
   FormHeader,
+  HostSelect,
+  PillPicker,
+  SvgIcon,
 } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
