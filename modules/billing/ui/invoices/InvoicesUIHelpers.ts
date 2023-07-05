@@ -1,3 +1,5 @@
+import { itemsPerPage } from '@shared/index';
+
 export type Pagination = {
   currentPage: number;
   itemsPerPage: number;
@@ -16,7 +18,7 @@ export type InitialQueryParams = {
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     currentPage: 1,
-    itemsPerPage: 10,
+    itemsPerPage: itemsPerPage['lg'],
   },
-  sorting: { order: 'asc', field: 'id' },
+  sorting: { order: 'desc', field: 'date' },
 };

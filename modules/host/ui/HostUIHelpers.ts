@@ -1,3 +1,4 @@
+import { itemsPerPage } from '@shared/index';
 import { hostFiltersDefaults } from '@shared/constants/lookups';
 
 export type ItemsPerPage = {
@@ -22,13 +23,6 @@ export type InitialFilter = {
 export type InitialQueryParams = {
   pagination: Pagination;
   filter: InitialFilter;
-};
-
-export const itemsPerPage = {
-  sm: 18,
-  lg: 36,
-  xl: 48,
-  xxl: 100,
 };
 
 export const initialQueryParams: InitialQueryParams = {
