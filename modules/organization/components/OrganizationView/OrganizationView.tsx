@@ -93,6 +93,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
 
   const onSubmit: SubmitHandler<{ email: string }> = async ({ email }) => {
     handleInviteClicked(email);
+    form.reset();
   };
 
   useEffect(() => {
