@@ -93,6 +93,16 @@ const invoicesLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const invoicesNextOffset = atom<string | undefined>({
+  key: 'billing.invoices.nextOffset',
+  default: undefined,
+});
+
+const preloadInvoices = atom<number>({
+  key: 'billing.invoices.preload',
+  default: 0,
+});
+
 const items = atom<Item[] | null>({
   key: 'billing.items',
   default: null,
@@ -159,6 +169,8 @@ export const billingAtoms = {
   invoiceLoadingState,
   invoices,
   invoicesLoadingState,
+  invoicesNextOffset,
+  preloadInvoices,
 
   subscriptionLoadingState,
 };

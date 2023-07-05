@@ -3,7 +3,7 @@ import { isEqual, isFunction } from 'lodash';
 import { initialQueryParams, InitialQueryParams } from './HostUIHelpers';
 import { loadPersistedFilters } from '../utils/loadPersistedFilters';
 import { buildParams } from '../utils/buildParams';
-import { numOfItemsPerPage } from '@modules/node/utils';
+import { numOfItemsPerPage } from '@shared/index';
 
 type HostUIContext = {
   queryParams: InitialQueryParams;

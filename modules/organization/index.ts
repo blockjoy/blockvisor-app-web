@@ -29,6 +29,5 @@ export * from './utils/typeGuards';
 export * from './utils/mapOrganizationDetails';
 export * from './utils/getOrgMemberRole';
 export * from './utils/mapOrganizationsToRows';
-export * from './utils/getHandlerTableChange';
 
 export * from './ui/OrganizationMembersUIHelpers';

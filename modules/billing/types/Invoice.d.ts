@@ -9,5 +9,7 @@ interface IInvoiceHook {
 interface IInvoicesHook {
   invoices: Invoice[];
   invoicesLoadingState: LoadingState;
-  getInvoices: VoidFunction;
+  invoicesNextOffset: string | undefined;
+  preloadInvoices: number;
+  getInvoices: (queryParams: any) => void;
 }

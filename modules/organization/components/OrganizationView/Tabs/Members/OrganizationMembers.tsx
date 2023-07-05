@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  getHandlerTableChange,
   organizationAtoms,
   useResendInvitation,
   OrganizationDialog,
@@ -11,18 +10,18 @@ import {
   Member,
 } from '@modules/organization/utils/mapOrganizationMembersToRows';
 import { useRecoilValue } from 'recoil';
-import { Table, withQuery } from '@shared/components';
+import { getHandlerTableChange, Table, withQuery } from '@shared/components';
 import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
 import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
 
 export const OrganizationMembers = () => {
-  const OrganizationMembersUIContext = useOrganizationMembersUIContext();
+  const organizationMembersUIContext = useOrganizationMembersUIContext();
   const organizationMembersUIProps = useMemo(() => {
     return {
-      queryParams: OrganizationMembersUIContext.queryParams,
-      setQueryParams: OrganizationMembersUIContext.setQueryParams,
+      queryParams: organizationMembersUIContext.queryParams,
+      setQueryParams: organizationMembersUIContext.setQueryParams,
     };
-  }, [OrganizationMembersUIContext]);
+  }, [organizationMembersUIContext]);
 
   const members = useRecoilValue(
     organizationAtoms.organizationMembersActive(
@@ -71,9 +70,9 @@ export const OrganizationMembers = () => {
   // reset currentPage to first page, when org ID changes
   useEffect(() => {
     organizationMembersUIProps.setQueryParams({
-      ...OrganizationMembersUIContext.queryParams,
+      ...organizationMembersUIContext.queryParams,
       pagination: {
-        ...OrganizationMembersUIContext.queryParams.pagination,
+        ...organizationMembersUIContext.queryParams.pagination,
         currentPage: 1,
       },
     });

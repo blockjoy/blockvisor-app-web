@@ -5,11 +5,14 @@ import { chargebee } from 'utils/billing/chargebeeInstance';
 
 const listInvoices = async (
   params: _invoice.invoice_list_params,
-): Promise<Invoice[]> => {
+): Promise<{ invoices: Invoice[]; nextOffset: string | undefined }> => {
   return new Promise((resolve, reject) => {
     chargebee.invoice
       .list(params)
-      .request(function (error: any, result: { list: Invoice[] }) {
+      .request(function (
+        error: any,
+        result: { list: Invoice[]; next_offset: string },
+      ) {
         if (error) {
           reject(error);
         } else {
@@ -17,7 +20,10 @@ const listInvoices = async (
             (listItem: any) => listItem.invoice as Invoice,
           );
 
-          resolve(invoices);
+          resolve({
+            invoices,
+            nextOffset: result.next_offset,
+          });
         }
       });
   });
@@ -25,7 +31,10 @@ const listInvoices = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<any | { message: string }>,
+  res: NextApiResponse<
+    | { invoices: Invoice[]; nextOffset: string | undefined }
+    | { message: string }
+  >,
 ) {
   if (req.method === 'POST') {
     try {
