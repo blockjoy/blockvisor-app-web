@@ -1,7 +1,7 @@
 import { styles } from './BillingContactsPreview.styles';
 
 export type BillingContactsPreviewProps = {
-  billingContact: BillingContactForm;
+  billingContact: IBillingContact;
 };
 
 export const BillingContactsPreview = ({

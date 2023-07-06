@@ -26,7 +26,7 @@ export const PaymentPreview = () => {
   const [activeView, setActiveView] = useState<any>('list');
 
   useEffect(() => {
-    getPaymentMethod(subscription?.payment_source_id);
+    getPaymentMethod(subscription?.payment_source_id!);
   }, [subscription?.payment_source_id]);
 
   const handleUpdate = () => setActiveView('dialog');
@@ -55,11 +55,15 @@ export const PaymentPreview = () => {
                 </Button>
               </>
             ) : (
-              <PaymentMethodsSelector
-                subscriptionId={subscription?.id!}
-                currentPaymentMethod={paymentMethod}
-                onHide={onHide}
-              />
+              <>
+                {paymentMethod && (
+                  <PaymentMethodsSelector
+                    subscriptionId={subscription?.id!}
+                    currentPaymentMethod={paymentMethod}
+                    onHide={onHide}
+                  />
+                )}
+              </>
             )}
           </DetailsView>
         </>

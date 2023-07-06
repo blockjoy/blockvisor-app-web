@@ -14,6 +14,25 @@ interface ExtendedCreateWithItemsParams
   cf_organization_id: string;
 }
 
+interface ISubscriptionHook {
+  subscriptionLoadingState: LoadingState;
+  getSubscription: (subscriptionId: string) => void;
+  createSubscription: (params: {
+    itemPriceId: string;
+    autoRenew: boolean;
+    paymentMethodId: string;
+  }) => void;
+  updateSubscription: (params: _subscription.update_for_items_params) => void;
+  cancelSubscription: (params: { endOfTerm: boolean }) => void;
+  restoreSubscription: (id: string) => void;
+  reactivateSubscription: (id: string) => void;
+  updateBillingProfile: (
+    id: string,
+    params: { paymentMethodId: string },
+  ) => void;
+  provideSubscription: () => Promise<Subscription | null>;
+}
+
 export const useSubscription = (): ISubscriptionHook => {
   const customer = useRecoilValue(billingSelectors.customer);
   const defaultOrganization = useRecoilValue(
@@ -49,7 +68,7 @@ export const useSubscription = (): ISubscriptionHook => {
     paymentMethodId,
   }: {
     itemPriceId: string;
-    autoRenew: string;
+    autoRenew: boolean;
     paymentMethodId: string;
   }) => {
     setSubscriptionLoadingState('initializing');
@@ -220,7 +239,7 @@ export const useSubscription = (): ISubscriptionHook => {
       try {
         const newSubscription = await createSubscription({
           itemPriceId: 'standard-USD-Monthly',
-          autoRenew: 'on',
+          autoRenew: true,
           paymentMethodId: customer?.primary_payment_source_id!,
         });
 
