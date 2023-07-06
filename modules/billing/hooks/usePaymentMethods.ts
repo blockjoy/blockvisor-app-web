@@ -8,6 +8,21 @@ import {
 import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
 import { _payment_source } from 'chargebee-typescript';
 
+interface IPaymentMethodsHook {
+  paymentMethod: PaymentSource | null;
+  paymentMethods: PaymentSource[];
+  paymentMethodsLoadingState: LoadingState;
+  paymentMethodLoadingState: LoadingState;
+  getPaymentMethod: (id: string) => void;
+  getPaymentMethods: VoidFunction;
+  createPaymentMethod: (
+    customerId: string,
+    paymentIntentId: string,
+    onSuccess: (paymentSourceId: string, customerId: string) => void,
+  ) => void;
+  deletePaymentMethod: (id: string) => void;
+}
+
 export const usePaymentMethods = (): IPaymentMethodsHook => {
   const [paymentMethods, setPaymentMethods] = useRecoilState(
     billingAtoms.paymentMethods,

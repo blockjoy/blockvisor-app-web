@@ -9,6 +9,14 @@ import {
 import { Invoice } from 'chargebee-typescript/lib/resources';
 import { _invoice } from 'chargebee-typescript';
 
+interface IInvoicesHook {
+  invoices: Invoice[];
+  invoicesLoadingState: LoadingState;
+  invoicesNextOffset: string | undefined;
+  preloadInvoices: number;
+  getInvoices: (queryParams: InvoicesInitialQueryParams) => void;
+}
+
 export const useInvoices = (): IInvoicesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const [invoices, setInvoices] = useRecoilState(billingAtoms.invoices);

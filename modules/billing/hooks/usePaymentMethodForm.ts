@@ -5,7 +5,15 @@ import { useCustomer } from './useCustomer';
 import { usePayment } from './usePayment';
 import { usePaymentMethods } from './usePaymentMethods';
 
-export const usePaymentMethodForm = (): any => {
+interface PaymentMethodFormHook {
+  onSubmit: (
+    cardRef: any,
+    additionalData: { billingAddress: BillingAddressAdditionalData },
+    onSuccess: (paymentSourceId: string, customerId: string) => void,
+  ) => void;
+}
+
+export const usePaymentMethodForm = (): PaymentMethodFormHook => {
   const setError = useSetRecoilState(billingAtoms.paymentMethodError);
   const setLoadingState = useSetRecoilState(
     billingAtoms.addPaymentMethodLoadingState,
@@ -17,15 +25,8 @@ export const usePaymentMethodForm = (): any => {
 
   const onSubmit = async (
     cardRef: any,
-    additionalData: {
-      firstName: string;
-      lastName: string;
-      addressLine1: string;
-      city: string;
-      zip: string;
-      countryCode: string;
-    },
-    onSuccess: VoidFunction,
+    additionalData: { billingAddress: BillingAddressAdditionalData },
+    onSuccess: (paymentSourceId: string, customerId: string) => void,
   ) => {
     setLoadingState('initializing');
     setError(null);

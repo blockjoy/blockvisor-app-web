@@ -33,7 +33,7 @@ export const InvoiceView = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      getInvoice(id);
+      getInvoice(id as string);
     }
 
     return () => unloadInvoice();
@@ -58,26 +58,32 @@ export const InvoiceView = () => {
                       <h2 css={styles.headline}>
                         Invoice <b>{`${invoice.id}`}</b>
                       </h2>
-                      <div css={styles.info}>
-                        <SvgIcon size="10px">
-                          <IconCalendar />
-                        </SvgIcon>
-                        <span>{formatters.formatDate(invoice.date)}</span>
-                      </div>
+                      {invoice?.date && (
+                        <div css={styles.info}>
+                          <SvgIcon size="10px">
+                            <IconCalendar />
+                          </SvgIcon>
+                          <span>{formatters.formatDate(invoice?.date)}</span>
+                        </div>
+                      )}
                     </div>
                     <InvoiceDownloadPDF invoice={invoice} />
                   </div>
                   <div css={styles.details}>
                     <DetailsView headline="Invoice recepient">
-                      <BillingAddressPreview
-                        billingAddress={invoice.billing_address}
-                      />
+                      {invoice?.billing_address && (
+                        <BillingAddressPreview
+                          billingAddress={invoice.billing_address}
+                        />
+                      )}
                     </DetailsView>
                     <DetailsView headline="Services">
-                      <Services
-                        services={invoice.line_items}
-                        total={invoice.total}
-                      />
+                      {invoice?.line_items && invoice?.total && (
+                        <Services
+                          services={invoice.line_items}
+                          total={invoice.total}
+                        />
+                      )}
                     </DetailsView>
                   </div>
                 </>

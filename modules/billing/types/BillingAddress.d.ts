@@ -1,24 +1,4 @@
-interface IBillingAddressHook {
-  billingAddress: CustomerBillingAddress | null;
-  billingAddressLoadingState: LoadingState;
-  addBillingAddress: (customerId: string, card: BillingAddressParams) => void;
-  updateBillingAddress: VoidFunction;
-}
-
-interface IBillingAddressFormHook {
-  loading?: boolean;
-  form?: UseFormReturn<BillingAddressParams>;
-  onSubmit?: SubmitHandler<BillingAddressParams>;
-  firstNameController: any;
-  lastNameController: any;
-  companyController: any;
-  addressController: any;
-  cityController: any;
-  countryController: any;
-  postalController: any;
-}
-
-type BillingAddressParams = {
+type BillingAddressForm = {
   firstName?: string;
   lastName?: string;
   company?: string;
@@ -27,6 +7,18 @@ type BillingAddressParams = {
   country?: string;
   region?: string;
   postal?: string;
+};
+
+type BillingAddressAdditionalData = {
+  firstName?: string;
+  lastName?: string;
+  addressLine1?: string;
+  addressLine2?: '';
+  city?: string;
+  zip?: string;
+  countryCode?: string;
+  state?: '';
+  stateCode?: '';
 };
 
 type BillingAddressActions = {
