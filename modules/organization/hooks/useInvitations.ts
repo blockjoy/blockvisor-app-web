@@ -19,20 +19,26 @@ export function useInvitations() {
   );
 
   const getReceivedInvitations = async (inviteeEmail: string) => {
-    const response: any = await invitationClient.receivedInvitations(
-      inviteeEmail,
-    );
-    checkForTokenError(response);
-    setReceivedInvitations(response);
+    try {
+      const response = await invitationClient.receivedInvitations(inviteeEmail);
+      setReceivedInvitations(response);
+    } catch (err) {
+      console.log('receivedInvitationsError', err);
+    }
   };
 
-  const getSentInvitations = async (id: string | string[]) => {
-    const orgId = Array.isArray(id) ? id[0] : id;
-    const response: any = await invitationClient.pendingInvitations(orgId);
-    if (isStatusResponse(response)) {
-      setSentInvitations([]);
-    } else {
-      setSentInvitations(response);
+  const getSentInvitations = async (orgId: string | string[]) => {
+    try {
+      const response = await invitationClient.pendingInvitations(
+        orgId as string,
+      );
+      if (isStatusResponse(response)) {
+        setSentInvitations([]);
+      } else {
+        setSentInvitations(response);
+      }
+    } catch (err) {
+      console.log('pendingInvitationsError', err);
     }
     setSentInvitationsLoadingState('finished');
   };
@@ -41,17 +47,27 @@ export function useInvitations() {
     invitation: Invitation,
     onSuccess?: VoidFunction,
   ) => {
-    await invitationClient.acceptInvitation(invitation.id);
-    if (onSuccess) onSuccess();
+    try {
+      await invitationClient.acceptInvitation(invitation.id);
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.log('acceptInvitationError', err);
+      toast.error('Error Accepting');
+    }
   };
 
   const declineInvitation = async (
     invitationId: string,
     onSuccess: VoidFunction,
   ) => {
-    await invitationClient.declineInvitation(invitationId);
-    toast.success('Invitation Declined');
-    onSuccess();
+    try {
+      await invitationClient.declineInvitation(invitationId);
+      toast.success('Invitation Declined');
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.log('declineInvitationError', err);
+      toast.error('Error Declining');
+    }
   };
 
   const revokeInvitation = async ({
@@ -61,9 +77,14 @@ export function useInvitations() {
     invitationId?: string;
     email?: string;
   }) => {
-    await invitationClient.revokeInvitation(invitationId);
-    updateInvitations(invitationId!);
-    toast.success('Invitation Canceled');
+    try {
+      await invitationClient.revokeInvitation(invitationId);
+      updateInvitations(invitationId!);
+      toast.success('Invitation Canceled');
+    } catch (err) {
+      console.log('revokeInvitationError', err);
+      toast.error('Error Revoking');
+    }
   };
 
   const updateInvitations = (invitation_id: string) => {

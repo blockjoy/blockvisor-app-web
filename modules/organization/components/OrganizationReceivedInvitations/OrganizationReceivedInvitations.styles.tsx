@@ -3,11 +3,12 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: (theme: ITheme) => css`
-    padding: 20px 0 20px 30px;
+  wrapper: css`
+    padding: 20px 0 20px 0;
 
-    @media ${breakpoints.fromXLrg} {
+    @media ${breakpoints.fromXHuge} {
       border-top: 0;
+      padding: 20px 0 20px 30px;
     }
   `,
   header: (theme: ITheme) => css`

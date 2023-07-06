@@ -28,12 +28,14 @@ export const OrganizationManagement = ({
             <OrganizationsList />
           </div>
         )}
-        {!isListOnly && <div css={styles.rightWrapper}>{children}</div>}
-        {Boolean(invititations?.length) && (
-          <div css={styles.invitationsWrapper}>
-            <OrganizationReceivedInvitations />
-          </div>
-        )}
+        <div css={styles.rightWrapper}>
+          {!isListOnly && <div css={styles.detailWrapper}>{children}</div>}
+          {Boolean(invititations?.length) && (
+            <div css={styles.invitationsWrapper}>
+              <OrganizationReceivedInvitations />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

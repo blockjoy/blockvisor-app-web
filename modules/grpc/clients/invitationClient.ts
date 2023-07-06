@@ -5,7 +5,7 @@ import {
   InvitationStatus,
 } from '../library/blockjoy/v1/invitation';
 
-import { authClient, getOptions } from '@modules/grpc';
+import { authClient, getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -17,55 +17,43 @@ class InvitationClient {
     this.client = createClient(InvitationServiceDefinition, channel);
   }
 
-  async inviteOrgMember(
-    inviteeEmail: string,
-    orgId: string,
-  ): Promise<void | StatusResponse> {
+  async inviteOrgMember(inviteeEmail: string, orgId: string): Promise<void> {
     try {
       await authClient.refreshToken();
       await this.client.create({ inviteeEmail, orgId }, getOptions());
     } catch (err) {
-      return StatusResponseFactory.inviteOrgMember(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
-  async acceptInvitation(
-    invitationId?: string,
-  ): Promise<void | StatusResponse> {
+  async acceptInvitation(invitationId?: string): Promise<void> {
     try {
       await authClient.refreshToken();
       await this.client.accept({ invitationId }, getOptions());
     } catch (err) {
-      return StatusResponseFactory.acceptInvitation(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
-  async declineInvitation(
-    invitationId: string,
-    token?: string,
-  ): Promise<void | StatusResponse> {
+  async declineInvitation(invitationId: string, token?: string): Promise<void> {
     await authClient.refreshToken();
     try {
       await this.client.decline({ invitationId }, getOptions(token));
     } catch (err) {
-      return StatusResponseFactory.declineInvitation(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
-  async revokeInvitation(
-    invitationId?: string,
-  ): Promise<void | StatusResponse> {
+  async revokeInvitation(invitationId?: string): Promise<void> {
     try {
       await authClient.refreshToken();
       await this.client.revoke({ invitationId }, getOptions());
     } catch (err) {
-      return StatusResponseFactory.revokeInvitation(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
-  async receivedInvitations(
-    inviteeEmail: string,
-  ): Promise<Invitation[] | StatusResponse> {
+  async receivedInvitations(inviteeEmail: string): Promise<Invitation[]> {
     try {
       await authClient.refreshToken();
       const response = await this.client.list(
@@ -74,13 +62,11 @@ class InvitationClient {
       );
       return response.invitations;
     } catch (err) {
-      return StatusResponseFactory.receivedInvitations(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
-  async pendingInvitations(
-    orgId: string,
-  ): Promise<Invitation[] | StatusResponse> {
+  async pendingInvitations(orgId: string): Promise<Invitation[]> {
     try {
       await authClient.refreshToken();
       const response = await this.client.list(
@@ -89,7 +75,7 @@ class InvitationClient {
       );
       return response.invitations;
     } catch (err) {
-      return StatusResponseFactory.pendingInvitations(err, 'grpcClient');
+      return handleError(err);
     }
   }
 }
