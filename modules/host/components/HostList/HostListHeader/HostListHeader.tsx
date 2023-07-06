@@ -1,11 +1,12 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
+  Alert,
   FiltersHeaderIconText,
   GridTableViewPicker,
   Skeleton,
 } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import { hostAtoms, hostSelectors } from '@modules/host';
+import { hostAtoms, hostSelectors, useHostList } from '@modules/host';
 
 export const HostListHeader = () => {
   const [activeListType, setActiveListType] = useRecoilState(
@@ -18,6 +19,8 @@ export const HostListHeader = () => {
   const filtersTotal = useRecoilValue(hostSelectors.filtersTotal);
 
   const isLoading = useRecoilValue(hostAtoms.isLoading);
+
+  const { hostCount } = useHostList();
 
   const handleActiveListType = (type: string) => {
     setActiveListType(type);
@@ -44,6 +47,9 @@ export const HostListHeader = () => {
           )}
         </div>
       )}
+      <Alert isRounded isSuccess={hostCount > 0}>
+        {hostCount} {hostCount === 1 ? 'Host' : 'Hosts'}
+      </Alert>
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleActiveListType}

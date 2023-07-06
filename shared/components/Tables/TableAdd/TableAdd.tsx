@@ -36,11 +36,12 @@ export const TableAdd = ({
   const [isFocused, setIsFocused] = useState(false);
   const theme = useTheme();
 
-  const handleSubmit = form.handleSubmit(async (values) => {
-    if (!form.formState.isSubmitted)
+  const handleSubmit = form.handleSubmit((values) => {
+    if (!form.formState.isSubmitted) {
       onSubmit({
         [field]: values[field],
       });
+    }
   });
 
   return (

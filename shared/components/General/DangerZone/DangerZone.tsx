@@ -16,9 +16,11 @@ export enum Action {
 
 interface Props {
   handleAction: () => void;
-  elementName: string | 'Node' | 'Host';
+  elementName: string;
+  placeholder: string;
   elementNameToCompare: string;
-  activeAction?: string | 'delete' | 'leave';
+  buttonText: string;
+  activeAction?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
 }
@@ -27,16 +29,12 @@ type DeleteForm = {
   elementNameToDelete: string;
 };
 
-const redirects = {
-  Node: '/nodes',
-  Host: '/hosts',
-  Organization: '/organizations',
-};
-
 export const DangerZone: FC<Props> = ({
   handleAction,
   elementName = 'Node',
   elementNameToCompare,
+  placeholder = 'node',
+  buttonText = 'Delete',
   activeAction = 'delete',
   isLoading = false,
   isDisabled = false,
@@ -52,31 +50,18 @@ export const DangerZone: FC<Props> = ({
   const doNamesMatch = (name: string) =>
     name === escapeHtml(elementNameToCompare);
 
-  const handleRedirect = () => router.push(redirects[elementName]);
-
   const onSubmit = async (e: any) => {
     setIsSubmitted(true);
     e.preventDefault();
     handleAction();
-    handleRedirect();
-  };
-
-  const messages = {
-    [Action.leave]: {
-      btn: 'Leave',
-    },
-    [Action.delete]: {
-      btn: 'Delete',
-    },
   };
 
   return (
     <section css={[spacing.top.large, spacing.bottom.xLarge]}>
-      <h2 css={[typo.large, spacing.bottom.medium]}>Danger Zone</h2>
       {step === 1 && (
         <>
           <div css={spacing.bottom.medium}>
-            <p>No longer need this {elementName}?</p>
+            <p>{elementName}?</p>
             <small>Click the button below to {activeAction}.</small>
           </div>
           <Button
@@ -85,22 +70,14 @@ export const DangerZone: FC<Props> = ({
             style="warning"
             onClick={() => gotoStep(2)}
           >
-            {messages[activeAction].btn}
+            {buttonText}
           </Button>
-          {isDisabled && (
-            <div css={spacing.top.medium}>
-              <Alert width="420px">
-                You cannot delete an {elementName} that has Nodes.
-              </Alert>
-            </div>
-          )}
         </>
       )}
       {step === 2 && (
         <div css={spacing.bottom.medium}>
           <p css={spacing.bottom.medium}>
-            To {activeAction}, type the name of your {elementName} and then
-            click "confirm".
+            To {activeAction}, type {placeholder} and then click "confirm".
           </p>
           <FormProvider {...form}>
             <form onSubmit={(e) => onSubmit(e)}>
@@ -108,7 +85,7 @@ export const DangerZone: FC<Props> = ({
                 style={{ maxWidth: '320px' }}
                 labelStyles={[display.visuallyHidden]}
                 name="elementNameToDelete"
-                placeholder={`Type ${elementName} name`}
+                placeholder={`Type ${placeholder}`}
                 type="text"
                 validationOptions={{
                   required: 'This is a mandatory field',
