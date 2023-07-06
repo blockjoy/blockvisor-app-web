@@ -86,12 +86,17 @@ export const mapOrganizationMembersToRows = (
           <div css={[flex.display.inline, flex.align.center]}>
             <p>{escapeHtml(member.email!)}</p>
             {member.role === OrgRole.ORG_ROLE_OWNER && (
+              <Badge style="outline" customCss={[spacing.left.small]}>
+                Owner
+              </Badge>
+            )}
+            {member.role === OrgRole.ORG_ROLE_ADMIN && (
               <Badge
                 color="primary"
                 style="outline"
                 customCss={[spacing.left.small]}
               >
-                Owner
+                Admin
               </Badge>
             )}
           </div>
