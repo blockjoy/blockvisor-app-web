@@ -37,7 +37,6 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
               labelStyles={[typo.base]}
               tabIndex={1}
               {...nameController.field}
-              ref={null}
               validationOptions={{
                 required: 'Name is required',
               }}
@@ -45,7 +44,6 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
           </li>
           <li css={[styles.formItem]}>
             <Input
-              name="email"
               label="Email"
               placeholder="Email"
               inputSize="medium"
@@ -53,7 +51,6 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
               type="email"
               tabIndex={2}
               {...emailController.field}
-              ref={null}
               validationOptions={{
                 required: 'Email is required',
                 pattern: {

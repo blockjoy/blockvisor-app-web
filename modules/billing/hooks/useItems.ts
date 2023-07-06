@@ -1,6 +1,20 @@
 import { useRecoilState } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
 import { _item, _item_price } from 'chargebee-typescript';
+import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
+import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+
+interface IItemsHook {
+  items: Item[] | null;
+  itemsLoadingState: LoadingState;
+  itemPrices: ItemPrice[] | null;
+  itemPricesLoadingState: LoadingState;
+  getItem: VoidFunction;
+  getItems: VoidFunction;
+  getItemPrices: (params: {
+    id: string;
+    periodUnit?: string;
+  }) => Promise<ItemPrice[]>;
+}
 
 export const useItems = (): IItemsHook => {
   const [items, setItems] = useRecoilState(billingAtoms.items);
@@ -60,7 +74,10 @@ export const useItems = (): IItemsHook => {
     }
   };
 
-  const getItemPrices = async (params: { id: string; periodUnit?: string }) => {
+  const getItemPrices = async (params: {
+    id: string;
+    periodUnit?: string;
+  }): Promise<ItemPrice[]> => {
     setItemPricesLoadingState('initializing');
 
     const { id, periodUnit } = params;
@@ -87,6 +104,7 @@ export const useItems = (): IItemsHook => {
       return data;
     } catch (error) {
       console.error('Failed to fetch item prices', error);
+      return [];
     } finally {
       setItemPricesLoadingState('finished');
     }

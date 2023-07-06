@@ -93,7 +93,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     const countryCode =
       activeView === 'action' ? billingInfo.country : billingAddress?.country;
 
-    const additionalData = {
+    const additionalData: { billingAddress: BillingAddressAdditionalData } = {
       billingAddress: {
         firstName,
         lastName,

@@ -8,6 +8,15 @@ import { _customer } from 'chargebee-typescript';
 import { useIdentityRepository } from '@modules/auth';
 import { Customer } from 'chargebee-typescript/lib/resources';
 
+interface ICustomerHook {
+  customer: Customer | null;
+  customerLoadingState: LoadingState;
+  getCustomer: (customerId: string) => void;
+  createCustomer: (params: _customer.create_params) => Promise<Customer | null>;
+  assignPaymentRole: (params: _customer.assign_payment_role_params) => void;
+  provideCustomer: () => Promise<Customer | null>;
+}
+
 export const useCustomer = (): ICustomerHook => {
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
@@ -39,7 +48,9 @@ export const useCustomer = (): ICustomerHook => {
     setCustomerLoadingState('finished');
   };
 
-  const createCustomer = async (params: _customer.create_params) => {
+  const createCustomer = async (
+    params: _customer.create_params,
+  ): Promise<Customer | null> => {
     try {
       const response = await fetch(BILLING_API_ROUTES.customer.create, {
         method: 'POST',
@@ -60,6 +71,7 @@ export const useCustomer = (): ICustomerHook => {
       return customer;
     } catch (error) {
       console.log('Error while creating a customer', error);
+      return null;
     }
   };
 

@@ -63,6 +63,11 @@ export const PlanSelect = ({
   };
 
   const handleSubscription = () => {
+    if (!activeItemPrice || !paymentMethodId) {
+      console.error('Missing required fields');
+      return;
+    }
+
     createSubscription({
       itemPriceId: activeItemPrice?.id,
       autoRenew,
