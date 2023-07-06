@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -9,7 +10,10 @@ export const styles = {
     justify-content: space-between;
     color: ${theme.colorDefault};
     font-size: 16px;
-    padding-right: 20px;
+
+    @media ${breakpoints.fromMed} {
+      padding-right: 30px;
+    }
 
     form {
       width: 100%;

@@ -17,6 +17,12 @@ export const getOptions = (token?: string) => {
 };
 
 export const handleError = (error: any) => {
+  // check if token has expired
+  if (error?.message?.includes('JWT')) {
+    localStorage.removeItem('identity');
+    window.location.href = '/';
+  }
+
   throw new Error(error?.toString());
 };
 
