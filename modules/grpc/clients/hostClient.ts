@@ -2,6 +2,7 @@ import {
   Host,
   HostServiceClient,
   HostServiceDefinition,
+  HostServiceListResponse,
 } from '../library/blockjoy/v1/host';
 
 import { authClient, callWithTokenRefresh, handleError } from '@modules/grpc';
@@ -29,12 +30,12 @@ class HostClient {
     orgId: string,
     filterCriteria?: UIFilterCriteria,
     pagination?: UIPagination,
-  ): Promise<Host[]> {
+  ): Promise<HostServiceListResponse> {
     const request = {
       orgId,
-      // offset: (pagination?.current_page - 1) * pagination?.items_per_page,
-      offset: 0,
-      limit: 10,
+      offset: (pagination?.current_page! - 1) * pagination?.items_per_page!,
+      // offset: 0,
+      limit: pagination?.items_per_page,
       // statuses: filterCriteria?.hostStatus?.map((f) => +f),
     };
 
@@ -46,7 +47,7 @@ class HostClient {
         request,
       );
       console.log('listHostsResponse', response);
-      return response.hosts;
+      return response;
     } catch (err) {
       return handleError(err);
     }

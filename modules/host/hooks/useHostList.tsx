@@ -6,6 +6,7 @@ import { hostClient } from '@modules/grpc/clients/hostClient';
 import { InitialQueryParams } from '../ui/HostUIHelpers';
 import { getInitialQueryParams } from '../ui/HostUIContext';
 import { useDefaultOrganization } from '@modules/organization';
+import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
 
 export const useHostList = () => {
   const router = useRouter();
@@ -16,6 +17,7 @@ export const useHostList = () => {
 
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
+  const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
 
   const setPreloadNodes = useSetRecoilState(hostAtoms.preloadHosts);
 
@@ -39,11 +41,15 @@ export const useHostList = () => {
     setHasMore(false);
 
     try {
-      const hosts: any = await hostClient.listHosts(
+      const response: HostServiceListResponse = await hostClient.listHosts(
         orgId!,
         queryParams?.filter,
         queryParams?.pagination,
       );
+
+      const { hosts, hostCount } = response;
+
+      setHostCount(hostCount);
 
       if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
       setPreloadNodes(hosts.length);
@@ -68,5 +74,6 @@ export const useHostList = () => {
 
     handleHostClick,
     loadHosts,
+    hostCount,
   };
 };

@@ -17,12 +17,13 @@ export const styles = {
   gridWrapper: css`
     width: 100%;
   `,
-  listWrapper: css`
+  listWrapper: (theme: ITheme) => css`
     flex: 1 1 auto;
     @media ${breakpoints.fromLrg} {
       position: static;
       margin-left: 0;
       padding: 0 20px 20px 0;
+      border-right: 1px solid ${theme.colorBorder};
     }
   `,
   endMessage: css``,
@@ -58,7 +59,12 @@ export const styles = {
     min-width: 320px;
     max-width: 36px;
     padding: 0 0 20px 20px;
-    border-left: 1px solid ${theme.colorBorder};
+
+    @media ${breakpoints.fromLrg} {
+      position: sticky;
+      top: 72px;
+      height: 100%;
+    }
 
     @media ${breakpoints.toLrg} {
       padding: 10px 0 10px 0;
