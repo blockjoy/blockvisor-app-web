@@ -11,7 +11,7 @@ import { InitialFilter, InitialQueryParams } from '../ui/NodeUIHelpers';
 import { buildParams } from '../utils';
 
 export const useFilters = (nodeUIProps: NodeUIProps) => {
-  const { organizations } = useGetOrganizations();
+  const { organizationsSorted } = useGetOrganizations();
   const { defaultOrganization } = useDefaultOrganization();
   const { switchOrganization } = useSwitchOrganization();
 
@@ -101,9 +101,9 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
   const filters = [
     {
       name: 'Organization',
-      isDisabled: organizations?.length === 1,
+      isDisabled: organizationsSorted?.length === 1,
       filterCount: 1,
-      filterList: organizations?.map((org) => ({
+      filterList: organizationsSorted?.map((org) => ({
         id: org.id,
         name: org.name,
         isChecked: org.id === defaultOrganization?.id,
