@@ -35,6 +35,14 @@ class UserClient {
     }
   }
 
+  async deleteUser(id: string): Promise<void> {
+    try {
+      await this.client.delete({ id }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
   async createUser(
     user: UIUser,
     token: string,

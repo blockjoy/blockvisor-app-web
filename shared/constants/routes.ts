@@ -25,4 +25,5 @@ export const PUBLIC_ROUTES = [
   '/verified',
   '/verify',
   '/forgot-password',
+  '/deactivated',
 ];
