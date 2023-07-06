@@ -9,6 +9,10 @@ export function useGetOrganizations() {
     organizationAtoms.allOrganizations,
   );
 
+  const organizationsSorted = useRecoilValue(
+    organizationAtoms.allOrganizationsSorted,
+  );
+
   const [isLoading, setIsLoading] = useRecoilState(
     organizationAtoms.organizationsLoadingState,
   );
@@ -42,6 +46,7 @@ export function useGetOrganizations() {
 
   return {
     organizations,
+    organizationsSorted,
     getOrganizations,
     removeFromOrganizations,
     addToOrganizations,

@@ -1,4 +1,4 @@
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/index';
@@ -7,6 +7,7 @@ import { InitialQueryParams } from '../ui/HostUIHelpers';
 import { getInitialQueryParams } from '../ui/HostUIContext';
 import { useDefaultOrganization } from '@modules/organization';
 import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
+import { hostSelectors } from '../store/hostSelectors';
 
 export const useHostList = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ export const useHostList = () => {
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
+  const hostListSorted = useRecoilValue(hostSelectors.hostListSorted);
 
   const setPreloadNodes = useSetRecoilState(hostAtoms.preloadHosts);
 
@@ -70,10 +72,11 @@ export const useHostList = () => {
 
   return {
     hostList,
+    hostListSorted,
+    hostCount,
     isLoading,
 
     handleHostClick,
     loadHosts,
-    hostCount,
   };
 };
