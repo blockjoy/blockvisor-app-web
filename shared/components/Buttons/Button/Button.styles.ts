@@ -42,9 +42,7 @@ const buttonStyle = {
     background-color: transparent;
     transition: background-color 0.18s var(--transition-easing-cubic);
 
-    :hover,
-    :active,
-    :focus {
+    :not(:disabled):is(:hover, :active, :focus) {
       background-color: var(--color-text-5-o10);
     }
   `,

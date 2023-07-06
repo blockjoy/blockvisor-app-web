@@ -10,6 +10,7 @@ import {
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { getOrgMemberRole } from './getOrgMemberRole';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
+import { OrganizationInvitationsResend } from '@modules/organization';
 
 export enum Action {
   revoke = 'revoke',
@@ -28,7 +29,6 @@ export type Member = {
 export type Methods = {
   action: (action: Action, orgMember: Member) => void;
   reset: VoidFunction;
-  resend: (orgMember: Member) => void;
 };
 
 export const mapOrganizationInvitationsToRows = (
@@ -59,14 +59,6 @@ export const mapOrganizationInvitationsToRows = (
     methods?.action(Action.revoke, { invitationId, email });
   };
 
-  const handleResendInvitation = (
-    invitationId: string,
-    email: string,
-    orgId: string,
-  ) => {
-    methods?.resend({ invitationId, email, orgId });
-  };
-
   const headers = [
     {
       name: 'Email',
@@ -80,9 +72,9 @@ export const mapOrganizationInvitationsToRows = (
     {
       name: '',
       key: '2',
-      width: '60px',
-      minWidth: '60px',
-      maxWidth: '60px',
+      width: '100px',
+      minWidth: '100px',
+      maxWidth: '100px',
       textAlign: 'right',
     },
     {
@@ -105,20 +97,7 @@ export const mapOrganizationInvitationsToRows = (
       {
         key: '3',
         component: canCreateMember ? (
-          <Button
-            type="button"
-            onClick={() =>
-              handleResendInvitation(
-                invitation.id!,
-                invitation.inviteeEmail!,
-                selectedOrganization?.id!,
-              )
-            }
-            style="outline"
-            size="small"
-          >
-            Resend
-          </Button>
+          <OrganizationInvitationsResend invitation={invitation} />
         ) : null,
       },
       {
