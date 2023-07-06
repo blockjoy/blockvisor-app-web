@@ -1,7 +1,5 @@
-import { Badge } from '@shared/components';
+import { Badge, TableBlock } from '@shared/components';
 import { formatters } from '@shared/index';
-import { flex } from 'styles/utils.flex.styles';
-import { typo } from 'styles/utils.typography.styles';
 import { InvoiceDownloadPDF } from '@modules/billing';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 
@@ -10,12 +8,12 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
     {
       name: 'ID',
       key: '1',
-      width: '200px',
+      width: '100px',
     },
     {
-      name: 'Date',
+      name: 'Info',
       key: '2',
-      width: '200px',
+      width: '300px',
     },
     {
       name: 'Amount',
@@ -23,14 +21,19 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
       width: '150px',
     },
     {
-      name: 'Status',
+      name: 'Due date',
       key: '4',
       width: '100px',
     },
     {
-      name: '',
+      name: 'Status',
       key: '5',
-      width: '150px',
+      width: '100px',
+    },
+    {
+      name: '',
+      key: '6',
+      width: '80px',
     },
   ];
 
@@ -40,52 +43,47 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
       cells: [
         {
           key: '1',
-          component: (
-            <>
-              <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-                {invoice.id}
-              </p>
-            </>
-          ),
+          component: <p>#{invoice.id}</p>,
         },
         {
           key: '2',
           component: (
-            <>
-              <p>{formatters.formatDate(invoice?.date!)}</p>
-            </>
+            <TableBlock
+              name={invoice?.line_items?.[0].description!}
+              address={
+                <p>
+                  {`${formatters.formatDate(
+                    invoice?.line_items?.[0].date_from!,
+                  )} - ${formatters.formatDate(
+                    invoice?.line_items?.[0].date_to!,
+                  )}`}
+                </p>
+              }
+            />
           ),
         },
         {
           key: '3',
-          component: (
-            <>
-              <p>{formatters.formatCurrency(invoice?.total!)}</p>
-            </>
-          ),
+          component: <p>{formatters.formatCurrency(invoice?.total!)}</p>,
         },
         {
           key: '4',
-          component: (
-            <>
-              <Badge
-                color={`${invoice.status === 'paid' ? 'primary' : 'note'}`}
-                style="outline"
-              >
-                {invoice.status}
-              </Badge>
-            </>
-          ),
+          component: <p>{formatters.formatDate(invoice?.due_date!)}</p>,
         },
         {
           key: '5',
           component: (
-            <>
-              <div css={[flex.display.flex]}>
-                <InvoiceDownloadPDF invoice={invoice} />
-              </div>
-            </>
+            <Badge
+              color={`${invoice.status === 'paid' ? 'primary' : 'note'}`}
+              style="outline"
+            >
+              {invoice.status}
+            </Badge>
           ),
+        },
+        {
+          key: '6',
+          component: <InvoiceDownloadPDF invoice={invoice} />,
         },
       ],
     })) ?? [];
