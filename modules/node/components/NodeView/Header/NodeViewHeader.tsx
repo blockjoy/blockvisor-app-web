@@ -45,59 +45,54 @@ export const NodeViewHeader = () => {
         />
       )}
 
-      <div css={wrapper.main}>
-        <header css={styles.header}>
-          {isLoading && !node?.id ? (
-            <SkeletonGrid>
-              <Skeleton width="400px" />
-            </SkeletonGrid>
-          ) : (
-            node?.id && (
-              <>
-                <div css={styles.blockchainIcon}>
-                  <BlockchainIcon
-                    size="40px"
-                    blockchainName={node!.blockchainName}
-                  />
-                </div>
-                <div>
-                  <h2 css={styles.detailsHeader}>{node!.name}</h2>
-                  <div css={styles.detailsFooter}>
-                    <div css={styles.nodeType}>
-                      <p>
-                        {node.blockchainName}{' '}
-                        {
-                          nodeTypeList.find((t) => t.id === node!.nodeType)
-                            ?.name
-                        }
-                      </p>
-                    </div>
-
-                    {node!.ip && (
-                      <small css={[typo.small, colors.text2]}>{node!.ip}</small>
-                    )}
-                    {node!.createdAt && (
-                      <small css={[typo.small, colors.text2]}>
-                        {formatDistanceToNow(node!.createdAt, {
-                          addSuffix: true,
-                        })}
-                      </small>
-                    )}
+      <header css={[styles.header, wrapper.main]}>
+        {isLoading && !node?.id ? (
+          <SkeletonGrid>
+            <Skeleton width="400px" />
+          </SkeletonGrid>
+        ) : (
+          node?.id && (
+            <>
+              <div css={styles.blockchainIcon}>
+                <BlockchainIcon
+                  size="40px"
+                  blockchainName={node!.blockchainName}
+                />
+              </div>
+              <div>
+                <h2 css={styles.detailsHeader}>{node!.name}</h2>
+                <div css={styles.detailsFooter}>
+                  <div css={styles.nodeType}>
+                    <p>
+                      {node.blockchainName}{' '}
+                      {nodeTypeList.find((t) => t.id === node!.nodeType)?.name}
+                    </p>
                   </div>
+
+                  {node!.ip && (
+                    <small css={[typo.small, colors.text2]}>{node!.ip}</small>
+                  )}
+                  {node!.createdAt && (
+                    <small css={[typo.small, colors.text2]}>
+                      {formatDistanceToNow(node!.createdAt, {
+                        addSuffix: true,
+                      })}
+                    </small>
+                  )}
                 </div>
-                <div css={styles.nodeStatus}>
-                  <NodeStatus status={node.status} />
-                </div>
-                <div css={styles.actions}>
-                  <NodeViewHeaderActions
-                    onDeleteClicked={toggleDeleteModalOpen}
-                  />
-                </div>
-              </>
-            )
-          )}
-        </header>
-      </div>
+              </div>
+              <div css={styles.nodeStatus}>
+                <NodeStatus status={node.status} />
+              </div>
+              <div css={styles.actions}>
+                <NodeViewHeaderActions
+                  onDeleteClicked={toggleDeleteModalOpen}
+                />
+              </div>
+            </>
+          )
+        )}
+      </header>
     </>
   );
 };

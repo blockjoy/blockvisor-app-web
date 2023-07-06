@@ -73,6 +73,30 @@ const loadSidePanelCharts = [
         dygraphSparkline: "sparkline"
       }
     ]
+  },
+  {
+    title: "Disk Read",
+    charts: [
+      {
+        netdata: "system.io",
+        library: "textonly",
+        title: "",
+        dimensions: "in",
+        textonlyDecimalPlaces: "1",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "system.io",
+        dygraphValueRange: "[0, 100]",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        dimensions: "in",
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
   }
 ];
 
@@ -245,7 +269,7 @@ const onLoad = () => {
     get: (searchParams, prop) => searchParams.get(prop),
   });
 
-  const { node_id, is_side_panel } = params;
+  const { is_side_panel } = params;
 
   // const node_id = "3b78c2f9-e9d5-4982-952e-23bae0fe9da1";
 

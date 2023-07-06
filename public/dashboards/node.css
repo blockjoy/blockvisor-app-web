@@ -250,10 +250,10 @@ body .netdata-container[data-chart-library] {
 }
 
 .charts > div:first-child {
-  min-width: 110px;
+  min-width: 126px;
 }
 
-.row {
+.row:not(:last-child) {
   border-bottom: 1px solid #363938;
   margin-bottom: 24px;
   padding-bottom: 10px;
