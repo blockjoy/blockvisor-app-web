@@ -20,7 +20,6 @@ function MyApp({ Component, pageProps, router }: any) {
         <ToastContainer
           hideProgressBar
           autoClose={3000}
-          limit={1}
           position="bottom-right"
         />
       </ThemeProvider>

@@ -6,6 +6,7 @@ export * from './components/OrganizationView/Details/OrganizationDetails';
 export * from './components/OrganizationView/Tabs/Members/OrganizationMembersView';
 export * from './components/OrganizationView/Tabs/Dialog/OrganizationDialog';
 export * from './components/OrganizationView/Tabs/Invitations/OrganizationInvitationsView';
+export * from './components/OrganizationView/Tabs/Invitations/Resend/OrganizationInvitationsResend';
 
 export * from './hooks/useCreateOrganization';
 export * from './hooks/useGetOrganizations';
