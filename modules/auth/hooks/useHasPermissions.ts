@@ -50,10 +50,12 @@ export const PERMISSIONS: {
     Permissions.READ_ORGANIZATION,
     Permissions.CREATE_ORGANIZATION,
     Permissions.UPDATE_ORGANIZATION,
+    Permissions.DELETE_ORGANIZATION,
 
     Permissions.READ_MEMBER,
     Permissions.CREATE_MEMBER,
     Permissions.UPDATE_MEMBER,
+    Permissions.DELETE_MEMBER,
   ],
 };
 
