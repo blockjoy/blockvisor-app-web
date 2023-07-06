@@ -6,7 +6,7 @@ import { hostAtoms } from './hostAtoms';
 const filtersTotal = selector<number>({
   key: 'host.filters.total',
   get: ({ get }) => {
-    let total = 0;
+    let total = 1;
 
     const filtersMemory = get(hostAtoms.filtersMemory);
     if (!isEqual(filtersMemory, hostFiltersDefaults.memory)) total++;

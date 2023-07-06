@@ -15,6 +15,11 @@ const activeHost = atom<Host | null>({
   default: null,
 });
 
+const hostCount = atom<number>({
+  key: 'host.count',
+  default: 0,
+});
+
 const isLoadingActiveHost = atom<LoadingState>({
   key: 'host.loading',
   default: 'initializing',
@@ -125,6 +130,7 @@ export const hostAtoms = {
   isLoadingActiveHost,
 
   hostList,
+  hostCount,
   isLoading,
 
   hasMoreHosts,

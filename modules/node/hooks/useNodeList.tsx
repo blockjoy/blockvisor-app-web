@@ -7,6 +7,7 @@ import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { ROUTES } from '@shared/constants/routes';
 import { useDefaultOrganization } from '@modules/organization';
+import { NodeServiceListResponse } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const useNodeList = () => {
   const router = useRouter();
@@ -53,7 +54,7 @@ export const useNodeList = () => {
     setHasMore(false);
 
     try {
-      const response: any = await nodeClient.listNodes(
+      const response: NodeServiceListResponse = await nodeClient.listNodes(
         orgId!,
         queryParams.filter,
         queryParams.pagination,
