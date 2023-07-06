@@ -2,6 +2,14 @@ import { useRecoilState } from 'recoil';
 import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 
+interface IInvoiceHook {
+  invoice: Invoice | null;
+  invoiceLoadingState: LoadingState;
+  getInvoice: (id: string) => void;
+  getInvoicePDF: (id: string) => Promise<Invoice | null>;
+  unloadInvoice: VoidFunction;
+}
+
 export const useInvoice = (): IInvoiceHook => {
   const [invoice, setInvoice] = useRecoilState(billingAtoms.invoice);
   const [invoiceLoadingState, setInvoiceLoadingState] = useRecoilState(

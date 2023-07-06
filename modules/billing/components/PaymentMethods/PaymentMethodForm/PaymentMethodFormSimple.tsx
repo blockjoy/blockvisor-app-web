@@ -68,7 +68,7 @@ export const PaymentMethodFormSimple = ({
   };
 
   const handleCreatePaymentMethod = async () => {
-    const additionalData = {
+    const additionalData: { billingAddress: BillingAddressAdditionalData } = {
       billingAddress: {
         firstName: cardHolder.firstName,
         lastName: cardHolder.lastName,

@@ -1,8 +1,11 @@
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { blockchainList, nodeTypes } from '@shared/constants/lookups';
 
-export const matchSKU = (blockchain: Blockchain, node: Node): string => {
+export const matchSKU = (
+  blockchain: Blockchain,
+  node: NodeServiceCreateRequest,
+): string => {
   const productCategory: 'FMN' | 'SMH' = 'FMN';
 
   const blockchainName: string = blockchain?.name;

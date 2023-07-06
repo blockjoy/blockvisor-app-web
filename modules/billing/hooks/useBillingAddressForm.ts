@@ -1,18 +1,31 @@
-import { useIdentityRepository } from '@modules/auth';
-import { ApplicationError } from '@modules/auth/utils/Errors';
-import {
-  Customer,
-  CustomerBillingAddress,
-} from 'chargebee-typescript/lib/resources';
 import { useState } from 'react';
 import {
   SubmitHandler,
   useController,
+  UseControllerReturn,
   useForm,
   UseFormReturn,
 } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useCustomer } from './useCustomer';
+import {
+  Customer,
+  CustomerBillingAddress,
+} from 'chargebee-typescript/lib/resources';
+import { ApplicationError } from '@modules/auth/utils/Errors';
+import { useCustomer } from '@modules/billing';
+
+interface IBillingAddressFormHook {
+  loading: boolean;
+  form: UseFormReturn<BillingAddressForm>;
+  onSubmit: SubmitHandler<BillingAddressForm>;
+  firstNameController: UseControllerReturn<BillingAddressForm, 'firstName'>;
+  lastNameController: UseControllerReturn<BillingAddressForm, 'lastName'>;
+  companyController: UseControllerReturn<BillingAddressForm, 'company'>;
+  addressController: UseControllerReturn<BillingAddressForm, 'address'>;
+  cityController: UseControllerReturn<BillingAddressForm, 'city'>;
+  countryController: UseControllerReturn<BillingAddressForm, 'country'>;
+  postalController: UseControllerReturn<BillingAddressForm, 'postal'>;
+}
 
 export const useBillingAddressForm = (
   actions: BillingAddressActions,
@@ -22,20 +35,19 @@ export const useBillingAddressForm = (
 
   const [loading, setLoading] = useState(false);
 
-  const form: UseFormReturn<BillingAddressParams> =
-    useForm<BillingAddressParams>({
-      defaultValues: {
-        firstName: billingAddress?.first_name ?? '',
-        lastName: billingAddress?.last_name ?? '',
-        company: billingAddress?.company ?? '',
-        address: billingAddress?.line1 ?? '',
-        city: billingAddress?.city ?? '',
-        country: billingAddress?.country ?? '',
-        postal: billingAddress?.zip ?? '',
-      },
-    });
+  const form: UseFormReturn<BillingAddressForm> = useForm<BillingAddressForm>({
+    defaultValues: {
+      firstName: billingAddress?.first_name ?? '',
+      lastName: billingAddress?.last_name ?? '',
+      company: billingAddress?.company ?? '',
+      address: billingAddress?.line1 ?? '',
+      city: billingAddress?.city ?? '',
+      country: billingAddress?.country ?? '',
+      postal: billingAddress?.zip ?? '',
+    },
+  });
 
-  const onSubmit: SubmitHandler<BillingAddressParams> = async ({
+  const onSubmit: SubmitHandler<BillingAddressForm> = async ({
     firstName,
     lastName,
     company,
@@ -44,13 +56,13 @@ export const useBillingAddressForm = (
     country,
     region,
     postal,
-  }: BillingAddressParams) => {
+  }: BillingAddressForm) => {
     setLoading(true);
 
-    const customerData: Customer = await provideCustomer();
+    const customerData: Customer | null = await provideCustomer();
 
     try {
-      await actions.add(customerData.id, {
+      await actions.add(customerData?.id!, {
         firstName,
         lastName,
         company,
@@ -68,42 +80,42 @@ export const useBillingAddressForm = (
     }
   };
 
-  const firstNameController = useController({
+  const firstNameController = useController<BillingAddressForm, 'firstName'>({
     name: 'firstName',
     control: form.control,
     defaultValue: '',
   });
-  const lastNameController = useController({
+  const lastNameController = useController<BillingAddressForm, 'lastName'>({
     name: 'lastName',
     control: form.control,
     defaultValue: '',
   });
 
-  const companyController = useController({
+  const companyController = useController<BillingAddressForm, 'company'>({
     name: 'company',
     control: form.control,
     defaultValue: '',
   });
 
-  const addressController = useController({
+  const addressController = useController<BillingAddressForm, 'address'>({
     name: 'address',
     control: form.control,
     defaultValue: '',
   });
 
-  const cityController = useController({
+  const cityController = useController<BillingAddressForm, 'city'>({
     name: 'city',
     control: form.control,
     defaultValue: '',
   });
 
-  const countryController = useController({
+  const countryController = useController<BillingAddressForm, 'country'>({
     name: 'country',
     control: form.control,
     defaultValue: '',
   });
 
-  const postalController = useController({
+  const postalController = useController<BillingAddressForm, 'postal'>({
     name: 'postal',
     control: form.control,
     defaultValue: '',

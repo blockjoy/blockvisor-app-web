@@ -1,9 +1,9 @@
-import { useTabs } from '@shared/hooks/useTabs';
-import { PageSection, PageTitle, Tabs } from '@shared/components';
 import { useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { PaymentMethods } from '../../billing/components/PaymentMethods/PaymentMethods/PaymentMethods';
-import { BillingInfo } from '@modules/billing';
+import { useTabs } from '@shared/hooks/useTabs';
+import { PageSection, PageTitle, Tabs } from '@shared/components';
+import { BillingInfo, PaymentMethods } from '@modules/billing';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
 export const Settings = () => {
   const { push } = useRouter();
@@ -46,7 +46,7 @@ export const Settings = () => {
   };
   return (
     <>
-      <PageTitle title="Settings" />
+      <PageTitle title="Settings" icon={<IconCog />} />
       <Tabs
         activeTab={activeTab}
         onTabClick={handleClick}

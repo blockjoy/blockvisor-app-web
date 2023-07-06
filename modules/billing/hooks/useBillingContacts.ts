@@ -6,13 +6,16 @@ import {
 } from '@modules/billing';
 import { _customer } from 'chargebee-typescript';
 import { Contact } from 'chargebee-typescript/lib/resources';
-import { useRouter } from 'next/router';
+
+interface IBillingContactsHook {
+  billingContacts: Contact[];
+  billingContactsLoadingState: LoadingState;
+  getBillingContacts: VoidFunction;
+  addBillingContact: (billingContact: BillingContactParams) => void;
+  removeBillingContact: (id: string) => void;
+}
 
 export const useBillingContacts = (): IBillingContactsHook => {
-  const {
-    query: { id },
-  } = useRouter();
-
   const [billingContacts, setBillingContacts] = useRecoilState(
     billingAtoms.billingContacts,
   );
@@ -48,7 +51,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
     }
   };
 
-  const addBillingContact = async ({ name, email }: BillingContactForm) => {
+  const addBillingContact = async ({ name, email }: BillingContactParams) => {
     setBillingContactsLoadingState('initializing');
 
     try {
