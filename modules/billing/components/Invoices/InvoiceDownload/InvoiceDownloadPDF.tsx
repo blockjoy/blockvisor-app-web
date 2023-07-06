@@ -40,7 +40,7 @@ export const InvoiceDownloadPDF = ({ invoice }: InvoiceDownloadPDFProps) => {
       loading={isLoading !== 'finished'}
       onClick={(e) => handleInvoicePDF(e, invoice.id)}
     >
-      <SvgIcon size="12px">
+      <SvgIcon size="12px" additionalStyles={[styles.icon]}>
         <IconDownload />
       </SvgIcon>
       <span>Download</span>
