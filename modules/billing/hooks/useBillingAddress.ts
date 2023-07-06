@@ -1,11 +1,19 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { Customer } from 'chargebee-typescript/lib/resources';
+import { BillingAddress } from 'chargebee-typescript/lib/resources/customer';
+import { _customer } from 'chargebee-typescript';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
 } from '@modules/billing';
-import { Customer } from 'chargebee-typescript/lib/resources';
-import { _customer } from 'chargebee-typescript';
+
+interface IBillingAddressHook {
+  billingAddress: BillingAddress | null;
+  billingAddressLoadingState: LoadingState;
+  addBillingAddress: (customerId: string, card: BillingAddressForm) => void;
+  updateBillingAddress: VoidFunction;
+}
 
 export const useBillingAddress = (): IBillingAddressHook => {
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
@@ -25,7 +33,7 @@ export const useBillingAddress = (): IBillingAddressHook => {
       country,
       region,
       postal,
-    }: BillingAddressParams,
+    }: BillingAddressForm,
   ) => {
     setCustomerLoadingState('loading');
 

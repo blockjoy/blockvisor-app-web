@@ -24,6 +24,7 @@ export type CountrySelectorProps = {
   label?: string;
   labelStyles?: SerializedStyles[];
   disabled?: boolean;
+  tabIndex?: number;
 };
 
 export const CountrySelector = ({
@@ -34,6 +35,7 @@ export const CountrySelector = ({
   label,
   labelStyles,
   disabled,
+  tabIndex,
 }: CountrySelectorProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const countrySearchRef = useRef<HTMLInputElement>(null);
@@ -101,6 +103,7 @@ export const CountrySelector = ({
           onClick={toggleDropdown}
           isOpen={isOpen}
           type="input"
+          tabIndex={tabIndex}
         />
 
         <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>

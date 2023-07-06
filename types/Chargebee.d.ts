@@ -1,4 +1,7 @@
-import { Subscription as OriginalSubscription } from 'chargebee-typescript/lib/resources';
+import {
+  Subscription as OriginalSubscription,
+  Customer as OriginalCustomer,
+} from 'chargebee-typescript/lib/resources';
 
 declare module 'chargebee-typescript/lib/resources' {
   interface Subscription extends OriginalSubscription {

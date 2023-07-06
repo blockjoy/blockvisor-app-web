@@ -10,10 +10,26 @@ import {
 } from '@modules/billing';
 import { _subscription } from 'chargebee-typescript';
 import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  Node,
+  NodeServiceCreateRequest,
+} from '@modules/grpc/library/blockjoy/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { blockchainsAtoms } from '@modules/node';
 import { ItemPrice, Subscription } from 'chargebee-typescript/lib/resources';
+
+interface IUpdateSubscriptionHook {
+  subscriptionLoadingState: LoadingState;
+  updateSubscriptionItems: (action: {
+    type: string;
+    payload: { node?: Node | NodeServiceCreateRequest | null };
+  }) => void;
+  generateParams: (
+    autoRenew: boolean,
+    periodUnit: string,
+    itemPrices: ItemPrice[],
+  ) => Promise<_subscription.update_for_items_params>;
+}
 
 export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
   const setSubscription = useSetRecoilState(billingSelectors.subscription);
@@ -28,7 +44,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
 
   const updateSubscriptionItems = async (action: {
     type: string;
-    payload: { node?: Node };
+    payload: { node?: Node | NodeServiceCreateRequest | null };
   }) => {
     setSubscriptionLoadingState('initializing');
     const subscription = await provideSubscription();
@@ -53,8 +69,8 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
       periodUnit: billingPeriod,
     };
 
-    const itemPrice: any = await getItemPrices(itemPriceParams);
-    const itemPriceID: string = itemPrice?.length ? itemPrice[0].id : null;
+    const itemPrices: ItemPrice[] = await getItemPrices(itemPriceParams);
+    const itemPriceID: string = itemPrices?.length ? itemPrices[0].id : '';
 
     const subscriptionItem: SubscriptionItem | undefined =
       subscription?.subscription_items?.find(
@@ -135,14 +151,14 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     if (periodUnit === 'year' && subscription?.billing_period_unit !== 'year') {
       const activeItemPrice = itemPrices.find(
         (itemPrice: ItemPrice) =>
-          itemPrice.period_unit === subscription.billing_period_unit,
+          itemPrice.period_unit === subscription?.billing_period_unit,
       );
       const newItemPrice = itemPrices.find(
         (itemPrice: ItemPrice) =>
-          itemPrice.period_unit !== subscription.billing_period_unit,
+          itemPrice.period_unit !== subscription?.billing_period_unit,
       );
 
-      const updatedSubscriptionItems =
+      const updatedSubscriptionItems: _subscription.subscription_items_update_for_items_params[] =
         subscription?.subscription_items?.filter(
           (subscriptionItem: SubscriptionItem) =>
             subscriptionItem.item_price_id !== activeItemPrice?.id,

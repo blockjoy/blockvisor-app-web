@@ -30,6 +30,7 @@ export * from './components/PaymentMethods/PaymentPreview/PaymentPreview';
 export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
 export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
 export * from './components/PaymentMethods/PaymentRequired/PaymentRequired';
+export * from './components/PaymentMethods/PaymentMethods/PaymentMethods';
 
 export * from './components/Subscription/PlanSelect/PlanSelect';
 export * from './components/Subscription/SinglePlan/SinglePlan';

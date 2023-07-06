@@ -10,6 +10,7 @@ type Props = {
   onClick: VoidFunction;
   icon?: ReactNode;
   type?: 'input' | 'default';
+  tabIndex?: number;
 };
 
 export const DropdownButton = ({
@@ -19,6 +20,7 @@ export const DropdownButton = ({
   text,
   isOpen,
   type,
+  tabIndex,
 }: Props) => {
   return (
     <button
@@ -26,6 +28,7 @@ export const DropdownButton = ({
       type="button"
       css={[styles.button, type === 'input' && styles.buttonInput]}
       onClick={onClick}
+      {...(tabIndex !== undefined && { tabIndex })}
     >
       {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
       {text}

@@ -1,6 +1,12 @@
 import { useRecoilState } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
 import { Estimate } from 'chargebee-typescript/lib/resources';
+import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+
+interface IEstimatesHook {
+  estimate: Estimate | null;
+  estimateLoadingState: LoadingState;
+  getEstimate: VoidFunction;
+}
 
 export const useEstimates = (subscriptionId: string): IEstimatesHook => {
   const [estimate, setEstimate] = useRecoilState(billingAtoms.estimate);

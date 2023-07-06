@@ -15,6 +15,7 @@ import {
 } from '@modules/billing';
 import { useHasPermissions, Permissions } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 
 type BillingProps = {
   item: Item;
@@ -97,7 +98,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
 
   return (
     <>
-      <PageTitle title="Billing" />
+      <PageTitle title="Billing" icon={<IconBilling />} />
       <Tabs
         activeTab={activeTab}
         onTabClick={handleClick}
