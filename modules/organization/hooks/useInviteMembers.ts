@@ -1,14 +1,10 @@
-import { isResponeMetaObject } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { invitationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
-import { useRecoilValue } from 'recoil';
-import { organizationAtoms } from '../store/organizationAtoms';
+import { useDefaultOrganization } from './useDefaultOrganization';
 
 export const useInviteMembers = () => {
-  const selectedOrganization = useRecoilValue(
-    organizationAtoms.selectedOrganization,
-  );
+  const { defaultOrganization } = useDefaultOrganization();
 
   const inviteMembers = async (
     inviteeEmail: string,
@@ -18,12 +14,13 @@ export const useInviteMembers = () => {
     try {
       await invitationClient.inviteOrgMember(
         formattedEmail,
-        selectedOrganization?.id!,
+        defaultOrganization?.id!,
       );
       toast.success('Invitation Sent');
       onComplete();
     } catch (err) {
-      throw new ApplicationError('UpdateOrganization', 'Update failed');
+      console.log('inviteOrgMemberError', err);
+      toast.error('Error Inviting');
     }
   };
 

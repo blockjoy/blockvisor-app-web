@@ -16,6 +16,8 @@ export const styles = {
     flex-direction: column;
 
     @media ${breakpoints.fromMed} {
+      position: sticky;
+      top: 72px;
       flex: 1 1 270px;
       max-width: 270px;
       max-height: calc(100vh - 72px);
@@ -24,6 +26,14 @@ export const styles = {
     }
   `,
   rightWrapper: css`
+    flex: 1 1 auto;
+    display: flex;
+
+    @media ${breakpoints.toXHuge} {
+      flex-direction: column;
+    }
+  `,
+  detailWrapper: css`
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
@@ -33,9 +43,18 @@ export const styles = {
     }
   `,
   invitationsWrapper: (theme: ITheme) => css`
-    flex: 1 1 200px;
-    max-width: 300px;
-    border-left: 1px solid ${theme.colorBorder};
-    margin-left: 30px;
+    border-top: 1px solid ${theme.colorBorder};
+
+    @media ${breakpoints.fromMed} {
+      margin-left: 30px;
+    }
+
+    @media ${breakpoints.fromXHuge} {
+      flex: 1 1 200px;
+      max-width: 300px;
+      border-top: 0;
+      border-left: 1px solid ${theme.colorBorder};
+      margin-left: 30px;
+    }
   `,
 };
