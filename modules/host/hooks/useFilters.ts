@@ -18,7 +18,7 @@ import { InitialFilter, InitialQueryParams } from '../ui/HostUIHelpers';
 import { buildParams } from '../utils/buildParams';
 
 export const useFilters = (hostUIProps: HostUIProps) => {
-  const { organizations } = useGetOrganizations();
+  const { organizationsSorted } = useGetOrganizations();
   const { defaultOrganization } = useDefaultOrganization();
   const { switchOrganization } = useSwitchOrganization();
 
@@ -98,9 +98,9 @@ export const useFilters = (hostUIProps: HostUIProps) => {
     {
       name: 'Organization',
       type: 'check',
-      isDisabled: organizations?.length === 1,
+      isDisabled: organizationsSorted?.length === 1,
       filterCount: 1,
-      filterList: organizations?.map((org) => ({
+      filterList: organizationsSorted?.map((org) => ({
         id: org.id,
         name: org.name,
         isChecked: org.id === defaultOrganization?.id,

@@ -34,9 +34,9 @@ export const HostList = () => {
     };
   }, [hostUIContext]);
 
-  const { loadHosts, hostList, isLoading, handleHostClick } = useHostList();
-  const { provisionToken, provisionTokenLoadingState, getProvisionToken } =
-    useProvisionToken();
+  const { loadHosts, hostList, hostListSorted, isLoading, handleHostClick } =
+    useHostList();
+  const { provisionToken, getProvisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
   const hasMoreHosts = useRecoilValue(hostAtoms.hasMoreHosts);
   const preloadHosts = useRecoilValue(hostAtoms.preloadHosts);
@@ -76,11 +76,12 @@ export const HostList = () => {
     hostUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = mapHostListToGird(hostList, handleHostClick);
-  const { headers, rows } = mapHostListToRows(hostList);
+  const cells = mapHostListToGird(hostListSorted, handleHostClick);
+
+  const { headers, rows } = mapHostListToRows(hostListSorted);
 
   const { isFiltered, isEmpty } = resultsStatus(
-    hostList.length,
+    hostListSorted.length,
     hostUIProps.queryParams.filter,
   );
 
