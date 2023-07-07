@@ -16,7 +16,7 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useHostList, useHostUpdate, useHostView } from '@modules/host';
-import { useUpdateSubscription } from '@modules/billing';
+import { SubscriptionAction, useUpdateSubscription } from '@modules/billing';
 
 type Args = string | string[] | undefined;
 
@@ -63,7 +63,7 @@ export const useNodeView = (): Hook => {
 
     // Remove node from the subscription
     updateSubscriptionItems({
-      type: 'delete',
+      type: SubscriptionAction.REMOVE_NODE,
       payload: { node },
     });
 
