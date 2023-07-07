@@ -42,6 +42,8 @@ export const styles = {
     border-radius: 20px;
     height: 40px;
     padding: 0 24px 0 36px;
+  `,
+  noBottomMargin: css`
     margin-bottom: 0;
   `,
 };

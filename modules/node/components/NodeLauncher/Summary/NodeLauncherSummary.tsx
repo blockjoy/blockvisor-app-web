@@ -15,17 +15,10 @@ import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { PermissionsCreateNode } from '@modules/auth/hooks/useHasPermissions';
-
-const ERROR_MESSAGES = {
-  [PermissionsCreateNode.NoPermissions]:
-    'Cannot launch node due to insufficient permissions',
-  [PermissionsCreateNode.NoSubscription]:
-    'Cannot launch node. Contact organization owner to upgrade subscription',
-  [PermissionsCreateNode.NoPaymentMethod]:
-    'Cannot launch node. Contact organization owner to add payment method',
-};
+import {
+  ERROR_MESSAGES,
+  PermissionsCreateResource,
+} from '@modules/auth/hooks/useHasPermissions';
 
 type NodeLauncherSummaryProps = {
   serverError: string;
@@ -33,7 +26,7 @@ type NodeLauncherSummaryProps = {
   hasNetworkList: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean | null;
-  canAddNode: PermissionsCreateNode;
+  canAddNode: PermissionsCreateResource;
   isCreating: boolean;
   selectedHost: Host | null;
   nodeLauncherState: NodeLauncherState;
@@ -84,10 +77,10 @@ export const NodeLauncherSummary = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
-        {!hasNetworkList || canAddNode !== PermissionsCreateNode.Granted ? (
+        {!hasNetworkList || canAddNode !== PermissionsCreateResource.Granted ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
-            {canAddNode !== PermissionsCreateNode.Granted
-              ? ERROR_MESSAGES[canAddNode]
+            {canAddNode !== PermissionsCreateResource.Granted
+              ? ERROR_MESSAGES['NODE'][canAddNode]
               : 'Cannot launch node, missing network configuration'}
           </div>
         ) : (
@@ -175,7 +168,7 @@ export const NodeLauncherSummary = ({
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
-            canAddNode !== PermissionsCreateNode.Granted ||
+            canAddNode !== PermissionsCreateResource.Granted ||
             Boolean(serverError) ||
             isCreating
           }

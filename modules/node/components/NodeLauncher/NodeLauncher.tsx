@@ -31,8 +31,8 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import {
-  PermissionsCreateNode,
-  useHasPermissionsToCreateNode,
+  PermissionsCreateResource,
+  useHasPermissionsToCreateResource,
 } from '@modules/auth';
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 
@@ -85,11 +85,12 @@ export const NodeLauncher = () => {
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canAddNode: PermissionsCreateNode = useHasPermissionsToCreateNode(
-    userRoleInOrganization,
-    hasPaymentMethod,
-    hasSubscription,
-  );
+  const canAddNode: PermissionsCreateResource =
+    useHasPermissionsToCreateResource(
+      userRoleInOrganization,
+      hasPaymentMethod,
+      hasSubscription,
+    );
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -411,6 +412,7 @@ export const NodeLauncher = () => {
       </div>
       {activeView === 'action' && (
         <PaymentRequired
+          warningMessage="Creating a Node requires a payment method."
           onHide={handleHidingPortal}
           handleSubmit={handleSubmitPayment}
         />
