@@ -8,11 +8,13 @@ import { styles } from './PaymentRequired.styles';
 type PaymentRequiredProps = {
   onHide: VoidFunction;
   handleSubmit: VoidFunction;
+  warningMessage?: string;
 };
 
 export const PaymentRequired = ({
   onHide,
   handleSubmit,
+  warningMessage,
 }: PaymentRequiredProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -25,12 +27,17 @@ export const PaymentRequired = ({
   }, []);
 
   return (
-    <Modal portalId="modal-root" isOpen={true} handleClose={onHide}>
+    <Modal
+      portalId="modal-root"
+      isOpen={true}
+      handleClose={onHide}
+      additionalStyles={[styles.modal]}
+    >
       <h2 css={[typo.medium, spacing.bottom.medium]}>
         Payment Information Required
       </h2>
       <div css={styles.info}>
-        <p>Creating a Node requires a payment method.</p>
+        {warningMessage && <p>{warningMessage}</p>}
         <p>Please enter your payment details to continue.</p>
       </div>
       {isModalVisible && (

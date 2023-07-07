@@ -11,4 +11,8 @@ export const styles = {
       margin-bottom: 7px;
     }
   `,
+  modal: css`
+    overflow: initial;
+    max-width: 540px;
+  `,
 };
