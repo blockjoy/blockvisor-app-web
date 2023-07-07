@@ -11,8 +11,11 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useHostList, useHostUpdate } from '@modules/host';
-import { useUpdateSubscription } from '@modules/billing';
-import { generateError, useUpdateSubscription } from '@modules/billing';
+import {
+  generateError,
+  SubscriptionAction,
+  useUpdateSubscription,
+} from '@modules/billing';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
@@ -49,7 +52,7 @@ export const useNodeAdd = () => {
       if (!nodeRequest.placement?.hostId)
         try {
           await updateSubscriptionItems({
-            type: 'create',
+            type: SubscriptionAction.ADD_NODE,
             payload: { node: nodeParams },
           });
         } catch (error: any) {

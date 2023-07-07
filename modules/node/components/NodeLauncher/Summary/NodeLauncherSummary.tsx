@@ -98,7 +98,7 @@ export const NodeLauncherSummary = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
-        {!hasNetworkList || canAddNode !== PermissionsCreateResource.Granted ? (
+        {!hasNetworkList || canAddNode !== PermissionsCreateResource.GRANTED ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
             Cannot launch node, missing network configuration.
           </div>
@@ -189,7 +189,7 @@ export const NodeLauncherSummary = ({
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
-            canAddNode !== PermissionsCreateResource.Granted ||
+            canAddNode !== PermissionsCreateResource.GRANTED ||
             Boolean(serverError) ||
             isCreating
           }

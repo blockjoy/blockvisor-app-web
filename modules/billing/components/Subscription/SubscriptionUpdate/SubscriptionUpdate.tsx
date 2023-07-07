@@ -31,10 +31,14 @@ export const SubscriptionUpdate = ({
   );
 
   const { updateSubscription } = useSubscription();
-  const { generateParams } = useUpdateSubscription();
+  const { generateUpdateSubscriptionParams } = useUpdateSubscription();
 
   const handleUpdate = async () => {
-    const params = await generateParams(autoRenew, periodUnit, itemPrices);
+    const params = await generateUpdateSubscriptionParams(
+      autoRenew,
+      periodUnit,
+      itemPrices,
+    );
 
     updateSubscription(params);
     handleBack();
