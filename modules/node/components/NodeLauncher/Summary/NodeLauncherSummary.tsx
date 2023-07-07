@@ -34,7 +34,7 @@ type NodeLauncherSummaryProps = {
   hasNetworkList: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean | null;
-  canAddNode: PermissionsCreateNode;
+  canAddNode: PermissionsCreateResource;
   isCreating: boolean;
   selectedHost: Host | null;
   selectedVersion: BlockchainVersion;
@@ -98,7 +98,7 @@ export const NodeLauncherSummary = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
-        {!hasNetworkList || canAddNode !== PermissionsCreateNode.Granted ? (
+        {!hasNetworkList || canAddNode !== PermissionsCreateResource.Granted ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
             Cannot launch node, missing network configuration.
           </div>
@@ -189,7 +189,7 @@ export const NodeLauncherSummary = ({
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
-            canAddNode !== PermissionsCreateNode.Granted ||
+            canAddNode !== PermissionsCreateResource.Granted ||
             Boolean(serverError) ||
             isCreating
           }

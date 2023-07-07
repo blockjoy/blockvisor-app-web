@@ -19,6 +19,7 @@ export const Alert = ({
       styles.alert,
       isSuccess ? styles.alertSuccess : styles.alertDanger,
       isRounded && styles.alertRounded,
+      noBottomMargin && styles.noBottomMargin,
     ]}
     style={{ maxWidth }}
   >

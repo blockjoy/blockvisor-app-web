@@ -59,6 +59,16 @@ export const CountrySelector = ({
     toggleDropdown();
   };
 
+  // const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedCountryCode = event.target.value;
+  //   onChange(selectedCountryCode);
+
+  //   const selectedCountry = COUNTRIES.find(
+  //     (country: Country) => country.code === selectedCountryCode,
+  //   );
+  //   setActiveCountryName(selectedCountry?.name || null);
+  // };
+
   const handleCountrySearch = (e: any) => {
     const searchValue = e.target.value.trim();
     const listOfFilteredCountries = COUNTRIES.filter((country: Country) =>
@@ -134,6 +144,19 @@ export const CountrySelector = ({
           </Scrollbar>
         </DropdownMenu>
       </DropdownWrapper>
+
+      {/* <select
+        name={name}
+        id={name}
+        value={value}
+        onChange={handleSelectChange}
+        hidden
+      >
+        <option value="">Select country</option>
+        {filteredCountries.map((country: Country) => {
+          return <option value={country.code}>{country.name}</option>;
+        })}
+      </select> */}
     </>
   );
 };
