@@ -56,7 +56,7 @@ export const InvoiceView = () => {
                   <div css={styles.headerWrapper}>
                     <div css={styles.header}>
                       <h2 css={styles.headline}>
-                        Invoice <b>{`${invoice.id}`}</b>
+                        Invoice #<b>{`${invoice.id}`}</b>
                       </h2>
                       {invoice?.date && (
                         <div css={styles.info}>

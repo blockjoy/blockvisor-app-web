@@ -6,6 +6,7 @@ type AlertProps = {
   isRounded?: boolean;
   children: ReactNode;
   width?: string;
+  noBottomMargin?: boolean;
 };
 
 export const Alert = ({
@@ -13,12 +14,14 @@ export const Alert = ({
   isRounded,
   children,
   width = '100%',
+  noBottomMargin,
 }: AlertProps) => (
   <div
     css={[
       styles.alert,
       isSuccess ? styles.alertSuccess : styles.alertDanger,
       isRounded && styles.alertRounded,
+      noBottomMargin && styles.noBottomMargin,
     ]}
     style={{ maxWidth: width }}
   >
