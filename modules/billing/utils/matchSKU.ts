@@ -2,21 +2,32 @@ import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { blockchainList, nodeTypes } from '@shared/constants/lookups';
 
-export const matchSKU = (
-  blockchain: Blockchain,
-  node: NodeServiceCreateRequest,
-): string => {
-  const productCategory: 'FMN' | 'SMH' = 'FMN';
+type NodeType = { blockchain?: Blockchain; node?: NodeServiceCreateRequest };
+type HostType = { host?: any };
 
-  const blockchainName: string = blockchain?.name;
-  const blockchainType: string =
-    blockchainList.find(
-      (blockchainItem) => blockchainItem.name === blockchainName,
-    )?.abbreviation ?? '';
+type Payload = NodeType | HostType;
 
-  const nodeType: string = nodeTypes[node?.nodeType];
-
+export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
   const region: string = 'EU';
+  const productCategory: 'FMN' | 'SMH' = type === 'node' ? 'FMN' : 'SMH';
 
-  return `${productCategory}-${blockchainType}-${nodeType}-${region}`;
+  if ('node' in payload) {
+    const { blockchain, node } = payload;
+    if (!node || !blockchain) return '';
+
+    const blockchainName: string = blockchain?.name;
+    const blockchainType: string =
+      blockchainList.find(
+        (blockchainItem) => blockchainItem.name === blockchainName,
+      )?.abbreviation ?? '';
+
+    const nodeType: string = nodeTypes[node?.nodeType];
+
+    return `${productCategory}-${blockchainType}-${nodeType}-${region}`;
+  } else if ('host' in payload) {
+    const { host } = payload;
+    if (!host) return '';
+
+    return 'SMH-THREAD-BASE';
+  } else return '';
 };
