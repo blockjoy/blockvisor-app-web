@@ -43,11 +43,13 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
         await createPaymentMethod(customerData?.id!, data.id, onSuccess);
       } catch (error: any) {
         setError(JSON.stringify(error));
+        throw error;
       } finally {
         setLoadingState('finished');
       }
     } catch (error: any) {
       setError(JSON.stringify(error));
+      throw error;
     }
   };
 

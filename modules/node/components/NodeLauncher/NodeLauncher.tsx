@@ -37,6 +37,7 @@ import { useSubscription } from '@modules/billing';
 import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import {
+  checkIfOwner,
   PermissionsCreateResource,
   useHasPermissionsToCreateResource,
 } from '@modules/auth';
@@ -91,13 +92,10 @@ export const NodeLauncher = () => {
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
+  const isOwner = checkIfOwner(userRoleInOrganization);
 
   const canAddNode: PermissionsCreateResource =
-    useHasPermissionsToCreateResource(
-      userRoleInOrganization,
-      hasPaymentMethod,
-      hasSubscription,
-    );
+    useHasPermissionsToCreateResource(userRoleInOrganization, hasSubscription);
 
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
@@ -234,7 +232,7 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
-    if (!hasPaymentMethod) {
+    if (!hasPaymentMethod && isOwner) {
       setActiveView('action');
       setFulfilRequirements(false);
       return;
@@ -280,8 +278,11 @@ export const NodeLauncher = () => {
   };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+>>>>>>> 3182023e (fix: sc-2031 permission to preview subscription; bug fixes)
   const userRole = useRecoilValue(authSelectors.userRole);
   const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
@@ -292,13 +293,6 @@ export const NodeLauncher = () => {
     userRoleInOrganization,
     Permissions.CREATE_NODE,
   );
-=======
-  const handleHidingPortal = () => setActiveView('view');
-  const handleSubmitPayment = () => {
-    setActiveView('view');
-    setFulfilRequirements(true);
-  };
->>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
 
 >>>>>>> 034b89a5 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
   useEffect(() => {
@@ -404,12 +398,7 @@ export const NodeLauncher = () => {
             selectedHost={selectedHost}
             canAddNode={canAddNode}
             onHostChanged={handleHostChanged}
-<<<<<<< HEAD
             onRegionChanged={handleRegionChanged}
-=======
-            onNodePropertyChanged={handleNodePropertyChanged}
-            canAddNode={canAddNode}
->>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
             onCreateNodeClicked={handleCreateNodeClicked}
             onRegionsLoaded={handleRegionsLoaded}
           />
