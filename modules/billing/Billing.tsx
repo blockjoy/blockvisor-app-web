@@ -33,9 +33,9 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canReadBilling: boolean = useHasPermissions(
+  const canUpdateBilling: boolean = useHasPermissions(
     userRoleInOrganization,
-    Permissions.READ_BILLING,
+    Permissions.UPDATE_BILLING,
   );
 
   const tabItems = useMemo(
@@ -78,7 +78,8 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
           ),
         },
       ].filter(
-        (tabItem) => tabItem.value === '1' || (subscription && canReadBilling),
+        (tabItem) =>
+          tabItem.value === '1' || (subscription && canUpdateBilling),
       ),
     [subscription],
   );

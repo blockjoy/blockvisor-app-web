@@ -24,13 +24,9 @@ export type LayoutProps = {
 
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
-
-  const currentOrg = useRef<string>();
-
   const userEmail = repository?.getIdentity()?.email;
 
-  const { customer, getCustomer } = useCustomer();
-  const { getSubscription } = useSubscription();
+  const currentOrg = useRef<string>();
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -39,6 +35,14 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
+  const { customer, getCustomer } = useCustomer();
+  const { getSubscription } = useSubscription();
+
+  useEffect(() => {
+    if (!customer) {
+      getCustomer(userEmail!);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -59,20 +63,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      loadNodes();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!customer) {
-      getCustomer(userEmail!);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (defaultOrganization?.id !== currentOrg.current) {
-      currentOrg.current = defaultOrganization!.id;
-
       getSubscription(defaultOrganization?.id!);
       loadNodes();
       loadHosts();
