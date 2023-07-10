@@ -15,7 +15,11 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { useDefaultOrganization } from '@modules/organization';
-import { billingSelectors, PaymentRequired } from '@modules/billing';
+import {
+  billingAtoms,
+  billingSelectors,
+  PaymentRequired,
+} from '@modules/billing';
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization';
 import {
@@ -33,6 +37,9 @@ export const HostLauncher = () => {
 
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
   const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
+  );
 
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
@@ -45,7 +52,7 @@ export const HostLauncher = () => {
       hasSubscription,
     );
 
-  const tokenValue = hasPaymentMethod ? token : token?.replace(/./g, '*');
+  const tokenValue = hasSubscription ? token : token?.replace(/./g, '*');
 
   const handleAddingPaymentMethod = () => {
     setActiveView('action');
@@ -72,7 +79,7 @@ export const HostLauncher = () => {
               <OrganizationSelect />
             </div>
           </li>
-          {isDisabledAdding && (
+          {isDisabledAdding && subscriptionLoadingState === 'finished' && (
             <li>
               <div css={spacing.bottom.large}>
                 <FormLabelCaps>Confirm Subscription Status</FormLabelCaps>
