@@ -1,8 +1,13 @@
 import { useRecoilValue } from 'recoil';
 import { hostAtoms, mapHostNodesToRows } from '@modules/host';
 import { useNodeList } from '@modules/node';
-import { Table, FormHeaderCaps } from '@shared/components';
-import { EmptyColumn, ROUTES, TableSkeleton } from '@shared/index';
+import {
+  Table,
+  FormHeaderCaps,
+  TableSkeleton,
+  EmptyColumn,
+} from '@shared/components';
+import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 

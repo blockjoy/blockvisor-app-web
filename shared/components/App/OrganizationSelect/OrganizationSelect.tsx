@@ -5,17 +5,22 @@ import {
   DropdownItem,
   Scrollbar,
   DropdownWrapper,
+  TableAdd,
 } from '@shared/components';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { useRouter } from 'next/router';
-import { ROUTES } from '@shared/constants/routes';
-import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import IconPlus from '@public/assets/icons/common/Plus.svg';
 import { styles } from './OrganizationSelect.styles';
+import {
+  useCreateOrganization,
+  useGetOrganization,
+  useGetOrganizations,
+} from '@modules/organization';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { ApplicationError } from '@modules/auth/utils/Errors';
+import { toast } from 'react-toastify';
 
 type Props = {
   hideName?: boolean;
@@ -28,9 +33,11 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
     organizationAtoms.allOrganizationsSorted,
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const setIsSidebarOpen = useSetRecoilState(sidebarOpen);
-
+  const createOrganization = useCreateOrganization();
+  const { addToOrganizations } = useGetOrganizations();
+  const { setOrganization } = useGetOrganization();
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -45,15 +52,20 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
     }
   };
 
-  const handleCreateClicked = () => {
-    setIsOpen(false);
-    if (isMobile) {
-      setIsSidebarOpen(false);
+  const handleCreate = async (name: string) => {
+    try {
+      setIsLoading(true);
+      await createOrganization(name, async (org: Org) => {
+        addToOrganizations(org);
+        setOrganization(org);
+        switchOrganization(org.id, name);
+      });
+    } catch (error) {
+      if (error instanceof ApplicationError) toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+      return true;
     }
-    router.push({
-      pathname: ROUTES.ORGANIZATIONS,
-      query: { add: true },
-    });
   };
 
   return (
@@ -85,9 +97,16 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
               ))}
           </ul>
         </Scrollbar>
-        <button css={[styles.createButton]} onClick={handleCreateClicked}>
-          <IconPlus /> Add Organization
-        </button>
+        <footer css={styles.addOrg}>
+          <TableAdd
+            buttonText="Add"
+            buttonWidth="60px"
+            placeholder="Add Organization"
+            placeholderFocused="Enter a name"
+            onSubmit={async (email: string) => await handleCreate(email)}
+            isLoading={isLoading}
+          />
+        </footer>
       </DropdownMenu>
     </DropdownWrapper>
   );
