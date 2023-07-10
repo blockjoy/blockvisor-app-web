@@ -7,19 +7,10 @@ import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
-<<<<<<< HEAD
 import { EmptyColumn, PageTitle } from '@shared/components';
 import {
   organizationSelectors,
   useDefaultOrganization,
-=======
-import { EmptyColumn, PageTitle, sort } from '@shared/components';
-import { useDefaultOrganization } from '@modules/organization';
-import { useRecoilValue } from 'recoil';
-import {
-  organizationAtoms,
-  organizationSelectors,
->>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
 } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
@@ -54,6 +45,7 @@ import { useSubscription } from '@modules/billing';
 import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import {
+  checkIfOwner,
   PermissionsCreateResource,
   useHasPermissionsToCreateResource,
 } from '@modules/auth';
@@ -89,13 +81,7 @@ export const NodeLauncher = () => {
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
 
-<<<<<<< HEAD
   const [, setHasRegionListError] = useState(true);
-=======
-  const [hasRegionListError, setHasRegionListError] = useState(true);
-  const [activeView, setActiveView] = useState<'view' | 'action'>('view');
-
->>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
   const [serverError, setServerError] = useState<string>();
   const [isCreating, setIsCreating] = useState(false);
 
@@ -114,13 +100,10 @@ export const NodeLauncher = () => {
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
+  const isOwner = checkIfOwner(userRoleInOrganization);
 
   const canAddNode: PermissionsCreateResource =
-    useHasPermissionsToCreateResource(
-      userRoleInOrganization,
-      hasPaymentMethod,
-      hasSubscription,
-    );
+    useHasPermissionsToCreateResource(userRoleInOrganization, hasSubscription);
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -251,7 +234,7 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
-    if (!hasPaymentMethod) {
+    if (!hasPaymentMethod && isOwner) {
       setActiveView('action');
       setFulfilRequirements(false);
       return;
@@ -302,7 +285,6 @@ export const NodeLauncher = () => {
     );
   };
 
-<<<<<<< HEAD
   const userRole = useRecoilValue(authSelectors.userRole);
   const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
@@ -313,13 +295,6 @@ export const NodeLauncher = () => {
     userRoleInOrganization,
     Permissions.CREATE_NODE,
   );
-=======
-  const handleHidingPortal = () => setActiveView('view');
-  const handleSubmitPayment = () => {
-    setActiveView('view');
-    setFulfilRequirements(true);
-  };
->>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
 
   useEffect(() => {
     const activeBlockchain = blockchains.find(
@@ -424,12 +399,7 @@ export const NodeLauncher = () => {
             selectedHost={selectedHost}
             canAddNode={canAddNode}
             onHostChanged={handleHostChanged}
-<<<<<<< HEAD
             onRegionChanged={handleRegionChanged}
-=======
-            onNodePropertyChanged={handleNodePropertyChanged}
-            canAddNode={canAddNode}
->>>>>>> df91c2f2 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
             onCreateNodeClicked={handleCreateNodeClicked}
             onRegionsLoaded={handleRegionsLoaded}
           />

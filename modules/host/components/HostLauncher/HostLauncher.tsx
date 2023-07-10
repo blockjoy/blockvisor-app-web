@@ -34,6 +34,7 @@ export const HostLauncher = () => {
   const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
+  const isOwner = checkIfOwner(userRoleInOrganization);
 
   const canAddHost: boolean = useHasPermissions(
     userRole,
