@@ -1,8 +1,10 @@
 import { selector, selectorFamily } from 'recoil';
 import { billingAtoms } from '@modules/billing';
 import {
+  Customer,
   CustomerBillingAddress,
   Item,
+  Subscription,
 } from 'chargebee-typescript/lib/resources';
 import { organizationAtoms } from '@modules/organization';
 
@@ -18,7 +20,7 @@ const activePlan = selectorFamily<Item | null, string>({
     },
 });
 
-const customer = selector({
+const customer = selector<Customer | null>({
   key: 'billing.customer',
   get: ({ get }) => get(billingAtoms.billing).customer,
   set: ({ set }, newValue) =>
@@ -41,7 +43,7 @@ const billingAddress = selector<CustomerBillingAddress | null>({
   },
 });
 
-const subscription = selector({
+const subscription = selector<Subscription | null>({
   key: 'billing.subscription',
   get: ({ get }) => get(billingAtoms.billing).subscription,
   set: ({ set }, newValue) =>

@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
@@ -16,6 +16,7 @@ interface ExtendedCreateWithItemsParams
 
 interface ISubscriptionHook {
   subscriptionLoadingState: LoadingState;
+  setSubscriptionLoadingState: SetterOrUpdater<LoadingState>;
   getSubscription: (subscriptionId: string) => void;
   createSubscription: (params: {
     itemPriceId: string;
@@ -255,6 +256,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
   return {
     subscriptionLoadingState,
+    setSubscriptionLoadingState,
 
     getSubscription,
     createSubscription,

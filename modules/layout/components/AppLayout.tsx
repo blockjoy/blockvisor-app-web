@@ -84,10 +84,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     }
   }, [defaultOrganization?.id]);
 
-  useEffect(() => {
-    getSubscription(defaultOrganization?.id!);
-  }, [defaultOrganization?.id]);
-
   return (
     <>
       <Head>
