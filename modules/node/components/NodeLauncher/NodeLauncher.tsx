@@ -28,9 +28,9 @@ import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain'
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
-import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import {
+  checkIfOwner,
   PermissionsCreateResource,
   useHasPermissionsToCreateResource,
 } from '@modules/auth';
@@ -84,13 +84,10 @@ export const NodeLauncher = () => {
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
+  const isOwner = checkIfOwner(userRoleInOrganization);
 
   const canAddNode: PermissionsCreateResource =
-    useHasPermissionsToCreateResource(
-      userRoleInOrganization,
-      hasPaymentMethod,
-      hasSubscription,
-    );
+    useHasPermissionsToCreateResource(userRoleInOrganization, hasSubscription);
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -228,7 +225,7 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
-    if (!hasPaymentMethod) {
+    if (!hasPaymentMethod && isOwner) {
       setActiveView('action');
       setFulfilRequirements(false);
       return;

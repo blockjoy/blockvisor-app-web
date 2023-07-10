@@ -23,6 +23,7 @@ import {
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization';
 import {
+  checkIfOwner,
   ERROR_MESSAGES,
   PermissionsCreateResource,
   useHasPermissionsToCreateResource,
@@ -44,15 +45,17 @@ export const HostLauncher = () => {
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
+  const isOwner = checkIfOwner(userRoleInOrganization);
 
   const canAddHost: PermissionsCreateResource =
-    useHasPermissionsToCreateResource(
-      userRoleInOrganization,
-      hasPaymentMethod,
-      hasSubscription,
-    );
+    useHasPermissionsToCreateResource(userRoleInOrganization, hasSubscription);
 
-  const tokenValue = hasSubscription ? token : token?.replace(/./g, '*');
+  const isDisabledAdding: boolean =
+    canAddHost !== PermissionsCreateResource.GRANTED ||
+    (!hasPaymentMethod && isOwner);
+
+  const tokenValue =
+    !isDisabledAdding && hasSubscription ? token : token?.replace(/./g, '*');
 
   const handleAddingPaymentMethod = () => {
     setActiveView('action');
@@ -62,9 +65,6 @@ export const HostLauncher = () => {
   const handleSubmitPayment = () => {
     setActiveView('view');
   };
-
-  const isDisabledAdding: boolean =
-    canAddHost !== PermissionsCreateResource.GRANTED || !hasPaymentMethod;
 
   return (
     <>

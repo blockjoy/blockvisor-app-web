@@ -182,7 +182,6 @@ export const useHasPermissions = (
 
 export const useHasPermissionsToCreateResource = (
   orgRole: OrgRole,
-  hasPaymentMethod: boolean,
   hasSubscription: boolean,
 ): PermissionsCreateResource => {
   if (!orgRole) return PermissionsCreateResource.NO_PERMISSION;
@@ -212,6 +211,8 @@ export const useHasPermissionsToCreateResource = (
 
   return PermissionsCreateResource.GRANTED;
 };
+
+export const checkIfOwner = (role: OrgRole) => role === OrgRole.ORG_ROLE_OWNER;
 
 export const ERROR_MESSAGES = {
   NODE: {
