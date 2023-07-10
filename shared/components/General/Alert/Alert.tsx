@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import { SerializedStyles } from '@emotion/react';
+=======
+>>>>>>> e162f124 (fix: sc-2031 permission to preview subscription; bug fixes)
 import { FC, ReactNode } from 'react';
 import { styles } from './Alert.styles';
 
