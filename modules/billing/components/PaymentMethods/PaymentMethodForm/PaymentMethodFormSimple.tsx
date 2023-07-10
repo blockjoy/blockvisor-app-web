@@ -82,8 +82,12 @@ export const PaymentMethodFormSimple = ({
       },
     };
 
-    await onSubmit(cardRef, additionalData, handleSucces);
-    handleSubmit();
+    try {
+      await onSubmit(cardRef, additionalData, handleSucces);
+      handleSubmit();
+    } catch (error: any) {
+      console.log('Error while adding a payment method', error);
+    }
   };
 
   const handleIsDefaultAddress = (e: ChangeEvent<HTMLInputElement>) => {
