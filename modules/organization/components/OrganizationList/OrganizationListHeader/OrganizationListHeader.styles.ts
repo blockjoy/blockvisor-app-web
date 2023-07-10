@@ -12,7 +12,7 @@ export const styles = {
     font-size: 16px;
 
     @media ${breakpoints.fromMed} {
-      padding-right: 30px;
+      padding-right: 20px;
     }
 
     form {

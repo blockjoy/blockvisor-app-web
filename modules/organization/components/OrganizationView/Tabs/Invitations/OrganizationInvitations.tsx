@@ -1,4 +1,4 @@
-import { Table, withQuery } from '@shared/index';
+import { Table, withQuery } from '@shared/components';
 import { useEffect, useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import {

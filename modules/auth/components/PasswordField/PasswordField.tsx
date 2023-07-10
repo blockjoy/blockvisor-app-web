@@ -4,7 +4,7 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
 import { typo } from 'styles/utils.typography.styles';
-import { useClickOutside } from '@shared/index';
+import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './PasswordField.styles';
 import { isMobile } from 'react-device-detect';
 

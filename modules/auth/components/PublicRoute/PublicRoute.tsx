@@ -1,6 +1,6 @@
 import { useIdentity } from '@modules/auth';
 import { EmptyColumn } from '@shared/components';
-import { ROUTES } from '@shared/index';
+import { ROUTES } from '@shared/constants/routes';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';

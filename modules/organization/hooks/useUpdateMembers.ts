@@ -1,5 +1,4 @@
 import { authAtoms } from '@modules/auth';
-import { ROUTES } from '@shared/index';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';

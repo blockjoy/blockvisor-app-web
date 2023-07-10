@@ -11,7 +11,7 @@ export const styles = {
   `,
   menu: (theme: ITheme) => css`
     position: absolute;
-    z-index: 1;
+    z-index: 5;
     top: 40px;
     left: 0;
     font-size: 14px;

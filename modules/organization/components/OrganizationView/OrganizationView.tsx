@@ -2,12 +2,7 @@ import { useRouter } from 'next/router';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { queryAsString } from '@shared/utils/query';
 import { spacing } from 'styles/utils.spacing.styles';
-import {
-  EmptyColumn,
-  TableAdd,
-  BackButton,
-  SkeletonView,
-} from '@shared/components';
+import { EmptyColumn, TableAdd, SkeletonView } from '@shared/components';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import {
   getOrgMemberRole,
@@ -26,20 +21,15 @@ import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { toast } from 'react-toastify';
-import { isValidEmail } from '@shared/index';
 import { createPath } from '@modules/organization/utils/createPath';
-import { isMobile } from 'react-device-detect';
 
 export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const { id } = router.query;
   const { getOrganization, organization, isLoading, setIsLoading } =
     useGetOrganization();
-
-  const form = useForm<{ email: string }>();
 
   const { getSentInvitations, setSentInvitationsLoadingState } =
     useInvitations();
@@ -65,7 +55,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
 
   const { inviteMembers } = useInviteMembers();
 
-  const handleInviteClicked = (email: string) => {
+  const handleInviteClicked = async (email: string) => {
     setIsInviting(true);
 
     const isMemberOrInvited = checkIfExists(
@@ -76,7 +66,6 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
 
     if (!isMemberOrInvited) {
       inviteMembers(email!, () => {
-        form.reset();
         getSentInvitations(id!);
         setIsInviting(false);
         router.push(createPath(id as string, 'invitations'));
@@ -89,11 +78,8 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
         toast.error('Already invited');
       }
     }
-  };
 
-  const onSubmit: SubmitHandler<{ email: string }> = async ({ email }) => {
-    handleInviteClicked(email);
-    form.reset();
+    return true;
   };
 
   useEffect(() => {
@@ -111,11 +97,6 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      {isMobile && (
-        <div css={spacing.top.medium}>
-          <BackButton />
-        </div>
-      )}
       <OrganizationViewHeader />
       {isLoading === 'loading' ? (
         <div css={spacing.top.medium}>
@@ -135,19 +116,13 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
                 <TableAdd
                   buttonText="Invite"
                   buttonWidth="70px"
-                  field="email"
                   placeholder="Invite Member"
                   placeholderFocused="Enter an email address"
-                  onSubmit={onSubmit}
+                  onSubmit={async (email: string) =>
+                    await handleInviteClicked(email)
+                  }
                   isLoading={isInviting}
-                  form={form}
-                  validationOptions={{
-                    required: 'An email address is required',
-                    pattern: {
-                      value: isValidEmail(),
-                      message: 'Email format is not correct',
-                    },
-                  }}
+                  isEmail
                 />
               )}
               {children}

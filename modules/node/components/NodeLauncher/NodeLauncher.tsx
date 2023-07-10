@@ -10,7 +10,7 @@ import { EmptyColumn, PageTitle } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
-import { ROUTES } from '@shared/index';
+import { ROUTES } from '@shared/constants/routes';
 import {
   UiType,
   NodeProperty,

@@ -1,13 +1,7 @@
-import { css, useTheme } from '@emotion/react';
-import { Button, Input } from '@shared/components';
-import { useState } from 'react';
-import {
-  FieldValues,
-  FormProvider,
-  RegisterOptions,
-  SubmitHandler,
-  UseFormReturn,
-} from 'react-hook-form';
+import { css } from '@emotion/react';
+import { Button } from '@shared/components';
+import { checkIfValidEmail } from '@shared/utils/validation';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { styles } from './TableAdd.styles';
 
 type Props = {
@@ -16,68 +10,79 @@ type Props = {
   buttonText?: string;
   buttonWidth?: string;
   isLoading: boolean;
-  onSubmit: SubmitHandler<any>;
-  form: UseFormReturn<any, any>;
-  field: string;
-  validationOptions?: RegisterOptions<FieldValues, string>;
+  onSubmit: (value: string) => Promise<boolean>;
+  isEmail?: boolean;
 };
 
 export const TableAdd = ({
-  form,
-  field,
   isLoading,
+  isEmail,
   buttonText = 'Add',
   buttonWidth = '58px',
   onSubmit,
   placeholder = 'New Organization',
   placeholderFocused,
-  validationOptions,
 }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
-  const theme = useTheme();
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [value, setValue] = useState('');
 
-  const handleSubmit = form.handleSubmit((values) => {
-    if (!form.formState.isSubmitted) {
-      onSubmit({
-        [field]: values[field],
-      });
+  const isValid =
+    !isSubmitted && isEmail ? checkIfValidEmail(value) : value.length > 0;
+
+  const handleSubmit = async () => {
+    if (isValid) {
+      setIsSubmitted(true);
+      await onSubmit(value);
+      setValue('');
+      setIsSubmitted(false);
     }
-  });
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleFormSubmit = () => {
+    handleSubmit();
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!['Enter'].includes(e.key)) return;
+    handleSubmit();
+  };
 
   return (
-    <>
-      <FormProvider {...form}>
-        <form onSubmit={handleSubmit} css={styles.wrapper}>
-          <Input
-            placeholder={
-              isFocused && placeholderFocused ? placeholderFocused : placeholder
-            }
-            name={field}
-            type="text"
-            inputSize="small"
-            inputStyles={[styles.input(theme, buttonWidth)]}
-            autoComplete="off"
-            required
-            validationOptions={validationOptions}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-          />
-          <div css={styles.button}>
-            <Button
-              disabled={!form.formState.isValid}
-              loading={isLoading}
-              style="secondary"
-              size="small"
-              type="submit"
-              css={css`
-                width: ${buttonWidth};
-              `}
-            >
-              {buttonText}
-            </Button>
-          </div>
-        </form>
-      </FormProvider>
-    </>
+    <div css={styles.wrapper}>
+      <input
+        placeholder={
+          isFocused && placeholderFocused ? placeholderFocused : placeholder
+        }
+        type="text"
+        css={styles.input(buttonWidth)}
+        autoComplete="off"
+        required
+        value={value}
+        onKeyDown={handleKeyDown}
+        onInput={handleChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => (!value.length ? setIsFocused(false) : null)}
+      />
+      <div css={styles.button}>
+        <Button
+          disabled={!isValid}
+          loading={isLoading}
+          style="secondary"
+          size="small"
+          type="submit"
+          css={css`
+            width: ${buttonWidth};
+          `}
+          onClick={handleFormSubmit}
+        >
+          {buttonText}
+        </Button>
+      </div>
+    </div>
   );
 };
