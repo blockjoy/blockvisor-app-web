@@ -1,14 +1,14 @@
-import { ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { styles } from './Alert.styles';
 
-type AlertProps = {
+type Props = {
   isSuccess?: boolean;
   isRounded?: boolean;
   children: ReactNode;
   maxWidth?: string;
 };
 
-export const Alert = ({
+export const Alert: FC<Props> = ({
   isSuccess,
   isRounded,
   children,
