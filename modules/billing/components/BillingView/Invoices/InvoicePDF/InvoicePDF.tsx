@@ -1,6 +1,6 @@
 import { Page, Text, View, Document } from '@react-pdf/renderer';
 import { BILL_HEADERS, INVOICE_DATA_HEADERS } from '@shared/index';
-import { InvoiceLogo } from './InvoiceLogo';
+import { InvoiceLogo } from './InvoiceLogo/InvoiceLogo';
 import { styles } from './InvoicePDF.styles';
 import { formatters } from '@shared/index';
 import { Invoice } from 'chargebee-typescript/lib/resources';
@@ -23,8 +23,9 @@ export const InvoicePDF = ({
 }: InvoicePDFProps) => (
   <Document>
     <Page size="A4" style={styles.page}>
+      {/* // IF logo is needed then use Svg, Path, etc */}
       {/* Company Brand */}
-      <View
+      {/* <View
         style={[
           styles.flex,
           styles.flexRow,
@@ -35,7 +36,7 @@ export const InvoicePDF = ({
         <View style={[styles.flex, styles.h40]}>
           <InvoiceLogo />
         </View>
-      </View>
+      </View> */}
 
       {/* Company Info */}
       <View style={styles.mbMed}>

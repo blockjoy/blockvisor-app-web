@@ -1,6 +1,6 @@
 import { Badge, TableBlock } from '@shared/components';
 import { formatters } from '@shared/index';
-import { InvoiceDownloadPDF } from '@modules/billing';
+import { InvoiceDownload } from '@modules/billing';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 
 export const mapInvoicesToRows = (invoices?: Invoice[]) => {
@@ -83,7 +83,7 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
         },
         {
           key: '6',
-          component: <InvoiceDownloadPDF invoice={invoice} />,
+          component: <InvoiceDownload invoice={invoice} />,
         },
       ],
     })) ?? [];

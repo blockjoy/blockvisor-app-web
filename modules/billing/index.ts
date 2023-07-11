@@ -18,21 +18,17 @@ export * from './components/BillingView/Estimates/Estimates';
 export * from './components/BillingView/Invoices/Invoices';
 export * from './components/BillingView/Invoices/InvoiceView/InvoiceView';
 export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
-export * from './components/BillingView/Invoices/InvoiceDownload/InvoiceDownload';
-export * from './components/BillingView/Invoices/InvoiceDownload/InvoiceDownloadPDF';
 export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
 export * from './components/BillingView/Invoices/InvoicePDF/InvoicePDF';
 
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CreditCardForm';
 export * from './components/BillingView/PaymentMethods/PaymentMethodDialog/PaymentMethodDialog';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
-export * from './components/BillingView/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelect';
-export * from './components/BillingView/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelector';
-export * from './components/BillingView/PaymentMethods/PaymentPreview/PaymentPreview';
-export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
-export * from './components/BillingView/PaymentMethods/PaymentRequired/PaymentRequired';
-export * from './components/BillingView/PaymentMethods/PaymentMethods/PaymentMethods';
+export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
+export * from './components/BillingView/PaymentMethods/PaymentMethods';
+export * from './components/BillingView/PaymentMethods/PaymentMethodsSelect/PaymentMethodsSelect';
+export * from './components/BillingView/PaymentMethods/PaymentPreview/PaymentPreview';
 
 export * from './components/BillingView/Plan/Plan';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanParams/PlanParams';
@@ -44,6 +40,10 @@ export * from './components/BillingView/Subscription/SubscriptionCancellation/Su
 export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionInfo/SubscriptionInfo';
 export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionPreview';
 export * from './components/BillingView/Subscription/SubscriptionUpdate/SubscriptionUpdate';
+
+export * from './components/Shared/InvoiceDownload/InvoiceDownload';
+export * from './components/Shared/PaymentMethodsDropdown/PaymentMethodsDropdown';
+export * from './components/Shared/PaymentRequired/PaymentRequired';
 
 export * from './constants/billing';
 export * from './constants/chargebee';

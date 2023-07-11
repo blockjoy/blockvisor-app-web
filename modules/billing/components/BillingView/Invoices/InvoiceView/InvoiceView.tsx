@@ -17,7 +17,7 @@ import { styles } from './InvoiceView.styles';
 import IconCalendar from '@public/assets/icons/common/Calendar.svg';
 import {
   BillingAddressPreview,
-  InvoiceDownloadPDF,
+  InvoiceDownload,
   Services,
   useInvoice,
 } from '@modules/billing';
@@ -67,7 +67,7 @@ export const InvoiceView = () => {
                         </div>
                       )}
                     </div>
-                    <InvoiceDownloadPDF invoice={invoice} />
+                    <InvoiceDownload invoice={invoice} />
                   </div>
                   <div css={styles.details}>
                     <DetailsView headline="Invoice recepient">
