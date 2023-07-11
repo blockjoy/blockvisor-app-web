@@ -3,13 +3,18 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (theme: ITheme) => css`
     flex: 1 1 auto;
     min-width: 0;
+    height: 44px;
     width: 100%;
     position: relative;
     display: flex;
     align-items: center;
+    border: 1px solid ${theme.colorBorder};
+    border-radius: 6px;
+    padding-left: 10px;
+    transition: 0.3s;
 
     :hover .title {
       opacity: 1;
@@ -23,6 +28,15 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       margin-right: 6px;
     }
+  `,
+  label: (theme: ITheme) => css`
+    position: absolute;
+    top: -5px;
+    left: 6px;
+    padding: 0 4px;
+    color: ${theme.colorDefault};
+    font-size: 10px;
+    background: #2a2c2b;
   `,
   activeOrg: css`
     overflow: hidden;
@@ -58,7 +72,6 @@ export const styles = {
     overflow: hidden;
     text-align: left;
     text-overflow: ellipsis;
-    cursor: pointer;
 
     :hover,
     :active,
@@ -73,6 +86,7 @@ export const styles = {
     text-overflow: ellipsis;
     padding-right: 8px;
     line-height: 1.8;
+    font-size: 14px;
   `,
   activeOrganization: css`
     cursor: default;
@@ -87,9 +101,9 @@ export const styles = {
     top: 54px;
     right: 5px;
     left: 0;
-    max-width: 190px;
-    min-width: 190px;
-    width: 190px;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
   `,
   dropdownInner: css`
     max-height: 199px;
@@ -148,17 +162,9 @@ export const styles = {
       }
     }
   `,
-  bubble: (theme: ITheme) => css`
-    display: grid;
-    place-items: center;
-    width: 22px;
-    height: 22px;
-    flex: 0 0 22px;
-    border-radius: 50%;
-    background: ${theme.colorAccent};
-    color: ${theme.colorPrimaryText};
-    font-weight: 600;
-    font-size: 11px;
-    text-align: center;
+  addOrg: (theme: ITheme) => css`
+    padding: 0 14px;
+    border-top: 1px solid ${theme.colorBorderGrey};
+    margin-bottom: 10px;
   `,
 };
