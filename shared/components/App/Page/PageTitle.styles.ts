@@ -105,4 +105,10 @@ export const styles = {
     display: flex;
     justify-content: flex-end;
   `,
+  rightWrapper: css`
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+  `,
 };
