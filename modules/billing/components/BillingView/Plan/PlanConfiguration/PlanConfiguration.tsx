@@ -9,9 +9,9 @@ import {
   useSubscription,
   BILLING_PLAN_FEATURES,
   billingSelectors,
-  PaymentMethodsSelect,
   usePaymentMethods,
   PlanParams,
+  PaymentMethodsDropdown,
 } from '@modules/billing';
 import { Alert, Button, ButtonGroup, SvgIcon } from '@shared/components';
 import { formatters, TableSkeleton } from '@shared/index';
@@ -91,7 +91,7 @@ export const PlanConfiguration = ({
       />
       <div css={spacing.bottom.medium}>
         <h3 css={styles.headline}>Payment Method</h3>
-        <PaymentMethodsSelect
+        <PaymentMethodsDropdown
           primaryId={paymentMethodId}
           handlePaymentMethod={handlePaymentMethod}
         />

@@ -13,20 +13,20 @@ import {
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { styles } from './PaymentMethodsSelect.styles';
+import { styles } from './PaymentMethodsDropdown.styles';
 import IconPlus from '@public/assets/icons/common/Plus.svg';
 import { useRouter } from 'next/router';
 import { Badge, ROUTES } from '@shared/index';
 
-type PaymentMethodsSelectProps = {
+type PaymentMethodsDropdownProps = {
   primaryId?: string;
   handlePaymentMethod: (paymentMethod: PaymentSource) => void;
 };
 
-export const PaymentMethodsSelect = ({
+export const PaymentMethodsDropdown = ({
   primaryId,
   handlePaymentMethod,
-}: PaymentMethodsSelectProps) => {
+}: PaymentMethodsDropdownProps) => {
   const router = useRouter();
   const customer = useRecoilValue(billingSelectors.customer);
   const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);

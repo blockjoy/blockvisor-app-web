@@ -12,11 +12,11 @@ import IconDownload from '@public/assets/icons/common/Download.svg';
 import { SvgIcon } from '@shared/components';
 import { InvoicePDF } from '@modules/billing';
 
-export type InvoiceDownloadProps = {
+export type InvoiceDownloadPDFProps = {
   invoice: Invoice;
 };
 
-export const InvoiceDownload = ({ invoice }: InvoiceDownloadProps) => {
+export const InvoiceDownloadPDF = ({ invoice }: InvoiceDownloadPDFProps) => {
   const handleDownloadClick = (
     event: React.MouseEvent<HTMLAnchorElement>,
   ): void => {
