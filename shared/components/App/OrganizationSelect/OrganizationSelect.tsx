@@ -37,7 +37,6 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
 
   const createOrganization = useCreateOrganization();
   const { addToOrganizations } = useGetOrganizations();
-  const { setOrganization } = useGetOrganization();
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -57,7 +56,6 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
       setIsLoading(true);
       await createOrganization(name, async (org: Org) => {
         addToOrganizations(org);
-        setOrganization(org);
         switchOrganization(org.id, name);
       });
     } catch (error) {
