@@ -43,7 +43,7 @@ const paymentMethod = atom<PaymentSource | null>({
   default: null,
 });
 
-const paymentMethodError = atom<string | null>({
+const paymentMethodError = atom<PaymentError | null>({
   key: 'billing.paymentMethod.error',
   default: null,
 });
