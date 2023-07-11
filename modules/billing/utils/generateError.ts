@@ -18,7 +18,7 @@ export const generateError = (error?: BillingError): string => {
 export const generatePaymentError = (error?: PaymentError): string => {
   switch (error?.name) {
     case PaymentErrorCodes.PAYMENT_ATTEMPT_REFUSED:
-      return 'Payment declined due to risk concerns. Please verify your details or try a different method.';
+      return 'Payment declined. Please verify your details or try a different method.';
     default:
       return 'Something went wrong. Please try again later.';
   }

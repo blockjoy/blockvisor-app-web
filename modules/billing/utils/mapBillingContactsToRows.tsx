@@ -4,7 +4,7 @@ import { Contact } from 'chargebee-typescript/lib/resources/customer';
 
 export const mapBillingContactsToRows = (
   billingContacts: Contact[],
-  handleRemove: (id: string) => void,
+  handleRemove: (contact: Contact) => void,
 ) => {
   const headers: TableHeader[] = [
     {
