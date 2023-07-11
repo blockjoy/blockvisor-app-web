@@ -13,6 +13,7 @@ import {
   billingSelectors,
   CardHolder,
   CreditCardForm,
+  generatePaymentError,
   PaymentMethodInfoForm,
   useBillingAddress,
   useCustomer,
@@ -126,6 +127,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     setIsDefaultAddress(!isDefaultAddress);
   };
 
+  const errorMessage = error ? generatePaymentError(error) : null;
+
   return (
     <div css={styles.wrapper}>
       <h4 css={styles.headline}>CARD DETAILS</h4>
@@ -176,7 +179,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
         )}
       </div>
 
-      {error && (
+      {errorMessage && (
         <p
           css={[
             typo.smaller,
@@ -185,7 +188,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
             spacing.bottom.medium,
           ]}
         >
-          An error occured. Please check your inputs.
+          {errorMessage}
         </p>
       )}
 
