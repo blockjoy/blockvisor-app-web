@@ -115,4 +115,9 @@ export const styles = {
       font-size: 14px;
     }
   `,
+  nodeStatus: css`
+    @media ${breakpoints.fromLrg} {
+      margin-left: 10px;
+    }
+  `,
 };

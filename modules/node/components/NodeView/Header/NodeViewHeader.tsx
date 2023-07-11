@@ -1,9 +1,4 @@
-import {
-  PageSection,
-  Skeleton,
-  SkeletonGrid,
-  SvgIcon,
-} from '@shared/components';
+import { NodeStatus, Skeleton, SkeletonGrid } from '@shared/components';
 import { FC, useState } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -11,7 +6,6 @@ import { styles } from './NodeViewHeader.styles';
 import { BlockchainIcon } from '@shared/components';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { useNodeView } from '@modules/node';
-import IconNodes from '@public/assets/icons/app/Node.svg';
 import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
 import { NodeViewHeaderDelete } from './Delete/NodeViewHeaderDelete';
 import { nodeTypeList } from '@shared/constants/lookups';
@@ -73,6 +67,9 @@ export const NodeViewHeader: FC = () => {
                       </small>
                     )}
                   </div>
+                </div>
+                <div css={styles.nodeStatus}>
+                  <NodeStatus status={node.status} />
                 </div>
                 <div css={styles.actions}>
                   <NodeViewHeaderActions

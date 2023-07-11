@@ -26,6 +26,11 @@ export const styles = {
     border-radius: 6px;
     padding-top: 14px;
   `,
+  cardOnlyShowOnMobile: css`
+    @media ${breakpoints.fromXLrg} {
+      display: none;
+    }
+  `,
   cardValue: (theme: ITheme) => css`
     font-style: normal;
     font-size: 14px;
