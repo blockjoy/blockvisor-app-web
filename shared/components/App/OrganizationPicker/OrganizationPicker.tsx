@@ -32,6 +32,8 @@ export const OrganizationPicker = ({ isRightAligned = false }: Props) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const [isAdding, setIsAdding] = useState<boolean>(false);
+
   const setIsSidebarOpen = useSetRecoilState(sidebarOpen);
 
   const defaultOrganization = useRecoilValue(

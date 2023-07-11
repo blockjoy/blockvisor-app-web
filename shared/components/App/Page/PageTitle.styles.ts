@@ -99,4 +99,10 @@ export const styles = {
       display: none;
     }
   `,
+  rightWrapper: css`
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+  `,
 };

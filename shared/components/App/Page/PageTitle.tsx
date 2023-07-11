@@ -9,6 +9,7 @@ import { FC, ReactNode } from 'react';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './PageTitle.styles';
 import { PageTitleLaunchNode } from './PageTitleLaunchNode';
+import { PageTitleOrgPicker } from './PageTitleOrgPicker';
 
 interface Props {
   title: string;

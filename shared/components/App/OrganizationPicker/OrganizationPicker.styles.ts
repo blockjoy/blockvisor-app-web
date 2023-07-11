@@ -25,6 +25,15 @@ export const styles = {
     border-bottom: 1px solid ${theme.colorBorderGrey};
     user-select: none;
   `,
+  label: (theme: ITheme) => css`
+    position: absolute;
+    top: -5px;
+    left: 6px;
+    padding: 0 4px;
+    color: ${theme.colorDefault};
+    font-size: 10px;
+    background: #2a2c2b;
+  `,
   activeOrg: css`
     display: flex;
     justify-content: space-between;
