@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import {
-  PaymentMethodsSelect,
+  PaymentMethodsDropdown,
   useCustomer,
   usePaymentMethods,
   useSubscription,
@@ -12,7 +12,7 @@ import {
   InputLabel,
   TableSkeleton,
 } from '@shared/components';
-import { styles } from './PaymentMethodsSelector.styles';
+import { styles } from './PaymentMethodsSelect.styles';
 import { typo } from 'styles/utils.typography.styles';
 
 type PaymentMethodsSelectorProps = {
@@ -65,7 +65,7 @@ export const PaymentMethodsSelector = ({
           >
             Select payment method
           </InputLabel>
-          <PaymentMethodsSelect
+          <PaymentMethodsDropdown
             handlePaymentMethod={handleSelect}
             primaryId={activePaymentMethod?.id}
           />
