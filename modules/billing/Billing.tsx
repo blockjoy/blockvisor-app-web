@@ -6,12 +6,12 @@ import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { PageSection, PageTitle, Tabs } from '@shared/components';
 import { ROUTES, useTabs } from '@shared/index';
 import {
-  Subscription,
   Invoices,
   PaymentPreview,
   BillingContacts,
   billingSelectors,
   billingAtoms,
+  BillingView,
 } from '@modules/billing';
 import { useHasPermissions, Permissions } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
@@ -46,7 +46,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
           value: '1',
           component: (
             <PageSection bottomBorder={false}>
-              <Subscription item={item} itemPrices={itemPrices} />
+              <BillingView item={item} itemPrices={itemPrices} />
             </PageSection>
           ),
         },
@@ -81,7 +81,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         (tabItem) =>
           tabItem.value === '1' || (subscription && canUpdateBilling),
       ),
-    [subscription],
+    [subscription, canUpdateBilling],
   );
   const { activeTab, setActiveTab } = useTabs(tabItems.length);
 
