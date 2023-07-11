@@ -1,53 +1,56 @@
 export * from './Billing';
 
-export * from './components/BillingInfo/BillingInfo';
-export * from './components/BillingInfo/BillingAddress/BillingAddress';
-export * from './components/BillingInfo/BillingAddress/BillingAddressForm/BillingAddressForm';
-export * from './components/BillingInfo/BillingAddress/BillingAddressPreview/BillingAddressPreview';
-export * from './components/BillingInfo/BillingContacts/BillingContactDialog/BillingContactDialog';
-export * from './components/BillingInfo/BillingContacts/BillingContactForm/BillingContactForm';
-export * from './components/BillingInfo/BillingContacts/BillingContacts';
-export * from './components/BillingInfo/BillingContacts/BillingContactsList/BillingContactsList';
-export * from './components/BillingInfo/BillingContacts/BillingContactsPreview/BillingContactsPreview';
-export * from './components/BillingInfo/BillingAddress/BillingAddressSelect/BillingAddressSelect';
+export * from './components/BillingView/BillingView';
 
-export * from './components/Invoices/Invoices';
-export * from './components/Invoices/InvoiceView/InvoiceView';
-export * from './components/Invoices/InvoiceView/Services/Services';
-export * from './components/Invoices/InvoiceDownload/InvoiceDownload';
-export * from './components/Invoices/InvoiceDownload/InvoiceDownloadPDF';
-export * from './components/Invoices/InvoicesList/InvoicesList';
-export * from './components/Invoices/InvoicePDF/InvoicePDF';
+export * from './components/BillingView/BillingInfo/BillingInfo';
+export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddress';
+export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddressForm/BillingAddressForm';
+export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddressPreview/BillingAddressPreview';
+export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactDialog/BillingContactDialog';
+export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactForm/BillingContactForm';
+export * from './components/BillingView/BillingInfo/BillingContacts/BillingContacts';
+export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactsList/BillingContactsList';
+export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactsPreview/BillingContactsPreview';
+export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddressSelect/BillingAddressSelect';
 
-export * from './components/Overview/Overview';
+export * from './components/BillingView/Estimates/Estimates';
 
-export * from './components/PaymentMethods/CreditCardForm/CreditCardForm';
-export * from './components/PaymentMethods/PaymentMethodDialog/PaymentMethodDialog';
-export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
-export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelect';
-export * from './components/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelector';
-export * from './components/PaymentMethods/PaymentPreview/PaymentPreview';
-export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
-export * from './components/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
-export * from './components/PaymentMethods/PaymentRequired/PaymentRequired';
-export * from './components/PaymentMethods/PaymentMethods/PaymentMethods';
+export * from './components/BillingView/Invoices/Invoices';
+export * from './components/BillingView/Invoices/InvoiceView/InvoiceView';
+export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
+export * from './components/BillingView/Invoices/InvoiceDownload/InvoiceDownload';
+export * from './components/BillingView/Invoices/InvoiceDownload/InvoiceDownloadPDF';
+export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
+export * from './components/BillingView/Invoices/InvoicePDF/InvoicePDF';
 
-export * from './components/Subscription/PlanSelect/PlanSelect';
-export * from './components/Subscription/SinglePlan/SinglePlan';
-export * from './components/Subscription/Subscription';
-export * from './components/Subscription/SubscriptionCancellation/SubscriptionCancellation';
-export * from './components/Subscription/SubscriptionPreview/SubscriptionInfo/SubscriptionInfo';
-export * from './components/Subscription/SubscriptionPreview/SubscriptionItems/SubscriptionItems';
-export * from './components/Subscription/SubscriptionPreview/SubscriptionPreview';
-export * from './components/Subscription/SubscriptionUpdate/SubscriptionUpdate';
-export * from './components/Subscription/PlanSelect/PlanParams/PlanParams';
+export * from './components/BillingView/PaymentMethods/CreditCardForm/CreditCardForm';
+export * from './components/BillingView/PaymentMethods/PaymentMethodDialog/PaymentMethodDialog';
+export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
+export * from './components/BillingView/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelect';
+export * from './components/BillingView/PaymentMethods/PaymentMethodsSelector/PaymentMethodsSelector';
+export * from './components/BillingView/PaymentMethods/PaymentPreview/PaymentPreview';
+export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
+export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
+export * from './components/BillingView/PaymentMethods/PaymentRequired/PaymentRequired';
+export * from './components/BillingView/PaymentMethods/PaymentMethods/PaymentMethods';
+
+export * from './components/BillingView/Plan/Plan';
+export * from './components/BillingView/Plan/PlanConfiguration/PlanParams/PlanParams';
+export * from './components/BillingView/Plan/PlanList/PlanList';
+export * from './components/BillingView/Plan/PlanConfiguration/PlanConfiguration';
+
+export * from './components/BillingView/Subscription/Subscription';
+export * from './components/BillingView/Subscription/SubscriptionCancellation/SubscriptionCancellation';
+export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionInfo/SubscriptionInfo';
+export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionPreview';
+export * from './components/BillingView/Subscription/SubscriptionUpdate/SubscriptionUpdate';
 
 export * from './constants/billing';
 export * from './constants/chargebee';
 export * from './constants/common';
 export * from './constants/routes';
 
-export * from './helpers/chargebeeClientInstance';
+export * from './services/chargebee';
 
 export * from './hooks/useBillingAddress';
 export * from './hooks/useBillingAddressForm';
@@ -67,7 +70,6 @@ export * from './hooks/useUpdateSubscription';
 export * from './store/billingAtoms';
 export * from './store/billingSelectors';
 
-export * from './ui/BillingUIContext';
 export * from './ui/invoices/InvoicesUIContext';
 export * from './ui/invoices/InvoicesUIHelpers';
 
