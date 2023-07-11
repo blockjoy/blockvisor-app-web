@@ -1,5 +1,6 @@
 import { useIdentity } from '@modules/auth';
-import { LoadingSpinner, PUBLIC_ROUTES, ROUTES } from '@shared/index';
+import { LoadingSpinner } from '@shared/components';
+import { PUBLIC_ROUTES, ROUTES } from '@shared/constants/routes';
 import { useEffect, useState } from 'react';
 
 interface Props {

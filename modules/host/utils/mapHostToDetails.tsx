@@ -1,5 +1,6 @@
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { formatters, HostOs } from '@shared/index';
+import { formatters } from '@shared/utils/formatters';
+import { HostOs } from '@shared/components';
 
 export const mapHostToDetails = (host: Host) => {
   const details: { label: string; data: any | undefined }[] = [

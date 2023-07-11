@@ -1,12 +1,10 @@
 import { PasswordToggle } from '@modules/auth';
 import { Input } from '@shared/components';
-import { withRHF } from '@shared/index';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentStory } from '@storybook/react';
 
 export default {
   title: 'Components/Input',
   component: Input,
-  decorators: [withRHF()],
 };
 
 const Template: ComponentStory<typeof Input> = (args) => {

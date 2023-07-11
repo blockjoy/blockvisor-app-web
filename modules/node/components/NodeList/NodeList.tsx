@@ -3,12 +3,17 @@ import { useRecoilValue } from 'recoil';
 import { isEqual } from 'lodash';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
-import { EmptyColumn, PageTitle, Table, TableGrid } from '@shared/components';
+import {
+  TableSkeleton,
+  EmptyColumn,
+  PageTitle,
+  Table,
+  TableGrid,
+} from '@shared/components';
 import { toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
-import { TableSkeleton } from '@shared/index';
 import { useNodeUIContext } from '../../ui/NodeUIContext';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { resultsStatus } from '@modules/node/utils';

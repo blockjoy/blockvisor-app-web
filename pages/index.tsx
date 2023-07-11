@@ -1,6 +1,6 @@
 import { useIdentity } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
-import { ROUTES } from '@shared/index';
+import { ROUTES } from '@shared/constants/routes';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

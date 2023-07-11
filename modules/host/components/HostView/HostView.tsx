@@ -2,7 +2,7 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { styles } from './HostView.styles';
 import { wrapper } from 'styles/wrapper.styles';
-import { EmptyColumn, TableSkeleton } from '@shared/components';
+import { EmptyColumn, SkeletonView } from '@shared/components';
 import {
   useHostView,
   HostViewHeader,
@@ -26,7 +26,7 @@ export const HostView = ({ children }: HostViewProps) => {
     (async () => {
       window.scrollTo(0, 0);
       if (router.isReady) {
-        await listNodesByHost(id as string);
+        listNodesByHost(id as string);
         loadHost(id);
       }
     })();
@@ -54,7 +54,7 @@ export const HostView = ({ children }: HostViewProps) => {
           <div css={[styles.wrapper, wrapper.main]}>
             {isLoading !== 'finished' && !host?.id ? (
               <div css={styles.loader}>
-                <TableSkeleton />
+                <SkeletonView />
               </div>
             ) : (
               <>

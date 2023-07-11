@@ -1,13 +1,17 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { isEqual } from 'lodash';
 import { useRecoilValue } from 'recoil';
-import { EmptyColumn, PageTitle, Table, TableGrid } from '@shared/components';
+import {
+  TableSkeleton,
+  EmptyColumn,
+  PageTitle,
+  Table,
+  TableGrid,
+} from '@shared/components';
 import { styles } from './HostList.styles';
-import { TableSkeleton } from '@shared/index';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { NodeTitle } from '@modules/node';
 import {
   hostAtoms,
   HostFilters,

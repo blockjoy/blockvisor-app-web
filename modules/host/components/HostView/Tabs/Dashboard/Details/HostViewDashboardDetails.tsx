@@ -1,6 +1,6 @@
 import { DetailsTable, FormHeaderCaps } from '@shared/components';
 import { useHostView, mapHostToDashboardDetails } from '@modules/host';
-import { ROUTES } from '@shared/index';
+import { ROUTES } from '@shared/constants/routes';
 
 export const HostViewDashboardDetails = () => {
   const { host } = useHostView();

@@ -3,16 +3,10 @@ import {
   useGetOrganizations,
 } from '@modules/organization';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
-import {
-  // hostFiltersCustomValues,
-  hostFiltersDefaults,
-  // hostFiltersSteps,
-} from '@shared/constants/lookups';
-import { formatters } from '@shared/index';
+import { hostFiltersDefaults } from '@shared/constants/lookups';
 import { isEqual } from 'lodash';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
-import { hostSelectors } from '../store/hostSelectors';
 import { HostUIProps } from '../ui/HostUIContext';
 import { InitialFilter, InitialQueryParams } from '../ui/HostUIHelpers';
 import { buildParams } from '../utils/buildParams';

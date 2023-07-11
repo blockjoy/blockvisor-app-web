@@ -7,6 +7,9 @@ import { wrapper } from 'styles/wrapper.styles';
 import { PropsWithChildren } from 'react';
 import { invitationAtoms } from '../store/invitationAtoms';
 import IconOrganizations from '@public/assets/icons/app/Organization.svg';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/constants/routes';
+import { isMobile } from 'react-device-detect';
 
 type Props = {
   isListOnly?: boolean;
@@ -18,10 +21,17 @@ export const OrganizationManagement = ({
   isListOnly,
   hideList,
 }: Props) => {
+  const router = useRouter();
   const invititations = useRecoilValue(invitationAtoms.receivedInvitations);
   return (
     <>
-      <PageTitle title="Organizations" icon={<IconOrganizations />} />
+      <PageTitle
+        title="Organizations"
+        icon={<IconOrganizations />}
+        onTitleClick={
+          isMobile ? () => router.push(ROUTES.ORGANIZATIONS) : undefined
+        }
+      />
       <div css={[styles.wrapper, wrapper.main]}>
         {!hideList && (
           <div css={styles.leftWrapper}>

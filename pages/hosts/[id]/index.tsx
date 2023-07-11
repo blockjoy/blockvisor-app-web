@@ -1,14 +1,12 @@
 import { AppLayout } from '@modules/layout';
-import { HostView, HostViewDashboard } from '@modules/host';
+import { HostView, HostViewDetails } from '@modules/host';
 
-const Host = () => <HostViewDashboard />;
+const Host = () => <HostViewDetails />;
 
-Host.getLayout = function getLayout() {
+Host.getLayout = function getLayout(page: any) {
   return (
     <AppLayout isPageFlex>
-      <HostView>
-        <HostViewDashboard />
-      </HostView>
+      <HostView>{page}</HostView>
     </AppLayout>
   );
 };

@@ -10,8 +10,7 @@ export const HostViewTabs = () => {
     `/hosts/${query.id}${path ? `/${path}` : ''}`;
 
   const tabs = [
-    { href: createPath(''), name: 'Dashboard' },
-    { href: createPath('details'), name: 'Details' },
+    { href: createPath(''), name: 'Details' },
     { href: createPath('nodes'), name: 'Nodes' },
   ];
 

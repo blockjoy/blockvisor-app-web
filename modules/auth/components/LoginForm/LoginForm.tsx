@@ -4,7 +4,7 @@ import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQ
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
-import { ROUTES } from '@shared/index';
+import { ROUTES } from '@shared/constants/routes';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
