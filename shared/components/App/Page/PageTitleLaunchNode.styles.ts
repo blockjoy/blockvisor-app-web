@@ -9,9 +9,10 @@ export const styles = {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding: 0 24px 0 18px;
-    margin-left: auto;
+    padding: 0;
+    margin-left: 8px;
     height: 44px;
+    width: 44px;
     border-radius: 6px;
     background: ${theme.colorPrimary};
     color: ${theme.colorPrimaryText};
@@ -34,24 +35,6 @@ export const styles = {
       transition: 0.3s;
       height: 16px;
       width: 16px;
-      flex: 0 0 16px;
-    }
-
-    @media ${breakpoints.toSml} {
-      width: 44px;
-      min-width: 44px;
-    }
-
-    @media ${breakpoints.toLrg} {
-      gap: 8px;
-      padding: 0 10px;
-      transform-origin: 100% 50%;
-      min-width: 0;
-
-      svg {
-        width: 30px;
-        flex: 0 0 30px;
-      }
     }
   `,
   buttonText: (theme: ITheme) => css`
