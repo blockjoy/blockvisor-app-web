@@ -5,6 +5,7 @@ import { typo } from 'styles/utils.typography.styles';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './PageTitle.styles';
 import { PageTitleLaunchNode } from './PageTitleLaunchNode';
+import { PageTitleOrgPicker } from './PageTitleOrgPicker';
 
 interface Props {
   title: string;
@@ -58,8 +59,11 @@ export const PageTitle: FC<Props> = ({
             </>
           )}
         </div>
-        <PageTitleLaunchNode />
-        <ProfileDropdown />
+        <div css={styles.rightWrapper}>
+          <PageTitleOrgPicker />
+          <PageTitleLaunchNode />
+          <ProfileDropdown />
+        </div>
       </div>
     </header>
   );

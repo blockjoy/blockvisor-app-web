@@ -83,4 +83,10 @@ export const styles = {
     padding-left: 8px;
     height: 22px;
   `,
+  rightWrapper: css`
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+  `,
 };
