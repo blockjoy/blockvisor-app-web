@@ -1,47 +1,26 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { chargebee } from 'utils/billing/chargebeeInstance';
-import { Subscription } from 'chargebee-typescript/lib/resources';
 import { _subscription } from 'chargebee-typescript';
+import { Subscription } from 'chargebee-typescript/lib/resources';
+import { chargebee } from 'utils/billing/chargebeeInstance';
+import { createHandler } from 'utils/billing/createHandler';
 
-const createSubscription = async (
-  id: string,
-  params: _subscription.create_with_items_params,
-): Promise<Subscription> => {
-  return new Promise((resolve, reject) => {
-    chargebee.subscription.create_with_items(id, params).request(function (
-      error: any,
-      result: {
-        subscription: Subscription;
-      },
-    ) {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(result.subscription);
-      }
-    });
-  });
+const requestCallback = ({
+  id,
+  params,
+}: {
+  id: string;
+  params: _subscription.create_with_items_params;
+}) => chargebee.subscription.create_with_items(id, params);
+
+const mappingCallback = (result: {
+  subscription: Subscription;
+}): Subscription => {
+  return result.subscription;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Subscription | { message: string }>,
-) {
-  if (req.method === 'POST') {
-    try {
-      const { id, params } = req.body as {
-        id: string;
-        params: _subscription.create_with_items_params;
-      };
+const handler = createHandler<
+  { id: string; params: _subscription.create_with_items_params },
+  { subscription: Subscription },
+  Subscription
+>(requestCallback, mappingCallback);
 
-      const response = await createSubscription(id, params);
-
-      res.status(200).json(response);
-    } catch (error: any) {
-      res.status(error.http_status_code || 500).json(error);
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+export default handler;

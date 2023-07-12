@@ -1,42 +1,26 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { chargebee } from 'utils/billing/chargebeeInstance';
+import { _subscription } from 'chargebee-typescript';
 import { Subscription } from 'chargebee-typescript/lib/resources';
+import { chargebee } from 'utils/billing/chargebeeInstance';
+import { createHandler } from 'utils/billing/createHandler';
 
-const reactivateSubscription = async (
-  subscriptionId: string,
-): Promise<Subscription> => {
-  return new Promise((resolve, reject) => {
-    chargebee.subscription
-      .reactivate(subscriptionId, { invoice_immediately: true })
-      .request(function (error: any, result: { subscription: Subscription }) {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result.subscription);
-        }
-      });
-  });
+const requestCallback = ({
+  id,
+  params,
+}: {
+  id: string;
+  params: _subscription.update_params;
+}) => chargebee.subscription.reactivate(id, params);
+
+const mappingCallback = (result: {
+  subscription: Subscription;
+}): Subscription => {
+  return result.subscription;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Subscription | { message: string }>,
-) {
-  if (req.method === 'POST') {
-    try {
-      type ReqBody = {
-        subscriptionId: string;
-      };
+const handler = createHandler<
+  { id: string; params: _subscription.update_params },
+  { subscription: Subscription },
+  Subscription
+>(requestCallback, mappingCallback);
 
-      const { subscriptionId } = req.body as ReqBody;
-      const response = await reactivateSubscription(subscriptionId);
-
-      res.status(200).json(response);
-    } catch (error: any) {
-      res.status(error.http_status_code || 500).json(error);
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+export default handler;

@@ -1,12 +1,12 @@
 import { useRecoilState } from 'recoil';
+import { _customer } from 'chargebee-typescript';
+import { Customer } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
 } from '@modules/billing';
-import { _customer } from 'chargebee-typescript';
 import { useIdentityRepository } from '@modules/auth';
-import { Customer } from 'chargebee-typescript/lib/resources';
 
 interface ICustomerHook {
   customer: Customer | null;
@@ -26,7 +26,7 @@ export const useCustomer = (): ICustomerHook => {
     billingAtoms.billingAddressLoadingState,
   );
 
-  const getCustomer = async (customerId: string) => {
+  const getCustomer = async (id: string) => {
     setCustomerLoadingState('initializing');
 
     try {
@@ -35,7 +35,7 @@ export const useCustomer = (): ICustomerHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(customerId),
+        body: JSON.stringify({ id }),
       });
 
       const data = await response.json();
@@ -57,7 +57,7 @@ export const useCustomer = (): ICustomerHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params),
+        body: JSON.stringify({ params }),
       });
 
       if (!response.ok) {

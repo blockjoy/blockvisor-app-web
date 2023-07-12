@@ -1,48 +1,27 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { _customer } from 'chargebee-typescript';
-import {
-  Card,
-  Customer,
-  CustomerBillingAddress,
-} from 'chargebee-typescript/lib/resources';
+import { Card, Customer } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
+import { createHandler } from 'utils/billing/createHandler';
 
-const updateBillingInfo = async (
-  customerId: string,
-  billingInfo: CustomerBillingAddress,
-): Promise<Customer> => {
-  return new Promise((resolve, reject) => {
-    chargebee.customer
-      .update_billing_info(customerId, { billing_address: billingInfo })
-      .request(function (
-        error: any,
-        result: { customer: Customer; card: Card },
-      ) {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result.customer);
-        }
-      });
-  });
+const requestCallback = ({
+  customerId,
+  params,
+}: {
+  customerId: string;
+  params: _customer.update_billing_info_params;
+}) => chargebee.customer.update_billing_info(customerId, params);
+
+const mappingCallback = (result: {
+  customer: Customer;
+  card: Card;
+}): Customer => {
+  return result.customer;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Customer | { message: string }>,
-) {
-  if (req.method === 'POST') {
-    try {
-      const { customerId, billingInfo } = req.body as any;
+const handler = createHandler<
+  { customerId: string; params: _customer.update_billing_info_params },
+  { customer: Customer; card: Card },
+  Customer
+>(requestCallback, mappingCallback);
 
-      const response = await updateBillingInfo(customerId, billingInfo);
-
-      res.status(200).json(response);
-    } catch (error: any) {
-      res.status(error.http_status_code || 500).json(error);
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+export default handler;

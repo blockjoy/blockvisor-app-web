@@ -130,18 +130,13 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
 
     params.subscription_items = subscriptionItems;
 
-    const subscriptionProperties: {
-      id: string;
-      params: _subscription.update_for_items_params;
-    } = {
-      id: subscription?.id!,
-      params,
-    };
-
     try {
       const data: Subscription = await fetchBilling(
         BILLING_API_ROUTES.subscriptions.update,
-        subscriptionProperties,
+        {
+          id: subscription?.id!,
+          params,
+        },
       );
 
       setSubscription(data);
