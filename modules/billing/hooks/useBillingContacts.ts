@@ -63,6 +63,10 @@ export const useBillingContacts = (): IBillingContactsHook => {
         label: subscription?.id,
       };
 
+      const params: _customer.add_contact_params = {
+        contact: newBillingContact,
+      };
+
       const response = await fetch(
         BILLING_API_ROUTES.customer.contacts.create,
         {
@@ -73,7 +77,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
           body: JSON.stringify({
             customerId: customer?.id,
             subscriptionId: subscription?.id,
-            contact: newBillingContact,
+            params,
           }),
         },
       );
@@ -92,6 +96,14 @@ export const useBillingContacts = (): IBillingContactsHook => {
     setBillingContactsLoadingState('initializing');
 
     try {
+      const contactToDelete: _customer.contact_delete_contact_params = {
+        id,
+      };
+
+      const params: _customer.delete_contact_params = {
+        contact: contactToDelete,
+      };
+
       const response = await fetch(
         BILLING_API_ROUTES.customer.contacts.delete,
         {
@@ -102,7 +114,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
           body: JSON.stringify({
             customerId: customer?.id,
             subscriptionId: subscription?.id,
-            contact: { id },
+            params,
           }),
         },
       );

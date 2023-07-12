@@ -1,40 +1,23 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { _payment_source } from 'chargebee-typescript';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
+import { createHandler } from 'utils/billing/createHandler';
 
-const getPaymentSource = async (id: string): Promise<PaymentSource> => {
-  return new Promise((resolve, reject) => {
-    chargebee.payment_source
-      .retrieve(id)
-      .request(function (
-        error: any,
-        result: { payment_source: PaymentSource },
-      ) {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result.payment_source);
-        }
-      });
-  });
+const requestCallback = ({ id }: { id: string }) =>
+  chargebee.payment_source.retrieve(id);
+
+const mappingCallback = (result: {
+  payment_source: PaymentSource;
+}): PaymentSource | null => {
+  const paymentSource = result.payment_source as PaymentSource;
+
+  return paymentSource;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<PaymentSource | { message: string }>,
-) {
-  if (req.method === 'POST') {
-    try {
-      const { id } = req.body as { id: string };
-      const response = await getPaymentSource(id);
+const handler = createHandler<
+  { id: string },
+  { payment_source: PaymentSource },
+  PaymentSource | null
+>(requestCallback, mappingCallback);
 
-      res.status(200).json(response);
-    } catch (error: any) {
-      res.status(error.http_status_code || 500).json(error);
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+export default handler;
