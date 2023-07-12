@@ -63,7 +63,7 @@ export const useInvoices = (): IInvoicesHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params),
+        body: JSON.stringify({ params }),
       });
 
       const data: { invoices: Invoice[]; nextOffset: string | undefined } =

@@ -1,56 +1,39 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { chargebee } from 'utils/billing/chargebeeInstance';
-import { Card, Subscription } from 'chargebee-typescript/lib/resources';
+import { Subscription, Card } from 'chargebee-typescript/lib/resources';
 import { _subscription } from 'chargebee-typescript';
+import { createHandler } from 'utils/billing/createHandler';
 
-const updateSubscriptionItems = async (
-  id: string,
-  params: _subscription.update_for_items_params,
-): Promise<Subscription> => {
-  return new Promise((resolve, reject) => {
-    chargebee.subscription.update_for_items(id, params).request(function (
-      error: any,
-      result: {
-        subscription: Subscription;
-        card: Card;
-      },
-    ) {
-      if (error) {
-        reject(error);
-      } else {
-        const subscription = result.subscription as Subscription;
-        let resultSubscription = subscription;
+const requestCallback = ({
+  id,
+  params,
+}: {
+  id: string;
+  params: _subscription.update_for_items_params;
+}) => chargebee.subscription.update_for_items(id, params);
 
-        if (!subscription.payment_source_id) {
-          const card = result.card as Card;
+const mappingCallback = (result: {
+  subscription: Subscription;
+  card: Card;
+}): Subscription | null => {
+  const subscription = result.subscription as Subscription;
+  let resultSubscription = subscription;
 
-          resultSubscription = {
-            ...subscription,
-            payment_source_id: card.payment_source_id!,
-          } as Subscription;
-        }
+  if (!subscription.payment_source_id) {
+    const card = result.card as Card;
 
-        resolve(resultSubscription);
-      }
-    });
-  });
+    resultSubscription = {
+      ...subscription,
+      payment_source_id: card.payment_source_id!,
+    } as Subscription;
+  }
+
+  return resultSubscription;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Subscription | { message: string }>,
-) {
-  if (req.method === 'POST') {
-    try {
-      const { id, params } = req.body as any;
-      const response = await updateSubscriptionItems(id, params);
+const handler = createHandler<
+  { id: string; params: _subscription.update_for_items_params },
+  { subscription: Subscription; card: Card },
+  Subscription | null
+>(requestCallback, mappingCallback);
 
-      res.status(200).json(response);
-    } catch (error: any) {
-      res.status(error.http_status_code || 500).json(error);
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+export default handler;
