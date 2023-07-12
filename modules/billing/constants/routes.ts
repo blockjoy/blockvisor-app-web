@@ -44,10 +44,6 @@ export const BILLING_API_ROUTES = {
       delete: `${BILLING_API_ROUTE}/payments/sources/delete`,
     },
   },
-  plan: {
-    get: `${BILLING_API_ROUTE}/plans/get`,
-    list: `${BILLING_API_ROUTE}/plans/list`,
-  },
   subscriptions: {
     get: `${BILLING_API_ROUTE}/subscriptions/get`,
     list: `${BILLING_API_ROUTE}/subscriptions/list`,

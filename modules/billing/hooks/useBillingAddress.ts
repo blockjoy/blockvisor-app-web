@@ -50,6 +50,10 @@ export const useBillingAddress = (): IBillingAddressHook => {
           company,
         };
 
+      const params: _customer.update_billing_info_params = {
+        billing_address: updatedBillingInfo,
+      };
+
       const response = await fetch(
         BILLING_API_ROUTES.customer.billingInfo.update,
         {
@@ -59,7 +63,7 @@ export const useBillingAddress = (): IBillingAddressHook => {
           },
           body: JSON.stringify({
             customerId: customer?.id ? customer.id : customerId,
-            billingInfo: updatedBillingInfo,
+            params,
           }),
         },
       );
