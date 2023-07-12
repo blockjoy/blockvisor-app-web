@@ -1,13 +1,13 @@
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import { _subscription } from 'chargebee-typescript';
+import { Subscription } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
   fetchBilling,
 } from '@modules/billing';
-import { _subscription } from 'chargebee-typescript';
 import { organizationAtoms } from '@modules/organization';
-import { Subscription } from 'chargebee-typescript/lib/resources';
 
 interface ExtendedCreateWithItemsParams
   extends _subscription.create_with_items_params {
@@ -17,7 +17,7 @@ interface ExtendedCreateWithItemsParams
 interface ISubscriptionHook {
   subscriptionLoadingState: LoadingState;
   setSubscriptionLoadingState: SetterOrUpdater<LoadingState>;
-  getSubscription: (subscriptionId: string) => void;
+  getSubscription: (id: string) => void;
   createSubscription: (params: {
     itemPriceId: string;
     autoRenew: boolean;
@@ -84,25 +84,19 @@ export const useSubscription = (): ISubscriptionHook => {
         },
       ];
 
-    const params: {
-      id: string;
-      params: ExtendedCreateWithItemsParams;
-    } = {
-      id: customer?.id!,
-      params: {
-        id: defaultOrganization?.id!,
-        auto_collection: autoRenewValue,
-        payment_source_id: paymentMethodId,
-        subscription_items: subscriptionItems,
-        cf_organization_id: defaultOrganization?.id!,
-      },
+    const params: ExtendedCreateWithItemsParams = {
+      id: defaultOrganization?.id!,
+      auto_collection: autoRenewValue,
+      payment_source_id: paymentMethodId,
+      subscription_items: subscriptionItems,
+      cf_organization_id: defaultOrganization?.id!,
     };
 
     try {
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.create,
+      const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.create, {
+        id: customer?.id!,
         params,
-      );
+      });
 
       setSubscription(data);
 
@@ -174,7 +168,7 @@ export const useSubscription = (): ISubscriptionHook => {
     try {
       const data = await fetchBilling(
         BILLING_API_ROUTES.subscriptions.restore,
-        { subscriptionId: id },
+        { id },
       );
 
       setSubscription(data);
@@ -189,9 +183,13 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionLoadingState('initializing');
 
     try {
+      const params: _subscription.update_params = {
+        invoice_immediately: true,
+      };
+
       const data = await fetchBilling(
         BILLING_API_ROUTES.subscriptions.reactivate,
-        { subscriptionId: id },
+        { id, params },
       );
 
       setSubscription(data);
@@ -210,21 +208,15 @@ export const useSubscription = (): ISubscriptionHook => {
 
     const { paymentMethodId } = updateParams;
 
-    const params: {
-      id: string;
-      params: _subscription.override_billing_profile_params;
-    } = {
-      id,
-      params: {
-        payment_source_id: paymentMethodId,
-        auto_collection: 'on',
-      },
+    const params: _subscription.override_billing_profile_params = {
+      payment_source_id: paymentMethodId,
+      auto_collection: 'on',
     };
 
     try {
       const data = await fetchBilling(
         BILLING_API_ROUTES.subscriptions.billingProfile.update,
-        params,
+        { id, params },
       );
 
       setSubscription(data);

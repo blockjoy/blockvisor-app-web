@@ -18,7 +18,7 @@ export const usePayment = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(params),
+      body: JSON.stringify({ params }),
     })
       .then((response) => response.json())
       .catch((err) => {

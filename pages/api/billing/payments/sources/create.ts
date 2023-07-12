@@ -1,47 +1,28 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-
 import { _payment_intent, _payment_source } from 'chargebee-typescript';
-import { chargebee } from 'utils/billing/chargebeeInstance';
 import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
+import { chargebee } from 'utils/billing/chargebeeInstance';
+import { createHandler } from 'utils/billing/createHandler';
 
-const createPaymentSource = async (
-  params: _payment_source.create_using_payment_intent_params,
-): Promise<{ paymentSource: PaymentSource; customer: Customer }> => {
-  return new Promise((resolve, reject) => {
-    chargebee.payment_source
-      .create_using_payment_intent(params)
-      .request(function (
-        error: any,
-        result: { payment_source: PaymentSource; customer: Customer },
-      ) {
-        if (error) {
-          reject(error);
-        } else {
-          resolve({
-            paymentSource: result.payment_source,
-            customer: result.customer,
-          });
-        }
-      });
-  });
+const requestCallback = ({
+  params,
+}: {
+  params: _payment_source.create_using_payment_intent_params;
+}) => chargebee.payment_source.create_using_payment_intent(params);
+
+const mappingCallback = (result: {
+  payment_source: PaymentSource;
+  customer: Customer;
+}): { paymentSource: PaymentSource; customer: Customer } => {
+  const paymentSource = result.payment_source as PaymentSource;
+  const customer = result.customer as Customer;
+
+  return { paymentSource, customer };
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === 'POST') {
-    try {
-      const params =
-        req.body as _payment_source.create_using_payment_intent_params;
-      const response = await createPaymentSource(params);
+const handler = createHandler<
+  { params: _payment_source.create_using_payment_intent_params },
+  { payment_source: PaymentSource; customer: Customer },
+  { paymentSource: PaymentSource; customer: Customer }
+>(requestCallback, mappingCallback);
 
-      res.status(200).json(response);
-    } catch (error: any) {
-      res.status(error.http_status_code || 500).json(error);
-    }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+export default handler;

@@ -55,7 +55,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params),
+        body: JSON.stringify({ params }),
       });
 
       if (!response.ok) {
@@ -116,7 +116,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params),
+        body: JSON.stringify({ params }),
       });
 
       const data: { paymentSource: PaymentSource; customer: Customer } =
@@ -142,14 +142,12 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     setPaymentMethodsLoadingState('initializing');
 
     try {
-      const params: { id: string } = { id };
-
       const response = await fetch(BILLING_API_ROUTES.payments.sources.delete, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(params),
+        body: JSON.stringify({ id }),
       });
 
       const data: { customer: Customer; paymentSource: PaymentSource } =
