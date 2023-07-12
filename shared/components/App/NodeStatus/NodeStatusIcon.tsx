@@ -10,6 +10,8 @@ import { SvgIcon } from '@shared/components';
 
 const IconNode = dynamic(() => import('@public/assets/icons/app/Node.svg'));
 
+const NodeStatusSpinner = dynamic(() => import('./NodeStatusSpinner'));
+
 const IconUndefined = dynamic(
   () => import('@public/assets/icons/nodeStatus/Undefined.svg'),
 );
@@ -138,14 +140,19 @@ export const NodeStatusIcon = ({
   size = '24px',
 }: NodeStatusIconProps) => {
   const statusName = getNodeStatusInfo(status!, type)?.name;
+
   return (
     <Suspense fallback={null}>
-      <SvgIcon
-        additionalStyles={[getNodeStatusColor(status!, type)]}
-        size={size}
-      >
-        {status === undefined ? <IconNode /> : getIcon(statusName!)}
-      </SvgIcon>
+      {statusName === 'PROVISIONING' ? (
+        <NodeStatusSpinner size={size} />
+      ) : (
+        <SvgIcon
+          additionalStyles={[getNodeStatusColor(status!, type)]}
+          size={size}
+        >
+          {status === undefined ? <IconNode /> : getIcon(statusName!)}
+        </SvgIcon>
+      )}
     </Suspense>
   );
 };

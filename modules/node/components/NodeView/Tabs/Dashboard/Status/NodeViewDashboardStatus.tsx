@@ -4,6 +4,10 @@ import { FormHeaderCaps } from '@shared/components';
 import { styles } from './NodeViewDashboardStatus.styles';
 import { getNodeStatusColor } from '@shared/components';
 import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
+import {
+  ContainerStatus,
+  SyncStatus,
+} from '@modules/grpc/library/blockjoy/v1/node';
 
 const iconSize = '24px';
 
@@ -16,11 +20,13 @@ export const NodeViewDashboardStatus = () => {
     <>
       <FormHeaderCaps>Status</FormHeaderCaps>
       <div css={styles.wrapper}>
-        <div css={styles.card}>
+        <div css={[styles.card, styles.cardOnlyShowOnMobile]}>
           <SvgIcon isDefaultColor size={iconSize}>
             <IconBlockHeight />
           </SvgIcon>
-          <var css={[styles.cardValue]}>{node.blockHeight ?? '-'}</var>
+          <var css={[styles.cardValue]}>
+            {node?.blockHeight?.toLocaleString('en-US') ?? '-'}
+          </var>
           <h3 css={styles.cardLabel}>Block Height</h3>
         </div>
         <div css={styles.card}>
@@ -30,44 +36,50 @@ export const NodeViewDashboardStatus = () => {
           </var>
           <h3 css={styles.cardLabel}>App Status</h3>
         </div>
-        <div css={styles.card}>
-          <NodeStatusIcon
-            size={iconSize}
-            status={node!.containerStatus}
-            type="container"
-          />
-          <var
-            css={[
-              styles.cardValue,
-              getNodeStatusColor(node.containerStatus!, 'container'),
-            ]}
-          >
-            {getNodeStatusInfo(
-              node.containerStatus,
-              'container',
-            )?.name?.toLocaleLowerCase()}
-          </var>
-          <h3 css={styles.cardLabel}>Node Status</h3>
-        </div>
-        <div css={styles.card}>
-          <NodeStatusIcon
-            size={iconSize}
-            status={node!.syncStatus}
-            type="sync"
-          />
-          <var
-            css={[
-              styles.cardValue,
-              getNodeStatusColor(node.syncStatus, 'sync'),
-            ]}
-          >
-            {getNodeStatusInfo(
-              node.syncStatus,
-              'sync',
-            )?.name?.toLocaleLowerCase()}
-          </var>
-          <h3 css={styles.cardLabel}>Sync Status</h3>
-        </div>
+        {node.containerStatus !==
+          ContainerStatus.CONTAINER_STATUS_UNSPECIFIED && (
+          <div css={styles.card}>
+            <NodeStatusIcon
+              size={iconSize}
+              status={node!.containerStatus}
+              type="container"
+            />
+            <var
+              css={[
+                styles.cardValue,
+                getNodeStatusColor(node.containerStatus!, 'container'),
+              ]}
+            >
+              {getNodeStatusInfo(
+                node.containerStatus,
+                'container',
+              )?.name?.toLocaleLowerCase()}
+            </var>
+            <h3 css={styles.cardLabel}>Node Status</h3>
+          </div>
+        )}
+        {node.syncStatus !== SyncStatus.SYNC_STATUS_UNSPECIFIED && (
+          <div css={styles.card}>
+            <NodeStatusIcon
+              size={iconSize}
+              status={node!.syncStatus}
+              type="sync"
+            />
+            <var
+              css={[
+                styles.cardValue,
+                getNodeStatusColor(node.syncStatus, 'sync'),
+              ]}
+            >
+              {getNodeStatusInfo(
+                node.syncStatus,
+                'sync',
+              )?.name?.toLocaleLowerCase()}
+            </var>
+            <h3 css={styles.cardLabel}>Sync Status</h3>
+          </div>
+        )}
+
         {/* <div css={styles.card}>
           <NodeStatusIcon
             size={iconSize}

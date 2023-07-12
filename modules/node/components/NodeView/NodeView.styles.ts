@@ -19,7 +19,7 @@ export const styles = {
     flex-direction: column;
     flex: 1 1 auto;
   `,
-  quickEdit: (theme: ITheme) => css`
+  sidePanel: (theme: ITheme) => css`
     flex: 1 1 420px;
     max-width: 420px;
     padding: 0 0 20px 20px;
@@ -33,10 +33,6 @@ export const styles = {
       margin-bottom: 100px;
       display: none;
     }
-  `,
-  formHeader: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    text-transform: uppercase;
   `,
   loader: css`
     padding: 35px 0 0;
