@@ -62,7 +62,7 @@ const isFiltersOpen = atom<boolean>({
           : null;
       const isFiltersOpenValue = savedNodeFiltersToggle
         ? JSON.parse(savedNodeFiltersToggle)
-        : true;
+        : false;
       setSelf(isFiltersOpenValue);
     },
   ],
