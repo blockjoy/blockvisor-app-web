@@ -1,3 +1,4 @@
+import { sort } from '@shared/components';
 import { FC, Fragment } from 'react';
 import { styles } from './PillPicker.styles';
 
@@ -22,7 +23,7 @@ export const PillPicker: FC<Props> = ({
 
   return (
     <div css={styles.wrapper}>
-      {items
+      {sort(items, { order: 'asc' })
         .filter((item, index) => items.indexOf(item) === index)
         .map((item, index) => (
           <Fragment key={item}>
