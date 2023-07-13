@@ -20,7 +20,7 @@ export const styles = {
 
     &:hover,
     &:active {
-      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.05);
+      box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.1);
     }
   `,
   dropdown: css`

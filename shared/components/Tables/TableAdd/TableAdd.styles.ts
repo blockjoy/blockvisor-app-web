@@ -7,6 +7,7 @@ export const styles = {
     padding: 0;
     margin: 0;
     gap: 12px;
+    width: 100%;
 
     > div {
       margin-bottom: 0;
@@ -17,6 +18,10 @@ export const styles = {
     top: 50%;
     right: 0;
     transform: translateY(-50%);
+
+    :disabled {
+      pointer-events: none;
+    }
   `,
 
   input: (buttonWidth: string) => (theme: ITheme) =>
@@ -34,8 +39,16 @@ export const styles = {
       transition: 0.3s;
 
       :is(:focus, :hover) {
-        opacity: 1;
+        opacity: 0.7;
         border-bottom-color: ${theme.colorLabel};
+      }
+
+      :valid {
+        opacity: 1;
+      }
+
+      ::placeholder {
+        color: ${theme.colorText};
       }
     `,
 };

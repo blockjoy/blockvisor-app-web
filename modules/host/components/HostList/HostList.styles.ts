@@ -5,22 +5,23 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     position: relative;
-    display: flex;
-    flex-direction: column;
+
     padding: 0 24px;
 
     @media ${breakpoints.fromXLrg} {
+      display: flex;
       flex-direction: row;
       padding: 0 30px;
+      flex: 1 1 auto;
     }
   `,
   gridWrapper: css`
     width: 100%;
   `,
   listWrapper: (theme: ITheme) => css`
-    flex: 1 1 auto;
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       position: static;
+      flex: 1 1 auto;
       margin-left: 0;
       padding: 0 20px 20px 0;
       border-right: 1px solid ${theme.colorBorder};
@@ -54,25 +55,22 @@ export const styles = {
       transition: 0.2s;
     }
   `,
-  quickEdit: (theme: ITheme) => css`
-    flex: 1 1 320px;
-    min-width: 320px;
-    max-width: 36px;
-    padding: 0 0 20px 20px;
-
-    @media ${breakpoints.fromLrg} {
+  rightPanel: (theme: ITheme) => css`
+    @media ${breakpoints.fromXLrg} {
       position: sticky;
       top: 72px;
       height: 100%;
+      flex: 1 1 320px;
+      max-width: 320px;
+      min-width: 320px;
+      padding: 0 0 20px 20px;
     }
 
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       padding: 10px 0 10px 0;
       max-width: 100%;
       width: 100%;
       min-width: 100%;
-      border-left: 0;
-      border-top: 1px solid ${theme.colorBorder};
     }
   `,
 };

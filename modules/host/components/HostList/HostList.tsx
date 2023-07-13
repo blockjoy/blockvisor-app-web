@@ -93,7 +93,8 @@ export const HostList = () => {
     <>
       <PageTitle title="Hosts" icon={<IconHost />} />
       <div css={[styles.wrapper, wrapper.main]}>
-        <HostFilters isLoading={isLoading} />
+        {/* TODO: Implement filters in api */}
+        {/* <HostFilters isLoading={isLoading} /> */}
         <div css={styles.listWrapper}>
           <HostListHeader />
 
@@ -143,7 +144,7 @@ export const HostList = () => {
             </InfiniteScroll>
           )}
         </div>
-        <div css={styles.quickEdit}>
+        <div css={styles.rightPanel}>
           <HostLauncher token={provisionToken} />
         </div>
       </div>

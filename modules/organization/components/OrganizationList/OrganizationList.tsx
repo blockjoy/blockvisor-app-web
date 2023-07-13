@@ -59,7 +59,7 @@ export const OrganizationsList = () => {
                 <p>{org.name}</p>
                 {isActive && (
                   <Badge color="primary" style="outline">
-                    Default
+                    Current
                   </Badge>
                 )}
               </button>

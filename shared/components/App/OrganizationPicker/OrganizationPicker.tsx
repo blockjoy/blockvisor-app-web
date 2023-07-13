@@ -1,13 +1,10 @@
-import { FC, useRef, useState } from 'react';
-import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
-import IconPlus from '@public/assets/icons/common/Plus.svg';
-import IconInfo from '@public/assets/icons/common/Info.svg';
+import { useRef, useState } from 'react';
 import {
-  Badge,
   DropdownMenu,
   DropdownItem,
   SvgIcon,
   Scrollbar,
+  Badge,
 } from '@shared/components';
 import { styles } from './OrganizationPicker.styles';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -16,21 +13,23 @@ import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { useRouter } from 'next/router';
-import { ROUTES } from '@shared/constants/routes';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import IconOrganization from '@public/assets/icons/app/Organization.svg';
+import IconArrow from '@public/assets/icons/common/ArrowDown.svg';
 
 type Props = {
-  hideName?: boolean;
+  isRightAligned?: boolean;
 };
 
-export const OrganizationPicker: FC<Props> = ({ hideName }) => {
+export const OrganizationPicker = ({ isRightAligned = false }: Props) => {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const allOrganizations = useRecoilValue(
     organizationAtoms.allOrganizationsSorted,
   );
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const setIsSidebarOpen = useSetRecoilState(sidebarOpen);
@@ -55,58 +54,25 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
 
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
-  const handleCreateClicked = () => {
-    setIsOpen(false);
-    if (isMobile) {
-      setIsSidebarOpen(false);
-    }
-    router.push({
-      pathname: ROUTES.ORGANIZATIONS,
-      query: { add: true },
-    });
-  };
-
   return (
-    <div
-      css={[styles.wrapper, hideName && styles.wrapperNameHidden]}
-      ref={dropdownRef}
-    >
+    <div css={styles.wrapper} ref={dropdownRef}>
       <button css={styles.select} onClick={handleClick}>
-        <span css={styles.bubble}>
-          {escapeHtml(defaultOrganization?.name?.toUpperCase()!)?.substring(
-            0,
-            1,
-          )}
-        </span>
-        {!hideName && (
-          <p css={styles.selectText}>
-            {escapeHtml(defaultOrganization?.name!)}
-          </p>
-        )}
+        <SvgIcon isDefaultColor size="16px">
+          <IconOrganization />
+        </SvgIcon>
+        <p css={styles.selectText}>{escapeHtml(defaultOrganization?.name!)}</p>
       </button>
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        <header css={styles.header}>
-          <h2>Your Organizations</h2>
-          <SvgIcon tooltip="View and launch nodes from your organizations">
-            <IconInfo />
-          </SvgIcon>
-        </header>
-        <ul>
-          <li>
-            <DropdownItem
-              additionalStyles={[styles.activeOrganization]}
-              size="medium"
-              type="button"
-            >
-              <p css={styles.activeOrg}>
-                {escapeHtml(defaultOrganization?.name!)}
-              </p>
-              <Badge color="primary" style="outline">
-                Active
-              </Badge>
-            </DropdownItem>
-          </li>
-        </ul>
+      <DropdownMenu
+        isOpen={isOpen}
+        additionalStyles={styles.dropdown(isRightAligned)}
+      >
+        <h2 css={styles.header}>Your Organizations</h2>
+        <div css={styles.activeOrg}>
+          <p css={styles.orgText}>{escapeHtml(defaultOrganization?.name!)}</p>
+          <Badge color="primary" style="outline">
+            Current
+          </Badge>
+        </div>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>
             {allOrganizations
@@ -118,18 +84,17 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
                     type="button"
                     onButtonClick={() => handleChange(org.id, org.name)}
                   >
-                    <p css={styles.activeOrg}>{escapeHtml(org.name!)}</p>
+                    <p css={styles.orgText}>{escapeHtml(org.name!)}</p>
                   </DropdownItem>
                 </li>
               ))}
           </ul>
         </Scrollbar>
-        <button css={[styles.createButton]} onClick={handleCreateClicked}>
-          <IconPlus /> Add Organization
-        </button>
       </DropdownMenu>
       <span css={[styles.icon, isOpen && styles.iconActive]}>
-        <IconArrow />
+        <SvgIcon isDefaultColor size="11px">
+          <IconArrow />
+        </SvgIcon>
       </span>
     </div>
   );

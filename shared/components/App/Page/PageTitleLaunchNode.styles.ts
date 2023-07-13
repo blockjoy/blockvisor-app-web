@@ -9,16 +9,14 @@ export const styles = {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding: 0 24px 0 18px;
-    margin-left: auto;
-    height: 44px;
+    padding: 0;
+    margin-left: 8px;
     border-radius: 6px;
     background: ${theme.colorPrimary};
     color: ${theme.colorPrimaryText};
     border: 0;
     cursor: pointer;
     white-space: nowrap;
-
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
     &:hover,
@@ -34,24 +32,16 @@ export const styles = {
       transition: 0.3s;
       height: 16px;
       width: 16px;
-      flex: 0 0 16px;
+    }
+
+    @media ${breakpoints.fromSml} {
+      padding: 0 24px 0 16px;
     }
 
     @media ${breakpoints.toSml} {
       width: 44px;
       min-width: 44px;
-    }
-
-    @media ${breakpoints.toLrg} {
-      gap: 8px;
-      padding: 0 10px;
-      transform-origin: 100% 50%;
-      min-width: 0;
-
-      svg {
-        width: 30px;
-        flex: 0 0 30px;
-      }
+      max-width: 44px;
     }
   `,
   buttonText: (theme: ITheme) => css`

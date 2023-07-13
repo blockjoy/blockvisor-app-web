@@ -17,7 +17,9 @@ export const styles = {
     }
   `,
   wrapperFlex: css`
-    display: flex;
-    flex-direction: column;
+    @media ${breakpoints.fromLrg} {
+      display: flex;
+      flex-direction: column;
+    }
   `,
 };
