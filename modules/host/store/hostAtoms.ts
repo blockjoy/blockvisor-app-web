@@ -52,7 +52,7 @@ const activeListType = atom<string | 'table' | 'grid'>({
 
 const isFiltersOpen = atom<boolean>({
   key: 'host.filters.isOpen',
-  default: true,
+  default: false,
   effects: [
     ({ setSelf }) => {
       if (isMobile) {
