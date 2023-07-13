@@ -6,7 +6,7 @@ import {
   billingAtoms,
   billingSelectors,
 } from '@modules/billing';
-import { useBilling, useIdentityRepository } from '@modules/auth';
+import { useUserBilling, useIdentityRepository } from '@modules/auth';
 
 interface ICustomerHook {
   customer: Customer | null;
@@ -20,7 +20,7 @@ interface ICustomerHook {
 export const useCustomer = (): ICustomerHook => {
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
-  const { updateBilling } = useBilling();
+  const { billingId, updateUserBilling, deleteUserBilling } = useUserBilling();
 
   const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
   const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
@@ -40,8 +40,16 @@ export const useCustomer = (): ICustomerHook => {
       });
 
       const data = await response.json();
+      const customerData = !response.ok ? null : data;
 
-      setCustomer(!response.ok ? null : data);
+      // TODO: Remove this after testing phase
+      try {
+        if (!customerData && billingId) await deleteUserBilling(user?.id!);
+      } catch (err: any) {
+        console.log('Error while deleting billing', err);
+      }
+
+      setCustomer(customerData);
     } catch (error: any) {
       console.log('Error while fetching a customer', error);
     }
@@ -68,7 +76,7 @@ export const useCustomer = (): ICustomerHook => {
       const customer = await response.json();
 
       try {
-        await updateBilling(user?.id!, customer.id);
+        await updateUserBilling(user?.id!, customer.id);
       } catch (err: any) {
         console.log('Error while updating billing', err);
       }
