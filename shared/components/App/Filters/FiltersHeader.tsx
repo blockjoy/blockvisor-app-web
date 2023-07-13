@@ -36,7 +36,7 @@ export const FiltersHeader = ({
             </span>
           </button>
           <div css={styles.orgPicker}>
-            {!isMobile && <OrganizationPicker isRightAligned />}
+            {isMobile && <OrganizationPicker isRightAligned />}
           </div>
         </>
       )}
