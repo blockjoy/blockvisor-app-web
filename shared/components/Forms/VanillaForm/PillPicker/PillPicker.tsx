@@ -21,27 +21,27 @@ export const PillPicker: FC<Props> = ({
     onChange(name, item);
   };
 
+  console.log('items', items);
+
   return (
     <div css={styles.wrapper}>
-      {sort(items, { order: 'asc' })
-        .filter((item, index) => items.indexOf(item) === index)
-        .map((item, index) => (
-          <Fragment key={item}>
-            <input
-              tabIndex={tabIndexStart! + index}
-              css={styles.input}
-              name={item}
-              id={item}
-              type="radio"
-              onChange={() => handleChange(item)}
-              checked={item === selectedItem}
-              value={item}
-            />
-            <label htmlFor={item} css={styles.label}>
-              <span css={styles.button}>{item}</span>
-            </label>
-          </Fragment>
-        ))}
+      {sort(items, { order: 'asc' }).map((item, index) => (
+        <Fragment key={item}>
+          <input
+            tabIndex={tabIndexStart! + index}
+            css={styles.input}
+            name={item}
+            id={item}
+            type="radio"
+            onChange={() => handleChange(item)}
+            checked={item === selectedItem}
+            value={item}
+          />
+          <label htmlFor={item} css={styles.label}>
+            <span css={styles.button}>{item}</span>
+          </label>
+        </Fragment>
+      ))}
     </div>
   );
 };
