@@ -34,7 +34,7 @@ export const HostViewHeader = () => {
     <>
       {isDeleteMode && (
         <DeleteModal
-          portalId="delete-node-modal"
+          portalId="delete-host-modal"
           elementName={host?.name!}
           entityName="Host"
           onHide={() => setIsDeleteMode(false)}
