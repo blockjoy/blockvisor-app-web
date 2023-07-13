@@ -31,8 +31,10 @@ export const styles = {
     left: 6px;
     padding: 0 4px;
     color: ${theme.colorDefault};
-    font-size: 10px;
-    background: #2a2c2b;
+    font-size: 12px;
+    padding: 12px;
+    border-bottom: 1px solid ${theme.colorBorderGrey};
+    user-select: none;
   `,
   activeOrg: css`
     display: flex;
