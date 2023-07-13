@@ -1,7 +1,7 @@
 export const sort = (items: any, sorting: Sorting) => {
   return [...items].sort((a: any, b: any) => {
-    let aField = a[sorting.field!];
-    let bField = b[sorting.field!];
+    let aField = a[sorting.field!] || a;
+    let bField = b[sorting.field!] || b;
 
     if (typeof aField === 'string' && typeof bField === 'string') {
       aField = aField.toLowerCase();
