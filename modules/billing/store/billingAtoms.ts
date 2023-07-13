@@ -12,11 +12,13 @@ import {
 import { localStorageEffect } from 'utils/store/persist';
 
 const billing = atom<{
+  id: string | null;
   customer: Customer | null;
   subscription: Subscription | null;
 }>({
   key: 'billing',
   default: {
+    id: null,
     customer: null,
     subscription: null,
   },
