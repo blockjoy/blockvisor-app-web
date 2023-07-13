@@ -1,10 +1,10 @@
-import { FC, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   DropdownMenu,
   DropdownItem,
   SvgIcon,
   Scrollbar,
-  TableAdd,
+  Badge,
 } from '@shared/components';
 import { styles } from './OrganizationPicker.styles';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -16,19 +16,13 @@ import { useRouter } from 'next/router';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
-import {
-  useCreateOrganization,
-  useGetOrganizations,
-} from '@modules/organization';
-import { ApplicationError } from '@modules/auth/utils/Errors';
-import { toast } from 'react-toastify';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import IconArrow from '@public/assets/icons/common/ArrowDown.svg';
 
 type Props = {
-  hideName?: boolean;
+  isRightAligned?: boolean;
 };
 
-export const OrganizationPicker: FC<Props> = ({ hideName }) => {
+export const OrganizationPicker = ({ isRightAligned = false }: Props) => {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -36,12 +30,7 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
     organizationAtoms.allOrganizationsSorted,
   );
 
-  const createOrganization = useCreateOrganization();
-  const { addToOrganizations } = useGetOrganizations();
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const [isAdding, setIsAdding] = useState<boolean>(false);
 
   const setIsSidebarOpen = useSetRecoilState(sidebarOpen);
 
@@ -65,38 +54,25 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
 
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
-  const handleCreate = async (name: string) => {
-    try {
-      setIsAdding(true);
-      await createOrganization(name, async (org: Org) => {
-        addToOrganizations(org);
-        switchOrganization(org.id, name);
-      });
-    } catch (error) {
-      if (error instanceof ApplicationError) toast.error(error.message);
-    } finally {
-      setIsAdding(false);
-      return true;
-    }
-  };
-
   return (
-    <div
-      css={[styles.wrapper, hideName && styles.wrapperNameHidden]}
-      ref={dropdownRef}
-    >
-      <label css={styles.label}>Default Organization</label>
-      <button disabled css={styles.select} onClick={handleClick}>
-        <SvgIcon isDefaultColor>
+    <div css={styles.wrapper} ref={dropdownRef}>
+      <button css={styles.select} onClick={handleClick}>
+        <SvgIcon isDefaultColor size="16px">
           <IconOrganization />
         </SvgIcon>
-        {!hideName && (
-          <p css={styles.selectText}>
-            {escapeHtml(defaultOrganization?.name!)}
-          </p>
-        )}
+        <p css={styles.selectText}>{escapeHtml(defaultOrganization?.name!)}</p>
       </button>
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
+      <DropdownMenu
+        isOpen={isOpen}
+        additionalStyles={styles.dropdown(isRightAligned)}
+      >
+        <h2 css={styles.header}>Your Organizations</h2>
+        <div css={styles.activeOrg}>
+          <p css={styles.orgText}>{escapeHtml(defaultOrganization?.name!)}</p>
+          <Badge color="primary" style="outline">
+            Current
+          </Badge>
+        </div>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>
             {allOrganizations
@@ -108,26 +84,18 @@ export const OrganizationPicker: FC<Props> = ({ hideName }) => {
                     type="button"
                     onButtonClick={() => handleChange(org.id, org.name)}
                   >
-                    <p css={styles.activeOrg}>{escapeHtml(org.name!)}</p>
+                    <p css={styles.orgText}>{escapeHtml(org.name!)}</p>
                   </DropdownItem>
                 </li>
               ))}
           </ul>
         </Scrollbar>
-        <footer css={styles.addOrg}>
-          <TableAdd
-            buttonText="Add"
-            buttonWidth="60px"
-            placeholder="Add Organization"
-            placeholderFocused="Enter a name"
-            onSubmit={async (email: string) => await handleCreate(email)}
-            isLoading={isAdding}
-          />
-        </footer>
       </DropdownMenu>
-      {/* <span css={[styles.icon, isOpen && styles.iconActive]}>
-        <IconArrow />
-      </span> */}
+      <span css={[styles.icon, isOpen && styles.iconActive]}>
+        <SvgIcon isDefaultColor size="11px">
+          <IconArrow />
+        </SvgIcon>
+      </span>
     </div>
   );
 };

@@ -1,8 +1,3 @@
-import {
-  useDefaultOrganization,
-  useGetOrganizations,
-} from '@modules/organization';
-import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { isEqual } from 'lodash';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
@@ -11,10 +6,6 @@ import { InitialFilter, InitialQueryParams } from '../ui/NodeUIHelpers';
 import { buildParams } from '../utils';
 
 export const useFilters = (nodeUIProps: NodeUIProps) => {
-  const { organizationsSorted } = useGetOrganizations();
-  const { defaultOrganization } = useDefaultOrganization();
-  const { switchOrganization } = useSwitchOrganization();
-
   const [filtersBlockchain, setFiltersBlockchain] = useRecoilState(
     nodeAtoms.filtersBlockchain,
   );
@@ -99,17 +90,6 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
   };
 
   const filters = [
-    {
-      name: 'Organization',
-      isDisabled: organizationsSorted?.length === 1,
-      filterCount: 1,
-      filterList: organizationsSorted?.map((org) => ({
-        id: org.id,
-        name: org.name,
-        isChecked: org.id === defaultOrganization?.id,
-      })),
-      switchOrganization,
-    },
     {
       name: 'Blockchain',
       isDisabled: false,

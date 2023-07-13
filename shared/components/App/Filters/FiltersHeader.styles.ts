@@ -13,7 +13,7 @@ export const styles = {
   header: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
     height: 72px;
     min-height: 72px;
     margin-bottom: 20px;
@@ -32,6 +32,14 @@ export const styles = {
     span {
       transition: 0.3s;
     }
+  `,
+  filtersButton: (theme: ITheme) => css`
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 
     :hover {
       > span {
@@ -55,6 +63,11 @@ export const styles = {
     svg {
       width: 100%;
       height: 100%;
+    }
+  `,
+  orgPicker: css`
+    @media ${breakpoints.fromLrg} {
+      display: none;
     }
   `,
 };

@@ -11,7 +11,7 @@ export const styles = {
     min-height: 0;
 
     @media ${breakpoints.toXlrg} {
-      padding: 20px 0 30px;
+      padding: 6px 0 30px;
     }
   `,
   addIcon: (theme: ITheme) => css`
@@ -49,10 +49,6 @@ export const styles = {
         text-overflow: ellipsis;
         padding-right: 10px;
         line-height: 1.6;
-      }
-
-      &.active {
-        /* border-bottom-color: ${theme.colorBorderGrey}; */
       }
     `,
   scrollbar: css`

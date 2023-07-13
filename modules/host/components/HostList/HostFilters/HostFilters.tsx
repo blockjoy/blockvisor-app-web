@@ -70,16 +70,6 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
       setIsDirty(true);
     }
 
-    if (!setFilterList) {
-      const foundOrg = list.find((item) => item.id === e.target.id);
-
-      if (defaultOrganization!.id !== foundOrg!.id) {
-        switchOrganization(foundOrg?.id!, foundOrg?.name!);
-      }
-
-      return;
-    }
-
     const filtersList = list.map((item) => {
       if (item.id === e.target.id) {
         return {
@@ -174,7 +164,6 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
                     filterCount={item.filterCount}
                     filterList={item.filterList}
                     setFilterList={item?.setFilterList!}
-                    setOrganization={switchOrganization}
                     onFilterChanged={handleFilterChanged}
                   />
                 );
