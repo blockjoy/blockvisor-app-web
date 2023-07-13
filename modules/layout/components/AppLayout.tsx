@@ -14,7 +14,11 @@ import {
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider, useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
-import { useCustomer, useSubscription } from '@modules/billing';
+import {
+  billingSelectors,
+  useCustomer,
+  useSubscription,
+} from '@modules/billing';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -33,6 +37,9 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const currentOrg = useRef<string>();
 
+  const billingId = useRecoilValue(billingSelectors.billingId);
+  const userSubscription = useRecoilValue(billingSelectors.userSubscription);
+
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
@@ -44,9 +51,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getSubscription } = useSubscription();
 
   useEffect(() => {
-    if (!customer) {
-      getCustomer(userEmail!);
-    }
+    if (!customer && billingId) getCustomer(billingId);
   }, []);
 
   useEffect(() => {
@@ -69,7 +74,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      getSubscription(defaultOrganization?.id!);
+      if (userSubscription) getSubscription(userSubscription.externalId);
       loadNodes();
       loadHosts();
       mqttConnect();
