@@ -4,17 +4,16 @@ import {
   EditableTitle,
   Button,
   SvgIcon,
+  DeleteModal,
 } from '@shared/components';
 import { FC, useState } from 'react';
 import { styles } from './OrganizationViewHeader.styles';
-import { OrganizationViewHeaderDelete } from './Delete/OrganizationViewHeaderDelete';
 import {
   getOrgMemberRole,
   useDefaultOrganization,
   useDeleteOrganization,
   useGetOrganization,
   useGetOrganizations,
-  useInvitations,
   useUpdateOrganization,
 } from '@modules/organization';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
@@ -96,16 +95,21 @@ export const OrganizationViewHeader: FC = () => {
     }
   };
 
+  const type = canDeleteOrganization ? 'Delete' : 'Leave';
+
   const isLoadingOrg =
     isLoading !== 'finished' || organization?.nodeCount === null;
 
   return (
     <>
       {isDeleteMode && (
-        <OrganizationViewHeaderDelete
-          isDelete={canDeleteOrganization}
+        <DeleteModal
+          portalId="delete-org-modal"
+          elementName={organization?.name!}
+          entityName="Organization"
+          type={type}
           onHide={handleDeleteModalClosed}
-          handleAction={handleAction}
+          onSubmit={handleAction}
         />
       )}
       <header css={styles.header}>
@@ -135,7 +139,7 @@ export const OrganizationViewHeader: FC = () => {
                       : ''
                   }
                   onClick={toggleDeleteModalOpen}
-                  style="warning"
+                  style="basic"
                 >
                   <SvgIcon>
                     {canDeleteOrganization ? <IconDelete /> : <IconDoor />}

@@ -53,13 +53,20 @@ class HostClient {
     }
   }
 
-  async getHost(id: string): Promise<Host | StatusResponse> {
-    await authClient.refreshToken();
-    const response = await callWithTokenRefresh(
-      this.client.get.bind(this.client),
-      { id },
-    );
-    return response.host!;
+  async getHost(id: string): Promise<Host> {
+    try {
+      const response = await callWithTokenRefresh(
+        this.client.get.bind(this.client),
+        { id },
+      );
+      return response.host!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async deleteHost(id: string): Promise<void> {
+    await callWithTokenRefresh(this.client.delete.bind(this.client), { id });
   }
 }
 

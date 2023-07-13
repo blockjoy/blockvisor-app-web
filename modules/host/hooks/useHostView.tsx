@@ -2,6 +2,7 @@ import { useRecoilState } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useHostList } from './useHostList';
+import { toast } from 'react-toastify';
 
 export const useHostView = () => {
   const [isLoading, setIsLoading] = useRecoilState(
@@ -9,7 +10,7 @@ export const useHostView = () => {
   );
   const [host, setHost] = useRecoilState(hostAtoms.activeHost);
 
-  const { hostList } = useHostList();
+  const { hostList, removeFromHostList } = useHostList();
 
   const loadHost = async (id?: string | string[]) => {
     if (hostList.findIndex((h) => h.id === id) > -1) {
@@ -26,6 +27,16 @@ export const useHostView = () => {
     setIsLoading('finished');
   };
 
+  const deleteHost = async (id: string, callback: VoidFunction) => {
+    try {
+      await hostClient.deleteHost(id);
+      removeFromHostList(id);
+      callback();
+    } catch (err) {
+      toast.error('Error Deleting');
+    }
+  };
+
   const unloadHost = () => {
     setHost(null);
     setIsLoading('loading');
@@ -36,6 +47,7 @@ export const useHostView = () => {
     isLoading,
 
     loadHost,
+    deleteHost,
     unloadHost,
   };
 };

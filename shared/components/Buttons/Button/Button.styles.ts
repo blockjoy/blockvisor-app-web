@@ -70,9 +70,15 @@ const buttonStyle = {
       fill: ${theme.colorText};
     }
   `,
-  basic: css`
-    color: var(--color-text-5);
-    padding: 0;
+  basic: (theme: ITheme) => css`
+    color: ${theme.colorText};
+    background-color: ${theme.colorInput};
+    transition: 0.3s;
+    opacity: 0.85;
+
+    :not(:disabled):is(:hover, :active, :focus) {
+      opacity: 1;
+    }
   `,
   icon: (theme: ITheme) => css`
     display: inline-grid;
