@@ -10,15 +10,22 @@ import {
   Subscription,
 } from 'chargebee-typescript/lib/resources';
 import { localStorageEffect } from 'utils/store/persist';
+import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
 
 const billing = atom<{
-  id: string | null;
+  identity: {
+    id: string | null;
+    subscription: UserSubscription | null;
+  };
   customer: Customer | null;
   subscription: Subscription | null;
 }>({
   key: 'billing',
   default: {
-    id: null,
+    identity: {
+      id: null,
+      subscription: null,
+    },
     customer: null,
     subscription: null,
   },

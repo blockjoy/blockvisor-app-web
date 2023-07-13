@@ -1,4 +1,9 @@
-import { useBilling, useIdentityRepository, useSignIn } from '@modules/auth';
+import {
+  useIdentityRepository,
+  useSignIn,
+  useUserBilling,
+  useUserSubscription,
+} from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
@@ -36,11 +41,12 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+  const repository = useIdentityRepository();
   const { getBlockchains } = useGetBlockchains();
-  const { getBilling } = useBilling();
   const { getCustomer } = useCustomer();
   const { getSubscription } = useSubscription();
-  const repository = useIdentityRepository();
+  const { getUserBilling } = useUserBilling();
+  const { getUserSubscription } = useUserSubscription();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -69,13 +75,16 @@ export function LoginForm() {
       await getOrganizations(!invited);
 
       const userId = repository?.getIdentity()?.id;
-      const billingId = await getBilling(userId!);
-      if (billingId) await getCustomer(billingId);
+      const billingId = await getUserBilling(userId!);
+      if (billingId) await getCustomer(billingId!);
 
       const defaultOrganization: DefaultOrganization = fetchFromLocalStorage(
         'defaultOrganization',
       );
-      await getSubscription(defaultOrganization?.id);
+      const userSubscription = await getUserSubscription(
+        defaultOrganization?.id!,
+      );
+      if (userSubscription) await getSubscription(userSubscription?.externalId);
 
       getBlockchains();
       handleRedirect();

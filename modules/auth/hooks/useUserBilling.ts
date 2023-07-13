@@ -1,14 +1,14 @@
 import { useRecoilState } from 'recoil';
 import { userClient } from '@modules/grpc';
 import { billingSelectors } from '@modules/billing';
-import { ApplicationError } from '../utils/Errors';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 
-export const useBilling = () => {
+export const useUserBilling = () => {
   const [userBillingId, setUserBillingId] = useRecoilState(
     billingSelectors.billingId,
   );
 
-  const getBilling = async (userId: string) => {
+  const getUserBilling = async (userId: string): Promise<string | null> => {
     try {
       const response: any = await userClient.getBilling(userId);
 
@@ -19,7 +19,10 @@ export const useBilling = () => {
     }
   };
 
-  const updateBilling: any = async (userId: string, billingId: string) => {
+  const updateUserBilling: any = async (
+    userId: string,
+    billingId: string,
+  ): Promise<string | null> => {
     try {
       const response: any = await userClient.updateBilling(userId, billingId);
 
@@ -30,7 +33,7 @@ export const useBilling = () => {
     }
   };
 
-  const deleteBilling: any = async (userId: string) => {
+  const deleteUserBilling: any = async (userId: string): Promise<void> => {
     try {
       await userClient.deleteBilling(userId);
 
@@ -42,10 +45,9 @@ export const useBilling = () => {
 
   return {
     billingId: userBillingId,
-    setBillingId: setUserBillingId,
 
-    getBilling,
-    updateBilling,
-    deleteBilling,
+    getUserBilling,
+    updateUserBilling,
+    deleteUserBilling,
   };
 };
