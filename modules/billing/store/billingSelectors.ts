@@ -20,6 +20,16 @@ const activePlan = selectorFamily<Item | null, string>({
     },
 });
 
+const billingId = selector<string | null>({
+  key: 'billing.id',
+  get: ({ get }) => get(billingAtoms.billing).id,
+  set: ({ set }, newValue) =>
+    set(billingAtoms.billing, (prevState: any) => ({
+      ...prevState,
+      id: newValue,
+    })),
+});
+
 const customer = selector<Customer | null>({
   key: 'billing.customer',
   get: ({ get }) => get(billingAtoms.billing).customer,
@@ -80,6 +90,7 @@ const hasSubscription = selector<boolean>({
 export const billingSelectors = {
   activePlan,
   billingAddress,
+  billingId,
   customer,
   hasPaymentMethod,
   subscription,
