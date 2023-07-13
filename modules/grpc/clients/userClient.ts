@@ -132,6 +132,42 @@ class UserClient {
       return handleError(err);
     }
   }
+
+  async getBilling(userId: string): Promise<string | undefined> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.getBilling({ userId }, getOptions());
+
+      return response.billingId;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async updateBilling(
+    userId: string,
+    billingId: string,
+  ): Promise<string | undefined> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.updateBilling(
+        { userId, billingId },
+        getOptions(),
+      );
+      return response.billingId;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async deleteBilling(userId: string): Promise<string | undefined> {
+    try {
+      await authClient.refreshToken();
+      await this.client.deleteBilling({ userId }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
 }
 
 export const userClient = new UserClient();

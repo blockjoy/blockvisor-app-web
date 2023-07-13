@@ -6,7 +6,7 @@ import {
   billingAtoms,
   billingSelectors,
 } from '@modules/billing';
-import { useIdentityRepository } from '@modules/auth';
+import { useBilling, useIdentityRepository } from '@modules/auth';
 
 interface ICustomerHook {
   customer: Customer | null;
@@ -20,6 +20,7 @@ interface ICustomerHook {
 export const useCustomer = (): ICustomerHook => {
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
+  const { updateBilling } = useBilling();
 
   const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
   const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
@@ -66,6 +67,12 @@ export const useCustomer = (): ICustomerHook => {
 
       const customer = await response.json();
 
+      try {
+        await updateBilling(user?.id!, customer.id);
+      } catch (err: any) {
+        console.log('Error while updating billing', err);
+      }
+
       setCustomer(customer);
 
       return customer;
@@ -101,11 +108,11 @@ export const useCustomer = (): ICustomerHook => {
     if (!customer) {
       try {
         const newCustomer = await createCustomer({
-          id: user?.id,
           first_name: user?.firstName,
           last_name: user?.lastName,
           email: user?.email,
         });
+
         return newCustomer;
       } catch (error) {
         console.log(
