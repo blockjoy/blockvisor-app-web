@@ -1,54 +1,56 @@
+import { css } from '@emotion/react';
 import { Button, Input, Modal } from '@shared/components';
-import { spacing } from 'styles/utils.spacing.styles';
-import { useNodeView } from '@modules/node';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { display } from 'styles/utils.display.styles';
-import { css } from '@emotion/react';
-import { styles } from './NodeViewHeaderDelete.styles';
-import { useRouter } from 'next/router';
-import { ROUTES } from '@shared/constants/routes';
+import { spacing } from 'styles/utils.spacing.styles';
+import { styles } from './DeleteModal.styles';
 
-export type Props = {
+type Props = {
+  portalId: string;
+  type?: string;
+  elementName: string;
+  entityName: string;
   onHide: VoidFunction;
+  onSubmit: VoidFunction;
 };
 
-type DeleteForm = {
-  elementNameToDelete: string;
-};
-
-export const NodeViewHeaderDelete = ({ onHide }: Props) => {
-  const { node, deleteNode } = useNodeView();
-  const router = useRouter();
-  const form = useForm<DeleteForm>({ mode: 'onChange' });
+export const DeleteModal = ({
+  portalId,
+  type = 'Delete',
+  elementName,
+  entityName,
+  onHide,
+  onSubmit,
+}: Props) => {
+  const form = useForm<{ name: string }>({ mode: 'onChange' });
   const { isValid } = form.formState;
   const [isDeleting, setIsDeleting] = useState(false);
-  const doNamesMatch = (name: string) => name === node!.name;
+  const doNamesMatch = (name: string) => name === elementName;
 
-  const onSubmit = async (e: any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     setIsDeleting(true);
-    deleteNode(node!.id, () => {
-      router.push(ROUTES.NODES);
-      onHide();
-    });
+    onSubmit();
   };
 
   return (
-    <Modal portalId="modal-root" isOpen={true} handleClose={onHide}>
-      <h2 css={styles.header}>Delete Node ({node!.name})</h2>
-
+    <Modal portalId={portalId} isOpen={true} handleClose={onHide}>
+      <h2 css={styles.header}>
+        {type} {entityName} ({elementName})
+      </h2>
       <p css={spacing.bottom.medium}>
-        To delete, type the name of your Node and then click "confirm".
+        To {type?.toLowerCase()}, type the name of your {entityName} and then
+        click "confirm".
       </p>
       <FormProvider {...form}>
-        <form onSubmit={(e) => onSubmit(e)}>
+        <form onSubmit={handleSubmit}>
           <Input
             autoFocus
             style={{ maxWidth: '380px' }}
             labelStyles={[display.visuallyHidden]}
             name="elementNameToDelete"
-            placeholder={`Type Node name`}
+            placeholder={`Type ${entityName?.toLowerCase()} name`}
             type="text"
             validationOptions={{
               required: 'This is a mandatory field',
@@ -59,7 +61,7 @@ export const NodeViewHeaderDelete = ({ onHide }: Props) => {
             <Button
               disabled={!isValid || isDeleting}
               type="submit"
-              size="small"
+              size="medium"
               style="warning"
               loading={isDeleting}
               customCss={[
@@ -73,7 +75,7 @@ export const NodeViewHeaderDelete = ({ onHide }: Props) => {
             <Button
               onClick={onHide}
               type="submit"
-              size="small"
+              size="medium"
               style="outline"
               customCss={[
                 css`
