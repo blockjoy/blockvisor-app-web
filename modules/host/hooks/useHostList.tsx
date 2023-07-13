@@ -29,6 +29,16 @@ export const useHostList = () => {
     router.push(ROUTES.HOST(args.key));
   };
 
+  const removeFromHostList = (id: string) => {
+    const newList = hostListSorted.filter((h) => h.id !== id);
+
+    if (newList.length !== hostListSorted.length) {
+      setHostList(newList);
+    }
+
+    setHostCount(hostCount - 1);
+  };
+
   const loadHosts = async (queryParams?: InitialQueryParams) => {
     if (!queryParams) {
       const savedQueryParams = getInitialQueryParams();
@@ -78,5 +88,6 @@ export const useHostList = () => {
 
     handleHostClick,
     loadHosts,
+    removeFromHostList,
   };
 };
