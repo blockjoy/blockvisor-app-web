@@ -6,7 +6,7 @@ import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
-import { EmptyColumn, PageTitle } from '@shared/components';
+import { EmptyColumn, PageTitle, sort } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
@@ -217,7 +217,12 @@ export const NodeLauncher = () => {
 
     if (!activeBlockchain) return;
 
-    setNetworkList(activeBlockchain.networks.map((n: any) => n.name));
+    const sortedNetworkList = sort(
+      activeBlockchain.networks.map((n: any) => n.name),
+      { order: 'asc' },
+    );
+
+    setNetworkList(sortedNetworkList);
 
     const supportedNodeTypes = activeBlockchain.nodesTypes;
 
@@ -248,9 +253,7 @@ export const NodeLauncher = () => {
       ...node,
       properties: propertiesWithValue,
       keyFiles: fileProperties,
-      network: activeBlockchain?.networks?.length
-        ? activeBlockchain?.networks[0]?.name
-        : '',
+      network: sortedNetworkList.length ? sortedNetworkList[0] : '',
     });
   }, [node.blockchainId, node.nodeType]);
 

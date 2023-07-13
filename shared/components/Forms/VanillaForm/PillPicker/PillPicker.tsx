@@ -1,4 +1,3 @@
-import { sort } from '@shared/components';
 import { FC, Fragment } from 'react';
 import { styles } from './PillPicker.styles';
 
@@ -17,15 +16,11 @@ export const PillPicker: FC<Props> = ({
   onChange,
   tabIndexStart,
 }) => {
-  const handleChange = (item: string) => {
-    onChange(name, item);
-  };
-
-  console.log('items', items);
+  const handleChange = (item: string) => onChange(name, item);
 
   return (
     <div css={styles.wrapper}>
-      {sort(items, { order: 'asc' }).map((item, index) => (
+      {items.map((item, index) => (
         <Fragment key={item}>
           <input
             tabIndex={tabIndexStart! + index}
