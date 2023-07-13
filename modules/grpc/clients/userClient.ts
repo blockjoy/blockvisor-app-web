@@ -133,12 +133,12 @@ class UserClient {
     }
   }
 
-  async getBilling(userId: string): Promise<string | undefined> {
+  async getBilling(userId: string): Promise<string | StatusResponse> {
     try {
       await authClient.refreshToken();
       const response = await this.client.getBilling({ userId }, getOptions());
 
-      return response.billingId;
+      return response.billingId!;
     } catch (err) {
       return handleError(err);
     }
@@ -147,20 +147,20 @@ class UserClient {
   async updateBilling(
     userId: string,
     billingId: string,
-  ): Promise<string | undefined> {
+  ): Promise<string | StatusResponse> {
     try {
       await authClient.refreshToken();
       const response = await this.client.updateBilling(
         { userId, billingId },
         getOptions(),
       );
-      return response.billingId;
+      return response.billingId!;
     } catch (err) {
       return handleError(err);
     }
   }
 
-  async deleteBilling(userId: string): Promise<string | undefined> {
+  async deleteBilling(userId: string): Promise<void> {
     try {
       await authClient.refreshToken();
       await this.client.deleteBilling({ userId }, getOptions());

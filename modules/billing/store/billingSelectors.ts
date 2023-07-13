@@ -7,6 +7,7 @@ import {
   Subscription,
 } from 'chargebee-typescript/lib/resources';
 import { organizationAtoms } from '@modules/organization';
+import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
 
 const activePlan = selectorFamily<Item | null, string>({
   key: 'billing.plan.active',
@@ -21,12 +22,28 @@ const activePlan = selectorFamily<Item | null, string>({
 });
 
 const billingId = selector<string | null>({
-  key: 'billing.id',
-  get: ({ get }) => get(billingAtoms.billing).id,
+  key: 'billing.identity.id',
+  get: ({ get }) => get(billingAtoms.billing).identity.id,
   set: ({ set }, newValue) =>
     set(billingAtoms.billing, (prevState: any) => ({
       ...prevState,
-      id: newValue,
+      identity: {
+        ...prevState.identity,
+        id: newValue,
+      },
+    })),
+});
+
+const userSubscription = selector<UserSubscription | null>({
+  key: 'billing.identity.subscription',
+  get: ({ get }) => get(billingAtoms.billing).identity.subscription,
+  set: ({ set }, newValue) =>
+    set(billingAtoms.billing, (prevState: any) => ({
+      ...prevState,
+      identity: {
+        ...prevState.identity,
+        subscription: newValue,
+      },
     })),
 });
 
@@ -91,6 +108,7 @@ export const billingSelectors = {
   activePlan,
   billingAddress,
   billingId,
+  userSubscription,
   customer,
   hasPaymentMethod,
   subscription,
