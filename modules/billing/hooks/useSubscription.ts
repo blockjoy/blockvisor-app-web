@@ -8,6 +8,7 @@ import {
   fetchBilling,
 } from '@modules/billing';
 import { organizationAtoms } from '@modules/organization';
+import { authAtoms, useUserSubscription } from '@modules/auth';
 
 interface ExtendedCreateWithItemsParams
   extends _subscription.create_with_items_params {
@@ -39,6 +40,7 @@ export const useSubscription = (): ISubscriptionHook => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
+  const user = useRecoilValue(authAtoms.user);
 
   const [subscription, setSubscription] = useRecoilState(
     billingSelectors.subscription,
@@ -46,6 +48,8 @@ export const useSubscription = (): ISubscriptionHook => {
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
+
+  const { createUserSubscription } = useUserSubscription();
 
   const getSubscription = async (id: string) => {
     setSubscriptionLoadingState('initializing');
@@ -85,7 +89,6 @@ export const useSubscription = (): ISubscriptionHook => {
       ];
 
     const params: ExtendedCreateWithItemsParams = {
-      id: defaultOrganization?.id!,
       auto_collection: autoRenewValue,
       payment_source_id: paymentMethodId,
       subscription_items: subscriptionItems,
@@ -99,6 +102,16 @@ export const useSubscription = (): ISubscriptionHook => {
       });
 
       setSubscription(data);
+
+      try {
+        await createUserSubscription(
+          defaultOrganization?.id!,
+          user?.id!,
+          data.id,
+        );
+      } catch (err: any) {
+        console.error('Failed to update billing profile', err);
+      }
 
       return data;
     } catch (error) {

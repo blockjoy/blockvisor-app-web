@@ -14,7 +14,11 @@ import {
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
-import { useCustomer, useSubscription } from '@modules/billing';
+import {
+  billingSelectors,
+  useCustomer,
+  useSubscription,
+} from '@modules/billing';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -24,9 +28,12 @@ export type LayoutProps = {
 
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
-  const userEmail = repository?.getIdentity()?.email;
+  const user = repository?.getIdentity();
 
   const currentOrg = useRef<string>();
+
+  const billingId = useRecoilValue(billingSelectors.billingId);
+  const userSubscription = useRecoilValue(billingSelectors.userSubscription);
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -39,15 +46,13 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getSubscription } = useSubscription();
 
   useEffect(() => {
-    if (!customer) {
-      getCustomer(userEmail!);
-    }
+    if (!customer && billingId) getCustomer(billingId);
   }, []);
 
   useEffect(() => {
     (async () => {
       if (!organizations.length) await getOrganizations(true);
-      await getReceivedInvitations(userEmail!);
+      await getReceivedInvitations(user?.email!);
     })();
   }, []);
 
@@ -63,7 +68,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      getSubscription(defaultOrganization?.id!);
+      if (userSubscription) getSubscription(userSubscription.externalId);
       loadNodes();
       loadHosts();
     }
