@@ -75,7 +75,7 @@ export const Profile = () => {
   };
   return (
     <>
-      <PageTitle title="Profile" icon={<IconPerson />} />
+      <PageTitle hideOrgPicker title="Profile" icon={<IconPerson />} />
       <Tabs
         activeTab={activeTab}
         onTabClick={handleClick}

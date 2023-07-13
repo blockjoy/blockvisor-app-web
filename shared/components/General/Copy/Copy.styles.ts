@@ -17,7 +17,7 @@ export const styles = {
     }
   `,
   text: (theme: ITheme) => css`
-    font-size: 18px;
+    font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

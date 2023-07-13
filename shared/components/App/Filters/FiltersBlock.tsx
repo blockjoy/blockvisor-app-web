@@ -16,14 +16,12 @@ type FiltersBlockProps = {
   filterCount: number;
   filterList: FilterItem[];
   setFilterList: SetterOrUpdater<FilterItem[]>;
-  setOrganization: (id: string, name: string) => void;
   onPlusMinusClicked: (filterName: string, args1: boolean) => void;
   onFilterBlockClicked: (name: string) => void;
   onFilterChanged: (
     e: ChangeEvent<HTMLInputElement>,
     list: FilterItem[],
     setFilterList: SetterOrUpdater<FilterItem[]>,
-    setOrganization: (id: string, name: string) => void,
   ) => void;
 };
 
@@ -38,7 +36,6 @@ export const FiltersBlock = ({
   onFilterBlockClicked,
   onFilterChanged,
   setFilterList,
-  setOrganization,
 }: FiltersBlockProps) => {
   const handleMinusClicked = (e: MouseEvent<HTMLLabelElement>) => {
     if (!isDisabled) {
@@ -81,12 +78,7 @@ export const FiltersBlock = ({
                   <Checkbox
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       e.stopPropagation();
-                      onFilterChanged(
-                        e,
-                        filterList,
-                        setFilterList,
-                        setOrganization,
-                      );
+                      onFilterChanged(e, filterList, setFilterList);
                     }}
                     id={item.id}
                     name={item.name!}

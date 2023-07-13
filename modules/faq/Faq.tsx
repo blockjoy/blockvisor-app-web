@@ -11,7 +11,7 @@ export type FaqProps = {
 export const Faq = ({ faqs }: FaqProps) => {
   return (
     <>
-      <PageTitle title="FAQ" icon={<IconChat />} />
+      <PageTitle hideOrgPicker title="FAQ" icon={<IconChat />} />
       <PageSection>
         <div css={styles.wrapper}>
           <header css={styles.header}>Frequently Asked Questions</header>

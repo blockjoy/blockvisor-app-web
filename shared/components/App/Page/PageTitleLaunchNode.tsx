@@ -11,7 +11,7 @@ export const PageTitleLaunchNode = () => {
       <SvgIcon size="20px">
         <IconRocket />
       </SvgIcon>
-      {/* <span css={styles.buttonText}>Launch Node</span> */}
+      <span css={styles.buttonText}>Launch Node</span>
     </button>
   ) : null;
 };

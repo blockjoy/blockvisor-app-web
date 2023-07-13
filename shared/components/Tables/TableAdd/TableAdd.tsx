@@ -68,21 +68,24 @@ export const TableAdd = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => (!value.length ? setIsFocused(false) : null)}
       />
-      <div css={styles.button}>
-        <Button
-          disabled={!isValid}
-          loading={isLoading}
-          style="secondary"
-          size="small"
-          type="submit"
-          css={css`
+      <Button
+        disabled={!isValid}
+        loading={isLoading}
+        style="secondary"
+        size="small"
+        type="submit"
+        css={[
+          styles.button,
+          css`
+            minwidth: ${buttonWidth};
+            maxwidth: ${buttonWidth};
             width: ${buttonWidth};
-          `}
-          onClick={handleFormSubmit}
-        >
-          {buttonText}
-        </Button>
-      </div>
+          `,
+        ]}
+        onClick={handleFormSubmit}
+      >
+        {buttonText}
+      </Button>
     </div>
   );
 };
