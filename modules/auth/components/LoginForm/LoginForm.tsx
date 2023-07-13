@@ -1,4 +1,4 @@
-import { useIdentityRepository, useSignIn } from '@modules/auth';
+import { useBilling, useIdentityRepository, useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
@@ -37,6 +37,7 @@ export function LoginForm() {
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
   const { getBlockchains } = useGetBlockchains();
+  const { getBilling } = useBilling();
   const { getCustomer } = useCustomer();
   const { getSubscription } = useSubscription();
   const repository = useIdentityRepository();
@@ -68,7 +69,8 @@ export function LoginForm() {
       await getOrganizations(!invited);
 
       const userId = repository?.getIdentity()?.id;
-      await getCustomer(userId!);
+      const billingId = await getBilling(userId!);
+      if (billingId) await getCustomer(billingId);
 
       const defaultOrganization: DefaultOrganization = fetchFromLocalStorage(
         'defaultOrganization',
