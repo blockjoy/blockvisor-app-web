@@ -23,6 +23,11 @@ export const ActionsDropdown = ({ items }: Props) => {
   const handleClick = () => setIsOpen(!isOpen);
   const handleClickOutside = () => setIsOpen(false);
 
+  const handleDropdownItemClicked = (method: VoidFunction) => {
+    setIsOpen(false);
+    method();
+  };
+
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   return (
@@ -39,9 +44,9 @@ export const ActionsDropdown = ({ items }: Props) => {
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         <ul>
           {items.map((item) => (
-            <li>
+            <li key={item.title}>
               <DropdownItem
-                onButtonClick={item.method}
+                onButtonClick={() => handleDropdownItemClicked(item.method)}
                 size="medium"
                 type="button"
               >
