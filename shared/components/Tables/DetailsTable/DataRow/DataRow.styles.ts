@@ -8,7 +8,7 @@ export const styles = {
     word-break: break-all;
     border-bottom: 1px solid var(--color-text-5-o10);
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toSml} {
       display: flex;
       flex-direction: column;
 
@@ -31,7 +31,7 @@ export const styles = {
     padding-top: 28px;
     padding-bottom: 8px;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toSml} {
       padding-top: 16px;
       padding-bottom: 16px;
       display: block;
@@ -40,11 +40,8 @@ export const styles = {
   heading: css`
     padding-right: 28px;
     font-weight: var(--font-weight-normal);
-    ${typo.uppercase}
-    ${typo.microlabel}
-    ${colors.text3} /* @media ${breakpoints.toXlrg} {
-      padding-top: 28px;
-      padding-bottom: 0;
-    } */
+    ${typo.uppercase};
+    ${typo.microlabel};
+    ${colors.text3};
   `,
 };

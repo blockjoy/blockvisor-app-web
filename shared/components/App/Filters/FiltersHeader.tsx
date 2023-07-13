@@ -1,9 +1,11 @@
 import { styles } from './FiltersHeader.styles';
+import { FiltersHeaderIconText } from './FiltersHeaderIconText';
+import { Skeleton } from '@shared/components';
+import { OrganizationPicker } from '@shared/components';
 import IconPlus from '@public/assets/icons/common/Plus.svg';
 import IconMinus from '@public/assets/icons/common/Minus.svg';
 import IconClose from '@public/assets/icons/common/ArrowLeft.svg';
-import { FiltersHeaderIconText } from './FiltersHeaderIconText';
-import { Skeleton } from '@shared/components';
+import { isMobile } from 'react-device-detect';
 
 export type FiltersHeaderProps = {
   isLoading: boolean;
@@ -19,18 +21,23 @@ export const FiltersHeader = ({
   handleFiltersToggle,
 }: FiltersHeaderProps) => {
   return (
-    <header css={styles.header} onClick={handleFiltersToggle}>
+    <header css={styles.header}>
       {isLoading ? (
         <Skeleton />
       ) : (
         <>
-          <span css={styles.collapseButton}>
-            <IconClose />
-          </span>
-          <FiltersHeaderIconText filtersTotal={filtersTotal} />
-          <span css={styles.dropdownIcon}>
-            {isFiltersOpen ? <IconMinus /> : <IconPlus />}
-          </span>
+          <button onClick={handleFiltersToggle} css={styles.filtersButton}>
+            <span css={styles.collapseButton}>
+              <IconClose />
+            </span>
+            <FiltersHeaderIconText filtersTotal={filtersTotal} />
+            <span css={styles.dropdownIcon}>
+              {isFiltersOpen ? <IconMinus /> : <IconPlus />}
+            </span>
+          </button>
+          <div css={styles.orgPicker}>
+            {!isMobile && <OrganizationPicker isRightAligned />}
+          </div>
         </>
       )}
     </header>

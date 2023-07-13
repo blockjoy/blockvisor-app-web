@@ -203,13 +203,12 @@ const filtersTotal = selector<number>({
     const filtersStatusTotal = get(filtersStatus).some((s) => s.isChecked);
     const filtersHealthTotal = get(filtersHealth) ? true : false;
 
-    const total =
-      [
-        filtersBlockchainTotal,
-        filtersTypeTotal,
-        filtersStatusTotal,
-        filtersHealthTotal,
-      ].filter(Boolean).length + 1;
+    const total = [
+      filtersBlockchainTotal,
+      filtersTypeTotal,
+      filtersStatusTotal,
+      filtersHealthTotal,
+    ].filter(Boolean).length;
 
     return total;
   },

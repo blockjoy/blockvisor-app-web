@@ -1,18 +1,20 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
-import { rgba } from 'polished';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
     display: flex;
     flex-direction: column;
-    flex: 1 1 400px;
     max-width: 33%;
     max-height: calc(100vh - 72px);
     padding: 10px 16px 10px 0;
     margin-left: -16px;
     border-right: 1px solid ${theme.colorBorder};
+
+    @media ${breakpoints.fromXLrg} {
+      flex: 1 1 400px;
+    }
 
     @media ${breakpoints.toXlrg} {
       display: block;
