@@ -88,6 +88,7 @@ export const useHostList = () => {
 
     handleHostClick,
     loadHosts,
+    setHostList,
     removeFromHostList,
   };
 };

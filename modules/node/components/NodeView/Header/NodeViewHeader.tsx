@@ -26,7 +26,7 @@ export const NodeViewHeader = () => {
   const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
 
   const handleDeleteNode = () => {
-    deleteNode(node!.id, () => {
+    deleteNode(node!.id, node!.hostId, () => {
       router.push(ROUTES.NODES);
       toggleDeleteModalOpen();
       toast.success('Node Deleted');

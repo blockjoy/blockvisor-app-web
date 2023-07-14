@@ -45,8 +45,8 @@ export const useHostView = () => {
   return {
     host,
     isLoading,
-
     loadHost,
+    setHost,
     deleteHost,
     unloadHost,
   };

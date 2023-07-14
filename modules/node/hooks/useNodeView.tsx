@@ -11,15 +11,17 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
   useDefaultOrganization,
+  useGetOrganization,
   useGetOrganizations,
   useUpdateOrganization,
 } from '@modules/organization';
+import { useHostList, useHostUpdate, useHostView } from '@modules/host';
 
 type Args = string | string[] | undefined;
 
 type Hook = {
   loadNode: (id: Args, onError: VoidFunction) => Promise<void>;
-  deleteNode: (args1: Args, onSuccess: VoidFunction) => void;
+  deleteNode: (nodeId: Args, hostId: string, onSuccess: VoidFunction) => void;
   stopNode: (nodeId: Args) => void;
   startNode: (nodeId: Args) => void;
   modifyNode: (node: Node) => void;
@@ -44,19 +46,35 @@ export const useNodeView = (): Hook => {
   const { organizations } = useGetOrganizations();
   const { defaultOrganization } = useDefaultOrganization();
   const { modifyOrganization } = useUpdateOrganization();
+  const { host } = useHostView();
+  const { hostList } = useHostList();
+  const { modifyHost } = useHostUpdate();
 
-  const deleteNode = async (id: Args, onSuccess: VoidFunction) => {
+  const deleteNode = async (
+    id: Args,
+    hostId: string,
+    onSuccess: VoidFunction,
+  ) => {
     const uuid = convertRouteParamToString(id);
     removeFromNodeList(uuid);
     await nodeClient.deleteNode(uuid);
-    // Update organization node count
+
     const activeOrganization = organizations.find(
       (org) => org.id === defaultOrganization?.id,
     );
     modifyOrganization({
       ...activeOrganization,
-      nodeCount: activeOrganization!.nodeCount - 1,
+      nodeCount: activeOrganization?.nodeCount! - 1,
     });
+
+    const hostInList = hostList.find((h) => h.id === node?.hostId);
+    if (hostInList) {
+      modifyHost({
+        ...hostInList,
+        nodeCount: hostInList.nodeCount - 1,
+      });
+    }
+
     onSuccess();
   };
 
