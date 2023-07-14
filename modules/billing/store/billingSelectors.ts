@@ -94,13 +94,9 @@ const hasPaymentMethod = selector<boolean>({
 const hasSubscription = selector<boolean>({
   key: 'billing.hasSubscription',
   get: ({ get }) => {
-    const defaultOrganization = get(organizationAtoms.defaultOrganization);
-    const subscription = get(billingAtoms.billing).subscription;
+    const subscription = get(billingAtoms.billing).identity.subscription;
 
-    return (
-      subscription?.status === 'active' &&
-      subscription.cf_organization_id === defaultOrganization?.id
-    );
+    return subscription !== null;
   },
 });
 
