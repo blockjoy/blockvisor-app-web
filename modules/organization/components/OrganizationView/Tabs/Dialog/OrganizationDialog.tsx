@@ -11,6 +11,8 @@ import { useRecoilValue } from 'recoil';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './OrganizationDialog.styles';
+import { useState } from 'react';
+import { css } from '@emotion/react';
 
 export type DialogProps = {
   activeMember: Member;
@@ -27,6 +29,8 @@ export function OrganizationDialog({
     organizationAtoms.selectedOrganization,
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const { revokeInvitation } = useInvitations();
   const { removeMemberFromOrganization } = useRemoveMember();
 
@@ -38,13 +42,15 @@ export function OrganizationDialog({
     await removeMemberFromOrganization(userId!, orgId!);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setIsLoading(true);
+
     switch (activeAction) {
       case Action.remove:
-        handleRemoveMember();
+        await handleRemoveMember();
         break;
       case Action.revoke:
-        handleRevokeInvitation();
+        await handleRevokeInvitation();
         break;
       default:
         break;
@@ -77,10 +83,27 @@ export function OrganizationDialog({
         <p>{messages[activeAction].subheadline}</p>
       </div>
       <div css={[styles.actions]}>
-        <Button style="warning" onClick={handleSubmit}>
+        <Button
+          customCss={[
+            css`
+              min-width: 125px;
+            `,
+          ]}
+          loading={isLoading}
+          style="warning"
+          onClick={handleSubmit}
+        >
           Confirm
         </Button>
-        <Button style="outline" onClick={onHide}>
+        <Button
+          customCss={[
+            css`
+              min-width: 125px;
+            `,
+          ]}
+          style="outline"
+          onClick={onHide}
+        >
           Cancel
         </Button>
       </div>

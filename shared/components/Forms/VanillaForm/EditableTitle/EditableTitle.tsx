@@ -23,6 +23,23 @@ type Props = {
   canUpdate: boolean;
 };
 
+const setCaret = (el?: HTMLInputElement) => {
+  if (!el) return;
+
+  try {
+    const range: Range = document.createRange();
+    const sel: Selection = window.getSelection()!;
+
+    range.setStart(el.childNodes[0], el.innerText.length);
+    range.collapse(true);
+
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } catch (err) {
+    console.log('Error Setting Caret: ', err);
+  }
+};
+
 export const EditableTitle: FC<Props> = ({
   isLoading,
   isSaving,
@@ -73,6 +90,7 @@ export const EditableTitle: FC<Props> = ({
   useEffect(() => {
     if (isEditMode) {
       inputRef?.current?.focus();
+      setCaret(inputRef.current!);
     }
   }, [isEditMode]);
 
