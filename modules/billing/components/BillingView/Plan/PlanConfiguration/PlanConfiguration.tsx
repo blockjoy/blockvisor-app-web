@@ -7,27 +7,26 @@ import {
 } from 'chargebee-typescript/lib/resources';
 import {
   useSubscription,
-  BILLING_PLAN_FEATURES,
   billingSelectors,
   usePaymentMethods,
   PlanParams,
   PaymentMethodsDropdown,
+  PlanFeatures,
 } from '@modules/billing';
 import { Alert, Button, ButtonGroup, SvgIcon } from '@shared/components';
 import { formatters, TableSkeleton } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanConfiguration.styles';
-import IconCheck from '@public/assets/icons/common/Check.svg';
 
 export type PlanConfigurationProps = {
-  plan: Item | null;
+  item: Item | null;
   itemPrices: ItemPrice[];
   handleCancel: VoidFunction;
 };
 
 export const PlanConfiguration = ({
-  plan,
+  item,
   handleCancel,
   itemPrices,
 }: PlanConfigurationProps) => {
@@ -80,7 +79,7 @@ export const PlanConfiguration = ({
   return (
     <div css={styles.wrapper}>
       <div css={spacing.bottom.medium}>
-        <p css={styles.planTitle}>{plan?.external_name}</p>
+        <p css={styles.planTitle}>{item?.external_name}</p>
       </div>
       <div css={[divider, spacing.bottom.medium]}></div>
       <PlanParams
@@ -96,21 +95,12 @@ export const PlanConfiguration = ({
           handlePaymentMethod={handlePaymentMethod}
         />
       </div>
-      <div css={spacing.bottom.medium}>
-        <h3 css={styles.headline}>What you get</h3>
-        <ul css={styles.features}>
-          {BILLING_PLAN_FEATURES.map(
-            (feature: string, featureIndex: number) => (
-              <li key={featureIndex}>
-                <span css={styles.summaryIcon}>
-                  <IconCheck />
-                </span>
-                <span>{feature}</span>
-              </li>
-            ),
-          )}
-        </ul>
-      </div>
+      {item?.metadata?.features && (
+        <div css={spacing.bottom.medium}>
+          <h3 css={styles.headline}>What you get</h3>
+          <PlanFeatures features={item?.metadata?.features} />
+        </div>
+      )}
       <div css={[divider, spacing.bottom.medium]}></div>
       <div css={[flex.display.flex, flex.justify.between]}>
         <p css={styles.headline}>Total</p>

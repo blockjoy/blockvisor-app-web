@@ -5,8 +5,10 @@ import { createHandler } from 'utils/billing/createHandler';
 
 type CreateContactParams = {
   customerId: string;
-  subscriptionId: string;
   params: _customer.add_contact_params;
+  filterParams: {
+    subscriptionId: string;
+  };
 };
 
 const requestCallback = ({ customerId, params }: CreateContactParams) =>
@@ -16,13 +18,15 @@ const mappingCallback = (
   result: { customer: Customer },
   params: CreateContactParams,
 ): Contact[] => {
-  const { subscriptionId } = params;
+  const {
+    filterParams: { subscriptionId },
+  } = params;
 
   const contacts = result.customer.contacts;
 
   const filteredContacts =
     contacts?.filter((contact: Contact) =>
-      contact.label?.split('|').includes(subscriptionId),
+      contact.label?.includes(subscriptionId),
     ) ?? [];
 
   return filteredContacts;

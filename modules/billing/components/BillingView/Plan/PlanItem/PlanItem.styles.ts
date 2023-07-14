@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -37,33 +36,19 @@ export const styles = {
     margin: 32px 0 20px;
   `,
   price: css`
-    font-size: 32px;
+    font-size: 22px;
     color: #fff;
+    max-width: 110px;
   `,
   priceLabel: (theme: ITheme) => css`
     font-size: 10px;
     line-height: 16px;
     color: ${theme.colorTextGrey};
     letter-spacing: 1.25px;
+    font-family: var(--font-family-primary);
   `,
-  priceInfo: css`
-    font-size: 12px;
-  `,
-  listContainer: css`
-    margin: 32px 0 20px;
-    margin-bottom: 20px;
-  `,
-  list: css``,
-  listItem: (theme: ITheme) => css`
+  description: css`
     font-size: 14px;
-    padding: 12px 0;
-    border-top: 1px solid ${theme.colorBorderGrey};
-    display: flex;
-    flex-flow: row nowrap;
-    gap: 10px;
-
-    &:not(:last-child) {
-      margin-bottom: 5px;
-    }
+    line-height: 1.25;
   `,
 };
