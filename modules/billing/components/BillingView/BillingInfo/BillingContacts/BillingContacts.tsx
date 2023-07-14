@@ -5,7 +5,7 @@ import {
   BillingContactsList,
   BillingContactForm,
   useBillingContacts,
-  checkIfExists,
+  checkIfBillingContactExists,
 } from '@modules/billing';
 import { Button, TableSkeleton } from '@shared/components';
 
@@ -24,7 +24,10 @@ export const BillingContacts = () => {
   const handleCancel = () => setActiveView('list');
 
   const handleNewBillingContact = async (contact: IBillingContact) => {
-    const isAdded = checkIfExists(billingContacts, contact?.email);
+    const isAdded = checkIfBillingContactExists(
+      billingContacts,
+      contact?.email,
+    );
 
     if (isAdded) {
       toast.error(

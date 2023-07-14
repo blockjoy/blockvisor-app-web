@@ -3,7 +3,18 @@ import { userClient } from '@modules/grpc';
 import { billingSelectors } from '@modules/billing';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 
-export const useUserBilling = () => {
+interface IUseUserBillingHook {
+  billingId: string | null;
+
+  getUserBilling: (userId: string) => Promise<string | null>;
+  updateUserBilling: (
+    userId: string,
+    billingId: string,
+  ) => Promise<string | null>;
+  deleteUserBilling: (userId: string) => Promise<void>;
+}
+
+export const useUserBilling = (): IUseUserBillingHook => {
   const [userBillingId, setUserBillingId] = useRecoilState(
     billingSelectors.billingId,
   );
