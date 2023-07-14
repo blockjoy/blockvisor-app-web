@@ -17,7 +17,9 @@ const mappingCallback = (
 ): Contact[] => {
   const { subscriptionId } = params;
 
-  const contacts = result.list;
+  const contacts = result.list.map(
+    (listItem: any) => listItem.contact as Contact,
+  );
 
   const filteredContacts = contacts.filter((contact: Contact) =>
     contact.label?.split('|').includes(subscriptionId),
