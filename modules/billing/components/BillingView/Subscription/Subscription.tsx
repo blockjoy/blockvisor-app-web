@@ -2,16 +2,13 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
 import { ItemPrice } from 'chargebee-typescript/lib/resources';
-import { DetailsView, TableSkeleton } from '@shared/components';
-import { styles } from './Subscription.styles';
+import { TableSkeleton } from '@shared/components';
 import {
   useEstimates,
   SubscriptionCancellation,
   billingAtoms,
   billingSelectors,
-  SubscriptionInfo,
   SubscriptionUpdate,
-  Estimates,
   SubscriptionPreview,
 } from '@modules/billing';
 
