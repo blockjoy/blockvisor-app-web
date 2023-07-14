@@ -15,6 +15,7 @@ export * from './components/HostView/Tabs/Dashboard/Nodes/HostViewDashboardNodes
 export * from './hooks/useFilters';
 export * from './hooks/useHostList';
 export * from './hooks/useHostView';
+export * from './hooks/useHostUpdate';
 
 export * from './store/hostAtoms';
 export * from './store/hostSelectors';

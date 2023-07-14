@@ -10,12 +10,15 @@ import {
   useGetOrganizations,
   useUpdateOrganization,
 } from '@modules/organization';
+import { useHostList, useHostUpdate } from '@modules/host';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
   const { organizations } = useGetOrganizations();
   const { defaultOrganization } = useDefaultOrganization();
   const { modifyOrganization } = useUpdateOrganization();
+  const { modifyHost } = useHostUpdate();
+  const { hostList } = useHostList();
 
   const createNode = async (
     nodeRequest: NodeServiceCreateRequest,
@@ -54,6 +57,15 @@ export const useNodeAdd = () => {
         ...activeOrganization,
         nodeCount: activeOrganization!.nodeCount + 1,
       });
+
+      const hostInList = hostList.find((h) => h.id === response.hostId);
+
+      if (hostInList) {
+        modifyHost({
+          ...hostInList,
+          nodeCount: hostInList.nodeCount + 1,
+        });
+      }
 
       toast.success('Node Created');
       loadNodes();
