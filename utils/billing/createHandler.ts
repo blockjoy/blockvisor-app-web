@@ -7,7 +7,7 @@ type RequestCallback<Params, Result> = (params: Params) => {
 
 type MappingCallback<Params, Result, Response> = (
   result: Result,
-  params?: Params | any, // TOOD: fix any
+  params?: Params | any, // TODO: fix any
 ) => Response;
 
 type ErrorCallback<Error, Response> = (error: Error) => Response | null;

@@ -33,6 +33,7 @@ interface ISubscriptionHook {
     params: { paymentMethodId: string },
   ) => void;
   provideSubscription: () => Promise<Subscription | null>;
+  fetchSubscription: (id?: string) => void;
 }
 
 export const useSubscription = (): ISubscriptionHook => {
@@ -259,6 +260,15 @@ export const useSubscription = (): ISubscriptionHook => {
     return subscription;
   };
 
+  const fetchSubscription = async (id?: string) => {
+    if (!id) {
+      setSubscriptionLoadingState('finished');
+      return;
+    }
+
+    await getSubscription(id);
+  };
+
   return {
     subscriptionLoadingState,
     setSubscriptionLoadingState,
@@ -269,6 +279,8 @@ export const useSubscription = (): ISubscriptionHook => {
     cancelSubscription,
     restoreSubscription,
     reactivateSubscription,
+
+    fetchSubscription,
 
     updateBillingProfile,
 
