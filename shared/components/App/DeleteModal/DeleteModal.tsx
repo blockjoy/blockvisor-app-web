@@ -66,7 +66,7 @@ export const DeleteModal = ({
               loading={isDeleting}
               customCss={[
                 css`
-                  min-width: 92px;
+                  min-width: 125px;
                 `,
               ]}
             >
@@ -79,7 +79,7 @@ export const DeleteModal = ({
               style="outline"
               customCss={[
                 css`
-                  min-width: 92px;
+                  min-width: 125px;
                 `,
               ]}
             >
