@@ -44,7 +44,7 @@ export function LoginForm() {
   const repository = useIdentityRepository();
   const { getBlockchains } = useGetBlockchains();
   const { getCustomer } = useCustomer();
-  const { getSubscription } = useSubscription();
+  const { fetchSubscription } = useSubscription();
   const { getUserBilling } = useUserBilling();
   const { getUserSubscription } = useUserSubscription();
 
@@ -84,7 +84,7 @@ export function LoginForm() {
       const userSubscription = await getUserSubscription(
         defaultOrganization?.id!,
       );
-      if (userSubscription) await getSubscription(userSubscription?.externalId);
+      await fetchSubscription(userSubscription?.externalId);
 
       getBlockchains();
       handleRedirect();

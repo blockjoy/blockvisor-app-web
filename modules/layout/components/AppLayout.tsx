@@ -47,7 +47,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
   const { customer, getCustomer } = useCustomer();
-  const { getSubscription } = useSubscription();
+  const { fetchSubscription } = useSubscription();
   const { getUserSubscription } = useUserSubscription();
 
   useEffect(() => {
@@ -63,19 +63,19 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, []);
 
   useEffect(() => {
-    const fetchSubscription = async () => {
+    const fetchOrganizationSubscription = async () => {
       const userSubscription = await getUserSubscription(
         defaultOrganization?.id!,
       );
 
-      if (userSubscription) await getSubscription(userSubscription?.externalId);
+      await fetchSubscription(userSubscription?.externalId);
     };
 
     if (
       defaultOrganization?.id !== currentOrg.current &&
       defaultOrganization?.id
     ) {
-      fetchSubscription();
+      fetchOrganizationSubscription();
     }
   }, [defaultOrganization?.id]);
 
