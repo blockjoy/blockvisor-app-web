@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { billingSelectors } from '@modules/billing';
 import { subscriptionClient } from '@modules/grpc';
@@ -8,10 +8,12 @@ export const useUserSubscription = () => {
   const [userSubscription, setUserSubscription] = useRecoilState(
     billingSelectors.userSubscription,
   );
+  const setSubscription = useSetRecoilState(billingSelectors.subscription);
 
   const getUserSubscription = async (orgId: string): Promise<Subscription> => {
     try {
       const response: any = await subscriptionClient.getSubscription(orgId);
+      if (!response) setSubscription(null);
 
       setUserSubscription(response || null);
       return response || null;
