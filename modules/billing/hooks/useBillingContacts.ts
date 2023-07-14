@@ -1,11 +1,11 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { _customer } from 'chargebee-typescript';
+import { Contact } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
 } from '@modules/billing';
-import { _customer } from 'chargebee-typescript';
-import { Contact } from 'chargebee-typescript/lib/resources';
 
 interface IBillingContactsHook {
   billingContacts: Contact[];
@@ -37,7 +37,9 @@ export const useBillingContacts = (): IBillingContactsHook => {
         },
         body: JSON.stringify({
           customerId: customer?.id,
-          subscriptionId: subscription?.id,
+          filterParams: {
+            subscriptionId: subscription?.id,
+          },
         }),
       });
 
@@ -76,8 +78,10 @@ export const useBillingContacts = (): IBillingContactsHook => {
           },
           body: JSON.stringify({
             customerId: customer?.id,
-            subscriptionId: subscription?.id,
             params,
+            filterParams: {
+              subscriptionId: subscription?.id,
+            },
           }),
         },
       );
@@ -113,8 +117,10 @@ export const useBillingContacts = (): IBillingContactsHook => {
           },
           body: JSON.stringify({
             customerId: customer?.id,
-            subscriptionId: subscription?.id,
             params,
+            filterParams: {
+              subscriptionId: subscription?.id,
+            },
           }),
         },
       );
