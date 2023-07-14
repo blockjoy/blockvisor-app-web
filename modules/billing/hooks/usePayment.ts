@@ -2,7 +2,11 @@ import { useRecoilValue } from 'recoil';
 import { billingSelectors, BILLING_API_ROUTES } from '@modules/billing';
 import { _payment_intent } from 'chargebee-typescript';
 
-export const usePayment = () => {
+interface IPaymentHook {
+  createIntent: () => Promise<any>;
+}
+
+export const usePayment = (): IPaymentHook => {
   const customer = useRecoilValue(billingSelectors.customer);
 
   const createIntent = async () => {

@@ -5,7 +5,9 @@ import { createHandler } from 'utils/billing/createHandler';
 
 type ListContactsParams = {
   customerId: string;
-  subscriptionId: string;
+  filterParams: {
+    subscriptionId: string;
+  };
 };
 
 const requestCallback = ({ customerId }: ListContactsParams) =>
@@ -15,14 +17,16 @@ const mappingCallback = (
   result: { list: Contact[] },
   params: ListContactsParams,
 ): Contact[] => {
-  const { subscriptionId } = params;
+  const {
+    filterParams: { subscriptionId },
+  } = params;
 
   const contacts = result.list.map(
     (listItem: any) => listItem.contact as Contact,
   );
 
   const filteredContacts = contacts.filter((contact: Contact) =>
-    contact.label?.split('|').includes(subscriptionId),
+    contact.label?.includes(subscriptionId),
   );
 
   return filteredContacts;

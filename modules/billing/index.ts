@@ -32,8 +32,9 @@ export * from './components/BillingView/PaymentMethods/PaymentPreview/PaymentPre
 
 export * from './components/BillingView/Plan/Plan';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanParams/PlanParams';
-export * from './components/BillingView/Plan/PlanList/PlanList';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanConfiguration';
+export * from './components/BillingView/Plan/PlanItem/PlanItem';
+export * from './components/BillingView/Plan/PlanFeatures/PlanFeatures';
 
 export * from './components/BillingView/Subscription/Subscription';
 export * from './components/BillingView/Subscription/SubscriptionCancellation/SubscriptionCancellation';
@@ -45,7 +46,6 @@ export * from './components/Shared/InvoiceDownload/InvoiceDownload';
 export * from './components/Shared/PaymentMethodsDropdown/PaymentMethodsDropdown';
 export * from './components/Shared/PaymentRequired/PaymentRequired';
 
-export * from './constants/billing';
 export * from './constants/chargebee';
 export * from './constants/common';
 export * from './constants/routes';
@@ -75,7 +75,7 @@ export * from './ui/invoices/InvoicesUIHelpers';
 
 export * from './utils/calcNextRenewDate';
 export * from './utils/calcPlanPrice';
-export * from './utils/checkIfExists';
+export * from './utils/checkIfBillingContactExists';
 export * from './utils/fetchBilling';
 export * from './utils/generateError';
 export * from './utils/handleCreditCardInfo';
