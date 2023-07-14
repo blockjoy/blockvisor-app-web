@@ -7,7 +7,7 @@ export const themeDark: ITheme = {
   colorPrimary: '#bff589',
   colorPrimaryText: '#222524',
   colorBorder: '#363938',
-  colorLabel: '#5F615D',
+  colorLabel: '#777a74',
   colorDefault: '#a7a7a7',
   colorActive: '#363938',
   colorHover: '#292b2a',
