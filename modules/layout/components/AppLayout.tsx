@@ -4,7 +4,7 @@ import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
 import { Toast } from './toast/Toast';
-import { useIdentityRepository } from '@modules/auth';
+import { useIdentityRepository, useUserSubscription } from '@modules/auth';
 import {
   useDefaultOrganization,
   useGetOrganizations,
@@ -38,7 +38,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const currentOrg = useRef<string>();
 
   const billingId = useRecoilValue(billingSelectors.billingId);
-  const userSubscription = useRecoilValue(billingSelectors.userSubscription);
 
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -49,6 +48,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { defaultOrganization } = useDefaultOrganization();
   const { customer, getCustomer } = useCustomer();
   const { getSubscription } = useSubscription();
+  const { getUserSubscription } = useUserSubscription();
 
   useEffect(() => {
     if (!customer && billingId) getCustomer(billingId);
@@ -63,6 +63,23 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, []);
 
   useEffect(() => {
+    const fetchSubscription = async () => {
+      const userSubscription = await getUserSubscription(
+        defaultOrganization?.id!,
+      );
+
+      if (userSubscription) await getSubscription(userSubscription?.externalId);
+    };
+
+    if (
+      defaultOrganization?.id !== currentOrg.current &&
+      defaultOrganization?.id
+    ) {
+      fetchSubscription();
+    }
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
     if (!provisionToken && defaultOrganization?.id) {
       getProvisionToken(defaultOrganization?.id);
     }
@@ -74,7 +91,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      if (userSubscription) getSubscription(userSubscription.externalId);
       loadNodes();
       loadHosts();
       mqttConnect();
