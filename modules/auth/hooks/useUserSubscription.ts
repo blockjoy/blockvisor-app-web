@@ -4,7 +4,20 @@ import { billingSelectors } from '@modules/billing';
 import { subscriptionClient } from '@modules/grpc';
 import { Subscription } from '@modules/grpc/library/blockjoy/v1/subscription';
 
-export const useUserSubscription = () => {
+interface IUseUserSubscriptionHook {
+  userSubscription: Subscription | null;
+
+  getUserSubscription: (orgId: string) => Promise<Subscription | null>;
+  getUserSubscriptions: (userId: string) => Promise<Subscription[] | null>;
+  createUserSubscription: (
+    orgId: string,
+    userId: string,
+    externalId: string,
+  ) => Promise<Subscription | null>;
+  deleteUserSubscription: (id: string) => Promise<void>;
+}
+
+export const useUserSubscription = (): IUseUserSubscriptionHook => {
   const [userSubscription, setUserSubscription] = useRecoilState(
     billingSelectors.userSubscription,
   );

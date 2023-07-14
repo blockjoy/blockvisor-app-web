@@ -6,7 +6,7 @@ import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { EmptyColumn } from '@shared/components';
 import { styles } from './Plan.styles';
 import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
-import { PlanConfiguration, PlanList } from '@modules/billing';
+import { PlanConfiguration, PlanItem } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
 import { Permissions } from '@modules/auth';
 
@@ -20,11 +20,11 @@ export const Plan = ({ item, itemPrices }: PlanProps) => {
 
   const [activeView, setActiveView] =
     useState<'default' | 'preview'>('default');
-  const [activePlan, setActivePlan] = useState<Item | null>(item);
+  const [activeItem, setActiveItem] = useState<Item | null>(item);
 
   const handleSelect = (plan: Item) => {
     setActiveView('preview');
-    setActivePlan(plan);
+    setActiveItem(plan);
   };
 
   const handleCancel = () => setActiveView('default');
@@ -63,10 +63,10 @@ export const Plan = ({ item, itemPrices }: PlanProps) => {
       {item &&
         canCreateSubscription &&
         (activeView === 'default' ? (
-          <PlanList item={item} handleSelect={handleSelect} />
+          <PlanItem item={item} handleSelect={handleSelect} />
         ) : (
           <PlanConfiguration
-            plan={activePlan}
+            item={activeItem}
             handleCancel={handleCancel}
             itemPrices={itemPrices}
           />
