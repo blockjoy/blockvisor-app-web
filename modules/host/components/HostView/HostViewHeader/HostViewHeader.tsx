@@ -69,7 +69,12 @@ export const HostViewHeader = () => {
               </div>
             )
           )}
-          <Button onClick={() => setIsDeleteMode(true)} style="basic">
+          <Button
+            disabled={host!.nodeCount > 0}
+            tooltip={host!.nodeCount > 0 ? 'Has Nodes Attached' : ''}
+            onClick={() => setIsDeleteMode(true)}
+            style="basic"
+          >
             <SvgIcon>
               <IconDelete />
             </SvgIcon>
