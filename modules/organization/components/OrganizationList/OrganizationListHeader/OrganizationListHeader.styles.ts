@@ -14,13 +14,5 @@ export const styles = {
     @media ${breakpoints.fromMed} {
       padding-right: 20px;
     }
-
-    form {
-      width: 100%;
-    }
-
-    button {
-      min-width: 58px;
-    }
   `,
 };

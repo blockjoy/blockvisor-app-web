@@ -29,11 +29,15 @@ export const styles = {
     }
 
     @media ${breakpoints.fromXLrg} {
-      flex: 0 0 380px;
+      flex: 0 0 320px;
       padding-left: 30px;
       margin-bottom: 0;
       margin-top: 20px;
       border-left: 1px solid ${theme.colorBorder};
+    }
+
+    @media ${breakpoints.fromXHuge} {
+      flex: 0 0 480px;
     }
   `,
 };
