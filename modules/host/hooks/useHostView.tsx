@@ -21,10 +21,14 @@ export const useHostView = () => {
 
     setIsLoading('initializing');
 
-    const host: any = await hostClient.getHost(id as string);
-
-    setHost(host);
-    setIsLoading('finished');
+    try {
+      const host: any = await hostClient.getHost(id as string);
+      setHost(host);
+    } catch (err) {
+      setHost(null);
+    } finally {
+      setIsLoading('finished');
+    }
   };
 
   const deleteHost = async (id: string, callback: VoidFunction) => {

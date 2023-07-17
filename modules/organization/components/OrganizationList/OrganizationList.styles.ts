@@ -27,20 +27,21 @@ export const styles = {
     css`
       display: flex;
       align-items: center;
-      justify-content: space-between;
       height: 64px;
       width: 100%;
       border: 0;
       padding: 0;
       border-bottom: 1px solid ${theme.colorBorder};
       background: transparent;
-      color: ${theme.colorText};
+      color: ${theme.colorDefault};
       cursor: pointer;
-      opacity: 0.4;
+      opacity: 0.6;
       transition: 0.3s;
 
       :is(:hover, .active) {
         opacity: 1;
+        color: ${theme.colorText};
+        border-bottom-color: ${theme.colorBorderGrey};
       }
 
       > p {

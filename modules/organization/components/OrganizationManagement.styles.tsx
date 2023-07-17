@@ -17,9 +17,10 @@ export const styles = {
 
     @media ${breakpoints.fromMed} {
       position: sticky;
+      z-index: 10;
       top: 72px;
-      flex: 1 1 270px;
-      max-width: 270px;
+      flex: 1 1 320px;
+      max-width: 320px;
       max-height: calc(100vh - 72px);
       padding-right: 10px;
       border-right: 1px solid ${theme.colorBorder};
