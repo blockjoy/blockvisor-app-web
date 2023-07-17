@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
-import { Button } from '@shared/components';
+import { Button, SvgIcon } from '@shared/components';
 import { checkIfValidEmail } from '@shared/utils/validation';
-import { ChangeEvent, KeyboardEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { styles } from './TableAdd.styles';
+import IconClose from '@public/assets/icons/common/Close.svg';
 
 type Props = {
   placeholder?: string;
@@ -27,6 +28,8 @@ export const TableAdd = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [value, setValue] = useState('');
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const isValid =
     !isSubmitted && isEmail ? checkIfValidEmail(value) : value.length > 0;
 
@@ -48,16 +51,33 @@ export const TableAdd = ({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!['Enter'].includes(e.key)) return;
+    if (e.key === 'Escape') {
+      handleCancel();
+      inputRef.current?.blur();
+      return;
+    }
+
+    if (e.key !== 'Enter') return;
+
     handleSubmit();
+  };
+
+  const handleBlur = () => {
+    if (value.length) return;
+    setIsFocused(false);
+  };
+
+  const handleCancel = () => {
+    setValue('');
+    setIsFocused(false);
   };
 
   return (
     <div css={styles.wrapper}>
       <input
-        placeholder={
-          isFocused && placeholderFocused ? placeholderFocused : placeholder
-        }
+        ref={inputRef}
+        tabIndex={1}
+        placeholder={isFocused && placeholderFocused ? placeholderFocused : ''}
         type="text"
         css={styles.input(buttonWidth)}
         autoComplete="off"
@@ -66,26 +86,52 @@ export const TableAdd = ({
         onKeyDown={handleKeyDown}
         onInput={handleChange}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => (!value.length ? setIsFocused(false) : null)}
+        onBlur={handleBlur}
       />
-      <Button
-        disabled={!isValid}
-        loading={isLoading}
-        style="secondary"
-        size="small"
-        type="submit"
-        css={[
-          styles.button,
-          css`
-            minwidth: ${buttonWidth};
-            maxwidth: ${buttonWidth};
-            width: ${buttonWidth};
-          `,
-        ]}
-        onClick={handleFormSubmit}
-      >
-        {buttonText}
-      </Button>
+      {!value.length && !isFocused && (
+        <Button
+          className="add-button"
+          size="small"
+          style="outline"
+          css={styles.addButton}
+        >
+          {placeholder}
+        </Button>
+      )}
+      {!!value.length || isFocused ? (
+        <div css={styles.buttons}>
+          <Button
+            tabIndex={3}
+            style="icon"
+            onClick={handleCancel}
+            tooltip="Cancel"
+          >
+            <SvgIcon size="18px">
+              <IconClose />
+            </SvgIcon>
+          </Button>
+          <Button
+            tabIndex={2}
+            disabled={!isValid}
+            loading={isLoading}
+            style="secondary"
+            size="small"
+            type="submit"
+            className="confirm-button"
+            css={[
+              styles.confirmButton,
+              css`
+                min-width: ${buttonWidth};
+                max-width: ${buttonWidth};
+                width: ${buttonWidth};
+              `,
+            ]}
+            onClick={handleFormSubmit}
+          >
+            {buttonText}
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 };
