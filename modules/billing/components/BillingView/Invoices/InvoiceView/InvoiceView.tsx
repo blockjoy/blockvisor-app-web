@@ -16,8 +16,8 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
 import IconCalendar from '@public/assets/icons/common/Calendar.svg';
 import {
-  BillingAddressPreview,
   InvoiceDownload,
+  InvoiceInfo,
   Services,
   useInvoice,
 } from '@modules/billing';
@@ -70,12 +70,8 @@ export const InvoiceView = () => {
                     <InvoiceDownload invoice={invoice} />
                   </div>
                   <div css={styles.details}>
-                    <DetailsView headline="Invoice recepient">
-                      {invoice?.billing_address && (
-                        <BillingAddressPreview
-                          billingAddress={invoice.billing_address}
-                        />
-                      )}
+                    <DetailsView headline="Invoice info">
+                      <InvoiceInfo invoice={invoice} />
                     </DetailsView>
                     <DetailsView headline="Services">
                       {invoice?.line_items && invoice?.total !== undefined && (
