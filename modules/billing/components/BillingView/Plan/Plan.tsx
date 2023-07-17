@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
@@ -37,10 +37,6 @@ export const Plan = ({ item, itemPrices }: PlanProps) => {
     userRoleInOrganization,
     Permissions.CREATE_SUBSCRIPTION,
   );
-
-  useEffect(() => {
-    if (router.isReady && router.query.added) setActiveView('preview');
-  }, [router.isReady, router.query.added]);
 
   return (
     <>

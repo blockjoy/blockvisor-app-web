@@ -18,13 +18,18 @@ export const mapServicesToRows = (
       width: '150px',
     },
     {
-      name: 'Quantity',
+      name: 'Qty',
       key: '3',
+      width: '50px',
+    },
+    {
+      name: 'Unit price',
+      key: '4',
       width: '100px',
     },
     {
-      name: 'Price',
-      key: '4',
+      name: 'Total price',
+      key: '5',
       width: '150px',
     },
   ];
@@ -66,6 +71,14 @@ export const mapServicesToRows = (
           key: '4',
           component: (
             <>
+              <p>{formatters.formatCurrency(service?.unit_amount!)}</p>
+            </>
+          ),
+        },
+        {
+          key: '5',
+          component: (
+            <>
               <p>{formatters.formatCurrency(service?.amount!)}</p>
             </>
           ),
@@ -86,6 +99,10 @@ export const mapServicesToRows = (
       },
       {
         key: '3',
+        component: null,
+      },
+      {
+        key: '4',
         component: (
           <>
             <p
@@ -101,7 +118,7 @@ export const mapServicesToRows = (
         ),
       },
       {
-        key: '4',
+        key: '5',
         component: (
           <>
             <p

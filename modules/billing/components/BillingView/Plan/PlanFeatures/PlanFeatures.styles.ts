@@ -9,15 +9,12 @@ export const styles = {
   list: css``,
   listItem: (theme: ITheme) => css`
     font-size: 14px;
-    padding: 12px 0;
+    padding: 15px 0;
     border-top: 1px solid ${theme.colorBorderGrey};
     display: flex;
+    align-items: center;
     flex-flow: row nowrap;
     gap: 10px;
-
-    &:not(:last-child) {
-      margin-bottom: 5px;
-    }
   `,
   listTitle: css`
     font-weight: 600;

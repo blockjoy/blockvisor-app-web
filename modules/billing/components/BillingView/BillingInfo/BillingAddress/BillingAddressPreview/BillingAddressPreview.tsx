@@ -1,37 +1,31 @@
 import { getName } from 'country-list';
 import { CustomerBillingAddress } from 'chargebee-typescript/lib/resources';
-import { styles } from './BillingAddressPreview.styles';
 import { BillingAddress as InvoiceBillingAddress } from 'chargebee-typescript/lib/resources/invoice';
 
 export type BillingAddressPreviewProps = {
+  type?: 'simple' | 'default';
   billingAddress: CustomerBillingAddress | InvoiceBillingAddress;
 };
 
 export const BillingAddressPreview = ({
-  billingAddress: {
-    first_name,
-    last_name,
-    company,
-    line1,
-    city,
-    country,
-    state,
-    zip,
-  },
+  type = 'default',
+  billingAddress: { first_name, last_name, company, line1, city, country, zip },
 }: BillingAddressPreviewProps) => {
   return (
-    <div css={styles.address}>
-      <span>
-        {first_name} {last_name}
-      </span>
+    <div>
+      {type === 'default' && (
+        <p>
+          {first_name} {last_name}
+        </p>
+      )}
       {line1 && (
         <>
-          <span>{company}</span>
-          <span>{line1}</span>
-          <span>
+          {company && <p>{company}</p>}
+          <p>{line1}</p>
+          <p>
             {city}, {zip}
-          </span>
-          {country && <span>{getName(country)}</span>}
+          </p>
+          {country && <p>{getName(country)}</p>}
         </>
       )}
     </div>
