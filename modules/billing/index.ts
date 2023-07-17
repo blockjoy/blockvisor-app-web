@@ -16,6 +16,7 @@ export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddres
 export * from './components/BillingView/Estimates/Estimates';
 
 export * from './components/BillingView/Invoices/Invoices';
+export * from './components/BillingView/Invoices/InvoiceView/InvoiceInfo/InvoiceInfo';
 export * from './components/BillingView/Invoices/InvoiceView/InvoiceView';
 export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
 export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
@@ -82,6 +83,7 @@ export * from './utils/handleCreditCardInfo';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapCardToDetails';
 export * from './utils/mapEstimateToRows';
+export * from './utils/mapInvoiceToDetails';
 export * from './utils/mapInvoicesToRows';
 export * from './utils/mapPaymentMethodsToRows';
 export * from './utils/mapServicesToRows';
