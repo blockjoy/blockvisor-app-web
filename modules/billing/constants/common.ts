@@ -18,3 +18,12 @@ export enum SubscriptionStatus {
   paused = 'paused',
   cancelled = 'cancelled',
 }
+
+export enum InvoiceStatus {
+  paid = 'paid',
+  posted = 'posted',
+  payment_due = 'payment due',
+  not_paid = 'not paid',
+  voided = 'voided',
+  pending = 'pending',
+}
