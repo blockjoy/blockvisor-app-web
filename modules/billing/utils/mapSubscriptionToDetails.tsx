@@ -2,13 +2,13 @@ import { Subscription } from 'chargebee-typescript/lib/resources';
 import { Badge, formatters } from '@shared/index';
 import { SubscriptionStatus } from '@modules/billing';
 
-export const getSubscriptionStatusColor = (name: string) => {
-  switch (name) {
-    case 'active':
+export const getSubscriptionStatusColor = (status: string) => {
+  switch (status) {
+    case SubscriptionStatus['active']:
       return 'primary';
-    case 'cancelled':
+    case SubscriptionStatus['cancelled']:
       return 'secondary';
-    case 'non_renewing':
+    case SubscriptionStatus['non_renewing']:
       return 'note';
     default:
       return 'default';

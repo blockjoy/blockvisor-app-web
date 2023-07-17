@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Button, Checkbox, ROUTES } from '@shared/index';
+import { Button, Checkbox } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
 import {
@@ -23,14 +23,12 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { useRouter } from 'next/router';
 
 type PaymentMethodFormProps = {
   handleCancel: VoidFunction;
 };
 
 export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
-  const { query, push } = useRouter();
   const loading = useRecoilValue(billingAtoms.addPaymentMethodLoadingState);
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
@@ -66,16 +64,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     if (isDefaultAddress || !billingAddress)
       addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
-    if (query.add)
-      push(
-        {
-          pathname: ROUTES.BILLING,
-          query: { tab: '1', added: true },
-        },
-        undefined,
-        { shallow: true },
-      );
-    else handleCancel();
+    handleCancel();
   };
 
   const handleSubmit = () => {
