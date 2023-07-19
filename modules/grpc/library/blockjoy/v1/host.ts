@@ -3,13 +3,16 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { NodeType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
-export enum HostConnectionStatus {
-  HOST_CONNECTION_STATUS_UNSPECIFIED = 0,
-  HOST_CONNECTION_STATUS_ONLINE = 1,
-  HOST_CONNECTION_STATUS_OFFLINE = 2,
+export enum HostType {
+  HOST_TYPE_UNSPECIFIED = 0,
+  /** HOST_TYPE_CLOUD - This host is a host on the blockjoy cloud platform. */
+  HOST_TYPE_CLOUD = 1,
+  /** HOST_TYPE_PRIVATE - This host is a private host that can only be used by the org that owns it. */
+  HOST_TYPE_PRIVATE = 2,
   UNRECOGNIZED = -1,
 }
 
@@ -54,6 +57,8 @@ export interface Host {
   nodeCount: number;
   /** The name of the organization that this host belongs to. */
   orgName: string;
+  /** The region of the host. */
+  region?: string | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -87,7 +92,11 @@ export interface HostServiceCreateRequest {
    * The organization that this host belongs to. This field _must_ be populated
    * with the current organization id.
    */
-  orgId?: string | undefined;
+  orgId?:
+    | string
+    | undefined;
+  /** The region of the host */
+  region?: string | undefined;
 }
 
 export interface HostServiceCreateResponse {
@@ -126,7 +135,11 @@ export interface HostServiceUpdateRequest {
   name?: string | undefined;
   version?: string | undefined;
   os?: string | undefined;
-  osVersion?: string | undefined;
+  osVersion?:
+    | string
+    | undefined;
+  /** The region of the host. */
+  region?: string | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -160,6 +173,26 @@ export interface HostServiceDeleteRequest {
 export interface HostServiceDeleteResponse {
 }
 
+/** Used to produce a list of regions that are available to deploy nodes to. */
+export interface HostServiceRegionsRequest {
+  /** The org for which to produce the list. */
+  orgId: string;
+  /** The type of host to include in this list. */
+  hostType?:
+    | HostType
+    | undefined;
+  /** The id of the blockchain that should be ran inside the node. */
+  blockchainId: string;
+  /** The version of the node software that is ran. */
+  version: string;
+  /** The type of node that you want to create. */
+  nodeType: NodeType;
+}
+
+export interface HostServiceRegionsResponse {
+  regions: string[];
+}
+
 function createBaseHost(): Host {
   return {
     id: "",
@@ -178,6 +211,7 @@ function createBaseHost(): Host {
     orgId: "",
     nodeCount: 0,
     orgName: "",
+    region: undefined,
   };
 }
 
@@ -230,6 +264,9 @@ export const Host = {
     }
     if (message.orgName !== "") {
       writer.uint32(146).string(message.orgName);
+    }
+    if (message.region !== undefined) {
+      writer.uint32(154).string(message.region);
     }
     return writer;
   },
@@ -353,6 +390,13 @@ export const Host = {
 
           message.orgName = reader.string();
           continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.region = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -384,6 +428,7 @@ export const Host = {
     message.orgId = object.orgId ?? "";
     message.nodeCount = object.nodeCount ?? 0;
     message.orgName = object.orgName ?? "";
+    message.region = object.region ?? undefined;
     return message;
   },
 };
@@ -403,6 +448,7 @@ function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
     ipRangeTo: "",
     ipGateway: "",
     orgId: undefined,
+    region: undefined,
   };
 }
 
@@ -446,6 +492,9 @@ export const HostServiceCreateRequest = {
     }
     if (message.orgId !== undefined) {
       writer.uint32(106).string(message.orgId);
+    }
+    if (message.region !== undefined) {
+      writer.uint32(114).string(message.region);
     }
     return writer;
   },
@@ -548,6 +597,13 @@ export const HostServiceCreateRequest = {
 
           message.orgId = reader.string();
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.region = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -576,6 +632,7 @@ export const HostServiceCreateRequest = {
     message.ipRangeTo = object.ipRangeTo ?? "";
     message.ipGateway = object.ipGateway ?? "";
     message.orgId = object.orgId ?? undefined;
+    message.region = object.region ?? undefined;
     return message;
   },
 };
@@ -866,7 +923,7 @@ export const HostServiceListResponse = {
 };
 
 function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
-  return { id: "", name: undefined, version: undefined, os: undefined, osVersion: undefined };
+  return { id: "", name: undefined, version: undefined, os: undefined, osVersion: undefined, region: undefined };
 }
 
 export const HostServiceUpdateRequest = {
@@ -885,6 +942,9 @@ export const HostServiceUpdateRequest = {
     }
     if (message.osVersion !== undefined) {
       writer.uint32(50).string(message.osVersion);
+    }
+    if (message.region !== undefined) {
+      writer.uint32(34).string(message.region);
     }
     return writer;
   },
@@ -931,6 +991,13 @@ export const HostServiceUpdateRequest = {
 
           message.osVersion = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.region = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -951,6 +1018,7 @@ export const HostServiceUpdateRequest = {
     message.version = object.version ?? undefined;
     message.os = object.os ?? undefined;
     message.osVersion = object.osVersion ?? undefined;
+    message.region = object.region ?? undefined;
     return message;
   },
 };
@@ -1314,6 +1382,142 @@ export const HostServiceDeleteResponse = {
   },
 };
 
+function createBaseHostServiceRegionsRequest(): HostServiceRegionsRequest {
+  return { orgId: "", hostType: undefined, blockchainId: "", version: "", nodeType: 0 };
+}
+
+export const HostServiceRegionsRequest = {
+  encode(message: HostServiceRegionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    if (message.hostType !== undefined) {
+      writer.uint32(16).int32(message.hostType);
+    }
+    if (message.blockchainId !== "") {
+      writer.uint32(26).string(message.blockchainId);
+    }
+    if (message.version !== "") {
+      writer.uint32(34).string(message.version);
+    }
+    if (message.nodeType !== 0) {
+      writer.uint32(40).int32(message.nodeType);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceRegionsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceRegionsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.hostType = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.blockchainId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.nodeType = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceRegionsRequest>): HostServiceRegionsRequest {
+    return HostServiceRegionsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceRegionsRequest>): HostServiceRegionsRequest {
+    const message = createBaseHostServiceRegionsRequest();
+    message.orgId = object.orgId ?? "";
+    message.hostType = object.hostType ?? undefined;
+    message.blockchainId = object.blockchainId ?? "";
+    message.version = object.version ?? "";
+    message.nodeType = object.nodeType ?? 0;
+    return message;
+  },
+};
+
+function createBaseHostServiceRegionsResponse(): HostServiceRegionsResponse {
+  return { regions: [] };
+}
+
+export const HostServiceRegionsResponse = {
+  encode(message: HostServiceRegionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.regions) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceRegionsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceRegionsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regions.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceRegionsResponse>): HostServiceRegionsResponse {
+    return HostServiceRegionsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceRegionsResponse>): HostServiceRegionsResponse {
+    const message = createBaseHostServiceRegionsResponse();
+    message.regions = object.regions?.map((e) => e) || [];
+    return message;
+  },
+};
+
 /** Manage hosts. */
 export type HostServiceDefinition = typeof HostServiceDefinition;
 export const HostServiceDefinition = {
@@ -1357,6 +1561,15 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Delete a single host */
+    delete: {
+      name: "Delete",
+      requestType: HostServiceDeleteRequest,
+      requestStream: false,
+      responseType: HostServiceDeleteResponse,
+      responseStream: false,
+      options: {},
+    },
     /** Start a single host */
     start: {
       name: "Start",
@@ -1384,12 +1597,12 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Delete a single host */
-    delete: {
-      name: "Delete",
-      requestType: HostServiceDeleteRequest,
+    /** Returns a list of regions where there are hosts available */
+    regions: {
+      name: "Regions",
+      requestType: HostServiceRegionsRequest,
       requestStream: false,
-      responseType: HostServiceDeleteResponse,
+      responseType: HostServiceRegionsResponse,
       responseStream: false,
       options: {},
     },
@@ -1418,6 +1631,11 @@ export interface HostServiceImplementation<CallContextExt = {}> {
     request: HostServiceUpdateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceUpdateResponse>>;
+  /** Delete a single host */
+  delete(
+    request: HostServiceDeleteRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceDeleteResponse>>;
   /** Start a single host */
   start(
     request: HostServiceStartRequest,
@@ -1433,11 +1651,11 @@ export interface HostServiceImplementation<CallContextExt = {}> {
     request: HostServiceRestartRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceRestartResponse>>;
-  /** Delete a single host */
-  delete(
-    request: HostServiceDeleteRequest,
+  /** Returns a list of regions where there are hosts available */
+  regions(
+    request: HostServiceRegionsRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HostServiceDeleteResponse>>;
+  ): Promise<DeepPartial<HostServiceRegionsResponse>>;
 }
 
 export interface HostServiceClient<CallOptionsExt = {}> {
@@ -1462,6 +1680,11 @@ export interface HostServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<HostServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceUpdateResponse>;
+  /** Delete a single host */
+  delete(
+    request: DeepPartial<HostServiceDeleteRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceDeleteResponse>;
   /** Start a single host */
   start(
     request: DeepPartial<HostServiceStartRequest>,
@@ -1477,17 +1700,17 @@ export interface HostServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<HostServiceRestartRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceRestartResponse>;
-  /** Delete a single host */
-  delete(
-    request: DeepPartial<HostServiceDeleteRequest>,
+  /** Returns a list of regions where there are hosts available */
+  regions(
+    request: DeepPartial<HostServiceRegionsRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<HostServiceDeleteResponse>;
+  ): Promise<HostServiceRegionsResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

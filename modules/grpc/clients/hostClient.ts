@@ -3,11 +3,12 @@ import {
   HostServiceClient,
   HostServiceDefinition,
   HostServiceListResponse,
+  HostType,
 } from '../library/blockjoy/v1/host';
 
-import { authClient, callWithTokenRefresh, handleError } from '@modules/grpc';
+import { callWithTokenRefresh, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { StatusResponse } from '../status_response';
+import { NodeType } from '../library/blockjoy/v1/node';
 
 export type UIFilterCriteria = {
   hostStatus?: string[];
@@ -60,6 +61,34 @@ class HostClient {
         { id },
       );
       return response.host!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async getRegions(
+    orgId: string,
+    blockchainId: string,
+    nodeType: NodeType,
+    version: string,
+  ): Promise<string[]> {
+    const request = {
+      blockchainId,
+      nodeType,
+      version,
+      orgId,
+      hostType: HostType.HOST_TYPE_CLOUD,
+    };
+
+    console.log('getRegionsRequest', request);
+
+    try {
+      const response = await callWithTokenRefresh(
+        this.client.regions.bind(this.client),
+        request,
+      );
+      console.log('getRegionsResponse', response);
+      return response.regions!;
     } catch (err) {
       return handleError(err);
     }

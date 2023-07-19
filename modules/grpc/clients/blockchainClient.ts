@@ -25,6 +25,7 @@ class BlockchainClient {
     try {
       await authClient.refreshToken();
       const response = await this.client.list({}, getOptions());
+      console.log('getBlockchainsResponse', response);
       return response.blockchains;
     } catch (err: any) {
       checkForRefreshTokenError(err.message);

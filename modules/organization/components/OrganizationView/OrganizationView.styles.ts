@@ -29,7 +29,7 @@ export const styles = {
     }
 
     @media ${breakpoints.fromXLrg} {
-      flex: 0 0 320px;
+      flex: 0 0 400px;
       padding-left: 30px;
       margin-bottom: 0;
       margin-top: 20px;
@@ -37,7 +37,7 @@ export const styles = {
     }
 
     @media ${breakpoints.fromXHuge} {
-      flex: 0 0 480px;
+      flex: 0 0 460px;
     }
   `,
 };

@@ -43,7 +43,7 @@ export const styles = {
       color: ${theme.colorText};
       transition: border-bottom-color 0.3s;
 
-      :is(:focus, :hover) {
+      :not(:valid):is(:focus, :hover) {
         opacity: 0.7;
         border-bottom-color: ${theme.colorLabel};
       }

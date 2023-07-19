@@ -8,7 +8,7 @@ export const styles = {
     gap: 16px;
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 152px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     max-width: 820px;
 
     @media ${breakpoints.toLrg} {
@@ -41,7 +41,7 @@ export const styles = {
   cardLabel: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 10px;

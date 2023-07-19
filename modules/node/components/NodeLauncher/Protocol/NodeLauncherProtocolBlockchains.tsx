@@ -14,25 +14,25 @@ type Props = {
     nodeVersion: string,
   ) => void;
   activeBlockchainId: string;
-  activeNodeTypeId: NodeType;
+  activeNodeType: NodeType;
 };
+
+const onlyUnique = (value: any, index: number, array: number[]) =>
+  array.indexOf(value) === index;
 
 export const NodeLauncherProtocolBlockchains = ({
   keyword,
   onProtocolSelected,
   activeBlockchainId,
-  activeNodeTypeId,
+  activeNodeType,
 }: Props) => {
-  const { blockchains, loading } = useGetBlockchains();
+  const { blockchains } = useGetBlockchains();
 
   const filteredBlockchains = blockchains?.filter((b) =>
     b.name?.toLowerCase().includes(keyword.toLowerCase()),
   );
 
-  const handleProtocolSelected = (
-    blockchainId: string,
-    nodeTypeId: NodeType,
-  ) => {
+  const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
     const blockchainsCopy = [...blockchains];
 
     const foundActiveNodeType = blockchainsCopy?.find(
@@ -40,12 +40,12 @@ export const NodeLauncherProtocolBlockchains = ({
     );
 
     const foundActiveSupportedNodeType = foundActiveNodeType?.nodesTypes!.find(
-      (n: SupportedNodeType) => n.nodeType === nodeTypeId,
+      (n: SupportedNodeType) => n.nodeType === nodeType,
     );
 
     onProtocolSelected(
       blockchainId,
-      nodeTypeId,
+      nodeType,
       foundActiveSupportedNodeType?.properties.map((property) => ({
         name: property.name,
         uiType: property.uiType,
@@ -67,38 +67,35 @@ export const NodeLauncherProtocolBlockchains = ({
       ) : (
         filteredBlockchains?.map((b, index) => (
           <div
-            tabIndex={activeNodeTypeId ? -1 : index + 1}
+            tabIndex={activeNodeType ? -1 : index + 1}
             key={b.id}
             css={[styles.row, styles.rowHover]}
             className={b.id === activeBlockchainId ? 'active row' : 'row'}
           >
             <span css={styles.blockchainWrapper}>
               <BlockchainIcon size="28px" hideTooltip blockchainName={b.name} />
-              <span css={styles.name}>
-                {/* <span className="beta-badge" css={styles.betaBadge}>
-                  BETA
-                </span> */}
-                {b.name}
-              </span>
+              <span css={styles.name}>{b.name}</span>
             </span>
             <div css={styles.nodeTypeButtons} className="node-type-buttons">
-              {b.nodesTypes.map((type: SupportedNodeType) => (
-                <button
-                  tabIndex={activeNodeTypeId ? -1 : index + 1}
-                  key={type.nodeType}
-                  className={
-                    type.nodeType === activeNodeTypeId &&
-                    b.id === activeBlockchainId
-                      ? 'active'
-                      : ''
-                  }
-                  onClick={() => handleProtocolSelected(b.id!, type.nodeType)}
-                  type="button"
-                  css={styles.createButton}
-                >
-                  {nodeTypeList.find((n) => n.id === type.nodeType)?.name}
-                </button>
-              ))}
+              {b.nodesTypes
+                .map((type) => type.nodeType)
+                .filter(onlyUnique)
+                .map((nodeType: NodeType) => (
+                  <button
+                    tabIndex={nodeType ? -1 : index + 1}
+                    key={nodeType}
+                    className={
+                      nodeType === activeNodeType && b.id === activeBlockchainId
+                        ? 'active'
+                        : ''
+                    }
+                    onClick={() => handleProtocolSelected(b.id!, nodeType)}
+                    type="button"
+                    css={styles.createButton}
+                  >
+                    {nodeTypeList.find((n) => n.id === nodeType)?.name}
+                  </button>
+                ))}
             </div>
           </div>
         ))
