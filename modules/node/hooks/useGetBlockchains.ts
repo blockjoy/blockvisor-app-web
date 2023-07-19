@@ -14,7 +14,6 @@ export function useGetBlockchains() {
   const getBlockchains = async () => {
     setLoadingState('loading');
     const blockchains: any = await blockchainClient.getBlockchains();
-    console.log('getBlockchains', blockchains);
     checkForTokenError(blockchains);
 
     if (blockchains?.length) {

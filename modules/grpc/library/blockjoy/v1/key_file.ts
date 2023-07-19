@@ -27,7 +27,7 @@ export interface KeyFileServiceCreateResponse {
 }
 
 function createBaseKeyfile(): Keyfile {
-  return { name: "", content: new Uint8Array() };
+  return { name: "", content: new Uint8Array(0) };
 }
 
 export const Keyfile = {
@@ -78,7 +78,7 @@ export const Keyfile = {
   fromPartial(object: DeepPartial<Keyfile>): Keyfile {
     const message = createBaseKeyfile();
     message.name = object.name ?? "";
-    message.content = object.content ?? new Uint8Array();
+    message.content = object.content ?? new Uint8Array(0);
     return message;
   },
 };

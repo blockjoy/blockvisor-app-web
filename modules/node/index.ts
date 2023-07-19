@@ -1,6 +1,5 @@
 export * from './components/NodeList/NodeList';
 export * from './components/NodeView/NodeView';
-export * from './components/NodeView/Tabs/Dashboard/NodeViewDashboard';
 export * from './components/NodeView/Tabs/Details/NodeViewDetails';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/NodeLauncher/NodeLauncher';

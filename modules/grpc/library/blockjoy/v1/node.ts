@@ -155,7 +155,7 @@ export interface Node {
 export interface NodeServiceCreateRequest {
   /** The id of the organization for which the node should be created. */
   orgId: string;
-  /** The id of the blockchain that shoudl be ran inside the node. */
+  /** The id of the blockchain that should be ran inside the node. */
   blockchainId: string;
   /** The version of the node software that is ran. */
   version: string;
@@ -325,18 +325,20 @@ export interface NodePlacement {
 /**
  * A node scheduler controls the way that the node is placed onto an appropriate
  * host. There are two fields, each representing a possible method of selecting
- * a host for this node to be scheduled on. They are sorted by priority, meaning
- * that `similarity` takes precedence over `resource`. The final field is
- * required, in order to make sure that the way we schedule a node is always
- * defined.
+ * a host for this node to be scheduled on. They are sorted by priority in
+ * descending order, meaning that `similarity` takes precedence over `resource`.
+ * The first field is required, in order to make sure that the way we schedule a
+ * node is always defined.
  */
 export interface NodeScheduler {
+  /** The way we want the node to react to similar nodes being on a host. */
+  resource: NodeScheduler_ResourceAffinity;
   /** The way we want the node to react to similar nodes being on a host. */
   similarity?:
     | NodeScheduler_SimilarNodeAffinity
     | undefined;
-  /** The way we want the node to react to hosts being full or empty. */
-  resource: NodeScheduler_ResourceAffinity;
+  /** The region where the node should be ran. */
+  region: string;
 }
 
 /**
@@ -1882,16 +1884,19 @@ export const NodePlacement = {
 };
 
 function createBaseNodeScheduler(): NodeScheduler {
-  return { similarity: undefined, resource: 0 };
+  return { resource: 0, similarity: undefined, region: "" };
 }
 
 export const NodeScheduler = {
   encode(message: NodeScheduler, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.similarity !== undefined) {
-      writer.uint32(8).int32(message.similarity);
-    }
     if (message.resource !== 0) {
-      writer.uint32(16).int32(message.resource);
+      writer.uint32(8).int32(message.resource);
+    }
+    if (message.similarity !== undefined) {
+      writer.uint32(16).int32(message.similarity);
+    }
+    if (message.region !== "") {
+      writer.uint32(26).string(message.region);
     }
     return writer;
   },
@@ -1908,14 +1913,21 @@ export const NodeScheduler = {
             break;
           }
 
-          message.similarity = reader.int32() as any;
+          message.resource = reader.int32() as any;
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.resource = reader.int32() as any;
+          message.similarity = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.region = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1932,8 +1944,9 @@ export const NodeScheduler = {
 
   fromPartial(object: DeepPartial<NodeScheduler>): NodeScheduler {
     const message = createBaseNodeScheduler();
-    message.similarity = object.similarity ?? undefined;
     message.resource = object.resource ?? 0;
+    message.similarity = object.similarity ?? undefined;
+    message.region = object.region ?? "";
     return message;
   },
 };
@@ -2279,10 +2292,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceDeleteResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

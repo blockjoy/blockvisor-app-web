@@ -1,10 +1,5 @@
 import { FirewallDropdown, useNodeView } from '@modules/node';
-import {
-  FormHeaderCaps,
-  FormLabelCaps,
-  Switch,
-  TableSkeleton,
-} from '@shared/components';
+import { FormLabelCaps, Switch, TableSkeleton } from '@shared/components';
 import { styles } from './NodeViewSettings.styles';
 
 export const NodeViewSettings = () => {
@@ -33,7 +28,6 @@ export const NodeViewSettings = () => {
     <TableSkeleton />
   ) : (
     <div css={styles.wrapper}>
-      <FormHeaderCaps>Config</FormHeaderCaps>
       <div css={styles.row}>
         <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
         <div css={styles.firewallWrapper}>

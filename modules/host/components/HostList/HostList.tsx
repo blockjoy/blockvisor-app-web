@@ -111,9 +111,6 @@ export const HostList = () => {
                     <h3 css={spacing.bottom.mediumSmall}>
                       Here is where your hosts will show, once you have some.
                     </h3>
-                    <a css={styles.launchNodeLink} onClick={() => {}}>
-                      Create a host
-                    </a>
                   </div>
                 )
               }

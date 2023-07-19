@@ -16,14 +16,14 @@ type Props = {
     nodeTypeProperties: NodeProperty[],
     nodeVersion: string,
   ) => void;
-  activeBlockchainId: string;
-  activeNodeTypeId: NodeType;
+  blockchainId: string;
+  nodeType: NodeType;
 };
 
 export const NodeLauncherProtocol: FC<Props> = ({
   onProtocolSelected,
-  activeBlockchainId,
-  activeNodeTypeId,
+  blockchainId,
+  nodeType,
 }) => {
   const { blockchains, loading } = useGetBlockchains();
 
@@ -36,8 +36,8 @@ export const NodeLauncherProtocol: FC<Props> = ({
   const BlockchainsComponent = () => (
     <NodeLauncherProtocolBlockchains
       onProtocolSelected={onProtocolSelected}
-      activeBlockchainId={activeBlockchainId}
-      activeNodeTypeId={activeNodeTypeId}
+      activeBlockchainId={blockchainId}
+      activeNodeType={nodeType}
       keyword={keyword}
     />
   );
@@ -60,7 +60,6 @@ export const NodeLauncherProtocol: FC<Props> = ({
             <IconSearch />
           </span>
         </div>
-
         {loading ? (
           <div css={styles.skeletonWrapper}>
             <TableSkeleton />
@@ -77,31 +76,6 @@ export const NodeLauncherProtocol: FC<Props> = ({
         ) : (
           <Scrollbar additionalStyles={[styles.scrollbar]}>
             <BlockchainsComponent />
-            {/* <div css={styles.disabledBlockchains}>
-              {!keyword &&
-                blockchainsDisabled
-                  ?.filter(
-                    (b: any) => !blockchains?.some((c: any) => b === c.name),
-                  )
-                  ?.map((b: any) => (
-                    <div key={b} css={[styles.row, styles.rowDisabled]}>
-                      <span css={styles.blockchainWrapper}>
-                        <BlockchainIcon
-                          size="28px"
-                          hideTooltip
-                          blockchainName={b}
-                        />
-                        <span css={styles.name}>{b}</span>
-                        <span
-                          className="coming-soon-badge"
-                          css={styles.comingSoonBadge}
-                        >
-                          Coming Soon
-                        </span>
-                      </span>
-                    </div>
-                  ))}
-            </div> */}
           </Scrollbar>
         )}
       </>
