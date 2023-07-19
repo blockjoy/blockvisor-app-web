@@ -35,11 +35,5 @@ export const mapNodeConfigToDetails = (node: Node) => {
         ),
     }));
 
-  details.unshift({
-    id: 'network',
-    label: <>NETWORK</>,
-    data: node.network || '-',
-  });
-
   return details;
 };

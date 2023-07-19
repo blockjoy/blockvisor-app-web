@@ -189,7 +189,7 @@ export const styles = {
     color: ${theme.colorLabel};
     font-size: 13px;
     margin-bottom: 8px;
-    padding-left: 38px;
+    padding-left: 32px;
   `,
   missingFields: css`
     display: grid;
@@ -199,7 +199,7 @@ export const styles = {
     div {
       display: flex;
       align-items: center;
-      padding-left: 38px;
+      padding-left: 32px;
       font-size: 14px;
     }
   `,

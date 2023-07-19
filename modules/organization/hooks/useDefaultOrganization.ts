@@ -8,8 +8,6 @@ export function useDefaultOrganization() {
   );
 
   const getDefaultOrganization = async (organizations: Org[]) => {
-    console.log('gettingDefaultOrganization', organizations);
-
     const doesLocalStorageDefaultOrgExistInList = organizations.find(
       (org) => org.id === defaultOrganization?.id,
     );

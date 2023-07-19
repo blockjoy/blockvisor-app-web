@@ -15,6 +15,10 @@ export const styles = {
     background: transparent;
     cursor: pointer;
 
+    :disabled {
+      cursor: not-allowed;
+    }
+
     &,
     p,
     path {

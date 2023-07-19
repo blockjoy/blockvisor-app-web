@@ -16,15 +16,14 @@ export const styles = {
     :hover,
     &.not-empty,
     &.is-open {
-      svg path {
-        fill: ${theme.colorText};
-      }
+      > button:not(:disabled) {
+        svg path {
+          fill: ${theme.colorText};
+        }
 
-      p {
-        color: ${theme.colorText};
-      }
-
-      > button {
+        p {
+          color: ${theme.colorText};
+        }
         border-color: ${theme.colorLabel};
       }
     }

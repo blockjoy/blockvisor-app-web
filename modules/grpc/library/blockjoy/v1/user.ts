@@ -52,6 +52,30 @@ export interface UserServiceDeleteRequest {
 export interface UserServiceDeleteResponse {
 }
 
+export interface UserServiceGetBillingRequest {
+  userId: string;
+}
+
+export interface UserServiceGetBillingResponse {
+  billingId?: string | undefined;
+}
+
+export interface UserServiceUpdateBillingRequest {
+  userId: string;
+  billingId?: string | undefined;
+}
+
+export interface UserServiceUpdateBillingResponse {
+  billingId?: string | undefined;
+}
+
+export interface UserServiceDeleteBillingRequest {
+  userId: string;
+}
+
+export interface UserServiceDeleteBillingResponse {
+}
+
 function createBaseUser(): User {
   return { id: "", email: "", firstName: "", lastName: "", createdAt: undefined, updatedAt: undefined };
 }
@@ -565,6 +589,282 @@ export const UserServiceDeleteResponse = {
   },
 };
 
+function createBaseUserServiceGetBillingRequest(): UserServiceGetBillingRequest {
+  return { userId: "" };
+}
+
+export const UserServiceGetBillingRequest = {
+  encode(message: UserServiceGetBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetBillingRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceGetBillingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceGetBillingRequest>): UserServiceGetBillingRequest {
+    return UserServiceGetBillingRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceGetBillingRequest>): UserServiceGetBillingRequest {
+    const message = createBaseUserServiceGetBillingRequest();
+    message.userId = object.userId ?? "";
+    return message;
+  },
+};
+
+function createBaseUserServiceGetBillingResponse(): UserServiceGetBillingResponse {
+  return { billingId: undefined };
+}
+
+export const UserServiceGetBillingResponse = {
+  encode(message: UserServiceGetBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.billingId !== undefined) {
+      writer.uint32(10).string(message.billingId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetBillingResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceGetBillingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.billingId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceGetBillingResponse>): UserServiceGetBillingResponse {
+    return UserServiceGetBillingResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceGetBillingResponse>): UserServiceGetBillingResponse {
+    const message = createBaseUserServiceGetBillingResponse();
+    message.billingId = object.billingId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUserServiceUpdateBillingRequest(): UserServiceUpdateBillingRequest {
+  return { userId: "", billingId: undefined };
+}
+
+export const UserServiceUpdateBillingRequest = {
+  encode(message: UserServiceUpdateBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.billingId !== undefined) {
+      writer.uint32(18).string(message.billingId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateBillingRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceUpdateBillingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.billingId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceUpdateBillingRequest>): UserServiceUpdateBillingRequest {
+    return UserServiceUpdateBillingRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceUpdateBillingRequest>): UserServiceUpdateBillingRequest {
+    const message = createBaseUserServiceUpdateBillingRequest();
+    message.userId = object.userId ?? "";
+    message.billingId = object.billingId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUserServiceUpdateBillingResponse(): UserServiceUpdateBillingResponse {
+  return { billingId: undefined };
+}
+
+export const UserServiceUpdateBillingResponse = {
+  encode(message: UserServiceUpdateBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.billingId !== undefined) {
+      writer.uint32(10).string(message.billingId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateBillingResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceUpdateBillingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.billingId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceUpdateBillingResponse>): UserServiceUpdateBillingResponse {
+    return UserServiceUpdateBillingResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceUpdateBillingResponse>): UserServiceUpdateBillingResponse {
+    const message = createBaseUserServiceUpdateBillingResponse();
+    message.billingId = object.billingId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUserServiceDeleteBillingRequest(): UserServiceDeleteBillingRequest {
+  return { userId: "" };
+}
+
+export const UserServiceDeleteBillingRequest = {
+  encode(message: UserServiceDeleteBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteBillingRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceDeleteBillingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceDeleteBillingRequest>): UserServiceDeleteBillingRequest {
+    return UserServiceDeleteBillingRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceDeleteBillingRequest>): UserServiceDeleteBillingRequest {
+    const message = createBaseUserServiceDeleteBillingRequest();
+    message.userId = object.userId ?? "";
+    return message;
+  },
+};
+
+function createBaseUserServiceDeleteBillingResponse(): UserServiceDeleteBillingResponse {
+  return {};
+}
+
+export const UserServiceDeleteBillingResponse = {
+  encode(_: UserServiceDeleteBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteBillingResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceDeleteBillingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceDeleteBillingResponse>): UserServiceDeleteBillingResponse {
+    return UserServiceDeleteBillingResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<UserServiceDeleteBillingResponse>): UserServiceDeleteBillingResponse {
+    const message = createBaseUserServiceDeleteBillingResponse();
+    return message;
+  },
+};
+
 /** User related services. */
 export type UserServiceDefinition = typeof UserServiceDefinition;
 export const UserServiceDefinition = {
@@ -607,6 +907,33 @@ export const UserServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Retrieve the billing details of this user. */
+    getBilling: {
+      name: "GetBilling",
+      requestType: UserServiceGetBillingRequest,
+      requestStream: false,
+      responseType: UserServiceGetBillingResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Overwrite the billing details of this user. */
+    updateBilling: {
+      name: "UpdateBilling",
+      requestType: UserServiceUpdateBillingRequest,
+      requestStream: false,
+      responseType: UserServiceUpdateBillingResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Remove the billing details of this user. */
+    deleteBilling: {
+      name: "DeleteBilling",
+      requestType: UserServiceDeleteBillingRequest,
+      requestStream: false,
+      responseType: UserServiceDeleteBillingResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -631,6 +958,21 @@ export interface UserServiceImplementation<CallContextExt = {}> {
     request: UserServiceDeleteRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceDeleteResponse>>;
+  /** Retrieve the billing details of this user. */
+  getBilling(
+    request: UserServiceGetBillingRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceGetBillingResponse>>;
+  /** Overwrite the billing details of this user. */
+  updateBilling(
+    request: UserServiceUpdateBillingRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceUpdateBillingResponse>>;
+  /** Remove the billing details of this user. */
+  deleteBilling(
+    request: UserServiceDeleteBillingRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceDeleteBillingResponse>>;
 }
 
 export interface UserServiceClient<CallOptionsExt = {}> {
@@ -654,6 +996,21 @@ export interface UserServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<UserServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceDeleteResponse>;
+  /** Retrieve the billing details of this user. */
+  getBilling(
+    request: DeepPartial<UserServiceGetBillingRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceGetBillingResponse>;
+  /** Overwrite the billing details of this user. */
+  updateBilling(
+    request: DeepPartial<UserServiceUpdateBillingRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceUpdateBillingResponse>;
+  /** Remove the billing details of this user. */
+  deleteBilling(
+    request: DeepPartial<UserServiceDeleteBillingRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceDeleteBillingResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

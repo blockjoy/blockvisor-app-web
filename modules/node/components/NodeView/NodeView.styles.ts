@@ -25,6 +25,12 @@ export const styles = {
     padding: 0 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
 
+    @media ${breakpoints.fromXLrg} {
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 120px);
+    }
+
     @media ${breakpoints.toXlrg} {
       border-left: 0;
       border-top: 1px solid ${theme.colorBorder};

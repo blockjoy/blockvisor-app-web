@@ -30,9 +30,9 @@ export interface NodeUpdated {
     | Node
     | undefined;
   /** The id of the person that updated the node */
-  updatedBy: string;
-  updatedByName: string;
-  updatedByEmail: string;
+  updatedBy?: string | undefined;
+  updatedByName?: string | undefined;
+  updatedByEmail?: string | undefined;
 }
 
 export interface NodeDeleted {
@@ -127,9 +127,9 @@ export interface HostCreated {
 
 export interface HostUpdated {
   host: Host | undefined;
-  updatedBy: string;
-  updatedByName: string;
-  updatedByEmail: string;
+  updatedBy?: string | undefined;
+  updatedByName?: string | undefined;
+  updatedByEmail?: string | undefined;
 }
 
 export interface HostDeleted {
@@ -293,7 +293,7 @@ export const NodeCreated = {
 };
 
 function createBaseNodeUpdated(): NodeUpdated {
-  return { node: undefined, updatedBy: "", updatedByName: "", updatedByEmail: "" };
+  return { node: undefined, updatedBy: undefined, updatedByName: undefined, updatedByEmail: undefined };
 }
 
 export const NodeUpdated = {
@@ -301,13 +301,13 @@ export const NodeUpdated = {
     if (message.node !== undefined) {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
-    if (message.updatedBy !== "") {
+    if (message.updatedBy !== undefined) {
       writer.uint32(18).string(message.updatedBy);
     }
-    if (message.updatedByName !== "") {
+    if (message.updatedByName !== undefined) {
       writer.uint32(26).string(message.updatedByName);
     }
-    if (message.updatedByEmail !== "") {
+    if (message.updatedByEmail !== undefined) {
       writer.uint32(34).string(message.updatedByEmail);
     }
     return writer;
@@ -364,9 +364,9 @@ export const NodeUpdated = {
   fromPartial(object: DeepPartial<NodeUpdated>): NodeUpdated {
     const message = createBaseNodeUpdated();
     message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
-    message.updatedBy = object.updatedBy ?? "";
-    message.updatedByName = object.updatedByName ?? "";
-    message.updatedByEmail = object.updatedByEmail ?? "";
+    message.updatedBy = object.updatedBy ?? undefined;
+    message.updatedByName = object.updatedByName ?? undefined;
+    message.updatedByEmail = object.updatedByEmail ?? undefined;
     return message;
   },
 };
@@ -1171,7 +1171,7 @@ export const HostCreated = {
 };
 
 function createBaseHostUpdated(): HostUpdated {
-  return { host: undefined, updatedBy: "", updatedByName: "", updatedByEmail: "" };
+  return { host: undefined, updatedBy: undefined, updatedByName: undefined, updatedByEmail: undefined };
 }
 
 export const HostUpdated = {
@@ -1179,13 +1179,13 @@ export const HostUpdated = {
     if (message.host !== undefined) {
       Host.encode(message.host, writer.uint32(10).fork()).ldelim();
     }
-    if (message.updatedBy !== "") {
+    if (message.updatedBy !== undefined) {
       writer.uint32(18).string(message.updatedBy);
     }
-    if (message.updatedByName !== "") {
+    if (message.updatedByName !== undefined) {
       writer.uint32(26).string(message.updatedByName);
     }
-    if (message.updatedByEmail !== "") {
+    if (message.updatedByEmail !== undefined) {
       writer.uint32(34).string(message.updatedByEmail);
     }
     return writer;
@@ -1242,9 +1242,9 @@ export const HostUpdated = {
   fromPartial(object: DeepPartial<HostUpdated>): HostUpdated {
     const message = createBaseHostUpdated();
     message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
-    message.updatedBy = object.updatedBy ?? "";
-    message.updatedByName = object.updatedByName ?? "";
-    message.updatedByEmail = object.updatedByEmail ?? "";
+    message.updatedBy = object.updatedBy ?? undefined;
+    message.updatedByName = object.updatedByName ?? undefined;
+    message.updatedByEmail = object.updatedByEmail ?? undefined;
     return message;
   },
 };

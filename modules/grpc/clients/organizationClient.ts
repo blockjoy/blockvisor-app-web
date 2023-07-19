@@ -26,9 +26,12 @@ class OrganizationClient {
   }
 
   async getOrganization(id: string): Promise<Org> {
+    const request = { id };
+    console.log('getOrganizationRequest', request);
     try {
       await authClient.refreshToken();
-      const response = await this.client.get({ id }, getOptions());
+      const response = await this.client.get(request, getOptions());
+      console.log('getOrganizationResponse', response.org);
       return response.org!;
     } catch (err) {
       return handleError(err);
