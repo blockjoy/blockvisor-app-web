@@ -5,7 +5,6 @@ export * from './components/BillingView/BillingView';
 export * from './components/BillingView/BillingInfo/BillingInfo';
 export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddress';
 export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddressForm/BillingAddressForm';
-export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddressPreview/BillingAddressPreview';
 export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactDialog/BillingContactDialog';
 export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactForm/BillingContactForm';
 export * from './components/BillingView/BillingInfo/BillingContacts/BillingContacts';

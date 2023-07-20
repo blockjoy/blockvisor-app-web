@@ -1,20 +1,18 @@
+import { useRecoilValue } from 'recoil';
 import { Controller, FormProvider } from 'react-hook-form';
-import { useBillingAddressForm } from '@modules/billing';
+import { billingSelectors, useBillingAddressForm } from '@modules/billing';
 import { Button, CountrySelector, Input } from '@shared/components';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './BillingAddressForm.styles';
-import { CustomerBillingAddress } from 'chargebee-typescript/lib/resources';
 import { ButtonGroup } from '@shared/components/Buttons/ButtonGroup/ButtonGroup';
 
-export type BillingAddressFormProps = {
-  actions: BillingAddressActions;
-  billingAddress?: CustomerBillingAddress | null;
+type BillingAddressFormProps = {
+  handleCancel: () => void;
 };
 
 export const BillingAddressForm = ({
-  actions,
-  billingAddress,
+  handleCancel,
 }: BillingAddressFormProps) => {
   const {
     loading,
@@ -29,10 +27,12 @@ export const BillingAddressForm = ({
     cityController,
     countryController,
     postalController,
-  } = useBillingAddressForm(actions, billingAddress);
+  } = useBillingAddressForm();
 
   const { formState } = form;
   const { isValid } = formState;
+
+  const hasBillingAddress = useRecoilValue(billingSelectors.hasBillingAddress);
 
   return (
     <FormProvider {...form}>
@@ -143,16 +143,18 @@ export const BillingAddressForm = ({
             tabIndex={8}
             disabled={!isValid}
           >
-            {billingAddress ? 'Update' : 'Add'}
+            {hasBillingAddress ? 'Update' : 'Add'}
           </Button>
-          <Button
-            onClick={() => actions.cancel()}
-            style="outline"
-            size="small"
-            tabIndex={9}
-          >
-            Cancel
-          </Button>
+          {!hasBillingAddress && (
+            <Button
+              onClick={handleCancel}
+              style="outline"
+              size="small"
+              tabIndex={9}
+            >
+              Cancel
+            </Button>
+          )}
         </ButtonGroup>
       </form>
     </FormProvider>

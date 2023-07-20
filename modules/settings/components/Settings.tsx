@@ -20,7 +20,7 @@ export const Settings = () => {
         ),
       },
       {
-        label: 'Billing Info',
+        label: 'Billing Address',
         value: '2',
         component: (
           <PageSection bottomBorder={false}>
