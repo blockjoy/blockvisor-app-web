@@ -61,6 +61,7 @@ export const globalStyles = css`
 
     /* --- INPUT --- */
     --color-input-background: hsl(165, 4%, 20%);
+    --color-input-placeholder: hsl(0, 0%, 46%);
 
     /* --- OTHERS --- */
     --color-foreground-secondary: hsl(160, 4%, 14%); /* Black */
