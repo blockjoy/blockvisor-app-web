@@ -4,22 +4,22 @@ import { BillingAddress } from 'chargebee-typescript/lib/resources/customer';
 import { billingSelectors } from '@modules/billing';
 import {
   DropdownButton,
+  DropdownCreate,
   DropdownItem,
   DropdownMenu,
   DropdownWrapper,
   Scrollbar,
 } from '@shared/components';
 import { styles } from './BillingAddressSelect.styles';
-import IconPlus from '@public/assets/icons/common/Plus.svg';
 
 type BillingAddressSelectProps = {
   handlePaymentBillingAddress: (billingAddress: BillingAddress) => void;
-  onCreate: VoidFunction;
+  handleNewAddress: VoidFunction;
 };
 
 export const BillingAddressSelect = ({
   handlePaymentBillingAddress,
-  onCreate,
+  handleNewAddress,
 }: BillingAddressSelectProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -58,9 +58,10 @@ export const BillingAddressSelect = ({
             </li>
           </ul>
         </Scrollbar>
-        <button css={[styles.createButton]} onClick={onCreate}>
-          <IconPlus /> Add Billing address
-        </button>
+        <DropdownCreate
+          title="Add Billing address"
+          handleClick={handleNewAddress}
+        />
       </DropdownMenu>
     </DropdownWrapper>
   );
