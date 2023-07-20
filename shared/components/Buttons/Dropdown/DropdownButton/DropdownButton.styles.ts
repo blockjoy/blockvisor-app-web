@@ -34,6 +34,8 @@ export const styles = {
   `,
   buttonInput: (theme: ITheme) => css`
     background-color: ${theme.colorInput};
+    border: none;
+    color: var(--color-text-5);
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
