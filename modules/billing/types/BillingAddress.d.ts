@@ -20,8 +20,3 @@ type BillingAddressAdditionalData = {
   state?: '';
   stateCode?: '';
 };
-
-type BillingAddressActions = {
-  add: (customerId: string, card: BillingAddressParams) => void;
-  cancel: VoidFunction;
-};

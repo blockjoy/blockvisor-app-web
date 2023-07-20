@@ -1,4 +1,4 @@
-import { DetailsView, TableSkeleton } from '@shared/components';
+import { TableSkeleton } from '@shared/components';
 import { BillingAddress, billingAtoms } from '@modules/billing';
 import { useRecoilValue } from 'recoil';
 
@@ -12,9 +12,7 @@ export const BillingInfo = () => {
       {billingAddressLoadingState !== 'finished' ? (
         <TableSkeleton />
       ) : (
-        <DetailsView headline="Billing Address">
-          <BillingAddress />
-        </DetailsView>
+        <BillingAddress />
       )}
     </>
   );
