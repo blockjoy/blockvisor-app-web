@@ -161,7 +161,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
             </label>
             <BillingAddressSelect
               handlePaymentBillingAddress={handleDefaultAddress}
-              onCreate={handleNewAddress}
+              handleNewAddress={handleNewAddress}
             />
           </div>
         ) : (
