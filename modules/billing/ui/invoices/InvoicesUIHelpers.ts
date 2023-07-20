@@ -1,4 +1,4 @@
-import { itemsPerPage } from '@shared/index';
+import { itemsPerPage } from '@shared/utils/infiniteScroll';
 
 export type Pagination = {
   currentPage: number;
