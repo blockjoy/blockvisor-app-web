@@ -3,9 +3,10 @@ import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
+  fetchBilling,
   useSubscription,
 } from '@modules/billing';
-import { Customer, PaymentSource } from 'chargebee-typescript/lib/resources';
+import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { _payment_source } from 'chargebee-typescript';
 
 interface IPaymentMethodsHook {
@@ -41,6 +42,22 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const { getSubscription } = useSubscription();
 
+  const getPaymentMethod = async (id: string) => {
+    setPaymentMethodLoadingState('initializing');
+
+    try {
+      const data = await fetchBilling(BILLING_API_ROUTES.payments.sources.get, {
+        id,
+      });
+
+      setPaymentMethod(data);
+    } catch (error) {
+      console.error('Failed to fetch Payment method', error);
+    } finally {
+      setPaymentMethodLoadingState('finished');
+    }
+  };
+
   const getPaymentMethods = async () => {
     setPaymentMethodsLoadingState('initializing');
 
@@ -50,49 +67,16 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     };
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.payments.sources.list, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ params }),
-      });
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.payments.sources.list,
+        { params },
+      );
 
-      if (!response.ok) {
-        console.error(
-          `Failed to fetch payment methods. Status: ${response.status}, Status Text: ${response.statusText}`,
-        );
-        setPaymentMethods([]);
-      } else {
-        const data: PaymentSource[] = await response.json();
-        setPaymentMethods(data);
-      }
+      setPaymentMethods(data);
     } catch (error) {
-      console.error('Failed to fetch payment methods', error);
+      console.error('Failed to fetch Payment methods', error);
     } finally {
       setPaymentMethodsLoadingState('finished');
-    }
-  };
-
-  const getPaymentMethod = async (id: string) => {
-    setPaymentMethodLoadingState('initializing');
-
-    try {
-      const response = await fetch(BILLING_API_ROUTES.payments.sources.get, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
-      });
-
-      const data: PaymentSource = await response.json();
-
-      setPaymentMethod(data);
-    } catch (error) {
-      console.error('Failed to fetch payment methods', error);
-    } finally {
-      setPaymentMethodLoadingState('finished');
     }
   };
 
@@ -111,16 +95,10 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
         },
       };
 
-      const response = await fetch(BILLING_API_ROUTES.payments.sources.create, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ params }),
-      });
-
-      const data: { paymentSource: PaymentSource; customer: Customer } =
-        await response.json();
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.payments.sources.create,
+        { params },
+      );
 
       const { paymentSource, customer: customerData } = data;
 
@@ -132,7 +110,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
       onSuccess(paymentSource?.id, customerData.id);
     } catch (error) {
-      console.error('Failed to create payment method', error);
+      console.error('Failed to create Payment method', error);
     } finally {
       setPaymentMethodsLoadingState('finished');
     }
@@ -142,16 +120,10 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     setPaymentMethodsLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.payments.sources.delete, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
-      });
-
-      const data: { customer: Customer; paymentSource: PaymentSource } =
-        await response.json();
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.payments.sources.delete,
+        { id },
+      );
 
       const { paymentSource, customer: customerData } = data;
 
@@ -167,7 +139,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
       if (subscription?.payment_source_id === id)
         getSubscription(subscription?.id);
     } catch (error) {
-      console.error('Failed to delete payment method', error);
+      console.error('Failed to delete Payment method', error);
     } finally {
       setPaymentMethodsLoadingState('finished');
     }

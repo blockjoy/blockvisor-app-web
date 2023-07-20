@@ -1,6 +1,10 @@
 import { useRecoilState } from 'recoil';
 import { Estimate } from 'chargebee-typescript/lib/resources';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import {
+  BILLING_API_ROUTES,
+  billingAtoms,
+  fetchBilling,
+} from '@modules/billing';
 
 interface IEstimatesHook {
   estimate: Estimate | null;
@@ -18,19 +22,13 @@ export const useEstimates = (subscriptionId: string): IEstimatesHook => {
     setEstimateLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.estimates.get, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ subscriptionId }),
+      const data = await fetchBilling(BILLING_API_ROUTES.estimates.get, {
+        subscriptionId,
       });
-
-      const data: Estimate = await response.json();
 
       setEstimate(data);
     } catch (error) {
-      console.error('Failed to fetch estimates', error);
+      console.error('Failed to fetch Estimates', error);
     } finally {
       setEstimateLoadingState('finished');
     }

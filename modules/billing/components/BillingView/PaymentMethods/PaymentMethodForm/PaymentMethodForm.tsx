@@ -122,6 +122,10 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
   const errorMessage = error ? generatePaymentError(error) : null;
 
+  const isValidInfoForm = Object.values(billingInfo).every(
+    (value) => value.trim() !== '',
+  );
+
   return (
     <div css={styles.wrapper}>
       <h4 css={styles.headline}>CARD DETAILS</h4>
@@ -188,6 +192,10 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
       <div css={styles.buttons}>
         <Button
           loading={loading !== 'finished'}
+          disabled={
+            loading !== 'finished' ||
+            (activeView === 'action' && !isValidInfoForm)
+          }
           style="primary"
           size="small"
           type="submit"

@@ -19,7 +19,7 @@ export const createHandler = <Params, Result, Response>(
 ) => {
   return async (
     req: NextApiRequest,
-    res: NextApiResponse<Response | null | { message: string }>,
+    res: NextApiResponse<Response | null | BillingError>,
   ) => {
     if (req.method === 'POST') {
       try {
@@ -48,9 +48,7 @@ export const createHandler = <Params, Result, Response>(
           const result = errorCallback(error);
           res.status(200).json(result);
         } else {
-          res
-            .status(error.http_status_code || 500)
-            .json({ message: error.message });
+          res.status(error.http_status_code || 500).json(error);
         }
       }
     } else {
