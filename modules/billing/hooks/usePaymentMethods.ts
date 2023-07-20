@@ -100,6 +100,8 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
         { params },
       );
 
+      console.log('%cCreatePaymentMethod', 'color: #bff589', { params, data });
+
       const { paymentSource, customer: customerData } = data;
 
       const newPaymentMethods = [...paymentMethods, paymentSource];

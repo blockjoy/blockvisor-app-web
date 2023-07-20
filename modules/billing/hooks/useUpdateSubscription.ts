@@ -139,6 +139,8 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
         },
       );
 
+      console.log('UpdateSubscription', { type, subscription, params, data });
+
       setSubscription(data);
     } catch (error: any) {
       throw error;
