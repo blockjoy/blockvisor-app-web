@@ -3,12 +3,11 @@ import { Select } from '@shared/components';
 import { NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { colors } from 'styles/utils.colors.styles';
-import { spacing } from 'styles/utils.spacing.styles';
 import { useDefaultOrganization } from '@modules/organization';
 
 type Props = {
   onChange: (name: string, value: any) => void;
-  onLoad: (error: boolean) => void;
+  onLoad: (firstRegion: string) => void;
   region: string;
   blockchainId: string;
   nodeType: NodeType;
@@ -25,9 +24,7 @@ export const NodeRegionSelect = ({
 }: Props) => {
   const [serverError, setServerError] = useState('');
   const [regions, setRegions] = useState<string[]>([]);
-
   const { defaultOrganization } = useDefaultOrganization();
-
   const currentBlockchainId = useRef('');
 
   useEffect(() => {
@@ -49,11 +46,11 @@ export const NodeRegionSelect = ({
             return;
           }
 
-          onLoad(false);
+          onLoad(regions[0]);
         } catch (err) {
           console.log('getRegionsError', err);
           setServerError('Error Loading Regions');
-          onLoad(true);
+          onLoad('');
         }
       })();
     }

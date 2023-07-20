@@ -29,7 +29,7 @@ type Props = {
   onCreateNodeClicked: VoidFunction;
   onHostChanged: (host: Host | null) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
-  onRegionsLoaded: (error: boolean) => void;
+  onRegionsLoaded: (region: string) => void;
 };
 
 export const NodeLauncherSummary: FC<Props> = ({

@@ -76,7 +76,7 @@ export const NodeLauncher = () => {
   });
 
   const isNodeValid = Boolean(
-    node.blockchainId && node.nodeType && !hasRegionListError,
+    node.blockchainId && node.nodeType && node.region,
   );
 
   const isConfigValid = !node.keyFiles
@@ -190,7 +190,13 @@ export const NodeLauncher = () => {
     Mixpanel.track('Launch Node - Key File Uploaded');
   };
 
-  const handleRegionsLoaded = (error: boolean) => setHasRegionListError(error);
+  const handleRegionsLoaded = (region: string) => {
+    setHasRegionListError(Boolean(region));
+    setNode({
+      ...node,
+      region,
+    });
+  };
 
   const handleCreateNodeClicked = () => {
     setIsCreating(true);
