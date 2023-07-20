@@ -1,11 +1,4 @@
-import { itemsPerPage } from '@shared/index';
-import { hostFiltersDefaults } from '@shared/constants/lookups';
-
-export type ItemsPerPage = {
-  sm: number;
-  lg: number;
-  xxl: number;
-};
+import { itemsPerPage } from '@shared/utils/infiniteScroll';
 
 export type Pagination = {
   current_page: number;
