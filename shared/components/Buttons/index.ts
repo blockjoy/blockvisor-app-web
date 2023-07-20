@@ -7,6 +7,7 @@ export * from './Dropdown/DropdownButton/DropdownButton';
 export * from './Dropdown/DropdownMenu/DropdownMenu';
 export * from './Dropdown/Dropdown';
 export * from './Dropdown/DropdownWrapper/DropdownWrapper';
+export * from './Dropdown/DropdownCreate/DropdownCreate';
 export * from './ActionsDropdown/ActionsDropdown';
 export * from './NextLink/NextLink';
 export * from './Dropdown/utils/withSearchDropdown';
