@@ -21,6 +21,7 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { Mixpanel } from '@shared/utils/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
 export type NodeLauncherState = {
@@ -108,6 +109,10 @@ export const NodeLauncher = () => {
       nodeType,
       properties,
     });
+    Mixpanel.track('Launch Node - Protocol Selected', {
+      blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
+      nodeType: NodeType[nodeType],
+    });
   };
 
   // hack that needs removing
@@ -119,11 +124,17 @@ export const NodeLauncher = () => {
     return !!activeNodeFiles?.files?.length;
   };
 
-  const handleNodePropertyChanged = (name: string, value: any) =>
+  const handleNodePropertyChanged = (name: string, value: any) => {
     setNode({
       ...node,
       [name]: value,
     });
+
+    Mixpanel.track('Launch Node - Property Changed', {
+      propertyName: name,
+      propertyValue: value,
+    });
+  };
 
   const handleNodeConfigPropertyChanged = (e: any) => {
     setServerError('');
@@ -136,16 +147,26 @@ export const NodeLauncher = () => {
 
     if (!foundProperty) return;
 
-    foundProperty.value =
+    const newValue =
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+    foundProperty.value = newValue;
 
     setNode({
       ...node,
       properties: propertiesCopy,
     });
+
+    Mixpanel.track('Launch Node - Node Config Property Changed', {
+      propertyName: foundProperty.name,
+      propertyValue: newValue,
+    });
   };
 
-  const handleHostChanged = (host: Host | null) => setSelectedHost(host);
+  const handleHostChanged = (host: Host | null) => {
+    Mixpanel.track('Launch Node - Host Changed');
+    setSelectedHost(host);
+  };
 
   const handleFileUploaded = (e: any) => {
     setServerError(undefined);
@@ -165,6 +186,8 @@ export const NodeLauncher = () => {
       ...node,
       keyFiles: keyFilesCopy,
     });
+
+    Mixpanel.track('Launch Node - Key File Uploaded');
   };
 
   const handleRegionsLoaded = (error: boolean) => setHasRegionListError(error);
@@ -205,6 +228,7 @@ export const NodeLauncher = () => {
       params,
       mergedFiles.flat(),
       (nodeId: string) => {
+        Mixpanel.track('Launch Node - Node Launched');
         router.push(ROUTES.NODE(nodeId));
       },
       (error: string) => setServerError(error!),
@@ -269,6 +293,10 @@ export const NodeLauncher = () => {
         : '',
     });
   }, [node.blockchainId, node.nodeType]);
+
+  useEffect(() => {
+    Mixpanel.track('Launch Node - Opened');
+  }, []);
 
   return (
     <>

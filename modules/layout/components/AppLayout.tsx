@@ -1,13 +1,11 @@
 import Head from 'next/head';
 import { useEffect, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
 import { Toast } from './toast/Toast';
 import { useIdentityRepository } from '@modules/auth';
 import {
-  organizationAtoms,
   useDefaultOrganization,
   useGetOrganizations,
   useInvitations,
@@ -65,11 +63,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     <>
       <Head>
         <title>{pageTitle}</title>
-        <script
-          defer
-          data-domain="app.blockjoy.com"
-          src="https://plausible.io/js/script.js"
-        ></script>
       </Head>
       <Burger />
       <Sidebar />
