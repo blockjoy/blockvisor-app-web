@@ -23,8 +23,8 @@ export const styles = {
       background: rgb(255 255 255 / 5%);
     }
   `,
-  placeholder: (theme: ITheme) => css`
-    color: ${theme.colorPlaceholder} !important;
+  placeholder: css`
+    color: var(--color-input-placeholder) !important;
   `,
   noResults: css`
     padding: 12px;

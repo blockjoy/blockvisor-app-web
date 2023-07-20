@@ -7,12 +7,9 @@ import {
   UseFormReturn,
 } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import {
-  Customer,
-  CustomerBillingAddress,
-} from 'chargebee-typescript/lib/resources';
+import { Customer } from 'chargebee-typescript/lib/resources';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { useCustomer } from '@modules/billing';
+import { useBillingAddress, useCustomer } from '@modules/billing';
 
 interface IBillingAddressFormHook {
   loading: boolean;
@@ -27,11 +24,9 @@ interface IBillingAddressFormHook {
   postalController: UseControllerReturn<BillingAddressForm, 'postal'>;
 }
 
-export const useBillingAddressForm = (
-  actions: BillingAddressActions,
-  billingAddress?: CustomerBillingAddress | null,
-): IBillingAddressFormHook => {
+export const useBillingAddressForm = (): IBillingAddressFormHook => {
   const { provideCustomer } = useCustomer();
+  const { billingAddress, addBillingAddress } = useBillingAddress();
 
   const [loading, setLoading] = useState(false);
 
@@ -62,7 +57,7 @@ export const useBillingAddressForm = (
     const customerData: Customer | null = await provideCustomer();
 
     try {
-      await actions.add(customerData?.id!, {
+      await addBillingAddress(customerData?.id!, {
         firstName,
         lastName,
         company,
@@ -72,7 +67,12 @@ export const useBillingAddressForm = (
         region,
         postal,
       });
-      actions.cancel();
+
+      toast.success(
+        `Billing address ${
+          !!billingAddress ? 'updated' : 'created'
+        } successfully`,
+      );
       setLoading(false);
     } catch (error) {
       setLoading(false);
