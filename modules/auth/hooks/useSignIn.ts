@@ -5,6 +5,7 @@ import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
 import { isStatusResponse } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
+import { Mixpanel } from '@shared/utils/mixpanel';
 
 type SignInParams = {
   email: string;
@@ -25,14 +26,20 @@ export function useSignIn() {
     const tokenObject: any = readToken(accessToken);
     const userId = tokenObject.resource_id;
 
-    const userData: any = await userClient.getUser(userId);
+    try {
+      const userData = await userClient.getUser(userId);
 
-    repository?.updateIdentity(userData);
-    setUser((current) => ({
-      ...current,
-      ...userData,
-      accessToken,
-    }));
+      Mixpanel.identify(userData.email);
+
+      repository?.updateIdentity(userData);
+      setUser((current) => ({
+        ...current,
+        ...userData,
+        accessToken,
+      }));
+    } catch (err) {
+      console.log("loginError: Couldn't retrieve user data", err);
+    }
   };
 
   const signIn = async (params?: SignInParams, token?: string) => {
