@@ -1,7 +1,11 @@
+import { Invoice } from 'chargebee-typescript/lib/resources';
 import { Badge, TableBlock } from '@shared/components';
 import { formatters } from '@shared/index';
-import { InvoiceDownload } from '@modules/billing';
-import { Invoice } from 'chargebee-typescript/lib/resources';
+import {
+  InvoiceDownload,
+  getInvoiceStatusColor,
+  getInvoiceStatusText,
+} from '@modules/billing';
 
 export const mapInvoicesToRows = (invoices?: Invoice[]) => {
   const headers: TableHeader[] = [
@@ -74,10 +78,10 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
           key: '5',
           component: (
             <Badge
-              color={`${invoice.status === 'paid' ? 'primary' : 'note'}`}
+              color={getInvoiceStatusColor(invoice.status)}
               style="outline"
             >
-              {invoice.status}
+              {getInvoiceStatusText(invoice.status)}
             </Badge>
           ),
         },
