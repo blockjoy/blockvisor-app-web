@@ -3,7 +3,6 @@ import {
   NodeRegionSelect,
   NodeTypeConfigLabel,
 } from '@modules/node';
-import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { nodeTypeList } from '@shared/constants/lookups';
