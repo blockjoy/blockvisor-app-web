@@ -19,6 +19,7 @@ import {
   ERROR_MESSAGES,
   PermissionsCreateResource,
 } from '@modules/auth/hooks/useHasPermissions';
+import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 
 type NodeLauncherSummaryProps = {
   serverError: string;
