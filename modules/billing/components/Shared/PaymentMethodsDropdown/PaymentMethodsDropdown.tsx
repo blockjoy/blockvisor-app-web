@@ -104,17 +104,13 @@ export const PaymentMethodsDropdown = ({
                         {CreditCardTypes[paymentMethod.card?.brand!]} ***
                         {paymentMethod.card?.last4}
                       </span>
-                      {customer?.primary_payment_source_id ===
-                        paymentMethod.id &&
-                        paymentMethods?.length > 1 && (
-                          <Badge
-                            color="primary"
-                            style="outline"
-                            customCss={[styles.badge]}
-                          >
-                            Primary
-                          </Badge>
-                        )}
+                      <Badge
+                        color="primary"
+                        style="outline"
+                        customCss={[styles.badge]}
+                      >
+                        Primary
+                      </Badge>
                     </p>
                   </DropdownItem>
                 </li>

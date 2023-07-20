@@ -1,5 +1,5 @@
 import { Customer, PaymentIntent } from 'chargebee-typescript/lib/resources';
-import { constSelector, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { billingAtoms } from '../store/billingAtoms';
 import { useCustomer } from './useCustomer';
 import { usePayment } from './usePayment';
@@ -41,6 +41,12 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
           additionalData,
         );
         await createPaymentMethod(customerData?.id!, data.id, onSuccess);
+
+        console.log('%cCreateIntent', 'color: #bff589', {
+          customerData,
+          intent,
+          data,
+        });
       } catch (error: any) {
         const returnedError = JSON.parse(JSON.stringify(error));
         setError(returnedError);
