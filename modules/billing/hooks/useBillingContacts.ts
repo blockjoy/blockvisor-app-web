@@ -5,6 +5,7 @@ import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
+  fetchBilling,
 } from '@modules/billing';
 
 interface IBillingContactsHook {
@@ -30,24 +31,19 @@ export const useBillingContacts = (): IBillingContactsHook => {
     setBillingContactsLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.customer.contacts.list, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.customer.contacts.list,
+        {
           customerId: customer?.id,
           filterParams: {
             subscriptionId: subscription?.id,
           },
-        }),
-      });
-
-      const data: Contact[] = await response.json();
+        },
+      );
 
       setBillingContacts(data);
     } catch (error) {
-      console.error('Failed to fetch payment methods', error);
+      console.error('Failed to fetch Billing contacts', error);
     } finally {
       setBillingContactsLoadingState('finished');
     }
@@ -90,7 +86,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
 
       setBillingContacts(data);
     } catch (error) {
-      console.error('Failed to fetch payment methods', error);
+      console.error('Failed to create Billing contact', error);
     } finally {
       setBillingContactsLoadingState('finished');
     }
@@ -129,7 +125,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
 
       setBillingContacts(data);
     } catch (error) {
-      console.error('Failed to fetch payment methods', error);
+      console.error('Failed to remove Billing contact', error);
     } finally {
       setBillingContactsLoadingState('finished');
     }

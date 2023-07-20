@@ -11,7 +11,7 @@ export const generateError = (error?: BillingError): string => {
     case ErrorCodes.PAYMENT_ERROR_DURING_UPDATE:
       return 'Unable to process payment. Please update you credit card details and try again.';
     default:
-      return 'Something went wrong. Please try again later.';
+      return 'Something went wrong. Please update you credit card details and try again.';
   }
 };
 
@@ -20,6 +20,6 @@ export const generatePaymentError = (error?: PaymentError): string => {
     case PaymentErrorCodes.PAYMENT_ATTEMPT_REFUSED:
       return 'Payment declined. Please verify your details or try a different method.';
     default:
-      return 'Something went wrong. Please try again later.';
+      return 'Something went wrong. Please update you credit card details and try again.';
   }
 };
