@@ -14,9 +14,8 @@ import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './PaymentMethodsDropdown.styles';
-import IconPlus from '@public/assets/icons/common/Plus.svg';
 import { useRouter } from 'next/router';
-import { Badge, ROUTES } from '@shared/index';
+import { Badge, DropdownCreate, ROUTES } from '@shared/index';
 
 type PaymentMethodsDropdownProps = {
   primaryId?: string;
@@ -118,9 +117,10 @@ export const PaymentMethodsDropdown = ({
             })}
           </ul>
         </Scrollbar>
-        <button css={[styles.createButton]} onClick={handleNewPaymentMethod}>
-          <IconPlus /> Add payment method
-        </button>
+        <DropdownCreate
+          title="Add payment method"
+          handleClick={handleNewPaymentMethod}
+        />
       </DropdownMenu>
     </DropdownWrapper>
   );
