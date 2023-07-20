@@ -5,6 +5,7 @@ import {
   billingSelectors,
   InitialQueryParams as InvoicesInitialQueryParams,
   getInitialQueryParams as getInvoicesInitialQueryParams,
+  fetchBilling,
 } from '@modules/billing';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 import { _invoice } from 'chargebee-typescript';
@@ -58,16 +59,9 @@ export const useInvoices = (): IInvoicesHook => {
         params.offset = invoicesNextOffset;
       }
 
-      const response = await fetch(BILLING_API_ROUTES.invoices.list, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ params }),
+      const data = await fetchBilling(BILLING_API_ROUTES.invoices.list, {
+        params,
       });
-
-      const data: { invoices: Invoice[]; nextOffset: string | undefined } =
-        await response.json();
 
       const { invoices: invoicesList, nextOffset } = data;
 

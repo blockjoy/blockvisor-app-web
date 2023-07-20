@@ -12,11 +12,11 @@ interface IBillingAddressHook {
   billingAddress: BillingAddress | null;
   billingAddressLoadingState: LoadingState;
   addBillingAddress: (customerId: string, card: BillingAddressForm) => void;
-  updateBillingAddress: VoidFunction;
 }
 
 export const useBillingAddress = (): IBillingAddressHook => {
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
+
   const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
   const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
     billingAtoms.customerLoadingState,
@@ -77,12 +77,10 @@ export const useBillingAddress = (): IBillingAddressHook => {
       setCustomerLoadingState('finished');
     }
   };
-  const updateBillingAddress = () => {};
 
   return {
     billingAddress,
     billingAddressLoadingState: customerLoadingState,
     addBillingAddress,
-    updateBillingAddress,
   };
 };

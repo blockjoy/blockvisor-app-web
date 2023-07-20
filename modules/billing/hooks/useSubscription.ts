@@ -62,7 +62,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to fetch subscription', error);
+      console.error('Failed to fetch Subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -110,13 +110,13 @@ export const useSubscription = (): ISubscriptionHook => {
           user?.id!,
           data.id,
         );
-      } catch (err: any) {
-        console.error('Failed to update billing profile', err);
+      } catch (error: any) {
+        console.error('Failed to create User Subscription', error);
       }
 
       return data;
     } catch (error) {
-      console.error('Failed to create the subscription', error);
+      console.error('Failed to create Subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -127,23 +127,15 @@ export const useSubscription = (): ISubscriptionHook => {
   ) => {
     setSubscriptionLoadingState('initializing');
 
-    const subscriptionProperties: {
-      id: string;
-      params: _subscription.update_for_items_params;
-    } = {
-      id: subscription?.id!,
-      params,
-    };
-
     try {
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.update,
-        subscriptionProperties,
-      );
+      const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.update, {
+        id: subscription?.id!,
+        params,
+      });
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to CREATE subscription', error);
+      console.error('Failed to update Subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -152,25 +144,17 @@ export const useSubscription = (): ISubscriptionHook => {
   const cancelSubscription = async ({ endOfTerm }: { endOfTerm: boolean }) => {
     setSubscriptionLoadingState('initializing');
 
-    const subscriptionProperties: {
-      id: string;
-      params: _subscription.cancel_for_items_params;
-    } = {
-      id: subscription?.id!,
-      params: {
-        end_of_term: endOfTerm,
-      },
-    };
-
     try {
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.cancel,
-        subscriptionProperties,
-      );
+      const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.cancel, {
+        id: subscription?.id!,
+        params: {
+          end_of_term: endOfTerm,
+        },
+      });
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to cancel subscription', error);
+      console.error('Failed to cancel Subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -187,7 +171,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to restore subscription', error);
+      console.error('Failed to Restore subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -208,7 +192,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to reactivate subscription', error);
+      console.error('Failed to Reactivate subscription', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -235,7 +219,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to update the billing profile', error);
+      console.error('Failed to update Billing profile', error);
     } finally {
       setSubscriptionLoadingState('finished');
     }
@@ -252,7 +236,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
         return newSubscription || null;
       } catch (error) {
-        console.log('Failed to provide Subscription', error);
+        console.error('Failed to provide Subscription', error);
         return null;
       }
     }

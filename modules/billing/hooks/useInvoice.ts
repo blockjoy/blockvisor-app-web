@@ -1,5 +1,9 @@
 import { useRecoilState } from 'recoil';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import {
+  BILLING_API_ROUTES,
+  billingAtoms,
+  fetchBilling,
+} from '@modules/billing';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 
 interface IInvoiceHook {
@@ -20,19 +24,13 @@ export const useInvoice = (): IInvoiceHook => {
     setInvoiceLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.invoices.get, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
+      const data = await fetchBilling(BILLING_API_ROUTES.invoices.get, {
+        id,
       });
-
-      const data: Invoice = await response.json();
 
       setInvoice(data);
     } catch (error) {
-      console.error(`Failed to fetch invoice with id: ${id}`, error);
+      console.error(`Failed to fetch Invoice with id: ${id}`, error);
     } finally {
       setInvoiceLoadingState('finished');
     }
@@ -40,19 +38,13 @@ export const useInvoice = (): IInvoiceHook => {
 
   const getInvoicePDF = async (id: string) => {
     try {
-      const response = await fetch(BILLING_API_ROUTES.invoices.pdf.get, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
+      const data = await fetchBilling(BILLING_API_ROUTES.invoices.pdf.get, {
+        id,
       });
-
-      const data: Invoice = await response.json();
 
       return data;
     } catch (error) {
-      console.error(`Failed to fetch invoice pdf with id: ${id}`, error);
+      console.error(`Failed to fetch Invoice pdf with id: ${id}`, error);
       return null;
     }
   };

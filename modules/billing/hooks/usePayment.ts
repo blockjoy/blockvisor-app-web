@@ -1,5 +1,9 @@
 import { useRecoilValue } from 'recoil';
-import { billingSelectors, BILLING_API_ROUTES } from '@modules/billing';
+import {
+  billingSelectors,
+  BILLING_API_ROUTES,
+  fetchBilling,
+} from '@modules/billing';
 import { _payment_intent } from 'chargebee-typescript';
 
 interface IPaymentHook {
@@ -17,17 +21,15 @@ export const usePayment = (): IPaymentHook => {
       customer_id: customer?.id,
     };
 
-    return fetch(BILLING_API_ROUTES.payments.intents.create, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ params }),
-    })
-      .then((response) => response.json())
-      .catch((err) => {
-        console.log('Error while creating a payment intent', err);
-      });
+    try {
+      const response = await fetchBilling(
+        BILLING_API_ROUTES.payments.intents.create,
+        { params },
+      );
+      return response;
+    } catch (error) {
+      console.error('Error while creating Payment intent', error);
+    }
   };
 
   return {
