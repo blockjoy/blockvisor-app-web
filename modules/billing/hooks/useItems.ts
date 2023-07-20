@@ -1,7 +1,11 @@
 import { useRecoilState } from 'recoil';
 import { _item, _item_price } from 'chargebee-typescript';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
-import { BILLING_API_ROUTES, billingAtoms } from '@modules/billing';
+import {
+  BILLING_API_ROUTES,
+  billingAtoms,
+  fetchBilling,
+} from '@modules/billing';
 
 interface IItemsHook {
   items: Item[] | null;
@@ -31,18 +35,13 @@ export const useItems = (): IItemsHook => {
     setItemsLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.items.get, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: 'standard' }),
+      const data = await fetchBilling(BILLING_API_ROUTES.items.get, {
+        id: 'standard',
       });
 
-      const data = await response.json();
       setItems(data);
     } catch (error) {
-      console.error('Failed to fetch item', error);
+      console.error('Failed to fetch Item', error);
     } finally {
       setItemsLoadingState('finished');
     }
@@ -56,19 +55,13 @@ export const useItems = (): IItemsHook => {
         id: { is: 'standard' },
       };
 
-      const response = await fetch(BILLING_API_ROUTES.items.list, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ params }),
+      const data = await fetchBilling(BILLING_API_ROUTES.items.list, {
+        params,
       });
-
-      const data = await response.json();
 
       setItems(data);
     } catch (error) {
-      console.error('Failed to fetch items', error);
+      console.error('Failed to fetch Items', error);
     } finally {
       setItemsLoadingState('finished');
     }
@@ -89,21 +82,15 @@ export const useItems = (): IItemsHook => {
 
       if (periodUnit) params['period_unit'] = { is: periodUnit };
 
-      const response = await fetch(BILLING_API_ROUTES.items.prices.list, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ params }),
+      const data = await fetchBilling(BILLING_API_ROUTES.items.prices.list, {
+        params,
       });
-
-      const data = await response.json();
 
       setItemPrices(data);
 
       return data;
     } catch (error) {
-      console.error('Failed to fetch item prices', error);
+      console.error('Failed to fetch Item prices', error);
       return [];
     } finally {
       setItemPricesLoadingState('finished');

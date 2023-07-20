@@ -5,6 +5,7 @@ import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
+  fetchBilling,
 } from '@modules/billing';
 import { useUserBilling, useIdentityRepository } from '@modules/auth';
 
@@ -31,27 +32,20 @@ export const useCustomer = (): ICustomerHook => {
     setCustomerLoadingState('initializing');
 
     try {
-      const response = await fetch(BILLING_API_ROUTES.customer.get, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
+      const data = await fetchBilling(BILLING_API_ROUTES.customer.get, {
+        id,
       });
-
-      const data = await response.json();
-      const customerData = !response.ok ? null : data;
 
       // TODO: Remove this after testing phase
       try {
-        if (!customerData && billingId) await deleteUserBilling(user?.id!);
-      } catch (err: any) {
-        console.log('Error while deleting billing', err);
+        if (!data && billingId) await deleteUserBilling(user?.id!);
+      } catch (error: any) {
+        console.error('Failed to deleting User Billing', error);
       }
 
-      setCustomer(customerData);
+      setCustomer(data);
     } catch (error: any) {
-      console.log('Error while fetching a customer', error);
+      console.error('Failed to fetch Customer', error);
     }
 
     setCustomerLoadingState('finished');
@@ -61,31 +55,21 @@ export const useCustomer = (): ICustomerHook => {
     params: _customer.create_params,
   ): Promise<Customer | null> => {
     try {
-      const response = await fetch(BILLING_API_ROUTES.customer.create, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ params }),
+      const data = await fetchBilling(BILLING_API_ROUTES.customer.create, {
+        params,
       });
 
-      if (!response.ok) {
-        throw new Error('Error creating Chargebee customer');
-      }
-
-      const customer = await response.json();
-
       try {
-        await updateUserBilling(user?.id!, customer.id);
-      } catch (err: any) {
-        console.log('Error while updating billing', err);
+        await updateUserBilling(user?.id!, data.id);
+      } catch (error: any) {
+        console.error('Failed to update User Billing', error);
       }
 
-      setCustomer(customer);
+      setCustomer(data);
 
-      return customer;
+      return data;
     } catch (error) {
-      console.log('Error while creating a customer', error);
+      console.error('Failed to create Customer', error);
       return null;
     }
   };
@@ -94,22 +78,15 @@ export const useCustomer = (): ICustomerHook => {
     params: _customer.assign_payment_role_params,
   ) => {
     try {
-      const response = await fetch(BILLING_API_ROUTES.customer.payment.update, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ customerId: customer?.id, params }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error creating Chargebee customer');
-      }
-
-      const data = await response.json();
+      const data = await fetchBilling(
+        BILLING_API_ROUTES.customer.payment.update,
+        { customerId: customer?.id, params },
+      );
 
       setCustomer(data);
-    } catch (error) {}
+    } catch (error) {
+      console.error('Failed to assign Payment role', error);
+    }
   };
 
   const provideCustomer = async (): Promise<Customer | null> => {
@@ -123,10 +100,7 @@ export const useCustomer = (): ICustomerHook => {
 
         return newCustomer;
       } catch (error) {
-        console.log(
-          'Error while creating a customer in handlePaymentCreation',
-          error,
-        );
+        console.error('Failed to provide Customer for the current User', error);
         return null;
       }
     }
