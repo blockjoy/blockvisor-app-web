@@ -79,6 +79,7 @@ export * from './utils/calcPlanPrice';
 export * from './utils/checkIfBillingContactExists';
 export * from './utils/fetchBilling';
 export * from './utils/generateError';
+export * from './utils/getStatuses';
 export * from './utils/handleCreditCardInfo';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapCardToDetails';

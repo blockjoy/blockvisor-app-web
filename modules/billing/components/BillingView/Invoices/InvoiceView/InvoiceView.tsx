@@ -15,6 +15,7 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
 import IconCalendar from '@public/assets/icons/common/Calendar.svg';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 import {
   InvoiceDownload,
   InvoiceInfo,
@@ -39,9 +40,28 @@ export const InvoiceView = () => {
     return () => unloadInvoice();
   }, [router.isReady]);
 
+  const handleBillingClicked = () => {
+    router.push(
+      {
+        pathname: ROUTES.BILLING,
+        query: {
+          tab: 4,
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
+  };
+
   return (
     <>
-      <PageTitle title="Invoice" />
+      <PageTitle
+        title="Billing"
+        icon={<IconBilling />}
+        onTitleClick={handleBillingClicked}
+        isLoading={true}
+        childTitle={invoice?.id ? `Invoice (#${invoice?.id})` : undefined}
+      />
       <PageSection bottomBorder={false} topPadding={false}>
         <div css={spacing.top.medium}>
           <PageHeader>

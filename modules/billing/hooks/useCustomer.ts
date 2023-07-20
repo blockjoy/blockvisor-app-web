@@ -59,6 +59,8 @@ export const useCustomer = (): ICustomerHook => {
         params,
       });
 
+      console.log('%cCreateCustomer', 'color: #bff589', { params, data });
+
       try {
         await updateUserBilling(user?.id!, data.id);
       } catch (error: any) {

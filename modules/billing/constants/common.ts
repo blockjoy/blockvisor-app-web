@@ -12,9 +12,9 @@ export enum CreditCardTypes {
 
 export enum SubscriptionStatus {
   future = 'future',
-  in_trial = 'in trial',
+  in_trial = 'in_trial',
   active = 'active',
-  non_renewing = 'non renewing',
+  non_renewing = 'non_renewing',
   paused = 'paused',
   cancelled = 'cancelled',
 }
@@ -22,8 +22,8 @@ export enum SubscriptionStatus {
 export enum InvoiceStatus {
   paid = 'paid',
   posted = 'posted',
-  payment_due = 'payment due',
-  not_paid = 'not paid',
+  payment_due = 'payment_due',
+  not_paid = 'not_paid',
   voided = 'voided',
   pending = 'pending',
 }

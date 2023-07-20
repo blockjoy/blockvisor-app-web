@@ -102,6 +102,8 @@ export const useSubscription = (): ISubscriptionHook => {
         params,
       });
 
+      console.log('%cCreateSubscription', 'color: #bff589', { params, data });
+
       setSubscription(data);
 
       try {

@@ -11,7 +11,6 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
   useDefaultOrganization,
-  useGetOrganization,
   useGetOrganizations,
   useUpdateOrganization,
 } from '@modules/organization';
@@ -62,7 +61,7 @@ export const useNodeView = (): Hook => {
     await nodeClient.deleteNode(uuid);
 
     // Remove node from the subscription
-    updateSubscriptionItems({
+    await updateSubscriptionItems({
       type: SubscriptionAction.REMOVE_NODE,
       payload: { node },
     });
