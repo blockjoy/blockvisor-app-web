@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
@@ -15,40 +14,8 @@ export const styles = {
     font-size: 24px;
     font-weight: 700;
   `,
-  renewText: css`
-    display: flex;
-    max-width: 70%;
-  `,
-  renewSwitch: css`
-    display: flex;
-    flex: 1;
-    margin-bottom: 0;
-    justify-content: flex-end;
-  `,
   totalPrice: css`
     font-size: 24px;
     font-weight: 700;
-  `,
-  button: css`
-    min-width: 120px;
-  `,
-  features: css`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    li {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-  `,
-  summaryIcon: (theme: ITheme) => css`
-    display: inline-flex;
-    height: 20px;
-    width: 20px;
-    path {
-      fill: ${theme.colorPrimary};
-    }
   `,
 };

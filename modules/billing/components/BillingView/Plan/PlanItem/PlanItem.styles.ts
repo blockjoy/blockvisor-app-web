@@ -11,9 +11,6 @@ export const styles = {
     display: flex;
     flex-direction: column;
   `,
-  featured: (theme: ITheme) => css`
-    background-color: ${theme.colorOverlay};
-  `,
   titleWrapper: css`
     display: flex;
     flex-flow: row nowrap;
@@ -23,9 +20,6 @@ export const styles = {
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 1.25px;
-  `,
-  featuredTitle: (theme: ITheme) => css`
-    color: ${theme.colorPrimary};
   `,
   pricing: css`
     display: flex;

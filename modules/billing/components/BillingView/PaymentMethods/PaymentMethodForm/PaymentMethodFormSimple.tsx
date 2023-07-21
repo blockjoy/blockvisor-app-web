@@ -1,5 +1,7 @@
+import { ChangeEvent, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Button } from '@shared/index';
+import { CardComponent } from '@chargebee/chargebee-js-react-wrapper';
+import { Button, ButtonGroup } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
 import {
@@ -16,12 +18,10 @@ import {
   useBillingAddress,
   usePaymentMethodForm,
 } from '@modules/billing';
-import { ChangeEvent, useRef, useState } from 'react';
+import { useIdentityRepository } from '@modules/auth';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { CardComponent } from '@chargebee/chargebee-js-react-wrapper';
-import { useIdentityRepository } from '@modules/auth';
 
 type PaymentMethodFormProps = {
   handleCancel: VoidFunction;
@@ -60,8 +60,8 @@ export const PaymentMethodFormSimple = ({
   const { onSubmit } = usePaymentMethodForm();
   const { addBillingAddress } = useBillingAddress();
 
-  const handleSucces = (paymentSourceId: string, customerId: string) => {
-    if (isDefaultAddress || !billingAddress)
+  const handleSucces = (customerId?: string) => {
+    if ((isDefaultAddress || !billingAddress) && customerId)
       addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
     handleCancel();
@@ -137,7 +137,7 @@ export const PaymentMethodFormSimple = ({
         </p>
       )}
 
-      <div css={styles.buttons}>
+      <ButtonGroup>
         <Button
           loading={loading !== 'finished'}
           style="primary"
@@ -156,7 +156,7 @@ export const PaymentMethodFormSimple = ({
         >
           Cancel
         </Button>
-      </div>
+      </ButtonGroup>
     </div>
   );
 };

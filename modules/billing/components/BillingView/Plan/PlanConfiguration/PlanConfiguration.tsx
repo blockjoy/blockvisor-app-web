@@ -118,7 +118,6 @@ export const PlanConfiguration = ({
           style="secondary"
           size="medium"
           disabled={!paymentMethodId || !paymentMethods.length}
-          customCss={[styles.button]}
           loading={subscriptionLoadingState !== 'finished'}
           onClick={handleSubscription}
         >

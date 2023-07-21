@@ -1,15 +1,17 @@
 import { Customer, PaymentIntent } from 'chargebee-typescript/lib/resources';
 import { useSetRecoilState } from 'recoil';
-import { billingAtoms } from '../store/billingAtoms';
-import { useCustomer } from './useCustomer';
-import { usePayment } from './usePayment';
-import { usePaymentMethods } from './usePaymentMethods';
+import {
+  billingAtoms,
+  useCustomer,
+  usePayment,
+  usePaymentMethods,
+} from '@modules/billing';
 
 interface PaymentMethodFormHook {
   onSubmit: (
     cardRef: any,
     additionalData: { billingAddress: BillingAddressAdditionalData },
-    onSuccess: (paymentSourceId: string, customerId: string) => void,
+    onSuccess: (customerId?: string, paymentSourceId?: string) => void,
   ) => void;
 }
 
@@ -26,7 +28,7 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
   const onSubmit = async (
     cardRef: any,
     additionalData: { billingAddress: BillingAddressAdditionalData },
-    onSuccess: (paymentSourceId: string, customerId: string) => void,
+    onSuccess: (customerId?: string, paymentMethodId?: string) => void,
   ) => {
     setLoadingState('initializing');
     setError(null);

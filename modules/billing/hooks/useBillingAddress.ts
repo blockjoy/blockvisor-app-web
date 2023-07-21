@@ -1,11 +1,12 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { _customer } from 'chargebee-typescript';
 import { Customer } from 'chargebee-typescript/lib/resources';
 import { BillingAddress } from 'chargebee-typescript/lib/resources/customer';
-import { _customer } from 'chargebee-typescript';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
+  fetchBilling,
 } from '@modules/billing';
 
 interface IBillingAddressHook {
@@ -54,21 +55,13 @@ export const useBillingAddress = (): IBillingAddressHook => {
         billing_address: updatedBillingInfo,
       };
 
-      const response = await fetch(
+      const data = await fetchBilling(
         BILLING_API_ROUTES.customer.billingInfo.update,
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            customerId: customer?.id ? customer.id : customerId,
-            params,
-          }),
+          customerId: customer?.id ? customer.id : customerId,
+          params,
         },
       );
-
-      const data: Customer = await response.json();
 
       setCustomer(data);
     } catch (error) {

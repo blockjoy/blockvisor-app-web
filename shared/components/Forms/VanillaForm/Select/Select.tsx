@@ -5,11 +5,13 @@ import {
   DropdownItem,
   Scrollbar,
   DropdownWrapper,
+  DropdownCreate,
 } from '@shared/components';
 import { styles } from './Select.styles';
 
 type MenuItem = {
   name: string;
+  element?: ReactNode;
   onClick: VoidFunction;
 };
 
@@ -17,9 +19,13 @@ type Props = {
   disabled?: boolean;
   items: MenuItem[];
   buttonText: string | ReactNode;
+  newItem?: {
+    title: string;
+    onClick: VoidFunction;
+  };
 };
 
-export const Select = ({ disabled, items, buttonText }: Props) => {
+export const Select = ({ disabled, items, buttonText, newItem }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleClick = () => setIsOpen(!isOpen);
@@ -51,12 +57,19 @@ export const Select = ({ disabled, items, buttonText }: Props) => {
                   type="button"
                   onButtonClick={() => handleMenuItemClicked(item.onClick)}
                 >
-                  <p css={styles.menuItemText}>{item.name}</p>
+                  {item.element ? (
+                    item.element
+                  ) : (
+                    <p css={styles.menuItemText}>{item.name}</p>
+                  )}
                 </DropdownItem>
               </li>
             ))}
           </ul>
         </Scrollbar>
+        {newItem && (
+          <DropdownCreate title={newItem.title} handleClick={newItem.onClick} />
+        )}
       </DropdownMenu>
     </DropdownWrapper>
   );
