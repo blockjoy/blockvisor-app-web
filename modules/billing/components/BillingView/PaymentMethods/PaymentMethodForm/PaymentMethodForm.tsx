@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Button, Checkbox } from '@shared/index';
+import { Button, ButtonGroup, Checkbox } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
 import {
@@ -55,13 +55,13 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const { assignPaymentRole } = useCustomer();
   const { addBillingAddress } = useBillingAddress();
 
-  const handleSucces = (paymentSourceId: string, customerId: string) => {
-    if (primary && paymentMethods.length)
+  const handleSucces = (customerId?: string, paymentSourceId?: string) => {
+    if (primary && paymentMethods.length && paymentSourceId)
       assignPaymentRole({
         payment_source_id: paymentSourceId,
         role: 'primary',
       });
-    if (isDefaultAddress || !billingAddress)
+    if ((isDefaultAddress || !billingAddress) && customerId)
       addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
     handleCancel();
@@ -189,7 +189,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
         </p>
       )}
 
-      <div css={styles.buttons}>
+      <ButtonGroup>
         <Button
           loading={loading !== 'finished'}
           disabled={
@@ -212,7 +212,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
         >
           Cancel
         </Button>
-      </div>
+      </ButtonGroup>
     </div>
   );
 };

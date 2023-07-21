@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { styles } from './BillingAddress.styles';
 import { BillingAddressForm, billingSelectors } from '@modules/billing';
 import { Button } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const BillingAddress = () => {
   const hasBillingAddress = useRecoilValue(billingSelectors.hasBillingAddress);
@@ -15,7 +15,7 @@ export const BillingAddress = () => {
     <>
       {!isAdding ? (
         <div>
-          <p css={styles.text}>
+          <p css={spacing.bottom.medium}>
             You have not yet added any billing addresses. Click the button below
             to add one.
           </p>

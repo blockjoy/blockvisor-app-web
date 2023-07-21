@@ -7,13 +7,7 @@ export const BillingInfo = () => {
     billingAtoms.billingAddressLoadingState,
   );
 
-  return (
-    <>
-      {billingAddressLoadingState !== 'finished' ? (
-        <TableSkeleton />
-      ) : (
-        <BillingAddress />
-      )}
-    </>
-  );
+  if (billingAddressLoadingState !== 'finished') return <TableSkeleton />;
+
+  return <BillingAddress />;
 };

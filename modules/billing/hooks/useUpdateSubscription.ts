@@ -17,6 +17,10 @@ import {
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { blockchainsAtoms } from '@modules/node';
 import { ItemPrice, Subscription } from 'chargebee-typescript/lib/resources';
+import {
+  Host,
+  HostServiceCreateRequest,
+} from '@modules/grpc/library/blockjoy/v1/host';
 
 export enum SubscriptionAction {
   ADD_NODE = 'ADD_NODE',
@@ -29,7 +33,9 @@ interface IUpdateSubscriptionHook {
   subscriptionLoadingState: LoadingState;
   updateSubscriptionItems: (action: {
     type: SubscriptionAction;
-    payload: { node?: Node | NodeServiceCreateRequest | null } | { host?: any };
+    payload:
+      | { node?: Node | NodeServiceCreateRequest | null }
+      | { host?: Host | HostServiceCreateRequest };
   }) => void;
   generateUpdateSubscriptionParams: (
     autoRenew: boolean,

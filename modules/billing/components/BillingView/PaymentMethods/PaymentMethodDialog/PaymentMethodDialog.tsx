@@ -1,8 +1,7 @@
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { Button, Modal } from '@shared/components';
+import { Button, ButtonGroup, Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { styles } from './PaymentMethodDialog.styles';
 import { CreditCardTypes } from '@modules/billing';
 
 export type PaymentMethodDialogProps = {
@@ -34,14 +33,15 @@ export const PaymentMethodDialog = ({
           paymentMethod?.card?.last4
         } from Payment Methods list.`}</p>
       </div>
-      <div css={[styles.actions]}>
+
+      <ButtonGroup>
         <Button style="warning" onClick={handleSubmit}>
           Confirm
         </Button>
         <Button style="outline" onClick={onHide}>
           Cancel
         </Button>
-      </div>
+      </ButtonGroup>
     </Modal>
   );
 };

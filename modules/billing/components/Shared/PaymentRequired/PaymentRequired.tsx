@@ -1,5 +1,5 @@
-import { Modal } from '@shared/components';
 import { useEffect, useState } from 'react';
+import { Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentRequired.styles';

@@ -1,3 +1,5 @@
+import { ChangeEvent } from 'react';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { styles } from './PaymentMethodInfoForm.styles';
 import { typo } from 'styles/utils.typography.styles';
 import {
@@ -11,9 +13,7 @@ import {
   inputLabelSize,
 } from '@shared/components/Forms/ReactHookForm/Input/InputLabel.styles';
 import { flex } from 'styles/utils.flex.styles';
-import { ChangeEvent } from 'react';
 import { Checkbox, CountrySelector } from '@shared/components';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { billingSelectors } from '@modules/billing';
 
 type PaymentMethodInfoFormProps = {
