@@ -27,7 +27,6 @@ export const NodeViewTabs = () => {
           <NextLink
             key={tab.name}
             href={tab.href}
-            className={tab.name.toLowerCase()}
             css={[
               styles.tabButton,
               isActive(tab.href) && styles.tabButtonActive,

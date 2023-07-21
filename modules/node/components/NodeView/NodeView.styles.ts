@@ -3,7 +3,7 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (theme: ITheme) => css`
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
