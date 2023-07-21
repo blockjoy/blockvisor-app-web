@@ -1,3 +1,10 @@
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
+var { node_id } = params;
+
+var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
 
 const sidePanelTextonlyWidth = "150px",
       sidePanelTextonlyHeight = "60px",
@@ -197,7 +204,7 @@ const after = "-600";
 const createChart = (chart) => {
   const element = document.createElement("div");
   element.setAttribute("data-netdata", chart.netdata);
-  element.setAttribute("data-host", `https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com`);
+  element.setAttribute("data-host", host);
   element.setAttribute("data-colors", chart.color || colorPrimary);
   element.setAttribute("data-height", size);
   element.setAttribute("data-width", "100%");
