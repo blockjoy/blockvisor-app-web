@@ -1,21 +1,15 @@
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import {
   billingAtoms,
   billingSelectors,
   CreditCardTypes,
 } from '@modules/billing';
-import {
-  DropdownButton,
-  DropdownItem,
-  DropdownMenu,
-  DropdownWrapper,
-  Scrollbar,
-} from '@shared/components';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { styles } from './PaymentMethodsDropdown.styles';
-import { useRouter } from 'next/router';
-import { Badge, DropdownCreate, ROUTES } from '@shared/index';
+import { ROUTES } from '@shared/index';
+import { Badge, Select } from '@shared/components';
 
 type PaymentMethodsDropdownProps = {
   primaryId?: string;
@@ -53,75 +47,50 @@ export const PaymentMethodsDropdown = ({
   };
 
   return (
-    <DropdownWrapper
-      isEmpty={false}
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-    >
-      <DropdownButton
-        text={
-          <p>
-            {activePaymentMethod ? (
-              <>
-                <span css={styles.title}>
-                  {CreditCardTypes[activePaymentMethod.card?.brand!]} ***
-                  {activePaymentMethod.card?.last4}
-                </span>
-                {customer?.primary_payment_source_id ===
-                  activePaymentMethod.id && (
-                  <Badge
-                    color="primary"
-                    style="outline"
-                    customCss={[styles.badge]}
-                  >
-                    Primary
-                  </Badge>
-                )}
-              </>
-            ) : (
-              'Select payment method'
-            )}
+    <Select
+      buttonText={
+        <p>
+          {activePaymentMethod ? (
+            <>
+              <span css={styles.title}>
+                {CreditCardTypes[activePaymentMethod.card?.brand!]} ***
+                {activePaymentMethod.card?.last4}
+              </span>
+              {customer?.primary_payment_source_id ===
+                activePaymentMethod.id && (
+                <Badge
+                  color="primary"
+                  style="outline"
+                  customCss={[styles.badge]}
+                >
+                  Primary
+                </Badge>
+              )}
+            </>
+          ) : (
+            'Select payment method'
+          )}
+        </p>
+      }
+      items={paymentMethods?.map((paymentMethod) => ({
+        name: paymentMethod.card?.last4 ?? '',
+        element: (
+          <p css={styles.active}>
+            <span css={styles.title}>
+              {CreditCardTypes[paymentMethod.card?.brand!]} ***
+              {paymentMethod.card?.last4}
+            </span>
+            <Badge color="primary" style="outline" customCss={[styles.badge]}>
+              Primary
+            </Badge>
           </p>
-        }
-        onClick={handleClose}
-        isOpen={isOpen}
-      />
-
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          <ul>
-            {paymentMethods?.map((paymentMethod: PaymentSource) => {
-              return (
-                <li key={paymentMethod.id}>
-                  <DropdownItem
-                    size="medium"
-                    type="button"
-                    onButtonClick={() => handleSelect(paymentMethod)}
-                  >
-                    <p css={styles.active}>
-                      <span css={styles.title}>
-                        {CreditCardTypes[paymentMethod.card?.brand!]} ***
-                        {paymentMethod.card?.last4}
-                      </span>
-                      <Badge
-                        color="primary"
-                        style="outline"
-                        customCss={[styles.badge]}
-                      >
-                        Primary
-                      </Badge>
-                    </p>
-                  </DropdownItem>
-                </li>
-              );
-            })}
-          </ul>
-        </Scrollbar>
-        <DropdownCreate
-          title="Add payment method"
-          handleClick={handleNewPaymentMethod}
-        />
-      </DropdownMenu>
-    </DropdownWrapper>
+        ),
+        onClick: () => handleSelect(paymentMethod),
+      }))}
+      newItem={{
+        title: 'Add payment method',
+        onClick: handleNewPaymentMethod,
+      }}
+    />
   );
 };

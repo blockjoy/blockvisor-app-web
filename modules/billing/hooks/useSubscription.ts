@@ -10,11 +10,6 @@ import {
 import { organizationAtoms } from '@modules/organization';
 import { authAtoms, useUserSubscription } from '@modules/auth';
 
-interface ExtendedCreateWithItemsParams
-  extends _subscription.create_with_items_params {
-  cf_organization_id: string;
-}
-
 interface ISubscriptionHook {
   subscriptionLoadingState: LoadingState;
   setSubscriptionLoadingState: SetterOrUpdater<LoadingState>;
@@ -89,11 +84,10 @@ export const useSubscription = (): ISubscriptionHook => {
         },
       ];
 
-    const params: ExtendedCreateWithItemsParams = {
+    const params: _subscription.create_with_items_params = {
       auto_collection: autoRenewValue,
       payment_source_id: paymentMethodId,
       subscription_items: subscriptionItems,
-      cf_organization_id: defaultOrganization?.id!,
     };
 
     try {

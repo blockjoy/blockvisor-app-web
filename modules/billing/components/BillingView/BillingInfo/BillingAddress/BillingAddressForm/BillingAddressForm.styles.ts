@@ -10,12 +10,6 @@ export const styles = {
       max-width: 500px;
     }
   `,
-  buttons: css`
-    margin-top: 12px;
-    display: grid;
-    grid-template-columns: 90px 90px;
-    gap: 8px;
-  `,
   formRow: css`
     display: flex;
     justify-content: space-between;
