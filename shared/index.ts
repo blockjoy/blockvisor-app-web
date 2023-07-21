@@ -10,3 +10,4 @@ export * from './utils/storybook';
 export * from './utils/escapeHtml';
 export * from './utils/formatters';
 export * from './utils/copyToClipboard';
+export * from './services/mixpanel';
