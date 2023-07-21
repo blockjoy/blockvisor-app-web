@@ -65,24 +65,16 @@ export const useBillingContacts = (): IBillingContactsHook => {
         contact: newBillingContact,
       };
 
-      const response = await fetch(
+      const data = await fetchBilling(
         BILLING_API_ROUTES.customer.contacts.create,
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+          customerId: customer?.id,
+          params,
+          filterParams: {
+            subscriptionId: subscription?.id,
           },
-          body: JSON.stringify({
-            customerId: customer?.id,
-            params,
-            filterParams: {
-              subscriptionId: subscription?.id,
-            },
-          }),
         },
       );
-
-      const data: Contact[] | [] = await response.json();
 
       setBillingContacts(data);
     } catch (error) {
@@ -104,24 +96,16 @@ export const useBillingContacts = (): IBillingContactsHook => {
         contact: contactToDelete,
       };
 
-      const response = await fetch(
+      const data = await fetchBilling(
         BILLING_API_ROUTES.customer.contacts.delete,
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+          customerId: customer?.id,
+          params,
+          filterParams: {
+            subscriptionId: subscription?.id,
           },
-          body: JSON.stringify({
-            customerId: customer?.id,
-            params,
-            filterParams: {
-              subscriptionId: subscription?.id,
-            },
-          }),
         },
       );
-
-      const data: Contact[] | [] = await response.json();
 
       setBillingContacts(data);
     } catch (error) {

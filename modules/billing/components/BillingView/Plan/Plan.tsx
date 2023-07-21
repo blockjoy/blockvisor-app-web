@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
@@ -16,8 +15,6 @@ type PlanProps = {
 };
 
 export const Plan = ({ item, itemPrices }: PlanProps) => {
-  const router = useRouter();
-
   const [activeView, setActiveView] =
     useState<'default' | 'preview'>('default');
   const [activeItem, setActiveItem] = useState<Item | null>(item);

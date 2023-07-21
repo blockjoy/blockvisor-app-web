@@ -1,7 +1,8 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Button, Table, TableSkeleton } from '@shared/index';
-import { styles } from './PaymentMethods.styles';
+import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import { Button, Table, TableSkeleton } from '@shared/components';
 import {
   billingSelectors,
   usePaymentMethods,
@@ -9,8 +10,7 @@ import {
   PaymentMethodDialog,
   PaymentMethodForm,
 } from '@modules/billing';
-import { useRouter } from 'next/router';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const PaymentMethods = () => {
   const router = useRouter();
@@ -60,7 +60,7 @@ export const PaymentMethods = () => {
     <TableSkeleton />
   ) : !isAdding ? (
     <>
-      <div>
+      <div css={spacing.bottom.medium}>
         {!paymentMethods || !paymentMethods?.length ? (
           <p>
             You have not yet added any cards. Click the button below to add one.
@@ -82,12 +82,7 @@ export const PaymentMethods = () => {
           </div>
         )}
       </div>
-      <Button
-        onClick={handleAdding}
-        style="primary"
-        size="small"
-        css={styles.button}
-      >
+      <Button onClick={handleAdding} style="primary" size="small">
         Add Credit Card
       </Button>
     </>

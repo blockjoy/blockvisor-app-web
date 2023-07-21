@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import {
   PaymentMethodsDropdown,
-  useCustomer,
   usePaymentMethods,
   useSubscription,
 } from '@modules/billing';
@@ -51,34 +50,30 @@ export const PaymentMethodsSelector = ({
     onHide();
   };
 
+  if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
+
   return (
-    <>
-      {paymentMethodsLoadingState !== 'finished' ? (
-        <TableSkeleton />
-      ) : (
-        <div css={styles.wrapper}>
-          <InputLabel
-            css={[typo.base]}
-            labelSize="medium"
-            name="paymentSource"
-            disabled={false}
-          >
-            Select payment method
-          </InputLabel>
-          <PaymentMethodsDropdown
-            handlePaymentMethod={handleSelect}
-            primaryId={activePaymentMethod?.id}
-          />
-          <ButtonGroup>
-            <Button size="small" onClick={handleConfirm}>
-              Confirm
-            </Button>
-            <Button size="small" style="outline" onClick={onHide}>
-              Cancel
-            </Button>
-          </ButtonGroup>
-        </div>
-      )}
-    </>
+    <div css={styles.wrapper}>
+      <InputLabel
+        css={[typo.base]}
+        labelSize="medium"
+        name="paymentSource"
+        disabled={false}
+      >
+        Select payment method
+      </InputLabel>
+      <PaymentMethodsDropdown
+        handlePaymentMethod={handleSelect}
+        primaryId={activePaymentMethod?.id}
+      />
+      <ButtonGroup>
+        <Button size="small" onClick={handleConfirm}>
+          Confirm
+        </Button>
+        <Button size="small" style="outline" onClick={onHide}>
+          Cancel
+        </Button>
+      </ButtonGroup>
+    </div>
   );
 };

@@ -85,6 +85,7 @@ export const useBillingAddressForm = (): IBillingAddressFormHook => {
     control: form.control,
     defaultValue: '',
   });
+
   const lastNameController = useController<BillingAddressForm, 'lastName'>({
     name: 'lastName',
     control: form.control,

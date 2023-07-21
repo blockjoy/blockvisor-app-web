@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import {
   Button,
   DetailsTable,
@@ -8,12 +9,11 @@ import {
 import {
   usePaymentMethods,
   mapCardToDetails,
-  PaymentMethodsSelector,
   billingAtoms,
   billingSelectors,
+  PaymentMethodsSelector,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useRecoilValue } from 'recoil';
 
 export const PaymentPreview = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
@@ -32,42 +32,37 @@ export const PaymentPreview = () => {
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');
 
+  if (
+    paymentMethodLoadingState !== 'finished' ||
+    subscriptionLoadingState !== 'finished'
+  )
+    return <TableSkeleton />;
+
   return (
-    <>
-      {paymentMethodLoadingState !== 'finished' ||
-      subscriptionLoadingState !== 'finished' ? (
-        <TableSkeleton />
+    <DetailsView headline="Payment method">
+      {activeView === 'list' ? (
+        <>
+          <DetailsTable bodyElements={mapCardToDetails(paymentMethod?.card!)} />
+          <Button
+            size="small"
+            style="outline"
+            onClick={handleUpdate}
+            css={spacing.top.medium}
+          >
+            Update Payment Method
+          </Button>
+        </>
       ) : (
         <>
-          <DetailsView headline="Payment method">
-            {activeView === 'list' ? (
-              <>
-                <DetailsTable
-                  bodyElements={mapCardToDetails(paymentMethod?.card!)}
-                />
-                <Button
-                  size="small"
-                  style="outline"
-                  onClick={handleUpdate}
-                  css={spacing.top.medium}
-                >
-                  Update Payment Method
-                </Button>
-              </>
-            ) : (
-              <>
-                {paymentMethod && (
-                  <PaymentMethodsSelector
-                    subscriptionId={subscription?.id!}
-                    currentPaymentMethod={paymentMethod}
-                    onHide={onHide}
-                  />
-                )}
-              </>
-            )}
-          </DetailsView>
+          {paymentMethod && (
+            <PaymentMethodsSelector
+              subscriptionId={subscription?.id!}
+              currentPaymentMethod={paymentMethod}
+              onHide={onHide}
+            />
+          )}
         </>
       )}
-    </>
+    </DetailsView>
   );
 };
