@@ -21,7 +21,7 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { Mixpanel } from '@shared/utils/mixpanel';
+import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
 export type NodeLauncherState = {

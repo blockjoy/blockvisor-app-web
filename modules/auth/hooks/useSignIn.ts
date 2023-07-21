@@ -5,7 +5,7 @@ import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
 import { isStatusResponse } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
-import { Mixpanel } from '@shared/utils/mixpanel';
+import { Mixpanel } from '@shared/services/mixpanel';
 
 type SignInParams = {
   email: string;
