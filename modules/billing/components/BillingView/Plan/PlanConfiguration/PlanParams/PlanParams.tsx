@@ -24,7 +24,7 @@ export const PlanParams = ({
 
   return (
     <>
-      {handlePeriodUnit && subscription?.billing_period_unit === 'month' && (
+      {handlePeriodUnit && subscription?.billing_period_unit !== 'year' && (
         <div css={spacing.bottom.large}>
           <h3 css={styles.headline}>Billing period</h3>
           <RadioButtonGroup>

@@ -1,10 +1,9 @@
+import { useState } from 'react';
 import { useInvoice } from '@modules/billing';
 import { Button, SvgIcon } from '@shared/components';
-import IconDownload from '@public/assets/icons/common/Download.svg';
 import { Invoice } from 'chargebee-typescript/lib/resources';
-
-import { useState } from 'react';
 import { styles } from './InvoiceDownload.styles';
+import IconDownload from '@public/assets/icons/common/Download.svg';
 
 type InvoiceDownloadProps = {
   invoice: Invoice;

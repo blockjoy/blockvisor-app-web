@@ -2,15 +2,7 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { BillingAddress } from 'chargebee-typescript/lib/resources/customer';
 import { billingSelectors } from '@modules/billing';
-import {
-  DropdownButton,
-  DropdownCreate,
-  DropdownItem,
-  DropdownMenu,
-  DropdownWrapper,
-  Scrollbar,
-} from '@shared/components';
-import { styles } from './BillingAddressSelect.styles';
+import { Select } from '@shared/components';
 
 type BillingAddressSelectProps = {
   handlePaymentBillingAddress: (billingAddress: BillingAddress) => void;
@@ -33,36 +25,16 @@ export const BillingAddressSelect = ({
   };
 
   return (
-    <DropdownWrapper
-      isEmpty={false}
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-    >
-      <DropdownButton
-        text={<p>{billingAddress?.line1}</p>}
-        onClick={handleClose}
-        isOpen={isOpen}
-      />
-
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          <ul>
-            <li>
-              <DropdownItem
-                size="medium"
-                type="button"
-                onButtonClick={() => handleSelect(billingAddress!)}
-              >
-                <p css={styles.active}>{billingAddress?.line1}</p>
-              </DropdownItem>
-            </li>
-          </ul>
-        </Scrollbar>
-        <DropdownCreate
-          title="Add Billing address"
-          handleClick={handleNewAddress}
-        />
-      </DropdownMenu>
-    </DropdownWrapper>
+    <Select
+      buttonText={<p>{billingAddress?.line1}</p>}
+      items={[billingAddress]?.map((billingAddress) => ({
+        name: billingAddress?.line1 ?? '',
+        onClick: () => handleSelect(billingAddress!),
+      }))}
+      newItem={{
+        title: 'Add Billing Address',
+        onClick: handleNewAddress,
+      }}
+    />
   );
 };

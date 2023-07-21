@@ -1,6 +1,6 @@
-import IconCheckmark from '@public/assets/icons/common/Checkmark.svg';
 import { styles } from './PlanFeatures.styles';
 import { SvgIcon } from '@shared/components';
+import IconCheckmark from '@public/assets/icons/common/Checkmark.svg';
 
 type Feature = {
   id: string;
