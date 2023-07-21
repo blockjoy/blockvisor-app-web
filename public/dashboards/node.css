@@ -150,7 +150,7 @@ main {
 .card-header {
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #5F615D;
+  color: #777a74;
   font-size: 11px;
   font-weight: 400;
   margin: 0 0 30px;
@@ -178,7 +178,7 @@ main {
 }
 
 header {
-  color: #5F615D;
+  color: #777a74;
   text-transform: uppercase;
   font-size: 11px;
   letter-spacing: 1px;
@@ -250,10 +250,10 @@ body .netdata-container[data-chart-library] {
 }
 
 .charts > div:first-child {
-  min-width: 110px;
+  min-width: 126px;
 }
 
-.row {
+.row:not(:last-child) {
   border-bottom: 1px solid #363938;
   margin-bottom: 24px;
   padding-bottom: 10px;

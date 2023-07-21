@@ -20,7 +20,7 @@ function loadScript( url, callback ) {
     document.body.appendChild( script );
   }
 
-  loadScript("https://xrp02.db.node.blockjoy.com/host/173-231-22-130.slc.cloud.blockjoy.com/dashboard.js", function() {
+  loadScript(`${host}/dashboard.js`, () => {
 
     NETDATA.options.current.stop_updates_when_focus_is_lost = false;
     NETDATA.themes.slate.easypiechart_track = "#363938";

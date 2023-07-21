@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { styles } from './NetdataDashboard.styles';
-import { EmptyColumn } from '@shared/components';
 
 type Props = {
   nodeId: string;
@@ -12,10 +11,9 @@ export const NetdataDashboard = ({ nodeId, isSidePanel }: Props) => {
     url: '',
     width: '100%',
     height: '1600px',
-    isLoading: true,
   });
 
-  const { url, width, height, isLoading } = state;
+  const { url, width, height } = state;
 
   useEffect(() => {
     if (!url) {
@@ -24,7 +22,7 @@ export const NetdataDashboard = ({ nodeId, isSidePanel }: Props) => {
       if (isSidePanel) {
         sidePanelIframeDimenisions = {
           width: '100%',
-          height: '380px',
+          height: '450px',
         };
       }
 
