@@ -1,11 +1,5 @@
 import { ChangeEvent, forwardRef, Ref } from 'react';
 import { SetterOrUpdater } from 'recoil';
-import {
-  CardComponent,
-  CardNumber,
-  CardExpiry,
-  CardCVV,
-} from '@chargebee/chargebee-js-react-wrapper';
 import { typo } from 'styles/utils.typography.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { styles } from './CreditCardForm.styles';
@@ -19,7 +13,7 @@ import {
   inputLabel,
   inputLabelSize,
 } from '@shared/components/Forms/ReactHookForm/Input/InputLabel.styles';
-import { CHARGEBEE_OPTIONS } from '@modules/billing';
+import { CardComponent } from '@modules/billing';
 
 export type CreditCardFormProps = {
   cardHolder: CardHolder;
@@ -33,8 +27,6 @@ export type CardHolder = {
 
 export const CreditCardForm = forwardRef(
   ({ cardHolder, setCardHolder }: CreditCardFormProps, ref: Ref<any>) => {
-    const { style, classes, locale, placeholder } = CHARGEBEE_OPTIONS;
-
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
 
@@ -82,60 +74,7 @@ export const CreditCardForm = forwardRef(
             </div>
           </div>
         </div>
-
-        <CardComponent
-          ref={ref}
-          className="fieldset field"
-          styles={style}
-          classes={classes}
-          locale={locale}
-          placeholder={placeholder}
-        >
-          <div css={[styles.formItem]}>
-            <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-              Card number
-            </label>
-            <div css={[inputWrapper]}>
-              <CardNumber
-                css={[inputField, inputTypesStyle['medium'], inputFieldDefault]}
-              />
-            </div>
-          </div>
-          <div css={[styles.formItem, styles.formRow]}>
-            <div
-              css={[flex.display.flex, flex.direction.column, flex.basis.b100]}
-            >
-              <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-                Expiry
-              </label>
-              <div css={[inputWrapper]}>
-                <CardExpiry
-                  css={[
-                    inputField,
-                    inputTypesStyle['medium'],
-                    inputFieldDefault,
-                  ]}
-                />
-              </div>
-            </div>
-            <div
-              css={[flex.display.flex, flex.direction.column, flex.basis.b100]}
-            >
-              <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-                CVV
-              </label>
-              <div css={[inputWrapper]}>
-                <CardCVV
-                  css={[
-                    inputField,
-                    inputTypesStyle['medium'],
-                    inputFieldDefault,
-                  ]}
-                />
-              </div>
-            </div>
-          </div>
-        </CardComponent>
+        <CardComponent ref={ref} />
       </>
     );
   },

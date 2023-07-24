@@ -1,11 +1,16 @@
 import { useSubscription } from '@modules/billing/hooks/useSubscription';
-import { billingSelectors, mapSubscriptionToDetails } from '@modules/billing';
+import {
+  SubscriptionStatus,
+  billingSelectors,
+  mapSubscriptionToDetails,
+} from '@modules/billing';
 import { ButtonGroup, Button, DetailsTable } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRecoilValue } from 'recoil';
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization';
 import { useHasPermissions, Permissions } from '@modules/auth';
+import { useCallback } from 'react';
 
 type SubscriptionInfoProps = {
   handleUpdate: VoidFunction;
@@ -21,10 +26,13 @@ export const SubscriptionInfo = ({
   const { restoreSubscription, reactivateSubscription } = useSubscription();
   const subscriptionData = mapSubscriptionToDetails(subscription!);
 
-  const handleRestoreSubscription = () =>
+  const handleRestoreSubscription = useCallback(() => {
     restoreSubscription(subscription?.id!);
-  const handleReactivateSubscription = () =>
+  }, [restoreSubscription, subscription]);
+
+  const handleReactivateSubscription = useCallback(() => {
     reactivateSubscription(subscription?.id!);
+  }, [reactivateSubscription, subscription]);
 
   const userRoleInOrganization: OrgRole = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
@@ -38,19 +46,21 @@ export const SubscriptionInfo = ({
   return (
     <>
       <DetailsTable bodyElements={subscriptionData} />
+
       {canUpdateBilling && (
         <ButtonGroup type="flex" additionalStyles={[spacing.top.large]}>
-          {subscription?.status === 'active' && (
-            <ButtonGroup type="flex">
+          {subscription?.status === SubscriptionStatus.active && (
+            <>
               <Button style="secondary" size="small" onClick={handleUpdate}>
                 Update subscription
               </Button>
               <Button style="outline" size="small" onClick={handleCancellation}>
                 Cancel subscription
               </Button>
-            </ButtonGroup>
+            </>
           )}
-          {subscription?.status === 'non_renewing' && (
+
+          {subscription?.status === SubscriptionStatus.non_renewing && (
             <Button
               style="outline"
               size="small"
@@ -59,7 +69,8 @@ export const SubscriptionInfo = ({
               Restore subscription
             </Button>
           )}
-          {subscription?.status === 'cancelled' && (
+
+          {subscription?.status === SubscriptionStatus.cancelled && (
             <Button
               style="outline"
               size="small"

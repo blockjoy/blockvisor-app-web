@@ -62,7 +62,6 @@ export const SubscriptionUpdate = ({
         <Button
           loading={subscriptionLoadingState !== 'finished'}
           size="small"
-          display="inline"
           style="secondary"
           type="submit"
           onClick={handleUpdate}

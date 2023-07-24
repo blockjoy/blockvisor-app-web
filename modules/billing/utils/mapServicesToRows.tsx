@@ -41,47 +41,31 @@ export const mapServicesToRows = (
         {
           key: '1',
           component: (
-            <>
-              <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-                {service.description}
-              </p>
-            </>
+            <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+              {service.description}
+            </p>
           ),
         },
         {
           key: '2',
           component: (
-            <>
-              <p>{`${formatters.formatDate(
-                service?.date_from!,
-              )} - ${formatters.formatDate(service?.date_to!)}`}</p>
-            </>
+            <p>{`${formatters.formatDate(
+              service?.date_from!,
+            )} - ${formatters.formatDate(service?.date_to!)}`}</p>
           ),
         },
         {
           key: '3',
-          component: (
-            <>
-              <p>{service.quantity}</p>
-            </>
-          ),
+          component: <p>{service.quantity}</p>,
         },
 
         {
           key: '4',
-          component: (
-            <>
-              <p>{formatters.formatCurrency(service?.unit_amount!)}</p>
-            </>
-          ),
+          component: <p>{formatters.formatCurrency(service?.unit_amount!)}</p>,
         },
         {
           key: '5',
-          component: (
-            <>
-              <p>{formatters.formatCurrency(service?.amount!)}</p>
-            </>
-          ),
+          component: <p>{formatters.formatCurrency(service?.amount!)}</p>,
         },
       ],
     })) ?? [];
@@ -104,32 +88,28 @@ export const mapServicesToRows = (
       {
         key: '4',
         component: (
-          <>
-            <p
-              style={{
-                fontSize: '10px',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-              }}
-            >
-              Grand Total
-            </p>
-          </>
+          <p
+            style={{
+              fontSize: '10px',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+            }}
+          >
+            Grand Total
+          </p>
         ),
       },
       {
         key: '5',
         component: (
-          <>
-            <p
-              style={{
-                fontSize: '20px',
-                width: '100%',
-              }}
-            >
-              {formatters.formatCurrency(total!)}
-            </p>
-          </>
+          <p
+            style={{
+              fontSize: '20px',
+              width: '100%',
+            }}
+          >
+            {formatters.formatCurrency(total!)}
+          </p>
         ),
       },
     ],
