@@ -17,3 +17,4 @@ export * from './CopyToClipboard/CopyToClipboard';
 export * from './CountrySelector/CountrySelector';
 export * from './DetailsView/DetailsView';
 export * from './ConfirmDialog/ConfirmDialog';
+export * from './List/List';
