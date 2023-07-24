@@ -23,6 +23,7 @@ import { formatters } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanConfiguration.styles';
+import { containers } from 'styles/containers.styles';
 
 export type PlanConfigurationProps = {
   item: Item | null;
@@ -79,7 +80,7 @@ export const PlanConfiguration = ({
   if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
 
   return (
-    <div css={styles.wrapper}>
+    <div css={containers.mediumSmall}>
       <h2 css={[styles.planTitle, spacing.bottom.medium]}>
         {item?.external_name}
       </h2>

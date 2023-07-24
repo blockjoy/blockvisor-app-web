@@ -1,11 +1,16 @@
 import { useRecoilValue } from 'recoil';
 import { Controller, FormProvider } from 'react-hook-form';
 import { billingSelectors, useBillingAddressForm } from '@modules/billing';
-import { Button, CountrySelector, Input } from '@shared/components';
+import {
+  ButtonGroup,
+  Button,
+  CountrySelector,
+  Input,
+} from '@shared/components';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './BillingAddressForm.styles';
-import { ButtonGroup } from '@shared/components/Buttons/ButtonGroup/ButtonGroup';
+import { containers } from 'styles/containers.styles';
 
 type BillingAddressFormProps = {
   handleCancel: () => void;
@@ -19,14 +24,6 @@ export const BillingAddressForm = ({
     form,
 
     onSubmit,
-
-    firstNameController,
-    lastNameController,
-    companyController,
-    addressController,
-    cityController,
-    countryController,
-    postalController,
   } = useBillingAddressForm();
 
   const { formState } = form;
@@ -36,17 +33,17 @@ export const BillingAddressForm = ({
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} css={styles.wrapper}>
+      <form onSubmit={form.handleSubmit(onSubmit)} css={containers.mediumSmall}>
         <ul css={[reset.list]}>
           <li css={[styles.formItem, styles.formRow]}>
             <div css={styles.formCol}>
               <Input
+                name="firstName"
                 label="First Name"
                 placeholder="First Name"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={1}
-                {...firstNameController.field}
                 validationOptions={{
                   required: 'First Name is required',
                 }}
@@ -54,12 +51,12 @@ export const BillingAddressForm = ({
             </div>
             <div css={styles.formCol}>
               <Input
+                name="lastName"
                 label="Last Name"
                 placeholder="Last Name"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={2}
-                {...lastNameController.field}
                 validationOptions={{
                   required: 'Last Name is required',
                 }}
@@ -68,22 +65,22 @@ export const BillingAddressForm = ({
           </li>
           <li css={[styles.formItem]}>
             <Input
+              name="company"
               label="Company (optional)"
               placeholder="Company"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={3}
-              {...companyController.field}
             />
           </li>
           <li css={[styles.formItem]}>
             <Input
+              name="address"
               label="Address"
               placeholder="Address"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={4}
-              {...addressController.field}
               validationOptions={{
                 required: 'Address is required',
               }}
@@ -91,7 +88,7 @@ export const BillingAddressForm = ({
           </li>
           <li css={[styles.formItem]}>
             <Controller
-              {...countryController.field}
+              name="country"
               rules={{ required: 'Country is required' }}
               render={({ field: { name, onChange, value } }) => (
                 <CountrySelector
@@ -108,12 +105,12 @@ export const BillingAddressForm = ({
           <li css={[styles.formItem, styles.formRow]}>
             <div css={styles.formCol}>
               <Input
+                name="city"
                 label="City"
                 placeholder="City"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={6}
-                {...cityController.field}
                 validationOptions={{
                   required: 'City is required',
                 }}
@@ -121,12 +118,12 @@ export const BillingAddressForm = ({
             </div>
             <div css={styles.formCol}>
               <Input
+                name="postal"
                 label="Postal code"
                 placeholder="Postal code"
                 inputSize="medium"
                 labelStyles={[typo.base]}
                 tabIndex={7}
-                {...postalController.field}
                 validationOptions={{
                   required: 'Postal code is required',
                 }}

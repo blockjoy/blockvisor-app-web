@@ -11,8 +11,8 @@ import {
   InputLabel,
   TableSkeleton,
 } from '@shared/components';
-import { styles } from './PaymentMethodsSelect.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { containers } from 'styles/containers.styles';
 
 type PaymentMethodsSelectorProps = {
   subscriptionId: string;
@@ -53,7 +53,7 @@ export const PaymentMethodsSelector = ({
   if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
 
   return (
-    <div css={styles.wrapper}>
+    <div css={containers.mediumSmall}>
       <InputLabel
         css={[typo.base]}
         labelSize="medium"
