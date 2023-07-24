@@ -2,11 +2,6 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
-    padding: 0;
-    margin: 0;
-    max-width: 500px;
-  `,
   formRow: css`
     display: flex;
     justify-content: space-between;

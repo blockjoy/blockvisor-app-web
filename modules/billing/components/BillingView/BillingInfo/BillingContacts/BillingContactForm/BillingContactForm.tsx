@@ -1,10 +1,11 @@
-import { styles } from './BillingContactForm.styles';
-import { useBillingContactsForm } from '@modules/billing/';
-import { Button, Input } from '@shared/components';
-import { isValidEmail } from '@shared/index';
 import { FormProvider } from 'react-hook-form';
+import { styles } from './BillingContactForm.styles';
+import { useBillingContactsForm } from '@modules/billing';
+import { Button, Input, ButtonGroup } from '@shared/components';
+import { isValidEmail } from '@shared/index';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { containers } from 'styles/containers.styles';
 
 export type BillingContactFormProps = {
   actions: BillingContactsActions;
@@ -16,9 +17,6 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
     form,
 
     onSubmit,
-
-    nameController,
-    emailController,
   } = useBillingContactsForm(actions);
 
   const {
@@ -27,16 +25,16 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} css={styles.wrapper}>
+      <form onSubmit={form.handleSubmit(onSubmit)} css={containers.mediumSmall}>
         <ul css={[reset.list]}>
           <li css={[styles.formItem]}>
             <Input
+              name="name"
               label="Name"
               placeholder="John Doe"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={1}
-              {...nameController.field}
               validationOptions={{
                 required: 'Name is required',
               }}
@@ -44,13 +42,13 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
           </li>
           <li css={[styles.formItem]}>
             <Input
+              name="email"
               label="Email"
               placeholder="Email"
               inputSize="medium"
               labelStyles={[typo.base]}
               type="email"
               tabIndex={2}
-              {...emailController.field}
               validationOptions={{
                 required: 'Email is required',
                 pattern: {
@@ -61,7 +59,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
             />
           </li>
         </ul>
-        <div css={styles.buttons}>
+        <ButtonGroup>
           <Button
             loading={loading}
             disabled={loading || !isValid}
@@ -80,7 +78,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
           >
             Cancel
           </Button>
-        </div>
+        </ButtonGroup>
       </form>
     </FormProvider>
   );
