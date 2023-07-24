@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { formatters } from '@shared/index';
 import { styles } from './SubscriptionCancellation.styles';
 import {
@@ -7,7 +8,6 @@ import {
   RadioButton,
   Button,
 } from '@shared/components';
-import { useRecoilValue } from 'recoil';
 import { billingSelectors, useSubscription } from '@modules/billing';
 
 type SubscriptionCancellationProps = {
@@ -23,17 +23,18 @@ export const SubscriptionCancellation = ({
 
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const handleCancellation = () => {
+  const handleCancellation = useCallback(() => {
     cancelSubscription({ endOfTerm });
     handleBack();
-  };
+  }, [cancelSubscription, handleBack, endOfTerm]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-
     const newEndOfTermValue = value === 'true';
     setEndOfTerm(newEndOfTermValue);
-  };
+  }, []);
+
+  const currentEndTerm = formatters.formatDate(subscription?.current_term_end!);
 
   return (
     <div>
@@ -56,17 +57,14 @@ export const SubscriptionCancellation = ({
           onChange={handleChange}
         >
           <h5 css={styles.title}>Cancel at the end of term</h5>
-          <p>
-            The subscription will be terminated on{' '}
-            {formatters.formatDate(subscription?.current_term_end!)}.
-          </p>
+          <p>The subscription will be terminated on {currentEndTerm}.</p>
         </RadioButton>
       </RadioButtonGroup>
+
       <ButtonGroup type="flex">
         <Button
           loading={subscriptionLoadingState !== 'finished'}
           size="small"
-          display="inline"
           style="secondary"
           type="submit"
           onClick={handleCancellation}

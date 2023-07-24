@@ -58,36 +58,34 @@ export const mapPaymentMethodsToRows = (
         {
           key: '1',
           component: (
-            <>
-              <div css={[flex.display.flex, flex.direction.column]}>
-                <div>
-                  <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-                    {`${CreditCardTypes[paymentMethod?.card?.brand!]} ****${
-                      paymentMethod.card?.last4
-                    }`}
-                  </p>
-                </div>
-
-                <div
-                  css={[
-                    flex.display.flex,
-                    flex.direction.row,
-                    flex.align.center,
-                    spacing.top.micro,
-                  ]}
-                >
-                  <p css={[styles.expiry, spacing.right.small]}>
-                    {paymentMethod?.card?.expiry_month}/
-                    {paymentMethod?.card?.expiry_year}
-                  </p>
-                  {primaryPaymentMethodId === paymentMethod.id && (
-                    <Badge color="primary" style="outline">
-                      Primary
-                    </Badge>
-                  )}
-                </div>
+            <div css={[flex.display.flex, flex.direction.column]}>
+              <div>
+                <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+                  {`${CreditCardTypes[paymentMethod?.card?.brand!]} ****${
+                    paymentMethod.card?.last4
+                  }`}
+                </p>
               </div>
-            </>
+
+              <div
+                css={[
+                  flex.display.flex,
+                  flex.direction.row,
+                  flex.align.center,
+                  spacing.top.micro,
+                ]}
+              >
+                <p css={[styles.expiry, spacing.right.small]}>
+                  {paymentMethod?.card?.expiry_month}/
+                  {paymentMethod?.card?.expiry_year}
+                </p>
+                {primaryPaymentMethodId === paymentMethod.id && (
+                  <Badge color="primary" style="outline">
+                    Primary
+                  </Badge>
+                )}
+              </div>
+            </div>
           ),
         },
         {
@@ -110,36 +108,26 @@ export const mapPaymentMethodsToRows = (
         },
         {
           key: '3',
-          component: (
-            <>
-              <p>{formatters.formatDate(paymentMethod.created_at)}</p>
-            </>
-          ),
+          component: <p>{formatters.formatDate(paymentMethod.created_at)}</p>,
         },
         {
           key: '4',
-          component: (
-            <>
-              <p>{capitalize(paymentMethod.status)}</p>
-            </>
-          ),
+          component: <p>{capitalize(paymentMethod.status)}</p>,
         },
         {
           key: '5',
           component: (
-            <>
-              <Button
-                type="button"
-                tooltip="Cancel"
-                style="icon"
-                size="medium"
-                onClick={() => handleRemove(paymentMethod)}
-              >
-                <SvgIcon size="20px">
-                  <IconClose />
-                </SvgIcon>
-              </Button>
-            </>
+            <Button
+              type="button"
+              tooltip="Cancel"
+              style="icon"
+              size="medium"
+              onClick={() => handleRemove(paymentMethod)}
+            >
+              <SvgIcon size="20px">
+                <IconClose />
+              </SvgIcon>
+            </Button>
           ),
         },
       ],
