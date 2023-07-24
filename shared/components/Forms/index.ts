@@ -2,6 +2,7 @@ export * from './VanillaForm/Checkbox/Checkbox';
 export * from './VanillaForm/EditableTitle/EditableTitle';
 export * from './VanillaForm/FileUpload/FileUpload';
 export * from './VanillaForm/PillPicker/PillPicker';
+export * from './VanillaForm/Select/Select';
 export * from './VanillaForm/Switch/Switch';
 export * from './VanillaForm/RangeSlider/RangeSlider';
 export * from './VanillaForm/Textbox/Textbox';

@@ -15,13 +15,11 @@ export const mapNodeToMainDetails = (node: Node) => {
           node.hostName
         ),
     },
-    {
-      label: 'Organization',
-      data: <Link href={ROUTES.ORGANIZATION(node.orgId)}>{node.orgName}</Link>,
-    },
-    { label: 'VERSION', data: node.version || 'Latest' },
     { label: 'NODE ADDRESS', data: node.address || '-' },
-    { label: 'BLOCK HEIGHT', data: node.blockHeight || '-' },
+    {
+      label: 'BLOCK HEIGHT',
+      data: node?.blockHeight?.toLocaleString('en-US') ?? '-',
+    },
     { label: 'IP ADDRESS', data: node.ip || '-' },
   ];
 

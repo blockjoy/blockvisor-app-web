@@ -16,7 +16,10 @@ export const styles = {
   `,
   leftWrapper: css`
     flex: 1 1 auto;
-    padding-right: 30px;
+
+    @media ${breakpoints.fromXLrg} {
+      padding-right: 30px;
+    }
   `,
   rightWrapper: (theme: ITheme) => css`
     margin-bottom: 40px;
@@ -26,11 +29,15 @@ export const styles = {
     }
 
     @media ${breakpoints.fromXLrg} {
-      flex: 0 0 380px;
+      flex: 0 0 400px;
       padding-left: 30px;
       margin-bottom: 0;
       margin-top: 20px;
       border-left: 1px solid ${theme.colorBorder};
+    }
+
+    @media ${breakpoints.fromXHuge} {
+      flex: 0 0 460px;
     }
   `,
 };

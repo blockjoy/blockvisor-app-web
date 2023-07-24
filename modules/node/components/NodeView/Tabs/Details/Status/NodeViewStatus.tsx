@@ -1,7 +1,7 @@
 import { getNodeStatusInfo, NodeStatusIcon, SvgIcon } from '@shared/components';
 import { useNodeView } from '@modules/node';
 import { FormHeaderCaps } from '@shared/components';
-import { styles } from './NodeViewDashboardStatus.styles';
+import { styles } from './NodeViewStatus.styles';
 import { getNodeStatusColor } from '@shared/components';
 import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 import {
@@ -11,14 +11,13 @@ import {
 
 const iconSize = '24px';
 
-export const NodeViewDashboardStatus = () => {
+export const NodeViewStatus = () => {
   const { node } = useNodeView();
 
   if (!node?.id) return null;
 
   return (
     <>
-      <FormHeaderCaps>Status</FormHeaderCaps>
       <div css={styles.wrapper}>
         <div css={[styles.card, styles.cardOnlyShowOnMobile]}>
           <SvgIcon isDefaultColor size={iconSize}>

@@ -26,6 +26,7 @@ export const OrganizationManagement = ({
   return (
     <>
       <PageTitle
+        hideOrgPicker
         title="Organizations"
         icon={<IconOrganizations />}
         onTitleClick={

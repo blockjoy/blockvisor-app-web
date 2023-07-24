@@ -117,17 +117,4 @@ export const styles = {
     padding: 0 14px;
     border-top: 1px solid ${theme.colorBorderGrey};
   `,
-  bubble: (theme: ITheme) => css`
-    display: grid;
-    place-items: center;
-    width: 22px;
-    height: 22px;
-    flex: 0 0 22px;
-    border-radius: 50%;
-    background: ${theme.colorAccent};
-    color: ${theme.colorPrimaryText};
-    font-weight: 600;
-    font-size: 11px;
-    text-align: center;
-  `,
 };

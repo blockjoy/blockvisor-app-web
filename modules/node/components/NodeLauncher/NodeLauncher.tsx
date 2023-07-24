@@ -1,14 +1,13 @@
 import { styles } from './NodeLauncher.styles';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
 import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
 import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
-import { EmptyColumn, PageTitle } from '@shared/components';
-import { useRecoilValue } from 'recoil';
-import { organizationAtoms } from '@modules/organization';
+import { EmptyColumn, PageTitle, sort } from '@shared/components';
+import { useDefaultOrganization } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import {
@@ -22,11 +21,12 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
 export type NodeLauncherState = {
   blockchainId: string;
-  nodeVersion: string;
+  nodeTypeVersion: string;
   nodeType: NodeType;
   properties: NodeProperty[];
   keyFiles?: NodeFiles[];
@@ -34,6 +34,7 @@ export type NodeLauncherState = {
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];
   placement: NodePlacement;
+  region: string;
 };
 
 export type CreateNodeParams = {
@@ -48,52 +49,35 @@ export type CreateNodeParams = {
 };
 
 export const NodeLauncher = () => {
-  const { blockchains } = useGetBlockchains();
-  const { createNode } = useNodeAdd();
   const router = useRouter();
 
+  const { blockchains } = useGetBlockchains();
+  const { createNode } = useNodeAdd();
+
+  const [hasRegionListError, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
-
   const [isCreating, setIsCreating] = useState<boolean>(false);
-
   const [networkList, setNetworkList] = useState<string[]>([]);
-
+  const [versionList, setVersionList] = useState<string[]>([]);
   const [selectedHost, setSelectedHost] = useState<Host | null>(null);
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
-  const currentOrganization = useRef(defaultOrganization);
+  const { defaultOrganization } = useDefaultOrganization();
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
     nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
     properties: [],
-    nodeVersion: '',
+    nodeTypeVersion: '',
     network: '',
     allowIps: [],
     denyIps: [],
     placement: {},
+    region: '',
   });
 
-  const handleProtocolSelected = (
-    blockchainId: string,
-    nodeType: NodeType,
-    properties: NodeProperty[],
-    nodeVersion: string,
-  ) => {
-    setServerError(undefined);
-    setIsCreating(false);
-    setNode({
-      ...node,
-      blockchainId,
-      nodeType,
-      properties,
-      nodeVersion,
-    });
-  };
-
-  const isNodeValid = Boolean(node.blockchainId && node.nodeType);
+  const isNodeValid = Boolean(
+    node.blockchainId && node.nodeType && node.region,
+  );
 
   const isConfigValid = !node.keyFiles
     ? null
@@ -112,6 +96,25 @@ export const NodeLauncher = () => {
             ),
       );
 
+  const handleProtocolSelected = (
+    blockchainId: string,
+    nodeType: NodeType,
+    properties: NodeProperty[],
+  ) => {
+    setServerError(undefined);
+    setIsCreating(false);
+    setNode({
+      ...node,
+      blockchainId,
+      nodeType,
+      properties,
+    });
+    Mixpanel.track('Launch Node - Protocol Selected', {
+      blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
+      nodeType: NodeType[nodeType],
+    });
+  };
+
   // hack that needs removing
   const hasAddedFiles = () => {
     const activeNodeFiles = node.keyFiles?.find((f, i) => i === 0);
@@ -121,11 +124,17 @@ export const NodeLauncher = () => {
     return !!activeNodeFiles?.files?.length;
   };
 
-  const handleNodePropertyChanged = (name: string, value: any) =>
+  const handleNodePropertyChanged = (name: string, value: any) => {
     setNode({
       ...node,
       [name]: value,
     });
+
+    Mixpanel.track('Launch Node - Property Changed', {
+      propertyName: name,
+      propertyValue: value,
+    });
+  };
 
   const handleNodeConfigPropertyChanged = (e: any) => {
     setServerError('');
@@ -138,16 +147,26 @@ export const NodeLauncher = () => {
 
     if (!foundProperty) return;
 
-    foundProperty.value =
+    const newValue =
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+    foundProperty.value = newValue;
 
     setNode({
       ...node,
       properties: propertiesCopy,
     });
+
+    Mixpanel.track('Launch Node - Node Config Property Changed', {
+      propertyName: foundProperty.name,
+      propertyValue: newValue,
+    });
   };
 
-  const handleHostChanged = (host: Host | null) => setSelectedHost(host);
+  const handleHostChanged = (host: Host | null) => {
+    Mixpanel.track('Launch Node - Host Changed');
+    setSelectedHost(host);
+  };
 
   const handleFileUploaded = (e: any) => {
     setServerError(undefined);
@@ -167,6 +186,16 @@ export const NodeLauncher = () => {
       ...node,
       keyFiles: keyFilesCopy,
     });
+
+    Mixpanel.track('Launch Node - Key File Uploaded');
+  };
+
+  const handleRegionsLoaded = (region: string) => {
+    setHasRegionListError(Boolean(region));
+    setNode({
+      ...node,
+      region,
+    });
   };
 
   const handleCreateNodeClicked = () => {
@@ -183,7 +212,7 @@ export const NodeLauncher = () => {
 
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.id,
-      version: node.nodeVersion,
+      version: node.nodeTypeVersion,
       nodeType: +node.nodeType ?? 0,
       blockchainId: node.blockchainId ?? '',
       properties: node.properties,
@@ -194,6 +223,7 @@ export const NodeLauncher = () => {
         ? { hostId: selectedHost.id }
         : {
             scheduler: {
+              region: node.region,
               resource:
                 NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
             },
@@ -204,6 +234,7 @@ export const NodeLauncher = () => {
       params,
       mergedFiles.flat(),
       (nodeId: string) => {
+        Mixpanel.track('Launch Node - Node Launched');
         router.push(ROUTES.NODE(nodeId));
       },
       (error: string) => setServerError(error!),
@@ -217,7 +248,21 @@ export const NodeLauncher = () => {
 
     if (!activeBlockchain) return;
 
-    setNetworkList(activeBlockchain.networks.map((n: any) => n.name));
+    const sortedVersionList = sort(
+      activeBlockchain.nodesTypes
+        .filter((n) => n.nodeType === node.nodeType)
+        .map((n: any) => n.version),
+      { order: 'asc' },
+    );
+
+    setVersionList(sortedVersionList);
+
+    const sortedNetworkList = sort(
+      activeBlockchain.networks.map((n: any) => n.name),
+      { order: 'asc' },
+    );
+
+    setNetworkList(sortedNetworkList);
 
     const supportedNodeTypes = activeBlockchain.nodesTypes;
 
@@ -248,17 +293,16 @@ export const NodeLauncher = () => {
       ...node,
       properties: propertiesWithValue,
       keyFiles: fileProperties,
-      network: activeBlockchain?.networks?.length
-        ? activeBlockchain?.networks[0]?.name
+      network: sortedNetworkList.length ? sortedNetworkList[0] : '',
+      nodeTypeVersion: activeBlockchain.nodesTypes.length
+        ? sortedVersionList[0]
         : '',
     });
   }, [node.blockchainId, node.nodeType]);
 
   useEffect(() => {
-    if (currentOrganization.current?.id !== defaultOrganization?.id) {
-      currentOrganization.current = defaultOrganization;
-    }
-  }, [defaultOrganization]);
+    Mixpanel.track('Launch Node - Opened');
+  }, []);
 
   return (
     <>
@@ -266,8 +310,8 @@ export const NodeLauncher = () => {
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeLauncherProtocol
           onProtocolSelected={handleProtocolSelected}
-          activeBlockchainId={node.blockchainId}
-          activeNodeTypeId={node.nodeType}
+          blockchainId={node.blockchainId}
+          nodeType={node.nodeType}
         />
         {node.blockchainId && node.nodeType && node.properties?.length && (
           <NodeLauncherConfig
@@ -275,9 +319,8 @@ export const NodeLauncher = () => {
             onFileUploaded={handleFileUploaded}
             onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
             onNodePropertyChanged={handleNodePropertyChanged}
-            selectedHost={selectedHost}
-            onHostChanged={handleHostChanged}
             networkList={networkList}
+            versionList={versionList}
             nodeLauncherState={node}
           />
         )}
@@ -297,10 +340,12 @@ export const NodeLauncher = () => {
             isCreating={isCreating}
             isNodeValid={isNodeValid}
             isConfigValid={isConfigValid}
-            blockchainId={node.blockchainId}
-            nodeTypeId={node.nodeType}
-            nodeTypeProperties={node.properties}
+            nodeLauncherState={node}
+            selectedHost={selectedHost}
+            onHostChanged={handleHostChanged}
+            onNodePropertyChanged={handleNodePropertyChanged}
             onCreateNodeClicked={handleCreateNodeClicked}
+            onRegionsLoaded={handleRegionsLoaded}
           />
         )}
       </div>

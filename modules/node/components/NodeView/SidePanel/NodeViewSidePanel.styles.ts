@@ -5,7 +5,6 @@ export const styles = {
   form: (theme: ITheme) => css`
     border-bottom: 1px solid ${theme.colorBorder};
     margin-bottom: 6px;
-    margin-top: 24px;
   `,
   formHeader: (theme: ITheme) => css`
     color: ${theme.colorLabel};

@@ -7,6 +7,7 @@ export const styles = {
     display: flex;
     gap: 12px;
     align-items: center;
+    justify-content: space-between;
     min-height: 100px;
     margin-bottom: 0;
     border-bottom: 1px solid ${theme.colorBorder};

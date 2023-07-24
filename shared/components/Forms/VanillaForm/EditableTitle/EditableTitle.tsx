@@ -10,7 +10,6 @@ import { styles } from './EditableTitle.styles';
 import IconPencil from '@public/assets/icons/common/Pencil.svg';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import { Button } from '../../../Buttons/Button/Button';
-import { css } from '@emotion/react';
 import { SvgIcon } from '../../../General/SvgIcon/SvgIcon';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 
@@ -21,6 +20,23 @@ type Props = {
   onSaveClicked: (value: string) => void;
   onEditClicked: VoidFunction;
   canUpdate: boolean;
+};
+
+const setCaret = (el?: HTMLInputElement) => {
+  if (!el) return;
+
+  try {
+    const range: Range = document.createRange();
+    const sel: Selection = window.getSelection()!;
+
+    range.setStart(el.childNodes[0], el.innerText.length);
+    range.collapse(true);
+
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } catch (err) {
+    console.log('Error Setting Caret: ', err);
+  }
 };
 
 export const EditableTitle: FC<Props> = ({
@@ -58,12 +74,24 @@ export const EditableTitle: FC<Props> = ({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!['Enter'].includes(e.key)) return;
+    if (e.key === 'Escape') {
+      handleEditToggled();
+      inputRef.current?.blur();
+      return;
+    }
+
+    if (e.key !== 'Enter') return;
     handleSaveClicked();
   };
 
   const handleSaveClicked = () => {
     onSaveClicked(inputValue.current);
+  };
+
+  const handleBlur = () => {
+    if (!isDirty) {
+      handleEditToggled();
+    }
   };
 
   useEffect(() => {
@@ -73,6 +101,7 @@ export const EditableTitle: FC<Props> = ({
   useEffect(() => {
     if (isEditMode) {
       inputRef?.current?.focus();
+      setCaret(inputRef.current!);
     }
   }, [isEditMode]);
 
@@ -92,6 +121,7 @@ export const EditableTitle: FC<Props> = ({
           css={[styles.input, isEditMode && styles.inputEditable]}
           onInput={handleChange}
           onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
           suppressContentEditableWarning
         >
           {initialValue}
@@ -122,11 +152,6 @@ export const EditableTitle: FC<Props> = ({
             onClick={handleSaveClicked}
             size="small"
             style="secondary"
-            customCss={[
-              css`
-                min-width: 84px;
-              `,
-            ]}
           >
             Save
           </Button>

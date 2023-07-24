@@ -9,7 +9,11 @@ const Hosts = () => (
 );
 
 Hosts.getLayout = function getLayout(page: any) {
-  return <AppLayout pageTitle="Hosts">{page}</AppLayout>;
+  return (
+    <AppLayout isPageFlex pageTitle="Hosts">
+      {page}
+    </AppLayout>
+  );
 };
 
 export default Hosts;

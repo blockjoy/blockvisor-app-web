@@ -3,7 +3,7 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (theme: ITheme) => css`
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
@@ -24,6 +24,12 @@ export const styles = {
     max-width: 420px;
     padding: 0 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
+
+    @media ${breakpoints.fromXLrg} {
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 120px);
+    }
 
     @media ${breakpoints.toXlrg} {
       border-left: 0;

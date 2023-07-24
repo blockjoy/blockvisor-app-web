@@ -26,47 +26,7 @@ export const styles = {
     opacity: 0.8;
     text-align: left;
   `,
-  betaBadge: (theme: ITheme) => css`
-    position: absolute;
-    top: -6px;
-    right: -28px;
-    display: grid;
-    place-items: center;
-    height: 12px;
-    border-radius: 7px;
-    padding: 0 5px;
-    font-size: 6px;
-    font-weight: 700;
-    background: ${theme.colorText};
-    color: ${theme.colorBackground};
-    opacity: 0;
-  `,
-  comingSoonBadge: (theme: ITheme) => css`
-    position: relative;
-    display: grid;
-    place-items: center;
-    height: 20px;
-    border-radius: 3px;
-    padding: 0 7px 0 19px;
-    font-size: 10px;
-    background: ${theme.colorLightGrey};
-    color: ${theme.colorText};
-    opacity: 0;
-
-    ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 7px;
-      translate: 0 -50%;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: ${theme.colorPrimary};
-    }
-  `,
-  row: (theme: ITheme) => css`
+  row: css`
     display: flex;
     align-items: center;
     text-align: center;

@@ -16,10 +16,6 @@ export const styles = {
     margin-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${theme.colorBackground};
-
-    @media ${breakpoints.toXlrg} {
-      display: none;
-    }
   `,
   wrapperInner: css``,
   listTypePicker: css`
@@ -59,5 +55,10 @@ export const styles = {
   `,
   endBlock: css`
     flex: 0 0 auto;
+  `,
+  orgPicker: css`
+    @media ${breakpoints.fromLrg} {
+      display: none;
+    }
   `,
 };

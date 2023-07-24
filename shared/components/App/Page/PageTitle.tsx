@@ -1,7 +1,11 @@
-import { Skeleton, Copy, SvgIcon } from '@shared/components';
+import {
+  Skeleton,
+  Copy,
+  SvgIcon,
+  OrganizationPicker,
+} from '@shared/components';
 import { ProfileDropdown } from './ProfileDropdown/ProfileDropdown';
 import { FC, ReactNode } from 'react';
-import { typo } from 'styles/utils.typography.styles';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './PageTitle.styles';
 import { PageTitleLaunchNode } from './PageTitleLaunchNode';
@@ -13,6 +17,7 @@ interface Props {
   icon?: ReactNode;
   onTitleClick?: VoidFunction;
   isLoading?: boolean;
+  hideOrgPicker?: boolean;
 }
 
 export const PageTitle: FC<Props> = ({
@@ -22,10 +27,11 @@ export const PageTitle: FC<Props> = ({
   icon,
   onTitleClick,
   isLoading,
+  hideOrgPicker,
 }) => {
   const Title = () => (
     <span css={styles.title}>
-      <SvgIcon isDefaultColor size="18px">
+      <SvgIcon isDefaultColor size="16px">
         {icon}
       </SvgIcon>
       <p>{title}</p>
@@ -36,6 +42,12 @@ export const PageTitle: FC<Props> = ({
     <header css={styles.base}>
       <div css={[styles.wrapper, wrapper.main]}>
         <div css={styles.breadcrumb}>
+          {!hideOrgPicker && (
+            <div css={styles.orgPicker}>
+              <OrganizationPicker />
+              <span css={styles.separator}>/</span>
+            </div>
+          )}
           {!!onTitleClick ? (
             <button onClick={onTitleClick} css={styles.button}>
               <Title />
@@ -58,8 +70,10 @@ export const PageTitle: FC<Props> = ({
             </>
           )}
         </div>
-        <PageTitleLaunchNode />
-        <ProfileDropdown />
+        <div css={styles.rightWrapper}>
+          <PageTitleLaunchNode />
+          <ProfileDropdown />
+        </div>
       </div>
     </header>
   );

@@ -75,7 +75,7 @@ export function NewPasswordForm() {
               <li css={[spacing.bottom.mediumSmall]}>
                 <PasswordField
                   loading={isLoading}
-                  tabIndex={4}
+                  tabIndex={1}
                   name="password"
                   placeholder="Password"
                 />

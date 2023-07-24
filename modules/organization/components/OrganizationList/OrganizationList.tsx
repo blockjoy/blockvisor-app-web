@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 
 import { OrganizationListHeader } from '@modules/organization';
 import { ROUTES } from '@shared/constants/routes';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export const OrganizationsList = () => {
   const router = useRouter();
@@ -56,10 +57,10 @@ export const OrganizationsList = () => {
                 css={styles.row}
                 key={org.id}
               >
-                <p>{org.name}</p>
+                <p>{escapeHtml(org.name)}</p>
                 {isActive && (
                   <Badge color="primary" style="outline">
-                    Default
+                    Current
                   </Badge>
                 )}
               </button>

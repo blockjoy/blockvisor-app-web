@@ -3,8 +3,6 @@ import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   wrapper: css`
-    position: relative;
-    z-index: 3;
     min-height: 100%;
 
     @media ${breakpoints.fromXLrg} {
@@ -17,7 +15,9 @@ export const styles = {
     }
   `,
   wrapperFlex: css`
-    display: flex;
-    flex-direction: column;
+    @media ${breakpoints.fromLrg} {
+      display: flex;
+      flex-direction: column;
+    }
   `,
 };

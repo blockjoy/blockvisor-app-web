@@ -156,7 +156,6 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
                 filterCount={item.filterCount}
                 filterList={item.filterList}
                 setFilterList={item?.setFilterList!}
-                setOrganization={switchOrganization}
                 onFilterChanged={handleFilterChanged}
               />
             ))}

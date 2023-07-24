@@ -11,7 +11,7 @@ export const styles = {
     min-height: 0;
 
     @media ${breakpoints.toXlrg} {
-      padding: 20px 0 30px;
+      padding: 6px 0 30px;
     }
   `,
   addIcon: (theme: ITheme) => css`
@@ -27,20 +27,21 @@ export const styles = {
     css`
       display: flex;
       align-items: center;
-      justify-content: space-between;
       height: 64px;
       width: 100%;
       border: 0;
       padding: 0;
       border-bottom: 1px solid ${theme.colorBorder};
       background: transparent;
-      color: ${theme.colorText};
+      color: ${theme.colorDefault};
       cursor: pointer;
-      opacity: 0.4;
+      opacity: 0.6;
       transition: 0.3s;
 
       :is(:hover, .active) {
         opacity: 1;
+        color: ${theme.colorText};
+        border-bottom-color: ${theme.colorBorderGrey};
       }
 
       > p {
@@ -49,10 +50,6 @@ export const styles = {
         text-overflow: ellipsis;
         padding-right: 10px;
         line-height: 1.6;
-      }
-
-      &.active {
-        /* border-bottom-color: ${theme.colorBorderGrey}; */
       }
     `,
   scrollbar: css`

@@ -48,7 +48,7 @@ const isLoadingActiveNode = atom<LoadingState>({
 
 const isFiltersOpen = atom<boolean>({
   key: 'node.isFiltersOpen',
-  default: true,
+  default: false,
   effects: [
     ({ setSelf }) => {
       if (isMobile) {
@@ -62,7 +62,7 @@ const isFiltersOpen = atom<boolean>({
           : null;
       const isFiltersOpenValue = savedNodeFiltersToggle
         ? JSON.parse(savedNodeFiltersToggle)
-        : true;
+        : false;
       setSelf(isFiltersOpenValue);
     },
   ],
@@ -203,13 +203,12 @@ const filtersTotal = selector<number>({
     const filtersStatusTotal = get(filtersStatus).some((s) => s.isChecked);
     const filtersHealthTotal = get(filtersHealth) ? true : false;
 
-    const total =
-      [
-        filtersBlockchainTotal,
-        filtersTypeTotal,
-        filtersStatusTotal,
-        filtersHealthTotal,
-      ].filter(Boolean).length + 1;
+    const total = [
+      filtersBlockchainTotal,
+      filtersTypeTotal,
+      filtersStatusTotal,
+      filtersHealthTotal,
+    ].filter(Boolean).length;
 
     return total;
   },

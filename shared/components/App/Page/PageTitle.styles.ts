@@ -31,8 +31,9 @@ export const styles = {
   `,
   breadcrumb: css`
     display: flex;
+    align-items: center;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toMed} {
       max-width: 240px;
     }
   `,
@@ -50,7 +51,7 @@ export const styles = {
       fill: ${theme.colorLabel};
     }
 
-    :is(p, path) {
+    & :is(p, path) {
       transition: 0.3s;
     }
 
@@ -60,7 +61,7 @@ export const styles = {
       }
 
       svg path {
-        fill: ${theme.colorDefault};
+        fill: ${theme.colorText};
       }
     }
   `,
@@ -68,19 +69,34 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 11px;
-    font-size: 18px;
+    font-size: 16px;
     color: ${theme.colorText};
 
     svg > path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
   separator: (theme: ITheme) => css`
     display: flex;
     align-items: center;
     color: ${theme.colorLabel};
-    padding-right: 8px;
-    padding-left: 8px;
+    padding: 0 8px;
     height: 22px;
+    font-size: 20px;
+    opacity: 0.6;
+  `,
+  rightWrapper: css`
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+  `,
+  orgPicker: css`
+    display: flex;
+    align-items: center;
+
+    @media ${breakpoints.toLrg} {
+      display: none;
+    }
   `,
 };

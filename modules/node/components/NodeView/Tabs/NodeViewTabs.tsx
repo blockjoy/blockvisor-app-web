@@ -10,8 +10,7 @@ export const NodeViewTabs = () => {
     `/nodes/${query.id}${path ? `/${path}` : ''}`;
 
   const tabs = [
-    { href: createPath(''), name: 'Dashboard' },
-    { href: createPath('details'), name: 'Details' },
+    { href: createPath(''), name: 'Details' },
     { href: createPath('settings'), name: 'Settings' },
   ];
 
@@ -28,7 +27,6 @@ export const NodeViewTabs = () => {
           <NextLink
             key={tab.name}
             href={tab.href}
-            className={tab.name.toLowerCase()}
             css={[
               styles.tabButton,
               isActive(tab.href) && styles.tabButtonActive,

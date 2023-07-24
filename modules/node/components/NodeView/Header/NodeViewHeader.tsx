@@ -1,34 +1,51 @@
-import { NodeStatus, Skeleton, SkeletonGrid } from '@shared/components';
-import { FC, useState } from 'react';
+import {
+  DeleteModal,
+  NodeStatus,
+  Skeleton,
+  SkeletonGrid,
+} from '@shared/components';
+import { useState } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
 import { BlockchainIcon } from '@shared/components';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { useNodeView } from '@modules/node';
-import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
-import { NodeViewHeaderDelete } from './Delete/NodeViewHeaderDelete';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { wrapper } from 'styles/wrapper.styles';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/constants/routes';
+import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
+import { toast } from 'react-toastify';
 
-export const NodeViewHeader: FC = () => {
-  const { node, isLoading } = useNodeView();
-
+export const NodeViewHeader = () => {
+  const router = useRouter();
+  const { node, isLoading, deleteNode } = useNodeView();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
-  const handleDeleteModalClosed = () => {
-    setIsDeleteMode(false);
-  };
-
   const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
+
+  const handleDeleteNode = () => {
+    deleteNode(node!.id, node!.hostId, () => {
+      router.push(ROUTES.NODES);
+      toggleDeleteModalOpen();
+      toast.success('Node Deleted');
+    });
+  };
 
   return (
     <>
       {isDeleteMode && (
-        <NodeViewHeaderDelete onHide={handleDeleteModalClosed} />
+        <DeleteModal
+          portalId="delete-node-modal"
+          elementName={node?.name!}
+          entityName="Node"
+          onHide={toggleDeleteModalOpen}
+          onSubmit={handleDeleteNode}
+        />
       )}
 
-      <div css={wrapper.main}>
+      <section css={wrapper.main}>
         <header css={styles.header}>
           {isLoading && !node?.id ? (
             <SkeletonGrid>
@@ -80,7 +97,7 @@ export const NodeViewHeader: FC = () => {
             )
           )}
         </header>
-      </div>
+      </section>
     </>
   );
 };

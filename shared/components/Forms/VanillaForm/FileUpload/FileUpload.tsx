@@ -70,7 +70,7 @@ export function FileUpload({
         ))
       ) : (
         <>
-          <SvgIcon size="18px">
+          <SvgIcon isDefaultColor size="18px">
             <IconUpload />
           </SvgIcon>
           <p css={[styles.text, typo.small]}>{placeholder}</p>

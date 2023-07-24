@@ -5,6 +5,21 @@ import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "blockjoy.v1";
 
+/** Type of compression used on chunk data. */
+export enum Compression {
+  COMPRESSION_UNSPECIFIED = 0,
+  UNRECOGNIZED = -1,
+}
+
+/** Checksum variant. */
+export enum ChecksumType {
+  CHECKSUM_TYPE_UNSPECIFIED = 0,
+  CHECKSUM_TYPE_SHA1 = 1,
+  CHECKSUM_TYPE_SHA256 = 2,
+  CHECKSUM_TYPE_BLAKE3 = 3,
+  UNRECOGNIZED = -1,
+}
+
 export enum NetType {
   NET_TYPE_UNSPECIFIED = 0,
   NET_TYPE_DEV = 1,
@@ -85,6 +100,103 @@ export interface BundleServiceDeleteRequest {
 }
 
 export interface BundleServiceDeleteResponse {
+}
+
+export interface ManifestServiceRetrieveDownloadManifestRequest {
+  id: ConfigIdentifier | undefined;
+  network: string;
+}
+
+export interface ManifestServiceRetrieveDownloadManifestResponse {
+  manifest: DownloadManifest | undefined;
+}
+
+/**
+ * Download manifest, describing a cloud to disk mapping.
+ * Sometimes it is necessary to put data into the cloud in a different form,
+ * because of cloud limitations or needed optimization.
+ */
+export interface DownloadManifest {
+  /** Total size of uncompressed data */
+  totalSize: number;
+  /** Chunk compression type or none */
+  compression?:
+    | Compression
+    | undefined;
+  /** Full list of chunks */
+  chunks: Chunk[];
+}
+
+/**
+ * Data is stored on the cloud in chunks. Each chunk may map into part
+ * of a single file or multiple files (i.e. original disk representation).
+ * Downloaded chunks, after decompression, shall be written into disk
+ * location(s) described by the destinations.
+ *
+ * Example of chunk-file mapping:
+ * ```ascii flow
+ *                path: file1           path: file1          path: file1
+ *  compressed    pos: 0                pos: 1024            pos: 2048
+ *  ─────────┐    size: 1024            size: 1024           size: 1024
+ *           │  ┌────────────────────┬────────────────────┬───────────────────┐
+ *           │  │  decompressed      │                    │                   │
+ *           │  └────────────────────┴────────────────────┴───────────────────┘
+ *           │                ▲                 ▲                  ▲
+ *           ▼                │                 │                  │
+ *         ┌──┐               │                 │                  │
+ * chunk 1 │  │               │                 │                  │
+ *         │  ├───────────────┘                 │                  │
+ *         │  │                                 │                  │
+ *         └──┘                                 │                  │
+ *         ┌──┐                                 │                  │
+ * chunk 2 │  │                                 │                  │
+ *         │  ├─────────────────────────────────┘                  │
+ *         │  │                                                    │
+ *         └──┘                                                    │
+ *         ┌──┐                                                    │
+ * chunk 3 │  │    download and decompress                         │
+ *         │  ├────────────────────────────────────────────────────┘
+ *         │  │
+ *         └──┘
+ *         ┌──┐        ┌──────┐ path: file2
+ * chunk 4 │  ├───────►│      │ pos: 0
+ *         │  │        └──────┘ size: 256
+ *         ├──┤
+ *         │  │        ┌──────────────┐ path: file3
+ *         │  ├───────►│              │ pos: 0
+ *         │  │        └──────────────┘ size: 512
+ *         │  │
+ *         ├──┤        ┌────┐ path: file4
+ *         │  ├───────►│    │ pos: 0
+ *         └──┘        └────┘ size: 128
+ * ```
+ */
+export interface Chunk {
+  /** Persistent chunk key */
+  key: string;
+  /** Pre-signed download url (may be temporary) */
+  url: string;
+  /** Chunk data checksum type */
+  checksumType: ChecksumType;
+  /** Chunk data checksum bytes */
+  checksum: Uint8Array;
+  /** Chunk size in bytes */
+  size: number;
+  /** Chunk to data files mapping */
+  destinations: FileLocation[];
+}
+
+/**
+ * Structure describing where decompressed data shall be written to and how
+ * many bytes.
+ */
+export interface FileLocation {
+  /** Relative file path */
+  path: string;
+  /** Position of data in the file */
+  positionBytes: number;
+  /** Size of uncompressed data */
+  sizeBytes: number;
 }
 
 /** Message type used for identifying a specific plugin. */
@@ -973,6 +1085,362 @@ export const BundleServiceDeleteResponse = {
   },
 };
 
+function createBaseManifestServiceRetrieveDownloadManifestRequest(): ManifestServiceRetrieveDownloadManifestRequest {
+  return { id: undefined, network: "" };
+}
+
+export const ManifestServiceRetrieveDownloadManifestRequest = {
+  encode(
+    message: ManifestServiceRetrieveDownloadManifestRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.id !== undefined) {
+      ConfigIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.network !== "") {
+      writer.uint32(18).string(message.network);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ManifestServiceRetrieveDownloadManifestRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseManifestServiceRetrieveDownloadManifestRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = ConfigIdentifier.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<ManifestServiceRetrieveDownloadManifestRequest>,
+  ): ManifestServiceRetrieveDownloadManifestRequest {
+    return ManifestServiceRetrieveDownloadManifestRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<ManifestServiceRetrieveDownloadManifestRequest>,
+  ): ManifestServiceRetrieveDownloadManifestRequest {
+    const message = createBaseManifestServiceRetrieveDownloadManifestRequest();
+    message.id = (object.id !== undefined && object.id !== null) ? ConfigIdentifier.fromPartial(object.id) : undefined;
+    message.network = object.network ?? "";
+    return message;
+  },
+};
+
+function createBaseManifestServiceRetrieveDownloadManifestResponse(): ManifestServiceRetrieveDownloadManifestResponse {
+  return { manifest: undefined };
+}
+
+export const ManifestServiceRetrieveDownloadManifestResponse = {
+  encode(
+    message: ManifestServiceRetrieveDownloadManifestResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.manifest !== undefined) {
+      DownloadManifest.encode(message.manifest, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ManifestServiceRetrieveDownloadManifestResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseManifestServiceRetrieveDownloadManifestResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.manifest = DownloadManifest.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<ManifestServiceRetrieveDownloadManifestResponse>,
+  ): ManifestServiceRetrieveDownloadManifestResponse {
+    return ManifestServiceRetrieveDownloadManifestResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<ManifestServiceRetrieveDownloadManifestResponse>,
+  ): ManifestServiceRetrieveDownloadManifestResponse {
+    const message = createBaseManifestServiceRetrieveDownloadManifestResponse();
+    message.manifest = (object.manifest !== undefined && object.manifest !== null)
+      ? DownloadManifest.fromPartial(object.manifest)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDownloadManifest(): DownloadManifest {
+  return { totalSize: 0, compression: undefined, chunks: [] };
+}
+
+export const DownloadManifest = {
+  encode(message: DownloadManifest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.totalSize !== 0) {
+      writer.uint32(8).uint64(message.totalSize);
+    }
+    if (message.compression !== undefined) {
+      writer.uint32(16).int32(message.compression);
+    }
+    for (const v of message.chunks) {
+      Chunk.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DownloadManifest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDownloadManifest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.totalSize = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.compression = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.chunks.push(Chunk.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DownloadManifest>): DownloadManifest {
+    return DownloadManifest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<DownloadManifest>): DownloadManifest {
+    const message = createBaseDownloadManifest();
+    message.totalSize = object.totalSize ?? 0;
+    message.compression = object.compression ?? undefined;
+    message.chunks = object.chunks?.map((e) => Chunk.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseChunk(): Chunk {
+  return { key: "", url: "", checksumType: 0, checksum: new Uint8Array(0), size: 0, destinations: [] };
+}
+
+export const Chunk = {
+  encode(message: Chunk, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.url !== "") {
+      writer.uint32(18).string(message.url);
+    }
+    if (message.checksumType !== 0) {
+      writer.uint32(24).int32(message.checksumType);
+    }
+    if (message.checksum.length !== 0) {
+      writer.uint32(34).bytes(message.checksum);
+    }
+    if (message.size !== 0) {
+      writer.uint32(40).uint64(message.size);
+    }
+    for (const v of message.destinations) {
+      FileLocation.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Chunk {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChunk();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.checksumType = reader.int32() as any;
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.checksum = reader.bytes();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.size = longToNumber(reader.uint64() as Long);
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.destinations.push(FileLocation.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Chunk>): Chunk {
+    return Chunk.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Chunk>): Chunk {
+    const message = createBaseChunk();
+    message.key = object.key ?? "";
+    message.url = object.url ?? "";
+    message.checksumType = object.checksumType ?? 0;
+    message.checksum = object.checksum ?? new Uint8Array(0);
+    message.size = object.size ?? 0;
+    message.destinations = object.destinations?.map((e) => FileLocation.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseFileLocation(): FileLocation {
+  return { path: "", positionBytes: 0, sizeBytes: 0 };
+}
+
+export const FileLocation = {
+  encode(message: FileLocation, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.path !== "") {
+      writer.uint32(10).string(message.path);
+    }
+    if (message.positionBytes !== 0) {
+      writer.uint32(16).uint64(message.positionBytes);
+    }
+    if (message.sizeBytes !== 0) {
+      writer.uint32(24).uint64(message.sizeBytes);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FileLocation {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFileLocation();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.path = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.positionBytes = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.sizeBytes = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<FileLocation>): FileLocation {
+    return FileLocation.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<FileLocation>): FileLocation {
+    const message = createBaseFileLocation();
+    message.path = object.path ?? "";
+    message.positionBytes = object.positionBytes ?? 0;
+    message.sizeBytes = object.sizeBytes ?? 0;
+    return message;
+  },
+};
+
 function createBaseConfigIdentifier(): ConfigIdentifier {
   return { protocol: "", nodeType: "", nodeVersion: "" };
 }
@@ -1088,7 +1556,7 @@ export const BundleIdentifier = {
 };
 
 function createBasePlugin(): Plugin {
-  return { identifier: undefined, rhaiContent: new Uint8Array() };
+  return { identifier: undefined, rhaiContent: new Uint8Array(0) };
 }
 
 export const Plugin = {
@@ -1141,7 +1609,7 @@ export const Plugin = {
     message.identifier = (object.identifier !== undefined && object.identifier !== null)
       ? ConfigIdentifier.fromPartial(object.identifier)
       : undefined;
-    message.rhaiContent = object.rhaiContent ?? new Uint8Array();
+    message.rhaiContent = object.rhaiContent ?? new Uint8Array(0);
     return message;
   },
 };
@@ -1537,10 +2005,44 @@ export interface BundleServiceClient<CallOptionsExt = {}> {
   ): Promise<BundleServiceDeleteResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+/** Retrieve manage download manifests, mainly for blockchain data archives. */
+export type ManifestServiceDefinition = typeof ManifestServiceDefinition;
+export const ManifestServiceDefinition = {
+  name: "ManifestService",
+  fullName: "blockjoy.v1.ManifestService",
+  methods: {
+    /** Retrieve image for specific version and state. */
+    retrieveDownloadManifest: {
+      name: "RetrieveDownloadManifest",
+      requestType: ManifestServiceRetrieveDownloadManifestRequest,
+      requestStream: false,
+      responseType: ManifestServiceRetrieveDownloadManifestResponse,
+      responseStream: false,
+      options: {},
+    },
+  },
+} as const;
+
+export interface ManifestServiceImplementation<CallContextExt = {}> {
+  /** Retrieve image for specific version and state. */
+  retrieveDownloadManifest(
+    request: ManifestServiceRetrieveDownloadManifestRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<ManifestServiceRetrieveDownloadManifestResponse>>;
+}
+
+export interface ManifestServiceClient<CallOptionsExt = {}> {
+  /** Retrieve image for specific version and state. */
+  retrieveDownloadManifest(
+    request: DeepPartial<ManifestServiceRetrieveDownloadManifestRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<ManifestServiceRetrieveDownloadManifestResponse>;
+}
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

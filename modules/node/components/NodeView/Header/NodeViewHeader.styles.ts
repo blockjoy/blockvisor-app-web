@@ -7,15 +7,16 @@ export const styles = {
     display: flex;
     gap: 12px;
     align-items: center;
-    min-height: 100px;
     margin-bottom: 0;
     border-bottom: 1px solid ${theme.colorBorder};
+    min-height: 100px;
 
     @media ${breakpoints.toLrg} {
       flex-direction: column;
       align-items: flex-start;
       margin-bottom: 16px;
       padding: 20px 0;
+      min-height: auto;
     }
   `,
   detailsHeader: css`
@@ -37,7 +38,7 @@ export const styles = {
     white-space: nowrap;
 
     @media ${breakpoints.toLrg} {
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
       max-width: 100%;
       padding-top: 8px;

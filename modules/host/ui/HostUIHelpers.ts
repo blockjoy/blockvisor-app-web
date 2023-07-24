@@ -13,9 +13,9 @@ export type Pagination = {
 
 export type InitialFilter = {
   hostStatus?: string[];
-  hostMemory: [number, number];
-  hostCPU: [number, number];
-  hostSpace: [number, number];
+  hostMemory: number[];
+  hostCPU: number[];
+  hostSpace: number[];
 };
 
 export type InitialQueryParams = {
@@ -37,8 +37,8 @@ export const initialQueryParams: InitialQueryParams = {
 
   filter: {
     hostStatus: [],
-    hostMemory: hostFiltersDefaults.memory,
-    hostCPU: hostFiltersDefaults.cpu,
-    hostSpace: hostFiltersDefaults.space,
+    hostMemory: [],
+    hostCPU: [],
+    hostSpace: [],
   },
 };
