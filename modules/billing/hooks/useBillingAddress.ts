@@ -1,6 +1,5 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { _customer } from 'chargebee-typescript';
-import { Customer } from 'chargebee-typescript/lib/resources';
 import { BillingAddress } from 'chargebee-typescript/lib/resources/customer';
 import {
   BILLING_API_ROUTES,
@@ -64,6 +63,7 @@ export const useBillingAddress = (): IBillingAddressHook => {
       );
 
       setCustomer(data);
+      console.log('%cAddBillingAddress', 'color: #bff589', { params, data });
     } catch (error) {
       console.error('Failed to create billing address', error);
     } finally {

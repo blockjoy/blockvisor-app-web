@@ -1,19 +1,14 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { CardComponent } from '@chargebee/chargebee-js-react-wrapper';
 import { Button, ButtonGroup } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
 import {
-  inputField,
-  inputFieldDefault,
-  inputTypesStyle,
-} from '@shared/components/Forms/ReactHookForm/Input/Input.styles';
-import {
   billingAtoms,
   BillingInfoData,
   billingSelectors,
-  CHARGEBEE_OPTIONS,
+  CardComponent,
+  generatePaymentError,
   PaymentMethodInfoForm,
   useBillingAddress,
   usePaymentMethodForm,
@@ -38,10 +33,11 @@ export const PaymentMethodFormSimple = ({
 
   const cardRef = useRef<any>(null);
 
+  const [isSubmittedPaymentForm, setIsSubmittedPaymentForm] =
+    useState<boolean>(false);
+
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
-
-  const { style, classes, locale, placeholder } = CHARGEBEE_OPTIONS;
 
   const cardHolder = {
     firstName: user?.firstName,
@@ -60,9 +56,13 @@ export const PaymentMethodFormSimple = ({
   const { onSubmit } = usePaymentMethodForm();
   const { addBillingAddress } = useBillingAddress();
 
-  const handleSucces = (customerId?: string) => {
+  useEffect(() => {
+    if (isSubmittedPaymentForm && !error) handleSubmit();
+  }, [isSubmittedPaymentForm]);
+
+  const handleSucces = async (customerId: string) => {
     if ((isDefaultAddress || !billingAddress) && customerId)
-      addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
+      await addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
     handleCancel();
   };
@@ -84,7 +84,7 @@ export const PaymentMethodFormSimple = ({
 
     try {
       await onSubmit(cardRef, additionalData, handleSucces);
-      handleSubmit();
+      setIsSubmittedPaymentForm(true);
     } catch (error: any) {
       console.log('Error while adding a payment method', error);
     }
@@ -95,18 +95,12 @@ export const PaymentMethodFormSimple = ({
     setIsDefaultAddress(!isDefaultAddress);
   };
 
+  const errorMessage = error ? generatePaymentError(error) : null;
+
   return (
     <div css={styles.wrapper}>
       <h4 css={styles.headline}>CARD DETAILS</h4>
-      <CardComponent
-        ref={cardRef}
-        className="fieldset field"
-        css={[inputField, inputTypesStyle['medium'], inputFieldDefault]}
-        styles={style}
-        classes={classes}
-        locale={locale}
-        placeholder={placeholder}
-      />
+      <CardComponent ref={cardRef} variant="simple" />
 
       <div css={spacing.top.large}>
         <div css={[flex.display.flex, flex.direction.row]}>
@@ -124,7 +118,7 @@ export const PaymentMethodFormSimple = ({
         </div>
       </div>
 
-      {error && (
+      {errorMessage && (
         <p
           css={[
             typo.smaller,
@@ -133,7 +127,7 @@ export const PaymentMethodFormSimple = ({
             spacing.bottom.medium,
           ]}
         >
-          An error occured. Please check your inputs.
+          {errorMessage}
         </p>
       )}
 
