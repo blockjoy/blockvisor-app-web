@@ -1,15 +1,6 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
-  wrapper: css`
-    padding: 0;
-    margin: 0;
-
-    @media ${breakpoints.fromXLrg} {
-      max-width: 500px;
-    }
-  `,
   formRow: css`
     display: flex;
     justify-content: space-between;

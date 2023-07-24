@@ -12,7 +12,7 @@ interface IBillingContactsHook {
   billingContacts: Contact[];
   billingContactsLoadingState: LoadingState;
   getBillingContacts: VoidFunction;
-  addBillingContact: (billingContact: BillingContactParams) => void;
+  addBillingContact: (billingContact: BillingContactForm) => void;
   removeBillingContact: (id: string) => void;
 }
 
@@ -49,7 +49,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
     }
   };
 
-  const addBillingContact = async ({ name, email }: BillingContactParams) => {
+  const addBillingContact = async ({ name, email }: BillingContactForm) => {
     setBillingContactsLoadingState('initializing');
 
     try {

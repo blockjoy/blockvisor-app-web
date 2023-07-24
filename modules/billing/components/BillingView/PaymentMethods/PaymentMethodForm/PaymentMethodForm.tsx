@@ -23,6 +23,7 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { colors } from 'styles/utils.colors.styles';
+import { containers } from 'styles/containers.styles';
 
 type PaymentMethodFormProps = {
   handleCancel: VoidFunction;
@@ -128,7 +129,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   );
 
   return (
-    <div css={styles.wrapper}>
+    <div css={containers.mediumSmall}>
       <h4 css={styles.headline}>CARD DETAILS</h4>
       <CreditCardForm
         ref={cardRef}
