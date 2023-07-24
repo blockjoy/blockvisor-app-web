@@ -11,7 +11,7 @@ interface PaymentMethodFormHook {
   onSubmit: (
     cardRef: any,
     additionalData: { billingAddress: BillingAddressAdditionalData },
-    onSuccess: (customerId?: string, paymentSourceId?: string) => void,
+    onSuccess: (customerId: string, paymentSourceId: string) => void,
   ) => void;
 }
 
@@ -28,7 +28,7 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
   const onSubmit = async (
     cardRef: any,
     additionalData: { billingAddress: BillingAddressAdditionalData },
-    onSuccess: (customerId?: string, paymentMethodId?: string) => void,
+    onSuccess: (customerId: string, paymentMethodId: string) => void,
   ) => {
     setLoadingState('initializing');
     setError(null);
@@ -43,12 +43,6 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
           additionalData,
         );
         await createPaymentMethod(customerData?.id!, data.id, onSuccess);
-
-        console.log('%cCreateIntent', 'color: #bff589', {
-          customerData,
-          intent,
-          data,
-        });
       } catch (error: any) {
         const returnedError = JSON.parse(JSON.stringify(error));
         setError(returnedError);

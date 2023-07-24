@@ -22,6 +22,7 @@ export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
 export * from './components/BillingView/Invoices/InvoicePDF/InvoicePDF';
 
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CreditCardForm';
+export * from './components/BillingView/PaymentMethods/CreditCardForm/CardComponent/CardComponent';
 export * from './components/BillingView/PaymentMethods/PaymentMethodDialog/PaymentMethodDialog';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
@@ -34,7 +35,6 @@ export * from './components/BillingView/Plan/Plan';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanParams/PlanParams';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanConfiguration';
 export * from './components/BillingView/Plan/PlanItem/PlanItem';
-export * from './components/BillingView/Plan/PlanFeatures/PlanFeatures';
 
 export * from './components/BillingView/Subscription/Subscription';
 export * from './components/BillingView/Subscription/SubscriptionCancellation/SubscriptionCancellation';

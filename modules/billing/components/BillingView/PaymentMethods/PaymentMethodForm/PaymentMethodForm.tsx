@@ -1,3 +1,4 @@
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Button, ButtonGroup, Checkbox } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
@@ -19,7 +20,6 @@ import {
   useCustomer,
   usePaymentMethodForm,
 } from '@modules/billing';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { colors } from 'styles/utils.colors.styles';
@@ -55,14 +55,15 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const { assignPaymentRole } = useCustomer();
   const { addBillingAddress } = useBillingAddress();
 
-  const handleSucces = (customerId?: string, paymentSourceId?: string) => {
-    if (primary && paymentMethods.length && paymentSourceId)
-      assignPaymentRole({
+  const handleSucces = async (customerId: string, paymentSourceId: string) => {
+    if (primary && paymentMethods.length)
+      await assignPaymentRole({
         payment_source_id: paymentSourceId,
         role: 'primary',
       });
-    if ((isDefaultAddress || !billingAddress) && customerId)
-      addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
+
+    if (isDefaultAddress || !billingAddress)
+      await addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
     handleCancel();
   };

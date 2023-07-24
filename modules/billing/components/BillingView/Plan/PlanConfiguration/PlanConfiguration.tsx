@@ -11,10 +11,15 @@ import {
   usePaymentMethods,
   PlanParams,
   PaymentMethodsDropdown,
-  PlanFeatures,
 } from '@modules/billing';
-import { Alert, Button, ButtonGroup, SvgIcon } from '@shared/components';
-import { formatters, TableSkeleton } from '@shared/index';
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  List,
+  TableSkeleton,
+} from '@shared/components';
+import { formatters } from '@shared/index';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanConfiguration.styles';
@@ -62,10 +67,7 @@ export const PlanConfiguration = ({
   };
 
   const handleSubscription = () => {
-    if (!activeItemPrice || !paymentMethodId) {
-      console.error('Missing required fields');
-      return;
-    }
+    if (!activeItemPrice || !paymentMethodId) return;
 
     createSubscription({
       itemPriceId: activeItemPrice?.id,
@@ -78,16 +80,19 @@ export const PlanConfiguration = ({
 
   return (
     <div css={styles.wrapper}>
-      <div css={spacing.bottom.medium}>
-        <p css={styles.planTitle}>{item?.external_name}</p>
-      </div>
+      <h2 css={[styles.planTitle, spacing.bottom.medium]}>
+        {item?.external_name}
+      </h2>
+
       <div css={[divider, spacing.bottom.medium]}></div>
+
       <PlanParams
         periodUnit={periodUnit}
         handlePeriodUnit={handlePeriodUnit}
         autoRenew={autoRenew}
         handleAutoRenew={handleAutoRenew}
       />
+
       <div css={spacing.bottom.medium}>
         <h3 css={styles.headline}>Payment Method</h3>
         <PaymentMethodsDropdown
@@ -95,24 +100,29 @@ export const PlanConfiguration = ({
           handlePaymentMethod={handlePaymentMethod}
         />
       </div>
+
       {item?.metadata?.features && (
         <div css={spacing.bottom.medium}>
           <h3 css={styles.headline}>What you get</h3>
-          <PlanFeatures features={item?.metadata?.features} />
+          <List items={item?.metadata?.features} />
         </div>
       )}
+
       <div css={[divider, spacing.bottom.medium]}></div>
+
       <div css={[flex.display.flex, flex.justify.between]}>
         <p css={styles.headline}>Total</p>
         <p css={styles.totalPrice}>
           {formatters.formatCurrency(activeItemPrice?.price!)}
         </p>
       </div>
+
       {(!paymentMethodId || !paymentMethods.length) && (
         <div css={spacing.top.medium}>
           <Alert>Please update your payment information.</Alert>
         </div>
       )}
+
       <ButtonGroup type="flex">
         <Button
           style="secondary"

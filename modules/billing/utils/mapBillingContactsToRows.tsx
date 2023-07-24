@@ -30,37 +30,27 @@ export const mapBillingContactsToRows = (
       cells: [
         {
           key: '1',
-          component: (
-            <>
-              <p>{contact.first_name}</p>
-            </>
-          ),
+          component: <p>{contact.first_name}</p>,
         },
         {
           key: '2',
-          component: (
-            <>
-              <p>{contact.email}</p>
-            </>
-          ),
+          component: <p>{contact.email}</p>,
         },
 
         {
           key: '3',
           component: (
-            <>
-              <Button
-                type="button"
-                tooltip="Remove"
-                style="icon"
-                size="medium"
-                onClick={() => handleRemove(contact)}
-              >
-                <SvgIcon size="20px">
-                  <IconClose />
-                </SvgIcon>
-              </Button>
-            </>
+            <Button
+              type="button"
+              tooltip="Remove"
+              style="icon"
+              size="medium"
+              onClick={() => handleRemove(contact)}
+            >
+              <SvgIcon size="20px">
+                <IconClose />
+              </SvgIcon>
+            </Button>
           ),
         },
       ],
