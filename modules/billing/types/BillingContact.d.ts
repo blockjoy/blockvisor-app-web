@@ -4,11 +4,6 @@ interface IBillingContact {
   email: string;
 }
 
-type BillingContactParams = {
-  name: string;
-  email: string;
-};
-
 type BillingContactForm = {
   name: string;
   email: string;

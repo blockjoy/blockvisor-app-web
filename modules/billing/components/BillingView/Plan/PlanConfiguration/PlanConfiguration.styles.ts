@@ -1,9 +1,6 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  wrapper: css`
-    max-width: 500px;
-  `,
   headline: css`
     font-size: 16px;
     text-transform: uppercase;

@@ -7,7 +7,7 @@ import { useSubscription } from '@modules/billing/hooks/useSubscription';
 import { billingAtoms } from '@modules/billing/store/billingAtoms';
 import { billingSelectors } from '@modules/billing/store/billingSelectors';
 import { Button, ButtonGroup } from '@shared/components';
-import { styles } from './SubscriptionUpdate.styles';
+import { containers } from 'styles/containers.styles';
 
 type SubscriptionUpdateProps = {
   handleBack: VoidFunction;
@@ -51,7 +51,7 @@ export const SubscriptionUpdate = ({
   };
 
   return (
-    <div css={styles.wrapper}>
+    <div css={containers.mediumSmall}>
       <PlanParams
         autoRenew={autoRenew}
         handleAutoRenew={handleAutoRenew}
