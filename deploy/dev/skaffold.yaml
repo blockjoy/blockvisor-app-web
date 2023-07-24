@@ -34,8 +34,6 @@ build:
                   NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
                   NEXT_PUBLIC_PLAUSIBLE_DATA_DOMAIN: 'app.testing.blockjoy.com'
                   NEXT_PUBLIC_CRISP_WEBSITE_ID: '09ccc057-4bc5-4c14-909a-6b10f6bbe1cb'
-                  NEXT_PUBLIC_MIXPANEL_TOKEN: 'ceb51f9e98426b77862cfd9478415a1c'
-                  NEXT_PUBLIC_MIXPANEL_PROJECT_URL: 'https://app.dev.blockjoy.com/mp'
                   CRISP_API_URL: 'https://api.crisp.chat/v1'
                   CRISP_TOKEN_IDENTIFIER: '50052e9a-1e04-4b2d-8186-5e1daf223c3e'
                   CRISP_TOKEN_KEY: '{{.CRISP_TOKEN_KEY}}'
