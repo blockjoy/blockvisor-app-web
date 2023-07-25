@@ -13,12 +13,12 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       maxWidth: '100px',
     },
     {
-      name: 'Name',
+      name: 'Node',
       key: '2',
       width: '300px',
     },
     {
-      name: 'Added',
+      name: 'Launched',
       key: '3',
       width: '200px',
     },

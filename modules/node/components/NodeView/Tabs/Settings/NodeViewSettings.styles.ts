@@ -4,7 +4,9 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
-    padding-right: 20px;
+    @media ${breakpoints.fromXLrg} {
+      padding-right: 20px;
+    }
   `,
   row: (theme: ITheme) => css`
     display: flex;

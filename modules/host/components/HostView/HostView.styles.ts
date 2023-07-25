@@ -5,21 +5,20 @@ export const styles = {
   wrapper: css`
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
+    padding: 0 0 20px;
 
     @media ${breakpoints.fromLrg} {
       flex-direction: row;
-      height: 100%;
     }
   `,
   content: css`
     flex: 1 1 auto;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       padding: 4px 20px 20px 0;
     }
   `,
   loader: css`
-    padding: 15px 0 0;
+    padding: 35px 0 0;
   `,
 };

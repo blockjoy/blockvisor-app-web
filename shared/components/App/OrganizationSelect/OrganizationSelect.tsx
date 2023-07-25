@@ -43,7 +43,11 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
       onClose={() => setIsOpen(false)}
     >
       <DropdownButton
-        text={<p>{escapeHtml(defaultOrganization?.name!)}</p>}
+        text={
+          <p css={styles.selectText}>
+            {escapeHtml(defaultOrganization?.name!)}
+          </p>
+        }
         onClick={handleClick}
         isOpen={isOpen}
       />

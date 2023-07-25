@@ -17,7 +17,7 @@ export const styles = {
 
     @media ${breakpoints.fromMed} {
       position: sticky;
-      z-index: 10;
+      z-index: 4;
       top: 72px;
       flex: 1 1 320px;
       max-width: 320px;

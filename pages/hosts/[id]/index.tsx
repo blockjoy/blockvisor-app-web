@@ -1,12 +1,19 @@
 import { AppLayout } from '@modules/layout';
-import { HostView, HostViewDetails } from '@modules/host';
+import {
+  HostView,
+  HostViewTitle,
+  HostViewDetails,
+  HostWrapper,
+} from '@modules/host';
 
 const Host = () => <HostViewDetails />;
 
 Host.getLayout = function getLayout(page: any) {
   return (
     <AppLayout isPageFlex>
-      <HostView>{page}</HostView>
+      <HostWrapper title={<HostViewTitle />}>
+        <HostView>{page}</HostView>
+      </HostWrapper>
     </AppLayout>
   );
 };
