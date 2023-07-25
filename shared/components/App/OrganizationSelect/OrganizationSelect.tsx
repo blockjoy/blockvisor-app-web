@@ -63,7 +63,7 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
                     type="button"
                     onButtonClick={() => handleChange(org.id, org.name)}
                   >
-                    <p css={styles.activeOrg}>{escapeHtml(org.name!)}</p>
+                    <p css={styles.selectText}>{escapeHtml(org.name!)}</p>
                   </DropdownItem>
                 </li>
               ))}

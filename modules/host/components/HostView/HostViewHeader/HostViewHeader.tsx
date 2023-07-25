@@ -33,7 +33,7 @@ export const HostViewHeader = () => {
       router.push(ROUTES.HOSTS);
     });
 
-  if (!host?.id) return;
+  if (!host?.id) return null;
 
   const handleScroll = () => {
     const { pageYOffset } = window;
