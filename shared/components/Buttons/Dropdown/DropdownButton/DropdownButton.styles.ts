@@ -53,8 +53,14 @@ export const styles = {
   `,
   buttonInput: (theme: ITheme) => css`
     background-color: ${theme.colorInput};
-    border: none;
+    border-color: var(--color-text-5-o10) !important;
     color: var(--color-text-5);
+
+    &:focus {
+      outline: 0;
+      border-color: var(--color-text-5-o30) !important;
+      color: var(--color-text-5);
+    }
   `,
   icon: (theme: ITheme) => css`
     position: absolute;

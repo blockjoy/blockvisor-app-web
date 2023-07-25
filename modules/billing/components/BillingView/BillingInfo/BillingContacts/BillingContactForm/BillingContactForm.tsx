@@ -1,11 +1,11 @@
 import { FormProvider } from 'react-hook-form';
-import { styles } from './BillingContactForm.styles';
 import { useBillingContactsForm } from '@modules/billing';
 import { Button, Input, ButtonGroup } from '@shared/components';
 import { isValidEmail } from '@shared/index';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { containers } from 'styles/containers.styles';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export type BillingContactFormProps = {
   actions: BillingContactsActions;
@@ -27,7 +27,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} css={containers.mediumSmall}>
         <ul css={[reset.list]}>
-          <li css={[styles.formItem]}>
+          <li css={[spacing.bottom.medium]}>
             <Input
               name="name"
               label="Name"
@@ -40,7 +40,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
               }}
             />
           </li>
-          <li css={[styles.formItem]}>
+          <li css={[spacing.bottom.medium]}>
             <Input
               name="email"
               label="Email"

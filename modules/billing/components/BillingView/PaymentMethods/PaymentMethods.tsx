@@ -1,29 +1,21 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { toast } from 'react-toastify';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { Button, Table, TableSkeleton } from '@shared/components';
+import { DeleteModal, TableSkeleton } from '@shared/components';
 import {
-  billingSelectors,
   usePaymentMethods,
-  mapPaymentMethodsToRows,
-  PaymentMethodDialog,
   PaymentMethodForm,
+  PaymentMethodsList,
 } from '@modules/billing';
-import { spacing } from 'styles/utils.spacing.styles';
 
 export const PaymentMethods = () => {
   const router = useRouter();
   const { add } = router.query;
 
-  const {
-    paymentMethods,
-    getPaymentMethods,
-    paymentMethodsLoadingState,
-    deletePaymentMethod,
-  } = usePaymentMethods();
+  const { getPaymentMethods, paymentMethodsLoadingState, deletePaymentMethod } =
+    usePaymentMethods();
 
-  const customer = useRecoilValue(billingSelectors.customer);
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [activeView, setActiveView] =
     useState<string | 'list' | 'dialog'>('list');
@@ -42,51 +34,45 @@ export const PaymentMethods = () => {
   const handleAdding = () => setIsAdding(true);
   const handleCancel = () => setIsAdding(false);
 
+  const onHide = () => setActiveView('list');
+
   const handleRemove = (paymentMethod: PaymentSource) => {
     setActivePaymentMethod(paymentMethod);
     setActiveView('dialog');
   };
 
-  const onConfirm = (id: string) => deletePaymentMethod(id);
-  const onHide = () => setActiveView('list');
+  const handleDeletePaymentMethod = () => {
+    deletePaymentMethod(activePaymentMethod?.id!);
+    onHide();
+    toast.success(
+      `Payment Method (${activePaymentMethod?.card?.masked_number}) Deleted`,
+    );
+  };
 
-  const { headers, rows } = mapPaymentMethodsToRows(
-    paymentMethods,
-    handleRemove,
-    customer?.primary_payment_source_id,
-  );
+  if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
 
-  return paymentMethodsLoadingState !== 'finished' ? (
-    <TableSkeleton />
-  ) : !isAdding ? (
+  return (
     <>
-      <div css={spacing.bottom.medium}>
-        {!paymentMethods || !paymentMethods?.length ? (
-          <p>
-            You have not yet added any cards. Click the button below to add one.
-          </p>
-        ) : (
-          <div>
-            <Table
-              headers={headers}
-              rows={rows}
-              isLoading={paymentMethodsLoadingState}
-            />
-            {activeView === 'dialog' && activePaymentMethod && (
-              <PaymentMethodDialog
-                paymentMethod={activePaymentMethod}
-                onConfirm={onConfirm}
-                onHide={onHide}
-              />
-            )}
-          </div>
-        )}
-      </div>
-      <Button onClick={handleAdding} style="primary" size="small">
-        Add Credit Card
-      </Button>
+      {!isAdding ? (
+        <PaymentMethodsList
+          handleAdding={handleAdding}
+          handleRemove={handleRemove}
+        />
+      ) : (
+        <PaymentMethodForm handleCancel={handleCancel} />
+      )}
+
+      {activeView === 'dialog' && activePaymentMethod && (
+        <DeleteModal
+          portalId="delete-payment-method-modal"
+          elementType="last four digits"
+          elementName={activePaymentMethod.card?.last4!}
+          elementPlaceholder={activePaymentMethod.card?.masked_number!}
+          entityName="Payment Method"
+          onHide={onHide}
+          onSubmit={handleDeletePaymentMethod}
+        />
+      )}
     </>
-  ) : (
-    <PaymentMethodForm handleCancel={handleCancel} />
   );
 };

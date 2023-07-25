@@ -9,8 +9,9 @@ import {
 } from '@shared/components';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { styles } from './BillingAddressForm.styles';
 import { containers } from 'styles/containers.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { form as formStyles } from 'styles/form.styles';
 
 type BillingAddressFormProps = {
   handleCancel: () => void;
@@ -35,8 +36,8 @@ export const BillingAddressForm = ({
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} css={containers.mediumSmall}>
         <ul css={[reset.list]}>
-          <li css={[styles.formItem, styles.formRow]}>
-            <div css={styles.formCol}>
+          <li css={[spacing.bottom.medium, formStyles.row]}>
+            <div css={formStyles.col}>
               <Input
                 name="firstName"
                 label="First Name"
@@ -49,7 +50,7 @@ export const BillingAddressForm = ({
                 }}
               />
             </div>
-            <div css={styles.formCol}>
+            <div css={formStyles.col}>
               <Input
                 name="lastName"
                 label="Last Name"
@@ -63,7 +64,7 @@ export const BillingAddressForm = ({
               />
             </div>
           </li>
-          <li css={[styles.formItem]}>
+          <li css={[spacing.bottom.medium]}>
             <Input
               name="company"
               label="Company (optional)"
@@ -73,7 +74,7 @@ export const BillingAddressForm = ({
               tabIndex={3}
             />
           </li>
-          <li css={[styles.formItem]}>
+          <li css={[spacing.bottom.medium]}>
             <Input
               name="address"
               label="Address"
@@ -86,7 +87,7 @@ export const BillingAddressForm = ({
               }}
             />
           </li>
-          <li css={[styles.formItem]}>
+          <li css={[spacing.bottom.medium]}>
             <Controller
               name="country"
               rules={{ required: 'Country is required' }}
@@ -102,8 +103,8 @@ export const BillingAddressForm = ({
               )}
             />
           </li>
-          <li css={[styles.formItem, styles.formRow]}>
-            <div css={styles.formCol}>
+          <li css={[spacing.bottom.medium, formStyles.row]}>
+            <div css={formStyles.col}>
               <Input
                 name="city"
                 label="City"
@@ -116,7 +117,7 @@ export const BillingAddressForm = ({
                 }}
               />
             </div>
-            <div css={styles.formCol}>
+            <div css={formStyles.col}>
               <Input
                 name="postal"
                 label="Postal code"

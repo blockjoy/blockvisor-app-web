@@ -62,11 +62,6 @@ const paymentMethodLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const addPaymentMethodLoadingState = atom<LoadingState>({
-  key: 'billing.paymentMethod.add.loadingState',
-  default: 'finished',
-});
-
 const billingAddressLoadingState = atom<LoadingState>({
   key: 'billing.billingAddress.loadingState',
   default: 'finished',
@@ -154,7 +149,6 @@ export const billingAtoms = {
 
   paymentMethod,
   paymentMethodLoadingState,
-  addPaymentMethodLoadingState,
   paymentMethodError,
 
   paymentMethods,
