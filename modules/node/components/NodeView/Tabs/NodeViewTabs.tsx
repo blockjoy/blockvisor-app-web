@@ -21,7 +21,7 @@ export const NodeViewTabs = () => {
   };
 
   return (
-    <div css={wrapper.main}>
+    <div css={[wrapper.main, styles.wrapper]}>
       <div css={styles.tabs}>
         {tabs.map((tab) => (
           <NextLink
@@ -36,6 +36,7 @@ export const NodeViewTabs = () => {
           </NextLink>
         ))}
       </div>
+      <header css={styles.sidePanelHeader}>Metrics</header>
     </div>
   );
 };

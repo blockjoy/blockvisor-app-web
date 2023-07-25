@@ -3,18 +3,17 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  tabs: (theme: ITheme) => css`
+  wrapper: (theme: ITheme) => css`
     display: flex;
-    gap: 16px;
+    align-items: center;
     height: 56px;
     border-bottom: 1px solid ${theme.colorBorder};
     margin-bottom: 20px;
-
-    @media ${breakpoints.toXlrg} {
-      .metrics {
-        display: none;
-      }
-    }
+  `,
+  tabs: () => css`
+    display: flex;
+    gap: 16px;
+    align-self: stretch;
   `,
   tabButton: (theme: ITheme) => css`
     display: flex;
@@ -26,5 +25,14 @@ export const styles = {
   tabButtonActive: (theme: ITheme) => css`
     color: ${theme.colorText};
     border-bottom-color: ${theme.colorDefault};
+  `,
+  sidePanelHeader: (theme: ITheme) => css`
+    color: ${theme.colorText};
+    margin-left: auto;
+    width: 400px;
+
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
   `,
 };

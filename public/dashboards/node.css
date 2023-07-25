@@ -178,7 +178,7 @@ main {
 }
 
 header {
-  color: #777a74;
+  color: #a7a7a7;
   text-transform: uppercase;
   font-size: 11px;
   letter-spacing: 1px;
@@ -250,11 +250,22 @@ body .netdata-container[data-chart-library] {
 }
 
 .charts > div:first-child {
-  min-width: 126px;
+  min-width: 136px;
 }
 
 .row:not(:last-child) {
   border-bottom: 1px solid #363938;
   margin-bottom: 24px;
   padding-bottom: 10px;
+}
+
+.textonly-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.measurement {
+  transform: translateY(-4px);
+  font-size: 12px;
+  color: #a7a7a7;
 }
