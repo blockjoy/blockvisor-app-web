@@ -2,14 +2,6 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  formRow: css`
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-  `,
-  formItem: css`
-    margin-bottom: 24px;
-  `,
   headline: css`
     margin-bottom: 20px;
   `,

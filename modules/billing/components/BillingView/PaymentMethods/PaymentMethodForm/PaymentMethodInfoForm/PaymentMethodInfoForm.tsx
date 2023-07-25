@@ -1,6 +1,5 @@
 import { ChangeEvent } from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
-import { styles } from './PaymentMethodInfoForm.styles';
 import { typo } from 'styles/utils.typography.styles';
 import {
   inputField,
@@ -15,6 +14,8 @@ import {
 import { flex } from 'styles/utils.flex.styles';
 import { Checkbox, CountrySelector } from '@shared/components';
 import { billingSelectors } from '@modules/billing';
+import { spacing } from 'styles/utils.spacing.styles';
+import { form as formStyles } from 'styles/form.styles';
 
 type PaymentMethodInfoFormProps = {
   type?: 'simple' | 'default';
@@ -58,7 +59,7 @@ export const PaymentMethodInfoForm = ({
 
   return (
     <>
-      <div css={[styles.formItem]}>
+      <div css={[spacing.bottom.medium]}>
         {type === 'default' && (
           <label css={[inputLabel, inputLabelSize.small, typo.base]}>
             Address
@@ -75,7 +76,7 @@ export const PaymentMethodInfoForm = ({
           />
         </div>
       </div>
-      <div css={[styles.formItem]}>
+      <div css={[spacing.bottom.medium]}>
         {type === 'default' && (
           <label css={[inputLabel, inputLabelSize.small, typo.base]}>
             Country
@@ -90,7 +91,7 @@ export const PaymentMethodInfoForm = ({
           />
         </div>
       </div>
-      <div css={[styles.formItem, styles.formRow]}>
+      <div css={[spacing.bottom.medium, formStyles.row]}>
         <div css={[flex.display.flex, flex.direction.column, flex.basis.b100]}>
           {type === 'default' && (
             <label css={[inputLabel, inputLabelSize.small, typo.base]}>
@@ -128,7 +129,7 @@ export const PaymentMethodInfoForm = ({
       </div>
 
       {type === 'default' && (
-        <div css={[styles.formItem]}>
+        <div css={[spacing.bottom.medium]}>
           <Checkbox
             id="default-address"
             name="default-address"

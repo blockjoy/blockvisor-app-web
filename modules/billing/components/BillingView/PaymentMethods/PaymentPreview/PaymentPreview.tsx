@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  Button,
-  DetailsTable,
-  DetailsView,
-  TableSkeleton,
-} from '@shared/components';
+import { Button, DetailsTable, TableSkeleton } from '@shared/components';
 import {
   usePaymentMethods,
   mapCardToDetails,
@@ -38,31 +33,27 @@ export const PaymentPreview = () => {
   )
     return <TableSkeleton />;
 
-  return (
-    <DetailsView headline="Payment method">
-      {activeView === 'list' ? (
-        <>
-          <DetailsTable bodyElements={mapCardToDetails(paymentMethod?.card!)} />
-          <Button
-            size="small"
-            style="outline"
-            onClick={handleUpdate}
-            css={spacing.top.medium}
-          >
-            Update Payment Method
-          </Button>
-        </>
-      ) : (
-        <>
-          {paymentMethod && (
-            <PaymentMethodsSelector
-              subscriptionId={subscription?.id!}
-              currentPaymentMethod={paymentMethod}
-              onHide={onHide}
-            />
-          )}
-        </>
+  return activeView === 'list' ? (
+    <>
+      <DetailsTable bodyElements={mapCardToDetails(paymentMethod?.card!)} />
+      <Button
+        size="small"
+        style="outline"
+        onClick={handleUpdate}
+        css={spacing.top.medium}
+      >
+        Update Payment Method
+      </Button>
+    </>
+  ) : (
+    <>
+      {paymentMethod && (
+        <PaymentMethodsSelector
+          subscriptionId={subscription?.id!}
+          currentPaymentMethod={paymentMethod}
+          onHide={onHide}
+        />
       )}
-    </DetailsView>
+    </>
   );
 };

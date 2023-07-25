@@ -119,7 +119,7 @@ export const mapPaymentMethodsToRows = (
           component: (
             <Button
               type="button"
-              tooltip="Cancel"
+              tooltip="Remove"
               style="icon"
               size="medium"
               onClick={() => handleRemove(paymentMethod)}

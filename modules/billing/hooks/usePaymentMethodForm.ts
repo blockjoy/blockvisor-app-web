@@ -1,5 +1,6 @@
-import { Customer, PaymentIntent } from 'chargebee-typescript/lib/resources';
+import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
+import { Customer, PaymentIntent } from 'chargebee-typescript/lib/resources';
 import {
   billingAtoms,
   useCustomer,
@@ -8,6 +9,7 @@ import {
 } from '@modules/billing';
 
 interface PaymentMethodFormHook {
+  loading: boolean;
   onSubmit: (
     cardRef: any,
     additionalData: { billingAddress: BillingAddressAdditionalData },
@@ -17,9 +19,7 @@ interface PaymentMethodFormHook {
 
 export const usePaymentMethodForm = (): PaymentMethodFormHook => {
   const setError = useSetRecoilState(billingAtoms.paymentMethodError);
-  const setLoadingState = useSetRecoilState(
-    billingAtoms.addPaymentMethodLoadingState,
-  );
+  const [loading, setLoading] = useState(false);
 
   const { createIntent } = usePayment();
   const { createPaymentMethod } = usePaymentMethods();
@@ -30,7 +30,7 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
     additionalData: { billingAddress: BillingAddressAdditionalData },
     onSuccess: (customerId: string, paymentMethodId: string) => void,
   ) => {
-    setLoadingState('initializing');
+    setLoading(true);
     setError(null);
 
     try {
@@ -51,9 +51,9 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
       const returnedError = JSON.parse(JSON.stringify(error));
       setError(returnedError);
     } finally {
-      setLoadingState('finished');
+      setLoading(false);
     }
   };
 
-  return { onSubmit };
+  return { loading, onSubmit };
 };
