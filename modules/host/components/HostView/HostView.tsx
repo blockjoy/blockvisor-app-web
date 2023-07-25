@@ -2,7 +2,7 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { styles } from './HostView.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
-import { useHostView, HostViewHeader, HostViewTabs } from '@modules/host';
+import { useHostView, HostViewTabs, HostViewHeader } from '@modules/host';
 import { useNodeList } from '@modules/node';
 
 type HostViewProps = {
