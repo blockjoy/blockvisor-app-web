@@ -30,7 +30,6 @@ type PaymentMethodFormProps = {
 };
 
 export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
-  const loading = useRecoilValue(billingAtoms.addPaymentMethodLoadingState);
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
   const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
@@ -52,7 +51,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const [primary, setPrimary] = useState<boolean>(false);
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
 
-  const { onSubmit } = usePaymentMethodForm();
+  const { loading, onSubmit } = usePaymentMethodForm();
   const { assignPaymentRole } = useCustomer();
   const { addBillingAddress } = useBillingAddress();
 
@@ -157,7 +156,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
           )}
         </div>
         {activeView === 'list' && billingAddress ? (
-          <div css={[styles.formItem]}>
+          <div css={[spacing.bottom.medium]}>
             <label css={[inputLabel, inputLabelSize.small, typo.base]}>
               Billing address
             </label>
@@ -193,11 +192,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
       <ButtonGroup>
         <Button
-          loading={loading !== 'finished'}
-          disabled={
-            loading !== 'finished' ||
-            (activeView === 'action' && !isValidInfoForm)
-          }
+          loading={loading}
+          disabled={loading || (activeView === 'action' && !isValidInfoForm)}
           style="primary"
           size="small"
           type="submit"

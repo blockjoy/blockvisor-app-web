@@ -1,4 +1,6 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { _payment_source } from 'chargebee-typescript';
+import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
@@ -6,8 +8,6 @@ import {
   fetchBilling,
   useSubscription,
 } from '@modules/billing';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { _payment_source } from 'chargebee-typescript';
 
 interface IPaymentMethodsHook {
   paymentMethod: PaymentSource | null;
@@ -85,7 +85,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     paymentIntentId: string,
     onSuccess: (customerId: string, paymentSourceId: string) => void,
   ) => {
-    setPaymentMethodsLoadingState('initializing');
+    setPaymentMethodLoadingState('initializing');
 
     try {
       const params: _payment_source.create_using_payment_intent_params = {
@@ -114,12 +114,13 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     } catch (error) {
       console.error('Failed to create Payment method', error);
     } finally {
-      setPaymentMethodsLoadingState('finished');
+      setPaymentMethodLoadingState('finished');
     }
   };
 
   const deletePaymentMethod = async (id: string) => {
-    setPaymentMethodsLoadingState('initializing');
+    setPaymentMethodLoadingState('initializing');
+    setPaymentMethodsLoadingState('loading');
 
     try {
       const data = await fetchBilling(
@@ -143,6 +144,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     } catch (error) {
       console.error('Failed to delete Payment method', error);
     } finally {
+      setPaymentMethodLoadingState('finished');
       setPaymentMethodsLoadingState('finished');
     }
   };

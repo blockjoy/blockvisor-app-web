@@ -28,7 +28,6 @@ export const PaymentMethodFormSimple = ({
   handleCancel,
   handleSubmit,
 }: PaymentMethodFormProps) => {
-  const loading = useRecoilValue(billingAtoms.addPaymentMethodLoadingState);
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const error = useRecoilValue(billingAtoms.paymentMethodError);
 
@@ -54,7 +53,7 @@ export const PaymentMethodFormSimple = ({
 
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
 
-  const { onSubmit } = usePaymentMethodForm();
+  const { loading, onSubmit } = usePaymentMethodForm();
   const { addBillingAddress } = useBillingAddress();
 
   useEffect(() => {
@@ -134,7 +133,8 @@ export const PaymentMethodFormSimple = ({
 
       <ButtonGroup>
         <Button
-          loading={loading !== 'finished'}
+          loading={loading}
+          disabled={loading}
           style="primary"
           size="small"
           type="submit"
