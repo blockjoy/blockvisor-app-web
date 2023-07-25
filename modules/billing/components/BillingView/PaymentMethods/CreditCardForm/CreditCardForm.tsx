@@ -2,7 +2,6 @@ import { ChangeEvent, forwardRef, Ref } from 'react';
 import { SetterOrUpdater } from 'recoil';
 import { typo } from 'styles/utils.typography.styles';
 import { flex } from 'styles/utils.flex.styles';
-import { styles } from './CreditCardForm.styles';
 import {
   inputField,
   inputFieldDefault,
@@ -14,6 +13,8 @@ import {
   inputLabelSize,
 } from '@shared/components/Forms/ReactHookForm/Input/InputLabel.styles';
 import { CardComponent } from '@modules/billing';
+import { spacing } from 'styles/utils.spacing.styles';
+import { form as formStyles } from 'styles/form.styles';
 
 export type CreditCardFormProps = {
   cardHolder: CardHolder;
@@ -38,7 +39,7 @@ export const CreditCardForm = forwardRef(
 
     return (
       <>
-        <div css={[styles.formItem, styles.formRow]}>
+        <div css={[spacing.bottom.medium, formStyles.row]}>
           <div
             css={[flex.display.flex, flex.direction.column, flex.basis.b100]}
           >

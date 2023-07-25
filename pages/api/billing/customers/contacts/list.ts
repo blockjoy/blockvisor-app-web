@@ -10,8 +10,13 @@ type ListContactsParams = {
   };
 };
 
-const requestCallback = ({ customerId }: ListContactsParams) =>
-  chargebee.customer.contacts_for_customer(customerId);
+const requestCallback = ({ customerId }: ListContactsParams) => {
+  if (!customerId || Object.keys(customerId).length === 0) {
+    throw new Error('No Customer ID provided');
+  }
+
+  return chargebee.customer.contacts_for_customer(customerId);
+};
 
 const mappingCallback = (
   result: { list: Contact[] },
@@ -32,10 +37,18 @@ const mappingCallback = (
   return filteredContacts;
 };
 
+const errorCallback = (error: any): [] | null => {
+  if (error.message === 'No Customer ID provided') {
+    return [];
+  }
+
+  return null;
+};
+
 const handler = createHandler<
   ListContactsParams,
   { list: Contact[] },
   Contact[]
->(requestCallback, mappingCallback);
+>(requestCallback, mappingCallback, errorCallback);
 
 export default handler;
