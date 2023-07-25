@@ -13,12 +13,8 @@ import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { useDefaultOrganization } from '@modules/organization';
 
-type HostLauncherProps = {
-  token?: string;
-};
-
-export const HostLauncher = ({ token }: HostLauncherProps) => {
-  const { resetProvisionToken, provisionTokenLoadingState } =
+export const HostLauncher = () => {
+  const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
   const { defaultOrganization } = useDefaultOrganization();
@@ -41,7 +37,7 @@ export const HostLauncher = ({ token }: HostLauncherProps) => {
             <FormText>
               Launch a new host by running this command on any server
             </FormText>
-            <CopyToClipboard value={`bvup ${token}`} />
+            <CopyToClipboard value={`bvup ${provisionToken}`} />
             <Button
               style="outline"
               size="small"

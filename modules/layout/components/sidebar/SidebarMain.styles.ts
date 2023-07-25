@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { rgba } from 'polished';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
@@ -110,6 +109,7 @@ export const styles = {
   linkTextHidden: (theme: ITheme) => css`
     @media ${breakpoints.fromXLrg} {
       position: absolute;
+      z-index: 10;
       left: 110%;
       background: ${theme.colorTooltip};
       padding: 6px 10px;

@@ -116,7 +116,6 @@ const buttonStyle = {
 const button = css`
   position: relative;
   font-weight: var(--font-weight-bold);
-  position: relative;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -130,7 +129,7 @@ const button = css`
 
   &[disabled] {
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.45;
   }
 
   :hover .tooltip {

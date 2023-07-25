@@ -1,14 +1,8 @@
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { styles } from './HostView.styles';
-import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
-import {
-  useHostView,
-  HostViewHeader,
-  HostViewTabs,
-  HostViewTitle,
-} from '@modules/host';
+import { useHostView, HostViewHeader, HostViewTabs } from '@modules/host';
 import { useNodeList } from '@modules/node';
 
 type HostViewProps = {
@@ -24,7 +18,6 @@ export const HostView = ({ children }: HostViewProps) => {
 
   useEffect(() => {
     (async () => {
-      window.scrollTo(0, 0);
       if (router.isReady) {
         listNodesByHost(id as string);
         loadHost(id);
@@ -37,7 +30,6 @@ export const HostView = ({ children }: HostViewProps) => {
 
   return (
     <>
-      <HostViewTitle />
       {isLoading === 'finished' && !host?.id ? (
         <EmptyColumn
           title="Host Not Found"
@@ -51,7 +43,7 @@ export const HostView = ({ children }: HostViewProps) => {
               <HostViewTabs />
             </>
           )}
-          <div css={[styles.wrapper, wrapper.main]}>
+          <div css={styles.wrapper}>
             {isLoading !== 'finished' && !host?.id ? (
               <div css={styles.loader}>
                 <SkeletonView />

@@ -1,26 +1,15 @@
-import { useRecoilValue } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { hostAtoms, mapHostNodesToRows } from '@modules/host';
-import { useNodeList, useNodeView } from '@modules/node';
+import { mapHostNodesToRows, useHostView } from '@modules/host';
+import { useNodeList } from '@modules/node';
 import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 
 export const HostViewNodes = () => {
   const router = useRouter();
-
   const { nodeList, isLoading, handleNodeClick } = useNodeList();
-  // const { stopNode, startNode } = useNodeView();
-  const host = useRecoilValue(hostAtoms.activeHost);
-  const isLoadingActiveHost = useRecoilValue(hostAtoms.isLoadingActiveHost);
-
+  const { host, isLoading: isLoadingActiveHost } = useHostView();
   const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
-
-  // const handleAction = (type: string, nodeId: string) => {
-  //   if (type === 'start') startNode(nodeId);
-  //   else if (type === 'stop') stopNode(nodeId);
-  // };
-
   const { headers, rows } = mapHostNodesToRows(hostNodes);
 
   return (
@@ -43,6 +32,7 @@ export const HostViewNodes = () => {
         />
       ) : (
         <Table
+          hideHeader
           isLoading={isLoading}
           headers={headers}
           rows={rows}

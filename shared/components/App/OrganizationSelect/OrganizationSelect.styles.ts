@@ -1,35 +1,7 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
-    flex: 1 1 auto;
-    min-width: 0;
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    :hover .title {
-      opacity: 1;
-      visibility: visible;
-    }
-  `,
-  wrapperNameHidden: css`
-    width: 52px;
-    max-width: 52px;
-
-    @media ${breakpoints.fromXLrg} {
-      margin-right: 6px;
-    }
-  `,
-  activeOrg: css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: left;
-    white-space: nowrap;
-  `,
   header: (theme: ITheme) => css`
     display: flex;
     align-items: center;
@@ -71,17 +43,10 @@ export const styles = {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-right: 8px;
+    white-space: nowrap;
+    padding-right: 16px;
     line-height: 1.8;
-  `,
-  activeOrganization: css`
-    cursor: default;
-
-    :hover,
-    :focus,
-    :active {
-      background: none;
-    }
+    text-align: left;
   `,
   dropdown: css`
     top: 54px;
@@ -112,9 +77,5 @@ export const styles = {
   `,
   iconActive: css`
     rotate: -90deg;
-  `,
-  addOrg: (theme: ITheme) => css`
-    padding: 0 14px;
-    border-top: 1px solid ${theme.colorBorderGrey};
   `,
 };

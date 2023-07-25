@@ -1,10 +1,12 @@
 import { AppLayout } from '@modules/layout';
-import { HostList } from '@modules/host';
+import { HostList, HostListTitle, HostWrapper } from '@modules/host';
 import { HostUIProvider } from '@modules/host';
 
 const Hosts = () => (
   <HostUIProvider>
-    <HostList />
+    <HostWrapper title={<HostListTitle />}>
+      <HostList />
+    </HostWrapper>
   </HostUIProvider>
 );
 
