@@ -8,7 +8,6 @@ import {
 import { CHARGEBEE_OPTIONS } from '@modules/billing';
 import { typo } from 'styles/utils.typography.styles';
 import { flex } from 'styles/utils.flex.styles';
-import { styles } from './CardComponent.styles';
 import {
   inputField,
   inputFieldDefault,
@@ -18,6 +17,8 @@ import {
   inputLabel,
   inputLabelSize,
 } from '@shared/components/Forms/ReactHookForm/Input/InputLabel.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { form as formStyles } from 'styles/form.styles';
 
 type CardComponentProps = {
   variant?: 'default' | 'simple';
@@ -41,7 +42,7 @@ export const CardComponent = forwardRef(
       >
         {variant === 'default' && (
           <>
-            <div css={[styles.formItem]}>
+            <div css={[spacing.bottom.medium]}>
               <label css={[inputLabel, inputLabelSize.small, typo.base]}>
                 Card number
               </label>
@@ -51,7 +52,7 @@ export const CardComponent = forwardRef(
                 <CardNumber />
               </div>
             </div>
-            <div css={[styles.formItem, styles.formRow]}>
+            <div css={[spacing.bottom.medium, formStyles.row]}>
               <div
                 css={[
                   flex.display.flex,

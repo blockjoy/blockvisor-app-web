@@ -9,7 +9,9 @@ import { styles } from './DeleteModal.styles';
 type Props = {
   portalId: string;
   type?: string;
+  elementType?: string;
   elementName: string;
+  elementPlaceholder?: string;
   entityName: string;
   isDisabled?: boolean;
   isDisabledMessage?: string | ReactNode;
@@ -20,7 +22,9 @@ type Props = {
 export const DeleteModal = ({
   portalId,
   type = 'Delete',
+  elementType = 'name',
   elementName,
+  elementPlaceholder,
   entityName,
   isDisabled,
   isDisabledMessage,
@@ -41,7 +45,8 @@ export const DeleteModal = ({
   return (
     <Modal portalId={portalId} isOpen={true} handleClose={onHide}>
       <h2 css={styles.header}>
-        {type} {entityName} ({elementName})
+        {type} {entityName} (
+        {elementPlaceholder ? elementPlaceholder : elementName})
       </h2>
 
       {isDisabled && isDisabledMessage && (

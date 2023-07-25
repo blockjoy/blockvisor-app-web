@@ -80,9 +80,11 @@ export const PaymentMethodsDropdown = ({
               {CreditCardTypes[paymentMethod.card?.brand!]} ***
               {paymentMethod.card?.last4}
             </span>
-            <Badge color="primary" style="outline" customCss={[styles.badge]}>
-              Primary
-            </Badge>
+            {customer?.primary_payment_source_id === paymentMethod.id && (
+              <Badge color="primary" style="outline" customCss={[styles.badge]}>
+                Primary
+              </Badge>
+            )}
           </p>
         ),
         onClick: () => handleSelect(paymentMethod),
