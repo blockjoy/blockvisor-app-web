@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { styles } from './HostViewTabs.styles';
-import { wrapper } from 'styles/wrapper.styles';
 
 export const HostViewTabs = () => {
   const { query, asPath } = useRouter();
@@ -21,21 +20,16 @@ export const HostViewTabs = () => {
   };
 
   return (
-    <div css={wrapper.main}>
-      <div css={styles.tabs}>
-        {tabs.map((tab) => (
-          <NextLink
-            key={tab.name}
-            href={tab.href}
-            css={[
-              styles.tabButton,
-              isActive(tab.href) && styles.tabButtonActive,
-            ]}
-          >
-            {tab.name}
-          </NextLink>
-        ))}
-      </div>
+    <div css={styles.tabs}>
+      {tabs.map((tab) => (
+        <NextLink
+          key={tab.name}
+          href={tab.href}
+          css={[styles.tabButton, isActive(tab.href) && styles.tabButtonActive]}
+        >
+          {tab.name}
+        </NextLink>
+      ))}
     </div>
   );
 };

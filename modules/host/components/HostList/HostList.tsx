@@ -4,18 +4,14 @@ import { useRecoilValue } from 'recoil';
 import {
   TableSkeleton,
   EmptyColumn,
-  PageTitle,
   Table,
   TableGrid,
 } from '@shared/components';
 import { styles } from './HostList.styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   hostAtoms,
-  HostFilters,
-  HostLauncher,
   HostListHeader,
   mapHostListToGird,
   mapHostListToRows,
@@ -23,11 +19,7 @@ import {
   useHostList,
   useHostUIContext,
 } from '@modules/host';
-import {
-  useDefaultOrganization,
-  useProvisionToken,
-} from '@modules/organization';
-import IconHost from '@public/assets/icons/app/Host.svg';
+import { useDefaultOrganization } from '@modules/organization';
 
 export const HostList = () => {
   const hostUIContext = useHostUIContext();
@@ -40,7 +32,7 @@ export const HostList = () => {
 
   const { loadHosts, hostList, hostListSorted, isLoading, handleHostClick } =
     useHostList();
-  const { provisionToken, getProvisionToken } = useProvisionToken();
+
   const { defaultOrganization } = useDefaultOrganization();
   const hasMoreHosts = useRecoilValue(hostAtoms.hasMoreHosts);
   const preloadHosts = useRecoilValue(hostAtoms.preloadHosts);
@@ -58,10 +50,6 @@ export const HostList = () => {
       currentQueryParams.current = hostUIProps.queryParams;
     }
   }, [hostUIProps.queryParams]);
-
-  useEffect(() => {
-    getProvisionToken(defaultOrganization?.id!);
-  }, []);
 
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
@@ -91,8 +79,7 @@ export const HostList = () => {
 
   return (
     <>
-      <PageTitle title="Hosts" icon={<IconHost />} />
-      <div css={[styles.wrapper, wrapper.main]}>
+      <div css={styles.wrapper}>
         {/* TODO: Implement filters in api */}
         {/* <HostFilters isLoading={isLoading} /> */}
         <div css={styles.listWrapper}>
@@ -140,9 +127,6 @@ export const HostList = () => {
               )}
             </InfiniteScroll>
           )}
-        </div>
-        <div css={styles.rightPanel}>
-          <HostLauncher token={provisionToken} />
         </div>
       </div>
     </>

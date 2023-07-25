@@ -9,7 +9,6 @@ import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
 import { BlockchainIcon } from '@shared/components';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { useNodeView } from '@modules/node';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { wrapper } from 'styles/wrapper.styles';
@@ -17,6 +16,7 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
 import { toast } from 'react-toastify';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 export const NodeViewHeader = () => {
   const router = useRouter();
@@ -72,12 +72,9 @@ export const NodeViewHeader = () => {
                         }
                       </p>
                     </div>
-
-                    {node!.ip && (
-                      <small css={[typo.small, colors.text2]}>{node!.ip}</small>
-                    )}
                     {node!.createdAt && (
                       <small css={[typo.small, colors.text2]}>
+                        Launched{' '}
                         {formatDistanceToNow(node!.createdAt, {
                           addSuffix: true,
                         })}

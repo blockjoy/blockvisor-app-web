@@ -1,11 +1,8 @@
 import { TableBlock } from '@shared/components';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { Node, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 
-export const mapHostNodesToRows = (
-  nodeList: Node[],
-  handleAction?: (type: string, nodeId: string) => void,
-) => {
+export const mapHostNodesToRows = (nodeList: Node[]) => {
   const headers: TableHeader[] = [
     {
       name: '',
@@ -22,12 +19,6 @@ export const mapHostNodesToRows = (
       name: 'Status',
       key: '3',
     },
-    // {
-    //   name: '',
-    //   key: '4',
-    //   width: '100px',
-    //   textAlign: 'right',
-    // },
   ];
 
   const rows = nodeList?.map((node: Node) => ({
@@ -45,7 +36,13 @@ export const mapHostNodesToRows = (
         key: '2',
         component: (
           <>
-            <TableBlock id={node.id} name={node.name} address={node?.ip!} />
+            <TableBlock
+              id={`${node.blockchainName} ${NodeType[node.nodeType]
+                .replace('NODE_TYPE_', '')
+                .toLowerCase()}`}
+              name={node.name}
+              address={node?.ip!}
+            />
           </>
         ),
       },
@@ -53,32 +50,6 @@ export const mapHostNodesToRows = (
         key: '3',
         component: <NodeStatus status={node.status} />,
       },
-      // {
-      //   key: '4',
-      //   component: (
-      //     <>
-      //       {handleAction && (
-      //         <ButtonGroup type="inline">
-      //           <Button
-      //             style="secondary"
-      //             size="small"
-      //             disabled={true}
-      //             onClick={() => handleAction('stop', node.id)}
-      //           >
-      //             Stop
-      //           </Button>
-      //           <Button
-      //             style="secondary"
-      //             size="small"
-      //             onClick={() => handleAction('start', node.id)}
-      //           >
-      //             Start
-      //           </Button>
-      //         </ButtonGroup>
-      //       )}
-      //     </>
-      //   ),
-      // },
     ],
   }));
 

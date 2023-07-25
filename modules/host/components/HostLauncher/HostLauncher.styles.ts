@@ -22,6 +22,7 @@ export const styles = {
       position: relative;
       display: flex;
       gap: 14px;
+      min-width: 0;
     }
 
     > li::before {
@@ -60,6 +61,7 @@ export const styles = {
     > li > div {
       flex: 1 1 auto;
       padding-top: 11px;
+      min-width: 0;
     }
   `,
 };

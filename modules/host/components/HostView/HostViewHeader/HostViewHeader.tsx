@@ -1,7 +1,6 @@
 import { styles } from './HostViewHeader.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { wrapper } from 'styles/wrapper.styles';
 import {
   Button,
   DeleteModal,
@@ -11,17 +10,21 @@ import {
   SvgIcon,
 } from '@shared/components';
 import { useHostView } from '@modules/host';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { toast } from 'react-toastify';
+import { HostViewHeaderScrolledDown } from './HeaderScrolledDown/HostViewHeaderScrolledDown';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+
+const heightForScrolledDown = 76;
 
 export const HostViewHeader = () => {
   const router = useRouter();
   const { host, isLoading, deleteHost } = useHostView();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
 
   const handleDeleteHost = () =>
     deleteHost(host?.id!, () => {
@@ -30,6 +33,26 @@ export const HostViewHeader = () => {
       router.push(ROUTES.HOSTS);
     });
 
+  if (!host?.id) return null;
+
+  const handleScroll = () => {
+    const { pageYOffset } = window;
+    if (pageYOffset > heightForScrolledDown && !isScrolledDown) {
+      setIsScrolledDown(true);
+    } else if (pageYOffset <= heightForScrolledDown && isScrolledDown) {
+      setIsScrolledDown(false);
+    }
+  };
+
+  const handleDeleteToggled = () => setIsDeleteMode(!isDeleteMode);
+
+  const canDelete = !host?.nodeCount;
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
+
   return (
     <>
       {isDeleteMode && (
@@ -37,51 +60,54 @@ export const HostViewHeader = () => {
           portalId="delete-host-modal"
           elementName={host?.name!}
           entityName="Host"
-          onHide={() => setIsDeleteMode(false)}
+          onHide={handleDeleteToggled}
           onSubmit={handleDeleteHost}
         />
       )}
-      <div css={wrapper.main}>
-        <header css={styles.header}>
-          {isLoading !== 'finished' && !host?.id ? (
-            <SkeletonGrid>
-              <Skeleton width="400px" />
-            </SkeletonGrid>
-          ) : (
-            host?.id && (
-              <div>
-                <h2 css={styles.detailsHeader}>{host!.name}</h2>
-                <div css={styles.detailsFooter}>
-                  <div css={[styles.hostStatus]}>
-                    <HostStatus hasBorder={false} />
-                  </div>
-                  {host!.ip && (
-                    <small css={[typo.small, colors.text2]}>{host!.ip}</small>
-                  )}
-                  {host!.createdAt && (
-                    <small css={[typo.small, colors.text2]}>
-                      {formatDistanceToNow(new Date(host!.createdAt), {
-                        addSuffix: true,
-                      })}
-                    </small>
-                  )}
+      <HostViewHeaderScrolledDown
+        isVisible={isScrolledDown}
+        canDelete={canDelete}
+        onDeleteClicked={handleDeleteToggled}
+      />
+      <header css={[styles.header]}>
+        {isLoading !== 'finished' && !host?.id ? (
+          <SkeletonGrid>
+            <Skeleton width="400px" />
+          </SkeletonGrid>
+        ) : (
+          host?.id && (
+            <div>
+              <h2 css={styles.detailsHeader}>{host!.name}</h2>
+              <div css={styles.detailsFooter}>
+                <div css={[styles.hostStatus]}>
+                  <HostStatus hasBorder={false} />
                 </div>
+                {host!.createdAt && (
+                  <small css={[typo.small, colors.text2]}>
+                    Launched{' '}
+                    {formatDistanceToNow(new Date(host!.createdAt), {
+                      addSuffix: true,
+                    })}
+                  </small>
+                )}
               </div>
-            )
-          )}
-          <Button
-            disabled={host!.nodeCount > 0}
-            tooltip={host!.nodeCount > 0 ? 'Has Nodes Attached' : ''}
-            onClick={() => setIsDeleteMode(true)}
-            style="basic"
-          >
-            <SvgIcon>
-              <IconDelete />
-            </SvgIcon>
-            <p>Delete</p>
-          </Button>
-        </header>
-      </div>
+            </div>
+          )
+        )}
+        <Button
+          disabled={host!.nodeCount > 0}
+          tooltip={
+            host!.nodeCount > 0 && !isScrolledDown ? 'Has Nodes Attached' : ''
+          }
+          onClick={handleDeleteToggled}
+          style="basic"
+        >
+          <SvgIcon>
+            <IconDelete />
+          </SvgIcon>
+          <p>Delete</p>
+        </Button>
+      </header>
     </>
   );
 };

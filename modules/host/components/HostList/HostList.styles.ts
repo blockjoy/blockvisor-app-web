@@ -4,14 +4,12 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
-    position: relative;
-
-    padding: 0 24px;
+    flex: 1 1 auto;
 
     @media ${breakpoints.fromXLrg} {
       display: flex;
       flex-direction: row;
-      padding: 0 30px;
+      padding: 0 24px 0 0;
       flex: 1 1 auto;
     }
   `,
@@ -23,8 +21,7 @@ export const styles = {
       position: static;
       flex: 1 1 auto;
       margin-left: 0;
-      padding: 0 20px 20px 0;
-      border-right: 1px solid ${theme.colorBorder};
+      padding: 0 0 20px;
     }
   `,
   endMessage: css``,
@@ -53,24 +50,6 @@ export const styles = {
       background: ${theme.colorDefault};
       opacity: 0;
       transition: 0.2s;
-    }
-  `,
-  rightPanel: (theme: ITheme) => css`
-    @media ${breakpoints.fromXLrg} {
-      position: sticky;
-      top: 72px;
-      height: 100%;
-      flex: 1 1 320px;
-      max-width: 320px;
-      min-width: 320px;
-      padding: 0 0 20px 20px;
-    }
-
-    @media ${breakpoints.toXlrg} {
-      padding: 10px 0 10px 0;
-      max-width: 100%;
-      width: 100%;
-      min-width: 100%;
     }
   `,
 };
