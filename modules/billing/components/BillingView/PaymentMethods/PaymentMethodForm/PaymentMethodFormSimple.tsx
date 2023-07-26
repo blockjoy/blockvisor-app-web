@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, ButtonGroup } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
@@ -29,7 +29,10 @@ export const PaymentMethodFormSimple = ({
   handleSubmit,
 }: PaymentMethodFormProps) => {
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
-  const error = useRecoilValue(billingAtoms.paymentMethodError);
+  const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
+  const setPaymentMethodLoadingState = useSetRecoilState(
+    billingAtoms.paymentMethodLoadingState,
+  );
 
   const cardRef = useRef<any>(null);
 
@@ -59,6 +62,13 @@ export const PaymentMethodFormSimple = ({
   useEffect(() => {
     if (isSubmittedPaymentForm && !error) handleSubmit();
   }, [isSubmittedPaymentForm]);
+
+  useEffect(() => {
+    return () => {
+      setError(null);
+      setPaymentMethodLoadingState('initializing');
+    };
+  }, []);
 
   const handleSucces = async (customerId: string) => {
     if ((isDefaultAddress || !billingAddress) && customerId)
