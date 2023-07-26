@@ -7,7 +7,6 @@ import {
 
 import { authClient, getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 class InvitationClient {
   private client: InvitationServiceClient;
@@ -17,10 +16,17 @@ class InvitationClient {
     this.client = createClient(InvitationServiceDefinition, channel);
   }
 
-  async inviteOrgMember(inviteeEmail: string, orgId: string): Promise<void> {
+  async inviteOrgMember(
+    inviteeEmail: string,
+    orgId: string,
+  ): Promise<Invitation> {
     try {
       await authClient.refreshToken();
-      await this.client.create({ inviteeEmail, orgId }, getOptions());
+      const response = await this.client.create(
+        { inviteeEmail, orgId },
+        getOptions(),
+      );
+      return response.invitation!;
     } catch (err) {
       return handleError(err);
     }

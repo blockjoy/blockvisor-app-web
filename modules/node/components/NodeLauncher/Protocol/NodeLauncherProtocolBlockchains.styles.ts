@@ -25,6 +25,13 @@ export const styles = {
     color: ${theme.colorText};
     opacity: 0.8;
     text-align: left;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
   `,
   row: css`
     display: flex;
@@ -143,6 +150,7 @@ export const styles = {
     color: ${theme.colorText};
     border-radius: 4px;
     cursor: pointer;
+    text-transform: capitalize;
 
     @media ${breakpoints.toXlrg} {
       &.active {
