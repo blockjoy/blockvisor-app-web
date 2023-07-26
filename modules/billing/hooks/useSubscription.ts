@@ -225,7 +225,7 @@ export const useSubscription = (): ISubscriptionHook => {
     if (!subscription) {
       try {
         const newSubscription = await createSubscription({
-          itemPriceId: 'standard-USD-Monthly',
+          itemPriceId: 'STANDARD-USD-M',
           autoRenew: true,
           paymentMethodId: customer?.primary_payment_source_id!,
         });
