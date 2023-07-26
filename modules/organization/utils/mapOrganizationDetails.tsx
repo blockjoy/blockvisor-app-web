@@ -22,35 +22,31 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
 
   const details: Details[] = [
     {
+      label: 'ROLE',
+      data: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <p>{role}</p>
+          <SvgIcon isDefaultColor tooltip="Your role within this Organization">
+            <IconInfo />
+          </SvgIcon>
+        </div>
+      ),
+    },
+    {
       label: 'Owner',
       data: org.members.find((m) => m.role === OrgRole.ORG_ROLE_OWNER)?.email,
     },
     { label: 'MEMBERS', data: org?.memberCount },
+    {
+      label: 'NODES',
+      data: <Link href={ROUTES.NODES}>{org.nodeCount}</Link>,
+    },
   ];
 
   if (org.personal) {
     details.unshift({
       label: 'TYPE',
       data: org.personal ? 'Personal' : 'Other',
-    });
-  } else {
-    details.unshift({
-      label: 'ROLE',
-      data: (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <p>{role}</p>
-          <SvgIcon tooltip="Your role within this Organization">
-            <IconInfo />
-          </SvgIcon>
-        </div>
-      ),
-    });
-  }
-
-  if (org.nodeCount) {
-    details.push({
-      label: 'NODES',
-      data: <Link href={ROUTES.NODES}>{org.nodeCount}</Link>,
     });
   }
 

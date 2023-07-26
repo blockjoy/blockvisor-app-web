@@ -1,7 +1,8 @@
 import { TableBlock } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
-import { Node, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { convertNodeTypeToName } from './convertNodeTypeToName';
 
 export const mapNodeListToRows = (nodeList?: Node[]) => {
   const headers: TableHeader[] = [
@@ -45,9 +46,9 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
         component: (
           <>
             <TableBlock
-              id={`${node.blockchainName} ${NodeType[node.nodeType]
-                .replace('NODE_TYPE_', '')
-                .toLowerCase()}`}
+              id={`${node.blockchainName} ${convertNodeTypeToName(
+                node.nodeType,
+              )}`}
               name={node.name}
               address={node?.ip!}
             />

@@ -4,7 +4,7 @@ import { HostOs } from '@shared/components';
 import Link from 'next/link';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
-import { dateFormatter } from '@shared/utils/dateFormatter';
+import { dateFormatter, timeFormatter } from '@shared/utils/dateFormatter';
 
 const generateIpAddresses = (host: Host) => {
   const ips = [];
@@ -77,7 +77,11 @@ export const mapHostToDetailsLaunch = (host: Host) => {
     },
     {
       label: 'Launched On',
-      data: dateFormatter.format(host.createdAt) || '-',
+      data: !host.createdAt
+        ? '-'
+        : `${dateFormatter.format(host.createdAt)} @ ${timeFormatter.format(
+            host.createdAt,
+          )}`,
     },
   ];
 

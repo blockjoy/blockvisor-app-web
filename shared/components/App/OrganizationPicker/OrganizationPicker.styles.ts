@@ -69,7 +69,7 @@ export const styles = {
   selectText: (theme: ITheme) => css`
     flex: 1 1 auto;
     min-width: 0;
-    max-width: 150px;
+    max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     padding-right: 8px;
