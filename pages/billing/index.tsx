@@ -20,7 +20,7 @@ Billing.getLayout = function getLayout(page: ReactNode) {
 
 export async function getStaticProps() {
   try {
-    const { item, itemPrices } = await fetchItems('standard');
+    const { item, itemPrices } = await fetchItems('STANDARD');
 
     return { props: { item, itemPrices } };
   } catch (error) {

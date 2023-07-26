@@ -1,24 +1,11 @@
-import { selector, selectorFamily } from 'recoil';
+import { selector } from 'recoil';
 import {
   Customer,
   CustomerBillingAddress,
-  Item,
   Subscription,
 } from 'chargebee-typescript/lib/resources';
 import { billingAtoms } from '@modules/billing';
 import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
-
-const activePlan = selectorFamily<Item | null, string>({
-  key: 'billing.plan.active',
-  get:
-    (planId) =>
-    ({ get }) => {
-      const plans = get(billingAtoms.items);
-
-      const activePlan = plans?.find((plan: Item) => plan.id === planId);
-      return activePlan ?? null;
-    },
-});
 
 const billingId = selector<string | null>({
   key: 'billing.identity.id',
@@ -113,7 +100,6 @@ const hasSubscription = selector<boolean>({
 });
 
 export const billingSelectors = {
-  activePlan,
   billingAddress,
   hasBillingAddress,
   billingId,
