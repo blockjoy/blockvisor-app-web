@@ -8,6 +8,7 @@ import { checkForTokenError } from 'utils/checkForTokenError';
 import { ROUTES } from '@shared/constants/routes';
 import { useDefaultOrganization } from '@modules/organization';
 import { NodeServiceListResponse } from '@modules/grpc/library/blockjoy/v1/node';
+import { sort } from '@shared/components/Tables/Table/utils/sort';
 
 export const useNodeList = () => {
   const router = useRouter();
@@ -79,7 +80,12 @@ export const useNodeList = () => {
       //   await new Promise((r) => setTimeout(r, 600));
 
       if (queryParams.pagination.current_page === 1) {
-        setNodeList(nodes);
+        setNodeList(
+          sort(nodes!, {
+            field: 'createdAt',
+            order: 'desc',
+          }),
+        );
       } else {
         const newNodes = [...nodeList, ...nodes];
         setNodeList(newNodes);

@@ -21,22 +21,24 @@ export const NodeViewTabs = () => {
   };
 
   return (
-    <div css={[wrapper.main, styles.wrapper]}>
-      <div css={styles.tabs}>
-        {tabs.map((tab) => (
-          <NextLink
-            key={tab.name}
-            href={tab.href}
-            css={[
-              styles.tabButton,
-              isActive(tab.href) && styles.tabButtonActive,
-            ]}
-          >
-            {tab.name}
-          </NextLink>
-        ))}
+    <section css={wrapper.main}>
+      <div css={styles.wrapper}>
+        <div css={styles.tabs}>
+          {tabs.map((tab) => (
+            <NextLink
+              key={tab.name}
+              href={tab.href}
+              css={[
+                styles.tabButton,
+                isActive(tab.href) && styles.tabButtonActive,
+              ]}
+            >
+              {tab.name}
+            </NextLink>
+          ))}
+        </div>
+        <header css={styles.sidePanelHeader}>Metrics</header>
       </div>
-      <header css={styles.sidePanelHeader}>Metrics</header>
-    </div>
+    </section>
   );
 };

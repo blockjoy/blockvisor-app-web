@@ -81,7 +81,6 @@ export const TableAdd = ({
         type="text"
         css={styles.input(buttonWidth)}
         autoComplete="off"
-        required
         value={value}
         onKeyDown={handleKeyDown}
         onInput={handleChange}
