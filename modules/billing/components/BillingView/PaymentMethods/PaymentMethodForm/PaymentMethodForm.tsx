@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, ButtonGroup, Checkbox } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
@@ -32,6 +32,9 @@ type PaymentMethodFormProps = {
 export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
+  const setPaymentMethodLoadingState = useSetRecoilState(
+    billingAtoms.paymentMethodLoadingState,
+  );
   const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const cardRef = useRef<any>(null);
@@ -51,9 +54,20 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const [primary, setPrimary] = useState<boolean>(false);
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
 
+  const defaultActiveView = billingAddress ? 'list' : 'action';
+  const [activeView, setActiveView] =
+    useState<'list' | 'action'>(defaultActiveView);
+
   const { loading, onSubmit } = usePaymentMethodForm();
   const { assignPaymentRole } = useCustomer();
   const { addBillingAddress } = useBillingAddress();
+
+  useEffect(() => {
+    return () => {
+      setError(null);
+      setPaymentMethodLoadingState('initializing');
+    };
+  }, []);
 
   const handleSucces = async (customerId: string, paymentSourceId: string) => {
     if (primary && paymentMethods.length)
@@ -100,14 +114,6 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
     onSubmit(cardRef, additionalData, handleSucces);
   };
-
-  const defaultActiveView = billingAddress ? 'list' : 'action';
-  const [activeView, setActiveView] =
-    useState<'list' | 'action'>(defaultActiveView);
-
-  useEffect(() => {
-    return () => setError(null);
-  }, []);
 
   const handleDefaultAddress = () => setActiveView('list');
   const handleNewAddress = () => setActiveView('action');

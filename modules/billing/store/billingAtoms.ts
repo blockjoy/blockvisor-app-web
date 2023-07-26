@@ -4,7 +4,6 @@ import {
   Customer,
   Estimate,
   Invoice,
-  Item,
   ItemPrice,
   PaymentSource,
   Subscription,
@@ -107,16 +106,6 @@ const preloadInvoices = atom<number>({
   default: 0,
 });
 
-const items = atom<Item[] | null>({
-  key: 'billing.items',
-  default: null,
-});
-
-const itemsLoadingState = atom<LoadingState>({
-  key: 'billing.items.loadingState',
-  default: 'initializing',
-});
-
 const itemPrices = atom<ItemPrice[] | null>({
   key: 'billing.items.prices',
   default: null,
@@ -161,9 +150,6 @@ export const billingAtoms = {
 
   estimate,
   estimateLoadingState,
-
-  items,
-  itemsLoadingState,
 
   itemPrices,
   itemPricesLoadingState,
