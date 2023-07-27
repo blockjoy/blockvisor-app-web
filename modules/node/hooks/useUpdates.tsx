@@ -76,7 +76,10 @@ export const useUpdates = () => {
         if (deletedBy === user?.id) break;
 
         removeFromNodeList(nodeId);
-        unloadNode();
+
+        if (activeNode?.id === nodeId) {
+          unloadNode();
+        }
 
         showNotification(type, `${deletedByName} just deleted a node`);
         break;
