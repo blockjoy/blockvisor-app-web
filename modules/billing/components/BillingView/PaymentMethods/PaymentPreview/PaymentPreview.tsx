@@ -6,7 +6,7 @@ import {
   mapCardToDetails,
   billingAtoms,
   billingSelectors,
-  PaymentMethodsSelector,
+  PaymentMethodsSelect,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 
@@ -48,7 +48,7 @@ export const PaymentPreview = () => {
   ) : (
     <>
       {paymentMethod && (
-        <PaymentMethodsSelector
+        <PaymentMethodsSelect
           subscriptionId={subscription?.id!}
           currentPaymentMethod={paymentMethod}
           onHide={onHide}

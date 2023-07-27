@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { styles } from './ButtonGroup.styles';
 
 type ButtonGroupProps = {
-  type?: 'default' | 'flex' | 'inline';
+  type?: 'default' | 'extended' | 'flex';
   children: ReactNode;
   additionalStyles?: SerializedStyles[];
 };

@@ -14,17 +14,17 @@ import {
 import { typo } from 'styles/utils.typography.styles';
 import { containers } from 'styles/containers.styles';
 
-type PaymentMethodsSelectorProps = {
+type PaymentMethodsSelectProps = {
   subscriptionId: string;
   currentPaymentMethod: PaymentSource;
   onHide: VoidFunction;
 };
 
-export const PaymentMethodsSelector = ({
+export const PaymentMethodsSelect = ({
   subscriptionId,
   currentPaymentMethod,
   onHide,
-}: PaymentMethodsSelectorProps) => {
+}: PaymentMethodsSelectProps) => {
   const [activePaymentMethod, setActivePaymentMethod] =
     useState<PaymentSource>(currentPaymentMethod);
   const [isOpen, setIsOpen] = useState<boolean>(false);

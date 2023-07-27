@@ -9,13 +9,13 @@ export const styles = {
     grid-template-columns: 90px 90px;
     gap: 8px;
   `,
-  flex: css`
-    display: flex;
-    flex-flow: row nowrap;
+  extended: css`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
     gap: 8px;
   `,
-  inline: css`
-    display: inline-flex;
+  flex: css`
+    display: flex;
     flex-flow: row nowrap;
     gap: 8px;
   `,

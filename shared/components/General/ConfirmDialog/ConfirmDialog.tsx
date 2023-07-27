@@ -1,7 +1,6 @@
-import { Button, Modal } from '@shared/components';
+import { Button, ButtonGroup, Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { styles } from './ConfirmDialog.styles';
 
 export type ConfirmDialogProps = {
   title: string;
@@ -27,14 +26,14 @@ export const ConfirmDialog = ({
       <div css={spacing.bottom.medium}>
         <p>{message}</p>
       </div>
-      <div css={[styles.actions]}>
+      <ButtonGroup type="extended">
         <Button style="warning" onClick={handleSubmit}>
           Confirm
         </Button>
         <Button style="outline" onClick={onHide}>
           Cancel
         </Button>
-      </div>
+      </ButtonGroup>
     </Modal>
   );
 };

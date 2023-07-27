@@ -9,7 +9,7 @@ import {
   useInvoicesUIContext,
 } from '@modules/billing';
 
-export const InvoicesTable = () => {
+export const InvoicesList = () => {
   const router = useRouter();
 
   const {

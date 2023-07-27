@@ -31,7 +31,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
             <Input
               name="name"
               label="Name"
-              placeholder="John Doe"
+              placeholder="Name"
               inputSize="medium"
               labelStyles={[typo.base]}
               tabIndex={1}
