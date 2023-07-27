@@ -2,7 +2,7 @@ import { ChangeEvent } from 'react';
 import { useRecoilValue } from 'recoil';
 import { formatters } from '@shared/index';
 import { RadioButton, RadioButtonGroup, Switch } from '@shared/components';
-import { billingSelectors, calcNextAutoRenew } from '@modules/billing';
+import { billingSelectors, calcNextRenewDate } from '@modules/billing';
 import { styles } from './PlanParams.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
@@ -56,7 +56,7 @@ export const PlanParams = ({
             {periodUnit && (
               <p css={styles.renewText}>
                 Your subscription will automatically renew on{' '}
-                {formatters.formatDate(calcNextAutoRenew(periodUnit))}
+                {formatters.formatDate(calcNextRenewDate(periodUnit))}
               </p>
             )}
             <Switch

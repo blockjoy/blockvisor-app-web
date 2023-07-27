@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import { _item } from 'chargebee-typescript';
 import { AppLayout } from '@modules/layout';
-import { Billing as BillingView } from '@modules/billing';
+import { Billing as BillingView, DEFAULT_ITEM_ID } from '@modules/billing';
 import { fetchItems } from 'utils/billing/fetchItems';
 
 type BillingProps = {
@@ -20,7 +20,7 @@ Billing.getLayout = function getLayout(page: ReactNode) {
 
 export async function getStaticProps() {
   try {
-    const { item, itemPrices } = await fetchItems('STANDARD');
+    const { item, itemPrices } = await fetchItems(DEFAULT_ITEM_ID);
 
     return { props: { item, itemPrices } };
   } catch (error) {
