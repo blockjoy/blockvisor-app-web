@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
@@ -47,7 +48,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
   const { customer, getCustomer } = useCustomer();
-  const { fetchSubscription } = useSubscription();
+  const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
   const { getUserSubscription } = useUserSubscription();
 
   useEffect(() => {
@@ -74,9 +75,12 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     if (
       defaultOrganization?.id !== currentOrg.current &&
       defaultOrganization?.id
-    ) {
+    )
       fetchOrganizationSubscription();
-    }
+
+    return () => {
+      setSubscriptionLoadingState('initializing');
+    };
   }, [defaultOrganization?.id]);
 
   useEffect(() => {
