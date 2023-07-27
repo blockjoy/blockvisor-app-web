@@ -12,6 +12,5 @@ export * from './utils/escapeHtml';
 export * from './utils/formatters';
 export * from './utils/copyToClipboard';
 export * from './services/mixpanel';
-export * from './utils/formatDate';
-export * from './utils/formatCurrency';
+export * from './utils/formatters';
 export * from './utils/infiniteScroll';

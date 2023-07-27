@@ -54,7 +54,9 @@ export const HostLauncher = () => {
     canAddHost !== PermissionsCreateResource.GRANTED ||
     (!hasPaymentMethod && isOwner);
 
-  const tokenValue = !isDisabledAdding ? token : token?.replace(/./g, '*');
+  const tokenValue = !isDisabledAdding
+    ? provisionToken
+    : provisionToken?.replace(/./g, '*');
 
   const handleAddingPaymentMethod = () => {
     setActiveView('action');
