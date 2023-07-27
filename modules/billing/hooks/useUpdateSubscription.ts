@@ -15,7 +15,7 @@ import {
   NodeServiceCreateRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { blockchainsAtoms } from '@modules/node';
+import { NodeLauncherState, blockchainsAtoms } from '@modules/node';
 import { ItemPrice, Subscription } from 'chargebee-typescript/lib/resources';
 import {
   Host,
@@ -34,7 +34,7 @@ interface IUpdateSubscriptionHook {
   updateSubscriptionItems: (action: {
     type: SubscriptionAction;
     payload:
-      | { node?: Node | NodeServiceCreateRequest | null }
+      | { node?: Node | NodeLauncherState | NodeServiceCreateRequest }
       | { host?: Host | HostServiceCreateRequest };
   }) => void;
   generateUpdateSubscriptionParams: (
@@ -57,7 +57,10 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
 
   const updateSubscriptionItems = async (action: {
     type: SubscriptionAction;
-    payload: { node?: Node | NodeServiceCreateRequest | null; host?: any };
+    payload: {
+      node?: Node | NodeLauncherState | NodeServiceCreateRequest;
+      host?: Host | HostServiceCreateRequest;
+    };
   }) => {
     setSubscriptionLoadingState('initializing');
     const subscription = await provideSubscription();
