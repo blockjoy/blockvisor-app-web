@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { styles } from './BillingContacts.styles';
 import {
   BillingContactsList,
   BillingContactForm,
@@ -8,6 +7,7 @@ import {
   checkIfBillingContactExists,
 } from '@modules/billing';
 import { Button, TableSkeleton } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const BillingContacts = () => {
   const {
@@ -49,10 +49,10 @@ export const BillingContacts = () => {
     cancel: handleCancel,
   };
 
-  return billingContactsLoadingState !== 'finished' ? (
-    <TableSkeleton />
-  ) : activeView === 'list' ? (
-    <div css={styles.wrapper}>
+  if (billingContactsLoadingState !== 'finished') return <TableSkeleton />;
+
+  return activeView === 'list' ? (
+    <>
       {!billingContacts.length ? (
         <p>
           You have not yet added any billing contacts. Click the button below to
@@ -64,10 +64,16 @@ export const BillingContacts = () => {
           handleRemove={removeBillingContact}
         />
       )}
-      <Button onClick={handleAdding} size="small" style="outline">
+
+      <Button
+        onClick={handleAdding}
+        size="small"
+        style="outline"
+        customCss={[spacing.top.medium]}
+      >
         Add Billing Contact
       </Button>
-    </div>
+    </>
   ) : (
     <BillingContactForm actions={actions} />
   );

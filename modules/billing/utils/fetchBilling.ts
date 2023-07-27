@@ -8,13 +8,13 @@ export const fetchBilling = async (url: string, body: any) => {
       body: JSON.stringify(body),
     });
 
+    const responseData = await response.json();
+
     if (!response.ok) {
-      const error = await response.json();
-      throw error;
+      throw responseData;
     }
 
-    const data = await response.json();
-    return data;
+    return responseData;
   } catch (error: any) {
     throw error;
   }

@@ -1,10 +1,7 @@
-import { Table } from '@shared/index';
-import {
-  BillingContactDialog,
-  mapBillingContactsToRows,
-} from '@modules/billing';
 import { useState } from 'react';
 import { Contact } from 'chargebee-typescript/lib/resources';
+import { ConfirmDialog, Table } from '@shared/components';
+import { mapBillingContactsToRows } from '@modules/billing';
 
 export type BillingContactsListProps = {
   billingContacts: Contact[];
@@ -25,7 +22,7 @@ export const BillingContactsList = ({
     setActiveView('dialog');
   };
 
-  const onConfirm = (contact: Contact) => handleRemove(contact?.id);
+  const onConfirm = () => handleRemove(activeContact?.id!);
   const onHide = () => setActiveView('list');
 
   const { headers, rows } = mapBillingContactsToRows(
@@ -37,9 +34,10 @@ export const BillingContactsList = ({
     <>
       <Table isLoading={'finished'} headers={headers} rows={rows} />
       {activeView === 'dialog' && activeContact && (
-        <BillingContactDialog
-          activeContact={activeContact}
-          onConfirm={onConfirm}
+        <ConfirmDialog
+          title="Remove Billing Contact"
+          message={`You are removing ${activeContact?.email} from Billing Contacts list.`}
+          handleConfirm={onConfirm}
           onHide={onHide}
         />
       )}

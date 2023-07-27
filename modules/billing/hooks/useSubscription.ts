@@ -3,6 +3,7 @@ import { _subscription } from 'chargebee-typescript';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
+  DEFAULT_ITEM_PRICE_ID,
   billingAtoms,
   billingSelectors,
   fetchBilling,
@@ -20,9 +21,6 @@ interface ISubscriptionHook {
     paymentMethodId: string;
   }) => void;
   updateSubscription: (params: _subscription.update_for_items_params) => void;
-  cancelSubscription: (params: { endOfTerm: boolean }) => void;
-  restoreSubscription: (id: string) => void;
-  reactivateSubscription: (id: string) => void;
   updateBillingProfile: (
     id: string,
     params: { paymentMethodId: string },
@@ -137,63 +135,6 @@ export const useSubscription = (): ISubscriptionHook => {
     }
   };
 
-  const cancelSubscription = async ({ endOfTerm }: { endOfTerm: boolean }) => {
-    setSubscriptionLoadingState('initializing');
-
-    try {
-      const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.cancel, {
-        id: subscription?.id!,
-        params: {
-          end_of_term: endOfTerm,
-        },
-      });
-
-      setSubscription(data);
-    } catch (error) {
-      console.error('Failed to cancel Subscription', error);
-    } finally {
-      setSubscriptionLoadingState('finished');
-    }
-  };
-
-  const restoreSubscription = async (id: string) => {
-    setSubscriptionLoadingState('initializing');
-
-    try {
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.restore,
-        { id },
-      );
-
-      setSubscription(data);
-    } catch (error) {
-      console.error('Failed to Restore subscription', error);
-    } finally {
-      setSubscriptionLoadingState('finished');
-    }
-  };
-
-  const reactivateSubscription = async (id: string) => {
-    setSubscriptionLoadingState('initializing');
-
-    try {
-      const params: _subscription.update_params = {
-        invoice_immediately: true,
-      };
-
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.reactivate,
-        { id, params },
-      );
-
-      setSubscription(data);
-    } catch (error) {
-      console.error('Failed to Reactivate subscription', error);
-    } finally {
-      setSubscriptionLoadingState('finished');
-    }
-  };
-
   const updateBillingProfile = async (
     id: string,
     updateParams: { paymentMethodId: string },
@@ -225,7 +166,7 @@ export const useSubscription = (): ISubscriptionHook => {
     if (!subscription) {
       try {
         const newSubscription = await createSubscription({
-          itemPriceId: 'STANDARD-USD-M',
+          itemPriceId: DEFAULT_ITEM_PRICE_ID,
           autoRenew: true,
           paymentMethodId: customer?.primary_payment_source_id!,
         });
@@ -256,9 +197,6 @@ export const useSubscription = (): ISubscriptionHook => {
     getSubscription,
     createSubscription,
     updateSubscription,
-    cancelSubscription,
-    restoreSubscription,
-    reactivateSubscription,
 
     fetchSubscription,
 

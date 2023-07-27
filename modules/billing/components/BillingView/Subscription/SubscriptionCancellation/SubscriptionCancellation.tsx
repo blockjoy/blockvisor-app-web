@@ -8,7 +8,7 @@ import {
   RadioButton,
   Button,
 } from '@shared/components';
-import { billingSelectors, useSubscription } from '@modules/billing';
+import { billingSelectors, useSubscriptionLifecycle } from '@modules/billing';
 
 type SubscriptionCancellationProps = {
   handleBack: VoidFunction;
@@ -19,7 +19,8 @@ export const SubscriptionCancellation = ({
 }: SubscriptionCancellationProps) => {
   const [endOfTerm, setEndOfTerm] = useState<boolean>(true);
 
-  const { cancelSubscription, subscriptionLoadingState } = useSubscription();
+  const { cancelSubscription, subscriptionLoadingState } =
+    useSubscriptionLifecycle();
 
   const subscription = useRecoilValue(billingSelectors.subscription);
 

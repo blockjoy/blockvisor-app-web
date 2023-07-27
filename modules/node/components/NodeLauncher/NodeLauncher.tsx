@@ -9,10 +9,7 @@ import { useRouter } from 'next/router';
 import { EmptyColumn, PageTitle, sort } from '@shared/components';
 import { useDefaultOrganization } from '@modules/organization';
 import { useRecoilValue } from 'recoil';
-import {
-  organizationAtoms,
-  organizationSelectors,
-} from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import {
@@ -349,6 +346,8 @@ export const NodeLauncher = () => {
         ? sortedVersionList[0]
         : '',
     });
+
+    setFulfilRequirements(false);
   }, [node.blockchainId, node.nodeType]);
 
   useEffect(() => {
