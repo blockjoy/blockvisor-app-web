@@ -1,8 +1,8 @@
-import { formatters } from '@shared/index';
 import { InvoiceEstimateLineItem } from 'chargebee-typescript/lib/resources';
+import { formatters } from '@shared/index';
 import { typo } from 'styles/utils.typography.styles';
 
-export const mapEstimateItemsToRows = (
+export const mapEstimatesToRows = (
   items?: InvoiceEstimateLineItem[],
   total?: number,
 ) => {

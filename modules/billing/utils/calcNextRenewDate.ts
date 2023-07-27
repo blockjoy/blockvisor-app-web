@@ -1,4 +1,4 @@
-export const calcNextAutoRenew = (autoRenew: string): Date => {
+export const calcNextRenewDate = (autoRenew: string): Date => {
   let nextRenew = null;
   const today = new Date();
 
