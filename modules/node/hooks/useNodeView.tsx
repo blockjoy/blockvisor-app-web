@@ -74,7 +74,7 @@ export const useNodeView = (): Hook => {
     // Remove node from the subscription
     await updateSubscriptionItems({
       type: SubscriptionAction.REMOVE_NODE,
-      payload: { node },
+      payload: { node: node! },
     });
 
     // Update organization node count
