@@ -223,6 +223,7 @@ export const NodeLauncher = () => {
 
   const handleCreateNodeClicked = () => {
     if (!hasPaymentMethod && isOwner) {
+      setIsCreating(true);
       setActiveView('action');
       setFulfilRequirements(false);
       return;
@@ -283,7 +284,10 @@ export const NodeLauncher = () => {
     );
   };
 
-  const handleHidingPortal = () => setActiveView('view');
+  const handleHidingPortal = () => {
+    setActiveView('view');
+    setIsCreating(false);
+  };
   const handleSubmitPayment = () => {
     setActiveView('view');
     setFulfilRequirements(true);
