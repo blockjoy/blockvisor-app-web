@@ -149,6 +149,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
 
       setSubscription(data);
     } catch (error: any) {
+      console.log('UpdateSubscription Error', error);
       throw error;
     } finally {
       setSubscriptionLoadingState('finished');

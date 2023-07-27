@@ -1,6 +1,6 @@
 import {
   useEstimates,
-  mapEstimateItemsToRows,
+  mapEstimatesToRows,
   billingSelectors,
 } from '@modules/billing';
 import { Table } from '@shared/index';
@@ -11,7 +11,7 @@ export const Estimates = () => {
 
   const { estimate } = useEstimates(subscription?.id! as string);
 
-  const { headers, rows } = mapEstimateItemsToRows(
+  const { headers, rows } = mapEstimatesToRows(
     estimate?.invoice_estimate?.line_items,
     estimate?.invoice_estimate?.total,
   );

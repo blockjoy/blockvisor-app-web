@@ -1,16 +1,16 @@
-import { useSubscription } from '@modules/billing/hooks/useSubscription';
+import { useCallback } from 'react';
+import { useRecoilValue } from 'recoil';
 import {
   SubscriptionStatus,
   billingSelectors,
   mapSubscriptionToDetails,
+  useSubscriptionLifecycle,
 } from '@modules/billing';
 import { ButtonGroup, Button, DetailsTable } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useRecoilValue } from 'recoil';
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization';
 import { useHasPermissions, Permissions } from '@modules/auth';
-import { useCallback } from 'react';
 
 type SubscriptionInfoProps = {
   handleUpdate: VoidFunction;
@@ -23,7 +23,8 @@ export const SubscriptionInfo = ({
 }: SubscriptionInfoProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const { restoreSubscription, reactivateSubscription } = useSubscription();
+  const { restoreSubscription, reactivateSubscription } =
+    useSubscriptionLifecycle();
   const subscriptionData = mapSubscriptionToDetails(subscription!);
 
   const handleRestoreSubscription = useCallback(() => {
