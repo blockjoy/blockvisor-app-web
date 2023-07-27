@@ -30,6 +30,7 @@ export const NodeLauncher = () => {
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
+  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();

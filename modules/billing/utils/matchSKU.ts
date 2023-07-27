@@ -3,13 +3,18 @@ import {
   Host,
   HostServiceCreateRequest,
 } from '@modules/grpc/library/blockjoy/v1/host';
-import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  Node,
+  NodeServiceCreateRequest,
+} from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeLauncherState } from '@modules/node';
 import { blockchainList, nodeTypes } from '@shared/constants/lookups';
 
 type NodeType = {
   blockchain?: Blockchain;
-  node?: Node | NodeServiceCreateRequest;
+  node?: Node | NodeLauncherState | NodeServiceCreateRequest | null;
 };
+
 type HostType = { host?: Host | HostServiceCreateRequest };
 
 type Payload = NodeType | HostType;
