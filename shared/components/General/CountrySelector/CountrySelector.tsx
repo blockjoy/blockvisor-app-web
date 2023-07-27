@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import countryList, { Country } from 'country-list';
 import { SerializedStyles } from '@emotion/react';
 import { styles } from './CountrySelector.styles';
 import {
@@ -11,10 +10,7 @@ import {
   Scrollbar,
 } from '@shared/components';
 import { CountrySearch } from './CountrySearch/CountrySearch';
-
-const COUNTRIES = countryList
-  .getData()
-  .sort((a: Country, b: Country) => a.name.localeCompare(b.name));
+import { Country, useCountries } from '@shared/hooks/useCountries';
 
 export type CountrySelectorProps = {
   name: string;
@@ -27,6 +23,14 @@ export type CountrySelectorProps = {
   tabIndex?: number;
 };
 
+const filterCountries = (
+  searchValue: string,
+  countries: Country[],
+): Country[] =>
+  countries.filter((country: Country) =>
+    country.name.toLowerCase().includes(searchValue.toLowerCase()),
+  );
+
 export const CountrySelector = ({
   name,
   value,
@@ -37,6 +41,8 @@ export const CountrySelector = ({
   disabled,
   tabIndex,
 }: CountrySelectorProps) => {
+  const COUNTRIES = useCountries();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const countrySearchRef = useRef<HTMLInputElement>(null);
 
@@ -52,28 +58,29 @@ export const CountrySelector = ({
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleChange = (e: any, country: Country) => {
+  const handleChange = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    country: Country,
+  ) => {
     e.preventDefault();
     onChange(country.code);
     setActiveCountryName(country.name);
     toggleDropdown();
   };
 
-  const handleCountrySearch = (e: any) => {
+  const handleCountrySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.trim();
-    const listOfFilteredCountries = COUNTRIES.filter((country: Country) =>
-      country.name.toLowerCase().includes(searchValue.toLowerCase()),
-    );
-
-    setFilteredCountries(listOfFilteredCountries);
+    setFilteredCountries(filterCountries(searchValue, COUNTRIES));
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (isOpen && countrySearchRef.current) {
-        countrySearchRef?.current?.focus();
+        countrySearchRef.current.focus();
       }
     }, 100);
+
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   return (
