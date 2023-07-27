@@ -6,6 +6,7 @@ var { node_id } = params;
 
 var host = `https://magellan-1.slc.blockjoy.com/host/${node_id}`;
 // var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
+// var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';
 
 const sidePanelTextonlyWidth = "150px",
       sidePanelTextonlyHeight = "56px",
@@ -14,7 +15,6 @@ const sidePanelTextonlyWidth = "150px",
 const loadSidePanelCharts = [
   {
     title: "Load Avg.",
-    measurement: "m load",
     charts: [
       {
         netdata: "system.load",
@@ -315,12 +315,15 @@ const onLoad = () => {
 
       const textonlyChart = createChart(block.charts[0]);
 
-      const measurement = document.createElement("div");
-      measurement.setAttribute("class", "measurement");
-      measurement.innerText = block.measurement;
-
       textonlyWrapper.appendChild(textonlyChart);
-      textonlyWrapper.appendChild(measurement);
+      
+      if (block.measurement) {
+        const measurement = document.createElement("div");
+        measurement.setAttribute("class", "measurement");
+        measurement.innerText = block.measurement;
+        
+        textonlyWrapper.appendChild(measurement);
+      }
 
       const sparklineChart = createChart(block.charts[1]);
 
