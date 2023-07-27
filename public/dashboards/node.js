@@ -4,8 +4,8 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 var { node_id } = params;
 
-// var host = `https://magellan-1.slc.blockjoy.com/host/${node_id}`;
-var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
+var host = `https://magellan-1.slc.blockjoy.com/host/${node_id}`;
+// var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
 
 const sidePanelTextonlyWidth = "150px",
       sidePanelTextonlyHeight = "56px",
