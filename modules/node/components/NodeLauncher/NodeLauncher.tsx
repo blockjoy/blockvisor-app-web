@@ -25,7 +25,12 @@ import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain'
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
-import { billingSelectors, PaymentRequired } from '@modules/billing';
+import {
+  billingSelectors,
+  PaymentRequired,
+  SubscriptionAction,
+  useUpdateSubscription,
+} from '@modules/billing';
 import {
   checkIfOwner,
   PermissionsCreateResource,
@@ -62,6 +67,7 @@ export const NodeLauncher = () => {
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
+  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const [hasRegionListError, setHasRegionListError] = useState(true);
   const [activeView, setActiveView] = useState<'view' | 'action'>('view');
@@ -271,7 +277,7 @@ export const NodeLauncher = () => {
         Mixpanel.track('Launch Node - Node Launched');
 
         updateSubscriptionItems({
-          type: 'create',
+          type: SubscriptionAction.ADD_NODE,
           payload: { node },
         });
 
