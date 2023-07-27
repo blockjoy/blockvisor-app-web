@@ -235,6 +235,7 @@ export const NodeLauncher = () => {
 
   const handleCreateNodeClicked = () => {
     if (!hasPaymentMethod && isOwner) {
+      setIsCreating(true);
       setActiveView('action');
       setFulfilRequirements(false);
       return;
