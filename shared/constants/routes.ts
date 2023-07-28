@@ -21,6 +21,7 @@ export const PUBLIC_ROUTES = [
   '/register',
   '/accept-invite',
   '/invite-registered',
+  '/decline-registered',
   '/decline-invite',
   '/verified',
   '/verify',

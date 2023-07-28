@@ -1,11 +1,24 @@
-import { authClient, setTokenValue, userClient } from '@modules/grpc';
+import {
+  authClient,
+  invitationClient,
+  setTokenValue,
+  userClient,
+} from '@modules/grpc';
 import { useSetRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
 import { ApplicationError } from '../utils/Errors';
 import { useIdentityRepository } from './useIdentityRepository';
-import { isStatusResponse } from '@modules/organization';
+import {
+  isStatusResponse,
+  useDefaultOrganization,
+  useGetOrganizations,
+  useInvitations,
+} from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
 import { Mixpanel } from '@shared/services/mixpanel';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/constants/routes';
+import { toast } from 'react-toastify';
 
 type SignInParams = {
   email: string;
@@ -16,7 +29,19 @@ export function useSignIn() {
   const setUser = useSetRecoilState(authAtoms.user);
   const repository = useIdentityRepository();
 
-  const handleSuccess = async (accessToken: string) => {
+  const router = useRouter();
+
+  const { acceptInvitation, declineInvitation } = useInvitations();
+
+  const { getOrganizations } = useGetOrganizations();
+
+  const { setDefaultOrganization } = useDefaultOrganization();
+
+  const handleSuccess = async (
+    accessToken: string,
+    invitationId?: string,
+    isInvited?: boolean,
+  ) => {
     setTokenValue(accessToken); // for grpc
 
     repository?.saveIdentity({
@@ -37,12 +62,40 @@ export function useSignIn() {
         ...userData,
         accessToken,
       }));
+
+      if (invitationId && isInvited) {
+        const receivedInvitations = await invitationClient.receivedInvitations(
+          userData?.email!,
+        );
+
+        const activeInvitation = receivedInvitations.find(
+          (i) => i.id === invitationId,
+        );
+
+        await acceptInvitation(invitationId as string);
+
+        await getOrganizations();
+
+        setDefaultOrganization({
+          id: activeInvitation?.orgId!,
+          name: activeInvitation?.orgName!,
+        });
+
+        toast.success('Joined Organization');
+      } else if (invitationId && !isInvited) {
+        await declineInvitation(invitationId, () => null);
+      }
     } catch (err) {
       console.log("loginError: Couldn't retrieve user data", err);
     }
   };
 
-  const signIn = async (params?: SignInParams, token?: string) => {
+  const signIn = async (
+    params?: SignInParams,
+    token?: string,
+    invitationId?: string,
+    isInvited?: boolean,
+  ) => {
     if (token) {
       await handleSuccess(token);
       return;
@@ -50,8 +103,9 @@ export function useSignIn() {
 
     if (params) {
       const response = await authClient.login(params.email, params.password);
+
       if (!isStatusResponse(response)) {
-        await handleSuccess(response!);
+        await handleSuccess(response!, invitationId, isInvited);
       } else {
         throw new ApplicationError('LoginError', 'Login Error');
       }
