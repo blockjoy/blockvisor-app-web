@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
 import { ItemPrice } from 'chargebee-typescript/lib/resources';
-import { PlanParams, useUpdateSubscription } from '@modules/billing';
+import { PlanParams, generateUpdateSubscriptionParams } from '@modules/billing';
 import { useSubscription } from '@modules/billing/hooks/useSubscription';
 import { billingAtoms } from '@modules/billing/store/billingAtoms';
 import { billingSelectors } from '@modules/billing/store/billingSelectors';
@@ -31,14 +31,13 @@ export const SubscriptionUpdate = ({
   );
 
   const { updateSubscription } = useSubscription();
-  const { generateUpdateSubscriptionParams } = useUpdateSubscription();
 
   const handleUpdate = async () => {
-    const params = await generateUpdateSubscriptionParams(
+    const params = await generateUpdateSubscriptionParams(subscription!, {
       autoRenew,
       periodUnit,
       itemPrices,
-    );
+    });
 
     updateSubscription(params);
     handleBack();

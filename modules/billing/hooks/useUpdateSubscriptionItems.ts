@@ -1,4 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { _subscription } from 'chargebee-typescript';
+import { ItemPrice, Subscription } from 'chargebee-typescript/lib/resources';
+import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
@@ -8,21 +11,10 @@ import {
   matchSKU,
   fetchBilling,
 } from '@modules/billing';
-import { _subscription } from 'chargebee-typescript';
-import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
-import {
-  Node,
-  NodeServiceCreateRequest,
-} from '@modules/grpc/library/blockjoy/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { NodeLauncherState, blockchainsAtoms } from '@modules/node';
-import { ItemPrice, Subscription } from 'chargebee-typescript/lib/resources';
-import {
-  Host,
-  HostServiceCreateRequest,
-} from '@modules/grpc/library/blockjoy/v1/host';
+import { blockchainsAtoms } from '@modules/node';
 
-export enum SubscriptionAction {
+export enum UpdateSubscriptionAction {
   ADD_NODE = 'ADD_NODE',
   REMOVE_NODE = 'REMOVE_NODE',
   ADD_HOST = 'ADD_HOST',
@@ -32,19 +24,12 @@ export enum SubscriptionAction {
 interface IUpdateSubscriptionHook {
   subscriptionLoadingState: LoadingState;
   updateSubscriptionItems: (action: {
-    type: SubscriptionAction;
-    payload:
-      | { node?: Node | NodeLauncherState | NodeServiceCreateRequest }
-      | { host?: Host | HostServiceCreateRequest };
+    type: UpdateSubscriptionAction;
+    payload: UpdateSubscriptionPayload;
   }) => void;
-  generateUpdateSubscriptionParams: (
-    autoRenew: boolean,
-    periodUnit: string,
-    itemPrices: ItemPrice[],
-  ) => Promise<_subscription.update_for_items_params>;
 }
 
-export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
+export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
   const setSubscription = useSetRecoilState(billingSelectors.subscription);
 
   const { provideSubscription } = useSubscription();
@@ -56,11 +41,8 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
   const blockchains = useRecoilValue(blockchainsAtoms.blockchains);
 
   const updateSubscriptionItems = async (action: {
-    type: SubscriptionAction;
-    payload: {
-      node?: Node | NodeLauncherState | NodeServiceCreateRequest;
-      host?: Host | HostServiceCreateRequest;
-    };
+    type: UpdateSubscriptionAction;
+    payload: UpdateSubscriptionPayload;
   }) => {
     setSubscriptionLoadingState('initializing');
     const subscription = await provideSubscription();
@@ -98,7 +80,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
       );
 
     switch (type) {
-      case SubscriptionAction.ADD_NODE:
+      case UpdateSubscriptionAction.ADD_NODE:
         let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
           {
             item_price_id: itemPriceID,
@@ -108,7 +90,7 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
         subscriptionItems?.push(newSubscriptionItem!);
         break;
 
-      case SubscriptionAction.REMOVE_NODE:
+      case UpdateSubscriptionAction.REMOVE_NODE:
         if (subscriptionItem?.quantity! > 1) {
           let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
             {
@@ -129,9 +111,9 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
           params.replace_items_list = true;
         }
         break;
-      case SubscriptionAction.ADD_HOST:
+      case UpdateSubscriptionAction.ADD_HOST:
         break;
-      case SubscriptionAction.REMOVE_HOST:
+      case UpdateSubscriptionAction.REMOVE_HOST:
         break;
       default:
         break;
@@ -159,53 +141,9 @@ export const useUpdateSubscription = (): IUpdateSubscriptionHook => {
     }
   };
 
-  const generateUpdateSubscriptionParams = async (
-    autoRenew: boolean,
-    periodUnit: string,
-    itemPrices: ItemPrice[],
-  ) => {
-    const params: _subscription.update_for_items_params = {};
-
-    const subscription = await provideSubscription();
-
-    params.auto_collection = autoRenew ? 'on' : 'off';
-
-    if (periodUnit === 'year' && subscription?.billing_period_unit !== 'year') {
-      const activeItemPrice = itemPrices.find(
-        (itemPrice: ItemPrice) =>
-          itemPrice.period_unit === subscription?.billing_period_unit,
-      );
-      const newItemPrice = itemPrices.find(
-        (itemPrice: ItemPrice) =>
-          itemPrice.period_unit !== subscription?.billing_period_unit,
-      );
-
-      const updatedSubscriptionItems: _subscription.subscription_items_update_for_items_params[] =
-        subscription?.subscription_items?.filter(
-          (subscriptionItem: SubscriptionItem) =>
-            subscriptionItem.item_price_id !== activeItemPrice?.id,
-        ) ?? [];
-
-      const yearlySubscriptionItem: _subscription.subscription_items_update_for_items_params =
-        {
-          item_price_id: newItemPrice?.id!,
-          quantity: 1,
-        };
-
-      updatedSubscriptionItems.push(yearlySubscriptionItem);
-
-      params.subscription_items = updatedSubscriptionItems;
-      params.replace_items_list = true;
-    }
-
-    return params;
-  };
-
   return {
     subscriptionLoadingState,
 
     updateSubscriptionItems,
-
-    generateUpdateSubscriptionParams,
   };
 };

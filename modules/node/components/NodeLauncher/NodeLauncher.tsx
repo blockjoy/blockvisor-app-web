@@ -115,6 +115,21 @@ export const NodeLauncher = () => {
     placement: {},
   });
 
+  useEffect(() => {
+    Mixpanel.track('Launch Node - Opened');
+  }, []);
+
+  useEffect(() => {
+    if (serverError) setServerError(undefined);
+    if (fulfilRequirements) setFulfilRequirements(false);
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    if (fulfilRequirements) {
+      handleNodeCreation();
+    }
+  }, [fulfilRequirements]);
+
   const isNodeValid = Boolean(
     node.blockchainId && node.nodeType && (selectedHost || selectedRegion),
   );
@@ -274,7 +289,7 @@ export const NodeLauncher = () => {
         Mixpanel.track('Launch Node - Node Launched');
 
         updateSubscriptionItems({
-          type: SubscriptionAction.ADD_NODE,
+          type: UpdateSubscriptionAction.ADD_NODE,
           payload: { node },
         });
 

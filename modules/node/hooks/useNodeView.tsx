@@ -15,7 +15,10 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useHostList, useHostUpdate, useHostView } from '@modules/host';
-import { SubscriptionAction, useUpdateSubscription } from '@modules/billing';
+import {
+  UpdateSubscriptionAction,
+  useUpdateSubscriptionItems,
+} from '@modules/billing';
 
 type Args = string | string[] | undefined;
 
@@ -49,7 +52,7 @@ export const useNodeView = (): Hook => {
   const { host } = useHostView();
   const { hostList } = useHostList();
   const { modifyHost } = useHostUpdate();
-  const { updateSubscriptionItems } = useUpdateSubscription();
+  const { updateSubscriptionItems } = useUpdateSubscriptionItems();
 
   const deleteNode = async (
     id: Args,
@@ -62,7 +65,7 @@ export const useNodeView = (): Hook => {
 
     // Remove node from the subscription
     await updateSubscriptionItems({
-      type: SubscriptionAction.REMOVE_NODE,
+      type: UpdateSubscriptionAction.REMOVE_NODE,
       payload: { node: node! },
     });
 
