@@ -1,13 +1,12 @@
 import { useSignIn } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
-import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQueryString';
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, Input } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
@@ -24,13 +23,13 @@ type LoginForm = {
 export function LoginForm() {
   const { getOrganizations } = useGetOrganizations();
   const router = useRouter();
-  const { invited, verified, redirect, forgot, token } = router.query;
+  const { verified, redirect, forgot, invitation_id, invited } = router.query;
   const signIn = useSignIn();
   const form = useForm<LoginForm>({
     mode: 'all',
     reValidateMode: 'onBlur',
   });
-  const { setValue, formState } = form;
+  const { formState } = form;
   const { isValid } = formState;
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
@@ -55,8 +54,13 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      await signIn({ email, password });
-      await getOrganizations(true);
+      await signIn(
+        { email, password },
+        undefined,
+        invitation_id as string,
+        !!invited,
+      );
+      await getOrganizations(!invited);
       getBlockchains();
       handleRedirect();
     } catch (error) {
@@ -67,17 +71,17 @@ export function LoginForm() {
     }
   });
 
-  useEffect(() => {
-    if (router.isReady) {
-      if (token) {
-        handleTokenFromQueryString(token?.toString()!, setValue);
-      }
-    }
-  }, [router.isReady]);
-
   return (
     <>
-      {invited && <Alert isSuccess>You've been invited, please login.</Alert>}
+      {invitation_id && invited && (
+        <Alert isSuccess>
+          You've been invited to a BlockJoy organization. Please login to
+          accept.
+        </Alert>
+      )}
+      {invitation_id && !invited && (
+        <Alert>Please login to decline the invitation.</Alert>
+      )}
       {verified && <Alert isSuccess>Account verified, please login.</Alert>}
       {forgot && <Alert isSuccess>Password reset, please login.</Alert>}
       <FormProvider {...form}>

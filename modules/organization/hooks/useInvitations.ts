@@ -43,11 +43,11 @@ export function useInvitations() {
   };
 
   const acceptInvitation = async (
-    invitation: Invitation,
+    invitationId: string,
     onSuccess?: VoidFunction,
   ) => {
     try {
-      await invitationClient.acceptInvitation(invitation.id);
+      await invitationClient.acceptInvitation(invitationId);
       if (onSuccess) onSuccess();
     } catch (err) {
       console.log('acceptInvitationError', err);

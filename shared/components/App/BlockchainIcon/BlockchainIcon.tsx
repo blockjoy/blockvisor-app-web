@@ -10,6 +10,10 @@ type Props = {
   size?: string;
 };
 
+const IconBlockchain = dynamic(
+  () => import(`@public/assets/icons/blockchain/Blockchain.svg`),
+);
+
 const IconAleo = dynamic(
   () => import(`@public/assets/icons/blockchain/Aleo.svg`),
 );
@@ -133,7 +137,7 @@ export const BlockchainIcon: FC<Props> = ({
       Component = IconTezos;
       break;
     default:
-      Component = IconAlgorand;
+      Component = IconBlockchain;
       break;
   }
 
