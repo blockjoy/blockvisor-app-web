@@ -13,8 +13,8 @@ import {
 import { useHostList, useHostUpdate } from '@modules/host';
 import {
   generateError,
-  SubscriptionAction,
-  useUpdateSubscription,
+  UpdateSubscriptionAction,
+  useUpdateSubscriptionItems,
 } from '@modules/billing';
 
 export const useNodeAdd = () => {
@@ -24,7 +24,7 @@ export const useNodeAdd = () => {
   const { modifyOrganization } = useUpdateOrganization();
   const { modifyHost } = useHostUpdate();
   const { hostList } = useHostList();
-  const { updateSubscriptionItems } = useUpdateSubscription();
+  const { updateSubscriptionItems } = useUpdateSubscriptionItems();
 
   const createNode = async (
     nodeRequest: NodeServiceCreateRequest,
@@ -54,7 +54,7 @@ export const useNodeAdd = () => {
       if (!nodeRequest.placement?.hostId)
         try {
           await updateSubscriptionItems({
-            type: SubscriptionAction.ADD_NODE,
+            type: UpdateSubscriptionAction.ADD_NODE,
             payload: { node: nodeParams },
           });
         } catch (error: any) {

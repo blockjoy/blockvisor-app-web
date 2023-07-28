@@ -65,7 +65,7 @@ export * from './hooks/usePaymentMethods';
 export * from './hooks/usePaymentMethodForm';
 export * from './hooks/useSubscription';
 export * from './hooks/useSubscriptionLifecycle';
-export * from './hooks/useUpdateSubscription';
+export * from './hooks/useUpdateSubscriptionItems';
 
 export * from './store/billingAtoms';
 export * from './store/billingSelectors';
@@ -77,6 +77,7 @@ export * from './utils/calcNextRenewDate';
 export * from './utils/checkIfBillingContactExists';
 export * from './utils/fetchBilling';
 export * from './utils/generateError';
+export * from './utils/generateUpdateSubscriptionParams';
 export * from './utils/getStatuses';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapCardToDetails';
