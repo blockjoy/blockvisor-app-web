@@ -18,11 +18,18 @@ import {
 } from '@modules/organization';
 import { useHostList, useHostUpdate, useHostView } from '@modules/host';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useUpdateSubscription } from '@modules/billing';
 >>>>>>> 034b89a5 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
 =======
 import { SubscriptionAction, useUpdateSubscription } from '@modules/billing';
 >>>>>>> 554bafed (feat: sc-1103 improving enums; adding basic host subscription update)
+=======
+import {
+  UpdateSubscriptionAction,
+  useUpdateSubscriptionItems,
+} from '@modules/billing';
+>>>>>>> 81092e81 (fix: sc-2354 ui tweaks)
 
 type Args = string | string[] | undefined;
 
@@ -60,7 +67,7 @@ export const useNodeView = (): Hook => {
   const { host } = useHostView();
   const { hostList } = useHostList();
   const { modifyHost } = useHostUpdate();
-  const { updateSubscriptionItems } = useUpdateSubscription();
+  const { updateSubscriptionItems } = useUpdateSubscriptionItems();
 
   const deleteNode = async (
     id: Args,
@@ -73,7 +80,7 @@ export const useNodeView = (): Hook => {
 
     // Remove node from the subscription
     await updateSubscriptionItems({
-      type: SubscriptionAction.REMOVE_NODE,
+      type: UpdateSubscriptionAction.REMOVE_NODE,
       payload: { node: node! },
     });
 
