@@ -1,23 +1,12 @@
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import {
-  Host,
-  HostServiceCreateRequest,
-} from '@modules/grpc/library/blockjoy/v1/host';
-import {
-  Node,
-  NodeServiceCreateRequest,
-} from '@modules/grpc/library/blockjoy/v1/node';
-import { NodeLauncherState } from '@modules/node';
 import { blockchainList, nodeTypes } from '@shared/constants/lookups';
 
-type NodeType = {
-  blockchain?: Blockchain;
-  node?: Node | NodeLauncherState | NodeServiceCreateRequest | null;
-};
-
-type HostType = { host?: Host | HostServiceCreateRequest };
-
-type Payload = NodeType | HostType;
+type Payload =
+  | {
+      blockchain?: Blockchain;
+      node?: UpdateSubscriptionNode;
+    }
+  | { host?: UpdateSubscriptionHost };
 
 export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
   const region: string = 'EU';

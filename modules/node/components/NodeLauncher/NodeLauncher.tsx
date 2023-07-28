@@ -71,6 +71,21 @@ export const NodeLauncher = () => {
     placement: {},
   });
 
+  useEffect(() => {
+    Mixpanel.track('Launch Node - Opened');
+  }, []);
+
+  useEffect(() => {
+    if (serverError) setServerError(undefined);
+    if (fulfilRequirements) setFulfilRequirements(false);
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    if (fulfilRequirements) {
+      handleNodeCreation();
+    }
+  }, [fulfilRequirements]);
+
   const isNodeValid = Boolean(
     node.blockchainId && node.nodeType && (selectedHost || selectedRegion),
   );
