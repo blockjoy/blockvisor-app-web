@@ -96,7 +96,7 @@ export const styles = {
   rowBasicUnderlineHover: (theme: ITheme) => css`
     @media ${breakpoints.fromXLrg} {
       :hover {
-        border-bottom-color: ${theme.colorLabel};
+        border-bottom-color: ${theme.colorDefault};
       }
     }
   `,

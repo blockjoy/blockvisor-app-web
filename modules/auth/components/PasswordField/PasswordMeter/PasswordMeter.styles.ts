@@ -110,13 +110,13 @@ export const styles = {
   hint: (theme: ITheme) => css`
     display: inline-block;
     padding: 3px 10px;
-    background: ${theme.colorLabel};
+    background: ${theme.colorDefault};
     border-radius: 13px;
     margin-right: 5px;
     margin-bottom: 5px;
 
     @media ${breakpoints.fromXLrg} {
-      background: ${theme.colorLabel};
+      background: ${theme.colorDefault};
     }
   `,
   hintDisabled: (theme: ITheme) => css`

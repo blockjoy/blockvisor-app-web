@@ -21,7 +21,7 @@ export const styles = {
     }
 
     svg > path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
 
     :is(p, path) {
@@ -41,7 +41,7 @@ export const styles = {
   separator: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     padding-right: 8px;
     padding-left: 8px;
     height: 22px;

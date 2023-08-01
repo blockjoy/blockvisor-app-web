@@ -86,7 +86,7 @@ export const styles = {
     cursor: pointer;
 
     svg path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
 
     :hover {
@@ -98,7 +98,7 @@ export const styles = {
     }
   `,
   separator: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     margin-right: 8px;
     margin-left: 8px;
   `,

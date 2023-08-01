@@ -60,7 +60,7 @@ export const styles = {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: ${theme.colorLabel};
+    background: ${theme.colorDefault};
     border: 3px solid ${theme.colorBackground};
   `,
   tooltip: css`

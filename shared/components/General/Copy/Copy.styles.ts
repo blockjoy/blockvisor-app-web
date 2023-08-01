@@ -8,7 +8,7 @@ export const styles = {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     padding-right: 12px;
 
     :hover,

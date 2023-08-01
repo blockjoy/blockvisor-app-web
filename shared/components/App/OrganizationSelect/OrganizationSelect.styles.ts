@@ -72,7 +72,7 @@ export const styles = {
     pointer-events: none;
 
     path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
   iconActive: css`

@@ -63,7 +63,7 @@ export const styles = {
       width: 140px;
       margin-bottom: 4px;
       font-size: 14px;
-      color: ${theme.colorLabel};
+      color: ${theme.colorDefault};
       width: 100%;
     }
 
@@ -186,7 +186,7 @@ export const styles = {
     color: ${theme.colorPrimaryText};
   `,
   missingFieldsTitle: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     font-size: 13px;
     margin-bottom: 8px;
     padding-left: 32px;

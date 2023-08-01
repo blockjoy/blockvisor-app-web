@@ -12,7 +12,7 @@ export const styles = {
     width: 100%;
   `,
   header: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     letter-spacing: 1.5px;
     font-size: 10px;
     margin: 0 16px 16px;
@@ -80,7 +80,7 @@ export const styles = {
     }
 
     & path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
 
     .link-icon > span {

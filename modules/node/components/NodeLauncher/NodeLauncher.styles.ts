@@ -24,7 +24,7 @@ export const styles = {
     }
 
     h3 {
-      color: ${theme.colorLabel};
+      color: ${theme.colorDefault};
     }
 
     @media ${breakpoints.toXlrg} {

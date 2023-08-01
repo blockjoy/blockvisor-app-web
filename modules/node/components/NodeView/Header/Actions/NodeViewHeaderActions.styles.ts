@@ -47,7 +47,7 @@ export const styles = {
     pointer-events: none;
 
     svg path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
   iconActive: css`

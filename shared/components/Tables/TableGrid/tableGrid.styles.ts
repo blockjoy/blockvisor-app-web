@@ -36,7 +36,7 @@ export const styles = {
     }
 
     > svg > path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
   cell: (theme: ITheme) => css`
@@ -97,13 +97,13 @@ export const styles = {
   cellEarnings: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     margin-bottom: 16px;
     font-size: 13px;
     text-transform: capitalize;
 
     svg path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
 };

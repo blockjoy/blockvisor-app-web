@@ -31,10 +31,10 @@ const styles = {
     max-width: 80%;
   `,
   address: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
 
     svg :is(path) {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
 };

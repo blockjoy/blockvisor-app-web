@@ -7,7 +7,7 @@ const styles = {
   h3: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     text-transform: uppercase;
     font-size: 11px;
     letter-spacing: 1px;

@@ -28,7 +28,7 @@ export const styles = {
     height: 48px;
     font-size: 16px;
     border-bottom: 2px solid transparent;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     cursor: pointer;
     transition: 0.2s;
 

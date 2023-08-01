@@ -16,7 +16,7 @@ export const styles = {
   `,
   infoIcon: (theme: ITheme) => css`
     & path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
 };

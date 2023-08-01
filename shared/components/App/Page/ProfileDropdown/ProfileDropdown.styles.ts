@@ -31,7 +31,7 @@ export const styles = {
     min-width: 180px;
   `,
   userInfoContainer: (theme: ITheme) => css`
-    border-bottom: 1px solid ${theme.colorLabel};
+    border-bottom: 1px solid ${theme.colorDefault};
 
     :hover {
       background-color: transparent;
@@ -45,7 +45,7 @@ export const styles = {
   `,
   label: (theme: ITheme) => css`
     font-size: 10px;
-    color: ${theme.colorPlaceholder};
+    color: ${theme.colorLabel};
   `,
   icon: css`
     width: 12px;

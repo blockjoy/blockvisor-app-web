@@ -61,7 +61,7 @@ export const styles = {
     flex: 0 0 auto;
   `,
   total: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     flex: 1 1 auto;
     text-align: right;
     font-size: 13px;
@@ -78,7 +78,7 @@ export const styles = {
     padding: 0 4px;
 
     & path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
   iconButtonActive: (theme: ITheme) => css`

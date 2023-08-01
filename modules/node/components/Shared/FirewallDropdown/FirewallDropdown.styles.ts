@@ -24,7 +24,7 @@ export const styles = {
       }
 
       > button {
-        border-color: ${theme.colorLabel};
+        border-color: ${theme.colorDefault};
       }
     }
 
@@ -72,7 +72,7 @@ export const styles = {
     }
   `,
   dropdownlabel: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
   `,
   text: (theme: ITheme) => css`
     min-width: 0;
@@ -83,7 +83,7 @@ export const styles = {
     padding-right: 50px;
   `,
   separator: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     margin: 0 10px;
   `,
   icon: (theme: ITheme) => css`
@@ -96,7 +96,7 @@ export const styles = {
     transition: 0.3s;
 
     path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
   iconOpen: css`

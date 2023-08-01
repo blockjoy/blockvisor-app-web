@@ -14,7 +14,7 @@ export const styles = {
     }
 
     ::-webkit-scrollbar-thumb {
-      background: ${theme.colorLabel};
+      background: ${theme.colorDefault};
     }
   `,
 };

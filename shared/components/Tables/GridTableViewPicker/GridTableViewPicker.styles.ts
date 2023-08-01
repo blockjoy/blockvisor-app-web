@@ -23,7 +23,7 @@ export const styles = {
     border-radius: 6px;
 
     path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
 
     :hover:not(.active),

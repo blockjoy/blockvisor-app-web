@@ -13,7 +13,7 @@ export const styles = {
     margin-top: 5px;
     padding-left: 2px;
     font-size: 12px;
-    color: ${theme.colorPlaceholder};
+    color: ${theme.colorLabel};
   `,
   arrowIcon: (theme: ITheme) => css`
     display: grid;

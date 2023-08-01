@@ -20,7 +20,7 @@ export const styles = {
     }
 
     & svg path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
 
     &:hover {

@@ -18,7 +18,7 @@ export const styles = {
   tabButton: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     padding-top: 2px;
     border-bottom: 2px solid transparent;
   `,

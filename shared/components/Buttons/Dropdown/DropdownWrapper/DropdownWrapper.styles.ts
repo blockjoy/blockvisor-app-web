@@ -24,7 +24,7 @@ export const styles = {
         p {
           color: ${theme.colorText};
         }
-        border-color: ${theme.colorLabel};
+        border-color: ${theme.colorDefault};
       }
     }
 

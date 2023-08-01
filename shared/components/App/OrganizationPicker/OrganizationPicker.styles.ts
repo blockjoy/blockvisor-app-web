@@ -106,7 +106,7 @@ export const styles = {
     transition: 0.3s;
 
     path {
-      fill: ${theme.colorLabel};
+      fill: ${theme.colorDefault};
     }
   `,
   iconActive: css`

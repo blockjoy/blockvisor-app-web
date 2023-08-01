@@ -18,7 +18,7 @@ export const styles = {
     }
 
     path {
-      color: ${theme.colorLabel};
+      color: ${theme.colorDefault};
     }
 
     :hover,

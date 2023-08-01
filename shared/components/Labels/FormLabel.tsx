@@ -9,7 +9,7 @@ const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
   `,
 };
 
