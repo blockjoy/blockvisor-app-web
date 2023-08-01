@@ -66,6 +66,10 @@ const IconNear = dynamic(
   () => import(`@public/assets/icons/blockchain/Near.svg`),
 );
 
+const IconOptimism = dynamic(
+  () => import(`@public/assets/icons/blockchain/Optimism.svg`),
+);
+
 const IconPocket = dynamic(
   () => import(`@public/assets/icons/blockchain/Pocket.svg`),
 );
@@ -130,6 +134,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'near':
       Component = IconNear;
+      break;
+    case 'optimism':
+      Component = IconOptimism;
       break;
     case 'pocket':
       Component = IconPocket;
