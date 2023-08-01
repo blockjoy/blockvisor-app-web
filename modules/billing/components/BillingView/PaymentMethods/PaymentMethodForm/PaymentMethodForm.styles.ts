@@ -2,6 +2,11 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  header: css`
+    display: flex;
+    flex-flow: row wrap;
+    gap: 20px;
+  `,
   headline: css`
     margin-bottom: 20px;
   `,
