@@ -15,6 +15,7 @@ import {
   CardHolder,
   CreditCardForm,
   generatePaymentError,
+  PaymentMethodFormHeader,
   PaymentMethodInfoForm,
   useBillingAddress,
   useCustomer,
@@ -135,7 +136,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
   return (
     <div css={containers.mediumSmall}>
-      <h4 css={styles.headline}>CARD DETAILS</h4>
+      <PaymentMethodFormHeader />
+
       <CreditCardForm
         ref={cardRef}
         cardHolder={cardHolder}
