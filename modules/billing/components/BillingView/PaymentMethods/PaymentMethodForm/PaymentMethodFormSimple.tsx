@@ -9,6 +9,7 @@ import {
   billingSelectors,
   CardComponent,
   generatePaymentError,
+  PaymentMethodFormHeader,
   PaymentMethodInfoForm,
   useBillingAddress,
   usePaymentMethodForm,
@@ -109,7 +110,8 @@ export const PaymentMethodFormSimple = ({
 
   return (
     <div css={containers.mediumSmall}>
-      <h4 css={styles.headline}>CARD DETAILS</h4>
+      <PaymentMethodFormHeader />
+
       <CardComponent ref={cardRef} variant="simple" />
 
       <div css={spacing.top.large}>

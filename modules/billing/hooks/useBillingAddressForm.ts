@@ -41,9 +41,9 @@ export const useBillingAddressForm = (): IBillingAddressFormHook => {
   }: BillingAddressForm) => {
     setLoading(true);
 
-    const customerData: Customer | null = await provideCustomer();
-
     try {
+      const customerData: Customer | null = await provideCustomer();
+
       await addBillingAddress(customerData?.id!, {
         firstName,
         lastName,
