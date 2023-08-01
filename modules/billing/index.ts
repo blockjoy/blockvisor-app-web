@@ -19,11 +19,13 @@ export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
 export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
 export * from './components/BillingView/Invoices/InvoicePDF/InvoicePDF';
 
+export * from './components/BillingView/PaymentMethods/CreditCardForm/AvailablePaymentMethods/AvailablePaymentMethods';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CreditCardForm';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CardComponent/CardComponent';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
+export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormHeader';
 export * from './components/BillingView/PaymentMethods/PaymentMethods';
 export * from './components/BillingView/PaymentMethods/PaymentMethodsList/PaymentMethodsList';
 export * from './components/BillingView/PaymentMethods/PaymentMethodsSelect/PaymentMethodsSelect';

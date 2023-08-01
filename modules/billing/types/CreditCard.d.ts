@@ -4,3 +4,9 @@ type CreditCardForm = {
   expDate: string;
   cvc: string;
 };
+
+type AvailablePaymentMethod = {
+  id: string;
+  name: string;
+  title: string;
+};

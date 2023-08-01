@@ -43,6 +43,7 @@ export const blockchainList = [
   { abbreviation: 'HNT', name: 'Helium' },
   { abbreviation: 'LBTC', name: 'Lightning' },
   { abbreviation: 'NEAR', name: 'Near' },
+  { abbreviation: 'OP', name: 'Optimism' },
   { abbreviation: 'POKT', name: 'Pocket' },
   { abbreviation: 'MATIC', name: 'Polygon' },
   { abbreviation: 'SOL', name: 'Solana' },
