@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
@@ -7,10 +8,16 @@ export const styles = {
     gap: 5px;
     align-content: center;
   `,
-  icon: css`
+  icon: (theme: ITheme) => css`
     position: relative;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 28px;
+    height: 20px;
+    padding: 2px;
+    border: 1px solid ${theme.colorBorderGrey};
+    border-radius: 2px;
 
     :hover .tooltip {
       opacity: 1;
@@ -18,8 +25,8 @@ export const styles = {
     }
 
     svg {
-      width: 28px;
-      height: auto;
+      max-width: 100%;
+      max-height: 100%;
     }
   `,
 };
