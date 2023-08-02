@@ -1,6 +1,6 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, ChangeEvent } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Button, ButtonGroup, Checkbox } from '@shared/index';
+import { Button, ButtonGroup, Checkbox, Switch } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
 import {
@@ -8,7 +8,7 @@ import {
   inputLabelSize,
 } from '@shared/components/Forms/ReactHookForm/Input/InputLabel.styles';
 import {
-  BillingAddressSelect,
+  // BillingAddressSelect,
   billingAtoms,
   BillingInfoData,
   billingSelectors,
@@ -165,13 +165,29 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
         </div>
         {activeView === 'list' && billingAddress ? (
           <div css={[spacing.bottom.medium]}>
-            <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+            <div css={[flex.display.flex, flex.justify.between]}>
+              <label css={[inputLabel, inputLabelSize.small, typo.base]}>
+                {billingAddress?.line1}
+                <br />
+                {billingAddress?.zip} {billingAddress?.city},{' '}
+                {billingAddress?.country}
+              </label>
+              <Switch
+                name="autoRenew"
+                disabled={false}
+                tooltip="Subscription's auto renewal"
+                checked={true}
+                onPropertyChanged={handleNewAddress}
+              />
+            </div>
+            {/* TODO: remove BillingAddressSelect */}
+            {/* <label css={[inputLabel, inputLabelSize.small, typo.base]}>
               Billing address
             </label>
             <BillingAddressSelect
               handlePaymentBillingAddress={handleDefaultAddress}
               handleNewAddress={handleNewAddress}
-            />
+            /> */}
           </div>
         ) : (
           <div>
