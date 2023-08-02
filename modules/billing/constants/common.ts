@@ -3,12 +3,12 @@ export const DEFAULT_ITEM_PRICE_ID = 'STANDARD-USD-M';
 
 export const AVAILABLE_PAYMENT_METHODS: AvailablePaymentMethod[] = [
   {
-    id: 'american-express',
+    id: 'american_express',
     name: 'AmericanExpress',
     title: 'American Express',
   },
   {
-    id: 'master-card',
+    id: 'mastercard',
     name: 'MasterCard',
     title: 'Master Card',
   },
