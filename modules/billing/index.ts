@@ -19,6 +19,7 @@ export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
 export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
 export * from './components/BillingView/Invoices/InvoicePDF/InvoicePDF';
 
+export * from './components/BillingView/PaymentMethods/CreditCardForm/AvailablePayments/AvailablePayment';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/AvailablePayments/AvailablePayments';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CreditCardForm';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CardComponent/CardComponent';
@@ -28,6 +29,7 @@ export * from './components/BillingView/PaymentMethods/PaymentMethodForm/Payment
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormHeader';
 export * from './components/BillingView/PaymentMethods/PaymentMethods';
 export * from './components/BillingView/PaymentMethods/PaymentMethodsList/PaymentMethodsList';
+export * from './components/BillingView/PaymentMethods/PaymentMethodActions/PaymentMethodActions';
 export * from './components/BillingView/PaymentMethods/PaymentMethodsSelect/PaymentMethodsSelect';
 export * from './components/BillingView/PaymentMethods/PaymentPreview/PaymentPreview';
 
@@ -80,6 +82,7 @@ export * from './utils/checkIfBillingContactExists';
 export * from './utils/fetchBilling';
 export * from './utils/generateError';
 export * from './utils/generateUpdateSubscriptionParams';
+export * from './utils/getPaymentMethodIcon';
 export * from './utils/getStatuses';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapCardToDetails';

@@ -8,16 +8,13 @@ export const styles = {
     gap: 5px;
     align-content: center;
   `,
-  icon: (theme: ITheme) => css`
+  icon: css`
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 28px;
     height: 20px;
-    padding: 2px;
-    border: 1px solid ${theme.colorBorderGrey};
-    border-radius: 2px;
 
     :hover .tooltip {
       opacity: 1;
@@ -28,5 +25,10 @@ export const styles = {
       max-width: 100%;
       max-height: 100%;
     }
+  `,
+  iconOutline: (theme: ITheme) => css`
+    padding: 2px;
+    border: 1px solid ${theme.colorBorderGrey};
+    border-radius: 2px;
   `,
 };
