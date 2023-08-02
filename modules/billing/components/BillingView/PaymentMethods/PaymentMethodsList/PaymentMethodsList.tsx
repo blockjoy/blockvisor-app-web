@@ -1,12 +1,12 @@
-import { useRecoilValue } from 'recoil';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { Button, Table } from '@shared/components';
+import { Button, SvgIcon, Table } from '@shared/components';
 import {
-  billingSelectors,
   usePaymentMethods,
   mapPaymentMethodsToRows,
+  useCustomer,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
 
 type PaymentMethodsListProps = {
   handleAdding: VoidFunction;
@@ -19,11 +19,18 @@ export const PaymentMethodsList = ({
 }: PaymentMethodsListProps) => {
   const { paymentMethods } = usePaymentMethods();
 
-  const customer = useRecoilValue(billingSelectors.customer);
+  const { customer, assignPaymentRole } = useCustomer();
+
+  const handleDefault = async (paymentSourceId: string) =>
+    await assignPaymentRole({
+      payment_source_id: paymentSourceId,
+      role: 'primary',
+    });
 
   const { headers, rows } = mapPaymentMethodsToRows(
     paymentMethods,
     handleRemove,
+    handleDefault,
     customer?.primary_payment_source_id,
   );
 
@@ -39,7 +46,10 @@ export const PaymentMethodsList = ({
         )}
       </div>
       <Button onClick={handleAdding} style="primary" size="small">
-        Add Credit Card
+        <SvgIcon size="10px">
+          <IconPlus />
+        </SvgIcon>
+        <span>Add Credit Card</span>
       </Button>
     </>
   );
