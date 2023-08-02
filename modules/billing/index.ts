@@ -19,7 +19,7 @@ export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
 export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
 export * from './components/BillingView/Invoices/InvoicePDF/InvoicePDF';
 
-export * from './components/BillingView/PaymentMethods/CreditCardForm/AvailablePaymentMethods/AvailablePaymentMethods';
+export * from './components/BillingView/PaymentMethods/CreditCardForm/AvailablePayments/AvailablePayments';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CreditCardForm';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CardComponent/CardComponent';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodForm';

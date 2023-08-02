@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import React, { Suspense } from 'react';
-import { styles } from './AvailablePaymentMethods.styles';
+import { styles } from './AvailablePayments.styles';
 import { SvgIcon } from '@shared/components';
 import { AVAILABLE_PAYMENT_METHODS } from '@modules/billing';
 
@@ -27,7 +27,7 @@ const matchIcon = (name: string) => {
   }
 };
 
-export const AvailablePaymentMethods = () => {
+export const AvailablePayments = () => {
   return (
     <div css={styles.wrapper}>
       {AVAILABLE_PAYMENT_METHODS.map((pm: AvailablePaymentMethod) => {
@@ -37,7 +37,7 @@ export const AvailablePaymentMethods = () => {
           <React.Fragment key={pm.id}>
             {IconComponent && (
               <span css={styles.icon}>
-                <SvgIcon>
+                <SvgIcon size="100%">
                   <Suspense fallback={null}>
                     <IconComponent />
                   </Suspense>
