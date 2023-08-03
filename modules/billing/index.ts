@@ -17,7 +17,6 @@ export * from './components/BillingView/Invoices/InvoiceView/InvoiceInfo/Invoice
 export * from './components/BillingView/Invoices/InvoiceView/InvoiceView';
 export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
 export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
-export * from './components/BillingView/Invoices/InvoicePDF/InvoicePDF';
 
 export * from './components/BillingView/PaymentMethods/CreditCardForm/AvailablePayments/AvailablePayment';
 export * from './components/BillingView/PaymentMethods/CreditCardForm/AvailablePayments/AvailablePayments';

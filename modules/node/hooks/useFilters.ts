@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { NodeUIProps } from '../ui/NodeUIContext';
