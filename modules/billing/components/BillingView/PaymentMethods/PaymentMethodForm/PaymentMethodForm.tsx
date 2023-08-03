@@ -177,10 +177,10 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
                 {billingAddress?.country}
               </label>
               <Switch
-                name="autoRenew"
+                name="defaultAddress"
                 disabled={false}
-                tooltip="Subscription's auto renewal"
-                checked={true}
+                tooltip="Use default Billing address"
+                checked={activeView === 'list'}
                 onPropertyChanged={handleNewAddress}
               />
             </div>
