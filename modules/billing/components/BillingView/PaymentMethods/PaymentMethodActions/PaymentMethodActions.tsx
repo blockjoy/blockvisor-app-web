@@ -7,27 +7,33 @@ type PaymentMethodActionsProps = {
   paymentMethod: PaymentSource;
   handleRemove: (paymentMethod: PaymentSource) => void;
   handleDefault: (paymentSourceId: string) => void;
+  isPrimary: boolean;
 };
 
 export const PaymentMethodActions = ({
   paymentMethod,
   handleRemove,
   handleDefault,
+  isPrimary,
 }: PaymentMethodActionsProps) => {
-  return (
-    <ActionsDropdown
-      items={[
-        {
-          title: 'Set as Default',
-          icon: <IconBilling />,
-          method: () => handleDefault(paymentMethod.id),
-        },
-        {
-          title: 'Delete',
-          icon: <IconDelete />,
-          method: () => handleRemove(paymentMethod),
-        },
-      ]}
-    />
-  );
+  let actions = [
+    {
+      title: 'Delete',
+      icon: <IconDelete />,
+      method: () => handleRemove(paymentMethod),
+    },
+  ];
+
+  if (!isPrimary) {
+    actions = [
+      {
+        title: 'Set as Default',
+        icon: <IconBilling />,
+        method: () => handleDefault(paymentMethod.id),
+      },
+      ...actions,
+    ];
+  }
+
+  return <ActionsDropdown items={actions} />;
 };
