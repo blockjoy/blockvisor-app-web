@@ -134,6 +134,10 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     (value) => value.trim() !== '',
   );
 
+  const isValidHolderForm = Object.values(cardHolder).every(
+    (value) => value.trim() !== '',
+  );
+
   return (
     <div css={containers.mediumSmall}>
       <PaymentMethodFormHeader />
@@ -217,7 +221,11 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
       <ButtonGroup>
         <Button
           loading={loading}
-          disabled={loading || (activeView === 'action' && !isValidInfoForm)}
+          disabled={
+            loading ||
+            (activeView === 'action' && !isValidInfoForm) ||
+            !isValidHolderForm
+          }
           style="primary"
           size="small"
           type="submit"
