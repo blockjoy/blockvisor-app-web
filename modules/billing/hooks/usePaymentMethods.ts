@@ -104,7 +104,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
       const { paymentSource, customer: customerData } = data;
 
-      const newPaymentMethods = [...paymentMethods, paymentSource];
+      const newPaymentMethods = [paymentSource, ...paymentMethods];
 
       setPaymentMethods(newPaymentMethods);
 
