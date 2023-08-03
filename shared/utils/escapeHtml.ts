@@ -1,4 +1,4 @@
-// import { escape } from 'lodash';
+// import escape from 'lodash/escape';
 //export const escapeHtml = (unsafe: string) => escape(unsafe);
 
 export const escapeHtml = (unsafe: string) => {

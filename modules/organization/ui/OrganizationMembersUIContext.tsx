@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { isEqual, isFunction } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import isFunction from 'lodash/isFunction';
 import {
   InitialQueryParams,
   initialQueryParams,

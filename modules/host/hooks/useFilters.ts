@@ -4,7 +4,7 @@ import {
 } from '@modules/organization';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { hostFiltersDefaults } from '@shared/constants/lookups';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useRecoilState } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
 import { HostUIProps } from '../ui/HostUIContext';

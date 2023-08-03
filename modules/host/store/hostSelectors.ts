@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { hostFiltersDefaults } from '@shared/constants/lookups';
 import { selector } from 'recoil';
 import { hostAtoms } from './hostAtoms';
