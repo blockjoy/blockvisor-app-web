@@ -120,6 +120,7 @@ export const mapPaymentMethodsToRows = (
                 paymentMethod={paymentMethod}
                 handleRemove={handleRemove}
                 handleDefault={handleDefault}
+                isPrimary={primaryPaymentMethodId === paymentMethod.id}
               />
             ),
           },
