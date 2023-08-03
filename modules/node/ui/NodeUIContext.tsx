@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6b2472a1 (fix: [sc-2354] performance improvements - removed react-pdf, cherry-picked lodash methods)
 import { InitialQueryParams, initialQueryParams } from './NodeUIHelpers';
 import { buildParams, loadPersistedFilters } from '@modules/node/utils';
 import { numOfItemsPerPage } from '@shared/index';
