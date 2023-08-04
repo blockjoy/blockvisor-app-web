@@ -20,7 +20,7 @@ export const Settings = () => {
         ),
       },
       {
-        label: 'Customer Information',
+        label: 'Account Profile',
         value: '2',
         component: (
           <PageSection bottomBorder={false}>
