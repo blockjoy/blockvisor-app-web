@@ -3,6 +3,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
 import { isSafari } from 'react-device-detect';
 import { TableSortButton } from './TableSortButton';
+import { useState } from 'react';
 
 export type TableProps = {
   hideHeader?: boolean;
@@ -97,7 +98,9 @@ export const Table = ({
             rows?.map((tr) => (
               <tr
                 key={tr.key}
-                className={tr.isDanger ? 'danger' : ''}
+                className={`${tr.isDanger ? 'danger' : ''} ${
+                  tr.key === activeRow.key ? 'active' : ''
+                }`}
                 css={[
                   !onRowClick || tr.isClickable === false
                     ? null
