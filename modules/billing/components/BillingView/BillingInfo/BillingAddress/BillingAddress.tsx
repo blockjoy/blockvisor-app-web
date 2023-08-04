@@ -16,11 +16,11 @@ export const BillingAddress = () => {
       {!isAdding ? (
         <div>
           <p css={spacing.bottom.medium}>
-            You have not yet added any customer information. Click the button
-            below to add one.
+            You have not yet added an account profile. Click the button below to
+            add one.
           </p>
           <Button onClick={handleAdding} size="small" style="primary">
-            Add Customer Information
+            Add Account Profile
           </Button>
         </div>
       ) : (
