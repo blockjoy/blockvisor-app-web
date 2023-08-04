@@ -4,6 +4,8 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     position: relative;
+    display: flex;
+    justify-content: flex-start;
   `,
   dropdown: css`
     top: 54px;

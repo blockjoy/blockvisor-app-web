@@ -35,19 +35,17 @@ export const mapPaymentMethodsToRows = (
     {
       name: 'Name',
       key: '2',
-      width: '300px',
+      width: '600px',
     },
     {
       name: 'Billing Info',
       key: '3',
-      width: '300px',
+      width: '600px',
     },
     {
       name: '',
       key: '4',
-      width: '60px',
-      maxWidth: '100px',
-      textAlign: 'right',
+      width: '200px',
     },
   ];
 
