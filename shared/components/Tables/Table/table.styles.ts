@@ -91,6 +91,10 @@ export const styles = {
       border-bottom: 1px solid ${theme.colorBorder};
       opacity: 0.8;
       transition: 0.3s;
+
+      &.active {
+        opacity: 1;
+      }
     }
   `,
   rowFancyUnderlineHover: css`

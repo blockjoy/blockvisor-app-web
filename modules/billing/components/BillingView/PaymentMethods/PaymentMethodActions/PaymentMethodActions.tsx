@@ -35,5 +35,5 @@ export const PaymentMethodActions = ({
     ];
   }
 
-  return <ActionsDropdown items={actions} />;
+  return <ActionsDropdown items={actions} align="right" />;
 };
