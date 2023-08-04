@@ -4,6 +4,7 @@ import { ReactNode, useRef, useState } from 'react';
 import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
+import { flex } from 'styles/utils.flex.styles';
 
 type Item = {
   title: string;
@@ -13,9 +14,10 @@ type Item = {
 
 type Props = {
   items: Item[];
+  align?: 'left' | 'right';
 };
 
-export const ActionsDropdown = ({ items }: Props) => {
+export const ActionsDropdown = ({ items, align = 'left' }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -31,7 +33,10 @@ export const ActionsDropdown = ({ items }: Props) => {
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   return (
-    <div css={styles.wrapper} ref={dropdownRef}>
+    <div
+      css={[styles.wrapper, align === 'right' && flex.justify.end]}
+      ref={dropdownRef}
+    >
       <button css={styles.dropdownButton} onClick={handleClick}>
         <SvgIcon>
           <IconCog />
