@@ -6,10 +6,9 @@ import { ITheme } from 'types/theme';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
-  AvailablePayment,
   CreditCardTypes,
+  PaymentIcon,
   PaymentMethodActions,
-  getPaymentMethodIcon,
 } from '@modules/billing';
 
 const styles = {
@@ -51,14 +50,12 @@ export const mapPaymentMethodsToRows = (
 
   const rows: Row[] =
     paymentMethods?.map((paymentMethod: PaymentSource) => {
-      const icon = getPaymentMethodIcon(paymentMethod?.card?.brand!);
-
       return {
         key: paymentMethod?.id!,
         cells: [
           {
             key: '1',
-            component: <AvailablePayment icon={icon} />,
+            component: <PaymentIcon brand={paymentMethod?.card?.brand!} />,
           },
           {
             key: '2',
@@ -81,8 +78,10 @@ export const mapPaymentMethodsToRows = (
                   ]}
                 >
                   <p css={[styles.expiry, spacing.right.small]}>
-                    {paymentMethod?.card?.expiry_month}/
-                    {paymentMethod?.card?.expiry_year}
+                    {paymentMethod?.card?.expiry_month
+                      ?.toString()
+                      .padStart(2, '0')}
+                    /{paymentMethod?.card?.expiry_year}
                   </p>
                   {primaryPaymentMethodId === paymentMethod.id && (
                     <Badge color="primary" style="outline">
