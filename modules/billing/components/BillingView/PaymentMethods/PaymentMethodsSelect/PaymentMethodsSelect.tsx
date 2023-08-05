@@ -67,7 +67,7 @@ export const PaymentMethodsSelect = ({
         primaryId={activePaymentMethod?.id}
       />
       <ButtonGroup>
-        <Button size="small" onClick={handleConfirm}>
+        <Button size="small" style="secondary" onClick={handleConfirm}>
           Confirm
         </Button>
         <Button size="small" style="outline" onClick={onHide}>

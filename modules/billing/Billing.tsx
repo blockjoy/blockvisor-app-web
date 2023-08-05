@@ -7,11 +7,11 @@ import { PageSection, PageTitle, Tabs } from '@shared/components';
 import { ROUTES, useTabs } from '@shared/index';
 import {
   Invoices,
-  PaymentPreview,
   BillingContacts,
   billingSelectors,
   billingAtoms,
   BillingView,
+  Estimates,
 } from '@modules/billing';
 import { useHasPermissions, Permissions } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
@@ -51,11 +51,11 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
           ),
         },
         {
-          label: 'Payment method',
+          label: 'Estimates',
           value: '2',
           component: (
             <PageSection bottomBorder={false}>
-              <PaymentPreview />
+              <Estimates />
             </PageSection>
           ),
         },
