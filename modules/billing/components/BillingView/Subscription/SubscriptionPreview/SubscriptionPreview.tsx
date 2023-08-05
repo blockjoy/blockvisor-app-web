@@ -4,7 +4,7 @@ import { DetailsView } from '@shared/components';
 import {
   billingSelectors,
   SubscriptionInfo,
-  Estimates,
+  PaymentPreview,
 } from '@modules/billing';
 
 type SubscriptionPreviewProps = {
@@ -27,8 +27,8 @@ export const SubscriptionPreview = ({
         />
       </DetailsView>
       {subscription?.status === 'active' && (
-        <DetailsView headline="Estimates">
-          <Estimates />
+        <DetailsView headline="Payment information">
+          <PaymentPreview />
         </DetailsView>
       )}
     </>
