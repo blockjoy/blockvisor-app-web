@@ -1,11 +1,27 @@
 import { Card } from 'chargebee-typescript/lib/resources/payment_source';
+import { css } from '@emotion/react';
 import { capitalize } from 'utils/capitalize';
+import { PaymentIcon } from '@modules/billing';
+
+const styles = {
+  info: css`
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 8px;
+  `,
+};
 
 export const mapCardToDetails = (card: Card) => {
   const details: any[] = [
     {
-      label: 'TYPE',
-      data: <p>{capitalize(card?.brand)}</p>,
+      label: 'Type',
+      data: (
+        <div css={styles.info}>
+          <PaymentIcon brand={card?.brand} type="outline" />
+          <p>{capitalize(card?.brand)}</p>
+        </div>
+      ),
     },
     {
       label: 'Number',
@@ -15,7 +31,7 @@ export const mapCardToDetails = (card: Card) => {
       label: 'Expiry',
       data: (
         <p>
-          {card?.expiry_month}/{card?.expiry_year}
+          {card?.expiry_month?.toString().padStart(2, '0')}/{card?.expiry_year}
         </p>
       ),
     },

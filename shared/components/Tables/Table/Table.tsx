@@ -32,7 +32,7 @@ export const Table = ({
   handleSort,
   additionalStyles,
 }: TableProps) => {
-  const [activeRow, setActiveRow] = useState<Row>(rows?.[0]);
+  const [activeRow, setActiveRow] = useState<Row>();
 
   const handleRowClick = (tr: Row) => {
     setActiveRow(tr);
@@ -104,7 +104,7 @@ export const Table = ({
               <tr
                 key={tr.key}
                 className={`${tr.isDanger ? 'danger' : ''} ${
-                  tr.key === activeRow.key ? 'active' : ''
+                  tr.key === activeRow?.key ? 'active' : ''
                 }`}
                 css={[
                   !!!onRowClick

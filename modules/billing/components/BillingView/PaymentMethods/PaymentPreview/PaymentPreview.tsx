@@ -9,6 +9,7 @@ import {
   PaymentMethodsSelect,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
+import { containers } from 'styles/containers.styles';
 
 export const PaymentPreview = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
@@ -34,17 +35,17 @@ export const PaymentPreview = () => {
     return <TableSkeleton />;
 
   return activeView === 'list' ? (
-    <>
+    <div css={containers.mediumSmall}>
       <DetailsTable bodyElements={mapCardToDetails(paymentMethod?.card!)} />
       <Button
         size="small"
-        style="outline"
+        style="secondary"
         onClick={handleUpdate}
         css={spacing.top.medium}
       >
-        Update Payment Method
+        Update payment method
       </Button>
-    </>
+    </div>
   ) : (
     <>
       {paymentMethod && (

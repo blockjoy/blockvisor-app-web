@@ -1,20 +1,12 @@
 import { styles } from './AvailablePayments.styles';
-import {
-  AVAILABLE_PAYMENT_METHODS,
-  AvailablePayment,
-  getPaymentMethodIcon,
-} from '@modules/billing';
+import { AVAILABLE_PAYMENT_METHODS, PaymentIcon } from '@modules/billing';
 
 export const AvailablePayments = () => {
   return (
     <div css={styles.wrapper}>
-      {AVAILABLE_PAYMENT_METHODS.map((pm: AvailablePaymentMethod) => {
-        const IconComponent = getPaymentMethodIcon(pm.id);
-
-        return (
-          <AvailablePayment key={pm.id} type="outline" icon={IconComponent} />
-        );
-      })}
+      {AVAILABLE_PAYMENT_METHODS.map((pm: AvailablePaymentMethod) => (
+        <PaymentIcon key={pm.id} brand={pm.id} type="outline" />
+      ))}
     </div>
   );
 };
