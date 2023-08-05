@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { formatters } from '@shared/index';
+import { ConfirmDialog, formatters } from '@shared/index';
 import { styles } from './SubscriptionCancellation.styles';
 import {
   ButtonGroup,
@@ -17,6 +17,7 @@ type SubscriptionCancellationProps = {
 export const SubscriptionCancellation = ({
   handleBack,
 }: SubscriptionCancellationProps) => {
+  const [activeView, setActiveView] = useState<'preview' | 'dialog'>('preview');
   const [endOfTerm, setEndOfTerm] = useState<boolean>(true);
 
   const { cancelSubscription, subscriptionLoadingState } =
@@ -24,16 +25,19 @@ export const SubscriptionCancellation = ({
 
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const handleCancellation = useCallback(() => {
-    cancelSubscription({ endOfTerm });
-    handleBack();
-  }, [cancelSubscription, handleBack, endOfTerm]);
+  const handleCancellation = () => setActiveView('dialog');
+  const onHide = () => setActiveView('preview');
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const newEndOfTermValue = value === 'true';
     setEndOfTerm(newEndOfTermValue);
   }, []);
+
+  const onConfirm = useCallback(() => {
+    cancelSubscription({ endOfTerm });
+    handleBack();
+  }, [cancelSubscription, handleBack, endOfTerm]);
 
   const currentEndTerm = formatters.formatDate(subscription?.current_term_end!);
 
@@ -76,6 +80,14 @@ export const SubscriptionCancellation = ({
           Back
         </Button>
       </ButtonGroup>
+      {activeView === 'dialog' && (
+        <ConfirmDialog
+          title="Subscription Cancellation"
+          message="Cancellation will end all premium services linked to your account. Please confirm if you wish to proceed."
+          handleConfirm={onConfirm}
+          onHide={onHide}
+        />
+      )}
     </div>
   );
 };

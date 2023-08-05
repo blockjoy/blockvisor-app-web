@@ -99,7 +99,7 @@ export const Table = ({
               <tr
                 key={tr.key}
                 className={`${tr.isDanger ? 'danger' : ''} ${
-                  tr.key === activeRow.key ? 'active' : ''
+                  tr.key === activeRow?.key ? 'active' : ''
                 }`}
                 css={[
                   !onRowClick || tr.isClickable === false

@@ -1,19 +1,20 @@
-import { ComponentType, Suspense } from 'react';
+import { Suspense } from 'react';
 import { SvgIcon } from '@shared/components';
-import { styles } from './AvailablePayments.styles';
+import { styles } from './PaymentIcon.styles';
+import { getPaymentMethodIcon } from '@modules/billing';
 
-type AvailablePaymentProps = {
-  icon: ComponentType;
+type PaymentIconProps = {
+  brand: string;
   type?: 'default' | 'outline';
   size?: string;
 };
 
-export const AvailablePayment = ({
-  icon,
+export const PaymentIcon = ({
+  brand,
   type = 'default',
   size = '100%',
-}: AvailablePaymentProps) => {
-  const IconComponent = icon;
+}: PaymentIconProps) => {
+  const IconComponent = getPaymentMethodIcon(brand);
 
   return (
     <span css={[styles.icon, type === 'outline' && styles.iconOutline]}>
