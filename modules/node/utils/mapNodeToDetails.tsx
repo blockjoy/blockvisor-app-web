@@ -1,8 +1,10 @@
 import {
   Node,
   NodeProperty,
+  NodeType,
   UiType,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import { Copy } from '@shared/components';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { LockedSwitch, NodeTypeConfigLabel } from '../components/Shared';
 
@@ -11,21 +13,22 @@ const formatter = new Intl.DateTimeFormat('en-US');
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
-  /** Validators should have no addreess*/
-  /**TODO: remove the mocked data to - */
-  const nodeUrl =
-    node.address && node.nodeType !== 3
-      ? node.address
-      : `https://${node.ip}/node`;
+  /**TODO: remove the mocked data to real data*/
+  const nodeUrl = (
+    <>
+      <a target="_blank" rel="noopener noreferrer" href="https://blockjoy.com/">
+        https://127.0.0.12/node
+      </a>
+      <Copy value="https://blockjoy.com/" />
+    </>
+  );
 
   const details: {
     label: string | any;
     data: any | undefined;
-    hasCopy?: boolean;
-    isHyperlink?: boolean;
   }[] = [
     { label: 'IP Address', data: node.ip || '-' },
-    { label: 'Node Address', data: nodeUrl, hasCopy: true, isHyperlink: true },
+    { label: 'Node Address', data: node.address || '-' },
     {
       label: 'Version',
       data: node.version || 'Latest',
@@ -35,6 +38,11 @@ export const mapNodeToDetails = (node: Node) => {
       data: node.network || '-',
     },
   ];
+
+  /** Validators should have no url*/
+  if (node.nodeType !== NodeType.NODE_TYPE_VALIDATOR) {
+    details.push({ label: 'Node URL', data: nodeUrl || '-' });
+  }
 
   details.push(
     ...node.properties
