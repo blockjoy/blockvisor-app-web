@@ -30,6 +30,10 @@ const IconAvalanche = dynamic(
   () => import(`@public/assets/icons/blockchain/Avalanche.svg`),
 );
 
+const IconBnB = dynamic(
+  () => import(`@public/assets/icons/blockchain/BNB.svg`),
+);
+
 const IconCardano = dynamic(
   () => import(`@public/assets/icons/blockchain/Cardano.svg`),
 );
@@ -60,6 +64,10 @@ const IconHelium = dynamic(
 
 const IconNear = dynamic(
   () => import(`@public/assets/icons/blockchain/Near.svg`),
+);
+
+const IconOptimism = dynamic(
+  () => import(`@public/assets/icons/blockchain/Optimism.svg`),
 );
 
 const IconPocket = dynamic(
@@ -97,6 +105,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'avalanche':
       Component = IconAvalanche;
       break;
+    case 'bnb':
+      Component = IconBnB;
+      break;
     case 'cardano':
       Component = IconCardano;
       break;
@@ -123,6 +134,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'near':
       Component = IconNear;
+      break;
+    case 'optimism':
+      Component = IconOptimism;
       break;
     case 'pocket':
       Component = IconPocket;
