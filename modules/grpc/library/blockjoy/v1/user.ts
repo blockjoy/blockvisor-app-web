@@ -5,12 +5,31 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 
 export const protobufPackage = "blockjoy.v1";
 
+export enum UserRole {
+  USER_ROLE_UNSPECIFICED = 0,
+  /** USER_ROLE_UNPRIVILEGED - This user has normal privileges. */
+  USER_ROLE_UNPRIVILEGED = 1,
+  /**
+   * USER_ROLE_BLOCKJOY_ADMIN - This user is allowed to administer organizations that they are not a member
+   * of.
+   */
+  USER_ROLE_BLOCKJOY_ADMIN = 2,
+  UNRECOGNIZED = -1,
+}
+
 /** User representation. */
 export interface User {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
+  /**
+   * Each users has a specific role within an organization, but they may also
+   * posses a global role. For most users this will be `Unprivileged`, but there
+   * are accounts that have the settings `Blockjoy Staff`. This means that  they
+   * are allowed to do administrative tasks for other users.
+   */
+  role: UserRole;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
 }
@@ -39,6 +58,7 @@ export interface UserServiceUpdateRequest {
   id: string;
   firstName?: string | undefined;
   lastName?: string | undefined;
+  role?: UserRole | undefined;
 }
 
 export interface UserServiceUpdateResponse {
@@ -77,7 +97,7 @@ export interface UserServiceDeleteBillingResponse {
 }
 
 function createBaseUser(): User {
-  return { id: "", email: "", firstName: "", lastName: "", createdAt: undefined, updatedAt: undefined };
+  return { id: "", email: "", firstName: "", lastName: "", role: 0, createdAt: undefined, updatedAt: undefined };
 }
 
 export const User = {
@@ -93,6 +113,9 @@ export const User = {
     }
     if (message.lastName !== "") {
       writer.uint32(34).string(message.lastName);
+    }
+    if (message.role !== 0) {
+      writer.uint32(56).int32(message.role);
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).ldelim();
@@ -138,6 +161,13 @@ export const User = {
 
           message.lastName = reader.string();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.role = reader.int32() as any;
+          continue;
         case 5:
           if (tag !== 42) {
             break;
@@ -171,6 +201,7 @@ export const User = {
     message.email = object.email ?? "";
     message.firstName = object.firstName ?? "";
     message.lastName = object.lastName ?? "";
+    message.role = object.role ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
     return message;
@@ -395,7 +426,7 @@ export const UserServiceCreateResponse = {
 };
 
 function createBaseUserServiceUpdateRequest(): UserServiceUpdateRequest {
-  return { id: "", firstName: undefined, lastName: undefined };
+  return { id: "", firstName: undefined, lastName: undefined, role: undefined };
 }
 
 export const UserServiceUpdateRequest = {
@@ -408,6 +439,9 @@ export const UserServiceUpdateRequest = {
     }
     if (message.lastName !== undefined) {
       writer.uint32(26).string(message.lastName);
+    }
+    if (message.role !== undefined) {
+      writer.uint32(32).int32(message.role);
     }
     return writer;
   },
@@ -440,6 +474,13 @@ export const UserServiceUpdateRequest = {
 
           message.lastName = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.role = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -458,6 +499,7 @@ export const UserServiceUpdateRequest = {
     message.id = object.id ?? "";
     message.firstName = object.firstName ?? undefined;
     message.lastName = object.lastName ?? undefined;
+    message.role = object.role ?? undefined;
     return message;
   },
 };
