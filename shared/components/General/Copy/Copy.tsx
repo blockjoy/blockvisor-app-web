@@ -12,14 +12,18 @@ export const Copy = ({ disabled, value }: CopyButtonProps) => {
   const handleCopy = () => copyToClipboard(value);
 
   return (
-    <Button
-      style="outline"
-      size="small"
-      onClick={handleCopy}
-      disabled={disabled}
-      css={spacing.left.small}
-    >
-      Copy <CopyIcon />
-    </Button>
+    <span css={spacing.left.small}>
+      <Button
+        tooltip="Copy"
+        style="icon"
+        size="small"
+        onClick={handleCopy}
+        disabled={disabled}
+      >
+        <SvgIcon size="14px">
+          <CopyIcon />
+        </SvgIcon>
+      </Button>
+    </span>
   );
 };

@@ -24,19 +24,6 @@ export const nodeTypeConfigLabels = [
   { name: 'self-hosted', value: 'Self Hosted' },
 ];
 
-export const blockchainsDisabled = [
-  'Algorand',
-  'Aptos',
-  'Avalanche',
-  'Cardano',
-  'Cosmos',
-  'Lightning',
-  'Near',
-  'Pocket',
-  'Polygon',
-  'Solana',
-];
-
 export const nodeTypeProps = {
   number: 'number',
   text: 'string',
@@ -79,3 +66,10 @@ export const hostFiltersCustomValues = {
     10 * Math.pow(1024, 4),
   ],
 };
+
+export const blockchainPortList = [
+  {
+    name: 'celo',
+    port: 9154,
+  },
+];
