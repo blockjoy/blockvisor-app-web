@@ -14,20 +14,21 @@ const formatter = new Intl.DateTimeFormat('en-US');
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
-  /**TODO: remove the mocked data to real data*/
-  const nodeUrl = `http://${node.ip}:${
-    blockchainPortList.find(
-      (p) => p.name === node.blockchainName.toLocaleLowerCase(),
-    )?.port
-  }`;
+  console.log(node);
+
+  /** Validators should have no addreess*/
+  const nodeUrl =
+    node.ip && node.ip && node.nodeType !== 3
+      ? `https://${node.ip}/nodes/${node.id}`
+      : '-';
 
   const details: {
     label: string | any;
     data: any | undefined;
+    hasCopy?: boolean;
   }[] = [
-    { label: 'Node Address', data: node.address || '-' },
     { label: 'IP Address', data: node.ip || '-' },
-    { label: 'Gateway IP', data: node.ipGateway || '-' },
+    { label: 'Node Url', data: nodeUrl, hasCopy: true },
     {
       label: 'Version',
       data: node.version || 'Latest',

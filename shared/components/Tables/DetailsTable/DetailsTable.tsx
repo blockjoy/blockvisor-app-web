@@ -21,7 +21,7 @@ export const DetailsTable: FC<DetailsTableProps> = ({ bodyElements }) => {
       <tbody>
         {bodyElements?.map((item: DetailsDataRow, itemIndex: number) => (
           <DataRow key={item.id ? item.id : itemIndex} label={item.label}>
-            {item.data}
+            {item.data} {item.hasCopy && <Copy value={item.data} />}
           </DataRow>
         ))}
       </tbody>
