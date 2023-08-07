@@ -17,16 +17,24 @@ export const styles = {
     font-size: 10px;
     margin: 0 16px 16px;
   `,
+  navigation: css`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  `,
+  block: (isSidebarOpen: boolean) => css`
+    margin-bottom: ${isSidebarOpen ? '24px' : '8px'};
+
+    &:last-child {
+      margin-top: auto;
+      margin-bottom: 8px;
+    }
+  `,
   list: css`
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding-bottom: 8px;
-
-    li:last-child {
-      margin-top: auto;
-    }
   `,
   link: (theme: ITheme) => css`
     user-select: none;
