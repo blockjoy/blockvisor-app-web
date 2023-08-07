@@ -27,7 +27,7 @@ export const mapNodeToDetails = (node: Node) => {
     hasCopy?: boolean;
   }[] = [
     { label: 'IP Address', data: node.ip || '-' },
-    { label: 'Node Url', data: nodeUrl, hasCopy: true },
+    { label: 'Node Address', data: nodeUrl, hasCopy: true },
     {
       label: 'Version',
       data: node.version || 'Latest',
