@@ -3,4 +3,5 @@ type FilterItem = {
   id?: string | undefined;
   isChecked?: boolean | undefined;
   isOnline?: boolean | undefined;
+  type?: string | undefined;
 };

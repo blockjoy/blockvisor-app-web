@@ -5,7 +5,7 @@ import { invitationClient } from '@modules/grpc';
 import { Layout } from '@shared/components';
 import { readToken } from '@shared/utils/readToken';
 
-const AcceptInvite: NextPage = () => {
+const DeclineInvite: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -29,4 +29,4 @@ const AcceptInvite: NextPage = () => {
   );
 };
 
-export default AcceptInvite;
+export default DeclineInvite;

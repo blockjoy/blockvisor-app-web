@@ -37,8 +37,9 @@ const Deactivated: NextPage = () => {
   return (
     <Layout title="Account Deactivated">
       <p css={styles.p}>
-        Thank you for trying out BlockJoy, your account has now been
-        deactivated.
+        Thank you for using BlockJoy.
+        <br />
+        Your account has been deactivated.
       </p>
       <a css={styles.a} href="https://blockjoy.com" target="_blank">
         Visit BlockJoy.com

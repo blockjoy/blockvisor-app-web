@@ -7,7 +7,7 @@ export const styles = {
     margin-bottom: 6px;
   `,
   formHeader: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
+    color: ${theme.colorDefault};
     text-transform: uppercase;
     font-size: 11px;
     letter-spacing: 1px;

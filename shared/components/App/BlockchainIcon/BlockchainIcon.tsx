@@ -10,6 +10,10 @@ type Props = {
   size?: string;
 };
 
+const IconBlockchain = dynamic(
+  () => import(`@public/assets/icons/blockchain/Blockchain.svg`),
+);
+
 const IconAleo = dynamic(
   () => import(`@public/assets/icons/blockchain/Aleo.svg`),
 );
@@ -24,6 +28,10 @@ const IconAlgorand = dynamic(
 
 const IconAvalanche = dynamic(
   () => import(`@public/assets/icons/blockchain/Avalanche.svg`),
+);
+
+const IconBnB = dynamic(
+  () => import(`@public/assets/icons/blockchain/BNB.svg`),
 );
 
 const IconCardano = dynamic(
@@ -56,6 +64,10 @@ const IconHelium = dynamic(
 
 const IconNear = dynamic(
   () => import(`@public/assets/icons/blockchain/Near.svg`),
+);
+
+const IconOptimism = dynamic(
+  () => import(`@public/assets/icons/blockchain/Optimism.svg`),
 );
 
 const IconPocket = dynamic(
@@ -93,6 +105,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'avalanche':
       Component = IconAvalanche;
       break;
+    case 'bnb':
+      Component = IconBnB;
+      break;
     case 'cardano':
       Component = IconCardano;
       break;
@@ -120,6 +135,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'near':
       Component = IconNear;
       break;
+    case 'optimism':
+      Component = IconOptimism;
+      break;
     case 'pocket':
       Component = IconPocket;
       break;
@@ -133,7 +151,7 @@ export const BlockchainIcon: FC<Props> = ({
       Component = IconTezos;
       break;
     default:
-      Component = IconAlgorand;
+      Component = IconBlockchain;
       break;
   }
 

@@ -36,7 +36,7 @@ export const OrganizationReceivedInvitations = () => {
   );
 
   const handleAcceptInvitation = (invitation: Invitation) => {
-    acceptInvitation(invitation, async () => {
+    acceptInvitation(invitation.id, async () => {
       await getOrganizations();
       switchOrganization(invitation.orgId, invitation.orgName);
       getOrganization(invitation.orgId);

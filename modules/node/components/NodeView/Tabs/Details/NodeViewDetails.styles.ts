@@ -1,9 +1,12 @@
 import { css } from '@emotion/react';
-import { ITheme } from 'types/theme';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   section: css`
-    padding-bottom: 50px;
-    padding-right: 20px;
+    padding-bottom: 80px;
+
+    @media ${breakpoints.fromXLrg} {
+      padding-right: 20px;
+    }
   `,
 };

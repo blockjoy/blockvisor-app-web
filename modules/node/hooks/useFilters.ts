@@ -69,10 +69,12 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
     }));
     setFiltersBlockchain(filtersBlockchainCopy);
 
-    let filtersStatusCopy = filtersStatus.map((item) => ({
-      ...item,
-      isChecked: false,
-    }));
+    let filtersStatusCopy = filtersStatus
+      .filter((item) => !item.type)
+      .map((item) => ({
+        ...item,
+        isChecked: false,
+      }));
     setFiltersStatus(filtersStatusCopy);
 
     let filtersTypeCopy = filtersType.map((item) => ({
@@ -98,10 +100,10 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
       setFilterList: setFiltersBlockchain,
     },
     {
-      name: 'Status',
+      name: 'App Status',
       isDisabled: false,
       filterCount: filtersStatusTotal,
-      filterList: filtersStatus,
+      filterList: filtersStatus.filter((item) => !item.type),
       setFilterList: setFiltersStatus,
     },
     {

@@ -4,10 +4,12 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 var { node_id } = params;
 
-var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
+var host = `https://magellan-1.slc.blockjoy.com/host/${node_id}`;
+// var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
+// var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';
 
 const sidePanelTextonlyWidth = "150px",
-      sidePanelTextonlyHeight = "60px",
+      sidePanelTextonlyHeight = "56px",
       sidePanelSparklineHeight = "44px";
 
 const loadSidePanelCharts = [
@@ -37,6 +39,7 @@ const loadSidePanelCharts = [
   },
   {
     title: "CPU",
+    measurement: "%",
     charts: [
       {
         netdata: "system.cpu",
@@ -59,6 +62,7 @@ const loadSidePanelCharts = [
   },
   {
     title: "Disk Write",
+    measurement: "MiB/s",
     charts: [
       {
         netdata: "system.io",
@@ -83,6 +87,7 @@ const loadSidePanelCharts = [
   },
   {
     title: "Disk Read",
+    measurement: "MiB/s",
     charts: [
       {
         netdata: "system.io",
@@ -305,10 +310,25 @@ const onLoad = () => {
       row.appendChild(header);
       row.appendChild(charts);
 
-      block.charts.forEach((chart) => {
-        const element = createChart(chart);
-        charts.appendChild(element);
-      });  
+      const textonlyWrapper = document.createElement("div");
+      textonlyWrapper.setAttribute("class", "textonly-wrapper");
+
+      const textonlyChart = createChart(block.charts[0]);
+
+      textonlyWrapper.appendChild(textonlyChart);
+      
+      if (block.measurement) {
+        const measurement = document.createElement("div");
+        measurement.setAttribute("class", "measurement");
+        measurement.innerText = block.measurement;
+        
+        textonlyWrapper.appendChild(measurement);
+      }
+
+      const sparklineChart = createChart(block.charts[1]);
+
+      charts.appendChild(textonlyWrapper);
+      charts.appendChild(sparklineChart);
 
       sidePanel.appendChild(row);
     });

@@ -25,13 +25,14 @@ export type InitialQueryParams = {
 export const itemsPerPage = {
   sm: 18,
   lg: 36,
-  xxl: 48,
+  xl: 48,
+  xxl: 100,
 };
 
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     current_page: 1,
-    items_per_page: itemsPerPage['lg'],
+    items_per_page: itemsPerPage['xxl'],
   },
 
   filter: {

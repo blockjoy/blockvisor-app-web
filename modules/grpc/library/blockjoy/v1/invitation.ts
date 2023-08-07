@@ -83,6 +83,7 @@ export interface InvitationServiceCreateRequest {
 }
 
 export interface InvitationServiceCreateResponse {
+  invitation: Invitation | undefined;
 }
 
 export interface InvitationServiceListRequest {
@@ -331,11 +332,14 @@ export const InvitationServiceCreateRequest = {
 };
 
 function createBaseInvitationServiceCreateResponse(): InvitationServiceCreateResponse {
-  return {};
+  return { invitation: undefined };
 }
 
 export const InvitationServiceCreateResponse = {
-  encode(_: InvitationServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: InvitationServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.invitation !== undefined) {
+      Invitation.encode(message.invitation, writer.uint32(10).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -346,6 +350,13 @@ export const InvitationServiceCreateResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.invitation = Invitation.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -359,8 +370,11 @@ export const InvitationServiceCreateResponse = {
     return InvitationServiceCreateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<InvitationServiceCreateResponse>): InvitationServiceCreateResponse {
+  fromPartial(object: DeepPartial<InvitationServiceCreateResponse>): InvitationServiceCreateResponse {
     const message = createBaseInvitationServiceCreateResponse();
+    message.invitation = (object.invitation !== undefined && object.invitation !== null)
+      ? Invitation.fromPartial(object.invitation)
+      : undefined;
     return message;
   },
 };

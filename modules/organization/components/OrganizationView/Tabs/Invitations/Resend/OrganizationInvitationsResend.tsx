@@ -24,7 +24,9 @@ export const OrganizationInvitationsResend = ({ invitation }: Props) => {
     }
   };
 
-  useEffect(() => clearTimeout(timeoutRef.current), []);
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
 
   return (
     <Button

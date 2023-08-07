@@ -11,7 +11,7 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       maxWidth: '100px',
     },
     {
-      name: 'Name',
+      name: 'Host',
       key: '2',
       width: '300px',
     },

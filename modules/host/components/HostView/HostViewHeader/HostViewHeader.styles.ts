@@ -10,6 +10,7 @@ export const styles = {
     justify-content: space-between;
     min-height: 100px;
     margin-bottom: 0;
+    margin-right: 24px;
     border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toLrg} {
@@ -18,19 +19,24 @@ export const styles = {
       margin-bottom: 16px;
       padding: 20px 0;
     }
+
+    @media ${breakpoints.toXlrg} {
+      margin-right: 0;
+    }
   `,
   detailsHeader: css`
     display: flex;
     gap: 10px;
     margin-bottom: 4px;
+    white-space: wrap;
+    word-break: break-all;
 
     @media ${breakpoints.toXlrg} {
+      display: block;
       flex-direction: column;
       margin-bottom: 2px;
       font-size: 20px;
     }
-
-    word-break: break-word;
   `,
   detailsFooter: css`
     display: flex;

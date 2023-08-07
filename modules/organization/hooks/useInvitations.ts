@@ -1,7 +1,6 @@
 import { invitationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
-import { checkForTokenError } from 'utils/checkForTokenError';
 import { invitationAtoms } from '@modules/organization';
 import { isStatusResponse } from '../utils/typeGuards';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
@@ -44,11 +43,11 @@ export function useInvitations() {
   };
 
   const acceptInvitation = async (
-    invitation: Invitation,
+    invitationId: string,
     onSuccess?: VoidFunction,
   ) => {
     try {
-      await invitationClient.acceptInvitation(invitation.id);
+      await invitationClient.acceptInvitation(invitationId);
       if (onSuccess) onSuccess();
     } catch (err) {
       console.log('acceptInvitationError', err);
@@ -79,7 +78,7 @@ export function useInvitations() {
   }) => {
     try {
       await invitationClient.revokeInvitation(invitationId);
-      updateInvitations(invitationId!);
+      deleteFromSentInvitations(invitationId!);
       toast.success('Invitation Canceled');
     } catch (err) {
       console.log('revokeInvitationError', err);
@@ -87,11 +86,23 @@ export function useInvitations() {
     }
   };
 
-  const updateInvitations = (invitation_id: string) => {
+  const deleteFromSentInvitations = (invitationId: string) => {
     const newSentInvitations = sentInvitations.filter(
-      (invitation) => invitation.id !== invitation_id,
+      (invitation) => invitation.id !== invitationId,
     );
     setSentInvitations(newSentInvitations);
+  };
+
+  const modifySentInvitations = (invitation: Invitation) => {
+    const sentInvitationsCopy = [...sentInvitations];
+
+    const invitationIndex = sentInvitationsCopy?.findIndex(
+      (i) => i.inviteeEmail === invitation.inviteeEmail,
+    );
+
+    sentInvitationsCopy[invitationIndex] = invitation;
+
+    setSentInvitations(sentInvitationsCopy);
   };
 
   return {
@@ -104,5 +115,6 @@ export function useInvitations() {
     revokeInvitation,
     sentInvitationsLoadingState,
     setSentInvitationsLoadingState,
+    modifySentInvitations,
   };
 }

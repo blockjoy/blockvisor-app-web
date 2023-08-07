@@ -63,7 +63,7 @@ const Verified: NextPage = () => {
           const invitation = receivedInvitations[0];
 
           if (invitation) {
-            await acceptInvitation(receivedInvitations[0]);
+            await acceptInvitation(receivedInvitations[0].id);
             await getOrganizations();
 
             setDefaultOrganization({
