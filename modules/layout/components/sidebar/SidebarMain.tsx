@@ -1,6 +1,8 @@
 import { isMobile } from 'react-device-detect';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { ReactNode } from 'react';
+import { isMobile } from 'react-device-detect';
 import { styles } from './SidebarMain.styles';
 import { Badge } from '@shared/components';
 import IconNodes from '@public/assets/icons/app/Node.svg';
@@ -35,7 +37,10 @@ export default () => {
     }
   };
 
-  const blocks = [
+  const blocks: {
+    title?: string;
+    items: SidebarItem[];
+  }[] = [
     {
       title: 'BLOCKVISOR',
       items: [
@@ -50,6 +55,11 @@ export default () => {
           path: '/hosts',
           icon: <IconHost />,
         },
+      ],
+    },
+    {
+      title: 'ADMIN',
+      items: [
         {
           name: 'Organizations',
           path: isMobile
@@ -58,6 +68,10 @@ export default () => {
           icon: <IconOrganizations />,
           isOrganizations: true,
         },
+      ],
+    },
+    {
+      items: [
         {
           name: 'FAQ',
           path: '/faq',
@@ -77,54 +91,61 @@ export default () => {
 
   return (
     <main css={[styles.wrapper]}>
-      {blocks.map((block) => (
-        <ul key={block.title} css={[styles.list]}>
-          {block.items.map((item) => (
-            <li key={item.name}>
-              <Link
-                href={item.path}
-                onClick={handleLinkClicked}
-                css={[
-                  styles.link,
-                  !isSidebarOpen && styles.linkSidebarCollapsed,
-                ]}
-              >
-                <span
-                  css={styles.linkInner}
-                  className={`link-inner ${
-                    router.pathname.startsWith(item.path.substring(0, 3))
-                      ? 'active'
-                      : ''
-                  }`}
-                >
-                  <span
-                    className="link-icon"
+      <div css={styles.navigation}>
+        {blocks.map((block) => (
+          <div css={styles.block(isSidebarOpen)}>
+            {block.title && isSidebarOpen && (
+              <h4 css={styles.header}>{block.title}</h4>
+            )}
+            <ul key={block.title} css={[styles.list]}>
+              {block.items.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.path}
+                    onClick={handleLinkClicked}
                     css={[
-                      styles.linkIcon,
-                      !isSidebarOpen && styles.linkIconSidebarOpen,
+                      styles.link,
+                      !isSidebarOpen && styles.linkSidebarCollapsed,
                     ]}
                   >
-                    {item.icon}
-                  </span>
-                  <span
-                    className="link-text"
-                    css={[
-                      styles.linkText,
-                      !isSidebarOpen && styles.linkTextHidden,
-                    ]}
-                  >
-                    {item.name}
+                    <span
+                      css={styles.linkInner}
+                      className={`link-inner ${
+                        router.pathname.startsWith(item.path.substring(0, 3))
+                          ? 'active'
+                          : ''
+                      }`}
+                    >
+                      <span
+                        className="link-icon"
+                        css={[
+                          styles.linkIcon,
+                          !isSidebarOpen && styles.linkIconSidebarOpen,
+                        ]}
+                      >
+                        {item.icon}
+                      </span>
+                      <span
+                        className="link-text"
+                        css={[
+                          styles.linkText,
+                          !isSidebarOpen && styles.linkTextHidden,
+                        ]}
+                      >
+                        {item.name}
 
-                    {Boolean(invitationCount) && item.isOrganizations && (
-                      <Badge color="danger">{invitationCount}</Badge>
-                    )}
-                  </span>
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ))}
+                        {Boolean(invitationCount) && item.isOrganizations && (
+                          <Badge color="danger">{invitationCount}</Badge>
+                        )}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
       <SidebarFooter />
     </main>
   );
