@@ -5,6 +5,7 @@ import { blockchainsAtoms } from './blockchains';
 import { isMobile } from 'react-device-detect';
 import { localStorageEffect } from 'utils/store/persist';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { sort } from '@shared/components';
 
 const activeNode = atom<Node | null>({
   key: 'node.activeNode',
@@ -144,13 +145,20 @@ const filtersTypeTotal = selector<number>({
 
 const filtersStatus = atom<FilterItem[]>({
   key: 'node.filtersStatus',
-  default: nodeStatusList
-    .filter((item) => item.id !== 0 && !item.type)
-    .map((item) => ({
-      name: item.name?.toLowerCase(),
-      id: item.id?.toString(),
-      isChecked: false,
-    })),
+  default: sort(
+    nodeStatusList
+      .filter((item) => item.id !== 0)
+      .map((item) => ({
+        ...item,
+        name: item.name?.toLowerCase(),
+        id: item.id?.toString(),
+        isChecked: false,
+      })),
+    {
+      field: 'name',
+      order: 'asc',
+    },
+  ),
   effects: [
     ({ setSelf }) => {
       const savedNodeFilters =
