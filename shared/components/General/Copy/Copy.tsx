@@ -1,6 +1,7 @@
 import CopyIcon from '@public/assets/icons/common/Copy.svg';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
 import { Button, SvgIcon } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
 interface CopyButtonProps {
   disabled?: boolean;
@@ -16,6 +17,7 @@ export const Copy = ({ disabled, value }: CopyButtonProps) => {
       size="small"
       onClick={handleCopy}
       disabled={disabled}
+      css={spacing.left.small}
     >
       Copy <CopyIcon />
     </Button>
