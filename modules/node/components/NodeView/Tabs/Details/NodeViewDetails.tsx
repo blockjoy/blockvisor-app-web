@@ -1,4 +1,3 @@
-import { mapNodeConfigToDetails } from '@modules/node/utils/mapNodeConfigToDetails';
 import { mapNodeToDetails } from '@modules/node/utils/mapNodeToDetails';
 import { mapNodeToGeneralDetails } from '@modules/node/utils/mapNodeToGeneralDetails';
 import { DetailsTable } from '@shared/components';
