@@ -10,6 +10,10 @@ import {
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
+import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+import { organizationSelectors } from '@modules/organization';
+import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import { Permissions } from '@modules/auth';
 
 export const PaymentPreview = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
@@ -25,6 +29,15 @@ export const PaymentPreview = () => {
     getPaymentMethod(subscription?.payment_source_id!);
   }, [subscription?.payment_source_id]);
 
+  const userRoleInOrganization: OrgRole = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
+
+  const canUpdateBilling: boolean = useHasPermissions(
+    userRoleInOrganization,
+    Permissions.UPDATE_BILLING,
+  );
+
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');
 
@@ -37,14 +50,16 @@ export const PaymentPreview = () => {
   return activeView === 'list' ? (
     <div css={containers.mediumSmall}>
       <DetailsTable bodyElements={mapCardToDetails(paymentMethod?.card!)} />
-      <Button
-        size="small"
-        style="secondary"
-        onClick={handleUpdate}
-        css={spacing.top.medium}
-      >
-        Update payment method
-      </Button>
+      {canUpdateBilling && (
+        <Button
+          size="small"
+          style="secondary"
+          onClick={handleUpdate}
+          css={spacing.top.medium}
+        >
+          Update payment method
+        </Button>
+      )}
     </div>
   ) : (
     <>
