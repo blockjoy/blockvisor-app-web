@@ -25,9 +25,10 @@ export const mapNodeToDetails = (node: Node) => {
     label: string | any;
     data: any | undefined;
     hasCopy?: boolean;
+    isHyperlink?: boolean;
   }[] = [
     { label: 'IP Address', data: node.ip || '-' },
-    { label: 'Node Address', data: nodeUrl, hasCopy: true },
+    { label: 'Node Address', data: nodeUrl, hasCopy: true, isHyperlink: true },
     {
       label: 'Version',
       data: node.version || 'Latest',
