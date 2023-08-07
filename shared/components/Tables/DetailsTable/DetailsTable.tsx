@@ -9,8 +9,6 @@ type DetailsDataRow = {
   id?: string;
   label: ReactNode | string;
   data: any;
-  hasCopy?: boolean;
-  isHyperlink?: boolean;
 };
 
 type DetailsTableProps = {
@@ -23,14 +21,7 @@ export const DetailsTable: FC<DetailsTableProps> = ({ bodyElements }) => {
       <tbody>
         {bodyElements?.map((item: DetailsDataRow, itemIndex: number) => (
           <DataRow key={item.id ? item.id : itemIndex} label={item.label}>
-            {item.isHyperlink ? (
-              <a target="_blank" rel="noopener noreferrer" href={item.data}>
-                {item.data}
-              </a>
-            ) : (
-              item.data
-            )}
-            {item.hasCopy && <Copy value={item.data} />}
+            {item.data}
           </DataRow>
         ))}
       </tbody>
