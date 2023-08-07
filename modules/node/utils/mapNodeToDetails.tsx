@@ -11,13 +11,12 @@ const formatter = new Intl.DateTimeFormat('en-US');
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
-  console.log(node);
-
   /** Validators should have no addreess*/
+  /**TODO: remove the mocked data to - */
   const nodeUrl =
-    node.ip && node.ip && node.nodeType !== 3
-      ? `https://${node.ip}/nodes/${node.id}`
-      : '-';
+    node.address && node.nodeType !== 3
+      ? node.address
+      : `https://${node.ip}/node`;
 
   const details: {
     label: string | any;
