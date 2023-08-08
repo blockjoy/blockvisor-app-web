@@ -1,5 +1,4 @@
 import { atom } from 'recoil';
-import { User } from 'types/Auth';
 
 const user = atom<User | null>({
   key: 'authentication.user',

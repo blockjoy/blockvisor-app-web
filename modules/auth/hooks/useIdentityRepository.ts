@@ -1,4 +1,3 @@
-import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { useMemo } from 'react';
 import { BrowserStorage } from '../utils/BrowserStorage';
 import { IdentityRepository } from '../utils/IdentityRepository';
