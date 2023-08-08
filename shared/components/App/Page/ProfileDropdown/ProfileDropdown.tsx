@@ -1,15 +1,16 @@
-import { authAtoms, useSignOut } from '@modules/auth';
-import { ROUTES } from '@shared/constants/routes';
 import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { DropdownMenu, DropdownItem } from '@shared/components';
+import { authAtoms, authSelectors, useSignOut } from '@modules/auth';
+import { ROUTES } from '@shared/constants/routes';
+import { DropdownMenu, DropdownItem, Badge } from '@shared/components';
 import { ProfileBubble } from './ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
 import IconDoor from '@public/assets/icons/common/Door.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
-import { useRef, useState } from 'react';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const ProfileDropdown = () => {
   const router = useRouter();
@@ -19,6 +20,9 @@ export const ProfileDropdown = () => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const signOut = useSignOut();
+
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const userRole = useRecoilValue(authSelectors.userRole);
 
   const handleClick = () => setOpen(!isOpen);
   const handleClickOutside = () => setOpen(false);
@@ -56,6 +60,11 @@ export const ProfileDropdown = () => {
           <div css={styles.userInfo}>
             <span css={styles.label}>Signed in as</span>
             <span>{escapeHtml(`${user?.firstName} ${user?.lastName}`)}</span>
+            {isSuperUser && (
+              <Badge customCss={[spacing.top.micro]} style="outline">
+                {userRole}
+              </Badge>
+            )}
           </div>
         </DropdownItem>
         <DropdownItem

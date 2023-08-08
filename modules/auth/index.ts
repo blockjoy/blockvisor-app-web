@@ -2,6 +2,7 @@ export * from './components';
 export * from './utils/authTypeGuards';
 export * from './utils/routes';
 export * from './store/authAtoms';
+export * from './store/authSelectors';
 export * from './hooks/useIdentity';
 export * from './hooks/useIdentityRepository';
 export * from './hooks/useSignIn';

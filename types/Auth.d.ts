@@ -4,4 +4,5 @@ type User = {
   firstName?: string;
   lastName?: string;
   email?: string;
+  role?: any; // TODO: user UserRole
 };

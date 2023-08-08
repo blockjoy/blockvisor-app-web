@@ -1,4 +1,4 @@
-import { USER_ROLES } from '@modules/auth/hooks/useHasPermissions';
+import { ORG_ROLES } from '@modules/auth/hooks/useHasPermissions';
 
 export type Pagination = {
   currentPage: number;
@@ -38,8 +38,8 @@ export const initialQueryParams: InitialQueryParams = {
 };
 
 const currentlyAvailableRoles = Object.fromEntries(
-  Object.entries(USER_ROLES).filter(([_, value]) =>
-    [USER_ROLES[1], USER_ROLES[2]].includes(value),
+  Object.entries(ORG_ROLES).filter(([_, value]) =>
+    [ORG_ROLES[1], ORG_ROLES[2]].includes(value),
   ),
 );
 
