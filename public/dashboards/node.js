@@ -14,6 +14,28 @@ const sidePanelTextonlyWidth = "166px",
 
 const charts = [
   {
+    title: "RPC Requests",
+    measurement: "Per Second",
+    charts: [
+      {
+        netdata: "web_log_nginx.requests",
+        textonlyDecimalPlaces: "0",
+        library: "textonly",
+        title: "",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "web_log_nginx.requests",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
+  },
+  {
     title: "Load Avg.",
     charts: [
       {
@@ -60,68 +82,70 @@ const charts = [
       }
     ]
   },
-  {
-    title: "Disk Write",
-    measurement: "MiB/s",
-    charts: [
-      {
-        netdata: "system.io",
-        library: "textonly",
-        title: "",
-        dimensions: "out",
-        textonlyDecimalPlaces: "1",
-        width: sidePanelTextonlyWidth,
-        height: sidePanelTextonlyHeight, 
-      },
-      {
-        netdata: "system.io",
-        dygraphValueRange: "[0, 100]",
-        width: "100%",
-        height: sidePanelSparklineHeight,
-        dimensions: "out",
-        color: "#bff589 #bff589",
-        decimalDigits: "-1",
-        dygraphSparkline: "sparkline"
-      }
-    ]
-  },
-  {
-    title: "Disk Read",
-    measurement: "MiB/s",
-    charts: [
-      {
-        netdata: "system.io",
-        library: "textonly",
-        title: "",
-        dimensions: "in",
-        textonlyDecimalPlaces: "1",
-        width: sidePanelTextonlyWidth,
-        height: sidePanelTextonlyHeight, 
-      },
-      {
-        netdata: "system.io",
-        dygraphValueRange: "[0, 100]",
-        width: "100%",
-        height: sidePanelSparklineHeight,
-        dimensions: "in",
-        color: "#bff589 #bff589",
-        decimalDigits: "-1",
-        dygraphSparkline: "sparkline"
-      }
-    ]
-  },
+  // {
+  //   title: "Disk Write",
+  //   measurement: "MiB/s",
+  //   charts: [
+  //     {
+  //       netdata: "system.io",
+  //       library: "textonly",
+  //       title: "",
+  //       dimensions: "out",
+  //       textonlyDecimalPlaces: "1",
+  //       width: sidePanelTextonlyWidth,
+  //       height: sidePanelTextonlyHeight, 
+  //     },
+  //     {
+  //       netdata: "system.io",
+  //       dygraphValueRange: "[0, 100]",
+  //       width: "100%",
+  //       height: sidePanelSparklineHeight,
+  //       dimensions: "out",
+  //       color: "#bff589 #bff589",
+  //       decimalDigits: "-1",
+  //       dygraphSparkline: "sparkline"
+  //     }
+  //   ]
+  // },
+  // {
+  //   title: "Disk Read",
+  //   measurement: "MiB/s",
+  //   charts: [
+  //     {
+  //       netdata: "system.io",
+  //       library: "d3pie",
+  //       title: "",
+  //       dimensions: "in",
+  //       textonlyDecimalPlaces: "1",
+  //       width: sidePanelTextonlyWidth,
+  //       height: sidePanelTextonlyHeight, 
+  //     },
+  //     {
+  //       netdata: "system.io",
+  //       dygraphValueRange: "[0, 100]",
+  //       width: "100%",
+  //       height: sidePanelSparklineHeight,
+  //       dimensions: "in",
+  //       color: "#bff589 #bff589",
+  //       decimalDigits: "-1",
+  //       dygraphSparkline: "sparkline"
+  //     }
+  //   ]
+  // },
   {
     title: "Disk Space",
     measurement: "GiB Available",
     charts: [
       {
-        netdata: "disk.space",
+        netdata: "disk_space._blockjoy",
+        textonlyDecimalPlaces: 0,
+        library: "textonly",
         title: "",
         width: sidePanelTextonlyWidth,
         height: sidePanelTextonlyHeight, 
       },
       {
-        netdata: "disk.space",
+        netdata: "disk_space._blockjoy",
         dygraphValueRange: "[0, 100]",
         width: "100%",
         height: sidePanelSparklineHeight,
