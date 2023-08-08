@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import {

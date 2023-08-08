@@ -70,11 +70,13 @@ export const OrganizationViewHeader: FC = () => {
   const role = getOrgMemberRole(organization!, user?.id!);
 
   const canUpdateOrganization: boolean = useHasPermissions(
+    user?.role!,
     role,
     Permissions.UPDATE_ORGANIZATION,
   );
 
   const canDeleteOrganization: boolean = useHasPermissions(
+    user?.role!,
     role,
     Permissions.DELETE_ORGANIZATION,
   );

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useRecoilValue } from 'recoil';
 import {
   TableSkeleton,

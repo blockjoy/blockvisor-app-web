@@ -1,19 +1,24 @@
 import {
   Node,
   NodeProperty,
+  NodeType,
   UiType,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import { Copy } from '@shared/components';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { LockedSwitch, NodeTypeConfigLabel } from '../components/Shared';
-
-const formatter = new Intl.DateTimeFormat('en-US');
 
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
-  const details: { label: string | any; data: any | undefined }[] = [
+  const nodeUrl = `http://${node.name}.n0des.xyz`;
+
+  const details: {
+    label: string | any;
+    data: any | undefined;
+  }[] = [
     { label: 'IP Address', data: node.ip || '-' },
-    { label: 'Node Address', data: node.address || '-' },
+    { label: 'Gateway IP', data: node.ipGateway || '-' },
     {
       label: 'Version',
       data: node.version || 'Latest',
@@ -23,6 +28,25 @@ export const mapNodeToDetails = (node: Node) => {
       data: node.network || '-',
     },
   ];
+
+  if (node.address) {
+    details.unshift({ label: 'Node Address', data: node.address || '-' });
+  }
+
+  if (node.nodeType !== NodeType.NODE_TYPE_VALIDATOR) {
+    details.unshift({
+      label: 'RPC URL',
+      data:
+        (
+          <>
+            <a target="_blank" rel="noopener noreferrer" href={nodeUrl}>
+              {nodeUrl}
+            </a>
+            <Copy value={nodeUrl} />
+          </>
+        ) || '-',
+    });
+  }
 
   details.push(
     ...node.properties

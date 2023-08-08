@@ -24,19 +24,6 @@ export const nodeTypeConfigLabels = [
   { name: 'self-hosted', value: 'Self Hosted' },
 ];
 
-export const blockchainsDisabled = [
-  'Algorand',
-  'Aptos',
-  'Avalanche',
-  'Cardano',
-  'Cosmos',
-  'Lightning',
-  'Near',
-  'Pocket',
-  'Polygon',
-  'Solana',
-];
-
 export const nodeTypeProps = {
   number: 'number',
   text: 'string',

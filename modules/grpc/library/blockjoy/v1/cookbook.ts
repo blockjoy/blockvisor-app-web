@@ -1468,7 +1468,7 @@ export const DownloadManifest = {
 };
 
 function createBaseChunk(): Chunk {
-  return { key: "", url: "", checksumType: 0, checksum: new Uint8Array(0), size: 0, destinations: [] };
+  return { key: "", url: "", checksumType: 0, checksum: new Uint8Array(), size: 0, destinations: [] };
 }
 
 export const Chunk = {
@@ -1561,7 +1561,7 @@ export const Chunk = {
     message.key = object.key ?? "";
     message.url = object.url ?? "";
     message.checksumType = object.checksumType ?? 0;
-    message.checksum = object.checksum ?? new Uint8Array(0);
+    message.checksum = object.checksum ?? new Uint8Array();
     message.size = object.size ?? 0;
     message.destinations = object.destinations?.map((e) => FileLocation.fromPartial(e)) || [];
     return message;
@@ -1797,7 +1797,7 @@ export const KernelIdentifier = {
 };
 
 function createBasePlugin(): Plugin {
-  return { identifier: undefined, rhaiContent: new Uint8Array(0) };
+  return { identifier: undefined, rhaiContent: new Uint8Array() };
 }
 
 export const Plugin = {
@@ -1850,7 +1850,7 @@ export const Plugin = {
     message.identifier = (object.identifier !== undefined && object.identifier !== null)
       ? ConfigIdentifier.fromPartial(object.identifier)
       : undefined;
-    message.rhaiContent = object.rhaiContent ?? new Uint8Array(0);
+    message.rhaiContent = object.rhaiContent ?? new Uint8Array();
     return message;
   },
 };
@@ -2333,10 +2333,10 @@ export interface ManifestServiceClient<CallOptionsExt = {}> {
   ): Promise<ManifestServiceRetrieveDownloadManifestResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

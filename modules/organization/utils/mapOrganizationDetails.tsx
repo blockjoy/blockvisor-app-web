@@ -1,4 +1,4 @@
-import { USER_ROLES } from '@modules/auth/hooks/useHasPermissions';
+import { ORG_ROLES } from '@modules/auth/hooks/useHasPermissions';
 import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { SvgIcon } from '@shared/components';
 import { getOrgMemberRole } from './getOrgMemberRole';
@@ -18,7 +18,7 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
     return null;
   }
 
-  const role = USER_ROLES[getOrgMemberRole(org!, userId)];
+  const role = ORG_ROLES[getOrgMemberRole(org!, userId)];
 
   const details: Details[] = [
     {

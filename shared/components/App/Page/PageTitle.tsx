@@ -61,11 +61,9 @@ export const PageTitle: FC<Props> = ({
               {isLoading && !childTitle ? (
                 <Skeleton width="80px" />
               ) : !isLoading && !childTitle ? (
-                <p>Host not found</p>
-              ) : canCopyChild ? (
-                <Copy value={childTitle}>{childTitle}</Copy>
+                <p css={styles.childTitle}>Host not found</p>
               ) : (
-                childTitle
+                <p css={styles.childTitle}>{childTitle}</p>
               )}
             </>
           )}

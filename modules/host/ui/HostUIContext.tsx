@@ -1,5 +1,6 @@
 import React, { useContext, useState, useCallback, createContext } from 'react';
-import { isEqual, isFunction } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import isFunction from 'lodash/isFunction';
 import { initialQueryParams, InitialQueryParams } from './HostUIHelpers';
 import { loadPersistedFilters } from '../utils/loadPersistedFilters';
 import { buildParams } from '../utils/buildParams';

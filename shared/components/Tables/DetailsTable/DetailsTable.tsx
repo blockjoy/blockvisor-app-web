@@ -1,10 +1,15 @@
+import { Copy } from '@shared/components/General';
 import { FC, ReactNode } from 'react';
 import { table } from 'styles/table.styles';
 import { DataRow } from './DataRow/DataRow';
 
 import { styles } from './DetailsTable.styles';
 
-type DetailsDataRow = { id?: string; label: ReactNode | string; data: any };
+type DetailsDataRow = {
+  id?: string;
+  label: ReactNode | string;
+  data: any;
+};
 
 type DetailsTableProps = {
   bodyElements: DetailsDataRow[];

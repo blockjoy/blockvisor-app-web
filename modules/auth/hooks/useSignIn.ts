@@ -57,7 +57,7 @@ export function useSignIn() {
       Mixpanel.identify(userData.email);
 
       repository?.updateIdentity(userData);
-      setUser((current) => ({
+      setUser((current: any) => ({
         ...current,
         ...userData,
         accessToken,

@@ -21,9 +21,7 @@ export const NodeViewSidePanel = () => {
           )}
         </div>
       </div>
-      {node?.blockHeight! > -1 && (
-        <NetdataDashboard nodeId={node?.id!} isSidePanel />
-      )}
+      {node?.blockHeight! > -1 && <NetdataDashboard id={node?.id!} />}
     </>
   );
 };

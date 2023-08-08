@@ -43,6 +43,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
   const role = getOrgMemberRole(selectedOrganization!, user?.id!);
 
   const canCreateMember: boolean = useHasPermissions(
+    user?.role!,
     role,
     Permissions.CREATE_MEMBER,
   );
