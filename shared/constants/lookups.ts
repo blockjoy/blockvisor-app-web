@@ -66,10 +66,3 @@ export const hostFiltersCustomValues = {
     10 * Math.pow(1024, 4),
   ],
 };
-
-export const blockchainPortList = [
-  {
-    name: 'celo',
-    port: 9154,
-  },
-];

@@ -7,25 +7,16 @@ import {
 import { Copy } from '@shared/components';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { LockedSwitch, NodeTypeConfigLabel } from '../components/Shared';
-import { blockchainPortList } from '@shared/constants/lookups';
-
-const formatter = new Intl.DateTimeFormat('en-US');
 
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
-  /**TODO: remove the mocked data to real data*/
-  const nodeUrl = `http://${node.ip}:${
-    blockchainPortList.find(
-      (p) => p.name === node.blockchainName.toLocaleLowerCase(),
-    )?.port
-  }`;
+  const nodeUrl = `http://${node.name}.n0des.xyz`;
 
   const details: {
     label: string | any;
     data: any | undefined;
   }[] = [
-    { label: 'Node Address', data: node.address || '-' },
     { label: 'IP Address', data: node.ip || '-' },
     { label: 'Gateway IP', data: node.ipGateway || '-' },
     {
@@ -38,7 +29,10 @@ export const mapNodeToDetails = (node: Node) => {
     },
   ];
 
-  /** Validators should have no url*/
+  if (node.address) {
+    details.unshift({ label: 'Node Address', data: node.address || '-' });
+  }
+
   if (node.nodeType !== NodeType.NODE_TYPE_VALIDATOR) {
     details.unshift({
       label: 'RPC URL',
@@ -48,7 +42,7 @@ export const mapNodeToDetails = (node: Node) => {
             <a target="_blank" rel="noopener noreferrer" href={nodeUrl}>
               {nodeUrl}
             </a>
-            <Copy value="https://blockjoy.com/" />
+            <Copy value={nodeUrl} />
           </>
         ) || '-',
     });
