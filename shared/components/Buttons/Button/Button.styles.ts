@@ -100,8 +100,7 @@ const buttonStyle = {
     }
 
     :hover,
-    :active,
-    :focus {
+    :active {
       background: ${theme.colorLightGrey};
 
       rect,

@@ -1,27 +1,29 @@
-import { reset } from 'styles/utils.reset.styles';
-import { styles } from './Copy.styles';
-import { colors } from 'styles/utils.colors.styles';
 import CopyIcon from '@public/assets/icons/common/Copy.svg';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
-import { SvgIcon } from '@shared/components';
+import { Button, SvgIcon } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
 interface CopyButtonProps {
   disabled?: boolean;
   value: string;
-  children?: React.ReactNode;
 }
 
-export const Copy = ({ disabled, children, value }: CopyButtonProps) => {
+export const Copy = ({ disabled, value }: CopyButtonProps) => {
   const handleCopy = () => copyToClipboard(value);
 
   return (
-    <button
-      onClick={handleCopy}
-      disabled={disabled}
-      css={[reset.button, styles.base, colors.text3]}
-    >
-      {children && <p css={styles.text}>{children}</p>}
-      <CopyIcon />
-    </button>
+    <span css={spacing.left.small}>
+      <Button
+        tooltip="Copy"
+        style="icon"
+        size="small"
+        onClick={handleCopy}
+        disabled={disabled}
+      >
+        <SvgIcon size="14px">
+          <CopyIcon />
+        </SvgIcon>
+      </Button>
+    </span>
   );
 };
