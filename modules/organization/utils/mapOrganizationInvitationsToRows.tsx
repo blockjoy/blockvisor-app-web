@@ -1,4 +1,4 @@
-import { useIdentityRepository } from '@modules/auth';
+import { useIdentity } from '@modules/auth';
 import { Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -35,23 +35,23 @@ export const mapOrganizationInvitationsToRows = (
   invitations?: Invitation[],
   methods?: Methods,
 ) => {
-  const repository = useIdentityRepository();
-  const identity = repository?.getIdentity();
-
-  const userId = identity?.id;
-  const userEmail = identity?.email;
+  const { user } = useIdentity();
 
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
+  const role = getOrgMemberRole(selectedOrganization!, user?.id!);
+
   const canCreateMember: boolean = useHasPermissions(
-    getOrgMemberRole(selectedOrganization!, userId!),
+    user?.role,
+    role,
     Permissions.CREATE_MEMBER,
   );
 
   const canRemoveMember: boolean = useHasPermissions(
-    getOrgMemberRole(selectedOrganization!, userId!),
+    user?.role,
+    role,
     Permissions.DELETE_MEMBER,
   );
 

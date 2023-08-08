@@ -1,4 +1,4 @@
-import { useIdentityRepository } from '@modules/auth';
+import { useIdentity } from '@modules/auth';
 import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
@@ -37,15 +37,17 @@ export const mapOrganizationMembersToRows = (
   members?: OrgUser[],
   methods?: Methods,
 ) => {
-  const repository = useIdentityRepository();
-  const userId = repository?.getIdentity()?.id;
+  const { user } = useIdentity();
 
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
+  const role = getOrgMemberRole(selectedOrganization!, user?.id!);
+
   const canRemoveMember: boolean = useHasPermissions(
-    getOrgMemberRole(selectedOrganization!, userId!),
+    user?.role,
+    role,
     Permissions.DELETE_MEMBER,
   );
 
@@ -106,7 +108,7 @@ export const mapOrganizationMembersToRows = (
         key: '2',
         component: (
           <>
-            {canRemoveMember && member.userId !== userId ? (
+            {canRemoveMember && member.userId !== user?.id ? (
               <Button
                 type="button"
                 tooltip="Remove"
