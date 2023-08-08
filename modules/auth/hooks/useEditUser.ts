@@ -4,6 +4,7 @@ import { useIdentityRepository } from './useIdentityRepository';
 import { userClient } from '@modules/grpc';
 import { isStatusResponse } from '@modules/organization';
 import { ApplicationError } from '../utils/Errors';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 export function useEditUser() {
   const [, setUser] = useRecoilState(authAtoms.user);
@@ -16,7 +17,7 @@ export function useEditUser() {
         firstName,
         lastName,
       );
-      setUser((current) => ({ ...current, ...response }));
+      setUser((current: User) => ({ ...current, ...response }));
       repository?.updateIdentity({ ...response });
     } catch (err: any) {
       throw new ApplicationError('EditUserError', err);
