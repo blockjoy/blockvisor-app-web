@@ -99,4 +99,9 @@ export const styles = {
       display: none;
     }
   `,
+  childTitle: css`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `,
 };

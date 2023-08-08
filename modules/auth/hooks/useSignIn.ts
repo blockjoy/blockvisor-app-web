@@ -19,7 +19,6 @@ import { Mixpanel } from '@shared/services/mixpanel';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { toast } from 'react-toastify';
-import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 type SignInParams = {
   email: string;
@@ -58,7 +57,7 @@ export function useSignIn() {
       Mixpanel.identify(userData.email);
 
       repository?.updateIdentity(userData);
-      setUser((current: User) => ({
+      setUser((current: any) => ({
         ...current,
         ...userData,
         accessToken,
