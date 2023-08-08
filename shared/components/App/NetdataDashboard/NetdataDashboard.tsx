@@ -22,7 +22,7 @@ export const NetdataDashboard = ({ nodeId, isSidePanel }: Props) => {
       if (isSidePanel) {
         sidePanelIframeDimenisions = {
           width: '100%',
-          height: '470px',
+          height: '640px',
         };
       }
 
