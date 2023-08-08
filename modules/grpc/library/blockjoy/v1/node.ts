@@ -331,7 +331,7 @@ export interface NodePlacement {
  * node is always defined.
  */
 export interface NodeScheduler {
-  /** The way we want the node to react to similar nodes being on a host. */
+  /** The way we want the node to react to hosts being full or empty. */
   resource: NodeScheduler_ResourceAffinity;
   /** The way we want the node to react to similar nodes being on a host. */
   similarity?:
@@ -2292,10 +2292,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceDeleteResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

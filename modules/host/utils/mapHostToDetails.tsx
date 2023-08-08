@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
 import { dateFormatter, timeFormatter } from '@shared/utils/dateFormatter';
+import { formatAmount } from '@shared/utils/amountFormatter';
 
 const generateIpAddresses = (host: Host) => {
   const ips = [];
@@ -65,6 +66,12 @@ export const mapHostToDetails = (host: Host) => {
       data: formatters.formatBytes(host?.diskSizeBytes!) || '-',
     },
   ];
+
+  if (host?.billingAmount)
+    details.push({
+      label: 'Monthly Cost',
+      data: formatAmount(host?.billingAmount?.amount!) || '-',
+    });
 
   return details;
 };
