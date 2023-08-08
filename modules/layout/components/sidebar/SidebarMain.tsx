@@ -90,7 +90,7 @@ export default () => {
   }
 
   return (
-    <main css={[styles.wrapper]}>
+    <main css={styles.wrapper(isSidebarOpen)}>
       <div css={styles.navigation}>
         {blocks.map((block) => (
           <div css={styles.block(isSidebarOpen)}>
