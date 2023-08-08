@@ -8,11 +8,11 @@ var host = `https://magellan-1.slc.blockjoy.com/host/${node_id}`;
 // var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
 // var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';
 
-const sidePanelTextonlyWidth = "150px",
-      sidePanelTextonlyHeight = "56px",
+const sidePanelTextonlyWidth = "166px",
+      sidePanelTextonlyHeight = "50px",
       sidePanelSparklineHeight = "44px";
 
-const loadSidePanelCharts = [
+const charts = [
   {
     title: "Load Avg.",
     charts: [
@@ -109,96 +109,27 @@ const loadSidePanelCharts = [
         dygraphSparkline: "sparkline"
       }
     ]
-  }
-];
-
-const systemCharts = [
-  {
-    netdata: "system.cpu",
-    library: "easypiechart",
-    title: "CPU",
-    units: "%",
-    width: "75%",
-    maxValue: "100",
-    points: "300",
   },
   {
-    netdata: "system.io",
-    library: "easypiechart",
-    title: "Disk Read",
-    points: "300",
-    dimensions: "in",
-    commonUnits: "system.io.mainhead",
-    units: "MiB/s",
-    width: "75%",
-    maxValue: "1000",
-  },  
-  {
-    netdata: "system.io",
-    library: "easypiechart",
-    title: "Disk Write",
-    width: "75%",
-    points: "300",
-    dimensions: "out",
-    commonUnits: "system.io.mainhead",
-    units: "MiB/s",
-    color: "#EE7070",
-    maxValue: "1000",
-  },  
-  {
-    netdata: "system.swap",
-    library: "easypiechart",
-    title: "Used Swap",
-    units: "%",
-    points: "480",
-    maxValue: "100",
-    appendOptions: "percentage",
-    dimensions: "used",
-    color: "#e9c09c",
-    width: "75%",
-  },
-  {
-    netdata: "system.ram",
-    library: "easypiechart",
-    title: "Used Ram",
-    units: "%",
-    dimensions: "used|buffers|active|wired",
-    color: "#e9c09c",
-    width: "75%",
-    maxValue: "100",
-    points: "600",
-    appendOptions: "percentage"
-  },
-  {
-    netdata: "system.net",
-    library: "easypiechart",
-    title: "Net Inbound",
-    units: "kilobits/s",
-    dimensions: "received",
-    width: "75%",
-    maxValue: "1000",
-  },
-  {
-    netdata: "system.net",
-    library: "easypiechart",
-    title: "Net Outbound",
-    units: "kilobits/s",
-    dimensions: "sent",
-    color: "#EE7070",
-    width: "75%",
-    maxValue: "1000",
-  },
-];
-
-const loadCharts = [
-  {
-    netdata: "system.load",
-    dygraphValueRange: "[0, 100]",
-    width: "100%",
-    height: "230px",
-    color: "#bff589 #e9af3a #EE7070",
-    decimalDigits: "-1",
-    legendPosition: "bottom"
+    title: "Disk Space",
+    measurement: "GiB Available",
+    charts: [
+      {
+        netdata: "disk.space",
+        title: "",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "disk.space",
+        dygraphValueRange: "[0, 100]",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
   }
 ];
 
@@ -277,96 +208,43 @@ const createChart = (chart) => {
 }
 
 const onLoad = () => {
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
+  charts.forEach((block) => {
 
-  const { is_side_panel } = params;
+    const row = document.createElement("div");
+    row.setAttribute("class", "row");
 
-  // const node_id = "3b78c2f9-e9d5-4982-952e-23bae0fe9da1";
+    const header = document.createElement("header");
+    header.innerText = block.title;
 
-  const system = document.querySelector("#system"),
-        load = document.querySelector("#load");
-        sidePanel = document.querySelector("#sidePanel");
+    const chartsDiv = document.createElement("div");
+    chartsDiv.setAttribute("class", "charts");
 
-  console.log("params", params.is_side_panel);
+    row.appendChild(header);
+    row.appendChild(chartsDiv);
 
-  if (is_side_panel === "true") {
-    document.body.classList.add("is-side-panel");
-    const main = document.querySelector("main");
-    document.body.removeChild(main);
+    const textonlyWrapper = document.createElement("div");
+    textonlyWrapper.setAttribute("class", "textonly-wrapper");
 
-    loadSidePanelCharts.forEach((block) => {
+    const textonlyChart = createChart(block.charts[0]);
+    textonlyChart.setAttribute("id", block.title);
 
-      const row = document.createElement("div");
-      row.setAttribute("class", "row");
-
-      const header = document.createElement("header");
-      header.innerText = block.title;
-
-      const charts = document.createElement("div");
-      charts.setAttribute("class", "charts");
-
-      row.appendChild(header);
-      row.appendChild(charts);
-
-      const textonlyWrapper = document.createElement("div");
-      textonlyWrapper.setAttribute("class", "textonly-wrapper");
-
-      const textonlyChart = createChart(block.charts[0]);
-
-      textonlyWrapper.appendChild(textonlyChart);
+    textonlyWrapper.appendChild(textonlyChart);
+    
+    if (block.measurement) {
+      const measurement = document.createElement("div");
+      measurement.setAttribute("class", "measurement");
+      measurement.innerText = block.measurement;
       
-      if (block.measurement) {
-        const measurement = document.createElement("div");
-        measurement.setAttribute("class", "measurement");
-        measurement.innerText = block.measurement;
-        
-        textonlyWrapper.appendChild(measurement);
-      }
+      textonlyWrapper.appendChild(measurement);
+    }
 
-      const sparklineChart = createChart(block.charts[1]);
+    const sparklineChart = createChart(block.charts[1]);
 
-      charts.appendChild(textonlyWrapper);
-      charts.appendChild(sparklineChart);
+    chartsDiv.appendChild(textonlyWrapper);
+    chartsDiv.appendChild(sparklineChart);
 
-      sidePanel.appendChild(row);
-    });
-  
-  } else {
-    const aside = document.querySelector("aside");
-    document.body.removeChild(aside);
-
-    systemCharts.forEach((chart) => {
-
-      const card = document.createElement("article");
-      card.setAttribute("class", "card");
-
-      const h2 = document.createElement("h2");
-      h2.setAttribute("class", "card-header");
-      h2.innerText = chart.title;
-
-      card.appendChild(h2);
-
-      const element = createChart(chart);
-      card.appendChild(element);
-  
-      system.appendChild(card);
-    });
-
-    loadCharts.forEach((chart) => {
-
-      const card = document.createElement("article");
-      card.setAttribute("class", "card");
-
-      const element = createChart(chart);
-      card.appendChild(element);
-
-      load.appendChild(card);
-    });
-  }
-
-  
+    main.appendChild(row);
+  });
 }
 
 

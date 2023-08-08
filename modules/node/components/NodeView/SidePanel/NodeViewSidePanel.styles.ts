@@ -15,7 +15,7 @@ export const styles = {
   `,
   formValue: (theme: ITheme) => css`
     color: ${theme.colorText};
-    font-size: 40px;
+    font-size: 36px;
     font-style: normal;
   `,
   blockheightWrapper: css`
