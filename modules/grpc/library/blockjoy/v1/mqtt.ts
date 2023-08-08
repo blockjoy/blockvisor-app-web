@@ -29,7 +29,7 @@ export interface NodeUpdated {
   node:
     | Node
     | undefined;
-  /** The id of the person that updated the node */
+  /** The id of the person that updated the node, if there is one. */
   updatedBy?: string | undefined;
   updatedByName?: string | undefined;
   updatedByEmail?: string | undefined;

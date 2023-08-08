@@ -331,7 +331,7 @@ export interface NodePlacement {
  * node is always defined.
  */
 export interface NodeScheduler {
-  /** The way we want the node to react to similar nodes being on a host. */
+  /** The way we want the node to react to hosts being full or empty. */
   resource: NodeScheduler_ResourceAffinity;
   /** The way we want the node to react to similar nodes being on a host. */
   similarity?:

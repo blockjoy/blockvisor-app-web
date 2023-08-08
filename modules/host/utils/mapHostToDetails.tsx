@@ -7,6 +7,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { dateFormatter, timeFormatter } from '@shared/utils/dateFormatter';
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
+import { formatAmount } from '@shared/utils/amountFormatter';
 
 const ipListStyles = css`
   columns: 2;
@@ -83,6 +84,12 @@ export const mapHostToDetails = (host: Host) => {
       data: formatters.formatBytes(host?.diskSizeBytes!) || '-',
     },
   ];
+
+  if (host?.billingAmount)
+    details.push({
+      label: 'Monthly Cost',
+      data: formatAmount(host?.billingAmount?.amount!) || '-',
+    });
 
   return details;
 };
