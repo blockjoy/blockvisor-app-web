@@ -119,7 +119,7 @@ export const useFilters = (hostUIProps: HostUIProps) => {
     //   max: hostFiltersDefaults.memory[1],
     //   values: filtersMemory,
     //   setValues: setFiltersMemory,
-    //   formatter: formatters.formatBytes,
+    //   formatter: formatters.formatSize, // TODO: improve formatting, use formatSize with type 'bytes'
     // },
     // {
     //   name: 'CPU Cores',
@@ -130,7 +130,7 @@ export const useFilters = (hostUIProps: HostUIProps) => {
     //   max: hostFiltersDefaults.cpu[1],
     //   values: filtersCPU,
     //   setValues: setFiltersCPU,
-    //   formatter: formatters.plain,
+    //   formatter: formatters.formatSize,
     // },
     // {
     //   name: 'Disk space',
@@ -143,7 +143,7 @@ export const useFilters = (hostUIProps: HostUIProps) => {
     //   values: filtersSpace,
     //   customValues: hostFiltersCustomValues.space,
     //   setValues: setFiltersSpace,
-    //   formatter: formatters.formatBytes,
+    //   formatter: formatters.formatSize, // TODO: improve formatting, use formatSize with type 'bytes'
     // },
   ];
 
