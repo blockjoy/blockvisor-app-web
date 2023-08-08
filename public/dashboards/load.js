@@ -61,8 +61,7 @@ loadScript(`${host}/dashboard.js`, () => {
   NETDATA.themes.slate.easypiechart_track = "#363938";
   NETDATA.options.current.update_only_visible = false;
   NETDATA.options.current.destroy_on_hide = false;
-  NETDATA.options.textOnlyCreate = () => console.log("text only update");
-
+  
   setTimeout(() => {
 
     // format memory available

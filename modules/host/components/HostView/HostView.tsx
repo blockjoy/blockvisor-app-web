@@ -4,6 +4,7 @@ import { styles } from './HostView.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
 import { useHostView, HostViewTabs, HostViewHeader } from '@modules/host';
 import { useNodeList } from '@modules/node';
+import { HostViewSidePanel } from './HostViewSidePanel/HostViewSidePanel';
 
 type HostViewProps = {
   children: ReactNode;
@@ -51,6 +52,9 @@ export const HostView = ({ children }: HostViewProps) => {
             ) : (
               <>
                 <div css={styles.content}>{children}</div>
+                <div css={styles.sidePanel}>
+                  <HostViewSidePanel />
+                </div>
               </>
             )}
           </div>

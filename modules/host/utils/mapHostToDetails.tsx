@@ -5,6 +5,24 @@ import Link from 'next/link';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
 import { dateFormatter, timeFormatter } from '@shared/utils/dateFormatter';
+import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
+
+const ipListStyles = css`
+  columns: 2;
+
+  @media ${breakpoints.fromSml} {
+    columns: 2;
+  }
+
+  @media ${breakpoints.fromMed} {
+    columns: 1;
+  }
+
+  @media ${breakpoints.fromXHuge} {
+    columns: 3;
+  }
+`;
 
 const generateIpAddresses = (host: Host) => {
   const ips = [];
@@ -41,7 +59,7 @@ export const mapHostToDetails = (host: Host) => {
       label: 'IP Addresses',
       data:
         (
-          <ul>
+          <ul css={ipListStyles}>
             {ipAddresses.map((ip) => (
               <li key={ip} css={spacing.bottom.micro}>
                 {ip}

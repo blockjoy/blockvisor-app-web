@@ -2,39 +2,31 @@ import { useEffect, useState } from 'react';
 import { styles } from './NetdataDashboard.styles';
 
 type Props = {
-  nodeId: string;
-  isSidePanel?: boolean;
+  id: string;
 };
 
-export const NetdataDashboard = ({ nodeId, isSidePanel }: Props) => {
+const iframeDimensions = {
+  width: '100%',
+  height: '640px',
+};
+
+export const NetdataDashboard = ({ id }: Props) => {
   const [state, setState] = useState({
     url: '',
-    width: '100%',
-    height: '1600px',
   });
 
-  const { url, width, height } = state;
+  const { url } = state;
+  const { width, height } = iframeDimensions;
 
   useEffect(() => {
     if (!url) {
-      let sidePanelIframeDimenisions;
-
-      if (isSidePanel) {
-        sidePanelIframeDimenisions = {
-          width: '100%',
-          height: '640px',
-        };
-      }
-
       setState({
         ...state,
-        url: `/dashboards/node.html?node_id=${nodeId}${
-          isSidePanel ? '&is_side_panel=true' : ''
-        }`,
-        ...sidePanelIframeDimenisions,
+        url: `/dashboards/node.html?id=${id}`,
+        ...iframeDimensions,
       });
     }
-  }, [nodeId]);
+  }, [id]);
 
   return url ? (
     <iframe css={styles.iframe} width={width} height={height} src={url} />

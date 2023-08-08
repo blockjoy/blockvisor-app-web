@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { localStorageEffect } from 'utils/store/persist';
 
 export type LayoutStates =
   | 'hosts'
@@ -16,4 +17,5 @@ export const layoutState = atom<LayoutStates | undefined>({
 export const sidebarOpen = atom<boolean>({
   key: 'sidebarOpen',
   default: false,
+  effects: [localStorageEffect('sidebarOpen')],
 });
