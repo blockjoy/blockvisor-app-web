@@ -1,3 +1,4 @@
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { atom } from 'recoil';
 
 const user = atom<User | null>({
