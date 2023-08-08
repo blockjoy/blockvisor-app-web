@@ -1,11 +1,9 @@
+import Link from 'next/link';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
 import { HostOs } from '@shared/components';
-import Link from 'next/link';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
-import { dateFormatter, timeFormatter } from '@shared/utils/dateFormatter';
-import { formatAmount } from '@shared/utils/amountFormatter';
 
 const generateIpAddresses = (host: Host) => {
   const ips = [];
@@ -59,18 +57,19 @@ export const mapHostToDetails = (host: Host) => {
     },
     {
       label: 'Memory',
-      data: formatters.formatBytes(host?.memSizeBytes!) || '-',
+      data: formatters.formatSize(host?.memSizeBytes!, 'bytes') || '-',
     },
     {
       label: 'Disk Size',
-      data: formatters.formatBytes(host?.diskSizeBytes!) || '-',
+      data: formatters.formatSize(host?.diskSizeBytes!, 'bytes') || '-',
     },
   ];
 
   if (host?.billingAmount)
     details.push({
       label: 'Monthly Cost',
-      data: formatAmount(host?.billingAmount?.amount!) || '-',
+      data:
+        formatters.formatAmount(host?.billingAmount?.amount!, 'amount') || '-',
     });
 
   return details;
@@ -86,8 +85,9 @@ export const mapHostToDetailsLaunch = (host: Host) => {
       label: 'Launched On',
       data: !host.createdAt
         ? '-'
-        : `${dateFormatter.format(host.createdAt)} @ ${timeFormatter.format(
+        : `${formatters.formatDate(host.createdAt)} @ ${formatters.formatDate(
             host.createdAt,
+            'time',
           )}`,
     },
   ];
