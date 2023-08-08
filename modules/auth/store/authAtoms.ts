@@ -1,5 +1,5 @@
-import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { atom } from 'recoil';
+import { User } from 'types/Auth';
 
 const user = atom<User | null>({
   key: 'authentication.user',

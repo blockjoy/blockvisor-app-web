@@ -12,7 +12,7 @@ const isSuperUser = selector<boolean>({
   },
 });
 
-const userRole = selector<UserRole | null>({
+const userRole = selector<any>({
   key: 'authentication.user.role',
   get: ({ get }) => {
     const user = get(authAtoms.user);

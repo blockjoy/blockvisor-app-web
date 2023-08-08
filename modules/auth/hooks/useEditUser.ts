@@ -17,7 +17,7 @@ export function useEditUser() {
         firstName,
         lastName,
       );
-      setUser((current: User) => ({ ...current, ...response }));
+      setUser((current: any) => ({ ...current, ...response }));
       repository?.updateIdentity({ ...response });
     } catch (err: any) {
       throw new ApplicationError('EditUserError', err);

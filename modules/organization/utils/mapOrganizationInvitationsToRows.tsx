@@ -44,13 +44,13 @@ export const mapOrganizationInvitationsToRows = (
   const role = getOrgMemberRole(selectedOrganization!, user?.id!);
 
   const canCreateMember: boolean = useHasPermissions(
-    user?.role,
+    user?.role!,
     role,
     Permissions.CREATE_MEMBER,
   );
 
   const canRemoveMember: boolean = useHasPermissions(
-    user?.role,
+    user?.role!,
     role,
     Permissions.DELETE_MEMBER,
   );

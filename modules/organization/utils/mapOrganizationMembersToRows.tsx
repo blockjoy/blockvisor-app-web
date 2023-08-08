@@ -46,7 +46,7 @@ export const mapOrganizationMembersToRows = (
   const role = getOrgMemberRole(selectedOrganization!, user?.id!);
 
   const canRemoveMember: boolean = useHasPermissions(
-    user?.role,
+    user?.role!,
     role,
     Permissions.DELETE_MEMBER,
   );
