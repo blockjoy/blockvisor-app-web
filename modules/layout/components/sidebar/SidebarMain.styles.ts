@@ -3,11 +3,12 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (isSidebarOpen: boolean) => css`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 16px 0;
+    padding-top: 16px;
+    padding-bottom: ${isSidebarOpen ? '16px' : '4px'};
     min-width: 0;
     width: 100%;
   `,
