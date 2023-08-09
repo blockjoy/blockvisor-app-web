@@ -1,6 +1,6 @@
 const preloader = document.querySelector("#preloader");
 
-function loadScript( url, callback ) {
+function loadScript(url, callback) {
   var script = document.createElement( "script" )
   script.type = "text/javascript";
   if(script.readyState) { 
@@ -27,6 +27,14 @@ loadScript(`${host}/dashboard.js`, () => {
   NETDATA.options.current.destroy_on_hide = false;
   
   setTimeout(() => {
+    // check if charts have an error
+    const textonlyCharts = document.querySelectorAll('.netdata-container');
+    textonlyCharts.forEach(chart => {
+      // only textonly charts have an id
+      if (chart.id && !+chart.innerHTML) {
+        chart.innerHTML = "0";
+      }
+    })
     preloader.classList.add("hidden");
   }, 3000)
 });
