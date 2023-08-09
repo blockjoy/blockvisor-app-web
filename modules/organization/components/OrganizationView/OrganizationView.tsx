@@ -5,10 +5,10 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { EmptyColumn, TableAdd, SkeletonView } from '@shared/components';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import {
-  getOrgMemberRole,
   invitationAtoms,
   organizationAtoms,
   OrganizationDetails,
+  organizationSelectors,
   useInvitations,
   useInviteMembers,
 } from '@modules/organization';
@@ -16,7 +16,7 @@ import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
 import { useRecoilValue } from 'recoil';
-import { useIdentity } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import {
   Permissions,
   useHasPermissions,
@@ -38,13 +38,14 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     organizationAtoms.selectedOrganization,
   );
 
-  const { user } = useIdentity();
-
-  const role = getOrgMemberRole(selectedOrganization!, user?.id!);
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
 
   const canCreateMember: boolean = useHasPermissions(
-    user?.role!,
-    role,
+    userRole,
+    userRoleInOrganization,
     Permissions.CREATE_MEMBER,
   );
 

@@ -1,12 +1,12 @@
-import { ORG_ROLES } from '@modules/auth/hooks/useHasPermissions';
+import Link from 'next/link';
+import { ReactNode } from 'react';
+import { useRecoilValue } from 'recoil';
 import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { SvgIcon } from '@shared/components';
-import { getOrgMemberRole } from './getOrgMemberRole';
-import Link from 'next/link';
 import IconInfo from '@public/assets/icons/common/Info.svg';
 import { ROUTES } from '@shared/constants/routes';
-import { ReactNode } from 'react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { organizationSelectors } from '@modules/organization';
 
 type Details = {
   label: string | ReactNode;
@@ -18,14 +18,16 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
     return null;
   }
 
-  const role = ORG_ROLES[getOrgMemberRole(org!, userId)];
+  const userRoleNameInOrganization = useRecoilValue(
+    organizationSelectors.userRoleNameInOrganization,
+  );
 
   const details: Details[] = [
     {
       label: 'ROLE',
       data: (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <p>{role}</p>
+          <p>{userRoleNameInOrganization}</p>
           <SvgIcon isDefaultColor tooltip="Your role within this Organization">
             <IconInfo />
           </SvgIcon>

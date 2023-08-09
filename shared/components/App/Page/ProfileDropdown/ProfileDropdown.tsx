@@ -22,7 +22,7 @@ export const ProfileDropdown = () => {
   const signOut = useSignOut();
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleName = useRecoilValue(authSelectors.userRoleName);
 
   const handleClick = () => setOpen(!isOpen);
   const handleClickOutside = () => setOpen(false);
@@ -62,7 +62,7 @@ export const ProfileDropdown = () => {
             <span>{escapeHtml(`${user?.firstName} ${user?.lastName}`)}</span>
             {isSuperUser && (
               <Badge customCss={[spacing.top.micro]} style="outline">
-                {userRole}
+                {userRoleName}
               </Badge>
             )}
           </div>

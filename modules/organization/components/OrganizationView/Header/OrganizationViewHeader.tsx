@@ -7,9 +7,10 @@ import {
   DeleteModal,
 } from '@shared/components';
 import { FC, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styles } from './OrganizationViewHeader.styles';
 import {
-  getOrgMemberRole,
+  organizationSelectors,
   useDefaultOrganization,
   useDeleteOrganization,
   useGetOrganization,
@@ -17,7 +18,7 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useIdentity } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import {
   Permissions,
   useHasPermissions,
@@ -38,8 +39,6 @@ export const OrganizationViewHeader: FC = () => {
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
-
-  const { user } = useIdentity();
 
   const { organizations } = useGetOrganizations();
 
@@ -67,17 +66,20 @@ export const OrganizationViewHeader: FC = () => {
     setIsSavingOrganization(null);
   };
 
-  const role = getOrgMemberRole(organization!, user?.id!);
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
 
   const canUpdateOrganization: boolean = useHasPermissions(
-    user?.role!,
-    role,
+    userRole,
+    userRoleInOrganization,
     Permissions.UPDATE_ORGANIZATION,
   );
 
   const canDeleteOrganization: boolean = useHasPermissions(
-    user?.role!,
-    role,
+    userRole,
+    userRoleInOrganization,
     Permissions.DELETE_ORGANIZATION,
   );
 
