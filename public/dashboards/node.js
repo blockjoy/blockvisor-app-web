@@ -2,7 +2,9 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
 
-var { id } = params;
+var { id, disk_space_name, is_node } = params;
+
+console.log("params", { id, disk_space_name, is_node })
 
 var host = `https://magellan-1.slc.blockjoy.com/host/${id}`;
 // var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
@@ -13,28 +15,6 @@ const sidePanelTextonlyWidth = "166px",
       sidePanelSparklineHeight = "44px";
 
 const charts = [
-  {
-    title: "RPC Requests",
-    measurement: "Per Second",
-    charts: [
-      {
-        netdata: "web_log_nginx.requests",
-        textonlyDecimalPlaces: "0",
-        library: "textonly",
-        title: "",
-        width: sidePanelTextonlyWidth,
-        height: sidePanelTextonlyHeight, 
-      },
-      {
-        netdata: "web_log_nginx.requests",
-        width: "100%",
-        height: sidePanelSparklineHeight,
-        color: "#bff589 #bff589",
-        decimalDigits: "-1",
-        dygraphSparkline: "sparkline"
-      }
-    ]
-  },
   {
     title: "Load Avg.",
     charts: [
@@ -137,7 +117,7 @@ const charts = [
     measurement: "GiB Available",
     charts: [
       {
-        netdata: "disk_space._blockjoy",
+        netdata: `disk_space.${disk_space_name}`,
         textonlyDecimalPlaces: 0,
         library: "textonly",
         title: "",
@@ -145,7 +125,7 @@ const charts = [
         height: sidePanelTextonlyHeight, 
       },
       {
-        netdata: "disk_space._blockjoy",
+        netdata: `disk_space.${disk_space_name}`,
         dygraphValueRange: "[0, 100]",
         width: "100%",
         height: sidePanelSparklineHeight,
@@ -156,6 +136,31 @@ const charts = [
     ]
   }
 ];
+
+if (is_node) {
+  charts.unshift({
+    title: "RPC Requests",
+    measurement: "Per Second",
+    charts: [
+      {
+        netdata: "web_log_nginx.requests",
+        textonlyDecimalPlaces: "0",
+        library: "textonly",
+        title: "",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "web_log_nginx.requests",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
+  },)
+}
 
 const colorPrimary = "#bff589";
 const size = "140px";
