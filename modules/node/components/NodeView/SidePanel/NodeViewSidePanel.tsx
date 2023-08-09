@@ -21,7 +21,13 @@ export const NodeViewSidePanel = () => {
           )}
         </div>
       </div>
-      {node?.blockHeight! > -1 && <NetdataDashboard id={node?.id!} />}
+      {node?.blockHeight! > -1 && (
+        <NetdataDashboard
+          id={node?.id!}
+          disk_space_name="_blockjoy"
+          is_node="true"
+        />
+      )}
     </>
   );
 };

@@ -3,6 +3,8 @@ import { styles } from './NetdataDashboard.styles';
 
 type Props = {
   id: string;
+  disk_space_name: string;
+  is_node?: string;
 };
 
 const iframeDimensions = {
@@ -10,7 +12,11 @@ const iframeDimensions = {
   height: '640px',
 };
 
-export const NetdataDashboard = ({ id }: Props) => {
+export const NetdataDashboard = ({
+  id,
+  disk_space_name,
+  is_node = '',
+}: Props) => {
   const [state, setState] = useState({
     url: '',
   });
@@ -22,7 +28,7 @@ export const NetdataDashboard = ({ id }: Props) => {
     if (!url) {
       setState({
         ...state,
-        url: `/dashboards/node.html?id=${id}`,
+        url: `/dashboards/node.html?id=${id}&disk_space_name=${disk_space_name}&is_node=${is_node}`,
         ...iframeDimensions,
       });
     }
