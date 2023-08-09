@@ -39,4 +39,8 @@ export const styles = {
     background-color: ${theme.colorInput};
     margin-right: auto;
   `,
+  disabled: css`
+    cursor: not-allowed;
+    opacity: 0.5;
+  `,
 };

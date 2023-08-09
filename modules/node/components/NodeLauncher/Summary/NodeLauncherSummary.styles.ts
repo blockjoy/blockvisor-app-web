@@ -35,6 +35,12 @@ export const styles = {
   buttons: css`
     display: flex;
     gap: 10px;
+    position: relative;
+
+    :hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
   `,
   summary: (theme: ITheme) => css`
     border: 1px solid ${theme.colorBorder};
