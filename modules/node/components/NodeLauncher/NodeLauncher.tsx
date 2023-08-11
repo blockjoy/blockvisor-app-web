@@ -1,5 +1,6 @@
 import { styles } from './NodeLauncher.styles';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
 import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
 import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
@@ -7,7 +8,10 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
 import { EmptyColumn, PageTitle, sort } from '@shared/components';
-import { useDefaultOrganization } from '@modules/organization';
+import {
+  organizationSelectors,
+  useDefaultOrganization,
+} from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import {
@@ -23,6 +27,11 @@ import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain'
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
+import {
+  useHasPermissions,
+  Permissions,
+} from '@modules/auth/hooks/useHasPermissions';
+import { authSelectors } from '@modules/auth';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -241,6 +250,17 @@ export const NodeLauncher = () => {
     );
   };
 
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
+
+  const canAddNode: boolean = useHasPermissions(
+    userRole,
+    userRoleInOrganization,
+    Permissions.CREATE_NODE,
+  );
+
   useEffect(() => {
     const activeBlockchain = blockchains.find(
       (b) => b.id === node.blockchainId,
@@ -342,6 +362,7 @@ export const NodeLauncher = () => {
             isConfigValid={isConfigValid}
             nodeLauncherState={node}
             selectedHost={selectedHost}
+            canAddNode={canAddNode}
             onHostChanged={handleHostChanged}
             onNodePropertyChanged={handleNodePropertyChanged}
             onCreateNodeClicked={handleCreateNodeClicked}

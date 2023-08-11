@@ -1,16 +1,17 @@
-import { useIdentity } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
-import { organizationAtoms } from '../store/organizationAtoms';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import {
   Permissions,
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { getOrgMemberRole } from './getOrgMemberRole';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
-import { OrganizationInvitationsResend } from '@modules/organization';
+import {
+  OrganizationInvitationsResend,
+  organizationSelectors,
+} from '@modules/organization';
 
 export enum Action {
   revoke = 'revoke',
@@ -35,23 +36,20 @@ export const mapOrganizationInvitationsToRows = (
   invitations?: Invitation[],
   methods?: Methods,
 ) => {
-  const { user } = useIdentity();
-
-  const selectedOrganization = useRecoilValue(
-    organizationAtoms.selectedOrganization,
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
   );
 
-  const role = getOrgMemberRole(selectedOrganization!, user?.id!);
-
   const canCreateMember: boolean = useHasPermissions(
-    user?.role!,
-    role,
+    userRole,
+    userRoleInOrganization,
     Permissions.CREATE_MEMBER,
   );
 
   const canRemoveMember: boolean = useHasPermissions(
-    user?.role!,
-    role,
+    userRole,
+    userRoleInOrganization,
     Permissions.DELETE_MEMBER,
   );
 

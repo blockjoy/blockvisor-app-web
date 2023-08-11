@@ -5,19 +5,27 @@ import { SvgIcon } from '@shared/components';
 
 type CopyToClipboardProps = {
   value: string;
+  disabled?: boolean;
 };
 
-export const CopyToClipboard = ({ value }: CopyToClipboardProps) => {
+export const CopyToClipboard = ({
+  value,
+  disabled = false,
+}: CopyToClipboardProps) => {
   const handleCopy = () => copyToClipboard(value);
   return (
-    <>
-      <div css={styles.wrapper} onClick={handleCopy}>
-        <span>$</span>
-        <p css={styles.value}>{value}</p>
-        <SvgIcon size="14px">
-          <CopyIcon />
-        </SvgIcon>
-      </div>
-    </>
+    <button
+      disabled={disabled}
+      css={styles.wrapper}
+      onClick={() => {
+        if (!disabled) handleCopy();
+      }}
+    >
+      <span>$</span>
+      <p css={styles.value}>{value}</p>
+      <SvgIcon size="14px">
+        <CopyIcon />
+      </SvgIcon>
+    </button>
   );
 };
