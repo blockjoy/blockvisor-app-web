@@ -4,10 +4,8 @@ import { formatters } from '@shared/utils/formatters';
 import { HostOs } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
-import { dateFormatter, timeFormatter } from '@shared/utils/dateFormatter';
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
-import { formatAmount } from '@shared/utils/amountFormatter';
 
 const ipListStyles = css`
   columns: 2;
