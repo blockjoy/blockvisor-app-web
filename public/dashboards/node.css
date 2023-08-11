@@ -156,6 +156,7 @@ body .netdata-legend-resize-handler {
 body .netdata-container[data-chart-library] {
   font-size: 36px;
   color: #f9f9f9;
+  text-align: right;
 }
 
 main {
@@ -165,6 +166,7 @@ main {
 .charts {
   display: flex;
   gap: 20px;
+  padding-top: 8px;
 }
 
 .charts > div:first-child {
@@ -186,8 +188,10 @@ main {
   transform: translateY(-4px);
   font-size: 12px;
   color: #a7a7a7;
+  text-align: right;
 }
 
+/* hides that nasty blue shit when empty */
 .dygraph__history-tip {
   display: none !important;
 }

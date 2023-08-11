@@ -10,7 +10,7 @@ var host = `https://magellan-1.slc.blockjoy.com/host/${id}`;
 // var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
 // var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';
 
-const sidePanelTextonlyWidth = "166px",
+const sidePanelTextonlyWidth = "84px",
       sidePanelTextonlyHeight = "50px",
       sidePanelSparklineHeight = "44px";
 
@@ -62,79 +62,63 @@ const charts = [
       }
     ]
   },
-  // {
-  //   title: "Disk Write",
-  //   measurement: "MiB/s",
-  //   charts: [
-  //     {
-  //       netdata: "system.io",
-  //       library: "textonly",
-  //       title: "",
-  //       dimensions: "out",
-  //       textonlyDecimalPlaces: "1",
-  //       width: sidePanelTextonlyWidth,
-  //       height: sidePanelTextonlyHeight, 
-  //     },
-  //     {
-  //       netdata: "system.io",
-  //       dygraphValueRange: "[0, 100]",
-  //       width: "100%",
-  //       height: sidePanelSparklineHeight,
-  //       dimensions: "out",
-  //       color: "#bff589 #bff589",
-  //       decimalDigits: "-1",
-  //       dygraphSparkline: "sparkline"
-  //     }
-  //   ]
-  // },
-  // {
-  //   title: "Disk Read",
-  //   measurement: "MiB/s",
-  //   charts: [
-  //     {
-  //       netdata: "system.io",
-  //       library: "d3pie",
-  //       title: "",
-  //       dimensions: "in",
-  //       textonlyDecimalPlaces: "1",
-  //       width: sidePanelTextonlyWidth,
-  //       height: sidePanelTextonlyHeight, 
-  //     },
-  //     {
-  //       netdata: "system.io",
-  //       dygraphValueRange: "[0, 100]",
-  //       width: "100%",
-  //       height: sidePanelSparklineHeight,
-  //       dimensions: "in",
-  //       color: "#bff589 #bff589",
-  //       decimalDigits: "-1",
-  //       dygraphSparkline: "sparkline"
-  //     }
-  //   ]
-  // },
   {
-    title: "Disk Space",
-    measurement: "GiB Available",
+    title: "Disk Write",
+    measurement: "MiB/s",
     charts: [
+      {},
       {
-        netdata: `disk_space.${disk_space_name}`,
-        textonlyDecimalPlaces: 0,
-        library: "textonly",
-        title: "",
-        width: sidePanelTextonlyWidth,
-        height: sidePanelTextonlyHeight, 
-      },
-      {
-        netdata: `disk_space.${disk_space_name}`,
+        netdata: "system.io",
         dygraphValueRange: "[0, 100]",
         width: "100%",
         height: sidePanelSparklineHeight,
+        dimensions: "out",
         color: "#bff589 #bff589",
         decimalDigits: "-1",
         dygraphSparkline: "sparkline"
       }
     ]
-  }
+  },
+  {
+    title: "Disk Read",
+    measurement: "MiB/s",
+    charts: [
+      {},
+      {
+        netdata: "system.io",
+        dygraphValueRange: "[0, 100]",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        dimensions: "in",
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
+  },
+  // {
+  //   title: "Disk Space",
+  //   measurement: "GiB Available",
+  //   charts: [
+  //     {
+  //       netdata: `disk_space.${disk_space_name}`,
+  //       textonlyDecimalPlaces: 0,
+  //       library: "textonly",
+  //       title: "",
+  //       width: sidePanelTextonlyWidth,
+  //       height: sidePanelTextonlyHeight, 
+  //     },
+  //     {
+  //       netdata: `disk_space.${disk_space_name}`,
+  //       dygraphValueRange: "[0, 100]",
+  //       width: "100%",
+  //       height: sidePanelSparklineHeight,
+  //       color: "#bff589 #bff589",
+  //       decimalDigits: "-1",
+  //       dygraphSparkline: "sparkline"
+  //     }
+  //   ]
+  // }
 ];
 
 if (is_node) {
@@ -249,28 +233,32 @@ const onLoad = () => {
     chartsDiv.setAttribute("class", "charts");
 
     row.appendChild(header);
-    row.appendChild(chartsDiv);
-
-    const textonlyWrapper = document.createElement("div");
-    textonlyWrapper.setAttribute("class", "textonly-wrapper");
-
-    const textonlyChart = createChart(block.charts[0]);
-    textonlyChart.setAttribute("id", block.title);
-
-    textonlyWrapper.appendChild(textonlyChart);
+    row.appendChild(chartsDiv)
     
-    if (block.measurement) {
-      const measurement = document.createElement("div");
-      measurement.setAttribute("class", "measurement");
-      measurement.innerText = block.measurement;
-      
-      textonlyWrapper.appendChild(measurement);
-    }
 
     const sparklineChart = createChart(block.charts[1]);
 
-    chartsDiv.appendChild(textonlyWrapper);
     chartsDiv.appendChild(sparklineChart);
+
+    if (block.charts[0].netdata) {
+      const textonlyWrapper = document.createElement("div");
+      textonlyWrapper.setAttribute("class", "textonly-wrapper");
+  
+      const textonlyChart = createChart(block.charts[0]);
+      textonlyChart.setAttribute("id", block.title);
+  
+      textonlyWrapper.appendChild(textonlyChart);
+      
+      if (block.measurement) {
+        const measurement = document.createElement("div");
+        measurement.setAttribute("class", "measurement");
+        measurement.innerText = block.measurement;
+        
+        textonlyWrapper.appendChild(measurement);
+      }
+
+      chartsDiv.appendChild(textonlyWrapper);
+    }
 
     main.appendChild(row);
   });
