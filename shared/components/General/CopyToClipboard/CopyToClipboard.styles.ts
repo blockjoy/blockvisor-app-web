@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -11,6 +12,16 @@ export const styles = {
     display: flex;
     align-items: center;
     cursor: pointer;
+    color: ${theme.colorText};
+
+    @media ${breakpoints.fromXLrg} {
+      width: 100%;
+    }
+
+    :disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
 
     &,
     path {
@@ -21,8 +32,7 @@ export const styles = {
       color: ${theme.colorLabel};
     }
 
-    :hover,
-    :active {
+    :not(:disabled):is(:hover, :active) {
       border-color: ${theme.colorBorderGrey};
 
       path {
@@ -33,14 +43,9 @@ export const styles = {
   value: (theme: ITheme) => css`
     padding: 5px 10px;
     font-size: 14px;
-    color: #fff;
     border: none;
     outline: none;
     background-color: ${theme.colorInput};
     margin-right: auto;
-  `,
-  disabled: css`
-    cursor: not-allowed;
-    opacity: 0.5;
   `,
 };

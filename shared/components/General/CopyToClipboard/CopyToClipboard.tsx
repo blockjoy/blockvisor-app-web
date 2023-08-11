@@ -14,19 +14,18 @@ export const CopyToClipboard = ({
 }: CopyToClipboardProps) => {
   const handleCopy = () => copyToClipboard(value);
   return (
-    <>
-      <div
-        css={[styles.wrapper, disabled && styles.disabled]}
-        onClick={() => {
-          if (!disabled) handleCopy();
-        }}
-      >
-        <span>$</span>
-        <p css={styles.value}>{value}</p>
-        <SvgIcon size="14px">
-          <CopyIcon />
-        </SvgIcon>
-      </div>
-    </>
+    <button
+      disabled={disabled}
+      css={styles.wrapper}
+      onClick={() => {
+        if (!disabled) handleCopy();
+      }}
+    >
+      <span>$</span>
+      <p css={styles.value}>{value}</p>
+      <SvgIcon size="14px">
+        <CopyIcon />
+      </SvgIcon>
+    </button>
   );
 };

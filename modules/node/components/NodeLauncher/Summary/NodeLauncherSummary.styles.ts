@@ -146,9 +146,7 @@ export const styles = {
       opacity: 0.25;
     }
 
-    :focus,
-    :hover,
-    :active {
+    :not(:disabled):is(:focus, :hover, :active) {
       box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
     }
 
