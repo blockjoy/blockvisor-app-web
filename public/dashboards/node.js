@@ -10,17 +10,38 @@ var host = `https://magellan-1.slc.blockjoy.com/host/${id}`;
 // var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
 // var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';
 
-const sidePanelTextonlyWidth = "84px",
-      sidePanelTextonlyHeight = "50px",
-      sidePanelSparklineHeight = "44px";
+const sidePanelTextonlyWidth = "160px",
+      sidePanelTextonlyHeight = "55px",
+      sidePanelSparklineHeight = "40px";
 
 const charts = [
+  {
+    title: "RPC Requests",
+    charts: [
+      {
+        netdata: "web_log_nginx.requests",
+        textonlyDecimalPlaces: "0",
+        library: "textonly",
+        title: "",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "web_log_nginx.requests",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
+  },
   {
     title: "Load Avg.",
     charts: [
       {
         netdata: "system.load",
-        library: "textonly",
+        library: "easypiechart",
         title: "",
         textonlyDecimalPlaces: "2",
         dimensions: "load1",
@@ -45,7 +66,7 @@ const charts = [
     charts: [
       {
         netdata: "system.cpu",
-        library: "textonly",
+        library: "easypiechart",
         title: "",
         textonlyDecimalPlaces: "1",
         width: sidePanelTextonlyWidth,
@@ -66,7 +87,15 @@ const charts = [
     title: "Disk Write",
     measurement: "MiB/s",
     charts: [
-      {},
+      {
+        netdata: "system.io",
+        dimensions: "out",
+        textonlyDecimalPlaces: 0,
+        library: "easypiechart",
+        title: "",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
       {
         netdata: "system.io",
         dygraphValueRange: "[0, 100]",
@@ -83,7 +112,15 @@ const charts = [
     title: "Disk Read",
     measurement: "MiB/s",
     charts: [
-      {},
+      {
+        netdata: "system.io",
+        dimensions: "in",
+        textonlyDecimalPlaces: 0,
+        library: "easypiechart",
+        title: "",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
       {
         netdata: "system.io",
         dygraphValueRange: "[0, 100]",
@@ -121,31 +158,6 @@ const charts = [
   // }
 ];
 
-if (is_node) {
-  charts.unshift({
-    title: "RPC Requests",
-    measurement: "Per Second",
-    charts: [
-      {
-        netdata: "web_log_nginx.requests",
-        textonlyDecimalPlaces: "0",
-        library: "textonly",
-        title: "",
-        width: sidePanelTextonlyWidth,
-        height: sidePanelTextonlyHeight, 
-      },
-      {
-        netdata: "web_log_nginx.requests",
-        width: "100%",
-        height: sidePanelSparklineHeight,
-        color: "#bff589 #bff589",
-        decimalDigits: "-1",
-        dygraphSparkline: "sparkline"
-      }
-    ]
-  },)
-}
-
 const colorPrimary = "#bff589";
 const size = "140px";
 const after = "-600";
@@ -157,9 +169,12 @@ const createChart = (chart) => {
   element.setAttribute("data-colors", chart.color || colorPrimary);
   element.setAttribute("data-height", size);
   element.setAttribute("data-width", "100%");
-  element.setAttribute("data-units", chart.units);
   element.setAttribute("data-after", after);
   element.setAttribute("data-title", "");
+
+  if (chart.units) {
+    element.setAttribute("data-units", chart.units);
+  }
 
   if (chart.library) {
     element.setAttribute("data-chart-library", chart.library);
@@ -220,6 +235,22 @@ const createChart = (chart) => {
   return element;
 }
 
+const createDiskSpaceChart = () => {
+  const element = document.createElement("div");
+  element.setAttribute("data-netdata", `disk_space.${disk_space_name}`);
+  element.setAttribute("data-chart-library", "d3pie");
+  element.setAttribute("data-host", host);
+  element.setAttribute("data-colors", "#bff589 #5F615D #a7a7a7");
+  element.setAttribute("data-d3pie-pieinnerradius", "90%");
+  element.setAttribute("data-d3pie-pieouterradius", "100%");
+  element.setAttribute("data-height", "200px");
+  element.setAttribute("data-width", "100%");
+  element.setAttribute("data-after", after);
+  element.setAttribute("data-points", "60");
+  element.setAttribute("data-dt-element-name", "time901");
+  return element;
+}
+
 const onLoad = () => {
   charts.forEach((block) => {
 
@@ -235,11 +266,6 @@ const onLoad = () => {
     row.appendChild(header);
     row.appendChild(chartsDiv)
     
-
-    const sparklineChart = createChart(block.charts[1]);
-
-    chartsDiv.appendChild(sparklineChart);
-
     if (block.charts[0].netdata) {
       const textonlyWrapper = document.createElement("div");
       textonlyWrapper.setAttribute("class", "textonly-wrapper");
@@ -249,19 +275,27 @@ const onLoad = () => {
   
       textonlyWrapper.appendChild(textonlyChart);
       
-      if (block.measurement) {
-        const measurement = document.createElement("div");
-        measurement.setAttribute("class", "measurement");
-        measurement.innerText = block.measurement;
+      // if (block.measurement) {
+      //   const measurement = document.createElement("div");
+      //   measurement.setAttribute("class", "measurement");
+      //   measurement.innerText = block.measurement;
         
-        textonlyWrapper.appendChild(measurement);
-      }
+      //   textonlyWrapper.appendChild(measurement);
+      // }
 
       chartsDiv.appendChild(textonlyWrapper);
     }
 
+    const sparklineChart = createChart(block.charts[1]);
+
+    chartsDiv.appendChild(sparklineChart);
+
     main.appendChild(row);
   });
+
+  const diskSpaceChart = createDiskSpaceChart();
+  const diskPie = document.querySelector(".disk-pie");
+  diskPie.appendChild(diskSpaceChart);
 }
 
 

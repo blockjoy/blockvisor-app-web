@@ -10,7 +10,6 @@ export const styles = {
     justify-content: space-between;
     min-height: 100px;
     margin-bottom: 0;
-    margin-right: 24px;
     border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toLrg} {

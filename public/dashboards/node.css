@@ -32,7 +32,10 @@
 
 body {
   margin: 0;
-  padding-right: 20px;
+}
+
+main {
+  padding-top: 10px;
 }
 
 #preloader {
@@ -118,29 +121,10 @@ body .gaugeChartUnits,
 body .dygraph-label,
 body .dygraph-axis-label,
 body .netdata-chart-legend,
-body .netdata-container[data-chart-library] {
+body .netdata-container[data-chart-library],
+body .netdata-d3pie-chart text {
   font-family: "Styrene A LC" !important;
   font-weight: 400 !important;
-}
-
-body .easyPieChartTitle,
-body .gaugeChartTitle {
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-size: 9px !important;
-}
-
-body .easyPieChartTitle {
-  transform: translate(0, 6px);
-}
-
-body main .easyPieChartLabel {
-  font-size: 43px !important;
-  transform: translateY(-36%);
-}
-
-body main .easyPieChartUnits {
-  transform: translateY(-6px);
 }
 
 body .netdata-message {
@@ -154,44 +138,104 @@ body .netdata-legend-resize-handler {
 }
 
 body .netdata-container[data-chart-library] {
-  font-size: 36px;
-  color: #f9f9f9;
-  text-align: right;
-}
-
-main {
-  padding-top: 20px;
+  font-size: 26px !important;
+  color: #f9f9f9 !important;
 }
 
 .charts {
   display: flex;
   gap: 20px;
-  padding-top: 8px;
 }
 
-.charts > div:first-child {
+.charts > div:last-child {
   min-width: 166px;
 }
 
 .row:not(:last-child) {
   border-bottom: 1px solid #363938;
-  margin-bottom: 24px;
-  padding-bottom: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
 }
 
-.textonly-wrapper {
+/* .textonly-wrapper {
   display: flex;
   flex-direction: column;
-}
+} */
 
 .measurement {
   transform: translateY(-4px);
   font-size: 12px;
   color: #a7a7a7;
-  text-align: right;
 }
 
 /* hides that nasty blue shit when empty */
 .dygraph__history-tip {
   display: none !important;
+}
+
+[class*="segmentPercentage-inner"], 
+
+[class*="title"]:not([class*="subtitle"]), 
+[class*="footer"] {
+  display: none !important;
+}
+
+[class*="segmentValue-outer"] {
+  fill: #f9f9f9 !important;
+  font-size: 14px !important;
+}
+
+[class*="segmentMainLabel-outer"] {
+  text-transform: capitalize;
+  fill: #5F615D !important;
+}
+
+[class*="subtitle"] {
+  fill: #a7a7a7;
+  transform: translateY(-10px);
+}
+
+
+.textonly-wrapper {
+  overflow: hidden;
+  height: 50px;
+  width: 168px;
+}
+
+.textonly-wrapper canvas {
+  display: none;
+}
+
+.textonly-wrapper .netdata-container-easypiechart,
+.textonly-wrapper .easyPieChartLabel {
+  font-size: 26px !important;
+  top: 0 !important;
+  color: #f9f9f9 !important;
+}
+
+.textonly-wrapper .easyPieChartUnits {
+  font-size: 10px !important;
+  text-transform: capitalize;
+  top: 36px !important;
+  color: #a7a7a7 !important;
+}
+
+.textonly-wrapper .easyPieChartLabel,
+.textonly-wrapper .easyPieChartUnits {
+  text-align: left !important;
+  transform: scale(1) !important;
+  margin-left: 0 !important;
+}
+
+.disk-wrapper {
+  margin-top: 10px;
+  border-top: 1px solid #363938;
+  padding-top: 20px;
+}
+
+.disk-pie {
+  padding-top: 20px;
+  height: 200px;
+  max-height: 200px;
+  overflow: hidden;
 }

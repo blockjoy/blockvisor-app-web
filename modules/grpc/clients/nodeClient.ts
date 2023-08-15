@@ -74,10 +74,7 @@ class NodeClient {
     }
   }
 
-  async listNodesByHost(
-    orgId: string,
-    hostId: string,
-  ): Promise<Node[] | StatusResponse> {
+  async listNodesByHost(orgId: string, hostId: string): Promise<Node[]> {
     const request = {
       orgId,
       hostId,
@@ -85,12 +82,15 @@ class NodeClient {
       limit: 10,
     };
 
-    const response = await callWithTokenRefresh(
-      this.client.list.bind(this.client),
-      request,
-    );
-
-    return response.nodes;
+    try {
+      const response = await callWithTokenRefresh(
+        this.client.list.bind(this.client),
+        request,
+      );
+      return response.nodes;
+    } catch (err) {
+      return handleError(err);
+    }
   }
 
   async getNode(id: string): Promise<Node | StatusResponse> {
