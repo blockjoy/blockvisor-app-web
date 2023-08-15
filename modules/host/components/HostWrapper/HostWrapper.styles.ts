@@ -21,6 +21,7 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       flex: 1 1 auto;
       border-right: 1px solid ${theme.colorBorder};
+      padding-right: 24px;
     }
   `,
   rightWrapper: css`

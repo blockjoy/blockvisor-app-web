@@ -9,7 +9,7 @@ type Props = {
 
 const iframeDimensions = {
   width: '100%',
-  height: '640px',
+  height: '740px',
 };
 
 export const NetdataDashboard = ({

@@ -82,6 +82,10 @@ const IconSolana = dynamic(
   () => import(`@public/assets/icons/blockchain/Solana.svg`),
 );
 
+const IconStarknet = dynamic(
+  () => import(`@public/assets/icons/blockchain/Starknet.svg`),
+);
+
 const IconTezos = dynamic(
   () => import(`@public/assets/icons/blockchain/Tezos.svg`),
 );
@@ -146,6 +150,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'solana':
       Component = IconSolana;
+      break;
+    case 'starknet':
+      Component = IconStarknet;
       break;
     case 'tezos':
       Component = IconTezos;

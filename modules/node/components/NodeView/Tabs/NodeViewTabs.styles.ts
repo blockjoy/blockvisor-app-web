@@ -14,6 +14,10 @@ export const styles = {
     display: flex;
     gap: 16px;
     align-self: stretch;
+
+    @media ${breakpoints.fromXLrg} {
+      margin-right: 24px;
+    }
   `,
   tabButton: (theme: ITheme) => css`
     display: flex;

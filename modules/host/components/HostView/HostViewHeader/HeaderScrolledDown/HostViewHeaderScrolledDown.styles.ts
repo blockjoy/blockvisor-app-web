@@ -19,10 +19,6 @@ export const styles = {
     visibility: hidden;
     transition-property: opacity, visibility;
     transition-duration: 0.3s;
-
-    @media ${breakpoints.fromXLrg} {
-      margin-right: 20px;
-    }
   `,
   wrapperVisible: css`
     opacity: 1;
