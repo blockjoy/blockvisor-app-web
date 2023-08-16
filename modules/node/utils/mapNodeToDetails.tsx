@@ -62,7 +62,7 @@ export const mapNodeToDetails = (node: Node) => {
             '-'
           ) : property.uiType === UiType.UI_TYPE_SWITCH ? (
             <LockedSwitch
-              tooltip="You will be able to enable Self Hosting after BETA."
+              tooltip="Feature disabled during beta."
               isChecked={property.value === 'true' ? true : false}
             />
           ) : (

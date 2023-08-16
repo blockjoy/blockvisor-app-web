@@ -165,7 +165,7 @@ export const NodeLauncherSummary: FC<Props> = ({
             noWrap
             top="-30px"
             left="50%"
-            tooltip="Feature coming soon! Disabled during BETA."
+            tooltip="Feature disabled during beta."
           />
         )}
         <button

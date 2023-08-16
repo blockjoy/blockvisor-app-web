@@ -44,7 +44,7 @@ export const renderControls = (
         <Switch
           tabIndex={!!property.disabled ? -1 : 5}
           disabled={!!property.disabled}
-          tooltip="Self hosting will be available after BETA."
+          tooltip="Feature disabled during beta."
           name={property.name}
           onPropertyChanged={onPropertyChanged}
         />

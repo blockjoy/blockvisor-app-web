@@ -69,7 +69,7 @@ export const HostLauncher = () => {
                   noWrap
                   top="-30px"
                   left="50%"
-                  tooltip="Feature coming soon! Disabled during BETA."
+                  tooltip="Feature disabled during beta."
                 />
               )}
             </div>
@@ -83,7 +83,7 @@ export const HostLauncher = () => {
               onClick={() => resetProvisionToken(defaultOrganization?.id!)}
               loading={provisionTokenLoadingState !== 'finished'}
               {...(!canAddHost && {
-                tooltip: 'Feature coming soon! Disabled during BETA.',
+                tooltip: 'Feature disabled during beta.',
               })}
             >
               <SvgIcon>
