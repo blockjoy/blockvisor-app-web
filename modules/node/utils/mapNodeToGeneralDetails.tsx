@@ -8,10 +8,6 @@ export const mapNodeToGeneralDetails = (node: Node) => {
 
   const details: { label: string; data: any | undefined }[] = [
     {
-      label: 'Region',
-      data: node.placement?.scheduler?.region ?? '-',
-    },
-    {
       label: 'Host',
       data:
         node.orgId === node.hostOrgId ? (
@@ -36,6 +32,13 @@ export const mapNodeToGeneralDetails = (node: Node) => {
           )}`,
     },
   ];
+
+  if (node?.placement?.scheduler?.region) {
+    details.splice(1, 0, {
+      label: 'Region',
+      data: node.placement?.scheduler?.region ?? '-',
+    });
+  }
 
   return details;
 };
