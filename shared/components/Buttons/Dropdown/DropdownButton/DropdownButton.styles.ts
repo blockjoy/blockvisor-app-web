@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -31,6 +30,10 @@ export const styles = {
 
     p {
       color: ${theme.colorDefault};
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-right: 20px;
     }
   `,
   icon: (theme: ITheme) => css`

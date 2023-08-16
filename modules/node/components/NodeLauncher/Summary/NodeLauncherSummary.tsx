@@ -62,15 +62,19 @@ export const NodeLauncherSummary: FC<Props> = ({
       <FormLabel>Host</FormLabel>
       <HostSelect selectedHost={selectedHost} onChange={onHostChanged} />
 
-      <FormLabel>Region</FormLabel>
-      <NodeRegionSelect
-        onChange={onNodePropertyChanged}
-        onLoad={onRegionsLoaded}
-        blockchainId={blockchainId}
-        nodeType={nodeType}
-        nodeTypeVersion={nodeTypeVersion}
-        region={region}
-      />
+      {!selectedHost && (
+        <>
+          <FormLabel>Region</FormLabel>
+          <NodeRegionSelect
+            onChange={onNodePropertyChanged}
+            onLoad={onRegionsLoaded}
+            blockchainId={blockchainId}
+            nodeType={nodeType}
+            nodeTypeVersion={nodeTypeVersion}
+            region={region}
+          />
+        </>
+      )}
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
