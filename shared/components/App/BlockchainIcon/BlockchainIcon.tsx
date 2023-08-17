@@ -50,6 +50,10 @@ const IconErigon = dynamic(
   () => import(`@public/assets/icons/blockchain/Erigon.svg`),
 );
 
+const IconGnosis = dynamic(
+  () => import(`@public/assets/icons/blockchain/Gnosis.svg`),
+);
+
 const IconCosmos = dynamic(
   () => import(`@public/assets/icons/blockchain/Cosmos.svg`),
 );
@@ -126,6 +130,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'ethereum erigon':
     case 'erigon':
       Component = IconErigon;
+      break;
+    case 'gnosis':
+      Component = IconGnosis;
       break;
     case 'cosmos':
       Component = IconCosmos;
