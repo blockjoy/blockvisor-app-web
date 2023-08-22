@@ -9,7 +9,7 @@ import {
   organizationAtoms,
 } from '@modules/organization';
 import { arraysEqual } from 'utils/arraysEqual';
-import { authAtoms } from '@modules/auth';
+import { useIdentity } from '@modules/auth';
 
 export const useMqtt = (): IMqttHook => {
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +17,7 @@ export const useMqtt = (): IMqttHook => {
   const [connectStatus, setConnectStatus] =
     useState<ConnectionStatus>('Connect');
 
-  const user = useRecoilValue(authAtoms.user);
+  const user = useIdentity().user;
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -41,7 +41,7 @@ export const useMqtt = (): IMqttHook => {
     reconnectPeriod: 10000,
   };
 
-  useEffect(() => {
+  const connect = () => {
     if (defaultOrganization?.id === currentOrganization.current) return;
     currentOrganization.current = defaultOrganization?.id!;
 
@@ -119,8 +119,9 @@ export const useMqtt = (): IMqttHook => {
       setConnectStatus('Connect');
     });
 
-    return () => mqttDisconnect();
-  }, [user?.accessToken]);
+    // TODO: handle disconnect
+    // return () => mqttDisconnect();
+  };
 
   const handleMessage = useCallback((channel: string, payload: any) => {
     const type: Channel = getActiveChannel(channel);
@@ -175,7 +176,7 @@ export const useMqtt = (): IMqttHook => {
     return () => setMessage(null);
   }, [message]);
 
-  return { client, error, message, connectStatus };
+  return { connect, client, error, message, connectStatus };
 };
 
 export default useMqtt;

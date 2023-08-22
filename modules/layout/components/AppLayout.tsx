@@ -12,7 +12,7 @@ import {
   useProvisionToken,
 } from '@modules/organization';
 import { useGetBlockchains, useNodeList } from '@modules/node';
-import { MqttUIProvider } from '@modules/mqtt';
+import { MqttUIProvider, useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 
 export type LayoutProps = {
@@ -27,6 +27,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const currentOrg = useRef<string>();
 
+  const { connect: mqttConnect } = useMqtt();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
@@ -39,6 +40,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     (async () => {
       if (!organizations.length) await getOrganizations(true);
       await getReceivedInvitations(userEmail!);
+      mqttConnect();
     })();
   }, []);
 
@@ -56,6 +58,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       currentOrg.current = defaultOrganization!.id;
       loadNodes();
       loadHosts();
+      mqttConnect();
     }
   }, [defaultOrganization?.id]);
 
