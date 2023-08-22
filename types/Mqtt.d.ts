@@ -1,4 +1,5 @@
 interface IMqttHook {
+  connect: VoidFunction;
   client: MqttClient | null;
   error?: string | null;
   message?: Message | null;
