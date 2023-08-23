@@ -125,6 +125,7 @@ export const BlockchainIcon: FC<Props> = ({
     case 'ethereum':
     case 'ethereum pos':
     case 'ethereum-reth':
+    case 'ethereum-stateless':
       Component = IconEthereum;
       break;
     case 'eth erigon':
