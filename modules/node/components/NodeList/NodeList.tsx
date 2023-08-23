@@ -55,6 +55,12 @@ export const NodeList = () => {
     }
   }, [nodeUIProps.queryParams]);
 
+  useEffect(() => {
+    if (router.isReady) {
+      loadNodes(nodeUIProps.queryParams, false);
+    }
+  }, [router.isReady]);
+
   const updateQueryParams = async () => {
     // sleep 300ms for better UX/UI (maybe should be removed)
     await new Promise((r) => setTimeout(r, 300));

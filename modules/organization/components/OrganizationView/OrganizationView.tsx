@@ -16,7 +16,7 @@ import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
 import { useRecoilValue } from 'recoil';
-import { authSelectors } from '@modules/auth';
+import { authSelectors, useIdentity } from '@modules/auth';
 import {
   Permissions,
   useHasPermissions,
@@ -28,11 +28,15 @@ import { createPath } from '@modules/organization/utils/createPath';
 export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const { id } = router.query;
+  const { user } = useIdentity();
   const { getOrganization, organization, isLoading, setIsLoading } =
     useGetOrganization();
 
-  const { getSentInvitations, setSentInvitationsLoadingState } =
-    useInvitations();
+  const {
+    getSentInvitations,
+    setSentInvitationsLoadingState,
+    getReceivedInvitations,
+  } = useInvitations();
 
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
@@ -89,6 +93,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
       if (router.isReady) {
         getOrganization(queryAsString(id));
         getSentInvitations(queryAsString(id));
+        getReceivedInvitations(user?.email!);
       }
     })();
     return () => {

@@ -19,8 +19,12 @@ export function useGetOrganizations() {
 
   const { getDefaultOrganization } = useDefaultOrganization();
 
-  const getOrganizations = async (init?: boolean) => {
-    setIsLoading('initializing');
+  const getOrganizations = async (
+    init?: boolean,
+    showLoader: boolean = true,
+  ) => {
+    if (showLoader) setIsLoading('initializing');
+
     const organizations: any = await organizationClient.getOrganizations();
 
     checkForTokenError(organizations);

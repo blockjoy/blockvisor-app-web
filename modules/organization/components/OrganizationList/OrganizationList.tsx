@@ -2,11 +2,12 @@ import { styles } from './OrganizationList.styles';
 import { useRecoilValue } from 'recoil';
 import {
   useDefaultOrganization,
+  useGetOrganization,
   useGetOrganizations,
 } from '@modules/organization';
 import { Badge, Scrollbar, Skeleton, SkeletonGrid } from '@shared/components';
 import { useOrganizationsUIContext } from '@modules/organization/ui/OrganizationsUIContext';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import { useRouter } from 'next/router';
 
@@ -16,6 +17,7 @@ import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export const OrganizationsList = () => {
   const router = useRouter();
+  const { id: activeOrgId } = router.query;
 
   const organizationUIContext = useOrganizationsUIContext();
   const organizationUIProps = useMemo(() => {
@@ -25,7 +27,8 @@ export const OrganizationsList = () => {
     };
   }, [organizationUIContext]);
 
-  const { isLoading } = useGetOrganizations();
+  const { isLoading, getOrganizations } = useGetOrganizations();
+  const { getOrganization } = useGetOrganization();
 
   const { defaultOrganization } = useDefaultOrganization();
 
@@ -36,6 +39,15 @@ export const OrganizationsList = () => {
   const handleRowClicked = (id: string) => {
     router.push(`${ROUTES.ORGANIZATION(id)}`);
   };
+
+  useEffect(() => {
+    (async () => {
+      if (router.isReady) {
+        await getOrganizations(false, false);
+        getOrganization(activeOrgId as string);
+      }
+    })();
+  }, [router.isReady]);
 
   return (
     <div css={styles.wrapper}>
