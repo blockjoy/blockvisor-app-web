@@ -1,10 +1,69 @@
-export const formatters = {
-  plain: (value: number) => value,
-  formatBytes: (bytes: number) => {
-    const gb = bytes / Math.pow(1024, 3);
-    if (gb < 1024) return `${gb.toFixed(0)} GB`;
+import {
+  Amount,
+  Currency,
+} from '@modules/grpc/library/blockjoy/common/v1/currency';
 
-    const tb = gb / 1024;
-    return `${tb.toFixed(0)} TB`;
-  },
+type FormatAmountType = 'amount';
+type FormatDateType = 'date' | 'time';
+type FormatSizeType = 'bytes';
+
+export const CURRENCIES = {
+  [Currency.CURRENCY_UNSPECIFIED]: '',
+  [Currency.CURRENCY_USD]: '$',
+  [Currency.UNRECOGNIZED]: 'Unknown',
+};
+
+const formatAmount = (amount: Amount, type?: FormatAmountType): string => {
+  const formattedAmount = amount?.value?.toFixed(2);
+
+  switch (type) {
+    case 'amount':
+      return `${CURRENCIES[amount.currency]}${formattedAmount}`;
+    default:
+      return formattedAmount;
+  }
+};
+
+const formatDate = (date: Date, type?: FormatDateType): string => {
+  let formattedDate: Intl.DateTimeFormat;
+
+  switch (type) {
+    case 'date':
+      formattedDate = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      break;
+    case 'time':
+      formattedDate = new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+      });
+      break;
+    default:
+      formattedDate = new Intl.DateTimeFormat('en-US');
+  }
+
+  return formattedDate.format(date);
+};
+
+const formatSize = (value: number, type?: FormatSizeType): string => {
+  switch (type) {
+    case 'bytes': {
+      const gb = value / Math.pow(1024, 3);
+      if (gb < 1024) return `${gb.toFixed(0)} GB`;
+
+      const tb = gb / 1024;
+      return `${tb.toFixed(0)} TB`;
+    }
+    default:
+      return value.toString();
+  }
+};
+
+export const formatters = {
+  formatAmount,
+  formatDate,
+  formatSize,
 };

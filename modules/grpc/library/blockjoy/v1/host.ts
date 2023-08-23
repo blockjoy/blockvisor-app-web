@@ -3,6 +3,7 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { BillingAmount } from "../common/v1/currency";
 import { NodeType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
@@ -58,7 +59,11 @@ export interface Host {
   /** The name of the organization that this host belongs to. */
   orgName: string;
   /** The region of the host. */
-  region?: string | undefined;
+  region?:
+    | string
+    | undefined;
+  /** The optional billing amount for this host. */
+  billingAmount?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -96,7 +101,11 @@ export interface HostServiceCreateRequest {
     | string
     | undefined;
   /** The region of the host */
-  region?: string | undefined;
+  region?:
+    | string
+    | undefined;
+  /** Optionally set a billing amount for this host. */
+  billingAmount?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateResponse {
@@ -139,7 +148,11 @@ export interface HostServiceUpdateRequest {
     | string
     | undefined;
   /** The region of the host. */
-  region?: string | undefined;
+  region?:
+    | string
+    | undefined;
+  /** Optionally set a billing amount for this host. */
+  billingAmount?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -212,6 +225,7 @@ function createBaseHost(): Host {
     nodeCount: 0,
     orgName: "",
     region: undefined,
+    billingAmount: undefined,
   };
 }
 
@@ -267,6 +281,9 @@ export const Host = {
     }
     if (message.region !== undefined) {
       writer.uint32(154).string(message.region);
+    }
+    if (message.billingAmount !== undefined) {
+      BillingAmount.encode(message.billingAmount, writer.uint32(162).fork()).ldelim();
     }
     return writer;
   },
@@ -397,6 +414,13 @@ export const Host = {
 
           message.region = reader.string();
           continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.billingAmount = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -429,6 +453,9 @@ export const Host = {
     message.nodeCount = object.nodeCount ?? 0;
     message.orgName = object.orgName ?? "";
     message.region = object.region ?? undefined;
+    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
+      ? BillingAmount.fromPartial(object.billingAmount)
+      : undefined;
     return message;
   },
 };
@@ -449,6 +476,7 @@ function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
     ipGateway: "",
     orgId: undefined,
     region: undefined,
+    billingAmount: undefined,
   };
 }
 
@@ -495,6 +523,9 @@ export const HostServiceCreateRequest = {
     }
     if (message.region !== undefined) {
       writer.uint32(114).string(message.region);
+    }
+    if (message.billingAmount !== undefined) {
+      BillingAmount.encode(message.billingAmount, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -604,6 +635,13 @@ export const HostServiceCreateRequest = {
 
           message.region = reader.string();
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.billingAmount = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -633,6 +671,9 @@ export const HostServiceCreateRequest = {
     message.ipGateway = object.ipGateway ?? "";
     message.orgId = object.orgId ?? undefined;
     message.region = object.region ?? undefined;
+    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
+      ? BillingAmount.fromPartial(object.billingAmount)
+      : undefined;
     return message;
   },
 };
@@ -923,7 +964,15 @@ export const HostServiceListResponse = {
 };
 
 function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
-  return { id: "", name: undefined, version: undefined, os: undefined, osVersion: undefined, region: undefined };
+  return {
+    id: "",
+    name: undefined,
+    version: undefined,
+    os: undefined,
+    osVersion: undefined,
+    region: undefined,
+    billingAmount: undefined,
+  };
 }
 
 export const HostServiceUpdateRequest = {
@@ -945,6 +994,9 @@ export const HostServiceUpdateRequest = {
     }
     if (message.region !== undefined) {
       writer.uint32(34).string(message.region);
+    }
+    if (message.billingAmount !== undefined) {
+      BillingAmount.encode(message.billingAmount, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -998,6 +1050,13 @@ export const HostServiceUpdateRequest = {
 
           message.region = reader.string();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.billingAmount = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1019,6 +1078,9 @@ export const HostServiceUpdateRequest = {
     message.os = object.os ?? undefined;
     message.osVersion = object.osVersion ?? undefined;
     message.region = object.region ?? undefined;
+    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
+      ? BillingAmount.fromPartial(object.billingAmount)
+      : undefined;
     return message;
   },
 };

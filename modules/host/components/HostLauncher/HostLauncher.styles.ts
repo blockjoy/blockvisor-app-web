@@ -64,4 +64,12 @@ export const styles = {
       min-width: 0;
     }
   `,
+  copy: css`
+    position: relative;
+
+    :hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+  `,
 };

@@ -1,4 +1,4 @@
-import { useIdentity } from '@modules/auth';
+import { authSelectors, useIdentity } from '@modules/auth';
 import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
@@ -10,8 +10,8 @@ import {
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { getOrgMemberRole } from './getOrgMemberRole';
 import { OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { organizationSelectors } from '../store/organizationSelectors';
 
 export enum Action {
   revoke = 'revoke',
@@ -43,11 +43,14 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  const role = getOrgMemberRole(selectedOrganization!, user?.id!);
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
 
   const canRemoveMember: boolean = useHasPermissions(
-    user?.role!,
-    role,
+    userRole,
+    userRoleInOrganization,
     Permissions.DELETE_MEMBER,
   );
 

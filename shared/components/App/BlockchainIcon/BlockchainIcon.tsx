@@ -50,6 +50,10 @@ const IconErigon = dynamic(
   () => import(`@public/assets/icons/blockchain/Erigon.svg`),
 );
 
+const IconGnosis = dynamic(
+  () => import(`@public/assets/icons/blockchain/Gnosis.svg`),
+);
+
 const IconCosmos = dynamic(
   () => import(`@public/assets/icons/blockchain/Cosmos.svg`),
 );
@@ -80,6 +84,10 @@ const IconPolygon = dynamic(
 
 const IconSolana = dynamic(
   () => import(`@public/assets/icons/blockchain/Solana.svg`),
+);
+
+const IconStarknet = dynamic(
+  () => import(`@public/assets/icons/blockchain/Starknet.svg`),
 );
 
 const IconTezos = dynamic(
@@ -116,12 +124,16 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'ethereum':
     case 'ethereum pos':
+    case 'ethereum-reth':
       Component = IconEthereum;
       break;
     case 'eth erigon':
     case 'ethereum erigon':
     case 'erigon':
       Component = IconErigon;
+      break;
+    case 'gnosis':
+      Component = IconGnosis;
       break;
     case 'cosmos':
       Component = IconCosmos;
@@ -146,6 +158,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'solana':
       Component = IconSolana;
+      break;
+    case 'starknet':
+      Component = IconStarknet;
       break;
     case 'tezos':
       Component = IconTezos;

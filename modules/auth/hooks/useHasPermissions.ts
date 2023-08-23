@@ -16,6 +16,11 @@ export enum Permissions {
   CREATE_NODE,
   UPDATE_NODE,
   DELETE_NODE,
+
+  READ_HOST,
+  CREATE_HOST,
+  UPDATE_HOST,
+  DELETE_HOST,
 }
 
 export const USER_ROLES: {
@@ -55,6 +60,7 @@ export const ORG_PERMISSIONS: {
     Permissions.READ_MEMBER,
 
     Permissions.READ_NODE,
+    Permissions.READ_HOST,
   ],
   [OrgRole.ORG_ROLE_OWNER]: [
     Permissions.READ_ORGANIZATION,
@@ -68,6 +74,7 @@ export const ORG_PERMISSIONS: {
     Permissions.DELETE_MEMBER,
 
     Permissions.READ_NODE,
+    Permissions.READ_HOST,
   ],
   [OrgRole.ORG_ROLE_ADMIN]: [
     Permissions.READ_ORGANIZATION,
@@ -81,21 +88,20 @@ export const ORG_PERMISSIONS: {
     Permissions.DELETE_MEMBER,
 
     Permissions.READ_NODE,
+    Permissions.READ_HOST,
   ],
 };
 
 export function useHasPermissions(
   usrRole: UserRole,
-  orgRole: OrgRole,
+  orgRole: OrgRole | null,
   permissions: Permissions | Permissions[],
 ) {
-  if (
-    (typeof usrRole === 'undefined' && typeof orgRole === 'undefined') ||
-    typeof permissions === 'undefined'
-  )
-    return false;
+  if (!!!usrRole) return false;
 
   if (usrRole === UserRole.USER_ROLE_BLOCKJOY_ADMIN) return true;
+
+  if (!!!orgRole || !!!permissions) return false;
 
   if (typeof permissions === 'number') {
     return ORG_PERMISSIONS[orgRole]?.includes?.(permissions);

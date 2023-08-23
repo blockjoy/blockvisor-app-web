@@ -1,3 +1,4 @@
+import { useRecoilValue } from 'recoil';
 import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 import {
   Button,
@@ -7,17 +8,41 @@ import {
   FormText,
   OrganizationSelect,
   SvgIcon,
+  Tooltip,
 } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { useDefaultOrganization } from '@modules/organization';
+import {
+  organizationSelectors,
+  useDefaultOrganization,
+} from '@modules/organization';
+import { authSelectors } from '@modules/auth';
+import {
+  useHasPermissions,
+  Permissions,
+} from '@modules/auth/hooks/useHasPermissions';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
   const { defaultOrganization } = useDefaultOrganization();
+
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
+
+  const canAddHost: boolean = useHasPermissions(
+    userRole,
+    userRoleInOrganization,
+    Permissions.CREATE_NODE,
+  );
+
+  const token = canAddHost
+    ? provisionToken
+    : provisionToken?.replace(/./g, '*');
 
   return (
     <div>
@@ -37,14 +62,29 @@ export const HostLauncher = () => {
             <FormText>
               Launch a new host by running this command on any server
             </FormText>
-            <CopyToClipboard value={`bvup ${provisionToken}`} />
+            <div css={[styles.copy, spacing.bottom.medium]}>
+              <CopyToClipboard value={`bvup ${token}`} disabled={!canAddHost} />
+              {!canAddHost && (
+                <Tooltip
+                  noWrap
+                  top="-30px"
+                  left="50%"
+                  tooltip="Feature disabled during beta."
+                />
+              )}
+            </div>
             <Button
               style="outline"
               size="small"
-              disabled={provisionTokenLoadingState !== 'finished'}
-              css={[spacing.top.medium, styles.button]}
+              disabled={
+                provisionTokenLoadingState !== 'finished' || !canAddHost
+              }
+              css={styles.button}
               onClick={() => resetProvisionToken(defaultOrganization?.id!)}
               loading={provisionTokenLoadingState !== 'finished'}
+              {...(!canAddHost && {
+                tooltip: 'Feature disabled during beta.',
+              })}
             >
               <SvgIcon>
                 <IconRefresh />

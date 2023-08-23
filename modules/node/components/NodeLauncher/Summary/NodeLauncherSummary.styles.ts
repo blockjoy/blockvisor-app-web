@@ -35,6 +35,12 @@ export const styles = {
   buttons: css`
     display: flex;
     gap: 10px;
+    position: relative;
+
+    :hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
   `,
   summary: (theme: ITheme) => css`
     border: 1px solid ${theme.colorBorder};
@@ -140,9 +146,7 @@ export const styles = {
       opacity: 0.25;
     }
 
-    :focus,
-    :hover,
-    :active {
+    :not(:disabled):is(:focus, :hover, :active) {
       box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
     }
 

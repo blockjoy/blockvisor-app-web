@@ -1,16 +1,12 @@
+import Link from 'next/link';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
-import { dateFormatter, timeFormatter } from '@shared/utils/dateFormatter';
-import Link from 'next/link';
+import { formatters } from '@shared/index';
 
 export const mapNodeToGeneralDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
   const details: { label: string; data: any | undefined }[] = [
-    {
-      label: 'Region',
-      data: node.placement?.scheduler?.region ?? '-',
-    },
     {
       label: 'Host',
       data:
@@ -30,11 +26,19 @@ export const mapNodeToGeneralDetails = (node: Node) => {
       label: 'Launched On',
       data: !node.createdAt
         ? '-'
-        : `${dateFormatter.format(node.createdAt)} @ ${timeFormatter.format(
+        : `${formatters.formatDate(node.createdAt)} @ ${formatters.formatDate(
             node.createdAt,
+            'time',
           )}`,
     },
   ];
+
+  if (node?.placement?.scheduler?.region) {
+    details.splice(1, 0, {
+      label: 'Region',
+      data: node.placement?.scheduler?.region ?? '-',
+    });
+  }
 
   return details;
 };

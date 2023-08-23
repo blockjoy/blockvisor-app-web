@@ -12,17 +12,27 @@ const isSuperUser = selector<boolean>({
   },
 });
 
-const userRole = selector<any>({
+const userRole = selector<UserRole>({
   key: 'authentication.user.role',
   get: ({ get }) => {
     const user = get(authAtoms.user);
-    if (!user || !user.role) return null;
+    if (!user?.role) return UserRole.USER_ROLE_UNPRIVILEGED;
 
-    return USER_ROLES[user?.role];
+    return user.role;
+  },
+});
+
+const userRoleName = selector<string>({
+  key: 'authentication.user.roleName',
+  get: ({ get }) => {
+    const usrRole = get(userRole);
+
+    return USER_ROLES[usrRole];
   },
 });
 
 export const authSelectors = {
   isSuperUser,
   userRole,
+  userRoleName,
 };

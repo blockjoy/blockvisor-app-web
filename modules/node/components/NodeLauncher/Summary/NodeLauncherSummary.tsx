@@ -10,7 +10,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { UiType } from '@modules/grpc/library/blockjoy/v1/node';
-import { FormHeader, FormLabel, HostSelect } from '@shared/components';
+import { FormHeader, FormLabel, HostSelect, Tooltip } from '@shared/components';
 import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
@@ -26,6 +26,7 @@ type Props = {
   isCreating: boolean;
   selectedHost: Host | null;
   nodeLauncherState: NodeLauncherState;
+  canAddNode: boolean;
   onCreateNodeClicked: VoidFunction;
   onHostChanged: (host: Host | null) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
@@ -41,6 +42,7 @@ export const NodeLauncherSummary: FC<Props> = ({
   isCreating,
   selectedHost,
   nodeLauncherState,
+  canAddNode,
   onCreateNodeClicked,
   onHostChanged,
   onNodePropertyChanged,
@@ -60,15 +62,19 @@ export const NodeLauncherSummary: FC<Props> = ({
       <FormLabel>Host</FormLabel>
       <HostSelect selectedHost={selectedHost} onChange={onHostChanged} />
 
-      <FormLabel>Region</FormLabel>
-      <NodeRegionSelect
-        onChange={onNodePropertyChanged}
-        onLoad={onRegionsLoaded}
-        blockchainId={blockchainId}
-        nodeType={nodeType}
-        nodeTypeVersion={nodeTypeVersion}
-        region={region}
-      />
+      {!selectedHost && (
+        <>
+          <FormLabel>Region</FormLabel>
+          <NodeRegionSelect
+            onChange={onNodePropertyChanged}
+            onLoad={onRegionsLoaded}
+            blockchainId={blockchainId}
+            nodeType={nodeType}
+            nodeTypeVersion={nodeTypeVersion}
+            region={region}
+          />
+        </>
+      )}
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
@@ -154,10 +160,19 @@ export const NodeLauncherSummary: FC<Props> = ({
         )}
       </div>
       <div css={styles.buttons}>
+        {!canAddNode && (
+          <Tooltip
+            noWrap
+            top="-30px"
+            left="50%"
+            tooltip="Feature disabled during beta."
+          />
+        )}
         <button
           tabIndex={20}
           onClick={onCreateNodeClicked}
           disabled={
+            !canAddNode ||
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||

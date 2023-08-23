@@ -10,7 +10,7 @@ type Props = {
 
 export const LockedSwitch: FC<Props> = ({
   isChecked = true,
-  tooltip = 'You will be able to disable Auto Updates after BETA.',
+  tooltip = 'Feature disabled during beta.',
 }) => (
   <div css={[styles.wrapper, isChecked && styles.isChecked]}>
     <div css={styles.switch}>
