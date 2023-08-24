@@ -24,12 +24,12 @@ export enum Permissions {
 }
 
 export const USER_ROLES: {
-  [UserRole.USER_ROLE_UNSPECIFICED]: string;
+  [UserRole.USER_ROLE_UNSPECIFIED]: string;
   [UserRole.USER_ROLE_UNPRIVILEGED]: string;
   [UserRole.USER_ROLE_BLOCKJOY_ADMIN]: string;
   [UserRole.UNRECOGNIZED]: string;
 } = {
-  [UserRole.USER_ROLE_UNSPECIFICED]: 'Undefined',
+  [UserRole.USER_ROLE_UNSPECIFIED]: 'Undefined',
   [UserRole.USER_ROLE_UNPRIVILEGED]: 'User',
   [UserRole.USER_ROLE_BLOCKJOY_ADMIN]: 'Super User',
   [UserRole.UNRECOGNIZED]: 'Unknown',

@@ -91,9 +91,19 @@ export enum NodeType {
 
 export enum UiType {
   UI_TYPE_UNSPECIFIED = 0,
+  /**
+   * UI_TYPE_SWITCH - Either "true" or "false" must be returned. The property should be rendered
+   * as a checkbox.
+   */
   UI_TYPE_SWITCH = 1,
+  /**
+   * UI_TYPE_PASSWORD - This field should be treated as a password field, i.e. a text field whose
+   * content is hidden.
+   */
   UI_TYPE_PASSWORD = 2,
+  /** UI_TYPE_TEXT - This field should be treated as a text field. */
   UI_TYPE_TEXT = 3,
+  /** UI_TYPE_FILE_UPLOAD - This field should let the user upload string from a file. */
   UI_TYPE_FILE_UPLOAD = 4,
   UNRECOGNIZED = -1,
 }
@@ -391,6 +401,7 @@ export interface FilteredIpAddr {
 
 export interface NodeProperty {
   name: string;
+  displayName: string;
   uiType: UiType;
   disabled: boolean;
   required: boolean;
@@ -2009,13 +2020,16 @@ export const FilteredIpAddr = {
 };
 
 function createBaseNodeProperty(): NodeProperty {
-  return { name: "", uiType: 0, disabled: false, required: false, value: "" };
+  return { name: "", displayName: "", uiType: 0, disabled: false, required: false, value: "" };
 }
 
 export const NodeProperty = {
   encode(message: NodeProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
+    }
+    if (message.displayName !== "") {
+      writer.uint32(50).string(message.displayName);
     }
     if (message.uiType !== 0) {
       writer.uint32(16).int32(message.uiType);
@@ -2045,6 +2059,13 @@ export const NodeProperty = {
           }
 
           message.name = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.displayName = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -2090,6 +2111,7 @@ export const NodeProperty = {
   fromPartial(object: DeepPartial<NodeProperty>): NodeProperty {
     const message = createBaseNodeProperty();
     message.name = object.name ?? "";
+    message.displayName = object.displayName ?? "";
     message.uiType = object.uiType ?? 0;
     message.disabled = object.disabled ?? false;
     message.required = object.required ?? false;
@@ -2292,10 +2314,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceDeleteResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

@@ -1,4 +1,4 @@
-import { NodeTypeConfigLabel, FirewallDropdown } from '@modules/node';
+import { FirewallDropdown } from '@modules/node';
 import { FC, Fragment } from 'react';
 import {
   FormLabel,
@@ -15,7 +15,6 @@ import IconInfo from '@public/assets/icons/common/Info.svg';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeLauncherState } from '../NodeLauncher';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
 
 type Props = {
@@ -98,8 +97,8 @@ export const NodeLauncherConfig: FC<Props> = ({
             return (
               <Fragment key={property.name}>
                 <FormLabel>
-                  <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>
-                  {property.required && !property.disabled && (
+                  {property.displayName || 'Luuuuuuuuuuuuuuuuk'}
+                  {property.required && (
                     <span css={styles.requiredAsterix}>*</span>
                   )}
                 </FormLabel>

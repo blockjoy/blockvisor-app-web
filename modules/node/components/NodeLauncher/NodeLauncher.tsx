@@ -23,7 +23,7 @@ import {
   NodePlacement,
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
-import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { BlockchainNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
@@ -32,6 +32,7 @@ import {
   Permissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { authSelectors } from '@modules/auth';
+import { onlyUnique } from '@shared/utils/onlyUnique';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -98,10 +99,7 @@ export const NodeLauncher = () => {
                 type.required && type.uiType !== UiType.UI_TYPE_FILE_UPLOAD,
             )
             .every(
-              (type) =>
-                type.value ||
-                type.disabled ||
-                type.uiType === UiType.UI_TYPE_SWITCH,
+              (type) => type.value || type.uiType === UiType.UI_TYPE_SWITCH,
             ),
       );
 
@@ -268,35 +266,38 @@ export const NodeLauncher = () => {
 
     if (!activeBlockchain) return;
 
+    const activeNodeType = activeBlockchain.nodeTypes.find(
+      (type: BlockchainNodeType) => type.nodeType === +node.nodeType,
+    );
+
     const sortedVersionList = sort(
-      activeBlockchain.nodesTypes
-        .filter((n) => n.nodeType === node.nodeType)
-        .map((n: any) => n.version),
+      activeNodeType?.versions.map((n) => n.version).filter(onlyUnique) || [],
       { order: 'asc' },
     );
+
+    if (sortedVersionList.length) {
+      console.log('sortedVersionList', sortedVersionList);
+    }
+
+    const activeVersion = activeNodeType?.versions[0];
 
     setVersionList(sortedVersionList);
 
     const sortedNetworkList = sort(
-      activeBlockchain.networks.map((n: any) => n.name),
+      activeVersion?.networks.map((n) => n.name) || [],
       { order: 'asc' },
     );
 
     setNetworkList(sortedNetworkList);
 
-    const supportedNodeTypes = activeBlockchain.nodesTypes;
-
-    const activeNodeType = supportedNodeTypes.find(
-      (type: SupportedNodeType) => type.nodeType === +node.nodeType,
-    );
-
-    const nodeTypePropertiesCopy = [...activeNodeType?.properties!];
+    const nodeTypePropertiesCopy = [...(activeVersion?.properties! || [])];
 
     const propertiesWithValue: NodeProperty[] = nodeTypePropertiesCopy.map(
       (property) => ({
         name: property.name,
+        displayName: property.name,
+        disabled: false,
         uiType: property.uiType,
-        disabled: property.disabled,
         required: property.required,
         value: property.default ?? '',
       }),
@@ -314,7 +315,7 @@ export const NodeLauncher = () => {
       properties: propertiesWithValue,
       keyFiles: fileProperties,
       network: sortedNetworkList.length ? sortedNetworkList[0] : '',
-      nodeTypeVersion: activeBlockchain.nodesTypes.length
+      nodeTypeVersion: activeBlockchain.nodeTypes.length
         ? sortedVersionList[0]
         : '',
     });
@@ -333,7 +334,9 @@ export const NodeLauncher = () => {
           blockchainId={node.blockchainId}
           nodeType={node.nodeType}
         />
-        {node.blockchainId && node.nodeType && node.properties?.length && (
+        {Boolean(
+          node.blockchainId && node.nodeType && node.properties?.length,
+        ) && (
           <NodeLauncherConfig
             isConfigValid={isConfigValid}
             onFileUploaded={handleFileUploaded}
@@ -352,7 +355,9 @@ export const NodeLauncher = () => {
             />
           </div>
         )}
-        {node.blockchainId && node.nodeType && node?.properties?.length && (
+        {Boolean(
+          node.blockchainId && node.nodeType && node?.properties?.length,
+        ) && (
           <NodeLauncherSummary
             hasNetworkList={Boolean(networkList?.length)}
             serverError={serverError!}

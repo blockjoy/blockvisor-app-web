@@ -49,7 +49,7 @@ const blockchainsWithNodeTypes = selector({
     return blockchainList.map((block) => {
       return {
         ...block,
-        supported_node_types: block.nodesTypes
+        supported_node_types: block.nodeTypes
           .map((s: any) => {
             return nodeTypeList
               .map((f) => {
