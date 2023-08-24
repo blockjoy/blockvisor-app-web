@@ -8,13 +8,14 @@ import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import IconSearch from '@public/assets/icons/common/Search.svg';
 import { NodeLauncherProtocolBlockchains } from './NodeLauncherProtocolBlockchains';
 import { isMobile } from 'react-device-detect';
+import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   onProtocolSelected: (
     blockchainId: string,
     nodeTypeId: NodeType,
     nodeTypeProperties: NodeProperty[],
-    nodeVersion: string,
+    nodeVersion: BlockchainVersion,
   ) => void;
   blockchainId: string;
   nodeType: NodeType;

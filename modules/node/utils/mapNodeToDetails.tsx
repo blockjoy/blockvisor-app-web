@@ -56,7 +56,7 @@ export const mapNodeToDetails = (node: Node) => {
           property.uiType !== UiType.UI_TYPE_PASSWORD,
       )
       .map((property: NodeProperty) => ({
-        label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
+        label: <>{property.displayName}</>,
         data:
           property.value === 'null' ? (
             '-'

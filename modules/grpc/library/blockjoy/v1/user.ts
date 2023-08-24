@@ -6,7 +6,7 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 export const protobufPackage = "blockjoy.v1";
 
 export enum UserRole {
-  USER_ROLE_UNSPECIFICED = 0,
+  USER_ROLE_UNSPECIFIED = 0,
   /** USER_ROLE_UNPRIVILEGED - This user has normal privileges. */
   USER_ROLE_UNPRIVILEGED = 1,
   /**
@@ -26,7 +26,7 @@ export interface User {
   /**
    * Each users has a specific role within an organization, but they may also
    * posses a global role. For most users this will be `Unprivileged`, but there
-   * are accounts that have the settings `Blockjoy Staff`. This means that  they
+   * are accounts that have the settings `Blockjoy Admin`. This means that  they
    * are allowed to do administrative tasks for other users.
    */
   role: UserRole;

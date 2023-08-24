@@ -2,6 +2,7 @@
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
+import { NodeType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -44,14 +45,6 @@ export interface CookbookServiceRetrieveImageResponse {
   location: ArchiveLocation | undefined;
 }
 
-export interface CookbookServiceRetrieveKernelRequest {
-  id: ConfigIdentifier | undefined;
-}
-
-export interface CookbookServiceRetrieveKernelResponse {
-  location: ArchiveLocation | undefined;
-}
-
 export interface CookbookServiceRequirementsRequest {
   id: ConfigIdentifier | undefined;
 }
@@ -73,7 +66,7 @@ export interface CookbookServiceNetConfigurationsResponse {
 
 export interface CookbookServiceListBabelVersionsRequest {
   protocol: string;
-  nodeType: string;
+  nodeType: NodeType;
 }
 
 export interface CookbookServiceListBabelVersionsResponse {
@@ -219,7 +212,7 @@ export interface ConfigIdentifier {
   /** snake_cased name of the blockchain. */
   protocol: string;
   /** snake_cased name of the node type. */
-  nodeType: string;
+  nodeType: NodeType;
   /** semantic version string of the node type version. */
   nodeVersion: string;
 }
@@ -446,100 +439,6 @@ export const CookbookServiceRetrieveImageResponse = {
   },
 };
 
-function createBaseCookbookServiceRetrieveKernelRequest(): CookbookServiceRetrieveKernelRequest {
-  return { id: undefined };
-}
-
-export const CookbookServiceRetrieveKernelRequest = {
-  encode(message: CookbookServiceRetrieveKernelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined) {
-      ConfigIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CookbookServiceRetrieveKernelRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCookbookServiceRetrieveKernelRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = ConfigIdentifier.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<CookbookServiceRetrieveKernelRequest>): CookbookServiceRetrieveKernelRequest {
-    return CookbookServiceRetrieveKernelRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<CookbookServiceRetrieveKernelRequest>): CookbookServiceRetrieveKernelRequest {
-    const message = createBaseCookbookServiceRetrieveKernelRequest();
-    message.id = (object.id !== undefined && object.id !== null) ? ConfigIdentifier.fromPartial(object.id) : undefined;
-    return message;
-  },
-};
-
-function createBaseCookbookServiceRetrieveKernelResponse(): CookbookServiceRetrieveKernelResponse {
-  return { location: undefined };
-}
-
-export const CookbookServiceRetrieveKernelResponse = {
-  encode(message: CookbookServiceRetrieveKernelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.location !== undefined) {
-      ArchiveLocation.encode(message.location, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CookbookServiceRetrieveKernelResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCookbookServiceRetrieveKernelResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.location = ArchiveLocation.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<CookbookServiceRetrieveKernelResponse>): CookbookServiceRetrieveKernelResponse {
-    return CookbookServiceRetrieveKernelResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<CookbookServiceRetrieveKernelResponse>): CookbookServiceRetrieveKernelResponse {
-    const message = createBaseCookbookServiceRetrieveKernelResponse();
-    message.location = (object.location !== undefined && object.location !== null)
-      ? ArchiveLocation.fromPartial(object.location)
-      : undefined;
-    return message;
-  },
-};
-
 function createBaseCookbookServiceRequirementsRequest(): CookbookServiceRequirementsRequest {
   return { id: undefined };
 }
@@ -747,7 +646,7 @@ export const CookbookServiceNetConfigurationsResponse = {
 };
 
 function createBaseCookbookServiceListBabelVersionsRequest(): CookbookServiceListBabelVersionsRequest {
-  return { protocol: "", nodeType: "" };
+  return { protocol: "", nodeType: 0 };
 }
 
 export const CookbookServiceListBabelVersionsRequest = {
@@ -755,8 +654,8 @@ export const CookbookServiceListBabelVersionsRequest = {
     if (message.protocol !== "") {
       writer.uint32(10).string(message.protocol);
     }
-    if (message.nodeType !== "") {
-      writer.uint32(18).string(message.nodeType);
+    if (message.nodeType !== 0) {
+      writer.uint32(16).int32(message.nodeType);
     }
     return writer;
   },
@@ -776,11 +675,11 @@ export const CookbookServiceListBabelVersionsRequest = {
           message.protocol = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.nodeType = reader.string();
+          message.nodeType = reader.int32() as any;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -798,7 +697,7 @@ export const CookbookServiceListBabelVersionsRequest = {
   fromPartial(object: DeepPartial<CookbookServiceListBabelVersionsRequest>): CookbookServiceListBabelVersionsRequest {
     const message = createBaseCookbookServiceListBabelVersionsRequest();
     message.protocol = object.protocol ?? "";
-    message.nodeType = object.nodeType ?? "";
+    message.nodeType = object.nodeType ?? 0;
     return message;
   },
 };
@@ -1468,7 +1367,7 @@ export const DownloadManifest = {
 };
 
 function createBaseChunk(): Chunk {
-  return { key: "", url: "", checksumType: 0, checksum: new Uint8Array(), size: 0, destinations: [] };
+  return { key: "", url: "", checksumType: 0, checksum: new Uint8Array(0), size: 0, destinations: [] };
 }
 
 export const Chunk = {
@@ -1561,7 +1460,7 @@ export const Chunk = {
     message.key = object.key ?? "";
     message.url = object.url ?? "";
     message.checksumType = object.checksumType ?? 0;
-    message.checksum = object.checksum ?? new Uint8Array();
+    message.checksum = object.checksum ?? new Uint8Array(0);
     message.size = object.size ?? 0;
     message.destinations = object.destinations?.map((e) => FileLocation.fromPartial(e)) || [];
     return message;
@@ -1637,7 +1536,7 @@ export const FileLocation = {
 };
 
 function createBaseConfigIdentifier(): ConfigIdentifier {
-  return { protocol: "", nodeType: "", nodeVersion: "" };
+  return { protocol: "", nodeType: 0, nodeVersion: "" };
 }
 
 export const ConfigIdentifier = {
@@ -1645,8 +1544,8 @@ export const ConfigIdentifier = {
     if (message.protocol !== "") {
       writer.uint32(10).string(message.protocol);
     }
-    if (message.nodeType !== "") {
-      writer.uint32(18).string(message.nodeType);
+    if (message.nodeType !== 0) {
+      writer.uint32(16).int32(message.nodeType);
     }
     if (message.nodeVersion !== "") {
       writer.uint32(26).string(message.nodeVersion);
@@ -1669,11 +1568,11 @@ export const ConfigIdentifier = {
           message.protocol = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.nodeType = reader.string();
+          message.nodeType = reader.int32() as any;
           continue;
         case 3:
           if (tag !== 26) {
@@ -1698,7 +1597,7 @@ export const ConfigIdentifier = {
   fromPartial(object: DeepPartial<ConfigIdentifier>): ConfigIdentifier {
     const message = createBaseConfigIdentifier();
     message.protocol = object.protocol ?? "";
-    message.nodeType = object.nodeType ?? "";
+    message.nodeType = object.nodeType ?? 0;
     message.nodeVersion = object.nodeVersion ?? "";
     return message;
   },
@@ -1797,7 +1696,7 @@ export const KernelIdentifier = {
 };
 
 function createBasePlugin(): Plugin {
-  return { identifier: undefined, rhaiContent: new Uint8Array() };
+  return { identifier: undefined, rhaiContent: new Uint8Array(0) };
 }
 
 export const Plugin = {
@@ -1850,7 +1749,7 @@ export const Plugin = {
     message.identifier = (object.identifier !== undefined && object.identifier !== null)
       ? ConfigIdentifier.fromPartial(object.identifier)
       : undefined;
-    message.rhaiContent = object.rhaiContent ?? new Uint8Array();
+    message.rhaiContent = object.rhaiContent ?? new Uint8Array(0);
     return message;
   },
 };
@@ -2069,15 +1968,6 @@ export const CookbookServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Retrieve kernel file for specific version and state. */
-    retrieveKernel: {
-      name: "RetrieveKernel",
-      requestType: CookbookServiceRetrieveKernelRequest,
-      requestStream: false,
-      responseType: CookbookServiceRetrieveKernelResponse,
-      responseStream: false,
-      options: {},
-    },
     /** Retrieve hardware requirements for given identifier. */
     requirements: {
       name: "Requirements",
@@ -2119,11 +2009,6 @@ export interface CookbookServiceImplementation<CallContextExt = {}> {
     request: CookbookServiceRetrieveImageRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<CookbookServiceRetrieveImageResponse>>;
-  /** Retrieve kernel file for specific version and state. */
-  retrieveKernel(
-    request: CookbookServiceRetrieveKernelRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<CookbookServiceRetrieveKernelResponse>>;
   /** Retrieve hardware requirements for given identifier. */
   requirements(
     request: CookbookServiceRequirementsRequest,
@@ -2152,11 +2037,6 @@ export interface CookbookServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<CookbookServiceRetrieveImageRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<CookbookServiceRetrieveImageResponse>;
-  /** Retrieve kernel file for specific version and state. */
-  retrieveKernel(
-    request: DeepPartial<CookbookServiceRetrieveKernelRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<CookbookServiceRetrieveKernelResponse>;
   /** Retrieve hardware requirements for given identifier. */
   requirements(
     request: DeepPartial<CookbookServiceRequirementsRequest>,
@@ -2333,10 +2213,10 @@ export interface ManifestServiceClient<CallOptionsExt = {}> {
   ): Promise<ManifestServiceRetrieveDownloadManifestResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
