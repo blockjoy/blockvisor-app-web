@@ -1,4 +1,4 @@
-import { nodeClient, keyFileClient } from '@modules/grpc';
+import { nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useNodeList } from './useNodeList';
 import {
@@ -22,7 +22,6 @@ export const useNodeAdd = () => {
 
   const createNode = async (
     nodeRequest: NodeServiceCreateRequest,
-    keyFiles: File[],
     onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
@@ -45,8 +44,6 @@ export const useNodeAdd = () => {
       });
 
       const nodeId = response.id;
-
-      await keyFileClient.create(nodeId, keyFiles);
 
       // Update organization node count
       const activeOrganization = organizations.find(

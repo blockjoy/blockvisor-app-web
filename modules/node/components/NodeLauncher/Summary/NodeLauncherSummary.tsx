@@ -1,59 +1,54 @@
-import {
-  NodeLauncherState,
-  NodeRegionSelect,
-  NodeTypeConfigLabel,
-} from '@modules/node';
+import { NodeLauncherState, NodeRegionSelect } from '@modules/node';
 import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { UiType } from '@modules/grpc/library/blockjoy/v1/node';
 import { FormHeader, FormLabel, HostSelect, Tooltip } from '@shared/components';
 import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   serverError: string;
-  hasAddedFiles: boolean;
   hasNetworkList: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean | null;
   isCreating: boolean;
   selectedHost: Host | null;
+  selectedVersion: BlockchainVersion;
+  selectedRegion: string;
   nodeLauncherState: NodeLauncherState;
   canAddNode: boolean;
   onCreateNodeClicked: VoidFunction;
   onHostChanged: (host: Host | null) => void;
-  onNodePropertyChanged: (name: string, value: any) => void;
+  onRegionChanged: (region: string) => void;
   onRegionsLoaded: (region: string) => void;
 };
 
 export const NodeLauncherSummary: FC<Props> = ({
   serverError,
-  hasAddedFiles,
   hasNetworkList,
   isNodeValid,
   isConfigValid,
   isCreating,
   selectedHost,
+  selectedVersion,
+  selectedRegion,
   nodeLauncherState,
   canAddNode,
   onCreateNodeClicked,
   onHostChanged,
-  onNodePropertyChanged,
+  onRegionChanged,
   onRegionsLoaded,
 }) => {
   const { blockchains } = useGetBlockchains();
 
-  if (isConfigValid === null) return null;
-
-  const { blockchainId, nodeType, nodeTypeVersion, region, properties } =
-    nodeLauncherState;
+  const { blockchainId, nodeType, properties } = nodeLauncherState;
 
   return (
     <div css={styles.wrapper}>
@@ -66,12 +61,12 @@ export const NodeLauncherSummary: FC<Props> = ({
         <>
           <FormLabel>Region</FormLabel>
           <NodeRegionSelect
-            onChange={onNodePropertyChanged}
+            onChange={onRegionChanged}
             onLoad={onRegionsLoaded}
             blockchainId={blockchainId}
             nodeType={nodeType}
-            nodeTypeVersion={nodeTypeVersion}
-            region={region}
+            version={selectedVersion}
+            region={selectedRegion}
           />
         </>
       )}
@@ -137,19 +132,12 @@ export const NodeLauncherSummary: FC<Props> = ({
                   {properties
                     ?.filter(
                       (property) =>
-                        (property.uiType !== UiType.UI_TYPE_FILE_UPLOAD &&
-                          property.required &&
-                          !property.disabled &&
-                          !property.value) ||
-                        (property.uiType === UiType.UI_TYPE_FILE_UPLOAD &&
-                          !hasAddedFiles),
+                        property.required &&
+                        !property.disabled &&
+                        !property.value,
                     )
                     .map((property) => (
-                      <div key={property.name}>
-                        <NodeTypeConfigLabel>
-                          {property.name}
-                        </NodeTypeConfigLabel>
-                      </div>
+                      <div key={property.name}>{property.displayName}</div>
                     ))}
                 </div>
               </>
