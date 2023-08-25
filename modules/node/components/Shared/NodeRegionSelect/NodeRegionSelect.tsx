@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Select } from '@shared/components';
 import { NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { colors } from 'styles/utils.colors.styles';
 import { useDefaultOrganization } from '@modules/organization';
+import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   onChange: (name: string, value: any) => void;
@@ -11,7 +12,7 @@ type Props = {
   region: string;
   blockchainId: string;
   nodeType: NodeType;
-  nodeTypeVersion: string;
+  version: BlockchainVersion;
 };
 
 export const NodeRegionSelect = ({
@@ -20,16 +21,14 @@ export const NodeRegionSelect = ({
   region,
   blockchainId,
   nodeType,
-  nodeTypeVersion,
+  version,
 }: Props) => {
   const [serverError, setServerError] = useState('');
   const [regions, setRegions] = useState<string[]>([]);
   const { defaultOrganization } = useDefaultOrganization();
-  const currentBlockchainId = useRef('');
 
   useEffect(() => {
-    if (currentBlockchainId.current !== blockchainId || nodeTypeVersion) {
-      currentBlockchainId.current = blockchainId;
+    if (version.id) {
       setServerError('');
       (async () => {
         try {
@@ -37,7 +36,7 @@ export const NodeRegionSelect = ({
             defaultOrganization?.id!,
             blockchainId,
             nodeType,
-            nodeTypeVersion,
+            version.version,
           );
           setRegions(regions);
 
@@ -45,7 +44,6 @@ export const NodeRegionSelect = ({
             setServerError('Region List Empty');
             return;
           }
-
           onLoad(regions[0]);
         } catch (err) {
           console.log('getRegionsError', err);
@@ -54,7 +52,7 @@ export const NodeRegionSelect = ({
         }
       })();
     }
-  }, [nodeTypeVersion]);
+  }, [version.id]);
 
   return (
     <Select

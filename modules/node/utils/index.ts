@@ -4,3 +4,4 @@ export * from './numOfItemsPerPage';
 export * from './resultsStatus';
 export * from './toGrid';
 export * from './mapNodeListToRows';
+export * from './sortLists';

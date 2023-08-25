@@ -16,27 +16,35 @@ import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeLauncherState } from '../NodeLauncher';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
+import {
+  BlockchainNetwork,
+  BlockchainVersion,
+} from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   isConfigValid: boolean | null;
   nodeTypeProperties?: NodeProperty[];
   nodeFiles?: NodeFiles[];
-  networkList: string[];
-  versionList: string[];
+  networks: BlockchainNetwork[];
+  versions: BlockchainVersion[];
+  selectedVersion: BlockchainVersion;
   nodeLauncherState: NodeLauncherState;
   onFileUploaded: (e: any) => void;
   onNodeConfigPropertyChanged: (e: any) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
+  onVersionChanged: (version: BlockchainVersion) => void;
 };
 
 export const NodeLauncherConfig: FC<Props> = ({
   isConfigValid,
-  networkList,
-  versionList,
+  networks,
+  versions,
+  selectedVersion,
   nodeLauncherState,
   onFileUploaded,
   onNodePropertyChanged,
   onNodeConfigPropertyChanged,
+  onVersionChanged,
 }) => {
   const { network, properties, keyFiles } = nodeLauncherState;
 
@@ -44,33 +52,31 @@ export const NodeLauncherConfig: FC<Props> = ({
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
-        {isConfigValid !== null && !!networkList?.length && (
-          <>
-            <FormLabel>Network</FormLabel>
-            <PillPicker
-              name="network"
-              items={networkList}
-              selectedItem={network}
-              onChange={onNodePropertyChanged}
-              tabIndexStart={3}
-            />
-          </>
-        )}
+        <>
+          <FormLabel>Network</FormLabel>
+          <PillPicker
+            name="network"
+            items={networks.map((n) => n.name)}
+            selectedItem={network}
+            onChange={onNodePropertyChanged}
+            tabIndexStart={3}
+          />
+        </>
 
-        {isConfigValid !== null && !networkList?.length && (
+        {isConfigValid !== null && !networks?.length && (
           <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
             Missing Network Configuration
           </div>
         )}
 
-        {versionList.length > 1 && (
+        {versions.length > 1 && (
           <>
             <FormLabel>Version</FormLabel>
             <Select
-              buttonText={<p>{nodeLauncherState.nodeTypeVersion}</p>}
-              items={versionList?.map((r) => ({
-                name: r,
-                onClick: () => onNodePropertyChanged('nodeTypeVersion', r),
+              buttonText={<p>{selectedVersion?.version}</p>}
+              items={versions.map((version) => ({
+                name: version.version,
+                onClick: () => onVersionChanged(version),
               }))}
             />
           </>
@@ -92,12 +98,12 @@ export const NodeLauncherConfig: FC<Props> = ({
           deniedIps={nodeLauncherState.denyIps}
         />
 
-        {Boolean(networkList?.length) &&
+        {Boolean(networks?.length) &&
           properties?.map((property: NodeProperty) => {
             return (
               <Fragment key={property.name}>
                 <FormLabel>
-                  {property.displayName || 'Luuuuuuuuuuuuuuuuk'}
+                  {property.displayName}
                   {property.required && (
                     <span css={styles.requiredAsterix}>*</span>
                   )}
