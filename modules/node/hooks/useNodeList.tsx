@@ -121,22 +121,23 @@ export const useNodeList = () => {
     setNodeListByHostLoadingState('finished');
   };
 
-  const addToNodeList = async (node: any) => {
+  const addToNodeList = (node: any) => {
+    const foundNode = nodeList.findIndex((n) => n.id === node.id) > -1;
+    if (foundNode) return;
+
     const newNodeList = [...nodeList, node];
 
     setNodeCount(nodeCount + 1);
-
     setNodeList(newNodeList);
   };
 
-  const removeFromNodeList = async (nodeId: string) => {
+  const removeFromNodeList = (nodeId: string) => {
     const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
 
     if (newNodeList.length !== nodeList.length) {
       setNodeList(newNodeList);
+      setNodeCount(nodeCount - 1);
     }
-
-    setNodeCount(nodeCount - 1);
   };
 
   return {
