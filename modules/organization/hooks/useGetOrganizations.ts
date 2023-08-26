@@ -1,4 +1,5 @@
 import { organizationClient } from '@modules/grpc';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -35,14 +36,17 @@ export function useGetOrganizations() {
     setIsLoading('finished');
   };
 
-  const removeFromOrganizations = (org_id: string) => {
+  const removeFromOrganizations = (orgId: string) => {
     const newOrganizations = organizations.filter(
-      (organization) => organization.id !== org_id,
+      (organization) => organization.id !== orgId,
     );
     setOrganizations(newOrganizations);
   };
 
-  const addToOrganizations = (org: any) => {
+  const addToOrganizations = (org: Org) => {
+    const foundOrg = organizations.findIndex((o) => o.id === org.id) > -1;
+    if (foundOrg) return;
+
     const organizationsCopy = [...organizations];
     organizationsCopy.push(org);
     setOrganizations(organizationsCopy);

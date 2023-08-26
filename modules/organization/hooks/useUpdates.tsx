@@ -24,10 +24,9 @@ export const useUpdates = () => {
   const { modifyOrganization } = useUpdateOrganization();
   const { removeOrganization } = useDeleteOrganization();
   const { updateMembersList } = useUpdateMembers();
-  const { getOrganizations } = useGetOrganizations();
   const { defaultOrganization, setDefaultOrganization } =
     useDefaultOrganization();
-  const { organizations } = useGetOrganizations();
+  const { organizations, addToOrganizations } = useGetOrganizations();
 
   const kickFromOrganization = () => {
     const newOrg = organizations[0];
@@ -54,8 +53,10 @@ export const useUpdates = () => {
           payloadDeserialized.created,
         );
 
-        const { createdBy, createdByName }: OrgCreated =
+        const { createdBy, createdByName, org }: OrgCreated =
           payloadDeserialized.created!;
+
+        addToOrganizations(org!);
 
         if (createdBy === user?.id) break;
 
@@ -72,11 +73,11 @@ export const useUpdates = () => {
         const { org, updatedBy, updatedByName }: OrgUpdated =
           payloadDeserialized.updated!;
 
-        if (updatedBy === user?.id) break;
-
         modifyOrganization(org!);
 
         updateMembersList(org!);
+
+        if (updatedBy === user?.id) break;
 
         if (!org?.members.find((m) => m.userId === user?.id)) {
           showNotification(
@@ -103,10 +104,9 @@ export const useUpdates = () => {
         const { orgId, deletedBy, deletedByName }: OrgDeleted =
           payloadDeserialized.deleted!;
 
-        if (deletedBy === user?.id) break;
-
         removeOrganization(orgId);
 
+        if (deletedBy === user?.id) break;
         if (orgId === defaultOrganization?.id) {
           showNotification(
             type,

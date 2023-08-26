@@ -2,7 +2,6 @@ import { ApplicationError } from '@modules/auth/utils/Errors';
 import { organizationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useGetOrganizations } from './useGetOrganizations';
-import { useSwitchOrganization } from './useSwitchOrganization';
 
 export function useDeleteOrganization(): IDeleteOrganizationHook {
   const { removeFromOrganizations } = useGetOrganizations();

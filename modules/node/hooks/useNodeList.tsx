@@ -122,13 +122,12 @@ export const useNodeList = () => {
   };
 
   const addToNodeList = (node: any) => {
-    const foundNode = nodeList.find((n) => n.id === node.id);
+    const foundNode = nodeList.findIndex((n) => n.id === node.id) > -1;
     if (foundNode) return;
 
     const newNodeList = [...nodeList, node];
 
     setNodeCount(nodeCount + 1);
-
     setNodeList(newNodeList);
   };
 
