@@ -1,9 +1,13 @@
 import { useGetBlockchains } from '@modules/node';
 import { BlockchainIcon, EmptyColumn, sort } from '@shared/components';
 import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
-import { SupportedNodeType } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import {
+  BlockchainNodeType,
+  BlockchainVersion,
+} from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { styles } from './NodeLauncherProtocolBlockchains.styles';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
+import { onlyUnique } from '@shared/utils/onlyUnique';
 
 type Props = {
   keyword: string;
@@ -11,14 +15,11 @@ type Props = {
     blockchainId: string,
     nodeTypeId: NodeType,
     nodeTypeProperties: NodeProperty[],
-    nodeVersion: string,
+    nodeVersion: BlockchainVersion,
   ) => void;
   activeBlockchainId: string;
   activeNodeType: NodeType;
 };
-
-const onlyUnique = (value: any, index: number, array: number[]) =>
-  array.indexOf(value) === index;
 
 export const NodeLauncherProtocolBlockchains = ({
   keyword,
@@ -39,21 +40,22 @@ export const NodeLauncherProtocolBlockchains = ({
       (b) => b.id === blockchainId,
     );
 
-    const foundActiveSupportedNodeType = foundActiveNodeType?.nodesTypes!.find(
-      (n: SupportedNodeType) => n.nodeType === nodeType,
+    const foundActiveSupportedNodeType = foundActiveNodeType?.nodeTypes!.find(
+      (n: BlockchainNodeType) => n.nodeType === nodeType,
     );
 
     onProtocolSelected(
       blockchainId,
       nodeType,
-      foundActiveSupportedNodeType?.properties.map((property) => ({
+      foundActiveSupportedNodeType?.versions[0]?.properties.map((property) => ({
         name: property.name,
         uiType: property.uiType,
-        disabled: property.disabled,
         required: property.required,
+        disabled: false,
+        displayName: property.displayName,
         value: property.default ?? '',
       }))!,
-      foundActiveSupportedNodeType?.version!,
+      foundActiveSupportedNodeType?.versions[0]!,
     );
   };
 
@@ -66,7 +68,7 @@ export const NodeLauncherProtocolBlockchains = ({
         />
       ) : (
         filteredBlockchains?.map((b, index) => {
-          const nodeTypesWithName = b.nodesTypes.map((nt) => ({
+          const nodeTypesWithName = b.nodeTypes.map((nt) => ({
             ...nt,
             nodeTypeName: convertNodeTypeToName(nt.nodeType),
           }));

@@ -18,7 +18,7 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 10px;
-    min-width: 170px;
+    min-width: 50%;
   `,
   name: (theme: ITheme) => css`
     position: relative;

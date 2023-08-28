@@ -4,7 +4,7 @@ import isFunction from 'lodash/isFunction';
 import { initialQueryParams, InitialQueryParams } from './HostUIHelpers';
 import { loadPersistedFilters } from '../utils/loadPersistedFilters';
 import { buildParams } from '../utils/buildParams';
-import { numOfItemsPerPage } from '@modules/node/utils';
+// import { numOfItemsPerPage } from '@modules/node/utils';
 
 type HostUIContext = {
   queryParams: InitialQueryParams;
@@ -31,14 +31,14 @@ export const getInitialQueryParams = () => {
   const { memory, cpu, space } = persistedHostFilters;
   const params = buildParams(memory, cpu, space);
 
-  const itemsPerPage = numOfItemsPerPage();
+  // const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,
     filter: params,
     pagination: {
       ...initialQueryParams.pagination,
-      items_per_page: itemsPerPage,
+      // items_per_page: itemsPerPage,
     },
   };
 };

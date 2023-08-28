@@ -32,5 +32,6 @@ export const nodeStatusList: NodeStatusListItem[] = [
     .map(([id, name]) => ({
       id: +id,
       name: name?.toString().replace('STAKING_STATUS_', ''),
+      type: 'staking',
     })),
 ];

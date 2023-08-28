@@ -44,7 +44,7 @@ export const useFilters = (nodeUIProps: NodeUIProps) => {
   const applyFilter = (values: InitialFilter) => {
     const newQueryParams = prepareFilter(nodeUIProps.queryParams, values);
     if (!isEqual(newQueryParams, nodeUIProps.queryParams)) {
-      newQueryParams.pagination.current_page = 1;
+      newQueryParams.pagination.current_page = 0;
       nodeUIProps.setQueryParams(newQueryParams);
     }
   };

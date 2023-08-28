@@ -32,9 +32,9 @@ export const useUpdates = () => {
 
         const { node }: NodeCreated = payloadDeserialized.created!;
 
-        if (node?.createdBy === user?.id) break;
-
         addToNodeList(node);
+
+        if (node?.createdBy === user?.id) break;
 
         showNotification(
           type,
@@ -49,17 +49,10 @@ export const useUpdates = () => {
           payloadDeserialized.updated,
         );
 
-        const {
-          updatedBy,
-          updatedByName,
-          node: mqttNode,
-        }: NodeUpdated = payloadDeserialized.updated!;
-
-        if (updatedBy === user?.id) break;
+        const { node: mqttNode }: NodeUpdated = payloadDeserialized.updated!;
 
         if (mqttNode?.id === activeNode?.id) {
           modifyNode(payloadDeserialized.updated?.node!);
-          // showNotification(type, `${updatedByName} just updated a node`);
         }
 
         break;
@@ -73,13 +66,13 @@ export const useUpdates = () => {
         const { nodeId, deletedBy, deletedByName }: NodeDeleted =
           payloadDeserialized.deleted!;
 
-        if (deletedBy === user?.id) break;
-
         removeFromNodeList(nodeId);
 
         if (activeNode?.id === nodeId) {
           unloadNode();
         }
+
+        if (deletedBy === user?.id) break;
 
         showNotification(type, `${deletedByName} just deleted a node`);
         break;

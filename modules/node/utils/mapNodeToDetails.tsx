@@ -56,15 +56,15 @@ export const mapNodeToDetails = (node: Node) => {
           property.uiType !== UiType.UI_TYPE_PASSWORD,
       )
       .map((property: NodeProperty) => ({
-        label: <NodeTypeConfigLabel>{property.name}</NodeTypeConfigLabel>,
+        label: <>{property.displayName}</>,
         data:
-          property.value === 'null' ? (
-            '-'
-          ) : property.uiType === UiType.UI_TYPE_SWITCH ? (
+          property.uiType === UiType.UI_TYPE_SWITCH ? (
             <LockedSwitch
               tooltip="Feature disabled during beta."
               isChecked={property.value === 'true' ? true : false}
             />
+          ) : property.value === 'null' ? (
+            ''
           ) : (
             escapeHtml(property.value!)
           ),
