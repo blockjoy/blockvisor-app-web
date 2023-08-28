@@ -7,7 +7,7 @@ import { useDefaultOrganization } from '@modules/organization';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
-  onChange: (name: string, value: any) => void;
+  onChange: (region: string) => void;
   onLoad: (firstRegion: string) => void;
   region: string;
   blockchainId: string;
@@ -66,7 +66,7 @@ export const NodeRegionSelect = ({
       }
       items={regions?.map((r) => ({
         name: r,
-        onClick: () => onChange('region', r),
+        onClick: () => onChange(r),
       }))}
     />
   );
