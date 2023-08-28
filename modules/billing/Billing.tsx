@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
-import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { PageSection, PageTitle, Tabs } from '@shared/components';
 import { ROUTES, useTabs } from '@shared/index';
 import {
@@ -13,7 +12,7 @@ import {
   BillingView,
   Estimates,
 } from '@modules/billing';
-import { useHasPermissions, Permissions } from '@modules/auth';
+import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
 
@@ -29,11 +28,13 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
     billingAtoms.subscriptionLoadingState,
   );
 
-  const userRoleInOrganization: OrgRole = useRecoilValue(
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
 
   const canUpdateBilling: boolean = useHasPermissions(
+    userRole,
     userRoleInOrganization,
     Permissions.UPDATE_BILLING,
   );
