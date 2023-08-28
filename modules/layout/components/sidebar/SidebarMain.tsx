@@ -44,15 +44,15 @@ export default () => {
     {
       title: 'BLOCKVISOR',
       items: [
-        { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
+        { name: 'Nodes', path: ROUTES.NODES, icon: <IconNodes /> },
         {
           name: 'Launch Node',
-          path: '/launch-node',
+          path: ROUTES.LAUNCH_NODE,
           icon: <IconRocket />,
         },
         {
           name: 'Hosts',
-          path: '/hosts',
+          path: ROUTES.HOSTS,
           icon: <IconHost />,
         },
       ],
@@ -63,10 +63,15 @@ export default () => {
         {
           name: 'Organizations',
           path: isMobile
-            ? '/organizations'
-            : `/organizations/${defaultOrganization?.id}`,
+            ? ROUTES.ORGANIZATIONS
+            : `${ROUTES.ORGANIZATIONS}/${defaultOrganization?.id}`,
           icon: <IconOrganizations />,
           isOrganizations: true,
+        },
+        {
+          name: 'Billing',
+          path: `${ROUTES.BILLING}?tab=1`,
+          icon: <IconBilling />,
         },
       ],
     },
@@ -74,7 +79,7 @@ export default () => {
       items: [
         {
           name: 'FAQ',
-          path: '/faq',
+          path: ROUTES.FAQ,
           icon: <IconChat />,
         },
       ],

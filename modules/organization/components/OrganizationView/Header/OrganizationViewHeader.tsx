@@ -1,5 +1,22 @@
+<<<<<<< HEAD
 import { Skeleton, SkeletonGrid, EditableTitle } from '@shared/components';
 import { FC, useState } from 'react';
+=======
+import {
+  Skeleton,
+  SkeletonGrid,
+  EditableTitle,
+  Button,
+  SvgIcon,
+  DeleteModal,
+} from '@shared/components';
+<<<<<<< HEAD
+import { FC, useState } from 'react';
+=======
+import { useState } from 'react';
+>>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
+import { useRecoilValue } from 'recoil';
+>>>>>>> edc70c6f (feat: [sc-2354] updated permissions; moved billing to sidebar)
 import { styles } from './OrganizationViewHeader.styles';
 import {
   useGetOrganization,
@@ -9,7 +26,13 @@ import { usePermissions } from '@modules/auth';
 import { toast } from 'react-toastify';
 import { OrganizationViewHeaderActions } from './Actions/OrganizationViewHeaderActions';
 
+<<<<<<< HEAD
 export const OrganizationViewHeader: FC = () => {
+=======
+export const OrganizationViewHeader = () => {
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+
+>>>>>>> edc70c6f (feat: [sc-2354] updated permissions; moved billing to sidebar)
   const { organization, isLoading } = useGetOrganization();
 
   const { updateOrganization } = useUpdateOrganization();

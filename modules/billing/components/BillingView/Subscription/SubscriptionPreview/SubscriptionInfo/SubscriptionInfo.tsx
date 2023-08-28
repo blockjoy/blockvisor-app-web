@@ -8,9 +8,9 @@ import {
 } from '@modules/billing';
 import { ButtonGroup, Button, DetailsTable } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
-import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization';
-import { useHasPermissions, Permissions } from '@modules/auth';
+import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
+import { containers } from 'styles/containers.styles';
 
 type SubscriptionInfoProps = {
   handleUpdate: VoidFunction;
@@ -35,17 +35,19 @@ export const SubscriptionInfo = ({
     reactivateSubscription(subscription?.id!);
   }, [reactivateSubscription, subscription]);
 
-  const userRoleInOrganization: OrgRole = useRecoilValue(
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
 
   const canUpdateBilling: boolean = useHasPermissions(
+    userRole,
     userRoleInOrganization,
     Permissions.UPDATE_BILLING,
   );
 
   return (
-    <>
+    <div css={containers.mediumSmall}>
       <DetailsTable bodyElements={subscriptionData} />
 
       {canUpdateBilling && (
@@ -82,6 +84,6 @@ export const SubscriptionInfo = ({
           )}
         </ButtonGroup>
       )}
-    </>
+    </div>
   );
 };

@@ -8,9 +8,8 @@ import {
 } from '@modules/billing';
 import { Alert, TableSkeleton } from '@shared/components';
 import { styles } from './BillingView.styles';
-import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization/store/organizationSelectors';
-import { useHasPermissions, Permissions } from '@modules/auth';
+import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
 
 type BillingViewProps = {
   item: Item;
@@ -23,11 +22,13 @@ export const BillingView = ({ item, itemPrices }: BillingViewProps) => {
     billingAtoms.subscriptionLoadingState,
   );
 
-  const userRoleInOrganization: OrgRole = useRecoilValue(
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
 
   const canReadBilling: boolean = useHasPermissions(
+    userRole,
     userRoleInOrganization,
     Permissions.READ_BILLING,
   );

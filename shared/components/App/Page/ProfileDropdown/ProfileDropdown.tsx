@@ -8,7 +8,6 @@ import { ProfileBubble } from './ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
 import IconDoor from '@public/assets/icons/common/Door.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
-import IconBilling from '@public/assets/icons/common/Billing.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -87,16 +86,6 @@ export const ProfileDropdown = () => {
             <IconCog />
           </span>
           Settings
-        </DropdownItem>
-        <DropdownItem
-          type="button"
-          size="medium"
-          onButtonClick={() => handleRedirect(ROUTES.BILLING)}
-        >
-          <span css={styles.icon}>
-            <IconBilling />
-          </span>
-          Billing
         </DropdownItem>
         <DropdownItem type="button" size="medium" onButtonClick={handleSignOut}>
           <span css={styles.icon}>
