@@ -1,14 +1,11 @@
 import { useRouter } from 'next/router';
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { nodeClient } from '@modules/grpc';
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
-import { checkForTokenError } from 'utils/checkForTokenError';
 import { ROUTES } from '@shared/constants/routes';
 import { useDefaultOrganization } from '@modules/organization';
-import { NodeServiceListResponse } from '@modules/grpc/library/blockjoy/v1/node';
-import { sort } from '@shared/components/Tables/Table/utils/sort';
 
 export const useNodeList = () => {
   const router = useRouter();
@@ -16,21 +13,16 @@ export const useNodeList = () => {
   const orgId = useDefaultOrganization().defaultOrganization?.id;
 
   const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
-  const setPreloadNodes = useSetRecoilState(nodeAtoms.preloadNodes);
 
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
 
   const [nodeCount, setNodeCount] = useRecoilState(nodeAtoms.nodeCount);
-
-  const setHasMore = useSetRecoilState(nodeAtoms.hasMoreNodes);
 
   const [nodeListByHost, setNodeListByHost] = useRecoilState(
     nodeAtoms.nodeListByHost,
   );
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
-
-  let total = 0;
 
   const handleNodeClick = (args: any) => {
     router.push(ROUTES.NODE(args.key));
@@ -46,61 +38,30 @@ export const useNodeList = () => {
     }
 
     const loadingState =
-      queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
+      queryParams.pagination.current_page === 0 ? 'initializing' : 'loading';
 
     if (showLoader) {
       setIsLoading(loadingState);
     }
 
-    setHasMore(false);
-
     try {
-      const response: NodeServiceListResponse = await nodeClient.listNodes(
+      const response = await nodeClient.listNodes(
         orgId!,
         queryParams.filter,
         queryParams.pagination,
       );
 
-      setNodeCount(response.nodeCount);
+      const { nodeCount } = response;
 
-      const nodes = response.nodes;
+      let nodes = response.nodes;
 
-      checkForTokenError(nodes);
+      setNodeCount(nodeCount);
 
-      setPreloadNodes(nodes.length);
-
-      if (queryParams.pagination.current_page === 1) {
-        // TODO: get total nodes from listNodes API and move metrics to separate component
-        // const totalNodes: number | undefined = await loadMetrics(true);
-        // if (totalNodes) total = totalNodes;
+      if (queryParams.pagination.current_page !== 0) {
+        nodes = [...nodeList, ...nodes];
       }
 
-      // TODO: (maybe) remove - added for better UI
-      // if (!(nodes.length === 0 || queryParams.pagination.current_page === 1))
-      //   await new Promise((r) => setTimeout(r, 600));
-
-      if (queryParams.pagination.current_page === 1) {
-        setNodeList(
-          sort(nodes!, {
-            field: 'createdAt',
-            order: 'desc',
-          }),
-        );
-      } else {
-        const newNodes = [...nodeList, ...nodes];
-        setNodeList(newNodes);
-      }
-
-      // TODO: has to be improved once the total nodes count is received (doesn't work with filtering)
-      const hasMoreNodes =
-        queryParams.pagination.current_page *
-          queryParams.pagination.items_per_page <
-        (total ?? Infinity);
-
-      setHasMore(hasMoreNodes);
-
-      setPreloadNodes(0);
-
+      setNodeList(nodes);
       setIsLoading('finished');
     } catch (err) {
       setIsLoading('finished');
@@ -125,7 +86,7 @@ export const useNodeList = () => {
     const foundNode = nodeList.findIndex((n) => n.id === node.id) > -1;
     if (foundNode) return;
 
-    const newNodeList = [...nodeList, node];
+    const newNodeList = [node, ...nodeList];
 
     setNodeCount(nodeCount + 1);
     setNodeList(newNodeList);

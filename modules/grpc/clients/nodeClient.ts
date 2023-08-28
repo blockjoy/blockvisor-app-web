@@ -53,8 +53,11 @@ class NodeClient {
   ): Promise<NodeServiceListResponse> {
     const request = {
       orgId,
-      offset: 0,
-      limit: 10,
+      offset:
+        pagination?.current_page! === 0
+          ? 0
+          : pagination?.current_page! * pagination?.items_per_page!,
+      limit: pagination?.items_per_page,
       statuses: filter_criteria?.nodeStatus?.map((f) => +f),
       nodeTypes: filter_criteria?.nodeType?.map((f) => +f),
       blockchainIds: filter_criteria?.blockchain,
