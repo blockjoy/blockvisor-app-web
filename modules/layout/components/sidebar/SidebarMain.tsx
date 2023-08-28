@@ -9,10 +9,12 @@ import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconChat from '@public/assets/icons/common/Chat.svg';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { invitationAtoms, useDefaultOrganization } from '@modules/organization';
+import { ROUTES } from '@shared/index';
 
 type SidebarItem = {
   name: string;
@@ -45,15 +47,15 @@ export default () => {
     {
       title: 'BLOCKVISOR',
       items: [
-        { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
+        { name: 'Nodes', path: ROUTES.NODES, icon: <IconNodes /> },
         {
           name: 'Launch Node',
-          path: '/launch-node',
+          path: ROUTES.LAUNCH_NODE,
           icon: <IconRocket />,
         },
         {
           name: 'Hosts',
-          path: '/hosts',
+          path: ROUTES.HOSTS,
           icon: <IconHost />,
         },
       ],
@@ -64,10 +66,15 @@ export default () => {
         {
           name: 'Organizations',
           path: isMobile
-            ? '/organizations'
-            : `/organizations/${defaultOrganization?.id}`,
+            ? ROUTES.ORGANIZATIONS
+            : `${ROUTES.ORGANIZATIONS}/${defaultOrganization?.id}`,
           icon: <IconOrganizations />,
           isOrganizations: true,
+        },
+        {
+          name: 'Billing',
+          path: `${ROUTES.BILLING}?tab=1`,
+          icon: <IconBilling />,
         },
       ],
     },
@@ -75,7 +82,7 @@ export default () => {
       items: [
         {
           name: 'FAQ',
-          path: '/faq',
+          path: ROUTES.FAQ,
           icon: <IconChat />,
         },
       ],

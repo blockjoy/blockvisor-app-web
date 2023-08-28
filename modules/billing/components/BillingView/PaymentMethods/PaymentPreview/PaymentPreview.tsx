@@ -10,10 +10,9 @@ import {
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
-import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '@modules/organization';
 import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
-import { Permissions } from '@modules/auth';
+import { Permissions, authSelectors } from '@modules/auth';
 
 export const PaymentPreview = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
@@ -29,11 +28,13 @@ export const PaymentPreview = () => {
     getPaymentMethod(subscription?.payment_source_id!);
   }, [subscription?.payment_source_id]);
 
-  const userRoleInOrganization: OrgRole = useRecoilValue(
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
 
   const canUpdateBilling: boolean = useHasPermissions(
+    userRole,
     userRoleInOrganization,
     Permissions.UPDATE_BILLING,
   );

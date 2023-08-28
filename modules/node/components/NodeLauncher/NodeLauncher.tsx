@@ -45,11 +45,9 @@ import { useSubscription } from '@modules/billing';
 import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import {
-  checkIfOwner,
   PermissionsCreateResource,
   useHasPermissionsToCreateResource,
 } from '@modules/auth';
-import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -98,10 +96,10 @@ export const NodeLauncher = () => {
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
   const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
 
-  const userRoleInOrganization: OrgRole = useRecoilValue(
+  const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
-  const isOwner = checkIfOwner(userRoleInOrganization);
+  const isOwner = useRecoilValue(organizationSelectors.isOwner);
 
   const canAddNode: PermissionsCreateResource =
     useHasPermissionsToCreateResource(userRoleInOrganization, hasSubscription);

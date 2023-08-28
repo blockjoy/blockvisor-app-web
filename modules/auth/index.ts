@@ -3,7 +3,10 @@ export * from './utils/authTypeGuards';
 export * from './utils/routes';
 export * from './store/authAtoms';
 export * from './store/authSelectors';
+<<<<<<< HEAD
 export * from './hooks/useBilling';
+=======
+>>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 export * from './hooks/useIdentity';
 export * from './hooks/useIdentityRepository';
 export * from './hooks/useSignIn';

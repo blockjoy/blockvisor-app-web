@@ -1,12 +1,23 @@
+<<<<<<< HEAD
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { SvgIcon } from '@shared/components';
+=======
+import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+import { SvgIcon } from '@shared/components';
+import Link from 'next/link';
+>>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 import IconInfo from '@public/assets/icons/common/Info.svg';
 import { ROUTES } from '@shared/constants/routes';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+<<<<<<< HEAD
 import { organizationSelectors } from '@modules/organization';
+=======
+import { useRecoilValue } from 'recoil';
+import { organizationSelectors } from '../store/organizationSelectors';
+>>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 
 type Details = {
   label: string | ReactNode;

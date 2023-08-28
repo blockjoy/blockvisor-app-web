@@ -16,7 +16,11 @@ import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
 import { useRecoilValue } from 'recoil';
+<<<<<<< HEAD
 import { authSelectors, useIdentity } from '@modules/auth';
+=======
+import { authSelectors } from '@modules/auth';
+>>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 import {
   Permissions,
   useHasPermissions,

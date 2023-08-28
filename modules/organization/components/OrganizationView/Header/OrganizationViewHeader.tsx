@@ -6,7 +6,11 @@ import {
   SvgIcon,
   DeleteModal,
 } from '@shared/components';
+<<<<<<< HEAD
 import { FC, useState } from 'react';
+=======
+import { useState } from 'react';
+>>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 import { useRecoilValue } from 'recoil';
 import { styles } from './OrganizationViewHeader.styles';
 import {
@@ -29,7 +33,7 @@ import { ROUTES } from '@shared/constants/routes';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconDoor from '@public/assets/icons/common/Door.svg';
 
-export const OrganizationViewHeader: FC = () => {
+export const OrganizationViewHeader = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const { organization, isLoading } = useGetOrganization();
