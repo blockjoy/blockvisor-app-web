@@ -3,7 +3,6 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { blockchainsAtoms } from './blockchains';
 import { isMobile } from 'react-device-detect';
-import { localStorageEffect } from 'utils/store/persist';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { sort } from '@shared/components';
 
@@ -147,7 +146,7 @@ const filtersStatus = atom<FilterItem[]>({
   key: 'node.filtersStatus',
   default: sort(
     nodeStatusList
-      .filter((item) => item.id !== 0)
+      .filter((item) => item.id !== 0 && !item.type)
       .map((item) => ({
         ...item,
         name: item.name?.toLowerCase(),
@@ -236,30 +235,6 @@ const filtersAll = selector<FilterItem[] | null>({
   },
 });
 
-const nodeWizardActive = atom<boolean>({
-  key: 'nodeWizard.active',
-  default: false,
-});
-
-const hasMoreNodes = atom<boolean>({
-  key: 'node.hasMore',
-  default: false,
-});
-
-const nodeMetricsLoadingState = atom<any>({
-  key: 'node.metricsLoadingState',
-  default: 'initializing',
-});
-const nodeMetrics = atom<any>({
-  key: 'node.metrics',
-  default: {},
-});
-
-const preloadNodes = atom<number>({
-  key: 'node.loadingTotal',
-  default: 0,
-});
-
 export const nodeAtoms = {
   activeNode,
   nodeList,
@@ -277,11 +252,6 @@ export const nodeAtoms = {
   filtersTypeTotal,
   filtersTotal,
   filtersAll,
-  nodeWizardActive,
-  hasMoreNodes,
-  nodeMetrics,
-  nodeMetricsLoadingState,
-  preloadNodes,
   nodeListByHost,
   isLoadingNodeListByHost,
 };

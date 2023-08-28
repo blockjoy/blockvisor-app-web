@@ -1,5 +1,3 @@
-import { NodeStatus, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
-
 export type ItemsPerPage = {
   sm: number;
   lg: number;
@@ -31,8 +29,8 @@ export const itemsPerPage = {
 
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
-    current_page: 1,
-    items_per_page: itemsPerPage['xxl'],
+    current_page: 0,
+    items_per_page: itemsPerPage['xl'],
   },
 
   filter: {

@@ -34,23 +34,22 @@ export const NodeList = () => {
     };
   }, [nodeUIContext]);
 
-  const { loadNodes, handleNodeClick } = useNodeList();
+  const { loadNodes, handleNodeClick, nodeList, nodeCount, isLoading } =
+    useNodeList();
 
-  const nodeList = useRecoilValue(nodeAtoms.nodeList);
-  const hasMoreNodes = useRecoilValue(nodeAtoms.hasMoreNodes);
-  const isLoading = useRecoilValue(nodeAtoms.isLoading);
-  const preloadNodes = useRecoilValue(nodeAtoms.preloadNodes);
+  const hasMoreNodes =
+    nodeUIContext.queryParams.pagination.current_page *
+      nodeUIContext.queryParams.pagination.items_per_page +
+      nodeUIContext.queryParams.pagination.items_per_page <
+    nodeCount;
+
   const activeListType = useRecoilValue(nodeAtoms.activeListType);
 
   const currentQueryParams = useRef(nodeUIProps.queryParams);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
     if (!isEqual(currentQueryParams.current, nodeUIProps.queryParams)) {
-      loadNodes(nodeUIProps.queryParams);
+      loadNodes(nodeUIProps.queryParams, true);
       currentQueryParams.current = nodeUIProps.queryParams;
     }
   }, [nodeUIProps.queryParams]);
@@ -61,10 +60,7 @@ export const NodeList = () => {
     }
   }, [router.isReady]);
 
-  const updateQueryParams = async () => {
-    // sleep 300ms for better UX/UI (maybe should be removed)
-    await new Promise((r) => setTimeout(r, 300));
-
+  const updateQueryParams = () => {
     const newCurrentPage = nodeUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
       ...nodeUIProps.queryParams,
@@ -118,26 +114,21 @@ export const NodeList = () => {
               next={updateQueryParams}
               hasMore={hasMoreNodes}
               style={{ overflow: 'hidden' }}
-              scrollThreshold={1}
+              scrollThreshold={0.75}
               loader={''}
-              endMessage={''}
             >
               {activeListType === 'table' ? (
                 <Table
                   isLoading={isLoading}
                   headers={headers}
-                  preload={preloadNodes}
+                  preload={0}
                   rows={rows}
                   fixedRowHeight="120px"
                   onRowClick={handleNodeClick}
                 />
               ) : (
                 <div css={styles.gridWrapper}>
-                  <TableGrid
-                    isLoading={isLoading}
-                    cells={cells!}
-                    preload={preloadNodes}
-                  />
+                  <TableGrid isLoading={isLoading} cells={cells!} />
                 </div>
               )}
             </InfiniteScroll>

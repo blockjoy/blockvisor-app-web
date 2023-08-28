@@ -1,5 +1,3 @@
-import { NodeStatus, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
-
 export type FilterCriteria = {
   blockchain?: string[];
   nodeType?: string[];
