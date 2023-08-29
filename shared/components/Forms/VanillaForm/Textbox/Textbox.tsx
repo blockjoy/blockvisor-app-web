@@ -1,16 +1,18 @@
-import { FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 import { styles } from './Textbox.styles';
 
 type Props = {
   isRequired: boolean;
+  defaultValue?: string;
   name: string;
   tabIndex?: number;
   type: string;
-  onPropertyChanged: (e: any) => void;
+  onPropertyChanged: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const Textbox: FC<Props> = ({
   onPropertyChanged,
+  defaultValue = '',
   name,
   isRequired,
   type = 'text',
@@ -21,10 +23,11 @@ export const Textbox: FC<Props> = ({
       tabIndex={tabIndex}
       name={name}
       type={type}
+      defaultValue={defaultValue}
       autoComplete={type === 'password' ? 'new-password' : 'off'}
       css={[styles.input, isRequired && styles.inputRequired]}
       placeholder="Enter a value"
-      onChange={(e: any) => onPropertyChanged(e)}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => onPropertyChanged(e)}
     />
   );
 };

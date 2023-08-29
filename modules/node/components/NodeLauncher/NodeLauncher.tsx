@@ -75,7 +75,6 @@ export const NodeLauncher = () => {
   const [serverError, setServerError] = useState<string>();
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
-  const [selectedBlockchain, setSelectedBlockchain] = useState<Blockchain>();
   const [selectedNodeType, setSelectedNodeType] =
     useState<BlockchainNodeType>();
   const [selectedHost, setSelectedHost] = useState<Host | null>(null);
@@ -269,7 +268,6 @@ export const NodeLauncher = () => {
 
     const sortedVersions = sortVersions(activeNodeType.versions);
 
-    setSelectedBlockchain(activeBlockchain);
     setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
     setSelectedVersion(sortedVersions[0]);
   }, [node.blockchainId, node.nodeType]);
@@ -279,12 +277,9 @@ export const NodeLauncher = () => {
 
     const properties: NodeProperty[] = nodeTypePropertiesCopy.map(
       (property) => ({
-        name: property.name,
-        displayName: property.displayName,
-        disabled: false,
-        uiType: property.uiType,
-        required: property.required,
+        ...property,
         value: property.default ?? '',
+        disabled: false,
       }),
     );
 
@@ -299,8 +294,7 @@ export const NodeLauncher = () => {
       ...node,
       keyFiles,
       properties,
-      network:
-        sortNetworks(selectedVersion?.networks! || [])[0]?.name ?? 'bollocks',
+      network: sortNetworks(selectedVersion?.networks! || [])[0]?.name,
     });
   }, [selectedVersion?.id]);
 

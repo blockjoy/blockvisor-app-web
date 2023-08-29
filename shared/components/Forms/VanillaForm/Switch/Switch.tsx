@@ -6,6 +6,7 @@ import { Tooltip } from '@shared/components';
 type Props = {
   checked?: boolean;
   name: string;
+  defaultValue?: boolean;
   tabIndex?: number;
   tooltip?: string;
   disabled: boolean;
@@ -17,6 +18,7 @@ export const Switch: FC<Props> = ({
   onPropertyChanged,
   tooltip,
   disabled,
+  defaultValue,
   name,
   checked,
   tabIndex,
@@ -30,8 +32,9 @@ export const Switch: FC<Props> = ({
           name={name}
           type="checkbox"
           css={styles.input}
-          onChange={(e: any) => onPropertyChanged(e)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => onPropertyChanged(e)}
           checked={checked}
+          defaultChecked={defaultValue}
         />
         <span className="switch" css={styles.switch}>
           <span className="handle" css={styles.handle}>
