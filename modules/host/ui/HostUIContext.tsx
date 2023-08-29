@@ -31,6 +31,7 @@ export const getInitialQueryParams = () => {
   const { memory, cpu, space } = persistedHostFilters;
   const params = buildParams(memory, cpu, space);
 
+  // TODO: Commented as this may be unnecessary
   // const itemsPerPage = numOfItemsPerPage();
 
   return {

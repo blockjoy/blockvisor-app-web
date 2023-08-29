@@ -63,7 +63,15 @@ export interface Host {
     | string
     | undefined;
   /** The optional billing amount for this host. */
-  billingAmount?: BillingAmount | undefined;
+  billingAmount?:
+    | BillingAmount
+    | undefined;
+  /**
+   * The root directory of the vmm, where all data related to the vmm is stored,
+   * i.e. config data, secrets, vm mountpoints. Usually this will be
+   * `/var/lib/blockvisor`.
+   */
+  vmmMountpoint?: string | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -105,7 +113,15 @@ export interface HostServiceCreateRequest {
     | string
     | undefined;
   /** Optionally set a billing amount for this host. */
-  billingAmount?: BillingAmount | undefined;
+  billingAmount?:
+    | BillingAmount
+    | undefined;
+  /**
+   * The root directory of the vmm, where all data related to the vmm is stored,
+   * i.e. config data, secrets, vm mountpoints. Usually this will be
+   * `/var/lib/blockvisor`.
+   */
+  vmmMountpoint?: string | undefined;
 }
 
 export interface HostServiceCreateResponse {
@@ -226,6 +242,7 @@ function createBaseHost(): Host {
     orgName: "",
     region: undefined,
     billingAmount: undefined,
+    vmmMountpoint: undefined,
   };
 }
 
@@ -284,6 +301,9 @@ export const Host = {
     }
     if (message.billingAmount !== undefined) {
       BillingAmount.encode(message.billingAmount, writer.uint32(162).fork()).ldelim();
+    }
+    if (message.vmmMountpoint !== undefined) {
+      writer.uint32(170).string(message.vmmMountpoint);
     }
     return writer;
   },
@@ -421,6 +441,13 @@ export const Host = {
 
           message.billingAmount = BillingAmount.decode(reader, reader.uint32());
           continue;
+        case 21:
+          if (tag !== 170) {
+            break;
+          }
+
+          message.vmmMountpoint = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -456,6 +483,7 @@ export const Host = {
     message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
+    message.vmmMountpoint = object.vmmMountpoint ?? undefined;
     return message;
   },
 };
@@ -477,6 +505,7 @@ function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
     orgId: undefined,
     region: undefined,
     billingAmount: undefined,
+    vmmMountpoint: undefined,
   };
 }
 
@@ -526,6 +555,9 @@ export const HostServiceCreateRequest = {
     }
     if (message.billingAmount !== undefined) {
       BillingAmount.encode(message.billingAmount, writer.uint32(122).fork()).ldelim();
+    }
+    if (message.vmmMountpoint !== undefined) {
+      writer.uint32(130).string(message.vmmMountpoint);
     }
     return writer;
   },
@@ -642,6 +674,13 @@ export const HostServiceCreateRequest = {
 
           message.billingAmount = BillingAmount.decode(reader, reader.uint32());
           continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.vmmMountpoint = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -674,6 +713,7 @@ export const HostServiceCreateRequest = {
     message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
+    message.vmmMountpoint = object.vmmMountpoint ?? undefined;
     return message;
   },
 };
