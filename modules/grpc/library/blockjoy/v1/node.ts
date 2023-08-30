@@ -158,7 +158,14 @@ export interface Node {
   /** A list of ip addresses denied all access to any ports on this node. */
   denyIps: FilteredIpAddr[];
   /** Logic with regards to where the node should placed. */
-  placement: NodePlacement | undefined;
+  placement:
+    | NodePlacement
+    | undefined;
+  /**
+   * The place where the blockchain data directory should be mounted on the
+   * host.
+   */
+  dataDirectoryMountpoint?: string | undefined;
 }
 
 /** This message is used to create a new node. */
@@ -440,6 +447,7 @@ function createBaseNode(): Node {
     allowIps: [],
     denyIps: [],
     placement: undefined,
+    dataDirectoryMountpoint: undefined,
   };
 }
 
@@ -534,6 +542,9 @@ export const Node = {
     }
     if (message.placement !== undefined) {
       NodePlacement.encode(message.placement, writer.uint32(242).fork()).ldelim();
+    }
+    if (message.dataDirectoryMountpoint !== undefined) {
+      writer.uint32(250).string(message.dataDirectoryMountpoint);
     }
     return writer;
   },
@@ -755,6 +766,13 @@ export const Node = {
 
           message.placement = NodePlacement.decode(reader, reader.uint32());
           continue;
+        case 31:
+          if (tag !== 250) {
+            break;
+          }
+
+          message.dataDirectoryMountpoint = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -802,6 +820,7 @@ export const Node = {
     message.placement = (object.placement !== undefined && object.placement !== null)
       ? NodePlacement.fromPartial(object.placement)
       : undefined;
+    message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
     return message;
   },
 };

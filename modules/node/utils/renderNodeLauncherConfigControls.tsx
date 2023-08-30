@@ -32,6 +32,7 @@ export const renderControls = (
     case UiType.UI_TYPE_TEXT:
       return (
         <Textbox
+          defaultValue={property.value}
           tabIndex={5}
           type="text"
           isRequired={property?.required && !property.value}
@@ -42,6 +43,7 @@ export const renderControls = (
     case UiType.UI_TYPE_SWITCH:
       return (
         <Switch
+          defaultValue={property.value === 'true'}
           tabIndex={!!property.disabled ? -1 : 5}
           disabled={!!property.disabled}
           tooltip="Feature disabled during beta."

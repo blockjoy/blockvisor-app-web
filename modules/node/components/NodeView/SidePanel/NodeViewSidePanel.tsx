@@ -24,7 +24,7 @@ export const NodeViewSidePanel = () => {
       {node?.blockHeight! > -1 && (
         <NetdataDashboard
           id={node?.id!}
-          disk_space_name="_blockjoy"
+          disk_space_name={node?.dataDirectoryMountpoint?.replace(/\//g, '_')!}
           is_node="true"
         />
       )}
