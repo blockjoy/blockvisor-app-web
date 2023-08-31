@@ -100,20 +100,22 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
       subscription?.status === 'active' &&
       subscriptionLoadingState === 'finished'
     ) {
-      // TODO: testing if this fixes error on VERCEL
       console.log('Does it enter?');
+      // TODO: testing if this fixes error on VERCEL
+      console.log('Started fetching estimates?');
       getEstimate();
+      console.log('Started fetching billing contacts?');
       getBillingContacts();
+      console.log('Started fetching invoices?');
       getInvoices();
       // TODO: testing if this fixes error on VERCEL
       console.log('Does it leave?');
     }
   }, [subscription]);
 
-  // TODO: testing if this fixes error on VERCEL
-  // useEffect(() => {
-  //   if (!userSubscription) handleClick('1');
-  // }, [userSubscription]);
+  useEffect(() => {
+    if (!userSubscription) handleClick('1');
+  }, [userSubscription]);
 
   const handleClick = (tabValue: string) => {
     setActiveTab(tabValue);
