@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   Item,
@@ -37,8 +37,7 @@ export const PlanConfiguration = ({
   itemPrices,
 }: PlanConfigurationProps) => {
   const { createSubscription, subscriptionLoadingState } = useSubscription();
-  const { paymentMethods, getPaymentMethods, paymentMethodsLoadingState } =
-    usePaymentMethods();
+  const { paymentMethods, paymentMethodsLoadingState } = usePaymentMethods();
 
   const customer = useRecoilValue(billingSelectors.customer);
 
@@ -47,10 +46,6 @@ export const PlanConfiguration = ({
   const [paymentMethodId, setPaymentMethodId] = useState<string | undefined>(
     customer?.primary_payment_source_id,
   );
-
-  useEffect(() => {
-    if (!paymentMethods || !paymentMethods.length) getPaymentMethods();
-  }, []);
 
   const activeItemPrice: ItemPrice | undefined = itemPrices?.find(
     (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,

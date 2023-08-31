@@ -11,7 +11,6 @@ import {
   billingAtoms,
   BillingView,
   Estimates,
-  usePaymentMethods,
   useEstimates,
   useBillingContacts,
   useInvoices,
@@ -43,8 +42,6 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
     userRoleInOrganization,
     Permissions.UPDATE_BILLING,
   );
-
-  const { fetchPaymentMethods } = usePaymentMethods();
 
   const { getEstimate } = useEstimates();
   const { getBillingContacts } = useBillingContacts();
@@ -97,10 +94,6 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   );
 
   const { activeTab, setActiveTab } = useTabs(tabItems.length);
-
-  useEffect(() => {
-    fetchPaymentMethods();
-  }, []);
 
   useEffect(() => {
     if (

@@ -30,7 +30,6 @@ export const useEstimates = (): IEstimatesHook => {
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
-      revalidateOnMount: false,
     },
   );
 

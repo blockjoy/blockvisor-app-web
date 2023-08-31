@@ -48,7 +48,6 @@ export const useInvoices = (
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
-      revalidateOnMount: false,
     },
   );
 

@@ -5,9 +5,9 @@ export const checkIfBillingContactExists = (
   email: string,
 ) => {
   if (
-    billingContacts.some(
+    billingContacts?.some(
       (billingContact) =>
-        billingContact.email?.toLowerCase() === email.toLowerCase(),
+        billingContact?.email?.toLowerCase() === email.toLowerCase(),
     )
   )
     return true;

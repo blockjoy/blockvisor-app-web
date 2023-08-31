@@ -80,6 +80,8 @@ export const useCustomer = (): ICustomerHook => {
     params: _customer.assign_payment_role_params,
   ) => {
     try {
+      setCustomerLoadingState('loading');
+
       const data = await fetchBilling(
         BILLING_API_ROUTES.customer.payment.update,
         { customerId: customer?.id, params },
@@ -88,6 +90,8 @@ export const useCustomer = (): ICustomerHook => {
       setCustomer(data);
     } catch (error) {
       console.error('Failed to assign Payment role', error);
+    } finally {
+      setCustomerLoadingState('finished');
     }
   };
 
