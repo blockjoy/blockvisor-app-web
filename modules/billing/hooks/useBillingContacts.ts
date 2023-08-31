@@ -40,18 +40,11 @@ export const useBillingContacts = (): IBillingContactsHook => {
     },
   );
 
-  console.log('useBillingContacts', {
-    data,
-    error,
-    isLoading,
-  });
-
   if (error) console.error('Failed to fetch Billing Contacts', error);
 
   const billingContactsLoadingState = isLoading ? 'initializing' : 'finished';
 
   const getBillingContacts = () => {
-    console.log('getBillingContacts()');
     mutate();
   };
 

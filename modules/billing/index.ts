@@ -64,6 +64,7 @@ export * from './hooks/useInvoice';
 export * from './hooks/useInvoices';
 export * from './hooks/useItems';
 export * from './hooks/usePayment';
+export * from './hooks/usePaymentMethod';
 export * from './hooks/usePaymentMethods';
 export * from './hooks/usePaymentMethodForm';
 export * from './hooks/useSubscription';

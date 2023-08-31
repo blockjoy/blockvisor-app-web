@@ -21,7 +21,6 @@ export const useEstimates = (): IEstimatesHook => {
       subscriptionId: subscription?.id!,
     });
 
-  console.log('useEstimates SWR?');
   const { data, error, isLoading, mutate } = useSWR(
     () =>
       subscription?.status === 'active'
@@ -34,22 +33,13 @@ export const useEstimates = (): IEstimatesHook => {
     },
   );
 
-  console.log('useEstimates', {
-    data,
-    error,
-    isLoading,
-  });
-
   if (error) console.error('Failed to fetch Estimates', error);
 
   const estimateLoadingState: LoadingState = isLoading
     ? 'initializing'
     : 'finished';
 
-  const getEstimate = () => {
-    console.log('getEstimate()');
-    mutate();
-  };
+  const getEstimate = () => mutate();
 
   return {
     estimate: data,
