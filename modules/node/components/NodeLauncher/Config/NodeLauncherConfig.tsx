@@ -22,12 +22,11 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
-  isConfigValid: boolean | null;
   nodeTypeProperties?: NodeProperty[];
   nodeFiles?: NodeFiles[];
-  networks: BlockchainNetwork[];
+  networks?: BlockchainNetwork[];
   versions: BlockchainVersion[];
-  selectedVersion: BlockchainVersion;
+  selectedVersion?: BlockchainVersion;
   nodeLauncherState: NodeLauncherState;
   onFileUploaded: (e: any) => void;
   onNodeConfigPropertyChanged: (e: any) => void;
@@ -36,7 +35,6 @@ type Props = {
 };
 
 export const NodeLauncherConfig: FC<Props> = ({
-  isConfigValid,
   networks,
   versions,
   selectedVersion,
@@ -52,18 +50,20 @@ export const NodeLauncherConfig: FC<Props> = ({
     <NodeLauncherConfigWrapper>
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
-        <>
-          <FormLabel>Network</FormLabel>
+
+        <FormLabel>Network</FormLabel>
+
+        {selectedVersion && Boolean(networks?.length) && (
           <PillPicker
             name="network"
-            items={networks.map((n) => n.name)}
-            selectedItem={network}
+            items={networks!.map((n) => n.name)}
+            selectedItem={network!}
             onChange={onNodePropertyChanged}
             tabIndexStart={3}
           />
-        </>
+        )}
 
-        {isConfigValid !== null && !networks?.length && (
+        {selectedVersion && !networks?.length && (
           <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
             Missing Network Configuration
           </div>

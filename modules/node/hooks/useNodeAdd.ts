@@ -21,27 +21,24 @@ export const useNodeAdd = () => {
   const { hostList } = useHostList();
 
   const createNode = async (
-    nodeRequest: NodeServiceCreateRequest,
+    node: NodeServiceCreateRequest,
     onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
-    const nodeProperties: any = nodeRequest.properties.map((property) => {
-      const { uiType, ...rest } = property;
-      return {
-        ...rest,
-        value: property?.value?.toString() || 'null',
-        uiType: uiType,
-      };
-    });
+    const properties = node?.properties?.map((property) => ({
+      ...property,
+      value: property?.value?.toString() || 'null',
+    }));
 
-    console.log('createNode Request', nodeRequest);
+    const nodeRequest = {
+      ...node,
+      properties,
+    };
+
+    console.log('createNodeRequest', nodeRequest);
 
     try {
-      const response: Node = await nodeClient.createNode({
-        ...nodeRequest,
-        properties: nodeProperties,
-        network: nodeRequest.network,
-      });
+      const response: Node = await nodeClient.createNode(nodeRequest);
 
       const nodeId = response.id;
 
@@ -64,7 +61,7 @@ export const useNodeAdd = () => {
         });
       }
 
-      toast.success('Node Created');
+      toast.success('Node Launched');
       loadNodes();
       onSuccess(nodeId);
     } catch (err: any) {

@@ -4,19 +4,13 @@ import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import IconSearch from '@public/assets/icons/common/Search.svg';
 import { NodeLauncherProtocolBlockchains } from './NodeLauncherProtocolBlockchains';
 import { isMobile } from 'react-device-detect';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
-  onProtocolSelected: (
-    blockchainId: string,
-    nodeTypeId: NodeType,
-    nodeTypeProperties: NodeProperty[],
-    nodeVersion: BlockchainVersion,
-  ) => void;
+  onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
   blockchainId: string;
   nodeType: NodeType;
 };
