@@ -17,13 +17,14 @@ export const useEstimates = (): IEstimatesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
   // TODO: testing if this fixes error on VERCEL
-  console.log('Does it enter?');
+  console.log('useEstimates fetcher?');
 
   const fetcher = () =>
     fetchBilling(BILLING_API_ROUTES.estimates.get, {
       subscriptionId: subscription?.id!,
     });
 
+  console.log('useEstimates SWR?');
   const { data, error, isLoading, mutate } = useSWR(
     () =>
       subscription?.status === 'active'
