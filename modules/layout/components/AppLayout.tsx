@@ -18,6 +18,7 @@ import { useHostList } from '@modules/host';
 import {
   billingSelectors,
   useCustomer,
+  usePaymentMethods,
   useSubscription,
 } from '@modules/billing';
 
@@ -44,6 +45,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
   const { customer, getCustomer } = useCustomer();
+  const { fetchPaymentMethods } = usePaymentMethods();
   const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
   const { getUserSubscription } = useUserSubscription();
 
@@ -95,6 +97,10 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       mqttConnect();
     }
   }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    if (customer) fetchPaymentMethods();
+  }, [customer]);
 
   return (
     <>
