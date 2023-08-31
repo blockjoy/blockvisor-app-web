@@ -1,10 +1,6 @@
 import { useGetBlockchains } from '@modules/node';
 import { BlockchainIcon, EmptyColumn, sort } from '@shared/components';
-import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
-import {
-  BlockchainNodeType,
-  BlockchainVersion,
-} from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { styles } from './NodeLauncherProtocolBlockchains.styles';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { onlyUnique } from '@shared/utils/onlyUnique';
