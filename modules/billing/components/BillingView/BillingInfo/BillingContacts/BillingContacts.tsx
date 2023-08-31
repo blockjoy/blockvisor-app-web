@@ -48,7 +48,7 @@ export const BillingContacts = () => {
 
   return activeView === 'list' ? (
     <>
-      {!billingContacts.length ? (
+      {!billingContacts?.length ? (
         <p>
           You have not yet added any billing contacts. Click the button below to
           add one.

@@ -2,7 +2,10 @@ import { useIdentityRepository } from './useIdentityRepository';
 
 export function useSignOut() {
   const repository = useIdentityRepository();
-  const removeBilling = () => localStorage.removeItem('billing');
+  const removeBilling = () => {
+    localStorage.removeItem('billing');
+    localStorage.removeItem('billing.paymentMethods');
+  };
 
   const signOut = () => {
     repository?.deleteIdentity();

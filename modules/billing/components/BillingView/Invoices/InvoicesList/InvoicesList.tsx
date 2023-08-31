@@ -78,7 +78,7 @@ export const InvoicesList = () => {
         <>
           {invoices?.length ? (
             <InfiniteScroll
-              dataLength={invoices.length}
+              dataLength={invoices?.length}
               next={updateQueryParams}
               hasMore={invoicesNextOffset !== undefined}
               style={{ overflow: 'hidden' }}

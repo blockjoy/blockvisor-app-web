@@ -42,7 +42,6 @@ export const useBillingContacts = (): IBillingContactsHook => {
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
-      revalidateOnMount: false,
     },
   );
 
