@@ -24,9 +24,6 @@ export const useInvoices = (
 ): IInvoicesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  // TODO: testing if this fixes error on VERCEL
-  console.log('Does it enter?');
-
   if (!queryParams) {
     const savedQueryParams = getInvoicesInitialQueryParams();
     queryParams = savedQueryParams;
@@ -54,6 +51,12 @@ export const useInvoices = (
     },
   );
 
+  console.log('useInvoices', {
+    data,
+    error,
+    isLoading,
+  });
+
   if (error) console.error('Failed to fetch Invoices', error);
 
   const invoicesLoadingState: LoadingState = isLoading
@@ -61,7 +64,9 @@ export const useInvoices = (
     : 'finished';
 
   const getInvoices = async (queryParams?: InvoicesInitialQueryParams) => {
+    console.log('getInvoices()');
     if (!subscription || subscription.status !== 'active') return [];
+    console.log('getInvoices() 2');
     mutate();
   };
 

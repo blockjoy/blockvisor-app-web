@@ -20,9 +20,6 @@ export const useBillingContacts = (): IBillingContactsHook => {
   const customer = useRecoilValue(billingSelectors.customer);
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  // TODO: testing if this fixes error on VERCEL
-  console.log('Does it enter?');
-
   const fetcher = () =>
     fetchBilling(BILLING_API_ROUTES.customer.contacts.list, {
       customerId: customer?.id,
@@ -31,12 +28,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
       },
     });
 
-  const {
-    data: billingContacts,
-    error,
-    isLoading,
-    mutate,
-  } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     () =>
       subscription?.status === 'active'
         ? BILLING_API_ROUTES.customer.contacts.list
@@ -48,11 +40,18 @@ export const useBillingContacts = (): IBillingContactsHook => {
     },
   );
 
+  console.log('useBillingContacts', {
+    data,
+    error,
+    isLoading,
+  });
+
   if (error) console.error('Failed to fetch Billing Contacts', error);
 
   const billingContactsLoadingState = isLoading ? 'initializing' : 'finished';
 
   const getBillingContacts = () => {
+    console.log('getBillingContacts()');
     mutate();
   };
 
@@ -115,7 +114,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
   };
 
   return {
-    billingContacts,
+    billingContacts: data,
     billingContactsLoadingState,
 
     getBillingContacts,
