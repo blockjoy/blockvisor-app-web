@@ -24,6 +24,9 @@ export const useInvoices = (
 ): IInvoicesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
+  // TODO: testing if this fixes error on VERCEL
+  console.log('Does it enter?');
+
   if (!queryParams) {
     const savedQueryParams = getInvoicesInitialQueryParams();
     queryParams = savedQueryParams;

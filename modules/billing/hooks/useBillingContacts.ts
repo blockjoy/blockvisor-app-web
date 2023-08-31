@@ -20,6 +20,9 @@ export const useBillingContacts = (): IBillingContactsHook => {
   const customer = useRecoilValue(billingSelectors.customer);
   const subscription = useRecoilValue(billingSelectors.subscription);
 
+  // TODO: testing if this fixes error on VERCEL
+  console.log('Does it enter?');
+
   const fetcher = () =>
     fetchBilling(BILLING_API_ROUTES.customer.contacts.list, {
       customerId: customer?.id,
