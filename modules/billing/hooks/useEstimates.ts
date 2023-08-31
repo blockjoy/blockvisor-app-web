@@ -16,9 +16,6 @@ interface IEstimatesHook {
 export const useEstimates = (): IEstimatesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  // TODO: testing if this fixes error on VERCEL
-  console.log('useEstimates fetcher?');
-
   const fetcher = () =>
     fetchBilling(BILLING_API_ROUTES.estimates.get, {
       subscriptionId: subscription?.id!,
@@ -37,13 +34,22 @@ export const useEstimates = (): IEstimatesHook => {
     },
   );
 
+  console.log('useEstimates', {
+    data,
+    error,
+    isLoading,
+  });
+
   if (error) console.error('Failed to fetch Estimates', error);
 
   const estimateLoadingState: LoadingState = isLoading
     ? 'initializing'
     : 'finished';
 
-  const getEstimate = async () => mutate();
+  const getEstimate = () => {
+    console.log('getEstimate()');
+    mutate();
+  };
 
   return {
     estimate: data,
