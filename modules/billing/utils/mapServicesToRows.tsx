@@ -49,9 +49,9 @@ export const mapServicesToRows = (
         {
           key: '2',
           component: (
-            <p>{`${formatters.formatDate(
+            <p>{`${formatters.formatTimestamp(
               service?.date_from!,
-            )} - ${formatters.formatDate(service?.date_to!)}`}</p>
+            )} - ${formatters.formatTimestamp(service?.date_to!)}`}</p>
           ),
         },
         {

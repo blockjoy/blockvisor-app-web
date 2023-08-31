@@ -6,7 +6,7 @@ export const ROUTES = {
   HOST: (id: string) => `/hosts/${id}`,
   HOSTS: '/hosts',
   HOST_GROUP: (id: string) => `/hosts/group/${id}`,
-  INVOICE: (id: string) => `/biling/invoices/${id}`,
+  INVOICE: (id: string) => `/billing/invoices/${id}`,
   NODE: (id: string) => `/nodes/${id}`,
   NODES: '/nodes',
   NODE_GROUP: (id: string) => `/nodes/group/${id}`,

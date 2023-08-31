@@ -1,13 +1,14 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { ConfirmDialog, formatters } from '@shared/index';
-import { styles } from './SubscriptionCancellation.styles';
+import { formatters } from '@shared/index';
 import {
   ButtonGroup,
+  ConfirmDialog,
   RadioButtonGroup,
   RadioButton,
   Button,
 } from '@shared/components';
+import { styles } from './SubscriptionCancellation.styles';
 import { billingSelectors, useSubscriptionLifecycle } from '@modules/billing';
 
 type SubscriptionCancellationProps = {
@@ -39,7 +40,9 @@ export const SubscriptionCancellation = ({
     handleBack();
   }, [cancelSubscription, handleBack, endOfTerm]);
 
-  const currentEndTerm = formatters.formatDate(subscription?.current_term_end!);
+  const currentEndTerm = formatters.formatTimestamp(
+    subscription?.current_term_end!,
+  );
 
   return (
     <div>

@@ -23,11 +23,13 @@ import { containers } from 'styles/containers.styles';
 type PaymentMethodFormProps = {
   handleCancel: VoidFunction;
   handleSubmit: VoidFunction;
+  handleHide: VoidFunction;
 };
 
 export const PaymentMethodFormSimple = ({
   handleCancel,
   handleSubmit,
+  handleHide,
 }: PaymentMethodFormProps) => {
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
@@ -75,7 +77,7 @@ export const PaymentMethodFormSimple = ({
     if ((isDefaultAddress || !billingAddress) && customerId)
       await addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
-    handleCancel();
+    handleHide();
   };
 
   const handleCreatePaymentMethod = async () => {

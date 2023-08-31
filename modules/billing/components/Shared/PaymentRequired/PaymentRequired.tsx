@@ -6,15 +6,17 @@ import { styles } from './PaymentRequired.styles';
 import { PaymentMethodFormSimple } from '@modules/billing';
 
 type PaymentRequiredProps = {
-  onHide: VoidFunction;
-  handleSubmit: VoidFunction;
   warningMessage?: string;
+  handleCancel: VoidFunction;
+  handleSubmit: VoidFunction;
+  handleHide: VoidFunction;
 };
 
 export const PaymentRequired = ({
-  onHide,
-  handleSubmit,
   warningMessage,
+  handleCancel,
+  handleSubmit,
+  handleHide,
 }: PaymentRequiredProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -28,9 +30,9 @@ export const PaymentRequired = ({
 
   return (
     <Modal
-      portalId="modal-root"
+      portalId="modal-payment-required"
       isOpen={true}
-      handleClose={onHide}
+      handleClose={handleCancel}
       additionalStyles={[styles.modal]}
     >
       <h2 css={[typo.medium, spacing.bottom.medium]}>
@@ -43,7 +45,8 @@ export const PaymentRequired = ({
       {isModalVisible && (
         <PaymentMethodFormSimple
           handleSubmit={handleSubmit}
-          handleCancel={onHide}
+          handleCancel={handleCancel}
+          handleHide={handleHide}
         />
       )}
     </Modal>

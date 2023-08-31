@@ -1,5 +1,6 @@
 import { Subscription } from 'chargebee-typescript/lib/resources';
-import { Badge, formatters } from '@shared/index';
+import { formatters } from '@shared/index';
+import { Badge } from '@shared/components';
 import {
   getSubscriptionStatusColor,
   getSubscriptionStatusText,
@@ -9,7 +10,7 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
   return [
     {
       label: 'Activated at',
-      data: formatters.formatDate(subscription.activated_at!),
+      data: formatters.formatTimestamp(subscription.activated_at!),
     },
     {
       label: 'Billing period',

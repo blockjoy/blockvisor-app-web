@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/router';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
-import { EmptyColumn, ROUTES, Table, TableSkeleton } from '@shared/index';
+import { ROUTES } from '@shared/index';
+import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import {
   mapInvoicesToRows,
   useInvoices,

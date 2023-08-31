@@ -2,10 +2,13 @@ import { ChangeEvent, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
 import { ItemPrice } from 'chargebee-typescript/lib/resources';
-import { PlanParams, generateUpdateSubscriptionParams } from '@modules/billing';
-import { useSubscription } from '@modules/billing/hooks/useSubscription';
-import { billingAtoms } from '@modules/billing/store/billingAtoms';
-import { billingSelectors } from '@modules/billing/store/billingSelectors';
+import {
+  PlanParams,
+  generateUpdateSubscriptionParams,
+  useSubscription,
+  billingAtoms,
+  billingSelectors,
+} from '@modules/billing';
 import { Button, ButtonGroup } from '@shared/components';
 import { containers } from 'styles/containers.styles';
 
