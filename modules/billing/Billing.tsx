@@ -14,6 +14,7 @@ import {
   useEstimates,
   useBillingContacts,
   useInvoices,
+  usePaymentMethod,
 } from '@modules/billing';
 import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
@@ -46,6 +47,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   const { getEstimate } = useEstimates();
   const { getBillingContacts } = useBillingContacts();
   const { getInvoices } = useInvoices();
+  const { getPaymentMethod } = usePaymentMethod();
 
   const tabItems = useMemo(
     () =>
@@ -100,16 +102,10 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
       subscription?.status === 'active' &&
       subscriptionLoadingState === 'finished'
     ) {
-      console.log('Does it enter?');
-      // TODO: testing if this fixes error on VERCEL
-      console.log('Started fetching estimates?');
       getEstimate();
-      console.log('Started fetching billing contacts?');
       getBillingContacts();
-      console.log('Started fetching invoices?');
       getInvoices();
-      // TODO: testing if this fixes error on VERCEL
-      console.log('Does it leave?');
+      getPaymentMethod();
     }
   }, [subscription]);
 

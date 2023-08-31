@@ -3,9 +3,9 @@ import { useRecoilValue } from 'recoil';
 import { Button, DetailsTable, TableSkeleton } from '@shared/components';
 import {
   mapCardToDetails,
-  billingAtoms,
   billingSelectors,
   PaymentMethodsSelect,
+  usePaymentMethod,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
@@ -14,21 +14,15 @@ import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
 import { Permissions, authSelectors } from '@modules/auth';
 
 export const PaymentPreview = () => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
-  const subscriptionLoadingState = useRecoilValue(
-    billingAtoms.subscriptionLoadingState,
-  );
-
   const [activeView, setActiveView] = useState<'list' | 'dialog'>('list');
 
-  const paymentMethod = useRecoilValue(
-    billingSelectors.paymentMethodById(subscription?.payment_source_id!),
-  );
-
+  const subscription = useRecoilValue(billingSelectors.subscription);
   const userRole = useRecoilValue(authSelectors.userRole);
   const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
+
+  const { paymentMethod, paymentMethodLoadingState } = usePaymentMethod();
 
   const canUpdateBilling: boolean = useHasPermissions(
     userRole,
@@ -39,7 +33,7 @@ export const PaymentPreview = () => {
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');
 
-  if (subscriptionLoadingState !== 'finished') return <TableSkeleton />;
+  if (paymentMethodLoadingState !== 'finished') return <TableSkeleton />;
 
   return activeView === 'list' ? (
     <div css={containers.mediumSmall}>
