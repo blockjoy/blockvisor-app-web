@@ -16,11 +16,7 @@ import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
 import { useRecoilValue } from 'recoil';
-<<<<<<< HEAD
-import { authSelectors, useIdentity } from '@modules/auth';
-=======
-import { authSelectors } from '@modules/auth';
->>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
+import { authAtoms, authSelectors } from '@modules/auth';
 import {
   Permissions,
   useHasPermissions,
@@ -32,7 +28,6 @@ import { createPath } from '@modules/organization/utils/createPath';
 export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useIdentity();
   const { getOrganization, organization, isLoading, setIsLoading } =
     useGetOrganization();
 
@@ -46,6 +41,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     organizationAtoms.selectedOrganization,
   );
 
+  const user = useRecoilValue(authAtoms.user);
   const userRole = useRecoilValue(authSelectors.userRole);
   const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,

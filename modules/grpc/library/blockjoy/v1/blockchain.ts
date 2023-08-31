@@ -17,20 +17,18 @@ export enum BlockchainNetworkType {
 export interface Blockchain {
   id: string;
   name: string;
-  description: string;
-  projectUrl?: string | undefined;
-  repoUrl?: string | undefined;
-  version?: string | undefined;
+  description?: string | undefined;
   createdAt: Date | undefined;
-  updatedAt?:
-    | Date
+  updatedAt: Date | undefined;
+  projectUrl?: string | undefined;
+  repoUrl?:
+    | string
     | undefined;
   /**
    * This list contains all the possible node types that can be created for this
    * kind of blockchain.
    */
-  nodesTypes: SupportedNodeType[];
-  networks: BlockchainNetwork[];
+  nodeTypes: BlockchainNodeType[];
 }
 
 export interface BlockchainServiceGetRequest {
@@ -48,17 +46,56 @@ export interface BlockchainServiceListResponse {
   blockchains: Blockchain[];
 }
 
-export interface SupportedNodeType {
+export interface BlockchainNodeType {
+  id: string;
   nodeType: NodeType;
-  version: string;
-  properties: SupportedNodeProperty[];
+  description?: string | undefined;
+  createdAt: Date | undefined;
+  updatedAt: Date | undefined;
+  versions: BlockchainVersion[];
 }
 
-export interface SupportedNodeProperty {
+export interface BlockchainVersion {
+  id: string;
+  version: string;
+  description?: string | undefined;
+  createdAt: Date | undefined;
+  updatedAt: Date | undefined;
+  networks: BlockchainNetwork[];
+  properties: BlockchainProperty[];
+}
+
+/**
+ * A property that is supported by a node of a particular:
+ * 1. blockchain type,
+ * 2. node type,
+ * 3. version.
+ * When a blockchain node is created, a list of properties must be submitted by
+ * the caller. The properties that are required / allowed are defined by these
+ * properties here.
+ */
+export interface BlockchainProperty {
+  /** The name of this property, i.e. `validator-key`. */
   name: string;
-  default?: string | undefined;
+  /** A nice looking name that can be used for display purposes. */
+  displayName: string;
+  /**
+   * If there is one, this field contains the default value that should be
+   * used if the user supplies no value.
+   */
+  default?:
+    | string
+    | undefined;
+  /**
+   * The way this field should be displayed when a node with this property is
+   * created.
+   */
   uiType: UiType;
-  disabled: boolean;
+  /**
+   * If this is true then the property _must_ be supplied when a node of this
+   * type and version is created. If this is false, then the property is treated
+   * as optional and may be omitted.
+   */
   required: boolean;
 }
 
@@ -72,14 +109,12 @@ function createBaseBlockchain(): Blockchain {
   return {
     id: "",
     name: "",
-    description: "",
-    projectUrl: undefined,
-    repoUrl: undefined,
-    version: undefined,
+    description: undefined,
     createdAt: undefined,
     updatedAt: undefined,
-    nodesTypes: [],
-    networks: [],
+    projectUrl: undefined,
+    repoUrl: undefined,
+    nodeTypes: [],
   };
 }
 
@@ -91,29 +126,23 @@ export const Blockchain = {
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.description !== "") {
+    if (message.description !== undefined) {
       writer.uint32(26).string(message.description);
     }
-    if (message.projectUrl !== undefined) {
-      writer.uint32(34).string(message.projectUrl);
-    }
-    if (message.repoUrl !== undefined) {
-      writer.uint32(42).string(message.repoUrl);
-    }
-    if (message.version !== undefined) {
-      writer.uint32(50).string(message.version);
-    }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(58).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(66).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(42).fork()).ldelim();
     }
-    for (const v of message.nodesTypes) {
-      SupportedNodeType.encode(v!, writer.uint32(74).fork()).ldelim();
+    if (message.projectUrl !== undefined) {
+      writer.uint32(50).string(message.projectUrl);
     }
-    for (const v of message.networks) {
-      BlockchainNetwork.encode(v!, writer.uint32(82).fork()).ldelim();
+    if (message.repoUrl !== undefined) {
+      writer.uint32(58).string(message.repoUrl);
+    }
+    for (const v of message.nodeTypes) {
+      BlockchainNodeType.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -151,49 +180,35 @@ export const Blockchain = {
             break;
           }
 
-          message.projectUrl = reader.string();
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.repoUrl = reader.string();
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.version = reader.string();
+          message.projectUrl = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.repoUrl = reader.string();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.nodesTypes.push(SupportedNodeType.decode(reader, reader.uint32()));
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.networks.push(BlockchainNetwork.decode(reader, reader.uint32()));
+          message.nodeTypes.push(BlockchainNodeType.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -212,14 +227,12 @@ export const Blockchain = {
     const message = createBaseBlockchain();
     message.id = object.id ?? "";
     message.name = object.name ?? "";
-    message.description = object.description ?? "";
-    message.projectUrl = object.projectUrl ?? undefined;
-    message.repoUrl = object.repoUrl ?? undefined;
-    message.version = object.version ?? undefined;
+    message.description = object.description ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
-    message.nodesTypes = object.nodesTypes?.map((e) => SupportedNodeType.fromPartial(e)) || [];
-    message.networks = object.networks?.map((e) => BlockchainNetwork.fromPartial(e)) || [];
+    message.projectUrl = object.projectUrl ?? undefined;
+    message.repoUrl = object.repoUrl ?? undefined;
+    message.nodeTypes = object.nodeTypes?.map((e) => BlockchainNodeType.fromPartial(e)) || [];
     return message;
   },
 };
@@ -399,37 +412,158 @@ export const BlockchainServiceListResponse = {
   },
 };
 
-function createBaseSupportedNodeType(): SupportedNodeType {
-  return { nodeType: 0, version: "", properties: [] };
+function createBaseBlockchainNodeType(): BlockchainNodeType {
+  return { id: "", nodeType: 0, description: undefined, createdAt: undefined, updatedAt: undefined, versions: [] };
 }
 
-export const SupportedNodeType = {
-  encode(message: SupportedNodeType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BlockchainNodeType = {
+  encode(message: BlockchainNodeType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     if (message.nodeType !== 0) {
-      writer.uint32(8).int32(message.nodeType);
+      writer.uint32(16).int32(message.nodeType);
     }
-    if (message.version !== "") {
-      writer.uint32(18).string(message.version);
+    if (message.description !== undefined) {
+      writer.uint32(26).string(message.description);
     }
-    for (const v of message.properties) {
-      SupportedNodeProperty.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
+    }
+    if (message.updatedAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.versions) {
+      BlockchainVersion.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SupportedNodeType {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainNodeType {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSupportedNodeType();
+    const message = createBaseBlockchainNodeType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
             break;
           }
 
           message.nodeType = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.versions.push(BlockchainVersion.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainNodeType>): BlockchainNodeType {
+    return BlockchainNodeType.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainNodeType>): BlockchainNodeType {
+    const message = createBaseBlockchainNodeType();
+    message.id = object.id ?? "";
+    message.nodeType = object.nodeType ?? 0;
+    message.description = object.description ?? undefined;
+    message.createdAt = object.createdAt ?? undefined;
+    message.updatedAt = object.updatedAt ?? undefined;
+    message.versions = object.versions?.map((e) => BlockchainVersion.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseBlockchainVersion(): BlockchainVersion {
+  return {
+    id: "",
+    version: "",
+    description: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+    networks: [],
+    properties: [],
+  };
+}
+
+export const BlockchainVersion = {
+  encode(message: BlockchainVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.version !== "") {
+      writer.uint32(18).string(message.version);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(26).string(message.description);
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
+    }
+    if (message.updatedAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.networks) {
+      BlockchainNetwork.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    for (const v of message.properties) {
+      BlockchainProperty.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainVersion {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainVersion();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -443,7 +577,35 @@ export const SupportedNodeType = {
             break;
           }
 
-          message.properties.push(SupportedNodeProperty.decode(reader, reader.uint32()));
+          message.description = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.networks.push(BlockchainNetwork.decode(reader, reader.uint32()));
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.properties.push(BlockchainProperty.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -454,36 +616,40 @@ export const SupportedNodeType = {
     return message;
   },
 
-  create(base?: DeepPartial<SupportedNodeType>): SupportedNodeType {
-    return SupportedNodeType.fromPartial(base ?? {});
+  create(base?: DeepPartial<BlockchainVersion>): BlockchainVersion {
+    return BlockchainVersion.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<SupportedNodeType>): SupportedNodeType {
-    const message = createBaseSupportedNodeType();
-    message.nodeType = object.nodeType ?? 0;
+  fromPartial(object: DeepPartial<BlockchainVersion>): BlockchainVersion {
+    const message = createBaseBlockchainVersion();
+    message.id = object.id ?? "";
     message.version = object.version ?? "";
-    message.properties = object.properties?.map((e) => SupportedNodeProperty.fromPartial(e)) || [];
+    message.description = object.description ?? undefined;
+    message.createdAt = object.createdAt ?? undefined;
+    message.updatedAt = object.updatedAt ?? undefined;
+    message.networks = object.networks?.map((e) => BlockchainNetwork.fromPartial(e)) || [];
+    message.properties = object.properties?.map((e) => BlockchainProperty.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseSupportedNodeProperty(): SupportedNodeProperty {
-  return { name: "", default: undefined, uiType: 0, disabled: false, required: false };
+function createBaseBlockchainProperty(): BlockchainProperty {
+  return { name: "", displayName: "", default: undefined, uiType: 0, required: false };
 }
 
-export const SupportedNodeProperty = {
-  encode(message: SupportedNodeProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BlockchainProperty = {
+  encode(message: BlockchainProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
+    if (message.displayName !== "") {
+      writer.uint32(18).string(message.displayName);
+    }
     if (message.default !== undefined) {
-      writer.uint32(18).string(message.default);
+      writer.uint32(26).string(message.default);
     }
     if (message.uiType !== 0) {
-      writer.uint32(24).int32(message.uiType);
-    }
-    if (message.disabled === true) {
-      writer.uint32(32).bool(message.disabled);
+      writer.uint32(32).int32(message.uiType);
     }
     if (message.required === true) {
       writer.uint32(40).bool(message.required);
@@ -491,10 +657,10 @@ export const SupportedNodeProperty = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SupportedNodeProperty {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainProperty {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSupportedNodeProperty();
+    const message = createBaseBlockchainProperty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -510,21 +676,21 @@ export const SupportedNodeProperty = {
             break;
           }
 
-          message.default = reader.string();
+          message.displayName = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.uiType = reader.int32() as any;
+          message.default = reader.string();
           continue;
         case 4:
           if (tag !== 32) {
             break;
           }
 
-          message.disabled = reader.bool();
+          message.uiType = reader.int32() as any;
           continue;
         case 5:
           if (tag !== 40) {
@@ -542,16 +708,16 @@ export const SupportedNodeProperty = {
     return message;
   },
 
-  create(base?: DeepPartial<SupportedNodeProperty>): SupportedNodeProperty {
-    return SupportedNodeProperty.fromPartial(base ?? {});
+  create(base?: DeepPartial<BlockchainProperty>): BlockchainProperty {
+    return BlockchainProperty.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<SupportedNodeProperty>): SupportedNodeProperty {
-    const message = createBaseSupportedNodeProperty();
+  fromPartial(object: DeepPartial<BlockchainProperty>): BlockchainProperty {
+    const message = createBaseBlockchainProperty();
     message.name = object.name ?? "";
+    message.displayName = object.displayName ?? "";
     message.default = object.default ?? undefined;
     message.uiType = object.uiType ?? 0;
-    message.disabled = object.disabled ?? false;
     message.required = object.required ?? false;
     return message;
   },

@@ -49,7 +49,7 @@ export const PlanConfiguration = ({
   );
 
   useEffect(() => {
-    getPaymentMethods();
+    if (!paymentMethods || !paymentMethods.length) getPaymentMethods();
   }, []);
 
   const activeItemPrice: ItemPrice | undefined = itemPrices?.find(

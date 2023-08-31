@@ -66,12 +66,17 @@ export interface Host {
   billingAmount?:
     | BillingAmount
     | undefined;
+<<<<<<< HEAD
   /**
    * The root directory of the vmm, where all data related to the vmm is stored,
    * i.e. config data, secrets, vm mountpoints. Usually this will be
    * `/var/lib/blockvisor`.
    */
   vmmMountpoint?: string | undefined;
+=======
+  /** The place where the net data directory should be mounted on the host. */
+  dataDirectoryMountpoint?: string | undefined;
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
 }
 
 export interface HostServiceCreateRequest {
@@ -116,12 +121,17 @@ export interface HostServiceCreateRequest {
   billingAmount?:
     | BillingAmount
     | undefined;
+<<<<<<< HEAD
   /**
    * The root directory of the vmm, where all data related to the vmm is stored,
    * i.e. config data, secrets, vm mountpoints. Usually this will be
    * `/var/lib/blockvisor`.
    */
   vmmMountpoint?: string | undefined;
+=======
+  /** The place where the net data directory should be mounted on the host. */
+  netdataDirectoryMointpoint?: string | undefined;
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
 }
 
 export interface HostServiceCreateResponse {
@@ -242,7 +252,11 @@ function createBaseHost(): Host {
     orgName: "",
     region: undefined,
     billingAmount: undefined,
+<<<<<<< HEAD
     vmmMountpoint: undefined,
+=======
+    dataDirectoryMountpoint: undefined,
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
   };
 }
 
@@ -302,8 +316,13 @@ export const Host = {
     if (message.billingAmount !== undefined) {
       BillingAmount.encode(message.billingAmount, writer.uint32(162).fork()).ldelim();
     }
+<<<<<<< HEAD
     if (message.vmmMountpoint !== undefined) {
       writer.uint32(170).string(message.vmmMountpoint);
+=======
+    if (message.dataDirectoryMountpoint !== undefined) {
+      writer.uint32(170).string(message.dataDirectoryMountpoint);
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     }
     return writer;
   },
@@ -446,7 +465,11 @@ export const Host = {
             break;
           }
 
+<<<<<<< HEAD
           message.vmmMountpoint = reader.string();
+=======
+          message.dataDirectoryMountpoint = reader.string();
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -483,7 +506,11 @@ export const Host = {
     message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
+<<<<<<< HEAD
     message.vmmMountpoint = object.vmmMountpoint ?? undefined;
+=======
+    message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     return message;
   },
 };
@@ -505,7 +532,11 @@ function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
     orgId: undefined,
     region: undefined,
     billingAmount: undefined,
+<<<<<<< HEAD
     vmmMountpoint: undefined,
+=======
+    netdataDirectoryMointpoint: undefined,
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
   };
 }
 
@@ -556,8 +587,13 @@ export const HostServiceCreateRequest = {
     if (message.billingAmount !== undefined) {
       BillingAmount.encode(message.billingAmount, writer.uint32(122).fork()).ldelim();
     }
+<<<<<<< HEAD
     if (message.vmmMountpoint !== undefined) {
       writer.uint32(130).string(message.vmmMountpoint);
+=======
+    if (message.netdataDirectoryMointpoint !== undefined) {
+      writer.uint32(130).string(message.netdataDirectoryMointpoint);
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     }
     return writer;
   },
@@ -679,7 +715,11 @@ export const HostServiceCreateRequest = {
             break;
           }
 
+<<<<<<< HEAD
           message.vmmMountpoint = reader.string();
+=======
+          message.netdataDirectoryMointpoint = reader.string();
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -713,7 +753,11 @@ export const HostServiceCreateRequest = {
     message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
+<<<<<<< HEAD
     message.vmmMountpoint = object.vmmMountpoint ?? undefined;
+=======
+    message.netdataDirectoryMointpoint = object.netdataDirectoryMointpoint ?? undefined;
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     return message;
   },
 };

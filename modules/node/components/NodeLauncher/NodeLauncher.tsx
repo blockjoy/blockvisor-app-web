@@ -44,10 +44,6 @@ import { useHostList } from '@modules/host';
 import { useSubscription } from '@modules/billing';
 import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
-import {
-  PermissionsCreateResource,
-  useHasPermissionsToCreateResource,
-} from '@modules/auth';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -80,9 +76,18 @@ export const NodeLauncher = () => {
   const { hostList } = useHostList();
   const { updateSubscriptionItems } = useUpdateSubscription();
 
+  const userRole = useRecoilValue(authSelectors.userRole);
+  const userRoleInOrganization = useRecoilValue(
+    organizationSelectors.userRoleInOrganization,
+  );
+  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
+
+  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
+
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [activeView, setActiveView] = useState<'view' | 'action'>('view');
 
   const [selectedNodeType, setSelectedNodeType] =
     useState<BlockchainNodeType>();
@@ -91,18 +96,6 @@ export const NodeLauncher = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>();
 
   const { defaultOrganization } = useDefaultOrganization();
-  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
-
-  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
-  const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
-
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-  const isOwner = useRecoilValue(organizationSelectors.isOwner);
-
-  const canAddNode: PermissionsCreateResource =
-    useHasPermissionsToCreateResource(userRoleInOrganization, hasSubscription);
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -112,21 +105,6 @@ export const NodeLauncher = () => {
     denyIps: [],
     placement: {},
   });
-
-  useEffect(() => {
-    Mixpanel.track('Launch Node - Opened');
-  }, []);
-
-  useEffect(() => {
-    if (serverError) setServerError(undefined);
-    if (fulfilRequirements) setFulfilRequirements(false);
-  }, [defaultOrganization?.id]);
-
-  useEffect(() => {
-    if (fulfilRequirements) {
-      handleNodeCreation();
-    }
-  }, [fulfilRequirements]);
 
   const isNodeValid = Boolean(
     node.blockchainId && node.nodeType && (selectedHost || selectedRegion),
@@ -248,7 +226,7 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
-    if (!hasPaymentMethod && isOwner) {
+    if (!hasPaymentMethod) {
       setIsCreating(true);
       setActiveView('action');
       setFulfilRequirements(false);
@@ -285,31 +263,27 @@ export const NodeLauncher = () => {
       params,
       (nodeId: string) => {
         Mixpanel.track('Launch Node - Node Launched');
-
-        updateSubscriptionItems({
-          type: UpdateSubscriptionAction.ADD_NODE,
-          payload: { node },
-        });
-
         router.push(ROUTES.NODE(nodeId));
       },
-      (error: string) => {
-        setServerError(error!);
-        setIsCreating(false);
-      },
+      (error: string) => setServerError(error!),
     );
   };
-
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
 
   const canAddNode: boolean = useHasPermissions(
     userRole,
     userRoleInOrganization,
     Permissions.CREATE_NODE,
   );
+
+  const handleHiddingPortal = () => setActiveView('view');
+  const handleCancelPayment = () => {
+    setActiveView('view');
+    setIsCreating(false);
+  };
+  const handleSubmitPayment = () => {
+    setActiveView('view');
+    setFulfilRequirements(true);
+  };
 
   useEffect(() => {
     const activeBlockchain = blockchains.find(
@@ -367,6 +341,11 @@ export const NodeLauncher = () => {
   }, []);
 
   useEffect(() => {
+    if (serverError) setServerError(undefined);
+    if (fulfilRequirements) setFulfilRequirements(false);
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
     if (fulfilRequirements) {
       handleNodeCreation();
     }
@@ -422,9 +401,10 @@ export const NodeLauncher = () => {
       </div>
       {activeView === 'action' && (
         <PaymentRequired
-          warningMessage="Creating a Node requires a payment method."
-          onHide={handleHidingPortal}
+          warningMessage="Creating a node requires a payment method."
+          handleCancel={handleCancelPayment}
           handleSubmit={handleSubmitPayment}
+          handleHide={handleHiddingPortal}
         />
       )}
     </>

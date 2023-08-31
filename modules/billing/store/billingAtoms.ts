@@ -1,8 +1,6 @@
 import { atom } from 'recoil';
 import {
-  Contact,
   Customer,
-  Estimate,
   Invoice,
   ItemPrice,
   PaymentSource,
@@ -39,6 +37,7 @@ const customerLoadingState = atom<LoadingState>({
 const paymentMethods = atom<PaymentSource[]>({
   key: 'billing.paymentMethods',
   default: [],
+  effects: [localStorageEffect('billing.paymentMethods')],
 });
 
 const paymentMethodsLoadingState = atom<LoadingState>({
@@ -63,16 +62,6 @@ const paymentMethodLoadingState = atom<LoadingState>({
 
 const billingAddressLoadingState = atom<LoadingState>({
   key: 'billing.billingAddress.loadingState',
-  default: 'finished',
-});
-
-const billingContacts = atom<Contact[]>({
-  key: 'billing.contacts',
-  default: [],
-});
-
-const billingContactsLoadingState = atom<LoadingState>({
-  key: 'billing.contacts.loadingState',
   default: 'finished',
 });
 
@@ -116,16 +105,6 @@ const itemPricesLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const estimate = atom<Estimate | null>({
-  key: 'billing.estimate',
-  default: null,
-});
-
-const estimateLoadingState = atom<LoadingState>({
-  key: 'billing.estimate.loadingState',
-  default: 'initializing',
-});
-
 const subscriptionLoadingState = atom<LoadingState>({
   key: 'billing.subscription.loadingState',
   default: 'initializing',
@@ -134,22 +113,8 @@ const subscriptionLoadingState = atom<LoadingState>({
 export const billingAtoms = {
   billing,
 
-  customerLoadingState,
-
-  paymentMethod,
-  paymentMethodLoadingState,
-  paymentMethodError,
-
-  paymentMethods,
-  paymentMethodsLoadingState,
-
   billingAddressLoadingState,
-
-  billingContacts,
-  billingContactsLoadingState,
-
-  estimate,
-  estimateLoadingState,
+  customerLoadingState,
 
   itemPrices,
   itemPricesLoadingState,
@@ -160,6 +125,13 @@ export const billingAtoms = {
   invoicesLoadingState,
   invoicesNextOffset,
   preloadInvoices,
+
+  paymentMethod,
+  paymentMethodLoadingState,
+  paymentMethodError,
+
+  paymentMethods,
+  paymentMethodsLoadingState,
 
   subscriptionLoadingState,
 };

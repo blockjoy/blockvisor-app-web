@@ -67,12 +67,6 @@ export const useNodeAdd = () => {
 
       const nodeId = response.id;
 
-      // Add node to the subscription
-      await updateSubscriptionItems({
-        type: 'create',
-        payload: { node: response },
-      });
-
       // Update organization node count
       const activeOrganization = organizations.find(
         (org) => org.id === defaultOrganization?.id,

@@ -1,5 +1,4 @@
 import { NodeLauncherState, NodeRegionSelect } from '@modules/node';
-import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { nodeTypeList } from '@shared/constants/lookups';
@@ -10,18 +9,14 @@ import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import {
-  ERROR_MESSAGES,
-  PermissionsCreateResource,
-} from '@modules/auth/hooks/useHasPermissions';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type NodeLauncherSummaryProps = {
   serverError: string;
   hasNetworkList: boolean;
   isNodeValid: boolean;
   isConfigValid: boolean | null;
-  canAddNode: PermissionsCreateResource;
   isCreating: boolean;
   selectedHost: Host | null;
   selectedVersion: BlockchainVersion;
@@ -39,7 +34,6 @@ export const NodeLauncherSummary = ({
   hasNetworkList,
   isNodeValid,
   isConfigValid,
-  canAddNode,
   isCreating,
   selectedHost,
   selectedVersion,
@@ -78,10 +72,10 @@ export const NodeLauncherSummary = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
-        {!hasNetworkList || canAddNode !== PermissionsCreateResource.GRANTED ? (
+        {!hasNetworkList || !canAddNode ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
-            {canAddNode !== PermissionsCreateResource.GRANTED
-              ? ERROR_MESSAGES['NODE'][canAddNode]
+            {!canAddNode
+              ? 'Cannot launch node due to insufficient permissions.'
               : 'Cannot launch node, missing network configuration'}
           </div>
         ) : (
@@ -155,14 +149,6 @@ export const NodeLauncherSummary = ({
         )}
       </div>
       <div css={styles.buttons}>
-        {!canAddNode && (
-          <Tooltip
-            noWrap
-            top="-30px"
-            left="50%"
-            tooltip="Feature disabled during beta."
-          />
-        )}
         <button
           tabIndex={20}
           onClick={onCreateNodeClicked}
@@ -171,7 +157,6 @@ export const NodeLauncherSummary = ({
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
-            canAddNode !== PermissionsCreateResource.GRANTED ||
             Boolean(serverError) ||
             isCreating
           }

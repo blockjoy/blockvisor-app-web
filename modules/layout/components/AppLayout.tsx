@@ -29,17 +29,13 @@ export type LayoutProps = {
 
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
-
-  const currentOrg = useRef<string>();
-
-  const { connect: mqttConnect } = useMqtt();
-  const userId = repository?.getIdentity()?.id;
-  const userEmail = repository?.getIdentity()?.email;
+  const user = repository?.getIdentity();
 
   const currentOrg = useRef<string>();
 
   const billingId = useRecoilValue(billingSelectors.billingId);
 
+  const { connect: mqttConnect } = useMqtt();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
@@ -58,13 +54,15 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   useEffect(() => {
     (async () => {
       if (!organizations.length) await getOrganizations(true);
-      await getReceivedInvitations(userEmail!);
+      await getReceivedInvitations(user?.email!);
       mqttConnect();
     })();
   }, []);
 
   useEffect(() => {
     const fetchOrganizationSubscription = async () => {
+      setSubscriptionLoadingState('initializing');
+
       const userSubscription = await getUserSubscription(
         defaultOrganization?.id!,
       );
@@ -77,10 +75,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     )
       fetchOrganizationSubscription();
-
-    return () => {
-      setSubscriptionLoadingState('initializing');
-    };
   }, [defaultOrganization?.id]);
 
   useEffect(() => {

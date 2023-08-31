@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { authSelectors, useIdentity } from '@modules/auth';
-=======
 import { authAtoms, authSelectors } from '@modules/auth';
->>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
@@ -41,11 +37,7 @@ export const mapOrganizationMembersToRows = (
   members?: OrgUser[],
   methods?: Methods,
 ) => {
-<<<<<<< HEAD
-  const { user } = useIdentity();
-=======
   const user = useRecoilValue(authAtoms.user);
->>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,

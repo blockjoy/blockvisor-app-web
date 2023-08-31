@@ -91,9 +91,19 @@ export enum NodeType {
 
 export enum UiType {
   UI_TYPE_UNSPECIFIED = 0,
+  /**
+   * UI_TYPE_SWITCH - Either "true" or "false" must be returned. The property should be rendered
+   * as a checkbox.
+   */
   UI_TYPE_SWITCH = 1,
+  /**
+   * UI_TYPE_PASSWORD - This field should be treated as a password field, i.e. a text field whose
+   * content is hidden.
+   */
   UI_TYPE_PASSWORD = 2,
+  /** UI_TYPE_TEXT - This field should be treated as a text field. */
   UI_TYPE_TEXT = 3,
+  /** UI_TYPE_FILE_UPLOAD - This field should let the user upload string from a file. */
   UI_TYPE_FILE_UPLOAD = 4,
   UNRECOGNIZED = -1,
 }
@@ -151,11 +161,16 @@ export interface Node {
   placement:
     | NodePlacement
     | undefined;
+<<<<<<< HEAD
   /**
    * The place where the blockchain data directory should be mounted on the
    * host.
    */
   dataDirectoryMountpoint?: string | undefined;
+=======
+  /** The place where the net data directory should be mounted on the host. */
+  netdataDirectoryMointpoint?: string | undefined;
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
 }
 
 /** This message is used to create a new node. */
@@ -398,6 +413,7 @@ export interface FilteredIpAddr {
 
 export interface NodeProperty {
   name: string;
+  displayName: string;
   uiType: UiType;
   disabled: boolean;
   required: boolean;
@@ -436,7 +452,11 @@ function createBaseNode(): Node {
     allowIps: [],
     denyIps: [],
     placement: undefined,
+<<<<<<< HEAD
     dataDirectoryMountpoint: undefined,
+=======
+    netdataDirectoryMointpoint: undefined,
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
   };
 }
 
@@ -532,8 +552,13 @@ export const Node = {
     if (message.placement !== undefined) {
       NodePlacement.encode(message.placement, writer.uint32(242).fork()).ldelim();
     }
+<<<<<<< HEAD
     if (message.dataDirectoryMountpoint !== undefined) {
       writer.uint32(250).string(message.dataDirectoryMountpoint);
+=======
+    if (message.netdataDirectoryMointpoint !== undefined) {
+      writer.uint32(250).string(message.netdataDirectoryMointpoint);
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     }
     return writer;
   },
@@ -760,7 +785,11 @@ export const Node = {
             break;
           }
 
+<<<<<<< HEAD
           message.dataDirectoryMountpoint = reader.string();
+=======
+          message.netdataDirectoryMointpoint = reader.string();
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -809,7 +838,11 @@ export const Node = {
     message.placement = (object.placement !== undefined && object.placement !== null)
       ? NodePlacement.fromPartial(object.placement)
       : undefined;
+<<<<<<< HEAD
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
+=======
+    message.netdataDirectoryMointpoint = object.netdataDirectoryMointpoint ?? undefined;
+>>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     return message;
   },
 };
@@ -2028,13 +2061,16 @@ export const FilteredIpAddr = {
 };
 
 function createBaseNodeProperty(): NodeProperty {
-  return { name: "", uiType: 0, disabled: false, required: false, value: "" };
+  return { name: "", displayName: "", uiType: 0, disabled: false, required: false, value: "" };
 }
 
 export const NodeProperty = {
   encode(message: NodeProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
+    }
+    if (message.displayName !== "") {
+      writer.uint32(50).string(message.displayName);
     }
     if (message.uiType !== 0) {
       writer.uint32(16).int32(message.uiType);
@@ -2064,6 +2100,13 @@ export const NodeProperty = {
           }
 
           message.name = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.displayName = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -2109,6 +2152,7 @@ export const NodeProperty = {
   fromPartial(object: DeepPartial<NodeProperty>): NodeProperty {
     const message = createBaseNodeProperty();
     message.name = object.name ?? "";
+    message.displayName = object.displayName ?? "";
     message.uiType = object.uiType ?? 0;
     message.disabled = object.disabled ?? false;
     message.required = object.required ?? false;

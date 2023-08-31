@@ -1,10 +1,10 @@
 import { useRecoilState } from 'recoil';
+import { Invoice } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   fetchBilling,
 } from '@modules/billing';
-import { Invoice } from 'chargebee-typescript/lib/resources';
 
 interface IInvoiceHook {
   invoice: Invoice | null;
