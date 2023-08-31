@@ -1,6 +1,13 @@
 import { OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
 import { UserRole } from '@modules/grpc/library/blockjoy/v1/user';
 
+export enum PermissionsCreateResource {
+  NO_PERMISSION = 'NO_PERMISSION',
+  NO_SUBSCRIPTION = 'NO_SUBSCRIPTION',
+  NO_PAYMENT_METHOD = 'NO_PAYMENT_METHOD',
+  GRANTED = 'GRANTED',
+}
+
 export enum Permissions {
   READ_ORGANIZATION,
   CREATE_ORGANIZATION,
@@ -21,6 +28,21 @@ export enum Permissions {
   CREATE_HOST,
   UPDATE_HOST,
   DELETE_HOST,
+
+  READ_BILLING,
+  CREATE_BILLING,
+  UPDATE_BILLING,
+  DELETE_BILLING,
+
+  READ_SUBSCRIPTION,
+  CREATE_SUBSCRIPTION,
+  UPDATE_SUBSCRIPTION,
+  DELETE_SUBSCRIPTION,
+
+  READ_PAYMENT,
+  CREATE_PAYMENT,
+  UPDATE_PAYMENT,
+  DELETE_PAYMENT,
 }
 
 export const USER_ROLES: {
@@ -55,14 +77,24 @@ export const ORG_PERMISSIONS: {
 } = {
   [OrgRole.ORG_ROLE_UNSPECIFIED]: [],
   [OrgRole.ORG_ROLE_MEMBER]: [
+    // ORGANIZATION
     Permissions.READ_ORGANIZATION,
 
     Permissions.READ_MEMBER,
 
+    // NODE
     Permissions.READ_NODE,
+
+    // HOST
     Permissions.READ_HOST,
+
+    // BILLING
+    Permissions.READ_BILLING,
+
+    Permissions.READ_SUBSCRIPTION,
   ],
   [OrgRole.ORG_ROLE_OWNER]: [
+    // ORGANIZATION
     Permissions.READ_ORGANIZATION,
     Permissions.CREATE_ORGANIZATION,
     Permissions.UPDATE_ORGANIZATION,
@@ -73,30 +105,67 @@ export const ORG_PERMISSIONS: {
     Permissions.UPDATE_MEMBER,
     Permissions.DELETE_MEMBER,
 
+    // NODE
     Permissions.READ_NODE,
+    Permissions.CREATE_NODE,
+    Permissions.UPDATE_NODE,
+    Permissions.DELETE_NODE,
+
+    // HOST,
     Permissions.READ_HOST,
+    Permissions.CREATE_HOST,
+    Permissions.UPDATE_HOST,
+    Permissions.DELETE_HOST,
+
+    // BILLING
+    Permissions.READ_BILLING,
+    Permissions.CREATE_BILLING,
+    Permissions.UPDATE_BILLING,
+    Permissions.DELETE_BILLING,
+
+    Permissions.READ_SUBSCRIPTION,
+    Permissions.CREATE_SUBSCRIPTION,
+    Permissions.UPDATE_SUBSCRIPTION,
+    Permissions.DELETE_SUBSCRIPTION,
+
+    Permissions.READ_PAYMENT,
+    Permissions.CREATE_PAYMENT,
+    Permissions.UPDATE_PAYMENT,
+    Permissions.DELETE_PAYMENT,
   ],
   [OrgRole.ORG_ROLE_ADMIN]: [
+    // ORGANIZATION
     Permissions.READ_ORGANIZATION,
     Permissions.CREATE_ORGANIZATION,
     Permissions.UPDATE_ORGANIZATION,
-    Permissions.DELETE_ORGANIZATION,
 
     Permissions.READ_MEMBER,
     Permissions.CREATE_MEMBER,
     Permissions.UPDATE_MEMBER,
     Permissions.DELETE_MEMBER,
 
+    // NODE
     Permissions.READ_NODE,
+
+    // HOST
     Permissions.READ_HOST,
+
+    // BILLING
+    Permissions.READ_BILLING,
+    Permissions.UPDATE_BILLING,
+
+    Permissions.READ_SUBSCRIPTION,
+    Permissions.UPDATE_SUBSCRIPTION,
+
+    Permissions.READ_PAYMENT,
   ],
 };
 
-export function useHasPermissions(
+export const useHasPermissions = (
   usrRole: UserRole,
   orgRole: OrgRole | null,
   permissions: Permissions | Permissions[],
-) {
+): boolean => {
   if (!!!usrRole) return false;
 
   if (usrRole === UserRole.USER_ROLE_BLOCKJOY_ADMIN) return true;
@@ -112,4 +181,4 @@ export function useHasPermissions(
   } else {
     return false;
   }
-}
+};

@@ -1,8 +1,12 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useTabs } from '@shared/hooks/useTabs';
 import { PageSection, PageTitle, Tabs } from '@shared/components';
-import { BillingInfo, PaymentMethods } from '@modules/billing';
+import {
+  BillingInfo,
+  PaymentMethods,
+  usePaymentMethods,
+} from '@modules/billing';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 
 export const Settings = () => {
@@ -31,7 +35,14 @@ export const Settings = () => {
     ],
     [],
   );
+
   const { activeTab, setActiveTab } = useTabs(tabItems.length);
+
+  const { fetchPaymentMethods } = usePaymentMethods();
+
+  useEffect(() => {
+    fetchPaymentMethods();
+  }, []);
 
   const handleClick = (tabValue: string) => {
     setActiveTab(tabValue);
@@ -44,6 +55,7 @@ export const Settings = () => {
       { shallow: true },
     );
   };
+
   return (
     <>
       <PageTitle title="Settings" icon={<IconCog />} />

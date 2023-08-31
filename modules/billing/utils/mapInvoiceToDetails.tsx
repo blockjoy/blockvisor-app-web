@@ -15,7 +15,7 @@ export const mapInvoiceToDetails = (invoice: Invoice) => {
     },
     {
       label: 'Due date',
-      data: formatters.formatDate(invoice.due_date!),
+      data: formatters.formatTimestamp(invoice.due_date!),
     },
   ];
 };

@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { ROUTES, formatters } from '@shared/index';
 import {
   BackButton,
   DetailsView,
@@ -5,25 +8,21 @@ import {
   PageHeader,
   PageSection,
   PageTitle,
-  ROUTES,
   Skeleton,
   SkeletonGrid,
   TableSkeleton,
-  formatters,
   SvgIcon,
-} from '@shared/index';
+} from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
-import IconCalendar from '@public/assets/icons/common/Calendar.svg';
-import IconBilling from '@public/assets/icons/common/Billing.svg';
 import {
   InvoiceDownload,
   InvoiceInfo,
   Services,
   useInvoice,
 } from '@modules/billing';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import IconCalendar from '@public/assets/icons/common/Calendar.svg';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 
 export const InvoiceView = () => {
   const router = useRouter();
@@ -83,7 +82,9 @@ export const InvoiceView = () => {
                           <SvgIcon size="10px" isDefaultColor>
                             <IconCalendar />
                           </SvgIcon>
-                          <span>{formatters.formatDate(invoice?.date)}</span>
+                          <span>
+                            {formatters.formatTimestamp(invoice?.date)}
+                          </span>
                         </div>
                       )}
                     </div>

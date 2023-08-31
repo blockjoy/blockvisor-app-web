@@ -1,8 +1,9 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
+import useSWR from 'swr';
 import { Estimate } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
-  billingAtoms,
+  billingSelectors,
   fetchBilling,
 } from '@modules/billing';
 
@@ -12,30 +13,37 @@ interface IEstimatesHook {
   getEstimate: VoidFunction;
 }
 
-export const useEstimates = (subscriptionId: string): IEstimatesHook => {
-  const [estimate, setEstimate] = useRecoilState(billingAtoms.estimate);
-  const [estimateLoadingState, setEstimateLoadingState] = useRecoilState(
-    billingAtoms.estimateLoadingState,
+export const useEstimates = (): IEstimatesHook => {
+  const subscription = useRecoilValue(billingSelectors.subscription);
+
+  const fetcher = () =>
+    fetchBilling(BILLING_API_ROUTES.estimates.get, {
+      subscriptionId: subscription?.id!,
+    });
+
+  const { data, error, isLoading, mutate } = useSWR(
+    () =>
+      subscription?.status === 'active'
+        ? BILLING_API_ROUTES.estimates.get
+        : null,
+    fetcher,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+      revalidateOnMount: false,
+    },
   );
 
-  const getEstimate = async () => {
-    setEstimateLoadingState('initializing');
+  if (error) console.error('Failed to fetch Estimates', error);
 
-    try {
-      const data = await fetchBilling(BILLING_API_ROUTES.estimates.get, {
-        subscriptionId,
-      });
+  const estimateLoadingState: LoadingState = isLoading
+    ? 'initializing'
+    : 'finished';
 
-      setEstimate(data);
-    } catch (error) {
-      console.error('Failed to fetch Estimates', error);
-    } finally {
-      setEstimateLoadingState('finished');
-    }
-  };
+  const getEstimate = async () => mutate();
 
   return {
-    estimate,
+    estimate: data,
     estimateLoadingState,
 
     getEstimate,

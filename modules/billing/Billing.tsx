@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import { PageSection, PageTitle, Tabs } from '@shared/components';
@@ -11,6 +11,10 @@ import {
   billingAtoms,
   BillingView,
   Estimates,
+  usePaymentMethods,
+  useEstimates,
+  useBillingContacts,
+  useInvoices,
 } from '@modules/billing';
 import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
@@ -24,6 +28,7 @@ type BillingProps = {
 export const Billing = ({ item, itemPrices }: BillingProps) => {
   const { push } = useRouter();
   const subscription = useRecoilValue(billingSelectors.subscription);
+  const userSubscription = useRecoilValue(billingSelectors.userSubscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
@@ -38,6 +43,12 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
     userRoleInOrganization,
     Permissions.UPDATE_BILLING,
   );
+
+  const { fetchPaymentMethods } = usePaymentMethods();
+
+  const { getEstimate } = useEstimates();
+  const { getBillingContacts } = useBillingContacts();
+  const { getInvoices } = useInvoices();
 
   const tabItems = useMemo(
     () =>
@@ -84,7 +95,27 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
       ),
     [subscription, canUpdateBilling],
   );
+
   const { activeTab, setActiveTab } = useTabs(tabItems.length);
+
+  useEffect(() => {
+    fetchPaymentMethods();
+  }, []);
+
+  useEffect(() => {
+    if (
+      subscription?.status === 'active' &&
+      subscriptionLoadingState === 'finished'
+    ) {
+      getEstimate();
+      getBillingContacts();
+      getInvoices();
+    }
+  }, [subscription]);
+
+  useEffect(() => {
+    if (!userSubscription) handleClick('1');
+  }, [userSubscription]);
 
   const handleClick = (tabValue: string) => {
     setActiveTab(tabValue);

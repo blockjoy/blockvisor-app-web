@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   BillingContactsList,
@@ -15,7 +15,6 @@ export const BillingContacts = () => {
     billingContactsLoadingState,
     addBillingContact,
     removeBillingContact,
-    getBillingContacts,
   } = useBillingContacts();
 
   const [activeView, setActiveView] = useState<'list' | 'action'>('list');
@@ -39,10 +38,6 @@ export const BillingContacts = () => {
     await addBillingContact(contact);
     setActiveView('list');
   };
-
-  useEffect(() => {
-    getBillingContacts();
-  }, []);
 
   const actions: BillingContactsActions = {
     add: handleNewBillingContact,

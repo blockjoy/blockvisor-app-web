@@ -31,12 +31,8 @@ export const PaymentMethodsSelect = ({
 
   const handleClose = () => setIsOpen(!isOpen);
 
-  const { paymentMethodsLoadingState, getPaymentMethods } = usePaymentMethods();
+  const { paymentMethodsLoadingState } = usePaymentMethods();
   const { updateBillingProfile } = useSubscription();
-
-  useEffect(() => {
-    getPaymentMethods();
-  }, []);
 
   const handleSelect = (paymentMethod: PaymentSource) => {
     setActivePaymentMethod(paymentMethod);

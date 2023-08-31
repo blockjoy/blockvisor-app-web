@@ -10,11 +10,7 @@ import {
   SvgIcon,
   DeleteModal,
 } from '@shared/components';
-<<<<<<< HEAD
-import { FC, useState } from 'react';
-=======
 import { useState } from 'react';
->>>>>>> 5d7807b1 (feat: [sc-2354] updated permissions; moved billing to sidebar)
 import { useRecoilValue } from 'recoil';
 >>>>>>> edc70c6f (feat: [sc-2354] updated permissions; moved billing to sidebar)
 import { styles } from './OrganizationViewHeader.styles';

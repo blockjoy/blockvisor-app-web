@@ -4,18 +4,20 @@ import {
   mapEstimatesToRows,
   billingSelectors,
 } from '@modules/billing';
-import { Alert, Table } from '@shared/components';
+import { Alert, Table, TableSkeleton } from '@shared/components';
 import { containers } from 'styles/containers.styles';
 
 export const Estimates = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const { estimate } = useEstimates(subscription?.id! as string);
+  const { estimate, estimateLoadingState } = useEstimates();
 
   const { headers, rows } = mapEstimatesToRows(
     estimate?.invoice_estimate?.line_items,
     estimate?.invoice_estimate?.total,
   );
+
+  if (estimateLoadingState !== 'finished') return <TableSkeleton />;
 
   return (
     <>

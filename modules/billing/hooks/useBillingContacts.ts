@@ -1,9 +1,9 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
+import useSWR from 'swr';
 import { _customer } from 'chargebee-typescript';
 import { Contact } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
-  billingAtoms,
   billingSelectors,
   fetchBilling,
 } from '@modules/billing';
@@ -17,41 +17,44 @@ interface IBillingContactsHook {
 }
 
 export const useBillingContacts = (): IBillingContactsHook => {
-  const [billingContacts, setBillingContacts] = useRecoilState(
-    billingAtoms.billingContacts,
-  );
-  const [billingContactsLoadingState, setBillingContactsLoadingState] =
-    useRecoilState(billingAtoms.billingContactsLoadingState);
-
   const customer = useRecoilValue(billingSelectors.customer);
-
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const getBillingContacts = async () => {
-    setBillingContactsLoadingState('initializing');
+  const fetcher = () =>
+    fetchBilling(BILLING_API_ROUTES.customer.contacts.list, {
+      customerId: customer?.id,
+      filterParams: {
+        subscriptionId: subscription?.id,
+      },
+    });
 
-    try {
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.customer.contacts.list,
-        {
-          customerId: customer?.id,
-          filterParams: {
-            subscriptionId: subscription?.id,
-          },
-        },
-      );
+  const {
+    data: billingContacts,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR(
+    () =>
+      subscription?.status === 'active'
+        ? BILLING_API_ROUTES.customer.contacts.list
+        : null,
+    fetcher,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+      revalidateOnMount: false,
+    },
+  );
 
-      setBillingContacts(data);
-    } catch (error) {
-      console.error('Failed to fetch Billing contacts', error);
-    } finally {
-      setBillingContactsLoadingState('finished');
-    }
+  if (error) console.error('Failed to fetch Billing Contacts', error);
+
+  const billingContactsLoadingState = isLoading ? 'initializing' : 'finished';
+
+  const getBillingContacts = () => {
+    mutate();
   };
 
   const addBillingContact = async ({ name, email }: BillingContactForm) => {
-    setBillingContactsLoadingState('initializing');
-
     try {
       const newBillingContact: _customer.contact_add_contact_params = {
         first_name: name,
@@ -76,17 +79,13 @@ export const useBillingContacts = (): IBillingContactsHook => {
         },
       );
 
-      setBillingContacts(data);
+      mutate(data);
     } catch (error) {
       console.error('Failed to create Billing contact', error);
-    } finally {
-      setBillingContactsLoadingState('finished');
     }
   };
 
   const removeBillingContact = async (id: string) => {
-    setBillingContactsLoadingState('initializing');
-
     try {
       const contactToDelete: _customer.contact_delete_contact_params = {
         id,
@@ -107,11 +106,9 @@ export const useBillingContacts = (): IBillingContactsHook => {
         },
       );
 
-      setBillingContacts(data);
+      mutate(data);
     } catch (error) {
       console.error('Failed to remove Billing contact', error);
-    } finally {
-      setBillingContactsLoadingState('finished');
     }
   };
 

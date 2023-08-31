@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Button, DetailsTable, TableSkeleton } from '@shared/components';
 import {
-  usePaymentMethods,
   mapCardToDetails,
   billingAtoms,
   billingSelectors,
@@ -19,14 +18,12 @@ export const PaymentPreview = () => {
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-  const { paymentMethod, paymentMethodLoadingState, getPaymentMethod } =
-    usePaymentMethods();
 
   const [activeView, setActiveView] = useState<'list' | 'dialog'>('list');
 
-  useEffect(() => {
-    getPaymentMethod(subscription?.payment_source_id!);
-  }, [subscription?.payment_source_id]);
+  const paymentMethod = useRecoilValue(
+    billingSelectors.paymentMethodById(subscription?.payment_source_id!),
+  );
 
   const userRole = useRecoilValue(authSelectors.userRole);
   const userRoleInOrganization = useRecoilValue(
@@ -42,11 +39,7 @@ export const PaymentPreview = () => {
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');
 
-  if (
-    paymentMethodLoadingState !== 'finished' ||
-    subscriptionLoadingState !== 'finished'
-  )
-    return <TableSkeleton />;
+  if (subscriptionLoadingState !== 'finished') return <TableSkeleton />;
 
   return activeView === 'list' ? (
     <div css={containers.mediumSmall}>
