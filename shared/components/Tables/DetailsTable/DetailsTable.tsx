@@ -8,7 +8,7 @@ import { styles } from './DetailsTable.styles';
 export type DetailsDataRow = {
   id?: string;
   label: ReactNode | string;
-  data: ReactNode | string;
+  data: any;
 };
 
 type DetailsTableProps = {

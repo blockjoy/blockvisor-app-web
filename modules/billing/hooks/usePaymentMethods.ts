@@ -22,6 +22,7 @@ interface IPaymentMethodsHook {
     onSuccess: (customerId: string, paymentSourceId: string) => void,
   ) => void;
   deletePaymentMethod: (id: string) => void;
+  fetchPaymentMethods: VoidFunction;
 }
 
 export const usePaymentMethods = (): IPaymentMethodsHook => {
@@ -149,6 +150,15 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     }
   };
 
+  const fetchPaymentMethods = async () => {
+    if (paymentMethods && paymentMethods.length) {
+      setPaymentMethodsLoadingState('finished');
+      return;
+    }
+
+    await getPaymentMethods();
+  };
+
   return {
     paymentMethod,
     paymentMethodLoadingState,
@@ -159,5 +169,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
     getPaymentMethod,
     createPaymentMethod,
     deletePaymentMethod,
+
+    fetchPaymentMethods,
   };
 };

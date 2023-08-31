@@ -1,7 +1,7 @@
-import { mapServicesToRows } from '@modules/billing';
-import { Table } from '@shared/index';
-import { styles } from './Services.styles';
 import { InvoiceLineItem } from 'chargebee-typescript/lib/resources';
+import { mapServicesToRows } from '@modules/billing';
+import { Table } from '@shared/components';
+import { styles } from './Services.styles';
 
 export type ServicesProps = {
   services: InvoiceLineItem[];

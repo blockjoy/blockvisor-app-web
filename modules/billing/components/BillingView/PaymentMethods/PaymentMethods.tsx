@@ -13,7 +13,7 @@ export const PaymentMethods = () => {
   const router = useRouter();
   const { add } = router.query;
 
-  const { getPaymentMethods, paymentMethodsLoadingState, deletePaymentMethod } =
+  const { paymentMethodsLoadingState, deletePaymentMethod } =
     usePaymentMethods();
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
@@ -26,10 +26,6 @@ export const PaymentMethods = () => {
   useEffect(() => {
     if (router.isReady && add) setIsAdding(true);
   }, [router.isReady, add]);
-
-  useEffect(() => {
-    getPaymentMethods();
-  }, []);
 
   const handleAdding = () => setIsAdding(true);
   const handleCancel = () => setIsAdding(false);

@@ -56,9 +56,9 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
               name={invoice?.line_items?.[0].description!}
               address={
                 <p>
-                  {`${formatters.formatDate(
+                  {`${formatters.formatTimestamp(
                     invoice?.line_items?.[0].date_from!,
-                  )} - ${formatters.formatDate(
+                  )} - ${formatters.formatTimestamp(
                     invoice?.line_items?.[0].date_to!,
                   )}`}
                 </p>
@@ -72,7 +72,7 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
         },
         {
           key: '4',
-          component: <p>{formatters.formatDate(invoice?.due_date!)}</p>,
+          component: <p>{formatters.formatTimestamp(invoice?.due_date!)}</p>,
         },
         {
           key: '5',

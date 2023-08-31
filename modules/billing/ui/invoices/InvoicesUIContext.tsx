@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-
 import { InitialQueryParams, initialQueryParams } from './InvoicesUIHelpers';
 import { numOfItemsPerPage } from '@shared/index';
 
