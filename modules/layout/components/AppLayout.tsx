@@ -44,7 +44,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
-  const { customer, getCustomer } = useCustomer();
+  const { customer, customerLoadingState, getCustomer } = useCustomer();
   const { fetchPaymentMethods } = usePaymentMethods();
   const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
   const { getUserSubscription } = useUserSubscription();
@@ -99,7 +99,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, [defaultOrganization?.id]);
 
   useEffect(() => {
-    if (customer) fetchPaymentMethods();
+    fetchPaymentMethods();
   }, [customer]);
 
   return (
