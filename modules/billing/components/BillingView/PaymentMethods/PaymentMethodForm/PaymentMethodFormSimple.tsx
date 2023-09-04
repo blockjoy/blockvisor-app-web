@@ -110,6 +110,10 @@ export const PaymentMethodFormSimple = ({
 
   const errorMessage = error ? generatePaymentError(error) : null;
 
+  const isValidInfoForm = Object.values(billingInfo).every(
+    (value) => value.trim() !== '',
+  );
+
   return (
     <div css={containers.mediumSmall}>
       <PaymentMethodFormHeader />
@@ -150,7 +154,7 @@ export const PaymentMethodFormSimple = ({
       <ButtonGroup>
         <Button
           loading={loading}
-          disabled={loading}
+          disabled={loading || !isValidInfoForm}
           style="primary"
           size="small"
           type="submit"
