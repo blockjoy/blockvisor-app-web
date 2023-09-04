@@ -12,8 +12,8 @@ interface IBillingContactsHook {
   billingContacts: Contact[];
   billingContactsLoadingState: LoadingState;
   getBillingContacts: VoidFunction;
-  addBillingContact: (billingContact: BillingContactForm) => void;
-  removeBillingContact: (id: string) => void;
+  addBillingContact: (billingContact: BillingContactForm) => Promise<void>;
+  removeBillingContact: (id: string) => Promise<void>;
 }
 
 export const useBillingContacts = (): IBillingContactsHook => {

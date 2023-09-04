@@ -15,7 +15,7 @@ interface IInvoicesHook {
   invoicesLoadingState: LoadingState;
   invoicesNextOffset: string | undefined;
   preloadInvoices: number;
-  getInvoices: (queryParams?: InvoicesInitialQueryParams) => void;
+  getInvoices: (queryParams?: InvoicesInitialQueryParams) => Promise<void>;
 }
 
 // TODO: include updates of QUERYPARAMS
@@ -58,8 +58,7 @@ export const useInvoices = (
     : 'finished';
 
   const getInvoices = async (queryParams?: InvoicesInitialQueryParams) => {
-    if (!subscription || subscription.status !== 'active') return [];
-    mutate();
+    if (!(!subscription || subscription.status !== 'active')) mutate();
   };
 
   return {

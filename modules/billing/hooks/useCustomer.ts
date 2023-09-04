@@ -12,9 +12,11 @@ import { useUserBilling, useIdentityRepository } from '@modules/auth';
 interface ICustomerHook {
   customer: Customer | null;
   customerLoadingState: LoadingState;
-  getCustomer: (customerId: string) => void;
+  getCustomer: (customerId: string) => Promise<void>;
   createCustomer: (params: _customer.create_params) => Promise<Customer | null>;
-  assignPaymentRole: (params: _customer.assign_payment_role_params) => void;
+  assignPaymentRole: (
+    params: _customer.assign_payment_role_params,
+  ) => Promise<void>;
   provideCustomer: () => Promise<Customer | null>;
 }
 

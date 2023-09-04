@@ -14,7 +14,7 @@ interface PaymentMethodFormHook {
     cardRef: any,
     additionalData: { billingAddress: BillingAddressAdditionalData },
     onSuccess: (customerId: string, paymentSourceId: string) => void,
-  ) => void;
+  ) => Promise<void>;
 }
 
 export const usePaymentMethodForm = (): PaymentMethodFormHook => {

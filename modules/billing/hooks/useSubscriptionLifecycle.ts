@@ -9,9 +9,9 @@ import {
 
 interface ISubscriptionLifecycleHook {
   subscriptionLoadingState: LoadingState;
-  cancelSubscription: (params: { endOfTerm: boolean }) => void;
-  restoreSubscription: (id: string) => void;
-  reactivateSubscription: (id: string) => void;
+  cancelSubscription: (params: { endOfTerm: boolean }) => Promise<void>;
+  restoreSubscription: (id: string) => Promise<void>;
+  reactivateSubscription: (id: string) => Promise<void>;
 }
 
 export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {

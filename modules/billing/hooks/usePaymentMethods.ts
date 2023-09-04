@@ -14,14 +14,14 @@ interface IPaymentMethodsHook {
   paymentMethods: PaymentSource[];
   paymentMethodsLoadingState: LoadingState;
   paymentMethodLoadingState: LoadingState;
-  getPaymentMethod: (id: string) => void;
+  getPaymentMethod: (id: string) => Promise<void>;
   getPaymentMethods: VoidFunction;
   createPaymentMethod: (
     customerId: string,
     paymentIntentId: string,
     onSuccess: (customerId: string, paymentSourceId: string) => void,
-  ) => void;
-  deletePaymentMethod: (id: string) => void;
+  ) => Promise<void>;
+  deletePaymentMethod: (id: string) => Promise<void>;
   fetchPaymentMethods: VoidFunction;
 }
 
