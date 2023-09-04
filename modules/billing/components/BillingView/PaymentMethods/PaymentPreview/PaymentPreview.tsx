@@ -41,7 +41,7 @@ export const PaymentPreview = () => {
       {canUpdateBilling && (
         <Button
           size="small"
-          style="secondary"
+          style="outline"
           onClick={handleUpdate}
           css={spacing.top.medium}
         >
