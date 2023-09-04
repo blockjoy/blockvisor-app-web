@@ -24,7 +24,7 @@ export const useEstimates = (): IEstimatesHook => {
   const { data, error, isLoading, mutate } = useSWR(
     () =>
       subscription?.status === 'active'
-        ? BILLING_API_ROUTES.estimates.get
+        ? `${BILLING_API_ROUTES.estimates.get}_${subscription?.id}`
         : null,
     fetcher,
     {
