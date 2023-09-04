@@ -31,7 +31,7 @@ export const useBillingContacts = (): IBillingContactsHook => {
   const { data, error, isLoading, mutate } = useSWR(
     () =>
       subscription?.status === 'active'
-        ? BILLING_API_ROUTES.customer.contacts.list
+        ? `${BILLING_API_ROUTES.customer.contacts.list}_${subscription?.id}`
         : null,
     fetcher,
     {
