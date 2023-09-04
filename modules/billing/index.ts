@@ -23,6 +23,7 @@ export * from './components/BillingView/PaymentMethods/CreditCardForm/CreditCard
 export * from './components/BillingView/PaymentMethods/CreditCardForm/CardComponent/CardComponent';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimple';
+export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormSimpleLoader';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodInfoForm/PaymentMethodInfoForm';
 export * from './components/BillingView/PaymentMethods/PaymentMethodForm/PaymentMethodFormHeader';
 export * from './components/BillingView/PaymentMethods/PaymentMethods';

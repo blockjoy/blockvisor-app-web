@@ -114,7 +114,9 @@ export const PaymentMethodFormSimple = ({
     <div css={containers.mediumSmall}>
       <PaymentMethodFormHeader />
 
-      <CardComponent ref={cardRef} variant="simple" />
+      <div style={{ minHeight: '45px' }}>
+        <CardComponent ref={cardRef} variant="simple" />
+      </div>
 
       <div css={spacing.top.large}>
         <div css={[flex.display.flex, flex.direction.row]}>
