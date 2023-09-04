@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { ROUTES, formatters } from '@shared/index';
 import {
   BackButton,
-  DetailsView,
+  Badge,
   EmptyColumn,
   PageHeader,
   PageSection,
@@ -17,8 +17,9 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './InvoiceView.styles';
 import {
   InvoiceDownload,
-  InvoiceInfo,
   Services,
+  getInvoiceStatusColor,
+  getInvoiceStatusText,
   useInvoice,
 } from '@modules/billing';
 import IconCalendar from '@public/assets/icons/common/Calendar.svg';
@@ -75,7 +76,15 @@ export const InvoiceView = () => {
                   <div css={styles.headerWrapper}>
                     <div css={styles.header}>
                       <h2 css={styles.headline}>
-                        Invoice #<b>{`${invoice.id}`}</b>
+                        <span>
+                          Invoice #<b>{`${invoice.id}`}</b>
+                        </span>
+                        <Badge
+                          color={getInvoiceStatusColor(invoice.status)}
+                          style="outline"
+                        >
+                          {getInvoiceStatusText(invoice.status)}
+                        </Badge>
                       </h2>
                       {invoice?.date && (
                         <div css={styles.info}>
@@ -90,19 +99,14 @@ export const InvoiceView = () => {
                     </div>
                     <InvoiceDownload invoice={invoice} />
                   </div>
-                  <div css={styles.details}>
-                    <DetailsView headline="Invoice info">
-                      <InvoiceInfo invoice={invoice} />
-                    </DetailsView>
-                    <DetailsView headline="Services">
-                      {invoice?.line_items && invoice?.total !== undefined && (
-                        <Services
-                          services={invoice.line_items}
-                          total={invoice.total}
-                        />
-                      )}
-                    </DetailsView>
-                  </div>
+                  {invoice?.line_items && invoice?.total !== undefined && (
+                    <div css={styles.details}>
+                      <Services
+                        services={invoice.line_items}
+                        total={invoice.total}
+                      />
+                    </div>
+                  )}
                 </>
               ) : (
                 <EmptyColumn
