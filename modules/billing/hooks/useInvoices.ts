@@ -42,7 +42,7 @@ export const useInvoices = (
   const { data, error, isLoading, mutate } = useSWR(
     () =>
       subscription?.status === 'active'
-        ? BILLING_API_ROUTES.invoices.list
+        ? `${BILLING_API_ROUTES.invoices.list}_${subscription?.id}`
         : null,
     fetcher,
     {
