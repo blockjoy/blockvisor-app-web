@@ -3,7 +3,10 @@ import { Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentRequired.styles';
-import { PaymentMethodFormSimple } from '@modules/billing';
+import {
+  PaymentMethodFormSimple,
+  PaymentMethodFormSimpleLoader,
+} from '@modules/billing';
 
 type PaymentRequiredProps = {
   warningMessage?: string;
@@ -42,12 +45,14 @@ export const PaymentRequired = ({
         {warningMessage && <p>{warningMessage}</p>}
         <p>Please enter your payment details to continue.</p>
       </div>
-      {isModalVisible && (
+      {isModalVisible ? (
         <PaymentMethodFormSimple
           handleSubmit={handleSubmit}
           handleCancel={handleCancel}
           handleHide={handleHide}
         />
+      ) : (
+        <PaymentMethodFormSimpleLoader />
       )}
     </Modal>
   );
