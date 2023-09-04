@@ -11,7 +11,10 @@ import {
 interface IBillingAddressHook {
   billingAddress: BillingAddress | null;
   billingAddressLoadingState: LoadingState;
-  addBillingAddress: (customerId: string, card: BillingAddressForm) => void;
+  addBillingAddress: (
+    customerId: string,
+    card: BillingAddressForm,
+  ) => Promise<void>;
 }
 
 export const useBillingAddress = (): IBillingAddressHook => {

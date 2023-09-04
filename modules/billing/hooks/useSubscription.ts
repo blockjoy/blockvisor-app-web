@@ -14,19 +14,21 @@ import { authAtoms, useUserSubscription } from '@modules/auth';
 interface ISubscriptionHook {
   subscriptionLoadingState: LoadingState;
   setSubscriptionLoadingState: SetterOrUpdater<LoadingState>;
-  getSubscription: (id: string) => void;
+  getSubscription: (id: string) => Promise<void>;
   createSubscription: (params: {
     itemPriceId: string;
     autoRenew: boolean;
     paymentMethodId: string;
-  }) => void;
-  updateSubscription: (params: _subscription.update_for_items_params) => void;
+  }) => Promise<void>;
+  updateSubscription: (
+    params: _subscription.update_for_items_params,
+  ) => Promise<void>;
   updateBillingProfile: (
     id: string,
     params: { paymentMethodId: string },
-  ) => void;
+  ) => Promise<void>;
   provideSubscription: () => Promise<Subscription | null>;
-  fetchSubscription: (id?: string) => void;
+  fetchSubscription: (id?: string) => Promise<void>;
 }
 
 export const useSubscription = (): ISubscriptionHook => {

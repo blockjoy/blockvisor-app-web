@@ -26,7 +26,7 @@ interface IUpdateSubscriptionHook {
   updateSubscriptionItems: (action: {
     type: UpdateSubscriptionAction;
     payload: UpdateSubscriptionPayload;
-  }) => void;
+  }) => Promise<void>;
 }
 
 export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {

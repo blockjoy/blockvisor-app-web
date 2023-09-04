@@ -9,7 +9,7 @@ import {
 interface IInvoiceHook {
   invoice: Invoice | null;
   invoiceLoadingState: LoadingState;
-  getInvoice: (id: string) => void;
+  getInvoice: (id: string) => Promise<void>;
   getInvoicePDF: (id: string) => Promise<Invoice | null>;
   unloadInvoice: VoidFunction;
 }
