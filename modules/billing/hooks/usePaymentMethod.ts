@@ -15,6 +15,9 @@ interface IPaymentMethodHook {
 
 export const usePaymentMethod = (): IPaymentMethodHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscriptionPaymentMethod = useRecoilValue(
+    billingSelectors.paymentMethodById(subscription?.payment_source_id!),
+  );
 
   const fetcher = () =>
     fetchBilling(BILLING_API_ROUTES.payments.sources.get, {
@@ -35,14 +38,19 @@ export const usePaymentMethod = (): IPaymentMethodHook => {
 
   if (error) console.error('Failed to fetch Payment Methods', error);
 
-  const paymentMethodLoadingState: LoadingState = isLoading
-    ? 'initializing'
-    : 'finished';
+  const paymentMethodLoadingState: LoadingState =
+    isLoading && !subscriptionPaymentMethod ? 'initializing' : 'finished';
 
-  const getPaymentMethod = () => mutate();
+  const getPaymentMethod = () => {
+    if (!subscriptionPaymentMethod) mutate();
+  };
+
+  const returnedPaymentMethod = subscriptionPaymentMethod
+    ? subscriptionPaymentMethod
+    : data;
 
   return {
-    paymentMethod: data,
+    paymentMethod: returnedPaymentMethod,
     paymentMethodLoadingState,
 
     getPaymentMethod,
