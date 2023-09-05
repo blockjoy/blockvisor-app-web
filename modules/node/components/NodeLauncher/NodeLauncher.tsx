@@ -24,7 +24,6 @@ import {
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
-  Blockchain,
   BlockchainNodeType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -41,14 +40,15 @@ import {
   Permissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { authSelectors } from '@modules/auth';
+import { useHostList } from '@modules/host';
 
 export type NodeLauncherState = {
   blockchainId: string;
   nodeTypeVersion: string;
   nodeType: NodeType;
-  properties: NodeProperty[];
+  properties?: NodeProperty[];
   keyFiles?: NodeFiles[];
-  network: string;
+  network?: string;
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];
   placement: NodePlacement;
@@ -70,10 +70,11 @@ export const NodeLauncher = () => {
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
+  const { hostList } = useHostList();
 
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
-  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const [selectedNodeType, setSelectedNodeType] =
     useState<BlockchainNodeType>();
@@ -86,33 +87,34 @@ export const NodeLauncher = () => {
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
     nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
-    properties: [],
     nodeTypeVersion: '',
-    network: '',
     allowIps: [],
     denyIps: [],
     placement: {},
   });
 
   const isNodeValid = Boolean(
-    node.blockchainId && node.nodeType && selectedRegion,
+    node.blockchainId && node.nodeType && (selectedHost || selectedRegion),
   );
 
-  const isConfigValid = !selectedVersion?.networks
-    ? null
-    : Boolean(
+  const isConfigValid =
+    Boolean(node.network) &&
+    (!node.properties?.length ||
+      Boolean(
         node.properties
           ?.filter(
             (type: NodeProperty) =>
-              type.required && type.uiType !== UiType.UI_TYPE_FILE_UPLOAD,
+              type.required &&
+              type.uiType !== UiType.UI_TYPE_FILE_UPLOAD &&
+              type.uiType !== UiType.UI_TYPE_SWITCH,
           )
-          .every((type) => type.value || type.uiType === UiType.UI_TYPE_SWITCH),
-      );
+          .every((type) => type.value),
+      ));
 
   const handleProtocolSelected = (
     blockchainId: string,
     nodeType: NodeType,
-    properties: NodeProperty[],
+    properties?: NodeProperty[],
   ) => {
     setServerError(undefined);
     setIsCreating(false);
@@ -143,7 +145,7 @@ export const NodeLauncher = () => {
   const handleNodeConfigPropertyChanged = (e: any) => {
     setServerError('');
 
-    const propertiesCopy = [...node.properties];
+    const propertiesCopy = [...node.properties!];
 
     let foundProperty = propertiesCopy.find(
       (property) => property.name === e.target.name,
@@ -175,6 +177,7 @@ export const NodeLauncher = () => {
   const handleHostChanged = (host: Host | null) => {
     Mixpanel.track('Launch Node - Host Changed');
     setSelectedHost(host);
+    setSelectedRegion(undefined);
   };
 
   const handleRegionChanged = (region: string) => {
@@ -217,8 +220,8 @@ export const NodeLauncher = () => {
       version: selectedVersion?.version!,
       nodeType: +node.nodeType ?? 0,
       blockchainId: node.blockchainId ?? '',
-      properties: node.properties,
-      network: node.network,
+      properties: node.properties!,
+      network: node.network!,
       allowIps: node.allowIps,
       denyIps: node.denyIps,
       placement: selectedHost
@@ -273,30 +276,36 @@ export const NodeLauncher = () => {
   }, [node.blockchainId, node.nodeType]);
 
   useEffect(() => {
-    const nodeTypePropertiesCopy = [...(selectedVersion?.properties! || [])];
+    let properties: NodeProperty[] | undefined, keyFiles;
 
-    const properties: NodeProperty[] = nodeTypePropertiesCopy.map(
-      (property) => ({
+    if (selectedVersion?.properties.length) {
+      const nodeTypePropertiesCopy = [...selectedVersion?.properties!];
+
+      properties = nodeTypePropertiesCopy.map((property) => ({
         ...property,
         value: property.default ?? '',
         disabled: false,
-      }),
-    );
-
-    const keyFiles: NodeFiles[] = properties
-      .filter((p) => p.uiType === UiType.UI_TYPE_FILE_UPLOAD)
-      .map((p) => ({
-        name: p.name,
-        files: [],
       }));
+
+      keyFiles = properties
+        .filter((p) => p.uiType === UiType.UI_TYPE_FILE_UPLOAD)
+        .map((p) => ({
+          name: p.name,
+          files: [],
+        }));
+    }
 
     setNode({
       ...node,
       keyFiles,
       properties,
-      network: sortNetworks(selectedVersion?.networks! || [])[0]?.name,
+      network: sortNetworks(selectedVersion?.networks)[0]?.name,
     });
   }, [selectedVersion?.id]);
+
+  useEffect(() => {
+    setSelectedHost(null);
+  }, [hostList]);
 
   useEffect(() => {
     Mixpanel.track('Launch Node - Opened');
@@ -311,18 +320,15 @@ export const NodeLauncher = () => {
           blockchainId={node.blockchainId}
           nodeType={node.nodeType}
         />
-        {Boolean(
-          node.blockchainId && node.nodeType && node.properties?.length,
-        ) && (
+        {Boolean(node.blockchainId && node.nodeType) && (
           <NodeLauncherConfig
-            isConfigValid={isConfigValid}
             onFileUploaded={handleFileUploaded}
             onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
             onNodePropertyChanged={handleNodePropertyChanged}
             onVersionChanged={handleVersionChanged}
-            selectedVersion={selectedVersion!}
-            networks={sortNetworks(selectedVersion?.networks! || [])}
-            versions={sortVersions(selectedNodeType?.versions! || [])}
+            selectedVersion={selectedVersion}
+            networks={sortNetworks(selectedVersion?.networks)}
+            versions={sortVersions(selectedNodeType?.versions)}
             nodeLauncherState={node}
           />
         )}
@@ -334,12 +340,7 @@ export const NodeLauncher = () => {
             />
           </div>
         )}
-        {Boolean(
-          node.blockchainId &&
-            node.nodeType &&
-            node?.properties?.length &&
-            selectedVersion?.id,
-        ) && (
+        {Boolean(node.blockchainId && node.nodeType && selectedVersion?.id) && (
           <NodeLauncherSummary
             hasNetworkList={Boolean(selectedVersion?.networks?.length)}
             serverError={serverError!}

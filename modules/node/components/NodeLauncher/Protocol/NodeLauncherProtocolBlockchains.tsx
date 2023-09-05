@@ -1,22 +1,13 @@
 import { useGetBlockchains } from '@modules/node';
 import { BlockchainIcon, EmptyColumn, sort } from '@shared/components';
-import { NodeProperty, NodeType } from '@modules/grpc/library/blockjoy/v1/node';
-import {
-  BlockchainNodeType,
-  BlockchainVersion,
-} from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { NodeType } from '@modules/grpc/library/blockjoy/v1/node';
 import { styles } from './NodeLauncherProtocolBlockchains.styles';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { onlyUnique } from '@shared/utils/onlyUnique';
 
 type Props = {
   keyword: string;
-  onProtocolSelected: (
-    blockchainId: string,
-    nodeTypeId: NodeType,
-    nodeTypeProperties: NodeProperty[],
-    nodeVersion: BlockchainVersion,
-  ) => void;
+  onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
   activeBlockchainId: string;
   activeNodeType: NodeType;
 };
@@ -32,32 +23,6 @@ export const NodeLauncherProtocolBlockchains = ({
   const filteredBlockchains = blockchains?.filter((b) =>
     b.name?.toLowerCase().includes(keyword.toLowerCase()),
   );
-
-  const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
-    const blockchainsCopy = [...blockchains];
-
-    const foundActiveNodeType = blockchainsCopy?.find(
-      (b) => b.id === blockchainId,
-    );
-
-    const foundActiveSupportedNodeType = foundActiveNodeType?.nodeTypes!.find(
-      (n: BlockchainNodeType) => n.nodeType === nodeType,
-    );
-
-    onProtocolSelected(
-      blockchainId,
-      nodeType,
-      foundActiveSupportedNodeType?.versions[0]?.properties.map((property) => ({
-        name: property.name,
-        uiType: property.uiType,
-        required: property.required,
-        disabled: false,
-        displayName: property.displayName,
-        value: property.default ?? '',
-      }))!,
-      foundActiveSupportedNodeType?.versions[0]!,
-    );
-  };
 
   return (
     <>
@@ -86,7 +51,7 @@ export const NodeLauncherProtocolBlockchains = ({
               <span css={styles.blockchainWrapper}>
                 <button
                   onClick={() =>
-                    handleProtocolSelected(b.id!, sortedNodeTypes[0].nodeType)
+                    onProtocolSelected(b.id!, sortedNodeTypes[0].nodeType)
                   }
                   css={styles.name}
                 >
@@ -112,7 +77,7 @@ export const NodeLauncherProtocolBlockchains = ({
                           ? 'active'
                           : ''
                       }
-                      onClick={() => handleProtocolSelected(b.id!, nodeType)}
+                      onClick={() => onProtocolSelected(b.id!, nodeType)}
                       type="button"
                       css={styles.createButton}
                     >

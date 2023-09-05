@@ -35,6 +35,7 @@ export const HostSelect = ({ selectedHost, onChange }: HostSelectProps) => {
       onClose={() => setIsOpen(false)}
     >
       <DropdownButton
+        disabled={!hosts.length}
         text={
           <p>{escapeHtml(selectedHost ? selectedHost.name : 'Auto select')}</p>
         }
