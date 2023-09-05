@@ -49,7 +49,7 @@ export const mapSubscriptionToDetails = (
         <Switch
           name="autoRenew"
           additionalStyles={styles.noBottomMargin}
-          disabled={false}
+          disabled={subscription?.status !== 'active'}
           tooltip="Subscription's auto renewal"
           checked={autoRenew}
           onPropertyChanged={handleAutoRenew}

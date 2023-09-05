@@ -71,7 +71,7 @@ export const SubscriptionInfo = ({ itemPrices }: SubscriptionInfoProps) => {
     <div css={containers.mediumSmall}>
       <DetailsTable bodyElements={subscriptionData} />
       <Button
-        disabled={!isDirty}
+        disabled={!isDirty || subscription?.status !== 'active'}
         style="secondary"
         size="small"
         onClick={handleUpdateSubscription}
