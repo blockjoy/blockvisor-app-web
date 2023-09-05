@@ -42,18 +42,12 @@ export const useNodeAdd = () => {
     };
 
     try {
-      const nodeParams = {
-        ...nodeRequest,
-        properties: nodeProperties,
-        network: nodeRequest.network,
-      };
-
       // Only add to subscription if node is not hosted
       if (!nodeRequest.placement?.hostId)
         try {
           await updateSubscriptionItems({
             type: UpdateSubscriptionAction.ADD_NODE,
-            payload: { node: nodeParams },
+            payload: { node: nodeRequest },
           });
         } catch (error: any) {
           const errorMessage = generateError(error);
@@ -61,7 +55,7 @@ export const useNodeAdd = () => {
           return;
         }
 
-      const response: Node = await nodeClient.createNode(nodeParams);
+      const response: Node = await nodeClient.createNode(nodeRequest);
 
       const nodeId = response.id;
       // Add node to the subscription

@@ -33,8 +33,6 @@ import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
-import { useSubscription } from '@modules/billing';
-import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import {
   PermissionsCreateResource,
@@ -70,7 +68,6 @@ export const NodeLauncher = () => {
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
-  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
@@ -366,9 +363,18 @@ export const NodeLauncher = () => {
   }, []);
 
   useEffect(() => {
+<<<<<<< HEAD
     if (fulfilRequirements) {
       handleNodeCreation();
     }
+=======
+    if (serverError) setServerError(undefined);
+    if (fulfilRequirements) setFulfilRequirements(false);
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    if (fulfilRequirements) handleNodeCreation();
+>>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   }, [fulfilRequirements]);
 
   return (

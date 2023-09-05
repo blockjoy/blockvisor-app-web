@@ -98,9 +98,15 @@ export const NodeLauncherSummary = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
+<<<<<<< HEAD
         {!hasNetworkList || canAddNode !== PermissionsCreateResource.GRANTED ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
             Cannot launch node, missing network configuration.
+=======
+        {!hasNetworkList ? (
+          <div css={[colors.warning, spacing.bottom.medium]}>
+            Cannot launch node, missing network configuration.{' '}
+>>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
           </div>
         ) : (
           <>
@@ -178,7 +184,11 @@ export const NodeLauncherSummary = ({
             noWrap
             top="-30px"
             left="50%"
+<<<<<<< HEAD
             tooltip="Feature disabled during beta."
+=======
+            tooltip="Insufficient permissions to launch node."
+>>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
           />
         )}
         <button
