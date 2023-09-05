@@ -161,16 +161,11 @@ export interface Node {
   placement:
     | NodePlacement
     | undefined;
-<<<<<<< HEAD
   /**
    * The place where the blockchain data directory should be mounted on the
    * host.
    */
   dataDirectoryMountpoint?: string | undefined;
-=======
-  /** The place where the net data directory should be mounted on the host. */
-  netdataDirectoryMointpoint?: string | undefined;
->>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
 }
 
 /** This message is used to create a new node. */
@@ -452,11 +447,7 @@ function createBaseNode(): Node {
     allowIps: [],
     denyIps: [],
     placement: undefined,
-<<<<<<< HEAD
     dataDirectoryMountpoint: undefined,
-=======
-    netdataDirectoryMointpoint: undefined,
->>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
   };
 }
 
@@ -552,13 +543,8 @@ export const Node = {
     if (message.placement !== undefined) {
       NodePlacement.encode(message.placement, writer.uint32(242).fork()).ldelim();
     }
-<<<<<<< HEAD
     if (message.dataDirectoryMountpoint !== undefined) {
       writer.uint32(250).string(message.dataDirectoryMountpoint);
-=======
-    if (message.netdataDirectoryMointpoint !== undefined) {
-      writer.uint32(250).string(message.netdataDirectoryMointpoint);
->>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     }
     return writer;
   },
@@ -785,11 +771,7 @@ export const Node = {
             break;
           }
 
-<<<<<<< HEAD
           message.dataDirectoryMountpoint = reader.string();
-=======
-          message.netdataDirectoryMointpoint = reader.string();
->>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -838,11 +820,7 @@ export const Node = {
     message.placement = (object.placement !== undefined && object.placement !== null)
       ? NodePlacement.fromPartial(object.placement)
       : undefined;
-<<<<<<< HEAD
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
-=======
-    message.netdataDirectoryMointpoint = object.netdataDirectoryMointpoint ?? undefined;
->>>>>>> 35dee5d0 (feat: [sc-2354] rebased develop, permissions, swr, caching, revalidation, reduced loaders, ui improvements)
     return message;
   },
 };

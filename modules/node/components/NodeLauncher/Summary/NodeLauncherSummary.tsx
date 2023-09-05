@@ -72,11 +72,9 @@ export const NodeLauncherSummary = ({
 
       <FormLabel>Summary</FormLabel>
       <div css={styles.summary}>
-        {!hasNetworkList || !canAddNode ? (
+        {!hasNetworkList ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
-            {!canAddNode
-              ? 'Cannot launch node due to insufficient permissions.'
-              : 'Cannot launch node, missing network configuration'}
+            Cannot launch node, missing network configuration.{' '}
           </div>
         ) : (
           <>
@@ -149,6 +147,14 @@ export const NodeLauncherSummary = ({
         )}
       </div>
       <div css={styles.buttons}>
+        {!canAddNode && (
+          <Tooltip
+            noWrap
+            top="-30px"
+            left="50%"
+            tooltip="Insufficient permissions to launch node."
+          />
+        )}
         <button
           tabIndex={20}
           onClick={onCreateNodeClicked}

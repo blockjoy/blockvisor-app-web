@@ -1,16 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 import {
-  Alert,
   Button,
   CopyToClipboard,
   FormHeaderCaps,
   FormLabelCaps,
   FormText,
   OrganizationSelect,
-  Skeleton,
   SvgIcon,
+  Tooltip,
 } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
@@ -20,11 +19,7 @@ import {
   useDefaultOrganization,
 } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
-import {
-  billingAtoms,
-  billingSelectors,
-  PaymentRequired,
-} from '@modules/billing';
+import { billingSelectors, PaymentRequired } from '@modules/billing';
 
 import {
   useHasPermissions,
@@ -41,14 +36,10 @@ export const HostLauncher = () => {
   const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
   );
-
-  const [activeView, setActiveView] = useState<'view' | 'action'>('view');
-
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
-  const subscriptionLoadingState = useRecoilValue(
-    billingAtoms.subscriptionLoadingState,
-  );
+  const [activeView, setActiveView] = useState<'view' | 'action'>('view');
+  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
 
   const canAddHost: boolean = useHasPermissions(
     userRole,
@@ -62,8 +53,30 @@ export const HostLauncher = () => {
     ? provisionToken
     : provisionToken?.replace(/./g, '*');
 
-  const handleAddingPaymentMethod = () => setActiveView('action');
   const handleHidingPortal = () => setActiveView('view');
+
+  const handleHostCreation = async () => {
+    await resetProvisionToken(defaultOrganization?.id!);
+    setFulfilRequirements(false);
+  };
+
+  const handleCreateHostClicked = () => {
+    if (!hasPaymentMethod) {
+      setActiveView('action');
+      setFulfilRequirements(false);
+      return;
+    }
+
+    setFulfilRequirements(true);
+  };
+
+  useEffect(() => {
+    if (fulfilRequirements) setFulfilRequirements(false);
+  }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    if (fulfilRequirements) handleHostCreation();
+  }, [fulfilRequirements]);
 
   return (
     <>
@@ -80,52 +93,40 @@ export const HostLauncher = () => {
           </li>
           <li>
             <div css={spacing.bottom.medium}>
-              <FormLabelCaps>Confirm Subscription Status</FormLabelCaps>
-              {subscriptionLoadingState !== 'finished' ? (
-                <Skeleton width="160px" />
-              ) : (
-                <>
-                  <Alert isSuccess={!isDisabledAdding} noBottomMargin>
-                    {isDisabledAdding
-                      ? !canAddHost
-                        ? 'Cannot launch host due to insufficient permissions.'
-                        : 'Set up a payment method to add new hosts.'
-                      : 'Good to go!'}
-                  </Alert>
-                  {canAddHost && !hasPaymentMethod && (
-                    <Button
-                      style="outline"
-                      size="small"
-                      css={[spacing.top.medium, styles.button]}
-                      onClick={handleAddingPaymentMethod}
-                      loading={provisionTokenLoadingState !== 'finished'}
-                    >
-                      Add payment method
-                    </Button>
-                  )}
-                </>
-              )}
-            </div>
-          </li>
-          <li>
-            <div css={spacing.bottom.medium}>
               <FormLabelCaps>Run terminal command</FormLabelCaps>
               <FormText>
                 Launch a new host by running this command on any server
               </FormText>
-              <CopyToClipboard
-                value={`bvup ${token}`}
-                disabled={isDisabledAdding}
-              />
+              <div css={[styles.copy, spacing.bottom.medium]}>
+                <CopyToClipboard
+                  value={`bvup ${token}`}
+                  disabled={isDisabledAdding}
+                />
+                {isDisabledAdding && (
+                  <Tooltip
+                    noWrap
+                    top="-30px"
+                    left="50%"
+                    tooltip={
+                      !canAddHost
+                        ? 'Insufficient permissions to launch host.'
+                        : 'Payment required to launch host.'
+                    }
+                  />
+                )}
+              </div>
               <Button
                 style="outline"
                 size="small"
                 disabled={
-                  provisionTokenLoadingState !== 'finished' || isDisabledAdding
+                  provisionTokenLoadingState !== 'finished' || !canAddHost
                 }
-                css={[spacing.top.medium, styles.button]}
-                onClick={() => resetProvisionToken(defaultOrganization?.id!)}
+                css={styles.button}
+                onClick={handleCreateHostClicked}
                 loading={provisionTokenLoadingState !== 'finished'}
+                {...(!canAddHost && {
+                  tooltip: 'Insufficient permissions to launch host.',
+                })}
               >
                 <SvgIcon>
                   <IconRefresh />
@@ -144,7 +145,7 @@ export const HostLauncher = () => {
       </div>
       {activeView === 'action' && (
         <PaymentRequired
-          warningMessage="Creating a Host requires a payment method."
+          warningMessage="Payment required to launch host."
           handleCancel={handleHidingPortal}
           handleSubmit={handleHidingPortal}
           handleHide={handleHidingPortal}

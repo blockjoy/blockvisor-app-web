@@ -33,6 +33,7 @@ const userRoleName = selector<string>({
 
 export const authSelectors = {
   isSuperUser,
+
   userRole,
   userRoleName,
 };

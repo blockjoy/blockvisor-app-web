@@ -41,8 +41,6 @@ import {
 } from '@modules/auth/hooks/useHasPermissions';
 import { authSelectors } from '@modules/auth';
 import { useHostList } from '@modules/host';
-import { useSubscription } from '@modules/billing';
-import { useUpdateSubscription } from '@modules/billing';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 
 export type NodeLauncherState = {
@@ -74,7 +72,6 @@ export const NodeLauncher = () => {
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
-  const { updateSubscriptionItems } = useUpdateSubscription();
 
   const userRole = useRecoilValue(authSelectors.userRole);
   const userRoleInOrganization = useRecoilValue(
@@ -346,9 +343,7 @@ export const NodeLauncher = () => {
   }, [defaultOrganization?.id]);
 
   useEffect(() => {
-    if (fulfilRequirements) {
-      handleNodeCreation();
-    }
+    if (fulfilRequirements) handleNodeCreation();
   }, [fulfilRequirements]);
 
   return (
