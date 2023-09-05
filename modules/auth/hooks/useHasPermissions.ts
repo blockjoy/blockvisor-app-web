@@ -168,6 +168,8 @@ export const useHasPermissions = (
 ): boolean => {
   if (!!!usrRole) return false;
 
+  // Disable features for non-blockjoy SuperAdmins during BETA
+  // if (usrRole !== UserRole.USER_ROLE_BLOCKJOY_ADMIN) return false;
   if (usrRole === UserRole.USER_ROLE_BLOCKJOY_ADMIN) return true;
 
   if (!!!orgRole || !!!permissions) return false;
