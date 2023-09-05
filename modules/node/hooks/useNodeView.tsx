@@ -79,12 +79,11 @@ export const useNodeView = (): Hook => {
     await nodeClient.deleteNode(uuid);
 
     // Remove node from the subscription
-    await updateSubscriptionItems({
+    updateSubscriptionItems({
       type: UpdateSubscriptionAction.REMOVE_NODE,
       payload: { node: node! },
     });
 
-    // Update organization node count
     const activeOrganization = organizations.find(
       (org) => org.id === defaultOrganization?.id,
     );
