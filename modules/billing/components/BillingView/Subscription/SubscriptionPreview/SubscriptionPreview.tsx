@@ -36,7 +36,10 @@ export const SubscriptionPreview = ({
   return (
     <>
       <DetailsView headline="Info">
-        <SubscriptionInfo itemPrices={itemPrices} />
+        <SubscriptionInfo
+          itemPrices={itemPrices}
+          onlyPreview={!canUpdateBilling}
+        />
       </DetailsView>
       {subscription?.status === 'active' && (
         <DetailsView headline="Payment information">
