@@ -27,7 +27,7 @@ export const Estimates = () => {
         <div css={containers.medium}>
           <Alert>
             Unlock the full potential of our platform by ensuring your
-            subscription is active. Only then can you view our comprehensive
+            subscription is active. Only then can you view subscription
             estimates.
           </Alert>
         </div>

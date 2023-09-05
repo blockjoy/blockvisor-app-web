@@ -5,11 +5,15 @@ import {
   BillingContactForm,
   useBillingContacts,
   checkIfBillingContactExists,
+  billingSelectors,
 } from '@modules/billing';
 import { Button, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
+import { useRecoilValue } from 'recoil';
 
 export const BillingContacts = () => {
+  const subscription = useRecoilValue(billingSelectors.subscription);
+
   const {
     billingContacts,
     billingContactsLoadingState,
@@ -48,23 +52,25 @@ export const BillingContacts = () => {
 
   return activeView === 'list' ? (
     <>
-      {!billingContacts?.length ? (
-        <p>
-          You have not yet added any billing contacts. Click the button below to
-          add one.
-        </p>
-      ) : (
-        <BillingContactsList
-          billingContacts={billingContacts}
-          handleRemove={removeBillingContact}
-        />
-      )}
-
+      <div css={spacing.bottom.medium}>
+        {!billingContacts?.length ? (
+          <p>
+            You have not yet added any billing contacts. Click the button below
+            to add one.
+          </p>
+        ) : (
+          <BillingContactsList
+            billingContacts={billingContacts}
+            handleRemove={removeBillingContact}
+          />
+        )}
+      </div>
       <Button
         onClick={handleAdding}
         size="small"
         style="outline"
-        customCss={[spacing.top.medium]}
+        disabled={subscription?.status !== 'active'}
+        tooltip="Cannot add with cancelled subscription"
       >
         Add Billing Contact
       </Button>
