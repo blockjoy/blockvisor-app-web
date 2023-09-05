@@ -1,11 +1,5 @@
 import { itemsPerPage } from '@shared/index';
 
-export type ItemsPerPage = {
-  sm: number;
-  lg: number;
-  xxl: number;
-};
-
 export type Pagination = {
   current_page: number;
   items_per_page: number;
