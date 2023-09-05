@@ -132,7 +132,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         activeTab={activeTab}
         onTabClick={handleClick}
         tabItems={tabItems}
-        isLoading={subscriptionLoadingState !== 'finished'}
+        isLoading={subscriptionLoadingState === 'initializing'}
       />
     </>
   );

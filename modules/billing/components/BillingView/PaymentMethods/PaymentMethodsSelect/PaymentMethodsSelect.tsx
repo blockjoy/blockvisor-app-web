@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import {
   PaymentMethodsDropdown,
@@ -46,6 +46,8 @@ export const PaymentMethodsSelect = ({
     onHide();
   };
 
+  const isDirty = currentPaymentMethod !== activePaymentMethod;
+
   if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
 
   return (
@@ -63,7 +65,12 @@ export const PaymentMethodsSelect = ({
         primaryId={activePaymentMethod?.id}
       />
       <ButtonGroup>
-        <Button size="small" style="secondary" onClick={handleConfirm}>
+        <Button
+          size="small"
+          style="secondary"
+          onClick={handleConfirm}
+          disabled={!isDirty}
+        >
           Confirm
         </Button>
         <Button size="small" style="outline" onClick={onHide}>

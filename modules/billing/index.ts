@@ -13,7 +13,6 @@ export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddres
 export * from './components/BillingView/Estimates/Estimates';
 
 export * from './components/BillingView/Invoices/Invoices';
-export * from './components/BillingView/Invoices/InvoiceView/InvoiceInfo/InvoiceInfo';
 export * from './components/BillingView/Invoices/InvoiceView/InvoiceView';
 export * from './components/BillingView/Invoices/InvoiceView/Services/Services';
 export * from './components/BillingView/Invoices/InvoicesList/InvoicesList';
@@ -38,11 +37,12 @@ export * from './components/BillingView/Plan/PlanConfiguration/PlanConfiguration
 export * from './components/BillingView/Plan/PlanItem/PlanItem';
 
 export * from './components/BillingView/Subscription/Subscription';
+export * from './components/BillingView/Subscription/SubscriptionActions/SubscriptionActions';
 export * from './components/BillingView/Subscription/SubscriptionCancellation/SubscriptionCancellation';
 export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionInfo/SubscriptionInfo';
 export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionPreview';
-export * from './components/BillingView/Subscription/SubscriptionUpdate/SubscriptionUpdate';
 
+export * from './components/Shared/BillingPeriodSelect/BillingPeriodSelect';
 export * from './components/Shared/InvoiceDownload/InvoiceDownload';
 export * from './components/Shared/PaymentIcon/PaymentIcon';
 export * from './components/Shared/PaymentMethodsDropdown/PaymentMethodsDropdown';
@@ -88,7 +88,6 @@ export * from './utils/getStatuses';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapCardToDetails';
 export * from './utils/mapEstimatesToRows';
-export * from './utils/mapInvoiceToDetails';
 export * from './utils/mapInvoicesToRows';
 export * from './utils/mapPaymentMethodsToRows';
 export * from './utils/mapServicesToRows';

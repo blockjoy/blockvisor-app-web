@@ -1,5 +1,4 @@
 import { ChangeEventHandler, ReactNode } from 'react';
-import { display } from 'styles/utils.display.styles';
 import { styles } from './RadioButton.styles';
 
 type RadioButtonProps = {

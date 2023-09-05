@@ -18,3 +18,14 @@ export const AVAILABLE_PAYMENT_METHODS: AvailablePaymentMethod[] = [
     title: 'Visa',
   },
 ];
+
+export const BILLING_PERIOD: BillingPeriod[] = [
+  {
+    id: 'year',
+    title: 'Yearly',
+  },
+  {
+    id: 'month',
+    title: 'Montlhy',
+  },
+];

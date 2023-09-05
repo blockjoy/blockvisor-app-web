@@ -6,6 +6,7 @@ import {
   billingSelectors,
   PaymentMethodsSelect,
   usePaymentMethod,
+  billingAtoms,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
@@ -17,6 +18,10 @@ export const PaymentPreview = () => {
   const [activeView, setActiveView] = useState<'list' | 'dialog'>('list');
 
   const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscriptionPaymentMethodLoadingState = useRecoilValue(
+    billingAtoms.subscriptionPaymentMethodLoadingState,
+  );
+
   const userRole = useRecoilValue(authSelectors.userRole);
   const userRoleInOrganization = useRecoilValue(
     organizationSelectors.userRoleInOrganization,
@@ -33,7 +38,11 @@ export const PaymentPreview = () => {
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');
 
-  if (paymentMethodLoadingState !== 'finished') return <TableSkeleton />;
+  if (
+    paymentMethodLoadingState !== 'finished' ||
+    subscriptionPaymentMethodLoadingState === 'loading'
+  )
+    return <TableSkeleton />;
 
   return activeView === 'list' ? (
     <div css={containers.mediumSmall}>
