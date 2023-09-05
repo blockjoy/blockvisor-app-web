@@ -18,7 +18,7 @@ export type InitialQueryParams = {
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     currentPage: 1,
-    itemsPerPage: itemsPerPage['lg'],
+    itemsPerPage: itemsPerPage['xl'],
   },
   sorting: { order: 'desc', field: 'date' },
 };
