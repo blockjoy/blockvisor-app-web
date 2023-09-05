@@ -44,7 +44,10 @@ export const BillingPeriodSelect = ({
         text={<p>{activePeriod?.title}</p>}
         onClick={handleClick}
         isOpen={isOpen}
-        disabled={subscription?.billing_period_unit === 'year'}
+        disabled={
+          subscription?.billing_period_unit === 'year' ||
+          subscription?.status !== 'active'
+        }
       />
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
