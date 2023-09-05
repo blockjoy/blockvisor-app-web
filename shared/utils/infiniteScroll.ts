@@ -1,9 +1,17 @@
 import { isMobile, isTablet } from 'react-device-detect';
 
-export const itemsPerPage = {
+export type ItemsPerPage = {
+  sm: number;
+  lg: number;
+  xl: number;
+  xxl: number;
+};
+
+export const itemsPerPage: ItemsPerPage = {
   sm: 18,
   lg: 36,
-  xxl: 48,
+  xl: 48,
+  xxl: 100,
 };
 
 export const numOfItemsPerPage = () => {
