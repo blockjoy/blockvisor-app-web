@@ -17,6 +17,7 @@ const styles = {
 export const mapSubscriptionToDetails = (
   subscription: Subscription,
   props: UpdateSubscriptionProperties,
+  onlyPreview: boolean = false,
 ) => {
   const { value: autoRenew, handleUpdate: handleAutoRenew } = props.renew;
   const { value: periodUnit, handleUpdate: handlePeriodUnit } = props.period;
@@ -29,7 +30,11 @@ export const mapSubscriptionToDetails = (
     {
       label: 'Billing period',
       data: (
-        <BillingPeriodSelect value={periodUnit} onChange={handlePeriodUnit} />
+        <BillingPeriodSelect
+          value={periodUnit}
+          onChange={handlePeriodUnit}
+          disabled={onlyPreview}
+        />
       ),
     },
     {
@@ -49,8 +54,8 @@ export const mapSubscriptionToDetails = (
         <Switch
           name="autoRenew"
           additionalStyles={styles.noBottomMargin}
-          disabled={subscription?.status !== 'active'}
-          tooltip="Subscription's auto renewal"
+          disabled={subscription?.status !== 'active' || onlyPreview}
+          tooltip="Insufficient permissions to update subscription."
           checked={autoRenew}
           onPropertyChanged={handleAutoRenew}
         />
