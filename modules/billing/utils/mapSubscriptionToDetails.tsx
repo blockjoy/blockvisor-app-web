@@ -1,12 +1,26 @@
+import { css } from '@emotion/react';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 import { formatters } from '@shared/index';
-import { Badge } from '@shared/components';
+import { Badge, Switch } from '@shared/components';
 import {
   getSubscriptionStatusColor,
   getSubscriptionStatusText,
+  BillingPeriodSelect,
 } from '@modules/billing';
 
-export const mapSubscriptionToDetails = (subscription: Subscription) => {
+const styles = {
+  noBottomMargin: css`
+    margin-bottom: 0;
+  `,
+};
+
+export const mapSubscriptionToDetails = (
+  subscription: Subscription,
+  props: UpdateSubscriptionProperties,
+) => {
+  const { value: autoRenew, handleUpdate: handleAutoRenew } = props.renew;
+  const { value: periodUnit, handleUpdate: handlePeriodUnit } = props.period;
+
   return [
     {
       label: 'Activated at',
@@ -14,7 +28,9 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
     },
     {
       label: 'Billing period',
-      data: subscription.billing_period_unit === 'year' ? 'Yearly' : 'Monthly',
+      data: (
+        <BillingPeriodSelect value={periodUnit} onChange={handlePeriodUnit} />
+      ),
     },
     {
       label: 'Status',
@@ -30,7 +46,14 @@ export const mapSubscriptionToDetails = (subscription: Subscription) => {
     {
       label: 'Auto renew',
       data: (
-        <p>{subscription.auto_collection === 'on' ? 'Enabled' : 'Disabled'}</p>
+        <Switch
+          name="autoRenew"
+          additionalStyles={styles.noBottomMargin}
+          disabled={false}
+          tooltip="Subscription's auto renewal"
+          checked={autoRenew}
+          onPropertyChanged={handleAutoRenew}
+        />
       ),
     },
   ];
