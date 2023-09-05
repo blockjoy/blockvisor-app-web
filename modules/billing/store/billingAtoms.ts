@@ -110,6 +110,11 @@ const subscriptionLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
+  key: 'billing.subscription.paymentMethod.loadingState',
+  default: 'finished',
+});
+
 export const billingAtoms = {
   billing,
 
@@ -134,4 +139,6 @@ export const billingAtoms = {
   paymentMethodsLoadingState,
 
   subscriptionLoadingState,
+
+  subscriptionPaymentMethodLoadingState,
 };

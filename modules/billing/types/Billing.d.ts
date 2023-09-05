@@ -22,3 +22,8 @@ type PaymentError = {
   data?: PaymentErrorData;
   displayMessage?: string;
 };
+
+type BillingPeriod = {
+  id: string;
+  title: string;
+};

@@ -7,6 +7,7 @@ import {
   RadioButtonGroup,
   RadioButton,
   Button,
+  Modal,
 } from '@shared/components';
 import { styles } from './SubscriptionCancellation.styles';
 import { billingSelectors, useSubscriptionLifecycle } from '@modules/billing';
@@ -44,53 +45,58 @@ export const SubscriptionCancellation = ({
     subscription?.current_term_end!,
   );
 
-  return (
-    <div>
-      <RadioButtonGroup>
-        <RadioButton
-          id="cancel"
-          name="endOfTerm"
-          value={false}
-          selectedValue={endOfTerm}
-          onChange={handleChange}
-        >
-          <h5 css={styles.title}>Cancel immediately</h5>
-          <p>The subscription will be terminated immediately.</p>
-        </RadioButton>
-        <RadioButton
-          id="delay"
-          name="endOfTerm"
-          value={true}
-          selectedValue={endOfTerm}
-          onChange={handleChange}
-        >
-          <h5 css={styles.title}>Cancel at the end of term</h5>
-          <p>The subscription will be terminated on {currentEndTerm}.</p>
-        </RadioButton>
-      </RadioButtonGroup>
+  return activeView === 'preview' ? (
+    <Modal
+      portalId="modal-subscription-cancellation"
+      isOpen={true}
+      handleClose={handleBack}
+    >
+      <div>
+        <RadioButtonGroup>
+          <RadioButton
+            id="cancel"
+            name="endOfTerm"
+            value={false}
+            selectedValue={endOfTerm}
+            onChange={handleChange}
+          >
+            <h5 css={styles.title}>Cancel immediately</h5>
+            <p>The subscription will be terminated immediately.</p>
+          </RadioButton>
+          <RadioButton
+            id="delay"
+            name="endOfTerm"
+            value={true}
+            selectedValue={endOfTerm}
+            onChange={handleChange}
+          >
+            <h5 css={styles.title}>Cancel at the end of term</h5>
+            <p>The subscription will be terminated on {currentEndTerm}.</p>
+          </RadioButton>
+        </RadioButtonGroup>
 
-      <ButtonGroup type="flex">
-        <Button
-          loading={subscriptionLoadingState !== 'finished'}
-          size="small"
-          style="secondary"
-          type="submit"
-          onClick={handleCancellation}
-        >
-          Cancel subscription
-        </Button>
-        <Button style="outline" size="small" onClick={handleBack}>
-          Back
-        </Button>
-      </ButtonGroup>
-      {activeView === 'dialog' && (
-        <ConfirmDialog
-          title="Subscription Cancellation"
-          message="Cancellation will end all premium services linked to your account. Please confirm if you wish to proceed."
-          handleConfirm={onConfirm}
-          onHide={onHide}
-        />
-      )}
-    </div>
+        <ButtonGroup type="flex">
+          <Button
+            loading={subscriptionLoadingState !== 'finished'}
+            size="small"
+            style="secondary"
+            type="submit"
+            onClick={handleCancellation}
+          >
+            Cancel subscription
+          </Button>
+          <Button style="outline" size="small" onClick={handleBack}>
+            Back
+          </Button>
+        </ButtonGroup>
+      </div>
+    </Modal>
+  ) : (
+    <ConfirmDialog
+      title="Subscription Cancellation"
+      message="Cancellation will end all premium services linked to your account. Please confirm if you wish to proceed."
+      handleConfirm={onConfirm}
+      onHide={onHide}
+    />
   );
 };
