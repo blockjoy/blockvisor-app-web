@@ -20,7 +20,7 @@ export type InitialQueryParams = {
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     current_page: 1,
-    items_per_page: itemsPerPage['xxl'],
+    items_per_page: itemsPerPage['xl'],
   },
 
   filter: {
