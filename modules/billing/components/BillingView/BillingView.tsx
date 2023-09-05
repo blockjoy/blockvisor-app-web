@@ -33,7 +33,7 @@ export const BillingView = ({ item, itemPrices }: BillingViewProps) => {
     Permissions.READ_BILLING,
   );
 
-  if (subscriptionLoadingState !== 'finished') return <TableSkeleton />;
+  if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
 
   if (!canReadBilling)
     return (

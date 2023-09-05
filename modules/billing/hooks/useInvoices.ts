@@ -41,7 +41,7 @@ export const useInvoices = (
 
   const { data, error, isLoading, mutate } = useSWR(
     () =>
-      subscription?.status === 'active'
+      subscription
         ? `${BILLING_API_ROUTES.invoices.list}_${subscription?.id}`
         : null,
     fetcher,
@@ -58,7 +58,7 @@ export const useInvoices = (
     : 'finished';
 
   const getInvoices = async (queryParams?: InvoicesInitialQueryParams) => {
-    if (!(!subscription || subscription.status !== 'active')) mutate();
+    if (subscription) mutate();
   };
 
   return {

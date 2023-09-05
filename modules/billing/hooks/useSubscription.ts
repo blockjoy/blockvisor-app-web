@@ -1,4 +1,9 @@
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import {
+  SetterOrUpdater,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
 import { _subscription } from 'chargebee-typescript';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 import {
@@ -44,6 +49,9 @@ export const useSubscription = (): ISubscriptionHook => {
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
+  const subscriptionPaymentMethodLoadingState = useSetRecoilState(
+    billingAtoms.subscriptionPaymentMethodLoadingState,
+  );
 
   const { createUserSubscription } = useUserSubscription();
 
@@ -121,7 +129,7 @@ export const useSubscription = (): ISubscriptionHook => {
   const updateSubscription = async (
     params: _subscription.update_for_items_params,
   ) => {
-    setSubscriptionLoadingState('initializing');
+    setSubscriptionLoadingState('loading');
 
     try {
       const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.update, {
@@ -141,7 +149,7 @@ export const useSubscription = (): ISubscriptionHook => {
     id: string,
     updateParams: { paymentMethodId: string },
   ) => {
-    setSubscriptionLoadingState('initializing');
+    subscriptionPaymentMethodLoadingState('loading');
 
     const { paymentMethodId } = updateParams;
 
@@ -160,7 +168,7 @@ export const useSubscription = (): ISubscriptionHook => {
     } catch (error) {
       console.error('Failed to update Billing profile', error);
     } finally {
-      setSubscriptionLoadingState('finished');
+      subscriptionPaymentMethodLoadingState('finished');
     }
   };
 

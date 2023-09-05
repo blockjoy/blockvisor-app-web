@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
+import { rgba } from 'polished';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
@@ -11,6 +12,7 @@ export const styles = {
     display: flex;
     flex-flow: column nowrap;
     flex: 1;
+    border: 1px solid ${rgba(theme.colorPrimary || '#fff', 0.3)};
 
     &.active {
       background-color: ${theme.colorPrimary};
