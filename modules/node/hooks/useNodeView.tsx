@@ -78,12 +78,6 @@ export const useNodeView = (): Hook => {
     removeFromNodeList(uuid);
     await nodeClient.deleteNode(uuid);
 
-    // Remove node from the subscription
-    updateSubscriptionItems({
-      type: UpdateSubscriptionAction.REMOVE_NODE,
-      payload: { node: node! },
-    });
-
     const activeOrganization = organizations.find(
       (org) => org.id === defaultOrganization?.id,
     );
@@ -99,6 +93,12 @@ export const useNodeView = (): Hook => {
         nodeCount: hostInList.nodeCount - 1,
       });
     }
+
+    // Remove node from the subscription
+    await updateSubscriptionItems({
+      type: UpdateSubscriptionAction.REMOVE_NODE,
+      payload: { node: node! },
+    });
 
     onSuccess();
   };
