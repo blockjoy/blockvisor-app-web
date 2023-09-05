@@ -14,11 +14,13 @@ import { BILLING_PERIOD, billingSelectors } from '@modules/billing';
 type BillingPeriodSelectProps = {
   value: string;
   onChange: (billingPeriod: BillingPeriod) => void;
+  disabled?: boolean;
 };
 
 export const BillingPeriodSelect = ({
   value,
   onChange,
+  disabled = false,
 }: BillingPeriodSelectProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -46,7 +48,8 @@ export const BillingPeriodSelect = ({
         isOpen={isOpen}
         disabled={
           subscription?.billing_period_unit === 'year' ||
-          subscription?.status !== 'active'
+          subscription?.status !== 'active' ||
+          disabled
         }
       />
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>

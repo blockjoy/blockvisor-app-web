@@ -15,9 +15,13 @@ import { styles } from './SubscriptionInfo.styles';
 
 type SubscriptionInfoProps = {
   itemPrices: ItemPrice[];
+  onlyPreview: boolean;
 };
 
-export const SubscriptionInfo = ({ itemPrices }: SubscriptionInfoProps) => {
+export const SubscriptionInfo = ({
+  itemPrices,
+  onlyPreview = false,
+}: SubscriptionInfoProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
@@ -51,6 +55,7 @@ export const SubscriptionInfo = ({ itemPrices }: SubscriptionInfoProps) => {
   const subscriptionData = mapSubscriptionToDetails(
     subscription!,
     subscriptionProperties,
+    onlyPreview,
   );
 
   const isDirty =
@@ -70,17 +75,19 @@ export const SubscriptionInfo = ({ itemPrices }: SubscriptionInfoProps) => {
   return (
     <div css={containers.mediumSmall}>
       <DetailsTable bodyElements={subscriptionData} />
-      <Button
-        disabled={!isDirty || subscription?.status !== 'active'}
-        style="secondary"
-        size="small"
-        onClick={handleUpdateSubscription}
-        css={spacing.top.medium}
-        loading={subscriptionLoadingState === 'loading'}
-        customCss={[styles.button]}
-      >
-        Update subscription
-      </Button>
+      {!onlyPreview && (
+        <Button
+          disabled={!isDirty || subscription?.status !== 'active'}
+          style="secondary"
+          size="small"
+          onClick={handleUpdateSubscription}
+          css={spacing.top.medium}
+          loading={subscriptionLoadingState === 'loading'}
+          customCss={[styles.button]}
+        >
+          Update subscription
+        </Button>
+      )}
     </div>
   );
 };
