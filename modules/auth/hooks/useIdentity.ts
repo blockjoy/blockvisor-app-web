@@ -1,9 +1,11 @@
-import { authAtoms } from '@modules/auth/store/authAtoms';
+import { authAtoms, authSelectors } from '@modules/auth';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 export const useIdentity = () => {
   const user = useRecoilValue(authAtoms.user);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
   const [loading, setLoading] = useState<string>('initializing');
 
   useEffect(() => {
@@ -15,6 +17,7 @@ export const useIdentity = () => {
     isLoading: loading === 'initializing',
     isDone: loading === 'finished',
     user,
+    isSuperUser,
     state: loading,
   };
 };
