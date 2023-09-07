@@ -8,6 +8,7 @@ export const ROUTES = {
   NODES: '/nodes',
   NODE_GROUP: (id: string) => `/nodes/group/${id}`,
   LOGIN: '/login',
+  NOT_FOUND: '/404',
   ORGANIZATIONS: '/organizations',
   ORGANIZATION: (id: string) => `/organizations/${id}`,
   PROFILE: '/profile',

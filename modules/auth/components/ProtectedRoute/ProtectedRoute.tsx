@@ -14,7 +14,7 @@ export function ProtectedRoute({ children }: Props) {
 
   useEffect(() => {
     if (!isSuperUser) {
-      router.push(ROUTES.DEFAULT, undefined, {
+      router.push(ROUTES.NOT_FOUND, undefined, {
         shallow: true,
       });
     }
