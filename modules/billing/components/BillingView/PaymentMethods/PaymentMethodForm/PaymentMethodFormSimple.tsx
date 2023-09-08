@@ -39,9 +39,6 @@ export const PaymentMethodFormSimple = ({
 
   const cardRef = useRef<any>(null);
 
-  const [isSubmittedPaymentForm, setIsSubmittedPaymentForm] =
-    useState<boolean>(false);
-
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
 
@@ -61,10 +58,6 @@ export const PaymentMethodFormSimple = ({
 
   const { loading, onSubmit } = usePaymentMethodForm();
   const { addBillingAddress } = useBillingAddress();
-
-  useEffect(() => {
-    if (isSubmittedPaymentForm && !error) handleSubmit();
-  }, [isSubmittedPaymentForm]);
 
   useEffect(() => {
     return () => {
@@ -97,7 +90,7 @@ export const PaymentMethodFormSimple = ({
 
     try {
       await onSubmit(cardRef, additionalData, handleSucces);
-      setIsSubmittedPaymentForm(true);
+      handleSubmit();
     } catch (error: any) {
       console.log('Error while adding a payment method', error);
     }
