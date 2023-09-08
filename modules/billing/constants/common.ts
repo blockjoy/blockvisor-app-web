@@ -21,11 +21,11 @@ export const AVAILABLE_PAYMENT_METHODS: AvailablePaymentMethod[] = [
 
 export const BILLING_PERIOD: BillingPeriod[] = [
   {
-    id: 'year',
-    title: 'Yearly',
+    id: 'month',
+    title: 'Monthly',
   },
   {
-    id: 'month',
-    title: 'Montlhy',
+    id: 'year',
+    title: 'Yearly',
   },
 ];

@@ -7,7 +7,15 @@ const requestCallback = ({
   params,
 }: {
   params: _invoice.invoice_list_params;
-}) => chargebee.invoice.list(params);
+}) => {
+  const { subscription_id } = params;
+
+  if (!subscription_id || Object.keys(subscription_id).length === 0) {
+    throw new Error('No Subscription ID provided');
+  }
+
+  return chargebee.invoice.list(params);
+};
 
 const mappingCallback = (result: {
   list: Invoice[];
@@ -22,10 +30,21 @@ const mappingCallback = (result: {
     nextOffset: result.next_offset,
   };
 };
+
+const errorCallback = (
+  error: any,
+): { invoices: []; nextOffset: undefined } | null => {
+  if (error.message === 'No Subscription ID provided') {
+    return { invoices: [], nextOffset: undefined };
+  }
+
+  return null;
+};
+
 const handler = createHandler<
   { params: _invoice.invoice_list_params },
   { list: Invoice[]; next_offset: string },
   { invoices: Invoice[]; nextOffset: string | undefined }
->(requestCallback, mappingCallback);
+>(requestCallback, mappingCallback, errorCallback);
 
 export default handler;
