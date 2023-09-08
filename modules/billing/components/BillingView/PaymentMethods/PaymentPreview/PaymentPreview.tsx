@@ -46,7 +46,7 @@ export const PaymentPreview = () => {
     router.push(
       {
         pathname: ROUTES.SETTINGS,
-        query: { tab: '1', add: true },
+        query: { tab: '1', add: true, update: true },
       },
       undefined,
       { shallow: true },
