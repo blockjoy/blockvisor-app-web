@@ -16,11 +16,20 @@ export const styles = {
       fill: ${theme.colorPrimary};
     }
   `,
+  statusText: css`
+    position: relative;
+    z-index: 3;
+  `,
   statusBorder: (theme: ITheme) => css`
     border: 1px solid ${theme.colorPrimary};
     padding: 8px 10px;
     font-size: 9px;
     border-radius: 3px;
+  `,
+  statusLoading: (theme: ITheme) => css`
+    position: relative;
+    overflow: hidden;
+    min-width: 144px;
   `,
   statusColorGreen: (theme: ITheme) => css`
     color: ${theme.colorPrimary};
@@ -42,7 +51,7 @@ export const styles = {
     color: ${theme.colorDefault};
     border-color: ${theme.colorDefault};
 
-    svg :is(path, circle, rect) { {
+    svg :is(path, circle, rect) {
       fill: ${theme.colorDefault};
     }
   `,

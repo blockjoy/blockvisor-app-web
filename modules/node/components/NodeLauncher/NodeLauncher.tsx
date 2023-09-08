@@ -239,7 +239,7 @@ export const NodeLauncher = () => {
       params,
       (nodeId: string) => {
         Mixpanel.track('Launch Node - Node Launched');
-        router.push(ROUTES.NODE(nodeId));
+        router.push(ROUTES.NODES);
       },
       (error: string) => setServerError(error!),
     );

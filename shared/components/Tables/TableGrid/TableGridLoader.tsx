@@ -11,7 +11,7 @@ const TableGridLoader = ({ length }: TableGridLoaderProps) => {
       {[...Array(length)].map((_, index) => {
         return (
           <div key={index} css={styles.cell}>
-            <div css={styles.cellIcon}>
+            <div css={styles.cellLeft}>
               <Skeleton width="28px" height="28px" />
             </div>
             <div css={styles.cellRight}>
