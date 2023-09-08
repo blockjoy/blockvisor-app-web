@@ -22,6 +22,7 @@ import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
 import { mapNodeListToRows } from '@modules/node/utils';
 import IconNode from '@public/assets/icons/app/Node.svg';
+import { ROUTES } from '@shared/constants/routes';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -34,8 +35,10 @@ export const NodeList = () => {
     };
   }, [nodeUIContext]);
 
-  const { loadNodes, handleNodeClick, nodeList, nodeCount, isLoading } =
-    useNodeList();
+  const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
+
+  const handleNodeClicked = (nodeId: string) =>
+    router.push(ROUTES.NODE(nodeId));
 
   const hasMoreNodes =
     nodeUIContext.queryParams.pagination.current_page *
@@ -74,7 +77,7 @@ export const NodeList = () => {
     nodeUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = toGrid(nodeList, handleNodeClick);
+  const cells = toGrid(nodeList, handleNodeClicked);
   const { headers, rows } = mapNodeListToRows(nodeList);
   const { isFiltered, isEmpty } = resultsStatus(
     nodeList.length,
@@ -124,7 +127,7 @@ export const NodeList = () => {
                   preload={0}
                   rows={rows}
                   fixedRowHeight="120px"
-                  onRowClick={handleNodeClick}
+                  onRowClick={handleNodeClicked}
                 />
               ) : (
                 <div css={styles.gridWrapper}>

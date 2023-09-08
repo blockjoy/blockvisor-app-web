@@ -8,7 +8,7 @@ export type TableProps = {
   hideHeader?: boolean;
   headers?: TableHeader[];
   rows?: Row[];
-  onRowClick?: (arg0: Row) => void;
+  onRowClick?: (id: string) => void;
   isLoading: LoadingState;
   preload?: number;
   verticalAlign?: 'top' | 'middle';
@@ -29,9 +29,9 @@ export const Table = ({
   properties,
   handleSort,
 }: TableProps) => {
-  const handleRowClick = (tr: Row) => {
+  const handleRowClick = (id: string) => {
     if (onRowClick) {
-      onRowClick(tr);
+      onRowClick(id);
     }
   };
 
@@ -40,7 +40,6 @@ export const Table = ({
       <table
         css={[
           styles.table,
-          !!onRowClick && styles.hasHoverRows,
           fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
         ]}
       >
@@ -97,13 +96,17 @@ export const Table = ({
                 key={tr.key}
                 className={tr.isDanger ? 'danger' : ''}
                 css={[
-                  !!!onRowClick
+                  !onRowClick || tr.isClickable === false
                     ? null
                     : !isSafari
                     ? styles.rowFancyUnderlineHover
                     : styles.rowBasicUnderlineHover,
                 ]}
-                onClick={() => handleRowClick(tr)}
+                onClick={
+                  tr.isClickable !== false
+                    ? () => handleRowClick(tr.key)
+                    : undefined
+                }
               >
                 {tr.cells?.map((td, index) => (
                   <td

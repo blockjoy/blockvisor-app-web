@@ -4,13 +4,16 @@ import { useNodeList } from '@modules/node';
 import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/constants/routes';
 
 export const HostViewNodes = () => {
   const router = useRouter();
-  const { nodeList, isLoading, handleNodeClick } = useNodeList();
+  const { nodeList, isLoading } = useNodeList();
   const { host, isLoading: isLoadingActiveHost } = useHostView();
   const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
   const { headers, rows } = mapHostNodesToRows(hostNodes);
+
+  const handleNodeClicked = (id: string) => router.push(ROUTES.NODE(id));
 
   return (
     <>
@@ -37,7 +40,7 @@ export const HostViewNodes = () => {
           headers={headers}
           rows={rows}
           fixedRowHeight="120px"
-          onRowClick={handleNodeClick}
+          onRowClick={handleNodeClicked}
         />
       )}
     </>

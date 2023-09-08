@@ -7,7 +7,6 @@ export const styles = {
     display: grid;
     gap: 16px;
     grid-template-columns: 1fr;
-    grid-auto-rows: 160px;
     padding: 0 0 20px;
 
     @media ${breakpoints.fromSml} {
@@ -27,10 +26,10 @@ export const styles = {
     }
   `,
 
-  cellIcon: (theme: ITheme) => css`
-    align-self: flex-start;
-    margin-top: 16px;
-    margin-right: 8px;
+  cellLeft: (theme: ITheme) => css`
+    padding-top: 10px;
+    width: 40px;
+    min-width: 40px;
 
     > svg {
     }
@@ -42,11 +41,10 @@ export const styles = {
   cell: (theme: ITheme) => css`
     display: flex;
     justify-content: center;
-    align-items: center;
     border-radius: 4px;
     border: 1px solid transparent;
     min-width: 0;
-    padding: 16px 24px;
+    padding: 34px 24px 38px;
     background: ${theme.colorCard};
     cursor: pointer;
 
@@ -56,6 +54,17 @@ export const styles = {
         border-color: ${theme.colorBorder};
       }
     }
+  `,
+  cellNotClickable: css`
+    cursor: default;
+    :hover,
+    :active {
+      border-color: transparent;
+    }
+  `,
+  cellCenter: css`
+    flex: 1 1 auto;
+    min-width: 0;
   `,
   cellHeader: css`
     min-width: 0;
@@ -67,29 +76,18 @@ export const styles = {
     line-height: 1.6;
     white-space: nowrap;
   `,
-
-  cellRight: css`
-    flex: 1 1 auto;
-    min-width: 0;
-  `,
-  cellMoreIcon: css`
-    width: 16px;
-    height: 16px;
-    rotate: 90deg;
-
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    path {
-      fill: rgba(255, 255, 255, 0.3);
-    }
+  cellRight: (theme: ITheme) => css`
+    width: 40px;
+    min-width: 40px;
+    padding-top: 5px;
+    display: flex;
+    justify-content: flex-end;
   `,
   cellTitle: css`
     font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-right: 20px;
   `,
   cellStatus: css`
     display: inline-block;
@@ -105,5 +103,8 @@ export const styles = {
     svg path {
       fill: ${theme.colorLabel};
     }
+  `,
+  moreIcon: css`
+    rotate: 90deg;
   `,
 };
