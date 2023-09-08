@@ -8,7 +8,6 @@ import {
   inputLabelSize,
 } from '@shared/components/Forms/ReactHookForm/Input/InputLabel.styles';
 import {
-  // BillingAddressSelect,
   billingAtoms,
   BillingInfoData,
   billingSelectors,
@@ -20,23 +19,28 @@ import {
   useBillingAddress,
   useCustomer,
   usePaymentMethodForm,
+  useSubscription,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { containers } from 'styles/containers.styles';
+import { useRouter } from 'next/router';
 
 type PaymentMethodFormProps = {
   handleCancel: VoidFunction;
 };
 
 export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
+  const router = useRouter();
+
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
+  const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
   const setPaymentMethodLoadingState = useSetRecoilState(
     billingAtoms.paymentMethodLoadingState,
   );
-  const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
+  const subscription = useRecoilValue(billingSelectors.subscription);
 
   const cardRef = useRef<any>(null);
 
@@ -62,6 +66,9 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const { loading, onSubmit } = usePaymentMethodForm();
   const { assignPaymentRole } = useCustomer();
   const { addBillingAddress } = useBillingAddress();
+  const { getSubscription } = useSubscription();
+
+  const { update } = router.query;
 
   useEffect(() => {
     return () => {
@@ -79,6 +86,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
     if (isDefaultAddress || !billingAddress)
       await addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
+
+    if (update && subscription?.id) getSubscription(subscription?.id);
 
     handleCancel();
   };
@@ -184,14 +193,6 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
                 onPropertyChanged={handleNewAddress}
               />
             </div>
-            {/* TODO: remove BillingAddressSelect */}
-            {/* <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-              Billing address
-            </label>
-            <BillingAddressSelect
-              handlePaymentBillingAddress={handleDefaultAddress}
-              handleNewAddress={handleNewAddress}
-            /> */}
           </div>
         ) : (
           <div>
