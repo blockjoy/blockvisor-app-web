@@ -1,7 +1,10 @@
 import { TableBlock } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  Node,
+  NodeStatus as NodeStatusEnum,
+} from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from './convertNodeTypeToName';
 
 export const mapNodeListToRows = (nodeList?: Node[]) => {
@@ -32,6 +35,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
 
   const rows = nodeList?.map((node: Node) => ({
     key: node.id,
+    isClickable: node.status !== NodeStatusEnum.NODE_STATUS_PROVISIONING,
     cells: [
       {
         key: '1',
@@ -67,7 +71,13 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       },
       {
         key: '4',
-        component: <NodeStatus status={node.status} />,
+        component: (
+          <NodeStatus
+            status={node.status}
+            loadingCurrent={node?.dataSyncProgress?.current}
+            loadingTotal={node?.dataSyncProgress?.total}
+          />
+        ),
       },
     ],
   }));

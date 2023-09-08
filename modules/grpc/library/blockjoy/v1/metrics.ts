@@ -69,7 +69,19 @@ export interface NodeMetrics {
    * The status of the node with respect to the rest of the network, i.e.
    * whether it is in sync with the other nodes.
    */
-  syncStatus?: SyncStatus | undefined;
+  syncStatus?:
+    | SyncStatus
+    | undefined;
+  /** The progress of node data sync operation: total units to sync */
+  dataSyncProgressTotal?:
+    | number
+    | undefined;
+  /** The progress of node data sync operation: units currently synced */
+  dataSyncProgressCurrent?:
+    | number
+    | undefined;
+  /** The progress of node data sync operation: message to display to user */
+  dataSyncProgressMessage?: string | undefined;
 }
 
 /**
@@ -448,6 +460,9 @@ function createBaseNodeMetrics(): NodeMetrics {
     consensus: undefined,
     applicationStatus: undefined,
     syncStatus: undefined,
+    dataSyncProgressTotal: undefined,
+    dataSyncProgressCurrent: undefined,
+    dataSyncProgressMessage: undefined,
   };
 }
 
@@ -470,6 +485,15 @@ export const NodeMetrics = {
     }
     if (message.syncStatus !== undefined) {
       writer.uint32(48).int32(message.syncStatus);
+    }
+    if (message.dataSyncProgressTotal !== undefined) {
+      writer.uint32(56).uint32(message.dataSyncProgressTotal);
+    }
+    if (message.dataSyncProgressCurrent !== undefined) {
+      writer.uint32(64).uint32(message.dataSyncProgressCurrent);
+    }
+    if (message.dataSyncProgressMessage !== undefined) {
+      writer.uint32(74).string(message.dataSyncProgressMessage);
     }
     return writer;
   },
@@ -523,6 +547,27 @@ export const NodeMetrics = {
 
           message.syncStatus = reader.int32() as any;
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.dataSyncProgressTotal = reader.uint32();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.dataSyncProgressCurrent = reader.uint32();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.dataSyncProgressMessage = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -544,6 +589,9 @@ export const NodeMetrics = {
     message.consensus = object.consensus ?? undefined;
     message.applicationStatus = object.applicationStatus ?? undefined;
     message.syncStatus = object.syncStatus ?? undefined;
+    message.dataSyncProgressTotal = object.dataSyncProgressTotal ?? undefined;
+    message.dataSyncProgressCurrent = object.dataSyncProgressCurrent ?? undefined;
+    message.dataSyncProgressMessage = object.dataSyncProgressMessage ?? undefined;
     return message;
   },
 };

@@ -42,6 +42,27 @@ export interface UserServiceGetResponse {
   user: User | undefined;
 }
 
+export interface UserServiceFilterRequest {
+  /**
+   * Return only users from this org. This is required for users that do not
+   * have access to the entire system (i.e. blockjoy's admins).
+   */
+  orgId?:
+    | string
+    | undefined;
+  /**
+   * Return only users whose email has the provided pattern as a substring. Note
+   * that this search is not case sensitive. The wildcard symbol here is `'%'`.
+   * For example, a query for all users whose email starts with `baremetal`
+   * would look like `"baremetal%"`.
+   */
+  emailLike?: string | undefined;
+}
+
+export interface UserServiceFilterResponse {
+  users: User[];
+}
+
 export interface UserServiceCreateRequest {
   email: string;
   firstName: string;
@@ -296,6 +317,109 @@ export const UserServiceGetResponse = {
   fromPartial(object: DeepPartial<UserServiceGetResponse>): UserServiceGetResponse {
     const message = createBaseUserServiceGetResponse();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    return message;
+  },
+};
+
+function createBaseUserServiceFilterRequest(): UserServiceFilterRequest {
+  return { orgId: undefined, emailLike: undefined };
+}
+
+export const UserServiceFilterRequest = {
+  encode(message: UserServiceFilterRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== undefined) {
+      writer.uint32(10).string(message.orgId);
+    }
+    if (message.emailLike !== undefined) {
+      writer.uint32(18).string(message.emailLike);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceFilterRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceFilterRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.emailLike = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceFilterRequest>): UserServiceFilterRequest {
+    return UserServiceFilterRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceFilterRequest>): UserServiceFilterRequest {
+    const message = createBaseUserServiceFilterRequest();
+    message.orgId = object.orgId ?? undefined;
+    message.emailLike = object.emailLike ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUserServiceFilterResponse(): UserServiceFilterResponse {
+  return { users: [] };
+}
+
+export const UserServiceFilterResponse = {
+  encode(message: UserServiceFilterResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.users) {
+      User.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceFilterResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceFilterResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.users.push(User.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceFilterResponse>): UserServiceFilterResponse {
+    return UserServiceFilterResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceFilterResponse>): UserServiceFilterResponse {
+    const message = createBaseUserServiceFilterResponse();
+    message.users = object.users?.map((e) => User.fromPartial(e)) || [];
     return message;
   },
 };
@@ -922,6 +1046,15 @@ export const UserServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Retrieve multiple users my means of a filter. */
+    filter: {
+      name: "Filter",
+      requestType: UserServiceFilterRequest,
+      requestStream: false,
+      responseType: UserServiceFilterResponse,
+      responseStream: false,
+      options: {},
+    },
     /** Create a single user. */
     create: {
       name: "Create",
@@ -985,6 +1118,11 @@ export interface UserServiceImplementation<CallContextExt = {}> {
     request: UserServiceGetRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceGetResponse>>;
+  /** Retrieve multiple users my means of a filter. */
+  filter(
+    request: UserServiceFilterRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceFilterResponse>>;
   /** Create a single user. */
   create(
     request: UserServiceCreateRequest,
@@ -1023,6 +1161,11 @@ export interface UserServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<UserServiceGetRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceGetResponse>;
+  /** Retrieve multiple users my means of a filter. */
+  filter(
+    request: DeepPartial<UserServiceFilterRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceFilterResponse>;
   /** Create a single user. */
   create(
     request: DeepPartial<UserServiceCreateRequest>,
