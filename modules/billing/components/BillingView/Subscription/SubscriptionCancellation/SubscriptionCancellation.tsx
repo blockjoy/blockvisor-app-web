@@ -76,6 +76,9 @@ export const SubscriptionCancellation = ({
         </RadioButtonGroup>
 
         <ButtonGroup type="flex">
+          <Button style="outline" size="small" onClick={handleBack}>
+            Back
+          </Button>
           <Button
             loading={subscriptionLoadingState !== 'finished'}
             size="small"
@@ -84,9 +87,6 @@ export const SubscriptionCancellation = ({
             onClick={handleCancellation}
           >
             Cancel subscription
-          </Button>
-          <Button style="outline" size="small" onClick={handleBack}>
-            Back
           </Button>
         </ButtonGroup>
       </div>
