@@ -8,7 +8,6 @@ export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddres
 export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactForm/BillingContactForm';
 export * from './components/BillingView/BillingInfo/BillingContacts/BillingContacts';
 export * from './components/BillingView/BillingInfo/BillingContacts/BillingContactsList/BillingContactsList';
-export * from './components/BillingView/BillingInfo/BillingAddress/BillingAddressSelect/BillingAddressSelect';
 
 export * from './components/BillingView/Estimates/Estimates';
 
