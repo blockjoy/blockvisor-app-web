@@ -64,7 +64,7 @@ export const NodeStatus: FC<Props> = ({
   const statusName = isLoading
     ? loadingCurrent === loadingTotal
       ? 'PROVISIONING'
-      : 'RESTORING'
+      : 'DOWNLOADING'
     : statusInfo.name;
 
   return (
