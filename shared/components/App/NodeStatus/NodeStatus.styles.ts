@@ -26,10 +26,10 @@ export const styles = {
     font-size: 9px;
     border-radius: 3px;
   `,
-  statusLoading: (theme: ITheme) => css`
+  statusLoading: css`
     position: relative;
     overflow: hidden;
-    min-width: 144px;
+    min-width: 164px;
   `,
   statusColorGreen: (theme: ITheme) => css`
     color: ${theme.colorPrimary};
