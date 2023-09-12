@@ -14,6 +14,7 @@ import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { PasswordToggle } from '@modules/auth';
+import { authClient } from '@modules/grpc';
 
 type LoginForm = {
   email: string;
@@ -61,6 +62,7 @@ export function LoginForm() {
         !!invited,
       );
       await getOrganizations(!invited);
+
       getBlockchains();
       handleRedirect();
     } catch (error) {

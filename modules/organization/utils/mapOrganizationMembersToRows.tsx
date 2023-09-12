@@ -1,4 +1,4 @@
-import { authSelectors, useIdentity } from '@modules/auth';
+import { useIdentity } from '@modules/auth';
 import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
@@ -10,7 +10,7 @@ import {
   useHasPermissions,
 } from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationSelectors } from '../store/organizationSelectors';
 
 export enum Action {
@@ -43,16 +43,12 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
+  // const userRole = useRecoilValue(authSelectors.userRole);
+  // const userRoleInOrganization = useRecoilValue(
+  //   organizationSelectors.userRoleInOrganization,
+  // );
 
-  const canRemoveMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.DELETE_MEMBER,
-  );
+  const canRemoveMember: boolean = useHasPermissions();
 
   const handleRemoveMember = async (
     userId: string,
@@ -90,7 +86,7 @@ export const mapOrganizationMembersToRows = (
         component: (
           <div css={[flex.display.inline, flex.align.center]}>
             <p>{escapeHtml(member.email!)}</p>
-            {member.role === OrgRole.ORG_ROLE_OWNER && (
+            {/* {member.role === OrgRole.ORG_ROLE_OWNER && (
               <Badge style="outline" customCss={[spacing.left.small]}>
                 Owner
               </Badge>
@@ -103,7 +99,7 @@ export const mapOrganizationMembersToRows = (
               >
                 Admin
               </Badge>
-            )}
+            )} */}
           </div>
         ),
       },
