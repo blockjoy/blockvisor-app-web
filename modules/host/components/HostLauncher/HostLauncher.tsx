@@ -34,11 +34,7 @@ export const HostLauncher = () => {
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canAddHost: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_NODE,
-  );
+  const canAddHost: boolean = useHasPermissions();
 
   const token = canAddHost
     ? provisionToken

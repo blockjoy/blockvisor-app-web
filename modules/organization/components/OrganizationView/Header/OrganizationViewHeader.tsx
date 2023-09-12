@@ -71,17 +71,9 @@ export const OrganizationViewHeader: FC = () => {
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canUpdateOrganization: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.UPDATE_ORGANIZATION,
-  );
+  const canUpdateOrganization: boolean = useHasPermissions();
 
-  const canDeleteOrganization: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.DELETE_ORGANIZATION,
-  );
+  const canDeleteOrganization: boolean = useHasPermissions();
 
   const { getDefaultOrganization } = useDefaultOrganization();
 

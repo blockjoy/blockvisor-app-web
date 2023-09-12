@@ -1,4 +1,4 @@
-import { ORG_ROLES } from '@modules/auth/hooks/useHasPermissions';
+// import { ORG_ROLES } from '@modules/auth/hooks/useHasPermissions';
 
 export type Pagination = {
   currentPage: number;
@@ -37,21 +37,23 @@ export const initialQueryParams: InitialQueryParams = {
   },
 };
 
-const currentlyAvailableRoles = Object.fromEntries(
-  Object.entries(ORG_ROLES).filter(([_, value]) =>
-    [ORG_ROLES[1], ORG_ROLES[2]].includes(value),
-  ),
-);
+// const currentlyAvailableRoles = Object.fromEntries(
+//   Object.entries(ORG_ROLES).filter(([_, value]) =>
+//     [ORG_ROLES[1], ORG_ROLES[2]].includes(value),
+//   ),
+// );
 
-const AVAILABLE_ROLES = Object.entries(currentlyAvailableRoles).map(
-  ([key, value]) => ({ value: key, label: value }),
-);
+// const currentlyAvailableRoles = []
+
+// const AVAILABLE_ROLES = Object.entries(currentlyAvailableRoles).map(
+//   ([key, value]) => ({ value: key, label: value }),
+// );
 
 export const FILTERS: FilteringItem[] = [
   {
     id: 'role',
     title: 'Role',
     dataField: 'currentUser.role',
-    entries: AVAILABLE_ROLES,
+    entries: [],
   },
 ];

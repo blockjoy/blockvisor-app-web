@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { SvgIcon } from '@shared/components';
 import IconInfo from '@public/assets/icons/common/Info.svg';
 import { ROUTES } from '@shared/constants/routes';
@@ -34,10 +34,10 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
         </div>
       ),
     },
-    {
-      label: 'Owner',
-      data: org.members.find((m) => m.role === OrgRole.ORG_ROLE_OWNER)?.email,
-    },
+    // {
+    //   label: 'Owner',
+    //   data: org.members.find((m) => m.  === OrgRole.ORG_ROLE_OWNER)?.email,
+    // },
     { label: 'MEMBERS', data: org?.memberCount },
     {
       label: 'NODES',

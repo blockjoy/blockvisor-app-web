@@ -1,3 +1,5 @@
+import { useIdentity } from '@modules/auth';
+import { authClient } from '@modules/grpc';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -6,6 +8,8 @@ export function useDefaultOrganization() {
   const [defaultOrganization, setDefaultOrganization] = useRecoilState(
     organizationAtoms.defaultOrganization,
   );
+
+  const identity = useIdentity();
 
   const getDefaultOrganization = async (organizations: Org[]) => {
     const doesLocalStorageDefaultOrgExistInList = organizations.find(
@@ -21,6 +25,13 @@ export function useDefaultOrganization() {
         name: organization.name,
         id: organization.id,
       });
+
+      const permissions = await authClient.listPermissions(
+        identity.user?.id!,
+        organization.id,
+      );
+
+      console.log('permissions', permissions);
     }
   };
 
