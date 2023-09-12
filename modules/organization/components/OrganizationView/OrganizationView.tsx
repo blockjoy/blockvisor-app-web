@@ -47,11 +47,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canCreateMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_MEMBER,
-  );
+  const canCreateMember: boolean = useHasPermissions();
 
   const [isInviting, setIsInviting] = useState<boolean>(false);
 

@@ -250,11 +250,7 @@ export const NodeLauncher = () => {
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canAddNode: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_NODE,
-  );
+  const canAddNode: boolean = useHasPermissions();
 
   useEffect(() => {
     const activeBlockchain = blockchains.find(

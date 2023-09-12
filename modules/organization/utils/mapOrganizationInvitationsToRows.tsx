@@ -41,17 +41,9 @@ export const mapOrganizationInvitationsToRows = (
     organizationSelectors.userRoleInOrganization,
   );
 
-  const canCreateMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_MEMBER,
-  );
+  const canCreateMember: boolean = useHasPermissions();
 
-  const canRemoveMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.DELETE_MEMBER,
-  );
+  const canRemoveMember: boolean = useHasPermissions();
 
   const handleRevokeInvitation = (invitationId: string, email: string) => {
     methods?.action(Action.revoke, { invitationId, email });

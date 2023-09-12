@@ -1,8 +1,8 @@
 import { selector } from 'recoil';
-import { Org, OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { organizationAtoms } from '@modules/organization';
 import { authAtoms } from '@modules/auth';
-import { ORG_ROLES } from '@modules/auth/hooks/useHasPermissions';
+// import { ORG_ROLES } from '@modules/auth/hooks/useHasPermissions';
 
 const defaultOrganization = selector<Org | null>({
   key: 'organization.default.details',
@@ -22,17 +22,19 @@ const defaultOrganization = selector<Org | null>({
   },
 });
 
-const userRoleInOrganization = selector<OrgRole | null>({
+const userRoleInOrganization = selector<any | null>({
   key: 'organization.user.role',
   get: ({ get }) => {
     const user = get(authAtoms.user);
 
     const defaultOrganizationDetails = get(defaultOrganization);
 
-    const role: OrgRole | null =
-      defaultOrganizationDetails?.members?.find(
-        (u: OrgUser) => u.userId === user?.id,
-      )?.role ?? null;
+    // const role: any | null =
+    //   defaultOrganizationDetails?.members?.find(
+    //     (u: any) => u.userId === user?.id,
+    //   )?.role ?? null;
+
+    const role = null;
 
     return role;
   },
@@ -44,7 +46,7 @@ const userRoleNameInOrganization = selector<string>({
     const orgRole = get(userRoleInOrganization);
     if (!orgRole) return '';
 
-    return ORG_ROLES[orgRole];
+    return '';
   },
 });
 
