@@ -58,6 +58,10 @@ const IconCosmos = dynamic(
   () => import(`@public/assets/icons/blockchain/Cosmos.svg`),
 );
 
+const IconKlaytn = dynamic(
+  () => import(`@public/assets/icons/blockchain/Klaytn.svg`),
+);
+
 const IconLightning = dynamic(
   () => import(`@public/assets/icons/blockchain/Lightning.svg`),
 );
@@ -114,6 +118,7 @@ export const BlockchainIcon: FC<Props> = ({
       Component = IconAvalanche;
       break;
     case 'bnb':
+    case 'bsc':
       Component = IconBnB;
       break;
     case 'cardano':
@@ -138,6 +143,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'cosmos':
       Component = IconCosmos;
+      break;
+    case 'klaytn':
+      Component = IconKlaytn;
       break;
     case 'lightning':
       Component = IconLightning;
