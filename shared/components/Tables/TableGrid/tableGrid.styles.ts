@@ -40,6 +40,7 @@ export const styles = {
   `,
   cell: (theme: ITheme) => css`
     display: flex;
+    align-items: flex-start;
     justify-content: center;
     border-radius: 4px;
     border: 1px solid transparent;
@@ -81,6 +82,7 @@ export const styles = {
     min-width: 40px;
     padding-top: 5px;
     display: flex;
+    align-items: flex-start;
     justify-content: flex-end;
   `,
   cellTitle: css`
@@ -106,5 +108,25 @@ export const styles = {
   `,
   moreIcon: css`
     rotate: 90deg;
+    width: 32px;
+    height: 32px;
+  `,
+  deleteButton: (theme: ITheme) => css`
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 4px;
+
+    :hover {
+      background: rgb(0 0 0 / 15%);
+      path {
+        fill: ${theme.colorText};
+      }
+    }
   `,
 };

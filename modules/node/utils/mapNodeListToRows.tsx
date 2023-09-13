@@ -1,4 +1,4 @@
-import { TableBlock } from '@shared/components';
+import { Button, TableBlock } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 import {
@@ -6,8 +6,15 @@ import {
   NodeStatus as NodeStatusEnum,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from './convertNodeTypeToName';
+import { SvgIcon } from '@shared/components/General';
+import { spacing } from 'styles/utils.spacing.styles';
+import { css } from '@emotion/react';
+import IconDelete from '@public/assets/icons/common/Trash.svg';
 
-export const mapNodeListToRows = (nodeList?: Node[]) => {
+export const mapNodeListToRows = (
+  nodeList?: Node[],
+  onDeleteClick?: (id: string, name: string, hostId: string) => void,
+) => {
   const headers: TableHeader[] = [
     {
       name: '',
@@ -30,6 +37,12 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       name: 'Status',
       key: '4',
       width: '200px',
+    },
+    {
+      name: '',
+      key: '5',
+      width: '40px',
+      textAlign: 'right',
     },
   ];
 
@@ -77,6 +90,30 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
             loadingCurrent={node?.dataSyncProgress?.current}
             loadingTotal={node?.dataSyncProgress?.total}
           />
+        ),
+      },
+      {
+        key: '5',
+        component: node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING && (
+          <Button
+            css={
+              (spacing.left.large,
+              css`
+                width: 40px;
+              `)
+            }
+            style="icon"
+            tooltip="Delete"
+            onClick={() =>
+              !!onDeleteClick
+                ? onDeleteClick(node.id, node.name, node.hostId)
+                : null
+            }
+          >
+            <SvgIcon isDefaultColor>
+              <IconDelete />
+            </SvgIcon>
+          </Button>
         ),
       },
     ],
