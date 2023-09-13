@@ -14,17 +14,9 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import {
-  organizationSelectors,
-  useDefaultOrganization,
-} from '@modules/organization';
-import { authSelectors } from '@modules/auth';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
-
-import {
-  useHasPermissions,
-  Permissions,
-} from '@modules/auth/hooks/useHasPermissions';
+import { useDefaultOrganization } from '@modules/organization';
+import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
@@ -32,20 +24,12 @@ export const HostLauncher = () => {
 
   const { defaultOrganization } = useDefaultOrganization();
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
   const [activeView, setActiveView] = useState<'view' | 'action'>('view');
   const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
 
-  const canAddHost: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_HOST,
-  );
+  const canAddHost = useHasPermissions('host-create');
 
   const isDisabledAdding = !hasPaymentMethod || !canAddHost;
 

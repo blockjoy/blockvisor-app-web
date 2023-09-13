@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { authAtoms, authSelectors, useSignOut } from '@modules/auth';
+import { authAtoms, useGetPermissions, useSignOut } from '@modules/auth';
 import { ROUTES } from '@shared/constants/routes';
 import { DropdownMenu, DropdownItem, Badge } from '@shared/components';
 import { ProfileBubble } from './ProfileBubble';
@@ -17,13 +17,12 @@ export const ProfileDropdown = () => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
 
+  const { permissions } = useGetPermissions();
+
   const [isOpen, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const signOut = useSignOut();
-
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const userRoleName = useRecoilValue(authSelectors.userRoleName);
 
   const handleClick = () => setOpen(!isOpen);
   const handleClickOutside = () => setOpen(false);
@@ -48,6 +47,9 @@ export const ProfileDropdown = () => {
     handleClickOutside();
   };
 
+  // TODO: Remove this banter code
+  const isSuperUser = permissions.length > 20;
+
   return (
     <div ref={dropdownRef} css={styles.base}>
       <button css={styles.button} onClick={handleClick}>
@@ -63,7 +65,7 @@ export const ProfileDropdown = () => {
             <span>{escapeHtml(`${user?.firstName} ${user?.lastName}`)}</span>
             {isSuperUser && (
               <Badge customCss={[spacing.top.micro]} style="outline">
-                {userRoleName}
+                Super User
               </Badge>
             )}
           </div>

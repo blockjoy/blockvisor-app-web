@@ -7,10 +7,8 @@ import {
   DeleteModal,
 } from '@shared/components';
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { styles } from './OrganizationViewHeader.styles';
 import {
-  organizationSelectors,
   useDefaultOrganization,
   useDeleteOrganization,
   useGetOrganization,
@@ -18,11 +16,7 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { authSelectors } from '@modules/auth';
-import {
-  Permissions,
-  useHasPermissions,
-} from '@modules/auth/hooks/useHasPermissions';
+import { useHasPermissions } from '@modules/auth';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
@@ -66,22 +60,9 @@ export const OrganizationViewHeader = () => {
     setIsSavingOrganization(null);
   };
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
+  const canUpdateOrganization = useHasPermissions('org-update');
 
-  const canUpdateOrganization: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.UPDATE_ORGANIZATION,
-  );
-
-  const canDeleteOrganization: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.DELETE_ORGANIZATION,
-  );
+  const canDeleteOrganization = useHasPermissions('org-delete');
 
   const { getDefaultOrganization } = useDefaultOrganization();
 

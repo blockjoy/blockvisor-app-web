@@ -6,14 +6,6 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 
 export const protobufPackage = "blockjoy.v1";
 
-export enum OrgRole {
-  ORG_ROLE_UNSPECIFIED = 0,
-  ORG_ROLE_MEMBER = 1,
-  ORG_ROLE_OWNER = 2,
-  ORG_ROLE_ADMIN = 3,
-  UNRECOGNIZED = -1,
-}
-
 /** Organization representation */
 export interface Org {
   /** The UUID of a the organization. */
@@ -115,7 +107,6 @@ export interface OrgServiceResetProvisionTokenResponse {
 export interface OrgUser {
   userId: string;
   orgId: string;
-  role: OrgRole;
   name: string;
   email: string;
 }
@@ -1000,7 +991,7 @@ export const OrgServiceResetProvisionTokenResponse = {
 };
 
 function createBaseOrgUser(): OrgUser {
-  return { userId: "", orgId: "", role: 0, name: "", email: "" };
+  return { userId: "", orgId: "", name: "", email: "" };
 }
 
 export const OrgUser = {
@@ -1011,14 +1002,11 @@ export const OrgUser = {
     if (message.orgId !== "") {
       writer.uint32(18).string(message.orgId);
     }
-    if (message.role !== 0) {
-      writer.uint32(24).int32(message.role);
-    }
     if (message.name !== "") {
-      writer.uint32(34).string(message.name);
+      writer.uint32(26).string(message.name);
     }
     if (message.email !== "") {
-      writer.uint32(42).string(message.email);
+      writer.uint32(34).string(message.email);
     }
     return writer;
   },
@@ -1045,21 +1033,14 @@ export const OrgUser = {
           message.orgId = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.role = reader.int32() as any;
-          continue;
-        case 4:
-          if (tag !== 34) {
+          if (tag !== 26) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 5:
-          if (tag !== 42) {
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
@@ -1082,7 +1063,6 @@ export const OrgUser = {
     const message = createBaseOrgUser();
     message.userId = object.userId ?? "";
     message.orgId = object.orgId ?? "";
-    message.role = object.role ?? 0;
     message.name = object.name ?? "";
     message.email = object.email ?? "";
     return message;

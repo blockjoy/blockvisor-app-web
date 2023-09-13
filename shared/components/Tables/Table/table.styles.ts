@@ -91,6 +91,7 @@ export const styles = {
   `,
   rowFancyUnderlineHover: css`
     @media ${breakpoints.fromXLrg} {
+      cursor: pointer;
       :hover .underline {
         transform: scaleX(1);
         opacity: 1;
@@ -99,6 +100,7 @@ export const styles = {
   `,
   rowBasicUnderlineHover: (theme: ITheme) => css`
     @media ${breakpoints.fromXLrg} {
+      cursor: pointer;
       :hover {
         border-bottom-color: ${theme.colorLabel};
       }
@@ -107,11 +109,6 @@ export const styles = {
   tableSkeleton: css`
     display: grid;
     gap: 20px;
-  `,
-  hasHoverRows: css`
-    tbody tr:hover {
-      cursor: pointer;
-    }
   `,
   underline: (theme: ITheme) => css`
     display: block;

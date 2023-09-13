@@ -8,7 +8,7 @@ import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 
 export const mapHostListToGird = (
   nodeList: Host[],
-  onCellClick: (args0: any) => void,
+  onCellClick: (id: string) => void,
 ) => {
   return nodeList?.map((host: Host) => {
     return {
@@ -16,7 +16,7 @@ export const mapHostListToGird = (
       component: (
         <TableGridCell
           key={host.id}
-          onCellClick={() => onCellClick({ key: host.id })}
+          onCellClick={() => onCellClick(host.id)}
           cellTitle={host.name}
           cellIcon={<HostIcon />}
           cellStatus={<HostStatus />}

@@ -25,8 +25,8 @@ export const useHostList = () => {
 
   const setHasMore = useSetRecoilState(hostAtoms.hasMoreHosts);
 
-  const handleHostClick = (args: any) => {
-    router.push(ROUTES.HOST(args.key));
+  const handleHostClick = (id: string) => {
+    router.push(ROUTES.HOST(id));
   };
 
   const removeFromHostList = (id: string) => {

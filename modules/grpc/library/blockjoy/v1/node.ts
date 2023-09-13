@@ -166,6 +166,7 @@ export interface Node {
    * host.
    */
   dataDirectoryMountpoint?: string | undefined;
+  dataSyncProgress?: DataSyncProgress | undefined;
 }
 
 /** This message is used to create a new node. */
@@ -415,6 +416,19 @@ export interface NodeProperty {
   value: string;
 }
 
+export interface DataSyncProgress {
+  /** The progress of node data sync operation: total units to sync. */
+  total?:
+    | number
+    | undefined;
+  /** The progress of node data sync operation: units currently synced. */
+  current?:
+    | number
+    | undefined;
+  /** The progress of node data sync operation: message to display to user. */
+  message?: string | undefined;
+}
+
 function createBaseNode(): Node {
   return {
     id: "",
@@ -448,6 +462,7 @@ function createBaseNode(): Node {
     denyIps: [],
     placement: undefined,
     dataDirectoryMountpoint: undefined,
+    dataSyncProgress: undefined,
   };
 }
 
@@ -545,6 +560,9 @@ export const Node = {
     }
     if (message.dataDirectoryMountpoint !== undefined) {
       writer.uint32(250).string(message.dataDirectoryMountpoint);
+    }
+    if (message.dataSyncProgress !== undefined) {
+      DataSyncProgress.encode(message.dataSyncProgress, writer.uint32(258).fork()).ldelim();
     }
     return writer;
   },
@@ -773,6 +791,13 @@ export const Node = {
 
           message.dataDirectoryMountpoint = reader.string();
           continue;
+        case 32:
+          if (tag !== 258) {
+            break;
+          }
+
+          message.dataSyncProgress = DataSyncProgress.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -821,6 +846,9 @@ export const Node = {
       ? NodePlacement.fromPartial(object.placement)
       : undefined;
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
+    message.dataSyncProgress = (object.dataSyncProgress !== undefined && object.dataSyncProgress !== null)
+      ? DataSyncProgress.fromPartial(object.dataSyncProgress)
+      : undefined;
     return message;
   },
 };
@@ -2135,6 +2163,74 @@ export const NodeProperty = {
     message.disabled = object.disabled ?? false;
     message.required = object.required ?? false;
     message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseDataSyncProgress(): DataSyncProgress {
+  return { total: undefined, current: undefined, message: undefined };
+}
+
+export const DataSyncProgress = {
+  encode(message: DataSyncProgress, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.total !== undefined) {
+      writer.uint32(256).uint32(message.total);
+    }
+    if (message.current !== undefined) {
+      writer.uint32(264).uint32(message.current);
+    }
+    if (message.message !== undefined) {
+      writer.uint32(274).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DataSyncProgress {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDataSyncProgress();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 32:
+          if (tag !== 256) {
+            break;
+          }
+
+          message.total = reader.uint32();
+          continue;
+        case 33:
+          if (tag !== 264) {
+            break;
+          }
+
+          message.current = reader.uint32();
+          continue;
+        case 34:
+          if (tag !== 274) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<DataSyncProgress>): DataSyncProgress {
+    return DataSyncProgress.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<DataSyncProgress>): DataSyncProgress {
+    const message = createBaseDataSyncProgress();
+    message.total = object.total ?? undefined;
+    message.current = object.current ?? undefined;
+    message.message = object.message ?? undefined;
     return message;
   },
 };

@@ -1,5 +1,5 @@
 import { organizationClient } from '@modules/grpc';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { checkForApiError } from 'utils/checkForApiError';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
@@ -12,7 +12,7 @@ export function useGetOrganization() {
 
   const { getDefaultOrganization } = useDefaultOrganization();
 
-  const { organizations, getOrganizations } = useGetOrganizations();
+  const { organizations } = useGetOrganizations();
 
   const [organization, setOrganization] = useRecoilState(
     organizationAtoms.selectedOrganization,

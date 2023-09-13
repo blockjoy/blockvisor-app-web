@@ -50,7 +50,7 @@ const Verified: NextPage = () => {
       const { token } = router.query;
       (async () => {
         try {
-          const accessToken = await authClient.registration_confirmation(
+          const accessToken = await authClient.registrationConfirmation(
             token?.toString()!,
           );
           await signIn(undefined, accessToken);
