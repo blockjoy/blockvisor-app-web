@@ -14,7 +14,7 @@ import {
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider, useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
-import { authClient } from '@modules/grpc';
+import { useGetPermissions } from '@modules/auth';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -29,6 +29,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const currentOrg = useRef<string>();
 
   const { connect: mqttConnect } = useMqtt();
+  const { getPermissions } = useGetPermissions();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();
@@ -41,14 +42,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     (async () => {
       if (!organizations.length) await getOrganizations(true);
       await getReceivedInvitations(userEmail!);
-
-      const permissions = await authClient.listPermissions(
-        repository?.getIdentity()?.id!,
-        defaultOrganization?.id!,
-      );
-
-      console.log('permissions', permissions);
-
       mqttConnect();
     })();
   }, []);
@@ -67,6 +60,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       currentOrg.current = defaultOrganization!.id;
       loadNodes();
       loadHosts();
+      getPermissions();
       mqttConnect();
     }
   }, [defaultOrganization?.id]);

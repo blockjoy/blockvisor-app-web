@@ -1,6 +1,5 @@
 import { styles } from './NodeLauncher.styles';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
 import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
 import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
@@ -8,10 +7,7 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { useNodeAdd } from '@modules/node/hooks/useNodeAdd';
 import { useRouter } from 'next/router';
 import { EmptyColumn, PageTitle } from '@shared/components';
-import {
-  organizationSelectors,
-  useDefaultOrganization,
-} from '@modules/organization';
+import { useDefaultOrganization } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import {
@@ -35,11 +31,7 @@ import {
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
-import {
-  useHasPermissions,
-  Permissions,
-} from '@modules/auth/hooks/useHasPermissions';
-import { authSelectors } from '@modules/auth';
+import { useHasPermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
 
 export type NodeLauncherState = {
@@ -237,7 +229,7 @@ export const NodeLauncher = () => {
 
     createNode(
       params,
-      (nodeId: string) => {
+      () => {
         Mixpanel.track('Launch Node - Node Launched');
         router.push(ROUTES.NODES);
       },
@@ -245,12 +237,7 @@ export const NodeLauncher = () => {
     );
   };
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canAddNode: boolean = useHasPermissions();
+  const canAddNode = useHasPermissions('node-create');
 
   useEffect(() => {
     const activeBlockchain = blockchains.find(

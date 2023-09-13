@@ -1,17 +1,9 @@
-import { authSelectors } from '@modules/auth';
+import { useHasPermissions } from '@modules/auth';
 import { Button, SvgIcon } from '@shared/components';
-import { useRecoilValue } from 'recoil';
 import IconClose from '@public/assets/icons/common/Close.svg';
-import {
-  Permissions,
-  useHasPermissions,
-} from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
-import {
-  OrganizationInvitationsResend,
-  organizationSelectors,
-} from '@modules/organization';
+import { OrganizationInvitationsResend } from '@modules/organization';
 
 export enum Action {
   revoke = 'revoke',
@@ -36,14 +28,9 @@ export const mapOrganizationInvitationsToRows = (
   invitations?: Invitation[],
   methods?: Methods,
 ) => {
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
+  const canCreateMember = useHasPermissions('org-update'); // TODO: org-invite-member
 
-  const canCreateMember: boolean = useHasPermissions();
-
-  const canRemoveMember: boolean = useHasPermissions();
+  const canRemoveMember = useHasPermissions('org-remove-member');
 
   const handleRevokeInvitation = (invitationId: string, email: string) => {
     methods?.action(Action.revoke, { invitationId, email });

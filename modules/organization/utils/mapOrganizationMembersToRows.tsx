@@ -1,17 +1,11 @@
-import { useIdentity } from '@modules/auth';
-import { Badge, Button, SvgIcon } from '@shared/components';
+import { useHasPermissions, useIdentity } from '@modules/auth';
+import { Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
-import { spacing } from 'styles/utils.spacing.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
 import IconClose from '@public/assets/icons/common/Close.svg';
-import {
-  Permissions,
-  useHasPermissions,
-} from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
-import { organizationSelectors } from '../store/organizationSelectors';
 
 export enum Action {
   revoke = 'revoke',
@@ -43,12 +37,7 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  // const userRole = useRecoilValue(authSelectors.userRole);
-  // const userRoleInOrganization = useRecoilValue(
-  //   organizationSelectors.userRoleInOrganization,
-  // );
-
-  const canRemoveMember: boolean = useHasPermissions();
+  const canRemoveMember = useHasPermissions('org-remove-member');
 
   const handleRemoveMember = async (
     userId: string,
@@ -86,20 +75,13 @@ export const mapOrganizationMembersToRows = (
         component: (
           <div css={[flex.display.inline, flex.align.center]}>
             <p>{escapeHtml(member.email!)}</p>
+            {/* TODO: Determine owner of Org */}
             {/* {member.role === OrgRole.ORG_ROLE_OWNER && (
               <Badge style="outline" customCss={[spacing.left.small]}>
                 Owner
               </Badge>
             )}
-            {member.role === OrgRole.ORG_ROLE_ADMIN && (
-              <Badge
-                color="primary"
-                style="outline"
-                customCss={[spacing.left.small]}
-              >
-                Admin
-              </Badge>
-            )} */}
+             */}
           </div>
         ),
       },
