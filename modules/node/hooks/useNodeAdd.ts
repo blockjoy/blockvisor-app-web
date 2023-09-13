@@ -22,7 +22,7 @@ export const useNodeAdd = () => {
 
   const createNode = async (
     node: NodeServiceCreateRequest,
-    onSuccess: (nodeId: string) => void,
+    onSuccess: () => void,
     onError: (errorMessage: string) => void,
   ) => {
     const properties = node?.properties?.map((property) => ({
@@ -39,8 +39,6 @@ export const useNodeAdd = () => {
 
     try {
       const response: Node = await nodeClient.createNode(nodeRequest);
-
-      const nodeId = response.id;
 
       // Update organization node count
       const activeOrganization = organizations.find(
@@ -63,7 +61,7 @@ export const useNodeAdd = () => {
 
       toast.success('Node Launched');
       loadNodes();
-      onSuccess(nodeId);
+      onSuccess();
     } catch (err: any) {
       console.log('Error Launching Node', err);
       onError('Error launching node, an unknown error occurred.');
