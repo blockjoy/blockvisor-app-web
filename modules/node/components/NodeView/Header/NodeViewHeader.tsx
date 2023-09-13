@@ -9,7 +9,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
 import { BlockchainIcon } from '@shared/components';
-import { useNodeView } from '@modules/node';
+import { useNodeDelete, useNodeView } from '@modules/node';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { wrapper } from 'styles/wrapper.styles';
 import { useRouter } from 'next/router';
@@ -20,7 +20,8 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 export const NodeViewHeader = () => {
   const router = useRouter();
-  const { node, isLoading, deleteNode } = useNodeView();
+  const { node, isLoading } = useNodeView();
+  const { deleteNode } = useNodeDelete();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
