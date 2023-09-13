@@ -4,21 +4,29 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/v1/node';
 
-export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
+export const toGrid = (
+  nodeList: Node[],
+  onCellClick: (args0: any) => void,
+  onDeleteClick: (id: string, name: string, hostId: string) => void,
+) => {
   return nodeList?.map((node: Node) => {
     const isProvisioning =
       node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING;
 
-    const handleCellClick = !isProvisioning
+    const handleCellClicked = !isProvisioning
       ? () => onCellClick(node.id)
       : undefined;
+
+    const handleDeleteClicked = () =>
+      onDeleteClick(node.id, node.name, node.hostId);
 
     return {
       key: node.id,
       component: (
         <TableGridCell
           key={node.id}
-          onCellClick={handleCellClick}
+          onCellClick={handleCellClicked}
+          onDeleteClick={handleDeleteClicked}
           cellTitle={node.name}
           cellIcon={
             <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
