@@ -1,4 +1,3 @@
-import { useRecoilValue } from 'recoil';
 import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 import {
   Button,
@@ -13,15 +12,8 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import {
-  organizationSelectors,
-  useDefaultOrganization,
-} from '@modules/organization';
-import { authSelectors } from '@modules/auth';
-import {
-  useHasPermissions,
-  Permissions,
-} from '@modules/auth/hooks/useHasPermissions';
+import { useDefaultOrganization } from '@modules/organization';
+import { useHasPermissions } from '@modules/auth';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
@@ -29,12 +21,7 @@ export const HostLauncher = () => {
 
   const { defaultOrganization } = useDefaultOrganization();
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canAddHost: boolean = useHasPermissions();
+  const canAddHost = useHasPermissions('host-create');
 
   const token = canAddHost
     ? provisionToken
