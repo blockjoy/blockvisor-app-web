@@ -33,11 +33,15 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     getReceivedInvitations,
   } = useInvitations();
 
+  const { hasPermission } = usePermissions();
+
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
-  const canCreateMember = usePermissions().hasPermission('invitation-create');
+  const canAddNode = hasPermission('node-create');
+
+  const canCreateMember = hasPermission('invitation-create');
 
   const [isInviting, setIsInviting] = useState<boolean>(false);
 

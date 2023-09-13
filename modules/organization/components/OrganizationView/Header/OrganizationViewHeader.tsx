@@ -33,6 +33,7 @@ export const OrganizationViewHeader: FC = () => {
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
+  const { hasPermission } = usePermissions();
 
   const { organizations } = useGetOrganizations();
 
@@ -60,9 +61,9 @@ export const OrganizationViewHeader: FC = () => {
     setIsSavingOrganization(null);
   };
 
-  const canUpdateOrganization = usePermissions().hasPermission('org-update');
+  const canUpdateOrganization = hasPermission('org-update');
 
-  const canDeleteOrganization = usePermissions().hasPermission('org-delete');
+  const canDeleteOrganization = hasPermission('org-delete');
 
   const { getDefaultOrganization } = useDefaultOrganization();
 

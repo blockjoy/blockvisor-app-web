@@ -21,7 +21,9 @@ export const HostLauncher = () => {
 
   const { defaultOrganization } = useDefaultOrganization();
 
-  const canAddHost = usePermissions().hasPermission('host-create');
+  const { hasPermission } = usePermissions();
+
+  const canAddHost = hasPermission('host-create');
 
   const token = canAddHost
     ? provisionToken
