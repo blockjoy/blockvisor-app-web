@@ -1,4 +1,4 @@
-import { useHasPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 import { Button, SvgIcon } from '@shared/components';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -28,9 +28,9 @@ export const mapOrganizationInvitationsToRows = (
   invitations?: Invitation[],
   methods?: Methods,
 ) => {
-  const canCreateMember = useHasPermissions('org-update'); // TODO: org-invite-member
+  const canCreateMember = usePermissions().hasPermission('invitation-create');
 
-  const canRemoveMember = useHasPermissions('org-remove-member');
+  const canRemoveMember = usePermissions().hasPermission('org-remove-member');
 
   const handleRevokeInvitation = (invitationId: string, email: string) => {
     methods?.action(Action.revoke, { invitationId, email });
@@ -79,28 +79,21 @@ export const mapOrganizationInvitationsToRows = (
       },
       {
         key: '4',
-        component: (
-          <>
-            {canRemoveMember ? (
-              <Button
-                type="button"
-                tooltip="Cancel"
-                style="icon"
-                size="medium"
-                onClick={() =>
-                  handleRevokeInvitation(
-                    invitation?.id!,
-                    invitation?.inviteeEmail!,
-                  )
-                }
-              >
-                <SvgIcon size="20px">
-                  <IconClose />
-                </SvgIcon>
-              </Button>
-            ) : null}
-          </>
-        ),
+        component: canRemoveMember ? (
+          <Button
+            type="button"
+            tooltip="Cancel"
+            style="icon"
+            size="medium"
+            onClick={() =>
+              handleRevokeInvitation(invitation?.id!, invitation?.inviteeEmail!)
+            }
+          >
+            <SvgIcon size="20px">
+              <IconClose />
+            </SvgIcon>
+          </Button>
+        ) : null,
       },
     ],
   }));
