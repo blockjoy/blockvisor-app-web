@@ -31,7 +31,7 @@ import {
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
-import { useHasPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
 
 export type NodeLauncherState = {
@@ -75,6 +75,10 @@ export const NodeLauncher = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>();
 
   const { defaultOrganization } = useDefaultOrganization();
+
+  const { hasPermission } = usePermissions();
+
+  const canAddNode = hasPermission('node-create');
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -236,8 +240,6 @@ export const NodeLauncher = () => {
       (error: string) => setServerError(error!),
     );
   };
-
-  const canAddNode = useHasPermissions('node-create');
 
   useEffect(() => {
     const activeBlockchain = blockchains.find(

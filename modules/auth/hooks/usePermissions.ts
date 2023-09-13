@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
 import { useIdentity } from './useIdentity';
 
-export function useGetPermissions() {
+export function usePermissions() {
   const [permissions, setPermissions] = useRecoilState(authAtoms.permissions);
 
   const { defaultOrganization } = useDefaultOrganization();
@@ -30,8 +30,12 @@ export function useGetPermissions() {
     }
   };
 
+  const hasPermission = (permission: Permission) =>
+    permissions.findIndex((p) => p === permission) > -1;
+
   return {
     permissions,
     getPermissions,
+    hasPermission,
   };
 }

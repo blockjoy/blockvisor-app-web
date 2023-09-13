@@ -13,7 +13,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { useDefaultOrganization } from '@modules/organization';
-import { useHasPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
@@ -21,7 +21,9 @@ export const HostLauncher = () => {
 
   const { defaultOrganization } = useDefaultOrganization();
 
-  const canAddHost = useHasPermissions('host-create');
+  const { hasPermission } = usePermissions();
+
+  const canAddHost = hasPermission('host-create');
 
   const token = canAddHost
     ? provisionToken
