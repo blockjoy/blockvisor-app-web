@@ -39,8 +39,6 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     organizationAtoms.selectedOrganization,
   );
 
-  const canAddNode = hasPermission('node-create');
-
   const canCreateMember = hasPermission('invitation-create');
 
   const [isInviting, setIsInviting] = useState<boolean>(false);
