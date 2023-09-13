@@ -28,9 +28,11 @@ export const mapOrganizationInvitationsToRows = (
   invitations?: Invitation[],
   methods?: Methods,
 ) => {
-  const canCreateMember = usePermissions().hasPermission('invitation-create');
+  const { hasPermission } = usePermissions();
 
-  const canRemoveMember = usePermissions().hasPermission('org-remove-member');
+  const canCreateMember = hasPermission('invitation-create');
+
+  const canRemoveMember = hasPermission('org-remove-member');
 
   const handleRevokeInvitation = (invitationId: string, email: string) => {
     methods?.action(Action.revoke, { invitationId, email });

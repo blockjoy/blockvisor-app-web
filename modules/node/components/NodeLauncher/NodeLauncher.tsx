@@ -76,6 +76,10 @@ export const NodeLauncher = () => {
 
   const { defaultOrganization } = useDefaultOrganization();
 
+  const { hasPermission } = usePermissions();
+
+  const canAddNode = hasPermission('node-create');
+
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
     nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
@@ -236,8 +240,6 @@ export const NodeLauncher = () => {
       (error: string) => setServerError(error!),
     );
   };
-
-  const canAddNode = usePermissions().hasPermission('node-create');
 
   useEffect(() => {
     const activeBlockchain = blockchains.find(

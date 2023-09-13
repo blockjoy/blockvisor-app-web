@@ -33,11 +33,13 @@ export const mapOrganizationMembersToRows = (
 ) => {
   const { user } = useIdentity();
 
+  const { hasPermission } = usePermissions();
+
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
-  const canRemoveMember = usePermissions().hasPermission('org-remove-member');
+  const canRemoveMember = hasPermission('org-remove-member');
 
   const handleRemoveMember = async (
     userId: string,
