@@ -15,8 +15,7 @@ import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
 import { useRecoilValue } from 'recoil';
-import { useIdentity } from '@modules/auth';
-import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import { useIdentity, usePermissions } from '@modules/auth';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { toast } from 'react-toastify';
 import { createPath } from '@modules/organization/utils/createPath';
@@ -38,7 +37,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     organizationAtoms.selectedOrganization,
   );
 
-  const canCreateMember = useHasPermissions('org-update'); // TODO: org-invite-member???
+  const canCreateMember = usePermissions().hasPermission('invitation-create');
 
   const [isInviting, setIsInviting] = useState<boolean>(false);
 

@@ -1,4 +1,4 @@
-import { useHasPermissions, useIdentity } from '@modules/auth';
+import { usePermissions, useIdentity } from '@modules/auth';
 import { Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
@@ -37,7 +37,7 @@ export const mapOrganizationMembersToRows = (
     organizationAtoms.selectedOrganization,
   );
 
-  const canRemoveMember = useHasPermissions('org-remove-member');
+  const canRemoveMember = usePermissions().hasPermission('org-remove-member');
 
   const handleRemoveMember = async (
     userId: string,

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { authAtoms, useGetPermissions, useSignOut } from '@modules/auth';
+import { authAtoms, usePermissions, useSignOut } from '@modules/auth';
 import { ROUTES } from '@shared/constants/routes';
 import { DropdownMenu, DropdownItem, Badge } from '@shared/components';
 import { ProfileBubble } from './ProfileBubble';
@@ -16,7 +16,7 @@ export const ProfileDropdown = () => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
 
-  const { permissions } = useGetPermissions();
+  const { permissions } = usePermissions();
 
   const [isOpen, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
