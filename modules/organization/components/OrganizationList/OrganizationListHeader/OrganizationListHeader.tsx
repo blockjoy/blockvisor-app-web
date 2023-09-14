@@ -1,3 +1,4 @@
+import { usePermissions } from '@modules/auth';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import {
@@ -19,6 +20,9 @@ export const OrganizationListHeader = () => {
   const { addToOrganizations } = useGetOrganizations();
   const { setOrganization } = useGetOrganization();
   const { switchOrganization } = useSwitchOrganization();
+  const { hasPermission } = usePermissions();
+
+  const canAddOrg = hasPermission('org-create');
 
   const onSubmit = async (name: string) => {
     try {
@@ -39,12 +43,14 @@ export const OrganizationListHeader = () => {
 
   return (
     <header css={styles.header}>
-      <TableAdd
-        placeholder="Add Organization"
-        placeholderFocused="Enter a name"
-        onSubmit={onSubmit}
-        isLoading={isLoading}
-      />
+      {canAddOrg && (
+        <TableAdd
+          placeholder="Add Organization"
+          placeholderFocused="Enter a name"
+          onSubmit={onSubmit}
+          isLoading={isLoading}
+        />
+      )}
     </header>
   );
 };

@@ -9,6 +9,7 @@ import {
   Node,
   NodeServiceUpdateConfigRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import { usePermissions } from '@modules/auth';
 
 type Args = string | string[] | undefined;
 
@@ -36,9 +37,21 @@ export const useNodeView = (): Hook => {
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
 
+  const { hasPermission } = usePermissions();
+
+  const canStopNode = hasPermission('node-stop');
+  const canStartNode = hasPermission('node-start');
+  const canLoadNode = hasPermission('node-get');
+  const canUpdateNode = hasPermission('node-update-config');
+
   const { nodeList } = useNodeList();
 
   const stopNode = async (nodeId: Args) => {
+    if (!canStopNode) {
+      toast.error('You have no permission to stop nodes');
+      return;
+    }
+
     try {
       await nodeClient.stopNode(convertRouteParamToString(nodeId));
       toast.success(`Node Stopped`);
@@ -48,6 +61,11 @@ export const useNodeView = (): Hook => {
   };
 
   const startNode = async (nodeId: Args) => {
+    if (!canStartNode) {
+      toast.error('You have no permission to start nodes');
+      return;
+    }
+
     try {
       await nodeClient.startNode(convertRouteParamToString(nodeId));
       toast.success(`Node Started`);
@@ -57,6 +75,11 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args, onError: VoidFunction) => {
+    if (!canLoadNode) {
+      toast.error('You have no permission to load nodes');
+      return;
+    }
+
     if (nodeList.findIndex((n) => n.id === id) > -1) {
       setIsLoading('finished');
       setNode(nodeList.find((n) => n.id === id)!);
@@ -78,9 +101,15 @@ export const useNodeView = (): Hook => {
     }
   };
 
+  //TODO: permission for unload node
   const unloadNode = () => setNode(null);
 
   const updateNode = async (nodeRequest: NodeServiceUpdateConfigRequest) => {
+    if (!canUpdateNode) {
+      toast.error('You have no permission to update nodes');
+      return;
+    }
+
     try {
       await nodeClient.updateNode(nodeRequest);
       setNode({
@@ -92,6 +121,7 @@ export const useNodeView = (): Hook => {
     }
   };
 
+  //TODO: permission for modify node
   const modifyNode = (mqttNode: Node) =>
     setNode({
       ...node!,

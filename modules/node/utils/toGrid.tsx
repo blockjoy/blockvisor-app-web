@@ -8,6 +8,7 @@ export const toGrid = (
   nodeList: Node[],
   onCellClick: (args0: any) => void,
   onDeleteClick: (id: string, name: string, hostId: string) => void,
+  canDeleteNode?: boolean,
 ) => {
   return nodeList?.map((node: Node) => {
     const isProvisioning =
@@ -42,6 +43,7 @@ export const toGrid = (
           cellType={`${node.blockchainName} ${convertNodeTypeToName(
             node.nodeType,
           )}`}
+          canDeleteNode={canDeleteNode}
         />
       ),
     };
