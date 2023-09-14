@@ -62,7 +62,7 @@ export const TableGridCell: FC<Props> = ({
           tooltip={
             canDeleteNode
               ? 'Delete'
-              : 'You have no persmission to delete this node'
+              : 'You have no permission to delete this node'
           }
           onClick={() => (!!onDeleteClick ? onDeleteClick() : null)}
           disabled={!canDeleteNode}
