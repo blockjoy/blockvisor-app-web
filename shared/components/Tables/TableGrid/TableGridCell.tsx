@@ -14,6 +14,7 @@ type Props = {
   cellStatus: ReactNode;
   cellType?: string | ReactNode;
   cellIcon: ReactNode;
+  canDeleteNode?: boolean;
 };
 
 export const TableGridCell: FC<Props> = ({
@@ -23,6 +24,7 @@ export const TableGridCell: FC<Props> = ({
   cellStatus,
   cellType,
   cellIcon,
+  canDeleteNode,
 }) => (
   <div
     onClick={onCellClick}
@@ -57,8 +59,13 @@ export const TableGridCell: FC<Props> = ({
             `)
           }
           style="icon"
-          tooltip="Delete"
+          tooltip={
+            canDeleteNode
+              ? 'Delete'
+              : 'You have no persmission to delete this node'
+          }
           onClick={() => (!!onDeleteClick ? onDeleteClick() : null)}
+          disabled={!canDeleteNode}
         >
           <SvgIcon isDefaultColor>
             <IconDelete />

@@ -26,6 +26,7 @@ import IconNode from '@public/assets/icons/app/Node.svg';
 import { ROUTES } from '@shared/constants/routes';
 import { useNodeDelete } from '@modules/node/hooks/useNodeDelete';
 import { toast } from 'react-toastify';
+import { usePermissions } from '@modules/auth';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -44,6 +45,9 @@ export const NodeList = () => {
 
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
   const { deleteNode } = useNodeDelete();
+  const { hasPermission } = usePermissions();
+
+  const canDeleteNode = hasPermission('node-delete');
 
   const handleNodeDeleted = () => {
     deleteNode(nodeToDelete?.id, nodeToDelete?.hostId!, () => {
@@ -107,9 +111,15 @@ export const NodeList = () => {
     nodeUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = toGrid(nodeList, handleNodeClicked, handleNodeDeleteClicked);
+  const cells = toGrid(
+    nodeList,
+    handleNodeClicked,
+    handleNodeDeleteClicked,
+    canDeleteNode,
+  );
   const { headers, rows } = mapNodeListToRows(
     nodeList,
+    canDeleteNode,
     handleNodeDeleteClicked,
   );
   const { isFiltered, isEmpty } = resultsStatus(

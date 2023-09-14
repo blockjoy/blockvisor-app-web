@@ -13,6 +13,7 @@ import IconDelete from '@public/assets/icons/common/Trash.svg';
 
 export const mapNodeListToRows = (
   nodeList?: Node[],
+  canDeleteNode?: boolean,
   onDeleteClick?: (id: string, name: string, hostId: string) => void,
 ) => {
   const headers: TableHeader[] = [
@@ -103,12 +104,17 @@ export const mapNodeListToRows = (
               `)
             }
             style="icon"
-            tooltip="Delete"
+            tooltip={
+              canDeleteNode
+                ? 'Delete'
+                : 'You have no persmission to delete this node'
+            }
             onClick={() =>
               !!onDeleteClick
                 ? onDeleteClick(node.id, node.name, node.hostId)
                 : null
             }
+            disabled={!canDeleteNode}
           >
             <SvgIcon isDefaultColor>
               <IconDelete />
