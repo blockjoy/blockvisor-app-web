@@ -13,6 +13,7 @@ type Permission =
   | 'babel-notify'
   | 'blockchain-get'
   | 'blockchain-list'
+  | 'blockjoy-admin'
   | 'bundle-delete'
   | 'bundle-list-bundle-versions'
   | 'bundle-retrieve'
