@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
-import { ItemPrice } from 'chargebee-typescript/lib/resources';
 import { TableSkeleton } from '@shared/components';
 import {
   SubscriptionCancellation,
@@ -9,11 +8,7 @@ import {
   SubscriptionPreview,
 } from '@modules/billing';
 
-type SubscriptionProps = {
-  itemPrices: ItemPrice[];
-};
-
-export const Subscription = ({ itemPrices }: SubscriptionProps) => {
+export const Subscription = () => {
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
@@ -26,10 +21,7 @@ export const Subscription = ({ itemPrices }: SubscriptionProps) => {
 
   return (
     <>
-      <SubscriptionPreview
-        itemPrices={itemPrices}
-        handleCancellation={handleCancellation}
-      />
+      <SubscriptionPreview handleCancellation={handleCancellation} />
       {activeView === 'cancel' && (
         <SubscriptionCancellation handleBack={handleBack} />
       )}

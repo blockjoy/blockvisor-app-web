@@ -37,7 +37,7 @@ export const BillingView = ({ item, itemPrices }: BillingViewProps) => {
   return (
     <div css={styles.wrapper}>
       {subscription ? (
-        <Subscription itemPrices={itemPrices} />
+        <Subscription />
       ) : (
         <Plan item={item} itemPrices={itemPrices} />
       )}

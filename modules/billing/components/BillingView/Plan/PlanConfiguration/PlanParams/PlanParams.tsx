@@ -2,7 +2,11 @@ import { ChangeEvent } from 'react';
 import { useRecoilValue } from 'recoil';
 import { formatters } from '@shared/index';
 import { RadioButton, RadioButtonGroup, Switch } from '@shared/components';
-import { billingSelectors, calcNextRenewDate } from '@modules/billing';
+import {
+  BILLING_PERIOD,
+  billingSelectors,
+  calcNextRenewDate,
+} from '@modules/billing';
 import { styles } from './PlanParams.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
@@ -24,31 +28,27 @@ export const PlanParams = ({
 
   return (
     <>
-      {handlePeriodUnit && subscription?.billing_period_unit !== 'year' && (
-        <div css={spacing.bottom.large}>
-          <h3 css={styles.headline}>Billing period</h3>
-          <RadioButtonGroup>
-            <RadioButton
-              id="month"
-              name="periodUnit"
-              value="month"
-              selectedValue={periodUnit}
-              onChange={handlePeriodUnit}
-            >
-              Monthly
-            </RadioButton>
-            <RadioButton
-              id="year"
-              name="periodUnit"
-              value="year"
-              selectedValue={periodUnit}
-              onChange={handlePeriodUnit}
-            >
-              Yearly
-            </RadioButton>
-          </RadioButtonGroup>
-        </div>
-      )}
+      {handlePeriodUnit &&
+        subscription?.billing_period_unit !== 'year' &&
+        Boolean(BILLING_PERIOD.length) && (
+          <div css={spacing.bottom.large}>
+            <h3 css={styles.headline}>Billing period</h3>
+            <RadioButtonGroup>
+              {BILLING_PERIOD.map((billingPeriod: BillingPeriod) => (
+                <RadioButton
+                  key={billingPeriod.id}
+                  id={billingPeriod.id}
+                  name="periodUnit"
+                  value={billingPeriod.id}
+                  selectedValue={periodUnit}
+                  onChange={handlePeriodUnit}
+                >
+                  {billingPeriod.title}
+                </RadioButton>
+              ))}
+            </RadioButtonGroup>
+          </div>
+        )}
       {autoRenew !== undefined && handleAutoRenew !== undefined && (
         <div css={spacing.bottom.large}>
           <h3 css={styles.headline}>Auto renew</h3>

@@ -7,7 +7,7 @@ import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/v1/
 export const toGrid = (
   nodeList: Node[],
   onCellClick: (args0: any) => void,
-  onDeleteClick: (id: string, name: string, hostId: string) => void,
+  onDeleteClick: (node: Node) => void,
 ) => {
   return nodeList?.map((node: Node) => {
     const isProvisioning =
@@ -17,8 +17,7 @@ export const toGrid = (
       ? () => onCellClick(node.id)
       : undefined;
 
-    const handleDeleteClicked = () =>
-      onDeleteClick(node.id, node.name, node.hostId);
+    const handleDeleteClicked = () => onDeleteClick(node);
 
     return {
       key: node.id,

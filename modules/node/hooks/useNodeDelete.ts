@@ -3,37 +3,31 @@ import {
   useGetOrganizations,
   useUpdateOrganization,
 } from '@modules/organization';
-import { useHostList, useHostUpdate, useHostView } from '@modules/host';
+import { useHostList, useHostUpdate } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
 import { useNodeList } from './useNodeList';
 import {
   UpdateSubscriptionAction,
   useUpdateSubscriptionItems,
 } from '@modules/billing';
-import { useRecoilValue } from 'recoil';
-import { nodeAtoms } from '../store/nodeAtoms';
-
-type Args = string | string[] | undefined;
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export function useNodeDelete() {
-  const node = useRecoilValue(nodeAtoms.activeNode);
   const { removeFromNodeList } = useNodeList();
   const { organizations } = useGetOrganizations();
   const { defaultOrganization } = useDefaultOrganization();
   const { modifyOrganization } = useUpdateOrganization();
-  const { host } = useHostView();
   const { hostList } = useHostList();
   const { modifyHost } = useHostUpdate();
   const { updateSubscriptionItems } = useUpdateSubscriptionItems();
 
   const deleteNode = async (
-    id: Args,
+    node: Node,
     hostId: string,
     onSuccess: VoidFunction,
   ) => {
-    const uuid = id as string;
-    removeFromNodeList(uuid);
-    await nodeClient.deleteNode(uuid);
+    removeFromNodeList(node?.id);
+    await nodeClient.deleteNode(node?.id);
 
     onSuccess();
 
@@ -54,7 +48,6 @@ export function useNodeDelete() {
       });
     }
 
-    // TODO: RemoveNode probably doesn't work
     await updateSubscriptionItems({
       type: UpdateSubscriptionAction.REMOVE_NODE,
       payload: { node: node! },

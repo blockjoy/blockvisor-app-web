@@ -130,7 +130,7 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
         },
       );
 
-      console.log('%cUpdateSubscription', 'color: #bff589', {
+      console.log('%cUpdateSubscriptionItems', 'color: #bff589', {
         type,
         subscription,
         params,

@@ -13,7 +13,7 @@ import IconDelete from '@public/assets/icons/common/Trash.svg';
 
 export const mapNodeListToRows = (
   nodeList?: Node[],
-  onDeleteClick?: (id: string, name: string, hostId: string) => void,
+  onDeleteClick?: (node: Node) => void,
 ) => {
   const headers: TableHeader[] = [
     {
@@ -104,11 +104,7 @@ export const mapNodeListToRows = (
             }
             style="icon"
             tooltip="Delete"
-            onClick={() =>
-              !!onDeleteClick
-                ? onDeleteClick(node.id, node.name, node.hostId)
-                : null
-            }
+            onClick={() => (!!onDeleteClick ? onDeleteClick(node) : null)}
           >
             <SvgIcon isDefaultColor>
               <IconDelete />
