@@ -40,14 +40,13 @@ export const NodeList = () => {
   }, [nodeUIContext]);
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [nodeToDelete, setNodeToDelete] =
-    useState<{ id: string; name: string; hostId: string }>();
+  const [nodeToDelete, setNodeToDelete] = useState<Node | null>(null);
 
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
   const { deleteNode } = useNodeDelete();
 
   const handleNodeDeleted = () => {
-    deleteNode(nodeToDelete?.id, nodeToDelete?.hostId!, () => {
+    deleteNode(nodeToDelete!, nodeToDelete?.hostId!, () => {
       handleNodeDeleteClosed();
       toast.success('Node Deleted');
     });

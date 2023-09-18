@@ -37,7 +37,7 @@ export const NodeViewHeader = () => {
     setIsReportProblemMode(!isReportProblemMode);
 
   const handleDeleteNode = () => {
-    deleteNode(node!.id, node!.hostId, () => {
+    deleteNode(node!, node!.hostId, () => {
       router.push(ROUTES.NODES);
       toggleDeleteModalOpen();
       toast.success('Node Deleted');
