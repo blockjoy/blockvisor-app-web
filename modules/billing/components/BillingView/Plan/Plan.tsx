@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import { EmptyColumn } from '@shared/components';
 import { styles } from './Plan.styles';
-import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import { usePermissions } from '@modules/auth';
 import { PlanConfiguration, PlanItem } from '@modules/billing';
 
 type PlanProps = {
@@ -22,7 +22,8 @@ export const Plan = ({ item, itemPrices }: PlanProps) => {
 
   const handleCancel = () => setActiveView('default');
 
-  const canCreateSubscription = useHasPermissions('subscription-create');
+  const { hasPermission } = usePermissions();
+  const canCreateSubscription = hasPermission('subscription-create');
 
   return (
     <>
