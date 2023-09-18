@@ -37,6 +37,13 @@ export interface SubscriptionServiceListResponse {
   subscriptions: Subscription[];
 }
 
+export interface SubscriptionServiceUpdateRequest {
+  orgId?: string | undefined;
+}
+
+export interface SubscriptionServiceUpdateResponse {
+}
+
 export interface SubscriptionServiceDeleteRequest {
   id: string;
 }
@@ -425,6 +432,87 @@ export const SubscriptionServiceListResponse = {
   },
 };
 
+function createBaseSubscriptionServiceUpdateRequest(): SubscriptionServiceUpdateRequest {
+  return { orgId: undefined };
+}
+
+export const SubscriptionServiceUpdateRequest = {
+  encode(message: SubscriptionServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== undefined) {
+      writer.uint32(10).string(message.orgId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SubscriptionServiceUpdateRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSubscriptionServiceUpdateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SubscriptionServiceUpdateRequest>): SubscriptionServiceUpdateRequest {
+    return SubscriptionServiceUpdateRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<SubscriptionServiceUpdateRequest>): SubscriptionServiceUpdateRequest {
+    const message = createBaseSubscriptionServiceUpdateRequest();
+    message.orgId = object.orgId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSubscriptionServiceUpdateResponse(): SubscriptionServiceUpdateResponse {
+  return {};
+}
+
+export const SubscriptionServiceUpdateResponse = {
+  encode(_: SubscriptionServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SubscriptionServiceUpdateResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSubscriptionServiceUpdateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<SubscriptionServiceUpdateResponse>): SubscriptionServiceUpdateResponse {
+    return SubscriptionServiceUpdateResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<SubscriptionServiceUpdateResponse>): SubscriptionServiceUpdateResponse {
+    const message = createBaseSubscriptionServiceUpdateResponse();
+    return message;
+  },
+};
+
 function createBaseSubscriptionServiceDeleteRequest(): SubscriptionServiceDeleteRequest {
   return { id: "" };
 }
@@ -535,6 +623,14 @@ export const SubscriptionServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    update: {
+      name: "Update",
+      requestType: SubscriptionServiceUpdateRequest,
+      requestStream: false,
+      responseType: SubscriptionServiceUpdateResponse,
+      responseStream: false,
+      options: {},
+    },
     delete: {
       name: "Delete",
       requestType: SubscriptionServiceDeleteRequest,
@@ -559,6 +655,10 @@ export interface SubscriptionServiceImplementation<CallContextExt = {}> {
     request: SubscriptionServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<SubscriptionServiceListResponse>>;
+  update(
+    request: SubscriptionServiceUpdateRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<SubscriptionServiceUpdateResponse>>;
   delete(
     request: SubscriptionServiceDeleteRequest,
     context: CallContext & CallContextExt,
@@ -578,6 +678,10 @@ export interface SubscriptionServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<SubscriptionServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<SubscriptionServiceListResponse>;
+  update(
+    request: DeepPartial<SubscriptionServiceUpdateRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<SubscriptionServiceUpdateResponse>;
   delete(
     request: DeepPartial<SubscriptionServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,

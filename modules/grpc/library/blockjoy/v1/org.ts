@@ -109,6 +109,11 @@ export interface OrgUser {
   orgId: string;
   name: string;
   email: string;
+  roles: OrgRole[];
+}
+
+export interface OrgRole {
+  name?: string | undefined;
 }
 
 function createBaseOrg(): Org {
@@ -991,7 +996,7 @@ export const OrgServiceResetProvisionTokenResponse = {
 };
 
 function createBaseOrgUser(): OrgUser {
-  return { userId: "", orgId: "", name: "", email: "" };
+  return { userId: "", orgId: "", name: "", email: "", roles: [] };
 }
 
 export const OrgUser = {
@@ -1007,6 +1012,9 @@ export const OrgUser = {
     }
     if (message.email !== "") {
       writer.uint32(34).string(message.email);
+    }
+    for (const v of message.roles) {
+      OrgRole.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -1046,6 +1054,13 @@ export const OrgUser = {
 
           message.email = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.roles.push(OrgRole.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1065,6 +1080,53 @@ export const OrgUser = {
     message.orgId = object.orgId ?? "";
     message.name = object.name ?? "";
     message.email = object.email ?? "";
+    message.roles = object.roles?.map((e) => OrgRole.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseOrgRole(): OrgRole {
+  return { name: undefined };
+}
+
+export const OrgRole = {
+  encode(message: OrgRole, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgRole {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgRole();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgRole>): OrgRole {
+    return OrgRole.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgRole>): OrgRole {
+    const message = createBaseOrgRole();
+    message.name = object.name ?? undefined;
     return message;
   },
 };

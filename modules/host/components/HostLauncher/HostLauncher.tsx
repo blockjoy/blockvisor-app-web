@@ -23,11 +23,7 @@ export const HostLauncher = () => {
 
   const { hasPermission } = usePermissions();
 
-  const canAddHost = hasPermission('host-create');
-
-  const token = canAddHost
-    ? provisionToken
-    : provisionToken?.replace(/./g, '*');
+  const canResetProvisionToken = hasPermission('org-provision-reset-token');
 
   return (
     <div>
@@ -48,13 +44,18 @@ export const HostLauncher = () => {
               Launch a new host by running this command on any server
             </FormText>
             <div css={[styles.copy, spacing.bottom.medium]}>
-              <CopyToClipboard value={`bvup ${token}`} disabled={!canAddHost} />
-              {!canAddHost && (
+              <CopyToClipboard
+                value={`bvup ${
+                  !canResetProvisionToken ? 'xxxxxxx' : provisionToken
+                }`}
+                disabled={!canResetProvisionToken}
+              />
+              {!canResetProvisionToken && (
                 <Tooltip
                   noWrap
                   top="-30px"
                   left="50%"
-                  tooltip="Feature disabled during beta."
+                  tooltip="Insufficient Permissions"
                 />
               )}
             </div>
@@ -62,13 +63,14 @@ export const HostLauncher = () => {
               style="outline"
               size="small"
               disabled={
-                provisionTokenLoadingState !== 'finished' || !canAddHost
+                provisionTokenLoadingState !== 'finished' ||
+                !canResetProvisionToken
               }
               css={styles.button}
               onClick={() => resetProvisionToken(defaultOrganization?.id!)}
               loading={provisionTokenLoadingState !== 'finished'}
-              {...(!canAddHost && {
-                tooltip: 'Feature disabled during beta.',
+              {...(!canResetProvisionToken && {
+                tooltip: 'Insufficient Permissions.',
               })}
             >
               <SvgIcon>
