@@ -163,8 +163,8 @@ body .netdata-container[data-chart-library] {
 } */
 
 .measurement {
-  transform: translateY(-4px);
-  font-size: 12px;
+  transform: translateY(-24px);
+  font-size: 11px;
   color: #a7a7a7;
 }
 
@@ -187,7 +187,7 @@ body .netdata-container[data-chart-library] {
 
 [class*="segmentMainLabel-outer"] {
   text-transform: capitalize;
-  fill: #5F615D !important;
+  fill: #777975 !important;
 }
 
 [class*="subtitle"] {
@@ -214,7 +214,7 @@ body .netdata-container[data-chart-library] {
 }
 
 .textonly-wrapper .easyPieChartUnits {
-  font-size: 10px !important;
+  font-size: 11px !important;
   text-transform: capitalize;
   top: 36px !important;
   color: #a7a7a7 !important;
