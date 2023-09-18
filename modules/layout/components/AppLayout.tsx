@@ -44,7 +44,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
-  const { customer, customerLoadingState, getCustomer } = useCustomer();
+  const { customer, getCustomer } = useCustomer();
   const { fetchPaymentMethods } = usePaymentMethods();
   const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
   const { getUserSubscription } = useUserSubscription();

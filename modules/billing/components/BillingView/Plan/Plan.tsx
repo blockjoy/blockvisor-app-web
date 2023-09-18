@@ -1,12 +1,9 @@
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import { EmptyColumn } from '@shared/components';
 import { styles } from './Plan.styles';
 import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
 import { PlanConfiguration, PlanItem } from '@modules/billing';
-import { organizationSelectors } from '@modules/organization';
-import { Permissions, authSelectors } from '@modules/auth';
 
 type PlanProps = {
   item: Item;
@@ -25,16 +22,7 @@ export const Plan = ({ item, itemPrices }: PlanProps) => {
 
   const handleCancel = () => setActiveView('default');
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canCreateSubscription: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_SUBSCRIPTION,
-  );
+  const canCreateSubscription = useHasPermissions('subscription-create');
 
   return (
     <>
