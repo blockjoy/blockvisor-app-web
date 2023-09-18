@@ -20,18 +20,23 @@ export const SubscriptionPreview = ({
 
   const { hasPermission } = usePermissions();
   const canUpdateSubscription = hasPermission('subscription-update');
+  const canDeleteSubscription = hasPermission('subscription-delete');
 
   return (
     <>
-      <DetailsView headline="Info">
+      {canUpdateSubscription ? (
+        <DetailsView headline="Info">
+          <SubscriptionInfo onlyPreview={!canUpdateSubscription} />
+        </DetailsView>
+      ) : (
         <SubscriptionInfo onlyPreview={!canUpdateSubscription} />
-      </DetailsView>
+      )}
       {subscription?.status === 'active' && canUpdateSubscription && (
         <DetailsView headline="Payment information">
           <PaymentPreview />
         </DetailsView>
       )}
-      {canUpdateSubscription && (
+      {canUpdateSubscription && canDeleteSubscription && (
         <DetailsView headline="Subscription status">
           <SubscriptionActions handleCancellation={handleCancellation} />
         </DetailsView>
