@@ -77,6 +77,7 @@ type Permission =
   | 'org-provision-get-token'
   | 'org-provision-reset-token'
   | 'org-remove-member'
+  | 'org-remove-self'
   | 'org-update'
   | 'subscription-create'
   | 'subscription-delete'

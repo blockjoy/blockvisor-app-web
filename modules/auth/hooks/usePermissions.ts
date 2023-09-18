@@ -27,6 +27,7 @@ export function usePermissions() {
       setPermissions(response);
     } catch (err) {
       console.log('getPermissionsError: ', err);
+      setPermissions([]);
     }
   };
 

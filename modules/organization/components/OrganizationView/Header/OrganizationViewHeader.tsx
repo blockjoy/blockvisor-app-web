@@ -65,6 +65,8 @@ export const OrganizationViewHeader: FC = () => {
 
   const canDeleteOrganization = hasPermission('org-delete');
 
+  const canLeaveOrganization = hasPermission('org-remove-self');
+
   const { getDefaultOrganization } = useDefaultOrganization();
 
   const callback = async () => {
@@ -81,7 +83,11 @@ export const OrganizationViewHeader: FC = () => {
     }
   };
 
-  const type = canDeleteOrganization ? 'Delete' : 'Leave';
+  const type = canDeleteOrganization
+    ? 'Delete'
+    : canLeaveOrganization
+    ? 'Leave'
+    : '';
 
   const isLoadingOrg =
     isLoading !== 'finished' || organization?.nodeCount === null;
@@ -114,25 +120,28 @@ export const OrganizationViewHeader: FC = () => {
                 onEditClicked={handleEditClicked}
                 canUpdate={canUpdateOrganization && !organization?.personal}
               />
-              {!organization.personal && (
-                <Button
-                  disabled={
-                    canDeleteOrganization ? organization!.nodeCount > 0 : false
-                  }
-                  tooltip={
-                    canDeleteOrganization && organization!.nodeCount > 0
-                      ? 'Has Nodes Attached'
-                      : ''
-                  }
-                  onClick={toggleDeleteModalOpen}
-                  style="basic"
-                >
-                  <SvgIcon>
-                    {canDeleteOrganization ? <IconDelete /> : <IconDoor />}
-                  </SvgIcon>
-                  <p>{canDeleteOrganization ? 'Delete' : 'Leave'}</p>
-                </Button>
-              )}
+              {(canDeleteOrganization || canLeaveOrganization) &&
+                !organization.personal && (
+                  <Button
+                    disabled={
+                      canDeleteOrganization
+                        ? organization!.nodeCount > 0
+                        : false
+                    }
+                    tooltip={
+                      canDeleteOrganization && organization!.nodeCount > 0
+                        ? 'Has Nodes Attached'
+                        : ''
+                    }
+                    onClick={toggleDeleteModalOpen}
+                    style="basic"
+                  >
+                    <SvgIcon>
+                      {canDeleteOrganization ? <IconDelete /> : <IconDoor />}
+                    </SvgIcon>
+                    <p>{canDeleteOrganization ? 'Delete' : 'Leave'}</p>
+                  </Button>
+                )}
             </>
           )
         )}
