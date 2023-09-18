@@ -1,7 +1,6 @@
 import {
   AuthServiceClient,
   AuthServiceDefinition,
-  AuthServiceListPermissionsResponse,
 } from '../library/blockjoy/v1/auth';
 import {
   createChannel,
@@ -76,7 +75,7 @@ class AuthClient {
     try {
       await this.refreshToken();
       const response = await this.client.listPermissions(
-        { userId, orgId },
+        { userId, orgId, includeToken: true },
         getOptions(),
       );
       return response.permissions;

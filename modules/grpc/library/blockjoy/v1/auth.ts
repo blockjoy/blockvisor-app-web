@@ -88,6 +88,8 @@ export interface AuthServiceSwitchOrgRequest {
 export interface AuthServiceListPermissionsRequest {
   userId: string;
   orgId: string;
+  /** Also include permissions from the token making the request. */
+  includeToken?: boolean | undefined;
 }
 
 export interface AuthServiceListPermissionsResponse {
@@ -726,7 +728,7 @@ export const AuthServiceSwitchOrgRequest = {
 };
 
 function createBaseAuthServiceListPermissionsRequest(): AuthServiceListPermissionsRequest {
-  return { userId: "", orgId: "" };
+  return { userId: "", orgId: "", includeToken: undefined };
 }
 
 export const AuthServiceListPermissionsRequest = {
@@ -736,6 +738,9 @@ export const AuthServiceListPermissionsRequest = {
     }
     if (message.orgId !== "") {
       writer.uint32(18).string(message.orgId);
+    }
+    if (message.includeToken !== undefined) {
+      writer.uint32(24).bool(message.includeToken);
     }
     return writer;
   },
@@ -761,6 +766,13 @@ export const AuthServiceListPermissionsRequest = {
 
           message.orgId = reader.string();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.includeToken = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -778,6 +790,7 @@ export const AuthServiceListPermissionsRequest = {
     const message = createBaseAuthServiceListPermissionsRequest();
     message.userId = object.userId ?? "";
     message.orgId = object.orgId ?? "";
+    message.includeToken = object.includeToken ?? undefined;
     return message;
   },
 };
