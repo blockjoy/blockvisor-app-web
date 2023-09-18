@@ -5,7 +5,6 @@ import { ApplicationError } from '@modules/auth/utils/Errors';
 
 interface IUseUserBillingHook {
   billingId: string | null;
-
   getUserBilling: (userId: string) => Promise<string | null>;
   updateUserBilling: (
     userId: string,

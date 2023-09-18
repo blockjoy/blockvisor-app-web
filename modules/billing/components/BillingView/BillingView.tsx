@@ -8,8 +8,7 @@ import {
 } from '@modules/billing';
 import { Alert, TableSkeleton } from '@shared/components';
 import { styles } from './BillingView.styles';
-import { organizationSelectors } from '@modules/organization/store/organizationSelectors';
-import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
+import { useHasPermissions } from '@modules/auth';
 
 type BillingViewProps = {
   item: Item;
@@ -22,20 +21,11 @@ export const BillingView = ({ item, itemPrices }: BillingViewProps) => {
     billingAtoms.subscriptionLoadingState,
   );
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canReadBilling: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.READ_BILLING,
-  );
+  const canReadSubscription = useHasPermissions('subscription-get');
 
   if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
 
-  if (!canReadBilling)
+  if (!canReadSubscription)
     return (
       <Alert>
         You don't have access to read the current organization billing plan! Try

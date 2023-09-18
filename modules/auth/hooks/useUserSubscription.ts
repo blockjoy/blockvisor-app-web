@@ -6,7 +6,6 @@ import { Subscription } from '@modules/grpc/library/blockjoy/v1/subscription';
 
 interface IUseUserSubscriptionHook {
   userSubscription: Subscription | null;
-
   getUserSubscription: (orgId: string) => Promise<Subscription | null>;
   getUserSubscriptions: (userId: string) => Promise<Subscription[] | null>;
   createUserSubscription: (

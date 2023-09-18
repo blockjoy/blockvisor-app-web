@@ -16,8 +16,7 @@ import {
   useInvoices,
   usePaymentMethod,
 } from '@modules/billing';
-import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
-import { organizationSelectors } from '@modules/organization';
+import { useHasPermissions } from '@modules/auth';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
 
 type BillingProps = {
@@ -33,17 +32,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
     billingAtoms.subscriptionLoadingState,
   );
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canUpdateBilling: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.UPDATE_BILLING,
-  );
-
+  const canUpdateSubscription = useHasPermissions('subscription-update');
   const { getEstimate } = useEstimates();
   const { getBillingContacts } = useBillingContacts();
   const { getInvoices } = useInvoices();
@@ -90,9 +79,9 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         },
       ].filter(
         (tabItem) =>
-          tabItem.value === '1' || (subscription && canUpdateBilling),
+          tabItem.value === '1' || (subscription && canUpdateSubscription),
       ),
-    [subscription, canUpdateBilling],
+    [subscription, canUpdateSubscription],
   );
 
   const { activeTab, setActiveTab } = useTabs(tabItems.length);

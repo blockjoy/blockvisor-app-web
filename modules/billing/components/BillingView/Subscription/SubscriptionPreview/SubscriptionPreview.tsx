@@ -8,8 +8,7 @@ import {
   PaymentPreview,
   SubscriptionActions,
 } from '@modules/billing';
-import { useHasPermissions, Permissions, authSelectors } from '@modules/auth';
-import { organizationSelectors } from '@modules/organization';
+import { useHasPermissions } from '@modules/auth';
 
 type SubscriptionPreviewProps = {
   itemPrices: ItemPrice[];
@@ -22,31 +21,22 @@ export const SubscriptionPreview = ({
 }: SubscriptionPreviewProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canUpdateBilling: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.UPDATE_BILLING,
-  );
+  const canUpdateSubscription = useHasPermissions('subscription-update');
 
   return (
     <>
       <DetailsView headline="Info">
         <SubscriptionInfo
           itemPrices={itemPrices}
-          onlyPreview={!canUpdateBilling}
+          onlyPreview={!canUpdateSubscription}
         />
       </DetailsView>
-      {subscription?.status === 'active' && (
+      {subscription?.status === 'active' && canUpdateSubscription && (
         <DetailsView headline="Payment information">
           <PaymentPreview />
         </DetailsView>
       )}
-      {canUpdateBilling && (
+      {canUpdateSubscription && (
         <DetailsView headline="Subscription status">
           <SubscriptionActions handleCancellation={handleCancellation} />
         </DetailsView>

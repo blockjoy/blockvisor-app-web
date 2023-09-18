@@ -11,9 +11,7 @@ import {
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
-import { organizationSelectors } from '@modules/organization';
 import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
-import { Permissions, authSelectors } from '@modules/auth';
 import { styles } from './PaymentPreview.styles';
 import { ROUTES } from '@shared/index';
 
@@ -26,18 +24,9 @@ export const PaymentPreview = () => {
     billingAtoms.subscriptionPaymentMethodLoadingState,
   );
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
   const { paymentMethod, paymentMethodLoadingState } = usePaymentMethod();
 
-  const canUpdateBilling: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.UPDATE_BILLING,
-  );
+  const canUpdateSubscription = useHasPermissions('subscription-update');
 
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');
@@ -73,7 +62,7 @@ export const PaymentPreview = () => {
         </>
       )}
 
-      {canUpdateBilling && (
+      {canUpdateSubscription && (
         <Button
           size="small"
           style="outline"
