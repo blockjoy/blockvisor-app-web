@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { ItemPrice } from 'chargebee-typescript/lib/resources';
 import {
   billingAtoms,
   billingSelectors,
@@ -14,12 +13,10 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './SubscriptionInfo.styles';
 
 type SubscriptionInfoProps = {
-  itemPrices: ItemPrice[];
   onlyPreview: boolean;
 };
 
 export const SubscriptionInfo = ({
-  itemPrices,
   onlyPreview = false,
 }: SubscriptionInfoProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
@@ -66,7 +63,6 @@ export const SubscriptionInfo = ({
     const params = await generateUpdateSubscriptionParams(subscription!, {
       autoRenew,
       periodUnit,
-      itemPrices,
     });
 
     await updateSubscription(params);
