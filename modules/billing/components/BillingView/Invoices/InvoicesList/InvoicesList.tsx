@@ -48,8 +48,8 @@ export const InvoicesList = () => {
 
   const { headers, rows } = mapInvoicesToRows(invoices);
 
-  const handleRowClicked = (id: any) => {
-    router.push(ROUTES.INVOICE(id.key));
+  const handleRowClicked = (id: string) => {
+    router.push(ROUTES.INVOICE(id));
   };
 
   const updateQueryParams = async () => {
