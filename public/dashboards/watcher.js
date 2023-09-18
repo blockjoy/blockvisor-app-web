@@ -23,18 +23,6 @@ var observeDOM = (function(){
   }
 })();
 
-var checkForErrors = () => {
-  const charts = document.querySelectorAll('.netdata-container-easypiechart');
-  charts.forEach(chart => {
-    const isError = chart.innerHTML.includes("fail") || chart.innerHTML.includes("found");
-    if (isError) {
-      console.log("chart has errord", chart.innerText);
-      chart.innerText = "-";
-      chart.setAttribute("data-netdata", "");
-    }
-  });
-}
-
 const main = document.querySelector("main");
 
 let isLoaded = false;
@@ -45,13 +33,11 @@ observeDOM(main, function(m){
   m.forEach(record => record.addedNodes.length & addedNodes.push(...record.addedNodes))
   m.forEach(record => record.removedNodes.length & removedNodes.push(...record.removedNodes))
 
-  if (!isLoaded) {
+  let target = m[0].target;
+  let chartValue = +target.innerText;
+
+  if (!isLoaded && chartValue > -1) {
     isLoaded = true;
-    setTimeout(() => {
-      preloader.classList.add("hidden");
-    }, 175);
-    setTimeout(() => {
-      checkForErrors();
-    }, 1000)
-  }
+    preloader.classList.add("hidden");
+  } 
 });

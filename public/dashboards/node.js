@@ -17,6 +17,7 @@ const sidePanelTextonlyWidth = "160px",
 const charts = [
   {
     title: "RPC Requests",
+    measurement: "Req/S",
     charts: [
       {
         netdata: "web_log_nginx.requests",
@@ -37,13 +38,13 @@ const charts = [
     ]
   },
   {
-    title: "Load Avg.",
+    title: "Load",
     charts: [
       {
         netdata: "system.load",
         library: "easypiechart",
+        units: "Avg.",
         title: "",
-        textonlyDecimalPlaces: "2",
         dimensions: "load1",
         width: sidePanelTextonlyWidth,
         height: sidePanelTextonlyHeight, 
@@ -62,13 +63,12 @@ const charts = [
   },
   {
     title: "CPU",
-    measurement: "%",
     charts: [
       {
         netdata: "system.cpu",
         library: "easypiechart",
+        units: "%",
         title: "",
-        textonlyDecimalPlaces: "1",
         width: sidePanelTextonlyWidth,
         height: sidePanelTextonlyHeight, 
       },
@@ -90,7 +90,6 @@ const charts = [
       {
         netdata: "system.io",
         dimensions: "out",
-        textonlyDecimalPlaces: 0,
         library: "easypiechart",
         title: "",
         width: sidePanelTextonlyWidth,
@@ -115,7 +114,6 @@ const charts = [
       {
         netdata: "system.io",
         dimensions: "in",
-        textonlyDecimalPlaces: 0,
         library: "easypiechart",
         title: "",
         width: sidePanelTextonlyWidth,
@@ -133,29 +131,6 @@ const charts = [
       }
     ]
   },
-  // {
-  //   title: "Disk Space",
-  //   measurement: "GiB Available",
-  //   charts: [
-  //     {
-  //       netdata: `disk_space.${disk_space_name}`,
-  //       textonlyDecimalPlaces: 0,
-  //       library: "textonly",
-  //       title: "",
-  //       width: sidePanelTextonlyWidth,
-  //       height: sidePanelTextonlyHeight, 
-  //     },
-  //     {
-  //       netdata: `disk_space.${disk_space_name}`,
-  //       dygraphValueRange: "[0, 100]",
-  //       width: "100%",
-  //       height: sidePanelSparklineHeight,
-  //       color: "#bff589 #bff589",
-  //       decimalDigits: "-1",
-  //       dygraphSparkline: "sparkline"
-  //     }
-  //   ]
-  // }
 ];
 
 const colorPrimary = "#bff589";
@@ -275,13 +250,13 @@ const onLoad = () => {
   
       textonlyWrapper.appendChild(textonlyChart);
       
-      // if (block.measurement) {
-      //   const measurement = document.createElement("div");
-      //   measurement.setAttribute("class", "measurement");
-      //   measurement.innerText = block.measurement;
+      if (block.measurement) {
+        const measurement = document.createElement("div");
+        measurement.setAttribute("class", "measurement");
+        measurement.innerText = block.measurement;
         
-      //   textonlyWrapper.appendChild(measurement);
-      // }
+        textonlyWrapper.appendChild(measurement);
+      }
 
       chartsDiv.appendChild(textonlyWrapper);
     }
