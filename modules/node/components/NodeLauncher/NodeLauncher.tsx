@@ -86,6 +86,11 @@ export const NodeLauncher = () => {
   const { hasPermission } = usePermissions();
 
   const canAddNode = hasPermission('node-create');
+  const canCreateSubscription = hasPermission('subscription-create');
+  const canUpdateSubscription = hasPermission('subscription-update');
+
+  const isAllowedToCreate =
+    canAddNode && (canCreateSubscription || canUpdateSubscription);
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -373,7 +378,7 @@ export const NodeLauncher = () => {
             selectedRegion={selectedRegion!}
             selectedVersion={selectedVersion!}
             selectedHost={selectedHost}
-            canAddNode={canAddNode}
+            canAddNode={isAllowedToCreate}
             onHostChanged={handleHostChanged}
             onRegionChanged={handleRegionChanged}
             onCreateNodeClicked={handleCreateNodeClicked}

@@ -31,8 +31,13 @@ export const HostLauncher = () => {
   const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
 
   const canAddHost = hasPermission('host-create');
+  const canCreateSubscription = hasPermission('subscription-create');
+  const canUpdateSubscription = hasPermission('subscription-update');
 
-  const isDisabledAdding = !hasPaymentMethod || !canAddHost;
+  const isAllowedToCreate =
+    canAddHost && (canCreateSubscription || canUpdateSubscription);
+
+  const isDisabledAdding = !hasPaymentMethod || !isAllowedToCreate;
 
   const token = !isDisabledAdding
     ? provisionToken
@@ -93,7 +98,7 @@ export const HostLauncher = () => {
                     top="-30px"
                     left="50%"
                     tooltip={
-                      !canAddHost
+                      !isAllowedToCreate
                         ? 'Insufficient permissions to launch host.'
                         : 'Payment required to launch host.'
                     }
@@ -104,12 +109,13 @@ export const HostLauncher = () => {
                 style="outline"
                 size="small"
                 disabled={
-                  provisionTokenLoadingState !== 'finished' || !canAddHost
+                  provisionTokenLoadingState !== 'finished' ||
+                  !isAllowedToCreate
                 }
                 css={styles.button}
                 onClick={handleCreateHostClicked}
                 loading={provisionTokenLoadingState !== 'finished'}
-                {...(!canAddHost && {
+                {...(!isAllowedToCreate && {
                   tooltip: 'Insufficient permissions to launch host.',
                 })}
               >
