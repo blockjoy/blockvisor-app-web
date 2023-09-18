@@ -31,7 +31,7 @@ export const mapOrganizationMembersToRows = (
   members?: OrgUser[],
   methods?: Methods,
 ) => {
-  const user = useRecoilValue(authAtoms.user);
+  const { user } = useIdentity();
 
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,

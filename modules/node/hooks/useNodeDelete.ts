@@ -54,7 +54,7 @@ export function useNodeDelete() {
       });
     }
 
-    // TODO: fix
+    // TODO: RemoveNode probably doesn't work
     await updateSubscriptionItems({
       type: UpdateSubscriptionAction.REMOVE_NODE,
       payload: { node: node! },

@@ -24,6 +24,7 @@ import { createPath } from '@modules/organization/utils/createPath';
 export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const { id } = router.query;
+  const { user } = useIdentity();
   const { getOrganization, organization, isLoading, setIsLoading } =
     useGetOrganization();
 

@@ -6,7 +6,7 @@ import {
   SvgIcon,
   DeleteModal,
 } from '@shared/components';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { styles } from './OrganizationViewHeader.styles';
 import {
   useDefaultOrganization,
@@ -23,7 +23,7 @@ import { ROUTES } from '@shared/constants/routes';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconDoor from '@public/assets/icons/common/Door.svg';
 
-export const OrganizationViewHeader = () => {
+export const OrganizationViewHeader: FC = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const { organization, isLoading } = useGetOrganization();

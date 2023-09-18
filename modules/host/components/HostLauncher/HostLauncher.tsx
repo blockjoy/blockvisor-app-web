@@ -16,7 +16,7 @@ import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import { useDefaultOrganization } from '@modules/organization';
-import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import { useHasPermissions } from '@modules/auth';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
