@@ -16,20 +16,21 @@ import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { billingSelectors, PaymentRequired } from '@modules/billing';
 import { useDefaultOrganization } from '@modules/organization';
-import { useHasPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
   const { defaultOrganization } = useDefaultOrganization();
+  const { hasPermission } = usePermissions();
 
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
   const [activeView, setActiveView] = useState<'view' | 'action'>('view');
   const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
 
-  const canAddHost = useHasPermissions('host-create');
+  const canAddHost = hasPermission('host-create');
 
   const isDisabledAdding = !hasPaymentMethod || !canAddHost;
 

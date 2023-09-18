@@ -21,7 +21,7 @@ import {
   usePaymentMethods,
   useSubscription,
 } from '@modules/billing';
-import { useGetPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -38,7 +38,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const billingId = useRecoilValue(billingSelectors.billingId);
 
   const { connect: mqttConnect } = useMqtt();
-  const { getPermissions } = useGetPermissions();
+  const { getPermissions } = usePermissions();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { getBlockchains, blockchains } = useGetBlockchains();

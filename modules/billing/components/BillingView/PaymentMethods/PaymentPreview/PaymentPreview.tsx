@@ -11,7 +11,7 @@ import {
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
-import { useHasPermissions } from '@modules/auth/hooks/useHasPermissions';
+import { usePermissions } from '@modules/auth';
 import { styles } from './PaymentPreview.styles';
 import { ROUTES } from '@shared/index';
 
@@ -25,8 +25,9 @@ export const PaymentPreview = () => {
   );
 
   const { paymentMethod, paymentMethodLoadingState } = usePaymentMethod();
+  const { hasPermission } = usePermissions();
 
-  const canUpdateSubscription = useHasPermissions('subscription-update');
+  const canUpdateSubscription = hasPermission('subscription-update');
 
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');

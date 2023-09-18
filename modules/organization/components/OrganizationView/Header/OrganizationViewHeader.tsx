@@ -16,7 +16,7 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useHasPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
@@ -33,6 +33,7 @@ export const OrganizationViewHeader: FC = () => {
   const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
+  const { hasPermission } = usePermissions();
 
   const { organizations } = useGetOrganizations();
 
@@ -60,9 +61,9 @@ export const OrganizationViewHeader: FC = () => {
     setIsSavingOrganization(null);
   };
 
-  const canUpdateOrganization = useHasPermissions('org-update');
+  const canUpdateOrganization = hasPermission('org-update');
 
-  const canDeleteOrganization = useHasPermissions('org-delete');
+  const canDeleteOrganization = hasPermission('org-delete');
 
   const { getDefaultOrganization } = useDefaultOrganization();
 
