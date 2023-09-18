@@ -8,7 +8,7 @@ import {
 } from '@modules/billing';
 import { Alert, TableSkeleton } from '@shared/components';
 import { styles } from './BillingView.styles';
-import { useHasPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 
 type BillingViewProps = {
   item: Item;
@@ -21,7 +21,8 @@ export const BillingView = ({ item, itemPrices }: BillingViewProps) => {
     billingAtoms.subscriptionLoadingState,
   );
 
-  const canReadSubscription = useHasPermissions('subscription-get');
+  const { hasPermission } = usePermissions();
+  const canReadSubscription = hasPermission('subscription-get');
 
   if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
 

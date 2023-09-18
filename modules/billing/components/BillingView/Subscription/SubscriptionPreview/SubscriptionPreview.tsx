@@ -8,7 +8,7 @@ import {
   PaymentPreview,
   SubscriptionActions,
 } from '@modules/billing';
-import { useHasPermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 
 type SubscriptionPreviewProps = {
   itemPrices: ItemPrice[];
@@ -21,7 +21,8 @@ export const SubscriptionPreview = ({
 }: SubscriptionPreviewProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const canUpdateSubscription = useHasPermissions('subscription-update');
+  const { hasPermission } = usePermissions();
+  const canUpdateSubscription = hasPermission('subscription-update');
 
   return (
     <>
