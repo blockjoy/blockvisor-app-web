@@ -10,11 +10,14 @@ import { SvgIcon } from '@shared/components/General';
 import { spacing } from 'styles/utils.spacing.styles';
 import { css } from '@emotion/react';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
+import { usePermissions } from '@modules/auth/hooks/usePermissions';
 
 export const mapNodeListToRows = (
   nodeList?: Node[],
   onDeleteClick?: (id: string, name: string, hostId: string) => void,
 ) => {
+  const { hasPermission } = usePermissions();
+
   const headers: TableHeader[] = [
     {
       name: '',
@@ -48,7 +51,9 @@ export const mapNodeListToRows = (
 
   const rows = nodeList?.map((node: Node) => ({
     key: node.id,
-    isClickable: node.status !== NodeStatusEnum.NODE_STATUS_PROVISIONING,
+    isClickable:
+      node.status !== NodeStatusEnum.NODE_STATUS_PROVISIONING ||
+      hasPermission('node-admin-get'),
     cells: [
       {
         key: '1',

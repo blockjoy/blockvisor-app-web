@@ -55,6 +55,7 @@ type Permission =
   | 'mqtt-acl'
   | 'node-admin-create'
   | 'node-admin-delete'
+  | 'node-admin-get'
   | 'node-admin-list'
   | 'node-admin-restart'
   | 'node-admin-start'
