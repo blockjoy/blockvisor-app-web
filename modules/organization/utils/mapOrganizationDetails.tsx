@@ -33,7 +33,9 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
   const role = getOrganizationRole(roles!);
 
   const owners = org.members.filter((member) =>
-    member.roles.some((role) => role.name === 'org-owner'),
+    member.roles.some(
+      (role) => role.name === 'org-owner' || role.name === 'org-personal',
+    ),
   );
 
   details.unshift({
@@ -50,23 +52,21 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
       ),
   });
 
-  if (!org.personal) {
-    details.unshift({
-      label: 'Role',
-      data: (
-        <p css={[display.flex, flex.align.center]}>
-          {role}{' '}
-          <SvgIcon
-            tooltip="Your role within this organization"
-            additionalStyles={[spacing.left.small]}
-            isDefaultColor
-          >
-            <IconInfo />
-          </SvgIcon>
-        </p>
-      ),
-    });
-  }
+  details.unshift({
+    label: 'Role',
+    data: (
+      <p css={[display.flex, flex.align.center]}>
+        {role}{' '}
+        <SvgIcon
+          tooltip="Your role within this organization"
+          additionalStyles={[spacing.left.small]}
+          isDefaultColor
+        >
+          <IconInfo />
+        </SvgIcon>
+      </p>
+    ),
+  });
 
   return details;
 }

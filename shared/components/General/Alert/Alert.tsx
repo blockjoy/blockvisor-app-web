@@ -5,14 +5,14 @@ type Props = {
   isSuccess?: boolean;
   isRounded?: boolean;
   children: ReactNode;
-  width?: string;
+  maxWidth?: string;
 };
 
 export const Alert: FC<Props> = ({
   isSuccess,
   isRounded,
   children,
-  width = '100%',
+  maxWidth = '100%',
 }) => (
   <div
     css={[
@@ -20,7 +20,7 @@ export const Alert: FC<Props> = ({
       isSuccess ? styles.alertSuccess : styles.alertDanger,
       isRounded && styles.alertRounded,
     ]}
-    style={{ maxWidth: width }}
+    style={{ maxWidth }}
   >
     {children}
   </div>

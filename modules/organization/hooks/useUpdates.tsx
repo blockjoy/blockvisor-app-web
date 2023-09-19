@@ -70,26 +70,23 @@ export const useUpdates = () => {
           payloadDeserialized.updated,
         );
 
-        const { org, updatedBy, updatedByName }: OrgUpdated =
-          payloadDeserialized.updated!;
+        const { org, updatedBy }: OrgUpdated = payloadDeserialized.updated!;
 
         modifyOrganization(org!);
 
         updateMembersList(org!);
 
-        if (updatedBy === user?.id) break;
+        // TODO: Investigate why updatedBy is wrong
+        //if (updatedBy === user?.id) break;
 
-        if (!org?.members.find((m) => m.userId === user?.id)) {
+        const isKicked = !org?.members.find((m) => m.userId === user?.id);
+
+        if (isKicked) {
           showNotification(
             type,
             `You've just been removed from ${org?.name} organization`,
           );
           kickFromOrganization();
-        } else {
-          showNotification(
-            type,
-            `${updatedByName} just updated an organization`,
-          );
         }
 
         break;
@@ -107,17 +104,13 @@ export const useUpdates = () => {
         removeOrganization(orgId);
 
         if (deletedBy === user?.id) break;
+
         if (orgId === defaultOrganization?.id) {
           showNotification(
             type,
             `${deletedByName} just deleted your default organization`,
           );
           kickFromOrganization();
-        } else {
-          showNotification(
-            type,
-            `${deletedByName} just deleted an organization`,
-          );
         }
 
         break;

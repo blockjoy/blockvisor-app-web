@@ -1,15 +1,17 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { mapHostNodesToRows, useHostView } from '@modules/host';
 import { useNodeList } from '@modules/node';
-import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
+import { Alert, EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
+import { useDefaultOrganization } from '@modules/organization';
 
 export const HostViewNodes = () => {
   const router = useRouter();
   const { nodeList, isLoading } = useNodeList();
   const { host, isLoading: isLoadingActiveHost } = useHostView();
+  const { defaultOrganization } = useDefaultOrganization();
   const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
   const { headers, rows } = mapHostNodesToRows(hostNodes);
 
@@ -17,6 +19,9 @@ export const HostViewNodes = () => {
 
   return (
     <>
+      <Alert isSuccess isRounded>
+        Only showing nodes for {defaultOrganization?.name} organization.
+      </Alert>
       {isLoading !== 'finished' && isLoadingActiveHost !== 'finished' ? (
         <TableSkeleton />
       ) : !Boolean(hostNodes?.length) ? (

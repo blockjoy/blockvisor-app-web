@@ -34,8 +34,11 @@ export function usePermissions() {
   const hasPermission = (permission: Permission) =>
     permissions.findIndex((p) => p === permission) > -1;
 
+  const isSuperUser = hasPermission('auth-admin-list-permissions');
+
   return {
     permissions,
+    isSuperUser,
     getPermissions,
     hasPermission,
   };
