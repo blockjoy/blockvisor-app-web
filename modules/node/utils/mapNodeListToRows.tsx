@@ -99,27 +99,28 @@ export const mapNodeListToRows = (
       },
       {
         key: '5',
-        component: node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING && (
-          <Button
-            css={
-              (spacing.left.large,
-              css`
-                width: 40px;
-              `)
-            }
-            style="icon"
-            tooltip="Delete"
-            onClick={() =>
-              !!onDeleteClick
-                ? onDeleteClick(node.id, node.name, node.hostId)
-                : null
-            }
-          >
-            <SvgIcon isDefaultColor>
-              <IconDelete />
-            </SvgIcon>
-          </Button>
-        ),
+        component: node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING &&
+          !hasPermission('node-admin-get') && (
+            <Button
+              css={
+                (spacing.left.large,
+                css`
+                  width: 40px;
+                `)
+              }
+              style="icon"
+              tooltip="Delete"
+              onClick={() =>
+                !!onDeleteClick
+                  ? onDeleteClick(node.id, node.name, node.hostId)
+                  : null
+              }
+            >
+              <SvgIcon isDefaultColor>
+                <IconDelete />
+              </SvgIcon>
+            </Button>
+          ),
       },
     ],
   }));
