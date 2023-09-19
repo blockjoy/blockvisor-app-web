@@ -19,7 +19,7 @@ export function useTabs(noOfTabs: number) {
         });
       }
     }
-  }, [query.tab]);
+  }, [isReady, query.tab]);
 
   return { activeTab, setActiveTab };
 }
