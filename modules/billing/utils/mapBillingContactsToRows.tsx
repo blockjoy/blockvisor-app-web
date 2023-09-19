@@ -5,6 +5,7 @@ import { Contact } from 'chargebee-typescript/lib/resources/customer';
 export const mapBillingContactsToRows = (
   billingContacts: Contact[],
   handleRemove: (contact: Contact) => void,
+  subscriptionStatus: string | undefined,
 ) => {
   const headers: TableHeader[] = [
     {
@@ -36,7 +37,6 @@ export const mapBillingContactsToRows = (
           key: '2',
           component: <p>{contact.email}</p>,
         },
-
         {
           key: '3',
           component: (
@@ -53,7 +53,7 @@ export const mapBillingContactsToRows = (
             </Button>
           ),
         },
-      ],
+      ].filter((cell) => cell.key !== '3' || subscriptionStatus === 'active'),
     })) ?? [];
 
   return {

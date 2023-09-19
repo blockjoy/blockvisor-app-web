@@ -6,6 +6,7 @@ import {
   useBillingContacts,
   checkIfBillingContactExists,
   billingSelectors,
+  billingAtoms,
 } from '@modules/billing';
 import { Button, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -13,6 +14,9 @@ import { useRecoilValue } from 'recoil';
 
 export const BillingContacts = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
+  );
 
   const {
     billingContacts,
@@ -48,7 +52,11 @@ export const BillingContacts = () => {
     cancel: handleCancel,
   };
 
-  if (billingContactsLoadingState !== 'finished') return <TableSkeleton />;
+  if (
+    billingContactsLoadingState !== 'finished' ||
+    subscriptionLoadingState !== 'finished'
+  )
+    return <TableSkeleton />;
 
   return activeView === 'list' ? (
     <>
@@ -65,15 +73,17 @@ export const BillingContacts = () => {
           />
         )}
       </div>
-      <Button
-        onClick={handleAdding}
-        size="small"
-        style="outline"
-        disabled={subscription?.status !== 'active'}
-        tooltip="Cannot add with cancelled subscription"
-      >
-        Add Billing Contact
-      </Button>
+      {subscription?.status === 'active' && (
+        <Button
+          onClick={handleAdding}
+          size="small"
+          style="outline"
+          disabled={subscription?.status !== 'active'}
+          tooltip="Cannot add with cancelled subscription"
+        >
+          Add Billing Contact
+        </Button>
+      )}
     </>
   ) : (
     <BillingContactForm actions={actions} />
