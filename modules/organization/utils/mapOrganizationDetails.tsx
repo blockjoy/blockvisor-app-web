@@ -3,6 +3,12 @@ import { ReactNode } from 'react';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { ROUTES } from '@shared/constants/routes';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { SvgIcon } from '@shared/components';
+import IconInfo from '@public/assets/icons/common/Info.svg';
+import { display } from 'styles/utils.display.styles';
+import { flex } from 'styles/utils.flex.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { getOrganizationRole } from '@modules/organization';
 
 type Details = {
   label: string | ReactNode;
@@ -22,10 +28,43 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
     },
   ];
 
-  if (org.personal) {
+  const roles = org.members.find((member) => member.userId === userId)?.roles;
+
+  const role = getOrganizationRole(roles!);
+
+  const owners = org.members.filter((member) =>
+    member.roles.some((role) => role.name === 'org-owner'),
+  );
+
+  details.unshift({
+    label: owners.length > 1 ? 'Owners' : 'Owner',
+    data:
+      owners.length > 1 ? (
+        <>
+          {owners.map((o) => (
+            <p key={o.userId}>{o.email}</p>
+          ))}
+        </>
+      ) : (
+        owners[0]?.email || 'None'
+      ),
+  });
+
+  if (!org.personal) {
     details.unshift({
-      label: 'TYPE',
-      data: org.personal ? 'Personal' : 'Other',
+      label: 'Role',
+      data: (
+        <p css={[display.flex, flex.align.center]}>
+          {role}{' '}
+          <SvgIcon
+            tooltip="Your role within this organization"
+            additionalStyles={[spacing.left.small]}
+            isDefaultColor
+          >
+            <IconInfo />
+          </SvgIcon>
+        </p>
+      ),
     });
   }
 

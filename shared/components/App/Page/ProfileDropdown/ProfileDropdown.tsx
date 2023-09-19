@@ -44,9 +44,8 @@ export const ProfileDropdown = () => {
     handleClickOutside();
   };
 
-  // TODO: Use blockjoy-admin-permission
-  // const { hasPermission } = usePermissions();
-  // const isSuperUser = hasPermission("blockjoy-admin");
+  const { hasPermission } = usePermissions();
+  const isSuperUser = hasPermission('auth-admin-list-permissions');
 
   return (
     <div ref={dropdownRef} css={styles.base}>
@@ -61,11 +60,11 @@ export const ProfileDropdown = () => {
           <div css={styles.userInfo}>
             <span css={styles.label}>Signed in as</span>
             <span>{escapeHtml(`${user?.firstName} ${user?.lastName}`)}</span>
-            {/* {isSuperUser && (
+            {isSuperUser && (
               <Badge customCss={[spacing.top.micro]} style="outline">
                 Super User
               </Badge>
-            )} */}
+            )}
           </div>
         </DropdownItem>
         <DropdownItem

@@ -122,9 +122,9 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
               )}
               {children}
             </div>
-            {/* <div css={styles.rightWrapper}>
+            <div css={styles.rightWrapper}>
               <OrganizationDetails />
-            </div> */}
+            </div>
           </section>
         </>
       )}

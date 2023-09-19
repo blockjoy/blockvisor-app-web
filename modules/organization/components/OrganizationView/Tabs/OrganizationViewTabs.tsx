@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { styles } from './OrganizationViewTabs.styles';
-import { wrapper } from 'styles/wrapper.styles';
 import { createPath } from '@modules/organization/utils/createPath';
 
 export const OrganizationViewTabs = () => {
@@ -32,6 +31,7 @@ export const OrganizationViewTabs = () => {
           {tab.name}
         </NextLink>
       ))}
+      <header css={styles.sidePanelHeader}>Details</header>
     </div>
   );
 };

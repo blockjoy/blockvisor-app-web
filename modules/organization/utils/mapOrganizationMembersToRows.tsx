@@ -1,11 +1,12 @@
 import { usePermissions, useIdentity } from '@modules/auth';
-import { Button, SvgIcon } from '@shared/components';
+import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export enum Action {
   revoke = 'revoke',
@@ -77,13 +78,17 @@ export const mapOrganizationMembersToRows = (
         component: (
           <div css={[flex.display.inline, flex.align.center]}>
             <p>{escapeHtml(member.email!)}</p>
-            {/* TODO: Determine owner of Org */}
-            {/* {member.role === OrgRole.ORG_ROLE_OWNER && (
+            {member.roles.some((r) => r.name === 'org-owner') ? (
               <Badge style="outline" customCss={[spacing.left.small]}>
                 Owner
               </Badge>
+            ) : (
+              member.roles.some((r) => r.name === 'org-admin') && (
+                <Badge style="outline" customCss={[spacing.left.small]}>
+                  Admin
+                </Badge>
+              )
             )}
-             */}
           </div>
         ),
       },

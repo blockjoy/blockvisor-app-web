@@ -30,12 +30,12 @@ export const styles = {
       pointer-events: none;
     }
   `,
-  input: (buttonWidth: string) => (theme: ITheme) =>
+  input: (buttonWidth: string, hasValue: boolean) => (theme: ITheme) =>
     css`
       border: 0;
       background: transparent;
       padding: 0 calc(${buttonWidth} + 44px) 0 0;
-      height: 72px;
+      height: 64px;
       width: 100%;
       border-radius: 0;
       border-bottom: 1px solid ${theme.colorBorder};
@@ -59,5 +59,13 @@ export const styles = {
       :focus {
         cursor: text;
       }
+
+      ${hasValue &&
+      css`
+        :focus {
+          opacity: 1;
+          color: ${theme.colorText};
+        }
+      `}
     `,
 };
