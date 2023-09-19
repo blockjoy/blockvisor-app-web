@@ -25,7 +25,7 @@ type BillingProps = {
 };
 
 export const Billing = ({ item, itemPrices }: BillingProps) => {
-  const { push } = useRouter();
+  const { push, query } = useRouter();
   const subscription = useRecoilValue(billingSelectors.subscription);
   const userSubscription = useRecoilValue(billingSelectors.userSubscription);
   const subscriptionLoadingState = useRecoilValue(
@@ -114,6 +114,10 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
       { shallow: true },
     );
   };
+
+  useEffect(() => {
+    if (!canUpdateSubscription && query.tab !== '1') handleClick('1');
+  }, [canUpdateSubscription]);
 
   return (
     <>

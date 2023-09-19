@@ -5,12 +5,18 @@ import isEqual from 'lodash/isEqual';
 import { ROUTES } from '@shared/index';
 import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import {
+  billingAtoms,
   mapInvoicesToRows,
   useInvoices,
   useInvoicesUIContext,
 } from '@modules/billing';
+import { useRecoilValue } from 'recoil';
 
 export const InvoicesList = () => {
+  const subscriptionLoadingState = useRecoilValue(
+    billingAtoms.subscriptionLoadingState,
+  );
+
   const router = useRouter();
 
   const {
@@ -70,39 +76,32 @@ export const InvoicesList = () => {
     invoicesUIProps.setQueryParams(newQueryParams);
   };
 
-  return (
-    <>
-      {invoicesLoadingState === 'initializing' ? (
-        <TableSkeleton />
-      ) : (
-        <>
-          {invoices?.length ? (
-            <InfiniteScroll
-              dataLength={invoices?.length}
-              next={updateQueryParams}
-              hasMore={invoicesNextOffset !== undefined}
-              style={{ overflow: 'hidden' }}
-              scrollThreshold={1}
-              loader={''}
-              endMessage={''}
-            >
-              <Table
-                isLoading={invoicesLoadingState}
-                headers={headers}
-                preload={preloadInvoices}
-                rows={rows}
-                fixedRowHeight="80px"
-                onRowClick={handleRowClicked}
-              />
-            </InfiniteScroll>
-          ) : (
-            <EmptyColumn
-              title="Invoices Not Found"
-              description="No invoices exist"
-            />
-          )}
-        </>
-      )}
-    </>
+  if (
+    invoicesLoadingState !== 'finished' ||
+    subscriptionLoadingState !== 'finished'
+  )
+    return <TableSkeleton />;
+
+  return invoices?.length ? (
+    <InfiniteScroll
+      dataLength={invoices?.length}
+      next={updateQueryParams}
+      hasMore={invoicesNextOffset !== undefined}
+      style={{ overflow: 'hidden' }}
+      scrollThreshold={1}
+      loader={''}
+      endMessage={''}
+    >
+      <Table
+        isLoading={invoicesLoadingState}
+        headers={headers}
+        preload={preloadInvoices}
+        rows={rows}
+        fixedRowHeight="80px"
+        onRowClick={handleRowClicked}
+      />
+    </InfiniteScroll>
+  ) : (
+    <EmptyColumn title="Invoices Not Found" description="No invoices exist" />
   );
 };
