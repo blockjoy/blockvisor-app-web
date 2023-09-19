@@ -144,7 +144,7 @@ export const NodeStatusIcon = ({
   return (
     <Suspense fallback={null}>
       {statusName === 'PROVISIONING' ? (
-        <NodeStatusSpinner size={size} />
+        <NodeStatusSpinner size={size} status={status!} />
       ) : (
         <SvgIcon
           additionalStyles={[getNodeStatusColor(status!, type)]}
