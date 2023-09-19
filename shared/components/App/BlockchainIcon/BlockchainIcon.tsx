@@ -122,6 +122,7 @@ export const BlockchainIcon: FC<Props> = ({
       Component = IconAvalanche;
       break;
     case 'bnb':
+    case 'bsc':
       Component = IconBnB;
       break;
     case 'cardano':
