@@ -69,19 +69,6 @@ export const NodeLauncherConfig: FC<Props> = ({
           </div>
         )}
 
-        {versions.length > 1 && (
-          <>
-            <FormLabel>Version</FormLabel>
-            <Select
-              buttonText={<p>{selectedVersion?.version}</p>}
-              items={versions.map((version) => ({
-                name: version.version,
-                onClick: () => onVersionChanged(version),
-              }))}
-            />
-          </>
-        )}
-
         <FormLabel>
           Firewall Rules{' '}
           <SvgIcon
@@ -97,6 +84,19 @@ export const NodeLauncherConfig: FC<Props> = ({
           allowedIps={nodeLauncherState.allowIps}
           deniedIps={nodeLauncherState.denyIps}
         />
+
+        {versions.length > 1 && (
+          <>
+            <FormLabel>Version</FormLabel>
+            <Select
+              buttonText={<p>{selectedVersion?.version}</p>}
+              items={versions.map((version) => ({
+                name: version.version,
+                onClick: () => onVersionChanged(version),
+              }))}
+            />
+          </>
+        )}
 
         {Boolean(networks?.length) &&
           properties?.map((property: NodeProperty) => {

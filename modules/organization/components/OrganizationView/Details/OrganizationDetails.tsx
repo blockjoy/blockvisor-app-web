@@ -2,7 +2,7 @@ import { useIdentity } from '@modules/auth';
 import { mapOrganizationDetails } from '@modules/organization';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import { DetailsTable, FormHeaderCaps } from '@shared/components';
-import { spacing } from 'styles/utils.spacing.styles';
+import { styles } from './OrganizationDetails.styles';
 
 export function OrganizationDetails() {
   const { organization } = useGetOrganization();
@@ -12,8 +12,10 @@ export function OrganizationDetails() {
   const details = mapOrganizationDetails(organization, user?.id!);
 
   return (
-    <section css={spacing.top.small}>
-      <FormHeaderCaps noBottomMargin>Details</FormHeaderCaps>
+    <section css={styles.section}>
+      <span css={styles.detailsHeaderMobile}>
+        <FormHeaderCaps noBottomMargin>Details</FormHeaderCaps>
+      </span>
       <DetailsTable bodyElements={details ?? []} />
     </section>
   );

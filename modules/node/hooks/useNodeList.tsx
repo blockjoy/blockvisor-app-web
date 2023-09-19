@@ -58,6 +58,7 @@ export const useNodeList = () => {
     } catch (err) {
       setIsLoading('finished');
       setNodeList([]);
+      setNodeCount(0);
     }
   };
 

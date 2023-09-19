@@ -39,12 +39,13 @@ class OrganizationClient {
   }
 
   async getOrganizations(): Promise<Org[] | StatusResponse> {
+    const request = { memberId: getIdentity().id };
+    console.log('listOrganizationsRequest', request);
+
     try {
       await authClient.refreshToken();
-      const response = await this.client.list(
-        { memberId: getIdentity().id },
-        getOptions(),
-      );
+      const response = await this.client.list(request, getOptions());
+      console.log('listOrganizationsResponse', response);
       return response.orgs;
     } catch (err: any) {
       checkForRefreshTokenError(err.message);
