@@ -44,8 +44,7 @@ export const ProfileDropdown = () => {
     handleClickOutside();
   };
 
-  const { hasPermission } = usePermissions();
-  const isSuperUser = hasPermission('auth-admin-list-permissions');
+  const { isSuperUser } = usePermissions();
 
   return (
     <div ref={dropdownRef} css={styles.base}>

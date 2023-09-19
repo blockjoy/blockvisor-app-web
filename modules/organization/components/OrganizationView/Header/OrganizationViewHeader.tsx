@@ -5,6 +5,7 @@ import {
   Button,
   SvgIcon,
   DeleteModal,
+  ButtonGroup,
 } from '@shared/components';
 import { FC, useState } from 'react';
 import { styles } from './OrganizationViewHeader.styles';
@@ -25,6 +26,8 @@ import IconDoor from '@public/assets/icons/common/Door.svg';
 
 export const OrganizationViewHeader: FC = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
+
+  const [deleteType, setDeleteType] = useState<string | 'Delete' | 'Leave'>();
 
   const { organization, isLoading } = useGetOrganization();
 
@@ -55,7 +58,10 @@ export const OrganizationViewHeader: FC = () => {
     setIsDeleteMode(false);
   };
 
-  const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
+  const toggleDeleteModalOpen = (type: 'Delete' | 'Leave') => {
+    setDeleteType(type);
+    setIsDeleteMode(!isDeleteMode);
+  };
 
   const handleEditClicked = () => {
     setIsSavingOrganization(null);
@@ -75,31 +81,22 @@ export const OrganizationViewHeader: FC = () => {
     setIsDeleteMode(false);
   };
 
-  const handleAction = async () => {
-    if (canDeleteOrganization) {
-      deleteOrganization(organization!.id, callback);
-    } else {
-      leaveOrganization(organization!.id, callback);
-    }
-  };
-
-  const type = canDeleteOrganization
-    ? 'Delete'
-    : canLeaveOrganization
-    ? 'Leave'
-    : '';
+  const handleAction = () =>
+    deleteType === 'Delete'
+      ? deleteOrganization(organization!.id, callback)
+      : deleteOrganization(organization!.id, callback);
 
   const isLoadingOrg =
     isLoading !== 'finished' || organization?.nodeCount === null;
 
   return (
     <>
-      {isDeleteMode && (
+      {isDeleteMode && canDeleteOrganization && (
         <DeleteModal
           portalId="delete-org-modal"
           elementName={organization?.name!}
           entityName="Organization"
-          type={type}
+          type={deleteType}
           onHide={handleDeleteModalClosed}
           onSubmit={handleAction}
         />
@@ -122,25 +119,36 @@ export const OrganizationViewHeader: FC = () => {
               />
               {(canDeleteOrganization || canLeaveOrganization) &&
                 !organization.personal && (
-                  <Button
-                    disabled={
-                      canDeleteOrganization
-                        ? organization!.nodeCount > 0
-                        : false
-                    }
-                    tooltip={
-                      canDeleteOrganization && organization!.nodeCount > 0
-                        ? 'Has Nodes Attached'
-                        : ''
-                    }
-                    onClick={toggleDeleteModalOpen}
-                    style="basic"
-                  >
-                    <SvgIcon>
-                      {canDeleteOrganization ? <IconDelete /> : <IconDoor />}
-                    </SvgIcon>
-                    <p>{canDeleteOrganization ? 'Delete' : 'Leave'}</p>
-                  </Button>
+                  <ButtonGroup type="flex">
+                    {canDeleteOrganization && (
+                      <Button
+                        disabled={organization!.nodeCount > 0}
+                        tooltip={
+                          organization!.nodeCount > 0
+                            ? 'Has Nodes Attached'
+                            : ''
+                        }
+                        onClick={() => toggleDeleteModalOpen('Delete')}
+                        style="basic"
+                      >
+                        <SvgIcon>
+                          <IconDelete />
+                        </SvgIcon>
+                        <p>Delete</p>
+                      </Button>
+                    )}
+                    {canLeaveOrganization && (
+                      <Button
+                        onClick={() => toggleDeleteModalOpen('Leave')}
+                        style="basic"
+                      >
+                        <SvgIcon>
+                          <IconDoor />
+                        </SvgIcon>
+                        <p>Leave</p>
+                      </Button>
+                    )}
+                  </ButtonGroup>
                 )}
             </>
           )

@@ -6,6 +6,7 @@ import {
   EmptyColumn,
   Table,
   TableGrid,
+  Alert,
 } from '@shared/components';
 import { styles } from './HostList.styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -19,7 +20,6 @@ import {
   useHostList,
   useHostUIContext,
 } from '@modules/host';
-import { useDefaultOrganization } from '@modules/organization';
 
 export const HostList = () => {
   const hostUIContext = useHostUIContext();
@@ -33,7 +33,6 @@ export const HostList = () => {
   const { loadHosts, hostList, hostListSorted, isLoading, handleHostClick } =
     useHostList();
 
-  const { defaultOrganization } = useDefaultOrganization();
   const hasMoreHosts = useRecoilValue(hostAtoms.hasMoreHosts);
   const preloadHosts = useRecoilValue(hostAtoms.preloadHosts);
   const activeListType = useRecoilValue(hostAtoms.activeListType);
@@ -52,9 +51,7 @@ export const HostList = () => {
   }, [hostUIProps.queryParams]);
 
   const updateQueryParams = async () => {
-    // sleep 300ms for better UX/UI (maybe should be removed)
-    await new Promise((r) => setTimeout(r, 300));
-
+    // TODO: Implement pagination
     const newCurrentPage = hostUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
       ...hostUIProps.queryParams,
@@ -84,7 +81,6 @@ export const HostList = () => {
         {/* <HostFilters isLoading={isLoading} /> */}
         <div css={styles.listWrapper}>
           <HostListHeader />
-
           {isLoading === 'initializing' ? (
             <TableSkeleton />
           ) : !Boolean(hostList?.length) && isLoading === 'finished' ? (
