@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/react';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { SvgIcon } from '@shared/components/General';
+import { getNodeStatusColor } from './NodeStatus';
 
 const spin = keyframes`
     100% {
@@ -17,11 +18,12 @@ const styles = {
 
 type Props = {
   size: string;
+  status: number;
 };
 
-const NodeStatusSpinner = ({ size }: Props) => (
+const NodeStatusSpinner = ({ size, status }: Props) => (
   <div css={styles.wrapper}>
-    <SvgIcon isDefaultColor size={size}>
+    <SvgIcon additionalStyles={[getNodeStatusColor(status)]} size={size}>
       <IconCog />
     </SvgIcon>
   </div>
