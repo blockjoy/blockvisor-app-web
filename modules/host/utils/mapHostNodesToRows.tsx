@@ -1,9 +1,15 @@
 import { TableBlock } from '@shared/components';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  Node,
+  NodeStatus as NodeStatusEnum,
+} from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
+import { usePermissions } from '@modules/auth/hooks/usePermissions';
 
 export const mapHostNodesToRows = (nodeList: Node[]) => {
+  const { hasPermission } = usePermissions();
+
   const headers: TableHeader[] = [
     {
       name: '',
@@ -24,6 +30,9 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
 
   const rows = nodeList?.map((node: Node) => ({
     key: node.id,
+    isClickable:
+      node.status !== NodeStatusEnum.NODE_STATUS_PROVISIONING ||
+      hasPermission('node-admin-get'),
     cells: [
       {
         key: '1',
