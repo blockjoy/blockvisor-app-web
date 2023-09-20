@@ -27,7 +27,7 @@ import IconDoor from '@public/assets/icons/common/Door.svg';
 export const OrganizationViewHeader: FC = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
-  const [deleteType, setDeleteType] = useState<string | 'Delete' | 'Leave'>();
+  const [deleteType, setDeleteType] = useState<'Delete' | 'Leave'>();
 
   const { organization, isLoading } = useGetOrganization();
 
@@ -60,7 +60,7 @@ export const OrganizationViewHeader: FC = () => {
 
   const toggleDeleteModalOpen = (type: 'Delete' | 'Leave') => {
     setDeleteType(type);
-    setIsDeleteMode(!isDeleteMode);
+    setIsDeleteMode(true);
   };
 
   const handleEditClicked = () => {
@@ -84,14 +84,14 @@ export const OrganizationViewHeader: FC = () => {
   const handleAction = () =>
     deleteType === 'Delete'
       ? deleteOrganization(organization!.id, callback)
-      : deleteOrganization(organization!.id, callback);
+      : leaveOrganization(organization!.id, callback);
 
   const isLoadingOrg =
     isLoading !== 'finished' || organization?.nodeCount === null;
 
   return (
     <>
-      {isDeleteMode && canDeleteOrganization && (
+      {isDeleteMode && (
         <DeleteModal
           portalId="delete-org-modal"
           elementName={organization?.name!}
