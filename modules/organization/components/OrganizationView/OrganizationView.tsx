@@ -8,7 +8,6 @@ import {
   invitationAtoms,
   organizationAtoms,
   OrganizationDetails,
-  organizationSelectors,
   useInvitations,
   useInviteMembers,
 } from '@modules/organization';
@@ -16,11 +15,7 @@ import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
 import { useRecoilValue } from 'recoil';
-import { authSelectors, useIdentity } from '@modules/auth';
-import {
-  Permissions,
-  useHasPermissions,
-} from '@modules/auth/hooks/useHasPermissions';
+import { useIdentity, usePermissions } from '@modules/auth';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 import { toast } from 'react-toastify';
 import { createPath } from '@modules/organization/utils/createPath';
@@ -38,20 +33,13 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     getReceivedInvitations,
   } = useInvitations();
 
+  const { hasPermission } = usePermissions();
+
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canCreateMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_MEMBER,
-  );
+  const canCreateMember = hasPermission('invitation-create');
 
   const [isInviting, setIsInviting] = useState<boolean>(false);
 

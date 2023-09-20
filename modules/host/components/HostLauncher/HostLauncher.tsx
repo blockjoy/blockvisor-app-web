@@ -1,4 +1,3 @@
-import { useRecoilValue } from 'recoil';
 import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 import {
   Button,
@@ -13,15 +12,8 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import {
-  organizationSelectors,
-  useDefaultOrganization,
-} from '@modules/organization';
-import { authSelectors } from '@modules/auth';
-import {
-  useHasPermissions,
-  Permissions,
-} from '@modules/auth/hooks/useHasPermissions';
+import { useDefaultOrganization } from '@modules/organization';
+import { usePermissions } from '@modules/auth';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
@@ -29,20 +21,9 @@ export const HostLauncher = () => {
 
   const { defaultOrganization } = useDefaultOrganization();
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
+  const { hasPermission } = usePermissions();
 
-  const canAddHost: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_NODE,
-  );
-
-  const token = canAddHost
-    ? provisionToken
-    : provisionToken?.replace(/./g, '*');
+  const canResetProvisionToken = hasPermission('org-provision-reset-token');
 
   return (
     <div>
@@ -63,13 +44,18 @@ export const HostLauncher = () => {
               Launch a new host by running this command on any server
             </FormText>
             <div css={[styles.copy, spacing.bottom.medium]}>
-              <CopyToClipboard value={`bvup ${token}`} disabled={!canAddHost} />
-              {!canAddHost && (
+              <CopyToClipboard
+                value={`bvup ${
+                  !canResetProvisionToken ? 'xxxxxxx' : provisionToken
+                }`}
+                disabled={!canResetProvisionToken}
+              />
+              {!canResetProvisionToken && (
                 <Tooltip
                   noWrap
                   top="-30px"
                   left="50%"
-                  tooltip="Feature disabled during beta."
+                  tooltip="Insufficient Permissions"
                 />
               )}
             </div>
@@ -77,13 +63,14 @@ export const HostLauncher = () => {
               style="outline"
               size="small"
               disabled={
-                provisionTokenLoadingState !== 'finished' || !canAddHost
+                provisionTokenLoadingState !== 'finished' ||
+                !canResetProvisionToken
               }
               css={styles.button}
               onClick={() => resetProvisionToken(defaultOrganization?.id!)}
               loading={provisionTokenLoadingState !== 'finished'}
-              {...(!canAddHost && {
-                tooltip: 'Feature disabled during beta.',
+              {...(!canResetProvisionToken && {
+                tooltip: 'Insufficient Permissions.',
               })}
             >
               <SvgIcon>

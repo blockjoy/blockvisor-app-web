@@ -16,6 +16,7 @@ export const styles = {
   `,
   leftWrapper: css`
     flex: 1 1 auto;
+    margin-top: -20px;
 
     @media ${breakpoints.fromXLrg} {
       padding-right: 30px;
@@ -32,7 +33,6 @@ export const styles = {
       flex: 0 0 400px;
       padding-left: 30px;
       margin-bottom: 0;
-      margin-top: 20px;
       border-left: 1px solid ${theme.colorBorder};
     }
 

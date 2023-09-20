@@ -1,15 +1,11 @@
-import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { nodeClient } from '@modules/grpc';
 import { InitialQueryParams } from '../ui/NodeUIHelpers';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
-import { ROUTES } from '@shared/constants/routes';
 import { useDefaultOrganization } from '@modules/organization';
 
 export const useNodeList = () => {
-  const router = useRouter();
-
   const orgId = useDefaultOrganization().defaultOrganization?.id;
 
   const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
@@ -23,10 +19,6 @@ export const useNodeList = () => {
   );
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
-
-  const handleNodeClick = (args: any) => {
-    router.push(ROUTES.NODE(args.key));
-  };
 
   const loadNodes = async (
     queryParams?: InitialQueryParams,
@@ -66,6 +58,7 @@ export const useNodeList = () => {
     } catch (err) {
       setIsLoading('finished');
       setNodeList([]);
+      setNodeCount(0);
     }
   };
 
@@ -108,7 +101,6 @@ export const useNodeList = () => {
     isLoading,
     addToNodeList,
     removeFromNodeList,
-    handleNodeClick,
     setIsLoading,
     listNodesByHost,
     nodeListByHost,

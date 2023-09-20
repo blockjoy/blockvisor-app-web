@@ -1,17 +1,9 @@
-import { authSelectors } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 import { Button, SvgIcon } from '@shared/components';
-import { useRecoilValue } from 'recoil';
 import IconClose from '@public/assets/icons/common/Close.svg';
-import {
-  Permissions,
-  useHasPermissions,
-} from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
-import {
-  OrganizationInvitationsResend,
-  organizationSelectors,
-} from '@modules/organization';
+import { OrganizationInvitationsResend } from '@modules/organization';
 
 export enum Action {
   revoke = 'revoke',
@@ -36,22 +28,11 @@ export const mapOrganizationInvitationsToRows = (
   invitations?: Invitation[],
   methods?: Methods,
 ) => {
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
+  const { hasPermission } = usePermissions();
 
-  const canCreateMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_MEMBER,
-  );
+  const canCreateMember = hasPermission('invitation-create');
 
-  const canRemoveMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.DELETE_MEMBER,
-  );
+  const canRemoveMember = hasPermission('org-remove-member');
 
   const handleRevokeInvitation = (invitationId: string, email: string) => {
     methods?.action(Action.revoke, { invitationId, email });
@@ -100,28 +81,21 @@ export const mapOrganizationInvitationsToRows = (
       },
       {
         key: '4',
-        component: (
-          <>
-            {canRemoveMember ? (
-              <Button
-                type="button"
-                tooltip="Cancel"
-                style="icon"
-                size="medium"
-                onClick={() =>
-                  handleRevokeInvitation(
-                    invitation?.id!,
-                    invitation?.inviteeEmail!,
-                  )
-                }
-              >
-                <SvgIcon size="20px">
-                  <IconClose />
-                </SvgIcon>
-              </Button>
-            ) : null}
-          </>
-        ),
+        component: canRemoveMember ? (
+          <Button
+            type="button"
+            tooltip="Cancel"
+            style="icon"
+            size="medium"
+            onClick={() =>
+              handleRevokeInvitation(invitation?.id!, invitation?.inviteeEmail!)
+            }
+          >
+            <SvgIcon size="20px">
+              <IconClose />
+            </SvgIcon>
+          </Button>
+        ) : null,
       },
     ],
   }));

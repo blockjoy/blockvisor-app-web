@@ -6,6 +6,7 @@ import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
+import { usePermissions } from '@modules/auth/hooks/usePermissions';
 
 const ipListStyles = css`
   columns: 2;
@@ -46,6 +47,8 @@ const generateIpAddresses = (host: Host) => {
 export const mapHostToDetails = (host: Host) => {
   const ipAddresses = generateIpAddresses(host);
 
+  const { isSuperUser } = usePermissions();
+
   const details: { label: string; data: any | undefined }[] = [
     { label: 'Version', data: host?.version || '-' },
     {
@@ -82,6 +85,13 @@ export const mapHostToDetails = (host: Host) => {
       data: formatters.formatSize(host?.diskSizeBytes!, 'bytes') || '-',
     },
   ];
+
+  if (isSuperUser) {
+    details.unshift({
+      label: 'Nodes',
+      data: host.nodeCount,
+    });
+  }
 
   if (host?.billingAmount)
     details.push({

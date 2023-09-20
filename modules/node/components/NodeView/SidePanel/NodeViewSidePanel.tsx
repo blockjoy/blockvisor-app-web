@@ -15,7 +15,7 @@ export const NodeViewSidePanel = () => {
             </var>
           ) : (
             <div css={styles.blockheightLoader}>
-              <NodeStatusIcon size="16px" status={1} />
+              <NodeStatusIcon size="16px" status={1} isDefaultColor />
               <p css={styles.blockheightLoaderText}>Syncing</p>
             </div>
           )}

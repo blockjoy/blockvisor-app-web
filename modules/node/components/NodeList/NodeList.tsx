@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { useNodeList } from '@modules/node/hooks/useNodeList';
@@ -9,6 +9,7 @@ import {
   PageTitle,
   Table,
   TableGrid,
+  DeleteModal,
 } from '@shared/components';
 import { toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
@@ -22,6 +23,9 @@ import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
 import { mapNodeListToRows } from '@modules/node/utils';
 import IconNode from '@public/assets/icons/app/Node.svg';
+import { ROUTES } from '@shared/constants/routes';
+import { useNodeDelete } from '@modules/node/hooks/useNodeDelete';
+import { toast } from 'react-toastify';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -34,8 +38,37 @@ export const NodeList = () => {
     };
   }, [nodeUIContext]);
 
-  const { loadNodes, handleNodeClick, nodeList, nodeCount, isLoading } =
-    useNodeList();
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [nodeToDelete, setNodeToDelete] =
+    useState<{ id: string; name: string; hostId: string }>();
+
+  const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
+  const { deleteNode } = useNodeDelete();
+
+  const handleNodeDeleted = () => {
+    deleteNode(nodeToDelete?.id, nodeToDelete?.hostId!, () => {
+      handleNodeDeleteClosed();
+      toast.success('Node Deleted');
+    });
+  };
+
+  const handleNodeClicked = (nodeId: string) =>
+    router.push(ROUTES.NODE(nodeId));
+
+  const handleNodeDeleteClicked = (
+    id: string,
+    name: string,
+    hostId: string,
+  ) => {
+    setIsDeleteMode(true);
+    setNodeToDelete({
+      id,
+      name,
+      hostId,
+    });
+  };
+
+  const handleNodeDeleteClosed = () => setIsDeleteMode(false);
 
   const hasMoreNodes =
     nodeUIContext.queryParams.pagination.current_page *
@@ -74,8 +107,11 @@ export const NodeList = () => {
     nodeUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = toGrid(nodeList, handleNodeClick);
-  const { headers, rows } = mapNodeListToRows(nodeList);
+  const cells = toGrid(nodeList, handleNodeClicked, handleNodeDeleteClicked);
+  const { headers, rows } = mapNodeListToRows(
+    nodeList,
+    handleNodeDeleteClicked,
+  );
   const { isFiltered, isEmpty } = resultsStatus(
     nodeList.length,
     nodeUIProps.queryParams.filter,
@@ -83,6 +119,15 @@ export const NodeList = () => {
 
   return (
     <>
+      {isDeleteMode && (
+        <DeleteModal
+          portalId="delete-node-modal"
+          elementName={nodeToDelete?.name!}
+          entityName="Node"
+          onHide={handleNodeDeleteClosed}
+          onSubmit={handleNodeDeleted}
+        />
+      )}
       <PageTitle title="Nodes" icon={<IconNode />} />
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters isLoading={isLoading} />
@@ -124,7 +169,7 @@ export const NodeList = () => {
                   preload={0}
                   rows={rows}
                   fixedRowHeight="120px"
-                  onRowClick={handleNodeClick}
+                  onRowClick={handleNodeClicked}
                 />
               ) : (
                 <div css={styles.gridWrapper}>

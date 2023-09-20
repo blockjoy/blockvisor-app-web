@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { toast } from 'react-toastify';
 import { HostViewHeaderScrolledDown } from './HeaderScrolledDown/HostViewHeaderScrolledDown';
+import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
@@ -25,6 +26,7 @@ export const HostViewHeader = () => {
   const { host, isLoading, deleteHost } = useHostView();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const { hasPermission } = usePermissions();
 
   const handleDeleteHost = () =>
     deleteHost(host?.id!, () => {
@@ -94,19 +96,21 @@ export const HostViewHeader = () => {
             </div>
           )
         )}
-        <Button
-          disabled={host!.nodeCount > 0}
-          tooltip={
-            host!.nodeCount > 0 && !isScrolledDown ? 'Has Nodes Attached' : ''
-          }
-          onClick={handleDeleteToggled}
-          style="basic"
-        >
-          <SvgIcon>
-            <IconDelete />
-          </SvgIcon>
-          <p>Delete</p>
-        </Button>
+        {hasPermission('host-delete') && (
+          <Button
+            disabled={host!.nodeCount > 0}
+            tooltip={
+              host!.nodeCount > 0 && !isScrolledDown ? 'Has Nodes Attached' : ''
+            }
+            onClick={handleDeleteToggled}
+            style="basic"
+          >
+            <SvgIcon>
+              <IconDelete />
+            </SvgIcon>
+            <p>Delete</p>
+          </Button>
+        )}
       </header>
     </>
   );

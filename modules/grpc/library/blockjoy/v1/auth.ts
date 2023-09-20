@@ -85,6 +85,17 @@ export interface AuthServiceSwitchOrgRequest {
   orgId: string;
 }
 
+export interface AuthServiceListPermissionsRequest {
+  userId: string;
+  orgId: string;
+  /** Also include permissions from the token making the request. */
+  includeToken?: boolean | undefined;
+}
+
+export interface AuthServiceListPermissionsResponse {
+  permissions: string[];
+}
+
 function createBaseAuthServiceLoginRequest(): AuthServiceLoginRequest {
   return { email: "", password: "" };
 }
@@ -716,6 +727,120 @@ export const AuthServiceSwitchOrgRequest = {
   },
 };
 
+function createBaseAuthServiceListPermissionsRequest(): AuthServiceListPermissionsRequest {
+  return { userId: "", orgId: "", includeToken: undefined };
+}
+
+export const AuthServiceListPermissionsRequest = {
+  encode(message: AuthServiceListPermissionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.orgId !== "") {
+      writer.uint32(18).string(message.orgId);
+    }
+    if (message.includeToken !== undefined) {
+      writer.uint32(24).bool(message.includeToken);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthServiceListPermissionsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthServiceListPermissionsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.includeToken = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AuthServiceListPermissionsRequest>): AuthServiceListPermissionsRequest {
+    return AuthServiceListPermissionsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<AuthServiceListPermissionsRequest>): AuthServiceListPermissionsRequest {
+    const message = createBaseAuthServiceListPermissionsRequest();
+    message.userId = object.userId ?? "";
+    message.orgId = object.orgId ?? "";
+    message.includeToken = object.includeToken ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAuthServiceListPermissionsResponse(): AuthServiceListPermissionsResponse {
+  return { permissions: [] };
+}
+
+export const AuthServiceListPermissionsResponse = {
+  encode(message: AuthServiceListPermissionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.permissions) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthServiceListPermissionsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthServiceListPermissionsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.permissions.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AuthServiceListPermissionsResponse>): AuthServiceListPermissionsResponse {
+    return AuthServiceListPermissionsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<AuthServiceListPermissionsResponse>): AuthServiceListPermissionsResponse {
+    const message = createBaseAuthServiceListPermissionsResponse();
+    message.permissions = object.permissions?.map((e) => e) || [];
+    return message;
+  },
+};
+
 /** Retrieve and refresh API token */
 export type AuthServiceDefinition = typeof AuthServiceDefinition;
 export const AuthServiceDefinition = {
@@ -779,6 +904,15 @@ export const AuthServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** List the permissions available for a user and org. */
+    listPermissions: {
+      name: "ListPermissions",
+      requestType: AuthServiceListPermissionsRequest,
+      requestStream: false,
+      responseType: AuthServiceListPermissionsResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -816,6 +950,11 @@ export interface AuthServiceImplementation<CallContextExt = {}> {
     request: AuthServiceUpdateUIPasswordRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AuthServiceUpdateUIPasswordResponse>>;
+  /** List the permissions available for a user and org. */
+  listPermissions(
+    request: AuthServiceListPermissionsRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<AuthServiceListPermissionsResponse>>;
 }
 
 export interface AuthServiceClient<CallOptionsExt = {}> {
@@ -852,6 +991,11 @@ export interface AuthServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<AuthServiceUpdateUIPasswordRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<AuthServiceUpdateUIPasswordResponse>;
+  /** List the permissions available for a user and org. */
+  listPermissions(
+    request: DeepPartial<AuthServiceListPermissionsRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<AuthServiceListPermissionsResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

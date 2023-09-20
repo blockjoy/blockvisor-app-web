@@ -8,6 +8,8 @@ import { NodeViewSidePanel } from './SidePanel/NodeViewSidePanel';
 import { NodeViewTabs } from './Tabs/NodeViewTabs';
 import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
+import { NodeStatus } from '@modules/grpc/library/blockjoy/v1/node';
+import { usePermissions } from '@modules/auth/hooks/usePermissions';
 
 type Props = {
   children?: ReactNode;
@@ -23,6 +25,8 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
 
   const { node, loadNode, unloadNode, isLoading, setIsLoading } = useNodeView();
 
+  const { hasPermission } = usePermissions();
+
   const handleNodeError = () => setNodeError(true);
 
   useEffect(() => {
@@ -36,6 +40,15 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
       unloadNode();
     };
   }, [id]);
+
+  useEffect(() => {
+    if (
+      node?.status === NodeStatus.NODE_STATUS_PROVISIONING &&
+      !hasPermission('node-admin-get')
+    ) {
+      unloadNode();
+    }
+  }, [node?.id]);
 
   return (
     <>

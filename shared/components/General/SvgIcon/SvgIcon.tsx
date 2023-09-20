@@ -5,7 +5,10 @@ import { ITheme } from 'types/theme';
 
 type Props = {
   children?: React.ReactNode;
-  additionalStyles?: ((theme: ITheme) => SerializedStyles)[] | undefined;
+  additionalStyles?:
+    | ((theme: ITheme) => SerializedStyles)[]
+    | SerializedStyles[]
+    | undefined;
   size?: string;
   tooltip?: string;
   isDefaultColor?: boolean;

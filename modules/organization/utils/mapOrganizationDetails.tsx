@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { useRecoilValue } from 'recoil';
-import { Org, OrgRole } from '@modules/grpc/library/blockjoy/v1/org';
-import { SvgIcon } from '@shared/components';
-import IconInfo from '@public/assets/icons/common/Info.svg';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { ROUTES } from '@shared/constants/routes';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { organizationSelectors } from '@modules/organization';
+import { sort, SvgIcon } from '@shared/components';
+import IconInfo from '@public/assets/icons/common/Info.svg';
+import { display } from 'styles/utils.display.styles';
+import { flex } from 'styles/utils.flex.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { getOrganizationRole } from '@modules/organization';
 
 type Details = {
   label: string | ReactNode;
@@ -18,26 +20,7 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
     return null;
   }
 
-  const userRoleNameInOrganization = useRecoilValue(
-    organizationSelectors.userRoleNameInOrganization,
-  );
-
   const details: Details[] = [
-    {
-      label: 'ROLE',
-      data: (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <p>{userRoleNameInOrganization}</p>
-          <SvgIcon isDefaultColor tooltip="Your role within this Organization">
-            <IconInfo />
-          </SvgIcon>
-        </div>
-      ),
-    },
-    {
-      label: 'Owner',
-      data: org.members.find((m) => m.role === OrgRole.ORG_ROLE_OWNER)?.email,
-    },
     { label: 'MEMBERS', data: org?.memberCount },
     {
       label: 'NODES',
@@ -45,12 +28,51 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
     },
   ];
 
-  if (org.personal) {
-    details.unshift({
-      label: 'TYPE',
-      data: org.personal ? 'Personal' : 'Other',
-    });
-  }
+  const roles = org.members.find((member) => member.userId === userId)?.roles;
+
+  const role = getOrganizationRole(roles!);
+
+  const owners = sort(
+    org.members.filter((member) =>
+      member.roles.some(
+        (role) => role.name === 'org-owner' || role.name === 'org-personal',
+      ),
+    ),
+    {
+      field: 'email',
+      order: 'asc',
+    },
+  );
+
+  details.unshift({
+    label: owners.length > 1 ? 'Owners' : 'Owner',
+    data:
+      owners.length > 1 ? (
+        <>
+          {owners.map((o) => (
+            <p key={o.userId}>{o.email}</p>
+          ))}
+        </>
+      ) : (
+        owners[0]?.email || 'None'
+      ),
+  });
+
+  details.unshift({
+    label: 'Role',
+    data: (
+      <p css={[display.flex, flex.align.center]}>
+        {role}{' '}
+        <SvgIcon
+          tooltip="Your role within this organization"
+          additionalStyles={[spacing.left.small]}
+          isDefaultColor
+        >
+          <IconInfo />
+        </SvgIcon>
+      </p>
+    ),
+  });
 
   return details;
 }

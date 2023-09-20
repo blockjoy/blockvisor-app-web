@@ -132,19 +132,25 @@ type NodeStatusIconProps = {
   status?: number;
   type?: NodeStatusType;
   size: string;
+  isDefaultColor?: boolean;
 };
 
 export const NodeStatusIcon = ({
   status,
   type,
   size = '24px',
+  isDefaultColor,
 }: NodeStatusIconProps) => {
   const statusName = getNodeStatusInfo(status!, type)?.name;
 
   return (
     <Suspense fallback={null}>
       {statusName === 'PROVISIONING' ? (
-        <NodeStatusSpinner size={size} />
+        <NodeStatusSpinner
+          isDefaultColor={isDefaultColor}
+          size={size}
+          status={status!}
+        />
       ) : (
         <SvgIcon
           additionalStyles={[getNodeStatusColor(status!, type)]}

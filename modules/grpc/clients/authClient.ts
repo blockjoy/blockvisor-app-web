@@ -49,7 +49,7 @@ class AuthClient {
     }
   }
 
-  async registration_confirmation(token: string): Promise<string> {
+  async registrationConfirmation(token: string): Promise<string> {
     const authHeader = {
       metadata: Metadata({
         authorization: `Bearer ${token}`,
@@ -68,6 +68,19 @@ class AuthClient {
       await this.client.resetPassword({ email }, getOptions());
     } catch (err) {
       return StatusResponseFactory.resetPasswordResponse(err, 'grpcClient');
+    }
+  }
+
+  async listPermissions(userId: string, orgId: string): Promise<string[]> {
+    try {
+      await this.refreshToken();
+      const response = await this.client.listPermissions(
+        { userId, orgId, includeToken: true },
+        getOptions(),
+      );
+      return response.permissions;
+    } catch (err) {
+      return handleError(err);
     }
   }
 

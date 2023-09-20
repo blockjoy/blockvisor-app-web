@@ -6,14 +6,6 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 
 export const protobufPackage = "blockjoy.v1";
 
-export enum OrgRole {
-  ORG_ROLE_UNSPECIFIED = 0,
-  ORG_ROLE_MEMBER = 1,
-  ORG_ROLE_OWNER = 2,
-  ORG_ROLE_ADMIN = 3,
-  UNRECOGNIZED = -1,
-}
-
 /** Organization representation */
 export interface Org {
   /** The UUID of a the organization. */
@@ -115,9 +107,13 @@ export interface OrgServiceResetProvisionTokenResponse {
 export interface OrgUser {
   userId: string;
   orgId: string;
-  role: OrgRole;
   name: string;
   email: string;
+  roles: OrgRole[];
+}
+
+export interface OrgRole {
+  name?: string | undefined;
 }
 
 function createBaseOrg(): Org {
@@ -1000,7 +996,7 @@ export const OrgServiceResetProvisionTokenResponse = {
 };
 
 function createBaseOrgUser(): OrgUser {
-  return { userId: "", orgId: "", role: 0, name: "", email: "" };
+  return { userId: "", orgId: "", name: "", email: "", roles: [] };
 }
 
 export const OrgUser = {
@@ -1011,14 +1007,14 @@ export const OrgUser = {
     if (message.orgId !== "") {
       writer.uint32(18).string(message.orgId);
     }
-    if (message.role !== 0) {
-      writer.uint32(24).int32(message.role);
-    }
     if (message.name !== "") {
-      writer.uint32(34).string(message.name);
+      writer.uint32(26).string(message.name);
     }
     if (message.email !== "") {
-      writer.uint32(42).string(message.email);
+      writer.uint32(34).string(message.email);
+    }
+    for (const v of message.roles) {
+      OrgRole.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -1045,25 +1041,25 @@ export const OrgUser = {
           message.orgId = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.role = reader.int32() as any;
+          message.name = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.name = reader.string();
+          message.email = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.email = reader.string();
+          message.roles.push(OrgRole.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1082,9 +1078,55 @@ export const OrgUser = {
     const message = createBaseOrgUser();
     message.userId = object.userId ?? "";
     message.orgId = object.orgId ?? "";
-    message.role = object.role ?? 0;
     message.name = object.name ?? "";
     message.email = object.email ?? "";
+    message.roles = object.roles?.map((e) => OrgRole.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseOrgRole(): OrgRole {
+  return { name: undefined };
+}
+
+export const OrgRole = {
+  encode(message: OrgRole, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgRole {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgRole();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgRole>): OrgRole {
+    return OrgRole.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgRole>): OrgRole {
+    const message = createBaseOrgRole();
+    message.name = object.name ?? undefined;
     return message;
   },
 };

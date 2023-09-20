@@ -1,17 +1,13 @@
-import { authSelectors, useIdentity } from '@modules/auth';
+import { usePermissions, useIdentity } from '@modules/auth';
 import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
-import { spacing } from 'styles/utils.spacing.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
 import IconClose from '@public/assets/icons/common/Close.svg';
-import {
-  Permissions,
-  useHasPermissions,
-} from '@modules/auth/hooks/useHasPermissions';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
-import { organizationSelectors } from '../store/organizationSelectors';
+import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { spacing } from 'styles/utils.spacing.styles';
+import { getOrganizationRole } from './getOrganizationRole';
 
 export enum Action {
   revoke = 'revoke',
@@ -39,20 +35,13 @@ export const mapOrganizationMembersToRows = (
 ) => {
   const { user } = useIdentity();
 
+  const { hasPermission } = usePermissions();
+
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-
-  const canRemoveMember: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.DELETE_MEMBER,
-  );
+  const canRemoveMember = hasPermission('org-remove-member');
 
   const handleRemoveMember = async (
     userId: string,
@@ -82,59 +71,60 @@ export const mapOrganizationMembersToRows = (
     },
   ];
 
-  const rows = members?.map((member: OrgUser, idx: number) => ({
-    key: member.userId ?? `${idx}`,
-    cells: [
-      {
-        key: '1',
-        component: (
-          <div css={[flex.display.inline, flex.align.center]}>
-            <p>{escapeHtml(member.email!)}</p>
-            {member.role === OrgRole.ORG_ROLE_OWNER && (
-              <Badge style="outline" customCss={[spacing.left.small]}>
-                Owner
-              </Badge>
-            )}
-            {member.role === OrgRole.ORG_ROLE_ADMIN && (
-              <Badge
-                color="primary"
-                style="outline"
-                customCss={[spacing.left.small]}
-              >
-                Admin
-              </Badge>
-            )}
-          </div>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
-            {canRemoveMember && member.userId !== user?.id ? (
-              <Button
-                type="button"
-                tooltip="Remove"
-                style="icon"
-                size="medium"
-                onClick={() =>
-                  handleRemoveMember(
-                    member?.userId!,
-                    selectedOrganization?.id!,
-                    member?.email!,
-                  )
-                }
-              >
-                <SvgIcon size="20px">
-                  <IconClose />
-                </SvgIcon>
-              </Button>
-            ) : null}
-          </>
-        ),
-      },
-    ],
-  }));
+  const rows = members?.map((member: OrgUser, idx: number) => {
+    const role = getOrganizationRole(member.roles);
+
+    return {
+      key: member.userId ?? `${idx}`,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <div css={[flex.display.inline, flex.align.center]}>
+              <p>{escapeHtml(member.email!)}</p>
+              {role === 'Owner' ? (
+                <Badge style="outline" customCss={[spacing.left.small]}>
+                  Owner
+                </Badge>
+              ) : (
+                role === 'Admin' && (
+                  <Badge style="outline" customCss={[spacing.left.small]}>
+                    Admin
+                  </Badge>
+                )
+              )}
+            </div>
+          ),
+        },
+        {
+          key: '2',
+          component: (
+            <>
+              {canRemoveMember && member.userId !== user?.id ? (
+                <Button
+                  type="button"
+                  tooltip="Remove"
+                  style="icon"
+                  size="medium"
+                  onClick={() =>
+                    handleRemoveMember(
+                      member?.userId!,
+                      selectedOrganization?.id!,
+                      member?.email!,
+                    )
+                  }
+                >
+                  <SvgIcon size="20px">
+                    <IconClose />
+                  </SvgIcon>
+                </Button>
+              ) : null}
+            </>
+          ),
+        },
+      ],
+    };
+  });
 
   return {
     rows,
