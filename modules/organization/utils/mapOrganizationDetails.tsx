@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { ROUTES } from '@shared/constants/routes';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { SvgIcon } from '@shared/components';
+import { sort, SvgIcon } from '@shared/components';
 import IconInfo from '@public/assets/icons/common/Info.svg';
 import { display } from 'styles/utils.display.styles';
 import { flex } from 'styles/utils.flex.styles';
@@ -32,10 +32,16 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
 
   const role = getOrganizationRole(roles!);
 
-  const owners = org.members.filter((member) =>
-    member.roles.some(
-      (role) => role.name === 'org-owner' || role.name === 'org-personal',
+  const owners = sort(
+    org.members.filter((member) =>
+      member.roles.some(
+        (role) => role.name === 'org-owner' || role.name === 'org-personal',
+      ),
     ),
+    {
+      field: 'email',
+      order: 'asc',
+    },
   );
 
   details.unshift({
