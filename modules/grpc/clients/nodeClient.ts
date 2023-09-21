@@ -97,11 +97,14 @@ class NodeClient {
   }
 
   async getNode(id: string): Promise<Node | StatusResponse> {
+    const request = { id };
+    console.log('getNodeRequest', request);
     await authClient.refreshToken();
     const response = await callWithTokenRefresh(
       this.client.get.bind(this.client),
       { id },
     );
+    console.log('getNodeResponse', response.node);
     return response.node!;
   }
 

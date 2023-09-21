@@ -32,13 +32,9 @@ const AcceptInvite: NextPage = () => {
           const receivedInvitations =
             await invitationClient.receivedInvitations(user?.email!);
 
-          console.log('receivedInvitations', receivedInvitations);
-
           const activeInvitation = receivedInvitations.find(
             (i) => i.id === invitation_id,
           );
-
-          console.log('activeInvitation', activeInvitation);
 
           await acceptInvitation(invitation_id as string);
 

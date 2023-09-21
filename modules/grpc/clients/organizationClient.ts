@@ -87,18 +87,12 @@ class OrganizationClient {
     }
   }
 
-  async removeMember(
-    userId: string,
-    orgId: string,
-  ): Promise<void | StatusResponse> {
+  async removeMember(userId: string, orgId: string): Promise<void> {
     try {
       await authClient.refreshToken();
       await this.client.removeMember({ userId, orgId }, getOptions());
     } catch (err) {
-      return StatusResponseFactory.removeOrganizationMemberResponse(
-        err,
-        'grpcClient',
-      );
+      return handleError(err);
     }
   }
 

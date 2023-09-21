@@ -24,8 +24,6 @@ export const PasswordMeter = ({
   isCompact,
   isPasswordRare,
 }: PasswordMeterProps) => {
-  if (!meter) return null;
-
   const hintsRef = useRef<HTMLUListElement>(null);
 
   const hintsClientHeight = useRef<number>(0);
@@ -51,6 +49,8 @@ export const PasswordMeter = ({
       setHintsHeight(0);
     }
   }, []);
+
+  if (!meter) return null;
 
   return meter ? (
     <>

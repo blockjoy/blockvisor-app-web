@@ -52,6 +52,7 @@ export function useInvitations() {
     } catch (err) {
       console.log('acceptInvitationError', err);
       toast.error('Error Accepting');
+      throw err;
     }
   };
 

@@ -9,14 +9,14 @@ import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
 import { useRecoilValue } from 'recoil';
 import { authAtoms } from '@modules/auth';
+import { usePermissions } from '@modules/auth/hooks/usePermissions';
 
 export const useUpdates = () => {
   const router = useRouter();
-
   const user = useRecoilValue(authAtoms.user);
-
   const { addToNodeList, removeFromNodeList } = useNodeList();
   const { unloadNode, modifyNode, node: activeNode } = useNodeView();
+  const { hasPermission } = usePermissions();
 
   const handleNodeUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -39,7 +39,11 @@ export const useUpdates = () => {
         showNotification(
           type,
           `${node?.createdByName} launched a node `,
-          <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>,
+          hasPermission('node-admin-get') ? (
+            <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+          ) : (
+            ''
+          ),
         );
         break;
       }
