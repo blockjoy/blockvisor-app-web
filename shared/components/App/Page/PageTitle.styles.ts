@@ -30,6 +30,8 @@ export const styles = {
     align-items: center;
   `,
   breadcrumb: css`
+    flex: 1 1 auto;
+    min-width: 0;
     display: flex;
     align-items: center;
 
@@ -87,7 +89,6 @@ export const styles = {
   `,
   rightWrapper: css`
     flex: 1 1 auto;
-    min-width: 0;
     display: flex;
     justify-content: flex-end;
   `,
@@ -103,5 +104,6 @@ export const styles = {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 0;
   `,
 };

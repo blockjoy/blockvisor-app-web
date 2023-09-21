@@ -3,8 +3,13 @@ import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   section: css`
-    @media ${breakpoints.fromXLrg} {
+    &:not(:last-child) {
       padding-bottom: 40px;
+    }
+  `,
+  metricsTitle: css`
+    @media ${breakpoints.fromXLrg} {
+      display: none;
     }
   `,
 };

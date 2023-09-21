@@ -66,17 +66,18 @@ export const styles = {
     text-overflow: ellipsis;
     cursor: pointer;
   `,
-  selectText: (theme: ITheme) => css`
-    flex: 1 1 auto;
-    min-width: 0;
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-right: 8px;
-    line-height: 1.8;
-    font-size: 16px;
-    color: ${theme.colorDefault};
-  `,
+  selectText: (maxWidth?: string) => (theme: ITheme) =>
+    css`
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: ${maxWidth || '200px'};
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-right: 8px;
+      line-height: 1.8;
+      font-size: 16px;
+      color: ${theme.colorDefault};
+    `,
   dropdown: (isRightAligned: boolean) => css`
     top: 44px;
     left: 0;

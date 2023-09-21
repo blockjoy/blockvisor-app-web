@@ -6,15 +6,16 @@ import { spacing } from 'styles/utils.spacing.styles';
 interface CopyButtonProps {
   disabled?: boolean;
   value: string;
+  hideTooltip?: boolean;
 }
 
-export const Copy = ({ disabled, value }: CopyButtonProps) => {
+export const Copy = ({ disabled, value, hideTooltip }: CopyButtonProps) => {
   const handleCopy = () => copyToClipboard(value);
 
   return (
     <span css={spacing.left.small}>
       <Button
-        tooltip="Copy"
+        tooltip={!hideTooltip ? 'Copy' : undefined}
         style="icon"
         size="small"
         onClick={handleCopy}

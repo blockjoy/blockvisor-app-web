@@ -22,6 +22,9 @@ export const HostViewDetails = () => {
         <FormHeaderCaps noBottomMargin>Launch Details</FormHeaderCaps>
         <DetailsTable bodyElements={launchDetails} />
       </section>
+      <div css={styles.metricsTitle}>
+        <FormHeaderCaps noBottomMargin>Metrics</FormHeaderCaps>
+      </div>
     </>
   );
 };

@@ -51,7 +51,9 @@ export const NodeLauncherProtocolBlockchains = ({
               <span css={styles.blockchainWrapper}>
                 <button
                   onClick={() =>
-                    onProtocolSelected(b.id!, sortedNodeTypes[0].nodeType)
+                    activeBlockchainId !== b.id
+                      ? onProtocolSelected(b.id!, sortedNodeTypes[0].nodeType)
+                      : null
                   }
                   css={styles.name}
                 >

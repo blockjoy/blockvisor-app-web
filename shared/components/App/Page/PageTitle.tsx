@@ -58,13 +58,8 @@ export const PageTitle: FC<Props> = ({
           {childTitle && (
             <>
               <span css={styles.separator}>/</span>
-              {isLoading && !childTitle ? (
-                <Skeleton width="80px" />
-              ) : !isLoading && !childTitle ? (
-                <p css={styles.childTitle}>Host not found</p>
-              ) : (
-                <p css={styles.childTitle}>{childTitle}</p>
-              )}
+              <p css={styles.childTitle}>{childTitle}</p>
+              {canCopyChild && <Copy value={title} hideTooltip />}
             </>
           )}
         </div>
