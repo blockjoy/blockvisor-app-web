@@ -30,6 +30,7 @@ export const styles = {
     cursor: pointer;
     display: flex;
     align-items: center;
+    padding: 0 6px;
     gap: 10px;
     width: 100%;
   `,
@@ -41,7 +42,7 @@ export const styles = {
     width: 100%;
     height: 56px;
     min-height: 56px;
-    padding: 0 15px;
+    padding: 0 6px;
     font-size: 16px;
     align-items: center;
     background: transparent;

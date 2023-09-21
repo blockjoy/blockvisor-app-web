@@ -40,6 +40,8 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 6px;
+    padding: 0;
+    user-select: none;
 
     :hover {
       > span {

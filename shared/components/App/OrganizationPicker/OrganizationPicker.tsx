@@ -20,9 +20,13 @@ import IconArrow from '@public/assets/icons/common/ArrowDown.svg';
 
 type Props = {
   isRightAligned?: boolean;
+  maxWidth?: string;
 };
 
-export const OrganizationPicker = ({ isRightAligned = false }: Props) => {
+export const OrganizationPicker = ({
+  isRightAligned = false,
+  maxWidth,
+}: Props) => {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -60,7 +64,9 @@ export const OrganizationPicker = ({ isRightAligned = false }: Props) => {
         <SvgIcon isDefaultColor size="16px">
           <IconOrganization />
         </SvgIcon>
-        <p css={styles.selectText}>{escapeHtml(defaultOrganization?.name!)}</p>
+        <p css={styles.selectText(maxWidth)}>
+          {escapeHtml(defaultOrganization?.name!)}
+        </p>
       </button>
       <DropdownMenu
         isOpen={isOpen}

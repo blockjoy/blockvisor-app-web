@@ -37,7 +37,6 @@ export const styles = {
 
     @media ${breakpoints.toXlrg} {
       border-left: 0;
-      border-top: 1px solid ${theme.colorBorder};
       border-bottom: 1px solid ${theme.colorBorder};
       padding: 20px 0 0 0;
       min-width: 100%;

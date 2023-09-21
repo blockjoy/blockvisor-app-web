@@ -51,7 +51,7 @@ export const HostListHeader = () => {
         {hostCount} {hostCount === 1 ? 'Host' : 'Hosts'}
       </Alert>
       <div css={styles.orgPicker}>
-        <OrganizationPicker isRightAligned />
+        <OrganizationPicker isRightAligned maxWidth="140px" />
       </div>
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
