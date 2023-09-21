@@ -47,23 +47,28 @@ const Verified: NextPage = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      const { token } = router.query;
+      const { token: emailToken } = router.query;
       (async () => {
         try {
           const accessToken = await authClient.registrationConfirmation(
-            token?.toString()!,
+            emailToken?.toString()!,
           );
           await signIn(undefined, accessToken);
           const accessTokenObject = readToken(accessToken);
+          const emailTokenObject = readToken(emailToken as string);
           const user = await userClient.getUser(accessTokenObject.resource_id);
+
+          const { invitation_id } = emailTokenObject.data;
 
           const receivedInvitations =
             await invitationClient.receivedInvitations(user?.email!);
 
-          const invitation = receivedInvitations[0];
+          const invitation = receivedInvitations.find(
+            (invitation) => invitation.id === invitation_id,
+          );
 
           if (invitation) {
-            await acceptInvitation(receivedInvitations[0].id);
+            await acceptInvitation(invitation_id);
             await getOrganizations();
 
             setDefaultOrganization({

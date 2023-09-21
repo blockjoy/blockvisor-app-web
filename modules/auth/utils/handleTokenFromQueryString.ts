@@ -8,7 +8,6 @@ export const handleTokenFromQueryString = async (
 ) => {
   try {
     const tokenObject: any = readToken(token);
-    console.log('tokenObject', tokenObject);
     const email =
       tokenObject?.email ||
       tokenObject?.invitee_email ||
@@ -19,5 +18,6 @@ export const handleTokenFromQueryString = async (
   } catch (error) {
     console.log('error reading token', error);
   }
-  //removeTokenFromUrl();
+  // TODO: Needs some thought on how to do this
+  // removeTokenFromUrl();
 };

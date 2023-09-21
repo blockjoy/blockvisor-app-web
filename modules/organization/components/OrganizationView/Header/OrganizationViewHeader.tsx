@@ -10,6 +10,7 @@ import {
 import { FC, useState } from 'react';
 import { styles } from './OrganizationViewHeader.styles';
 import {
+  getOrganizationRole,
   useDefaultOrganization,
   useDeleteOrganization,
   useGetOrganization,
@@ -17,7 +18,7 @@ import {
   useUpdateOrganization,
 } from '@modules/organization';
 import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { usePermissions } from '@modules/auth';
+import { useIdentity, usePermissions } from '@modules/auth';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
@@ -37,6 +38,7 @@ export const OrganizationViewHeader: FC = () => {
   const { updateOrganization } = useUpdateOrganization();
   const { leaveOrganization } = useLeaveOrganization();
   const { hasPermission } = usePermissions();
+  const { user } = useIdentity();
 
   const { organizations } = useGetOrganizations();
 
@@ -71,7 +73,16 @@ export const OrganizationViewHeader: FC = () => {
 
   const canDeleteOrganization = hasPermission('org-delete');
 
-  const canLeaveOrganization = hasPermission('org-remove-self');
+  const orgHasOtherAdmins = organization?.members
+    .filter((member) => member.userId !== user?.id)
+    .some(
+      (member) =>
+        getOrganizationRole(member.roles) === 'Admin' ||
+        getOrganizationRole(member.roles) === 'Owner',
+    );
+
+  const canLeaveOrganization =
+    hasPermission('org-remove-self') && orgHasOtherAdmins;
 
   const { getDefaultOrganization } = useDefaultOrganization();
 
