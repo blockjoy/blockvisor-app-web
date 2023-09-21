@@ -1,16 +1,23 @@
-import { useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { useEffect, useMemo, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
 import { ROUTES } from '@shared/index';
-import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
+import {
+  EmptyColumn,
+  Table,
+  TableSkeleton,
+  ButtonSpinner,
+} from '@shared/components';
 import {
   billingAtoms,
   mapInvoicesToRows,
   useInvoices,
   useInvoicesUIContext,
 } from '@modules/billing';
-import { useRecoilValue } from 'recoil';
+import { spacing } from 'styles/utils.spacing.styles';
+import { flex } from 'styles/utils.flex.styles';
 
 export const InvoicesList = () => {
   const subscriptionLoadingState = useRecoilValue(
@@ -19,13 +26,8 @@ export const InvoicesList = () => {
 
   const router = useRouter();
 
-  const {
-    invoices,
-    invoicesLoadingState,
-    invoicesNextOffset,
-    preloadInvoices,
-    getInvoices,
-  } = useInvoices();
+  const { invoices, invoicesLoadingState, invoicesNextOffset, getInvoices } =
+    useInvoices();
 
   const invoicesUIContext = useInvoicesUIContext();
   const invoicesUIProps = useMemo(() => {
@@ -42,10 +44,6 @@ export const InvoicesList = () => {
   }, []);
 
   useEffect(() => {
-    getInvoices(invoicesUIProps.queryParams);
-  }, []);
-
-  useEffect(() => {
     if (!isEqual(currentQueryParams.current, invoicesUIProps.queryParams)) {
       getInvoices(invoicesUIProps.queryParams);
       currentQueryParams.current = invoicesUIProps.queryParams;
@@ -59,9 +57,6 @@ export const InvoicesList = () => {
   };
 
   const updateQueryParams = async () => {
-    // sleep 300ms for better UX/UI (maybe should be removed)
-    await new Promise((r) => setTimeout(r, 300));
-
     const newCurrentPage =
       invoicesUIProps.queryParams.pagination.currentPage + 1;
     const newQueryParams = {
@@ -71,13 +66,17 @@ export const InvoicesList = () => {
         ...invoicesUIProps.queryParams.pagination,
         currentPage: newCurrentPage,
       },
+      filtering: {
+        ...invoicesUIProps.queryParams.filtering,
+        offset: invoicesNextOffset,
+      },
     };
 
     invoicesUIProps.setQueryParams(newQueryParams);
   };
 
   if (
-    invoicesLoadingState !== 'finished' ||
+    invoicesLoadingState === 'initializing' ||
     subscriptionLoadingState !== 'finished'
   )
     return <TableSkeleton />;
@@ -89,13 +88,16 @@ export const InvoicesList = () => {
       hasMore={invoicesNextOffset !== undefined}
       style={{ overflow: 'hidden' }}
       scrollThreshold={1}
-      loader={''}
-      endMessage={''}
+      loader={
+        <div css={[spacing.top.medium, flex.display.flex, flex.justify.center]}>
+          <ButtonSpinner size="medium" />
+        </div>
+      }
     >
       <Table
         isLoading={invoicesLoadingState}
         headers={headers}
-        preload={preloadInvoices}
+        preload={0}
         rows={rows}
         fixedRowHeight="80px"
         onRowClick={handleRowClicked}

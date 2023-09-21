@@ -44,20 +44,18 @@ export const useNodeAdd = () => {
     console.log('createNodeRequest', nodeRequest);
 
     try {
-      // Only add to subscription if node is not hosted
-      if (!nodeRequest.placement?.hostId)
-        try {
-          await updateSubscriptionItems({
-            type: UpdateSubscriptionAction.ADD_NODE,
-            payload: { node: nodeRequest },
-          });
-        } catch (error: any) {
-          const errorMessage = generateError(error);
-          onError(errorMessage);
-          return;
-        }
-
       const response: Node = await nodeClient.createNode(nodeRequest);
+
+      try {
+        await updateSubscriptionItems({
+          type: UpdateSubscriptionAction.ADD_NODE,
+          payload: { node: response },
+        });
+      } catch (error: any) {
+        const errorMessage = generateError(error);
+        onError(errorMessage);
+        return;
+      }
 
       // Update organization node count
       const activeOrganization = organizations.find(

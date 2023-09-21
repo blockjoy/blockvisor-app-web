@@ -1,33 +1,31 @@
 import { useRecoilValue } from 'recoil';
-import useSWR from 'swr';
+import { preload } from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import { _invoice } from 'chargebee-typescript';
 import { Invoice } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
   billingSelectors,
-  InitialQueryParams as InvoicesInitialQueryParams,
-  getInitialQueryParams as getInvoicesInitialQueryParams,
+  getInitialQueryParams,
   fetchBilling,
+  InvoicesQueryParams,
 } from '@modules/billing';
+import { usePermissions } from '@modules/auth';
 
 interface IInvoicesHook {
   invoices: Invoice[];
   invoicesLoadingState: LoadingState;
   invoicesNextOffset: string | undefined;
-  preloadInvoices: number;
-  getInvoices: (queryParams?: InvoicesInitialQueryParams) => Promise<void>;
+  loadInvoices: VoidFunction;
+  getInvoices: (queryParams?: InvoicesQueryParams) => Promise<void>;
 }
 
-// TODO: include updates of QUERYPARAMS
-export const useInvoices = (
-  queryParams?: InvoicesInitialQueryParams,
-): IInvoicesHook => {
+export const useInvoices = (): IInvoicesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
+  const { hasPermission } = usePermissions();
+  const canUpdateSubscription = hasPermission('subscription-update');
 
-  if (!queryParams) {
-    const savedQueryParams = getInvoicesInitialQueryParams();
-    queryParams = savedQueryParams;
-  }
+  const queryParams = getInitialQueryParams();
 
   const params: _invoice.invoice_list_params = {
     subscription_id: { is: subscription?.id },
@@ -36,38 +34,72 @@ export const useInvoices = (
     [`sort_by[${queryParams?.sorting.order}]`]: queryParams?.sorting.field,
   };
 
-  const fetcher = () =>
-    fetchBilling(BILLING_API_ROUTES.invoices.list, { params });
+  // TODO: move offset to next API; pass as query param
+  const fetcher = (url: string) => {
+    const updatedParams = {
+      ...params,
+    };
 
-  const { data, error, isLoading, mutate } = useSWR(
-    () =>
-      subscription
-        ? `${BILLING_API_ROUTES.invoices.list}_${subscription?.id}`
-        : null,
-    fetcher,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
+    const match = url.match(/offset=([^&]*)/);
+    const offsetString = match && match[1] ? match[1] : undefined;
+    if (offsetString) updatedParams.offset = offsetString;
+
+    return fetchBilling(BILLING_API_ROUTES.invoices.list, {
+      params: updatedParams,
+    });
+  };
+
+  const getKey = (
+    pageIndex: number,
+    previousPageData: {
+      invoices: Invoice[];
+      nextOffset: string | undefined;
     },
+  ) => {
+    if (!canUpdateSubscription) return null;
+
+    if (previousPageData && !previousPageData.invoices) return null;
+
+    if (previousPageData && previousPageData.nextOffset)
+      return `${BILLING_API_ROUTES.invoices.list}_${subscription?.id}?offset=${previousPageData.nextOffset}`;
+
+    return `${BILLING_API_ROUTES.invoices.list}_${subscription?.id}`;
+  };
+
+  const { data, error, isLoading, size, setSize } = useSWRInfinite(
+    getKey,
+    fetcher,
   );
 
   if (error) console.error('Failed to fetch Invoices', error);
 
   const invoicesLoadingState: LoadingState = isLoading
-    ? 'initializing'
+    ? queryParams.pagination.currentPage > 1
+      ? 'loading'
+      : 'initializing'
     : 'finished';
 
-  const getInvoices = async (queryParams?: InvoicesInitialQueryParams) => {
-    if (subscription) mutate();
+  const loadInvoices = async () => {
+    preload(getKey, fetcher);
   };
 
+  const getInvoices = async (queryParams?: InvoicesQueryParams) => {
+    setSize(queryParams?.pagination?.currentPage ?? size + 1);
+  };
+
+  const invoicesNextOffset = data?.[data?.length - 1]?.nextOffset;
+
+  const invoices: Invoice[] =
+    data
+      ?.map((data) => data?.invoices)
+      ?.reduce((acc, invoices) => acc.concat(invoices), []) ?? [];
+
   return {
-    invoices: data?.invoices,
+    invoices,
     invoicesLoadingState,
+    invoicesNextOffset,
 
-    invoicesNextOffset: '',
-    preloadInvoices: 0,
-
+    loadInvoices,
     getInvoices,
   };
 };
