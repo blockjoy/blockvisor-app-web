@@ -42,21 +42,9 @@ export const useNodeAdd = () => {
     };
 
     try {
-      // Only add to subscription if node is not hosted
-      if (!nodeRequest.placement?.hostId)
-        try {
-          await updateSubscriptionItems({
-            type: UpdateSubscriptionAction.ADD_NODE,
-            payload: { node: nodeRequest },
-          });
-        } catch (error: any) {
-          const errorMessage = generateError(error);
-          onError(errorMessage);
-          return;
-        }
-
       const response: Node = await nodeClient.createNode(nodeRequest);
 
+<<<<<<< HEAD
       const nodeId = response.id;
       // Add node to the subscription
       await updateSubscriptionItems({
@@ -65,6 +53,18 @@ export const useNodeAdd = () => {
       });
 
       await keyFileClient.create(nodeId, keyFiles);
+=======
+      try {
+        await updateSubscriptionItems({
+          type: UpdateSubscriptionAction.ADD_NODE,
+          payload: { node: response },
+        });
+      } catch (error: any) {
+        const errorMessage = generateError(error);
+        onError(errorMessage);
+        return;
+      }
+>>>>>>> 73fe8a78 (feat: [sc-2346] InvoicesList LazyLoad, caching via SWR and Context API)
 
       // Update organization node count
       const activeOrganization = organizations.find(

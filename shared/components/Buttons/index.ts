@@ -1,5 +1,6 @@
 export * from './BackButton/BackButton';
 export * from './Button/Button';
+export * from './Button/ButtonSpinner';
 export * from './ButtonGroup/ButtonGroup';
 export * from './ButtonWithDropdown/ButtonWithDropdown';
 export * from './Dropdown/DropdownItem/DropdownItem';

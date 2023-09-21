@@ -36,7 +36,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   const canUpdateSubscription = hasPermission('subscription-update');
   const { getEstimate } = useEstimates();
   const { getBillingContacts } = useBillingContacts();
-  const { getInvoices } = useInvoices();
+  const { loadInvoices } = useInvoices();
   const { getPaymentMethod } = usePaymentMethod();
 
   const tabItems = useMemo(
@@ -88,20 +88,21 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   const { activeTab, setActiveTab } = useTabs(tabItems.length);
 
   useEffect(() => {
+    if (!userSubscription) handleClick('1');
+  }, [userSubscription]);
+
+  useEffect(() => {
     if (
       subscription?.status === 'active' &&
-      subscriptionLoadingState === 'finished'
+      subscriptionLoadingState === 'finished' &&
+      canUpdateSubscription
     ) {
       getEstimate();
       getBillingContacts();
-      getInvoices();
+      loadInvoices();
       getPaymentMethod();
     }
   }, [subscription]);
-
-  useEffect(() => {
-    if (!userSubscription) handleClick('1');
-  }, [userSubscription]);
 
   const handleClick = (tabValue: string) => {
     setActiveTab(tabValue);

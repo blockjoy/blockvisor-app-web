@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import { InitialQueryParams, initialQueryParams } from './InvoicesUIHelpers';
+import { InvoicesQueryParams, initialQueryParams } from '@modules/billing';
 import { numOfItemsPerPage } from '@shared/index';
 
-export type SetQueryParams = (nextQueryParams: InitialQueryParams) => void;
+export type SetQueryParams = (nextQueryParams: InvoicesQueryParams) => void;
 
 type InvoicesUIContext = {
-  queryParams: InitialQueryParams;
-  setQueryParamsBase: React.Dispatch<React.SetStateAction<InitialQueryParams>>;
+  queryParams: InvoicesQueryParams;
+  setQueryParamsBase: React.Dispatch<React.SetStateAction<InvoicesQueryParams>>;
   setQueryParams: SetQueryParams;
 };
 
@@ -39,12 +39,12 @@ export function useInvoicesUIContext() {
 export const InvoicesUIConsumer = InvoicesUIContext.Consumer;
 
 export function InvoicesUIProvider({ children }: InvoicesUIProvider) {
-  const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
+  const initialQueryParamsValue: InvoicesQueryParams = getInitialQueryParams();
 
-  const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
+  const [queryParams, setQueryParamsBase] = useState<InvoicesQueryParams>(
     initialQueryParamsValue,
   );
-  const setQueryParams = useCallback((nextQueryParams: InitialQueryParams) => {
+  const setQueryParams = useCallback((nextQueryParams: InvoicesQueryParams) => {
     setQueryParamsBase((prevQueryParams) => {
       if (isFunction(nextQueryParams)) {
         nextQueryParams = nextQueryParams(prevQueryParams);
