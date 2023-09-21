@@ -299,7 +299,7 @@ export const NodeLauncher = () => {
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
-      <div css={[styles.wrapper, wrapper.main]}>
+      <div css={[wrapper.main, styles.wrapper]}>
         <NodeLauncherProtocol
           onProtocolSelected={handleProtocolSelected}
           blockchainId={node.blockchainId}

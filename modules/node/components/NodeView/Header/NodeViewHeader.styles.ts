@@ -117,8 +117,10 @@ export const styles = {
     }
   `,
   nodeStatus: css`
+    display: none;
     @media ${breakpoints.fromLrg} {
       margin-left: 10px;
+      display: block;
     }
   `,
 };

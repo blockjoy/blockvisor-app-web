@@ -24,7 +24,7 @@ export const styles = {
     border-left: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.toXlrg} {
-      padding: 10px 0 10px 0;
+      padding: 10px;
       max-width: 100%;
       width: 100%;
       min-width: 100%;

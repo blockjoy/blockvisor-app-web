@@ -15,6 +15,7 @@ import { useDefaultOrganization } from '@modules/organization';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import NextLink from 'next/link';
 
 type NodeToDelete = {
   id: string;
@@ -62,8 +63,12 @@ export const HostViewNodes = () => {
       )}
 
       {hasPermission('node-admin-list') && (
-        <Alert isSuccess isRounded>
-          Only showing nodes for {defaultOrganization?.name} organization.
+        <Alert isSuccess>
+          Showing nodes for{' '}
+          <NextLink href={ROUTES.ORGANIZATION(defaultOrganization?.id!)}>
+            {defaultOrganization?.name}
+          </NextLink>{' '}
+          organization.
         </Alert>
       )}
 

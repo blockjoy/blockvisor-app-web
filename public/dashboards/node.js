@@ -16,28 +16,6 @@ const sidePanelTextonlyWidth = "160px",
 
 const charts = [
   {
-    title: "RPC Requests",
-    measurement: "Req/S",
-    charts: [
-      {
-        netdata: "web_log_nginx.requests",
-        textonlyDecimalPlaces: "0",
-        library: "textonly",
-        title: "",
-        width: sidePanelTextonlyWidth,
-        height: sidePanelTextonlyHeight, 
-      },
-      {
-        netdata: "web_log_nginx.requests",
-        width: "100%",
-        height: sidePanelSparklineHeight,
-        color: "#bff589 #bff589",
-        decimalDigits: "-1",
-        dygraphSparkline: "sparkline"
-      }
-    ]
-  },
-  {
     title: "Load",
     charts: [
       {
@@ -132,6 +110,31 @@ const charts = [
     ]
   },
 ];
+
+if (is_node) {
+  charts.unshift({
+    title: "RPC Requests",
+    measurement: "Req/S",
+    charts: [
+      {
+        netdata: "web_log_nginx.requests",
+        textonlyDecimalPlaces: "0",
+        library: "textonly",
+        title: "",
+        width: sidePanelTextonlyWidth,
+        height: sidePanelTextonlyHeight, 
+      },
+      {
+        netdata: "web_log_nginx.requests",
+        width: "100%",
+        height: sidePanelSparklineHeight,
+        color: "#bff589 #bff589",
+        decimalDigits: "-1",
+        dygraphSparkline: "sparkline"
+      }
+    ]
+  },)
+}
 
 const colorPrimary = "#bff589";
 const size = "140px";

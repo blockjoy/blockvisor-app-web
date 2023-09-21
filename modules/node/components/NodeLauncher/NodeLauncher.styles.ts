@@ -9,6 +9,8 @@ export const styles = {
 
     @media ${breakpoints.toXlrg} {
       flex-direction: column;
+      padding-left: 10px;
+      padding-right: 10px;
     }
   `,
   empty: (theme: ITheme) => css`
