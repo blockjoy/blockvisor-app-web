@@ -10,15 +10,23 @@ export type Sorting = {
   field: string;
 };
 
-export type InitialQueryParams = {
-  pagination: Pagination;
-  sorting: Sorting;
+export type Filtering = {
+  offset?: string | undefined;
 };
 
-export const initialQueryParams: InitialQueryParams = {
+export type InvoicesQueryParams = {
+  pagination: Pagination;
+  sorting: Sorting;
+  filtering: Filtering;
+};
+
+export const initialQueryParams: InvoicesQueryParams = {
   pagination: {
     currentPage: 1,
     itemsPerPage: itemsPerPage['xl'],
   },
   sorting: { order: 'desc', field: 'date' },
+  filtering: {
+    offset: undefined,
+  },
 };
