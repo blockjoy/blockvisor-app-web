@@ -42,7 +42,7 @@ class InvitationClient {
   }
 
   async declineInvitation(invitationId: string, token?: string): Promise<void> {
-    await authClient.refreshToken();
+    if (!token) await authClient.refreshToken();
     try {
       await this.client.decline({ invitationId }, getOptions(token));
     } catch (err) {
