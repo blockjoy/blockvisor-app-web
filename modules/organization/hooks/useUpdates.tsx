@@ -76,8 +76,7 @@ export const useUpdates = () => {
 
         updateMembersList(org!);
 
-        // TODO: Investigate why updatedBy is wrong
-        //if (updatedBy === user?.id) break;
+        if (updatedBy === user?.id) break;
 
         const isKicked = !org?.members.find((m) => m.userId === user?.id);
 
