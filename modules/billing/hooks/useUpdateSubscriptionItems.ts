@@ -13,6 +13,7 @@ import {
 } from '@modules/billing';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { blockchainsAtoms } from '@modules/node';
+import { useSWRConfig } from 'swr';
 
 export enum UpdateSubscriptionAction {
   ADD_NODE = 'ADD_NODE',
@@ -30,6 +31,7 @@ interface IUpdateSubscriptionHook {
 }
 
 export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
+  const { mutate } = useSWRConfig();
   const setSubscription = useSetRecoilState(billingSelectors.subscription);
 
   const { provideSubscription } = useSubscription();
@@ -129,6 +131,12 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
           params,
         },
       );
+
+      if (
+        UpdateSubscriptionAction.ADD_NODE ||
+        UpdateSubscriptionAction.ADD_HOST
+      )
+        mutate(`${BILLING_API_ROUTES.invoices.list}_${subscription?.id}`);
 
       console.log('%cUpdateSubscriptionItems', 'color: #bff589', {
         type,
