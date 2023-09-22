@@ -19,9 +19,8 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
     onSubmit,
   } = useBillingContactsForm(actions);
 
-  const {
-    formState: { isValid },
-  } = form;
+  const { formState } = form;
+  const { isValid, isDirty } = formState;
 
   return (
     <FormProvider {...form}>
@@ -62,7 +61,7 @@ export const BillingContactForm = ({ actions }: BillingContactFormProps) => {
         <ButtonGroup>
           <Button
             loading={loading}
-            disabled={loading || !isValid}
+            disabled={loading || !isValid || !isDirty}
             style="secondary"
             size="small"
             type="submit"
