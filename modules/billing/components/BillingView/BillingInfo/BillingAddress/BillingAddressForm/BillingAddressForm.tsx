@@ -28,7 +28,7 @@ export const BillingAddressForm = ({
   } = useBillingAddressForm();
 
   const { formState } = form;
-  const { isValid } = formState;
+  const { isValid, isDirty } = formState;
 
   const hasBillingAddress = useRecoilValue(billingSelectors.hasBillingAddress);
 
@@ -139,7 +139,7 @@ export const BillingAddressForm = ({
             size="small"
             type="submit"
             tabIndex={8}
-            disabled={!isValid}
+            disabled={!isValid || !isDirty}
           >
             {hasBillingAddress ? 'Update' : 'Add'}
           </Button>

@@ -6,6 +6,7 @@ import {
   getSubscriptionStatusColor,
   getSubscriptionStatusText,
   BillingPeriodSelect,
+  BILLING_PERIOD,
 } from '@modules/billing';
 
 const styles = {
@@ -22,6 +23,12 @@ export const mapSubscriptionToDetails = (
   const { value: autoRenew, handleUpdate: handleAutoRenew } = props.renew;
   const { value: periodUnit, handleUpdate: handlePeriodUnit } = props.period;
 
+  const billingPeriodYearly = BILLING_PERIOD.find(
+    (billingPeriod: BillingPeriod) => billingPeriod.id === 'year',
+  );
+  const isYearlySubscription =
+    subscription.billing_period_unit === billingPeriodYearly?.id;
+
   return [
     {
       label: 'Activated at',
@@ -30,11 +37,17 @@ export const mapSubscriptionToDetails = (
     {
       label: 'Billing period',
       data: (
-        <BillingPeriodSelect
-          value={periodUnit}
-          onChange={handlePeriodUnit}
-          disabled={onlyPreview}
-        />
+        <>
+          {isYearlySubscription ? (
+            billingPeriodYearly?.title
+          ) : (
+            <BillingPeriodSelect
+              value={periodUnit}
+              onChange={handlePeriodUnit}
+              disabled={onlyPreview}
+            />
+          )}
+        </>
       ),
     },
     {
