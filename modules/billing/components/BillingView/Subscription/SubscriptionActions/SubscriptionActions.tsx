@@ -33,8 +33,7 @@ export const SubscriptionActions = ({
     [SubscriptionStatus.active]: {
       label: 'Cancel subscription',
       action: handleCancellation,
-      message:
-        'Not satisfied? Remember, you can cancel your subscription at any time.',
+      message: 'Not satisfied? You can cancel your subscription at any time.',
     },
     [SubscriptionStatus.non_renewing]: {
       label: 'Restore subscription',
@@ -46,7 +45,7 @@ export const SubscriptionActions = ({
       label: 'Reactivate subscription',
       action: handleReactivateSubscription,
       message:
-        'Missed our services? Reactivate your subscription with a single click!',
+        'Miss our services? Reactivate your subscription with a single click!',
     },
   };
 
