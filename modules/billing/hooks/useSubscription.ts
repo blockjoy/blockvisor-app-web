@@ -22,7 +22,6 @@ interface ISubscriptionHook {
   getSubscription: (id: string) => Promise<void>;
   createSubscription: (params: {
     itemPriceId: string;
-    autoRenew: boolean;
     paymentMethodId: string;
   }) => Promise<void>;
   updateSubscription: (
@@ -73,16 +72,12 @@ export const useSubscription = (): ISubscriptionHook => {
 
   const createSubscription = async ({
     itemPriceId,
-    autoRenew,
     paymentMethodId,
   }: {
     itemPriceId: string;
-    autoRenew: boolean;
     paymentMethodId: string;
   }) => {
     setSubscriptionLoadingState('initializing');
-
-    const autoRenewValue: string = autoRenew ? 'on' : 'off';
 
     const subscriptionItems: _subscription.subscription_items_create_with_items_params[] =
       [
@@ -93,7 +88,6 @@ export const useSubscription = (): ISubscriptionHook => {
       ];
 
     const params: _subscription.create_with_items_params = {
-      auto_collection: autoRenewValue,
       payment_source_id: paymentMethodId,
       subscription_items: subscriptionItems,
     };
@@ -155,7 +149,6 @@ export const useSubscription = (): ISubscriptionHook => {
 
     const params: _subscription.override_billing_profile_params = {
       payment_source_id: paymentMethodId,
-      auto_collection: 'on',
     };
 
     try {
@@ -177,7 +170,6 @@ export const useSubscription = (): ISubscriptionHook => {
       try {
         const newSubscription = await createSubscription({
           itemPriceId: DEFAULT_ITEM_PRICE_ID,
-          autoRenew: true,
           paymentMethodId: customer?.primary_payment_source_id!,
         });
 

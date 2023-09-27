@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRecoilValue } from 'recoil';
 import {
   BillingContactsList,
   BillingContactForm,
@@ -10,7 +11,6 @@ import {
 } from '@modules/billing';
 import { Button, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useRecoilValue } from 'recoil';
 
 export const BillingContacts = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
@@ -74,13 +74,7 @@ export const BillingContacts = () => {
         )}
       </div>
       {subscription?.status === 'active' && (
-        <Button
-          onClick={handleAdding}
-          size="small"
-          style="outline"
-          disabled={subscription?.status !== 'active'}
-          tooltip="Cannot add with cancelled subscription"
-        >
+        <Button onClick={handleAdding} size="small" style="outline">
           Add Billing Contact
         </Button>
       )}
