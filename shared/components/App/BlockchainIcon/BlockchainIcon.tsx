@@ -30,6 +30,10 @@ const IconAvalanche = dynamic(
   () => import(`@public/assets/icons/blockchain/Avalanche.svg`),
 );
 
+const IconAvalancheDfk = dynamic(
+  () => import(`@public/assets/icons/blockchain/Avalanche-DFK.svg`),
+);
+
 const IconBnB = dynamic(
   () => import(`@public/assets/icons/blockchain/BNB.svg`),
 );
@@ -120,6 +124,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'avalanche':
       Component = IconAvalanche;
+      break;
+    case 'avalanche-dfk':
+      Component = IconAvalancheDfk;
       break;
     case 'bnb':
     case 'bsc':
