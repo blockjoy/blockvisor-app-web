@@ -42,7 +42,6 @@ export const PlanConfiguration = ({
   const customer = useRecoilValue(billingSelectors.customer);
 
   const [periodUnit, setPeriodUnit] = useState<string>('year');
-  const [autoRenew, setAutoRenew] = useState<boolean>(true);
   const [paymentMethodId, setPaymentMethodId] = useState<string | undefined>(
     customer?.primary_payment_source_id,
   );
@@ -56,8 +55,6 @@ export const PlanConfiguration = ({
     setPeriodUnit(value);
   };
 
-  const handleAutoRenew = () => setAutoRenew(!autoRenew);
-
   const handlePaymentMethod = (paymentMethod: PaymentSource) => {
     setPaymentMethodId(paymentMethod.id);
   };
@@ -67,7 +64,6 @@ export const PlanConfiguration = ({
 
     createSubscription({
       itemPriceId: activeItemPrice?.id,
-      autoRenew,
       paymentMethodId,
     });
   };
@@ -82,12 +78,7 @@ export const PlanConfiguration = ({
 
       <div css={[divider, spacing.bottom.medium]}></div>
 
-      <PlanParams
-        periodUnit={periodUnit}
-        handlePeriodUnit={handlePeriodUnit}
-        autoRenew={autoRenew}
-        handleAutoRenew={handleAutoRenew}
-      />
+      <PlanParams periodUnit={periodUnit} handlePeriodUnit={handlePeriodUnit} />
 
       <div css={spacing.bottom.medium}>
         <h3 css={styles.headline}>Payment Method</h3>

@@ -24,25 +24,17 @@ export const SubscriptionInfo = ({
     billingAtoms.subscriptionLoadingState,
   );
 
-  const [autoRenew, setAutoRenew] = useState<boolean>(
-    subscription?.auto_collection === 'on',
-  );
   const [periodUnit, setPeriodUnit] = useState<string>(
     subscription?.billing_period_unit ?? '',
   );
 
   const { updateSubscription } = useSubscription();
 
-  const handleAutoRenew = () => setAutoRenew(!autoRenew);
   const handlePeriodUnit = (billingPeriod: BillingPeriod) => {
     setPeriodUnit(billingPeriod?.id);
   };
 
   const subscriptionProperties: UpdateSubscriptionProperties = {
-    renew: {
-      value: autoRenew,
-      handleUpdate: handleAutoRenew,
-    },
     period: {
       value: periodUnit,
       handleUpdate: handlePeriodUnit,
@@ -55,13 +47,10 @@ export const SubscriptionInfo = ({
     onlyPreview,
   );
 
-  const isDirty =
-    Boolean(subscription?.auto_collection === 'on') !== autoRenew ||
-    subscription?.billing_period_unit !== periodUnit;
+  const isDirty = subscription?.billing_period_unit !== periodUnit;
 
   const handleUpdateSubscription = async () => {
     const params = await generateUpdateSubscriptionParams(subscription!, {
-      autoRenew,
       periodUnit,
     });
 

@@ -7,14 +7,4 @@ export const styles = {
     margin-bottom: 15px;
     font-weight: 700;
   `,
-  renewText: css`
-    display: flex;
-    max-width: 70%;
-  `,
-  renewSwitch: css`
-    display: flex;
-    flex: 1;
-    margin-bottom: 0;
-    justify-content: flex-end;
-  `,
 };

@@ -34,7 +34,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
 
   const { hasPermission } = usePermissions();
   const canUpdateSubscription = hasPermission('subscription-update');
-  const { getEstimate } = useEstimates();
+  const { loadEstimates } = useEstimates();
   const { getBillingContacts } = useBillingContacts();
   const { loadInvoices } = useInvoices();
   const { getPaymentMethod } = usePaymentMethod();
@@ -97,7 +97,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
       subscriptionLoadingState === 'finished' &&
       canUpdateSubscription
     ) {
-      getEstimate();
+      loadEstimates();
       getBillingContacts();
       loadInvoices();
       getPaymentMethod();
