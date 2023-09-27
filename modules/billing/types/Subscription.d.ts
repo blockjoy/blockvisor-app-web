@@ -11,10 +11,6 @@ type UpdateSubscriptionPayload = {
 };
 
 type UpdateSubscriptionProperties = {
-  renew: {
-    value: boolean;
-    handleUpdate: VoidFunction;
-  };
   period: {
     value: string;
     handleUpdate: (billingPeriod: BillingPeriod) => void;

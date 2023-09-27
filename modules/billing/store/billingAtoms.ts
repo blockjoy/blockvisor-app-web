@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 import {
   Customer,
+  Estimate,
   Invoice,
   ItemPrice,
   PaymentSource,
@@ -65,6 +66,16 @@ const billingAddressLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
+const estimates = atom<Estimate | null>({
+  key: 'billing.estimates',
+  default: null,
+});
+
+const estimatesLoadingState = atom<LoadingState>({
+  key: 'billing.estimates.loadingState',
+  default: 'initializing',
+});
+
 const invoice = atom<Invoice | null>({
   key: 'billing.invoice',
   default: null,
@@ -120,6 +131,9 @@ export const billingAtoms = {
 
   billingAddressLoadingState,
   customerLoadingState,
+
+  estimates,
+  estimatesLoadingState,
 
   itemPrices,
   itemPricesLoadingState,

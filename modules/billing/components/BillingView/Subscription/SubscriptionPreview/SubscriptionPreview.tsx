@@ -31,7 +31,7 @@ export const SubscriptionPreview = ({
       ) : (
         <SubscriptionInfo onlyPreview={!canUpdateSubscription} />
       )}
-      {subscription?.status === 'active' && canUpdateSubscription && (
+      {subscription?.status !== 'cancelled' && canUpdateSubscription && (
         <DetailsView headline="Payment information">
           <PaymentPreview />
         </DetailsView>

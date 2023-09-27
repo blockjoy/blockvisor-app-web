@@ -5,15 +5,12 @@ import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscriptio
 export const generateUpdateSubscriptionParams = async (
   subscription: Subscription,
   subscriptionParams: {
-    autoRenew: boolean;
     periodUnit: string;
   },
 ): Promise<_subscription.update_for_items_params> => {
-  const { autoRenew, periodUnit } = subscriptionParams;
+  const { periodUnit } = subscriptionParams;
 
   const params: _subscription.update_for_items_params = {};
-
-  params.auto_collection = autoRenew ? 'on' : 'off';
 
   if (periodUnit === 'year' && subscription?.billing_period_unit !== 'year') {
     const updatedSubscriptionItems: _subscription.subscription_items_update_for_items_params[] =
