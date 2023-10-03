@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { Button, Input, Modal } from '@shared/components';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -11,6 +11,8 @@ type Props = {
   type?: string;
   elementName: string;
   entityName: string;
+  isDisabled?: boolean;
+  isDisabledMessage?: string | ReactNode;
   onHide: VoidFunction;
   onSubmit: VoidFunction;
 };
@@ -20,6 +22,8 @@ export const DeleteModal = ({
   type = 'Delete',
   elementName,
   entityName,
+  isDisabled,
+  isDisabledMessage,
   onHide,
   onSubmit,
 }: Props) => {
@@ -39,55 +43,66 @@ export const DeleteModal = ({
       <h2 css={styles.header}>
         {type} {entityName} ({elementName})
       </h2>
-      <p css={spacing.bottom.medium}>
-        To {type?.toLowerCase()}, type the name of your {entityName} and then
-        click "confirm".
-      </p>
-      <FormProvider {...form}>
-        <form onSubmit={handleSubmit}>
-          <Input
-            autoFocus
-            style={{ maxWidth: '380px' }}
-            labelStyles={[display.visuallyHidden]}
-            name="elementNameToDelete"
-            placeholder={`Type ${entityName?.toLowerCase()} name`}
-            type="text"
-            validationOptions={{
-              required: 'This is a mandatory field',
-              validate: (name) => doNamesMatch(name),
-            }}
-          />
-          <div css={[styles.actions, spacing.top.medium]}>
-            <Button
-              disabled={!isValid || isDeleting}
-              type="submit"
-              size="medium"
-              style="warning"
-              loading={isDeleting}
-              customCss={[
-                css`
-                  min-width: 125px;
-                `,
-              ]}
-            >
-              Confirm
-            </Button>
-            <Button
-              onClick={onHide}
-              type="submit"
-              size="medium"
-              style="outline"
-              customCss={[
-                css`
-                  min-width: 125px;
-                `,
-              ]}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </FormProvider>
+
+      {isDisabled && isDisabledMessage && (
+        <p css={spacing.bottom.medium}>{isDisabledMessage}</p>
+      )}
+      <>
+        {!isDisabled && (
+          <p css={spacing.bottom.medium}>
+            To {type?.toLowerCase()}, type the name of your {entityName} and
+            then click "confirm".
+          </p>
+        )}
+
+        <FormProvider {...form}>
+          <form onSubmit={handleSubmit}>
+            {!isDisabled && (
+              <Input
+                autoFocus
+                style={{ maxWidth: '380px' }}
+                labelStyles={[display.visuallyHidden]}
+                name="elementNameToDelete"
+                placeholder={`Type ${entityName?.toLowerCase()} name`}
+                type="text"
+                validationOptions={{
+                  required: 'This is a mandatory field',
+                  validate: (name) => doNamesMatch(name),
+                }}
+              />
+            )}
+            <div css={[styles.actions, spacing.top.medium]}>
+              <Button
+                disabled={!isValid || isDeleting || isDisabled}
+                type="submit"
+                size="medium"
+                style="warning"
+                loading={isDeleting}
+                customCss={[
+                  css`
+                    min-width: 125px;
+                  `,
+                ]}
+              >
+                Confirm
+              </Button>
+              <Button
+                onClick={onHide}
+                type="submit"
+                size="medium"
+                style="outline"
+                customCss={[
+                  css`
+                    min-width: 125px;
+                  `,
+                ]}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </FormProvider>
+      </>
     </Modal>
   );
 };

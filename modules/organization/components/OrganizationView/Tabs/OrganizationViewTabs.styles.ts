@@ -10,12 +10,6 @@ export const styles = {
     height: 56px;
     margin-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
-
-    @media ${breakpoints.toXlrg} {
-      .metrics {
-        display: none;
-      }
-    }
   `,
   tabButton: (theme: ITheme) => css`
     display: flex;
@@ -34,7 +28,7 @@ export const styles = {
     margin-left: auto;
     width: 370px;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toXHuge} {
       display: none;
     }
 

@@ -4,6 +4,7 @@ import { ReactNode, useRef, useState } from 'react';
 import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
+import { css } from '@emotion/react';
 
 type Item = {
   title: string;
@@ -49,6 +50,12 @@ export const ActionsDropdown = ({ items }: Props) => {
                 onButtonClick={() => handleDropdownItemClicked(item.method)}
                 size="medium"
                 type="button"
+                additionalStyles={[
+                  css`
+                    padding-left: 18px;
+                    gap: 12px;
+                  `,
+                ]}
               >
                 <SvgIcon isDefaultColor size="12px">
                   {item.icon}
