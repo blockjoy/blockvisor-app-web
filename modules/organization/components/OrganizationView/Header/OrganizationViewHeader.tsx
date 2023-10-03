@@ -1,46 +1,19 @@
-import {
-  Skeleton,
-  SkeletonGrid,
-  EditableTitle,
-  Button,
-  SvgIcon,
-  DeleteModal,
-  ButtonGroup,
-} from '@shared/components';
+import { Skeleton, SkeletonGrid, EditableTitle } from '@shared/components';
 import { FC, useState } from 'react';
 import { styles } from './OrganizationViewHeader.styles';
 import {
-  getOrganizationRole,
-  useDefaultOrganization,
-  useDeleteOrganization,
   useGetOrganization,
-  useGetOrganizations,
   useUpdateOrganization,
 } from '@modules/organization';
-import { useLeaveOrganization } from '@modules/organization/hooks/useLeaveOrganization';
-import { useIdentity, usePermissions } from '@modules/auth';
+import { usePermissions } from '@modules/auth';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
-import { ROUTES } from '@shared/constants/routes';
-import IconDelete from '@public/assets/icons/common/Trash.svg';
-import IconDoor from '@public/assets/icons/common/Door.svg';
+import { OrganizationViewHeaderActions } from './Actions/OrganizationViewHeaderActions';
 
 export const OrganizationViewHeader: FC = () => {
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
-
-  const [deleteType, setDeleteType] = useState<'Delete' | 'Leave'>();
-
   const { organization, isLoading } = useGetOrganization();
 
-  const router = useRouter();
-
-  const { deleteOrganization } = useDeleteOrganization();
   const { updateOrganization } = useUpdateOrganization();
-  const { leaveOrganization } = useLeaveOrganization();
   const { hasPermission } = usePermissions();
-  const { user } = useIdentity();
-
-  const { organizations } = useGetOrganizations();
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean | null>(null);
@@ -56,62 +29,17 @@ export const OrganizationViewHeader: FC = () => {
     }
   };
 
-  const handleDeleteModalClosed = () => {
-    setIsDeleteMode(false);
-  };
-
-  const toggleDeleteModalOpen = (type: 'Delete' | 'Leave') => {
-    setDeleteType(type);
-    setIsDeleteMode(true);
-  };
-
   const handleEditClicked = () => {
     setIsSavingOrganization(null);
   };
 
   const canUpdateOrganization = hasPermission('org-update');
 
-  const canDeleteOrganization = hasPermission('org-delete');
-
-  const orgHasOtherAdmins = organization?.members
-    .filter((member) => member.userId !== user?.id)
-    .some(
-      (member) =>
-        getOrganizationRole(member.roles) === 'Admin' ||
-        getOrganizationRole(member.roles) === 'Owner',
-    );
-
-  const canLeaveOrganization =
-    hasPermission('org-remove-self') && orgHasOtherAdmins;
-
-  const { getDefaultOrganization } = useDefaultOrganization();
-
-  const callback = async () => {
-    await getDefaultOrganization(organizations);
-    router.push(ROUTES.ORGANIZATION(organizations[0].id));
-    setIsDeleteMode(false);
-  };
-
-  const handleAction = () =>
-    deleteType === 'Delete'
-      ? deleteOrganization(organization!.id, callback)
-      : leaveOrganization(organization!.id, callback);
-
   const isLoadingOrg =
     isLoading !== 'finished' || organization?.nodeCount === null;
 
   return (
     <>
-      {isDeleteMode && (
-        <DeleteModal
-          portalId="delete-org-modal"
-          elementName={organization?.name!}
-          entityName="Organization"
-          type={deleteType}
-          onHide={handleDeleteModalClosed}
-          onSubmit={handleAction}
-        />
-      )}
       <header css={styles.header}>
         {isLoadingOrg && !organization?.id ? (
           <SkeletonGrid>
@@ -128,39 +56,7 @@ export const OrganizationViewHeader: FC = () => {
                 onEditClicked={handleEditClicked}
                 canUpdate={canUpdateOrganization && !organization?.personal}
               />
-              {(canDeleteOrganization || canLeaveOrganization) &&
-                !organization.personal && (
-                  <ButtonGroup type="flex">
-                    {canDeleteOrganization && (
-                      <Button
-                        disabled={organization!.nodeCount > 0}
-                        tooltip={
-                          organization!.nodeCount > 0
-                            ? 'Has Nodes Attached'
-                            : ''
-                        }
-                        onClick={() => toggleDeleteModalOpen('Delete')}
-                        style="basic"
-                      >
-                        <SvgIcon>
-                          <IconDelete />
-                        </SvgIcon>
-                        <p>Delete</p>
-                      </Button>
-                    )}
-                    {canLeaveOrganization && (
-                      <Button
-                        onClick={() => toggleDeleteModalOpen('Leave')}
-                        style="basic"
-                      >
-                        <SvgIcon>
-                          <IconDoor />
-                        </SvgIcon>
-                        <p>Leave</p>
-                      </Button>
-                    )}
-                  </ButtonGroup>
-                )}
+              {!organization.personal && <OrganizationViewHeaderActions />}
             </>
           )
         )}

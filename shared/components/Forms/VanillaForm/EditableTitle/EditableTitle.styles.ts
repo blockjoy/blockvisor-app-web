@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -6,6 +7,19 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 10px;
+  `,
+  wrapperEditable: css`
+    @media ${breakpoints.fromXLrg} {
+      cursor: pointer;
+
+      .edit-toggle {
+        opacity: 0;
+      }
+
+      :hover .edit-toggle {
+        opacity: 1;
+      }
+    }
   `,
   input: (theme: ITheme) => css`
     display: flex;
@@ -18,16 +32,17 @@ export const styles = {
     margin-right: 11px;
     color: ${theme.colorText};
     -webkit-text-fill-color: ${theme.colorText};
-    opacity: 1; /* required on iOS */
+    opacity: 1;
     border: 0;
     padding: 0;
     border-radius: 0;
     border-bottom: 1px solid transparent;
     resize: none;
+    cursor: text;
 
     :disabled {
       -webkit-text-fill-color: ${theme.colorText};
-      opacity: 1; /* required on iOS */
+      opacity: 1;
     }
   `,
   inputEditable: (theme: ITheme) => css`

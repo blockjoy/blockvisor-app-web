@@ -2,22 +2,20 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  base: css`
-    position: relative;
-  `,
   right: css`
     left: auto;
     right: 0;
   `,
   menu: (theme: ITheme) => css`
     position: absolute;
+    overflow: hidden;
     z-index: 5;
     top: 40px;
     left: 0;
     font-size: 14px;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-16px);
+    transform: translateY(-16px) translateZ(0);
     border-radius: 4px;
     min-width: max-content;
     transition: all 0.4s;

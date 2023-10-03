@@ -1,24 +1,19 @@
 import { useRouter } from 'next/router';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect } from 'react';
 import { queryAsString } from '@shared/utils/query';
 import { spacing } from 'styles/utils.spacing.styles';
-import { EmptyColumn, TableAdd, SkeletonView } from '@shared/components';
+import { EmptyColumn, SkeletonView } from '@shared/components';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
 import {
   invitationAtoms,
-  organizationAtoms,
   OrganizationDetails,
   useInvitations,
-  useInviteMembers,
 } from '@modules/organization';
 import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
 import { useRecoilValue } from 'recoil';
-import { useIdentity, usePermissions } from '@modules/auth';
-import { checkIfExists } from '@modules/organization/utils/checkIfExists';
-import { toast } from 'react-toastify';
-import { createPath } from '@modules/organization/utils/createPath';
+import { useIdentity } from '@modules/auth';
 
 export const OrganizationView = ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -33,48 +28,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     getReceivedInvitations,
   } = useInvitations();
 
-  const { hasPermission } = usePermissions();
-
-  const selectedOrganization = useRecoilValue(
-    organizationAtoms.selectedOrganization,
-  );
-
-  const canCreateMember = hasPermission('invitation-create');
-
-  const [isInviting, setIsInviting] = useState<boolean>(false);
-
-  const members = selectedOrganization?.members;
-
   const sentInvitations = useRecoilValue(invitationAtoms.sentInvitations);
-
-  const { inviteMembers } = useInviteMembers();
-
-  const handleInviteClicked = async (email: string) => {
-    setIsInviting(true);
-
-    const isMemberOrInvited = checkIfExists(
-      members!,
-      sentInvitations!,
-      email!?.toLowerCase(),
-    );
-
-    if (!isMemberOrInvited) {
-      inviteMembers(email!, () => {
-        getSentInvitations(id!);
-        setIsInviting(false);
-        router.push(createPath(id as string, 'invitations'));
-      });
-    } else {
-      setIsInviting(false);
-      if (isMemberOrInvited === 'member') {
-        toast.error('Already a member');
-      } else {
-        toast.error('Already invited');
-      }
-    }
-
-    return true;
-  };
 
   useEffect(() => {
     (async () => {
@@ -106,22 +60,7 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
         <>
           <OrganizationViewTabs />
           <section css={styles.wrapper}>
-            <div css={styles.leftWrapper}>
-              {canCreateMember && (
-                <TableAdd
-                  buttonText="Invite"
-                  buttonWidth="70px"
-                  placeholder="Invite Member"
-                  placeholderFocused="Enter an email address"
-                  onSubmit={async (email: string) =>
-                    await handleInviteClicked(email)
-                  }
-                  isLoading={isInviting}
-                  isEmail
-                />
-              )}
-              {children}
-            </div>
+            <div css={styles.leftWrapper}>{children}</div>
             <div css={styles.rightWrapper}>
               <OrganizationDetails />
             </div>

@@ -8,7 +8,7 @@ export const styles = {
     display: flex;
     flex: 1 1 auto;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toXHuge} {
       flex: 0 0 auto;
       flex-direction: column;
       gap: 50px;
@@ -29,15 +29,11 @@ export const styles = {
       width: 110px;
     }
 
-    @media ${breakpoints.fromXLrg} {
-      flex: 0 0 400px;
+    @media ${breakpoints.fromXHuge} {
+      flex: 0 0 460px;
       padding-left: 30px;
       margin-bottom: 0;
       border-left: 1px solid ${theme.colorBorder};
-    }
-
-    @media ${breakpoints.fromXHuge} {
-      flex: 0 0 460px;
     }
   `,
 };

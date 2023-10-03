@@ -3,7 +3,7 @@ import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
-import IconClose from '@public/assets/icons/common/Close.svg';
+import IconDelete from '@public/assets/icons/common/Trash.svg';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -102,6 +102,7 @@ export const mapOrganizationMembersToRows = (
             <>
               {canRemoveMember && member.userId !== user?.id ? (
                 <Button
+                  className="show-on-hover"
                   type="button"
                   tooltip="Remove"
                   style="icon"
@@ -114,8 +115,8 @@ export const mapOrganizationMembersToRows = (
                     )
                   }
                 >
-                  <SvgIcon size="20px">
-                    <IconClose />
+                  <SvgIcon size="18px">
+                    <IconDelete />
                   </SvgIcon>
                 </Button>
               ) : null}

@@ -94,6 +94,13 @@ export const EditableTitle: FC<Props> = ({
     }
   };
 
+  const handleWrapperClicked = () => {
+    if (!isEditMode && canUpdate) {
+      handleEditToggled();
+      setIsEditMode(true);
+    }
+  };
+
   useEffect(() => {
     inputValue.current = initialValue;
   }, []);
@@ -112,7 +119,10 @@ export const EditableTitle: FC<Props> = ({
   }, [isSaving]);
 
   return (
-    <div css={styles.wrapper}>
+    <div
+      css={[styles.wrapper, canUpdate && !isEditMode && styles.wrapperEditable]}
+      onClick={handleWrapperClicked}
+    >
       {isEditMode ? (
         <div
           contentEditable
@@ -132,8 +142,8 @@ export const EditableTitle: FC<Props> = ({
 
       {canUpdate && !isLoading && initialValue?.length && (
         <Button
+          className={isEditMode ? '' : 'edit-toggle'}
           style="icon"
-          onClick={handleEditToggled}
           tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
         >
           <span css={styles.iconWrapper}>

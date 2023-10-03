@@ -25,13 +25,16 @@ export const styles = {
     height: 44px;
     color: ${theme.colorDefault};
     cursor: pointer;
+    transition: 0.3s;
 
     svg path {
       fill: ${theme.colorDefault};
+      transition: 0.3s;
     }
 
-    :hover {
+    :is(:hover, :active, :focus) {
       color: ${theme.colorText};
+      box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.1);
 
       svg path {
         fill: ${theme.colorText};
@@ -45,12 +48,13 @@ export const styles = {
   icon: (theme: ITheme) => css`
     rotate: 90deg;
     pointer-events: none;
+    transition: transform 0.3s;
 
     svg path {
       fill: ${theme.colorLabel};
     }
   `,
   iconActive: css`
-    rotate: -90deg;
+    transform: rotate(-180deg);
   `,
 };

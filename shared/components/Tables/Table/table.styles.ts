@@ -42,13 +42,15 @@ export const styles = {
       }
     }
 
-    & .show-on-hover {
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
+    @media ${breakpoints.fromXLrg} {
+      .show-on-hover {
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
 
-    tr:hover .show-on-hover {
-      opacity: 1;
+      tr:hover .show-on-hover {
+        opacity: 1;
+      }
     }
 
     tr:hover {
