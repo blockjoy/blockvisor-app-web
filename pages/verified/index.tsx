@@ -54,33 +54,36 @@ const Verified: NextPage = () => {
             emailToken?.toString()!,
           );
           await signIn(undefined, accessToken);
+          await getOrganizations();
+
           const accessTokenObject = readToken(accessToken);
           const emailTokenObject = readToken(emailToken as string);
           const user = await userClient.getUser(accessTokenObject.resource_id);
 
-          const { invitation_id } = emailTokenObject.data;
+          const invitationId = emailTokenObject?.data?.invitation_id;
 
-          const receivedInvitations =
-            await invitationClient.receivedInvitations(user?.email!);
+          if (invitationId) {
+            const receivedInvitations =
+              await invitationClient.receivedInvitations(user?.email!);
 
-          const invitation = receivedInvitations.find(
-            (invitation) => invitation.id === invitation_id,
-          );
+            const invitation = receivedInvitations.find(
+              (invitation) => invitation.id === invitationId,
+            );
 
-          if (invitation) {
-            await acceptInvitation(invitation_id);
-            await getOrganizations();
+            await acceptInvitation(invitationId);
 
-            setDefaultOrganization({
-              id: invitation.orgId,
-              name: invitation.orgName,
-            });
-
-            router.push({
-              pathname: ROUTES.NODES,
-              query: { verified: true },
-            });
+            if (invitation) {
+              setDefaultOrganization({
+                id: invitation.orgId,
+                name: invitation.orgName,
+              });
+            }
           }
+
+          router.push({
+            pathname: ROUTES.NODES,
+            query: { verified: true },
+          });
         } catch (err) {
           console.log('error verifying', err);
           toast.error('Error Verifying');

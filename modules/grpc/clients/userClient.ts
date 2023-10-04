@@ -14,7 +14,6 @@ export type UIUser = {
   lastName: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
 };
 
 class UserClient {
@@ -45,14 +44,16 @@ class UserClient {
 
   async createUser(
     user: UIUser,
-    token: string,
+    token?: string,
   ): Promise<User | StatusResponse> {
     try {
-      const authHeader = {
-        metadata: Metadata({
+      const authHeader: any = {};
+
+      if (token) {
+        authHeader.metadata = Metadata({
           authorization: `Bearer ${token}`,
-        }),
-      };
+        });
+      }
 
       const { email, firstName, lastName, password } = user;
       const response = await this.client.create(

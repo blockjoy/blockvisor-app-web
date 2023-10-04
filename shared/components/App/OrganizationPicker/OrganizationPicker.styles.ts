@@ -10,11 +10,15 @@ export const styles = {
       transition: 0.3s;
     }
 
-    :is(:hover, :focus) p {
+    button:not(:disabled) {
+      cursor: pointer;
+    }
+
+    :is(:hover, :focus) button:not(:disabled) p {
       color: ${theme.colorText};
     }
 
-    :is(:hover, :focus) path {
+    :is(:hover, :focus) button:not(:disabled) path {
       fill: ${theme.colorText};
     }
   `,
@@ -58,13 +62,11 @@ export const styles = {
     background: transparent;
     color: ${theme.colorText};
     padding: 0;
-    padding-right: 18px;
     border: 0;
     white-space: nowrap;
     overflow: hidden;
     text-align: left;
     text-overflow: ellipsis;
-    cursor: pointer;
   `,
   selectText: (maxWidth?: string) => (theme: ITheme) =>
     css`
@@ -73,7 +75,6 @@ export const styles = {
       max-width: ${maxWidth || '200px'};
       overflow: hidden;
       text-overflow: ellipsis;
-      padding-right: 8px;
       line-height: 1.8;
       font-size: 16px;
       color: ${theme.colorDefault};
@@ -99,10 +100,6 @@ export const styles = {
     }
   `,
   icon: (theme: ITheme) => css`
-    position: absolute;
-    top: 50%;
-    right: 4px;
-    translate: 0 -50%;
     pointer-events: none;
     transition: 0.3s;
 
