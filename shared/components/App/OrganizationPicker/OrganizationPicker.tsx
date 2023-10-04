@@ -60,13 +60,24 @@ export const OrganizationPicker = ({
 
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
-      <button css={styles.select} onClick={handleClick}>
+      <button
+        disabled={allOrganizations.length === 1}
+        css={styles.select}
+        onClick={handleClick}
+      >
         <SvgIcon isDefaultColor size="16px">
           <IconOrganization />
         </SvgIcon>
         <p css={styles.selectText(maxWidth)}>
           {escapeHtml(defaultOrganization?.name!)}
         </p>
+        {allOrganizations.length > 1 && (
+          <span css={[styles.icon, isOpen && styles.iconActive]}>
+            <SvgIcon isDefaultColor size="11px">
+              <IconArrow />
+            </SvgIcon>
+          </span>
+        )}
       </button>
       <DropdownMenu
         isOpen={isOpen}
@@ -97,11 +108,6 @@ export const OrganizationPicker = ({
           </ul>
         </Scrollbar>
       </DropdownMenu>
-      <span css={[styles.icon, isOpen && styles.iconActive]}>
-        <SvgIcon isDefaultColor size="11px">
-          <IconArrow />
-        </SvgIcon>
-      </span>
     </div>
   );
 };
