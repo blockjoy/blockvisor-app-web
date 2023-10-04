@@ -3,11 +3,8 @@ import { organizationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { useGetOrganizations } from './useGetOrganizations';
 
 export function useLeaveOrganization() {
-  const { removeFromOrganizations } = useGetOrganizations();
-
   const [loadingState, setLoadingState] = useRecoilState(
     organizationAtoms.organizationLoadingState,
   );
@@ -19,7 +16,6 @@ export function useLeaveOrganization() {
     setLoadingState('loading');
     try {
       await organizationClient.removeMember(userId!, orgId);
-      removeFromOrganizations(orgId);
       setLoadingState('finished');
       toast.success('Successfully left the organization');
       callback();

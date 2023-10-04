@@ -1,4 +1,5 @@
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { sort } from '@shared/components';
 import { useRecoilState } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
 
@@ -16,11 +17,19 @@ export function useDefaultOrganization() {
       organizations?.length &&
       (!defaultOrganization || !doesLocalStorageDefaultOrgExistInList)
     ) {
-      const organization = organizations[0];
-      setDefaultOrganization({
-        name: organization.name,
-        id: organization.id,
-      });
+      const firstOrgInList = sort(organizations, {
+        field: 'name',
+        order: 'asc',
+      })[0];
+
+      const newDefaultOrg = {
+        name: firstOrgInList.name,
+        id: firstOrgInList.id,
+      };
+
+      setDefaultOrganization(newDefaultOrg);
+
+      return newDefaultOrg;
     }
   };
 
