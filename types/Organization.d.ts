@@ -1,6 +1,5 @@
 interface IDeleteOrganizationHook {
   deleteOrganization: (id: string, callback: VoidFunction) => void;
-  removeOrganization: (id: string) => void;
 }
 
 interface IUpdateOrganizationHook {

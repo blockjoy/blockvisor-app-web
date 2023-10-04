@@ -17,7 +17,6 @@ import {
 import { readToken } from '@shared/utils/readToken';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { useRouter } from 'next/router';
-import { ROUTES } from '@shared/constants/routes';
 import { toast } from 'react-toastify';
 
 type SignInParams = {
@@ -72,7 +71,7 @@ export function useSignIn() {
           (i) => i.id === invitationId,
         );
 
-        await acceptInvitation(invitationId as string);
+        await acceptInvitation(invitationId);
 
         await getOrganizations();
 

@@ -2,7 +2,7 @@ import { authAtoms } from '@modules/auth';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { useDeleteOrganization } from './useDeleteOrganization';
+import { useGetOrganizations } from './useGetOrganizations';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
 import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { invitationAtoms } from '../store/invitationAtoms';
@@ -20,7 +20,7 @@ export function useUpdateMembers(): IUpdateMembersHook {
 
   const organizationMembers = selectedOrganization?.members;
 
-  const { removeOrganization } = useDeleteOrganization();
+  const { removeFromOrganizations } = useGetOrganizations();
 
   const updateMembersList = async (organization: Org) => {
     const { members, ...org }: Org = organization;
@@ -38,7 +38,7 @@ export function useUpdateMembers(): IUpdateMembersHook {
       );
 
       if (isRemovedCurrentUser) {
-        removeOrganization(org?.id!);
+        removeFromOrganizations(org?.id!);
       }
     }
 

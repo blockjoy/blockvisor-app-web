@@ -26,7 +26,7 @@ export const OrganizationViewHeaderActions = () => {
 
   const { nodeList } = useNodeList();
   const { organization } = useGetOrganization();
-  const { organizations } = useGetOrganizations();
+  const { removeFromOrganizations } = useGetOrganizations();
   const { deleteOrganization } = useDeleteOrganization();
   const { leaveOrganization } = useLeaveOrganization();
   const { getDefaultOrganization } = useDefaultOrganization();
@@ -61,8 +61,9 @@ export const OrganizationViewHeaderActions = () => {
   };
 
   const callback = async () => {
-    await getDefaultOrganization(organizations);
-    router.push(ROUTES.ORGANIZATION(organizations[0].id));
+    const newOrgs = removeFromOrganizations(organization?.id!);
+    const newDefaultOrg = await getDefaultOrganization(newOrgs);
+    router.push(ROUTES.ORGANIZATION(newDefaultOrg?.id!));
     setIsDeleteMode(false);
   };
 

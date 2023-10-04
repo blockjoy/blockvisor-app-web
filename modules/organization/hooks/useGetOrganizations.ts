@@ -40,7 +40,10 @@ export function useGetOrganizations() {
     const newOrganizations = organizations.filter(
       (organization) => organization.id !== orgId,
     );
+
     setOrganizations(newOrganizations);
+
+    return newOrganizations;
   };
 
   const addToOrganizations = (org: Org) => {
