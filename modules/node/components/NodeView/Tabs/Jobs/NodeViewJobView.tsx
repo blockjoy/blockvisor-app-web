@@ -9,5 +9,10 @@ export const NodeViewJobView = () => {
 
   const job = node?.jobs.find((job) => job.name === (name as string));
 
-  return <>{job?.name}</>;
+  return (
+    <>
+      <h2>{job?.name}</h2>
+      Progress {job?.progress}%{job?.logs.map((log) => log)}
+    </>
+  );
 };

@@ -3,11 +3,29 @@ import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { Table } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
+import { convertNodeJobStatusToName } from '@modules/node/utils/convertNodeJobStatusToName';
+import { NodeJobStatus } from '@modules/grpc/library/blockjoy/v1/node';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const NodeViewJobList = () => {
   const { node } = useNodeView();
 
   const router = useRouter();
+
+  const headers: TableHeader[] = [
+    {
+      key: '1',
+      name: 'Name',
+    },
+    {
+      key: '2',
+      name: 'Status',
+    },
+    {
+      key: '3',
+      name: 'Progress',
+    },
+  ];
 
   const rows = node?.jobs.map((job) => ({
     key: job.name,
@@ -15,17 +33,37 @@ export const NodeViewJobList = () => {
       {
         key: '1',
         component: <p>{job.name}</p>,
-        data: 'test',
+      },
+      {
+        key: '2',
+        component: (
+          <p
+            css={[
+              styles.status,
+              job.status === NodeJobStatus.NODE_JOB_STATUS_FINISHED &&
+                styles.statusSuccess,
+            ]}
+          >
+            {convertNodeJobStatusToName(job.status)}
+          </p>
+        ),
+      },
+      {
+        key: '3',
+        component: (
+          <p>
+            {job.status === NodeJobStatus.NODE_JOB_STATUS_FINISHED
+              ? ''
+              : `${
+                  Math.round(
+                    (job?.progress?.current! / job?.progress?.total!) * 100,
+                  ) || 0
+                }%`}
+          </p>
+        ),
       },
     ],
   }));
-
-  const headers: TableHeader[] = [
-    {
-      key: '1',
-      name: 'Name',
-    },
-  ];
 
   const handleRowClicked = (name: string) => {
     router.push({
@@ -34,13 +72,15 @@ export const NodeViewJobList = () => {
   };
 
   return (
-    <Table
-      isLoading="finished"
-      headers={headers}
-      rows={rows}
-      verticalAlign="middle"
-      fixedRowHeight="74px"
-      onRowClick={handleRowClicked}
-    />
+    <section css={spacing.top.medium}>
+      <Table
+        isLoading="finished"
+        headers={headers}
+        rows={rows}
+        verticalAlign="middle"
+        fixedRowHeight="74px"
+        onRowClick={handleRowClicked}
+      />
+    </section>
   );
 };
