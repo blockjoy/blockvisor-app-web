@@ -92,8 +92,9 @@ export const mapNodeListToRows = (
         component: (
           <NodeStatus
             status={node.status}
-            loadingCurrent={node?.dataSyncProgress?.current}
-            loadingTotal={node?.dataSyncProgress?.total}
+            // TODO: Add back in
+            // loadingCurrent={node?.dataSyncProgress?.current}
+            // loadingTotal={node?.dataSyncProgress?.total}
           />
         ),
       },

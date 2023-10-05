@@ -2,6 +2,8 @@ export * from './components/NodeList/NodeList';
 export * from './components/NodeView/NodeView';
 export * from './components/NodeView/Tabs/Details/NodeViewDetails';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
+export * from './components/NodeView/Tabs/Jobs/NodeViewJobList';
+export * from './components/NodeView/Tabs/Jobs/NodeViewJobView';
 export * from './components/NodeLauncher/NodeLauncher';
 export * from './components/Shared';
 export * from './hooks/useNodeAdd';

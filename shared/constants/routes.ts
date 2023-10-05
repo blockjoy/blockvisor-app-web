@@ -7,6 +7,8 @@ export const ROUTES = {
   NODE: (id: string) => `/nodes/${id}`,
   NODES: '/nodes',
   NODE_GROUP: (id: string) => `/nodes/group/${id}`,
+  NODE_JOBS: () => `/nodes/jobs`,
+  NODE_JOB: (nodeId: string, name: string) => `/nodes/${nodeId}/jobs/${name}`,
   LOGIN: '/login',
   ORGANIZATIONS: '/organizations',
   ORGANIZATION: (id: string) => `/organizations/${id}`,

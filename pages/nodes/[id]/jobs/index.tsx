@@ -1,7 +1,7 @@
 import { AppLayout } from '@modules/layout';
-import { NodeView, NodeViewSettings } from '@modules/node';
+import { NodeView, NodeViewJobList } from '@modules/node';
 
-const Component = () => <NodeViewSettings />;
+const Component = () => <NodeViewJobList />;
 
 Component.getLayout = function getLayout(page: any) {
   return (
