@@ -11,8 +11,7 @@ export const NodeViewJobView = () => {
 
   return (
     <>
-      <h2>{job?.name}</h2>
-      Progress {job?.progress}%{job?.logs.map((log) => log)}
+      <h3>{job?.name}</h3>
     </>
   );
 };

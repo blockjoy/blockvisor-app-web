@@ -1,9 +1,4 @@
-import {
-  Skeleton,
-  Copy,
-  SvgIcon,
-  OrganizationPicker,
-} from '@shared/components';
+import { Copy, SvgIcon, OrganizationPicker } from '@shared/components';
 import { ProfileDropdown } from './ProfileDropdown/ProfileDropdown';
 import { FC, ReactNode } from 'react';
 import { wrapper } from 'styles/wrapper.styles';

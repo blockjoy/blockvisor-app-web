@@ -1,6 +1,6 @@
 import { styles } from './NodeViewJobList.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
-import { Table } from '@shared/components';
+import { sort, Table } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { convertNodeJobStatusToName } from '@modules/node/utils/convertNodeJobStatusToName';
@@ -65,6 +65,8 @@ export const NodeViewJobList = () => {
     ],
   }));
 
+  const sortedRows = sort(rows, { field: 'name', order: 'asc' });
+
   const handleRowClicked = (name: string) => {
     router.push({
       pathname: ROUTES.NODE_JOB(node?.id!, name),
@@ -76,7 +78,7 @@ export const NodeViewJobList = () => {
       <Table
         isLoading="finished"
         headers={headers}
-        rows={rows}
+        rows={sortedRows}
         verticalAlign="middle"
         fixedRowHeight="74px"
         onRowClick={handleRowClicked}
