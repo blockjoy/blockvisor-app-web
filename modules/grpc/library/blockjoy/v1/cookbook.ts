@@ -6,12 +6,6 @@ import { NodeType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
-/** Type of compression used on chunk data. */
-export enum Compression {
-  COMPRESSION_UNSPECIFIED = 0,
-  UNRECOGNIZED = -1,
-}
-
 /** Checksum variant. */
 export enum ChecksumType {
   CHECKSUM_TYPE_UNSPECIFIED = 0,
@@ -117,6 +111,12 @@ export interface ManifestServiceRetrieveDownloadManifestRequest {
 
 export interface ManifestServiceRetrieveDownloadManifestResponse {
   manifest: DownloadManifest | undefined;
+}
+
+/** Type of compression used on chunk data. */
+export interface Compression {
+  /** ZSTD compression - value means level of compression */
+  zstd?: number | undefined;
 }
 
 /**
@@ -1298,6 +1298,52 @@ export const ManifestServiceRetrieveDownloadManifestResponse = {
   },
 };
 
+function createBaseCompression(): Compression {
+  return { zstd: undefined };
+}
+
+export const Compression = {
+  encode(message: Compression, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.zstd !== undefined) {
+      writer.uint32(8).int32(message.zstd);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Compression {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCompression();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.zstd = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Compression>): Compression {
+    return Compression.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Compression>): Compression {
+    const message = createBaseCompression();
+    message.zstd = object.zstd ?? undefined;
+    return message;
+  },
+};
+
 function createBaseDownloadManifest(): DownloadManifest {
   return { totalSize: 0, compression: undefined, chunks: [] };
 }
@@ -1308,7 +1354,7 @@ export const DownloadManifest = {
       writer.uint32(8).uint64(message.totalSize);
     }
     if (message.compression !== undefined) {
-      writer.uint32(16).int32(message.compression);
+      Compression.encode(message.compression, writer.uint32(18).fork()).ldelim();
     }
     for (const v of message.chunks) {
       Chunk.encode(v!, writer.uint32(26).fork()).ldelim();
@@ -1331,11 +1377,11 @@ export const DownloadManifest = {
           message.totalSize = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.compression = reader.int32() as any;
+          message.compression = Compression.decode(reader, reader.uint32());
           continue;
         case 3:
           if (tag !== 26) {
@@ -1360,7 +1406,9 @@ export const DownloadManifest = {
   fromPartial(object: DeepPartial<DownloadManifest>): DownloadManifest {
     const message = createBaseDownloadManifest();
     message.totalSize = object.totalSize ?? 0;
-    message.compression = object.compression ?? undefined;
+    message.compression = (object.compression !== undefined && object.compression !== null)
+      ? Compression.fromPartial(object.compression)
+      : undefined;
     message.chunks = object.chunks?.map((e) => Chunk.fromPartial(e)) || [];
     return message;
   },

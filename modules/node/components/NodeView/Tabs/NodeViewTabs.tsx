@@ -12,6 +12,7 @@ export const NodeViewTabs = () => {
   const tabs = [
     { href: createPath(''), name: 'Details' },
     { href: createPath('settings'), name: 'Settings' },
+    { href: createPath('jobs'), name: 'Jobs' },
   ];
 
   const isActive = (href: string) => {

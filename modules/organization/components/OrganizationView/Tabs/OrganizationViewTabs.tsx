@@ -20,7 +20,13 @@ export const OrganizationViewTabs = () => {
   const isActive = (href: string) => {
     const routerPath = asPath.substring(asPath.lastIndexOf('/'), asPath.length);
     const buttonPath = href.substring(href.lastIndexOf('/'), href.length);
-    return routerPath === buttonPath;
+
+    console.log('isActive', {
+      routerPath,
+      buttonPath,
+    });
+
+    return routerPath.includes(buttonPath);
   };
 
   return (

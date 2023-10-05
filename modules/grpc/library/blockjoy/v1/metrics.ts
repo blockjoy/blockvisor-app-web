@@ -2,7 +2,7 @@
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { NodeStatus, StakingStatus, SyncStatus } from "./node";
+import { NodeJob, NodeStatus, StakingStatus, SyncStatus } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -72,16 +72,8 @@ export interface NodeMetrics {
   syncStatus?:
     | SyncStatus
     | undefined;
-  /** The progress of node data sync operation: total units to sync */
-  dataSyncProgressTotal?:
-    | number
-    | undefined;
-  /** The progress of node data sync operation: units currently synced */
-  dataSyncProgressCurrent?:
-    | number
-    | undefined;
-  /** The progress of node data sync operation: message to display to user */
-  dataSyncProgressMessage?: string | undefined;
+  /** A list of the jobs that this node consists of. */
+  jobs: NodeJob[];
 }
 
 /**
@@ -460,9 +452,7 @@ function createBaseNodeMetrics(): NodeMetrics {
     consensus: undefined,
     applicationStatus: undefined,
     syncStatus: undefined,
-    dataSyncProgressTotal: undefined,
-    dataSyncProgressCurrent: undefined,
-    dataSyncProgressMessage: undefined,
+    jobs: [],
   };
 }
 
@@ -486,14 +476,8 @@ export const NodeMetrics = {
     if (message.syncStatus !== undefined) {
       writer.uint32(48).int32(message.syncStatus);
     }
-    if (message.dataSyncProgressTotal !== undefined) {
-      writer.uint32(56).uint32(message.dataSyncProgressTotal);
-    }
-    if (message.dataSyncProgressCurrent !== undefined) {
-      writer.uint32(64).uint32(message.dataSyncProgressCurrent);
-    }
-    if (message.dataSyncProgressMessage !== undefined) {
-      writer.uint32(74).string(message.dataSyncProgressMessage);
+    for (const v of message.jobs) {
+      NodeJob.encode(v!, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -547,26 +531,12 @@ export const NodeMetrics = {
 
           message.syncStatus = reader.int32() as any;
           continue;
-        case 7:
-          if (tag !== 56) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
-          message.dataSyncProgressTotal = reader.uint32();
-          continue;
-        case 8:
-          if (tag !== 64) {
-            break;
-          }
-
-          message.dataSyncProgressCurrent = reader.uint32();
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.dataSyncProgressMessage = reader.string();
+          message.jobs.push(NodeJob.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -589,9 +559,7 @@ export const NodeMetrics = {
     message.consensus = object.consensus ?? undefined;
     message.applicationStatus = object.applicationStatus ?? undefined;
     message.syncStatus = object.syncStatus ?? undefined;
-    message.dataSyncProgressTotal = object.dataSyncProgressTotal ?? undefined;
-    message.dataSyncProgressCurrent = object.dataSyncProgressCurrent ?? undefined;
-    message.dataSyncProgressMessage = object.dataSyncProgressMessage ?? undefined;
+    message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
     return message;
   },
 };
