@@ -59,7 +59,7 @@ export const PageTitle: FC<Props> = ({
             <>
               <span css={styles.separator}>/</span>
               <p css={styles.childTitle}>{childTitle}</p>
-              {canCopyChild && <Copy value={title} hideTooltip />}
+              {canCopyChild && <Copy value={childTitle} hideTooltip />}
             </>
           )}
         </div>
