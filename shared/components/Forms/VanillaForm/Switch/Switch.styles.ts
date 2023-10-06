@@ -30,14 +30,14 @@ export const styles = {
     }
 
     :checked ~ .switch .handle {
-      translate: 32px 0;
+      translate: 26px 0;
       background: ${theme.colorPrimary};
     }
   `,
   switch: (theme: ITheme) => css`
     display: block;
-    width: 60px;
-    height: 28px;
+    width: 50px;
+    height: 24px;
     padding: 3px;
     border-radius: 15px;
     border: 1px solid ${theme.colorDefault};
@@ -48,8 +48,8 @@ export const styles = {
     content: '';
     display: grid;
     place-items: center;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: ${theme.colorDefault};
     transition: translate 0.3s;

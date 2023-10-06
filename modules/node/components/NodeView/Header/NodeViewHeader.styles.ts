@@ -14,7 +14,6 @@ export const styles = {
     @media ${breakpoints.toLrg} {
       flex-direction: column;
       align-items: flex-start;
-      margin-bottom: 16px;
       padding: 20px 0;
       min-height: auto;
     }
