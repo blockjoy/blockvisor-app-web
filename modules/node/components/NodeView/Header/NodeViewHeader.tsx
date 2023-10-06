@@ -17,12 +17,15 @@ import { ROUTES } from '@shared/constants/routes';
 import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
 import { toast } from 'react-toastify';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 
 export const NodeViewHeader = () => {
   const router = useRouter();
   const { node, isLoading } = useNodeView();
   const { deleteNode } = useNodeDelete();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
+
+  const progress = getNodeJobProgress(node!);
 
   const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
 
@@ -84,7 +87,11 @@ export const NodeViewHeader = () => {
                   </div>
                 </div>
                 <div css={styles.nodeStatus}>
-                  <NodeStatus status={node.status} />
+                  <NodeStatus
+                    status={node.status}
+                    loadingCurrent={progress?.current}
+                    loadingTotal={progress?.total}
+                  />
                 </div>
                 <div css={styles.actions}>
                   <NodeViewHeaderActions

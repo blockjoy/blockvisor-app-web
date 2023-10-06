@@ -4,6 +4,7 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/v1/node';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
+import { getNodeJobProgress } from './getNodeJobProgress';
 
 export const toGrid = (
   nodeList: Node[],
@@ -15,6 +16,8 @@ export const toGrid = (
   return nodeList?.map((node: Node) => {
     const isProvisioning =
       node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING;
+
+    const progress = getNodeJobProgress(node);
 
     const handleCellClicked =
       !isProvisioning || hasPermission('node-admin-get')
@@ -39,9 +42,8 @@ export const toGrid = (
             <NodeStatus
               hasBorder
               status={node.status}
-              // TODO: Add back in
-              // loadingCurrent={node?.dataSyncProgress?.current}
-              // loadingTotal={node?.dataSyncProgress?.total}
+              loadingCurrent={progress?.current}
+              loadingTotal={progress?.total}
             />
           }
           cellType={`${node.blockchainName} ${convertNodeTypeToName(

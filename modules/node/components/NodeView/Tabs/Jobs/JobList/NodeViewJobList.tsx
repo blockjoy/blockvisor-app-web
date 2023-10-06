@@ -1,6 +1,6 @@
 import { styles } from './NodeViewJobList.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
-import { sort, Table } from '@shared/components';
+import { EmptyColumn, sort, Table } from '@shared/components';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { convertNodeJobStatusToName } from '@modules/node/utils/convertNodeJobStatusToName';
@@ -51,21 +51,22 @@ export const NodeViewJobList = () => {
       {
         key: '3',
         component: (
-          <p>
-            {job.status === NodeJobStatus.NODE_JOB_STATUS_FINISHED
+          <p css={styles.progress}>
+            {job.status === NodeJobStatus.NODE_JOB_STATUS_FINISHED ||
+            !job?.progress
               ? ''
               : `${
                   Math.round(
                     (job?.progress?.current! / job?.progress?.total!) * 100,
                   ) || 0
-                }%`}
+                }% Complete`}
           </p>
         ),
       },
     ],
   }));
 
-  const sortedRows = sort(rows, { field: 'name', order: 'asc' });
+  const sortedRows = sort(rows, { field: 'key', order: 'asc' });
 
   const handleRowClicked = (name: string) => {
     router.push({
@@ -73,16 +74,21 @@ export const NodeViewJobList = () => {
     });
   };
 
-  return (
-    <section css={spacing.top.medium}>
+  return sortedRows.length ? (
+    <section css={spacing.top.small}>
       <Table
         isLoading="finished"
         headers={headers}
         rows={sortedRows}
         verticalAlign="middle"
-        fixedRowHeight="74px"
+        fixedRowHeight="72px"
         onRowClick={handleRowClicked}
       />
     </section>
+  ) : (
+    <EmptyColumn
+      title="No Jobs"
+      description="When your node has jobs, they will be shown here."
+    />
   );
 };
