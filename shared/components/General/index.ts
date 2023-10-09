@@ -18,3 +18,6 @@ export * from './CountrySelector/CountrySelector';
 export * from './DetailsView/DetailsView';
 export * from './ConfirmDialog/ConfirmDialog';
 export * from './List/List';
+export * from './Billing/Pricing/Pricing';
+export * from './Billing/Pricing/Total/Total';
+export * from './Billing/Promo/Promo';

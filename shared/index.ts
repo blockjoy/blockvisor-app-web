@@ -13,3 +13,4 @@ export * from './utils/copyToClipboard';
 export * from './services/mixpanel';
 export * from './utils/formatters';
 export * from './utils/infiniteScroll';
+export * from './utils/computePricing';

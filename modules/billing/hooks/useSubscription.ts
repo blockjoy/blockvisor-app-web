@@ -17,6 +17,7 @@ import { organizationAtoms } from '@modules/organization';
 import { authAtoms, useUserSubscription } from '@modules/auth';
 
 interface ISubscriptionHook {
+  subscription: Subscription | null;
   subscriptionLoadingState: LoadingState;
   setSubscriptionLoadingState: SetterOrUpdater<LoadingState>;
   getSubscription: (id: string) => Promise<void>;
@@ -193,6 +194,8 @@ export const useSubscription = (): ISubscriptionHook => {
   };
 
   return {
+    subscription,
+
     subscriptionLoadingState,
     setSubscriptionLoadingState,
 

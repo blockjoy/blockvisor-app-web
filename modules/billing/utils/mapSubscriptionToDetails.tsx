@@ -4,7 +4,7 @@ import { Badge } from '@shared/components';
 import {
   getSubscriptionStatusColor,
   getSubscriptionStatusText,
-  BillingPeriodSelect,
+  // BillingPeriodSelect,
   BILLING_PERIOD,
   calcNextRenewDate,
 } from '@modules/billing';
@@ -16,11 +16,15 @@ export const mapSubscriptionToDetails = (
 ) => {
   const { value: periodUnit, handleUpdate: handlePeriodUnit } = props.period;
 
-  const billingPeriodYearly = BILLING_PERIOD.find(
-    (billingPeriod: BillingPeriod) => billingPeriod.id === 'year',
+  const billingPeriod = BILLING_PERIOD.find(
+    (billingPeriod: BillingPeriod) => billingPeriod.id === periodUnit,
   );
-  const isYearlySubscription =
-    subscription.billing_period_unit === billingPeriodYearly?.id;
+
+  // const billingPeriodYearly = BILLING_PERIOD.find(
+  //   (billingPeriod: BillingPeriod) => billingPeriod.id === 'year',
+  // );
+  // const isYearlySubscription =
+  //   subscription.billing_period_unit === billingPeriodYearly?.id;
 
   return [
     {
@@ -31,15 +35,17 @@ export const mapSubscriptionToDetails = (
       label: 'Billing period',
       data: (
         <>
-          {isYearlySubscription ? (
-            billingPeriodYearly?.title
-          ) : (
-            <BillingPeriodSelect
-              value={periodUnit}
-              onChange={handlePeriodUnit}
-              disabled={onlyPreview}
-            />
-          )}
+          {
+            // isYearlySubscription ? (
+            billingPeriod?.title
+            // ) : (
+            //   <BillingPeriodSelect
+            //     value={periodUnit}
+            //     onChange={handlePeriodUnit}
+            //     disabled={onlyPreview}
+            //   />
+            // )
+          }
         </>
       ),
     },

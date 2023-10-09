@@ -48,7 +48,7 @@ export const Settings = () => {
 
   return (
     <>
-      <PageTitle title="Settings" icon={<IconCog />} />
+      <PageTitle hideOrgPicker title="Settings" icon={<IconCog />} />
       <Tabs
         activeTab={activeTab}
         onTabClick={handleClick}

@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styles } from './NodeLauncher.styles';
 import { useEffect, useState } from 'react';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
@@ -34,7 +34,15 @@ import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
-import { billingSelectors, PaymentRequired } from '@modules/billing';
+import {
+  billingAtoms,
+  billingSelectors,
+  ItemPriceSimple,
+  matchSKU,
+  PaymentRequired,
+  SubscriptionActivation,
+} from '@modules/billing';
+import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -59,21 +67,33 @@ export type CreateNodeParams = {
   deniedIps: FilteredIpAddr[];
 };
 
-export const NodeLauncher = () => {
+type NodeLauncherProps = {
+  itemPrices: ItemPriceSimple[];
+};
+
+type NodeLauncherView =
+  | 'launch-node'
+  | 'payment-required'
+  | 'confirm-subscription';
+
+export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   const router = useRouter();
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
 
+  const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
+  const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
+  const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
 
   const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
 
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
   const [isCreating, setIsCreating] = useState<boolean>(false);
-  const [activeView, setActiveView] = useState<'view' | 'action'>('view');
+  const [activeView, setActiveView] = useState<NodeLauncherView>('launch-node');
 
   const [selectedNodeType, setSelectedNodeType] =
     useState<BlockchainNodeType>();
@@ -221,9 +241,14 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
-    if (!hasPaymentMethod) {
+    if (!hasPaymentMethod || !hasSubscription) {
       setIsCreating(true);
-      setActiveView('action');
+
+      const newActiveView: NodeLauncherView = !hasPaymentMethod
+        ? 'payment-required'
+        : 'confirm-subscription';
+      setActiveView(newActiveView);
+
       setFulfilRequirements(false);
       return;
     }
@@ -264,13 +289,21 @@ export const NodeLauncher = () => {
     );
   };
 
-  const handleHiddingPortal = () => setActiveView('view');
+  const handleHiddingPortal = () => setActiveView('launch-node');
   const handleCancelPayment = () => {
-    setActiveView('view');
+    setActiveView('launch-node');
     setIsCreating(false);
   };
   const handleSubmitPayment = () => {
-    setActiveView('view');
+    const newActiveView: NodeLauncherView = hasSubscription
+      ? 'launch-node'
+      : 'confirm-subscription';
+    setActiveView(newActiveView);
+
+    if (hasSubscription) setFulfilRequirements(true);
+  };
+  const handleActivateSubscription = () => {
+    setActiveView('launch-node');
     setFulfilRequirements(true);
   };
 
@@ -288,6 +321,13 @@ export const NodeLauncher = () => {
     if (!activeNodeType) return;
 
     const sortedVersions = sortVersions(activeNodeType.versions);
+
+    const nodeSKU = matchSKU('node', {
+      blockchain: activeBlockchain,
+      node: node,
+    });
+
+    setSelectedSKU(nodeSKU);
 
     setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
     setSelectedVersion(sortedVersions[0]);
@@ -338,6 +378,10 @@ export const NodeLauncher = () => {
     if (fulfilRequirements) handleNodeCreation();
   }, [fulfilRequirements]);
 
+  useEffect(() => {
+    setItemPrices(itemPrices);
+  }, [itemPrices]);
+
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
@@ -386,12 +430,18 @@ export const NodeLauncher = () => {
           />
         )}
       </div>
-      {activeView === 'action' && (
+      {activeView === 'payment-required' && (
         <PaymentRequired
           warningMessage="Creating a node requires a payment method."
           handleCancel={handleCancelPayment}
           handleSubmit={handleSubmitPayment}
           handleHide={handleHiddingPortal}
+        />
+      )}
+      {activeView === 'confirm-subscription' && (
+        <SubscriptionActivation
+          handleSubmit={handleActivateSubscription}
+          handleHide={handleCancelPayment}
         />
       )}
     </>

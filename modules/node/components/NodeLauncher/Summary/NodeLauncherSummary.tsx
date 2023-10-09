@@ -4,13 +4,21 @@ import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { FormHeader, FormLabel, HostSelect, Tooltip } from '@shared/components';
+import {
+  FormHeader,
+  FormLabel,
+  HostSelect,
+  Pricing,
+  Tooltip,
+} from '@shared/components';
 import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { useRecoilValue } from 'recoil';
+import { billingSelectors } from '@modules/billing';
 
 type NodeLauncherSummaryProps = {
   serverError: string;
@@ -48,6 +56,7 @@ export const NodeLauncherSummary = ({
   const { blockchains } = useGetBlockchains();
 
   const { blockchainId, nodeType, properties } = nodeLauncherState;
+  const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
 
   return (
     <div css={styles.wrapper}>
@@ -146,6 +155,10 @@ export const NodeLauncherSummary = ({
           </>
         )}
       </div>
+
+      <FormLabel>Pricing</FormLabel>
+      <Pricing itemPrice={itemPrice} />
+
       <div css={styles.buttons}>
         {!canAddNode && (
           <Tooltip

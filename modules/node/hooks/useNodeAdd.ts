@@ -44,18 +44,18 @@ export const useNodeAdd = () => {
     console.log('createNodeRequest', nodeRequest);
 
     try {
-      const response: Node = await nodeClient.createNode(nodeRequest);
-
       try {
         await updateSubscriptionItems({
           type: UpdateSubscriptionAction.ADD_NODE,
-          payload: { node: response },
+          payload: { node: nodeRequest },
         });
       } catch (error: any) {
         const errorMessage = generateError(error);
         onError(errorMessage);
         return;
       }
+
+      const response: Node = await nodeClient.createNode(nodeRequest);
 
       // Update organization node count
       const activeOrganization = organizations.find(
