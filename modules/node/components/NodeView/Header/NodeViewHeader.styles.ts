@@ -14,6 +14,7 @@ export const styles = {
     @media ${breakpoints.toLrg} {
       flex-direction: column;
       align-items: flex-start;
+      margin-bottom: 16px;
       padding: 20px 0;
       min-height: auto;
     }
@@ -61,7 +62,7 @@ export const styles = {
     overflow: hidden;
     text-overflow: ellipsis;
   `,
-  blockchainIcon: (theme: ITheme) => css`
+  blockchainIcon: css`
     display: grid;
     place-items: center;
     border-radius: 50%;
