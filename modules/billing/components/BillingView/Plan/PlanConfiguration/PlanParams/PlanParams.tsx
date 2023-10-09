@@ -1,18 +1,16 @@
 import { ChangeEvent } from 'react';
 import { useRecoilValue } from 'recoil';
-import { formatters } from '@shared/index';
 import { RadioButton, RadioButtonGroup } from '@shared/components';
 import {
   BILLING_PERIOD,
+  PlanParamsInfo,
   billingSelectors,
-  calcNextRenewDate,
 } from '@modules/billing';
 import { styles } from './PlanParams.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { flex } from 'styles/utils.flex.styles';
 
 type PlanParamsProps = {
-  periodUnit?: string;
+  periodUnit: string;
   handlePeriodUnit?: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -45,17 +43,7 @@ export const PlanParams = ({
             </RadioButtonGroup>
           </div>
         )}
-      {periodUnit && (
-        <div css={spacing.bottom.large}>
-          <h3 css={styles.headline}>Auto renew</h3>
-          <div css={[flex.display.flex, flex.justify.between]}>
-            <p>
-              Your subscription will automatically renew on{' '}
-              {formatters.formatDate(calcNextRenewDate(periodUnit))}
-            </p>
-          </div>
-        </div>
-      )}
+      <PlanParamsInfo periodUnit={periodUnit} />
     </>
   );
 };
