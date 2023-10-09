@@ -9,8 +9,10 @@ import {
   useSubscription,
   billingSelectors,
   usePaymentMethods,
-  PlanParams,
+  // PlanParams,
   PaymentMethodsDropdown,
+  PlanParamsInfo,
+  DEFAULT_BILLING_PERIOD,
 } from '@modules/billing';
 import {
   Alert,
@@ -19,8 +21,7 @@ import {
   List,
   TableSkeleton,
 } from '@shared/components';
-import { formatters } from '@shared/index';
-import { flex } from 'styles/utils.flex.styles';
+import { Total } from '@shared/components';
 import { spacing, divider } from 'styles/utils.spacing.styles';
 import { styles } from './PlanConfiguration.styles';
 import { containers } from 'styles/containers.styles';
@@ -41,7 +42,7 @@ export const PlanConfiguration = ({
 
   const customer = useRecoilValue(billingSelectors.customer);
 
-  const [periodUnit, setPeriodUnit] = useState<string>('year');
+  const [periodUnit, setPeriodUnit] = useState<string>(DEFAULT_BILLING_PERIOD);
   const [paymentMethodId, setPaymentMethodId] = useState<string | undefined>(
     customer?.primary_payment_source_id,
   );
@@ -50,10 +51,10 @@ export const PlanConfiguration = ({
     (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
   );
 
-  const handlePeriodUnit = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setPeriodUnit(value);
-  };
+  // const handlePeriodUnit = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = e.target;
+  //   setPeriodUnit(value);
+  // };
 
   const handlePaymentMethod = (paymentMethod: PaymentSource) => {
     setPaymentMethodId(paymentMethod.id);
@@ -78,7 +79,8 @@ export const PlanConfiguration = ({
 
       <div css={[divider, spacing.bottom.medium]}></div>
 
-      <PlanParams periodUnit={periodUnit} handlePeriodUnit={handlePeriodUnit} />
+      {/* <PlanParams periodUnit={periodUnit} handlePeriodUnit={handlePeriodUnit} /> */}
+      <PlanParamsInfo periodUnit={periodUnit} />
 
       <div css={spacing.bottom.medium}>
         <h3 css={styles.headline}>Payment Method</h3>
@@ -97,12 +99,7 @@ export const PlanConfiguration = ({
 
       <div css={[divider, spacing.bottom.medium]}></div>
 
-      <div css={[flex.display.flex, flex.justify.between]}>
-        <p css={styles.headline}>Total</p>
-        <p css={styles.totalPrice}>
-          {formatters.formatCurrency(activeItemPrice?.price!)}
-        </p>
-      </div>
+      <Total total={activeItemPrice?.price!} />
 
       {(!paymentMethodId || !paymentMethods.length) && (
         <div css={spacing.top.medium}>

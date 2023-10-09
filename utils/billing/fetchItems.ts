@@ -1,6 +1,7 @@
 import { _item, _item_price } from 'chargebee-typescript';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import { chargebee } from './chargebeeInstance';
+import { ItemPriceSimple } from '@modules/billing';
 
 export async function fetchItems(id: string): Promise<{
   item: Item | null;
@@ -15,6 +16,40 @@ export async function fetchItems(id: string): Promise<{
   const itemPrices: ItemPrice[] = await listItemPrices(itemPricesParams);
 
   return { item, itemPrices };
+}
+
+// TOOD: include nextOffset so all addons can be read
+export async function fetchItemPrices() {
+  const itemPricesParams: _item_price.item_price_list_params = {
+    limit: 100,
+    item_type: { is: 'addon' },
+    item_id: { starts_with: 'FMN' },
+  };
+
+  const itemPricesMonthly: ItemPrice[] = await listItemPrices({
+    ...itemPricesParams,
+    period_unit: { is: 'month' },
+  });
+
+  const itemPricesYearly: ItemPrice[] = await listItemPrices({
+    ...itemPricesParams,
+    period_unit: { is: 'year' },
+  });
+
+  const itemPrices: ItemPriceSimple[] = [
+    ...itemPricesMonthly,
+    ...itemPricesYearly,
+  ].map((itemPrice: ItemPrice) => ({
+    id: itemPrice.id,
+    item_id: itemPrice.item_id,
+    price: itemPrice.price,
+    currency_code: itemPrice.currency_code,
+    period_unit: itemPrice.period_unit,
+  }));
+
+  return {
+    itemPrices,
+  };
 }
 
 export async function getItem(id: string): Promise<Item | null> {

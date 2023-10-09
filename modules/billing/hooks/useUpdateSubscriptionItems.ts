@@ -1,19 +1,16 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
-import { ItemPrice, Subscription } from 'chargebee-typescript/lib/resources';
+import { Subscription } from 'chargebee-typescript/lib/resources';
+import { useSWRConfig } from 'swr';
 import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
   billingSelectors,
-  useItems,
   useSubscription,
-  matchSKU,
   fetchBilling,
+  usePromoCode,
 } from '@modules/billing';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { blockchainsAtoms } from '@modules/node';
-import { useSWRConfig } from 'swr';
 
 export enum UpdateSubscriptionAction {
   ADD_NODE = 'ADD_NODE',
@@ -33,14 +30,12 @@ interface IUpdateSubscriptionHook {
 export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
   const { mutate } = useSWRConfig();
   const setSubscription = useSetRecoilState(billingSelectors.subscription);
-
-  const { provideSubscription } = useSubscription();
+  const selectedItemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
 
-  const { getItemPrices } = useItems();
-
-  const blockchains = useRecoilValue(blockchainsAtoms.blockchains);
+  const { provideSubscription } = useSubscription();
+  const { promoCode, resetPromoCode } = usePromoCode();
 
   const updateSubscriptionItems = async (action: {
     type: UpdateSubscriptionAction;
@@ -49,32 +44,13 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
     setSubscriptionLoadingState('initializing');
     const subscription = await provideSubscription();
 
-    const { type, payload } = action;
-    const { node, host } = payload;
+    const { type } = action;
 
     const params: _subscription.update_for_items_params = {};
     const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
       [];
 
-    let SKU: string = '';
-    if (node) {
-      const blockchain = blockchains.find(
-        (blockchain: Blockchain) => blockchain.id === node?.blockchainId,
-      );
-      SKU = matchSKU('node', { blockchain, node: node! });
-    } else if (host) {
-      SKU = matchSKU('host', { host: host! });
-    }
-
-    const billingPeriod = subscription?.billing_period_unit;
-
-    const itemPriceParams = {
-      id: SKU,
-      periodUnit: billingPeriod,
-    };
-
-    const itemPrices: ItemPrice[] = await getItemPrices(itemPriceParams);
-    const itemPriceID: string = itemPrices?.length ? itemPrices[0].id : '';
+    const itemPriceID: string = selectedItemPrice ? selectedItemPrice?.id : '';
 
     const subscriptionItem: SubscriptionItem | undefined =
       subscription?.subscription_items?.find(
@@ -123,6 +99,14 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
 
     params.subscription_items = subscriptionItems;
 
+    if (promoCode) {
+      const promoCodeValue = promoCode.couponCode
+        ? promoCode.couponCode?.code
+        : promoCode.coupon?.id;
+
+      if (promoCodeValue) params.coupon_ids = [promoCodeValue];
+    }
+
     try {
       const data: Subscription = await fetchBilling(
         BILLING_API_ROUTES.subscriptions.update,
@@ -146,6 +130,7 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
       });
 
       setSubscription(data);
+      resetPromoCode();
     } catch (error: any) {
       console.log('UpdateSubscription Error', error);
       throw error;

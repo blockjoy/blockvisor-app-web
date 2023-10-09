@@ -32,12 +32,14 @@ export * from './components/BillingView/PaymentMethods/PaymentPreview/PaymentPre
 
 export * from './components/BillingView/Plan/Plan';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanParams/PlanParams';
+export * from './components/BillingView/Plan/PlanConfiguration/PlanParams/PlanParamsInfo';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanConfiguration';
 export * from './components/BillingView/Plan/PlanItem/PlanItem';
 
 export * from './components/BillingView/Subscription/Subscription';
 export * from './components/BillingView/Subscription/SubscriptionActions/SubscriptionActions';
 export * from './components/BillingView/Subscription/SubscriptionCancellation/SubscriptionCancellation';
+export * from './components/BillingView/Subscription/SubscriptionActivation/SubscriptionActivation';
 export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionInfo/SubscriptionInfo';
 export * from './components/BillingView/Subscription/SubscriptionPreview/SubscriptionPreview';
 
@@ -62,11 +64,11 @@ export * from './hooks/useCustomer';
 export * from './hooks/useEstimates';
 export * from './hooks/useInvoice';
 export * from './hooks/useInvoices';
-export * from './hooks/useItems';
 export * from './hooks/usePayment';
 export * from './hooks/usePaymentMethod';
 export * from './hooks/usePaymentMethods';
 export * from './hooks/usePaymentMethodForm';
+export * from './hooks/usePromoCode';
 export * from './hooks/useSubscription';
 export * from './hooks/useSubscriptionLifecycle';
 export * from './hooks/useUpdateSubscriptionItems';
@@ -84,6 +86,7 @@ export * from './utils/generateError';
 export * from './utils/generateUpdateSubscriptionParams';
 export * from './utils/getPaymentMethodIcon';
 export * from './utils/getStatuses';
+export * from './utils/isAppliedPromoCode';
 export * from './utils/mapBillingContactsToRows';
 export * from './utils/mapCardToDetails';
 export * from './utils/mapEstimatesToRows';

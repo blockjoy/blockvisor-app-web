@@ -1,3 +1,9 @@
+import {
+  Coupon,
+  CouponCode,
+  ItemPrice,
+} from 'chargebee-typescript/lib/resources';
+
 export enum CreditCardTypes {
   visa = 'Visa',
   mastercard = 'MasterCard',
@@ -27,3 +33,13 @@ export enum InvoiceStatus {
   voided = 'voided',
   pending = 'pending',
 }
+
+export type ItemPriceSimple = Pick<
+  ItemPrice,
+  'id' | 'item_id' | 'price' | 'currency_code' | 'period_unit'
+>;
+
+export type PromoCode = {
+  coupon: Coupon | null;
+  couponCode: CouponCode | null;
+};

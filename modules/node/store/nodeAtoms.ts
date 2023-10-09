@@ -46,6 +46,11 @@ const isLoadingActiveNode = atom<LoadingState>({
   default: 'initializing',
 });
 
+const selectedSKU = atom<string>({
+  key: 'node.sku',
+  default: '',
+});
+
 const isFiltersOpen = atom<boolean>({
   key: 'node.isFiltersOpen',
   default: false,
@@ -241,6 +246,7 @@ export const nodeAtoms = {
   nodeCount,
   isLoading,
   isLoadingActiveNode,
+  selectedSKU,
   isFiltersOpen,
   activeListType,
   filtersHealth,
