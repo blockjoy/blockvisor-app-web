@@ -3,12 +3,13 @@ import { _item_price } from 'chargebee-typescript';
 import { ItemPrice } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
+  ItemPriceSimple,
   billingAtoms,
   fetchBilling,
 } from '@modules/billing';
 
 interface IItemsHook {
-  itemPrices: ItemPrice[] | null;
+  itemPrices: ItemPriceSimple[] | ItemPrice[] | null;
   itemPricesLoadingState: LoadingState;
   getItemPrices: (params: {
     id: string;

@@ -5,8 +5,9 @@ import {
   PaymentSource,
   Subscription,
 } from 'chargebee-typescript/lib/resources';
-import { billingAtoms } from '@modules/billing';
+import { ItemPriceSimple, billingAtoms } from '@modules/billing';
 import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
+import { nodeAtoms } from '@modules/node';
 
 const billingId = selector<string | null>({
   key: 'billing.identity.id',
@@ -85,6 +86,28 @@ const subscription = selector<Subscription | null>({
     })),
 });
 
+const selectedItemPrice = selector<ItemPriceSimple | null>({
+  key: 'billing.selectedItemPrice',
+  get: ({ get }) => {
+    const itemPrices = get(billingAtoms.itemPrices);
+    if (!itemPrices?.length) return null;
+
+    const selectedSKU = get(nodeAtoms.selectedSKU);
+    if (!selectedSKU) return null;
+
+    const subscriptionVal = get(subscription);
+    const billingPeriodUnit = subscriptionVal?.billing_period_unit ?? 'month';
+
+    const itemPrice = itemPrices.find(
+      (itemPrice: ItemPriceSimple) =>
+        itemPrice.item_id === selectedSKU &&
+        itemPrice.period_unit === billingPeriodUnit,
+    );
+
+    return itemPrice || null;
+  },
+});
+
 const hasBillingAddress = selector<boolean>({
   key: 'billing.hasBillingAddress',
   get: ({ get }) => {
@@ -124,6 +147,8 @@ export const billingSelectors = {
 
   customer,
   subscription,
+
+  selectedItemPrice,
 
   billingAddress,
   paymentMethodById,

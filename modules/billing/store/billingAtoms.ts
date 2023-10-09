@@ -3,12 +3,27 @@ import {
   Customer,
   Estimate,
   Invoice,
-  ItemPrice,
   PaymentSource,
   Subscription,
 } from 'chargebee-typescript/lib/resources';
 import { localStorageEffect } from 'utils/store/persist';
 import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
+import { ItemPriceSimple, PromoCode } from '@modules/billing';
+
+const promoCode = atom<PromoCode | null>({
+  key: 'billing.promoCode',
+  default: null,
+});
+
+const promoCodeError = atom<string | null>({
+  key: 'billing.promoCode.error',
+  default: null,
+});
+
+const promoCodeLoadingState = atom<LoadingState>({
+  key: 'billing.promoCode.loading',
+  default: 'finished',
+});
 
 const billing = atom<{
   identity: {
@@ -32,6 +47,16 @@ const billing = atom<{
 
 const customerLoadingState = atom<LoadingState>({
   key: 'billing.customer.loadingState',
+  default: 'finished',
+});
+
+const itemPrices = atom<ItemPriceSimple[] | null>({
+  key: 'billing.items.prices',
+  default: null,
+});
+
+const itemPricesLoadingState = atom<LoadingState>({
+  key: 'billing.items.prices.loadingState',
   default: 'finished',
 });
 
@@ -106,16 +131,6 @@ const preloadInvoices = atom<number>({
   default: 0,
 });
 
-const itemPrices = atom<ItemPrice[] | null>({
-  key: 'billing.items.prices',
-  default: null,
-});
-
-const itemPricesLoadingState = atom<LoadingState>({
-  key: 'billing.items.prices.loadingState',
-  default: 'initializing',
-});
-
 const subscriptionLoadingState = atom<LoadingState>({
   key: 'billing.subscription.loadingState',
   default: 'initializing',
@@ -127,6 +142,10 @@ const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
 });
 
 export const billingAtoms = {
+  promoCode,
+  promoCodeError,
+  promoCodeLoadingState,
+
   billing,
 
   billingAddressLoadingState,
@@ -146,8 +165,8 @@ export const billingAtoms = {
   preloadInvoices,
 
   paymentMethod,
-  paymentMethodLoadingState,
   paymentMethodError,
+  paymentMethodLoadingState,
 
   paymentMethods,
   paymentMethodsLoadingState,

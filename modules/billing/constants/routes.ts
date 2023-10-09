@@ -1,6 +1,12 @@
 const BILLING_API_ROUTE = '/api/billing';
 
 export const BILLING_API_ROUTES = {
+  coupons: {
+    get: `${BILLING_API_ROUTE}/coupons/get`,
+    code: {
+      get: `${BILLING_API_ROUTE}/coupons/code/get`,
+    },
+  },
   customer: {
     get: `${BILLING_API_ROUTE}/customers/get`,
     create: `${BILLING_API_ROUTE}/customers/create`,
