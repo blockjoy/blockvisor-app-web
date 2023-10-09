@@ -85,7 +85,7 @@ export function useSignIn() {
         await declineInvitation(invitationId, () => null);
       }
     } catch (err) {
-      console.log("loginError: Couldn't retrieve user data", err);
+      console.log('loginError', err);
     }
   };
 

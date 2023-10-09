@@ -5,7 +5,12 @@ import {
   InvitationStatus,
 } from '../library/blockjoy/v1/invitation';
 
-import { authClient, getOptions, handleError } from '@modules/grpc';
+import {
+  authClient,
+  getIdentity,
+  getOptions,
+  handleError,
+} from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 
 class InvitationClient {
@@ -33,20 +38,20 @@ class InvitationClient {
   }
 
   async acceptInvitation(invitationId?: string): Promise<void> {
+    if (getIdentity().accessToken) await authClient.refreshToken();
     try {
-      await authClient.refreshToken();
       await this.client.accept({ invitationId }, getOptions());
     } catch (err) {
-      return handleError(err);
+      return handleError(err, false);
     }
   }
 
   async declineInvitation(invitationId: string, token?: string): Promise<void> {
-    if (!token) await authClient.refreshToken();
+    if (getIdentity().accessToken) await authClient.refreshToken();
     try {
       await this.client.decline({ invitationId }, getOptions(token));
     } catch (err) {
-      return handleError(err);
+      return handleError(err, false);
     }
   }
 
