@@ -9,6 +9,7 @@ export * from './HostOs/HostOs';
 export * from './Layout/Layout';
 export * from './Page/PageHeader';
 export * from './Page/PageSection';
+export * from './Page/PageSpinner/PageSpinner';
 export * from './Page/PageTitle';
 export * from './NetdataDashboard/NetdataDashboard';
 export * from './NodeStatus/NodeStatus';

@@ -11,6 +11,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { css } from '@emotion/react';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
+import { getNodeJobProgress } from './getNodeJobProgress';
 
 export const mapNodeListToRows = (
   nodeList?: Node[],
@@ -49,24 +50,29 @@ export const mapNodeListToRows = (
     },
   ];
 
-  const rows = nodeList?.map((node: Node) => ({
-    key: node.id,
-    isClickable:
-      node.status !== NodeStatusEnum.NODE_STATUS_PROVISIONING ||
-      hasPermission('node-admin-get'),
-    cells: [
-      {
-        key: '1',
-        component: (
-          <div style={{ marginTop: '4px', marginLeft: '8px' }}>
-            <BlockchainIcon size="36px" blockchainName={node.blockchainName} />
-          </div>
-        ),
-      },
-      {
-        key: '2',
-        component: (
-          <>
+  const rows = nodeList?.map((node: Node) => {
+    const progress = getNodeJobProgress(node);
+
+    return {
+      key: node.id,
+      isClickable:
+        node.status !== NodeStatusEnum.NODE_STATUS_PROVISIONING ||
+        hasPermission('node-admin-get'),
+      cells: [
+        {
+          key: '1',
+          component: (
+            <div style={{ marginTop: '4px', marginLeft: '8px' }}>
+              <BlockchainIcon
+                size="36px"
+                blockchainName={node.blockchainName}
+              />
+            </div>
+          ),
+        },
+        {
+          key: '2',
+          component: (
             <TableBlock
               id={`${node.blockchainName} ${convertNodeTypeToName(
                 node.nodeType,
@@ -74,56 +80,56 @@ export const mapNodeListToRows = (
               name={node.name}
               address={node?.ip!}
             />
-          </>
-        ),
-      },
-      {
-        key: '3',
-        component: (
-          <span style={{ fontSize: '14px', whiteSpace: 'nowrap' }}>
-            {formatDistanceToNow(new Date(node.createdAt!), {
-              addSuffix: true,
-            })}
-          </span>
-        ),
-      },
-      {
-        key: '4',
-        component: (
-          <NodeStatus
-            status={node.status}
-            loadingCurrent={node?.dataSyncProgress?.current}
-            loadingTotal={node?.dataSyncProgress?.total}
-          />
-        ),
-      },
-      {
-        key: '5',
-        component: node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING &&
-          !hasPermission('node-admin-get') && (
-            <Button
-              css={
-                (spacing.left.large,
-                css`
-                  width: 40px;
-                `)
-              }
-              style="icon"
-              tooltip="Delete"
-              onClick={() =>
-                !!onDeleteClick
-                  ? onDeleteClick(node.id, node.name, node.hostId)
-                  : null
-              }
-            >
-              <SvgIcon isDefaultColor>
-                <IconDelete />
-              </SvgIcon>
-            </Button>
           ),
-      },
-    ],
-  }));
+        },
+        {
+          key: '3',
+          component: (
+            <span style={{ fontSize: '14px', whiteSpace: 'nowrap' }}>
+              {formatDistanceToNow(new Date(node.createdAt!), {
+                addSuffix: true,
+              })}
+            </span>
+          ),
+        },
+        {
+          key: '4',
+          component: (
+            <NodeStatus
+              status={node.status}
+              loadingCurrent={progress?.current}
+              loadingTotal={progress?.total}
+            />
+          ),
+        },
+        {
+          key: '5',
+          component: node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING &&
+            !hasPermission('node-admin-get') && (
+              <Button
+                css={
+                  (spacing.left.large,
+                  css`
+                    width: 40px;
+                  `)
+                }
+                style="icon"
+                tooltip="Delete"
+                onClick={() =>
+                  !!onDeleteClick
+                    ? onDeleteClick(node.id, node.name, node.hostId)
+                    : null
+                }
+              >
+                <SvgIcon isDefaultColor>
+                  <IconDelete />
+                </SvgIcon>
+              </Button>
+            ),
+        },
+      ],
+    };
+  });
 
   return {
     rows,

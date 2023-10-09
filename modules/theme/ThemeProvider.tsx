@@ -31,6 +31,27 @@ const globalStyles = (theme: ITheme) => css`
       }
     }
 
+    p a {
+      position: relative;
+      color: ${theme.colorText};
+    }
+
+    p a::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: ${theme.colorText};
+      opacity: 0.5;
+      transition: 0.3s;
+    }
+
+    p a:hover::after {
+      opacity: 1;
+    }
+
     /* apexcharts */
     & .apexcharts-tooltip.apexcharts-theme-light {
       padding: 16px;

@@ -23,8 +23,8 @@ type RegisterForm = {
 };
 
 const getError = (message: string) => {
-  // temporary getError method based on message
-  if (message?.toLowerCase()?.includes('duplicate')) {
+  // TODO: Have better error messages / codes
+  if (message?.toLowerCase()?.includes('exists')) {
     return 'Email address already registered';
   } else {
     return 'Error creating account, please contact our support team.';
@@ -33,7 +33,7 @@ const getError = (message: string) => {
 
 export function RegisterForm() {
   const router = useRouter();
-  const { token } = router.query;
+  const { invited, token } = router.query;
 
   const form = useForm<RegisterForm>({
     mode: 'all',
@@ -56,7 +56,6 @@ export function RegisterForm() {
           lastName,
           email,
           password,
-          passwordConfirmation: password,
         },
         token as string,
       );
@@ -88,7 +87,7 @@ export function RegisterForm() {
 
   return (
     <>
-      {token && (
+      {invited && (
         <Alert isSuccess>
           You've been invited to a BlockJoy organization. Please create an
           account to accept.
@@ -103,22 +102,6 @@ export function RegisterForm() {
                 tabIndex={1}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
-                name="email"
-                placeholder="Email"
-                validationOptions={{
-                  required: 'Your email address is required',
-                  pattern: {
-                    value: isValidEmail(),
-                    message: 'Email format is not correct',
-                  },
-                }}
-              />
-            </li>
-            <li css={[spacing.bottom.mediumSmall]}>
-              <Input
-                tabIndex={2}
-                labelStyles={[display.visuallyHidden]}
-                disabled={loading}
                 name="firstName"
                 placeholder="First name"
                 validationOptions={{
@@ -128,13 +111,29 @@ export function RegisterForm() {
             </li>
             <li css={[spacing.bottom.mediumSmall]}>
               <Input
-                tabIndex={3}
+                tabIndex={2}
                 labelStyles={[display.visuallyHidden]}
                 disabled={loading}
                 name="lastName"
                 placeholder="Last name"
                 validationOptions={{
                   required: 'Your last name is required',
+                }}
+              />
+            </li>
+            <li css={[spacing.bottom.mediumSmall]}>
+              <Input
+                tabIndex={3}
+                labelStyles={[display.visuallyHidden]}
+                disabled={loading}
+                name="email"
+                placeholder="Email"
+                validationOptions={{
+                  required: 'Your email address is required',
+                  pattern: {
+                    value: isValidEmail(),
+                    message: 'Email format is not correct',
+                  },
                 }}
               />
             </li>

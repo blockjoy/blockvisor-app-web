@@ -68,7 +68,7 @@ export function Button({
 
   const ButtonComponent = () => (
     <button
-      disabled={disabled}
+      disabled={disabled || loading}
       {...rest}
       id={id}
       type={type}

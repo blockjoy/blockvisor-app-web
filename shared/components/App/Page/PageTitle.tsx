@@ -1,9 +1,4 @@
-import {
-  Skeleton,
-  Copy,
-  SvgIcon,
-  OrganizationPicker,
-} from '@shared/components';
+import { Copy, SvgIcon, OrganizationPicker } from '@shared/components';
 import { ProfileDropdown } from './ProfileDropdown/ProfileDropdown';
 import { FC, ReactNode } from 'react';
 import { wrapper } from 'styles/wrapper.styles';
@@ -59,7 +54,7 @@ export const PageTitle: FC<Props> = ({
             <>
               <span css={styles.separator}>/</span>
               <p css={styles.childTitle}>{childTitle}</p>
-              {canCopyChild && <Copy value={title} hideTooltip />}
+              {canCopyChild && <Copy value={childTitle} hideTooltip />}
             </>
           )}
         </div>

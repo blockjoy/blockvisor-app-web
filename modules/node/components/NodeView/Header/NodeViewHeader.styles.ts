@@ -62,7 +62,7 @@ export const styles = {
     overflow: hidden;
     text-overflow: ellipsis;
   `,
-  blockchainIcon: (theme: ITheme) => css`
+  blockchainIcon: css`
     display: grid;
     place-items: center;
     border-radius: 50%;

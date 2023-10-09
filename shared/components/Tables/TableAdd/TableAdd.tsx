@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Button, SvgIcon } from '@shared/components';
 import { checkIfValidEmail } from '@shared/utils/validation';
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useRef, useState } from 'react';
 import { styles } from './TableAdd.styles';
 import IconClose from '@public/assets/icons/common/Close.svg';
 
@@ -39,6 +39,8 @@ export const TableAdd = ({
       await onSubmit(value);
       setValue('');
       setIsSubmitted(false);
+      setIsFocused(false);
+      inputRef.current?.blur();
     }
   };
 

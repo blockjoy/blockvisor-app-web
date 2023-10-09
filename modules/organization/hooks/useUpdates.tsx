@@ -22,11 +22,11 @@ export const useUpdates = () => {
   const router = useRouter();
 
   const { modifyOrganization } = useUpdateOrganization();
-  const { removeOrganization } = useDeleteOrganization();
   const { updateMembersList } = useUpdateMembers();
   const { defaultOrganization, setDefaultOrganization } =
     useDefaultOrganization();
-  const { organizations, addToOrganizations } = useGetOrganizations();
+  const { organizations, removeFromOrganizations, addToOrganizations } =
+    useGetOrganizations();
 
   const kickFromOrganization = () => {
     const newOrg = organizations[0];
@@ -76,8 +76,7 @@ export const useUpdates = () => {
 
         updateMembersList(org!);
 
-        // TODO: Investigate why updatedBy is wrong
-        //if (updatedBy === user?.id) break;
+        if (updatedBy === user?.id) break;
 
         const isKicked = !org?.members.find((m) => m.userId === user?.id);
 
@@ -101,7 +100,7 @@ export const useUpdates = () => {
         const { orgId, deletedBy, deletedByName }: OrgDeleted =
           payloadDeserialized.deleted!;
 
-        removeOrganization(orgId);
+        removeFromOrganizations(orgId);
 
         if (deletedBy === user?.id) break;
 

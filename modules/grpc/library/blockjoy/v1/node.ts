@@ -108,6 +108,22 @@ export enum UiType {
   UNRECOGNIZED = -1,
 }
 
+/** Flags describing a job possible states. */
+export enum NodeJobStatus {
+  NODE_JOB_STATUS_UNSPECIFIED = 0,
+  /** NODE_JOB_STATUS_PENDING - The job has not started yet. */
+  NODE_JOB_STATUS_PENDING = 1,
+  /** NODE_JOB_STATUS_RUNNING - The job is current being executed. */
+  NODE_JOB_STATUS_RUNNING = 2,
+  /** NODE_JOB_STATUS_FINISHED - The job has successfully finished. */
+  NODE_JOB_STATUS_FINISHED = 3,
+  /** NODE_JOB_STATUS_FAILED - The job has unsuccessfully finished. */
+  NODE_JOB_STATUS_FAILED = 4,
+  /** NODE_JOB_STATUS_STOPPED - The job was interrupted. */
+  NODE_JOB_STATUS_STOPPED = 5,
+  UNRECOGNIZED = -1,
+}
+
 /** Blockchain node representation */
 export interface Node {
   id: string;
@@ -165,8 +181,14 @@ export interface Node {
    * The place where the blockchain data directory should be mounted on the
    * host.
    */
-  dataDirectoryMountpoint?: string | undefined;
-  dataSyncProgress?: DataSyncProgress | undefined;
+  dataDirectoryMountpoint?:
+    | string
+    | undefined;
+  /**
+   * The running node on the host will consist of a couple of processes. These
+   * may individually start, stop and fail.
+   */
+  jobs: NodeJob[];
 }
 
 /** This message is used to create a new node. */
@@ -416,16 +438,65 @@ export interface NodeProperty {
   value: string;
 }
 
-export interface DataSyncProgress {
-  /** The progress of node data sync operation: total units to sync. */
+/**
+ * A job is a process running on the host that is necessary for the operation of
+ * a node. Examples here are downloading the chain data or running the
+ * blockchain node process.
+ */
+export interface NodeJob {
+  /** A name to identify this job by. */
+  name: string;
+  /** The status this job is currently in. */
+  status: NodeJobStatus;
+  /** If the process exited, then this field holds the unix-style exit code. */
+  exitCode?:
+    | number
+    | undefined;
+  /**
+   * A displayable message that the user might be able to read in order to
+   * further identify the current status of the job. For example, if the job has
+   * failed, an error message might be place here.
+   */
+  message?:
+    | string
+    | undefined;
+  /** A list of log lines with information about the current job. */
+  logs: string[];
+  /**
+   * This field contains the number of restarts that as happened since the last
+   * cut-off. This is _not_ guaranteed to be the number of restarts that has
+   * happened since the creation of this node. Rather, this number may be reset
+   * to zero periodically, or whenever the job triggers the state `FINISHED`.
+   */
+  restarts: number;
+  /**
+   * This message contains a couple of fields that together denote the progress
+   * towards completion of this job.
+   */
+  progress?: NodeJobProgress | undefined;
+}
+
+/**
+ * This message indicates the amount of progress a job has made towards its
+ * completion. Note that it is possible for a job to report an amount of
+ * progress without it also providing a total.
+ */
+export interface NodeJobProgress {
+  /**
+   * The total units of progress that need to be made in order to complete this
+   * job.
+   */
   total?:
     | number
     | undefined;
-  /** The progress of node data sync operation: units currently synced. */
+  /**
+   * The amount of units of progress that have been made towards the completion
+   * of this job.
+   */
   current?:
     | number
     | undefined;
-  /** The progress of node data sync operation: message to display to user. */
+  /** Any sort of message that is included with this job, */
   message?: string | undefined;
 }
 
@@ -462,7 +533,7 @@ function createBaseNode(): Node {
     denyIps: [],
     placement: undefined,
     dataDirectoryMountpoint: undefined,
-    dataSyncProgress: undefined,
+    jobs: [],
   };
 }
 
@@ -561,8 +632,8 @@ export const Node = {
     if (message.dataDirectoryMountpoint !== undefined) {
       writer.uint32(250).string(message.dataDirectoryMountpoint);
     }
-    if (message.dataSyncProgress !== undefined) {
-      DataSyncProgress.encode(message.dataSyncProgress, writer.uint32(258).fork()).ldelim();
+    for (const v of message.jobs) {
+      NodeJob.encode(v!, writer.uint32(266).fork()).ldelim();
     }
     return writer;
   },
@@ -791,12 +862,12 @@ export const Node = {
 
           message.dataDirectoryMountpoint = reader.string();
           continue;
-        case 32:
-          if (tag !== 258) {
+        case 33:
+          if (tag !== 266) {
             break;
           }
 
-          message.dataSyncProgress = DataSyncProgress.decode(reader, reader.uint32());
+          message.jobs.push(NodeJob.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -846,9 +917,7 @@ export const Node = {
       ? NodePlacement.fromPartial(object.placement)
       : undefined;
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
-    message.dataSyncProgress = (object.dataSyncProgress !== undefined && object.dataSyncProgress !== null)
-      ? DataSyncProgress.fromPartial(object.dataSyncProgress)
-      : undefined;
+    message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
     return message;
   },
 };
@@ -2167,47 +2236,161 @@ export const NodeProperty = {
   },
 };
 
-function createBaseDataSyncProgress(): DataSyncProgress {
-  return { total: undefined, current: undefined, message: undefined };
+function createBaseNodeJob(): NodeJob {
+  return { name: "", status: 0, exitCode: undefined, message: undefined, logs: [], restarts: 0, progress: undefined };
 }
 
-export const DataSyncProgress = {
-  encode(message: DataSyncProgress, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.total !== undefined) {
-      writer.uint32(256).uint32(message.total);
+export const NodeJob = {
+  encode(message: NodeJob, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
     }
-    if (message.current !== undefined) {
-      writer.uint32(264).uint32(message.current);
+    if (message.status !== 0) {
+      writer.uint32(16).int32(message.status);
+    }
+    if (message.exitCode !== undefined) {
+      writer.uint32(24).int32(message.exitCode);
     }
     if (message.message !== undefined) {
-      writer.uint32(274).string(message.message);
+      writer.uint32(34).string(message.message);
+    }
+    for (const v of message.logs) {
+      writer.uint32(42).string(v!);
+    }
+    if (message.restarts !== 0) {
+      writer.uint32(48).uint64(message.restarts);
+    }
+    if (message.progress !== undefined) {
+      NodeJobProgress.encode(message.progress, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DataSyncProgress {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeJob {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDataSyncProgress();
+    const message = createBaseNodeJob();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 32:
-          if (tag !== 256) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.exitCode = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.logs.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.restarts = longToNumber(reader.uint64() as Long);
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.progress = NodeJobProgress.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeJob>): NodeJob {
+    return NodeJob.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeJob>): NodeJob {
+    const message = createBaseNodeJob();
+    message.name = object.name ?? "";
+    message.status = object.status ?? 0;
+    message.exitCode = object.exitCode ?? undefined;
+    message.message = object.message ?? undefined;
+    message.logs = object.logs?.map((e) => e) || [];
+    message.restarts = object.restarts ?? 0;
+    message.progress = (object.progress !== undefined && object.progress !== null)
+      ? NodeJobProgress.fromPartial(object.progress)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeJobProgress(): NodeJobProgress {
+  return { total: undefined, current: undefined, message: undefined };
+}
+
+export const NodeJobProgress = {
+  encode(message: NodeJobProgress, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.total !== undefined) {
+      writer.uint32(8).uint32(message.total);
+    }
+    if (message.current !== undefined) {
+      writer.uint32(16).uint32(message.current);
+    }
+    if (message.message !== undefined) {
+      writer.uint32(26).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeJobProgress {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeJobProgress();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
             break;
           }
 
           message.total = reader.uint32();
           continue;
-        case 33:
-          if (tag !== 264) {
+        case 2:
+          if (tag !== 16) {
             break;
           }
 
           message.current = reader.uint32();
           continue;
-        case 34:
-          if (tag !== 274) {
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
@@ -2222,12 +2405,12 @@ export const DataSyncProgress = {
     return message;
   },
 
-  create(base?: DeepPartial<DataSyncProgress>): DataSyncProgress {
-    return DataSyncProgress.fromPartial(base ?? {});
+  create(base?: DeepPartial<NodeJobProgress>): NodeJobProgress {
+    return NodeJobProgress.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<DataSyncProgress>): DataSyncProgress {
-    const message = createBaseDataSyncProgress();
+  fromPartial(object: DeepPartial<NodeJobProgress>): NodeJobProgress {
+    const message = createBaseNodeJobProgress();
     message.total = object.total ?? undefined;
     message.current = object.current ?? undefined;
     message.message = object.message ?? undefined;

@@ -1,23 +1,17 @@
-import { RegisterForm } from '@modules/auth';
+import { RegisterFooter, RegisterForm } from '@modules/auth';
 import { Layout } from '@shared/components';
 import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const Register: NextPage = () => {
-  const router = useRouter();
-
-  const { token } = router.query;
+  useEffect(() => {
+    localStorage.removeItem('identity');
+  }, []);
 
   return (
-    <Layout
-      title={token ? 'Create Account' : 'Access Denied'}
-      overflow="visible"
-    >
-      {token ? (
-        <RegisterForm />
-      ) : (
-        <p>You need to be invited to start using BlockJoy.</p>
-      )}
+    <Layout title="Create Account" overflow="visible">
+      <RegisterForm />
+      <RegisterFooter />
     </Layout>
   );
 };

@@ -30,6 +30,10 @@ const IconAvalanche = dynamic(
   () => import(`@public/assets/icons/blockchain/Avalanche.svg`),
 );
 
+const IconAvalancheDfk = dynamic(
+  () => import(`@public/assets/icons/blockchain/Avalanche-DFK.svg`),
+);
+
 const IconBnB = dynamic(
   () => import(`@public/assets/icons/blockchain/BNB.svg`),
 );
@@ -48,6 +52,10 @@ const IconEthereum = dynamic(
 
 const IconErigon = dynamic(
   () => import(`@public/assets/icons/blockchain/Erigon.svg`),
+);
+
+const IconFantom = dynamic(
+  () => import(`@public/assets/icons/blockchain/Fantom.svg`),
 );
 
 const IconGnosis = dynamic(
@@ -121,6 +129,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'avalanche':
       Component = IconAvalanche;
       break;
+    case 'avalanche-dfk':
+      Component = IconAvalancheDfk;
+      break;
     case 'bnb':
     case 'bsc':
       Component = IconBnB;
@@ -141,6 +152,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'ethereum erigon':
     case 'erigon':
       Component = IconErigon;
+      break;
+    case 'fantom':
+      Component = IconFantom;
       break;
     case 'gnosis':
       Component = IconGnosis;

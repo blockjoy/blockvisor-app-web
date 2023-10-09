@@ -2,22 +2,39 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { styles } from './NodeViewTabs.styles';
 import { wrapper } from 'styles/wrapper.styles';
+import { ROUTES } from '@shared/constants/routes';
 
 export const NodeViewTabs = () => {
+  const router = useRouter();
+
+  console.log(router);
   const { query, asPath } = useRouter();
+  const { id } = query;
 
   const createPath = (path: string) =>
-    `/nodes/${query.id}${path ? `/${path}` : ''}`;
+    `${ROUTES.NODE(id as string)}${path ? `/${path}` : ''}`;
 
   const tabs = [
     { href: createPath(''), name: 'Details' },
     { href: createPath('settings'), name: 'Settings' },
+    { href: createPath('jobs'), name: 'Jobs' },
   ];
 
   const isActive = (href: string) => {
-    const routerPath = asPath.substring(asPath.lastIndexOf('/'), asPath.length);
-    const buttonPath = href.substring(href.lastIndexOf('/'), href.length);
-    return routerPath === buttonPath;
+    const routerPath = asPath
+      .substring(
+        asPath.lastIndexOf(id as string) + id?.length! + 1,
+        asPath.length,
+      )
+      .trim();
+
+    const buttonPath = href
+      .substring(href.lastIndexOf(id as string) + id?.length! + 1, href.length)
+      .trim();
+
+    return buttonPath === ''
+      ? buttonPath === routerPath
+      : routerPath.includes(buttonPath);
   };
 
   return (

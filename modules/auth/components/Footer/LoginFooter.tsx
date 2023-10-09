@@ -22,7 +22,7 @@ export function LoginFooter() {
           Forgot password?
         </Link>
       </div>
-      {/* <div css={[footerLoginAccount]}>
+      <div css={[footerLoginAccount]}>
         <p css={[colors.text2]}>Don't have a BlockJoy account?</p>
         <Link
           css={[link, linkPrimary, linkUnderline]}
@@ -32,7 +32,7 @@ export function LoginFooter() {
         >
           Create an account
         </Link>
-      </div> */}
+      </div>
     </footer>
   );
 }

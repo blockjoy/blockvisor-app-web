@@ -1,7 +1,6 @@
 import { useIdentityRepository } from '@modules/auth';
 import {
   invitationAtoms,
-  useDefaultOrganization,
   useGetOrganization,
   useGetOrganizations,
   useInvitations,
@@ -15,9 +14,13 @@ import { styles } from './OrganizationReceivedInvitations.styles';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
+import { useState } from 'react';
 
 export const OrganizationReceivedInvitations = () => {
   const router = useRouter();
+
+  const [isAccepting, setIsAccepting] = useState(false);
+  const [isDeclining, setIsDeclining] = useState(false);
 
   const { acceptInvitation, declineInvitation, getReceivedInvitations } =
     useInvitations();
@@ -36,8 +39,9 @@ export const OrganizationReceivedInvitations = () => {
   );
 
   const handleAcceptInvitation = (invitation: Invitation) => {
+    setIsAccepting(true);
     acceptInvitation(invitation.id, async () => {
-      await getOrganizations();
+      await getOrganizations(true, false);
       switchOrganization(invitation.orgId, invitation.orgName);
       getOrganization(invitation.orgId);
       getReceivedInvitations(userEmail!);
@@ -45,8 +49,12 @@ export const OrganizationReceivedInvitations = () => {
     });
   };
 
-  const handleDeclineInvitation = (invitationId: string) => {
-    declineInvitation(invitationId, () => getReceivedInvitations(userEmail!));
+  const handleDeclineInvitation = async (invitationId: string) => {
+    setIsDeclining(true);
+    await declineInvitation(invitationId, () =>
+      getReceivedInvitations(userEmail!),
+    );
+    setIsDeclining(false);
   };
 
   return (
@@ -70,6 +78,7 @@ export const OrganizationReceivedInvitations = () => {
                 size="small"
                 style="secondary"
                 onClick={() => handleAcceptInvitation(invite)}
+                loading={isAccepting}
               >
                 Accept
               </Button>
@@ -77,6 +86,7 @@ export const OrganizationReceivedInvitations = () => {
                 size="small"
                 onClick={() => handleDeclineInvitation(invite.id!)}
                 style="outline"
+                loading={isDeclining}
               >
                 Decline
               </Button>

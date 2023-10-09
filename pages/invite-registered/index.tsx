@@ -5,6 +5,7 @@ import {
   useGetOrganizations,
   useInvitations,
 } from '@modules/organization';
+import { PageSpinner } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -45,9 +46,9 @@ const AcceptInvite: NextPage = () => {
             name: activeInvitation?.orgName!,
           });
 
-          router.push(`/organizations/${activeInvitation?.orgId}`);
+          toast.success(`Joined ${activeInvitation?.orgName!}`);
 
-          toast.success('Joined Organization');
+          router.push(ROUTES.NODES);
         } catch (err) {
           router.push({
             pathname: ROUTES.LOGIN,
@@ -58,7 +59,7 @@ const AcceptInvite: NextPage = () => {
     }
   }, [router.isReady]);
 
-  return null;
+  return <PageSpinner />;
 };
 
 export default AcceptInvite;

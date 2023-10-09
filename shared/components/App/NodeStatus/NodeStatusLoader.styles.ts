@@ -18,7 +18,7 @@ export const styles = {
     top: 0;
     left: 0;
     bottom: 0;
-    opacity: 0.85;
+    opacity: 0.5;
     transition: width 0.3s;
 
     ::before,

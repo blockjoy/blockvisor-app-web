@@ -1,6 +1,5 @@
 import { AppLayout } from '@modules/layout';
-import { NodeView } from '@modules/node';
-import { NodeViewSettings } from '@modules/node';
+import { NodeView, NodeViewSettings } from '@modules/node';
 
 const Component = () => <NodeViewSettings />;
 

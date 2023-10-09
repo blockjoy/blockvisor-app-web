@@ -11,32 +11,7 @@ import {
   useInvitations,
 } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
-import { css, keyframes } from '@emotion/react';
-import { ITheme } from 'types/theme';
-
-const spin = keyframes`
-    100% { transform: rotate(1turn); }
-`;
-
-const styles = {
-  wrapper: css`
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: grid;
-    place-items: center;
-    gap: 30px;
-  `,
-  spinner: (theme: ITheme) => css`
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    border: 4px solid ${theme.colorInput};
-    border-top-color: ${theme.colorPrimary};
-    animation: ${spin} 0.8s infinite linear;
-  `,
-};
+import { PageSpinner } from '@shared/components';
 
 const Verified: NextPage = () => {
   const router = useRouter();
@@ -54,33 +29,36 @@ const Verified: NextPage = () => {
             emailToken?.toString()!,
           );
           await signIn(undefined, accessToken);
+          await getOrganizations();
+
           const accessTokenObject = readToken(accessToken);
           const emailTokenObject = readToken(emailToken as string);
           const user = await userClient.getUser(accessTokenObject.resource_id);
 
-          const { invitation_id } = emailTokenObject.data;
+          const invitationId = emailTokenObject?.data?.invitation_id;
 
-          const receivedInvitations =
-            await invitationClient.receivedInvitations(user?.email!);
+          if (invitationId) {
+            const receivedInvitations =
+              await invitationClient.receivedInvitations(user?.email!);
 
-          const invitation = receivedInvitations.find(
-            (invitation) => invitation.id === invitation_id,
-          );
+            const invitation = receivedInvitations.find(
+              (invitation) => invitation.id === invitationId,
+            );
 
-          if (invitation) {
-            await acceptInvitation(invitation_id);
-            await getOrganizations();
+            await acceptInvitation(invitationId);
 
-            setDefaultOrganization({
-              id: invitation.orgId,
-              name: invitation.orgName,
-            });
-
-            router.push({
-              pathname: ROUTES.NODES,
-              query: { verified: true },
-            });
+            if (invitation) {
+              setDefaultOrganization({
+                id: invitation.orgId,
+                name: invitation.orgName,
+              });
+            }
           }
+
+          router.push({
+            pathname: ROUTES.NODES,
+            query: { verified: true },
+          });
         } catch (err) {
           console.log('error verifying', err);
           toast.error('Error Verifying');
@@ -90,11 +68,7 @@ const Verified: NextPage = () => {
     }
   }, [router.isReady]);
 
-  return (
-    <div css={styles.wrapper}>
-      <div css={styles.spinner} />
-    </div>
-  );
+  return <PageSpinner />;
 };
 
 export default Verified;
