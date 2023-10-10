@@ -9,6 +9,7 @@ import { Subscription } from 'chargebee-typescript/lib/resources';
 import {
   BILLING_API_ROUTES,
   DEFAULT_ITEM_PRICE_ID,
+  ExtendedCreateWithItemsParams,
   billingAtoms,
   billingSelectors,
   fetchBilling,
@@ -88,9 +89,10 @@ export const useSubscription = (): ISubscriptionHook => {
         },
       ];
 
-    const params: _subscription.create_with_items_params = {
+    const params: ExtendedCreateWithItemsParams = {
       payment_source_id: paymentMethodId,
       subscription_items: subscriptionItems,
+      cf_organization_id: defaultOrganization?.id,
     };
 
     try {

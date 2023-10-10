@@ -1,3 +1,4 @@
+import { _subscription } from 'chargebee-typescript';
 import {
   Coupon,
   CouponCode,
@@ -43,3 +44,8 @@ export type PromoCode = {
   coupon: Coupon | null;
   couponCode: CouponCode | null;
 };
+
+export type ExtendedCreateWithItemsParams =
+  _subscription.create_with_items_params & {
+    cf_organization_id?: string;
+  };
