@@ -8,8 +8,10 @@ import {
   billingAtoms,
   billingSelectors,
   fetchBilling,
+  isApplicablePromoCode,
   isAppliedPromoCode,
 } from '@modules/billing';
+import { nodeAtoms } from '@modules/node';
 
 interface IPromoCodeHook {
   promoCode: PromoCode | null;
@@ -22,6 +24,7 @@ interface IPromoCodeHook {
 
 export const usePromoCode = (): IPromoCodeHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
+  const sku = useRecoilValue(nodeAtoms.selectedSKU);
   const [promoCode, setPromoCode] = useRecoilState(billingAtoms.promoCode);
   const [promoCodeError, setPromoCodeError] = useRecoilState(
     billingAtoms.promoCodeError,
@@ -64,6 +67,12 @@ export const usePromoCode = (): IPromoCodeHook => {
       }
 
       if (couponCode?.status === 'redeemed') {
+        setPromoCodeError(PROMO_CODE_ERROR_MESSAGES.INVALID);
+        return null;
+      }
+
+      const isApplicable = isApplicablePromoCode(sku, coupon);
+      if (!isApplicable) {
         setPromoCodeError(PROMO_CODE_ERROR_MESSAGES.INVALID);
         return null;
       }
