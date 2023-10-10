@@ -1,9 +1,12 @@
 import { blockchainClient } from '@modules/grpc';
+import { useDefaultOrganization } from '@modules/organization';
 import { useRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { blockchainsAtoms } from '../store/blockchains';
 
 export function useGetBlockchains() {
+  const { defaultOrganization } = useDefaultOrganization();
+
   const [blockchains, setBlockchains] = useRecoilState(
     blockchainsAtoms.blockchains,
   );
@@ -13,7 +16,9 @@ export function useGetBlockchains() {
 
   const getBlockchains = async () => {
     setLoadingState('loading');
-    const blockchains: any = await blockchainClient.getBlockchains();
+    const blockchains: any = await blockchainClient.getBlockchains(
+      defaultOrganization?.id!,
+    );
     checkForTokenError(blockchains);
 
     if (blockchains?.length) {
