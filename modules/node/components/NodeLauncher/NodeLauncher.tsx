@@ -84,6 +84,9 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   const { hostList } = useHostList();
 
   const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
+  const isActiveSubscription = useRecoilValue(
+    billingSelectors.isActiveSubscription,
+  );
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
   const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
   const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
@@ -241,7 +244,11 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   };
 
   const handleCreateNodeClicked = () => {
-    if (!hasPaymentMethod || !hasSubscription) {
+    if (
+      !hasPaymentMethod ||
+      !hasSubscription ||
+      (hasSubscription && !isActiveSubscription)
+    ) {
       setIsCreating(true);
 
       const newActiveView: NodeLauncherView = !hasPaymentMethod
