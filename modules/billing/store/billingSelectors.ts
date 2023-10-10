@@ -141,6 +141,15 @@ const hasSubscription = selector<boolean>({
   },
 });
 
+const isActiveSubscription = selector<boolean>({
+  key: 'billing.subscription.isActive',
+  get: ({ get }) => {
+    const subscriptionVal = get(subscription);
+
+    return subscriptionVal?.status === 'active';
+  },
+});
+
 export const billingSelectors = {
   billingId,
   userSubscription,
@@ -156,4 +165,5 @@ export const billingSelectors = {
   hasBillingAddress,
   hasPaymentMethod,
   hasSubscription,
+  isActiveSubscription,
 };
