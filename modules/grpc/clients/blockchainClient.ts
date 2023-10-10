@@ -21,10 +21,14 @@ class BlockchainClient {
     this.client = createClient(BlockchainServiceDefinition, channel);
   }
 
-  async getBlockchains(): Promise<Blockchain[] | StatusResponse> {
+  async getBlockchains(orgId?: string): Promise<Blockchain[] | StatusResponse> {
+    const request = {
+      orgId,
+    };
+    console.log('getBlockchainsRequest', request);
     try {
       await authClient.refreshToken();
-      const response = await this.client.list({}, getOptions());
+      const response = await this.client.list(request, getOptions());
       console.log('getBlockchainsResponse', response);
       return response.blockchains;
     } catch (err: any) {
