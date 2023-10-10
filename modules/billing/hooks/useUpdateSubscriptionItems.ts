@@ -104,7 +104,10 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
         ? promoCode.couponCode?.code
         : promoCode.coupon?.id;
 
-      if (promoCodeValue) params.coupon_ids = [promoCodeValue];
+      if (promoCodeValue) {
+        params.coupon_ids = [promoCodeValue];
+        if (!subscription?.coupons) params.replace_coupon_list = true;
+      }
     }
 
     try {
