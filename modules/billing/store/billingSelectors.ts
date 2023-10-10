@@ -145,6 +145,7 @@ const isActiveSubscription = selector<boolean>({
   key: 'billing.subscription.isActive',
   get: ({ get }) => {
     const subscriptionVal = get(subscription);
+    if (!subscriptionVal) return false;
 
     return subscriptionVal?.status === 'active';
   },
