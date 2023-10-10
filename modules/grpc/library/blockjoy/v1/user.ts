@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
@@ -23,7 +24,7 @@ export interface UserServiceGetResponse {
   user: User | undefined;
 }
 
-export interface UserServiceFilterRequest {
+export interface UserServiceListRequest {
   /**
    * Return only users from this org. This is required for users that do not
    * have access to the entire system (i.e. blockjoy's admins).
@@ -37,11 +38,22 @@ export interface UserServiceFilterRequest {
    * For example, a query for all users whose email starts with `baremetal`
    * would look like `"baremetal%"`.
    */
-  emailLike?: string | undefined;
+  emailLike?:
+    | string
+    | undefined;
+  /** The number of items to be skipped over. */
+  offset: number;
+  /**
+   * The number of items that will be returned. Together with offset, you can
+   * use this to get pagination.
+   */
+  limit: number;
 }
 
-export interface UserServiceFilterResponse {
+export interface UserServiceListResponse {
   users: User[];
+  /** The total number of users matching your query. */
+  userCount: number;
 }
 
 export interface UserServiceCreateRequest {
@@ -290,25 +302,31 @@ export const UserServiceGetResponse = {
   },
 };
 
-function createBaseUserServiceFilterRequest(): UserServiceFilterRequest {
-  return { orgId: undefined, emailLike: undefined };
+function createBaseUserServiceListRequest(): UserServiceListRequest {
+  return { orgId: undefined, emailLike: undefined, offset: 0, limit: 0 };
 }
 
-export const UserServiceFilterRequest = {
-  encode(message: UserServiceFilterRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const UserServiceListRequest = {
+  encode(message: UserServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
     if (message.emailLike !== undefined) {
       writer.uint32(18).string(message.emailLike);
     }
+    if (message.offset !== 0) {
+      writer.uint32(24).uint64(message.offset);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(32).uint64(message.limit);
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceFilterRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceListRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceFilterRequest();
+    const message = createBaseUserServiceListRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -326,52 +344,19 @@ export const UserServiceFilterRequest = {
 
           message.emailLike = reader.string();
           continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UserServiceFilterRequest>): UserServiceFilterRequest {
-    return UserServiceFilterRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceFilterRequest>): UserServiceFilterRequest {
-    const message = createBaseUserServiceFilterRequest();
-    message.orgId = object.orgId ?? undefined;
-    message.emailLike = object.emailLike ?? undefined;
-    return message;
-  },
-};
-
-function createBaseUserServiceFilterResponse(): UserServiceFilterResponse {
-  return { users: [] };
-}
-
-export const UserServiceFilterResponse = {
-  encode(message: UserServiceFilterResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.users) {
-      User.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceFilterResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceFilterResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
-          message.users.push(User.decode(reader, reader.uint32()));
+          message.offset = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.limit = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -382,13 +367,73 @@ export const UserServiceFilterResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceFilterResponse>): UserServiceFilterResponse {
-    return UserServiceFilterResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<UserServiceListRequest>): UserServiceListRequest {
+    return UserServiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceFilterResponse>): UserServiceFilterResponse {
-    const message = createBaseUserServiceFilterResponse();
+  fromPartial(object: DeepPartial<UserServiceListRequest>): UserServiceListRequest {
+    const message = createBaseUserServiceListRequest();
+    message.orgId = object.orgId ?? undefined;
+    message.emailLike = object.emailLike ?? undefined;
+    message.offset = object.offset ?? 0;
+    message.limit = object.limit ?? 0;
+    return message;
+  },
+};
+
+function createBaseUserServiceListResponse(): UserServiceListResponse {
+  return { users: [], userCount: 0 };
+}
+
+export const UserServiceListResponse = {
+  encode(message: UserServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.users) {
+      User.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.userCount !== 0) {
+      writer.uint32(16).uint64(message.userCount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceListResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceListResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.users.push(User.decode(reader, reader.uint32()));
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.userCount = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceListResponse>): UserServiceListResponse {
+    return UserServiceListResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceListResponse>): UserServiceListResponse {
+    const message = createBaseUserServiceListResponse();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
+    message.userCount = object.userCount ?? 0;
     return message;
   },
 };
@@ -1005,11 +1050,11 @@ export const UserServiceDefinition = {
       options: {},
     },
     /** Retrieve multiple users my means of a filter. */
-    filter: {
-      name: "Filter",
-      requestType: UserServiceFilterRequest,
+    list: {
+      name: "List",
+      requestType: UserServiceListRequest,
       requestStream: false,
-      responseType: UserServiceFilterResponse,
+      responseType: UserServiceListResponse,
       responseStream: false,
       options: {},
     },
@@ -1077,10 +1122,10 @@ export interface UserServiceImplementation<CallContextExt = {}> {
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceGetResponse>>;
   /** Retrieve multiple users my means of a filter. */
-  filter(
-    request: UserServiceFilterRequest,
+  list(
+    request: UserServiceListRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<UserServiceFilterResponse>>;
+  ): Promise<DeepPartial<UserServiceListResponse>>;
   /** Create a single user. */
   create(
     request: UserServiceCreateRequest,
@@ -1120,10 +1165,10 @@ export interface UserServiceClient<CallOptionsExt = {}> {
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceGetResponse>;
   /** Retrieve multiple users my means of a filter. */
-  filter(
-    request: DeepPartial<UserServiceFilterRequest>,
+  list(
+    request: DeepPartial<UserServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<UserServiceFilterResponse>;
+  ): Promise<UserServiceListResponse>;
   /** Create a single user. */
   create(
     request: DeepPartial<UserServiceCreateRequest>,
@@ -1156,6 +1201,25 @@ export interface UserServiceClient<CallOptionsExt = {}> {
   ): Promise<UserServiceDeleteBillingResponse>;
 }
 
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -1173,4 +1237,16 @@ function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
   return new Date(millis);
+}
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }

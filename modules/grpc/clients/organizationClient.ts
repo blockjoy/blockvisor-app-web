@@ -39,9 +39,8 @@ class OrganizationClient {
   }
 
   async getOrganizations(): Promise<Org[] | StatusResponse> {
-    const request = { memberId: getIdentity().id };
+    const request = { memberId: getIdentity().id, offset: 0, limit: 100 };
     console.log('listOrganizationsRequest', request);
-
     try {
       await authClient.refreshToken();
       const response = await this.client.list(request, getOptions());

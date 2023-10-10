@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
@@ -29,10 +30,16 @@ export interface Blockchain {
    * kind of blockchain.
    */
   nodeTypes: BlockchainNodeType[];
+  nodeCount?: number | undefined;
+  nodeCountActive?: number | undefined;
+  nodeCountSyncing?: number | undefined;
+  nodeCountProvisioning?: number | undefined;
+  nodeCountFailed?: number | undefined;
 }
 
 export interface BlockchainServiceGetRequest {
   id: string;
+  orgId?: string | undefined;
 }
 
 export interface BlockchainServiceGetResponse {
@@ -40,6 +47,7 @@ export interface BlockchainServiceGetResponse {
 }
 
 export interface BlockchainServiceListRequest {
+  orgId?: string | undefined;
 }
 
 export interface BlockchainServiceListResponse {
@@ -115,6 +123,11 @@ function createBaseBlockchain(): Blockchain {
     projectUrl: undefined,
     repoUrl: undefined,
     nodeTypes: [],
+    nodeCount: undefined,
+    nodeCountActive: undefined,
+    nodeCountSyncing: undefined,
+    nodeCountProvisioning: undefined,
+    nodeCountFailed: undefined,
   };
 }
 
@@ -143,6 +156,21 @@ export const Blockchain = {
     }
     for (const v of message.nodeTypes) {
       BlockchainNodeType.encode(v!, writer.uint32(66).fork()).ldelim();
+    }
+    if (message.nodeCount !== undefined) {
+      writer.uint32(72).uint64(message.nodeCount);
+    }
+    if (message.nodeCountActive !== undefined) {
+      writer.uint32(80).uint64(message.nodeCountActive);
+    }
+    if (message.nodeCountSyncing !== undefined) {
+      writer.uint32(88).uint64(message.nodeCountSyncing);
+    }
+    if (message.nodeCountProvisioning !== undefined) {
+      writer.uint32(96).uint64(message.nodeCountProvisioning);
+    }
+    if (message.nodeCountFailed !== undefined) {
+      writer.uint32(112).uint64(message.nodeCountFailed);
     }
     return writer;
   },
@@ -210,6 +238,41 @@ export const Blockchain = {
 
           message.nodeTypes.push(BlockchainNodeType.decode(reader, reader.uint32()));
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.nodeCount = longToNumber(reader.uint64() as Long);
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.nodeCountActive = longToNumber(reader.uint64() as Long);
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.nodeCountSyncing = longToNumber(reader.uint64() as Long);
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.nodeCountProvisioning = longToNumber(reader.uint64() as Long);
+          continue;
+        case 14:
+          if (tag !== 112) {
+            break;
+          }
+
+          message.nodeCountFailed = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -233,18 +296,26 @@ export const Blockchain = {
     message.projectUrl = object.projectUrl ?? undefined;
     message.repoUrl = object.repoUrl ?? undefined;
     message.nodeTypes = object.nodeTypes?.map((e) => BlockchainNodeType.fromPartial(e)) || [];
+    message.nodeCount = object.nodeCount ?? undefined;
+    message.nodeCountActive = object.nodeCountActive ?? undefined;
+    message.nodeCountSyncing = object.nodeCountSyncing ?? undefined;
+    message.nodeCountProvisioning = object.nodeCountProvisioning ?? undefined;
+    message.nodeCountFailed = object.nodeCountFailed ?? undefined;
     return message;
   },
 };
 
 function createBaseBlockchainServiceGetRequest(): BlockchainServiceGetRequest {
-  return { id: "" };
+  return { id: "", orgId: undefined };
 }
 
 export const BlockchainServiceGetRequest = {
   encode(message: BlockchainServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
+    }
+    if (message.orgId !== undefined) {
+      writer.uint32(18).string(message.orgId);
     }
     return writer;
   },
@@ -263,6 +334,13 @@ export const BlockchainServiceGetRequest = {
 
           message.id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -279,6 +357,7 @@ export const BlockchainServiceGetRequest = {
   fromPartial(object: DeepPartial<BlockchainServiceGetRequest>): BlockchainServiceGetRequest {
     const message = createBaseBlockchainServiceGetRequest();
     message.id = object.id ?? "";
+    message.orgId = object.orgId ?? undefined;
     return message;
   },
 };
@@ -332,11 +411,14 @@ export const BlockchainServiceGetResponse = {
 };
 
 function createBaseBlockchainServiceListRequest(): BlockchainServiceListRequest {
-  return {};
+  return { orgId: undefined };
 }
 
 export const BlockchainServiceListRequest = {
-  encode(_: BlockchainServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BlockchainServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== undefined) {
+      writer.uint32(10).string(message.orgId);
+    }
     return writer;
   },
 
@@ -347,6 +429,13 @@ export const BlockchainServiceListRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -360,8 +449,9 @@ export const BlockchainServiceListRequest = {
     return BlockchainServiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<BlockchainServiceListRequest>): BlockchainServiceListRequest {
+  fromPartial(object: DeepPartial<BlockchainServiceListRequest>): BlockchainServiceListRequest {
     const message = createBaseBlockchainServiceListRequest();
+    message.orgId = object.orgId ?? undefined;
     return message;
   },
 };
@@ -844,6 +934,25 @@ export interface BlockchainServiceClient<CallOptionsExt = {}> {
   ): Promise<BlockchainServiceListResponse>;
 }
 
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -861,4 +970,16 @@ function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
   return new Date(millis);
+}
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }

@@ -43,11 +43,22 @@ export interface OrgServiceGetResponse {
 }
 
 export interface OrgServiceListRequest {
-  memberId?: string | undefined;
+  memberId?:
+    | string
+    | undefined;
+  /** The number of items to be skipped over. */
+  offset: number;
+  /**
+   * The number of items that will be returned. Together with offset, you can
+   * use this to get pagination.
+   */
+  limit: number;
 }
 
 export interface OrgServiceListResponse {
   orgs: Org[];
+  /** The total number of orgs matching your query. */
+  orgCount: number;
 }
 
 export interface OrgServiceCreateRequest {
@@ -341,13 +352,19 @@ export const OrgServiceGetResponse = {
 };
 
 function createBaseOrgServiceListRequest(): OrgServiceListRequest {
-  return { memberId: undefined };
+  return { memberId: undefined, offset: 0, limit: 0 };
 }
 
 export const OrgServiceListRequest = {
   encode(message: OrgServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.memberId !== undefined) {
       writer.uint32(10).string(message.memberId);
+    }
+    if (message.offset !== 0) {
+      writer.uint32(16).uint64(message.offset);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(24).uint64(message.limit);
     }
     return writer;
   },
@@ -366,6 +383,20 @@ export const OrgServiceListRequest = {
 
           message.memberId = reader.string();
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.offset = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.limit = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -382,18 +413,23 @@ export const OrgServiceListRequest = {
   fromPartial(object: DeepPartial<OrgServiceListRequest>): OrgServiceListRequest {
     const message = createBaseOrgServiceListRequest();
     message.memberId = object.memberId ?? undefined;
+    message.offset = object.offset ?? 0;
+    message.limit = object.limit ?? 0;
     return message;
   },
 };
 
 function createBaseOrgServiceListResponse(): OrgServiceListResponse {
-  return { orgs: [] };
+  return { orgs: [], orgCount: 0 };
 }
 
 export const OrgServiceListResponse = {
   encode(message: OrgServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.orgs) {
       Org.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.orgCount !== 0) {
+      writer.uint32(16).uint64(message.orgCount);
     }
     return writer;
   },
@@ -412,6 +448,13 @@ export const OrgServiceListResponse = {
 
           message.orgs.push(Org.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.orgCount = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -428,6 +471,7 @@ export const OrgServiceListResponse = {
   fromPartial(object: DeepPartial<OrgServiceListResponse>): OrgServiceListResponse {
     const message = createBaseOrgServiceListResponse();
     message.orgs = object.orgs?.map((e) => Org.fromPartial(e)) || [];
+    message.orgCount = object.orgCount ?? 0;
     return message;
   },
 };
