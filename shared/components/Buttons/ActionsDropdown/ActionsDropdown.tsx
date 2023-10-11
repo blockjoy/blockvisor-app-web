@@ -10,6 +10,7 @@ type Item = {
   title: string;
   icon: ReactNode;
   method: VoidFunction;
+  hasBorderTop?: boolean;
 };
 
 type Props = {
@@ -44,26 +45,37 @@ export const ActionsDropdown = ({ items }: Props) => {
       </button>
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         <ul>
-          {items.map((item) => (
-            <li key={item.title}>
-              <DropdownItem
-                onButtonClick={() => handleDropdownItemClicked(item.method)}
-                size="medium"
-                type="button"
-                additionalStyles={[
-                  css`
-                    padding-left: 18px;
-                    gap: 12px;
-                  `,
-                ]}
-              >
-                <SvgIcon isDefaultColor size="12px">
-                  {item.icon}
-                </SvgIcon>
-                <p css={styles.dropdownText}>{item.title}</p>
-              </DropdownItem>
-            </li>
-          ))}
+          {items.map((item) => {
+            const additionalStyles = [
+              css`
+                padding-left: 18px;
+                padding-right: 20px;
+                gap: 12px;
+              `,
+            ];
+
+            if (item.hasBorderTop) {
+              additionalStyles.push(css`
+                border-top: 1px solid rgb(255 255 255 / 20%);
+              `);
+            }
+
+            return (
+              <li key={item.title}>
+                <DropdownItem
+                  onButtonClick={() => handleDropdownItemClicked(item.method)}
+                  size="medium"
+                  type="button"
+                  additionalStyles={additionalStyles}
+                >
+                  <SvgIcon isDefaultColor size="12px">
+                    {item.icon}
+                  </SvgIcon>
+                  <p css={styles.dropdownText}>{item.title}</p>
+                </DropdownItem>
+              </li>
+            );
+          })}
         </ul>
       </DropdownMenu>
     </div>

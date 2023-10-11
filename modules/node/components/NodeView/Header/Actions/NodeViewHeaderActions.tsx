@@ -4,12 +4,17 @@ import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconStart from '@public/assets/icons/app/NodeStart.svg';
+import IconWarning from '@public/assets/icons/common/Warning.svg';
 
 type Props = {
   onDeleteClicked: VoidFunction;
+  onReportProblemClicked: VoidFunction;
 };
 
-export const NodeViewHeaderActions = ({ onDeleteClicked }: Props) => {
+export const NodeViewHeaderActions = ({
+  onDeleteClicked,
+  onReportProblemClicked,
+}: Props) => {
   const { node, stopNode, startNode } = useNodeView();
   const handleStop = () => stopNode(node?.id);
   const handleStart = () => startNode(node?.id);
@@ -37,6 +42,13 @@ export const NodeViewHeaderActions = ({ onDeleteClicked }: Props) => {
       method: onDeleteClicked,
     });
   }
+
+  items.push({
+    title: 'Report Problem',
+    icon: <IconWarning />,
+    method: onReportProblemClicked,
+    hasBorderTop: true,
+  });
 
   return items.length ? <ActionsDropdown items={items} /> : null;
 };
