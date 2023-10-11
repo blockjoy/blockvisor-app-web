@@ -34,6 +34,23 @@ class UserClient {
     }
   }
 
+  async listUsers(emailLike?: string): Promise<User[]> {
+    const request = {
+      offset: 0,
+      limit: 1000,
+      emailLike,
+    };
+    console.log('listUsersRequest', request);
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.list(request, getOptions());
+      console.log('listUsersResponse', response);
+      return response.users!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
   async deleteUser(id: string): Promise<void> {
     try {
       await this.client.delete({ id }, getOptions());
