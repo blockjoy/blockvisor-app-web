@@ -97,7 +97,7 @@ export const PlanConfiguration = ({
         </div>
       )}
 
-      <div css={[divider, spacing.bottom.medium]}></div>
+      <div css={[divider, spacing.bottom.mediumSmall]}></div>
 
       <Total total={activeItemPrice?.price!} />
 

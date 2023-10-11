@@ -47,6 +47,7 @@ class OrganizationClient {
     }
   }
 
+<<<<<<< HEAD
   async getOrganizations(
     pagination?: UIPagination,
     sort?: OrgSort[],
@@ -70,12 +71,20 @@ class OrganizationClient {
       request.search = search;
     }
 
+=======
+  async getOrganizations(): Promise<Org[] | StatusResponse> {
+    const request = { memberId: getIdentity().id, offset: 0, limit: 100 };
+>>>>>>> f4bccfe2 (fix: ruined branch due to api changes)
     console.log('listOrganizationsRequest', request);
     try {
       await authClient.refreshToken();
       const response = await this.client.list(request, getOptions());
       console.log('listOrganizationsResponse', response);
+<<<<<<< HEAD
       return response;
+=======
+      return response.orgs;
+>>>>>>> f4bccfe2 (fix: ruined branch due to api changes)
     } catch (err: any) {
       return handleError(err);
     }
