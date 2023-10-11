@@ -10,6 +10,7 @@ import {
 } from '@modules/organization';
 import { arraysEqual } from 'utils/arraysEqual';
 import { useIdentity } from '@modules/auth';
+import { authClient } from '@modules/grpc';
 
 export const useMqtt = (): IMqttHook => {
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +42,9 @@ export const useMqtt = (): IMqttHook => {
     reconnectPeriod: 10000,
   };
 
-  const connect = () => {
+  const connect = async () => {
+    await authClient.refreshToken();
+
     if (defaultOrganization?.id === currentOrganization.current) return;
     currentOrganization.current = defaultOrganization?.id!;
 
