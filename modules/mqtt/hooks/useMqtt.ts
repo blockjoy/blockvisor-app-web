@@ -10,7 +10,7 @@ import {
 } from '@modules/organization';
 import { arraysEqual } from 'utils/arraysEqual';
 import { useIdentity } from '@modules/auth';
-import { authClient } from '@modules/grpc';
+import { authClient, getIdentity } from '@modules/grpc';
 
 export const useMqtt = (): IMqttHook => {
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +18,6 @@ export const useMqtt = (): IMqttHook => {
   const [connectStatus, setConnectStatus] =
     useState<ConnectionStatus>('Connect');
 
-  const user = useIdentity().user;
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -33,17 +32,22 @@ export const useMqtt = (): IMqttHook => {
   const { handleNodeUpdate } = useNodeUpdates();
   const { handleOrganizationUpdate } = useOrgUpdates();
 
-  const token: string = user?.accessToken!;
-
-  const options: IClientOptions = {
-    clean: true,
-    username: token,
-    password: token,
-    reconnectPeriod: 10000,
-  };
-
   const connect = async () => {
     await authClient.refreshToken();
+
+    const token: string = getIdentity()?.accessToken;
+
+    if (!token) {
+      console.log('ERROR CONNECTING: No valid token');
+      return;
+    }
+
+    const options: IClientOptions = {
+      clean: true,
+      username: token,
+      password: token,
+      reconnectPeriod: 10000,
+    };
 
     if (defaultOrganization?.id === currentOrganization.current) return;
     currentOrganization.current = defaultOrganization?.id!;
