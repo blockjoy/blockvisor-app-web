@@ -5,7 +5,7 @@ export const styles = {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   `,
   title: css`
     font-size: 16px;
