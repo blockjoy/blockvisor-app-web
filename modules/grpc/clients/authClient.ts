@@ -123,7 +123,7 @@ class AuthClient {
     const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
     if (
       !!localStorage.getItem('accessTokenExpiry') &&
-      currentDateTimestamp > +localStorage.getItem('accessTokenExpiry')!
+      currentDateTimestamp > +localStorage.getItem('accessTokenExpiry')! - 30
     ) {
       try {
         const refreshTokenResponse = await this.client.refresh({
