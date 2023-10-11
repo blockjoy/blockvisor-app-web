@@ -10,8 +10,7 @@ export const styles = {
     right: 0;
     left: auto;
     width: 100%;
-    max-width: 100%;
-    min-width: 100%;
+    max-width: 200px;
   `,
   dropdownButton: (theme: ITheme) => css`
     display: flex;

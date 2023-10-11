@@ -89,7 +89,7 @@ export const NodeLauncherSummary: FC<Props> = ({
       <div css={styles.summary}>
         {!hasNetworkList ? (
           <div css={[colors.warning, spacing.bottom.medium]}>
-            Cannot launch node, missing network configuration.{' '}
+            Cannot launch node, missing network configuration.
           </div>
         ) : (
           <>

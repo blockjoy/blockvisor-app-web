@@ -20,8 +20,8 @@ export const NodeLauncherProtocolBlockchains = ({
 }: Props) => {
   const { blockchains } = useGetBlockchains();
 
-  const filteredBlockchains = blockchains?.filter((b) =>
-    b.name?.toLowerCase().includes(keyword.toLowerCase()),
+  const filteredBlockchains = blockchains?.filter((blockchain) =>
+    blockchain.name?.toLowerCase().includes(keyword.toLowerCase()),
   );
 
   return (
@@ -32,10 +32,10 @@ export const NodeLauncherProtocolBlockchains = ({
           description="Please refine your search."
         />
       ) : (
-        filteredBlockchains?.map((b, index) => {
-          const nodeTypesWithName = b.nodeTypes.map((nt) => ({
-            ...nt,
-            nodeTypeName: convertNodeTypeToName(nt.nodeType),
+        filteredBlockchains?.map((blockchain, index) => {
+          const nodeTypesWithName = blockchain.nodeTypes.map((nodeType) => ({
+            ...nodeType,
+            nodeTypeName: convertNodeTypeToName(nodeType.nodeType),
           }));
           const sortedNodeTypes = sort(nodeTypesWithName, {
             field: 'nodeTypeName',
@@ -44,15 +44,20 @@ export const NodeLauncherProtocolBlockchains = ({
           return (
             <div
               tabIndex={activeNodeType ? -1 : index + 1}
-              key={b.id}
+              key={blockchain.id}
               css={[styles.row, styles.rowHover]}
-              className={b.id === activeBlockchainId ? 'active row' : 'row'}
+              className={
+                blockchain.id === activeBlockchainId ? 'active row' : 'row'
+              }
             >
               <span css={styles.blockchainWrapper}>
                 <button
                   onClick={() =>
-                    activeBlockchainId !== b.id
-                      ? onProtocolSelected(b.id!, sortedNodeTypes[0].nodeType)
+                    activeBlockchainId !== blockchain.id
+                      ? onProtocolSelected(
+                          blockchain.id!,
+                          sortedNodeTypes[0].nodeType,
+                        )
                       : null
                   }
                   css={styles.name}
@@ -60,9 +65,9 @@ export const NodeLauncherProtocolBlockchains = ({
                   <BlockchainIcon
                     size="28px"
                     hideTooltip
-                    blockchainName={b.name}
+                    blockchainName={blockchain.name}
                   />
-                  <p>{b.name}</p>
+                  <p>{blockchain.name}</p>
                 </button>
               </span>
               <div css={styles.nodeTypeButtons} className="node-type-buttons">
@@ -75,11 +80,17 @@ export const NodeLauncherProtocolBlockchains = ({
                       key={nodeType}
                       className={
                         nodeType === activeNodeType &&
-                        b.id === activeBlockchainId
+                        blockchain.id === activeBlockchainId
                           ? 'active'
                           : ''
                       }
-                      onClick={() => onProtocolSelected(b.id!, nodeType)}
+                      disabled={
+                        activeBlockchainId === blockchain.id &&
+                        activeNodeType === nodeType
+                      }
+                      onClick={() =>
+                        onProtocolSelected(blockchain.id!, nodeType)
+                      }
                       type="button"
                       css={styles.createButton}
                     >
