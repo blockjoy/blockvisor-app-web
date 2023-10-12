@@ -143,8 +143,7 @@ export const PaymentMethodFormSimple = ({
           {errorMessage}
         </p>
       )}
-
-      <ButtonGroup>
+      <ButtonGroup type="flex">
         <Button
           loading={loading}
           disabled={loading || !isValidInfoForm}
@@ -153,8 +152,9 @@ export const PaymentMethodFormSimple = ({
           type="submit"
           tabIndex={5}
           onClick={handleCreatePaymentMethod}
+          customCss={[styles.confirmButton]}
         >
-          Add
+          Confirm and Activate
         </Button>
         <Button
           onClick={handleCancel}

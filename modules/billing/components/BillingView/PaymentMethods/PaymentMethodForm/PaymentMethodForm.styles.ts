@@ -39,4 +39,7 @@ export const styles = {
       transition: 0.2s;
     }
   `,
+  confirmButton: css`
+    min-width: 185px;
+  `,
 };

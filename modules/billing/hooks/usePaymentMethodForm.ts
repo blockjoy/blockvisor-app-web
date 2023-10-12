@@ -46,10 +46,12 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
       } catch (error: any) {
         const returnedError = JSON.parse(JSON.stringify(error));
         setError(returnedError);
+        throw returnedError;
       }
     } catch (error: any) {
       const returnedError = JSON.parse(JSON.stringify(error));
       setError(returnedError);
+      throw returnedError;
     } finally {
       setLoading(false);
     }
