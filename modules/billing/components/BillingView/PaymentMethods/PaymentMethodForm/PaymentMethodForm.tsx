@@ -92,7 +92,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     handleCancel();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const firstName =
       activeView === 'action'
         ? cardHolder.firstName
@@ -122,7 +122,11 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
       },
     };
 
-    onSubmit(cardRef, additionalData, handleSucces);
+    try {
+      await onSubmit(cardRef, additionalData, handleSucces);
+    } catch (error: any) {
+      console.log('Error while adding a payment method', error);
+    }
   };
 
   const handleDefaultAddress = () => setActiveView('list');
