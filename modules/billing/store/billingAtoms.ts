@@ -141,6 +141,11 @@ const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
+const isSuperUserBilling = atom<boolean>({
+  key: 'billing.superUser',
+  default: false,
+});
+
 export const billingAtoms = {
   promoCode,
   promoCodeError,
@@ -174,4 +179,6 @@ export const billingAtoms = {
   subscriptionLoadingState,
 
   subscriptionPaymentMethodLoadingState,
+
+  isSuperUserBilling,
 };

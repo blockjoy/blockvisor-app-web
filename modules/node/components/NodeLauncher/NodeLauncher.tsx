@@ -32,6 +32,20 @@ export const NodeLauncher = () => {
   const { hostList } = useHostList();
   const { updateSubscriptionItems } = useUpdateSubscription();
 
+<<<<<<< HEAD
+=======
+  const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
+  const isActiveSubscription = useRecoilValue(
+    billingSelectors.isActiveSubscription,
+  );
+  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
+  const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
+  const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
+
+  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
+  const isSuperUserBilling = useRecoilValue(billingAtoms.isSuperUserBilling);
+
+>>>>>>> aabaf5c2 (feat: [sc-2861] bypassing billing for super admins)
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
   const [isCreating, setIsCreating] = useState(false);
@@ -58,9 +72,18 @@ export const NodeLauncher = () => {
 
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
-  const { hasPermission } = usePermissions();
+  const { hasPermission, isSuperUser } = usePermissions();
 
   const canAddNode = hasPermission('node-create');
+<<<<<<< HEAD
+=======
+  const canCreateSubscription = hasPermission('subscription-create');
+  const canUpdateSubscription = hasPermission('subscription-update');
+
+  const isAllowedToCreate =
+    (canAddNode && (canCreateSubscription || canUpdateSubscription)) ||
+    (isSuperUser && isSuperUserBilling);
+>>>>>>> cc5ac756 (feat: [sc-2861] bypassing billing for super admins)
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -206,7 +229,20 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
+<<<<<<< HEAD
     if (!hasPaymentMethod && isOwner) {
+=======
+    if (isSuperUserBilling) {
+      setFulfilRequirements(true);
+      return;
+    }
+
+    if (
+      !hasPaymentMethod ||
+      !hasSubscription ||
+      (hasSubscription && !isActiveSubscription)
+    ) {
+>>>>>>> aabaf5c2 (feat: [sc-2861] bypassing billing for super admins)
       setIsCreating(true);
       setActiveView('action');
       setFulfilRequirements(false);
