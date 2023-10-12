@@ -1,3 +1,4 @@
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { NodeLauncherState, NodeRegionSelect } from '@modules/node';
 import { FC } from 'react';
 import { styles } from './NodeLauncherSummary.styles';
@@ -6,6 +7,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
+  Checkbox,
   FormHeader,
   FormLabel,
   HostSelect,
@@ -18,6 +20,7 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+<<<<<<< HEAD
 import { isMobile } from 'react-device-detect';
 
 const ERROR_MESSAGES = {
@@ -28,6 +31,10 @@ const ERROR_MESSAGES = {
   [PermissionsCreateNode.NoPaymentMethod]:
     'Cannot launch node. Contact organization owner to add payment method',
 };
+=======
+import { billingAtoms, billingSelectors } from '@modules/billing';
+import { usePermissions } from '@modules/auth';
+>>>>>>> aabaf5c2 (feat: [sc-2861] bypassing billing for super admins)
 
 type NodeLauncherSummaryProps = {
   serverError: string;
@@ -65,8 +72,16 @@ export const NodeLauncherSummary = ({
   onRegionsLoaded,
 }: NodeLauncherSummaryProps) => {
   const { blockchains } = useGetBlockchains();
+  const { isSuperUser } = usePermissions();
+  const [isSuperUserBilling, setIsSuperUserBilling] = useRecoilState(
+    billingAtoms.isSuperUserBilling,
+  );
 
   const { blockchainId, nodeType, properties } = nodeLauncherState;
+
+  const handleSuperUserBilling = () => {
+    setIsSuperUserBilling(!isSuperUserBilling);
+  };
 
   return (
     <div css={styles.wrapper}>
@@ -178,6 +193,27 @@ export const NodeLauncherSummary = ({
           </>
         )}
       </div>
+<<<<<<< HEAD
+=======
+
+      <FormLabel>Pricing</FormLabel>
+      <Pricing itemPrice={itemPrice} />
+
+      {isSuperUser && (
+        <div css={[spacing.top.medium, spacing.bottom.medium]}>
+          <FormLabel>Super User</FormLabel>
+          <Checkbox
+            id="admin-launch-node"
+            name="admin-launch-node"
+            checked={isSuperUserBilling}
+            onChange={handleSuperUserBilling}
+          >
+            Bypass Billing
+          </Checkbox>
+        </div>
+      )}
+
+>>>>>>> aabaf5c2 (feat: [sc-2861] bypassing billing for super admins)
       <div css={styles.buttons}>
         {!canAddNode && (
           <Tooltip

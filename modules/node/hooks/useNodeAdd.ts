@@ -1,3 +1,4 @@
+import { useRecoilValue } from 'recoil';
 import { nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { useNodeList } from './useNodeList';
@@ -12,6 +13,7 @@ import {
 } from '@modules/organization';
 import { useHostList, useHostUpdate } from '@modules/host';
 import {
+  billingAtoms,
   generateError,
   UpdateSubscriptionAction,
   useUpdateSubscriptionItems,
@@ -25,6 +27,7 @@ export const useNodeAdd = () => {
   const { modifyHost } = useHostUpdate();
   const { hostList } = useHostList();
   const { updateSubscriptionItems } = useUpdateSubscriptionItems();
+  const isSuperUserBilling = useRecoilValue(billingAtoms.isSuperUserBilling);
 
   const createNode = async (
     node: NodeServiceCreateRequest,
@@ -42,6 +45,7 @@ export const useNodeAdd = () => {
     };
 
     try {
+<<<<<<< HEAD
       const response: Node = await nodeClient.createNode(nodeRequest);
 
 <<<<<<< HEAD
@@ -65,6 +69,21 @@ export const useNodeAdd = () => {
         return;
       }
 >>>>>>> 73fe8a78 (feat: [sc-2346] InvoicesList LazyLoad, caching via SWR and Context API)
+=======
+      if (!isSuperUserBilling)
+        try {
+          await updateSubscriptionItems({
+            type: UpdateSubscriptionAction.ADD_NODE,
+            payload: { node: nodeRequest },
+          });
+        } catch (error: any) {
+          const errorMessage = generateError(error);
+          onError(errorMessage);
+          return;
+        }
+
+      const response: Node = await nodeClient.createNode(nodeRequest);
+>>>>>>> aabaf5c2 (feat: [sc-2861] bypassing billing for super admins)
 
       // Update organization node count
       const activeOrganization = organizations.find(
