@@ -26,6 +26,7 @@ import IconNode from '@public/assets/icons/app/Node.svg';
 import { ROUTES } from '@shared/constants/routes';
 import { useNodeDelete } from '@modules/node/hooks/useNodeDelete';
 import { toast } from 'react-toastify';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -55,17 +56,9 @@ export const NodeList = () => {
   const handleNodeClicked = (nodeId: string) =>
     router.push(ROUTES.NODE(nodeId));
 
-  const handleNodeDeleteClicked = (
-    id: string,
-    name: string,
-    hostId: string,
-  ) => {
+  const handleNodeDeleteClicked = (node: Node) => {
     setIsDeleteMode(true);
-    setNodeToDelete({
-      id,
-      name,
-      hostId,
-    });
+    setNodeToDelete(node);
   };
 
   const handleNodeDeleteClosed = () => setIsDeleteMode(false);
