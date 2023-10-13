@@ -15,7 +15,7 @@ import { getNodeJobProgress } from './getNodeJobProgress';
 
 export const mapNodeListToRows = (
   nodeList?: Node[],
-  onDeleteClick?: (id: string, name: string, hostId: string) => void,
+  onDeleteClick?: (node: Node) => void,
 ) => {
   const { hasPermission } = usePermissions();
 
@@ -115,11 +115,7 @@ export const mapNodeListToRows = (
                 }
                 style="icon"
                 tooltip="Delete"
-                onClick={() =>
-                  !!onDeleteClick
-                    ? onDeleteClick(node.id, node.name, node.hostId)
-                    : null
-                }
+                onClick={() => (!!onDeleteClick ? onDeleteClick(node) : null)}
               >
                 <SvgIcon isDefaultColor>
                   <IconDelete />
