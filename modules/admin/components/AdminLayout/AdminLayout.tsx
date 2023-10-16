@@ -1,18 +1,23 @@
-import { PageTitle } from '@shared/components';
-import { PropsWithChildren } from 'react';
-import { wrapper } from 'styles/wrapper.styles';
+import { AdminSidebar } from '../AdminLayout/AdminSidebar/AdminSidebar';
+import { AdminContent } from './AdminContent/AdminContent';
+import { AdminTitle } from '../AdminLayout/AdminTitle/AdminTitle';
 import { styles } from './AdminLayout.styles';
-import NextLink from 'next/link';
-import IconCog from '@public/assets/icons/common/Cog.svg';
+import { useRouter } from 'next/router';
+import { wrapper } from 'styles/wrapper.styles';
 
-export const AdminLayout = ({ children }: PropsWithChildren) => {
-  <>
-    <PageTitle hideOrgPicker title="Admin" icon={<IconCog />} />
-    <div css={[styles.wrapper, wrapper.main]}>
-      <aside>
-        <NextLink href="/admin/users">Users</NextLink>
-      </aside>
-      <section>{children}</section>
-    </div>
-  </>;
+export const AdminLayout = () => {
+  const router = useRouter();
+  const { tab } = router.query;
+
+  return (
+    <>
+      <AdminTitle />
+      <section css={[styles.wrapper, wrapper.main]}>
+        <>
+          <AdminSidebar tab={tab as string} />
+          <AdminContent tab={tab as string} />
+        </>
+      </section>
+    </>
+  );
 };
