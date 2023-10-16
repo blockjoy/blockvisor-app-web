@@ -1,10 +1,10 @@
 import { AppLayout } from '@modules/layout';
-import { AdminLayout } from '@modules/admin';
+import { Admin } from '@modules/admin/components/Admin';
 
-const Admin = () => <AdminLayout />;
+const Component = () => <Admin />;
 
-Admin.getLayout = function getLayout(page: any) {
-  return <AppLayout pageTitle="Nodes">{page}</AppLayout>;
+Component.getLayout = function getLayout(page: any) {
+  return <AppLayout pageTitle="Admin">{page}</AppLayout>;
 };
 
-export default Admin;
+export default Component;

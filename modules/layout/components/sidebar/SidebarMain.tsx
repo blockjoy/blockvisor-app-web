@@ -7,7 +7,7 @@ import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconChat from '@public/assets/icons/common/Chat.svg';
-import IconCog from '@public/assets/icons/common/Cog.svg';
+import IconSliders from '@public/assets/icons/app/Sliders.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
@@ -69,8 +69,8 @@ export default () => {
   if (isSuperUser) {
     blocks[0].items.unshift({
       name: 'Admin',
-      path: '/admin',
-      icon: <IconCog />,
+      path: '/admin?tab=dashboard',
+      icon: <IconSliders />,
     });
   }
 

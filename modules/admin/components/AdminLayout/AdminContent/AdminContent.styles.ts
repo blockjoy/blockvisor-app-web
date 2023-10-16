@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 export const styles = {
   wrapper: css`
-    display: flex;
-    padding-top: 20px;
+    padding-left: 20px;
+    flex: 1 1 auto;
   `,
 };
