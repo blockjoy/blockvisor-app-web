@@ -19,9 +19,10 @@ const styles = {
 
 export const mapPaymentMethodsToRows = (
   paymentMethods: PaymentSource[],
-  handleRemove: (paymentMethod: PaymentSource) => void,
+  handleDelete: (paymentMethod: PaymentSource) => void,
   handleDefault: (paymentSourceId: string) => void,
   primaryPaymentMethodId?: string,
+  loadingItem?: string,
 ) => {
   const headers: TableHeader[] = [
     {
@@ -115,9 +116,10 @@ export const mapPaymentMethodsToRows = (
             component: (
               <PaymentMethodActions
                 paymentMethod={paymentMethod}
-                handleRemove={handleRemove}
+                handleRemove={handleDelete}
                 handleDefault={handleDefault}
                 isPrimary={primaryPaymentMethodId === paymentMethod.id}
+                isLoading={loadingItem === paymentMethod.id}
               />
             ),
           },

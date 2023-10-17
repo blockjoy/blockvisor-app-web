@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil';
 
 export type BillingContactsListProps = {
   billingContacts: Contact[];
-  handleRemove: (id: string) => void;
+  handleRemove: (id: string) => Promise<void>;
 };
 
 export const BillingContactsList = ({
@@ -25,7 +25,8 @@ export const BillingContactsList = ({
     setActiveView('dialog');
   };
 
-  const onConfirm = () => handleRemove(activeContact?.id!);
+  const onConfirm = async () => await handleRemove(activeContact?.id!);
+
   const onHide = () => setActiveView('list');
 
   const { headers, rows } = mapBillingContactsToRows(

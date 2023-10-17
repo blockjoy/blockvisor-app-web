@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useInvoice } from '@modules/billing';
 import { Button, SvgIcon } from '@shared/components';
 import { Invoice } from 'chargebee-typescript/lib/resources';
@@ -30,6 +31,8 @@ export const InvoiceDownload = ({ invoice }: InvoiceDownloadProps) => {
     link.remove();
 
     setIsLoading('finished');
+
+    toast.success('Invoice downloaded');
   };
 
   return (

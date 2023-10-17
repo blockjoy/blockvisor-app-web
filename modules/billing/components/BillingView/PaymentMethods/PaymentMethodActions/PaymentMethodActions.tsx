@@ -8,6 +8,7 @@ type PaymentMethodActionsProps = {
   handleRemove: (paymentMethod: PaymentSource) => void;
   handleDefault: (paymentSourceId: string) => void;
   isPrimary: boolean;
+  isLoading?: boolean;
 };
 
 export const PaymentMethodActions = ({
@@ -15,6 +16,7 @@ export const PaymentMethodActions = ({
   handleRemove,
   handleDefault,
   isPrimary,
+  isLoading,
 }: PaymentMethodActionsProps) => {
   let actions = [
     {
@@ -35,5 +37,7 @@ export const PaymentMethodActions = ({
     ];
   }
 
-  return <ActionsDropdown items={actions} align="right" />;
+  return (
+    <ActionsDropdown items={actions} align="right" isLoading={isLoading} />
+  );
 };

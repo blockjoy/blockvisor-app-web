@@ -9,8 +9,9 @@ import {
   billingSelectors,
   billingAtoms,
 } from '@modules/billing';
-import { Button, TableSkeleton } from '@shared/components';
+import { Alert, Button, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
+import { containers } from 'styles/containers.styles';
 
 export const BillingContacts = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
@@ -30,7 +31,7 @@ export const BillingContacts = () => {
   const handleAdding = () => setActiveView('action');
   const handleCancel = () => setActiveView('list');
 
-  const handleNewBillingContact = async (contact: IBillingContact) => {
+  const handleNew = async (contact: IBillingContact) => {
     const isAdded = checkIfBillingContactExists(
       billingContacts,
       contact?.email,
@@ -44,11 +45,20 @@ export const BillingContacts = () => {
     }
 
     await addBillingContact(contact);
+
+    toast.success('Billing Contact added');
+
     setActiveView('list');
   };
 
+  const handleRemove = async (id: string) => {
+    await removeBillingContact(id);
+
+    toast.success('Billing Contact removed');
+  };
+
   const actions: BillingContactsActions = {
-    add: handleNewBillingContact,
+    add: handleNew,
     cancel: handleCancel,
   };
 
@@ -57,6 +67,16 @@ export const BillingContacts = () => {
     subscriptionLoadingState !== 'finished'
   )
     return <TableSkeleton />;
+
+  if (!(subscription?.status === 'active'))
+    return (
+      <div css={containers.medium}>
+        <Alert>
+          Unlock the full potential of our platform by ensuring your
+          subscription is active. Only then can you view billing contacts.
+        </Alert>
+      </div>
+    );
 
   return activeView === 'list' ? (
     <>
@@ -69,7 +89,7 @@ export const BillingContacts = () => {
         ) : (
           <BillingContactsList
             billingContacts={billingContacts}
-            handleRemove={removeBillingContact}
+            handleRemove={handleRemove}
           />
         )}
       </div>

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, ChangeEvent } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Checkbox, Switch } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
@@ -25,7 +27,6 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { containers } from 'styles/containers.styles';
-import { useRouter } from 'next/router';
 
 type PaymentMethodFormProps = {
   handleCancel: VoidFunction;
@@ -88,6 +89,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
       await addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
     if (update && subscription?.id) getSubscription(subscription?.id);
+
+    toast.success('Payment method added');
 
     handleCancel();
   };

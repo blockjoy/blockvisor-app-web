@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button, ButtonGroup, Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -5,7 +6,7 @@ import { typo } from 'styles/utils.typography.styles';
 export type ConfirmDialogProps = {
   title: string;
   message: string;
-  handleConfirm: VoidFunction;
+  handleConfirm: () => void | Promise<void>;
   onHide: VoidFunction;
 };
 
@@ -15,8 +16,13 @@ export const ConfirmDialog = ({
   handleConfirm,
   onHide,
 }: ConfirmDialogProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleSubmit = async () => {
-    handleConfirm();
+    setIsLoading(true);
+
+    await Promise.resolve(handleConfirm());
+
+    setIsLoading(false);
     onHide();
   };
 
@@ -27,7 +33,7 @@ export const ConfirmDialog = ({
         <p>{message}</p>
       </div>
       <ButtonGroup type="extended">
-        <Button style="warning" onClick={handleSubmit}>
+        <Button style="warning" onClick={handleSubmit} loading={isLoading}>
           Confirm
         </Button>
         <Button style="outline" onClick={onHide}>

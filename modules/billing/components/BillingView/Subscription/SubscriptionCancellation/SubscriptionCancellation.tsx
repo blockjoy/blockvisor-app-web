@@ -36,8 +36,8 @@ export const SubscriptionCancellation = ({
     setEndOfTerm(newEndOfTermValue);
   }, []);
 
-  const onConfirm = useCallback(() => {
-    cancelSubscription({ endOfTerm });
+  const onConfirm = useCallback(async () => {
+    await cancelSubscription({ endOfTerm });
     handleBack();
   }, [cancelSubscription, handleBack, endOfTerm]);
 

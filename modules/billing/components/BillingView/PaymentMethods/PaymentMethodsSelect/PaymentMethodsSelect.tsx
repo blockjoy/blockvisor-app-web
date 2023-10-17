@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import {
@@ -32,17 +33,21 @@ export const PaymentMethodsSelect = ({
   const handleClose = () => setIsOpen(!isOpen);
 
   const { paymentMethodsLoadingState } = usePaymentMethods();
-  const { updateBillingProfile } = useSubscription();
+  const { updateBillingProfile, subscriptionPaymentMethodLoadingState } =
+    useSubscription();
 
   const handleSelect = (paymentMethod: PaymentSource) => {
     setActivePaymentMethod(paymentMethod);
     handleClose();
   };
 
-  const handleConfirm = () => {
-    updateBillingProfile(subscriptionId, {
+  const handleConfirm = async () => {
+    await updateBillingProfile(subscriptionId, {
       paymentMethodId: activePaymentMethod?.id,
     });
+
+    toast.success('Payment Information updated');
+
     onHide();
   };
 
@@ -69,7 +74,10 @@ export const PaymentMethodsSelect = ({
           size="small"
           style="secondary"
           onClick={handleConfirm}
-          disabled={!isDirty}
+          disabled={
+            !isDirty || subscriptionPaymentMethodLoadingState !== 'finished'
+          }
+          loading={subscriptionPaymentMethodLoadingState !== 'finished'}
         >
           Confirm
         </Button>

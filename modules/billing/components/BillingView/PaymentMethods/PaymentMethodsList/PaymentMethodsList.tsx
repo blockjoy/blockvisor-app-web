@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { Button, SvgIcon, Table } from '@shared/components';
 import {
@@ -17,21 +19,38 @@ export const PaymentMethodsList = ({
   handleAdding,
   handleRemove,
 }: PaymentMethodsListProps) => {
+  const [loadingItem, setLoadingItem] = useState<string>('');
   const { paymentMethods } = usePaymentMethods();
 
   const { customer, assignPaymentRole } = useCustomer();
 
-  const handleDefault = async (paymentSourceId: string) =>
+  const handleDefault = async (paymentSourceId: string) => {
+    setLoadingItem(paymentSourceId);
+
     await assignPaymentRole({
       payment_source_id: paymentSourceId,
       role: 'primary',
     });
 
+    setLoadingItem('');
+
+    toast.success('Updated default Payment method');
+  };
+
+  const handleDelete = (paymentMethod: PaymentSource) => {
+    setLoadingItem(paymentMethod?.id);
+
+    handleRemove(paymentMethod);
+
+    setLoadingItem('');
+  };
+
   const { headers, rows } = mapPaymentMethodsToRows(
     paymentMethods,
-    handleRemove,
+    handleDelete,
     handleDefault,
     customer?.primary_payment_source_id,
+    loadingItem,
   );
 
   return (
