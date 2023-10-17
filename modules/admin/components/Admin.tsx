@@ -3,8 +3,10 @@ import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { usePermissions } from '@modules/auth';
 
-const AdminLayout = dynamic<{}>(() =>
-  import(`./AdminLayout/AdminLayout`).then((module) => module.AdminLayout),
+const AdminDashboard = dynamic<{}>(() =>
+  import(`./AdminDashboard/AdminDashboard`).then(
+    (module) => module.AdminDashboard,
+  ),
 );
 
 export const Admin = () => {
@@ -12,5 +14,5 @@ export const Admin = () => {
 
   if (permissions !== undefined && !isSuperUser) notFound();
 
-  return <Suspense fallback={null}>{<AdminLayout />}</Suspense>;
+  return <Suspense fallback={null}>{<AdminDashboard />}</Suspense>;
 };

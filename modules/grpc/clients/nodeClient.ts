@@ -47,17 +47,18 @@ class NodeClient {
   }
 
   async listNodes(
-    orgId: string,
+    orgId?: string,
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
   ): Promise<NodeServiceListResponse> {
     const request = {
       orgId,
-      offset:
-        pagination?.current_page! === 0
-          ? 0
-          : pagination?.current_page! * pagination?.items_per_page!,
-      limit: pagination?.items_per_page,
+      offset: !pagination
+        ? 0
+        : pagination?.current_page! === 0
+        ? 0
+        : pagination?.current_page! * pagination?.items_per_page!,
+      limit: pagination?.items_per_page || 1000,
       statuses: filter_criteria?.nodeStatus?.map((f) => +f),
       nodeTypes: filter_criteria?.nodeType?.map((f) => +f),
       blockchainIds: filter_criteria?.blockchain,

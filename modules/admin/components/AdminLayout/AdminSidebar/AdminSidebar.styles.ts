@@ -6,19 +6,23 @@ export const styles = {
   sidebar: (theme: ITheme) => css`
     background: #2a2c2b;
     padding: 20px;
+    position: sticky;
+    top: 92px;
     display: grid;
+    grid-auto-rows: 1fr;
     gap: 4px;
     place-items: center;
     border-radius: 6px;
     min-width: 250px;
+    height: 260px;
   `,
   link: (theme: ITheme) => css`
     color: ${theme.colorText};
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     gap: 12px;
-    height: 44px;
     padding: 0 12px;
     border-radius: 6px;
     text-transform: capitalize;

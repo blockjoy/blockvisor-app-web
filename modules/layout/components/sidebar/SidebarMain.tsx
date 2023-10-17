@@ -69,7 +69,7 @@ export default () => {
   if (isSuperUser) {
     blocks[0].items.unshift({
       name: 'Admin',
-      path: '/admin?tab=dashboard',
+      path: '/admin',
       icon: <IconSliders />,
     });
   }
