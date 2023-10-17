@@ -1,9 +1,4 @@
-import {
-  SetterOrUpdater,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
 import { Subscription } from 'chargebee-typescript/lib/resources';
 import {
@@ -21,6 +16,7 @@ interface ISubscriptionHook {
   subscription: Subscription | null;
   subscriptionLoadingState: LoadingState;
   setSubscriptionLoadingState: SetterOrUpdater<LoadingState>;
+  subscriptionPaymentMethodLoadingState: LoadingState;
   getSubscription: (id: string) => Promise<void>;
   createSubscription: (params: {
     itemPriceId: string;
@@ -50,9 +46,10 @@ export const useSubscription = (): ISubscriptionHook => {
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
-  const subscriptionPaymentMethodLoadingState = useSetRecoilState(
-    billingAtoms.subscriptionPaymentMethodLoadingState,
-  );
+  const [
+    subscriptionPaymentMethodLoadingState,
+    setSubscriptionPaymentMethodLoadingState,
+  ] = useRecoilState(billingAtoms.subscriptionPaymentMethodLoadingState);
 
   const { createUserSubscription } = useUserSubscription();
 
@@ -146,7 +143,7 @@ export const useSubscription = (): ISubscriptionHook => {
     id: string,
     updateParams: { paymentMethodId: string },
   ) => {
-    subscriptionPaymentMethodLoadingState('loading');
+    setSubscriptionPaymentMethodLoadingState('loading');
 
     const { paymentMethodId } = updateParams;
 
@@ -164,7 +161,7 @@ export const useSubscription = (): ISubscriptionHook => {
     } catch (error) {
       console.error('Failed to update Billing profile', error);
     } finally {
-      subscriptionPaymentMethodLoadingState('finished');
+      setSubscriptionPaymentMethodLoadingState('finished');
     }
   };
 
@@ -200,6 +197,8 @@ export const useSubscription = (): ISubscriptionHook => {
 
     subscriptionLoadingState,
     setSubscriptionLoadingState,
+
+    subscriptionPaymentMethodLoadingState,
 
     getSubscription,
     createSubscription,

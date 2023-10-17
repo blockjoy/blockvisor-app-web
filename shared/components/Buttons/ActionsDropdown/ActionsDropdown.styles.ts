@@ -1,5 +1,11 @@
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { ITheme } from 'types/theme';
+
+const spin = keyframes`
+  100% {
+    transform: rotate(1turn);
+  }
+`;
 
 export const styles = {
   wrapper: css`
@@ -53,6 +59,9 @@ export const styles = {
     svg path {
       fill: ${theme.colorLabel};
     }
+  `,
+  cogIcon: css`
+    animation: ${spin} 0.9s infinite linear;
   `,
   iconActive: css`
     transform: rotate(-180deg);

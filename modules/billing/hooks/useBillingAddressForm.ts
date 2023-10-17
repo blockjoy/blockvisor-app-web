@@ -56,7 +56,7 @@ export const useBillingAddressForm = (): IBillingAddressFormHook => {
       });
 
       toast.success(
-        `Billing address ${
+        `Account Profile ${
           !!billingAddress ? 'updated' : 'created'
         } successfully`,
       );

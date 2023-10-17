@@ -1,33 +1,26 @@
-import { useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { Button } from '@shared/components';
 import {
+  ActiveView,
   SubscriptionStatus,
   billingSelectors,
-  useSubscriptionLifecycle,
 } from '@modules/billing';
 import { containers } from 'styles/containers.styles';
 import { spacing } from 'styles/utils.spacing.styles';
+import { styles } from './SubscriptionActions.styles';
 
 type SubscriptionActionsProps = {
-  handleCancellation: VoidFunction;
+  onViewChange: SetterOrUpdater<ActiveView>;
 };
 
 export const SubscriptionActions = ({
-  handleCancellation,
+  onViewChange,
 }: SubscriptionActionsProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const { restoreSubscription, reactivateSubscription } =
-    useSubscriptionLifecycle();
-
-  const handleRestoreSubscription = useCallback(() => {
-    restoreSubscription(subscription?.id!);
-  }, [restoreSubscription, subscription]);
-
-  const handleReactivateSubscription = useCallback(() => {
-    reactivateSubscription(subscription?.id!);
-  }, [reactivateSubscription, subscription]);
+  const handleCancellation = () => onViewChange('cancel-subscription');
+  const handleRestoration = () => onViewChange('restore-subscription');
+  const handleReactivation = () => onViewChange('reactivate-subscription');
 
   const SUBSCRIPTION_CONFIG = {
     [SubscriptionStatus.active]: {
@@ -37,13 +30,13 @@ export const SubscriptionActions = ({
     },
     [SubscriptionStatus.non_renewing]: {
       label: 'Restore subscription',
-      action: handleRestoreSubscription,
+      action: handleRestoration,
       message:
         'Changed your mind? You can easily restore your subscription here.',
     },
     [SubscriptionStatus.cancelled]: {
       label: 'Reactivate subscription',
-      action: handleReactivateSubscription,
+      action: handleReactivation,
       message:
         'Miss our services? Reactivate your subscription with a single click!',
     },
@@ -54,9 +47,19 @@ export const SubscriptionActions = ({
   return (
     <div css={containers.mediumSmall}>
       <p css={spacing.bottom.medium}>{subscriptionConfig.message}</p>
-      <Button style="outline" size="small" onClick={subscriptionConfig.action}>
-        {subscriptionConfig.label}
-      </Button>
+      {subscription?.status === 'active' ? (
+        <a onClick={subscriptionConfig.action} css={styles.link}>
+          {subscriptionConfig.label}
+        </a>
+      ) : (
+        <Button
+          style="outline"
+          size="small"
+          onClick={subscriptionConfig.action}
+        >
+          {subscriptionConfig.label}
+        </Button>
+      )}
     </div>
   );
 };

@@ -120,7 +120,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
   };
 
   const deletePaymentMethod = async (id: string) => {
-    setPaymentMethodLoadingState('initializing');
+    setPaymentMethodLoadingState('loading');
     setPaymentMethodsLoadingState('loading');
 
     try {

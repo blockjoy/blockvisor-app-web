@@ -23,7 +23,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
     useRecoilState(billingAtoms.subscriptionLoadingState);
 
   const cancelSubscription = async ({ endOfTerm }: { endOfTerm: boolean }) => {
-    setSubscriptionLoadingState('initializing');
+    setSubscriptionLoadingState('loading');
 
     try {
       const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.cancel, {
@@ -42,7 +42,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
   };
 
   const restoreSubscription = async (id: string) => {
-    setSubscriptionLoadingState('initializing');
+    setSubscriptionLoadingState('loading');
 
     try {
       const data = await fetchBilling(
@@ -59,7 +59,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
   };
 
   const reactivateSubscription = async (id: string) => {
-    setSubscriptionLoadingState('initializing');
+    setSubscriptionLoadingState('loading');
 
     try {
       const params: _subscription.update_params = {
