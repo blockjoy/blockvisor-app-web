@@ -43,12 +43,13 @@ export const NodeViewHeaderActions = ({
     });
   }
 
-  items.push({
-    title: 'Report Problem',
-    icon: <IconWarning />,
-    method: onReportProblemClicked,
-    hasBorderTop: true,
-  });
+  // TODO: Add back in once implemented
+  // items.push({
+  //   title: 'Report Problem',
+  //   icon: <IconWarning />,
+  //   method: onReportProblemClicked,
+  //   hasBorderTop: true,
+  // });
 
   return items.length ? <ActionsDropdown items={items} /> : null;
 };
