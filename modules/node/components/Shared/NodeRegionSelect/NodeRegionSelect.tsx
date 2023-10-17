@@ -28,7 +28,7 @@ export const NodeRegionSelect = ({
   const { defaultOrganization } = useDefaultOrganization();
 
   useEffect(() => {
-    if (version.id) {
+    if (version?.id) {
       setServerError('');
       (async () => {
         try {
@@ -51,8 +51,10 @@ export const NodeRegionSelect = ({
           onLoad('');
         }
       })();
+    } else {
+      setRegions([]);
     }
-  }, [version.id]);
+  }, [version?.id]);
 
   return (
     <Select

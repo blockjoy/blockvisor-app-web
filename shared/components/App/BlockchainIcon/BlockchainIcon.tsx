@@ -201,7 +201,7 @@ export const BlockchainIcon: FC<Props> = ({
   }
 
   return (
-    <span css={styles.icon}>
+    <span css={styles.icon(size)}>
       {!hideTooltip && (
         <Tooltip
           noWrap

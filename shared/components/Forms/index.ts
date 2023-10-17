@@ -10,3 +10,4 @@ export * from './VanillaForm/Textbox/Textbox';
 export * from './ReactHookForm/Input/Input';
 export * from './ReactHookForm/Input/InputUtil';
 export * from './ReactHookForm/Input/InputLabel';
+export * from './ReactHookForm/Textarea/Textarea';

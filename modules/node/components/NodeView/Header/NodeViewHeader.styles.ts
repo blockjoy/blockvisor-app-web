@@ -114,6 +114,7 @@ export const styles = {
     p {
       color: ${theme.colorDefault};
       font-size: 14px;
+      text-transform: capitalize;
     }
   `,
   nodeStatus: css`

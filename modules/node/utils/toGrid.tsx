@@ -9,7 +9,7 @@ import { getNodeJobProgress } from './getNodeJobProgress';
 export const toGrid = (
   nodeList: Node[],
   onCellClick: (args0: any) => void,
-  onDeleteClick: (id: string, name: string, hostId: string) => void,
+  onDeleteClick: (node: Node) => void,
 ) => {
   const { hasPermission } = usePermissions();
 
@@ -24,8 +24,7 @@ export const toGrid = (
         ? () => onCellClick(node.id)
         : undefined;
 
-    const handleDeleteClicked = () =>
-      onDeleteClick(node.id, node.name, node.hostId);
+    const handleDeleteClicked = () => onDeleteClick(node);
 
     return {
       key: node.id,

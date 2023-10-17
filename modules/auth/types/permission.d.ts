@@ -83,6 +83,7 @@ type Permission =
   | 'org-update'
   | 'subscription-create'
   | 'subscription-delete'
+  | 'subscription-update'
   | 'subscription-get'
   | 'subscription-list'
   | 'user-admin-filter'
