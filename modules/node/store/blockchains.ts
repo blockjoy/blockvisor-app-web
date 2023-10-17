@@ -1,6 +1,6 @@
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { nodeTypeList } from '@shared/constants/lookups';
-import { atom, selector } from 'recoil';
+import { atom, selector, selectorFamily } from 'recoil';
 
 const blockchainSearch = atom<string | null>({
   key: 'blockchains.search',
@@ -68,11 +68,25 @@ const blockchainsWithNodeTypes = selector({
   },
 });
 
+const activeBlockchain = selectorFamily<Blockchain | null, string>({
+  key: 'blockchains.active',
+  get:
+    (id) =>
+    ({ get }) => {
+      const blockchainList = get(blockchains);
+      const activeBlockchain = blockchainList?.find((b) => b.id === id);
+
+      return activeBlockchain || null;
+    },
+});
+
 export const blockchainSelectors = {
   blockchainsHasError,
   blockchainsWithNodeTypes,
   filteredBySearchTermBlockchains,
+  activeBlockchain,
 };
+
 export const blockchainsAtoms = {
   blockchains,
   blockchainsLoadingState,

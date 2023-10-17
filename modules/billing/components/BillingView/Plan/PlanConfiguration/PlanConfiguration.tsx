@@ -110,14 +110,14 @@ export const PlanConfiguration = ({
       <ButtonGroup type="flex">
         <Button
           style="secondary"
-          size="medium"
+          size="small"
           disabled={!paymentMethodId || !paymentMethods.length}
           loading={subscriptionLoadingState !== 'finished'}
           onClick={handleSubscription}
         >
           Confirm
         </Button>
-        <Button style="outline" size="medium" onClick={handleCancel}>
+        <Button style="outline" size="small" onClick={handleCancel}>
           Cancel
         </Button>
       </ButtonGroup>

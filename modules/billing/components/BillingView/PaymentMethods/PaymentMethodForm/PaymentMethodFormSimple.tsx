@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { toast } from 'react-toastify';
 import { Button, ButtonGroup } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
@@ -91,6 +92,7 @@ export const PaymentMethodFormSimple = ({
     try {
       await onSubmit(cardRef, additionalData, handleSucces);
       handleSubmit();
+      toast.success('Payment method added');
     } catch (error: any) {
       console.log('Error while adding a payment method', error);
     }

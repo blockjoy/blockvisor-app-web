@@ -37,15 +37,17 @@ export const PaymentMethods = () => {
     setActiveView('dialog');
   };
 
-  const handleDeletePaymentMethod = () => {
-    deletePaymentMethod(activePaymentMethod?.id!);
+  const handleDeletePaymentMethod = async () => {
+    await deletePaymentMethod(activePaymentMethod?.id!);
+
     onHide();
+
     toast.success(
       `Payment Method (${activePaymentMethod?.card?.masked_number}) Deleted`,
     );
   };
 
-  if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
+  if (paymentMethodsLoadingState === 'initializing') return <TableSkeleton />;
 
   return (
     <>

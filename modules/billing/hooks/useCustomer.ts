@@ -23,7 +23,7 @@ interface ICustomerHook {
 export const useCustomer = (): ICustomerHook => {
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
-  const { billingId, updateUserBilling, deleteUserBilling } = useUserBilling();
+  const { updateUserBilling } = useUserBilling();
 
   const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
   const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
@@ -37,13 +37,6 @@ export const useCustomer = (): ICustomerHook => {
       const data = await fetchBilling(BILLING_API_ROUTES.customer.get, {
         id,
       });
-
-      // TODO: Remove this after testing phase
-      try {
-        if (!data && billingId) await deleteUserBilling(user?.id!);
-      } catch (error: any) {
-        console.error('Failed to deleting User Billing', error);
-      }
 
       setCustomer(data);
     } catch (error: any) {

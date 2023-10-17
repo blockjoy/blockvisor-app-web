@@ -7,7 +7,6 @@ import {
   billingSelectors,
   PaymentMethodsSelect,
   usePaymentMethod,
-  billingAtoms,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
@@ -20,9 +19,6 @@ export const PaymentPreview = () => {
   const [activeView, setActiveView] = useState<'list' | 'dialog'>('list');
 
   const subscription = useRecoilValue(billingSelectors.subscription);
-  const subscriptionPaymentMethodLoadingState = useRecoilValue(
-    billingAtoms.subscriptionPaymentMethodLoadingState,
-  );
 
   const { paymentMethod, paymentMethodLoadingState } = usePaymentMethod();
 
@@ -42,11 +38,7 @@ export const PaymentPreview = () => {
     );
   };
 
-  if (
-    paymentMethodLoadingState !== 'finished' ||
-    subscriptionPaymentMethodLoadingState === 'loading'
-  )
-    return <TableSkeleton />;
+  if (paymentMethodLoadingState !== 'finished') return <TableSkeleton />;
 
   return activeView === 'list' ? (
     <div css={containers.mediumSmall}>
@@ -70,6 +62,7 @@ export const PaymentPreview = () => {
             !!paymentMethod?.card ? handleUpdate : handleNewPaymentMethod
           }
           css={spacing.top.medium}
+          disabled={subscription?.status !== 'active'}
         >
           {!!paymentMethod?.card
             ? 'Update payment method'

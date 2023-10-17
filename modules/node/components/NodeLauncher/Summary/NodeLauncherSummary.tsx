@@ -196,8 +196,12 @@ export const NodeLauncherSummary = ({
 <<<<<<< HEAD
 =======
 
-      <FormLabel>Pricing</FormLabel>
-      <Pricing itemPrice={itemPrice} />
+      {itemPrice && (
+        <>
+          <FormLabel>Pricing</FormLabel>
+          <Pricing itemPrice={itemPrice} />
+        </>
+      )}
 
       {isSuperUser && (
         <div css={[spacing.top.medium, spacing.bottom.medium]}>

@@ -1,13 +1,12 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  active: css`
+  dropdownItem: css`
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
     white-space: nowrap;
   `,
-
   dropdown: css`
     top: 54px;
     right: 5px;

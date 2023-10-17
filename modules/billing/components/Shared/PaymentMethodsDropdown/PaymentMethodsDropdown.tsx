@@ -75,7 +75,7 @@ export const PaymentMethodsDropdown = ({
       items={paymentMethods?.map((paymentMethod) => ({
         name: paymentMethod.card?.last4 ?? '',
         element: (
-          <p css={styles.active}>
+          <p css={styles.dropdownItem}>
             <span css={styles.title}>
               {CreditCardTypes[paymentMethod.card?.brand!]} ***
               {paymentMethod.card?.last4}

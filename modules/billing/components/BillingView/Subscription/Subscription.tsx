@@ -6,24 +6,35 @@ import {
   SubscriptionCancellation,
   billingAtoms,
   SubscriptionPreview,
+  SubscriptionActivation,
 } from '@modules/billing';
+
+export type ActiveView =
+  | 'preview'
+  | 'cancel-subscription'
+  | 'reactivate-subscription'
+  | 'restore-subscription';
 
 export const Subscription = () => {
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-  const [activeView, setActiveView] = useState<'view' | 'cancel'>('view');
+  const [activeView, setActiveView] = useState<ActiveView>('preview');
 
-  const handleCancellation = () => setActiveView('cancel');
-  const handleBack = () => setActiveView('view');
+  const handleBack = () => setActiveView('preview');
 
   if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
 
   return (
     <>
-      <SubscriptionPreview handleCancellation={handleCancellation} />
-      {activeView === 'cancel' && (
+      {activeView === 'reactivate-subscription' && <p>test123</p>}
+      <SubscriptionPreview onViewChange={setActiveView} />
+      {activeView === 'cancel-subscription' && (
         <SubscriptionCancellation handleBack={handleBack} />
+      )}
+      {(activeView === 'reactivate-subscription' ||
+        activeView === 'restore-subscription') && (
+        <SubscriptionActivation handleBack={handleBack} type={activeView} />
       )}
     </>
   );

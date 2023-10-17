@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { _subscription } from 'chargebee-typescript';
 import { DetailsView } from '@shared/components';
 import {
@@ -6,15 +6,16 @@ import {
   SubscriptionInfo,
   PaymentPreview,
   SubscriptionActions,
+  ActiveView,
 } from '@modules/billing';
 import { usePermissions } from '@modules/auth';
 
 type SubscriptionPreviewProps = {
-  handleCancellation: VoidFunction;
+  onViewChange: SetterOrUpdater<ActiveView>;
 };
 
 export const SubscriptionPreview = ({
-  handleCancellation,
+  onViewChange,
 }: SubscriptionPreviewProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
@@ -38,7 +39,7 @@ export const SubscriptionPreview = ({
       )}
       {canUpdateSubscription && canDeleteSubscription && (
         <DetailsView headline="Subscription status">
-          <SubscriptionActions handleCancellation={handleCancellation} />
+          <SubscriptionActions onViewChange={onViewChange} />
         </DetailsView>
       )}
     </>

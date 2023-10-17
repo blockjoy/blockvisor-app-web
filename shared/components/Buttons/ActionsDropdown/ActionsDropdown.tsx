@@ -1,6 +1,6 @@
+import { ReactNode, useRef, useState } from 'react';
 import { DropdownMenu, DropdownItem, SvgIcon } from '@shared/components';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
-import { ReactNode, useRef, useState } from 'react';
 import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
@@ -16,9 +16,14 @@ type Item = {
 type Props = {
   items: Item[];
   align?: 'left' | 'right';
+  isLoading?: boolean;
 };
 
-export const ActionsDropdown = ({ items, align = 'left' }: Props) => {
+export const ActionsDropdown = ({
+  items,
+  align = 'left',
+  isLoading = false,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -39,7 +44,11 @@ export const ActionsDropdown = ({ items, align = 'left' }: Props) => {
       ref={dropdownRef}
     >
       <button css={styles.dropdownButton} onClick={handleClick}>
-        <SvgIcon>
+        <SvgIcon
+          {...(isLoading && {
+            additionalStyles: [styles.cogIcon],
+          })}
+        >
           <IconCog />
         </SvgIcon>
         <p>Actions</p>
