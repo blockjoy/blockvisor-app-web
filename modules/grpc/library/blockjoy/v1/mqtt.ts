@@ -2,7 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { Host } from "./host";
 import { Invitation } from "./invitation";
-import { Node } from "./node";
+import { Node, NodeResource } from "./node";
 import { Org } from "./org";
 import { User } from "./user";
 
@@ -16,33 +16,20 @@ export interface NodeMessage {
 }
 
 export interface NodeCreated {
-  node:
-    | Node
-    | undefined;
-  /** The id of the person that updated the node */
-  createdBy: string;
-  createdByName: string;
-  createdByEmail: string;
+  node: Node | undefined;
+  createdBy: NodeResource | undefined;
 }
 
 export interface NodeUpdated {
-  node:
-    | Node
-    | undefined;
-  /** The id of the person that updated the node, if there is one. */
-  updatedBy?: string | undefined;
-  updatedByName?: string | undefined;
-  updatedByEmail?: string | undefined;
+  node: Node | undefined;
+  updatedBy: NodeResource | undefined;
 }
 
 export interface NodeDeleted {
   nodeId: string;
   hostId: string;
   orgId: string;
-  /** The id of the persona that deleted the node */
-  deletedBy: string;
-  deletedByName: string;
-  deletedByEmail: string;
+  deletedBy: NodeResource | undefined;
 }
 
 export interface OrgMessage {
@@ -214,7 +201,7 @@ export const NodeMessage = {
 };
 
 function createBaseNodeCreated(): NodeCreated {
-  return { node: undefined, createdBy: "", createdByName: "", createdByEmail: "" };
+  return { node: undefined, createdBy: undefined };
 }
 
 export const NodeCreated = {
@@ -222,14 +209,8 @@ export const NodeCreated = {
     if (message.node !== undefined) {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
-    if (message.createdBy !== "") {
-      writer.uint32(18).string(message.createdBy);
-    }
-    if (message.createdByName !== "") {
-      writer.uint32(26).string(message.createdByName);
-    }
-    if (message.createdByEmail !== "") {
-      writer.uint32(34).string(message.createdByEmail);
+    if (message.createdBy !== undefined) {
+      NodeResource.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -253,21 +234,7 @@ export const NodeCreated = {
             break;
           }
 
-          message.createdBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.createdByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.createdByEmail = reader.string();
+          message.createdBy = NodeResource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -285,15 +252,15 @@ export const NodeCreated = {
   fromPartial(object: DeepPartial<NodeCreated>): NodeCreated {
     const message = createBaseNodeCreated();
     message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
-    message.createdBy = object.createdBy ?? "";
-    message.createdByName = object.createdByName ?? "";
-    message.createdByEmail = object.createdByEmail ?? "";
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? NodeResource.fromPartial(object.createdBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseNodeUpdated(): NodeUpdated {
-  return { node: undefined, updatedBy: undefined, updatedByName: undefined, updatedByEmail: undefined };
+  return { node: undefined, updatedBy: undefined };
 }
 
 export const NodeUpdated = {
@@ -302,13 +269,7 @@ export const NodeUpdated = {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
     if (message.updatedBy !== undefined) {
-      writer.uint32(18).string(message.updatedBy);
-    }
-    if (message.updatedByName !== undefined) {
-      writer.uint32(26).string(message.updatedByName);
-    }
-    if (message.updatedByEmail !== undefined) {
-      writer.uint32(34).string(message.updatedByEmail);
+      NodeResource.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -332,21 +293,7 @@ export const NodeUpdated = {
             break;
           }
 
-          message.updatedBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.updatedByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.updatedByEmail = reader.string();
+          message.updatedBy = NodeResource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -364,15 +311,15 @@ export const NodeUpdated = {
   fromPartial(object: DeepPartial<NodeUpdated>): NodeUpdated {
     const message = createBaseNodeUpdated();
     message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
-    message.updatedBy = object.updatedBy ?? undefined;
-    message.updatedByName = object.updatedByName ?? undefined;
-    message.updatedByEmail = object.updatedByEmail ?? undefined;
+    message.updatedBy = (object.updatedBy !== undefined && object.updatedBy !== null)
+      ? NodeResource.fromPartial(object.updatedBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseNodeDeleted(): NodeDeleted {
-  return { nodeId: "", hostId: "", orgId: "", deletedBy: "", deletedByName: "", deletedByEmail: "" };
+  return { nodeId: "", hostId: "", orgId: "", deletedBy: undefined };
 }
 
 export const NodeDeleted = {
@@ -386,14 +333,8 @@ export const NodeDeleted = {
     if (message.orgId !== "") {
       writer.uint32(26).string(message.orgId);
     }
-    if (message.deletedBy !== "") {
-      writer.uint32(34).string(message.deletedBy);
-    }
-    if (message.deletedByName !== "") {
-      writer.uint32(42).string(message.deletedByName);
-    }
-    if (message.deletedByEmail !== "") {
-      writer.uint32(50).string(message.deletedByEmail);
+    if (message.deletedBy !== undefined) {
+      NodeResource.encode(message.deletedBy, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -431,21 +372,7 @@ export const NodeDeleted = {
             break;
           }
 
-          message.deletedBy = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.deletedByName = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.deletedByEmail = reader.string();
+          message.deletedBy = NodeResource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -465,9 +392,9 @@ export const NodeDeleted = {
     message.nodeId = object.nodeId ?? "";
     message.hostId = object.hostId ?? "";
     message.orgId = object.orgId ?? "";
-    message.deletedBy = object.deletedBy ?? "";
-    message.deletedByName = object.deletedByName ?? "";
-    message.deletedByEmail = object.deletedByEmail ?? "";
+    message.deletedBy = (object.deletedBy !== undefined && object.deletedBy !== null)
+      ? NodeResource.fromPartial(object.deletedBy)
+      : undefined;
     return message;
   },
 };

@@ -3,6 +3,7 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { ApiResource } from "./api_key";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -155,20 +156,8 @@ export interface Node {
   ipGateway: string;
   selfUpdate: boolean;
   network: string;
-  /**
-   * The id of the user that created this node. For the earliest nodes we
-   * created, this field was not tracked and is therefore not populated.
-   */
-  createdBy?:
-    | string
-    | undefined;
-  /** The name of the aforementioned user. */
-  createdByName?:
-    | string
-    | undefined;
-  /** The email of said aforementioned user. */
-  createdByEmail?:
-    | string
+  createdBy:
+    | NodeResource
     | undefined;
   /** A list of ip addresses allowed to access public ports on this node. */
   allowIps: FilteredIpAddr[];
@@ -190,6 +179,24 @@ export interface Node {
    * may individually start, stop and fail.
    */
   jobs: NodeJob[];
+}
+
+/** Details around the user or resource that updated a node. */
+export interface NodeResource {
+  /** The resource type that updated this node. */
+  resource?:
+    | ApiResource
+    | undefined;
+  /** The uuid of the resource that updated this node. */
+  resourceId?:
+    | string
+    | undefined;
+  /** The name of the creator (if updated by a user resource). */
+  name?:
+    | string
+    | undefined;
+  /** The email of the creator (if updated by a user resource). */
+  email?: string | undefined;
 }
 
 /** This message is used to create a new node. */
@@ -530,8 +537,6 @@ function createBaseNode(): Node {
     selfUpdate: false,
     network: "",
     createdBy: undefined,
-    createdByName: undefined,
-    createdByEmail: undefined,
     allowIps: [],
     denyIps: [],
     placement: undefined,
@@ -615,13 +620,7 @@ export const Node = {
       writer.uint32(194).string(message.network);
     }
     if (message.createdBy !== undefined) {
-      writer.uint32(202).string(message.createdBy);
-    }
-    if (message.createdByName !== undefined) {
-      writer.uint32(210).string(message.createdByName);
-    }
-    if (message.createdByEmail !== undefined) {
-      writer.uint32(218).string(message.createdByEmail);
+      NodeResource.encode(message.createdBy, writer.uint32(202).fork()).ldelim();
     }
     for (const v of message.allowIps) {
       FilteredIpAddr.encode(v!, writer.uint32(226).fork()).ldelim();
@@ -821,21 +820,7 @@ export const Node = {
             break;
           }
 
-          message.createdBy = reader.string();
-          continue;
-        case 26:
-          if (tag !== 210) {
-            break;
-          }
-
-          message.createdByName = reader.string();
-          continue;
-        case 27:
-          if (tag !== 218) {
-            break;
-          }
-
-          message.createdByEmail = reader.string();
+          message.createdBy = NodeResource.decode(reader, reader.uint32());
           continue;
         case 28:
           if (tag !== 226) {
@@ -911,9 +896,9 @@ export const Node = {
     message.ipGateway = object.ipGateway ?? "";
     message.selfUpdate = object.selfUpdate ?? false;
     message.network = object.network ?? "";
-    message.createdBy = object.createdBy ?? undefined;
-    message.createdByName = object.createdByName ?? undefined;
-    message.createdByEmail = object.createdByEmail ?? undefined;
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? NodeResource.fromPartial(object.createdBy)
+      : undefined;
     message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.placement = (object.placement !== undefined && object.placement !== null)
@@ -921,6 +906,85 @@ export const Node = {
       : undefined;
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
     message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseNodeResource(): NodeResource {
+  return { resource: undefined, resourceId: undefined, name: undefined, email: undefined };
+}
+
+export const NodeResource = {
+  encode(message: NodeResource, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.resource !== undefined) {
+      writer.uint32(8).int32(message.resource);
+    }
+    if (message.resourceId !== undefined) {
+      writer.uint32(18).string(message.resourceId);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.email !== undefined) {
+      writer.uint32(34).string(message.email);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeResource {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeResource();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.resource = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.resourceId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeResource>): NodeResource {
+    return NodeResource.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeResource>): NodeResource {
+    const message = createBaseNodeResource();
+    message.resource = object.resource ?? undefined;
+    message.resourceId = object.resourceId ?? undefined;
+    message.name = object.name ?? undefined;
+    message.email = object.email ?? undefined;
     return message;
   },
 };
