@@ -34,11 +34,11 @@ export const useUpdates = () => {
 
         addToNodeList(node);
 
-        if (node?.createdBy === user?.id) break;
+        if (node?.createdBy?.resourceId === user?.id) break;
 
         showNotification(
           type,
-          `${node?.createdByName} launched a node `,
+          `${node?.createdBy?.name} launched a node `,
           hasPermission('node-admin-get') ? (
             <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
           ) : (
@@ -67,8 +67,7 @@ export const useUpdates = () => {
           payloadDeserialized.deleted,
         );
 
-        const { nodeId, deletedBy, deletedByName }: NodeDeleted =
-          payloadDeserialized.deleted!;
+        const { nodeId, deletedBy }: NodeDeleted = payloadDeserialized.deleted!;
 
         removeFromNodeList(nodeId);
 
@@ -76,9 +75,9 @@ export const useUpdates = () => {
           unloadNode();
         }
 
-        if (deletedBy === user?.id) break;
+        if (deletedBy?.resourceId === user?.id) break;
 
-        showNotification(type, `${deletedByName} just deleted a node`);
+        showNotification(type, `${deletedBy?.name} just deleted a node`);
         break;
       }
       default:
