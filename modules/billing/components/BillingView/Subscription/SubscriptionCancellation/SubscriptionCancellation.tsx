@@ -1,5 +1,6 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { toast } from 'react-toastify';
 import { formatters } from '@shared/index';
 import {
   ButtonGroup,
@@ -38,6 +39,8 @@ export const SubscriptionCancellation = ({
 
   const onConfirm = useCallback(async () => {
     await cancelSubscription({ endOfTerm });
+
+    toast.success('Subscription cancelled');
     handleBack();
   }, [cancelSubscription, handleBack, endOfTerm]);
 
