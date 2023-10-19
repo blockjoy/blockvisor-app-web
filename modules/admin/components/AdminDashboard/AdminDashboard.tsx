@@ -1,24 +1,49 @@
-import { AdminTitle } from '../AdminLayout/AdminTitle/AdminTitle';
-import { AdminNodes } from './AdminNodes/AdminNodes';
-import { AdminUsers } from './AdminUsers/AdminUsers';
-import { AdminHosts } from './AdminHosts/AdminHosts';
-import { AdminOrgs } from './AdminOrgs/AdminOrgs';
+import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { styles } from './AdminDashboard.styles';
-import { wrapper } from 'styles/wrapper.styles';
+import { AdminDashboardCard } from './AdminDashboardCard/AdminDashboardCard';
+
+type Card = {
+  name: 'Nodes' | 'Hosts' | 'Users' | 'Orgs';
+  getTotal: () => Promise<number>;
+};
 
 export const AdminDashboard = () => {
-  return (
-    <>
-      <AdminTitle />
-      <div css={[wrapper.main, styles.wrapper]}>
-        <section css={[styles.grid]}>
-          <AdminUsers />
+  const router = useRouter();
+  const { name, id } = router.query;
 
-          {/* <AdminNodes />
-          <AdminHosts />
-          <AdminOrgs /> */}
-        </section>
-      </div>
-    </>
+  const { getTotalUsers, getTotalHosts, getTotalNodes, getTotalOrgs } =
+    useAdminGetTotals();
+
+  const cards: Card[] = [
+    {
+      name: 'Nodes',
+      getTotal: getTotalNodes,
+    },
+    {
+      name: 'Hosts',
+      getTotal: getTotalHosts,
+    },
+    {
+      name: 'Orgs',
+      getTotal: getTotalOrgs,
+    },
+    {
+      name: 'Users',
+      getTotal: getTotalUsers,
+    },
+  ];
+
+  return (
+    <div css={styles.wrapper}>
+      {cards.map((card) => (
+        <AdminDashboardCard
+          key={card.name}
+          name={card.name}
+          getTotal={card.getTotal}
+        />
+      ))}
+    </div>
   );
 };

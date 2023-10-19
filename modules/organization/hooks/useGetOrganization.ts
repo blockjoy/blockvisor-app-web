@@ -5,11 +5,8 @@ import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
 import { useDefaultOrganization } from './useDefaultOrganization';
 import { useGetOrganizations } from './useGetOrganizations';
-import { useSwitchOrganization } from './useSwitchOrganization';
 
 export function useGetOrganization() {
-  const { switchOrganization } = useSwitchOrganization();
-
   const { getDefaultOrganization } = useDefaultOrganization();
 
   const { organizations } = useGetOrganizations();
@@ -39,10 +36,6 @@ export function useGetOrganization() {
         setIsLoading('finished');
         return;
       }
-    }
-
-    if (organization) {
-      switchOrganization(organization!.id, organization!.name);
     }
 
     setIsLoading('finished');

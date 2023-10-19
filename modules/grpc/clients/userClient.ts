@@ -4,7 +4,12 @@ import {
   UserServiceDefinition,
   UserServiceListResponse,
 } from '../library/blockjoy/v1/user';
-import { getOptions, handleError } from '@modules/grpc';
+import {
+  getOptions,
+  getPaginationOffset,
+  handleError,
+  UIPagination,
+} from '@modules/grpc';
 import { createChannel, createClient, Metadata } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 
@@ -36,14 +41,13 @@ class UserClient {
   }
 
   async listUsers(
-    emailLike: string = '',
-    offset: number = 0,
-    limit: number = 6,
+    emailLike: string = '%',
+    pagination?: UIPagination,
   ): Promise<UserServiceListResponse> {
     const request = {
-      offset,
-      limit,
-      emailLike: `${emailLike}%`,
+      offset: getPaginationOffset(pagination),
+      limit: pagination?.items_per_page || 1000,
+      emailLike: `%${emailLike}%`,
     };
     console.log('listUsersRequest', request);
     try {

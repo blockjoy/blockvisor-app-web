@@ -7,15 +7,19 @@ import {
   Region,
 } from '../library/blockjoy/v1/host';
 
-import { callWithTokenRefresh, handleError } from '@modules/grpc';
+import {
+  callWithTokenRefresh,
+  getPaginationOffset,
+  handleError,
+} from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { NodeType } from '../library/blockjoy/v1/node';
 
-export type UIFilterCriteria = {
+export type HostFilterCriteria = {
   hostStatus?: string[];
 };
 
-export type UIPagination = {
+export type HostPagination = {
   current_page: number;
   items_per_page: number;
 };
@@ -29,15 +33,15 @@ class HostClient {
   }
 
   async listHosts(
-    orgId: string,
-    filterCriteria?: UIFilterCriteria,
-    pagination?: UIPagination,
+    orgId?: string,
+    filterCriteria?: HostFilterCriteria,
+    pagination?: HostPagination,
   ): Promise<HostServiceListResponse> {
     const request = {
       orgId,
-      offset: (pagination?.current_page! - 1) * pagination?.items_per_page!,
+      offset: getPaginationOffset(pagination),
       // offset: 0,
-      limit: pagination?.items_per_page,
+      limit: pagination?.items_per_page || 1,
       // statuses: filterCriteria?.hostStatus?.map((f) => +f),
     };
 

@@ -3,6 +3,7 @@ import {
   OrgServiceClient,
   OrgServiceDefinition,
   OrgServiceGetProvisionTokenResponse,
+  OrgServiceListResponse,
   OrgServiceResetProvisionTokenResponse,
   OrgServiceUpdateResponse,
 } from '../library/blockjoy/v1/org';
@@ -13,6 +14,8 @@ import {
   handleError,
   authClient,
   checkForRefreshTokenError,
+  UIPagination,
+  getPaginationOffset,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
@@ -38,17 +41,24 @@ class OrganizationClient {
     }
   }
 
-  async getOrganizations(): Promise<Org[] | StatusResponse> {
-    const request = { memberId: getIdentity().id, offset: 0, limit: 100 };
+  async getOrganizations(
+    memberId?: string | undefined,
+    pagination?: UIPagination,
+  ): Promise<OrgServiceListResponse> {
+    const request = {
+      memberId,
+      offset: getPaginationOffset(pagination!),
+      limit: pagination?.items_per_page || 10,
+    };
     console.log('listOrganizationsRequest', request);
     try {
       await authClient.refreshToken();
       const response = await this.client.list(request, getOptions());
       console.log('listOrganizationsResponse', response);
-      return response.orgs;
+      return response;
     } catch (err: any) {
-      checkForRefreshTokenError(err.message);
-      return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');
+      // checkForRefreshTokenError(err.message);
+      return handleError(err);
     }
   }
 

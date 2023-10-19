@@ -1,3 +1,4 @@
+import { useIdentity } from '@modules/auth';
 import { organizationClient } from '@modules/grpc';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -6,6 +7,8 @@ import { organizationAtoms } from '../store/organizationAtoms';
 import { useDefaultOrganization } from './useDefaultOrganization';
 
 export function useGetOrganizations() {
+  const { user } = useIdentity();
+
   const [organizations, setOrganizations] = useRecoilState(
     organizationAtoms.allOrganizations,
   );
@@ -26,10 +29,12 @@ export function useGetOrganizations() {
   ) => {
     if (showLoader) setIsLoading('initializing');
 
-    const organizations: any = await organizationClient.getOrganizations();
+    const response = await organizationClient.getOrganizations(user?.id!, {
+      current_page: 0,
+      items_per_page: 1000,
+    });
 
-    checkForTokenError(organizations);
-    setOrganizations(organizations);
+    setOrganizations(response.orgs);
 
     if (init) await getDefaultOrganization(organizations);
 

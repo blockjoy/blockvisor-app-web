@@ -1,5 +1,5 @@
 import { AppLayout } from '@modules/layout';
-import { Admin } from '@modules/admin/components/Admin';
+import { Admin } from '@modules/admin/Admin';
 
 const Component = () => <Admin />;
 
