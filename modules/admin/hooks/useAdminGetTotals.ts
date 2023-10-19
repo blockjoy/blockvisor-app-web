@@ -23,12 +23,18 @@ export const useAdminGetTotals = () => {
   };
 
   const getTotalHosts = async () => {
-    const response = await hostClient.listHosts();
+    const response = await hostClient.listHosts(undefined, undefined, {
+      current_page: 0,
+      items_per_page: 0,
+    });
     return response.hostCount;
   };
 
   const getTotalOrgs = async () => {
-    const response = await organizationClient.getOrganizations();
+    const response = await organizationClient.getOrganizations({
+      current_page: 0,
+      items_per_page: 0,
+    });
     return response.orgCount;
   };
 

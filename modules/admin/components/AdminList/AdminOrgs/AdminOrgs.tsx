@@ -23,10 +23,13 @@ export const AdminOrgs = () => {
   const { getTotalOrgs: getTotal } = useAdminGetTotals();
 
   const getList = async (searchTerm?: string, page?: number) => {
-    const response = await organizationClient.getOrganizations(undefined, {
-      current_page: page!,
-      items_per_page: adminContext.listPageSize,
-    });
+    const response = await organizationClient.getOrganizations(
+      {
+        current_page: page!,
+        items_per_page: adminContext.listPageSize,
+      },
+      true,
+    );
     return {
       list: response.orgs,
       total: response.orgCount,

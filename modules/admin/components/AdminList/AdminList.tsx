@@ -8,7 +8,6 @@ import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRouter } from 'next/router';
-import { isMobile } from 'react-device-detect';
 
 export type AdminGetList = {
   list: Node[] | User[] | Host[] | Org[];
@@ -27,16 +26,7 @@ export const AdminList = () => {
   const { name } = router.query;
   return (
     <section css={styles.grid}>
-      {isMobile ? (
-        <>
-          <AdminNodes />
-          <AdminHosts />
-          <AdminUsers />
-          <AdminOrgs />
-        </>
-      ) : (
-        views.find((v) => v.name === (name as string))?.component
-      )}
+      {views.find((v) => v.name === (name as string))?.component}
     </section>
   );
 };

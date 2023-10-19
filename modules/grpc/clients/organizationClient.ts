@@ -42,11 +42,11 @@ class OrganizationClient {
   }
 
   async getOrganizations(
-    memberId?: string | undefined,
     pagination?: UIPagination,
+    isAdmin?: boolean,
   ): Promise<OrgServiceListResponse> {
     const request = {
-      memberId,
+      memberId: !isAdmin ? getIdentity().id : undefined,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page || 10,
     };

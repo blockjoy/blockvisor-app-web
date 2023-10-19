@@ -7,12 +7,19 @@ export const styles = {
     display: flex;
     align-items: center;
     width: 100%;
-    height: 72px;
+    padding-top: 2px;
     padding-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
 
     h2 {
       font-size: 16px;
+    }
+
+    @media ${breakpoints.toXlrg} {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 10px;
     }
   `,
   cardTitle: (theme: ITheme) => css`

@@ -5,7 +5,7 @@ import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AdminGetList } from '../AdminList';
-import { styles } from './AdminList.styles';
+import { styles } from './AdminListView.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
 
@@ -34,7 +34,7 @@ export const AdminListView = ({
   getList,
 }: Props) => {
   const router = useRouter();
-  const { search } = router.query;
+  const { search, page } = router.query;
   const [list, setList] = useState<AdminSupportedViews>([]);
   const [listTotal, setListTotal] = useState<number>();
   const [total, setTotal] = useState(0);
@@ -55,25 +55,31 @@ export const AdminListView = ({
   const handleSearch = async (search: string) => {
     setSearchTerm(search);
     setListPage(0);
-    handleGetList(search, listPage);
   };
 
-  const handlePageChanged = (offset: number) => {
-    setListPage(offset);
-    handleGetList(searchTerm, offset);
+  const handlePageChanged = (page: number) => {
+    router.push({
+      pathname: `/admin`,
+      query: {
+        search,
+        name,
+        page,
+      },
+    });
+    setListPage(page);
   };
 
   useEffect(() => {
     (async () => {
+      if (search) setSearchTerm(search as string);
+      if (page) setListPage(+page?.toString()!);
       handleGetTotal();
-
-      if (search) {
-        setSearchTerm(search as string);
-      }
-
-      handleGetList(search as string, listPage);
     })();
   }, []);
+
+  useEffect(() => {
+    handleGetList(searchTerm, listPage);
+  }, [listPage, searchTerm]);
 
   return (
     <article key={name} id={name} css={styles.card}>

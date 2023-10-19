@@ -16,6 +16,10 @@ export const styles = {
     border-radius: 6px;
     min-width: 200px;
     height: 220px;
+
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
   `,
   link: (theme: ITheme) => css`
     color: ${theme.colorText};

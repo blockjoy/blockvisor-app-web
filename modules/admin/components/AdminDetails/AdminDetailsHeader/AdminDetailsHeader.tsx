@@ -1,3 +1,4 @@
+import { Skeleton } from '@shared/components';
 import { AdminHeader } from '../../AdminHeader/AdminHeader';
 import { styles } from './AdminDetailsHeader.styles';
 
@@ -18,7 +19,7 @@ export const AdminDetailsHeader = ({
     <AdminHeader name={name} icon={icon}>
       <div css={styles.wrapper}>
         <span css={styles.separator}>/</span>
-        <h2>{detailsName}</h2>
+        <h2>{!detailsName ? <Skeleton width="200px" /> : detailsName}</h2>
         {!!onOpenAppView && (
           <button css={styles.button} onClick={onOpenAppView}>
             Open In App

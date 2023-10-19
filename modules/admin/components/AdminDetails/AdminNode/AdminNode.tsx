@@ -13,6 +13,8 @@ export const AdminNode = () => {
 
   const openInApp = () => router.push(`/nodes/${id as string}`);
 
+  const ignoreItems = ['hostId', 'hostOrgId', 'blockchainId', 'orgId'];
+
   useEffect(() => {
     (async () => {
       const response = await nodeClient.getNode(id as string);
@@ -28,7 +30,7 @@ export const AdminNode = () => {
         detailsName={item?.name!}
         onOpenAppView={openInApp}
       />
-      <AdminDetailsTable item={item!} />
+      <AdminDetailsTable item={item!} ignoreItems={ignoreItems} />
     </>
   );
 };
