@@ -13,6 +13,7 @@ import {
   authClient,
   callWithTokenRefresh,
   getOptions,
+  getPaginationOffset,
   handleError,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
@@ -53,12 +54,8 @@ class NodeClient {
   ): Promise<NodeServiceListResponse> {
     const request = {
       orgId,
-      offset: !pagination
-        ? 0
-        : pagination?.current_page! === 0
-        ? 0
-        : pagination?.current_page! * pagination?.items_per_page!,
-      limit: pagination?.items_per_page || 1000,
+      offset: getPaginationOffset(pagination!),
+      limit: pagination?.items_per_page || 1,
       statuses: filter_criteria?.nodeStatus?.map((f) => +f),
       nodeTypes: filter_criteria?.nodeType?.map((f) => +f),
       blockchainIds: filter_criteria?.blockchain,
@@ -97,7 +94,7 @@ class NodeClient {
     }
   }
 
-  async getNode(id: string): Promise<Node | StatusResponse> {
+  async getNode(id: string): Promise<Node> {
     const request = { id };
     console.log('getNodeRequest', request);
     await authClient.refreshToken();

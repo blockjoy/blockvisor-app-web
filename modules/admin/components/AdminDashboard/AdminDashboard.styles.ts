@@ -3,19 +3,16 @@ import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   wrapper: css`
-    display: flex;
-  `,
-  grid: css`
-    flex: 1 1 auto;
-    min-width: 0;
     display: grid;
-    grid-template-columns: repeat(1, auto);
-    grid-auto-rows: max-content;
+    width: 100%;
     gap: 20px;
-    padding-top: 20px;
+
+    @media ${breakpoints.fromLrg} {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
     @media ${breakpoints.fromXHuge} {
-      grid-template-columns: repeat(2, 50%);
+      grid-template-columns: repeat(4, 1fr);
     }
   `,
 };

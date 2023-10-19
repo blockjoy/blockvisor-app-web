@@ -1,9 +1,11 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   wrapper: css`
     display: flex;
-    gap: 20px;
-    padding-top: 20px;
+  `,
+  grid: css`
+    flex: 1 1 auto;
   `,
 };
