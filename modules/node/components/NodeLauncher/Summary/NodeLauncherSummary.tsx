@@ -16,7 +16,7 @@ import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { isMobile } from 'react-device-detect';
 
@@ -28,13 +28,13 @@ type Props = {
   isCreating: boolean;
   selectedHost: Host | null;
   selectedVersion: BlockchainVersion;
-  selectedRegion: string;
+  selectedRegion: Region | null;
   nodeLauncherState: NodeLauncherState;
   canAddNode: boolean;
   onCreateNodeClicked: VoidFunction;
   onHostChanged: (host: Host | null) => void;
-  onRegionChanged: (region: string) => void;
-  onRegionsLoaded: (region: string) => void;
+  onRegionChanged: (region: Region | null) => void;
+  onRegionsLoaded: (region: Region | null) => void;
 };
 
 export const NodeLauncherSummary: FC<Props> = ({

@@ -25,11 +25,13 @@ export interface Blockchain {
   repoUrl?:
     | string
     | undefined;
-  /**
-   * This list contains all the possible node types that can be created for this
-   * kind of blockchain.
-   */
+  /** All possible node types that can be created for this chain. */
   nodeTypes: BlockchainNodeType[];
+  /** Optional statistics around the state of this chain. */
+  stats: BlockchainStats | undefined;
+}
+
+export interface BlockchainStats {
   nodeCount?: number | undefined;
   nodeCountActive?: number | undefined;
   nodeCountSyncing?: number | undefined;
@@ -123,11 +125,7 @@ function createBaseBlockchain(): Blockchain {
     projectUrl: undefined,
     repoUrl: undefined,
     nodeTypes: [],
-    nodeCount: undefined,
-    nodeCountActive: undefined,
-    nodeCountSyncing: undefined,
-    nodeCountProvisioning: undefined,
-    nodeCountFailed: undefined,
+    stats: undefined,
   };
 }
 
@@ -157,20 +155,8 @@ export const Blockchain = {
     for (const v of message.nodeTypes) {
       BlockchainNodeType.encode(v!, writer.uint32(66).fork()).ldelim();
     }
-    if (message.nodeCount !== undefined) {
-      writer.uint32(72).uint64(message.nodeCount);
-    }
-    if (message.nodeCountActive !== undefined) {
-      writer.uint32(80).uint64(message.nodeCountActive);
-    }
-    if (message.nodeCountSyncing !== undefined) {
-      writer.uint32(88).uint64(message.nodeCountSyncing);
-    }
-    if (message.nodeCountProvisioning !== undefined) {
-      writer.uint32(96).uint64(message.nodeCountProvisioning);
-    }
-    if (message.nodeCountFailed !== undefined) {
-      writer.uint32(112).uint64(message.nodeCountFailed);
+    if (message.stats !== undefined) {
+      BlockchainStats.encode(message.stats, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -239,39 +225,11 @@ export const Blockchain = {
           message.nodeTypes.push(BlockchainNodeType.decode(reader, reader.uint32()));
           continue;
         case 9:
-          if (tag !== 72) {
+          if (tag !== 74) {
             break;
           }
 
-          message.nodeCount = longToNumber(reader.uint64() as Long);
-          continue;
-        case 10:
-          if (tag !== 80) {
-            break;
-          }
-
-          message.nodeCountActive = longToNumber(reader.uint64() as Long);
-          continue;
-        case 11:
-          if (tag !== 88) {
-            break;
-          }
-
-          message.nodeCountSyncing = longToNumber(reader.uint64() as Long);
-          continue;
-        case 12:
-          if (tag !== 96) {
-            break;
-          }
-
-          message.nodeCountProvisioning = longToNumber(reader.uint64() as Long);
-          continue;
-        case 14:
-          if (tag !== 112) {
-            break;
-          }
-
-          message.nodeCountFailed = longToNumber(reader.uint64() as Long);
+          message.stats = BlockchainStats.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -296,6 +254,100 @@ export const Blockchain = {
     message.projectUrl = object.projectUrl ?? undefined;
     message.repoUrl = object.repoUrl ?? undefined;
     message.nodeTypes = object.nodeTypes?.map((e) => BlockchainNodeType.fromPartial(e)) || [];
+    message.stats = (object.stats !== undefined && object.stats !== null)
+      ? BlockchainStats.fromPartial(object.stats)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseBlockchainStats(): BlockchainStats {
+  return {
+    nodeCount: undefined,
+    nodeCountActive: undefined,
+    nodeCountSyncing: undefined,
+    nodeCountProvisioning: undefined,
+    nodeCountFailed: undefined,
+  };
+}
+
+export const BlockchainStats = {
+  encode(message: BlockchainStats, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.nodeCount !== undefined) {
+      writer.uint32(8).uint64(message.nodeCount);
+    }
+    if (message.nodeCountActive !== undefined) {
+      writer.uint32(16).uint64(message.nodeCountActive);
+    }
+    if (message.nodeCountSyncing !== undefined) {
+      writer.uint32(24).uint64(message.nodeCountSyncing);
+    }
+    if (message.nodeCountProvisioning !== undefined) {
+      writer.uint32(32).uint64(message.nodeCountProvisioning);
+    }
+    if (message.nodeCountFailed !== undefined) {
+      writer.uint32(40).uint64(message.nodeCountFailed);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainStats {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainStats();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.nodeCount = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.nodeCountActive = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.nodeCountSyncing = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.nodeCountProvisioning = longToNumber(reader.uint64() as Long);
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.nodeCountFailed = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainStats>): BlockchainStats {
+    return BlockchainStats.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainStats>): BlockchainStats {
+    const message = createBaseBlockchainStats();
     message.nodeCount = object.nodeCount ?? undefined;
     message.nodeCountActive = object.nodeCountActive ?? undefined;
     message.nodeCountSyncing = object.nodeCountSyncing ?? undefined;
@@ -934,10 +986,10 @@ export interface BlockchainServiceClient<CallOptionsExt = {}> {
   ): Promise<BlockchainServiceListResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

@@ -28,7 +28,7 @@ import {
   sortNetworks,
   sortNodeTypes,
 } from '@modules/node/utils/sortLists';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { usePermissions } from '@modules/auth';
@@ -72,7 +72,7 @@ export const NodeLauncher = () => {
     useState<BlockchainNodeType>();
   const [selectedHost, setSelectedHost] = useState<Host | null>(null);
   const [selectedVersion, setSelectedVersion] = useState<BlockchainVersion>();
-  const [selectedRegion, setSelectedRegion] = useState<string>();
+  const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
 
   const { defaultOrganization } = useDefaultOrganization();
 
@@ -173,10 +173,10 @@ export const NodeLauncher = () => {
   const handleHostChanged = (host: Host | null) => {
     Mixpanel.track('Launch Node - Host Changed');
     setSelectedHost(host);
-    setSelectedRegion(undefined);
+    setSelectedRegion(null);
   };
 
-  const handleRegionChanged = (region: string) => {
+  const handleRegionChanged = (region: Region | null) => {
     Mixpanel.track('Launch Node - Region Changed');
     setSelectedRegion(region);
   };
@@ -203,7 +203,7 @@ export const NodeLauncher = () => {
     Mixpanel.track('Launch Node - Key File Uploaded');
   };
 
-  const handleRegionsLoaded = (region: string) => {
+  const handleRegionsLoaded = (region: Region | null) => {
     setHasRegionListError(Boolean(region));
     setSelectedRegion(region);
   };
@@ -224,7 +224,7 @@ export const NodeLauncher = () => {
         ? { hostId: selectedHost.id }
         : {
             scheduler: {
-              region: selectedRegion!,
+              region: selectedRegion?.name!,
               resource:
                 NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
             },

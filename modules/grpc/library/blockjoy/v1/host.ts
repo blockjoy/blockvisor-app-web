@@ -139,7 +139,9 @@ export interface HostServiceGetResponse {
 }
 
 export interface HostServiceListRequest {
-  orgId: string;
+  orgId?:
+    | string
+    | undefined;
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -219,7 +221,20 @@ export interface HostServiceRegionsRequest {
 }
 
 export interface HostServiceRegionsResponse {
-  regions: string[];
+  regions: Region[];
+}
+
+export interface Region {
+  name?:
+    | string
+    | undefined;
+  /**
+   * We currently have regions in the following pricing tiers:
+   * NA1: North america
+   * EU1: Europe
+   * AP1: Asia-Pacific
+   */
+  pricingTier?: string | undefined;
 }
 
 function createBaseHost(): Host {
@@ -879,12 +894,12 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: "", offset: 0, limit: 0 };
+  return { orgId: undefined, offset: 0, limit: 0 };
 }
 
 export const HostServiceListRequest = {
   encode(message: HostServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
+    if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
     if (message.offset !== 0) {
@@ -939,7 +954,7 @@ export const HostServiceListRequest = {
 
   fromPartial(object: DeepPartial<HostServiceListRequest>): HostServiceListRequest {
     const message = createBaseHostServiceListRequest();
-    message.orgId = object.orgId ?? "";
+    message.orgId = object.orgId ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     return message;
@@ -1581,7 +1596,7 @@ function createBaseHostServiceRegionsResponse(): HostServiceRegionsResponse {
 export const HostServiceRegionsResponse = {
   encode(message: HostServiceRegionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.regions) {
-      writer.uint32(10).string(v!);
+      Region.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -1598,7 +1613,7 @@ export const HostServiceRegionsResponse = {
             break;
           }
 
-          message.regions.push(reader.string());
+          message.regions.push(Region.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1615,7 +1630,64 @@ export const HostServiceRegionsResponse = {
 
   fromPartial(object: DeepPartial<HostServiceRegionsResponse>): HostServiceRegionsResponse {
     const message = createBaseHostServiceRegionsResponse();
-    message.regions = object.regions?.map((e) => e) || [];
+    message.regions = object.regions?.map((e) => Region.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRegion(): Region {
+  return { name: undefined, pricingTier: undefined };
+}
+
+export const Region = {
+  encode(message: Region, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.pricingTier !== undefined) {
+      writer.uint32(18).string(message.pricingTier);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Region {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegion();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pricingTier = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Region>): Region {
+    return Region.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Region>): Region {
+    const message = createBaseRegion();
+    message.name = object.name ?? undefined;
+    message.pricingTier = object.pricingTier ?? undefined;
     return message;
   },
 };
@@ -1809,10 +1881,10 @@ export interface HostServiceClient<CallOptionsExt = {}> {
   ): Promise<HostServiceRegionsResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

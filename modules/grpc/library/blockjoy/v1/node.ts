@@ -245,7 +245,9 @@ export interface NodeServiceGetResponse {
  */
 export interface NodeServiceListRequest {
   /** The organization within which we will search for nodes. */
-  orgId: string;
+  orgId?:
+    | string
+    | undefined;
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -301,7 +303,7 @@ export interface NodeServiceUpdateConfigResponse {
 export interface NodeServiceUpdateStatusRequest {
   /** The UUID of the node that you want to update. */
   id: string;
-  /** The version of the blockchain software that should now be ran on the node. */
+  /** The version of the node image that is currently used. */
   version?:
     | string
     | undefined;
@@ -1208,12 +1210,12 @@ export const NodeServiceGetResponse = {
 };
 
 function createBaseNodeServiceListRequest(): NodeServiceListRequest {
-  return { orgId: "", offset: 0, limit: 0, statuses: [], nodeTypes: [], blockchainIds: [], hostId: undefined };
+  return { orgId: undefined, offset: 0, limit: 0, statuses: [], nodeTypes: [], blockchainIds: [], hostId: undefined };
 }
 
 export const NodeServiceListRequest = {
   encode(message: NodeServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
+    if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
     if (message.offset !== 0) {
@@ -1332,7 +1334,7 @@ export const NodeServiceListRequest = {
 
   fromPartial(object: DeepPartial<NodeServiceListRequest>): NodeServiceListRequest {
     const message = createBaseNodeServiceListRequest();
-    message.orgId = object.orgId ?? "";
+    message.orgId = object.orgId ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.statuses = object.statuses?.map((e) => e) || [];
@@ -2613,10 +2615,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceDeleteResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
