@@ -28,6 +28,12 @@ export const styles = {
       opacity: 1;
       visibility: visible;
     }
+
+    @media ${breakpoints.toXlrg} {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
   `,
   totalValue: (theme: ITheme) => css`
     display: block;

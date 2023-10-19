@@ -23,13 +23,17 @@ export const AdminContext =
 export const AdminLayout = () => {
   const router = useRouter();
   const { name, id } = router.query;
+
+  const capitalizeName = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1);
+
   return (
     <AdminContext.Provider value={initialContextParams}>
       <>
         <PageTitle
           title="Admin"
           icon={<IconAdmin />}
-          childTitle={!name ? 'Dashboard' : (name as string)}
+          childTitle={!name ? 'Dashboard' : capitalizeName(name as string)}
           onTitleClick={name ? () => router.push('/admin') : undefined}
           hideOrgPicker
         />

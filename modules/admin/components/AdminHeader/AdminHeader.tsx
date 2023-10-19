@@ -14,7 +14,7 @@ export const AdminHeader = ({ icon, name, children }: Props) => {
   const { id } = router.query;
 
   const handleTitleClicked = () => {
-    router.push(`/admin?name=${name}`);
+    router.back();
   };
 
   return (

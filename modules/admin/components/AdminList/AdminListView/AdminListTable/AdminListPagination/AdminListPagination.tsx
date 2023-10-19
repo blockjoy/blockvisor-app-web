@@ -25,17 +25,10 @@ export const AdminListPagination = ({
 
     const pagesToDisplay = Math.min(maxPagesToDisplay, pageCount);
 
-    console.log('pagesToDisplay', pagesToDisplay);
-
     let newPages = [];
 
     let start = 0;
     let end = pagesToDisplay;
-
-    console.log('pagination', {
-      start,
-      end,
-    });
 
     if (pageIndex > 0 && pageIndex > (pagesToDisplay - 1) / 2) {
       start = pageIndex - (pagesToDisplay - 1) / 2;

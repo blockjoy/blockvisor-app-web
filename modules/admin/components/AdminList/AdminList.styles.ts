@@ -7,5 +7,6 @@ export const styles = {
   `,
   grid: css`
     flex: 1 1 auto;
+    min-width: 0;
   `,
 };

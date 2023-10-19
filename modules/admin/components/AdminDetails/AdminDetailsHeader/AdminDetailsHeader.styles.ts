@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -11,6 +12,10 @@ export const styles = {
   separator: (theme: ITheme) => css`
     margin-left: 20px;
     color: ${theme.colorBorderGrey};
+
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
   `,
   button: (theme: ITheme) => css`
     border: 1px solid ${theme.colorBorderGrey};
@@ -18,7 +23,8 @@ export const styles = {
     background: transparent;
     color: ${theme.colorText};
     font-size: 14px;
-    padding: 10px 12px;
+    padding: 0 12px;
+    height: 44px;
     margin-left: 10px;
     opacity: 0.8;
     cursor: pointer;
