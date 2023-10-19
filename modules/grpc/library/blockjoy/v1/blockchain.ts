@@ -75,6 +75,37 @@ export interface BlockchainVersion {
   properties: BlockchainProperty[];
 }
 
+export interface BlockchainServiceAddNodeTypeRequest {
+  /** The blockchain UUID for the new `node_type`. */
+  id: string;
+  /** The new `node_type` supported by the blockchain. */
+  nodeType: NodeType;
+  /** A readable description of this new `node_type`. */
+  description?: string | undefined;
+}
+
+export interface BlockchainServiceAddNodeTypeResponse {
+}
+
+export interface BlockchainServiceAddVersionRequest {
+  /** The blockchain UUID to add the new version to. */
+  id: string;
+  /** A semantically parseable representation of the new version. */
+  version: string;
+  /** A readable description of the new version. */
+  description?:
+    | string
+    | undefined;
+  /** The node type of the new version (with cookbook metadata available). */
+  nodeType: NodeType;
+  /** The properties applicable to this `version` and `node_type`. */
+  properties: BlockchainProperty[];
+}
+
+export interface BlockchainServiceAddVersionResponse {
+  version: BlockchainVersion | undefined;
+}
+
 /**
  * A property that is supported by a node of a particular:
  * 1. blockchain type,
@@ -775,6 +806,247 @@ export const BlockchainVersion = {
   },
 };
 
+function createBaseBlockchainServiceAddNodeTypeRequest(): BlockchainServiceAddNodeTypeRequest {
+  return { id: "", nodeType: 0, description: undefined };
+}
+
+export const BlockchainServiceAddNodeTypeRequest = {
+  encode(message: BlockchainServiceAddNodeTypeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.nodeType !== 0) {
+      writer.uint32(16).int32(message.nodeType);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(26).string(message.description);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceAddNodeTypeRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServiceAddNodeTypeRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.nodeType = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServiceAddNodeTypeRequest>): BlockchainServiceAddNodeTypeRequest {
+    return BlockchainServiceAddNodeTypeRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainServiceAddNodeTypeRequest>): BlockchainServiceAddNodeTypeRequest {
+    const message = createBaseBlockchainServiceAddNodeTypeRequest();
+    message.id = object.id ?? "";
+    message.nodeType = object.nodeType ?? 0;
+    message.description = object.description ?? undefined;
+    return message;
+  },
+};
+
+function createBaseBlockchainServiceAddNodeTypeResponse(): BlockchainServiceAddNodeTypeResponse {
+  return {};
+}
+
+export const BlockchainServiceAddNodeTypeResponse = {
+  encode(_: BlockchainServiceAddNodeTypeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceAddNodeTypeResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServiceAddNodeTypeResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServiceAddNodeTypeResponse>): BlockchainServiceAddNodeTypeResponse {
+    return BlockchainServiceAddNodeTypeResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<BlockchainServiceAddNodeTypeResponse>): BlockchainServiceAddNodeTypeResponse {
+    const message = createBaseBlockchainServiceAddNodeTypeResponse();
+    return message;
+  },
+};
+
+function createBaseBlockchainServiceAddVersionRequest(): BlockchainServiceAddVersionRequest {
+  return { id: "", version: "", description: undefined, nodeType: 0, properties: [] };
+}
+
+export const BlockchainServiceAddVersionRequest = {
+  encode(message: BlockchainServiceAddVersionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.version !== "") {
+      writer.uint32(18).string(message.version);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(26).string(message.description);
+    }
+    if (message.nodeType !== 0) {
+      writer.uint32(32).int32(message.nodeType);
+    }
+    for (const v of message.properties) {
+      BlockchainProperty.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceAddVersionRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServiceAddVersionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.nodeType = reader.int32() as any;
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.properties.push(BlockchainProperty.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServiceAddVersionRequest>): BlockchainServiceAddVersionRequest {
+    return BlockchainServiceAddVersionRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainServiceAddVersionRequest>): BlockchainServiceAddVersionRequest {
+    const message = createBaseBlockchainServiceAddVersionRequest();
+    message.id = object.id ?? "";
+    message.version = object.version ?? "";
+    message.description = object.description ?? undefined;
+    message.nodeType = object.nodeType ?? 0;
+    message.properties = object.properties?.map((e) => BlockchainProperty.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseBlockchainServiceAddVersionResponse(): BlockchainServiceAddVersionResponse {
+  return { version: undefined };
+}
+
+export const BlockchainServiceAddVersionResponse = {
+  encode(message: BlockchainServiceAddVersionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.version !== undefined) {
+      BlockchainVersion.encode(message.version, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServiceAddVersionResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServiceAddVersionResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.version = BlockchainVersion.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServiceAddVersionResponse>): BlockchainServiceAddVersionResponse {
+    return BlockchainServiceAddVersionResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainServiceAddVersionResponse>): BlockchainServiceAddVersionResponse {
+    const message = createBaseBlockchainServiceAddVersionResponse();
+    message.version = (object.version !== undefined && object.version !== null)
+      ? BlockchainVersion.fromPartial(object.version)
+      : undefined;
+    return message;
+  },
+};
+
 function createBaseBlockchainProperty(): BlockchainProperty {
   return { name: "", displayName: "", default: undefined, uiType: 0, required: false };
 }
@@ -957,6 +1229,24 @@ export const BlockchainServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Add a new supported blockchain `node_type`. */
+    addNodeType: {
+      name: "AddNodeType",
+      requestType: BlockchainServiceAddNodeTypeRequest,
+      requestStream: false,
+      responseType: BlockchainServiceAddNodeTypeResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Add a new blockchain version. */
+    addVersion: {
+      name: "AddVersion",
+      requestType: BlockchainServiceAddVersionRequest,
+      requestStream: false,
+      responseType: BlockchainServiceAddVersionResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -971,6 +1261,16 @@ export interface BlockchainServiceImplementation<CallContextExt = {}> {
     request: BlockchainServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<BlockchainServiceListResponse>>;
+  /** Add a new supported blockchain `node_type`. */
+  addNodeType(
+    request: BlockchainServiceAddNodeTypeRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<BlockchainServiceAddNodeTypeResponse>>;
+  /** Add a new blockchain version. */
+  addVersion(
+    request: BlockchainServiceAddVersionRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<BlockchainServiceAddVersionResponse>>;
 }
 
 export interface BlockchainServiceClient<CallOptionsExt = {}> {
@@ -984,6 +1284,16 @@ export interface BlockchainServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<BlockchainServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<BlockchainServiceListResponse>;
+  /** Add a new supported blockchain `node_type`. */
+  addNodeType(
+    request: DeepPartial<BlockchainServiceAddNodeTypeRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<BlockchainServiceAddNodeTypeResponse>;
+  /** Add a new blockchain version. */
+  addVersion(
+    request: DeepPartial<BlockchainServiceAddVersionRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<BlockchainServiceAddVersionResponse>;
 }
 
 declare var self: any | undefined;
