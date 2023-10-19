@@ -6,10 +6,11 @@ import { useRouter } from 'next/router';
 
 type Props = {
   name: string;
+  icon: React.ReactNode;
   getTotal: () => Promise<number>;
 };
 
-export const AdminDashboardCard = ({ name, getTotal }: Props) => {
+export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
   const router = useRouter();
   const searchText = useRef('');
   const [total, setTotal] = useState<number>();
@@ -38,8 +39,16 @@ export const AdminDashboardCard = ({ name, getTotal }: Props) => {
 
   return (
     <article css={styles.card}>
-      <label css={styles.cardLabel}>{name}</label>
-      <var css={styles.cardValue}>{total}</var>
+      <div css={styles.cardTitle}>
+        <span css={styles.cardIcon}>
+          <SvgIcon size="20px"> {icon}</SvgIcon>
+        </span>
+        <div>
+          <label css={styles.cardLabel}>{name}</label>
+          <var css={styles.cardValue}>{total}</var>
+        </div>
+      </div>
+
       <div css={styles.search}>
         <span css={styles.searchIcon}>
           <SvgIcon isDefaultColor>

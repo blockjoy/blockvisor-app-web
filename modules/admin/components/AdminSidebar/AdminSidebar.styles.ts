@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 import { rgba } from 'polished';
+import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   sidebar: (theme: ITheme) => css`

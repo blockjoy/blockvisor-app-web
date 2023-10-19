@@ -6,20 +6,37 @@ export const styles = {
   card: (theme: ITheme) => css`
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 40px 20px 20px;
+    justify-content: center;
+    padding: 40px 30px 24px;
     border-radius: 6px;
     border: 1px solid ${theme.colorBorderGrey};
   `,
+  cardTitle: css`
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+  `,
+  cardIcon: (theme: ITheme) => css`
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: ${theme.colorInput};
+
+    path {
+      fill: ${theme.colorPrimary};
+    }
+  `,
   cardLabel: (theme: ITheme) => css`
+    display: block;
     color: ${theme.colorDefault};
+    margin-bottom: 2px;
   `,
   cardValue: (theme: ITheme) => css`
     font-style: normal;
     font-size: 34px;
-    margin-bottom: 10px;
   `,
   search: css`
     position: relative;

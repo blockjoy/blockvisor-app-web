@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 import { wrapper } from 'styles/wrapper.styles';
 import { AdminList } from '../AdminList/AdminList';
 import { AdminDetails } from '../AdminDetails/AdminDetails';
+import { AdminDashboard } from '../AdminDashboard/AdminDashboard';
 import { PageTitle } from '@shared/components';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
-import { AdminDashboard } from '../AdminDashboard/AdminDashboard';
 
 type AdminContextParams = {
   listPageSize: number;
