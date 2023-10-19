@@ -4,6 +4,9 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     overflow: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
   `,
   table: (theme: ITheme) => css`
     text-align: left;

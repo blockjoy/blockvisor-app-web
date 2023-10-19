@@ -57,6 +57,8 @@ export const styles = {
   cardIcon: (theme: ITheme) => css`
     background: ${theme.colorInput};
     width: 40px;
+    min-width: 40px;
+    flex: 0 0 40px;
     height: 40px;
     border-radius: 50%;
     display: grid;
