@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { toast } from 'react-toastify';
 import { css } from '@emotion/react';
 import { billingSelectors, useSubscriptionLifecycle } from '@modules/billing';
 import { Button, ButtonGroup, Modal } from '@shared/components';
@@ -47,8 +48,12 @@ export const SubscriptionActivation = ({
       await Promise.resolve(handleSubmit());
     } else if (type === 'restore-subscription') {
       await handleRestoreSubscription();
+
+      toast.success('Subscription restored');
     } else if (type === 'reactivate-subscription') {
       await handleReactivateSubscription();
+
+      toast.success('Subscription reactivated');
     }
 
     setIsLoading(false);
