@@ -22,7 +22,7 @@ type Props = {
   columns: AdminListColumn[];
   listMap: (list: AdminSupportedViews) => AdminSupportedViews;
   getTotal: () => Promise<number>;
-  getList: (searchTerm?: string, page?: number) => Promise<AdminGetList>;
+  getList: (keyword?: string, page?: number) => Promise<AdminGetList>;
 };
 
 export const AdminListView = ({
@@ -38,22 +38,30 @@ export const AdminListView = ({
   const [list, setList] = useState<AdminSupportedViews>([]);
   const [listTotal, setListTotal] = useState<number>();
   const [total, setTotal] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [listPage, setListPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState<string>();
+  const [listPage, setListPage] = useState<number>();
 
   const handleGetTotal = async () => {
     const response = await getTotal();
     setTotal(response);
   };
 
-  const handleGetList = async (search: string, page: number) => {
-    const response = await getList(search, page);
+  const handleGetList = async (keyword: string, page: number) => {
+    const response = await getList(keyword, page);
     setList(response.list);
     setListTotal(response.total);
   };
 
-  const handleSearch = async (search: string) => {
-    setSearchTerm(search);
+  const handleSearch = async (keyword: string) => {
+    router.push({
+      pathname: `/admin`,
+      query: {
+        name,
+        page,
+        search: keyword,
+      },
+    });
+    setSearchTerm(keyword);
     setListPage(0);
   };
 
@@ -61,9 +69,9 @@ export const AdminListView = ({
     router.push({
       pathname: `/admin`,
       query: {
-        search,
         name,
         page,
+        search,
       },
     });
     setListPage(page);
@@ -71,15 +79,17 @@ export const AdminListView = ({
 
   useEffect(() => {
     (async () => {
-      if (search) setSearchTerm(search as string);
-      if (page) setListPage(+page?.toString()!);
-      handleGetTotal();
+      setSearchTerm((search as string) || '');
+      setListPage(page ? +page?.toString()! : 0);
     })();
-  }, []);
+  }, [router.isReady]);
 
   useEffect(() => {
-    handleGetList(searchTerm, listPage);
-  }, [listPage, searchTerm]);
+    if (searchTerm !== undefined && listPage !== undefined) {
+      handleGetTotal();
+      handleGetList(searchTerm!, listPage!);
+    }
+  }, [searchTerm, listPage]);
 
   return (
     <article key={name} id={name} css={styles.card}>
@@ -93,7 +103,7 @@ export const AdminListView = ({
         name={name}
         list={listMap(list)}
         listTotal={listTotal}
-        listPage={listPage}
+        listPage={listPage!}
         columns={columns}
         onPageChanged={handlePageChanged}
       />

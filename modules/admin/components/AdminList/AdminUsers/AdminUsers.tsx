@@ -1,10 +1,9 @@
 import { AdminListView } from '../AdminListView/AdminListView';
 import { userClient } from '@modules/grpc';
-import { useContext } from 'react';
 import { formatters } from '@shared/utils/formatters';
-import { AdminContext } from '@modules/admin/components/AdminLayout/AdminLayout';
-import IconUser from '@public/assets/icons/common/Person.svg';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
+import { pageSize } from '@modules/admin/constants/constants';
+import IconUser from '@public/assets/icons/common/Person.svg';
 
 const columns = [
   {
@@ -21,14 +20,12 @@ const columns = [
 ];
 
 export const AdminUsers = () => {
-  const adminContext = useContext(AdminContext);
-
   const { getTotalUsers: getTotal } = useAdminGetTotals();
 
   const getList = async (searchTerm?: string, page?: number) => {
     const response = await userClient.listUsers(searchTerm, {
       current_page: page!,
-      items_per_page: adminContext.listPageSize,
+      items_per_page: pageSize,
     });
     return {
       list: response.users,

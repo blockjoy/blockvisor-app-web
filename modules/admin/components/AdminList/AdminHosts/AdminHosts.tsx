@@ -1,10 +1,9 @@
 import { AdminListView } from '../AdminListView/AdminListView';
-import { useContext, useEffect } from 'react';
 import { formatters } from '@shared/utils/formatters';
 import { hostClient } from '@modules/grpc/clients/hostClient';
-import { AdminContext } from '@modules/admin/components/AdminLayout/AdminLayout';
-import IconHost from '@public/assets/icons/app/Host.svg';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
+import { pageSize } from '@modules/admin/constants/constants';
+import IconHost from '@public/assets/icons/app/Host.svg';
 
 const columns = [
   {
@@ -18,25 +17,18 @@ const columns = [
 ];
 
 export const AdminHosts = () => {
-  const adminContext = useContext(AdminContext);
-
   const { getTotalHosts: getTotal } = useAdminGetTotals();
 
   const getList = async (searchTerm?: string, page?: number) => {
     const response = await hostClient.listHosts(undefined, undefined, {
       current_page: page!,
-      items_per_page: adminContext.listPageSize,
+      items_per_page: pageSize,
     });
     return {
       list: response.hosts,
       total: response.hostCount,
     };
   };
-
-  useEffect(() => {
-    getTotal();
-    getList();
-  }, []);
 
   const listMap = (list: any[]) =>
     list.map((item) => {

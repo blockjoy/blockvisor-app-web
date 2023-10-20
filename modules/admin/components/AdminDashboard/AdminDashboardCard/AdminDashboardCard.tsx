@@ -26,9 +26,14 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
   };
 
   const handleSearch = () =>
-    router.push(
-      `/admin?name=${name.toLowerCase()}&search=${searchText.current}`,
-    );
+    router.push({
+      pathname: '/admin',
+      query: {
+        name: name.toLowerCase(),
+        page: 0,
+        search: searchText.current,
+      },
+    });
 
   useEffect(() => {
     (async () => {

@@ -9,17 +9,6 @@ import { AdminDashboard } from '../AdminDashboard/AdminDashboard';
 import { PageTitle } from '@shared/components';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
-type AdminContextParams = {
-  listPageSize: number;
-};
-
-const initialContextParams = {
-  listPageSize: 10,
-};
-
-export const AdminContext =
-  createContext<AdminContextParams>(initialContextParams);
-
 export const AdminLayout = () => {
   const router = useRouter();
   const { name, id } = router.query;
@@ -28,20 +17,18 @@ export const AdminLayout = () => {
     str.charAt(0).toUpperCase() + str.slice(1);
 
   return (
-    <AdminContext.Provider value={initialContextParams}>
-      <>
-        <PageTitle
-          title="Admin"
-          icon={<IconAdmin />}
-          childTitle={!name ? 'Dashboard' : capitalizeName(name as string)}
-          onTitleClick={name ? () => router.push('/admin') : undefined}
-          hideOrgPicker
-        />
-        <section css={[styles.wrapper, wrapper.main]}>
-          <AdminSidebar tab={name as string} />
-          {!name ? <AdminDashboard /> : id ? <AdminDetails /> : <AdminList />}
-        </section>
-      </>
-    </AdminContext.Provider>
+    <>
+      <PageTitle
+        title="Admin"
+        icon={<IconAdmin />}
+        childTitle={!name ? 'Dashboard' : capitalizeName(name as string)}
+        onTitleClick={name ? () => router.push('/admin') : undefined}
+        hideOrgPicker
+      />
+      <section css={[styles.wrapper, wrapper.main]}>
+        <AdminSidebar tab={name as string} />
+        {!name ? <AdminDashboard /> : id ? <AdminDetails /> : <AdminList />}
+      </section>
+    </>
   );
 };

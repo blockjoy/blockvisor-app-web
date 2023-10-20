@@ -1,13 +1,16 @@
 import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
-import { rgba } from 'polished';
 
 export const styles = {
+  footer: css`
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  `,
   pagination: css`
     display: flex;
     gap: 4px;
   `,
-
   paginationButton: (theme: ITheme) => css`
     display: grid;
     place-items: center;
@@ -38,5 +41,13 @@ export const styles = {
       opacity: 0.25;
       cursor: default;
     }
+  `,
+  rowCount: (theme: ITheme) => css`
+    color: ${theme.colorLabel};
+    font-size: 14px;
+  `,
+  rowCountTotal: (theme: ITheme) => css`
+    color: ${theme.colorText};
+    font-style: normal;
   `,
 };

@@ -9,6 +9,7 @@ export const styles = {
     width: 100%;
     padding-top: 2px;
     padding-bottom: 20px;
+    min-height: 66px;
     border-bottom: 1px solid ${theme.colorBorder};
 
     h2 {

@@ -23,7 +23,7 @@ export const AdminUser = () => {
       <AdminDetailsHeader
         name={name as string}
         icon={<IconUser />}
-        detailsName={`${item?.firstName} ${item?.lastName}`}
+        detailsName={item ? `${item?.firstName} ${item?.lastName}` : undefined}
       />
       <AdminDetailsTable item={item!} />
     </>

@@ -8,6 +8,7 @@ type Props = {
   listPage: number;
   maxPagesToDisplay?: number;
   pageCount?: number;
+  totalRowCount: number;
   onPageChanged: (page: number) => void;
 };
 
@@ -15,6 +16,7 @@ export const AdminListPagination = ({
   listPage,
   maxPagesToDisplay = 5,
   pageCount = 10,
+  totalRowCount,
   onPageChanged,
 }: Props) => {
   const [pages, setPages] = useState<number[]>([]);
@@ -54,38 +56,44 @@ export const AdminListPagination = ({
   }, [pageCount, listPage]);
 
   return (
-    <div css={styles.pagination}>
-      <button
-        disabled={listPage === 0}
-        onClick={() => onPageChanged(0)}
-        type="button"
-        css={styles.paginationButton}
-      >
-        <SvgIcon isDefaultColor>
-          <IconPageFirst />
-        </SvgIcon>
-      </button>
-      {pages.map((page: number) => (
+    <footer css={styles.footer}>
+      <div css={styles.pagination}>
         <button
-          css={styles.paginationButton}
-          className={listPage === page && !isBuilding ? 'active' : ''}
-          onClick={() => onPageChanged(page)}
-          key={page}
+          disabled={listPage === 0}
+          onClick={() => onPageChanged(0)}
           type="button"
+          css={styles.paginationButton}
         >
-          {page + 1}
+          <SvgIcon isDefaultColor>
+            <IconPageFirst />
+          </SvgIcon>
         </button>
-      ))}
-      <button
-        disabled={listPage === pageCount - 1}
-        onClick={() => onPageChanged(pageCount - 1)}
-        type="button"
-        css={styles.paginationButton}
-      >
-        <SvgIcon isDefaultColor>
-          <IconPageLast />
-        </SvgIcon>
-      </button>
-    </div>
+        {pages.map((page: number) => (
+          <button
+            css={styles.paginationButton}
+            className={listPage === page && !isBuilding ? 'active' : ''}
+            onClick={() => onPageChanged(page)}
+            key={page}
+            type="button"
+          >
+            {page + 1}
+          </button>
+        ))}
+        <button
+          disabled={listPage === pageCount - 1}
+          onClick={() => onPageChanged(pageCount - 1)}
+          type="button"
+          css={styles.paginationButton}
+        >
+          <SvgIcon isDefaultColor>
+            <IconPageLast />
+          </SvgIcon>
+        </button>
+      </div>
+      <p css={styles.rowCount}>
+        Showing <var css={styles.rowCountTotal}>{totalRowCount}</var> row
+        {totalRowCount === 1 ? '' : 's'}
+      </p>
+    </footer>
   );
 };

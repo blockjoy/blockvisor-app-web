@@ -31,10 +31,13 @@ export const useAdminGetTotals = () => {
   };
 
   const getTotalOrgs = async () => {
-    const response = await organizationClient.getOrganizations({
-      current_page: 0,
-      items_per_page: 0,
-    });
+    const response = await organizationClient.getOrganizations(
+      {
+        current_page: 0,
+        items_per_page: 0,
+      },
+      true,
+    );
     return response.orgCount;
   };
 

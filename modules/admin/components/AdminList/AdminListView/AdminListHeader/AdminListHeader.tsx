@@ -21,7 +21,7 @@ export const AdminListHeader = ({ name, icon, total, onSearch }: Props) => {
   const handleSearchTermChanged = (e: React.ChangeEvent<HTMLInputElement>) =>
     (searchTerm.current = e.target.value);
 
-  const handleSearch = () => onSearch(`${searchTerm.current}%`);
+  const handleSearch = () => onSearch(searchTerm.current);
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

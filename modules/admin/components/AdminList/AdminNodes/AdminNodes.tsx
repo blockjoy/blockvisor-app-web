@@ -1,11 +1,10 @@
 import { AdminListView } from '../AdminListView/AdminListView';
 import { nodeClient } from '@modules/grpc';
-import { useContext, useEffect } from 'react';
 import { formatters } from '@shared/utils/formatters';
 import { NodeStatus } from '@shared/components';
-import { AdminContext } from '@modules/admin/components/AdminLayout/AdminLayout';
-import IconNode from '@public/assets/icons/app/Node.svg';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
+import { pageSize } from '@modules/admin/constants/constants';
+import IconNode from '@public/assets/icons/app/Node.svg';
 
 const columns = [
   {
@@ -23,25 +22,18 @@ const columns = [
 ];
 
 export const AdminNodes = () => {
-  const adminContext = useContext(AdminContext);
-
   const { getTotalNodes: getTotal } = useAdminGetTotals();
 
   const getList = async (searchTerm?: string, page?: number) => {
     const response = await nodeClient.listNodes(undefined, undefined, {
       current_page: page!,
-      items_per_page: adminContext.listPageSize,
+      items_per_page: pageSize,
     });
     return {
       list: response.nodes,
       total: response.nodeCount,
     };
   };
-
-  useEffect(() => {
-    getTotal();
-    getList();
-  }, []);
 
   const listMap = (list: any[]) =>
     list.map((item) => {

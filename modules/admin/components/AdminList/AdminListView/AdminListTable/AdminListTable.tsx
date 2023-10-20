@@ -68,6 +68,7 @@ export const AdminListTable = ({
       </div>
       <AdminListPagination
         listPage={listPage}
+        totalRowCount={listTotal}
         pageCount={pageCount}
         onPageChanged={onPageChanged}
       />

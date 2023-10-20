@@ -1,10 +1,9 @@
 import { AdminListView } from '../AdminListView/AdminListView';
 import { organizationClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
-import { useContext } from 'react';
-import { AdminContext } from '@modules/admin/components/AdminLayout/AdminLayout';
-import IconOrg from '@public/assets/icons/app/Organization.svg';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
+import { pageSize } from '@modules/admin/constants/constants';
+import IconOrg from '@public/assets/icons/app/Organization.svg';
 
 const columns = [
   {
@@ -18,15 +17,13 @@ const columns = [
 ];
 
 export const AdminOrgs = () => {
-  const adminContext = useContext(AdminContext);
-
   const { getTotalOrgs: getTotal } = useAdminGetTotals();
 
   const getList = async (searchTerm?: string, page?: number) => {
     const response = await organizationClient.getOrganizations(
       {
-        current_page: page!,
-        items_per_page: adminContext.listPageSize,
+        current_page: page! || 0,
+        items_per_page: pageSize,
       },
       true,
     );
