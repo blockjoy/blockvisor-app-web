@@ -2,6 +2,7 @@
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { EntityUpdate } from "../common/v1/resource";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -30,10 +31,6 @@ export enum InvitationStatus {
 export interface Invitation {
   /** A uuid that uniquely determines the invitation. */
   id: string;
-  /** The id of the user that created this invitation. */
-  createdBy: string;
-  /** The full name of the user that created this invitation. */
-  createdByName: string;
   /** The id of the organization the invitee is being invited to. */
   orgId: string;
   /**
@@ -47,15 +44,19 @@ export interface Invitation {
    * an account (yet).
    */
   inviteeEmail: string;
-  /** The moment this invitation was created. */
-  createdAt:
-    | Date
-    | undefined;
   /**
    * The status of the invitation, indicating what user action has been taken
    * with this invitation.
    */
   status: InvitationStatus;
+  /** The resource that created this invitation. */
+  invitedBy:
+    | EntityUpdate
+    | undefined;
+  /** The timestamp when this invitation was created. */
+  createdAt:
+    | Date
+    | undefined;
   /**
    * If this invitation has been accepted, this field is set to the moment of
    * acceptance.
@@ -89,8 +90,8 @@ export interface InvitationServiceCreateResponse {
 export interface InvitationServiceListRequest {
   orgId?: string | undefined;
   inviteeEmail?: string | undefined;
-  createdBy?: string | undefined;
-  status?: InvitationStatus | undefined;
+  invitedBy: EntityUpdate | undefined;
+  status: InvitationStatus;
 }
 
 export interface InvitationServiceListResponse {
@@ -121,13 +122,12 @@ export interface InvitationServiceRevokeResponse {
 function createBaseInvitation(): Invitation {
   return {
     id: "",
-    createdBy: "",
-    createdByName: "",
     orgId: "",
     orgName: "",
     inviteeEmail: "",
-    createdAt: undefined,
     status: 0,
+    invitedBy: undefined,
+    createdAt: undefined,
     acceptedAt: undefined,
     declinedAt: undefined,
   };
@@ -138,26 +138,23 @@ export const Invitation = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.createdBy !== "") {
-      writer.uint32(18).string(message.createdBy);
-    }
-    if (message.createdByName !== "") {
-      writer.uint32(26).string(message.createdByName);
-    }
     if (message.orgId !== "") {
-      writer.uint32(34).string(message.orgId);
+      writer.uint32(18).string(message.orgId);
     }
     if (message.orgName !== "") {
-      writer.uint32(42).string(message.orgName);
+      writer.uint32(26).string(message.orgName);
     }
     if (message.inviteeEmail !== "") {
-      writer.uint32(50).string(message.inviteeEmail);
+      writer.uint32(34).string(message.inviteeEmail);
+    }
+    if (message.status !== 0) {
+      writer.uint32(40).int32(message.status);
+    }
+    if (message.invitedBy !== undefined) {
+      EntityUpdate.encode(message.invitedBy, writer.uint32(50).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(58).fork()).ldelim();
-    }
-    if (message.status !== 0) {
-      writer.uint32(64).int32(message.status);
     }
     if (message.acceptedAt !== undefined) {
       Timestamp.encode(toTimestamp(message.acceptedAt), writer.uint32(74).fork()).ldelim();
@@ -187,35 +184,35 @@ export const Invitation = {
             break;
           }
 
-          message.createdBy = reader.string();
+          message.orgId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.createdByName = reader.string();
+          message.orgName = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.orgId = reader.string();
+          message.inviteeEmail = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.orgName = reader.string();
+          message.status = reader.int32() as any;
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.inviteeEmail = reader.string();
+          message.invitedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
         case 7:
           if (tag !== 58) {
@@ -223,13 +220,6 @@ export const Invitation = {
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 8:
-          if (tag !== 64) {
-            break;
-          }
-
-          message.status = reader.int32() as any;
           continue;
         case 9:
           if (tag !== 74) {
@@ -261,13 +251,14 @@ export const Invitation = {
   fromPartial(object: DeepPartial<Invitation>): Invitation {
     const message = createBaseInvitation();
     message.id = object.id ?? "";
-    message.createdBy = object.createdBy ?? "";
-    message.createdByName = object.createdByName ?? "";
     message.orgId = object.orgId ?? "";
     message.orgName = object.orgName ?? "";
     message.inviteeEmail = object.inviteeEmail ?? "";
-    message.createdAt = object.createdAt ?? undefined;
     message.status = object.status ?? 0;
+    message.invitedBy = (object.invitedBy !== undefined && object.invitedBy !== null)
+      ? EntityUpdate.fromPartial(object.invitedBy)
+      : undefined;
+    message.createdAt = object.createdAt ?? undefined;
     message.acceptedAt = object.acceptedAt ?? undefined;
     message.declinedAt = object.declinedAt ?? undefined;
     return message;
@@ -380,7 +371,7 @@ export const InvitationServiceCreateResponse = {
 };
 
 function createBaseInvitationServiceListRequest(): InvitationServiceListRequest {
-  return { orgId: undefined, inviteeEmail: undefined, createdBy: undefined, status: undefined };
+  return { orgId: undefined, inviteeEmail: undefined, invitedBy: undefined, status: 0 };
 }
 
 export const InvitationServiceListRequest = {
@@ -391,10 +382,10 @@ export const InvitationServiceListRequest = {
     if (message.inviteeEmail !== undefined) {
       writer.uint32(18).string(message.inviteeEmail);
     }
-    if (message.createdBy !== undefined) {
-      writer.uint32(26).string(message.createdBy);
+    if (message.invitedBy !== undefined) {
+      EntityUpdate.encode(message.invitedBy, writer.uint32(26).fork()).ldelim();
     }
-    if (message.status !== undefined) {
+    if (message.status !== 0) {
       writer.uint32(32).int32(message.status);
     }
     return writer;
@@ -426,7 +417,7 @@ export const InvitationServiceListRequest = {
             break;
           }
 
-          message.createdBy = reader.string();
+          message.invitedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 32) {
@@ -452,8 +443,10 @@ export const InvitationServiceListRequest = {
     const message = createBaseInvitationServiceListRequest();
     message.orgId = object.orgId ?? undefined;
     message.inviteeEmail = object.inviteeEmail ?? undefined;
-    message.createdBy = object.createdBy ?? undefined;
-    message.status = object.status ?? undefined;
+    message.invitedBy = (object.invitedBy !== undefined && object.invitedBy !== null)
+      ? EntityUpdate.fromPartial(object.invitedBy)
+      : undefined;
+    message.status = object.status ?? 0;
     return message;
   },
 };

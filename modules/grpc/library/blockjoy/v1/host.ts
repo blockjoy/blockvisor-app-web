@@ -4,6 +4,7 @@ import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
+import { SearchOperator } from "../common/v1/search";
 import { NodeType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
@@ -149,6 +150,31 @@ export interface HostServiceListRequest {
    * use this to get pagination.
    */
   limit: number;
+  /** Search params. */
+  search?: HostSearch | undefined;
+}
+
+export interface HostSearch {
+  /** The way the search parameters should be combined. */
+  operator: SearchOperator;
+  /** Search for the id of the host. */
+  id?:
+    | string
+    | undefined;
+  /** Search only for the name of the host. */
+  name?:
+    | string
+    | undefined;
+  /** Search only for the version of the host. */
+  version?:
+    | string
+    | undefined;
+  /** Search only for the operating system. */
+  os?:
+    | string
+    | undefined;
+  /** Search only for the ip address. */
+  ip?: string | undefined;
 }
 
 export interface HostServiceListResponse {
@@ -894,7 +920,7 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0 };
+  return { orgId: undefined, offset: 0, limit: 0, search: undefined };
 }
 
 export const HostServiceListRequest = {
@@ -907,6 +933,9 @@ export const HostServiceListRequest = {
     }
     if (message.limit !== 0) {
       writer.uint32(24).uint64(message.limit);
+    }
+    if (message.search !== undefined) {
+      HostSearch.encode(message.search, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -939,6 +968,13 @@ export const HostServiceListRequest = {
 
           message.limit = longToNumber(reader.uint64() as Long);
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.search = HostSearch.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -957,6 +993,110 @@ export const HostServiceListRequest = {
     message.orgId = object.orgId ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
+    message.search = (object.search !== undefined && object.search !== null)
+      ? HostSearch.fromPartial(object.search)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseHostSearch(): HostSearch {
+  return { operator: 0, id: undefined, name: undefined, version: undefined, os: undefined, ip: undefined };
+}
+
+export const HostSearch = {
+  encode(message: HostSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.operator !== 0) {
+      writer.uint32(8).int32(message.operator);
+    }
+    if (message.id !== undefined) {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.version !== undefined) {
+      writer.uint32(34).string(message.version);
+    }
+    if (message.os !== undefined) {
+      writer.uint32(42).string(message.os);
+    }
+    if (message.ip !== undefined) {
+      writer.uint32(50).string(message.ip);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostSearch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostSearch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.operator = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.os = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostSearch>): HostSearch {
+    return HostSearch.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostSearch>): HostSearch {
+    const message = createBaseHostSearch();
+    message.operator = object.operator ?? 0;
+    message.id = object.id ?? undefined;
+    message.name = object.name ?? undefined;
+    message.version = object.version ?? undefined;
+    message.os = object.os ?? undefined;
+    message.ip = object.ip ?? undefined;
     return message;
   },
 };
@@ -1881,10 +2021,10 @@ export interface HostServiceClient<CallOptionsExt = {}> {
   ): Promise<HostServiceRegionsResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

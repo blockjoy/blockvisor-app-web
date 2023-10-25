@@ -2,17 +2,9 @@
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { Resource } from "../common/v1/resource";
 
 export const protobufPackage = "blockjoy.v1";
-
-export enum ApiResource {
-  API_RESOURCE_UNSPECIFIED = 0,
-  API_RESOURCE_USER = 1,
-  API_RESOURCE_ORG = 2,
-  API_RESOURCE_NODE = 3,
-  API_RESOURCE_HOST = 4,
-  UNRECOGNIZED = -1,
-}
 
 export interface ApiKeyServiceCreateRequest {
   /** The (non-unique) label for this api key. */
@@ -99,7 +91,7 @@ export interface ApiKeyServiceDeleteResponse {
 
 export interface ApiKeyScope {
   /** The resource scope of this api key. */
-  resource: ApiResource;
+  resource: Resource;
   /** The resource identifier of this api key. */
   resourceId?: string | undefined;
 }

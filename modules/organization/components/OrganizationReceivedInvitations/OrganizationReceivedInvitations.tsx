@@ -69,7 +69,7 @@ export const OrganizationReceivedInvitations = () => {
         {invitations?.map((invite) => (
           <li key={invite.id} css={styles.item}>
             <div css={[spacing.bottom.medium]}>
-              <b>{escapeHtml(invite.createdByName!) || 'Unknown'}</b> invited
+              <b>{escapeHtml(invite.invitedBy?.name!) || 'Unknown'}</b> invited
               you to join <b>{escapeHtml(invite.orgName!) || 'Unknown'}</b>{' '}
               organization
             </div>
