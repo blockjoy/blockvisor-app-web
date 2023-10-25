@@ -3,7 +3,8 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { ApiResource } from "./api_key";
+import { EntityUpdate } from "../common/v1/resource";
+import { SearchOperator } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -157,7 +158,7 @@ export interface Node {
   selfUpdate: boolean;
   network: string;
   createdBy:
-    | NodeResource
+    | EntityUpdate
     | undefined;
   /** A list of ip addresses allowed to access public ports on this node. */
   allowIps: FilteredIpAddr[];
@@ -179,24 +180,6 @@ export interface Node {
    * may individually start, stop and fail.
    */
   jobs: NodeJob[];
-}
-
-/** Details around the user or resource that updated a node. */
-export interface NodeResource {
-  /** The resource type that updated this node. */
-  resource?:
-    | ApiResource
-    | undefined;
-  /** The uuid of the resource that updated this node. */
-  resourceId?:
-    | string
-    | undefined;
-  /** The name of the creator (if updated by a user resource). */
-  name?:
-    | string
-    | undefined;
-  /** The email of the creator (if updated by a user resource). */
-  email?: string | undefined;
 }
 
 /** This message is used to create a new node. */
@@ -278,7 +261,30 @@ export interface NodeServiceListRequest {
    */
   blockchainIds: string[];
   /** If this value is provided, only nodes running on this host are provided. */
-  hostId?: string | undefined;
+  hostId?:
+    | string
+    | undefined;
+  /** Search params. */
+  search?: NodeSearch | undefined;
+}
+
+/**
+ * This message contains fields used to search nodes as opposed to just
+ * filtering them.
+ */
+export interface NodeSearch {
+  /** The way the search parameters should be combined. */
+  operator: SearchOperator;
+  /** Search only the name. */
+  id?:
+    | string
+    | undefined;
+  /** Search only the name. */
+  name?:
+    | string
+    | undefined;
+  /** Search only the ip address. */
+  ip?: string | undefined;
 }
 
 /** This response will contain all the filtered nodes. */
@@ -620,7 +626,7 @@ export const Node = {
       writer.uint32(194).string(message.network);
     }
     if (message.createdBy !== undefined) {
-      NodeResource.encode(message.createdBy, writer.uint32(202).fork()).ldelim();
+      EntityUpdate.encode(message.createdBy, writer.uint32(202).fork()).ldelim();
     }
     for (const v of message.allowIps) {
       FilteredIpAddr.encode(v!, writer.uint32(226).fork()).ldelim();
@@ -820,7 +826,7 @@ export const Node = {
             break;
           }
 
-          message.createdBy = NodeResource.decode(reader, reader.uint32());
+          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
         case 28:
           if (tag !== 226) {
@@ -897,7 +903,7 @@ export const Node = {
     message.selfUpdate = object.selfUpdate ?? false;
     message.network = object.network ?? "";
     message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
-      ? NodeResource.fromPartial(object.createdBy)
+      ? EntityUpdate.fromPartial(object.createdBy)
       : undefined;
     message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
@@ -906,85 +912,6 @@ export const Node = {
       : undefined;
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
     message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseNodeResource(): NodeResource {
-  return { resource: undefined, resourceId: undefined, name: undefined, email: undefined };
-}
-
-export const NodeResource = {
-  encode(message: NodeResource, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resource !== undefined) {
-      writer.uint32(8).int32(message.resource);
-    }
-    if (message.resourceId !== undefined) {
-      writer.uint32(18).string(message.resourceId);
-    }
-    if (message.name !== undefined) {
-      writer.uint32(26).string(message.name);
-    }
-    if (message.email !== undefined) {
-      writer.uint32(34).string(message.email);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeResource {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeResource();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.resource = reader.int32() as any;
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.resourceId = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<NodeResource>): NodeResource {
-    return NodeResource.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<NodeResource>): NodeResource {
-    const message = createBaseNodeResource();
-    message.resource = object.resource ?? undefined;
-    message.resourceId = object.resourceId ?? undefined;
-    message.name = object.name ?? undefined;
-    message.email = object.email ?? undefined;
     return message;
   },
 };
@@ -1274,7 +1201,16 @@ export const NodeServiceGetResponse = {
 };
 
 function createBaseNodeServiceListRequest(): NodeServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0, statuses: [], nodeTypes: [], blockchainIds: [], hostId: undefined };
+  return {
+    orgId: undefined,
+    offset: 0,
+    limit: 0,
+    statuses: [],
+    nodeTypes: [],
+    blockchainIds: [],
+    hostId: undefined,
+    search: undefined,
+  };
 }
 
 export const NodeServiceListRequest = {
@@ -1303,6 +1239,9 @@ export const NodeServiceListRequest = {
     }
     if (message.hostId !== undefined) {
       writer.uint32(58).string(message.hostId);
+    }
+    if (message.search !== undefined) {
+      NodeSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -1383,6 +1322,13 @@ export const NodeServiceListRequest = {
 
           message.hostId = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.search = NodeSearch.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1405,6 +1351,88 @@ export const NodeServiceListRequest = {
     message.nodeTypes = object.nodeTypes?.map((e) => e) || [];
     message.blockchainIds = object.blockchainIds?.map((e) => e) || [];
     message.hostId = object.hostId ?? undefined;
+    message.search = (object.search !== undefined && object.search !== null)
+      ? NodeSearch.fromPartial(object.search)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeSearch(): NodeSearch {
+  return { operator: 0, id: undefined, name: undefined, ip: undefined };
+}
+
+export const NodeSearch = {
+  encode(message: NodeSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.operator !== 0) {
+      writer.uint32(8).int32(message.operator);
+    }
+    if (message.id !== undefined) {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.ip !== undefined) {
+      writer.uint32(34).string(message.ip);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeSearch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeSearch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.operator = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeSearch>): NodeSearch {
+    return NodeSearch.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeSearch>): NodeSearch {
+    const message = createBaseNodeSearch();
+    message.operator = object.operator ?? 0;
+    message.id = object.id ?? undefined;
+    message.name = object.name ?? undefined;
+    message.ip = object.ip ?? undefined;
     return message;
   },
 };
@@ -2679,10 +2707,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceDeleteResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
