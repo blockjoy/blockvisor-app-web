@@ -2,12 +2,19 @@ import {
   User,
   UserServiceClient,
   UserServiceDefinition,
+  UserServiceListRequest,
+  UserServiceListResponse,
 } from '../library/blockjoy/v1/user';
-import { getOptions, handleError } from '@modules/grpc';
+import {
+  getOptions,
+  getPaginationOffset,
+  handleError,
+  UIPagination,
+} from '@modules/grpc';
 import { createChannel, createClient, Metadata } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
-
 import { authClient } from '@modules/grpc';
+import { SearchOperator } from '../library/blockjoy/common/v1/search';
 
 export type UIUser = {
   firstName: string;
@@ -29,6 +36,35 @@ class UserClient {
       await authClient.refreshToken();
       const response = await this.client.get({ id }, getOptions());
       return response.user!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async listUsers(
+    keyword?: string,
+    pagination?: UIPagination,
+  ): Promise<UserServiceListResponse> {
+    const request: UserServiceListRequest = {
+      offset: getPaginationOffset(pagination),
+      limit: pagination?.items_per_page || 1000,
+    };
+
+    if (keyword) {
+      request.search = {
+        name: keyword,
+        email: keyword,
+        id: keyword,
+        operator: SearchOperator.SEARCH_OPERATOR_OR,
+      };
+    }
+
+    console.log('listUsersRequest', request);
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.list(request, getOptions());
+      console.log('listUsersResponse', response);
+      return response;
     } catch (err) {
       return handleError(err);
     }

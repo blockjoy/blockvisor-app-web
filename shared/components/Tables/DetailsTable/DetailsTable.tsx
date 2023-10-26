@@ -5,7 +5,7 @@ import { DataRow } from './DataRow/DataRow';
 
 import { styles } from './DetailsTable.styles';
 
-type DetailsDataRow = {
+export type DetailsDataRow = {
   id?: string;
   label: ReactNode | string;
   data: any;

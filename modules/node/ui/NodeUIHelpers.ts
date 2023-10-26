@@ -13,6 +13,7 @@ export type InitialFilter = {
   blockchain?: string[];
   nodeStatus?: string[];
   nodeType?: string[];
+  keyword?: string;
 };
 
 export type InitialQueryParams = {
@@ -37,5 +38,6 @@ export const initialQueryParams: InitialQueryParams = {
     blockchain: [],
     nodeStatus: [],
     nodeType: [],
+    keyword: '',
   },
 };

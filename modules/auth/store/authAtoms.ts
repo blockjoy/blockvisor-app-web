@@ -16,9 +16,9 @@ const user = atom<User | null>({
   ],
 });
 
-const permissions = atom<string[]>({
+const permissions = atom<string[] | undefined>({
   key: 'auth.permissions',
-  default: [],
+  default: undefined,
 });
 
 const loading = atom<LoadingState>({

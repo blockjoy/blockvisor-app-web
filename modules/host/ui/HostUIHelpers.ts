@@ -16,6 +16,7 @@ export type InitialFilter = {
   hostMemory: number[];
   hostCPU: number[];
   hostSpace: number[];
+  keyword?: string;
 };
 
 export type InitialQueryParams = {
@@ -32,7 +33,7 @@ export const itemsPerPage = {
 
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
-    current_page: 1,
+    current_page: 0,
     items_per_page: itemsPerPage['xxl'],
   },
 
