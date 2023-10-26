@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import { styles } from './GridTableViewPicker.styles';
 import IconTable from '@public/assets/icons/common/Table.svg';
 import IconGrid from '@public/assets/icons/common/Grid.svg';
+import { SvgIcon } from '@shared/components/General';
 
 type IconButtonProps = {
   activeListType: string | 'table' | 'grid';
@@ -21,7 +22,7 @@ const IconButton: FC<IconButtonProps> = ({
     css={[styles.iconButton]}
     className={activeListType === name ? 'active' : ''}
   >
-    {icon}
+    <SvgIcon size="14px">{icon}</SvgIcon>
   </button>
 );
 
