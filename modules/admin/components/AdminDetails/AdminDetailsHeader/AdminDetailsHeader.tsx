@@ -21,7 +21,7 @@ export const AdminDetailsHeader = ({
         <span css={styles.separator}>/</span>
 
         {!detailsName ? (
-          <Skeleton width="100px" />
+          <Skeleton width="200px" />
         ) : (
           <>
             <h2>{detailsName}</h2>

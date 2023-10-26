@@ -1,8 +1,9 @@
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { styles } from './AdminListTable.styles';
-import { AdminListColumn, AdminSupportedViews } from '../AdminListView';
+import { AdminListColumn, AdminSupportedViews } from '../AdminList';
 import { useRouter } from 'next/router';
 import { EmptyColumn, TableSkeleton } from '@shared/components';
+import { capitalized } from '@modules/admin/utils/capitalized';
 
 type Props = {
   name: string;
@@ -46,7 +47,7 @@ export const AdminListTable = ({
           <thead>
             <tr>
               {columns.map((column) => (
-                <th key={column.name}>{column.name}</th>
+                <th key={column.name}>{capitalized(column.name)}</th>
               ))}
             </tr>
           </thead>

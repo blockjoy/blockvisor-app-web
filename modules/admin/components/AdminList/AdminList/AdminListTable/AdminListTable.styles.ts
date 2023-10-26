@@ -7,6 +7,7 @@ export const styles = {
     flex: 1 1 auto;
     min-width: 0;
     max-width: 100%;
+    padding-top: 16px;
   `,
   table: (theme: ITheme) => css`
     text-align: left;

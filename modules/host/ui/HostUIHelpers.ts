@@ -16,6 +16,7 @@ export type InitialFilter = {
   hostMemory: number[];
   hostCPU: number[];
   hostSpace: number[];
+  keyword?: string;
 };
 
 export type InitialQueryParams = {

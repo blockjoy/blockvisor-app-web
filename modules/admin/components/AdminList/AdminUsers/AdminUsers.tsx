@@ -1,4 +1,4 @@
-import { AdminListView } from '../AdminListView/AdminListView';
+import { AdminList } from '../AdminList/AdminList';
 import { userClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
@@ -7,7 +7,7 @@ import IconUser from '@public/assets/icons/common/Person.svg';
 
 const columns = [
   {
-    name: 'name',
+    name: 'fullName',
     width: '230px',
   },
   {
@@ -22,8 +22,8 @@ const columns = [
 export const AdminUsers = () => {
   const { getTotalUsers: getTotal } = useAdminGetTotals();
 
-  const getList = async (searchTerm?: string, page?: number) => {
-    const response = await userClient.listUsers(searchTerm, {
+  const getList = async (keyword?: string, page?: number) => {
+    const response = await userClient.listUsers(`%${keyword!}%`, {
       current_page: page!,
       items_per_page: pageSize,
     });
@@ -37,7 +37,7 @@ export const AdminUsers = () => {
     list.map((item) => {
       return {
         ...item,
-        name: `${item.firstName} ${item.lastName}`,
+        fullName: `${item.firstName} ${item.lastName}`,
         created: `${formatters.formatDate(
           item.createdAt!,
         )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
@@ -45,7 +45,7 @@ export const AdminUsers = () => {
     });
 
   return (
-    <AdminListView
+    <AdminList
       name="users"
       icon={<IconUser />}
       columns={columns}

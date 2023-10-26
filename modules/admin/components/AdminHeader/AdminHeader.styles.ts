@@ -10,16 +10,14 @@ export const styles = {
     padding-top: 2px;
     padding-bottom: 20px;
     min-height: 66px;
-    border-bottom: 1px solid ${theme.colorBorder};
+    border-bottom: 1px solid ${theme.colorBorderGrey};
 
     h2 {
       font-size: 16px;
     }
 
     @media ${breakpoints.toXlrg} {
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
+      flex-wrap: wrap;
       gap: 10px;
     }
   `,

@@ -1,4 +1,4 @@
-import { AdminListView } from '../AdminListView/AdminListView';
+import { AdminList } from '../AdminList/AdminList';
 import { formatters } from '@shared/utils/formatters';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
@@ -19,11 +19,17 @@ const columns = [
 export const AdminHosts = () => {
   const { getTotalHosts: getTotal } = useAdminGetTotals();
 
-  const getList = async (searchTerm?: string, page?: number) => {
-    const response = await hostClient.listHosts(undefined, undefined, {
-      current_page: page!,
-      items_per_page: pageSize,
-    });
+  const getList = async (keyword?: string, page?: number) => {
+    const response = await hostClient.listHosts(
+      undefined,
+      {
+        keyword: `%${keyword!}%`,
+      },
+      {
+        current_page: page!,
+        items_per_page: pageSize,
+      },
+    );
     return {
       list: response.hosts,
       total: response.hostCount,
@@ -41,7 +47,7 @@ export const AdminHosts = () => {
     });
 
   return (
-    <AdminListView
+    <AdminList
       name="hosts"
       icon={<IconHost />}
       columns={columns}

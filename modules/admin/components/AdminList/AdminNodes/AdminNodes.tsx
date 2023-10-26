@@ -1,4 +1,4 @@
-import { AdminListView } from '../AdminListView/AdminListView';
+import { AdminList } from '../AdminList/AdminList';
 import { nodeClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
 import { NodeStatus } from '@shared/components';
@@ -24,11 +24,17 @@ const columns = [
 export const AdminNodes = () => {
   const { getTotalNodes: getTotal } = useAdminGetTotals();
 
-  const getList = async (searchTerm?: string, page?: number) => {
-    const response = await nodeClient.listNodes(undefined, undefined, {
-      current_page: page!,
-      items_per_page: pageSize,
-    });
+  const getList = async (keyword?: string, page?: number) => {
+    const response = await nodeClient.listNodes(
+      undefined,
+      {
+        keyword: `%${keyword!}%`,
+      },
+      {
+        current_page: page!,
+        items_per_page: pageSize,
+      },
+    );
     return {
       list: response.nodes,
       total: response.nodeCount,
@@ -47,7 +53,7 @@ export const AdminNodes = () => {
     });
 
   return (
-    <AdminListView
+    <AdminList
       name="nodes"
       icon={<IconNode />}
       columns={columns}

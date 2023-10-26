@@ -1,12 +1,13 @@
 import {
   Host,
+  HostSearch,
   HostServiceClient,
   HostServiceDefinition,
+  HostServiceListRequest,
   HostServiceListResponse,
   HostType,
   Region,
 } from '../library/blockjoy/v1/host';
-
 import {
   callWithTokenRefresh,
   getPaginationOffset,
@@ -14,9 +15,14 @@ import {
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { NodeType } from '../library/blockjoy/v1/node';
+import { SearchOperator } from '../library/blockjoy/common/v1/search';
 
 export type HostFilterCriteria = {
   hostStatus?: string[];
+  hostMemory?: number[];
+  hostCPU?: number[];
+  hostSpace?: number[];
+  keyword?: string;
 };
 
 export type HostPagination = {
@@ -37,13 +43,22 @@ class HostClient {
     filterCriteria?: HostFilterCriteria,
     pagination?: HostPagination,
   ): Promise<HostServiceListResponse> {
-    const request = {
+    const request: HostServiceListRequest = {
       orgId,
       offset: getPaginationOffset(pagination),
-      // offset: 0,
       limit: pagination?.items_per_page || 1,
-      // statuses: filterCriteria?.hostStatus?.map((f) => +f),
     };
+
+    if (filterCriteria?.keyword) {
+      const { keyword } = filterCriteria;
+      const search: HostSearch = {
+        id: keyword,
+        ip: keyword,
+        name: keyword,
+        operator: SearchOperator.SEARCH_OPERATOR_OR,
+      };
+      request.search = search;
+    }
 
     console.log('listHostsRequest', request);
 

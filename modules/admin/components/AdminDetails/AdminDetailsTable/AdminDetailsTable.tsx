@@ -1,3 +1,4 @@
+import { capitalized } from '@modules/admin/utils/capitalized';
 import { DetailsTable } from '@shared/components';
 import { formatters } from '@shared/utils/formatters';
 import { AdminDetailsItem } from '../AdminDetails';
@@ -15,9 +16,7 @@ export const AdminDetailsTable = ({ item, ignoreItems }: Props) => {
   const properties = Object.entries(item)
     .filter((property) => !ignoreItems?.some((item) => property[0] === item))
     .map((property) => {
-      const text = property[0];
-      const result = text.replace(/([A-Z])/g, ' $1');
-      const label = result.charAt(0).toUpperCase() + result.slice(1);
+      const label = capitalized(property[0]);
       const value = property[1];
 
       return {
@@ -33,8 +32,6 @@ export const AdminDetailsTable = ({ item, ignoreItems }: Props) => {
             : value?.toString(),
       };
     });
-
-  console.log('properties', properties);
 
   return <DetailsTable bodyElements={properties} />;
 };

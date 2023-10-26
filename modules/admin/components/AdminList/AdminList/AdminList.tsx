@@ -4,8 +4,8 @@ import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AdminGetList } from '../AdminList';
-import { styles } from './AdminListView.styles';
+import { AdminGetList } from '../AdminLists';
+import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
 
@@ -25,7 +25,7 @@ type Props = {
   getList: (keyword?: string, page?: number) => Promise<AdminGetList>;
 };
 
-export const AdminListView = ({
+export const AdminList = ({
   name,
   icon,
   columns,
@@ -37,7 +37,7 @@ export const AdminListView = ({
   const { search, page } = router.query;
   const [list, setList] = useState<AdminSupportedViews>([]);
   const [listTotal, setListTotal] = useState<number>();
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState<number>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [listPage, setListPage] = useState<number>();
 
@@ -57,8 +57,8 @@ export const AdminListView = ({
       pathname: `/admin`,
       query: {
         name,
-        page,
-        search: keyword,
+        page: 0,
+        search: keyword.trim(),
       },
     });
     setSearchTerm(keyword);
@@ -96,7 +96,7 @@ export const AdminListView = ({
       <AdminListHeader
         name={name}
         icon={icon}
-        total={total}
+        total={total!}
         onSearch={handleSearch}
       />
       <AdminListTable

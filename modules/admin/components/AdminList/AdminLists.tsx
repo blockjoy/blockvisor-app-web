@@ -2,7 +2,7 @@ import { AdminNodes } from './AdminNodes/AdminNodes';
 import { AdminUsers } from './AdminUsers/AdminUsers';
 import { AdminHosts } from './AdminHosts/AdminHosts';
 import { AdminOrgs } from './AdminOrgs/AdminOrgs';
-import { styles } from './AdminList.styles';
+import { styles } from './AdminLists.styles';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
@@ -21,7 +21,7 @@ const views = [
   { name: 'orgs', component: <AdminOrgs /> },
 ];
 
-export const AdminList = () => {
+export const AdminLists = () => {
   const router = useRouter();
   const { name } = router.query;
   return (

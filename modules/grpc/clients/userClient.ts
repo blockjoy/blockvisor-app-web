@@ -2,6 +2,7 @@ import {
   User,
   UserServiceClient,
   UserServiceDefinition,
+  UserServiceListRequest,
   UserServiceListResponse,
 } from '../library/blockjoy/v1/user';
 import {
@@ -12,8 +13,8 @@ import {
 } from '@modules/grpc';
 import { createChannel, createClient, Metadata } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
-
 import { authClient } from '@modules/grpc';
+import { SearchOperator } from '../library/blockjoy/common/v1/search';
 
 export type UIUser = {
   firstName: string;
@@ -41,14 +42,23 @@ class UserClient {
   }
 
   async listUsers(
-    emailLike: string = '%',
+    keyword?: string,
     pagination?: UIPagination,
   ): Promise<UserServiceListResponse> {
-    const request = {
+    const request: UserServiceListRequest = {
       offset: getPaginationOffset(pagination),
       limit: pagination?.items_per_page || 1000,
-      emailLike: `%${emailLike}%`,
     };
+
+    if (keyword) {
+      request.search = {
+        name: keyword,
+        email: keyword,
+        id: keyword,
+        operator: SearchOperator.SEARCH_OPERATOR_OR,
+      };
+    }
+
     console.log('listUsersRequest', request);
     try {
       await authClient.refreshToken();

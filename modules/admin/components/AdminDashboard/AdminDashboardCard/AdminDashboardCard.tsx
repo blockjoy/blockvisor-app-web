@@ -1,8 +1,8 @@
 import { styles } from './AdminDashboardCard.styles';
-import IconSearch from '@public/assets/icons/common/Search.svg';
-import { SvgIcon } from '@shared/components';
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { Skeleton, SvgIcon } from '@shared/components';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { AdminSearch } from '../../AdminSearch/AdminSearch';
 
 type Props = {
   name: string;
@@ -12,28 +12,18 @@ type Props = {
 
 export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
   const router = useRouter();
-  const searchText = useRef('');
   const [total, setTotal] = useState<number>();
 
-  const handleSearchChanged = (e: ChangeEvent<HTMLInputElement>) => {
-    searchText.current = e.target.value;
-  };
-
-  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const handleSearch = () =>
+  const handleSearch = (keyword: string) => {
     router.push({
       pathname: '/admin',
       query: {
         name: name.toLowerCase(),
         page: 0,
-        search: searchText.current,
+        search: keyword.trim(),
       },
     });
+  };
 
   useEffect(() => {
     (async () => {
@@ -50,27 +40,16 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
         </span>
         <div>
           <label css={styles.cardLabel}>{name}</label>
-          <var css={styles.cardValue}>{total}</var>
+          <var css={styles.cardValue}>
+            {total! >= 0 ? (
+              total
+            ) : (
+              <Skeleton height="34px" margin="6px 0 0" width="60px" />
+            )}
+          </var>
         </div>
       </div>
-
-      <div css={styles.search}>
-        <span css={styles.searchIcon}>
-          <SvgIcon isDefaultColor>
-            <IconSearch />
-          </SvgIcon>
-        </span>
-        <input
-          css={styles.searchInput}
-          type="text"
-          onInput={handleSearchChanged}
-          onKeyUp={handleKeyUp}
-          placeholder="Keyword"
-        />
-        <button css={styles.searchButton} onClick={handleSearch}>
-          Search
-        </button>
-      </div>
+      <AdminSearch onSearch={handleSearch} />
     </article>
   );
 };

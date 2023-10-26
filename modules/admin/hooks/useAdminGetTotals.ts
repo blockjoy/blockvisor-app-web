@@ -36,6 +36,7 @@ export const useAdminGetTotals = () => {
         current_page: 0,
         items_per_page: 0,
       },
+      '',
       true,
     );
     return response.orgCount;

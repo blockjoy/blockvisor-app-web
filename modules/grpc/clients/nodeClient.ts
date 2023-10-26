@@ -7,8 +7,10 @@ import {
   NodeServiceDefinition,
   NodeServiceUpdateConfigRequest,
   NodeServiceListResponse,
+  NodeServiceListRequest,
+  NodeSearch,
 } from '../library/blockjoy/v1/node';
-
+import { SearchOperator } from '../library/blockjoy/common/v1/search';
 import {
   authClient,
   callWithTokenRefresh,
@@ -32,6 +34,7 @@ export type UIFilterCriteria = {
   blockchain?: string[];
   nodeType?: string[];
   nodeStatus?: string[];
+  keyword?: string;
 };
 
 export type UIPagination = {
@@ -52,14 +55,25 @@ class NodeClient {
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
   ): Promise<NodeServiceListResponse> {
-    const request = {
+    const request: NodeServiceListRequest = {
       orgId,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page || 1,
-      statuses: filter_criteria?.nodeStatus?.map((f) => +f),
-      nodeTypes: filter_criteria?.nodeType?.map((f) => +f),
-      blockchainIds: filter_criteria?.blockchain,
+      statuses: filter_criteria?.nodeStatus?.map((f) => +f)!,
+      nodeTypes: filter_criteria?.nodeType?.map((f) => +f)!,
+      blockchainIds: filter_criteria?.blockchain!,
     };
+
+    if (filter_criteria?.keyword) {
+      const { keyword } = filter_criteria;
+      const search: NodeSearch = {
+        id: keyword,
+        ip: keyword,
+        name: keyword,
+        operator: SearchOperator.SEARCH_OPERATOR_OR,
+      };
+      request.search = search;
+    }
 
     console.log('listNodesRequest', request);
 
