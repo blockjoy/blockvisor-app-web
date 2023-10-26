@@ -53,14 +53,16 @@ export const useUpdates = () => {
           payloadDeserialized.created,
         );
 
-        const { createdBy, createdByName, org }: OrgCreated =
-          payloadDeserialized.created!;
+        const { createdBy, org }: OrgCreated = payloadDeserialized.created!;
 
         addToOrganizations(org!);
 
         if (createdBy === user?.id) break;
 
-        showNotification(type, `${createdByName} just created an organization`);
+        showNotification(
+          type,
+          `${createdBy?.name} just created an organization`,
+        );
         break;
       }
 
@@ -97,8 +99,7 @@ export const useUpdates = () => {
           payloadDeserialized.deleted,
         );
 
-        const { orgId, deletedBy, deletedByName }: OrgDeleted =
-          payloadDeserialized.deleted!;
+        const { orgId, deletedBy }: OrgDeleted = payloadDeserialized.deleted!;
 
         removeFromOrganizations(orgId);
 
@@ -107,7 +108,7 @@ export const useUpdates = () => {
         if (orgId === defaultOrganization?.id) {
           showNotification(
             type,
-            `${deletedByName} just deleted your default organization`,
+            `${deletedBy?.name} just deleted your default organization`,
           );
           kickFromOrganization();
         }

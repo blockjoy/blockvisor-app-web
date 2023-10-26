@@ -1,5 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { EntityUpdate } from "../common/v1/resource";
 import { Host } from "./host";
 import { Invitation } from "./invitation";
 import { Node } from "./node";
@@ -16,33 +17,20 @@ export interface NodeMessage {
 }
 
 export interface NodeCreated {
-  node:
-    | Node
-    | undefined;
-  /** The id of the person that updated the node */
-  createdBy: string;
-  createdByName: string;
-  createdByEmail: string;
+  node: Node | undefined;
+  createdBy: EntityUpdate | undefined;
 }
 
 export interface NodeUpdated {
-  node:
-    | Node
-    | undefined;
-  /** The id of the person that updated the node, if there is one. */
-  updatedBy?: string | undefined;
-  updatedByName?: string | undefined;
-  updatedByEmail?: string | undefined;
+  node: Node | undefined;
+  updatedBy: EntityUpdate | undefined;
 }
 
 export interface NodeDeleted {
   nodeId: string;
   hostId: string;
   orgId: string;
-  /** The id of the persona that deleted the node */
-  deletedBy: string;
-  deletedByName: string;
-  deletedByEmail: string;
+  deletedBy: EntityUpdate | undefined;
 }
 
 export interface OrgMessage {
@@ -65,23 +53,17 @@ export interface OrgMessage {
 
 export interface OrgCreated {
   org: Org | undefined;
-  createdBy: string;
-  createdByName: string;
-  createdByEmail: string;
+  createdBy: EntityUpdate | undefined;
 }
 
 export interface OrgUpdated {
   org: Org | undefined;
-  updatedBy: string;
-  updatedByName: string;
-  updatedByEmail: string;
+  updatedBy: EntityUpdate | undefined;
 }
 
 export interface OrgDeleted {
   orgId: string;
-  deletedBy: string;
-  deletedByName: string;
-  deletedByEmail: string;
+  deletedBy: EntityUpdate | undefined;
 }
 
 /**
@@ -120,23 +102,17 @@ export interface HostMessage {
 
 export interface HostCreated {
   host: Host | undefined;
-  createdBy: string;
-  createdByName: string;
-  createdByEmail: string;
+  createdBy: EntityUpdate | undefined;
 }
 
 export interface HostUpdated {
   host: Host | undefined;
-  updatedBy?: string | undefined;
-  updatedByName?: string | undefined;
-  updatedByEmail?: string | undefined;
+  updatedBy: EntityUpdate | undefined;
 }
 
 export interface HostDeleted {
   hostId: string;
-  deletedBy: string;
-  deletedByName: string;
-  deletedByEmail: string;
+  deletedBy: EntityUpdate | undefined;
 }
 
 function createBaseNodeMessage(): NodeMessage {
@@ -214,7 +190,7 @@ export const NodeMessage = {
 };
 
 function createBaseNodeCreated(): NodeCreated {
-  return { node: undefined, createdBy: "", createdByName: "", createdByEmail: "" };
+  return { node: undefined, createdBy: undefined };
 }
 
 export const NodeCreated = {
@@ -222,14 +198,8 @@ export const NodeCreated = {
     if (message.node !== undefined) {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
-    if (message.createdBy !== "") {
-      writer.uint32(18).string(message.createdBy);
-    }
-    if (message.createdByName !== "") {
-      writer.uint32(26).string(message.createdByName);
-    }
-    if (message.createdByEmail !== "") {
-      writer.uint32(34).string(message.createdByEmail);
+    if (message.createdBy !== undefined) {
+      EntityUpdate.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -253,21 +223,7 @@ export const NodeCreated = {
             break;
           }
 
-          message.createdBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.createdByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.createdByEmail = reader.string();
+          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -285,15 +241,15 @@ export const NodeCreated = {
   fromPartial(object: DeepPartial<NodeCreated>): NodeCreated {
     const message = createBaseNodeCreated();
     message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
-    message.createdBy = object.createdBy ?? "";
-    message.createdByName = object.createdByName ?? "";
-    message.createdByEmail = object.createdByEmail ?? "";
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? EntityUpdate.fromPartial(object.createdBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseNodeUpdated(): NodeUpdated {
-  return { node: undefined, updatedBy: undefined, updatedByName: undefined, updatedByEmail: undefined };
+  return { node: undefined, updatedBy: undefined };
 }
 
 export const NodeUpdated = {
@@ -302,13 +258,7 @@ export const NodeUpdated = {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
     if (message.updatedBy !== undefined) {
-      writer.uint32(18).string(message.updatedBy);
-    }
-    if (message.updatedByName !== undefined) {
-      writer.uint32(26).string(message.updatedByName);
-    }
-    if (message.updatedByEmail !== undefined) {
-      writer.uint32(34).string(message.updatedByEmail);
+      EntityUpdate.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -332,21 +282,7 @@ export const NodeUpdated = {
             break;
           }
 
-          message.updatedBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.updatedByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.updatedByEmail = reader.string();
+          message.updatedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -364,15 +300,15 @@ export const NodeUpdated = {
   fromPartial(object: DeepPartial<NodeUpdated>): NodeUpdated {
     const message = createBaseNodeUpdated();
     message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
-    message.updatedBy = object.updatedBy ?? undefined;
-    message.updatedByName = object.updatedByName ?? undefined;
-    message.updatedByEmail = object.updatedByEmail ?? undefined;
+    message.updatedBy = (object.updatedBy !== undefined && object.updatedBy !== null)
+      ? EntityUpdate.fromPartial(object.updatedBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseNodeDeleted(): NodeDeleted {
-  return { nodeId: "", hostId: "", orgId: "", deletedBy: "", deletedByName: "", deletedByEmail: "" };
+  return { nodeId: "", hostId: "", orgId: "", deletedBy: undefined };
 }
 
 export const NodeDeleted = {
@@ -386,14 +322,8 @@ export const NodeDeleted = {
     if (message.orgId !== "") {
       writer.uint32(26).string(message.orgId);
     }
-    if (message.deletedBy !== "") {
-      writer.uint32(34).string(message.deletedBy);
-    }
-    if (message.deletedByName !== "") {
-      writer.uint32(42).string(message.deletedByName);
-    }
-    if (message.deletedByEmail !== "") {
-      writer.uint32(50).string(message.deletedByEmail);
+    if (message.deletedBy !== undefined) {
+      EntityUpdate.encode(message.deletedBy, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -431,21 +361,7 @@ export const NodeDeleted = {
             break;
           }
 
-          message.deletedBy = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.deletedByName = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.deletedByEmail = reader.string();
+          message.deletedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -465,9 +381,9 @@ export const NodeDeleted = {
     message.nodeId = object.nodeId ?? "";
     message.hostId = object.hostId ?? "";
     message.orgId = object.orgId ?? "";
-    message.deletedBy = object.deletedBy ?? "";
-    message.deletedByName = object.deletedByName ?? "";
-    message.deletedByEmail = object.deletedByEmail ?? "";
+    message.deletedBy = (object.deletedBy !== undefined && object.deletedBy !== null)
+      ? EntityUpdate.fromPartial(object.deletedBy)
+      : undefined;
     return message;
   },
 };
@@ -593,7 +509,7 @@ export const OrgMessage = {
 };
 
 function createBaseOrgCreated(): OrgCreated {
-  return { org: undefined, createdBy: "", createdByName: "", createdByEmail: "" };
+  return { org: undefined, createdBy: undefined };
 }
 
 export const OrgCreated = {
@@ -601,14 +517,8 @@ export const OrgCreated = {
     if (message.org !== undefined) {
       Org.encode(message.org, writer.uint32(10).fork()).ldelim();
     }
-    if (message.createdBy !== "") {
-      writer.uint32(18).string(message.createdBy);
-    }
-    if (message.createdByName !== "") {
-      writer.uint32(26).string(message.createdByName);
-    }
-    if (message.createdByEmail !== "") {
-      writer.uint32(34).string(message.createdByEmail);
+    if (message.createdBy !== undefined) {
+      EntityUpdate.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -632,21 +542,7 @@ export const OrgCreated = {
             break;
           }
 
-          message.createdBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.createdByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.createdByEmail = reader.string();
+          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -664,15 +560,15 @@ export const OrgCreated = {
   fromPartial(object: DeepPartial<OrgCreated>): OrgCreated {
     const message = createBaseOrgCreated();
     message.org = (object.org !== undefined && object.org !== null) ? Org.fromPartial(object.org) : undefined;
-    message.createdBy = object.createdBy ?? "";
-    message.createdByName = object.createdByName ?? "";
-    message.createdByEmail = object.createdByEmail ?? "";
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? EntityUpdate.fromPartial(object.createdBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseOrgUpdated(): OrgUpdated {
-  return { org: undefined, updatedBy: "", updatedByName: "", updatedByEmail: "" };
+  return { org: undefined, updatedBy: undefined };
 }
 
 export const OrgUpdated = {
@@ -680,14 +576,8 @@ export const OrgUpdated = {
     if (message.org !== undefined) {
       Org.encode(message.org, writer.uint32(10).fork()).ldelim();
     }
-    if (message.updatedBy !== "") {
-      writer.uint32(18).string(message.updatedBy);
-    }
-    if (message.updatedByName !== "") {
-      writer.uint32(26).string(message.updatedByName);
-    }
-    if (message.updatedByEmail !== "") {
-      writer.uint32(34).string(message.updatedByEmail);
+    if (message.updatedBy !== undefined) {
+      EntityUpdate.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -711,21 +601,7 @@ export const OrgUpdated = {
             break;
           }
 
-          message.updatedBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.updatedByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.updatedByEmail = reader.string();
+          message.updatedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -743,15 +619,15 @@ export const OrgUpdated = {
   fromPartial(object: DeepPartial<OrgUpdated>): OrgUpdated {
     const message = createBaseOrgUpdated();
     message.org = (object.org !== undefined && object.org !== null) ? Org.fromPartial(object.org) : undefined;
-    message.updatedBy = object.updatedBy ?? "";
-    message.updatedByName = object.updatedByName ?? "";
-    message.updatedByEmail = object.updatedByEmail ?? "";
+    message.updatedBy = (object.updatedBy !== undefined && object.updatedBy !== null)
+      ? EntityUpdate.fromPartial(object.updatedBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseOrgDeleted(): OrgDeleted {
-  return { orgId: "", deletedBy: "", deletedByName: "", deletedByEmail: "" };
+  return { orgId: "", deletedBy: undefined };
 }
 
 export const OrgDeleted = {
@@ -759,14 +635,8 @@ export const OrgDeleted = {
     if (message.orgId !== "") {
       writer.uint32(10).string(message.orgId);
     }
-    if (message.deletedBy !== "") {
-      writer.uint32(18).string(message.deletedBy);
-    }
-    if (message.deletedByName !== "") {
-      writer.uint32(26).string(message.deletedByName);
-    }
-    if (message.deletedByEmail !== "") {
-      writer.uint32(34).string(message.deletedByEmail);
+    if (message.deletedBy !== undefined) {
+      EntityUpdate.encode(message.deletedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -790,21 +660,7 @@ export const OrgDeleted = {
             break;
           }
 
-          message.deletedBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.deletedByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.deletedByEmail = reader.string();
+          message.deletedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -822,9 +678,9 @@ export const OrgDeleted = {
   fromPartial(object: DeepPartial<OrgDeleted>): OrgDeleted {
     const message = createBaseOrgDeleted();
     message.orgId = object.orgId ?? "";
-    message.deletedBy = object.deletedBy ?? "";
-    message.deletedByName = object.deletedByName ?? "";
-    message.deletedByEmail = object.deletedByEmail ?? "";
+    message.deletedBy = (object.deletedBy !== undefined && object.deletedBy !== null)
+      ? EntityUpdate.fromPartial(object.deletedBy)
+      : undefined;
     return message;
   },
 };
@@ -1092,7 +948,7 @@ export const HostMessage = {
 };
 
 function createBaseHostCreated(): HostCreated {
-  return { host: undefined, createdBy: "", createdByName: "", createdByEmail: "" };
+  return { host: undefined, createdBy: undefined };
 }
 
 export const HostCreated = {
@@ -1100,14 +956,8 @@ export const HostCreated = {
     if (message.host !== undefined) {
       Host.encode(message.host, writer.uint32(10).fork()).ldelim();
     }
-    if (message.createdBy !== "") {
-      writer.uint32(18).string(message.createdBy);
-    }
-    if (message.createdByName !== "") {
-      writer.uint32(26).string(message.createdByName);
-    }
-    if (message.createdByEmail !== "") {
-      writer.uint32(34).string(message.createdByEmail);
+    if (message.createdBy !== undefined) {
+      EntityUpdate.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1131,21 +981,7 @@ export const HostCreated = {
             break;
           }
 
-          message.createdBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.createdByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.createdByEmail = reader.string();
+          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1163,15 +999,15 @@ export const HostCreated = {
   fromPartial(object: DeepPartial<HostCreated>): HostCreated {
     const message = createBaseHostCreated();
     message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
-    message.createdBy = object.createdBy ?? "";
-    message.createdByName = object.createdByName ?? "";
-    message.createdByEmail = object.createdByEmail ?? "";
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? EntityUpdate.fromPartial(object.createdBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseHostUpdated(): HostUpdated {
-  return { host: undefined, updatedBy: undefined, updatedByName: undefined, updatedByEmail: undefined };
+  return { host: undefined, updatedBy: undefined };
 }
 
 export const HostUpdated = {
@@ -1180,13 +1016,7 @@ export const HostUpdated = {
       Host.encode(message.host, writer.uint32(10).fork()).ldelim();
     }
     if (message.updatedBy !== undefined) {
-      writer.uint32(18).string(message.updatedBy);
-    }
-    if (message.updatedByName !== undefined) {
-      writer.uint32(26).string(message.updatedByName);
-    }
-    if (message.updatedByEmail !== undefined) {
-      writer.uint32(34).string(message.updatedByEmail);
+      EntityUpdate.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1210,21 +1040,7 @@ export const HostUpdated = {
             break;
           }
 
-          message.updatedBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.updatedByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.updatedByEmail = reader.string();
+          message.updatedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1242,15 +1058,15 @@ export const HostUpdated = {
   fromPartial(object: DeepPartial<HostUpdated>): HostUpdated {
     const message = createBaseHostUpdated();
     message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
-    message.updatedBy = object.updatedBy ?? undefined;
-    message.updatedByName = object.updatedByName ?? undefined;
-    message.updatedByEmail = object.updatedByEmail ?? undefined;
+    message.updatedBy = (object.updatedBy !== undefined && object.updatedBy !== null)
+      ? EntityUpdate.fromPartial(object.updatedBy)
+      : undefined;
     return message;
   },
 };
 
 function createBaseHostDeleted(): HostDeleted {
-  return { hostId: "", deletedBy: "", deletedByName: "", deletedByEmail: "" };
+  return { hostId: "", deletedBy: undefined };
 }
 
 export const HostDeleted = {
@@ -1258,14 +1074,8 @@ export const HostDeleted = {
     if (message.hostId !== "") {
       writer.uint32(10).string(message.hostId);
     }
-    if (message.deletedBy !== "") {
-      writer.uint32(18).string(message.deletedBy);
-    }
-    if (message.deletedByName !== "") {
-      writer.uint32(26).string(message.deletedByName);
-    }
-    if (message.deletedByEmail !== "") {
-      writer.uint32(34).string(message.deletedByEmail);
+    if (message.deletedBy !== undefined) {
+      EntityUpdate.encode(message.deletedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1289,21 +1099,7 @@ export const HostDeleted = {
             break;
           }
 
-          message.deletedBy = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.deletedByName = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.deletedByEmail = reader.string();
+          message.deletedBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1321,9 +1117,9 @@ export const HostDeleted = {
   fromPartial(object: DeepPartial<HostDeleted>): HostDeleted {
     const message = createBaseHostDeleted();
     message.hostId = object.hostId ?? "";
-    message.deletedBy = object.deletedBy ?? "";
-    message.deletedByName = object.deletedByName ?? "";
-    message.deletedByEmail = object.deletedByEmail ?? "";
+    message.deletedBy = (object.deletedBy !== undefined && object.deletedBy !== null)
+      ? EntityUpdate.fromPartial(object.deletedBy)
+      : undefined;
     return message;
   },
 };

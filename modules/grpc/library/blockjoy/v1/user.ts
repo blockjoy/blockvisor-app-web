@@ -3,6 +3,7 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { SearchOperator } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -32,15 +33,6 @@ export interface UserServiceListRequest {
   orgId?:
     | string
     | undefined;
-  /**
-   * Return only users whose email has the provided pattern as a substring. Note
-   * that this search is not case sensitive. The wildcard symbol here is `'%'`.
-   * For example, a query for all users whose email starts with `baremetal`
-   * would look like `"baremetal%"`.
-   */
-  emailLike?:
-    | string
-    | undefined;
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -48,6 +40,32 @@ export interface UserServiceListRequest {
    * use this to get pagination.
    */
   limit: number;
+  /** Search params. */
+  search?: UserSearch | undefined;
+}
+
+/**
+ * This message contains fields used to search organizations as opposed to just
+ * filtering them.
+ */
+export interface UserSearch {
+  /** The way the search parameters should be combined. */
+  operator: SearchOperator;
+  /** Search only the id. */
+  id?:
+    | string
+    | undefined;
+  /**
+   * Return only users whose email has the provided pattern as a substring. Note
+   * that this search is not case sensitive. The wildcard symbol here is `'%'`.
+   * For example, a query for all users whose email starts with `baremetal`
+   * would look like `"baremetal%"`.
+   */
+  email?:
+    | string
+    | undefined;
+  /** Search only the full name. */
+  name?: string | undefined;
 }
 
 export interface UserServiceListResponse {
@@ -303,7 +321,7 @@ export const UserServiceGetResponse = {
 };
 
 function createBaseUserServiceListRequest(): UserServiceListRequest {
-  return { orgId: undefined, emailLike: undefined, offset: 0, limit: 0 };
+  return { orgId: undefined, offset: 0, limit: 0, search: undefined };
 }
 
 export const UserServiceListRequest = {
@@ -311,14 +329,14 @@ export const UserServiceListRequest = {
     if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
-    if (message.emailLike !== undefined) {
-      writer.uint32(18).string(message.emailLike);
-    }
     if (message.offset !== 0) {
       writer.uint32(24).uint64(message.offset);
     }
     if (message.limit !== 0) {
       writer.uint32(32).uint64(message.limit);
+    }
+    if (message.search !== undefined) {
+      UserSearch.encode(message.search, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -337,13 +355,6 @@ export const UserServiceListRequest = {
 
           message.orgId = reader.string();
           continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.emailLike = reader.string();
-          continue;
         case 3:
           if (tag !== 24) {
             break;
@@ -357,6 +368,13 @@ export const UserServiceListRequest = {
           }
 
           message.limit = longToNumber(reader.uint64() as Long);
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.search = UserSearch.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -374,9 +392,90 @@ export const UserServiceListRequest = {
   fromPartial(object: DeepPartial<UserServiceListRequest>): UserServiceListRequest {
     const message = createBaseUserServiceListRequest();
     message.orgId = object.orgId ?? undefined;
-    message.emailLike = object.emailLike ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
+    message.search = (object.search !== undefined && object.search !== null)
+      ? UserSearch.fromPartial(object.search)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseUserSearch(): UserSearch {
+  return { operator: 0, id: undefined, email: undefined, name: undefined };
+}
+
+export const UserSearch = {
+  encode(message: UserSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.operator !== 0) {
+      writer.uint32(8).int32(message.operator);
+    }
+    if (message.id !== undefined) {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.email !== undefined) {
+      writer.uint32(26).string(message.email);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(34).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserSearch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserSearch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.operator = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserSearch>): UserSearch {
+    return UserSearch.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserSearch>): UserSearch {
+    const message = createBaseUserSearch();
+    message.operator = object.operator ?? 0;
+    message.id = object.id ?? undefined;
+    message.email = object.email ?? undefined;
+    message.name = object.name ?? undefined;
     return message;
   },
 };

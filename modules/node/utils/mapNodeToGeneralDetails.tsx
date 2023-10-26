@@ -21,7 +21,7 @@ export const mapNodeToGeneralDetails = (node: Node) => {
       data: <Link href={ROUTES.ORGANIZATION(node.orgId)}>{node.orgName}</Link>,
     },
 
-    { label: 'Launched By', data: node.createdByName || '-' },
+    { label: 'Launched By', data: node.createdBy?.name || '-' },
     {
       label: 'Launched On',
       data: !node.createdAt

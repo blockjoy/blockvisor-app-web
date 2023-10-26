@@ -3,6 +3,7 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { SearchOperator } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -53,6 +54,23 @@ export interface OrgServiceListRequest {
    * use this to get pagination.
    */
   limit: number;
+  /** Search params. */
+  search?: OrgSearch | undefined;
+}
+
+/**
+ * This message contains fields used to search organizations as opposed to just
+ * filtering them.
+ */
+export interface OrgSearch {
+  /** The way the search parameters should be combined. */
+  operator: SearchOperator;
+  /** Search only the id. */
+  id?:
+    | string
+    | undefined;
+  /** Search only the name. */
+  name?: string | undefined;
 }
 
 export interface OrgServiceListResponse {
@@ -352,7 +370,7 @@ export const OrgServiceGetResponse = {
 };
 
 function createBaseOrgServiceListRequest(): OrgServiceListRequest {
-  return { memberId: undefined, offset: 0, limit: 0 };
+  return { memberId: undefined, offset: 0, limit: 0, search: undefined };
 }
 
 export const OrgServiceListRequest = {
@@ -365,6 +383,9 @@ export const OrgServiceListRequest = {
     }
     if (message.limit !== 0) {
       writer.uint32(24).uint64(message.limit);
+    }
+    if (message.search !== undefined) {
+      OrgSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -397,6 +418,13 @@ export const OrgServiceListRequest = {
 
           message.limit = longToNumber(reader.uint64() as Long);
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.search = OrgSearch.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -415,6 +443,77 @@ export const OrgServiceListRequest = {
     message.memberId = object.memberId ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
+    message.search = (object.search !== undefined && object.search !== null)
+      ? OrgSearch.fromPartial(object.search)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseOrgSearch(): OrgSearch {
+  return { operator: 0, id: undefined, name: undefined };
+}
+
+export const OrgSearch = {
+  encode(message: OrgSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.operator !== 0) {
+      writer.uint32(8).int32(message.operator);
+    }
+    if (message.id !== undefined) {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgSearch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgSearch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.operator = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgSearch>): OrgSearch {
+    return OrgSearch.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgSearch>): OrgSearch {
+    const message = createBaseOrgSearch();
+    message.operator = object.operator ?? 0;
+    message.id = object.id ?? undefined;
+    message.name = object.name ?? undefined;
     return message;
   },
 };

@@ -3,6 +3,8 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { EntityUpdate } from "../common/v1/resource";
+import { SearchOperator } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -155,20 +157,8 @@ export interface Node {
   ipGateway: string;
   selfUpdate: boolean;
   network: string;
-  /**
-   * The id of the user that created this node. For the earliest nodes we
-   * created, this field was not tracked and is therefore not populated.
-   */
-  createdBy?:
-    | string
-    | undefined;
-  /** The name of the aforementioned user. */
-  createdByName?:
-    | string
-    | undefined;
-  /** The email of said aforementioned user. */
-  createdByEmail?:
-    | string
+  createdBy:
+    | EntityUpdate
     | undefined;
   /** A list of ip addresses allowed to access public ports on this node. */
   allowIps: FilteredIpAddr[];
@@ -245,7 +235,9 @@ export interface NodeServiceGetResponse {
  */
 export interface NodeServiceListRequest {
   /** The organization within which we will search for nodes. */
-  orgId: string;
+  orgId?:
+    | string
+    | undefined;
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -269,7 +261,30 @@ export interface NodeServiceListRequest {
    */
   blockchainIds: string[];
   /** If this value is provided, only nodes running on this host are provided. */
-  hostId?: string | undefined;
+  hostId?:
+    | string
+    | undefined;
+  /** Search params. */
+  search?: NodeSearch | undefined;
+}
+
+/**
+ * This message contains fields used to search nodes as opposed to just
+ * filtering them.
+ */
+export interface NodeSearch {
+  /** The way the search parameters should be combined. */
+  operator: SearchOperator;
+  /** Search only the name. */
+  id?:
+    | string
+    | undefined;
+  /** Search only the name. */
+  name?:
+    | string
+    | undefined;
+  /** Search only the ip address. */
+  ip?: string | undefined;
 }
 
 /** This response will contain all the filtered nodes. */
@@ -301,7 +316,7 @@ export interface NodeServiceUpdateConfigResponse {
 export interface NodeServiceUpdateStatusRequest {
   /** The UUID of the node that you want to update. */
   id: string;
-  /** The version of the blockchain software that should now be ran on the node. */
+  /** The version of the node image that is currently used. */
   version?:
     | string
     | undefined;
@@ -528,8 +543,6 @@ function createBaseNode(): Node {
     selfUpdate: false,
     network: "",
     createdBy: undefined,
-    createdByName: undefined,
-    createdByEmail: undefined,
     allowIps: [],
     denyIps: [],
     placement: undefined,
@@ -613,13 +626,7 @@ export const Node = {
       writer.uint32(194).string(message.network);
     }
     if (message.createdBy !== undefined) {
-      writer.uint32(202).string(message.createdBy);
-    }
-    if (message.createdByName !== undefined) {
-      writer.uint32(210).string(message.createdByName);
-    }
-    if (message.createdByEmail !== undefined) {
-      writer.uint32(218).string(message.createdByEmail);
+      EntityUpdate.encode(message.createdBy, writer.uint32(202).fork()).ldelim();
     }
     for (const v of message.allowIps) {
       FilteredIpAddr.encode(v!, writer.uint32(226).fork()).ldelim();
@@ -819,21 +826,7 @@ export const Node = {
             break;
           }
 
-          message.createdBy = reader.string();
-          continue;
-        case 26:
-          if (tag !== 210) {
-            break;
-          }
-
-          message.createdByName = reader.string();
-          continue;
-        case 27:
-          if (tag !== 218) {
-            break;
-          }
-
-          message.createdByEmail = reader.string();
+          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
           continue;
         case 28:
           if (tag !== 226) {
@@ -909,9 +902,9 @@ export const Node = {
     message.ipGateway = object.ipGateway ?? "";
     message.selfUpdate = object.selfUpdate ?? false;
     message.network = object.network ?? "";
-    message.createdBy = object.createdBy ?? undefined;
-    message.createdByName = object.createdByName ?? undefined;
-    message.createdByEmail = object.createdByEmail ?? undefined;
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? EntityUpdate.fromPartial(object.createdBy)
+      : undefined;
     message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.placement = (object.placement !== undefined && object.placement !== null)
@@ -1208,12 +1201,21 @@ export const NodeServiceGetResponse = {
 };
 
 function createBaseNodeServiceListRequest(): NodeServiceListRequest {
-  return { orgId: "", offset: 0, limit: 0, statuses: [], nodeTypes: [], blockchainIds: [], hostId: undefined };
+  return {
+    orgId: undefined,
+    offset: 0,
+    limit: 0,
+    statuses: [],
+    nodeTypes: [],
+    blockchainIds: [],
+    hostId: undefined,
+    search: undefined,
+  };
 }
 
 export const NodeServiceListRequest = {
   encode(message: NodeServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
+    if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
     if (message.offset !== 0) {
@@ -1237,6 +1239,9 @@ export const NodeServiceListRequest = {
     }
     if (message.hostId !== undefined) {
       writer.uint32(58).string(message.hostId);
+    }
+    if (message.search !== undefined) {
+      NodeSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -1317,6 +1322,13 @@ export const NodeServiceListRequest = {
 
           message.hostId = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.search = NodeSearch.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1332,13 +1344,95 @@ export const NodeServiceListRequest = {
 
   fromPartial(object: DeepPartial<NodeServiceListRequest>): NodeServiceListRequest {
     const message = createBaseNodeServiceListRequest();
-    message.orgId = object.orgId ?? "";
+    message.orgId = object.orgId ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.statuses = object.statuses?.map((e) => e) || [];
     message.nodeTypes = object.nodeTypes?.map((e) => e) || [];
     message.blockchainIds = object.blockchainIds?.map((e) => e) || [];
     message.hostId = object.hostId ?? undefined;
+    message.search = (object.search !== undefined && object.search !== null)
+      ? NodeSearch.fromPartial(object.search)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeSearch(): NodeSearch {
+  return { operator: 0, id: undefined, name: undefined, ip: undefined };
+}
+
+export const NodeSearch = {
+  encode(message: NodeSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.operator !== 0) {
+      writer.uint32(8).int32(message.operator);
+    }
+    if (message.id !== undefined) {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.ip !== undefined) {
+      writer.uint32(34).string(message.ip);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeSearch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeSearch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.operator = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeSearch>): NodeSearch {
+    return NodeSearch.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeSearch>): NodeSearch {
+    const message = createBaseNodeSearch();
+    message.operator = object.operator ?? 0;
+    message.id = object.id ?? undefined;
+    message.name = object.name ?? undefined;
+    message.ip = object.ip ?? undefined;
     return message;
   },
 };

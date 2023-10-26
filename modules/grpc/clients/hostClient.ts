@@ -4,6 +4,7 @@ import {
   HostServiceDefinition,
   HostServiceListResponse,
   HostType,
+  Region,
 } from '../library/blockjoy/v1/host';
 
 import { callWithTokenRefresh, handleError } from '@modules/grpc';
@@ -71,7 +72,7 @@ class HostClient {
     blockchainId: string,
     nodeType: NodeType,
     version: string,
-  ): Promise<string[]> {
+  ): Promise<Region[]> {
     const request = {
       blockchainId,
       nodeType,

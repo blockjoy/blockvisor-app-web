@@ -4,6 +4,7 @@ import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
+import { SearchOperator } from "../common/v1/search";
 import { NodeType } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
@@ -139,7 +140,9 @@ export interface HostServiceGetResponse {
 }
 
 export interface HostServiceListRequest {
-  orgId: string;
+  orgId?:
+    | string
+    | undefined;
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -147,6 +150,31 @@ export interface HostServiceListRequest {
    * use this to get pagination.
    */
   limit: number;
+  /** Search params. */
+  search?: HostSearch | undefined;
+}
+
+export interface HostSearch {
+  /** The way the search parameters should be combined. */
+  operator: SearchOperator;
+  /** Search for the id of the host. */
+  id?:
+    | string
+    | undefined;
+  /** Search only for the name of the host. */
+  name?:
+    | string
+    | undefined;
+  /** Search only for the version of the host. */
+  version?:
+    | string
+    | undefined;
+  /** Search only for the operating system. */
+  os?:
+    | string
+    | undefined;
+  /** Search only for the ip address. */
+  ip?: string | undefined;
 }
 
 export interface HostServiceListResponse {
@@ -219,7 +247,20 @@ export interface HostServiceRegionsRequest {
 }
 
 export interface HostServiceRegionsResponse {
-  regions: string[];
+  regions: Region[];
+}
+
+export interface Region {
+  name?:
+    | string
+    | undefined;
+  /**
+   * We currently have regions in the following pricing tiers:
+   * NA1: North america
+   * EU1: Europe
+   * AP1: Asia-Pacific
+   */
+  pricingTier?: string | undefined;
 }
 
 function createBaseHost(): Host {
@@ -879,12 +920,12 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: "", offset: 0, limit: 0 };
+  return { orgId: undefined, offset: 0, limit: 0, search: undefined };
 }
 
 export const HostServiceListRequest = {
   encode(message: HostServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
+    if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
     if (message.offset !== 0) {
@@ -892,6 +933,9 @@ export const HostServiceListRequest = {
     }
     if (message.limit !== 0) {
       writer.uint32(24).uint64(message.limit);
+    }
+    if (message.search !== undefined) {
+      HostSearch.encode(message.search, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -924,6 +968,13 @@ export const HostServiceListRequest = {
 
           message.limit = longToNumber(reader.uint64() as Long);
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.search = HostSearch.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -939,9 +990,113 @@ export const HostServiceListRequest = {
 
   fromPartial(object: DeepPartial<HostServiceListRequest>): HostServiceListRequest {
     const message = createBaseHostServiceListRequest();
-    message.orgId = object.orgId ?? "";
+    message.orgId = object.orgId ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
+    message.search = (object.search !== undefined && object.search !== null)
+      ? HostSearch.fromPartial(object.search)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseHostSearch(): HostSearch {
+  return { operator: 0, id: undefined, name: undefined, version: undefined, os: undefined, ip: undefined };
+}
+
+export const HostSearch = {
+  encode(message: HostSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.operator !== 0) {
+      writer.uint32(8).int32(message.operator);
+    }
+    if (message.id !== undefined) {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.version !== undefined) {
+      writer.uint32(34).string(message.version);
+    }
+    if (message.os !== undefined) {
+      writer.uint32(42).string(message.os);
+    }
+    if (message.ip !== undefined) {
+      writer.uint32(50).string(message.ip);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostSearch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostSearch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.operator = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.os = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostSearch>): HostSearch {
+    return HostSearch.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostSearch>): HostSearch {
+    const message = createBaseHostSearch();
+    message.operator = object.operator ?? 0;
+    message.id = object.id ?? undefined;
+    message.name = object.name ?? undefined;
+    message.version = object.version ?? undefined;
+    message.os = object.os ?? undefined;
+    message.ip = object.ip ?? undefined;
     return message;
   },
 };
@@ -1581,7 +1736,7 @@ function createBaseHostServiceRegionsResponse(): HostServiceRegionsResponse {
 export const HostServiceRegionsResponse = {
   encode(message: HostServiceRegionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.regions) {
-      writer.uint32(10).string(v!);
+      Region.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -1598,7 +1753,7 @@ export const HostServiceRegionsResponse = {
             break;
           }
 
-          message.regions.push(reader.string());
+          message.regions.push(Region.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1615,7 +1770,64 @@ export const HostServiceRegionsResponse = {
 
   fromPartial(object: DeepPartial<HostServiceRegionsResponse>): HostServiceRegionsResponse {
     const message = createBaseHostServiceRegionsResponse();
-    message.regions = object.regions?.map((e) => e) || [];
+    message.regions = object.regions?.map((e) => Region.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRegion(): Region {
+  return { name: undefined, pricingTier: undefined };
+}
+
+export const Region = {
+  encode(message: Region, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.pricingTier !== undefined) {
+      writer.uint32(18).string(message.pricingTier);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Region {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegion();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.pricingTier = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Region>): Region {
+    return Region.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Region>): Region {
+    const message = createBaseRegion();
+    message.name = object.name ?? undefined;
+    message.pricingTier = object.pricingTier ?? undefined;
     return message;
   },
 };
