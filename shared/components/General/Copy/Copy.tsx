@@ -2,6 +2,7 @@ import CopyIcon from '@public/assets/icons/common/Copy.svg';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
 import { Button, SvgIcon } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
+import { MouseEvent } from 'react';
 
 interface CopyButtonProps {
   disabled?: boolean;
@@ -10,7 +11,10 @@ interface CopyButtonProps {
 }
 
 export const Copy = ({ disabled, value, hideTooltip }: CopyButtonProps) => {
-  const handleCopy = () => copyToClipboard(value);
+  const handleCopy = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    copyToClipboard(value);
+  };
 
   return (
     <span css={spacing.left.small}>

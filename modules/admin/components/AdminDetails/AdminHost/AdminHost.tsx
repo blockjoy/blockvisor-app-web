@@ -1,34 +1,22 @@
 import { hostClient } from '@modules/grpc/clients/hostClient';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { AdminDetailsHeader } from '../AdminDetailsHeader/AdminDetailsHeader';
-import { AdminDetailsTable } from '../AdminDetailsTable/AdminDetailsTable';
+import { AdminDetail } from '../AdminDetail/AdminDetail';
 import IconHost from '@public/assets/icons/app/Host.svg';
 
 export const AdminHost = () => {
   const router = useRouter();
-  const { id, name } = router.query;
-  const [item, setItem] = useState<Host>();
+  const { id } = router.query;
 
   const openInApp = () => router.push(`/hosts/${id as string}`);
 
-  useEffect(() => {
-    (async () => {
-      const response = await hostClient.getHost(id as string);
-      setItem(response);
-    })();
-  }, []);
+  const getItem = async () => await hostClient.getHost(id as string);
 
   return (
-    <>
-      <AdminDetailsHeader
-        name={name as string}
-        icon={<IconHost />}
-        detailsName={item?.name!}
-        onOpenAppView={openInApp}
-      />
-      <AdminDetailsTable item={item!} />
-    </>
+    <AdminDetail
+      getItem={getItem}
+      openInApp={openInApp}
+      icon={<IconHost />}
+      detailsName="name"
+    />
   );
 };

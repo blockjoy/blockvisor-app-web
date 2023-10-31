@@ -18,13 +18,13 @@ export const styles = {
     th {
       color: ${theme.colorLabel};
       font-weight: 400;
-      padding: 0 0 20px;
     }
 
     tbody tr td {
       opacity: 0.8;
-      padding: 20px 10px 21px 0;
+      padding: 0 10px 0 0;
       border-bottom: 1px solid ${theme.colorBorder};
+      height: 50px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -39,10 +39,29 @@ export const styles = {
       opacity: 1;
       border-color: ${theme.colorBorderGrey};
     }
+
+    tbody tr:hover .copy-button {
+      opacity: 1;
+      visibility: visible;
+    }
   `,
   tableCellWidth: (width: string) => css`
     width: ${width};
     min-width: ${width};
     max-width: ${width};
+  `,
+  copyButton: css`
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+  `,
+  rowCount: (theme: ITheme) => css`
+    color: ${theme.colorLabel};
+    font-size: 14px;
+    margin-bottom: 14px;
+  `,
+  rowCountTotal: (theme: ITheme) => css`
+    color: ${theme.colorText};
+    font-style: normal;
   `,
 };

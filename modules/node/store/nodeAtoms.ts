@@ -16,9 +16,9 @@ const activeListType = atom<string | 'table' | 'grid'>({
   default: 'grid',
 });
 
-const nodeList = atom<Node[]>({
+const nodeList = atom<Node[] | undefined>({
   key: 'node.nodeList',
-  default: [],
+  default: undefined,
 });
 
 const nodeCount = atom<number>({

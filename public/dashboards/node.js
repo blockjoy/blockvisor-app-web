@@ -4,8 +4,6 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 var { id, disk_space_name, is_node } = params;
 
-console.log("params", { id, disk_space_name, is_node })
-
 var host = `https://magellan-1.slc.blockjoy.com/host/${id}`;
 // var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
 // var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';

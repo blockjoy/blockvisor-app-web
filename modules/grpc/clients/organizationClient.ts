@@ -16,6 +16,7 @@ import {
   authClient,
   UIPagination,
   getPaginationOffset,
+  createSearch,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
@@ -50,13 +51,13 @@ class OrganizationClient {
     const request: OrgServiceListRequest = {
       memberId: !isAdmin ? getIdentity().id : undefined,
       offset: getPaginationOffset(pagination!),
-      limit: pagination?.items_per_page || 10,
+      limit: pagination?.items_per_page!,
     };
 
     if (keyword) {
       const search: OrgSearch = {
-        id: keyword,
-        name: keyword,
+        id: createSearch(keyword),
+        name: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;

@@ -57,9 +57,9 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args, onError: VoidFunction) => {
-    if (nodeList.findIndex((n) => n.id === id) > -1) {
+    if (nodeList?.findIndex((n) => n.id === id)! > -1) {
       setIsLoading('finished');
-      setNode(nodeList.find((n) => n.id === id)!);
+      setNode(nodeList?.find((n) => n.id === id)!);
       return;
     }
 

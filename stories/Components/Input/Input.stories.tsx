@@ -27,7 +27,7 @@ WithIcon.args = {
   name: 'input',
   leftIcon: (
     <>
-      <PasswordToggle activeType="password" onClick={() => console.log()} />
+      <PasswordToggle activeType="password" onClick={() => null} />
     </>
   ),
 };

@@ -6,6 +6,7 @@ import {
   UserServiceListResponse,
 } from '../library/blockjoy/v1/user';
 import {
+  createSearch,
   getOptions,
   getPaginationOffset,
   handleError,
@@ -47,14 +48,14 @@ class UserClient {
   ): Promise<UserServiceListResponse> {
     const request: UserServiceListRequest = {
       offset: getPaginationOffset(pagination),
-      limit: pagination?.items_per_page || 1000,
+      limit: pagination?.items_per_page!,
     };
 
     if (keyword) {
       request.search = {
-        name: keyword,
-        email: keyword,
-        id: keyword,
+        name: createSearch(keyword),
+        email: createSearch(keyword),
+        id: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
     }

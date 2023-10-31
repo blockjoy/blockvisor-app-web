@@ -1,8 +1,10 @@
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { styles } from './AdminListTable.styles';
-import { AdminListColumn, AdminSupportedViews } from '../AdminListView';
+import { AdminListColumn, AdminSupportedViews } from '../AdminList';
 import { useRouter } from 'next/router';
-import { EmptyColumn, TableSkeleton } from '@shared/components';
+import { Copy, TableSkeleton } from '@shared/components';
+import { capitalized } from '@modules/admin/utils/capitalized';
+import { pageSize } from '@modules/admin/constants/constants';
 
 type Props = {
   name: string;
@@ -10,6 +12,7 @@ type Props = {
   list: AdminSupportedViews;
   listTotal?: number;
   listPage: number;
+  searchTerm?: string;
   onPageChanged: (page: number) => void;
 };
 
@@ -19,11 +22,12 @@ export const AdminListTable = ({
   list,
   listTotal,
   listPage,
+  searchTerm,
   onPageChanged,
 }: Props) => {
   const router = useRouter();
 
-  const pageCount = Math.ceil(listTotal! / 10);
+  const pageCount = Math.ceil(listTotal! / pageSize);
 
   const gotoDetails = (id: string) => {
     router.push({
@@ -41,12 +45,17 @@ export const AdminListTable = ({
 
   return (
     <>
+      {searchTerm && (
+        <p css={styles.rowCount}>
+          Found <var css={styles.rowCountTotal}>{listTotal}</var> {name}
+        </p>
+      )}
       <div css={styles.wrapper}>
         <table css={styles.table}>
           <thead>
             <tr>
               {columns.map((column) => (
-                <th key={column.name}>{column.name}</th>
+                <th key={column.name}>{capitalized(column.name)}</th>
               ))}
             </tr>
           </thead>
@@ -59,6 +68,11 @@ export const AdminListTable = ({
                     css={styles.tableCellWidth(column.width!)}
                   >
                     {item[column.name]}
+                    {column.canCopy && (
+                      <span className="copy-button" css={styles.copyButton}>
+                        <Copy value={item[column.name]} hideTooltip />
+                      </span>
+                    )}
                   </td>
                 ))}
               </tr>
@@ -68,6 +82,7 @@ export const AdminListTable = ({
       </div>
       <AdminListPagination
         listPage={listPage}
+        totalRowCount={listTotal}
         pageCount={pageCount}
         onPageChanged={onPageChanged}
       />

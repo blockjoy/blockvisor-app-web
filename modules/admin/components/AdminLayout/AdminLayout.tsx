@@ -2,7 +2,7 @@ import { AdminSidebar } from '../AdminSidebar/AdminSidebar';
 import { styles } from './AdminLayout.styles';
 import { useRouter } from 'next/router';
 import { wrapper } from 'styles/wrapper.styles';
-import { AdminLists } from '../AdminList/AdminLists';
+import { AdminLists } from '../AdminLists/AdminLists';
 import { AdminDetails } from '../AdminDetails/AdminDetails';
 import { AdminDashboard } from '../AdminDashboard/AdminDashboard';
 import { PageTitle } from '@shared/components';

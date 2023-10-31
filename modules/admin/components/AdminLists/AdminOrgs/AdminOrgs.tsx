@@ -1,9 +1,9 @@
 import { AdminList } from '../AdminList/AdminList';
+import { organizationClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
-import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
-import IconHost from '@public/assets/icons/app/Host.svg';
+import IconOrg from '@public/assets/icons/app/Organization.svg';
 
 const columns = [
   {
@@ -16,23 +16,21 @@ const columns = [
   },
 ];
 
-export const AdminHosts = () => {
-  const { getTotalHosts: getTotal } = useAdminGetTotals();
+export const AdminOrgs = () => {
+  const { getTotalOrgs: getTotal } = useAdminGetTotals();
 
   const getList = async (keyword?: string, page?: number) => {
-    const response = await hostClient.listHosts(
-      undefined,
+    const response = await organizationClient.getOrganizations(
       {
-        keyword: `%${keyword!}%`,
-      },
-      {
-        current_page: page!,
+        current_page: page! || 0,
         items_per_page: pageSize,
       },
+      keyword,
+      true,
     );
     return {
-      list: response.hosts,
-      total: response.hostCount,
+      list: response.orgs,
+      total: response.orgCount,
     };
   };
 
@@ -48,8 +46,8 @@ export const AdminHosts = () => {
 
   return (
     <AdminList
-      name="hosts"
-      icon={<IconHost />}
+      name="orgs"
+      icon={<IconOrg />}
       columns={columns}
       getTotal={getTotal}
       getList={getList}

@@ -27,7 +27,6 @@ export const NodeViewReportProblem = ({ onHide, onSubmit }: Props) => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setIsDeleting(true);
-    console.log(form.getValues().message);
     onSubmit(form.getValues().message);
   };
 

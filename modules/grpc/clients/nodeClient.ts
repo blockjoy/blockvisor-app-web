@@ -14,6 +14,7 @@ import { SearchOperator } from '../library/blockjoy/common/v1/search';
 import {
   authClient,
   callWithTokenRefresh,
+  createSearch,
   getOptions,
   getPaginationOffset,
   handleError,
@@ -58,7 +59,7 @@ class NodeClient {
     const request: NodeServiceListRequest = {
       orgId,
       offset: getPaginationOffset(pagination!),
-      limit: pagination?.items_per_page || 1,
+      limit: pagination?.items_per_page!,
       statuses: filter_criteria?.nodeStatus?.map((f) => +f)!,
       nodeTypes: filter_criteria?.nodeType?.map((f) => +f)!,
       blockchainIds: filter_criteria?.blockchain!,
@@ -67,9 +68,9 @@ class NodeClient {
     if (filter_criteria?.keyword) {
       const { keyword } = filter_criteria;
       const search: NodeSearch = {
-        id: keyword,
-        ip: keyword,
-        name: keyword,
+        id: createSearch(keyword),
+        ip: createSearch(keyword),
+        name: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;
@@ -121,9 +122,11 @@ class NodeClient {
   }
 
   async createNode(node: NodeServiceCreateRequest): Promise<Node> {
+    console.log('createNodeRequest', node);
     try {
       await authClient.refreshToken();
       const response = await this.client.create(node, getOptions());
+      console.log('createNodeResponse', response.node);
       return response.node!;
     } catch (err) {
       return handleError(err);
