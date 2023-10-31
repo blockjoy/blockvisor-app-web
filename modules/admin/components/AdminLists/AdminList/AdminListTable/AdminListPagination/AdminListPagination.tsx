@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { styles } from './AdminListPagination.styles';
-import IconPageFirst from '@public/assets/icons/common/PageFirst.svg';
-import IconPageLast from '@public/assets/icons/common/PageLast.svg';
+import IconArrowRight from '@public/assets/icons/common/ArrowRight.svg';
+import IconArrowLeft from '@public/assets/icons/common/ArrowLeft.svg';
 import { SvgIcon } from '@shared/components';
+import { pageSize } from '@modules/admin/constants/constants';
 
 type Props = {
   listPage: number;
@@ -32,14 +33,14 @@ export const AdminListPagination = ({
     let start = 0;
     let end = pagesToDisplay;
 
-    if (pageIndex > 0 && pageIndex > (pagesToDisplay - 1) / 2) {
-      start = pageIndex - (pagesToDisplay - 1) / 2;
-      end = start + Math.min(pagesToDisplay, pageCount);
+    if (pageIndex > 3 && pageIndex < pageCount - 3) {
+      start = pageIndex - 1;
+      end = pageIndex - 1 + 3;
     }
 
-    if (pageIndex > 0 && pageIndex > pageCount - (pagesToDisplay + 1) / 2) {
-      start = pageCount - pagesToDisplay;
-      end = pageCount;
+    if (pageCount > 5 && pageIndex > pageCount - 5) {
+      start = pageCount - 5;
+      end = pageCount - 1;
     }
 
     for (let i = start; i < end; i++) {
@@ -55,19 +56,21 @@ export const AdminListPagination = ({
     buildPagination(listPage);
   }, [pageCount, listPage]);
 
+  if (pageCount === 1) return null;
+
   return (
     <footer css={styles.footer}>
       <div css={styles.pagination}>
-        <button
-          disabled={listPage === 0}
-          onClick={() => onPageChanged(0)}
-          type="button"
-          css={styles.paginationButton}
-        >
-          <SvgIcon isDefaultColor>
-            <IconPageFirst />
-          </SvgIcon>
-        </button>
+        {listPage >= 4 && (
+          <button
+            onClick={() => onPageChanged(0)}
+            type="button"
+            css={styles.paginationButton}
+          >
+            1
+          </button>
+        )}
+        {listPage >= 4 && <span css={styles.paginationButton}>...</span>}
         {pages.map((page: number) => (
           <button
             css={styles.paginationButton}
@@ -79,21 +82,22 @@ export const AdminListPagination = ({
             {page + 1}
           </button>
         ))}
-        <button
-          disabled={listPage === pageCount - 1}
-          onClick={() => onPageChanged(pageCount - 1)}
-          type="button"
-          css={styles.paginationButton}
-        >
-          <SvgIcon isDefaultColor>
-            <IconPageLast />
-          </SvgIcon>
-        </button>
+        {listPage < pageCount - 4 && (
+          <span css={styles.paginationButton}>...</span>
+        )}
+        {pageCount > 5 && (
+          <button
+            className={
+              listPage === pageCount - 1 && !isBuilding ? 'active' : ''
+            }
+            onClick={() => onPageChanged(pageCount - 1)}
+            type="button"
+            css={styles.paginationButton}
+          >
+            {pageCount}
+          </button>
+        )}
       </div>
-      <p css={styles.rowCount}>
-        Showing <var css={styles.rowCountTotal}>{totalRowCount}</var> row
-        {totalRowCount === 1 ? '' : 's'}
-      </p>
     </footer>
   );
 };

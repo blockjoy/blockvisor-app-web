@@ -22,13 +22,17 @@ export const styles = {
     background: ${theme.colorCard};
     color: #f9f9f9;
     font-size: 13px;
-    cursor: pointer;
+    cursor: default;
+
+    :not(span) {
+      cursor: pointer;
+    }
 
     :not(.active) {
       opacity: 0.7;
     }
 
-    :hover:not(.active, :disabled) {
+    :hover:not(span, .active, :disabled) {
       opacity: 1;
     }
 
@@ -41,13 +45,5 @@ export const styles = {
       opacity: 0.25;
       cursor: default;
     }
-  `,
-  rowCount: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    font-size: 14px;
-  `,
-  rowCountTotal: (theme: ITheme) => css`
-    color: ${theme.colorText};
-    font-style: normal;
   `,
 };

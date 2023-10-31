@@ -13,7 +13,6 @@ export function usePermissions() {
   const { user } = useIdentity();
 
   const getPermissions = async () => {
-    // setPermissions([]);
     try {
       const response = await authClient.listPermissions(
         user?.id!,

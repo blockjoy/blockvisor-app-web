@@ -1,18 +1,13 @@
 import { AdminList } from '../AdminList/AdminList';
-import { nodeClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
-import { NodeStatus } from '@shared/components';
+import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
-import IconNode from '@public/assets/icons/app/Node.svg';
+import IconHost from '@public/assets/icons/app/Host.svg';
 
 const columns = [
   {
     name: 'name',
-    width: '230px',
-  },
-  {
-    name: 'status',
     width: '230px',
   },
   {
@@ -21,14 +16,14 @@ const columns = [
   },
 ];
 
-export const AdminNodes = () => {
-  const { getTotalNodes: getTotal } = useAdminGetTotals();
+export const AdminHosts = () => {
+  const { getTotalHosts: getTotal } = useAdminGetTotals();
 
   const getList = async (keyword?: string, page?: number) => {
-    const response = await nodeClient.listNodes(
+    const response = await hostClient.listHosts(
       undefined,
       {
-        keyword: `%${keyword!}%`,
+        keyword,
       },
       {
         current_page: page!,
@@ -36,8 +31,8 @@ export const AdminNodes = () => {
       },
     );
     return {
-      list: response.nodes,
-      total: response.nodeCount,
+      list: response.hosts,
+      total: response.hostCount,
     };
   };
 
@@ -45,7 +40,6 @@ export const AdminNodes = () => {
     list.map((item) => {
       return {
         ...item,
-        status: <NodeStatus status={item.status} hasBorder={false} />,
         created: `${formatters.formatDate(
           item.createdAt!,
         )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
@@ -54,8 +48,8 @@ export const AdminNodes = () => {
 
   return (
     <AdminList
-      name="nodes"
-      icon={<IconNode />}
+      name="hosts"
+      icon={<IconHost />}
       columns={columns}
       getTotal={getTotal}
       getList={getList}

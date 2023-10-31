@@ -66,3 +66,5 @@ export const getPaginationOffset = (pagination?: UIPagination) => {
     ? 0
     : pagination?.current_page! * pagination?.items_per_page!;
 };
+
+export const createSearch = (keyword: string) => `%${keyword}%`;

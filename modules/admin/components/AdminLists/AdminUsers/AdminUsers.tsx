@@ -1,11 +1,11 @@
-import { AdminList } from '../AdminList/AdminList';
+import { AdminList, AdminListColumn } from '../AdminList/AdminList';
 import { userClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
 import IconUser from '@public/assets/icons/common/Person.svg';
 
-const columns = [
+const columns: AdminListColumn[] = [
   {
     name: 'fullName',
     width: '230px',
@@ -13,6 +13,7 @@ const columns = [
   {
     name: 'email',
     width: '280px',
+    canCopy: true,
   },
   {
     name: 'created',
@@ -23,7 +24,7 @@ export const AdminUsers = () => {
   const { getTotalUsers: getTotal } = useAdminGetTotals();
 
   const getList = async (keyword?: string, page?: number) => {
-    const response = await userClient.listUsers(`%${keyword!}%`, {
+    const response = await userClient.listUsers(keyword, {
       current_page: page!,
       items_per_page: pageSize,
     });

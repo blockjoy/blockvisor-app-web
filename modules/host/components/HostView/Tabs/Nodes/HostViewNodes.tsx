@@ -27,7 +27,7 @@ export const HostViewNodes = () => {
   const { nodeList, isLoading } = useNodeList();
   const { host, isLoading: isLoadingActiveHost } = useHostView();
   const { defaultOrganization } = useDefaultOrganization();
-  const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
+  const hostNodes = nodeList?.filter((node: Node) => node.hostId === host?.id);
   const { hasPermission } = usePermissions();
   const { deleteNode } = useNodeDelete();
 
@@ -48,7 +48,7 @@ export const HostViewNodes = () => {
 
   const handleNodeClicked = (id: string) => router.push(ROUTES.NODE(id));
 
-  const { headers, rows } = mapHostNodesToRows(hostNodes, handleDeleteClicked);
+  const { headers, rows } = mapHostNodesToRows(hostNodes!, handleDeleteClicked);
 
   return (
     <>

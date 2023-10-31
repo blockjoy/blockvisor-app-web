@@ -75,7 +75,7 @@ export const NodeList = () => {
 
   useEffect(() => {
     if (!isEqual(currentQueryParams.current, nodeUIProps.queryParams)) {
-      loadNodes(nodeUIProps.queryParams, true);
+      loadNodes(nodeUIProps.queryParams, !nodeList?.length);
       currentQueryParams.current = nodeUIProps.queryParams;
     }
   }, [nodeUIProps.queryParams]);
@@ -100,13 +100,13 @@ export const NodeList = () => {
     nodeUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = toGrid(nodeList, handleNodeClicked, handleNodeDeleteClicked);
+  const cells = toGrid(nodeList!, handleNodeClicked, handleNodeDeleteClicked);
   const { headers, rows } = mapNodeListToRows(
     nodeList,
     handleNodeDeleteClicked,
   );
   const { isFiltered, isEmpty } = resultsStatus(
-    nodeList.length,
+    nodeList?.length!,
     nodeUIProps.queryParams.filter,
   );
 
@@ -126,7 +126,7 @@ export const NodeList = () => {
         <NodeFilters isLoading={isLoading} />
         <div css={styles.nodeListWrapper}>
           <NodeListHeader />
-          {isLoading === 'initializing' ? (
+          {isLoading === 'initializing' && nodeList === undefined ? (
             <TableSkeleton />
           ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
             <EmptyColumn
@@ -148,7 +148,7 @@ export const NodeList = () => {
             />
           ) : (
             <InfiniteScroll
-              dataLength={nodeList.length}
+              dataLength={nodeList?.length!}
               next={updateQueryParams}
               hasMore={hasMoreNodes}
               style={{ overflow: 'hidden' }}

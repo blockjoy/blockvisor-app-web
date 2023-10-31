@@ -9,9 +9,6 @@ const ToastListItem: FC<ToastItem> = ({ id, content, isSuccess }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      // console.log('timeout id', id);
-      // console.log('timeout toastList', toastList);
-
       const newToastList = toastList.filter((t) => t.id !== id);
       setToastList(newToastList);
     }, 3000);

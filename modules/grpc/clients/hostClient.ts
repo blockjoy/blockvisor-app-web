@@ -10,6 +10,7 @@ import {
 } from '../library/blockjoy/v1/host';
 import {
   callWithTokenRefresh,
+  createSearch,
   getPaginationOffset,
   handleError,
 } from '@modules/grpc';
@@ -46,15 +47,15 @@ class HostClient {
     const request: HostServiceListRequest = {
       orgId,
       offset: getPaginationOffset(pagination),
-      limit: pagination?.items_per_page || 1,
+      limit: pagination?.items_per_page!,
     };
 
     if (filterCriteria?.keyword) {
       const { keyword } = filterCriteria;
       const search: HostSearch = {
-        id: keyword,
-        ip: keyword,
-        name: keyword,
+        id: createSearch(keyword),
+        ip: createSearch(keyword),
+        name: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;

@@ -1,11 +1,12 @@
 import { Skeleton } from '@shared/components';
-import { AdminHeader } from '../../AdminHeader/AdminHeader';
+import { AdminHeader } from '../../../AdminHeader/AdminHeader';
 import { styles } from './AdminDetailsHeader.styles';
 
 type Props = {
   icon: React.ReactNode;
   name: string;
   detailsName?: string;
+  isLoading?: boolean;
   onOpenAppView?: VoidFunction;
 };
 
@@ -13,6 +14,7 @@ export const AdminDetailsHeader = ({
   icon,
   name,
   detailsName,
+  isLoading,
   onOpenAppView,
 }: Props) => {
   return (
@@ -20,7 +22,7 @@ export const AdminDetailsHeader = ({
       <div css={styles.wrapper}>
         <span css={styles.separator}>/</span>
 
-        {!detailsName ? (
+        {isLoading ? (
           <Skeleton width="200px" />
         ) : (
           <>

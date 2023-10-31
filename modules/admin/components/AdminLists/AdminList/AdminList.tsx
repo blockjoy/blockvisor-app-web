@@ -12,6 +12,7 @@ import { AdminListTable } from './AdminListTable/AdminListTable';
 export type AdminListColumn = {
   name: string;
   width?: string;
+  canCopy?: boolean;
 };
 
 export type AdminSupportedViews = Node[] | User[] | Host[] | Org[];
@@ -104,6 +105,7 @@ export const AdminList = ({
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
+        searchTerm={searchTerm}
         columns={columns}
         onPageChanged={handlePageChanged}
       />

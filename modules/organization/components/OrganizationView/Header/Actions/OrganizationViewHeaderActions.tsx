@@ -90,7 +90,7 @@ export const OrganizationViewHeaderActions = () => {
     });
   }
 
-  const singleNode = nodeList[0];
+  const singleNode = nodeList?.length && nodeList[0];
 
   return (
     <>

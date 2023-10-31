@@ -50,7 +50,7 @@ export const useNodeList = () => {
       setNodeCount(nodeCount);
 
       if (queryParams.pagination.current_page !== 0) {
-        nodes = [...nodeList, ...nodes];
+        nodes = [...nodeList!, ...nodes];
       }
 
       setNodeList(nodes);
@@ -76,19 +76,19 @@ export const useNodeList = () => {
   };
 
   const addToNodeList = (node: any) => {
-    const foundNode = nodeList.findIndex((n) => n.id === node.id) > -1;
+    const foundNode = nodeList?.findIndex((n) => n.id === node.id)! > -1;
     if (foundNode) return;
 
-    const newNodeList = [node, ...nodeList];
+    const newNodeList = [node, ...nodeList!];
 
     setNodeCount(nodeCount + 1);
     setNodeList(newNodeList);
   };
 
   const removeFromNodeList = (nodeId: string) => {
-    const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
+    const newNodeList = nodeList?.filter((nl) => nl.id !== nodeId);
 
-    if (newNodeList.length !== nodeList.length) {
+    if (newNodeList?.length !== nodeList?.length) {
       setNodeList(newNodeList);
       setNodeCount(nodeCount - 1);
     }

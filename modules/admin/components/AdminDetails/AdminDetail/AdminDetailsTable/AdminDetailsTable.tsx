@@ -1,7 +1,7 @@
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { DetailsTable } from '@shared/components';
 import { formatters } from '@shared/utils/formatters';
-import { AdminDetailsItem } from '../AdminDetails';
+import { AdminDetailsItem } from '../../AdminDetails';
 
 type Props = {
   item: AdminDetailsItem;
@@ -10,8 +10,6 @@ type Props = {
 
 export const AdminDetailsTable = ({ item, ignoreItems }: Props) => {
   if (!item) return null;
-
-  console.log(Object.entries(item));
 
   const properties = Object.entries(item)
     .filter((property) => !ignoreItems?.some((item) => property[0] === item))
