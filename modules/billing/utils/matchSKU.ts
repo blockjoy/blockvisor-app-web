@@ -4,6 +4,7 @@ import {
   BlockchainNetworkType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   blockchainList,
   nodeNetworkTypes,
@@ -15,6 +16,7 @@ type Payload =
       blockchain?: Blockchain | null;
       node?: UpdateSubscriptionNode;
       version?: BlockchainVersion | null;
+      region?: Region | null;
     }
   | { host?: UpdateSubscriptionHost };
 
@@ -34,15 +36,15 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
     nodeType: '',
   };
 
-  // REGION
-  SKU.region = 'EU1';
-
   if ('node' in payload) {
-    const { blockchain, node, version } = payload;
-    if (!node || !blockchain || !version) return '';
+    const { blockchain, node, version, region } = payload;
+    if (!node || !blockchain || !version || !region) return '';
 
     // PRODUCT
     SKU.product = 'FMN';
+
+    // REGION
+    SKU.region = region.pricingTier;
 
     // NETWORK
     const selectedNetwork: BlockchainNetwork | null =
