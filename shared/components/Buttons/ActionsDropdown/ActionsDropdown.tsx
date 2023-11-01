@@ -4,7 +4,7 @@ import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
-import { css } from '@emotion/react';
+import { flex } from 'styles/utils.flex.styles';
 
 type Item = {
   title: string;
@@ -58,37 +58,24 @@ export const ActionsDropdown = ({
       </button>
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         <ul>
-          {items.map((item) => {
-            const additionalStyles = [
-              css`
-                padding-left: 18px;
-                padding-right: 20px;
-                gap: 12px;
-              `,
-            ];
-
-            if (item.hasBorderTop) {
-              additionalStyles.push(css`
-                border-top: 1px solid rgb(255 255 255 / 20%);
-              `);
-            }
-
-            return (
-              <li key={item.title}>
-                <DropdownItem
-                  onButtonClick={() => handleDropdownItemClicked(item.method)}
-                  size="medium"
-                  type="button"
-                  additionalStyles={additionalStyles}
-                >
-                  <SvgIcon isDefaultColor size="12px">
-                    {item.icon}
-                  </SvgIcon>
-                  <p css={styles.dropdownText}>{item.title}</p>
-                </DropdownItem>
-              </li>
-            );
-          })}
+          {items.map((item) => (
+            <li key={item.title}>
+              <DropdownItem
+                onButtonClick={() => handleDropdownItemClicked(item.method)}
+                size="medium"
+                type="button"
+                additionalStyles={[
+                  styles.dropdownItem,
+                  ...(item.hasBorderTop ? [styles.borderTop] : []),
+                ]}
+              >
+                <SvgIcon isDefaultColor size="12px">
+                  {item.icon}
+                </SvgIcon>
+                <p css={styles.dropdownText}>{item.title}</p>
+              </DropdownItem>
+            </li>
+          ))}
         </ul>
       </DropdownMenu>
     </div>

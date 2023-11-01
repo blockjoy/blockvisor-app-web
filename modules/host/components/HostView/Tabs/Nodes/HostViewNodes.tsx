@@ -32,16 +32,16 @@ export const HostViewNodes = () => {
   const { deleteNode } = useNodeDelete();
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [nodeToDelete, setNodeToDelete] = useState<NodeToDelete>();
+  const [nodeToDelete, setNodeToDelete] = useState<Node>();
 
   const handleDeleteNode = () => {
-    deleteNode(nodeToDelete?.id!, host!.id, () => {
+    deleteNode(nodeToDelete!, host!.id, () => {
       setIsDeleteMode(false);
       toast.success('Node Deleted');
     });
   };
 
-  const handleDeleteClicked = (node: NodeToDelete) => {
+  const handleDeleteClicked = (node: Node) => {
     setNodeToDelete(node);
     setIsDeleteMode(true);
   };

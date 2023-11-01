@@ -9,27 +9,6 @@ import {
   Node,
   NodeServiceUpdateConfigRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
-<<<<<<< HEAD
-=======
-import {
-  useDefaultOrganization,
-  useGetOrganizations,
-  useUpdateOrganization,
-} from '@modules/organization';
-import { useHostList, useHostUpdate, useHostView } from '@modules/host';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { useUpdateSubscription } from '@modules/billing';
->>>>>>> 034b89a5 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
-=======
-import { SubscriptionAction, useUpdateSubscription } from '@modules/billing';
->>>>>>> 554bafed (feat: sc-1103 improving enums; adding basic host subscription update)
-=======
-import {
-  UpdateSubscriptionAction,
-  useUpdateSubscriptionItems,
-} from '@modules/billing';
->>>>>>> 81092e81 (fix: sc-2354 ui tweaks)
 
 type Args = string | string[] | undefined;
 
@@ -56,53 +35,8 @@ export const useNodeView = (): Hook => {
     nodeAtoms.isLoadingActiveNode,
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-<<<<<<< HEAD
 
   const { nodeList } = useNodeList();
-=======
-  const { removeFromNodeList, nodeList } = useNodeList();
-  const { organizations } = useGetOrganizations();
-  const { defaultOrganization } = useDefaultOrganization();
-  const { modifyOrganization } = useUpdateOrganization();
-  const { host } = useHostView();
-  const { hostList } = useHostList();
-  const { modifyHost } = useHostUpdate();
-  const { updateSubscriptionItems } = useUpdateSubscriptionItems();
-
-  const deleteNode = async (
-    id: Args,
-    hostId: string,
-    onSuccess: VoidFunction,
-  ) => {
-    const uuid = convertRouteParamToString(id);
-    removeFromNodeList(uuid);
-    await nodeClient.deleteNode(uuid);
-
-    const activeOrganization = organizations.find(
-      (org) => org.id === defaultOrganization?.id,
-    );
-    modifyOrganization({
-      ...activeOrganization,
-      nodeCount: activeOrganization?.nodeCount! - 1,
-    });
-
-    const hostInList = hostList.find((h) => h.id === node?.hostId);
-    if (hostInList) {
-      modifyHost({
-        ...hostInList,
-        nodeCount: hostInList.nodeCount - 1,
-      });
-    }
-
-    // Remove node from the subscription
-    await updateSubscriptionItems({
-      type: UpdateSubscriptionAction.REMOVE_NODE,
-      payload: { node: node! },
-    });
-
-    onSuccess();
-  };
->>>>>>> 034b89a5 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
 
   const stopNode = async (nodeId: Args) => {
     try {

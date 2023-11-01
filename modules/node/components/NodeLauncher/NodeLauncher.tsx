@@ -1,3 +1,4 @@
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styles } from './NodeLauncher.styles';
 import { useEffect, useState } from 'react';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
@@ -33,11 +34,16 @@ import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
-import { billingSelectors, PaymentRequired } from '@modules/billing';
 import {
-  PermissionsCreateResource,
-  useHasPermissionsToCreateResource,
-} from '@modules/auth';
+  billingAtoms,
+  billingSelectors,
+  ItemPriceSimple,
+  matchSKU,
+  PaymentRequired,
+  SubscriptionActivation,
+} from '@modules/billing';
+import { nodeAtoms } from '@modules/node/store/nodeAtoms';
+import { blockchainSelectors } from '@modules/node/store/blockchains';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -62,15 +68,22 @@ export type CreateNodeParams = {
   deniedIps: FilteredIpAddr[];
 };
 
-export const NodeLauncher = () => {
+type NodeLauncherProps = {
+  itemPrices: ItemPriceSimple[];
+};
+
+type NodeLauncherView =
+  | 'launch-node'
+  | 'payment-required'
+  | 'confirm-subscription';
+
+export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   const router = useRouter();
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
 
-<<<<<<< HEAD
-=======
   const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
   const isActiveSubscription = useRecoilValue(
     billingSelectors.isActiveSubscription,
@@ -79,13 +92,16 @@ export const NodeLauncher = () => {
   const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
   const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
 
-  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
-  const isSuperUserBilling = useRecoilValue(billingAtoms.isSuperUserBilling);
+  const [fulfilRequirements, setFulfilRequirements] = useState(false);
+  const { hasPermission, isSuperUser } = usePermissions();
+  const isSuperUserBilling = useRecoilValue(
+    billingAtoms.isSuperUserBilling(isSuperUser),
+  );
 
->>>>>>> aabaf5c2 (feat: [sc-2861] bypassing billing for super admins)
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
   const [isCreating, setIsCreating] = useState(false);
+  const [activeView, setActiveView] = useState<NodeLauncherView>('launch-node');
 
   const [selectedNodeType, setSelectedNodeType] =
     useState<BlockchainNodeType>();
@@ -94,22 +110,6 @@ export const NodeLauncher = () => {
   const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
 
   const { defaultOrganization } = useDefaultOrganization();
-  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
-
-  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
-  const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
-
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
-  const isOwner = useRecoilValue(organizationSelectors.isOwner);
-
-  const canAddNode: PermissionsCreateResource =
-    useHasPermissionsToCreateResource(userRoleInOrganization, hasSubscription);
-
-  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
-
-  const { hasPermission, isSuperUser } = usePermissions();
 
   const canAddNode = hasPermission('node-create');
   const canCreateSubscription = hasPermission('subscription-create');
@@ -128,20 +128,9 @@ export const NodeLauncher = () => {
     placement: {},
   });
 
-  useEffect(() => {
-    Mixpanel.track('Launch Node - Opened');
-  }, []);
-
-  useEffect(() => {
-    if (serverError) setServerError(undefined);
-    if (fulfilRequirements) setFulfilRequirements(false);
-  }, [defaultOrganization?.id]);
-
-  useEffect(() => {
-    if (fulfilRequirements) {
-      handleNodeCreation();
-    }
-  }, [fulfilRequirements]);
+  const activeBlockchain = useRecoilValue(
+    blockchainSelectors.activeBlockchain(node?.blockchainId),
+  );
 
   const isNodeValid = Boolean(
     node.blockchainId && node.nodeType && (selectedHost || selectedRegion),
@@ -263,9 +252,6 @@ export const NodeLauncher = () => {
   };
 
   const handleCreateNodeClicked = () => {
-<<<<<<< HEAD
-    if (!hasPaymentMethod && isOwner) {
-=======
     if (isSuperUserBilling) {
       setFulfilRequirements(true);
       return;
@@ -276,9 +262,13 @@ export const NodeLauncher = () => {
       !hasSubscription ||
       (hasSubscription && !isActiveSubscription)
     ) {
->>>>>>> aabaf5c2 (feat: [sc-2861] bypassing billing for super admins)
       setIsCreating(true);
-      setActiveView('action');
+
+      const newActiveView: NodeLauncherView = !hasPaymentMethod
+        ? 'payment-required'
+        : 'confirm-subscription';
+      setActiveView(newActiveView);
+
       setFulfilRequirements(false);
       return;
     }
@@ -315,36 +305,25 @@ export const NodeLauncher = () => {
         Mixpanel.track('Launch Node - Node Launched');
         router.push(ROUTES.NODES);
       },
-      (error: string) => {
-        setServerError(error!);
-        setIsCreating(false);
-      },
+      (error: string) => setServerError(error!),
     );
   };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3182023e (fix: sc-2031 permission to preview subscription; bug fixes)
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
+  const handleHiddingPortal = () => setActiveView('launch-node');
+  const handleCancelPayment = () => {
+    setActiveView('launch-node');
+    setIsCreating(false);
+  };
+  const handleSubmitPayment = () => {
+    setActiveView('launch-node');
+    setFulfilRequirements(true);
+  };
+  const handleActivateSubscription = () => {
+    setActiveView('launch-node');
+    setFulfilRequirements(true);
+  };
 
-  const canAddNode: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_NODE,
-  );
-
->>>>>>> 034b89a5 (feat: sc-1581 node creation permissions; sc-1099 add/remove items from subscription; sc-1116 subscription customer upon node creationg)
   useEffect(() => {
-    const activeBlockchain = blockchains.find(
-      (b) => b.id === node.blockchainId,
-    );
-
     if (!activeBlockchain) return;
 
     const activeNodeType =
@@ -358,6 +337,16 @@ export const NodeLauncher = () => {
     setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
     setSelectedVersion(sortedVersions[0]);
   }, [node.blockchainId, node.nodeType]);
+
+  useEffect(() => {
+    const nodeSKU = matchSKU('node', {
+      blockchain: activeBlockchain,
+      node: node,
+      version: selectedVersion,
+      region: selectedRegion,
+    });
+    setSelectedSKU(nodeSKU);
+  }, [node, selectedVersion, selectedRegion]);
 
   useEffect(() => {
     let properties: NodeProperty[] | undefined, keyFiles;
@@ -396,24 +385,22 @@ export const NodeLauncher = () => {
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
-    if (fulfilRequirements) {
-      handleNodeCreation();
-    }
-=======
     if (serverError) setServerError(undefined);
     if (fulfilRequirements) setFulfilRequirements(false);
   }, [defaultOrganization?.id]);
 
   useEffect(() => {
     if (fulfilRequirements) handleNodeCreation();
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   }, [fulfilRequirements]);
+
+  useEffect(() => {
+    setItemPrices(itemPrices);
+  }, [itemPrices]);
 
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
-      <div css={[wrapper.main, styles.wrapper]}>
+      <div css={[styles.wrapper, wrapper.main]}>
         <NodeLauncherProtocol
           onProtocolSelected={handleProtocolSelected}
           blockchainId={node.blockchainId}
@@ -458,11 +445,18 @@ export const NodeLauncher = () => {
           />
         )}
       </div>
-      {activeView === 'action' && (
+      {activeView === 'payment-required' && (
         <PaymentRequired
-          warningMessage="Creating a Node requires a payment method."
-          onHide={handleHidingPortal}
+          warningMessage="Creating a node requires a payment method."
+          handleCancel={handleCancelPayment}
           handleSubmit={handleSubmitPayment}
+          handleHide={handleHiddingPortal}
+        />
+      )}
+      {activeView === 'confirm-subscription' && (
+        <SubscriptionActivation
+          handleSubmit={handleActivateSubscription}
+          handleBack={handleCancelPayment}
         />
       )}
     </>

@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
 import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 import {
   Button,
@@ -17,57 +14,39 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-<<<<<<< HEAD
+import { billingSelectors, PaymentRequired } from '@modules/billing';
 import { useDefaultOrganization } from '@modules/organization';
 import { usePermissions } from '@modules/auth';
-=======
-import {
-  organizationSelectors,
-  useDefaultOrganization,
-} from '@modules/organization';
-import { authSelectors } from '@modules/auth';
-import { billingSelectors, PaymentRequired } from '@modules/billing';
-
-import {
-  useHasPermissions,
-  Permissions,
-} from '@modules/auth/hooks/useHasPermissions';
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
   const { defaultOrganization } = useDefaultOrganization();
-
-<<<<<<< HEAD
   const { hasPermission } = usePermissions();
 
-  const canResetProvisionToken = hasPermission('org-provision-reset-token');
-=======
-  const userRole = useRecoilValue(authSelectors.userRole);
-  const userRoleInOrganization = useRecoilValue(
-    organizationSelectors.userRoleInOrganization,
-  );
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
   const [activeView, setActiveView] = useState<'view' | 'action'>('view');
   const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
 
-  const canAddHost: boolean = useHasPermissions(
-    userRole,
-    userRoleInOrganization,
-    Permissions.CREATE_HOST,
-  );
+  const canResetProvisionToken = hasPermission('org-provision-reset-token');
+  const canAddHost = hasPermission('host-create');
+  const canCreateSubscription = hasPermission('subscription-create');
+  const canUpdateSubscription = hasPermission('subscription-update');
 
-  const isDisabledAdding = !hasPaymentMethod || !canAddHost;
+  const isAllowedToCreate =
+    canAddHost &&
+    canResetProvisionToken &&
+    (canCreateSubscription || canUpdateSubscription);
+
+  const isDisabledAdding = !hasPaymentMethod || !isAllowedToCreate;
 
   const token = !isDisabledAdding
     ? provisionToken
     : provisionToken?.replace(/./g, '*');
 
   const handleHidingPortal = () => setActiveView('view');
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
 
   const handleHostCreation = async () => {
     await resetProvisionToken(defaultOrganization?.id!);
@@ -93,70 +72,6 @@ export const HostLauncher = () => {
   }, [fulfilRequirements]);
 
   return (
-<<<<<<< HEAD
-    <div>
-      <header css={styles.header}>
-        <FormHeaderCaps noBottomMargin>LAUNCH HOST</FormHeaderCaps>
-      </header>
-      <ul css={styles.timeline}>
-        <li>
-          <div>
-            <FormLabelCaps>Select Organization</FormLabelCaps>
-            <OrganizationSelect />
-          </div>
-        </li>
-        <li>
-          <div css={spacing.bottom.large}>
-            <FormLabelCaps>Run terminal command</FormLabelCaps>
-            <FormText>
-              Launch a new host by running this command on any server
-            </FormText>
-            <div css={[styles.copy, spacing.bottom.medium]}>
-              <CopyToClipboard
-                value={`bvup ${
-                  !canResetProvisionToken ? 'xxxxxxx' : provisionToken
-                }`}
-                disabled={!canResetProvisionToken}
-              />
-              {!canResetProvisionToken && (
-                <Tooltip
-                  noWrap
-                  top="-30px"
-                  left="50%"
-                  tooltip="Insufficient Permissions"
-                />
-              )}
-            </div>
-            <Button
-              style="outline"
-              size="small"
-              disabled={
-                provisionTokenLoadingState !== 'finished' ||
-                !canResetProvisionToken
-              }
-              css={styles.button}
-              onClick={() => resetProvisionToken(defaultOrganization?.id!)}
-              loading={provisionTokenLoadingState !== 'finished'}
-              {...(!canResetProvisionToken && {
-                tooltip: 'Insufficient Permissions.',
-              })}
-            >
-              <SvgIcon>
-                <IconRefresh />
-              </SvgIcon>
-              Regenerate
-            </Button>
-          </div>
-        </li>
-        <li>
-          <div>
-            <FormLabelCaps>Sit back and wait</FormLabelCaps>
-            <FormText>We expect this host to be ready in 4 minutes</FormText>
-          </div>
-        </li>
-      </ul>
-    </div>
-=======
     <>
       <div>
         <header css={styles.header}>
@@ -186,7 +101,7 @@ export const HostLauncher = () => {
                     top="-30px"
                     left="50%"
                     tooltip={
-                      !canAddHost
+                      !isAllowedToCreate
                         ? 'Insufficient permissions to launch host.'
                         : 'Payment required to launch host.'
                     }
@@ -197,12 +112,13 @@ export const HostLauncher = () => {
                 style="outline"
                 size="small"
                 disabled={
-                  provisionTokenLoadingState !== 'finished' || !canAddHost
+                  provisionTokenLoadingState !== 'finished' ||
+                  !isAllowedToCreate
                 }
                 css={styles.button}
                 onClick={handleCreateHostClicked}
                 loading={provisionTokenLoadingState !== 'finished'}
-                {...(!canAddHost && {
+                {...(!isAllowedToCreate && {
                   tooltip: 'Insufficient permissions to launch host.',
                 })}
               >
@@ -230,6 +146,5 @@ export const HostLauncher = () => {
         />
       )}
     </>
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   );
 };

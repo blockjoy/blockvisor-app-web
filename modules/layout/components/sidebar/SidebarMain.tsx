@@ -10,12 +10,20 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconChat from '@public/assets/icons/common/Chat.svg';
 import IconSliders from '@public/assets/icons/app/Sliders.svg';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { invitationAtoms, useDefaultOrganization } from '@modules/organization';
-import { isMobile } from 'react-device-detect';
+import { ROUTES } from '@shared/index';
 import { usePermissions } from '@modules/auth';
+
+type SidebarItem = {
+  name: string;
+  path: string;
+  icon: ReactNode;
+  isOrganizations?: boolean;
+};
 
 export default () => {
   const router = useRouter();
@@ -57,7 +65,7 @@ export default () => {
       ],
     },
     {
-      title: 'ADMIN',
+      title: 'SETTINGS',
       items: [
         {
           name: 'Organizations',
@@ -86,10 +94,15 @@ export default () => {
   ];
 
   if (isSuperUser) {
-    blocks[0].items.unshift({
-      name: 'Admin',
-      path: '/admin',
-      icon: <IconSliders />,
+    blocks.unshift({
+      title: 'BLOCKJOY',
+      items: [
+        {
+          name: 'Admin',
+          path: '/admin',
+          icon: <IconSliders />,
+        },
+      ],
     });
   }
 

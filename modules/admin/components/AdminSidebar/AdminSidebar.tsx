@@ -5,6 +5,7 @@ import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/app/Grid.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 import { SvgIcon } from '@shared/components';
 
 type Props = { tab: string };
@@ -15,6 +16,7 @@ const links = [
   { name: 'hosts', icon: <IconHost />, href: '/admin?name=hosts' },
   { name: 'orgs', icon: <IconOrganization />, href: '/admin?name=orgs' },
   { name: 'users', icon: <IconPerson />, href: '/admin?name=users' },
+  { name: 'settings', icon: <IconCog />, href: '/admin?name=settings' },
 ];
 
 export const AdminSidebar = ({ tab }: Props) => (

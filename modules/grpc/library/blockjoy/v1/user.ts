@@ -25,11 +25,7 @@ export interface UserServiceGetResponse {
   user: User | undefined;
 }
 
-<<<<<<< HEAD
 export interface UserServiceListRequest {
-=======
-export interface UserServiceFilterRequest {
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   /**
    * Return only users from this org. This is required for users that do not
    * have access to the entire system (i.e. blockjoy's admins).
@@ -37,7 +33,6 @@ export interface UserServiceFilterRequest {
   orgId?:
     | string
     | undefined;
-<<<<<<< HEAD
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -60,15 +55,12 @@ export interface UserSearch {
   id?:
     | string
     | undefined;
-=======
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   /**
    * Return only users whose email has the provided pattern as a substring. Note
    * that this search is not case sensitive. The wildcard symbol here is `'%'`.
    * For example, a query for all users whose email starts with `baremetal`
    * would look like `"baremetal%"`.
    */
-<<<<<<< HEAD
   email?:
     | string
     | undefined;
@@ -80,13 +72,6 @@ export interface UserServiceListResponse {
   users: User[];
   /** The total number of users matching your query. */
   userCount: number;
-=======
-  emailLike?: string | undefined;
-}
-
-export interface UserServiceFilterResponse {
-  users: User[];
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
 }
 
 export interface UserServiceCreateRequest {
@@ -335,7 +320,6 @@ export const UserServiceGetResponse = {
   },
 };
 
-<<<<<<< HEAD
 function createBaseUserServiceListRequest(): UserServiceListRequest {
   return { orgId: undefined, offset: 0, limit: 0, search: undefined };
 }
@@ -353,34 +337,14 @@ export const UserServiceListRequest = {
     }
     if (message.search !== undefined) {
       UserSearch.encode(message.search, writer.uint32(42).fork()).ldelim();
-=======
-function createBaseUserServiceFilterRequest(): UserServiceFilterRequest {
-  return { orgId: undefined, emailLike: undefined };
-}
-
-export const UserServiceFilterRequest = {
-  encode(message: UserServiceFilterRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== undefined) {
-      writer.uint32(10).string(message.orgId);
-    }
-    if (message.emailLike !== undefined) {
-      writer.uint32(18).string(message.emailLike);
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
     }
     return writer;
   },
 
-<<<<<<< HEAD
   decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceListRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceListRequest();
-=======
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceFilterRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceFilterRequest();
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -391,7 +355,6 @@ export const UserServiceFilterRequest = {
 
           message.orgId = reader.string();
           continue;
-<<<<<<< HEAD
         case 3:
           if (tag !== 24) {
             break;
@@ -473,14 +436,11 @@ export const UserSearch = {
 
           message.operator = reader.int32() as any;
           continue;
-=======
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
         case 2:
           if (tag !== 18) {
             break;
           }
 
-<<<<<<< HEAD
           message.id = reader.string();
           continue;
         case 3:
@@ -496,9 +456,6 @@ export const UserSearch = {
           }
 
           message.name = reader.string();
-=======
-          message.emailLike = reader.string();
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -509,7 +466,6 @@ export const UserSearch = {
     return message;
   },
 
-<<<<<<< HEAD
   create(base?: DeepPartial<UserSearch>): UserSearch {
     return UserSearch.fromPartial(base ?? {});
   },
@@ -520,21 +476,10 @@ export const UserSearch = {
     message.id = object.id ?? undefined;
     message.email = object.email ?? undefined;
     message.name = object.name ?? undefined;
-=======
-  create(base?: DeepPartial<UserServiceFilterRequest>): UserServiceFilterRequest {
-    return UserServiceFilterRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceFilterRequest>): UserServiceFilterRequest {
-    const message = createBaseUserServiceFilterRequest();
-    message.orgId = object.orgId ?? undefined;
-    message.emailLike = object.emailLike ?? undefined;
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
     return message;
   },
 };
 
-<<<<<<< HEAD
 function createBaseUserServiceListResponse(): UserServiceListResponse {
   return { users: [], userCount: 0 };
 }
@@ -554,24 +499,6 @@ export const UserServiceListResponse = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceListResponse();
-=======
-function createBaseUserServiceFilterResponse(): UserServiceFilterResponse {
-  return { users: [] };
-}
-
-export const UserServiceFilterResponse = {
-  encode(message: UserServiceFilterResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.users) {
-      User.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceFilterResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceFilterResponse();
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -582,7 +509,6 @@ export const UserServiceFilterResponse = {
 
           message.users.push(User.decode(reader, reader.uint32()));
           continue;
-<<<<<<< HEAD
         case 2:
           if (tag !== 16) {
             break;
@@ -590,8 +516,6 @@ export const UserServiceFilterResponse = {
 
           message.userCount = longToNumber(reader.uint64() as Long);
           continue;
-=======
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -601,7 +525,6 @@ export const UserServiceFilterResponse = {
     return message;
   },
 
-<<<<<<< HEAD
   create(base?: DeepPartial<UserServiceListResponse>): UserServiceListResponse {
     return UserServiceListResponse.fromPartial(base ?? {});
   },
@@ -610,15 +533,6 @@ export const UserServiceFilterResponse = {
     const message = createBaseUserServiceListResponse();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
     message.userCount = object.userCount ?? 0;
-=======
-  create(base?: DeepPartial<UserServiceFilterResponse>): UserServiceFilterResponse {
-    return UserServiceFilterResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceFilterResponse>): UserServiceFilterResponse {
-    const message = createBaseUserServiceFilterResponse();
-    message.users = object.users?.map((e) => User.fromPartial(e)) || [];
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
     return message;
   },
 };
@@ -1235,19 +1149,11 @@ export const UserServiceDefinition = {
       options: {},
     },
     /** Retrieve multiple users my means of a filter. */
-<<<<<<< HEAD
     list: {
       name: "List",
       requestType: UserServiceListRequest,
       requestStream: false,
       responseType: UserServiceListResponse,
-=======
-    filter: {
-      name: "Filter",
-      requestType: UserServiceFilterRequest,
-      requestStream: false,
-      responseType: UserServiceFilterResponse,
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
       responseStream: false,
       options: {},
     },
@@ -1315,17 +1221,10 @@ export interface UserServiceImplementation<CallContextExt = {}> {
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceGetResponse>>;
   /** Retrieve multiple users my means of a filter. */
-<<<<<<< HEAD
   list(
     request: UserServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceListResponse>>;
-=======
-  filter(
-    request: UserServiceFilterRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<UserServiceFilterResponse>>;
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   /** Create a single user. */
   create(
     request: UserServiceCreateRequest,
@@ -1365,17 +1264,10 @@ export interface UserServiceClient<CallOptionsExt = {}> {
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceGetResponse>;
   /** Retrieve multiple users my means of a filter. */
-<<<<<<< HEAD
   list(
     request: DeepPartial<UserServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceListResponse>;
-=======
-  filter(
-    request: DeepPartial<UserServiceFilterRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<UserServiceFilterResponse>;
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   /** Create a single user. */
   create(
     request: DeepPartial<UserServiceCreateRequest>,

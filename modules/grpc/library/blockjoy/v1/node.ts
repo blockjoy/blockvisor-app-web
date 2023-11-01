@@ -172,7 +172,6 @@ export interface Node {
    * The place where the blockchain data directory should be mounted on the
    * host.
    */
-<<<<<<< HEAD
   dataDirectoryMountpoint?:
     | string
     | undefined;
@@ -181,9 +180,6 @@ export interface Node {
    * may individually start, stop and fail.
    */
   jobs: NodeJob[];
-=======
-  dataDirectoryMountpoint?: string | undefined;
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
 }
 
 /** This message is used to create a new node. */
@@ -551,10 +547,7 @@ function createBaseNode(): Node {
     denyIps: [],
     placement: undefined,
     dataDirectoryMountpoint: undefined,
-<<<<<<< HEAD
     jobs: [],
-=======
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
   };
 }
 
@@ -646,12 +639,9 @@ export const Node = {
     }
     if (message.dataDirectoryMountpoint !== undefined) {
       writer.uint32(250).string(message.dataDirectoryMountpoint);
-<<<<<<< HEAD
     }
     for (const v of message.jobs) {
       NodeJob.encode(v!, writer.uint32(266).fork()).ldelim();
-=======
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
     }
     return writer;
   },
@@ -865,7 +855,6 @@ export const Node = {
           }
 
           message.dataDirectoryMountpoint = reader.string();
-<<<<<<< HEAD
           continue;
         case 33:
           if (tag !== 266) {
@@ -873,8 +862,6 @@ export const Node = {
           }
 
           message.jobs.push(NodeJob.decode(reader, reader.uint32()));
-=======
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -924,10 +911,7 @@ export const Node = {
       ? NodePlacement.fromPartial(object.placement)
       : undefined;
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
-<<<<<<< HEAD
     message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
-=======
->>>>>>> e4e84717 (fix: [sc-2346] removed additional step in HostLauncher, rebased off develop)
     return message;
   },
 };
@@ -2723,10 +2707,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceDeleteResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
