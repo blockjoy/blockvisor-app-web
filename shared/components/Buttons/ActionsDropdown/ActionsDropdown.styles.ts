@@ -20,6 +20,11 @@ export const styles = {
     width: 100%;
     max-width: 200px;
   `,
+  dropdownItem: css`
+    padding-left: 18px;
+    padding-right: 20px;
+    gap: 12px;
+  `,
   dropdownButton: (theme: ITheme) => css`
     display: flex;
     align-items: center;
@@ -65,5 +70,8 @@ export const styles = {
   `,
   iconActive: css`
     transform: rotate(-180deg);
+  `,
+  borderTop: css`
+    border-top: 1px solid rgb(255 255 255 / 20%);
   `,
 };
