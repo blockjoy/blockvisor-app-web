@@ -1,4 +1,9 @@
-import { Table, TableAdd, withQuery } from '@shared/components';
+import {
+  Table,
+  TableAdd,
+  getHandlerTableChange,
+  withQuery,
+} from '@shared/components';
 import { useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import {

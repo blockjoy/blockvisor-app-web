@@ -14,7 +14,6 @@ export function usePermissions() {
   const { user } = useIdentity();
 
   const getPermissions = async () => {
-    setPermissions([]);
     try {
       const response = await authClient.listPermissions(
         user?.id!,
@@ -35,8 +34,6 @@ export function usePermissions() {
 
   const hasPermission = (permission: Permission) =>
     permissions?.findIndex((p) => p === permission)! > -1;
-
-  const isSuperUser = hasPermission('auth-admin-list-permissions');
 
   const isSuperUser = hasPermission('auth-admin-list-permissions');
 

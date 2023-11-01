@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, atomFamily } from 'recoil';
 import {
   Customer,
   Estimate,
@@ -141,9 +141,12 @@ const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const isSuperUserBilling = atom<boolean>({
+export const isSuperUserBilling = atomFamily<boolean, boolean>({
   key: 'billing.superUser',
   default: false,
+  effects: (isSuperUser) => {
+    return isSuperUser ? [localStorageEffect('billing.isSuperUser')] : [];
+  },
 });
 
 export const billingAtoms = {
