@@ -52,6 +52,7 @@ class OrganizationClient {
       memberId: !isAdmin ? getIdentity().id : undefined,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page!,
+      personal: isAdmin ? false : undefined,
     };
 
     if (keyword) {
