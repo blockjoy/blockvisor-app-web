@@ -1,7 +1,7 @@
 import { Suspense, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { usePermissions } from '@modules/auth';
-import { LayoutProps } from '../../modules/layout/components/AppLayout';
+import { usePermissions } from '../../modules/auth';
+import { PageLayoutType } from '../../modules/layout/components/page/Page';
 
 const AdminLayout = dynamic<{}>(() =>
   import(`./components/AdminLayout/AdminLayout`).then(
@@ -9,10 +9,20 @@ const AdminLayout = dynamic<{}>(() =>
   ),
 );
 
-const AppLayout = dynamic<LayoutProps>(() =>
-  import(`../../modules/layout/components/AppLayout`).then(
-    (module) => module.AppLayout,
+const Sidebar = dynamic<{}>(() =>
+  import(`../../modules/layout/components/sidebar/Sidebar`).then(
+    (module) => module,
   ),
+);
+
+const Burger = dynamic<{}>(() =>
+  import(`../../modules/layout/components/burger/Burger`).then(
+    (module) => module.Burger,
+  ),
+);
+
+const Page = dynamic<PageLayoutType>(() =>
+  import(`../../modules/layout/components/page/Page`).then((module) => module),
 );
 
 const NotFound = dynamic<{}>(() =>
@@ -35,9 +45,13 @@ export const Admin = () => {
   return (
     <Suspense fallback={null}>
       {isSuperUser ? (
-        <AppLayout pageTitle="Admin">
-          <AdminLayout />
-        </AppLayout>
+        <>
+          <Sidebar />
+          <Burger />
+          <Page>
+            <AdminLayout />
+          </Page>
+        </>
       ) : (
         <NotFound />
       )}

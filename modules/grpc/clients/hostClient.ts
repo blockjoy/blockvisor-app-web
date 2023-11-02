@@ -46,7 +46,7 @@ class HostClient {
   ): Promise<HostServiceListResponse> {
     const request: HostServiceListRequest = {
       orgId,
-      offset: getPaginationOffset(pagination),
+      offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page!,
     };
 
