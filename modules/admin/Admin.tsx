@@ -32,8 +32,6 @@ export const Admin = () => {
 
   if (permissions === undefined) return null;
 
-  console.log('we never get here');
-
   return (
     <Suspense fallback={null}>
       {isSuperUser ? (
