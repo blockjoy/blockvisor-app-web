@@ -1,16 +1,14 @@
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
-import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { styles } from './Page.styles';
 
-type LayoutType = {
+export type PageLayoutType = {
   children: React.ReactNode;
   isFlex?: boolean;
 };
 
-const Page: React.FC<LayoutType> = ({ children, isFlex }) => {
+const Page = ({ children, isFlex }: PageLayoutType) => {
   const isSidebarOpen = useRecoilValue(sidebarOpen);
-
   return (
     <div
       css={[

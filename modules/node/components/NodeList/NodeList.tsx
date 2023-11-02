@@ -101,10 +101,12 @@ export const NodeList = () => {
   };
 
   const cells = toGrid(nodeList!, handleNodeClicked, handleNodeDeleteClicked);
+
   const { headers, rows } = mapNodeListToRows(
     nodeList,
     handleNodeDeleteClicked,
   );
+
   const { isFiltered, isEmpty } = resultsStatus(
     nodeList?.length!,
     nodeUIProps.queryParams.filter,

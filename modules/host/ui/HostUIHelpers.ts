@@ -34,7 +34,7 @@ export const itemsPerPage = {
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     current_page: 0,
-    items_per_page: itemsPerPage['xxl'],
+    items_per_page: itemsPerPage['xl'],
   },
 
   filter: {

@@ -1,4 +1,4 @@
-import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
@@ -21,10 +21,6 @@ export const useHostList = () => {
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
   const hostListSorted = useRecoilValue(hostSelectors.hostListSorted);
 
-  const setPreloadNodes = useSetRecoilState(hostAtoms.preloadHosts);
-
-  const setHasMore = useSetRecoilState(hostAtoms.hasMoreHosts);
-
   const handleHostClick = (id: string) => {
     router.push(ROUTES.HOST(id));
   };
@@ -46,34 +42,30 @@ export const useHostList = () => {
     }
 
     const loadingState =
-      queryParams.pagination.current_page === 1 ? 'initializing' : 'loading';
+      queryParams.pagination.current_page === 0 ? 'initializing' : 'loading';
 
     setIsLoading(loadingState);
-
-    setHasMore(false);
 
     try {
       const response: HostServiceListResponse = await hostClient.listHosts(
         orgId!,
-        queryParams?.filter,
-        queryParams?.pagination,
+        queryParams.filter,
+        queryParams.pagination,
       );
 
-      const { hosts, hostCount } = response;
+      const { hostCount } = response;
+
+      let hosts = response.hosts;
 
       setHostCount(hostCount);
 
       if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
-      setPreloadNodes(hosts.length);
-      if (queryParams.pagination.current_page === 1) {
-        setHostList(hosts);
-      } else {
-        const newNodes = [...hostList, ...hosts];
-        setHostList(newNodes);
+
+      if (queryParams.pagination.current_page !== 0) {
+        hosts = [...hostList!, ...hosts];
       }
 
-      setHasMore(false);
-      setPreloadNodes(0);
+      setHostList(hosts);
       setIsLoading('finished');
     } catch (err) {
       setIsLoading('finished');
