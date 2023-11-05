@@ -6,6 +6,7 @@ export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/NodeView/Tabs/Jobs/JobList/NodeViewJobList';
 export * from './components/NodeView/Tabs/Jobs/JobView/NodeViewJobView';
 export * from './components/NodeLauncher/NodeLauncher';
+export * from './components/NodeLauncher/NodeLauncherWithGuard';
 export * from './components/Shared';
 export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeList';

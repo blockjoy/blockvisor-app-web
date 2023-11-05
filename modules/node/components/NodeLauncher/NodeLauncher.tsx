@@ -32,15 +32,11 @@ import {
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
-import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
 import {
   billingAtoms,
-  billingSelectors,
-  ItemPriceSimple,
   matchSKU,
-  PaymentRequired,
-  SubscriptionActivation,
+  LauncherWithGuardProps,
 } from '@modules/billing';
 import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import { blockchainSelectors } from '@modules/node/store/blockchains';
@@ -68,39 +64,27 @@ export type CreateNodeParams = {
   deniedIps: FilteredIpAddr[];
 };
 
-type NodeLauncherProps = {
-  itemPrices: ItemPriceSimple[];
-};
+export const NodeLauncher = ({
+  itemPrices,
+  fulfilReqs,
+  onCreateClick,
+  permissions,
+}: LauncherWithGuardProps) => {
+  const { permitted: isPermittedToCreate, superUser: isPermittedAsSuperUser } =
+    permissions;
 
-type NodeLauncherView =
-  | 'launch-node'
-  | 'payment-required'
-  | 'confirm-subscription';
-
-export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   const router = useRouter();
 
   const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
 
-  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
-  const canCreateResources = useRecoilValue(
-    billingSelectors.canCreateResources,
-  );
   const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
   const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
-
-  const [fulfilRequirements, setFulfilRequirements] = useState(false);
-  const { hasPermission, isSuperUser } = usePermissions();
-  const isSuperUserBilling = useRecoilValue(
-    billingAtoms.isSuperUserBilling(isSuperUser),
-  );
 
   const [, setHasRegionListError] = useState(true);
   const [serverError, setServerError] = useState<string>();
   const [isCreating, setIsCreating] = useState(false);
-  const [activeView, setActiveView] = useState<NodeLauncherView>('launch-node');
 
   const [selectedNodeType, setSelectedNodeType] =
     useState<BlockchainNodeType>();
@@ -109,14 +93,6 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
 
   const { defaultOrganization } = useDefaultOrganization();
-
-  const canAddNode = hasPermission('node-create');
-  const canCreateSubscription = hasPermission('subscription-create');
-  const canUpdateSubscription = hasPermission('subscription-update');
-
-  const isPermittedToCreate =
-    (canAddNode && (canCreateSubscription || canUpdateSubscription)) ||
-    (isSuperUser && isSuperUserBilling);
 
   const [node, setNode] = useState<NodeLauncherState>({
     blockchainId: '',
@@ -250,27 +226,6 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
     setSelectedRegion(region);
   };
 
-  const handleCreateNodeClicked = () => {
-    if (isSuperUserBilling) {
-      setFulfilRequirements(true);
-      return;
-    }
-
-    if (!canCreateResources) {
-      setIsCreating(true);
-
-      const newActiveView: NodeLauncherView = !hasPaymentMethod
-        ? 'payment-required'
-        : 'confirm-subscription';
-      setActiveView(newActiveView);
-
-      setFulfilRequirements(false);
-      return;
-    }
-
-    setFulfilRequirements(true);
-  };
-
   const handleNodeCreation = () => {
     setIsCreating(true);
 
@@ -302,20 +257,6 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
       },
       (error: string) => setServerError(error!),
     );
-  };
-
-  const handleHiddingPortal = () => setActiveView('launch-node');
-  const handleCancelPayment = () => {
-    setActiveView('launch-node');
-    setIsCreating(false);
-  };
-  const handleSubmitPayment = () => {
-    setActiveView('launch-node');
-    setFulfilRequirements(true);
-  };
-  const handleActivateSubscription = () => {
-    setActiveView('launch-node');
-    setFulfilRequirements(true);
   };
 
   useEffect(() => {
@@ -381,15 +322,14 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
 
   useEffect(() => {
     if (serverError) setServerError(undefined);
-    if (fulfilRequirements) setFulfilRequirements(false);
   }, [defaultOrganization?.id]);
 
   useEffect(() => {
-    if (fulfilRequirements) handleNodeCreation();
-  }, [fulfilRequirements]);
+    if (fulfilReqs) handleNodeCreation();
+  }, [fulfilReqs]);
 
   useEffect(() => {
-    setItemPrices(itemPrices);
+    setItemPrices(itemPrices ?? null);
   }, [itemPrices]);
 
   return (
@@ -432,28 +372,14 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
             selectedRegion={selectedRegion!}
             selectedVersion={selectedVersion!}
             selectedHost={selectedHost}
-            canAddNode={isPermittedToCreate}
+            canAddNode={isPermittedToCreate || isPermittedAsSuperUser}
             onHostChanged={handleHostChanged}
             onRegionChanged={handleRegionChanged}
-            onCreateNodeClicked={handleCreateNodeClicked}
+            onCreateNodeClicked={onCreateClick}
             onRegionsLoaded={handleRegionsLoaded}
           />
         )}
       </div>
-      {activeView === 'payment-required' && (
-        <PaymentRequired
-          warningMessage="Creating a node requires a payment method."
-          handleCancel={handleCancelPayment}
-          handleSubmit={handleSubmitPayment}
-          handleBack={handleHiddingPortal}
-        />
-      )}
-      {activeView === 'confirm-subscription' && (
-        <SubscriptionActivation
-          handleSubmit={handleActivateSubscription}
-          handleBack={handleCancelPayment}
-        />
-      )}
     </>
   );
 };

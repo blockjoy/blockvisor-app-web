@@ -1,5 +1,5 @@
 import { AppLayout } from '@modules/layout';
-import { NodeLauncher } from '@modules/node/';
+import { NodeLauncherWithGuard } from '@modules/node';
 import { fetchItemPrices } from 'utils/billing/fetchItems';
 import { ItemPriceSimple } from '@modules/billing';
 
@@ -8,7 +8,7 @@ type NodeProps = {
 };
 
 const Node = ({ itemPrices }: NodeProps) => (
-  <NodeLauncher itemPrices={itemPrices} />
+  <NodeLauncherWithGuard itemPrices={itemPrices} />
 );
 
 Node.getLayout = function getLayout(page: any) {
