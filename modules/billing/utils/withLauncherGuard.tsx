@@ -1,21 +1,29 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import {
-  LAUNCH_ERRORS,
-  PaymentRequired,
-  SubscriptionActivation,
   billingAtoms,
   billingSelectors,
+  ItemPriceSimple,
+  PaymentRequired,
+  SubscriptionActivation,
+  LAUNCH_ERRORS,
 } from '@modules/billing';
 import { useDefaultOrganization } from '@modules/organization';
 import { usePermissions } from '@modules/auth';
-import { useRecoilValue } from 'recoil';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
-type WithLauncherGuardProps = {
+type WithLauncherGuardBasicProps = {
   type: 'launch-host' | 'launch-node';
   isPermittedToCreate: boolean;
 };
+
+export type WithLauncherGuardAdditionalProps = {
+  itemPrices?: ItemPriceSimple[];
+};
+
+type WithLauncherGuardProps = WithLauncherGuardBasicProps &
+  Partial<WithLauncherGuardAdditionalProps>;
 
 export type WithLauncherGuardPermissions = {
   disabled: boolean;
@@ -24,16 +32,19 @@ export type WithLauncherGuardPermissions = {
   message: string;
 };
 
-export type LauncherWithGuardProps = {
+type LauncherWithGuardBasicProps = {
   fulfilReqs: boolean;
   resetFulfilReqs: VoidFunction;
   onCreateClick: VoidFunction;
   permissions: WithLauncherGuardPermissions;
-};
+} & Partial<WithLauncherGuardAdditionalProps>;
+
+export type LauncherWithGuardProps = LauncherWithGuardBasicProps &
+  Partial<WithLauncherGuardAdditionalProps>;
 
 export const withLauncherGuard = (Component: any) => {
   const withLauncherGuard = ({ ...props }: WithLauncherGuardProps) => {
-    const { type, isPermittedToCreate } = props;
+    const { type, isPermittedToCreate, ...aditionalProps } = props;
 
     const { defaultOrganization } = useDefaultOrganization();
     const { isSuperUser } = usePermissions();
@@ -110,19 +121,18 @@ export const withLauncherGuard = (Component: any) => {
 
     return (
       <>
-        {activeView === 'launcher' && (
-          <Component
-            fulfilReqs={fulfilRequirements}
-            resetFulfilReqs={resetFulfilReqs}
-            onCreateClick={handleCreateClicked}
-            permissions={{
-              disabled: isDisabledAdding,
-              permitted: isPermittedToCreate,
-              superUser: isPermittedAsSuperUser,
-              message: warningMessage,
-            }}
-          />
-        )}
+        <Component
+          fulfilReqs={fulfilRequirements}
+          resetFulfilReqs={resetFulfilReqs}
+          onCreateClick={handleCreateClicked}
+          permissions={{
+            disabled: isDisabledAdding,
+            permitted: isPermittedToCreate,
+            superUser: isPermittedAsSuperUser,
+            message: warningMessage,
+          }}
+          {...aditionalProps}
+        />
         {activeView === 'payment-required' && (
           <PaymentRequired
             warningMessage={`Creating a ${name} requires a payment method.`}
