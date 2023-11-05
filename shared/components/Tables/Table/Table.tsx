@@ -32,7 +32,7 @@ export const Table = ({
   handleSort,
   additionalStyles,
 }: TableProps) => {
-  const [activeRowKey, setActiveRowKey] = useState<string>(rows?.[0].key);
+  const [activeRowKey, setActiveRowKey] = useState<string>(rows?.[0]?.key);
 
   const handleRowClick = (id: string) => {
     if (onRowClick) {

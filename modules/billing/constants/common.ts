@@ -37,3 +37,9 @@ export const PROMO_CODE_ERROR_MESSAGES = {
   EXPIRED: 'Promo code expired',
   UNEXPECTED: 'Unexpected error occurred',
 };
+
+export const LAUNCH_ERRORS = {
+  NO_PERMISSION: 'Insufficient permissions to launch.',
+  NO_BILLING: 'Payment required to launch.',
+  NO_ACTIVE_SUBSCRIPTION: 'Active subscription required to launch.',
+};

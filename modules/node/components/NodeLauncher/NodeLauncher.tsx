@@ -84,11 +84,10 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   const { createNode } = useNodeAdd();
   const { hostList } = useHostList();
 
-  const hasSubscription = useRecoilValue(billingSelectors.hasSubscription);
-  const isActiveSubscription = useRecoilValue(
-    billingSelectors.isActiveSubscription,
-  );
   const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
+  const canCreateResources = useRecoilValue(
+    billingSelectors.canCreateResources,
+  );
   const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
   const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
 
@@ -115,7 +114,7 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
   const canCreateSubscription = hasPermission('subscription-create');
   const canUpdateSubscription = hasPermission('subscription-update');
 
-  const isAllowedToCreate =
+  const isPermittedToCreate =
     (canAddNode && (canCreateSubscription || canUpdateSubscription)) ||
     (isSuperUser && isSuperUserBilling);
 
@@ -257,11 +256,7 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
       return;
     }
 
-    if (
-      !hasPaymentMethod ||
-      !hasSubscription ||
-      (hasSubscription && !isActiveSubscription)
-    ) {
+    if (!canCreateResources) {
       setIsCreating(true);
 
       const newActiveView: NodeLauncherView = !hasPaymentMethod
@@ -437,7 +432,7 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
             selectedRegion={selectedRegion!}
             selectedVersion={selectedVersion!}
             selectedHost={selectedHost}
-            canAddNode={isAllowedToCreate}
+            canAddNode={isPermittedToCreate}
             onHostChanged={handleHostChanged}
             onRegionChanged={handleRegionChanged}
             onCreateNodeClicked={handleCreateNodeClicked}
@@ -450,7 +445,7 @@ export const NodeLauncher = ({ itemPrices }: NodeLauncherProps) => {
           warningMessage="Creating a node requires a payment method."
           handleCancel={handleCancelPayment}
           handleSubmit={handleSubmitPayment}
-          handleHide={handleHiddingPortal}
+          handleBack={handleHiddingPortal}
         />
       )}
       {activeView === 'confirm-subscription' && (

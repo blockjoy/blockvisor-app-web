@@ -151,6 +151,20 @@ const isActiveSubscription = selector<boolean>({
   },
 });
 
+const canCreateResources = selector<boolean>({
+  key: 'billing.resources.canCreate',
+  get: ({ get }) => {
+    const hasSubscriptionVal = get(hasSubscription);
+    const isActiveSubscriptionVal = get(isActiveSubscription);
+    const hasPaymentMethodVal = get(hasPaymentMethod);
+
+    const canCreate =
+      hasPaymentMethodVal && hasSubscriptionVal && isActiveSubscriptionVal;
+
+    return canCreate || false;
+  },
+});
+
 export const billingSelectors = {
   billingId,
   userSubscription,
@@ -167,4 +181,5 @@ export const billingSelectors = {
   hasPaymentMethod,
   hasSubscription,
   isActiveSubscription,
+  canCreateResources,
 };

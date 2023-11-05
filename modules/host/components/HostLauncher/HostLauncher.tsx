@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
+import { useEffect } from 'react';
 import {
   Button,
   CopyToClipboard,
@@ -14,137 +12,103 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { billingSelectors, PaymentRequired } from '@modules/billing';
-import { useDefaultOrganization } from '@modules/organization';
-import { usePermissions } from '@modules/auth';
+import {
+  useProvisionToken,
+  useDefaultOrganization,
+} from '@modules/organization';
+import { LAUNCH_ERRORS, LauncherWithGuardProps } from '@modules/billing';
 
-export const HostLauncher = () => {
-  const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
-    useProvisionToken();
+export const HostLauncher = ({
+  fulfilReqs,
+  resetFulfilReqs,
+  onCreateClick,
+  permissions,
+}: LauncherWithGuardProps) => {
+  const {
+    disabled: isDisabledAdding,
+    permitted: isPermittedToCreate,
+    superUser: isPermittedAsSuperUser,
+    message: warningMessage,
+  } = permissions;
 
   const { defaultOrganization } = useDefaultOrganization();
-  const { hasPermission } = usePermissions();
-
-  const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
-
-  const [activeView, setActiveView] = useState<'view' | 'action'>('view');
-  const [fulfilRequirements, setFulfilRequirements] = useState<boolean>(false);
-
-  const canResetProvisionToken = hasPermission('org-provision-reset-token');
-  const canAddHost = hasPermission('host-create');
-  const canCreateSubscription = hasPermission('subscription-create');
-  const canUpdateSubscription = hasPermission('subscription-update');
-
-  const isAllowedToCreate =
-    canAddHost &&
-    canResetProvisionToken &&
-    (canCreateSubscription || canUpdateSubscription);
-
-  const isDisabledAdding = !hasPaymentMethod || !isAllowedToCreate;
+  const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
+    useProvisionToken();
 
   const token = !isDisabledAdding
     ? provisionToken
     : provisionToken?.replace(/./g, '*');
 
-  const handleHidingPortal = () => setActiveView('view');
-
   const handleHostCreation = async () => {
     await resetProvisionToken(defaultOrganization?.id!);
-    setFulfilRequirements(false);
-  };
-
-  const handleCreateHostClicked = () => {
-    if (!hasPaymentMethod) {
-      setActiveView('action');
-      setFulfilRequirements(false);
-      return;
-    }
-
-    setFulfilRequirements(true);
+    resetFulfilReqs();
   };
 
   useEffect(() => {
-    if (fulfilRequirements) setFulfilRequirements(false);
-  }, [defaultOrganization?.id]);
-
-  useEffect(() => {
-    if (fulfilRequirements) handleHostCreation();
-  }, [fulfilRequirements]);
+    if (fulfilReqs) handleHostCreation();
+  }, [fulfilReqs]);
 
   return (
-    <>
-      <div>
-        <header css={styles.header}>
-          <FormHeaderCaps noBottomMargin>LAUNCH HOST</FormHeaderCaps>
-        </header>
-        <ul css={styles.timeline}>
-          <li>
-            <div>
-              <FormLabelCaps>Select Organization</FormLabelCaps>
-              <OrganizationSelect />
-            </div>
-          </li>
-          <li>
-            <div css={spacing.bottom.medium}>
-              <FormLabelCaps>Run terminal command</FormLabelCaps>
-              <FormText>
-                Launch a new host by running this command on any server
-              </FormText>
-              <div css={[styles.copy, spacing.bottom.medium]}>
-                <CopyToClipboard
-                  value={`bvup ${token}`}
-                  disabled={isDisabledAdding}
+    <div>
+      <header css={styles.header}>
+        <FormHeaderCaps noBottomMargin>LAUNCH HOST</FormHeaderCaps>
+      </header>
+      <ul css={styles.timeline}>
+        <li>
+          <div>
+            <FormLabelCaps>Select Organization</FormLabelCaps>
+            <OrganizationSelect />
+          </div>
+        </li>
+        <li>
+          <div css={spacing.bottom.medium}>
+            <FormLabelCaps>Run terminal command</FormLabelCaps>
+            <FormText>
+              Launch a new host by running this command on any server
+            </FormText>
+            <div css={[styles.copy, spacing.bottom.medium]}>
+              <CopyToClipboard
+                value={`bvup ${token}`}
+                disabled={isDisabledAdding}
+              />
+              {isDisabledAdding && (
+                <Tooltip
+                  noWrap
+                  top="-30px"
+                  left="50%"
+                  tooltip={warningMessage}
                 />
-                {isDisabledAdding && (
-                  <Tooltip
-                    noWrap
-                    top="-30px"
-                    left="50%"
-                    tooltip={
-                      !isAllowedToCreate
-                        ? 'Insufficient permissions to launch host.'
-                        : 'Payment required to launch host.'
-                    }
-                  />
-                )}
-              </div>
-              <Button
-                style="outline"
-                size="small"
-                disabled={
-                  provisionTokenLoadingState !== 'finished' ||
-                  !isAllowedToCreate
-                }
-                css={styles.button}
-                onClick={handleCreateHostClicked}
-                loading={provisionTokenLoadingState !== 'finished'}
-                {...(!isAllowedToCreate && {
-                  tooltip: 'Insufficient permissions to launch host.',
+              )}
+            </div>
+            <Button
+              style="outline"
+              size="small"
+              disabled={
+                provisionTokenLoadingState !== 'finished' ||
+                (!isPermittedToCreate && !isPermittedAsSuperUser)
+              }
+              css={styles.button}
+              onClick={onCreateClick}
+              loading={provisionTokenLoadingState !== 'finished'}
+              {...(!isPermittedToCreate &&
+                !isPermittedAsSuperUser && {
+                  tooltip: LAUNCH_ERRORS.NO_PERMISSION,
                 })}
-              >
-                <SvgIcon>
-                  <IconRefresh />
-                </SvgIcon>
-                Regenerate
-              </Button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <FormLabelCaps>Sit back and wait</FormLabelCaps>
-              <FormText>We expect this host to be ready in 4 minutes</FormText>
-            </div>
-          </li>
-        </ul>
-      </div>
-      {activeView === 'action' && (
-        <PaymentRequired
-          warningMessage="Payment required to launch host."
-          handleCancel={handleHidingPortal}
-          handleSubmit={handleHidingPortal}
-          handleHide={handleHidingPortal}
-        />
-      )}
-    </>
+            >
+              <SvgIcon>
+                <IconRefresh />
+              </SvgIcon>
+              Regenerate
+            </Button>
+          </div>
+        </li>
+        <li>
+          <div>
+            <FormLabelCaps>Sit back and wait</FormLabelCaps>
+            <FormText>We expect this host to be ready in 4 minutes</FormText>
+          </div>
+        </li>
+      </ul>
+    </div>
   );
 };
