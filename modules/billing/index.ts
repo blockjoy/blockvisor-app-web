@@ -95,3 +95,4 @@ export * from './utils/mapPaymentMethodsToRows';
 export * from './utils/mapServicesToRows';
 export * from './utils/mapSubscriptionToDetails';
 export * from './utils/matchSKU';
+export * from './utils/withLauncherGuard';

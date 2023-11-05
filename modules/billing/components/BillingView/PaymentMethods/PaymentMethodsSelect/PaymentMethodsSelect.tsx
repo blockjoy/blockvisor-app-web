@@ -42,13 +42,16 @@ export const PaymentMethodsSelect = ({
   };
 
   const handleConfirm = async () => {
-    await updateBillingProfile(subscriptionId, {
-      paymentMethodId: activePaymentMethod?.id,
-    });
+    try {
+      await updateBillingProfile(subscriptionId, {
+        paymentMethodId: activePaymentMethod?.id,
+      });
+      toast.success('Payment Information updated');
 
-    toast.success('Payment Information updated');
-
-    onHide();
+      onHide();
+    } catch (error: any) {
+      toast.error('An error occured while updating payment information.');
+    }
   };
 
   const isDirty = currentPaymentMethod !== activePaymentMethod;

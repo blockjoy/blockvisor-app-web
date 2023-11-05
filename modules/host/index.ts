@@ -1,4 +1,5 @@
 export * from './components/HostLauncher/HostLauncher';
+export * from './components/HostLauncher/HostLauncherWithGuard';
 export * from './components/HostList/HostList';
 export * from './components/HostList/HostListTitle/HostListTitle';
 export * from './components/HostList/HostFilters/HostFilters';

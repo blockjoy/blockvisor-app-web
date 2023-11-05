@@ -160,6 +160,7 @@ export const useSubscription = (): ISubscriptionHook => {
       setSubscription(data);
     } catch (error) {
       console.error('Failed to update Billing profile', error);
+      throw error;
     } finally {
       setSubscriptionPaymentMethodLoadingState('finished');
     }

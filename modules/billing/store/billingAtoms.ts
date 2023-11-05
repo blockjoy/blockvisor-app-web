@@ -145,7 +145,9 @@ export const isSuperUserBilling = atomFamily<boolean, boolean>({
   key: 'billing.superUser',
   default: false,
   effects: (isSuperUser) => {
-    return isSuperUser ? [localStorageEffect('billing.isSuperUser')] : [];
+    return isSuperUser
+      ? [localStorageEffect('billing.isSuperUser', false)]
+      : [];
   },
 });
 
