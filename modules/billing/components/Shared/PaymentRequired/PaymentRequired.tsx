@@ -12,14 +12,14 @@ type PaymentRequiredProps = {
   warningMessage?: string;
   handleCancel: VoidFunction;
   handleSubmit: VoidFunction;
-  handleHide: VoidFunction;
+  handleBack: VoidFunction;
 };
 
 export const PaymentRequired = ({
   warningMessage,
   handleCancel,
   handleSubmit,
-  handleHide,
+  handleBack,
 }: PaymentRequiredProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -49,7 +49,7 @@ export const PaymentRequired = ({
         <PaymentMethodFormSimple
           handleSubmit={handleSubmit}
           handleCancel={handleCancel}
-          handleHide={handleHide}
+          handleHide={handleBack}
         />
       ) : (
         <PaymentMethodFormSimpleLoader />
