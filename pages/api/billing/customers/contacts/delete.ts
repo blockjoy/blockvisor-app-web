@@ -16,8 +16,10 @@ const requestCallback = ({ customerId, params }: DeleteContactParams) =>
 
 const mappingCallback = (
   result: { customer: Customer },
-  params: DeleteContactParams,
+  params?: DeleteContactParams,
 ): Contact[] => {
+  if (!params) return [];
+
   const {
     filterParams: { subscriptionId },
   } = params;

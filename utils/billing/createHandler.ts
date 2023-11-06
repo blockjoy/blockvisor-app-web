@@ -7,7 +7,7 @@ type RequestCallback<Params, Result> = (params: Params) => {
 
 type MappingCallback<Params, Result, Response> = (
   result: Result,
-  params?: Params | any, // TODO: fix any
+  params?: Params,
 ) => Response;
 
 type ErrorCallback<Error, Response> = (error: Error) => Response | null;
@@ -35,9 +35,7 @@ export const createHandler = <Params, Result, Response>(
         });
 
         if (result !== null) {
-          const response = params
-            ? mappingCallback(result, params)
-            : mappingCallback(result);
+          const response = mappingCallback(result, params);
 
           res.status(200).json(response);
         } else {
