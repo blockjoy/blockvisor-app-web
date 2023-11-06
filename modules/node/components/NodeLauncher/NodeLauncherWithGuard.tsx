@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   WithLauncherGuardAdditionalProps,
   withLauncherGuard,
@@ -17,7 +18,10 @@ export const NodeLauncherWithGuard = ({
   const isPermittedToCreate =
     canAddNode && (canCreateSubscription || canUpdateSubscription);
 
-  const NodeLauncherGuarded = withLauncherGuard(NodeLauncher);
+  const NodeLauncherGuarded = useMemo(
+    () => withLauncherGuard(NodeLauncher),
+    [],
+  );
 
   return (
     <NodeLauncherGuarded

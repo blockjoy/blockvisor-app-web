@@ -104,12 +104,6 @@ export const withLauncherGuard = (Component: any) => {
       setFulfilRequirements(false);
     };
 
-    console.group('withLauncherGuard');
-    console.log({ isSuperUser, isSuperUserBilling });
-    console.log({ hasPaymentMethod, canCreateResources });
-    console.log({ isDisabledAdding });
-    console.groupEnd();
-
     const warningMessage =
       isDisabledAdding && !isPermittedAsSuperUser
         ? !isPermittedToCreate
