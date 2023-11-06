@@ -54,9 +54,10 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
     const selectedNetType: BlockchainNetworkType | null =
       selectedNetwork?.netType || null;
 
-    SKU.nodeNetwork = nodeNetworkTypes?.find(
-      (nnt: { id: number; value: string }) => nnt.id === selectedNetType,
-    )?.value;
+    SKU.nodeNetwork =
+      nodeNetworkTypes?.find(
+        (nnt: { id: number; value: string }) => nnt.id === selectedNetType,
+      )?.value ?? 'MN';
 
     // BLOCKCHAIN
     const blockchainName: string = blockchain?.name;
