@@ -90,20 +90,27 @@ class NodeClient {
     }
   }
 
-  async listNodesByHost(orgId: string, hostId: string): Promise<Node[]> {
+  async listNodesByHost(
+    orgId: string,
+    hostId: string,
+    pagination: UIPagination,
+  ): Promise<NodeServiceListResponse> {
     const request = {
       orgId,
       hostId,
-      offset: 0,
-      limit: 10,
+      offset: getPaginationOffset(pagination!),
+      limit: pagination?.items_per_page!,
     };
+
+    console.log('listNodesByHostRequest', request);
 
     try {
       const response = await callWithTokenRefresh(
         this.client.list.bind(this.client),
         request,
       );
-      return response.nodes;
+      console.log('listNodesByHostResponse', response);
+      return response;
     } catch (err) {
       return handleError(err);
     }

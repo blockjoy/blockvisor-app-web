@@ -7,7 +7,7 @@ import { InitialQueryParams } from '../ui/HostUIHelpers';
 import { getInitialQueryParams } from '../ui/HostUIContext';
 import { useDefaultOrganization } from '@modules/organization';
 import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
-import { hostSelectors } from '../store/hostSelectors';
+import { nodeAtoms } from '@modules/node';
 
 export const useHostList = () => {
   const router = useRouter();
@@ -19,16 +19,15 @@ export const useHostList = () => {
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
-  const hostListSorted = useRecoilValue(hostSelectors.hostListSorted);
 
   const handleHostClick = (id: string) => {
     router.push(ROUTES.HOST(id));
   };
 
   const removeFromHostList = (id: string) => {
-    const newList = hostListSorted.filter((h) => h.id !== id);
+    const newList = hostList.filter((h) => h.id !== id);
 
-    if (newList.length !== hostListSorted.length) {
+    if (newList.length !== hostList.length) {
       setHostList(newList);
     }
 
@@ -74,7 +73,6 @@ export const useHostList = () => {
 
   return {
     hostList,
-    hostListSorted,
     hostCount,
     isLoading,
 
