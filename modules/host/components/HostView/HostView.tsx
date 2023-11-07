@@ -20,7 +20,10 @@ export const HostView = ({ children }: HostViewProps) => {
   useEffect(() => {
     (async () => {
       if (router.isReady) {
-        listNodesByHost(id as string);
+        listNodesByHost(id as string, {
+          current_page: 0,
+          items_per_page: 48,
+        });
         loadHost(id);
       }
     })();

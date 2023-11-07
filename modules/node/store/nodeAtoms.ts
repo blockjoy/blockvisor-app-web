@@ -31,6 +31,11 @@ const nodeListByHost = atom<Node[]>({
   default: [],
 });
 
+const nodeListByHostCount = atom<number>({
+  key: 'node.nodeListByHostCount',
+  default: 0,
+});
+
 const isLoadingNodeListByHost = atom<LoadingState>({
   key: 'node.nodeListByHost.loading',
   default: 'initializing',
@@ -253,5 +258,6 @@ export const nodeAtoms = {
   filtersTotal,
   filtersAll,
   nodeListByHost,
+  nodeListByHostCount,
   isLoadingNodeListByHost,
 };

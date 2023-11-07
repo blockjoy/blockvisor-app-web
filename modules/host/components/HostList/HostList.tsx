@@ -30,14 +30,8 @@ export const HostList = () => {
     };
   }, [hostUIContext]);
 
-  const {
-    loadHosts,
-    hostList,
-    hostCount,
-    hostListSorted,
-    isLoading,
-    handleHostClick,
-  } = useHostList();
+  const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
+    useHostList();
 
   const activeListType = useRecoilValue(hostAtoms.activeListType);
 
@@ -70,12 +64,12 @@ export const HostList = () => {
     hostUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = mapHostListToGird(hostListSorted, handleHostClick);
+  const cells = mapHostListToGird(hostList, handleHostClick);
 
-  const { headers, rows } = mapHostListToRows(hostListSorted);
+  const { headers, rows } = mapHostListToRows(hostList);
 
   const { isFiltered, isEmpty } = resultsStatus(
-    hostListSorted.length,
+    hostList.length,
     hostUIProps.queryParams.filter,
   );
 
