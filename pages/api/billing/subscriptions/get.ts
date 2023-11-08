@@ -18,7 +18,7 @@ const mappingCallback = (result: {
 
     resultSubscription = {
       ...subscription,
-      payment_source_id: card.payment_source_id!,
+      payment_source_id: card.payment_source_id ?? null,
     } as Subscription;
   }
 

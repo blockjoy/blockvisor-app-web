@@ -19,6 +19,7 @@ const mappingCallback = (
   params?: CreateContactParams,
 ): Contact[] => {
   if (!params) return [];
+
   const {
     filterParams: { subscriptionId },
   } = params;
