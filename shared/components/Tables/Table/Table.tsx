@@ -37,8 +37,8 @@ export const Table = ({
   const handleRowClick = (id: string) => {
     if (onRowClick) {
       onRowClick(id);
-      setActiveRowKey(id);
     }
+    setActiveRowKey(id);
   };
 
   return (
@@ -98,49 +98,53 @@ export const Table = ({
           {isLoading === 'initializing' ? (
             <TableRowLoader length={preload} />
           ) : (
-            rows?.map((tr) => (
-              <tr
-                key={tr.key}
-                className={`${tr.isDanger ? 'danger' : ''} ${
-                  tr.key === activeRowKey ? 'active' : ''
-                }`}
-                css={[
-                  !onRowClick || tr.isClickable === false
-                    ? null
-                    : !isSafari
-                    ? styles.rowFancyUnderlineHover
-                    : styles.rowBasicUnderlineHover,
-                ]}
-                onClick={
-                  tr.isClickable !== false
-                    ? () => handleRowClick(tr.key)
-                    : undefined
-                }
-              >
-                {tr.cells?.map((td, index) => (
-                  <td
-                    key={td.key}
-                    css={[
-                      headers &&
-                        headers[index]?.isHiddenOnMobile &&
-                        styles.hiddenOnMobile,
-                      verticalAlign ? styles[verticalAlign] : styles.middle,
-                      styles.textAlign(headers[index]?.textAlign || 'left'),
-                      css`
-                        width: ${headers[index]?.width};
-                        min-width: ${headers[index]?.minWidth};
-                        max-width: ${headers[index]?.maxWidth};
-                      `,
-                    ]}
-                  >
-                    {td.component}
-                    {index === 0 && !isSafari && (
-                      <span className="underline" css={styles.underline} />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))
+            rows?.map((tr) => {
+              console.log('tr.key', tr.key);
+              console.log('activeRowKey', activeRowKey);
+              return (
+                <tr
+                  key={tr.key}
+                  className={`${tr.isDanger ? 'danger' : ''} ${
+                    tr.key === activeRowKey ? 'active' : ''
+                  }`}
+                  css={[
+                    !onRowClick || tr.isClickable === false
+                      ? null
+                      : !isSafari
+                      ? styles.rowFancyUnderlineHover
+                      : styles.rowBasicUnderlineHover,
+                  ]}
+                  onClick={
+                    tr.isClickable !== false
+                      ? () => handleRowClick(tr.key)
+                      : undefined
+                  }
+                >
+                  {tr.cells?.map((td, index) => (
+                    <td
+                      key={td.key}
+                      css={[
+                        headers &&
+                          headers[index]?.isHiddenOnMobile &&
+                          styles.hiddenOnMobile,
+                        verticalAlign ? styles[verticalAlign] : styles.middle,
+                        styles.textAlign(headers[index]?.textAlign || 'left'),
+                        css`
+                          width: ${headers[index]?.width};
+                          min-width: ${headers[index]?.minWidth};
+                          max-width: ${headers[index]?.maxWidth};
+                        `,
+                      ]}
+                    >
+                      {td.component}
+                      {index === 0 && !isSafari && (
+                        <span className="underline" css={styles.underline} />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })
           )}
           {isLoading === 'loading' && preload ? (
             <TableRowLoader length={preload} />
