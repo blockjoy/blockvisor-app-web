@@ -44,8 +44,19 @@ export interface OrgServiceGetResponse {
 }
 
 export interface OrgServiceListRequest {
+  /**
+   * If this is set to a user id, only orgs that that user is a member of will
+   * be returned
+   */
   memberId?:
     | string
+    | undefined;
+  /**
+   * If this is true, only personal orgs are returned. If this is false, no
+   * personal orgs are returned.
+   */
+  personal?:
+    | boolean
     | undefined;
   /** The number of items to be skipped over. */
   offset: number;
@@ -370,13 +381,16 @@ export const OrgServiceGetResponse = {
 };
 
 function createBaseOrgServiceListRequest(): OrgServiceListRequest {
-  return { memberId: undefined, offset: 0, limit: 0, search: undefined };
+  return { memberId: undefined, personal: undefined, offset: 0, limit: 0, search: undefined };
 }
 
 export const OrgServiceListRequest = {
   encode(message: OrgServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.memberId !== undefined) {
       writer.uint32(10).string(message.memberId);
+    }
+    if (message.personal !== undefined) {
+      writer.uint32(32).bool(message.personal);
     }
     if (message.offset !== 0) {
       writer.uint32(16).uint64(message.offset);
@@ -403,6 +417,13 @@ export const OrgServiceListRequest = {
           }
 
           message.memberId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.personal = reader.bool();
           continue;
         case 2:
           if (tag !== 16) {
@@ -441,6 +462,7 @@ export const OrgServiceListRequest = {
   fromPartial(object: DeepPartial<OrgServiceListRequest>): OrgServiceListRequest {
     const message = createBaseOrgServiceListRequest();
     message.memberId = object.memberId ?? undefined;
+    message.personal = object.personal ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.search = (object.search !== undefined && object.search !== null)

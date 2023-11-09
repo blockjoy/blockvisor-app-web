@@ -30,18 +30,18 @@ export const HostList = () => {
     };
   }, [hostUIContext]);
 
-  const { loadHosts, hostList, hostListSorted, isLoading, handleHostClick } =
+  const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
     useHostList();
 
-  const hasMoreHosts = useRecoilValue(hostAtoms.hasMoreHosts);
-  const preloadHosts = useRecoilValue(hostAtoms.preloadHosts);
   const activeListType = useRecoilValue(hostAtoms.activeListType);
 
   const currentQueryParams = useRef(hostUIProps.queryParams);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const hasMore =
+    hostUIContext.queryParams.pagination.current_page *
+      hostUIContext.queryParams.pagination.items_per_page +
+      hostUIContext.queryParams.pagination.items_per_page <
+    hostCount;
 
   useEffect(() => {
     if (!isEqual(currentQueryParams.current, hostUIProps.queryParams)) {
@@ -51,7 +51,6 @@ export const HostList = () => {
   }, [hostUIProps.queryParams]);
 
   const updateQueryParams = async () => {
-    // TODO: Implement pagination
     const newCurrentPage = hostUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
       ...hostUIProps.queryParams,
@@ -65,12 +64,12 @@ export const HostList = () => {
     hostUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = mapHostListToGird(hostListSorted, handleHostClick);
+  const cells = mapHostListToGird(hostList, handleHostClick);
 
-  const { headers, rows } = mapHostListToRows(hostListSorted);
+  const { headers, rows } = mapHostListToRows(hostList);
 
   const { isFiltered, isEmpty } = resultsStatus(
-    hostListSorted.length,
+    hostList.length,
     hostUIProps.queryParams.filter,
   );
 
@@ -102,11 +101,10 @@ export const HostList = () => {
             <InfiniteScroll
               dataLength={hostList.length}
               next={updateQueryParams}
-              hasMore={hasMoreHosts}
+              hasMore={hasMore}
               style={{ overflow: 'hidden' }}
-              scrollThreshold={1}
+              scrollThreshold={0.75}
               loader={''}
-              endMessage={''}
             >
               {activeListType === 'table' ? (
                 <Table
@@ -114,7 +112,6 @@ export const HostList = () => {
                   headers={headers}
                   rows={rows}
                   onRowClick={handleHostClick}
-                  preload={preloadHosts}
                 />
               ) : (
                 <div css={styles.gridWrapper}>

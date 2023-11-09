@@ -16,9 +16,9 @@ const activeListType = atom<string | 'table' | 'grid'>({
   default: 'grid',
 });
 
-const nodeList = atom<Node[]>({
+const nodeList = atom<Node[] | undefined>({
   key: 'node.nodeList',
-  default: [],
+  default: undefined,
 });
 
 const nodeCount = atom<number>({
@@ -29,6 +29,11 @@ const nodeCount = atom<number>({
 const nodeListByHost = atom<Node[]>({
   key: 'node.nodeListByHost',
   default: [],
+});
+
+const nodeListByHostCount = atom<number>({
+  key: 'node.nodeListByHostCount',
+  default: 0,
 });
 
 const isLoadingNodeListByHost = atom<LoadingState>({
@@ -253,5 +258,6 @@ export const nodeAtoms = {
   filtersTotal,
   filtersAll,
   nodeListByHost,
+  nodeListByHostCount,
   isLoadingNodeListByHost,
 };

@@ -35,16 +35,6 @@ const isLoading = atom<LoadingState>({
   default: 'initializing',
 });
 
-const hasMoreHosts = atom<boolean>({
-  key: 'host.hasMore',
-  default: false,
-});
-
-const preloadHosts = atom<number>({
-  key: 'hosts.loading.total',
-  default: 0,
-});
-
 const activeListType = atom<string | 'table' | 'grid'>({
   key: 'host.list.type',
   default: 'table',
@@ -132,9 +122,6 @@ export const hostAtoms = {
   hostList,
   hostCount,
   isLoading,
-
-  hasMoreHosts,
-  preloadHosts,
 
   activeListType,
 

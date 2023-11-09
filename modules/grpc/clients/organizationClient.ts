@@ -1,21 +1,26 @@
 import {
   Org,
+  OrgSearch,
   OrgServiceClient,
   OrgServiceDefinition,
   OrgServiceGetProvisionTokenResponse,
+  OrgServiceListRequest,
+  OrgServiceListResponse,
   OrgServiceResetProvisionTokenResponse,
   OrgServiceUpdateResponse,
 } from '../library/blockjoy/v1/org';
-
 import {
   getOptions,
   getIdentity,
   handleError,
   authClient,
-  checkForRefreshTokenError,
+  UIPagination,
+  getPaginationOffset,
+  createSearch,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
+import { SearchOperator } from '../library/blockjoy/common/v1/search';
 
 class OrganizationClient {
   private client: OrgServiceClient;
@@ -38,17 +43,35 @@ class OrganizationClient {
     }
   }
 
-  async getOrganizations(): Promise<Org[] | StatusResponse> {
-    const request = { memberId: getIdentity().id, offset: 0, limit: 100 };
+  async getOrganizations(
+    pagination?: UIPagination,
+    keyword?: string,
+    isAdmin?: boolean,
+  ): Promise<OrgServiceListResponse> {
+    const request: OrgServiceListRequest = {
+      memberId: !isAdmin ? getIdentity().id : undefined,
+      offset: getPaginationOffset(pagination!),
+      limit: pagination?.items_per_page!,
+      personal: isAdmin ? false : undefined,
+    };
+
+    if (keyword) {
+      const search: OrgSearch = {
+        id: createSearch(keyword),
+        name: createSearch(keyword),
+        operator: SearchOperator.SEARCH_OPERATOR_OR,
+      };
+      request.search = search;
+    }
+
     console.log('listOrganizationsRequest', request);
     try {
       await authClient.refreshToken();
       const response = await this.client.list(request, getOptions());
       console.log('listOrganizationsResponse', response);
-      return response.orgs;
+      return response;
     } catch (err: any) {
-      checkForRefreshTokenError(err.message);
-      return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 

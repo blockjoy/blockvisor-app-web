@@ -1,6 +1,7 @@
 import { readToken } from '@shared/utils/readToken';
 import { Metadata } from 'nice-grpc-web';
 import { authClient } from '../clients/authClient';
+import { UIPagination } from '../clients/nodeClient';
 
 export const getIdentity = () => {
   if (!window.localStorage.getItem('identity')) return '';
@@ -57,3 +58,13 @@ export const checkForRefreshTokenError = (message: string) => {
     window.location.href = '';
   }
 };
+
+export const getPaginationOffset = (pagination?: UIPagination) => {
+  return !pagination
+    ? 0
+    : pagination?.current_page! === 0
+    ? 0
+    : pagination?.current_page! * pagination?.items_per_page!;
+};
+
+export const createSearch = (keyword: string) => `%${keyword}%`;

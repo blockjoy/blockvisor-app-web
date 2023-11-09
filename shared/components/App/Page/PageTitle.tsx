@@ -26,9 +26,12 @@ export const PageTitle: FC<Props> = ({
 }) => {
   const Title = () => (
     <span css={styles.title}>
-      <SvgIcon isDefaultColor size="16px">
-        {icon}
-      </SvgIcon>
+      {icon && (
+        <SvgIcon isDefaultColor size="16px">
+          {icon}
+        </SvgIcon>
+      )}
+
       <p>{title}</p>
     </span>
   );

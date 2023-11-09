@@ -13,26 +13,34 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { useDefaultOrganization } from '@modules/organization';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import NextLink from 'next/link';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 type NodeToDelete = {
   id: string;
   name: string;
 };
 
+const itemsPerPage = 48;
+
 export const HostViewNodes = () => {
   const router = useRouter();
-  const { nodeList, isLoading } = useNodeList();
+  const { id } = router.query;
+  const { nodeListByHost, isLoading, listNodesByHost, nodeListByHostCount } =
+    useNodeList();
   const { host, isLoading: isLoadingActiveHost } = useHostView();
   const { defaultOrganization } = useDefaultOrganization();
-  const hostNodes = nodeList.filter((node: Node) => node.hostId === host?.id);
   const { hasPermission } = usePermissions();
   const { deleteNode } = useNodeDelete();
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [nodeToDelete, setNodeToDelete] = useState<NodeToDelete>();
+  const [pageIndex, setPageIndex] = useState(0);
+
+  const hasMoreNodes =
+    pageIndex * itemsPerPage + itemsPerPage < nodeListByHostCount;
 
   const handleDeleteNode = () => {
     deleteNode(nodeToDelete?.id!, host!.id, () => {
@@ -48,7 +56,19 @@ export const HostViewNodes = () => {
 
   const handleNodeClicked = (id: string) => router.push(ROUTES.NODE(id));
 
-  const { headers, rows } = mapHostNodesToRows(hostNodes, handleDeleteClicked);
+  const { headers, rows } = mapHostNodesToRows(
+    nodeListByHost!,
+    handleDeleteClicked,
+  );
+
+  useEffect(() => {
+    if (router.isReady) {
+      listNodesByHost(id as string, {
+        current_page: pageIndex,
+        items_per_page: itemsPerPage,
+      });
+    }
+  }, [pageIndex, router.isReady]);
 
   return (
     <>
@@ -74,7 +94,7 @@ export const HostViewNodes = () => {
 
       {isLoading !== 'finished' && isLoadingActiveHost !== 'finished' ? (
         <TableSkeleton />
-      ) : !Boolean(hostNodes?.length) ? (
+      ) : !Boolean(nodeListByHost?.length) ? (
         <EmptyColumn
           title="No Nodes."
           description={
@@ -89,14 +109,23 @@ export const HostViewNodes = () => {
           }
         />
       ) : (
-        <Table
-          hideHeader
-          isLoading={isLoading}
-          headers={headers}
-          rows={rows}
-          fixedRowHeight="120px"
-          onRowClick={handleNodeClicked}
-        />
+        <InfiniteScroll
+          dataLength={nodeListByHost?.length!}
+          next={() => setPageIndex(pageIndex + 1)}
+          hasMore={hasMoreNodes}
+          style={{ overflow: 'hidden' }}
+          scrollThreshold={0.75}
+          loader={''}
+        >
+          <Table
+            hideHeader
+            isLoading={isLoading}
+            headers={headers}
+            rows={rows}
+            fixedRowHeight="120px"
+            onRowClick={handleNodeClicked}
+          />
+        </InfiniteScroll>
       )}
     </>
   );

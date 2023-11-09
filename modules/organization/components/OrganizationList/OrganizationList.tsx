@@ -4,13 +4,13 @@ import {
   useDefaultOrganization,
   useGetOrganization,
   useGetOrganizations,
+  useSwitchOrganization,
 } from '@modules/organization';
 import { Badge, Scrollbar, Skeleton, SkeletonGrid } from '@shared/components';
 import { useOrganizationsUIContext } from '@modules/organization/ui/OrganizationsUIContext';
 import { useEffect, useMemo } from 'react';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import { useRouter } from 'next/router';
-
 import { OrganizationListHeader } from '@modules/organization';
 import { ROUTES } from '@shared/constants/routes';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -31,12 +31,14 @@ export const OrganizationsList = () => {
   const { getOrganization } = useGetOrganization();
 
   const { defaultOrganization } = useDefaultOrganization();
+  const { switchOrganization } = useSwitchOrganization();
 
   const organizationsActive = useRecoilValue(
     organizationAtoms.organizationsActive(organizationUIProps.queryParams),
   );
 
-  const handleRowClicked = (id: string) => {
+  const handleRowClicked = (id: string, name: string) => {
+    switchOrganization(id, name);
     router.push(`${ROUTES.ORGANIZATION(id)}`);
   };
 
@@ -65,7 +67,7 @@ export const OrganizationsList = () => {
             return (
               <button
                 className={isActive ? 'active' : ''}
-                onClick={() => handleRowClicked(org.id)}
+                onClick={() => handleRowClicked(org.id, org.name)}
                 css={styles.row}
                 key={org.id}
               >

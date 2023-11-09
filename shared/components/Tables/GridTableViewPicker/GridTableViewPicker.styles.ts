@@ -13,7 +13,8 @@ export const styles = {
     }
   `,
   iconButton: (theme: ITheme) => css`
-    display: block;
+    display: grid;
+    place-items: center;
     background: transparent;
     border: 0;
     cursor: pointer;

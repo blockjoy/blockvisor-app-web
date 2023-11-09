@@ -1,7 +1,7 @@
 import { useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { nodeClient } from '@modules/grpc';
-import { InitialQueryParams } from '../ui/NodeUIHelpers';
+import { InitialQueryParams, Pagination } from '../ui/NodeUIHelpers';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useDefaultOrganization } from '@modules/organization';
 
@@ -17,6 +17,11 @@ export const useNodeList = () => {
   const [nodeListByHost, setNodeListByHost] = useRecoilState(
     nodeAtoms.nodeListByHost,
   );
+
+  const [nodeListByHostCount, setNodeListByHostCount] = useRecoilState(
+    nodeAtoms.nodeListByHostCount,
+  );
+
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
 
@@ -50,7 +55,7 @@ export const useNodeList = () => {
       setNodeCount(nodeCount);
 
       if (queryParams.pagination.current_page !== 0) {
-        nodes = [...nodeList, ...nodes];
+        nodes = [...nodeList!, ...nodes];
       }
 
       setNodeList(nodes);
@@ -65,10 +70,24 @@ export const useNodeList = () => {
   // TODO: improve/remove - maybe merge into loadNodes, but then we're in problem that if a user goes to the nodes in general
   // and in the nodes screen a user will see only the nodes belonging to the specific host
   // but we still don't have a default host, nor filter by hosts
-  const listNodesByHost = async (hostId: string) => {
+  const listNodesByHost = async (hostId: string, pagination: Pagination) => {
     setNodeListByHostLoadingState('initializing');
 
-    const nodes: any = await nodeClient.listNodesByHost(orgId!, hostId);
+    const response = await nodeClient.listNodesByHost(
+      orgId!,
+      hostId,
+      pagination,
+    );
+
+    const { nodeCount } = response;
+
+    setNodeListByHostCount(nodeCount);
+
+    let nodes = response.nodes;
+
+    if (pagination.current_page !== 0) {
+      nodes = [...nodeListByHost!, ...nodes];
+    }
 
     setNodeListByHost(nodes);
 
@@ -76,19 +95,19 @@ export const useNodeList = () => {
   };
 
   const addToNodeList = (node: any) => {
-    const foundNode = nodeList.findIndex((n) => n.id === node.id) > -1;
+    const foundNode = nodeList?.findIndex((n) => n.id === node.id)! > -1;
     if (foundNode) return;
 
-    const newNodeList = [node, ...nodeList];
+    const newNodeList = [node, ...nodeList!];
 
     setNodeCount(nodeCount + 1);
     setNodeList(newNodeList);
   };
 
   const removeFromNodeList = (nodeId: string) => {
-    const newNodeList = nodeList.filter((nl) => nl.id !== nodeId);
+    const newNodeList = nodeList?.filter((nl) => nl.id !== nodeId);
 
-    if (newNodeList.length !== nodeList.length) {
+    if (newNodeList?.length !== nodeList?.length) {
       setNodeList(newNodeList);
       setNodeCount(nodeCount - 1);
     }
@@ -104,6 +123,7 @@ export const useNodeList = () => {
     setIsLoading,
     listNodesByHost,
     nodeListByHost,
+    nodeListByHostCount,
     nodeListByHostLoadingState,
   };
 };

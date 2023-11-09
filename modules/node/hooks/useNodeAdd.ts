@@ -35,8 +35,6 @@ export const useNodeAdd = () => {
       properties,
     };
 
-    console.log('createNodeRequest', nodeRequest);
-
     try {
       const response: Node = await nodeClient.createNode(nodeRequest);
 

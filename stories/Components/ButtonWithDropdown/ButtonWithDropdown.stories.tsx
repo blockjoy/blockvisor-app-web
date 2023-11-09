@@ -22,7 +22,7 @@ const Template: ComponentStory<typeof ButtonWithDropdown> = (args) => {
             </DropdownItem>
           </li>
           <li css={[divider]}>
-            <DropdownItem onButtonClick={() => console.log()}>
+            <DropdownItem onButtonClick={() => null}>
               <IconDoor />
               Logout
             </DropdownItem>
