@@ -28,7 +28,8 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const currentOrg = useRef<string>();
 
-  const { connect: mqttConnect } = useMqtt();
+  const { connect: mqttConnect, updateConnection: updateMqttConnection } =
+    useMqtt();
   const { getPermissions } = usePermissions();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -41,8 +42,8 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   useEffect(() => {
     (async () => {
       if (!organizations.length) await getOrganizations(true);
-      await getReceivedInvitations(userEmail!);
       mqttConnect();
+      await getReceivedInvitations(userEmail!);
     })();
   }, []);
 
@@ -61,7 +62,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       loadNodes();
       loadHosts();
       getPermissions();
-      mqttConnect();
+      updateMqttConnection();
     }
   }, [defaultOrganization?.id]);
 

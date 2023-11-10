@@ -1,170 +1,151 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import mqtt, { MqttClient, IClientOptions } from 'mqtt';
 import { useRecoilValue } from 'recoil';
+import mqtt, { MqttClient, IClientOptions } from 'mqtt';
 import { env } from '@shared/constants/env';
-import { getActiveChannel } from '@modules/mqtt';
+import { getActiveTopic } from '@modules/mqtt';
 import { useUpdates as useNodeUpdates } from '@modules/node';
 import {
   useUpdates as useOrgUpdates,
   organizationAtoms,
 } from '@modules/organization';
 import { arraysEqual } from 'utils/arraysEqual';
-import { useIdentity } from '@modules/auth';
-import { authClient, getIdentity } from '@modules/grpc';
+import { getIdentity } from '@modules/grpc';
+
+type IMqttHook = {
+  connect: VoidFunction;
+  client: MqttClient | null;
+  error?: Error | null;
+  message?: Message | null;
+  connectStatus: ConnectionStatus;
+  updateConnection: VoidFunction;
+};
 
 export const useMqtt = (): IMqttHook => {
-  const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<Message | null>(null);
-  const [connectStatus, setConnectStatus] =
-    useState<ConnectionStatus>('Connect');
+  const { handleNodeUpdate } = useNodeUpdates();
+  const { handleOrganizationUpdate } = useOrgUpdates();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
 
-  const client = useRef<MqttClient | null>(null);
+  const [client, setClient] = useState<MqttClient | null>(null);
+  const [connectStatus, setConnectStatus] =
+    useState<ConnectionStatus>('Connect');
+  const [message, setMessage] = useState<Message | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
-  const currentOrganization = useRef<string>('');
+  const subscribedTopics = useRef<string[]>([]);
 
-  const subscribedChannels = useRef<string[]>([]);
-  const activeChannels = useRef<string[]>([]);
-
-  const { handleNodeUpdate } = useNodeUpdates();
-  const { handleOrganizationUpdate } = useOrgUpdates();
-
-  const connect = async () => {
-    await authClient.refreshToken();
-
-    const token: string = getIdentity()?.accessToken;
-
-    if (!token) {
-      console.log('ERROR CONNECTING: No valid token');
-      return;
-    }
+  const mqttConnect = () => {
+    if (client) return;
+    setConnectStatus('Connecting');
 
     const options: IClientOptions = {
       clean: true,
-      username: token,
-      password: token,
-      reconnectPeriod: 10000,
+      reconnectPeriod: 1000,
+      transformWsUrl: (url, options, client) => {
+        const token: string = getIdentity()?.accessToken;
+
+        client.options.username = token;
+        client.options.password = token;
+
+        return url;
+      },
     };
 
-    if (defaultOrganization?.id === currentOrganization.current) return;
-    currentOrganization.current = defaultOrganization?.id!;
+    setClient(mqtt.connect(env.mqttUrl!, options));
+  };
 
-    if (defaultOrganization?.id) {
-      activeChannels.current = [
-        `/orgs/${defaultOrganization?.id}`,
-        `/orgs/${defaultOrganization?.id}/nodes`,
-      ];
-    }
+  const mqttUpdateSubscription = () => {
+    if (!client) return;
 
-    mqttDisconnect();
+    const topics = [
+      `/orgs/${defaultOrganization?.id}`,
+      `/orgs/${defaultOrganization?.id}/nodes`,
+    ];
 
-    const mqttClient: MqttClient = mqttConnect(options);
+    mqttUnSubscribe(topics);
+    mqttSubscribe(topics);
+  };
 
-    mqttClient.on('connect', () => {
-      console.log('CONNECTED', mqttClient);
-      if (!mqttClient.connected && !mqttClient.reconnecting) mqttReconnect();
-
-      setConnectStatus('Connected');
-      client.current = mqttClient;
-
-      if (
-        subscribedChannels.current.length &&
-        !arraysEqual(subscribedChannels.current, activeChannels.current)
-      ) {
-        mqttClient.unsubscribe(subscribedChannels.current, (err: string) => {
-          if (err) {
-            console.error(
-              `Failed to unsubscribe from ${subscribedChannels.current}: ${err}`,
-            );
-            return;
-          }
-          subscribedChannels.current = [];
-          console.log(`Unsubscribed from ${subscribedChannels.current}`);
-        });
+  const mqttSubscribe = (topics: string[]) => {
+    client?.subscribe(topics, (err: Error) => {
+      if (err) {
+        console.error(`Failed to subscribe to ${topics}: ${err}`);
+        return;
       }
 
-      mqttClient.subscribe(activeChannels.current, (err: any) => {
+      subscribedTopics.current = topics;
+    });
+  };
+
+  const mqttUnSubscribe = (topics: string[]) => {
+    if (
+      subscribedTopics.current.length &&
+      !arraysEqual(subscribedTopics.current, topics)
+    ) {
+      client?.unsubscribe(subscribedTopics.current, (err: Error) => {
         if (err) {
           console.error(
-            `Failed to subscribe to ${activeChannels.current}: ${err}`,
+            `Failed to unsubscribe from ${subscribedTopics.current}: ${err}`,
           );
           return;
         }
-        subscribedChannels.current = activeChannels.current;
-
-        mqttClient.on('message', (channel: string, payload: any) => {
-          try {
-            handleMessage(channel, payload);
-          } catch (err) {
-            console.error(`Failed to handle message: ${err}`);
-          }
-        });
+        subscribedTopics.current = [];
       });
-    });
-
-    mqttClient.on('error', (err: string) => {
-      console.error(`MQTT connection error: ${err}`);
-      mqttDisconnect();
-      setError(err);
-    });
-
-    mqttClient.on('reconnect', () => {
-      console.log('reconnecting');
-      setConnectStatus('Reconnecting');
-    });
-
-    mqttClient.on('offline', () => {
-      console.log('MQTT client offline');
-      setConnectStatus('Connect');
-    });
-
-    mqttClient.on('close', () => {
-      console.log('Disconnected from broker.');
-      setConnectStatus('Connect');
-    });
-
-    // TODO: handle disconnect
-    // return () => mqttDisconnect();
-  };
-
-  const handleMessage = useCallback((channel: string, payload: any) => {
-    const type: Channel = getActiveChannel(channel);
-
-    setMessage({ type, channel, payload });
-  }, []);
-
-  const mqttConnect = (options: any) => {
-    setConnectStatus('Connecting');
-    console.log('MQTT Connect - URL: ', env.mqttUrl!);
-    return mqtt.connect(env.mqttUrl!, options);
-  };
-
-  const mqttReconnect = () => {
-    if (
-      client.current &&
-      !client.current.connected &&
-      !client.current.reconnecting
-    ) {
-      console.log('Attempting MQTT reconnection...', connectStatus);
-      client.current.reconnect();
     }
   };
 
   const mqttDisconnect = () => {
-    if (client.current) {
-      console.log('MQTT client disconnected');
-      client.current.end(true, () => {
+    if (client) {
+      client.end(true, () => {
         setConnectStatus('Connect');
-        client.current = null;
         setError(null);
         setMessage(null);
-        subscribedChannels.current = [];
+        subscribedTopics.current = [];
       });
     }
   };
+
+  useEffect(() => {
+    if (client) {
+      client.on('connect', () => {
+        console.log('Connected to broker.');
+        setConnectStatus('Connected');
+        mqttUpdateSubscription();
+      });
+
+      client.on('error', (err: Error) => {
+        console.error('Connection error: ', err);
+        setError(err);
+        mqttDisconnect();
+      });
+
+      client.on('reconnect', () => {
+        console.log('Reconnecting');
+        setConnectStatus('Reconnecting');
+      });
+
+      client.on('message', (topic: string, payload: Uint8Array) => {
+        console.log({ topic, payload });
+        try {
+          handleMessage(topic, payload);
+        } catch (err) {
+          console.error(`Failed to handle message: ${err}`);
+        }
+      });
+
+      client?.on('close', () => {
+        console.log('Disconnected from broker.');
+        setConnectStatus('Connect');
+      });
+
+      client?.on('offline', () => {
+        console.log('MQTT client offline');
+        setConnectStatus('Connect');
+      });
+    }
+  }, [client]);
 
   useEffect(() => {
     if (!message) return;
@@ -183,7 +164,20 @@ export const useMqtt = (): IMqttHook => {
     return () => setMessage(null);
   }, [message]);
 
-  return { connect, client, error, message, connectStatus };
+  const handleMessage = useCallback((topic: string, payload: Uint8Array) => {
+    const type: Topic = getActiveTopic(topic);
+
+    setMessage({ type, topic, payload });
+  }, []);
+
+  return {
+    connect: mqttConnect,
+    client,
+    error,
+    message,
+    connectStatus,
+    updateConnection: mqttUpdateSubscription,
+  };
 };
 
 export default useMqtt;
