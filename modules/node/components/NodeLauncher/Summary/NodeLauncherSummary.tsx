@@ -19,6 +19,7 @@ import IconCog from '@public/assets/icons/common/Cog.svg';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { isMobile } from 'react-device-detect';
+import { useHostList } from '@modules/host';
 
 type Props = {
   serverError: string;
@@ -55,14 +56,20 @@ export const NodeLauncherSummary: FC<Props> = ({
 }) => {
   const { blockchains } = useGetBlockchains();
 
+  const { hostList } = useHostList();
+
   const { blockchainId, nodeType, properties } = nodeLauncherState;
 
   return (
     <div css={styles.wrapper}>
       <FormHeader>Launch</FormHeader>
 
-      <FormLabel>Host</FormLabel>
-      <HostSelect selectedHost={selectedHost} onChange={onHostChanged} />
+      {Boolean(hostList?.length) && (
+        <>
+          <FormLabel>Host</FormLabel>
+          <HostSelect selectedHost={selectedHost} onChange={onHostChanged} />
+        </>
+      )}
 
       {!selectedHost && (
         <>
