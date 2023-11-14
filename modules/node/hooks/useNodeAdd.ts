@@ -22,7 +22,7 @@ export const useNodeAdd = () => {
 
   const createNode = async (
     node: NodeServiceCreateRequest,
-    onSuccess: () => void,
+    onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
     const properties = node?.properties?.map((property) => ({
@@ -59,7 +59,7 @@ export const useNodeAdd = () => {
 
       toast.success('Node Launched');
       loadNodes();
-      onSuccess();
+      onSuccess(response.id);
     } catch (err: any) {
       console.log('Error Launching Node', err);
       onError('Error launching node, an unknown error occurred.');
