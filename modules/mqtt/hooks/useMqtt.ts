@@ -43,6 +43,7 @@ export const useMqtt = (): IMqttHook => {
     }
 
     const options: IClientOptions = {
+      protocolVersion: 5,
       clean: true,
       username: token,
       password: token,
