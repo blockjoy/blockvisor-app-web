@@ -3,8 +3,6 @@ import { nodeClient } from '@modules/grpc';
 import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
-import { checkForTokenError } from 'utils/checkForTokenError';
-import { checkForApiError } from 'utils/checkForApiError';
 import {
   Node,
   NodeServiceUpdateConfigRequest,
@@ -13,8 +11,7 @@ import {
 type Args = string | string[] | undefined;
 
 type Hook = {
-  loadNode: (id: Args, onError: VoidFunction) => Promise<void>;
-
+  loadNode: (id: Args) => Promise<void>;
   stopNode: (nodeId: Args) => void;
   startNode: (nodeId: Args) => void;
   modifyNode: (node: Node) => void;
@@ -56,7 +53,7 @@ export const useNodeView = (): Hook => {
     }
   };
 
-  const loadNode = async (id: Args, onError: VoidFunction) => {
+  const loadNode = async (id: Args) => {
     if (nodeList?.findIndex((n) => n.id === id)! > -1) {
       setIsLoading('finished');
       setNode(nodeList?.find((n) => n.id === id)!);
@@ -66,13 +63,10 @@ export const useNodeView = (): Hook => {
     try {
       const nodeId = convertRouteParamToString(id);
       const node: any = await nodeClient.getNode(nodeId);
-      checkForApiError('GetNode', node);
-      checkForTokenError(node);
       setNode(node);
       setIsLoading('finished');
     } catch (err) {
       setIsLoading('finished');
-      onError();
       return;
     } finally {
     }

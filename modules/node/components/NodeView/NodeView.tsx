@@ -1,15 +1,13 @@
 import { styles } from './NodeView.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { NodeViewTitle } from './Title/NodeViewTitle';
 import { NodeViewHeader } from './Header/NodeViewHeader';
 import { NodeViewSidePanel } from './SidePanel/NodeViewSidePanel';
 import { NodeViewTabs } from './Tabs/NodeViewTabs';
 import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
-import { NodeStatus } from '@modules/grpc/library/blockjoy/v1/node';
-import { usePermissions } from '@modules/auth/hooks/usePermissions';
 
 type Props = {
   children?: ReactNode;
@@ -17,22 +15,14 @@ type Props = {
 };
 
 export const NodeView = ({ children, hideEditPanel }: Props) => {
-  const [, setNodeError] = useState<boolean>(false);
-  const [, setIsDeleting] = useState<boolean>(false);
-
   const router = useRouter();
   const { id } = router.query;
 
   const { node, loadNode, unloadNode, isLoading, setIsLoading } = useNodeView();
 
-  const { hasPermission } = usePermissions();
-
-  const handleNodeError = () => setNodeError(true);
-
   useEffect(() => {
     if (router.isReady) {
-      loadNode(id, handleNodeError);
-      setIsDeleting(false);
+      loadNode(id);
     }
 
     return () => {
@@ -40,15 +30,6 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
       unloadNode();
     };
   }, [id]);
-
-  useEffect(() => {
-    if (
-      node?.status === NodeStatus.NODE_STATUS_PROVISIONING &&
-      !hasPermission('node-admin-get')
-    ) {
-      unloadNode();
-    }
-  }, [node?.id]);
 
   return (
     <>
