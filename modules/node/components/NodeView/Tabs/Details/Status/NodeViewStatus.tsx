@@ -1,8 +1,7 @@
 import { getNodeStatusInfo, NodeStatusIcon, SvgIcon } from '@shared/components';
 import { useNodeView } from '@modules/node';
-import { FormHeaderCaps } from '@shared/components';
 import { styles } from './NodeViewStatus.styles';
-import { getNodeStatusColor } from '@shared/components';
+import { getNodeStatusColor, NodeStatusName } from '@shared/components';
 import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 import {
   ContainerStatus,
@@ -31,7 +30,7 @@ export const NodeViewStatus = () => {
         <div css={styles.card}>
           <NodeStatusIcon size={iconSize} status={node!.status} />
           <var css={[styles.cardValue, getNodeStatusColor(node.status!)]}>
-            {getNodeStatusInfo(node.status)?.name?.toLocaleLowerCase()}
+            <NodeStatusName status={node.status} />
           </var>
           <h3 css={styles.cardLabel}>App Status</h3>
         </div>

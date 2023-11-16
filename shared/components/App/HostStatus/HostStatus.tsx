@@ -25,7 +25,7 @@ export const HostStatus = ({ hasBorder = true }: HostStatusProps) => {
       ]}
     >
       <HostStatusIcon size="12px" />
-      <span css={[styles.statusText, styles.statusColorGreen]}>Running</span>
+      <span css={[styles.statusText, styles.statusColorGreen]}>Online</span>
     </span>
   );
 };

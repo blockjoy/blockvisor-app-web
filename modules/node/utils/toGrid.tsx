@@ -21,8 +21,8 @@ export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
             <NodeStatus
               hasBorder
               status={node.status}
-              loadingCurrent={progress?.current}
-              loadingTotal={progress?.total}
+              downloadingCurrent={progress?.current}
+              downloadingTotal={progress?.total}
             />
           }
           cellType={`${node.blockchainName} ${convertNodeTypeToName(

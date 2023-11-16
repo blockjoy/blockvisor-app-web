@@ -106,8 +106,8 @@ export const NodeViewHeader = () => {
                 <div css={styles.nodeStatus}>
                   <NodeStatus
                     status={node.status}
-                    loadingCurrent={progress?.current}
-                    loadingTotal={progress?.total}
+                    downloadingCurrent={progress?.current}
+                    downloadingTotal={progress?.total}
                   />
                 </div>
                 <div css={styles.actions}>
