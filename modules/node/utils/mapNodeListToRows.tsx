@@ -76,8 +76,8 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
           component: (
             <NodeStatus
               status={node.status}
-              loadingCurrent={progress?.current}
-              loadingTotal={progress?.total}
+              downloadingCurrent={progress?.current}
+              downloadingTotal={progress?.total}
             />
           ),
         },

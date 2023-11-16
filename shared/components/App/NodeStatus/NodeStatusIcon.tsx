@@ -5,6 +5,7 @@ import {
   getNodeStatusInfo,
   NodeStatusType,
 } from './NodeStatus';
+import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/v1/node';
 
 import { SvgIcon } from '@shared/components';
 
@@ -14,6 +15,9 @@ const NodeStatusSpinner = dynamic(() => import('./NodeStatusSpinner'));
 
 const IconUndefined = dynamic(
   () => import('@public/assets/icons/nodeStatus/Undefined.svg'),
+);
+const IconDeleted = dynamic(
+  () => import('@public/assets/icons/common/Trash.svg'),
 );
 const IconEarning = dynamic(
   () => import('@public/assets/icons/nodeStatus/Earning.svg'),
@@ -114,6 +118,8 @@ const getIcon = (statusName: string) => {
         return <IconMinting />;
       case 'RELAYING':
         return <IconRelaying />;
+      case 'DELETED':
+        return <IconDeleted />;
       case 'REMOVED':
         return <IconRemoved />;
       case 'REMOVING':
@@ -123,7 +129,7 @@ const getIcon = (statusName: string) => {
       case 'SYNCING':
         return <IconSyncing />;
       default:
-        return <IconProcessing />;
+        return <IconUnspecified />;
     }
   }
 };
@@ -145,7 +151,7 @@ export const NodeStatusIcon = ({
 
   return (
     <Suspense fallback={null}>
-      {statusName === 'PROVISIONING' ? (
+      {statusName?.includes('PROVISIONING') ? (
         <NodeStatusSpinner
           isDefaultColor={isDefaultColor}
           size={size}

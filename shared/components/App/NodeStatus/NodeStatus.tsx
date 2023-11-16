@@ -3,6 +3,7 @@ import { styles } from './NodeStatus.styles';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { NodeStatusIcon } from './NodeStatusIcon';
 import { NodeStatusLoader } from './NodeStatusLoader';
+import { NodeStatusName } from './NodeStatusName';
 import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/v1/node';
 
 export type NodeStatusType = 'container' | 'sync' | 'staking';
@@ -17,8 +18,8 @@ type Props = {
   status: number;
   type?: NodeStatusType;
   hasBorder?: boolean;
-  loadingCurrent?: number;
-  loadingTotal?: number;
+  downloadingCurrent?: number;
+  downloadingTotal?: number;
 };
 
 export const getNodeStatusInfo = (status: number, type?: NodeStatusType) => {
@@ -42,7 +43,7 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
     )
   ) {
     return styles.statusColorGreen;
-  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|STOPPED/g)) {
+  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|STOPPED|DELETED/g)) {
     return styles.statusColorRed;
   } else {
     return styles.statusColorDefault;
@@ -53,35 +54,36 @@ export const NodeStatus: FC<Props> = ({
   status,
   type,
   hasBorder = true,
-  loadingCurrent,
-  loadingTotal,
+  downloadingCurrent,
+  downloadingTotal,
 }) => {
-  const statusInfo = getNodeStatusInfo(status, type);
-  const isLoading =
+  const isDownloading =
     status === NodeStatusEnum.NODE_STATUS_PROVISIONING &&
-    loadingCurrent! !== loadingTotal!;
-
-  const statusName = isLoading
-    ? loadingCurrent === loadingTotal
-      ? 'PROVISIONING'
-      : 'DOWNLOADING'
-    : statusInfo.name;
+    downloadingCurrent! !== downloadingTotal!;
 
   return (
     <span
       css={[
         styles.status,
         hasBorder && styles.statusBorder,
-        isLoading && styles.statusLoading,
+        isDownloading && styles.statusLoading,
         getNodeStatusColor(status, type),
       ]}
     >
-      {isLoading && (
-        <NodeStatusLoader current={loadingCurrent!} total={loadingTotal!} />
+      {isDownloading && (
+        <NodeStatusLoader
+          current={downloadingCurrent!}
+          total={downloadingTotal!}
+        />
       )}
       <NodeStatusIcon size="12px" status={status} type={type} />
       <p css={[styles.statusText, getNodeStatusColor(status, type)]}>
-        {statusName}
+        <NodeStatusName
+          status={status}
+          type={type}
+          downloadingCurrent={downloadingCurrent}
+          downloadingTotal={downloadingTotal}
+        />
       </p>
     </span>
   );

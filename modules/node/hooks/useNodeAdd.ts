@@ -56,8 +56,6 @@ export const useNodeAdd = () => {
           nodeCount: hostInList.nodeCount + 1,
         });
       }
-
-      toast.success('Node Launched');
       loadNodes();
       onSuccess(response.id);
     } catch (err: any) {

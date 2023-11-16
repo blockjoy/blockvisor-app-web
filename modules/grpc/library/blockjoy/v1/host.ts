@@ -18,6 +18,13 @@ export enum HostType {
   UNRECOGNIZED = -1,
 }
 
+export enum HostConnectionStatus {
+  HOST_CONNECTION_STATUS_UNSPECIFIED = 0,
+  HOST_CONNECTION_STATUS_ONLINE = 1,
+  HOST_CONNECTION_STATUS_OFFLINE = 2,
+  UNRECOGNIZED = -1,
+}
+
 export interface Host {
   /** This is the id of the host. */
   id: string;
@@ -196,7 +203,11 @@ export interface HostServiceUpdateRequest {
     | string
     | undefined;
   /** Optionally set a billing amount for this host. */
-  billingAmount?: BillingAmount | undefined;
+  billingAmount?:
+    | BillingAmount
+    | undefined;
+  /** This is total disk space installed on host, given in bytes. */
+  totalDiskSpace?: number | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -261,6 +272,12 @@ export interface Region {
    * AP1: Asia-Pacific
    */
   pricingTier?: string | undefined;
+}
+
+/** Used to indicate a change in the host status via MQTT. */
+export interface HostStatus {
+  hostId: string;
+  connectionStatus?: HostConnectionStatus | undefined;
 }
 
 function createBaseHost(): Host {
@@ -1167,6 +1184,7 @@ function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
     osVersion: undefined,
     region: undefined,
     billingAmount: undefined,
+    totalDiskSpace: undefined,
   };
 }
 
@@ -1192,6 +1210,9 @@ export const HostServiceUpdateRequest = {
     }
     if (message.billingAmount !== undefined) {
       BillingAmount.encode(message.billingAmount, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.totalDiskSpace !== undefined) {
+      writer.uint32(64).uint64(message.totalDiskSpace);
     }
     return writer;
   },
@@ -1252,6 +1273,13 @@ export const HostServiceUpdateRequest = {
 
           message.billingAmount = BillingAmount.decode(reader, reader.uint32());
           continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.totalDiskSpace = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1276,6 +1304,7 @@ export const HostServiceUpdateRequest = {
     message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
+    message.totalDiskSpace = object.totalDiskSpace ?? undefined;
     return message;
   },
 };
@@ -1828,6 +1857,63 @@ export const Region = {
     const message = createBaseRegion();
     message.name = object.name ?? undefined;
     message.pricingTier = object.pricingTier ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostStatus(): HostStatus {
+  return { hostId: "", connectionStatus: undefined };
+}
+
+export const HostStatus = {
+  encode(message: HostStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.connectionStatus !== undefined) {
+      writer.uint32(16).int32(message.connectionStatus);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostStatus {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostStatus();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.connectionStatus = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostStatus>): HostStatus {
+    return HostStatus.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostStatus>): HostStatus {
+    const message = createBaseHostStatus();
+    message.hostId = object.hostId ?? "";
+    message.connectionStatus = object.connectionStatus ?? undefined;
     return message;
   },
 };
