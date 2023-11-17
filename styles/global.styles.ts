@@ -195,16 +195,6 @@ export const globalStyles = css`
     }
   }
 
-  #crisp-chatbox,
-  #crisp-chatbox span,
-  #crisp-chatbox div,
-  #crisp-chatbox textarea,
-  #crisp-chatbox textarea::placeholder {
-    font-family: 'Styrene A LC', -apple-system, BlinkMacSystemFont, avenir next,
-      avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
-      sans-serif !important;
-  }
-
   html {
     box-sizing: border-box;
     scroll-behavior: smooth;

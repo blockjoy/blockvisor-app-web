@@ -4729,11 +4729,6 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-crisp-sdk-web@^1.0.11:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/crisp-sdk-web/-/crisp-sdk-web-1.0.12.tgz#95f2c5132b186b704871a91a8fb0a34779e534c7"
-  integrity sha512-BTtjJePSJuzAaPOf+h0q6RL4Cw62SNLvP8fKUfu/aIqbQ4nk8hJyMg7nRBa+HaOXRHLXubqnxoBe/R5MnlJTJA==
-
 cross-spawn@^6.0.0:
   version "6.0.5"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
