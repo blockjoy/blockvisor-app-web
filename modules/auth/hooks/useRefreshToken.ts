@@ -1,8 +1,7 @@
+import { useSetRecoilState } from 'recoil';
 import { authClient } from '@modules/grpc';
-import { organizationAtoms } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
-import { useRecoilValue } from 'recoil';
-import { useIdentityRepository } from './useIdentityRepository';
+import { authAtoms, useIdentityRepository } from '@modules/auth';
 
 interface Hook {
   refreshToken: VoidFunction;
@@ -11,25 +10,47 @@ interface Hook {
 
 export const useRefreshToken = (): Hook => {
   const repository = useIdentityRepository();
-  const orgId = useRecoilValue(organizationAtoms.defaultOrganization);
+  const setUser = useSetRecoilState(authAtoms.user);
 
-  let refreshInterval: ReturnType<typeof setInterval>;
+  let refreshInterval: ReturnType<typeof setInterval> | null = null;
+  let isRefreshing = false;
 
-  const refreshToken = () => {
+  const refreshToken = async () => {
+    if (isRefreshing) return;
+    isRefreshing = true;
+
     const identity = repository?.getIdentity();
     const user: any = readToken(identity?.accessToken!);
 
     const expirationTime = user.exp;
-    const callTime = expirationTime * 1000 + 100 - Date.now();
+    let callTime = expirationTime * 1000 - Date.now();
 
-    refreshInterval = setInterval(async (): Promise<void> => {
-      // TODO
-      //await apiClient.getDashboardMetrics(orgId?.id);
-    }, callTime);
+    if (callTime <= 0) {
+      callTime = 1000;
+      await handleTokenRefresh();
+    }
+
+    if (refreshInterval) clearInterval(refreshInterval);
+
+    refreshInterval = setInterval(handleTokenRefresh, callTime);
+    isRefreshing = false;
   };
 
   const removeRefreshTokenCall = () => {
-    clearInterval(refreshInterval);
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+      refreshInterval = null;
+    }
+  };
+
+  const handleTokenRefresh = async (): Promise<void> => {
+    const accessToken = await authClient.refreshToken();
+
+    if (accessToken)
+      setUser((user) => ({
+        ...user,
+        accessToken,
+      }));
   };
 
   return {

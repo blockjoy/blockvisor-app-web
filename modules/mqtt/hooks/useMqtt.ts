@@ -2,22 +2,22 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import mqtt, { MqttClient, IClientOptions } from 'mqtt';
 import { env } from '@shared/constants/env';
-import { getActiveTopic } from '@modules/mqtt';
+import { getActiveTopic, createWebWorker, keepAlive } from '@modules/mqtt';
 import { useUpdates as useNodeUpdates } from '@modules/node';
 import {
   useUpdates as useOrgUpdates,
   organizationAtoms,
 } from '@modules/organization';
-import { arraysEqual } from 'utils/arraysEqual';
 import { getIdentity } from '@modules/grpc';
 
 type IMqttHook = {
   connect: VoidFunction;
+  reconnect: VoidFunction;
   client: MqttClient | null;
   error?: Error | null;
   message?: Message | null;
   connectStatus: ConnectionStatus;
-  updateConnection: VoidFunction;
+  updateSubscription: VoidFunction;
 };
 
 export const useMqtt = (): IMqttHook => {
@@ -36,13 +36,17 @@ export const useMqtt = (): IMqttHook => {
 
   const subscribedTopics = useRef<string[]>([]);
 
+  const keepAliveWorker = useRef<Worker | null>(null);
+
   const mqttConnect = () => {
-    if (client) return;
+    if (client?.connected) return;
     setConnectStatus('Connecting');
 
     const options: IClientOptions = {
+      protocolVersion: 5,
       clean: true,
       reconnectPeriod: 1000,
+      keepalive: 0,
       transformWsUrl: (url, options, client) => {
         const token: string = getIdentity()?.accessToken;
 
@@ -53,23 +57,29 @@ export const useMqtt = (): IMqttHook => {
       },
     };
 
-    setClient(mqtt.connect(env.mqttUrl!, options));
+    try {
+      const mqttClient = mqtt.connect(env.mqttUrl!, options);
+      setClient(mqttClient);
+    } catch (err: any) {
+      console.error('Error while connecting to MQTT client', error);
+    }
   };
 
   const mqttUpdateSubscription = () => {
-    if (!client) return;
+    if (!client || !client.connected || !defaultOrganization) return;
 
     const topics = [
-      `/orgs/${defaultOrganization?.id}`,
-      `/orgs/${defaultOrganization?.id}/nodes`,
+      `/orgs/${defaultOrganization.id}`,
+      `/orgs/${defaultOrganization.id}/nodes`,
     ];
 
-    mqttUnSubscribe(topics);
+    if (subscribedTopics.current.length) mqttUnSubscribe();
     mqttSubscribe(topics);
   };
 
   const mqttSubscribe = (topics: string[]) => {
-    client?.subscribe(topics, (err: Error) => {
+    if (!client?.connected) return;
+    client?.subscribe(topics, (err: Error | null) => {
       if (err) {
         console.error(`Failed to subscribe to ${topics}: ${err}`);
         return;
@@ -79,46 +89,44 @@ export const useMqtt = (): IMqttHook => {
     });
   };
 
-  const mqttUnSubscribe = (topics: string[]) => {
-    if (
-      subscribedTopics.current.length &&
-      !arraysEqual(subscribedTopics.current, topics)
-    ) {
-      client?.unsubscribe(subscribedTopics.current, (err: Error) => {
-        if (err) {
-          console.error(
-            `Failed to unsubscribe from ${subscribedTopics.current}: ${err}`,
-          );
-          return;
-        }
-        subscribedTopics.current = [];
-      });
-    }
+  const mqttUnSubscribe = () => {
+    if (!client?.connected) return;
+    client?.unsubscribe(subscribedTopics.current, (err?: Error) => {
+      if (err) {
+        console.error(
+          `Failed to unsubscribe from ${subscribedTopics.current}: ${err}`,
+        );
+        return;
+      }
+      subscribedTopics.current = [];
+    });
   };
 
-  const mqttDisconnect = () => {
-    if (client) {
-      client.end(true, () => {
-        setConnectStatus('Connect');
-        setError(null);
-        setMessage(null);
-        subscribedTopics.current = [];
+  const mqttReconnect = async () => {
+    if (!client || client.reconnecting) return;
+    console.log('Attempting MQTT reconnection...');
+
+    if (client.disconnected || client.disconnecting) handleReconnect();
+    else
+      client.end(false, () => {
+        handleReconnect();
       });
-    }
   };
 
   useEffect(() => {
     if (client) {
       client.on('connect', () => {
-        console.log('Connected to broker.');
         setConnectStatus('Connected');
         mqttUpdateSubscription();
+        setError(null);
+
+        manageKeepAliveWorker();
       });
 
       client.on('error', (err: Error) => {
-        console.error('Connection error: ', err);
+        console.error('Connection error: ', err, client);
         setError(err);
-        mqttDisconnect();
+        mqttReconnect();
       });
 
       client.on('reconnect', () => {
@@ -135,16 +143,25 @@ export const useMqtt = (): IMqttHook => {
         }
       });
 
-      client?.on('close', () => {
+      client.on('close', () => {
         console.log('Disconnected from broker.');
+        keepAliveWorker.current?.terminate();
         setConnectStatus('Connect');
       });
 
-      client?.on('offline', () => {
+      client.on('offline', () => {
         console.log('MQTT client offline');
         setConnectStatus('Connect');
       });
+
+      client.on('packetreceive', () => {
+        client.pingResp = true;
+      });
     }
+
+    return () => {
+      client?.end();
+    };
   }, [client]);
 
   useEffect(() => {
@@ -170,13 +187,34 @@ export const useMqtt = (): IMqttHook => {
     setMessage({ type, topic, payload });
   }, []);
 
+  const handleReconnect = () => {
+    if (!client) return;
+
+    const token: string = getIdentity()?.accessToken;
+
+    client.options.username = token;
+    client.options.password = token;
+
+    client.reconnect();
+  };
+
+  const manageKeepAliveWorker = () => {
+    if (!keepAliveWorker.current) return;
+
+    keepAliveWorker.current = createWebWorker(keepAlive);
+    keepAliveWorker.current?.addEventListener('message', (event: any) => {
+      (client as any)._sendPacket({ cmd: 'pingreq' });
+    });
+  };
+
   return {
     connect: mqttConnect,
+    reconnect: mqttReconnect,
     client,
     error,
     message,
     connectStatus,
-    updateConnection: mqttUpdateSubscription,
+    updateSubscription: mqttUpdateSubscription,
   };
 };
 

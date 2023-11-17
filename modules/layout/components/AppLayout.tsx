@@ -4,7 +4,11 @@ import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
 import { Toast } from './toast/Toast';
-import { useIdentityRepository } from '@modules/auth';
+import {
+  authAtoms,
+  useIdentityRepository,
+  useRefreshToken,
+} from '@modules/auth';
 import {
   useDefaultOrganization,
   useGetOrganizations,
@@ -15,6 +19,7 @@ import { useGetBlockchains, useNodeList } from '@modules/node';
 import { MqttUIProvider, useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
+import { useRecoilValue } from 'recoil';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -28,8 +33,13 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const currentOrg = useRef<string>();
 
-  const { connect: mqttConnect, updateConnection: updateMqttConnection } =
-    useMqtt();
+  const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
+  const {
+    client: mqttClient,
+    connect: mqttConnect,
+    reconnect: mqttReconnect,
+    updateSubscription: updateMqttSubscription,
+  } = useMqtt();
   const { getPermissions } = usePermissions();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -38,14 +48,31 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
+  const user = useRecoilValue(authAtoms.user);
 
   useEffect(() => {
     (async () => {
       if (!organizations.length) await getOrganizations(true);
-      mqttConnect();
       await getReceivedInvitations(userEmail!);
     })();
   }, []);
+
+  useEffect(() => {
+    try {
+      refreshToken();
+    } catch (error: any) {
+      console.error('Error while refreshing the token');
+    }
+
+    return () => {
+      removeRefreshTokenCall();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mqttClient) mqttConnect();
+    else mqttReconnect();
+  }, [user?.accessToken]);
 
   useEffect(() => {
     if (!provisionToken && defaultOrganization?.id) {
@@ -62,7 +89,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       loadNodes();
       loadHosts();
       getPermissions();
-      updateMqttConnection();
+      if (mqttClient?.connected) updateMqttSubscription();
     }
   }, [defaultOrganization?.id]);
 

@@ -119,7 +119,7 @@ class AuthClient {
     }
   }
 
-  async refreshToken(): Promise<void> {
+  async refreshToken(): Promise<string | null> {
     const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
     if (
       !!localStorage.getItem('accessTokenExpiry') &&
@@ -130,10 +130,14 @@ class AuthClient {
           token: getIdentity().accessToken,
         });
         setTokenValue(refreshTokenResponse.token);
+        return refreshTokenResponse.token;
       } catch (err) {
         console.log('refreshTokenError', err);
+        return null;
       }
     }
+
+    return getIdentity().accessToken;
   }
 }
 
