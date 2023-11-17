@@ -5,7 +5,6 @@ import { RecoilRoot } from 'recoil';
 import { globalStyles } from 'styles/global.styles';
 import ThemeProvider from '@modules/theme/ThemeProvider';
 import { PrivateRoute } from '@modules/auth';
-import { Chat } from '@shared/components';
 
 function MyApp({ Component, pageProps, router }: any) {
   const getLayout = Component?.getLayout || ((page: any) => page);
@@ -16,7 +15,6 @@ function MyApp({ Component, pageProps, router }: any) {
         <PrivateRoute router={router}>
           {getLayout(<Component {...pageProps} />)}
         </PrivateRoute>
-        <Chat />
         <ToastContainer
           hideProgressBar
           autoClose={3000}

@@ -1,4 +1,3 @@
-export * from './Chat/Chat';
 export * from './DangerZone/DangerZone';
 export * from './Skeleton/Skeleton';
 export * from './Skeleton/SkeletonGrid';

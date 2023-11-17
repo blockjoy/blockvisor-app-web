@@ -1,24 +1,11 @@
-import { Button, TableBlock } from '@shared/components';
+import { TableBlock } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
-import {
-  Node,
-  NodeStatus as NodeStatusEnum,
-} from '@modules/grpc/library/blockjoy/v1/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from './convertNodeTypeToName';
-import { SvgIcon } from '@shared/components/General';
-import { spacing } from 'styles/utils.spacing.styles';
-import { css } from '@emotion/react';
-import IconDelete from '@public/assets/icons/common/Trash.svg';
-import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import { getNodeJobProgress } from './getNodeJobProgress';
 
-export const mapNodeListToRows = (
-  nodeList?: Node[],
-  onDeleteClick?: (node: Node) => void,
-) => {
-  const { hasPermission } = usePermissions();
-
+export const mapNodeListToRows = (nodeList?: Node[]) => {
   const headers: TableHeader[] = [
     {
       name: '',
@@ -31,33 +18,25 @@ export const mapNodeListToRows = (
       name: 'Node',
       key: '2',
       width: '300px',
+      maxWidth: '300px',
     },
     {
       name: 'Launched',
       key: '3',
       width: '200px',
+      maxWidth: '200px',
     },
     {
       name: 'Status',
       key: '4',
-      width: '200px',
-    },
-    {
-      name: '',
-      key: '5',
-      width: '40px',
-      textAlign: 'right',
+      width: '400px',
     },
   ];
 
   const rows = nodeList?.map((node: Node) => {
     const progress = getNodeJobProgress(node);
-
     return {
       key: node.id,
-      isClickable:
-        node.status !== NodeStatusEnum.NODE_STATUS_PROVISIONING ||
-        hasPermission('node-admin-get'),
       cells: [
         {
           key: '1',
@@ -97,31 +76,10 @@ export const mapNodeListToRows = (
           component: (
             <NodeStatus
               status={node.status}
-              loadingCurrent={progress?.current}
-              loadingTotal={progress?.total}
+              downloadingCurrent={progress?.current}
+              downloadingTotal={progress?.total}
             />
           ),
-        },
-        {
-          key: '5',
-          component: node.status === NodeStatusEnum.NODE_STATUS_PROVISIONING &&
-            !hasPermission('node-admin-get') && (
-              <Button
-                css={
-                  (spacing.left.large,
-                  css`
-                    width: 40px;
-                  `)
-                }
-                style="icon"
-                tooltip="Delete"
-                onClick={() => (!!onDeleteClick ? onDeleteClick(node) : null)}
-              >
-                <SvgIcon isDefaultColor>
-                  <IconDelete />
-                </SvgIcon>
-              </Button>
-            ),
         },
       ],
     };

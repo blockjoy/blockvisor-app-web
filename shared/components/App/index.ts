@@ -13,6 +13,7 @@ export * from './Page/PageSpinner/PageSpinner';
 export * from './Page/PageTitle';
 export * from './NetdataDashboard/NetdataDashboard';
 export * from './NodeStatus/NodeStatus';
+export * from './NodeStatus/NodeStatusName';
 export * from './NodeStatus/NodeStatusIcon';
 export * from './BlockchainIcon/BlockchainIcon';
 export * from './OrganizationPicker/OrganizationPicker';

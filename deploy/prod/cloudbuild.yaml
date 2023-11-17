@@ -9,7 +9,6 @@ steps:
           - skaffold build --filename='deploy/prod/skaffold.yaml' --file-output=/workspace/artifacts.json
       env:
           - 'SHORT_SHA=${SHORT_SHA}'
-          - 'CRISP_TOKEN_KEY=${_CRISP_TOKEN_KEY}'
 
     - name: 'google/cloud-sdk:latest'
       entrypoint: 'sh'

@@ -9,13 +9,19 @@ import { SearchOperator } from "../common/v1/search";
 export const protobufPackage = "blockjoy.v1";
 
 /**
- * Describe the node's chain related status
+ * Describe the node's blockchainchain related status.
  * Generic, NOT chain specific states. These states are used to describe the
  * node's states as seen by the blockchain
  */
 export enum NodeStatus {
+  /** NODE_STATUS_UNSPECIFIED - General chain states */
   NODE_STATUS_UNSPECIFIED = 0,
-  /** NODE_STATUS_PROVISIONING - General chain states */
+  /**
+   * NODE_STATUS_PROVISIONING_PENDING - The node has been created, and it will move to pending as soon as the host
+   * that it will run on has acked the messages sent to it.
+   */
+  NODE_STATUS_PROVISIONING_PENDING = 19,
+  /** NODE_STATUS_PROVISIONING - The node is currently being created on the host. */
   NODE_STATUS_PROVISIONING = 1,
   NODE_STATUS_BROADCASTING = 2,
   NODE_STATUS_CANCELLED = 3,
@@ -31,8 +37,17 @@ export enum NodeStatus {
   NODE_STATUS_MINTING = 13,
   NODE_STATUS_PROCESSING = 14,
   NODE_STATUS_RELAYING = 15,
-  NODE_STATUS_REMOVED = 16,
-  NODE_STATUS_REMOVING = 17,
+  /**
+   * NODE_STATUS_DELETE_PENDING - A message to delete has been sent, and as soon as the process is kicked off
+   * the node will move to the deleting status.
+   */
+  NODE_STATUS_DELETE_PENDING = 16,
+  /** NODE_STATUS_DELETING - The node is currently in the process of being removed. */
+  NODE_STATUS_DELETING = 17,
+  /** NODE_STATUS_DELETED - This node is deleted. */
+  NODE_STATUS_DELETED = 18,
+  NODE_STATUS_UPDATE_PENDING = 20,
+  NODE_STATUS_UPDATING = 21,
   UNRECOGNIZED = -1,
 }
 

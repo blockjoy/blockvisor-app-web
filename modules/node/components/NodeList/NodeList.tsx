@@ -9,7 +9,6 @@ import {
   PageTitle,
   Table,
   TableGrid,
-  DeleteModal,
 } from '@shared/components';
 import { toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
@@ -24,9 +23,6 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { mapNodeListToRows } from '@modules/node/utils';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import { ROUTES } from '@shared/constants/routes';
-import { useNodeDelete } from '@modules/node/hooks/useNodeDelete';
-import { toast } from 'react-toastify';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -39,29 +35,10 @@ export const NodeList = () => {
     };
   }, [nodeUIContext]);
 
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [nodeToDelete, setNodeToDelete] =
-    useState<{ id: string; name: string; hostId: string }>();
-
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
-  const { deleteNode } = useNodeDelete();
-
-  const handleNodeDeleted = () => {
-    deleteNode(nodeToDelete?.id, nodeToDelete?.hostId!, () => {
-      handleNodeDeleteClosed();
-      toast.success('Node Deleted');
-    });
-  };
 
   const handleNodeClicked = (nodeId: string) =>
     router.push(ROUTES.NODE(nodeId));
-
-  const handleNodeDeleteClicked = (node: Node) => {
-    setIsDeleteMode(true);
-    setNodeToDelete(node);
-  };
-
-  const handleNodeDeleteClosed = () => setIsDeleteMode(false);
 
   const hasMoreNodes =
     nodeUIContext.queryParams.pagination.current_page *
@@ -100,12 +77,9 @@ export const NodeList = () => {
     nodeUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = toGrid(nodeList!, handleNodeClicked, handleNodeDeleteClicked);
+  const cells = toGrid(nodeList!, handleNodeClicked);
 
-  const { headers, rows } = mapNodeListToRows(
-    nodeList,
-    handleNodeDeleteClicked,
-  );
+  const { headers, rows } = mapNodeListToRows(nodeList);
 
   const { isFiltered, isEmpty } = resultsStatus(
     nodeList?.length!,
@@ -114,15 +88,6 @@ export const NodeList = () => {
 
   return (
     <>
-      {isDeleteMode && (
-        <DeleteModal
-          portalId="delete-node-modal"
-          elementName={nodeToDelete?.name!}
-          entityName="Node"
-          onHide={handleNodeDeleteClosed}
-          onSubmit={handleNodeDeleted}
-        />
-      )}
       <PageTitle title="Nodes" icon={<IconNode />} />
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters isLoading={isLoading} />
