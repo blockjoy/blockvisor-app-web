@@ -15,12 +15,6 @@ build:
                   NEXT_PUBLIC_API_URL: 'https://api.staging.blockjoy.com'
                   NEXT_PUBLIC_MQTT_URL: 'wss://mqtt.staging.blockjoy.com:8084/mqtt'
                   NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
-                  NEXT_PUBLIC_PLAUSIBLE_DATA_DOMAIN: 'app.staging.blockjoy.com'
-                  NEXT_PUBLIC_CRISP_WEBSITE_ID: '09ccc057-4bc5-4c14-909a-6b10f6bbe1cb'
-                  CRISP_API_URL: 'https://api.crisp.chat/v1'
-                  CRISP_TOKEN_IDENTIFIER: '50052e9a-1e04-4b2d-8186-5e1daf223c3e'
-                  CRISP_TOKEN_KEY: '{{.CRISP_TOKEN_KEY}}'
-                  CRISP_FAQ_CATEGORY_ID: '0d56e507-52b6-4aeb-b022-0d75e41fabc7'
 
         - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-prod
           context: ./
@@ -31,14 +25,8 @@ build:
                   NEXT_PUBLIC_API_URL: 'https://api.prod.blockjoy.com'
                   NEXT_PUBLIC_MQTT_URL: 'wss://mqtt.prod.blockjoy.com:8084/mqtt'
                   NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
-                  NEXT_PUBLIC_PLAUSIBLE_DATA_DOMAIN: 'app.prod.blockjoy.com'
-                  NEXT_PUBLIC_CRISP_WEBSITE_ID: '09ccc057-4bc5-4c14-909a-6b10f6bbe1cb'
                   NEXT_PUBLIC_MIXPANEL_TOKEN: '12c47463bb293286f0c40ee2e293f89a'
                   NEXT_PUBLIC_MIXPANEL_PROJECT_URL: 'https://app.blockjoy.com/mp'
-                  CRISP_API_URL: 'https://api.crisp.chat/v1'
-                  CRISP_TOKEN_IDENTIFIER: '50052e9a-1e04-4b2d-8186-5e1daf223c3e'
-                  CRISP_TOKEN_KEY: '{{.CRISP_TOKEN_KEY}}'
-                  CRISP_FAQ_CATEGORY_ID: '0d56e507-52b6-4aeb-b022-0d75e41fabc7'
     local:
         push: true
         useDockerCLI: true
