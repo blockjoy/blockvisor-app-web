@@ -79,7 +79,11 @@ export interface Host {
    * i.e. config data, secrets, vm mountpoints. Usually this will be
    * `/var/lib/blockvisor`.
    */
-  vmmMountpoint?: string | undefined;
+  vmmMountpoint?:
+    | string
+    | undefined;
+  /** A list of ip addresses available for this host. */
+  ipAddresses: HostIpAddress[];
 }
 
 export interface HostServiceCreateRequest {
@@ -280,6 +284,13 @@ export interface HostStatus {
   connectionStatus?: HostConnectionStatus | undefined;
 }
 
+export interface HostIpAddress {
+  /** The ip address as a string. */
+  ip: string;
+  /** Whether or not the ip address is currently in use by a node. */
+  assigned: boolean;
+}
+
 function createBaseHost(): Host {
   return {
     id: "",
@@ -301,6 +312,7 @@ function createBaseHost(): Host {
     region: undefined,
     billingAmount: undefined,
     vmmMountpoint: undefined,
+    ipAddresses: [],
   };
 }
 
@@ -362,6 +374,9 @@ export const Host = {
     }
     if (message.vmmMountpoint !== undefined) {
       writer.uint32(170).string(message.vmmMountpoint);
+    }
+    for (const v of message.ipAddresses) {
+      HostIpAddress.encode(v!, writer.uint32(178).fork()).ldelim();
     }
     return writer;
   },
@@ -506,6 +521,13 @@ export const Host = {
 
           message.vmmMountpoint = reader.string();
           continue;
+        case 22:
+          if (tag !== 178) {
+            break;
+          }
+
+          message.ipAddresses.push(HostIpAddress.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -542,6 +564,7 @@ export const Host = {
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
     message.vmmMountpoint = object.vmmMountpoint ?? undefined;
+    message.ipAddresses = object.ipAddresses?.map((e) => HostIpAddress.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1914,6 +1937,63 @@ export const HostStatus = {
     const message = createBaseHostStatus();
     message.hostId = object.hostId ?? "";
     message.connectionStatus = object.connectionStatus ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostIpAddress(): HostIpAddress {
+  return { ip: "", assigned: false };
+}
+
+export const HostIpAddress = {
+  encode(message: HostIpAddress, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.ip !== "") {
+      writer.uint32(10).string(message.ip);
+    }
+    if (message.assigned === true) {
+      writer.uint32(16).bool(message.assigned);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostIpAddress {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostIpAddress();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ip = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.assigned = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostIpAddress>): HostIpAddress {
+    return HostIpAddress.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostIpAddress>): HostIpAddress {
+    const message = createBaseHostIpAddress();
+    message.ip = object.ip ?? "";
+    message.assigned = object.assigned ?? false;
     return message;
   },
 };
