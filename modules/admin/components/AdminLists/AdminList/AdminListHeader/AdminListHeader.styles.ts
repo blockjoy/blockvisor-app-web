@@ -3,36 +3,26 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  cardHeader: (theme: ITheme) => css`
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding-bottom: 20px;
-    border-bottom: 1px solid ${theme.colorBorder};
-  `,
-  cardTitle: (theme: ITheme) => css`
-    font-size: 16px;
-    text-transform: capitalize;
-  `,
   total: (theme: ITheme) => css`
     position: relative;
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 0 20px;
-    margin: 0 20px;
+    padding: 0 10px;
     border-left: 1px solid ${theme.colorBorderGrey};
-    border-right: 1px solid ${theme.colorBorderGrey};
+
+    @media ${breakpoints.fromMed} {
+      border-right: 1px solid ${theme.colorBorderGrey};
+    }
+
+    @media ${breakpoints.fromSml} {
+      margin: 0 20px;
+      padding: 0 20px;
+    }
 
     :hover .tooltip {
       opacity: 1;
       visibility: visible;
-    }
-
-    @media ${breakpoints.toXlrg} {
-      border: 0;
-      margin: 0;
-      padding: 0;
     }
   `,
   totalValue: (theme: ITheme) => css`

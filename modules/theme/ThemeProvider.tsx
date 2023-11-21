@@ -1,5 +1,4 @@
 import { atom, useRecoilValue } from 'recoil';
-// import { ThemeProvider as StyledThemeProvider, Global } from '@emotion/react';
 import {
   ThemeProvider as StyledThemeProvider,
   css,
@@ -76,7 +75,7 @@ const globalStyles = (theme: ITheme) => css`
     }
 
     & .Toastify__toast-container.Toastify__toast-container--bottom-right {
-      right: 100px !important;
+      right: 24px !important;
       bottom: 0 !important;
     }
 

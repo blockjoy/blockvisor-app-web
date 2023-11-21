@@ -4,11 +4,12 @@ import { rgba } from 'polished';
 import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
-  sidebar: (theme: ITheme) => css`
+  sidebar: css`
     background: #2a2c2b;
     padding: 20px;
     position: sticky;
     top: 92px;
+    margin-top: 20px;
     display: grid;
     grid-auto-rows: 1fr;
     gap: 4px;

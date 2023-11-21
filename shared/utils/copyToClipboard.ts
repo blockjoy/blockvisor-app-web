@@ -17,9 +17,9 @@ const fallbackCopyToClipboard = (str: string) => {
 export const copyToClipboard = (value: string) => {
   if (isClipboardApiSupported()) {
     navigator.clipboard.writeText(value);
-    toast.success('Copied');
+    toast.success('Copied', { toastId: 'copy' });
   } else {
     fallbackCopyToClipboard(value);
-    toast.success('Copied');
+    toast.success('Copied', { toastId: 'copy' });
   }
 };
