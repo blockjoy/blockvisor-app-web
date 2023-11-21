@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
-import { HostOs } from '@shared/components';
+import { HostOs, sort } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
 import { css } from '@emotion/react';
@@ -37,16 +37,19 @@ export const mapHostToDetails = (host: Host) => {
     { label: 'Gateway IP', data: host?.ipGateway || '-' },
     {
       label: 'IP Addresses',
-      data:
-        (
-          <ul css={ipListStyles}>
-            {host.ipAddresses.map(({ ip }) => (
+      data: host.ipAddresses?.length ? (
+        <ul css={ipListStyles}>
+          {sort(host.ipAddresses, { field: 'ip', order: 'asc' }).map(
+            ({ ip }) => (
               <li key={ip} css={spacing.bottom.micro}>
                 {ip}
               </li>
-            ))}
-          </ul>
-        ) || '-',
+            ),
+          )}
+        </ul>
+      ) : (
+        '-'
+      ),
     },
     {
       label: 'CPU Count',
