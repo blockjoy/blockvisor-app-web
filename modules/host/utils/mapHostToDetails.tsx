@@ -24,29 +24,7 @@ const ipListStyles = css`
   }
 `;
 
-const generateIpAddresses = (host: Host) => {
-  const ips = [];
-  try {
-    const from = +host?.ipRangeFrom?.split('.')[3]!,
-      to = +host?.ipRangeTo?.split('.')[3]!;
-
-    for (let i = from; i < to; i++)
-      ips.push(
-        `${host?.ipRangeFrom?.substring(
-          0,
-          host?.ipRangeFrom?.lastIndexOf('.')!,
-        )!}.${i}`,
-      );
-  } catch (err) {
-    console.log('generateIpAddressesError:', err);
-  } finally {
-    return ips;
-  }
-};
-
 export const mapHostToDetails = (host: Host) => {
-  const ipAddresses = generateIpAddresses(host);
-
   const { isSuperUser } = usePermissions();
 
   const details: { label: string; data: any | undefined }[] = [
@@ -62,7 +40,7 @@ export const mapHostToDetails = (host: Host) => {
       data:
         (
           <ul css={ipListStyles}>
-            {ipAddresses.map((ip) => (
+            {host.ipAddresses.map(({ ip }) => (
               <li key={ip} css={spacing.bottom.micro}>
                 {ip}
               </li>
