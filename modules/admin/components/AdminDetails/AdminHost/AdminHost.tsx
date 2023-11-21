@@ -46,7 +46,13 @@ export const AdminHost = () => {
       icon={<IconHost />}
       detailsName="id"
       customItems={customItems}
-      ignoreItems={['id', 'name', 'memSizeBytes', 'diskSizeBytes']}
+      ignoreItems={[
+        'id',
+        'name',
+        'ipAddresses',
+        'memSizeBytes',
+        'diskSizeBytes',
+      ]}
     />
   );
 };
