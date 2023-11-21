@@ -1,6 +1,6 @@
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { styles } from './AdminListTable.styles';
-import { AdminListColumn, AdminSupportedViews } from '../AdminList';
+import { AdminListColumn, IAdminItem } from '../AdminList';
 import { useRouter } from 'next/router';
 import { Copy, TableSkeleton } from '@shared/components';
 import { capitalized } from '@modules/admin/utils/capitalized';
@@ -9,7 +9,7 @@ import { pageSize } from '@modules/admin/constants/constants';
 type Props = {
   name: string;
   columns: AdminListColumn[];
-  list: AdminSupportedViews;
+  list: IAdminItem[];
   listTotal?: number;
   listPage: number;
   searchTerm?: string;
@@ -67,11 +67,17 @@ export const AdminListTable = ({
                     key={column.name}
                     css={styles.tableCellWidth(column.width!)}
                   >
-                    {item[column.name]}
-                    {column.canCopy && (
-                      <span className="copy-button" css={styles.copyButton}>
-                        <Copy value={item[column.name]} hideTooltip />
-                      </span>
+                    {column.canCopy ? (
+                      <div css={styles.copyTd}>
+                        {item[column.name]}
+                        {column.canCopy && (
+                          <span className="copy-button" css={styles.copyButton}>
+                            <Copy value={item[column.name]} hideTooltip />
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      item[column.name]
                     )}
                   </td>
                 ))}

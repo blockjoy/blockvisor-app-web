@@ -16,11 +16,12 @@ export const styles = {
     border-collapse: collapse;
 
     th {
-      color: ${theme.colorLabel};
+      color: ${theme.colorDefault};
       font-weight: 400;
     }
 
     tbody tr td {
+      vertical-align: middle;
       opacity: 0.8;
       padding: 0 10px 0 0;
       border-bottom: 1px solid ${theme.colorBorder};
@@ -54,6 +55,10 @@ export const styles = {
     opacity: 0;
     visibility: hidden;
     transition: 0.3s;
+  `,
+  copyTd: css`
+    display: flex;
+    align-items: center;
   `,
   rowCount: (theme: ITheme) => css`
     color: ${theme.colorLabel};
