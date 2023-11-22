@@ -121,13 +121,16 @@ class AuthClient {
 
   async refreshToken(): Promise<string | null> {
     const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
+    const accessToken = getIdentity().accessToken;
+    const accessTokenExpiry = localStorage.getItem('accessTokenExpiry');
+
     if (
-      !!localStorage.getItem('accessTokenExpiry') &&
-      currentDateTimestamp > +localStorage.getItem('accessTokenExpiry')! - 30
+      !!accessTokenExpiry &&
+      currentDateTimestamp > +accessTokenExpiry! - 30
     ) {
       try {
         const refreshTokenResponse = await this.client.refresh({
-          token: getIdentity().accessToken,
+          token: accessToken,
         });
         setTokenValue(refreshTokenResponse.token);
         return refreshTokenResponse.token;
@@ -137,7 +140,7 @@ class AuthClient {
       }
     }
 
-    return getIdentity().accessToken;
+    return accessToken;
   }
 }
 

@@ -12,45 +12,46 @@ export const useRefreshToken = (): Hook => {
   const repository = useIdentityRepository();
   const setUser = useSetRecoilState(authAtoms.user);
 
-  let refreshInterval: ReturnType<typeof setInterval> | null = null;
-  let isRefreshing = false;
+  let refreshTimeout: ReturnType<typeof setTimeout> | null = null;
 
   const refreshToken = async () => {
-    if (isRefreshing) return;
-    isRefreshing = true;
-
     const identity = repository?.getIdentity();
-    const user: any = readToken(identity?.accessToken!);
+    const accessToken = identity?.accessToken
+      ? readToken(identity.accessToken)
+      : null;
+    if (accessToken) scheduleTokenRefresh(accessToken.exp);
+  };
 
-    const expirationTime = user.exp;
-    let callTime = expirationTime * 1000 - Date.now();
+  const scheduleTokenRefresh = (expirationTime: number) => {
+    const callTime = Math.max(expirationTime * 1000 - Date.now() - 20000, 1000);
 
-    if (callTime <= 0) {
-      callTime = 1000;
-      await handleTokenRefresh();
+    if (refreshTimeout) clearTimeout(refreshTimeout);
+
+    refreshTimeout = setTimeout(handleTokenRefresh, callTime);
+  };
+
+  const handleTokenRefresh = async () => {
+    try {
+      const accessToken = await authClient.refreshToken();
+      if (accessToken) {
+        setUser((user) => ({
+          ...user,
+          accessToken,
+        }));
+
+        const user = readToken(accessToken);
+        scheduleTokenRefresh(user.exp);
+      }
+    } catch (error) {
+      console.error('Error while refreshing the token', error);
     }
-
-    if (refreshInterval) clearInterval(refreshInterval);
-
-    refreshInterval = setInterval(handleTokenRefresh, callTime);
-    isRefreshing = false;
   };
 
   const removeRefreshTokenCall = () => {
-    if (refreshInterval) {
-      clearInterval(refreshInterval);
-      refreshInterval = null;
+    if (refreshTimeout) {
+      clearTimeout(refreshTimeout);
+      refreshTimeout = null;
     }
-  };
-
-  const handleTokenRefresh = async (): Promise<void> => {
-    const accessToken = await authClient.refreshToken();
-
-    if (accessToken)
-      setUser((user) => ({
-        ...user,
-        accessToken,
-      }));
   };
 
   return {

@@ -44,8 +44,6 @@ export const useMqtt = (): IMqttHook => {
 
     const options: IClientOptions = {
       protocolVersion: 5,
-      clean: true,
-      reconnectPeriod: 1000,
       keepalive: 0,
       transformWsUrl: (url, options, client) => {
         const token: string = getIdentity()?.accessToken;
@@ -104,7 +102,6 @@ export const useMqtt = (): IMqttHook => {
 
   const mqttReconnect = async () => {
     if (!client || client.reconnecting) return;
-    console.log('Attempting MQTT reconnection...');
 
     if (client.disconnected || client.disconnecting) handleReconnect();
     else
@@ -124,9 +121,8 @@ export const useMqtt = (): IMqttHook => {
       });
 
       client.on('error', (err: Error) => {
-        console.error('Connection error: ', err, client);
+        console.error('Connection error: ', err, client, new Date());
         setError(err);
-        mqttReconnect();
       });
 
       client.on('reconnect', () => {
@@ -135,7 +131,6 @@ export const useMqtt = (): IMqttHook => {
       });
 
       client.on('message', (topic: string, payload: Uint8Array) => {
-        console.log({ topic, payload });
         try {
           handleMessage(topic, payload);
         } catch (err) {
