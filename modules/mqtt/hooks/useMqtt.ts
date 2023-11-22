@@ -103,11 +103,7 @@ export const useMqtt = (): IMqttHook => {
   const mqttReconnect = async () => {
     if (!client || client.reconnecting) return;
 
-    if (client.disconnected || client.disconnecting) handleReconnect();
-    else
-      client.end(false, () => {
-        handleReconnect();
-      });
+    handleReconnect();
   };
 
   useEffect(() => {
