@@ -117,7 +117,7 @@ export const useMqtt = (): IMqttHook => {
       });
 
       client.on('error', (err: Error) => {
-        console.error('Connection error: ', err, client, new Date());
+        console.error('Connection error: ', err);
         setError(err);
       });
 
