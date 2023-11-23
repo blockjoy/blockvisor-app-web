@@ -45,6 +45,9 @@ export const useMqtt = (): IMqttHook => {
     const options: IClientOptions = {
       protocolVersion: 5,
       keepalive: 0,
+      log(...args) {
+        console.log('LOG', args);
+      },
       transformWsUrl: (url, options, client) => {
         const token: string = getIdentity()?.accessToken;
 
@@ -79,7 +82,7 @@ export const useMqtt = (): IMqttHook => {
     if (!client?.connected) return;
     client?.subscribe(topics, (err: Error | null) => {
       if (err) {
-        console.error(`Failed to subscribe to ${topics}: ${err}`);
+        console.error(`Failed to subscribe to ${topics}: ${err}`, client);
         return;
       }
 
@@ -93,6 +96,7 @@ export const useMqtt = (): IMqttHook => {
       if (err) {
         console.error(
           `Failed to unsubscribe from ${subscribedTopics.current}: ${err}`,
+          client,
         );
         return;
       }
