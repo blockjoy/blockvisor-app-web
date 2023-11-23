@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
@@ -16,10 +17,10 @@ import {
   useProvisionToken,
 } from '@modules/organization';
 import { useGetBlockchains, useNodeList } from '@modules/node';
-import { MqttUIProvider, useMqtt } from '@modules/mqtt';
+import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
-import { useRecoilValue } from 'recoil';
+import { usePageVisibility } from '@shared/index';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -49,6 +50,10 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
   const user = useRecoilValue(authAtoms.user);
+
+  usePageVisibility({
+    onVisible: refreshToken,
+  });
 
   useEffect(() => {
     (async () => {
@@ -101,9 +106,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       <Burger />
       <Sidebar />
       <Toast />
-      <MqttUIProvider>
-        {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
-      </MqttUIProvider>
+      {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
     </>
   );
 };
