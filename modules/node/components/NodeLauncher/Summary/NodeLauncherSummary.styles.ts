@@ -207,4 +207,35 @@ export const styles = {
       font-size: 14px;
     }
   `,
+  autoSelect: (theme: ITheme) => css`
+    position: relative;
+    display: inline-block;
+    color: ${theme.colorDefault};
+    margin-left: 10px;
+    padding-bottom: 2px;
+    font-size: 13px;
+    bottom: -1px;
+
+    :hover {
+      color: ${theme.colorText};
+
+      ::after {
+        opacity: 1;
+        background: ${theme.colorText};
+      }
+    }
+
+    ::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: ${theme.colorDefault};
+      opacity: 0;
+      transition: 0.2s;
+    }
+  `,
 };

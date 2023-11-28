@@ -1,5 +1,5 @@
-import { SvgIcon } from '@shared/components';
 import { ReactNode } from 'react';
+import { SvgIcon } from '@shared/components';
 import { styles } from './DropdownButton.styles';
 import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
 
@@ -9,6 +9,7 @@ type Props = {
   text: string | ReactNode;
   icon?: ReactNode;
   onClick: VoidFunction;
+  isLoading?: boolean;
 };
 
 export const DropdownButton = ({
@@ -17,12 +18,13 @@ export const DropdownButton = ({
   onClick,
   text,
   isOpen,
+  isLoading,
 }: Props) => {
   return (
     <button
-      disabled={disabled}
+      disabled={disabled || isLoading}
       type="button"
-      css={styles.button}
+      css={[styles.button, isLoading && styles.loading]}
       onClick={onClick}
     >
       {icon && <SvgIcon size="16px">{icon}</SvgIcon>}

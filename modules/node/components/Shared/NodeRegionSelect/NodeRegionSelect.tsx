@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Select } from '@shared/components';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { Dropdown } from '@shared/components';
 import { hostClient } from '@modules/grpc/clients/hostClient';
-import { colors } from 'styles/utils.colors.styles';
 import { useDefaultOrganization } from '@modules/organization';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
@@ -24,15 +23,22 @@ export const NodeRegionSelect = ({
   nodeType,
   version,
 }: Props) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [serverError, setServerError] = useState('');
   const [regions, setRegions] = useState<Region[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { defaultOrganization } = useDefaultOrganization();
+
+  const handleOpen = (open: boolean) => {
+    setIsOpen(open);
+  };
 
   useEffect(() => {
     if (version?.id) {
       setServerError('');
       (async () => {
         try {
+          setIsLoading(true);
           const regions: Region[] = await hostClient.getRegions(
             defaultOrganization?.id!,
             blockchainId,
@@ -50,6 +56,8 @@ export const NodeRegionSelect = ({
           console.log('getRegionsError', err);
           setServerError('Error Loading Regions');
           onLoad(null);
+        } finally {
+          setIsLoading(false);
         }
       })();
     } else {
@@ -58,19 +66,15 @@ export const NodeRegionSelect = ({
   }, [version?.id]);
 
   return (
-    <Select
+    <Dropdown
+      items={regions}
+      handleSelected={onChange}
+      selectedItem={region}
+      isLoading={isLoading}
       disabled={!!serverError}
-      buttonText={
-        serverError ? (
-          <div css={[colors.warning]}>{serverError}</div>
-        ) : (
-          <p>{region?.name}</p>
-        )
-      }
-      items={regions?.map((r) => ({
-        name: r?.name || '',
-        onClick: () => onChange(r),
-      }))}
+      {...(serverError && { error: serverError })}
+      isOpen={isOpen}
+      handleOpen={handleOpen}
     />
   );
 };
