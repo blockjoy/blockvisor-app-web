@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Select } from '@shared/components';
-import { NodeType } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { colors } from 'styles/utils.colors.styles';
 import { useDefaultOrganization } from '@modules/organization';

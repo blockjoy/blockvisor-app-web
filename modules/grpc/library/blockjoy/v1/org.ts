@@ -1296,16 +1296,13 @@ export const OrgRole = {
   },
 };
 
-/** Manage organizations */
+/** Service for managing organizations. */
 export type OrgServiceDefinition = typeof OrgServiceDefinition;
 export const OrgServiceDefinition = {
   name: "OrgService",
   fullName: "blockjoy.v1.OrgService",
   methods: {
-    /**
-     * Get all the organizations for a user. All users automatically get a private
-     * (internal) organization.
-     */
+    /** Get all the organizations for a user. */
     get: {
       name: "Get",
       requestType: OrgServiceGetRequest,
@@ -1314,6 +1311,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** List all members of orgs matching a set of criteria. */
     list: {
       name: "List",
       requestType: OrgServiceListRequest,
@@ -1322,7 +1320,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Create a single organization */
+    /** Create a new organization. */
     create: {
       name: "Create",
       requestType: OrgServiceCreateRequest,
@@ -1331,7 +1329,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Update a single organization */
+    /** Update an existing organization. */
     update: {
       name: "Update",
       requestType: OrgServiceUpdateRequest,
@@ -1340,7 +1338,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Mark a single organization as deleted */
+    /** Mark an organization as deleted. */
     delete: {
       name: "Delete",
       requestType: OrgServiceDeleteRequest,
@@ -1349,7 +1347,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Remove organization member */
+    /** Remove a member from an organization. */
     removeMember: {
       name: "RemoveMember",
       requestType: OrgServiceRemoveMemberRequest,
@@ -1358,7 +1356,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Returns the host provision token for the provided user and organization. */
+    /** Get the host provision token for a user and organization. */
     getProvisionToken: {
       name: "GetProvisionToken",
       requestType: OrgServiceGetProvisionTokenRequest,
@@ -1367,10 +1365,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /**
-     * Regenerates and returns the host provision token for the provided user and
-     * organization.
-     */
+    /** Regenerates the host provision token for a user and organization. */
     resetProvisionToken: {
       name: "ResetProvisionToken",
       requestType: OrgServiceResetProvisionTokenRequest,
@@ -1383,47 +1378,42 @@ export const OrgServiceDefinition = {
 } as const;
 
 export interface OrgServiceImplementation<CallContextExt = {}> {
-  /**
-   * Get all the organizations for a user. All users automatically get a private
-   * (internal) organization.
-   */
+  /** Get all the organizations for a user. */
   get(
     request: OrgServiceGetRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceGetResponse>>;
+  /** List all members of orgs matching a set of criteria. */
   list(
     request: OrgServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceListResponse>>;
-  /** Create a single organization */
+  /** Create a new organization. */
   create(
     request: OrgServiceCreateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceCreateResponse>>;
-  /** Update a single organization */
+  /** Update an existing organization. */
   update(
     request: OrgServiceUpdateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceUpdateResponse>>;
-  /** Mark a single organization as deleted */
+  /** Mark an organization as deleted. */
   delete(
     request: OrgServiceDeleteRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceDeleteResponse>>;
-  /** Remove organization member */
+  /** Remove a member from an organization. */
   removeMember(
     request: OrgServiceRemoveMemberRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceRemoveMemberResponse>>;
-  /** Returns the host provision token for the provided user and organization. */
+  /** Get the host provision token for a user and organization. */
   getProvisionToken(
     request: OrgServiceGetProvisionTokenRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceGetProvisionTokenResponse>>;
-  /**
-   * Regenerates and returns the host provision token for the provided user and
-   * organization.
-   */
+  /** Regenerates the host provision token for a user and organization. */
   resetProvisionToken(
     request: OrgServiceResetProvisionTokenRequest,
     context: CallContext & CallContextExt,
@@ -1431,47 +1421,42 @@ export interface OrgServiceImplementation<CallContextExt = {}> {
 }
 
 export interface OrgServiceClient<CallOptionsExt = {}> {
-  /**
-   * Get all the organizations for a user. All users automatically get a private
-   * (internal) organization.
-   */
+  /** Get all the organizations for a user. */
   get(
     request: DeepPartial<OrgServiceGetRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceGetResponse>;
+  /** List all members of orgs matching a set of criteria. */
   list(
     request: DeepPartial<OrgServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceListResponse>;
-  /** Create a single organization */
+  /** Create a new organization. */
   create(
     request: DeepPartial<OrgServiceCreateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceCreateResponse>;
-  /** Update a single organization */
+  /** Update an existing organization. */
   update(
     request: DeepPartial<OrgServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceUpdateResponse>;
-  /** Mark a single organization as deleted */
+  /** Mark an organization as deleted. */
   delete(
     request: DeepPartial<OrgServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceDeleteResponse>;
-  /** Remove organization member */
+  /** Remove a member from an organization. */
   removeMember(
     request: DeepPartial<OrgServiceRemoveMemberRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceRemoveMemberResponse>;
-  /** Returns the host provision token for the provided user and organization. */
+  /** Get the host provision token for a user and organization. */
   getProvisionToken(
     request: DeepPartial<OrgServiceGetProvisionTokenRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceGetProvisionTokenResponse>;
-  /**
-   * Regenerates and returns the host provision token for the provided user and
-   * organization.
-   */
+  /** Regenerates the host provision token for a user and organization. */
   resetProvisionToken(
     request: DeepPartial<OrgServiceResetProvisionTokenRequest>,
     options?: CallOptions & CallOptionsExt,

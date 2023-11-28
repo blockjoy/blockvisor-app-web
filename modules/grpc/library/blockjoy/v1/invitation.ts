@@ -27,7 +27,7 @@ export enum InvitationStatus {
   UNRECOGNIZED = -1,
 }
 
-/** The invitation resource. This invites users into organization */
+/** An invitation for a user to some organization. */
 export interface Invitation {
   /** A uuid that uniquely determines the invitation. */
   id: string;

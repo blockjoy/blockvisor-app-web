@@ -1,6 +1,6 @@
 import { useGetBlockchains } from '@modules/node';
 import { BlockchainIcon, EmptyColumn, sort } from '@shared/components';
-import { NodeType } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { styles } from './NodeLauncherProtocolBlockchains.styles';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { onlyUnique } from '@shared/utils/onlyUnique';

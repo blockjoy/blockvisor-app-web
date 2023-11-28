@@ -594,11 +594,13 @@ export const SubscriptionServiceDeleteResponse = {
   },
 };
 
+/** Service for managing third-party subscriptions. */
 export type SubscriptionServiceDefinition = typeof SubscriptionServiceDefinition;
 export const SubscriptionServiceDefinition = {
   name: "SubscriptionService",
   fullName: "blockjoy.v1.SubscriptionService",
   methods: {
+    /** Create a new third-party subscription. */
     create: {
       name: "Create",
       requestType: SubscriptionServiceCreateRequest,
@@ -607,6 +609,7 @@ export const SubscriptionServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Get details for a single subscription. */
     get: {
       name: "Get",
       requestType: SubscriptionServiceGetRequest,
@@ -615,6 +618,7 @@ export const SubscriptionServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** List details of subscriptions matching some criteria. */
     list: {
       name: "List",
       requestType: SubscriptionServiceListRequest,
@@ -623,6 +627,7 @@ export const SubscriptionServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Update an existing third-party subscription. */
     update: {
       name: "Update",
       requestType: SubscriptionServiceUpdateRequest,
@@ -631,6 +636,7 @@ export const SubscriptionServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Delete an existing third-party subscription. */
     delete: {
       name: "Delete",
       requestType: SubscriptionServiceDeleteRequest,
@@ -643,22 +649,27 @@ export const SubscriptionServiceDefinition = {
 } as const;
 
 export interface SubscriptionServiceImplementation<CallContextExt = {}> {
+  /** Create a new third-party subscription. */
   create(
     request: SubscriptionServiceCreateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<SubscriptionServiceCreateResponse>>;
+  /** Get details for a single subscription. */
   get(
     request: SubscriptionServiceGetRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<SubscriptionServiceGetResponse>>;
+  /** List details of subscriptions matching some criteria. */
   list(
     request: SubscriptionServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<SubscriptionServiceListResponse>>;
+  /** Update an existing third-party subscription. */
   update(
     request: SubscriptionServiceUpdateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<SubscriptionServiceUpdateResponse>>;
+  /** Delete an existing third-party subscription. */
   delete(
     request: SubscriptionServiceDeleteRequest,
     context: CallContext & CallContextExt,
@@ -666,22 +677,27 @@ export interface SubscriptionServiceImplementation<CallContextExt = {}> {
 }
 
 export interface SubscriptionServiceClient<CallOptionsExt = {}> {
+  /** Create a new third-party subscription. */
   create(
     request: DeepPartial<SubscriptionServiceCreateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<SubscriptionServiceCreateResponse>;
+  /** Get details for a single subscription. */
   get(
     request: DeepPartial<SubscriptionServiceGetRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<SubscriptionServiceGetResponse>;
+  /** List details of subscriptions matching some criteria. */
   list(
     request: DeepPartial<SubscriptionServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<SubscriptionServiceListResponse>;
+  /** Update an existing third-party subscription. */
   update(
     request: DeepPartial<SubscriptionServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<SubscriptionServiceUpdateResponse>;
+  /** Delete an existing third-party subscription. */
   delete(
     request: DeepPartial<SubscriptionServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,

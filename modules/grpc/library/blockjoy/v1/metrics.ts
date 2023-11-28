@@ -2,7 +2,8 @@
 import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { NodeJob, NodeStatus, StakingStatus, SyncStatus } from "./node";
+import { NodeStatus, StakingStatus, SyncStatus } from "../common/v1/node";
+import { NodeJob } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -17,7 +18,6 @@ export interface MetricsServiceNodeRequest_MetricsEntry {
   value: NodeMetrics | undefined;
 }
 
-/** This message exists only for forward compatibility. */
 export interface MetricsServiceNodeResponse {
 }
 
@@ -32,7 +32,6 @@ export interface MetricsServiceHostRequest_MetricsEntry {
   value: HostMetrics | undefined;
 }
 
-/** This message exists only for forward compatibility. */
 export interface MetricsServiceHostResponse {
 }
 
@@ -708,6 +707,7 @@ export const HostMetrics = {
   },
 };
 
+/** A service for updating host and node metrics. */
 export type MetricsServiceDefinition = typeof MetricsServiceDefinition;
 export const MetricsServiceDefinition = {
   name: "MetricsService",

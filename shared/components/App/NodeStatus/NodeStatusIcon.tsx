@@ -5,7 +5,7 @@ import {
   getNodeStatusInfo,
   NodeStatusType,
 } from './NodeStatus';
-import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 import { SvgIcon } from '@shared/components';
 
