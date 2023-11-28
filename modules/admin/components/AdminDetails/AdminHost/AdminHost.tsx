@@ -41,7 +41,7 @@ export const AdminHost = () => {
     {
       id: 'ipAddresses',
       label: 'Ip Addresses',
-      data: <HostIps ipAddresses={host.ipAddresses} isAdmin />,
+      data: <HostIps ipAddresses={host.ipAddresses} />,
     },
   ];
 
