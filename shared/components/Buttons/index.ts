@@ -7,3 +7,4 @@ export * from './Dropdown/DropdownButton/DropdownButton';
 export * from './Dropdown/DropdownMenu/DropdownMenu';
 export * from './Dropdown/DropdownWrapper/DropdownWrapper';
 export * from './ActionsDropdown/ActionsDropdown';
+export * from './NextLink/NextLink';

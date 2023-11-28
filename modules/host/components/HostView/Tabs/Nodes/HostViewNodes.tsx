@@ -1,10 +1,9 @@
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { mapHostNodesToRows, useHostView } from '@modules/host';
-import { useNodeDelete, useNodeList } from '@modules/node';
+import { useNodeList } from '@modules/node';
 import {
   Alert,
-  DeleteModal,
   EmptyColumn,
+  NextLink,
   Table,
   TableSkeleton,
 } from '@shared/components';
@@ -14,14 +13,8 @@ import { ROUTES } from '@shared/constants/routes';
 import { useDefaultOrganization } from '@modules/organization';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import NextLink from 'next/link';
-import InfiniteScroll from 'react-infinite-scroll-component';
 
-type NodeToDelete = {
-  id: string;
-  name: string;
-};
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const itemsPerPage = 48;
 
@@ -30,36 +23,18 @@ export const HostViewNodes = () => {
   const { id } = router.query;
   const { nodeListByHost, isLoading, listNodesByHost, nodeListByHostCount } =
     useNodeList();
-  const { host, isLoading: isLoadingActiveHost } = useHostView();
+  const { isLoading: isLoadingActiveHost } = useHostView();
   const { defaultOrganization } = useDefaultOrganization();
   const { hasPermission } = usePermissions();
-  const { deleteNode } = useNodeDelete();
 
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [nodeToDelete, setNodeToDelete] = useState<NodeToDelete>();
   const [pageIndex, setPageIndex] = useState(0);
 
   const hasMoreNodes =
     pageIndex * itemsPerPage + itemsPerPage < nodeListByHostCount;
 
-  const handleDeleteNode = () => {
-    deleteNode(nodeToDelete?.id!, host!.id, () => {
-      setIsDeleteMode(false);
-      toast.success('Node Deleted');
-    });
-  };
-
-  const handleDeleteClicked = (node: NodeToDelete) => {
-    setNodeToDelete(node);
-    setIsDeleteMode(true);
-  };
-
   const handleNodeClicked = (id: string) => router.push(ROUTES.NODE(id));
 
-  const { headers, rows } = mapHostNodesToRows(
-    nodeListByHost!,
-    handleDeleteClicked,
-  );
+  const { headers, rows } = mapHostNodesToRows(nodeListByHost!);
 
   useEffect(() => {
     if (router.isReady) {
@@ -72,16 +47,6 @@ export const HostViewNodes = () => {
 
   return (
     <>
-      {isDeleteMode && (
-        <DeleteModal
-          portalId="delete-node-modal"
-          elementName={nodeToDelete?.name!}
-          entityName="Node"
-          onHide={() => setIsDeleteMode(false)}
-          onSubmit={handleDeleteNode}
-        />
-      )}
-
       {hasPermission('node-admin-list') && (
         <Alert isSuccess>
           Showing nodes for{' '}

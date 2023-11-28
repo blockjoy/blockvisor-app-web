@@ -20,26 +20,5 @@ export const styles = {
       text-overflow: ellipsis;
       line-height: 1.6;
     }
-
-    td a {
-      position: relative;
-      color: ${theme.colorText};
-    }
-
-    td a::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 1px;
-      background: ${theme.colorText};
-      opacity: 0.6;
-      transition: 0.3s;
-    }
-
-    td a:hover::after {
-      opacity: 1;
-    }
   `,
 };

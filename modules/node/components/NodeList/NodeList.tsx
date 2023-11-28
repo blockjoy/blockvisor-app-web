@@ -45,8 +45,6 @@ export const NodeList = () => {
       },
     });
 
-    console.log('window.scrollY', window.scrollY);
-
     router.push(ROUTES.NODE(nodeId));
   };
 
@@ -62,18 +60,7 @@ export const NodeList = () => {
   const currentQueryParams = useRef(nodeUIProps.queryParams);
 
   useEffect(() => {
-    // if (nodeUIProps.queryParams.pagination.scrollPosition > 0) {
-    //   window.scrollTo({
-    //     top: nodeUIProps.queryParams.pagination.scrollPosition,
-    //   });
-    // }
-
     if (!isEqual(currentQueryParams.current, nodeUIProps.queryParams)) {
-      console.log(
-        'loading nodes',
-        currentQueryParams.current,
-        nodeUIProps.queryParams,
-      );
       loadNodes(nodeUIProps.queryParams, !nodeList?.length);
       currentQueryParams.current = nodeUIProps.queryParams;
     }
@@ -90,8 +77,6 @@ export const NodeList = () => {
         scrollPosition: window.scrollY,
       },
     };
-
-    console.log('updateQueryParams', newQueryParams);
 
     nodeUIProps.setQueryParams(newQueryParams);
   };

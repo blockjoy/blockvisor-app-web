@@ -15,6 +15,12 @@ export const styles = {
     gap: 16px;
     align-self: stretch;
 
+    @media ${breakpoints.fromXHuge} {
+      .metrics {
+        display: none;
+      }
+    }
+
     @media ${breakpoints.fromXLrg} {
       margin-right: 24px;
     }
@@ -35,7 +41,7 @@ export const styles = {
     margin-left: auto;
     width: 400px;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toXHuge} {
       display: none;
     }
   `,

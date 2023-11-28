@@ -1,24 +1,16 @@
 import { nodeClient } from '@modules/grpc';
-import { toast } from 'react-toastify';
 import { useNodeList } from './useNodeList';
 import {
   NodeServiceCreateRequest,
   Node,
 } from '@modules/grpc/library/blockjoy/v1/node';
-import {
-  useDefaultOrganization,
-  useGetOrganizations,
-  useUpdateOrganization,
-} from '@modules/organization';
-import { useHostList, useHostUpdate } from '@modules/host';
+import { useGetOrganizations } from '@modules/organization';
+import { useHostList } from '@modules/host';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
-  const { organizations } = useGetOrganizations();
-  const { defaultOrganization } = useDefaultOrganization();
-  const { modifyOrganization } = useUpdateOrganization();
-  const { modifyHost } = useHostUpdate();
-  const { hostList } = useHostList();
+  const { getOrganizations } = useGetOrganizations();
+  const { loadHosts } = useHostList();
 
   const createNode = async (
     node: NodeServiceCreateRequest,
@@ -37,26 +29,9 @@ export const useNodeAdd = () => {
 
     try {
       const response: Node = await nodeClient.createNode(nodeRequest);
-
-      // Update organization node count
-      const activeOrganization = organizations.find(
-        (org) => org.id === defaultOrganization?.id,
-      );
-
-      modifyOrganization({
-        ...activeOrganization,
-        nodeCount: activeOrganization!.nodeCount + 1,
-      });
-
-      const hostInList = hostList.find((h) => h.id === response.hostId);
-
-      if (hostInList) {
-        modifyHost({
-          ...hostInList,
-          nodeCount: hostInList.nodeCount + 1,
-        });
-      }
       loadNodes();
+      loadHosts();
+      getOrganizations();
       onSuccess(response.id);
     } catch (err: any) {
       console.log('Error Launching Node', err);

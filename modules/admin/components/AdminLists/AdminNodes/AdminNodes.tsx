@@ -11,7 +11,6 @@ const columns = [
   {
     name: 'name',
     width: '280px',
-    canCopy: true,
   },
   {
     name: 'status',

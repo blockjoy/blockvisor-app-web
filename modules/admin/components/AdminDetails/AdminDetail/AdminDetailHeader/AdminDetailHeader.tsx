@@ -39,7 +39,7 @@ export const AdminDetailHeader = ({
               <SvgIcon size="12px">
                 <CopyIcon />
               </SvgIcon>{' '}
-              Copy Object
+              Copy Json
             </button>
           </div>
         </>

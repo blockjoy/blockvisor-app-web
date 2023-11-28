@@ -39,7 +39,7 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
 
   if (
     statusName?.match(
-      /RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING/g,
+      /RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING/g,
     )
   ) {
     return styles.statusColorGreen;

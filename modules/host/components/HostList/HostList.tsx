@@ -44,8 +44,6 @@ export const HostList = () => {
       hostUIContext.queryParams.pagination.items_per_page <
       hostCount;
 
-  console.log('host has more', hasMore);
-
   useEffect(() => {
     if (!isEqual(currentQueryParams.current, hostUIProps.queryParams)) {
       loadHosts(hostUIProps.queryParams);
