@@ -1,4 +1,5 @@
-import { NodeProperty, UiType } from '@modules/grpc/library/blockjoy/v1/node';
+import { UiType } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { FileUpload, Switch, Textbox } from '@shared/components';
 
 export const renderControls = (

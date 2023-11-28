@@ -1,6 +1,5 @@
 import {
   Node,
-  NodeType,
   NodeProperty,
   NodeServiceCreateRequest,
   NodeServiceClient,
@@ -10,6 +9,7 @@ import {
   NodeServiceListRequest,
   NodeSearch,
 } from '../library/blockjoy/v1/node';
+import { NodeType } from '../library/blockjoy/common/v1/node';
 import { SearchOperator } from '../library/blockjoy/common/v1/search';
 import {
   authClient,

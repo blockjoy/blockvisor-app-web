@@ -748,6 +748,7 @@ export const ApiKeyServiceDefinition = {
   name: "ApiKeyService",
   fullName: "blockjoy.v1.ApiKeyService",
   methods: {
+    /** Create a new api key. */
     create: {
       name: "Create",
       requestType: ApiKeyServiceCreateRequest,
@@ -756,6 +757,7 @@ export const ApiKeyServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** List existing api keys. */
     list: {
       name: "List",
       requestType: ApiKeyServiceListRequest,
@@ -764,6 +766,7 @@ export const ApiKeyServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Update an existing api key. */
     update: {
       name: "Update",
       requestType: ApiKeyServiceUpdateRequest,
@@ -772,6 +775,7 @@ export const ApiKeyServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Regenerate an existing api key token. */
     regenerate: {
       name: "Regenerate",
       requestType: ApiKeyServiceRegenerateRequest,
@@ -780,6 +784,7 @@ export const ApiKeyServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Delete an existing api key. */
     delete: {
       name: "Delete",
       requestType: ApiKeyServiceDeleteRequest,
@@ -792,22 +797,27 @@ export const ApiKeyServiceDefinition = {
 } as const;
 
 export interface ApiKeyServiceImplementation<CallContextExt = {}> {
+  /** Create a new api key. */
   create(
     request: ApiKeyServiceCreateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<ApiKeyServiceCreateResponse>>;
+  /** List existing api keys. */
   list(
     request: ApiKeyServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<ApiKeyServiceListResponse>>;
+  /** Update an existing api key. */
   update(
     request: ApiKeyServiceUpdateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<ApiKeyServiceUpdateResponse>>;
+  /** Regenerate an existing api key token. */
   regenerate(
     request: ApiKeyServiceRegenerateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<ApiKeyServiceRegenerateResponse>>;
+  /** Delete an existing api key. */
   delete(
     request: ApiKeyServiceDeleteRequest,
     context: CallContext & CallContextExt,
@@ -815,22 +825,27 @@ export interface ApiKeyServiceImplementation<CallContextExt = {}> {
 }
 
 export interface ApiKeyServiceClient<CallOptionsExt = {}> {
+  /** Create a new api key. */
   create(
     request: DeepPartial<ApiKeyServiceCreateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<ApiKeyServiceCreateResponse>;
+  /** List existing api keys. */
   list(
     request: DeepPartial<ApiKeyServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<ApiKeyServiceListResponse>;
+  /** Update an existing api key. */
   update(
     request: DeepPartial<ApiKeyServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<ApiKeyServiceUpdateResponse>;
+  /** Regenerate an existing api key token. */
   regenerate(
     request: DeepPartial<ApiKeyServiceRegenerateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<ApiKeyServiceRegenerateResponse>;
+  /** Delete an existing api key. */
   delete(
     request: DeepPartial<ApiKeyServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,

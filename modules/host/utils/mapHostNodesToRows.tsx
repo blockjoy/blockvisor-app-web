@@ -1,9 +1,7 @@
 import { Button, SvgIcon, TableBlock } from '@shared/components';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
-import {
-  Node,
-  NodeStatus as NodeStatusEnum,
-} from '@modules/grpc/library/blockjoy/v1/node';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import { spacing } from 'styles/utils.spacing.styles';

@@ -4,14 +4,11 @@ import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "blockjoy.v1";
 
-/** This is here for forwards compatibility. */
 export interface DiscoveryServiceServicesRequest {
 }
 
-/** All relevant service URLs */
 export interface DiscoveryServiceServicesResponse {
-  keyServiceUrl: string;
-  /** This is the address of the MQTT server. */
+  /** The address of the MQTT server. */
   notificationUrl: string;
 }
 
@@ -51,16 +48,13 @@ export const DiscoveryServiceServicesRequest = {
 };
 
 function createBaseDiscoveryServiceServicesResponse(): DiscoveryServiceServicesResponse {
-  return { keyServiceUrl: "", notificationUrl: "" };
+  return { notificationUrl: "" };
 }
 
 export const DiscoveryServiceServicesResponse = {
   encode(message: DiscoveryServiceServicesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.keyServiceUrl !== "") {
-      writer.uint32(10).string(message.keyServiceUrl);
-    }
     if (message.notificationUrl !== "") {
-      writer.uint32(26).string(message.notificationUrl);
+      writer.uint32(10).string(message.notificationUrl);
     }
     return writer;
   },
@@ -74,13 +68,6 @@ export const DiscoveryServiceServicesResponse = {
       switch (tag >>> 3) {
         case 1:
           if (tag !== 10) {
-            break;
-          }
-
-          message.keyServiceUrl = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
             break;
           }
 
@@ -101,18 +88,18 @@ export const DiscoveryServiceServicesResponse = {
 
   fromPartial(object: DeepPartial<DiscoveryServiceServicesResponse>): DiscoveryServiceServicesResponse {
     const message = createBaseDiscoveryServiceServicesResponse();
-    message.keyServiceUrl = object.keyServiceUrl ?? "";
     message.notificationUrl = object.notificationUrl ?? "";
     return message;
   },
 };
 
+/** Service discovery endpoints. */
 export type DiscoveryServiceDefinition = typeof DiscoveryServiceDefinition;
 export const DiscoveryServiceDefinition = {
   name: "DiscoveryService",
   fullName: "blockjoy.v1.DiscoveryService",
   methods: {
-    /** Return relevant service URLs */
+    /** List available services. */
     services: {
       name: "Services",
       requestType: DiscoveryServiceServicesRequest,
@@ -125,7 +112,7 @@ export const DiscoveryServiceDefinition = {
 } as const;
 
 export interface DiscoveryServiceImplementation<CallContextExt = {}> {
-  /** Return relevant service URLs */
+  /** List available services. */
   services(
     request: DiscoveryServiceServicesRequest,
     context: CallContext & CallContextExt,
@@ -133,7 +120,7 @@ export interface DiscoveryServiceImplementation<CallContextExt = {}> {
 }
 
 export interface DiscoveryServiceClient<CallOptionsExt = {}> {
-  /** Return relevant service URLs */
+  /** List available services. */
   services(
     request: DeepPartial<DiscoveryServiceServicesRequest>,
     options?: CallOptions & CallOptionsExt,

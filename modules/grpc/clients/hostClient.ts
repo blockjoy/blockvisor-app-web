@@ -15,7 +15,7 @@ import {
   handleError,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { NodeType } from '../library/blockjoy/v1/node';
+import { NodeType } from '../library/blockjoy/common/v1/node';
 import { SearchOperator } from '../library/blockjoy/common/v1/search';
 
 export type HostFilterCriteria = {

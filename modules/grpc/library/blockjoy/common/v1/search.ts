@@ -2,6 +2,7 @@
 
 export const protobufPackage = "blockjoy.common.v1";
 
+/** The search operator type. */
 export enum SearchOperator {
   SEARCH_OPERATOR_UNSPECIFIED = 0,
   SEARCH_OPERATOR_OR = 1,

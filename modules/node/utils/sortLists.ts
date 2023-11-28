@@ -1,5 +1,5 @@
+import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import {
-  BlockchainNetwork,
   BlockchainNodeType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -16,10 +16,10 @@ export const sortVersions = (list: BlockchainVersion[] | undefined) => {
   return result;
 };
 
-export const sortNetworks = (list: BlockchainNetwork[] | undefined) => {
+export const sortNetworks = (list: NetworkConfig[] | undefined) => {
   if (!list) return [];
 
-  const result: BlockchainNetwork[] = sort(list, {
+  const result: NetworkConfig[] = sort(list, {
     order: 'asc',
     field: 'name',
   });

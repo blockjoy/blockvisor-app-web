@@ -1,4 +1,4 @@
-import { NodeStatus } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { getNodeStatusInfo, NodeStatusType } from '@shared/components';
 
 type Props = {
