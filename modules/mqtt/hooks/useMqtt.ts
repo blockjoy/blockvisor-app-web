@@ -74,7 +74,7 @@ export const useMqtt = (): IMqttHook => {
         subscribedChannels.current.length &&
         !arraysEqual(subscribedChannels.current, activeChannels.current)
       ) {
-        mqttClient.unsubscribe(subscribedChannels.current, (err: string) => {
+        mqttClient.unsubscribe(subscribedChannels.current, (err: any) => {
           if (err) {
             console.error(
               `Failed to unsubscribe from ${subscribedChannels.current}: ${err}`,
@@ -105,7 +105,7 @@ export const useMqtt = (): IMqttHook => {
       });
     });
 
-    mqttClient.on('error', (err: string) => {
+    mqttClient.on('error', (err: any) => {
       console.error(`MQTT connection error: ${err}`);
       mqttDisconnect();
       setError(err);
