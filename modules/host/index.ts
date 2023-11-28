@@ -13,6 +13,7 @@ export * from './components/HostWrapper/HostWrapper';
 
 export * from './hooks/useFilters';
 export * from './hooks/useHostList';
+export * from './hooks/useHostSelect';
 export * from './hooks/useHostView';
 export * from './hooks/useHostUpdate';
 

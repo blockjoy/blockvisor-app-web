@@ -34,7 +34,7 @@ import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { usePermissions } from '@modules/auth';
-import { useHostList } from '@modules/host';
+import { useHostList, useHostSelect } from '@modules/host';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -79,6 +79,8 @@ export const NodeLauncher = () => {
   const { defaultOrganization } = useDefaultOrganization();
 
   const { hasPermission } = usePermissions();
+
+  const { hosts, getHosts } = useHostSelect();
 
   const canAddNode = hasPermission('node-create');
 
@@ -298,6 +300,10 @@ export const NodeLauncher = () => {
     Mixpanel.track('Launch Node - Opened');
   }, []);
 
+  useEffect(() => {
+    if (!hosts?.length) getHosts();
+  }, [defaultOrganization?.id]);
+
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
@@ -339,6 +345,7 @@ export const NodeLauncher = () => {
             selectedVersion={selectedVersion!}
             selectedHost={selectedHost}
             canAddNode={canAddNode}
+            hosts={hosts}
             onHostChanged={handleHostChanged}
             onRegionChanged={handleRegionChanged}
             onCreateNodeClicked={handleCreateNodeClicked}

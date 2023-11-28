@@ -1,91 +1,33 @@
-import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import {
-  DropdownMenu,
-  DropdownButton,
-  DropdownItem,
-  Scrollbar,
-  DropdownWrapper,
-} from '@shared/components';
-import { escapeHtml } from '@shared/utils/escapeHtml';
-import { styles } from './HostSelect.styles';
+import { useMemo, useState } from 'react';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { hostSelectors } from '@modules/host';
+import { withSearch, Dropdown } from '@shared/components';
 
 type HostSelectProps = {
+  hosts: Host[];
   selectedHost: Host | null;
   onChange: (host: Host | null) => void;
 };
 
-export const HostSelect = ({ selectedHost, onChange }: HostSelectProps) => {
-  const hosts = useRecoilValue(hostSelectors.hostListSorted);
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const handleClick = () => setIsOpen(!isOpen);
-  const handleChange = (host: Host | null) => {
-    onChange(host);
-    setIsOpen(false);
+export const HostSelect = ({
+  hosts,
+  selectedHost,
+  onChange,
+}: HostSelectProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = (open: boolean) => {
+    setIsOpen(open);
   };
 
+  const HostSelectDropdown = useMemo(() => withSearch<Host>(Dropdown), []);
+
   return (
-    <DropdownWrapper
-      isEmpty={true}
+    <HostSelectDropdown
+      items={hosts}
+      selectedItem={selectedHost}
+      handleSelected={onChange}
+      defaultText="Auto select"
       isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-    >
-      <DropdownButton
-        disabled={!hosts.length}
-        text={
-          <p>{escapeHtml(selectedHost ? selectedHost.name : 'Auto select')}</p>
-        }
-        onClick={handleClick}
-        isOpen={isOpen}
-      />
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          <ul>
-            <li>
-              <DropdownItem
-                additionalStyles={[styles.autoSelect]}
-                onButtonClick={() => handleChange(null)}
-                size="medium"
-                type="button"
-              >
-                <p css={styles.active}>Auto select</p>
-              </DropdownItem>
-            </li>
-            {hosts?.map((host) => {
-              const ipAddressCount = host.ipAddresses.filter(
-                (ip) => !ip.assigned,
-              ).length;
-              const isDisabled = ipAddressCount < 1;
-              return (
-                <li key={host.id}>
-                  <DropdownItem
-                    size="medium"
-                    type="button"
-                    isDisabled={isDisabled}
-                    onButtonClick={() => handleChange(host)}
-                    additionalStyles={[styles.dropdownItem]}
-                  >
-                    <p css={styles.active}>{escapeHtml(host.name!)}</p>
-                    <span
-                      className="alert"
-                      css={[
-                        styles.alert,
-                        isDisabled ? styles.alertDisabled : styles.alertSuccess,
-                      ]}
-                    >
-                      {ipAddressCount} IP{ipAddressCount !== 1 && `'s`}
-                    </span>
-                  </DropdownItem>
-                </li>
-              );
-            })}
-          </ul>
-        </Scrollbar>
-      </DropdownMenu>
-    </DropdownWrapper>
+      handleOpen={handleOpen}
+    />
   );
 };

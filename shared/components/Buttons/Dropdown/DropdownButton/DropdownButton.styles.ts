@@ -52,4 +52,9 @@ export const styles = {
   iconOpen: css`
     transform: rotate(-180deg);
   `,
+  loading: (theme: ITheme) => css`
+    p {
+      color: ${theme.colorLabel};
+    }
+  `,
 };
