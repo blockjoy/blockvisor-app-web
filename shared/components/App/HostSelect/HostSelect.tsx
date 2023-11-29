@@ -67,11 +67,11 @@ export const HostSelect = ({ selectedHost, onChange }: HostSelectProps) => {
                     type="button"
                     isDisabled={isDisabled}
                     onButtonClick={() => handleChange(host)}
-                    additionalStyles={[styles.disabledDropdownItem]}
+                    additionalStyles={[styles.dropdownItem]}
                   >
                     <p css={styles.active}>{escapeHtml(host.name!)}</p>
                     <span
-                      className="disabled-alert"
+                      className="alert"
                       css={[
                         styles.alert,
                         isDisabled ? styles.alertDisabled : styles.alertSuccess,

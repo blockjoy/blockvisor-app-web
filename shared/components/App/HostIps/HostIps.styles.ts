@@ -3,8 +3,9 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (hasMarginBottom: boolean) => css`
     flex: 1 1 auto;
+    ${hasMarginBottom && `margin-bottom: 20px;`}
 
     @media ${breakpoints.toSml} {
       margin-top: 8px;
@@ -42,7 +43,6 @@ export const styles = {
   ipListWrapper: css`
     position: relative;
     overflow: hidden;
-    margin-bottom: 16px;
     will-change: height;
   `,
   ipList: css`
@@ -51,6 +51,10 @@ export const styles = {
     left: 0;
     columns: 2 140px;
     display: inline-block;
+
+    li {
+      line-height: 1.66;
+    }
 
     @media ${breakpoints.fromSml} {
       columns: 2 140px;
@@ -68,21 +72,25 @@ export const styles = {
       columns: 3 140px;
     }
   `,
-  ipListLink: (theme: ITheme) => css`
-    position: relative;
-    color: ${theme.colorText};
-  `,
   ip: css`
     display: flex;
     align-items: center;
     gap: 10px;
-    line-height: 1.66;
   `,
   ipAssigned: css`
-    display: flex;
-    align-items: center;
-    gap: 8px;
     opacity: 0.66;
     text-decoration: line-through;
+  `,
+  ipListLink: (theme: ITheme) => css`
+    position: relative;
+    color: ${theme.colorText};
+    line-height: inherit;
+    opacity: 0.88;
+  `,
+  ipListLinkAssigned: css`
+    :hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
   `,
 };

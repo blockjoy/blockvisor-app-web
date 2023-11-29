@@ -38,7 +38,8 @@ export const AdminList = ({
   getList,
 }: Props) => {
   const router = useRouter();
-  const { search, page } = router.query;
+  const { search, page, org_id } = router.query;
+  const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState<IAdminItem[]>([]);
   const [listTotal, setListTotal] = useState<number>();
   const [total, setTotal] = useState<number>();
@@ -54,6 +55,7 @@ export const AdminList = ({
     const response = await getList(keyword, page);
     setList(response.list);
     setListTotal(response.total);
+    setIsLoading(false);
   };
 
   const handleSearch = async (keyword: string) => {
@@ -99,12 +101,14 @@ export const AdminList = ({
     <article key={name} id={name} css={styles.card}>
       <AdminListHeader
         name={name}
+        isLoading={isLoading}
         icon={icon}
         total={total!}
         onSearch={handleSearch}
       />
       <AdminListTable
         name={name}
+        isLoading={isLoading}
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}

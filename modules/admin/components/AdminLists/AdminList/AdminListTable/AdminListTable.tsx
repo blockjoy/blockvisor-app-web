@@ -8,6 +8,7 @@ import { pageSize } from '@modules/admin/constants/constants';
 
 type Props = {
   name: string;
+  isLoading: boolean;
   columns: AdminListColumn[];
   list: IAdminItem[];
   listTotal?: number;
@@ -19,6 +20,7 @@ type Props = {
 export const AdminListTable = ({
   name,
   columns,
+  isLoading,
   list,
   listTotal,
   listPage,
@@ -26,6 +28,8 @@ export const AdminListTable = ({
   onPageChanged,
 }: Props) => {
   const router = useRouter();
+
+  const { search, page } = router.query;
 
   const pageCount = Math.ceil(listTotal! / pageSize);
 
@@ -35,11 +39,13 @@ export const AdminListTable = ({
       query: {
         name: name.toLowerCase(),
         id,
+        search,
+        page,
       },
     });
   };
 
-  if (listTotal === undefined) return <TableSkeleton />;
+  if (isLoading) return <TableSkeleton />;
 
   if (listTotal === 0) return <p>No {name} found.</p>;
 
@@ -88,7 +94,7 @@ export const AdminListTable = ({
       </div>
       <AdminListPagination
         listPage={listPage}
-        totalRowCount={listTotal}
+        totalRowCount={listTotal!}
         pageCount={pageCount}
         onPageChanged={onPageChanged}
       />

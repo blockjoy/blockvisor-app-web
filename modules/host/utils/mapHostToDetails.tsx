@@ -16,9 +16,13 @@ export const mapHostToDetails = (host: Host) => {
     { label: 'IP Address', data: host?.ip || '-' },
     { label: 'Gateway IP', data: host?.ipGateway || '-' },
     {
+      label: `Available IP's`,
+      data: host?.ipAddresses.filter((ip) => !ip.assigned).length,
+    },
+    {
       label: 'IP Addresses',
       data: host.ipAddresses?.length ? (
-        <HostIps ipAddresses={host.ipAddresses} />
+        <HostIps ipAddresses={host.ipAddresses} orgId={host.orgId} />
       ) : (
         '-'
       ),
@@ -43,10 +47,6 @@ export const mapHostToDetails = (host: Host) => {
     details.unshift({
       label: 'Nodes',
       data: host.nodeCount,
-    });
-    details.splice(5, 0, {
-      label: `Available IP's`,
-      data: host?.ipAddresses.filter((ip) => !ip.assigned).length,
     });
   }
 

@@ -39,9 +39,14 @@ export const AdminHost = () => {
       data: formatters.formatSize(host.diskSizeBytes, 'bytes'),
     },
     {
+      id: 'availableIps',
+      label: `Available Ip's`,
+      data: host?.ipAddresses.filter((ip) => !ip.assigned).length,
+    },
+    {
       id: 'ipAddresses',
       label: 'Ip Addresses',
-      data: <HostIps ipAddresses={host.ipAddresses} />,
+      data: <HostIps ipAddresses={host.ipAddresses} orgId={host.orgId} />,
     },
   ];
 

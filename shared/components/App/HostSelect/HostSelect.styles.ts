@@ -26,14 +26,11 @@ export const styles = {
   autoSelect: (theme: ITheme) => css`
     border-bottom: 1px solid ${theme.colorBorderGrey};
   `,
-  disabledDropdownItem: css`
+  dropdownItem: css`
     gap: 20px;
+    padding: 8px 10px;
 
-    .disabled-alert {
-      opacity: 0;
-    }
-
-    :hover .disabled-alert {
+    :hover .alert {
       opacity: 1;
     }
   `,
@@ -44,6 +41,7 @@ export const styles = {
     border-radius: 3px;
     display: flex;
     align-items: center;
+    opacity: 0;
 
     &::before {
       content: '';
@@ -53,7 +51,6 @@ export const styles = {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: ${theme.colorDanger};
       transform: translateY(-50%);
     }
   `,

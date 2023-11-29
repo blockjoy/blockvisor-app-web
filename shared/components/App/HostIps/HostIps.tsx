@@ -3,25 +3,22 @@ import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { styles } from './HostIps.styles';
 import Link from 'next/link';
-import { NextLink } from '@shared/components/Buttons';
 
 type Props = {
   ipAddresses: HostIpAddress[];
+  orgId: string;
 };
-
-const listTypes = ['all', 'available', 'assigned'];
 
 type ListType = 'all' | 'available' | 'assigned';
 
-export const HostIps = ({ ipAddresses }: Props) => {
+export const HostIps = ({ ipAddresses, orgId }: Props) => {
   const listRef = useRef<HTMLOListElement>(null);
 
   const { isSuperUser } = usePermissions();
 
   const [listHeight, setListHeight] = useState(0);
-
+  const [listTypes, setListTypes] = useState<ListType[]>([]);
   const [isTransitionEnabled, setIsTransitionEnabled] = useState(false);
-
   const [ipListType, setIpListType] = useState<ListType>('all');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +38,6 @@ export const HostIps = ({ ipAddresses }: Props) => {
 
   const getSortedIps = (ips: HostIpAddress[]) => {
     const ipsCopy = [...ips];
-
     const sortedIps = ipsCopy.sort((a, b) => {
       const num1 = Number(
         a.ip
@@ -74,11 +70,20 @@ export const HostIps = ({ ipAddresses }: Props) => {
     }
   }, [ipListType]);
 
+  useEffect(() => {
+    if (
+      !ipAddresses.every((ip) => ip.assigned) &&
+      !ipAddresses.every((ip) => !ip.assigned)
+    ) {
+      setListTypes(['all', 'available', 'assigned']);
+    }
+  }, [ipAddresses?.length]);
+
   if (!ipAddresses?.length) return <>-</>;
 
   return (
-    <div css={styles.wrapper}>
-      {isSuperUser && (
+    <div css={styles.wrapper(sortedIps.length > 3)}>
+      {listTypes?.length > 1 && (
         <ul css={styles.listPicker}>
           {listTypes.map((type) => (
             <li key={type}>
@@ -109,25 +114,36 @@ export const HostIps = ({ ipAddresses }: Props) => {
             position: isTransitionEnabled ? 'absolute' : 'static',
           }}
         >
-          {sortedIps?.length
-            ? sortedIps.map(({ ip, assigned }) => (
-                <li
-                  key={ip}
-                  css={[
-                    styles.ip,
-                    ipListType === 'all' && assigned && styles.ipAssigned,
-                  ]}
-                >
-                  {isSuperUser && ipListType === 'assigned' ? (
-                    <NextLink href={`/admin?name=nodes&page=0&search=${ip}`}>
-                      {ip}
-                    </NextLink>
-                  ) : (
-                    ip
-                  )}
-                </li>
-              ))
-            : `None`}
+          {sortedIps?.length ? (
+            sortedIps.map(({ ip, assigned }) => (
+              <li key={ip} css={styles.ip}>
+                {ipListType !== 'available' && assigned ? (
+                  <>
+                    {isSuperUser ? (
+                      <Link
+                        css={[
+                          styles.ipListLink,
+                          styles.ipListLinkAssigned,
+                          ipListType === 'all' && styles.ipAssigned,
+                        ]}
+                        href={`/admin?name=nodes&page=0&ip=${ip}`}
+                      >
+                        {ip}
+                      </Link>
+                    ) : (
+                      <p css={ipListType === 'all' && styles.ipAssigned}>
+                        {ip}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  ip
+                )}
+              </li>
+            ))
+          ) : (
+            <li>None</li>
+          )}
         </ol>
       </div>
     </div>
