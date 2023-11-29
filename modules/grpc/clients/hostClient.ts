@@ -105,14 +105,11 @@ class HostClient {
       hostType: HostType.HOST_TYPE_CLOUD,
     };
 
-    console.log('getRegionsRequest', request);
-
     try {
       const response = await callWithTokenRefresh(
         this.client.regions.bind(this.client),
         request,
       );
-      console.log('getRegionsResponse', response);
       return response.regions!;
     } catch (err) {
       return handleError(err);

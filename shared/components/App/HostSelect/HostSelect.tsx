@@ -4,12 +4,14 @@ import { withSearch, Dropdown } from '@shared/components';
 
 type HostSelectProps = {
   hosts: Host[];
+  isLoading: boolean;
   selectedHost: Host | null;
   onChange: (host: Host | null) => void;
 };
 
 export const HostSelect = ({
   hosts,
+  isLoading,
   selectedHost,
   onChange,
 }: HostSelectProps) => {
@@ -18,7 +20,7 @@ export const HostSelect = ({
     setIsOpen(open);
   };
 
-  const HostSelectDropdown = useMemo(() => withSearch<Host>(Dropdown), []);
+  const HostSelectDropdown = useMemo(() => withSearch<Host>(Dropdown), [hosts]);
 
   return (
     <HostSelectDropdown
@@ -28,6 +30,7 @@ export const HostSelect = ({
       defaultText="Auto select"
       isOpen={isOpen}
       handleOpen={handleOpen}
+      isLoading={isLoading}
     />
   );
 };
