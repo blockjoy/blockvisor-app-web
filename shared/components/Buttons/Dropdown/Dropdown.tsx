@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useRef } from 'react';
 import { styles } from './Dropdown.styles';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -6,6 +6,7 @@ import { DropdownItem, DropdownWrapper, Scrollbar } from '@shared/components';
 import { DropdownButton } from './DropdownButton/DropdownButton';
 import { DropdownMenu } from './DropdownMenu/DropdownMenu';
 import { colors } from 'styles/utils.colors.styles';
+import { useEscapeKey } from '@shared/hooks/useEscapeKey';
 
 export type DropdownProps<T = any> = {
   items: T[];
@@ -37,18 +38,22 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   handleOpen,
 }: DropdownProps<T>) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  useClickOutside<HTMLDivElement>(dropdownRef, () => handleOpen(false));
+
+  const handleClose = () => handleOpen(false);
+
+  useClickOutside<HTMLDivElement>(dropdownRef, handleClose);
+  useEscapeKey(handleClose);
 
   const handleSelect = (item: T) => {
     handleSelected(item);
-    handleOpen(false);
+    handleClose();
   };
 
   return (
     <DropdownWrapper
       isEmpty={isEmpty}
       isOpen={isOpen}
-      onClose={() => handleOpen(false)}
+      onClose={handleClose}
       {...(noBottomMargin && { noBottomMargin })}
     >
       <DropdownButton

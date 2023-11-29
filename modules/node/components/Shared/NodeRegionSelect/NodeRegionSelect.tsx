@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Dropdown } from '@shared/components';
-import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useDefaultOrganization } from '@modules/organization';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { useGetRegions } from '@modules/node/hooks/useGetRegions';
 
 type Props = {
   onChange: (region: Region | null) => void;
@@ -24,46 +24,26 @@ export const NodeRegionSelect = ({
   version,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [serverError, setServerError] = useState('');
-  const [regions, setRegions] = useState<Region[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { defaultOrganization } = useDefaultOrganization();
 
   const handleOpen = (open: boolean) => {
     setIsOpen(open);
   };
 
-  useEffect(() => {
-    if (version?.id) {
-      setServerError('');
-      (async () => {
-        try {
-          setIsLoading(true);
-          const regions: Region[] = await hostClient.getRegions(
-            defaultOrganization?.id!,
-            blockchainId,
-            nodeType,
-            version.version,
-          );
-          setRegions(regions);
+  const { regions, isLoading, error, getRegions } = useGetRegions();
 
-          if (!regions.length) {
-            setServerError('Region List Empty');
-            return;
-          }
-          onLoad(regions[0]);
-        } catch (err) {
-          console.log('getRegionsError', err);
-          setServerError('Error Loading Regions');
-          onLoad(null);
-        } finally {
-          setIsLoading(false);
-        }
+  useEffect(() => {
+    if (version?.id && defaultOrganization?.id) {
+      (async () => {
+        await getRegions(version, blockchainId, nodeType);
       })();
-    } else {
-      setRegions([]);
     }
-  }, [version?.id]);
+  }, [version?.id, defaultOrganization?.id]);
+
+  useEffect(() => {
+    const activeRegion = regions.length ? regions[0] : null;
+    onLoad(activeRegion);
+  }, [regions]);
 
   return (
     <Dropdown
@@ -71,8 +51,8 @@ export const NodeRegionSelect = ({
       handleSelected={onChange}
       selectedItem={region}
       isLoading={isLoading}
-      disabled={!!serverError}
-      {...(serverError && { error: serverError })}
+      disabled={!!error}
+      {...(error && { error })}
       isOpen={isOpen}
       handleOpen={handleOpen}
     />

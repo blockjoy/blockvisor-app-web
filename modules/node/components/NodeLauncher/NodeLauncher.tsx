@@ -80,7 +80,7 @@ export const NodeLauncher = () => {
 
   const { hasPermission } = usePermissions();
 
-  const { hosts, getHosts } = useHostSelect();
+  const { hosts, isLoading: isLoadingHosts, getHosts } = useHostSelect();
 
   const canAddNode = hasPermission('node-create');
 
@@ -301,7 +301,7 @@ export const NodeLauncher = () => {
   }, []);
 
   useEffect(() => {
-    if (!hosts?.length) getHosts();
+    getHosts();
   }, [defaultOrganization?.id]);
 
   return (
@@ -346,6 +346,7 @@ export const NodeLauncher = () => {
             selectedHost={selectedHost}
             canAddNode={canAddNode}
             hosts={hosts}
+            isLoadingHosts={isLoadingHosts}
             onHostChanged={handleHostChanged}
             onRegionChanged={handleRegionChanged}
             onCreateNodeClicked={handleCreateNodeClicked}
