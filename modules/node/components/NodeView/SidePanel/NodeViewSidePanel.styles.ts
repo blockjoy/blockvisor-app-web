@@ -1,10 +1,15 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
   form: (theme: ITheme) => css`
     border-bottom: 1px solid ${theme.colorBorder};
     margin-bottom: 6px;
+
+    @media ${breakpoints.toXHuge} {
+      display: none;
+    }
   `,
   formHeader: (theme: ITheme) => css`
     color: ${theme.colorDefault};

@@ -1,5 +1,5 @@
 import { styles } from './AdminDetailTable.styles';
-import { Copy } from '@shared/components';
+import { Copy, TableSkeleton } from '@shared/components';
 
 export type AdminDetailProperty = {
   id: string;
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export const AdminDetailTable = ({ item, properties }: Props) => {
-  if (!item) return null;
+  if (!item) return <TableSkeleton />;
 
   return (
     <table css={styles.table}>
@@ -24,7 +24,7 @@ export const AdminDetailTable = ({ item, properties }: Props) => {
             <tr key={property.id || property.label}>
               <th>{property.label}</th>
               <td>
-                {property.data || '-'}{' '}
+                {property.data ?? '-'}{' '}
                 {property.copyValue && (
                   <span className="copy-button" css={styles.copyButton}>
                     <Copy value={property.copyValue} hideTooltip />

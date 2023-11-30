@@ -5,17 +5,20 @@ import { ITheme } from 'types/theme';
 export const styles = {
   table: (theme: ITheme) => css`
     margin: 0 0 60px;
+    border-collapse: collapse;
 
     tr:hover .copy-button {
       opacity: 1;
       visibility: visible;
     }
 
+    tr {
+      border-bottom: 1px solid ${theme.colorBorder};
+    }
+
     th,
     td {
-      padding: 16px 10px 16px 0;
-      border-bottom: 1px solid ${theme.colorBorder};
-      vertical-align: middle;
+      padding: 20px 10px 20px 0;
     }
 
     th {
@@ -25,11 +28,16 @@ export const styles = {
       width: 200px;
       max-width: 200px;
       font-size: 14px;
+      vertical-align: top;
+    }
+
+    td {
+      vertical-align: middle;
     }
 
     th,
     p {
-      line-height: 1.66;
+      line-height: 30px;
     }
 
     p {
@@ -64,7 +72,6 @@ export const styles = {
       th,
       td {
         min-height: 68px;
-        height: 68px;
       }
     }
   `,
@@ -74,11 +81,6 @@ export const styles = {
     transition: 0.3s;
 
     @media ${breakpoints.toXlrg} {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    @media ${breakpoints.toSml} {
       display: none;
     }
   `,

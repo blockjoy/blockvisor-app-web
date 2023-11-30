@@ -128,6 +128,8 @@ const getIcon = (statusName: string) => {
         return <IconRunning />;
       case 'SYNCING':
         return <IconSyncing />;
+      case 'UPDATING':
+        return <IconProcessing />;
       default:
         return <IconUnspecified />;
     }

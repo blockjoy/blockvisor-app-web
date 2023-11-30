@@ -5,9 +5,6 @@ import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 
 export const NodeViewTabs = () => {
-  const router = useRouter();
-
-  console.log(router);
   const { query, asPath } = useRouter();
   const { id } = query;
 
@@ -18,6 +15,7 @@ export const NodeViewTabs = () => {
     { href: createPath(''), name: 'Details' },
     { href: createPath('settings'), name: 'Settings' },
     { href: createPath('jobs'), name: 'Jobs' },
+    { href: createPath('metrics'), name: 'Metrics', className: 'metrics' },
   ];
 
   const isActive = (href: string) => {
@@ -49,6 +47,7 @@ export const NodeViewTabs = () => {
                 styles.tabButton,
                 isActive(tab.href) && styles.tabButtonActive,
               ]}
+              className={tab.className}
             >
               {tab.name}
             </NextLink>

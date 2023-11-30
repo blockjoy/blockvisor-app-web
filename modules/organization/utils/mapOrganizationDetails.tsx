@@ -1,9 +1,8 @@
-import Link from 'next/link';
 import { ReactNode } from 'react';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { ROUTES } from '@shared/constants/routes';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { sort, SvgIcon } from '@shared/components';
+import { NextLink, sort, SvgIcon } from '@shared/components';
 import IconInfo from '@public/assets/icons/common/Info.svg';
 import { display } from 'styles/utils.display.styles';
 import { flex } from 'styles/utils.flex.styles';
@@ -24,7 +23,7 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
     { label: 'MEMBERS', data: org?.memberCount },
     {
       label: 'NODES',
-      data: <Link href={ROUTES.NODES}>{org.nodeCount}</Link>,
+      data: <NextLink href={ROUTES.NODES}>{org.nodeCount}</NextLink>,
     },
   ];
 

@@ -55,17 +55,34 @@ export const HostSelect = ({ selectedHost, onChange }: HostSelectProps) => {
                 <p css={styles.active}>Auto select</p>
               </DropdownItem>
             </li>
-            {hosts?.map((host) => (
-              <li key={host.id}>
-                <DropdownItem
-                  size="medium"
-                  type="button"
-                  onButtonClick={() => handleChange(host)}
-                >
-                  <p css={styles.active}>{escapeHtml(host.name!)}</p>
-                </DropdownItem>
-              </li>
-            ))}
+            {hosts?.map((host) => {
+              const ipAddressCount = host.ipAddresses.filter(
+                (ip) => !ip.assigned,
+              ).length;
+              const isDisabled = ipAddressCount < 1;
+              return (
+                <li key={host.id}>
+                  <DropdownItem
+                    size="medium"
+                    type="button"
+                    isDisabled={isDisabled}
+                    onButtonClick={() => handleChange(host)}
+                    additionalStyles={[styles.dropdownItem]}
+                  >
+                    <p css={styles.active}>{escapeHtml(host.name!)}</p>
+                    <span
+                      className="alert"
+                      css={[
+                        styles.alert,
+                        isDisabled ? styles.alertDisabled : styles.alertSuccess,
+                      ]}
+                    >
+                      {ipAddressCount} IP's
+                    </span>
+                  </DropdownItem>
+                </li>
+              );
+            })}
           </ul>
         </Scrollbar>
       </DropdownMenu>

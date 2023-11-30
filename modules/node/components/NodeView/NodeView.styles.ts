@@ -40,6 +40,10 @@ export const styles = {
       width: 100%;
       min-width: 100%;
     }
+
+    @media ${breakpoints.toXHuge} {
+      display: none;
+    }
   `,
   loader: css`
     padding: 35px 0 0;

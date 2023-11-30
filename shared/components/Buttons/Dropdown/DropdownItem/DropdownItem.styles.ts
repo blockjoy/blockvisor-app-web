@@ -24,6 +24,14 @@ export const styles = {
       min-width: 100%;
       cursor: pointer;
 
+      :disabled {
+        cursor: not-allowed;
+      }
+
+      :disabled p {
+        opacity: 0.45;
+      }
+
       &,
       &:visited {
         color: ${theme.colorTextGrey};
@@ -36,9 +44,7 @@ export const styles = {
         pointer-events: none;
       }
 
-      &:hover,
-      &:active,
-      &:focus {
+      :is(:hover, :active, :focus) {
         text-decoration: none;
         background-color: rgb(255 255 255 / 10%);
 
@@ -55,5 +61,13 @@ export const styles = {
   `,
   large: css`
     padding: 16px 12px;
+  `,
+  isDisabledMessage: (theme: ITheme) => css`
+    color: ${theme.colorDanger};
+    border: 1px solid ${theme.colorDanger};
+    border-radius: 12px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    font-size: 12px;
   `,
 };

@@ -113,6 +113,11 @@ const filtersSpace = atom<[number, number]>({
   ],
 });
 
+const hostIpListType = atom<'all' | 'available' | 'assigned'>({
+  key: 'host.ipListType',
+  default: 'all',
+});
+
 export const hostAtoms = {
   defaultHost,
 
@@ -121,6 +126,7 @@ export const hostAtoms = {
 
   hostList,
   hostCount,
+  hostIpListType,
   isLoading,
 
   activeListType,

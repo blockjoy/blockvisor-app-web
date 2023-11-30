@@ -76,11 +76,14 @@ class HostClient {
   }
 
   async getHost(id: string): Promise<Host> {
+    const request = { id };
+    console.log('getHostRequest', request);
     try {
       const response = await callWithTokenRefresh(
         this.client.get.bind(this.client),
-        { id },
+        request,
       );
+      console.log('getHostResponse', response);
       return response.host!;
     } catch (err) {
       return handleError(err);

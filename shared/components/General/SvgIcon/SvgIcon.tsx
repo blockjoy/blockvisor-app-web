@@ -11,16 +11,20 @@ type Props = {
     | undefined;
   size?: string;
   tooltip?: string;
+  tooltipMinWidth?: string;
+  tooltipTextAlign?: string;
   isDefaultColor?: boolean;
 };
 
-export const SvgIcon: React.FC<Props> = ({
+export const SvgIcon = ({
   children,
   size = '16px',
   tooltip,
+  tooltipMinWidth = '180px',
+  tooltipTextAlign = 'left',
   additionalStyles,
   isDefaultColor,
-}) => {
+}: Props) => {
   const SvgIconComponent = () => (
     <span
       css={[
@@ -28,7 +32,14 @@ export const SvgIcon: React.FC<Props> = ({
         isDefaultColor && styles.iconDefault,
         additionalStyles ?? '',
       ]}
-      style={{ width: size, minWidth: size, height: size, minHeight: size }}
+      style={{
+        width: size,
+        minWidth: size,
+        maxWidth: size,
+        height: size,
+        minHeight: size,
+        maxHeight: size,
+      }}
     >
       {children}
     </span>
@@ -41,10 +52,11 @@ export const SvgIcon: React.FC<Props> = ({
         <Tooltip
           customCss={[
             css`
-              min-width: 180px;
               max-width: 180px;
+              min-width: ${tooltipMinWidth};
             `,
           ]}
+          left="50%"
           bottom={`calc(${size} + 10px)`}
           tooltip={tooltip}
         />

@@ -12,6 +12,7 @@ import {
 } from './AdminDetailTable/AdminDetailTable';
 import { formatters } from '@shared/utils/formatters';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
+import { nodeClient } from '@modules/grpc';
 
 export type AdminDetailItem = Node & User & Host & Org;
 
@@ -33,7 +34,7 @@ export const AdminDetail = ({
   onOpenInApp,
 }: Props) => {
   const router = useRouter();
-  const { name } = router.query;
+  const { name, ip, org_id } = router.query;
   const [error, setError] = useState('');
   const [item, setItem] = useState<any>();
 
@@ -69,8 +70,25 @@ export const AdminDetail = ({
   useEffect(() => {
     (async () => {
       try {
-        const item = await getItem();
-        setItem(item);
+        if (ip && org_id) {
+          const nodeResults = await nodeClient.listNodes(
+            org_id as string,
+            {
+              keyword: ip as string,
+            },
+            {
+              current_page: 0,
+              items_per_page: 1,
+            },
+          );
+          console.log('nodeResults', nodeResults);
+          const item = await nodeClient.getNode(nodeResults.nodes[0].id);
+          setItem(item);
+          console.log('item', item);
+        } else {
+          const item = await getItem();
+          setItem(item);
+        }
       } catch (err) {
         setItem({});
         setError(`${capitalized(name as string)} not found`);

@@ -14,6 +14,8 @@ export const styles = {
   `,
   iconTooltip: css`
     position: relative;
+    display: block;
+
     :hover .tooltip {
       opacity: 1;
       visibility: visible;

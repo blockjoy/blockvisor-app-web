@@ -10,7 +10,6 @@ const columns = [
   {
     name: 'name',
     width: '230px',
-    canCopy: true,
   },
   {
     name: 'created',
