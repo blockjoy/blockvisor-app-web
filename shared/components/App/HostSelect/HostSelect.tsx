@@ -77,7 +77,7 @@ export const HostSelect = ({ selectedHost, onChange }: HostSelectProps) => {
                         isDisabled ? styles.alertDisabled : styles.alertSuccess,
                       ]}
                     >
-                      {ipAddressCount} IP's
+                      {ipAddressCount} IP{ipAddressCount !== 1 && 's'}
                     </span>
                   </DropdownItem>
                 </li>
