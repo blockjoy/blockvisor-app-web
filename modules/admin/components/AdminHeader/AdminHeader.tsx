@@ -11,10 +11,17 @@ type Props = {
 export const AdminHeader = ({ icon, name, children }: Props) => {
   const router = useRouter();
 
-  const { id } = router.query;
+  const { id, ip, search, page } = router.query;
 
   const handleTitleClicked = () => {
-    router.back();
+    router.push({
+      pathname: `admin`,
+      query: {
+        name,
+        search,
+        page,
+      },
+    });
   };
 
   return (
@@ -23,8 +30,8 @@ export const AdminHeader = ({ icon, name, children }: Props) => {
         <SvgIcon size="16px">{icon}</SvgIcon>
       </span>
       <h2
-        onClick={() => (id ? handleTitleClicked() : null)}
-        css={[styles.cardTitle, id && styles.cardTitleClickable]}
+        onClick={() => (id || ip ? handleTitleClicked() : null)}
+        css={[styles.cardTitle, (id || ip) && styles.cardTitleClickable]}
       >
         {name}
       </h2>

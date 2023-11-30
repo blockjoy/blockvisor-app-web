@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import { Toast } from './toast/Toast';
 import { useIdentityRepository } from '@modules/auth';
 import {
   useDefaultOrganization,
@@ -72,7 +71,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       </Head>
       <Burger />
       <Sidebar />
-      <Toast />
       <MqttUIProvider>
         {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
       </MqttUIProvider>

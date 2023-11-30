@@ -3,14 +3,11 @@ import { AdminUsers } from './AdminUsers/AdminUsers';
 import { AdminHosts } from './AdminHosts/AdminHosts';
 import { AdminOrgs } from './AdminOrgs/AdminOrgs';
 import { styles } from './AdminLists.styles';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { User } from '@modules/grpc/library/blockjoy/v1/user';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRouter } from 'next/router';
+import { AdminDetailItem } from '../AdminDetails/AdminDetail/AdminDetail';
 
 export type AdminGetList = {
-  list: Node[] | User[] | Host[] | Org[];
+  list: AdminDetailItem[];
   total: number;
 };
 

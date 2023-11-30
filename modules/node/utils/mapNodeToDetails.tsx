@@ -1,12 +1,12 @@
 import {
-  Node,
-  NodeProperty,
   NodeType,
   UiType,
-} from '@modules/grpc/library/blockjoy/v1/node';
+} from '@modules/grpc/library/blockjoy/common/v1/node';
+import { Node, NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { Copy } from '@shared/components';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { LockedSwitch, NodeTypeConfigLabel } from '../components/Shared';
+import { LockedSwitch } from '../components/Shared';
+import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
 
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
@@ -39,7 +39,12 @@ export const mapNodeToDetails = (node: Node) => {
       data:
         (
           <>
-            <a target="_blank" rel="noopener noreferrer" href={nodeUrl}>
+            <a
+              css={styles.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              href={nodeUrl}
+            >
               {nodeUrl}
             </a>
             <Copy value={nodeUrl} />

@@ -27,7 +27,7 @@ export const styles = {
     padding-top: 14px;
   `,
   cardOnlyShowOnMobile: css`
-    @media ${breakpoints.fromXLrg} {
+    @media ${breakpoints.fromXHuge} {
       display: none;
     }
   `,

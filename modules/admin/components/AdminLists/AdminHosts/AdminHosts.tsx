@@ -8,7 +8,7 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 const columns = [
   {
     name: 'name',
-    width: '230px',
+    width: '280px',
   },
   {
     name: 'created',

@@ -9,23 +9,43 @@ export const styles = {
     align-items: center;
     gap: 16px;
   `,
+  name: css`
+    max-width: 96px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 20px;
+  `,
   separator: (theme: ITheme) => css`
-    margin-left: 20px;
     color: ${theme.colorBorderGrey};
 
-    @media ${breakpoints.toXlrg} {
-      display: none;
+    @media ${breakpoints.fromSml} {
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  `,
+  buttons: (theme: ITheme) => css`
+    display: flex;
+    gap: 16px;
+
+    @media ${breakpoints.toSml} {
+      border-top: 1px solid ${theme.colorBorder};
+      width: 100%;
+      padding-top: 10px;
     }
   `,
   button: (theme: ITheme) => css`
     border: 1px solid ${theme.colorBorderGrey};
     border-radius: 4px;
     background: transparent;
+    white-space: nowrap;
     color: ${theme.colorText};
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 14px;
-    padding: 0 12px;
-    height: 44px;
-    margin-left: 10px;
+    padding: 0 16px;
+    height: 40px;
     opacity: 0.8;
     cursor: pointer;
     transition: 0.3s;

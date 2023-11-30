@@ -6,15 +6,22 @@ import { AdminSearch } from '@modules/admin/components/AdminSearch/AdminSearch';
 type Props = {
   icon: React.ReactNode;
   name: string;
+  isLoading: boolean;
   total: number;
   onSearch: (search: string) => void;
 };
 
-export const AdminListHeader = ({ name, icon, total, onSearch }: Props) => {
+export const AdminListHeader = ({
+  name,
+  isLoading,
+  icon,
+  total,
+  onSearch,
+}: Props) => {
   return (
     <AdminHeader icon={icon} name={name}>
       <>
-        {total > -1 ? (
+        {!isLoading ? (
           <>
             <div css={styles.total}>
               <var css={[styles.totalValue]}>{total}</var>

@@ -15,7 +15,7 @@ import {
   handleError,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { NodeType } from '../library/blockjoy/v1/node';
+import { NodeType } from '../library/blockjoy/common/v1/node';
 import { SearchOperator } from '../library/blockjoy/common/v1/search';
 
 export type HostFilterCriteria = {
@@ -76,11 +76,14 @@ class HostClient {
   }
 
   async getHost(id: string): Promise<Host> {
+    const request = { id };
+    console.log('getHostRequest', request);
     try {
       const response = await callWithTokenRefresh(
         this.client.get.bind(this.client),
-        { id },
+        request,
       );
+      console.log('getHostResponse', response);
       return response.host!;
     } catch (err) {
       return handleError(err);

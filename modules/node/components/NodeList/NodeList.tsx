@@ -37,14 +37,23 @@ export const NodeList = () => {
 
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
 
-  const handleNodeClicked = (nodeId: string) =>
+  const handleNodeClicked = (nodeId: string) => {
+    nodeUIProps.setQueryParams({
+      ...nodeUIProps.queryParams,
+      pagination: {
+        ...nodeUIProps.queryParams.pagination,
+      },
+    });
+
     router.push(ROUTES.NODE(nodeId));
+  };
 
   const hasMoreNodes =
+    nodeCount !== nodeList?.length &&
     nodeUIContext.queryParams.pagination.current_page *
       nodeUIContext.queryParams.pagination.items_per_page +
       nodeUIContext.queryParams.pagination.items_per_page <
-    nodeCount;
+      nodeCount;
 
   const activeListType = useRecoilValue(nodeAtoms.activeListType);
 
@@ -57,12 +66,6 @@ export const NodeList = () => {
     }
   }, [nodeUIProps.queryParams]);
 
-  useEffect(() => {
-    if (router.isReady) {
-      loadNodes(nodeUIProps.queryParams, false);
-    }
-  }, [router.isReady]);
-
   const updateQueryParams = () => {
     const newCurrentPage = nodeUIProps.queryParams.pagination.current_page + 1;
     const newQueryParams = {
@@ -71,6 +74,7 @@ export const NodeList = () => {
       pagination: {
         ...nodeUIProps.queryParams.pagination,
         current_page: newCurrentPage,
+        scrollPosition: window.scrollY,
       },
     };
 
@@ -93,7 +97,7 @@ export const NodeList = () => {
         <NodeFilters isLoading={isLoading} />
         <div css={styles.nodeListWrapper}>
           <NodeListHeader />
-          {isLoading === 'initializing' && nodeList === undefined ? (
+          {isLoading === 'initializing' ? (
             <TableSkeleton />
           ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
             <EmptyColumn

@@ -21,10 +21,11 @@ const views = [
 
 export const AdminDetails = () => {
   const router = useRouter();
-  const { name, id } = router.query;
+  const { name, id, ip } = router.query;
   return (
     <div css={styles.wrapper}>
-      {(id && views.find((v) => v.name === (name as string))?.component) || (
+      {((id || ip) &&
+        views.find((v) => v.name === (name as string))?.component) || (
         <>Not Found</>
       )}
     </div>

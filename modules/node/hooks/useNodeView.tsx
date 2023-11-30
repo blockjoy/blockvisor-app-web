@@ -62,7 +62,7 @@ export const useNodeView = (): Hook => {
 
     try {
       const nodeId = convertRouteParamToString(id);
-      const node: any = await nodeClient.getNode(nodeId);
+      const node = await nodeClient.getNode(nodeId);
       setNode(node);
       setIsLoading('finished');
     } catch (err) {

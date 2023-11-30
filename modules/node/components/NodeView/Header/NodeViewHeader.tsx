@@ -12,6 +12,7 @@ import { BlockchainIcon } from '@shared/components';
 import {
   NodeViewReportProblem,
   useNodeDelete,
+  useNodeList,
   useNodeView,
 } from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
@@ -22,10 +23,15 @@ import { toast } from 'react-toastify';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
+import { useGetOrganizations } from '@modules/organization';
+import { useHostList } from '@modules/host';
 
 export const NodeViewHeader = () => {
   const router = useRouter();
   const { node, isLoading } = useNodeView();
+  const { getOrganizations } = useGetOrganizations();
+  const { removeFromNodeList } = useNodeList();
+  const { loadHosts } = useHostList();
   const { deleteNode } = useNodeDelete();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [isReportProblemMode, setIsReportProblemMode] = useState(false);
@@ -37,10 +43,13 @@ export const NodeViewHeader = () => {
     setIsReportProblemMode(!isReportProblemMode);
 
   const handleDeleteNode = () => {
-    deleteNode(node!.id, node!.hostId, () => {
-      router.push(ROUTES.NODES);
+    deleteNode(node!.id, () => {
+      loadHosts();
+      getOrganizations();
+      removeFromNodeList(node!.id);
       toggleDeleteModalOpen();
       toast.success('Node Deleted');
+      router.push(ROUTES.NODES);
     });
   };
 

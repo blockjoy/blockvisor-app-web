@@ -17,6 +17,7 @@ type DropdownItemProps = {
     | ((theme: ITheme) => SerializedStyles)[]
     | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
+  isDisabled?: boolean;
 };
 export const DropdownItem = ({
   href,
@@ -26,6 +27,7 @@ export const DropdownItem = ({
   onButtonClick,
   additionalStyles,
   type = 'plain',
+  isDisabled,
 }: DropdownItemProps) => {
   switch (type) {
     case 'link':
@@ -49,6 +51,7 @@ export const DropdownItem = ({
         <button
           id={id}
           onClick={onButtonClick}
+          disabled={isDisabled}
           css={[
             reset.button,
             typo.tiny,

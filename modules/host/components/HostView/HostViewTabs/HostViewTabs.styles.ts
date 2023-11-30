@@ -17,6 +17,12 @@ export const styles = {
     height: 56px;
     border-bottom: 1px solid ${theme.colorBorder};
 
+    @media ${breakpoints.fromXHuge} {
+      .metrics {
+        display: none;
+      }
+    }
+
     @media ${breakpoints.fromXLrg} {
       margin-right: 24px;
     }
@@ -37,7 +43,7 @@ export const styles = {
     margin-left: auto;
     width: 400px;
 
-    @media ${breakpoints.toXlrg} {
+    @media ${breakpoints.toXHuge} {
       display: none;
     }
   `,

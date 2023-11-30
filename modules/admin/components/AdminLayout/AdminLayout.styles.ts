@@ -4,6 +4,5 @@ export const styles = {
   wrapper: css`
     display: flex;
     gap: 20px;
-    padding-top: 20px;
   `,
 };

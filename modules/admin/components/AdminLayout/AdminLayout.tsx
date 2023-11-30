@@ -11,7 +11,7 @@ import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
 export const AdminLayout = () => {
   const router = useRouter();
-  const { name, id } = router.query;
+  const { name, id, ip } = router.query;
   return (
     <>
       <PageTitle
@@ -23,7 +23,13 @@ export const AdminLayout = () => {
       />
       <section css={[styles.wrapper, wrapper.main]}>
         <AdminSidebar tab={name as string} />
-        {!name ? <AdminDashboard /> : id ? <AdminDetails /> : <AdminLists />}
+        {!name ? (
+          <AdminDashboard />
+        ) : id || ip ? (
+          <AdminDetails />
+        ) : (
+          <AdminLists />
+        )}
       </section>
     </>
   );

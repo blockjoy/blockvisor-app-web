@@ -4,12 +4,13 @@ import { formatters } from '@shared/utils/formatters';
 import { NodeStatus } from '@shared/components';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import IconNode from '@public/assets/icons/app/Node.svg';
 
 const columns = [
   {
     name: 'name',
-    width: '230px',
+    width: '280px',
   },
   {
     name: 'status',
@@ -41,7 +42,7 @@ export const AdminNodes = () => {
     };
   };
 
-  const listMap = (list: any[]) =>
+  const listMap = (list: Node[]) =>
     list.map((item) => {
       return {
         ...item,

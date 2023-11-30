@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
-import { formatters } from '@shared/index';
+import { formatters, NextLink } from '@shared/index';
 
 export const mapNodeToGeneralDetails = (node: Node) => {
   if (!node?.nodeType) return [];
@@ -11,14 +10,18 @@ export const mapNodeToGeneralDetails = (node: Node) => {
       label: 'Host',
       data:
         node.orgId === node.hostOrgId ? (
-          <Link href={ROUTES.HOST(node.hostId)}>{node.hostName}</Link>
+          <NextLink href={ROUTES.HOST(node.hostId)}>{node.hostName}</NextLink>
         ) : (
           node.hostName
         ),
     },
     {
       label: 'Organization',
-      data: <Link href={ROUTES.ORGANIZATION(node.orgId)}>{node.orgName}</Link>,
+      data: (
+        <NextLink href={ROUTES.ORGANIZATION(node.orgId)}>
+          {node.orgName}
+        </NextLink>
+      ),
     },
 
     { label: 'Launched By', data: node.createdBy?.name || '-' },

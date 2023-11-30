@@ -1,6 +1,6 @@
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { styles } from './AdminListTable.styles';
-import { AdminListColumn, AdminSupportedViews } from '../AdminList';
+import { AdminListColumn, IAdminItem } from '../AdminList';
 import { useRouter } from 'next/router';
 import { Copy, TableSkeleton } from '@shared/components';
 import { capitalized } from '@modules/admin/utils/capitalized';
@@ -8,8 +8,9 @@ import { pageSize } from '@modules/admin/constants/constants';
 
 type Props = {
   name: string;
+  isLoading: boolean;
   columns: AdminListColumn[];
-  list: AdminSupportedViews;
+  list: IAdminItem[];
   listTotal?: number;
   listPage: number;
   searchTerm?: string;
@@ -19,6 +20,7 @@ type Props = {
 export const AdminListTable = ({
   name,
   columns,
+  isLoading,
   list,
   listTotal,
   listPage,
@@ -26,6 +28,8 @@ export const AdminListTable = ({
   onPageChanged,
 }: Props) => {
   const router = useRouter();
+
+  const { search, page } = router.query;
 
   const pageCount = Math.ceil(listTotal! / pageSize);
 
@@ -35,11 +39,13 @@ export const AdminListTable = ({
       query: {
         name: name.toLowerCase(),
         id,
+        search,
+        page,
       },
     });
   };
 
-  if (listTotal === undefined) return <TableSkeleton />;
+  if (isLoading) return <TableSkeleton />;
 
   if (listTotal === 0) return <p>No {name} found.</p>;
 
@@ -67,11 +73,17 @@ export const AdminListTable = ({
                     key={column.name}
                     css={styles.tableCellWidth(column.width!)}
                   >
-                    {item[column.name]}
-                    {column.canCopy && (
-                      <span className="copy-button" css={styles.copyButton}>
-                        <Copy value={item[column.name]} hideTooltip />
-                      </span>
+                    {column.canCopy ? (
+                      <div css={styles.copyTd}>
+                        {item[column.name]}
+                        {column.canCopy && (
+                          <span className="copy-button" css={styles.copyButton}>
+                            <Copy value={item[column.name]} hideTooltip />
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      item[column.name]
                     )}
                   </td>
                 ))}
@@ -82,7 +94,7 @@ export const AdminListTable = ({
       </div>
       <AdminListPagination
         listPage={listPage}
-        totalRowCount={listTotal}
+        totalRowCount={listTotal!}
         pageCount={pageCount}
         onPageChanged={onPageChanged}
       />

@@ -11,17 +11,19 @@ import { useDefaultOrganization } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import {
-  UiType,
   NodeProperty,
-  NodeType,
   NodeServiceCreateRequest,
   FilteredIpAddr,
   NodePlacement,
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
-  BlockchainNodeType,
+  UiType,
+  NodeType,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
+import {
   BlockchainVersion,
+  BlockchainNodeType,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   sortVersions,

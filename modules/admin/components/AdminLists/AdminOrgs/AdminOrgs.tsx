@@ -3,6 +3,7 @@ import { organizationClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import IconOrg from '@public/assets/icons/app/Organization.svg';
 
 const columns = [
@@ -34,7 +35,7 @@ export const AdminOrgs = () => {
     };
   };
 
-  const listMap = (list: any[]) =>
+  const listMap = (list: Org[]) =>
     list.map((item) => {
       return {
         ...item,

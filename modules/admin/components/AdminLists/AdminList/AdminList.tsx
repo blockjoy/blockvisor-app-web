@@ -1,10 +1,5 @@
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
-import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AdminGetList } from '../AdminLists';
 import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
@@ -15,15 +10,23 @@ export type AdminListColumn = {
   canCopy?: boolean;
 };
 
-export type AdminSupportedViews = Node[] | User[] | Host[] | Org[];
+export interface IAdminItem {
+  id: string;
+}
 
 type Props = {
   name: string;
   icon: React.ReactNode;
   columns: AdminListColumn[];
-  listMap: (list: AdminSupportedViews) => AdminSupportedViews;
+  listMap: (list: any[]) => IAdminItem[];
   getTotal: () => Promise<number>;
-  getList: (keyword?: string, page?: number) => Promise<AdminGetList>;
+  getList: (
+    keyword?: string,
+    page?: number,
+  ) => Promise<{
+    total: number;
+    list: IAdminItem[];
+  }>;
 };
 
 export const AdminList = ({
@@ -35,8 +38,9 @@ export const AdminList = ({
   getList,
 }: Props) => {
   const router = useRouter();
-  const { search, page } = router.query;
-  const [list, setList] = useState<AdminSupportedViews>([]);
+  const { search, page, org_id } = router.query;
+  const [isLoading, setIsLoading] = useState(true);
+  const [list, setList] = useState<IAdminItem[]>([]);
   const [listTotal, setListTotal] = useState<number>();
   const [total, setTotal] = useState<number>();
   const [searchTerm, setSearchTerm] = useState<string>();
@@ -51,6 +55,7 @@ export const AdminList = ({
     const response = await getList(keyword, page);
     setList(response.list);
     setListTotal(response.total);
+    setIsLoading(false);
   };
 
   const handleSearch = async (keyword: string) => {
@@ -96,12 +101,14 @@ export const AdminList = ({
     <article key={name} id={name} css={styles.card}>
       <AdminListHeader
         name={name}
+        isLoading={isLoading}
         icon={icon}
         total={total!}
         onSearch={handleSearch}
       />
       <AdminListTable
         name={name}
+        isLoading={isLoading}
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
