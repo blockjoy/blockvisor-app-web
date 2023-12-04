@@ -16,7 +16,7 @@ export const HostSelect = ({
   onChange,
 }: HostSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const handleOpen = (open: boolean) => {
+  const handleOpen = (open: boolean = true) => {
     setIsOpen(open);
   };
 

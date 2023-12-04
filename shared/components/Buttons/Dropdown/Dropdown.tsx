@@ -6,13 +6,14 @@ import { DropdownItem, DropdownWrapper, Scrollbar } from '@shared/components';
 import { DropdownButton } from './DropdownButton/DropdownButton';
 import { DropdownMenu } from './DropdownMenu/DropdownMenu';
 import { colors } from 'styles/utils.colors.styles';
-import { useEscapeKey } from '@shared/hooks/useEscapeKey';
+import { useAccessibleDropdown } from '@shared/index';
 
 export type DropdownProps<T = any> = {
   items: T[];
   selectedItem: T | null;
   handleSelected: (item: T | null) => void;
   defaultText?: string;
+  searchQuery?: string;
   renderSearch?: (isOpen: boolean) => ReactNode;
   isEmpty?: boolean;
   noBottomMargin?: boolean;
@@ -20,7 +21,7 @@ export type DropdownProps<T = any> = {
   disabled?: boolean;
   error?: string;
   isOpen: boolean;
-  handleOpen: (open: boolean) => void;
+  handleOpen: (open?: boolean) => void;
 };
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
@@ -28,6 +29,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   selectedItem,
   handleSelected,
   defaultText,
+  searchQuery,
   renderSearch,
   isEmpty = true,
   noBottomMargin = false,
@@ -42,12 +44,21 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   const handleClose = () => handleOpen(false);
 
   useClickOutside<HTMLDivElement>(dropdownRef, handleClose);
-  useEscapeKey(handleClose);
 
   const handleSelect = (item: T) => {
     handleSelected(item);
     handleClose();
   };
+
+  const { activeIndex, handleItemRef, handleFocus, handleBlur } =
+    useAccessibleDropdown({
+      items,
+      selectedItem,
+      handleSelect,
+      isOpen,
+      handleOpen,
+      searchQuery,
+    });
 
   return (
     <DropdownWrapper
@@ -70,22 +81,27 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         }
         {...(disabled && { disabled })}
         onClick={() => handleOpen(!isOpen)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         {renderSearch ? renderSearch(isOpen) : null}
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>
-            {items?.map((item: T) => (
+            {items?.map((item: T, index: number) => (
               <li
                 key={item.id || item.name}
-                {...(selectedItem?.id === item.id && {
-                  css: styles.active,
-                })}
+                ref={(el: HTMLLIElement) => handleItemRef(el, index)}
+                css={[
+                  selectedItem?.id === item.id ? styles.active : null,
+                  activeIndex === index ? styles.focus : null,
+                ]}
               >
                 <DropdownItem
                   size="medium"
                   type="button"
                   onButtonClick={() => handleSelect(item)}
+                  tabIndex={-1}
                 >
                   <p>{escapeHtml(item.name!)}</p>
                 </DropdownItem>

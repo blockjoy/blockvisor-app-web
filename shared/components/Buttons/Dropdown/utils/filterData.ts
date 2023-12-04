@@ -10,9 +10,9 @@ export const filterData = <T extends FilterItem>(
 
   if (isHost) {
     return data.filter((item: T) => {
-      return queryWords.some((queryWord) => {
+      return queryWords.every((queryWord) => {
         const word = queryWord.toLowerCase();
-        const hasId = item?.id?.toLowerCase().includes(word);
+        const hasId = item?.id?.toLowerCase() === word;
         const hasName = item?.name?.toLowerCase().includes(word);
         const hasIp = item?.ip?.toLowerCase().includes(word);
 

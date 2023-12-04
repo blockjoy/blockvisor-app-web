@@ -74,7 +74,7 @@ export const NodeLauncherSummary: FC<Props> = ({
             <span>Host</span>
             {selectedHost !== null ? (
               <a onClick={() => onHostChanged(null)} css={styles.autoSelect}>
-                Back to Auto select?
+                Auto select
               </a>
             ) : null}
           </FormLabel>
