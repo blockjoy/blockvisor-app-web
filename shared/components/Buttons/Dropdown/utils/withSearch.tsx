@@ -25,7 +25,10 @@ export const withSearch = <T extends { id?: string; name?: string }>(
     const handleSelect = (item: T | null) => {
       handleSelected(item);
       setSearchQuery('');
-      setFilteredData(items);
+      // Added Timeout due to animation in the DropdownMenu
+      setTimeout(() => {
+        setFilteredData(items);
+      }, 300);
     };
 
     return (

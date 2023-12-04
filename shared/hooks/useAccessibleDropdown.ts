@@ -25,21 +25,20 @@ export const useAccessibleDropdown = <T>({
   handleSelect,
   searchQuery,
 }: UseAccessibleDropdownParams<T>): UseAccessibleDropdownReturnType => {
-  const selectedItemIndex = items.findIndex((item: T) => item === selectedItem);
-  const itemIndex = selectedItemIndex >= 0 ? selectedItemIndex : 0;
-  const [activeIndex, setActiveIndex] = useState(itemIndex);
+  const selectedItemIndex = selectedItem ? items.indexOf(selectedItem) : 0;
+  const [activeIndex, setActiveIndex] = useState(selectedItemIndex);
 
   const [isFocus, setIsFocus] = useState(false);
 
   const itemRefs = useRef<HTMLLIElement[]>([]);
 
   useEffect(() => {
-    if (typeof searchQuery !== 'undefined') setActiveIndex(0);
-  }, [searchQuery]);
+    if (activeIndex !== selectedItemIndex) setActiveIndex(selectedItemIndex);
+  }, [selectedItem, selectedItemIndex]);
 
   useEffect(() => {
-    if (activeIndex !== itemIndex) setActiveIndex(itemIndex);
-  }, [selectedItem]);
+    if (typeof searchQuery !== 'undefined') setActiveIndex(0);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (isOpen && itemRefs.current[activeIndex]) {

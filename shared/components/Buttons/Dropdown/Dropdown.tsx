@@ -46,6 +46,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   useClickOutside<HTMLDivElement>(dropdownRef, handleClose);
 
   const handleSelect = (item: T) => {
+    if (!item) return;
     handleSelected(item);
     handleClose();
   };
