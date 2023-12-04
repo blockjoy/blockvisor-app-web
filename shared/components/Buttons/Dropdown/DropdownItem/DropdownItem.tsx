@@ -18,6 +18,7 @@ type DropdownItemProps = {
     | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
   isDisabled?: boolean;
+  tabIndex?: number;
 };
 export const DropdownItem = ({
   href,
@@ -28,6 +29,7 @@ export const DropdownItem = ({
   additionalStyles,
   type = 'plain',
   isDisabled,
+  tabIndex,
 }: DropdownItemProps) => {
   switch (type) {
     case 'link':
@@ -42,6 +44,7 @@ export const DropdownItem = ({
             styles[size],
             additionalStyles && additionalStyles,
           ]}
+          {...(tabIndex && { tabIndex })}
         >
           {children}
         </Link>
@@ -59,6 +62,7 @@ export const DropdownItem = ({
             styles[size],
             additionalStyles && additionalStyles,
           ]}
+          {...(tabIndex && { tabIndex })}
         >
           {children}
         </button>
@@ -72,6 +76,7 @@ export const DropdownItem = ({
             styles[size],
             additionalStyles && additionalStyles,
           ]}
+          {...(tabIndex && { tabIndex })}
         >
           {children}
         </div>

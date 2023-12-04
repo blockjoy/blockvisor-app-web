@@ -26,7 +26,7 @@ export const NodeRegionSelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const { defaultOrganization } = useDefaultOrganization();
 
-  const handleOpen = (open: boolean) => {
+  const handleOpen = (open: boolean = true) => {
     setIsOpen(open);
   };
 

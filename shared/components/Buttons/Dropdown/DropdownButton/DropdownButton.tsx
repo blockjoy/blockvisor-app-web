@@ -9,16 +9,22 @@ type Props = {
   text: string | ReactNode;
   icon?: ReactNode;
   onClick: VoidFunction;
+  onFocus?: VoidFunction;
+  onBlur?: VoidFunction;
   isLoading?: boolean;
+  tabIndex?: number;
 };
 
 export const DropdownButton = ({
   disabled,
   icon,
   onClick,
+  onFocus,
+  onBlur,
   text,
   isOpen,
   isLoading,
+  tabIndex,
 }: Props) => {
   return (
     <button
@@ -26,6 +32,9 @@ export const DropdownButton = ({
       type="button"
       css={[styles.button, isLoading && styles.loading]}
       onClick={onClick}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      {...(tabIndex && { tabIndex })}
     >
       {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
       {text}

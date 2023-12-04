@@ -19,6 +19,10 @@ export const styles = {
     }
   `,
   active: (theme: ITheme) => css`
-    background-color: ${rgba(theme.colorPrimaryText || '#000', 0.3)};
+    background-color: ${rgba(theme.colorText || '#ffffff', 0.2)};
+  `,
+  focus: (theme: ITheme) => css`
+    background-color: ${rgba(theme.colorText || '#ffffff', 0.1)};
+    outline: none;
   `,
 };

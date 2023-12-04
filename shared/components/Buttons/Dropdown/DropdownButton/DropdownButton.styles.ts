@@ -35,6 +35,16 @@ export const styles = {
       text-overflow: ellipsis;
       padding-right: 20px;
     }
+    :focus {
+      svg path {
+        fill: ${theme.colorText};
+      }
+
+      p {
+        color: ${theme.colorText};
+      }
+      border-color: ${theme.colorLabel};
+    }
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
