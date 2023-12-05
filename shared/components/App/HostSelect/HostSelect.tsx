@@ -20,6 +20,18 @@ export const HostSelect = ({
     setIsOpen(open);
   };
 
+  const checkDisabledItem = (item?: Host) =>
+    item?.ipAddresses?.every((ip) => ip.assigned) ?? false;
+
+  const renderItemLabel = (item?: Host) => {
+    const ipAddressCount = item?.ipAddresses?.reduce(
+      (acc, ip) => acc + (!ip.assigned ? 1 : 0),
+      0,
+    );
+
+    return `${ipAddressCount} IP${ipAddressCount !== 1 ? 's' : ''}`;
+  };
+
   const HostSelectDropdown = useMemo(() => withSearch<Host>(Dropdown), [hosts]);
 
   return (
@@ -31,6 +43,9 @@ export const HostSelect = ({
       isOpen={isOpen}
       handleOpen={handleOpen}
       isLoading={isLoading}
+      size="small"
+      checkDisabledItem={checkDisabledItem}
+      renderItemLabel={renderItemLabel}
     />
   );
 };
