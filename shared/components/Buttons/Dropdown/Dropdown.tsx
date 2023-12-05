@@ -21,7 +21,10 @@ export type DropdownProps<T = any> = {
   disabled?: boolean;
   error?: string;
   isOpen: boolean;
+  size?: 'small' | 'medium' | 'large';
   handleOpen: (open?: boolean) => void;
+  checkDisabledItem?: (item?: T) => boolean;
+  renderItemLabel?: (item?: T) => ReactNode;
 };
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
@@ -37,7 +40,10 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   disabled,
   error,
   isOpen,
+  size = 'medium',
   handleOpen,
+  checkDisabledItem,
+  renderItemLabel,
 }: DropdownProps<T>) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -89,25 +95,46 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         {renderSearch ? renderSearch(isOpen) : null}
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul>
-            {items?.map((item: T, index: number) => (
-              <li
-                key={item.id || item.name}
-                ref={(el: HTMLLIElement) => handleItemRef(el, index)}
-                css={[
-                  selectedItem?.id === item.id ? styles.active : null,
-                  activeIndex === index ? styles.focus : null,
-                ]}
-              >
-                <DropdownItem
-                  size="medium"
-                  type="button"
-                  onButtonClick={() => handleSelect(item)}
-                  tabIndex={-1}
+            {items?.map((item: T, index: number) => {
+              const isDisabled: boolean = checkDisabledItem
+                ? checkDisabledItem(item)
+                : false;
+
+              return (
+                <li
+                  key={item.id || item.name}
+                  ref={(el: HTMLLIElement) => handleItemRef(el, index)}
+                  css={[
+                    selectedItem?.id === item.id ? styles.active : null,
+                    activeIndex === index ? styles.focus : null,
+                  ]}
                 >
-                  <p>{escapeHtml(item.name!)}</p>
-                </DropdownItem>
-              </li>
-            ))}
+                  <DropdownItem
+                    size={size}
+                    type="button"
+                    onButtonClick={() => handleSelect(item)}
+                    tabIndex={-1}
+                    isDisabled={isDisabled}
+                    additionalStyles={[styles.dropdownItem]}
+                  >
+                    <p>{escapeHtml(item.name!)}</p>
+                    {renderItemLabel ? (
+                      <span
+                        className="alert"
+                        css={[
+                          styles.alert,
+                          isDisabled
+                            ? styles.alertDisabled
+                            : styles.alertSuccess,
+                        ]}
+                      >
+                        {renderItemLabel(item)}
+                      </span>
+                    ) : null}
+                  </DropdownItem>
+                </li>
+              );
+            })}
           </ul>
         </Scrollbar>
       </DropdownMenu>

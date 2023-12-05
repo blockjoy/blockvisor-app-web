@@ -11,7 +11,7 @@ type DropdownItemProps = {
   id?: string;
   href?: string;
   children?: ReactNode;
-  size?: 'large' | 'medium' | 'small';
+  size?: 'small' | 'medium' | 'large';
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
   additionalStyles?:
     | ((theme: ITheme) => SerializedStyles)[]
@@ -20,6 +20,7 @@ type DropdownItemProps = {
   isDisabled?: boolean;
   tabIndex?: number;
 };
+
 export const DropdownItem = ({
   href,
   id,
