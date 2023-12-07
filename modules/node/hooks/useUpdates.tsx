@@ -14,7 +14,8 @@ import { usePermissions } from '@modules/auth/hooks/usePermissions';
 export const useUpdates = () => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
-  const { addToNodeList, removeFromNodeList } = useNodeList();
+  const { addToNodeList, removeFromNodeList, modifyNodeInNodeList } =
+    useNodeList();
   const { unloadNode, modifyNode, node: activeNode } = useNodeView();
   const { hasPermission } = usePermissions();
 
@@ -32,7 +33,7 @@ export const useUpdates = () => {
 
         const { node }: NodeCreated = payloadDeserialized.created!;
 
-        addToNodeList(node);
+        addToNodeList(node!);
 
         if (node?.createdBy?.resourceId === user?.id) break;
 
@@ -56,8 +57,10 @@ export const useUpdates = () => {
         const { node: mqttNode }: NodeUpdated = payloadDeserialized.updated!;
 
         if (mqttNode?.id === activeNode?.id) {
-          modifyNode(payloadDeserialized.updated?.node!);
+          modifyNode(mqttNode!);
         }
+
+        modifyNodeInNodeList(mqttNode!);
 
         break;
       }

@@ -72,6 +72,7 @@ export const AdminList = ({
   };
 
   const handlePageChanged = (page: number) => {
+    setListPage(page);
     router.push({
       pathname: `/admin`,
       query: {
@@ -80,7 +81,6 @@ export const AdminList = ({
         search,
       },
     });
-    setListPage(page);
   };
 
   useEffect(() => {
