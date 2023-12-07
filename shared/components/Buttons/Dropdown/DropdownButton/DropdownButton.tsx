@@ -1,7 +1,7 @@
 import { SvgIcon } from '@shared/components';
 import { ReactNode } from 'react';
 import { styles } from './DropdownButton.styles';
-import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
+import IconArrow from '@public/assets/icons/common/ChevronRight.svg';
 
 type Props = {
   disabled?: boolean;

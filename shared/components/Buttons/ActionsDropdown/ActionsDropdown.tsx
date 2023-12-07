@@ -3,7 +3,7 @@ import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { ReactNode, useRef, useState } from 'react';
 import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import IconArrow from '@public/assets/icons/common/ArrowRight.svg';
+import IconArrow from '@public/assets/icons/common/ChevronRight.svg';
 import { css } from '@emotion/react';
 
 type Item = {

@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
-import IconArrow from '@public/assets/icons/common/ArrowDown.svg';
+import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
 type Props = {
   isRightAligned?: boolean;

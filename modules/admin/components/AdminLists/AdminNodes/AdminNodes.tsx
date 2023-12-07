@@ -17,6 +17,10 @@ const columns = [
     width: '230px',
   },
   {
+    name: 'host',
+    width: '230px',
+  },
+  {
     name: 'created',
     width: '230px',
   },
@@ -43,13 +47,14 @@ export const AdminNodes = () => {
   };
 
   const listMap = (list: Node[]) =>
-    list.map((item) => {
+    list.map((node) => {
       return {
-        ...item,
-        status: <NodeStatus status={item.status} hasBorder={false} />,
+        ...node,
+        status: <NodeStatus status={node.status} hasBorder={false} />,
         created: `${formatters.formatDate(
-          item.createdAt!,
-        )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
+          node.createdAt!,
+        )} @ ${formatters.formatDate(node.createdAt!, 'time')}`,
+        host: node.hostName,
       };
     });
 
