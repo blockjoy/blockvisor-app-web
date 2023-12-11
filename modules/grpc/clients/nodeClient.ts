@@ -63,6 +63,7 @@ class NodeClient {
       statuses: filter_criteria?.nodeStatus?.map((f) => +f)!,
       nodeTypes: filter_criteria?.nodeType?.map((f) => +f)!,
       blockchainIds: filter_criteria?.blockchain!,
+      sort: [],
     };
 
     if (filter_criteria?.keyword) {
