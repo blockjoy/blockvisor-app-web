@@ -49,6 +49,7 @@ class UserClient {
     const request: UserServiceListRequest = {
       offset: getPaginationOffset(pagination),
       limit: pagination?.items_per_page!,
+      sort: [],
     };
 
     if (keyword) {

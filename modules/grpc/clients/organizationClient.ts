@@ -53,6 +53,7 @@ class OrganizationClient {
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page!,
       personal: isAdmin ? false : undefined,
+      sort: [],
     };
 
     if (keyword) {

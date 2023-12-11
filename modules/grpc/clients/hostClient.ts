@@ -48,6 +48,7 @@ class HostClient {
       orgId,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page!,
+      sort: [],
     };
 
     if (filterCriteria?.keyword) {
