@@ -5,9 +5,23 @@ import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
 import { NodeType } from "../common/v1/node";
-import { SearchOperator } from "../common/v1/search";
+import { SearchOperator, SortOrder } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
+
+export enum HostSortField {
+  HOST_SORT_FIELD_UNSPECIFIED = 0,
+  HOST_SORT_FIELD_HOST_NAME = 1,
+  HOST_SORT_FIELD_CREATED_AT = 2,
+  HOST_SORT_FIELD_VERSION = 3,
+  HOST_SORT_FIELD_OS = 4,
+  HOST_SORT_FIELD_OS_VERSION = 5,
+  HOST_SORT_FIELD_CPU_COUNT = 6,
+  HOST_SORT_FIELD_MEM_SIZE_BYTES = 7,
+  HOST_SORT_FIELD_DISK_SIZE_BYTES = 8,
+  HOST_SORT_FIELD_NODE_COUNT = 9,
+  UNRECOGNIZED = -1,
+}
 
 /** The environment of host. */
 export enum HostType {
@@ -164,7 +178,11 @@ export interface HostServiceListRequest {
    */
   limit: number;
   /** Search params. */
-  search?: HostSearch | undefined;
+  search?:
+    | HostSearch
+    | undefined;
+  /** The field sorting order of results. */
+  sort: HostSort[];
 }
 
 export interface HostSearch {
@@ -188,6 +206,11 @@ export interface HostSearch {
     | undefined;
   /** Search only for the ip address. */
   ip?: string | undefined;
+}
+
+export interface HostSort {
+  field: HostSortField;
+  order: SortOrder;
 }
 
 export interface HostServiceListResponse {
@@ -962,7 +985,7 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0, search: undefined };
+  return { orgId: undefined, offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const HostServiceListRequest = {
@@ -978,6 +1001,9 @@ export const HostServiceListRequest = {
     }
     if (message.search !== undefined) {
       HostSearch.encode(message.search, writer.uint32(34).fork()).ldelim();
+    }
+    for (const v of message.sort) {
+      HostSort.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -1017,6 +1043,13 @@ export const HostServiceListRequest = {
 
           message.search = HostSearch.decode(reader, reader.uint32());
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.sort.push(HostSort.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1038,6 +1071,7 @@ export const HostServiceListRequest = {
     message.search = (object.search !== undefined && object.search !== null)
       ? HostSearch.fromPartial(object.search)
       : undefined;
+    message.sort = object.sort?.map((e) => HostSort.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1139,6 +1173,63 @@ export const HostSearch = {
     message.version = object.version ?? undefined;
     message.os = object.os ?? undefined;
     message.ip = object.ip ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostSort(): HostSort {
+  return { field: 0, order: 0 };
+}
+
+export const HostSort = {
+  encode(message: HostSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field !== 0) {
+      writer.uint32(8).int32(message.field);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostSort {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostSort();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.field = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.order = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostSort>): HostSort {
+    return HostSort.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostSort>): HostSort {
+    const message = createBaseHostSort();
+    message.field = object.field ?? 0;
+    message.order = object.order ?? 0;
     return message;
   },
 };

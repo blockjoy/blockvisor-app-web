@@ -5,9 +5,23 @@ import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { ContainerStatus, NodeStatus, NodeType, StakingStatus, SyncStatus, UiType } from "../common/v1/node";
 import { EntityUpdate } from "../common/v1/resource";
-import { SearchOperator } from "../common/v1/search";
+import { SearchOperator, SortOrder } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
+
+export enum NodeSortField {
+  NODE_SORT_FIELD_UNSPECIFIED = 0,
+  NODE_SORT_FIELD_HOST_NAME = 1,
+  NODE_SORT_FIELD_NODE_NAME = 2,
+  NODE_SORT_FIELD_NODE_TYPE = 3,
+  NODE_SORT_FIELD_CREATED_AT = 4,
+  NODE_SORT_FIELD_UPDATED_AT = 5,
+  NODE_SORT_FIELD_NODE_STATUS = 6,
+  NODE_SORT_FIELD_SYNC_STATUS = 7,
+  NODE_SORT_FIELD_CONTAINER_STATUS = 8,
+  NODE_SORT_FIELD_STAKING_STATUS = 9,
+  UNRECOGNIZED = -1,
+}
 
 /** Flags describing a job possible states. */
 export enum NodeJobStatus {
@@ -163,7 +177,11 @@ export interface NodeServiceListRequest {
     | string
     | undefined;
   /** Search params. */
-  search?: NodeSearch | undefined;
+  search?:
+    | NodeSearch
+    | undefined;
+  /** The field sorting order of results. */
+  sort: NodeSort[];
 }
 
 /**
@@ -183,6 +201,11 @@ export interface NodeSearch {
     | undefined;
   /** Search only the ip address. */
   ip?: string | undefined;
+}
+
+export interface NodeSort {
+  field: NodeSortField;
+  order: SortOrder;
 }
 
 /** This response will contain all the filtered nodes. */
@@ -1108,6 +1131,7 @@ function createBaseNodeServiceListRequest(): NodeServiceListRequest {
     blockchainIds: [],
     hostId: undefined,
     search: undefined,
+    sort: [],
   };
 }
 
@@ -1140,6 +1164,9 @@ export const NodeServiceListRequest = {
     }
     if (message.search !== undefined) {
       NodeSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
+    }
+    for (const v of message.sort) {
+      NodeSort.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -1227,6 +1254,13 @@ export const NodeServiceListRequest = {
 
           message.search = NodeSearch.decode(reader, reader.uint32());
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.sort.push(NodeSort.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1252,6 +1286,7 @@ export const NodeServiceListRequest = {
     message.search = (object.search !== undefined && object.search !== null)
       ? NodeSearch.fromPartial(object.search)
       : undefined;
+    message.sort = object.sort?.map((e) => NodeSort.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1331,6 +1366,63 @@ export const NodeSearch = {
     message.id = object.id ?? undefined;
     message.name = object.name ?? undefined;
     message.ip = object.ip ?? undefined;
+    return message;
+  },
+};
+
+function createBaseNodeSort(): NodeSort {
+  return { field: 0, order: 0 };
+}
+
+export const NodeSort = {
+  encode(message: NodeSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field !== 0) {
+      writer.uint32(8).int32(message.field);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeSort {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeSort();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.field = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.order = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeSort>): NodeSort {
+    return NodeSort.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeSort>): NodeSort {
+    const message = createBaseNodeSort();
+    message.field = object.field ?? 0;
+    message.order = object.order ?? 0;
     return message;
   },
 };

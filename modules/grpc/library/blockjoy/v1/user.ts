@@ -3,9 +3,18 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { SearchOperator } from "../common/v1/search";
+import { SearchOperator, SortOrder } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
+
+export enum UserSortField {
+  USER_SORT_FIELD_UNSPECIFIED = 0,
+  USER_SORT_FIELD_EMAIL = 1,
+  USER_SORT_FIELD_FIRST_NAME = 2,
+  USER_SORT_FIELD_LAST_NAME = 3,
+  USER_SORT_FIELD_CREATED_AT = 4,
+  UNRECOGNIZED = -1,
+}
 
 /** User representation. */
 export interface User {
@@ -14,7 +23,6 @@ export interface User {
   firstName: string;
   lastName: string;
   createdAt: Date | undefined;
-  updatedAt: Date | undefined;
 }
 
 export interface UserServiceGetRequest {
@@ -41,7 +49,11 @@ export interface UserServiceListRequest {
    */
   limit: number;
   /** Search params. */
-  search?: UserSearch | undefined;
+  search?:
+    | UserSearch
+    | undefined;
+  /** The field sorting order of results. */
+  sort: UserSort[];
 }
 
 /**
@@ -66,6 +78,11 @@ export interface UserSearch {
     | undefined;
   /** Search only the full name. */
   name?: string | undefined;
+}
+
+export interface UserSort {
+  field: UserSortField;
+  order: SortOrder;
 }
 
 export interface UserServiceListResponse {
@@ -128,7 +145,7 @@ export interface UserServiceDeleteBillingResponse {
 }
 
 function createBaseUser(): User {
-  return { id: "", email: "", firstName: "", lastName: "", createdAt: undefined, updatedAt: undefined };
+  return { id: "", email: "", firstName: "", lastName: "", createdAt: undefined };
 }
 
 export const User = {
@@ -147,9 +164,6 @@ export const User = {
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).ldelim();
-    }
-    if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -196,13 +210,6 @@ export const User = {
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -223,7 +230,6 @@ export const User = {
     message.firstName = object.firstName ?? "";
     message.lastName = object.lastName ?? "";
     message.createdAt = object.createdAt ?? undefined;
-    message.updatedAt = object.updatedAt ?? undefined;
     return message;
   },
 };
@@ -321,7 +327,7 @@ export const UserServiceGetResponse = {
 };
 
 function createBaseUserServiceListRequest(): UserServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0, search: undefined };
+  return { orgId: undefined, offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const UserServiceListRequest = {
@@ -337,6 +343,9 @@ export const UserServiceListRequest = {
     }
     if (message.search !== undefined) {
       UserSearch.encode(message.search, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.sort) {
+      UserSort.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -376,6 +385,13 @@ export const UserServiceListRequest = {
 
           message.search = UserSearch.decode(reader, reader.uint32());
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.sort.push(UserSort.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -397,6 +413,7 @@ export const UserServiceListRequest = {
     message.search = (object.search !== undefined && object.search !== null)
       ? UserSearch.fromPartial(object.search)
       : undefined;
+    message.sort = object.sort?.map((e) => UserSort.fromPartial(e)) || [];
     return message;
   },
 };
@@ -476,6 +493,63 @@ export const UserSearch = {
     message.id = object.id ?? undefined;
     message.email = object.email ?? undefined;
     message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUserSort(): UserSort {
+  return { field: 0, order: 0 };
+}
+
+export const UserSort = {
+  encode(message: UserSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field !== 0) {
+      writer.uint32(8).int32(message.field);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserSort {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserSort();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.field = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.order = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserSort>): UserSort {
+    return UserSort.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserSort>): UserSort {
+    const message = createBaseUserSort();
+    message.field = object.field ?? 0;
+    message.order = object.order ?? 0;
     return message;
   },
 };
