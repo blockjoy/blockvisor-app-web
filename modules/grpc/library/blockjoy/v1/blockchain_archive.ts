@@ -80,8 +80,10 @@ export interface DownloadManifest {
 export interface ArchiveChunk {
   /** The persistent chunk key. */
   key: string;
-  /** A temporary, pre-signed download url. */
-  url: string;
+  /** A temporary pre-signed download url (or none for a blueprint). */
+  url?:
+    | string
+    | undefined;
   /** The checksum of the chunk data. */
   checksum:
     | Checksum
@@ -588,7 +590,7 @@ export const DownloadManifest = {
 };
 
 function createBaseArchiveChunk(): ArchiveChunk {
-  return { key: "", url: "", checksum: undefined, size: 0, destinations: [] };
+  return { key: "", url: undefined, checksum: undefined, size: 0, destinations: [] };
 }
 
 export const ArchiveChunk = {
@@ -596,7 +598,7 @@ export const ArchiveChunk = {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
-    if (message.url !== "") {
+    if (message.url !== undefined) {
       writer.uint32(18).string(message.url);
     }
     if (message.checksum !== undefined) {
@@ -669,7 +671,7 @@ export const ArchiveChunk = {
   fromPartial(object: DeepPartial<ArchiveChunk>): ArchiveChunk {
     const message = createBaseArchiveChunk();
     message.key = object.key ?? "";
-    message.url = object.url ?? "";
+    message.url = object.url ?? undefined;
     message.checksum = (object.checksum !== undefined && object.checksum !== null)
       ? Checksum.fromPartial(object.checksum)
       : undefined;
