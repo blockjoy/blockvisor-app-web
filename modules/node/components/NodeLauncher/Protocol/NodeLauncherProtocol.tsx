@@ -1,28 +1,29 @@
-import { useGetBlockchains } from '@modules/node';
+import { ChangeEvent, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
+import { useGetBlockchains, nodeLauncherAtoms } from '@modules/node';
 import { TableSkeleton, Scrollbar } from '@shared/components';
-import { ChangeEvent, FC, useState } from 'react';
 import { styles } from './NodeLauncherProtocol.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import IconSearch from '@public/assets/icons/common/Search.svg';
 import { NodeLauncherProtocolBlockchains } from './NodeLauncherProtocolBlockchains';
-import { isMobile } from 'react-device-detect';
 
-type Props = {
+type NodeLauncherProtocolProps = {
   onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
-  blockchainId: string;
-  nodeType: NodeType;
 };
 
-export const NodeLauncherProtocol: FC<Props> = ({
+export const NodeLauncherProtocol = ({
   onProtocolSelected,
-  blockchainId,
-  nodeType,
-}) => {
+}: NodeLauncherProtocolProps) => {
   const { blockchains, loading } = useGetBlockchains();
 
-  const [keyword, setKeyword] = useState<string>('');
+  const node = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+
+  const [keyword, setKeyword] = useState('');
+
+  const { blockchainId, nodeType } = node;
 
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);

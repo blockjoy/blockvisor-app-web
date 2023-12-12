@@ -1,36 +1,33 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { Dropdown } from '@shared/components';
-import { useDefaultOrganization } from '@modules/organization';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { useGetRegions } from '@modules/node/hooks/useGetRegions';
+import { useDefaultOrganization } from '@modules/organization';
+import { nodeLauncherAtoms, useGetRegions } from '@modules/node';
+import { Dropdown } from '@shared/components';
 
-type Props = {
+type NodeRegionSelectProps = {
   onChange: (region: Region | null) => void;
   onLoad: (firstRegion: Region | null) => void;
-  region: Region | null;
   blockchainId: string;
   nodeType: NodeType;
-  version: BlockchainVersion;
 };
 
 export const NodeRegionSelect = ({
   onChange,
   onLoad,
-  region,
   blockchainId,
   nodeType,
-  version,
-}: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+}: NodeRegionSelectProps) => {
   const { defaultOrganization } = useDefaultOrganization();
-
-  const handleOpen = (open: boolean = true) => {
-    setIsOpen(open);
-  };
-
   const { regions, isLoading, error, getRegions } = useGetRegions();
+
+  const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+  const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = (open: boolean = true) => setIsOpen(open);
 
   useEffect(() => {
     if (version?.id && defaultOrganization?.id) {

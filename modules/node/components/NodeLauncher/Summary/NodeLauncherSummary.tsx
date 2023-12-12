@@ -1,5 +1,5 @@
-import { NodeLauncherState, NodeRegionSelect } from '@modules/node';
-import { FC } from 'react';
+import { useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import { styles } from './NodeLauncherSummary.styles';
 import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
 import { nodeTypeList } from '@shared/constants/lookups';
@@ -17,52 +17,46 @@ import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { isMobile } from 'react-device-detect';
+import { usePermissions } from '@modules/auth';
 import { useHostList } from '@modules/host';
+import {
+  NodeRegionSelect,
+  nodeLauncherAtoms,
+  nodeLauncherSelectors,
+} from '@modules/node';
 
-type Props = {
-  serverError: string;
-  hasNetworkList: boolean;
-  isNodeValid: boolean;
-  isConfigValid: boolean | null;
-  isCreating: boolean;
+type NodeLauncherSummaryProps = {
   hosts: Host[];
   isLoadingHosts: boolean;
-  selectedHost: Host | null;
-  selectedVersion: BlockchainVersion;
-  selectedRegion: Region | null;
-  nodeLauncherState: NodeLauncherState;
-  canAddNode: boolean;
   onCreateNodeClicked: VoidFunction;
   onHostChanged: (host: Host | null) => void;
   onRegionChanged: (region: Region | null) => void;
   onRegionsLoaded: (region: Region | null) => void;
 };
 
-export const NodeLauncherSummary: FC<Props> = ({
-  serverError,
-  hasNetworkList,
-  isNodeValid,
-  isConfigValid,
-  isCreating,
+export const NodeLauncherSummary = ({
   hosts,
   isLoadingHosts,
-  selectedHost,
-  selectedVersion,
-  selectedRegion,
-  nodeLauncherState,
-  canAddNode,
   onCreateNodeClicked,
   onHostChanged,
   onRegionChanged,
   onRegionsLoaded,
-}) => {
+}: NodeLauncherSummaryProps) => {
   const { blockchains } = useGetBlockchains();
-
   const { hostList } = useHostList();
 
-  const { blockchainId, nodeType, properties } = nodeLauncherState;
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const error = useRecoilValue(nodeLauncherAtoms.error);
+  const isLoading = useRecoilValue(nodeLauncherAtoms.isLoading);
+  const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
+  const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
+  const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
+  const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+
+  const { blockchainId, nodeType, properties } = nodeLauncher;
+
+  const { hasPermission } = usePermissions();
+  const canAddNode = hasPermission('node-create');
 
   return (
     <div css={styles.wrapper}>
@@ -95,8 +89,6 @@ export const NodeLauncherSummary: FC<Props> = ({
             onLoad={onRegionsLoaded}
             blockchainId={blockchainId}
             nodeType={nodeType}
-            version={selectedVersion}
-            region={selectedRegion}
           />
         </>
       )}
@@ -168,19 +160,19 @@ export const NodeLauncherSummary: FC<Props> = ({
                 <div css={styles.missingFields}>
                   {properties
                     ?.filter(
-                      (property) =>
+                      (property: any) =>
                         property.required &&
                         !property.disabled &&
                         !property.value,
                     )
-                    .map((property) => (
+                    .map((property: any) => (
                       <div key={property.name}>{property.displayName}</div>
                     ))}
                 </div>
               </>
             )}
 
-            {serverError && <div css={styles.serverError}>{serverError}</div>}
+            {error && <div css={styles.serverError}>{error}</div>}
           </>
         )}
       </div>
@@ -201,16 +193,16 @@ export const NodeLauncherSummary: FC<Props> = ({
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
-            Boolean(serverError) ||
-            isCreating
+            Boolean(error) ||
+            isLoading
           }
           css={[
             styles.createButton,
-            isCreating && !Boolean(serverError) && styles.createButtonLoading,
+            isLoading && !Boolean(error) && styles.createButtonLoading,
           ]}
         >
           <span css={styles.createButtonInner}>
-            {isCreating && !Boolean(serverError) ? (
+            {isLoading && !Boolean(error) ? (
               <span css={styles.cogIcon}>
                 <IconCog />
               </span>
@@ -218,9 +210,7 @@ export const NodeLauncherSummary: FC<Props> = ({
               <IconRocket />
             )}
             <span>
-              {isCreating && !Boolean(serverError)
-                ? 'Launching'
-                : 'Launch Your Node'}
+              {isLoading && !Boolean(error) ? 'Launching' : 'Launch Your Node'}
             </span>
           </span>
         </button>
