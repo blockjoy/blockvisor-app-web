@@ -6,9 +6,15 @@ import router from 'next/router';
 
 type Props = {
   onSearch: (keyword: string) => void;
+  hideSearchButton?: boolean;
+  placeholder?: string;
 };
 
-export const AdminSearch = ({ onSearch }: Props) => {
+export const AdminSearch = ({
+  onSearch,
+  hideSearchButton,
+  placeholder = 'Keyword',
+}: Props) => {
   const { search } = router.query;
 
   const searchText = useRef('');
@@ -42,15 +48,17 @@ export const AdminSearch = ({ onSearch }: Props) => {
       </span>
       <input
         ref={inputRef}
-        css={styles.searchInput}
+        css={styles.searchInput(hideSearchButton!)}
         type="text"
         onInput={handleSearchChanged}
         onKeyUp={handleKeyUp}
-        placeholder="Keyword"
+        placeholder={placeholder}
       />
-      <button css={styles.searchButton} onClick={handleSearch}>
-        Search
-      </button>
+      {!hideSearchButton && (
+        <button css={styles.searchButton} onClick={handleSearch}>
+          Search
+        </button>
+      )}
     </div>
   );
 };

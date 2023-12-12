@@ -1,35 +1,55 @@
-import { AdminList } from '../AdminList/AdminList';
+import { AdminList, AdminListColumn } from '../AdminList/AdminList';
 import { nodeClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
 import { NodeStatus } from '@shared/components';
 import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import IconNode from '@public/assets/icons/app/Node.svg';
+import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
+import { capitalized } from '@modules/admin/utils/capitalized';
 
-const columns = [
+const columns: AdminListColumn[] = [
   {
     name: 'name',
-    width: '280px',
+    width: '330px',
+    sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
   },
   {
     name: 'status',
     width: '230px',
+    sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
   },
   {
     name: 'host',
-    width: '230px',
+    width: '330px',
+    sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
+  },
+  {
+    name: 'nodeType',
+    width: '150px',
+    sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
+  },
+  {
+    name: 'blockchainName',
+    width: '190px',
   },
   {
     name: 'created',
     width: '230px',
+    sortField: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
   },
 ];
 
 export const AdminNodes = () => {
   const { getTotalNodes: getTotal } = useAdminGetTotals();
 
-  const getList = async (keyword?: string, page?: number) => {
+  const getList = async (
+    keyword?: string,
+    page?: number,
+    sortField?: number,
+    sortOrder?: SortOrder,
+  ) => {
     const response = await nodeClient.listNodes(
       undefined,
       {
@@ -39,6 +59,12 @@ export const AdminNodes = () => {
         current_page: page!,
         items_per_page: pageSize,
       },
+      [
+        {
+          field: sortField!,
+          order: sortOrder!,
+        },
+      ],
     );
     return {
       list: response.nodes,
@@ -51,6 +77,7 @@ export const AdminNodes = () => {
       return {
         ...node,
         status: <NodeStatus status={node.status} hasBorder={false} />,
+        nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
         created: `${formatters.formatDate(
           node.createdAt!,
         )} @ ${formatters.formatDate(node.createdAt!, 'time')}`,
@@ -61,7 +88,8 @@ export const AdminNodes = () => {
   return (
     <AdminList
       name="nodes"
-      icon={<IconNode />}
+      defaultSortField={NodeSortField.NODE_SORT_FIELD_CREATED_AT}
+      defaultSortOrder={SortOrder.SORT_ORDER_DESCENDING}
       columns={columns}
       getTotal={getTotal}
       getList={getList}

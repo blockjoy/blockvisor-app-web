@@ -10,7 +10,7 @@ import { SvgIcon } from '@shared/components';
 type Props = { tab: string };
 
 const links = [
-  { name: 'dashboard', icon: <IconDashboard />, href: '/admin' },
+  { name: 'dashboard', icon: <IconDashboard />, href: '/admin?name=dashboard' },
   { name: 'nodes', icon: <IconNode />, href: '/admin?name=nodes' },
   { name: 'hosts', icon: <IconHost />, href: '/admin?name=hosts' },
   { name: 'orgs', icon: <IconOrganization />, href: '/admin?name=orgs' },

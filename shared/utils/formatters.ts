@@ -29,20 +29,20 @@ const formatDate = (date: Date, type?: FormatDateType): string => {
 
   switch (type) {
     case 'date':
-      formattedDate = new Intl.DateTimeFormat('en-US', {
+      formattedDate = new Intl.DateTimeFormat(undefined, {
         year: 'numeric',
-        month: 'long',
+        month: 'narrow',
         day: 'numeric',
       });
       break;
     case 'time':
-      formattedDate = new Intl.DateTimeFormat('en-US', {
+      formattedDate = new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
       });
       break;
     default:
-      formattedDate = new Intl.DateTimeFormat('en-US');
+      formattedDate = new Intl.DateTimeFormat();
   }
 
   return formattedDate.format(date);

@@ -7,7 +7,7 @@ export const styles = {
     position: relative;
     max-width: max-content;
   `,
-  button: css`
+  button: (theme: ITheme) => css`
     border: none;
     border-radius: 6px;
     background: none;
@@ -20,7 +20,7 @@ export const styles = {
 
     &:hover,
     &:active {
-      box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 0px 2px ${theme.colorInputOutline};
     }
   `,
   dropdown: css`

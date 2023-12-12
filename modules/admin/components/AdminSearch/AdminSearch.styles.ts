@@ -18,25 +18,40 @@ export const styles = {
     transform: translateY(-50%);
     pointer-events: none;
   `,
-  searchInput: (theme: ITheme) => css`
-    background: transparent;
-    border: 1px solid ${theme.colorBorderGrey};
-    outline: none;
-    border-radius: 6px;
-    height: 44px;
-    width: 100%;
-    color: ${theme.colorText};
-    padding-left: 40px;
-    padding-right: 100px;
+  searchInput: (hideSearchButton: boolean) => (theme: ITheme) =>
+    css`
+      background: transparent;
+      border: 1px solid ${theme.colorBorderGrey};
+      outline: none;
+      border-radius: 6px;
+      height: 44px;
+      width: 100%;
+      color: ${theme.colorText};
+      padding-left: 40px;
+      padding-right: ${hideSearchButton ? '16px' : '100px'};
+      opacity: 0.8;
+      transition: 0.3s;
 
-    ::placeholder {
-      color: ${theme.colorPlaceholder};
-    }
+      ::placeholder {
+        color: ${theme.colorPlaceholder};
+      }
 
-    @media ${breakpoints.fromLrg} {
-      font-size: 14px;
-    }
-  `,
+      @media ${breakpoints.fromLrg} {
+        font-size: 14px;
+      }
+
+      :hover,
+      :focus,
+      :active {
+        opacity: 1;
+      }
+
+      :focus,
+      :active {
+        box-shadow: 0px 0px 0px 2px ${theme.colorBorderGrey};
+        border-color: transparent;
+      }
+    `,
   searchButton: (theme: ITheme) => css`
     position: absolute;
     top: 50%;
@@ -54,7 +69,9 @@ export const styles = {
     opacity: 0.7;
     transition: 0.3s;
 
-    :hover {
+    :hover,
+    :focus,
+    :active {
       opacity: 1;
     }
   `,

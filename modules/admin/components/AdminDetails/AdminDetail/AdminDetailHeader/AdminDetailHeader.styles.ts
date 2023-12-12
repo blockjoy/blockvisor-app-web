@@ -7,22 +7,13 @@ export const styles = {
     flex: 1 1 auto;
     display: flex;
     align-items: center;
-    gap: 16px;
   `,
   name: css`
-    max-width: 96px;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
     margin-right: 20px;
   `,
   separator: (theme: ITheme) => css`
     color: ${theme.colorBorderGrey};
-
-    @media ${breakpoints.fromSml} {
-      margin-left: 20px;
-      margin-right: 20px;
-    }
   `,
   buttons: (theme: ITheme) => css`
     display: flex;

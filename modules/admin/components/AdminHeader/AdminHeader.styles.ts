@@ -4,12 +4,13 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  cardHeader: (theme: ITheme) => css`
+  header: (theme: ITheme) => css`
     position: sticky;
     z-index: 2;
     top: 72px;
     display: flex;
     align-items: center;
+    gap: 20px;
     width: 100%;
     padding-top: 22px;
     padding-bottom: 20px;
@@ -27,28 +28,22 @@ export const styles = {
       flex-wrap: wrap;
     }
   `,
-  cardTitle: (theme: ITheme) => css`
+  title: css`
+    display: flex;
+    align-items: center;
+  `,
+  titleText: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-size: 16px;
     text-transform: capitalize;
-  `,
-  cardTitleClickable: css`
     cursor: pointer;
-  `,
-  cardIcon: (theme: ITheme) => css`
-    background: ${theme.colorInput};
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
+    color: ${theme.colorDefault};
+    transition: 0.3s;
 
-    path {
-      fill: ${theme.colorPrimary};
-    }
-
-    @media ${breakpoints.fromSml} {
-      margin-right: 16px;
+    :hover {
+      color: ${theme.colorText};
     }
   `,
 };

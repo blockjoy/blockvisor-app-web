@@ -12,6 +12,11 @@ export const styles = {
       fill: ${theme.colorDefault};
     }
   `,
+  iconPrimary: (theme: ITheme) => css`
+    > svg :is(path, rect) {
+      fill: ${theme.colorPrimary};
+    }
+  `,
   iconTooltip: css`
     position: relative;
     display: block;

@@ -13,11 +13,11 @@ import {
 import { formatters } from '@shared/utils/formatters';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
 import { nodeClient } from '@modules/grpc';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export type AdminDetailItem = Node & User & Host & Org;
 
 type Props = {
-  icon: React.ReactNode;
   ignoreItems?: string[];
   detailsName: string;
   getItem: () => Promise<{}>;
@@ -26,7 +26,6 @@ type Props = {
 };
 
 export const AdminDetail = ({
-  icon,
   ignoreItems,
   detailsName,
   getItem,
@@ -81,17 +80,15 @@ export const AdminDetail = ({
               items_per_page: 1,
             },
           );
-          console.log('nodeResults', nodeResults);
           const item = await nodeClient.getNode(nodeResults.nodes[0].id);
           setItem(item);
-          console.log('item', item);
         } else {
           const item = await getItem();
           setItem(item);
         }
       } catch (err) {
         setItem({});
-        setError(`${capitalized(name as string)} not found`);
+        setError('Cannot load data');
       }
     })();
   }, []);
@@ -100,7 +97,6 @@ export const AdminDetail = ({
     <>
       <AdminDetailHeader
         name={name as string}
-        icon={icon}
         isLoading={item === undefined}
         detailsName={item ? item[detailsName] : undefined}
         onOpenAppView={onOpenInApp}
@@ -109,7 +105,7 @@ export const AdminDetail = ({
       {!error ? (
         <AdminDetailTable item={item!} properties={properties} />
       ) : (
-        <p>{error}</p>
+        <p css={spacing.top.medium}>{error}</p>
       )}
     </>
   );

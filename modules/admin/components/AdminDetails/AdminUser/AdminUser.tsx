@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
-import IconUser from '@public/assets/icons/common/Person.svg';
 
 export const AdminUser = () => {
   const router = useRouter();
@@ -24,7 +23,6 @@ export const AdminUser = () => {
       ignoreItems={['id']}
       customItems={customItems}
       getItem={getItem}
-      icon={<IconUser />}
       detailsName="id"
     />
   );

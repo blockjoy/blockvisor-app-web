@@ -16,14 +16,17 @@ export const AdminLayout = () => {
     <>
       <PageTitle
         title="Admin"
+        isAdmin
         icon={<IconAdmin />}
         childTitle={name && capitalized(name as string)}
-        onTitleClick={name ? () => router.push('/admin') : undefined}
+        onTitleClick={
+          name ? () => router.push('/admin?name=dashboard') : undefined
+        }
         hideOrgPicker
       />
       <section css={[styles.wrapper, wrapper.main]}>
         <AdminSidebar tab={name as string} />
-        {!name ? (
+        {name === 'dashboard' ? (
           <AdminDashboard />
         ) : id || ip ? (
           <AdminDetails />

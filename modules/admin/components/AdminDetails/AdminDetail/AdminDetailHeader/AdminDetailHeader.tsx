@@ -5,7 +5,6 @@ import { SvgIcon } from '@shared/components';
 import CopyIcon from '@public/assets/icons/common/Copy.svg';
 
 type Props = {
-  icon: React.ReactNode;
   name: string;
   detailsName?: string;
   isLoading?: boolean;
@@ -14,7 +13,6 @@ type Props = {
 };
 
 export const AdminDetailHeader = ({
-  icon,
   name,
   detailsName,
   isLoading,
@@ -22,7 +20,7 @@ export const AdminDetailHeader = ({
   onCopyObject,
 }: Props) => {
   return (
-    <AdminHeader name={name} icon={icon}>
+    <AdminHeader name={name}>
       <span css={styles.separator}>/</span>
       {isLoading ? (
         <Skeleton width="200px" />

@@ -4,6 +4,8 @@ import {
   UserServiceDefinition,
   UserServiceListRequest,
   UserServiceListResponse,
+  UserSort,
+  UserSortField,
 } from '../library/blockjoy/v1/user';
 import {
   createSearch,
@@ -15,7 +17,10 @@ import {
 import { createChannel, createClient, Metadata } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
 import { authClient } from '@modules/grpc';
-import { SearchOperator } from '../library/blockjoy/common/v1/search';
+import {
+  SearchOperator,
+  SortOrder,
+} from '../library/blockjoy/common/v1/search';
 
 export type UIUser = {
   firstName: string;
@@ -45,11 +50,17 @@ class UserClient {
   async listUsers(
     keyword?: string,
     pagination?: UIPagination,
+    sort?: UserSort[],
   ): Promise<UserServiceListResponse> {
     const request: UserServiceListRequest = {
       offset: getPaginationOffset(pagination),
       limit: pagination?.items_per_page!,
-      sort: [],
+      sort: sort || [
+        {
+          field: UserSortField.USER_SORT_FIELD_FIRST_NAME,
+          order: SortOrder.SORT_ORDER_ASCENDING,
+        },
+      ],
     };
 
     if (keyword) {

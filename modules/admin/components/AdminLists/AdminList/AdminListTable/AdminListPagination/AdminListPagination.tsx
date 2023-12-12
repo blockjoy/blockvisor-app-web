@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styles } from './AdminListPagination.styles';
 import { SvgIcon } from '@shared/components';
 import IconChevronRight from '@public/assets/icons/common/ChevronRight.svg';
@@ -23,10 +23,8 @@ export const AdminListPagination = ({
   const [end, setEnd] = useState<number>(5);
 
   const buildPagination = (pageIndex: number) => {
-    const pagesToDisplay = Math.min(5, pageCount);
-
     let pageStart = 0,
-      pageEnd = pagesToDisplay;
+      pageEnd = Math.min(5, pageCount);
 
     if (pageIndex > 3 && pageIndex < pageCount - 3) {
       pageStart = pageIndex - 1;

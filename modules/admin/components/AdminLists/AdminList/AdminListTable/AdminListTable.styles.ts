@@ -1,12 +1,35 @@
 import { css } from '@emotion/react';
+import { rgba } from 'polished';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (theme: ITheme) => css`
     overflow: auto;
     flex: 1 1 auto;
     min-width: 0;
     max-width: 100%;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: ${theme.colorLabel};
+      opacity: 0.5;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${theme.colorDefault};
+    }
   `,
   table: (theme: ITheme) => css`
     text-align: left;
@@ -16,15 +39,19 @@ export const styles = {
     border-collapse: collapse;
 
     th {
-      color: ${theme.colorDefault};
+      color: ${rgba(theme.colorDefault || '#a7a7a7', 0.8)};
       font-weight: 400;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid ${theme.colorBorder};
     }
 
     tbody tr td {
       vertical-align: middle;
       opacity: 0.8;
       padding: 0 10px 0 0;
-      border-bottom: 1px solid ${theme.colorBorder};
       height: 50px;
       white-space: nowrap;
       overflow: hidden;

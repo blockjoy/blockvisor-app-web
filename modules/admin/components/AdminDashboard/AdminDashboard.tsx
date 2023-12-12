@@ -47,7 +47,6 @@ export const AdminDashboard = () => {
 
   return (
     <section css={styles.wrapper}>
-      <AdminHeader icon={<IconDashboard />} name="Dashboard"></AdminHeader>
       <div css={styles.grid}>
         {cards.map((card) => (
           <AdminDashboardCard

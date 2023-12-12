@@ -1,5 +1,6 @@
 import { styles } from './AdminDetailTable.styles';
 import { Copy, TableSkeleton } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export type AdminDetailProperty = {
   id: string;
@@ -14,7 +15,12 @@ type Props = {
 };
 
 export const AdminDetailTable = ({ item, properties }: Props) => {
-  if (!item) return <TableSkeleton />;
+  if (!item)
+    return (
+      <div css={spacing.top.medium}>
+        <TableSkeleton />
+      </div>
+    );
 
   return (
     <table css={styles.table}>
