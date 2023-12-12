@@ -16,6 +16,7 @@ export * from './store/nodeWizard';
 export * from './store/blockchains';
 export * from './hooks/useFilters';
 export * from './hooks/useGetBlockchains';
+export * from './hooks/useGetRegions';
 export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeDelete';
 export * from './hooks/useNodeList';

@@ -35,6 +35,16 @@ export const styles = {
       text-overflow: ellipsis;
       padding-right: 20px;
     }
+    :focus {
+      svg path {
+        fill: ${theme.colorText};
+      }
+
+      p {
+        color: ${theme.colorText};
+      }
+      border-color: ${theme.colorLabel};
+    }
   `,
   icon: (theme: ITheme) => css`
     position: absolute;
@@ -51,5 +61,10 @@ export const styles = {
   `,
   iconOpen: css`
     transform: rotate(-180deg);
+  `,
+  loading: (theme: ITheme) => css`
+    p {
+      color: ${theme.colorLabel};
+    }
   `,
 };
