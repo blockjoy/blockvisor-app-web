@@ -1,10 +1,12 @@
-import { ApplicationError } from '@modules/auth/utils/Errors';
-import { invitationClient } from '@modules/grpc';
+import { useRecoilValue } from 'recoil';
 import { toast } from 'react-toastify';
-import { useDefaultOrganization } from './useDefaultOrganization';
+import { invitationClient } from '@modules/grpc';
+import { organizationAtoms } from '../store/organizationAtoms';
 
 export const useInviteMembers = () => {
-  const { defaultOrganization } = useDefaultOrganization();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const inviteMembers = async (
     inviteeEmail: string,

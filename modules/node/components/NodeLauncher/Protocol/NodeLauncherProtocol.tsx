@@ -1,13 +1,13 @@
-import { ChangeEvent, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { ChangeEvent, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useGetBlockchains, nodeLauncherAtoms } from '@modules/node';
+import IconSearch from '@public/assets/icons/common/Search.svg';
+import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { TableSkeleton, Scrollbar } from '@shared/components';
+import { blockchainAtoms } from '@modules/node';
 import { styles } from './NodeLauncherProtocol.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
-import IconSearch from '@public/assets/icons/common/Search.svg';
 import { NodeLauncherProtocolBlockchains } from './NodeLauncherProtocolBlockchains';
 
 type NodeLauncherProtocolProps = {
@@ -17,13 +17,10 @@ type NodeLauncherProtocolProps = {
 export const NodeLauncherProtocol = ({
   onProtocolSelected,
 }: NodeLauncherProtocolProps) => {
-  const { blockchains, loading } = useGetBlockchains();
-
-  const node = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const blockchains = useRecoilValue(blockchainAtoms.blockchains);
+  const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
 
   const [keyword, setKeyword] = useState('');
-
-  const { blockchainId, nodeType } = node;
 
   const handleKeywordChanged = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
@@ -32,8 +29,6 @@ export const NodeLauncherProtocol = ({
   const BlockchainsComponent = () => (
     <NodeLauncherProtocolBlockchains
       onProtocolSelected={onProtocolSelected}
-      activeBlockchainId={blockchainId}
-      activeNodeType={nodeType}
       keyword={keyword}
     />
   );
@@ -56,7 +51,7 @@ export const NodeLauncherProtocol = ({
             <IconSearch />
           </span>
         </div>
-        {loading ? (
+        {loadingState !== 'finished' ? (
           <div css={styles.skeletonWrapper}>
             <TableSkeleton />
           </div>

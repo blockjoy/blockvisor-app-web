@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { mapHostNodesToRows, useHostView } from '@modules/host';
 import { useNodeList } from '@modules/node';
 import {
@@ -10,11 +11,11 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { useDefaultOrganization } from '@modules/organization';
+import { organizationAtoms } from '@modules/organization';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
-import { useEffect, useState } from 'react';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useRecoilValue } from 'recoil';
 
 const itemsPerPage = 48;
 
@@ -24,8 +25,11 @@ export const HostViewNodes = () => {
   const { nodeListByHost, isLoading, listNodesByHost, nodeListByHostCount } =
     useNodeList();
   const { isLoading: isLoadingActiveHost } = useHostView();
-  const { defaultOrganization } = useDefaultOrganization();
   const { hasPermission } = usePermissions();
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const [pageIndex, setPageIndex] = useState(0);
 

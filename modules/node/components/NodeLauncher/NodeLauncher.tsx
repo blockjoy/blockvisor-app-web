@@ -6,12 +6,9 @@ import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
 import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { EmptyColumn, PageTitle } from '@shared/components';
 import { wrapper } from 'styles/wrapper.styles';
-import { useHostSelect } from '@modules/host';
 import { useNodeLauncherHandlers, nodeLauncherSelectors } from '@modules/node';
 
 export const NodeLauncher = () => {
-  const { hosts, isLoading: isLoadingHosts } = useHostSelect();
-
   const {
     handleHostChanged,
     handleRegionChanged,
@@ -31,6 +28,7 @@ export const NodeLauncher = () => {
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
+
       <div css={[wrapper.main, styles.wrapper]}>
         <NodeLauncherProtocol onProtocolSelected={handleProtocolSelected} />
 
@@ -46,8 +44,6 @@ export const NodeLauncher = () => {
             )}
             {hasSummary && (
               <NodeLauncherSummary
-                hosts={hosts}
-                isLoadingHosts={isLoadingHosts}
                 onHostChanged={handleHostChanged}
                 onRegionChanged={handleRegionChanged}
                 onCreateNodeClicked={handleCreateNodeClicked}

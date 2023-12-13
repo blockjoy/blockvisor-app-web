@@ -1,28 +1,27 @@
-import { useGetBlockchains } from '@modules/node';
-import { BlockchainIcon, EmptyColumn, sort } from '@shared/components';
+import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { blockchainSelectors, nodeLauncherAtoms } from '@modules/node';
+import { BlockchainIcon, EmptyColumn, sort } from '@shared/components';
 import { styles } from './NodeLauncherProtocolBlockchains.styles';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { onlyUnique } from '@shared/utils/onlyUnique';
 
-type Props = {
+type NodeLauncherProtocolBlockchainsProps = {
   keyword: string;
   onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
-  activeBlockchainId: string;
-  activeNodeType: NodeType;
 };
 
 export const NodeLauncherProtocolBlockchains = ({
   keyword,
   onProtocolSelected,
-  activeBlockchainId,
-  activeNodeType,
-}: Props) => {
-  const { blockchains } = useGetBlockchains();
-
-  const filteredBlockchains = blockchains?.filter((blockchain) =>
-    blockchain.name?.toLowerCase().includes(keyword.toLowerCase()),
+}: NodeLauncherProtocolBlockchainsProps) => {
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const filteredBlockchains = useRecoilValue(
+    blockchainSelectors.blockchainsFilteredByName(keyword),
   );
+
+  const { blockchainId: activeBlockchainId, nodeType: activeNodeType } =
+    nodeLauncher;
 
   return (
     <>

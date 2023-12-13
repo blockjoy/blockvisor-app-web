@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { useDefaultOrganization } from '@modules/organization';
+import { organizationAtoms } from '@modules/organization';
 import { nodeLauncherAtoms, useGetRegions } from '@modules/node';
 import { Dropdown } from '@shared/components';
 
@@ -19,9 +19,11 @@ export const NodeRegionSelect = ({
   blockchainId,
   nodeType,
 }: NodeRegionSelectProps) => {
-  const { defaultOrganization } = useDefaultOrganization();
   const { regions, isLoading, error, getRegions } = useGetRegions();
 
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
 

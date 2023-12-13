@@ -1,3 +1,7 @@
+import { ChangeEvent, useMemo, useRef, useState } from 'react';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import IconClose from '@public/assets/icons/common/Close.svg';
+import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { styles } from './nodeFilters.styles';
 import {
   Skeleton,
@@ -7,17 +11,13 @@ import {
   FiltersHeader,
   FiltersBlock,
 } from '@shared/components';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
-import { ChangeEvent, useMemo, useRef, useState } from 'react';
-
-import IconClose from '@public/assets/icons/common/Close.svg';
-import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { useNodeUIContext } from '@modules/node/ui/NodeUIContext';
-import { useDefaultOrganization } from '@modules/organization';
-import { useFilters } from '@modules/node/hooks/useFilters';
-import { blockchainSelectors } from '@modules/node/store/blockchains';
-import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
-import { nodeAtoms } from '@modules/node';
+import { useSwitchOrganization } from '@modules/organization';
+import {
+  nodeAtoms,
+  blockchainSelectors,
+  useFilters,
+  useNodeUIContext,
+} from '@modules/node';
 
 export type NodeFiltersProps = {
   isLoading: LoadingState;
@@ -36,7 +36,6 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
     useFilters(nodeUIProps);
 
   const { switchOrganization } = useSwitchOrganization();
-  const { defaultOrganization } = useDefaultOrganization();
 
   const [isDirty, setIsDirty] = useState(false);
 

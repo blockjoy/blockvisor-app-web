@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
@@ -12,13 +12,9 @@ import {
   NodeScheduler_ResourceAffinity,
   NodeServiceCreateRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
-import { useHostList, useHostSelect } from '@modules/host';
-import {
-  useGetBlockchains,
-  useNodeAdd,
-  nodeLauncherAtoms,
-} from '@modules/node';
-import { useDefaultOrganization } from '@modules/organization';
+import { hostAtoms, useHostSelect } from '@modules/host';
+import { useNodeAdd, nodeLauncherAtoms, blockchainAtoms } from '@modules/node';
+import { organizationAtoms } from '@modules/organization';
 import { ROUTES } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { sortNetworks, sortNodeTypes, sortVersions } from '../utils';
@@ -42,12 +38,14 @@ interface IUseNodeLauncherHandlersHook {
 export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const router = useRouter();
 
-  const { defaultOrganization } = useDefaultOrganization();
   const { getHosts } = useHostSelect();
-  const { blockchains } = useGetBlockchains();
   const { createNode } = useNodeAdd();
-  const { hostList } = useHostList();
 
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
+  const hostList = useRecoilValue(hostAtoms.hostList);
+  const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const setSelectedNodeType = useSetRecoilState(
     nodeLauncherAtoms.selectedNodeType,
   );
@@ -118,19 +116,25 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
 
   const handleNodeConfigPropertyChanged = (e: any) => {
     setError('');
+    if (!nodeLauncherState.properties) return;
 
     const propertiesCopy = [...nodeLauncherState.properties!];
 
-    let foundProperty = propertiesCopy.find(
+    const propertyIndex = propertiesCopy.findIndex(
       (property) => property.name === e.target.name,
     );
 
-    if (!foundProperty) return;
+    if (propertyIndex === -1) return;
 
     const newValue =
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
-    foundProperty.value = newValue;
+    const updatedProperty = {
+      ...propertiesCopy[propertyIndex],
+      value: newValue,
+    };
+
+    propertiesCopy[propertyIndex] = updatedProperty;
 
     setNodeLauncherState({
       ...nodeLauncherState,
@@ -138,7 +142,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     });
 
     Mixpanel.track('Launch Node - Node Config Property Changed', {
-      propertyName: foundProperty.name,
+      propertyName: updatedProperty.name,
       propertyValue: newValue,
     });
   };

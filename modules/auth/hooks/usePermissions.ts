@@ -1,14 +1,15 @@
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { authClient } from '@modules/grpc';
-import { useDefaultOrganization } from '@modules/organization';
+import { organizationAtoms } from '@modules/organization';
 import { sort } from '@shared/components';
-import { useRecoilState } from 'recoil';
 import { authAtoms } from '../store/authAtoms';
 import { useIdentity } from './useIdentity';
 
 export function usePermissions() {
   const [permissions, setPermissions] = useRecoilState(authAtoms.permissions);
-
-  const { defaultOrganization } = useDefaultOrganization();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const { user } = useIdentity();
 
