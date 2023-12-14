@@ -1,6 +1,5 @@
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { styles } from './AdminListTable.styles';
-import { AdminListColumn, IAdminItem } from '../AdminList';
 import { useRouter } from 'next/router';
 import { Copy, TableSkeleton } from '@shared/components';
 import { capitalized } from '@modules/admin/utils/capitalized';

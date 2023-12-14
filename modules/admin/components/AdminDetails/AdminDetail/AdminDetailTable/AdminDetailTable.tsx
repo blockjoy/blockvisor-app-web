@@ -10,7 +10,7 @@ export type AdminDetailProperty = {
 };
 
 type Props = {
-  item: any;
+  item: IAdminItem;
   properties: AdminDetailProperty[];
 };
 

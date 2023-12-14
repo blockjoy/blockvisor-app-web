@@ -14,7 +14,7 @@ export const AdminHost = () => {
 
   const getItem = async () => await hostClient.getHost(id as string);
 
-  const customItems = (host: Host): AdminDetailProperty[] => [
+  const customItems = (host: Host & IAdminItem): AdminDetailProperty[] => [
     {
       id: 'name',
       label: 'Name',

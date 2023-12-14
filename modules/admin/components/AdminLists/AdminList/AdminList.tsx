@@ -5,26 +5,12 @@ import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
 
-export type AdminListColumn = {
-  name: string;
-  width?: string;
-  canCopy?: boolean;
-  sortField?: number;
-  sortOrder?: SortOrder;
-  displayName?: string;
-};
-
-export interface IAdminItem {
-  id: string;
-}
-
 type Props = {
   name: string;
   columns: AdminListColumn[];
   defaultSortField: number;
   defaultSortOrder: SortOrder;
-  listMap: (list: any[]) => IAdminItem[];
-  getTotal: () => Promise<number>;
+  listMap: (list: any[]) => any[];
   getList: (
     keyword?: string,
     page?: number,
@@ -32,7 +18,7 @@ type Props = {
     sortOrder?: number,
   ) => Promise<{
     total: number;
-    list: IAdminItem[];
+    list: any[];
   }>;
 };
 
@@ -42,25 +28,42 @@ export const AdminList = ({
   defaultSortField,
   defaultSortOrder,
   listMap,
-  getTotal,
   getList,
 }: Props) => {
   const router = useRouter();
-  const { search, page, field, order } = router.query;
+  const { search, page } = router.query;
   const [isLoading, setIsLoading] = useState(true);
-  const [list, setList] = useState<IAdminItem[]>([]);
+  const [list, setList] = useState<any[]>([]);
   const [listTotal, setListTotal] = useState<number>();
-  const [total, setTotal] = useState<number>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [listPage, setListPage] = useState<number>();
-  const [sortField, setSortField] = useState(defaultSortField);
-  const [sortOrder, setSortOrder] = useState(defaultSortOrder);
-  const [columnsState, setColumnsState] = useState(columns);
+  const [sortField, setSortField] = useState(
+    +localStorage?.getItem(`${name}SortField`)! || defaultSortField,
+  );
+  const [sortOrder, setSortOrder] = useState(
+    +localStorage?.getItem(`${name}SortOrder`)! || defaultSortOrder,
+  );
 
-  const handleGetTotal = async () => {
-    const response = await getTotal();
-    setTotal(response);
+  const localStorageColumns: AdminListColumn[] = JSON.parse(
+    localStorage.getItem(`${name}Columns`)!,
+  );
+
+  const loadColumns = () => {
+    let tempColumns = columns;
+
+    if (localStorageColumns) {
+      tempColumns.forEach((column) => {
+        const isVisible = localStorageColumns?.find(
+          (c: AdminListColumn) => c.name === column.name,
+        )?.isVisible;
+        column.isVisible = isVisible;
+      });
+    }
+
+    return tempColumns;
   };
+
+  const [columnsState, setColumnsState] = useState(loadColumns());
 
   const handleGetList = async (
     keyword: string,
@@ -81,82 +84,75 @@ export const AdminList = ({
         name,
         page: 0,
         search: keyword.trim(),
-        field,
-        order,
       },
     });
     setSearchTerm(keyword);
     setListPage(0);
   };
 
-  const handleSortChanged = (sortField: number, sortOrder: SortOrder) => {
-    setSortField(sortField);
-
+  const handleSortChanged = (field: number, order: SortOrder) => {
     const newSortOrder =
-      sortOrder === SortOrder.SORT_ORDER_ASCENDING
+      sortField !== field
+        ? SortOrder.SORT_ORDER_ASCENDING
+        : sortOrder === SortOrder.SORT_ORDER_ASCENDING
         ? SortOrder.SORT_ORDER_DESCENDING
         : SortOrder.SORT_ORDER_ASCENDING!;
 
     setSortOrder(newSortOrder);
+    setSortField(field);
 
-    const columnsStateCopy = [...columnsState];
+    localStorage.setItem(`${name}SortField`, field.toString());
+    localStorage.setItem(`${name}SortOrder`, newSortOrder.toString());
 
-    const foundColumn = columnsStateCopy.find(
-      (column) => column.sortField === sortField,
-    );
+    const newColumns = [...columnsState];
+    const foundColumn = newColumns.find((column) => column.sortField === field);
 
     if (!foundColumn) return;
 
     foundColumn.sortOrder = newSortOrder;
 
-    setColumnsState(columnsStateCopy);
-
-    router.push({
-      pathname: `/admin`,
-      query: {
-        name,
-        page,
-        search,
-        field: sortField,
-        order: newSortOrder,
-      },
-    });
-    console.log('handleSortChanged', sortField, newSortOrder);
+    setColumnsState(newColumns);
   };
 
-  const handlePageChanged = (page: number) => {
-    setListPage(page);
+  const handlePageChanged = (nextPage: number) => {
+    setListPage(nextPage);
+    const query: AdminQuery = {
+      name,
+      page: nextPage,
+    };
+
+    if (search) query.search = search as string;
+
     router.push({
       pathname: `/admin`,
-      query: {
-        name,
-        page,
-        search,
-        field,
-        order,
-      },
+      query,
     });
+  };
+
+  const handleColumnsChanged = (nextColumns: AdminListColumn[]) => {
+    localStorage.setItem(`${name}Columns`, JSON.stringify(nextColumns));
+    setColumnsState(nextColumns);
   };
 
   useEffect(() => {
-    (async () => {
-      setSearchTerm((search as string) || '');
-      setListPage(page ? +page?.toString()! : 0);
-      setSortField(field ? +field?.toString()! : defaultSortField);
-      setSortOrder(order ? +order?.toString()! : defaultSortOrder);
-    })();
+    setSearchTerm((search as string) || '');
+    setListPage(page ? +page?.toString()! : 0);
   }, [router.isReady]);
 
   useEffect(() => {
     if (searchTerm !== undefined && listPage !== undefined) {
-      handleGetTotal();
       handleGetList(searchTerm!, listPage!, sortField!, sortOrder!);
     }
   }, [searchTerm, listPage, sortField, sortOrder]);
 
   return (
     <article key={name} id={name} css={styles.card}>
-      <AdminListHeader name={name} onSearch={handleSearch} />
+      <AdminListHeader
+        name={name}
+        onSearch={handleSearch}
+        columnsState={columnsState}
+        onColumnsChanged={handleColumnsChanged}
+      />
       <AdminListTable
         name={name}
         isLoading={isLoading}
@@ -164,7 +160,7 @@ export const AdminList = ({
         listTotal={listTotal}
         listPage={listPage!}
         searchTerm={searchTerm}
-        columns={columnsState}
+        columns={columnsState.filter((column) => column.isVisible)}
         activeSortField={sortField}
         activeSortOrder={sortOrder}
         onPageChanged={handlePageChanged}

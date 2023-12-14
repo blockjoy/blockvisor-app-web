@@ -1,7 +1,6 @@
-import { AdminList, AdminListColumn } from '../AdminList/AdminList';
+import { AdminList } from '../AdminList/AdminList';
 import { organizationClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
-import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Org, OrgSortField } from '@modules/grpc/library/blockjoy/v1/org';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
@@ -11,27 +10,29 @@ const columns: AdminListColumn[] = [
     name: 'name',
     width: '230px',
     sortField: OrgSortField.ORG_SORT_FIELD_NAME,
+    isVisible: true,
   },
   {
     name: 'nodeCount',
     displayName: 'Nodes',
     width: '50px',
+    isVisible: true,
   },
   {
     name: 'hostCount',
     displayName: 'Hosts',
     width: '100px',
+    isVisible: true,
   },
   {
     name: 'created',
     width: '230px',
     sortField: OrgSortField.ORG_SORT_FIELD_CREATED_AT,
+    isVisible: true,
   },
 ];
 
 export const AdminOrgs = () => {
-  const { getTotalOrgs: getTotal } = useAdminGetTotals();
-
   const getList = async (
     keyword?: string,
     page?: number,
@@ -74,7 +75,6 @@ export const AdminOrgs = () => {
       defaultSortField={OrgSortField.ORG_SORT_FIELD_NAME}
       defaultSortOrder={SortOrder.SORT_ORDER_ASCENDING}
       columns={columns}
-      getTotal={getTotal}
       getList={getList}
       listMap={listMap}
     />

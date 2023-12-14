@@ -11,6 +11,7 @@ export const styles = {
   name: css`
     white-space: nowrap;
     margin-right: 20px;
+    font-size: 16px;
   `,
   separator: (theme: ITheme) => css`
     color: ${theme.colorBorderGrey};

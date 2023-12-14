@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { styles } from './AdminHeader.styles';
-import IconBack from '@public/assets/icons/common/ArrowLeft.svg';
 import { SvgIcon } from '@shared/components';
+import IconBack from '@public/assets/icons/common/ArrowLeft.svg';
 
 type Props = {
   name: string;
@@ -11,18 +11,19 @@ type Props = {
 export const AdminHeader = ({ name, children }: Props) => {
   const router = useRouter();
 
-  const { id, ip, search, page, field, order } = router.query;
+  const { id, ip, search, page } = router.query;
 
   const handleTitleClicked = () => {
+    const query: AdminQuery = {
+      name,
+    };
+
+    if (search) query.search = search as string;
+    if (page) query.page = +page;
+
     router.push({
       pathname: `admin`,
-      query: {
-        name,
-        search,
-        page,
-        field,
-        order,
-      },
+      query,
     });
   };
 

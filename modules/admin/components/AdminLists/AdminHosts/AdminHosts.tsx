@@ -1,7 +1,6 @@
-import { AdminList, AdminListColumn } from '../AdminList/AdminList';
+import { AdminList } from '../AdminList/AdminList';
 import { formatters } from '@shared/utils/formatters';
 import { hostClient } from '@modules/grpc/clients/hostClient';
-import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
@@ -11,34 +10,42 @@ const columns: AdminListColumn[] = [
     name: 'name',
     width: '320px',
     sortField: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+    isVisible: true,
   },
   {
     name: 'nodeCount',
     displayName: 'Nodes',
     width: '100px',
+    isVisible: true,
   },
   {
     name: 'diskSizeBytes',
     displayName: 'Disk Size',
     width: '130px',
     sortField: HostSortField.HOST_SORT_FIELD_DISK_SIZE_BYTES,
+    isVisible: true,
   },
   {
     name: 'cpuCount',
     displayName: 'Cpu Count',
     width: '150px',
     sortField: HostSortField.HOST_SORT_FIELD_CPU_COUNT,
+    isVisible: true,
+  },
+  {
+    name: 'orgName',
+    width: '230px',
+    isVisible: true,
   },
   {
     name: 'created',
     width: '230px',
     sortField: HostSortField.HOST_SORT_FIELD_CREATED_AT,
+    isVisible: true,
   },
 ];
 
 export const AdminHosts = () => {
-  const { getTotalHosts: getTotal } = useAdminGetTotals();
-
   const getList = async (
     keyword?: string,
     page?: number,
@@ -84,7 +91,6 @@ export const AdminHosts = () => {
       defaultSortField={HostSortField.HOST_SORT_FIELD_HOST_NAME}
       defaultSortOrder={SortOrder.SORT_ORDER_ASCENDING}
       columns={columns}
-      getTotal={getTotal}
       getList={getList}
       listMap={listMap}
     />

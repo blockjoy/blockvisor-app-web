@@ -1,7 +1,3 @@
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
-import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -14,8 +10,6 @@ import { formatters } from '@shared/utils/formatters';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
 import { nodeClient } from '@modules/grpc';
 import { spacing } from 'styles/utils.spacing.styles';
-
-export type AdminDetailItem = Node & User & Host & Org;
 
 type Props = {
   ignoreItems?: string[];

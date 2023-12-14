@@ -19,10 +19,6 @@ export const styles = {
     background: ${rgba(theme.colorBackground || '#000', 0.7)};
     backdrop-filter: blur(10px);
 
-    h2 {
-      font-size: 16px;
-    }
-
     @media ${breakpoints.toSml} {
       gap: 10px;
       flex-wrap: wrap;

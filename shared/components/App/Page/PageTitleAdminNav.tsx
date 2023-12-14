@@ -8,7 +8,7 @@ import IconNode from '@public/assets/icons/app/Node.svg';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconUser from '@public/assets/icons/common/Person.svg';
-import IconDashboard from '@public/assets/icons/app/Grid.svg';
+import IconDashboard from '@public/assets/icons/common/Grid.svg';
 
 const links = [
   { name: 'dashboard', icon: <IconDashboard /> },

@@ -1,8 +1,7 @@
-import { AdminList, AdminListColumn } from '../AdminList/AdminList';
+import { AdminList } from '../AdminList/AdminList';
 import { nodeClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
 import { NodeStatus } from '@shared/components';
-import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
@@ -14,36 +13,45 @@ const columns: AdminListColumn[] = [
     name: 'name',
     width: '330px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+    isVisible: true,
   },
   {
     name: 'status',
     width: '230px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    isVisible: true,
   },
   {
     name: 'host',
     width: '330px',
     sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
+    isVisible: true,
   },
   {
     name: 'nodeType',
     width: '150px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
+    isVisible: true,
   },
   {
     name: 'blockchainName',
     width: '190px',
+    isVisible: true,
+  },
+  {
+    name: 'orgName',
+    width: '240px',
+    isVisible: true,
   },
   {
     name: 'created',
     width: '230px',
     sortField: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
+    isVisible: true,
   },
 ];
 
 export const AdminNodes = () => {
-  const { getTotalNodes: getTotal } = useAdminGetTotals();
-
   const getList = async (
     keyword?: string,
     page?: number,
@@ -91,7 +99,6 @@ export const AdminNodes = () => {
       defaultSortField={NodeSortField.NODE_SORT_FIELD_CREATED_AT}
       defaultSortOrder={SortOrder.SORT_ORDER_DESCENDING}
       columns={columns}
-      getTotal={getTotal}
       getList={getList}
       listMap={listMap}
     />

@@ -1,6 +1,6 @@
 import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
-import { AdminDetail, AdminDetailItem } from '../AdminDetail/AdminDetail';
+import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { NextLink, NodeStatus } from '@shared/components';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized } from '@modules/admin/utils/capitalized';
