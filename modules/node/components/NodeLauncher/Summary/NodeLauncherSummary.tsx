@@ -27,6 +27,8 @@ type Props = {
   isNodeValid: boolean;
   isConfigValid: boolean | null;
   isCreating: boolean;
+  hosts: Host[];
+  isLoadingHosts: boolean;
   selectedHost: Host | null;
   selectedVersion: BlockchainVersion;
   selectedRegion: Region | null;
@@ -44,6 +46,8 @@ export const NodeLauncherSummary: FC<Props> = ({
   isNodeValid,
   isConfigValid,
   isCreating,
+  hosts,
+  isLoadingHosts,
   selectedHost,
   selectedVersion,
   selectedRegion,
@@ -66,8 +70,20 @@ export const NodeLauncherSummary: FC<Props> = ({
 
       {Boolean(hostList?.length) && (
         <>
-          <FormLabel>Host</FormLabel>
-          <HostSelect selectedHost={selectedHost} onChange={onHostChanged} />
+          <FormLabel>
+            <span>Host</span>
+            {selectedHost !== null ? (
+              <a onClick={() => onHostChanged(null)} css={styles.autoSelect}>
+                Auto select
+              </a>
+            ) : null}
+          </FormLabel>
+          <HostSelect
+            hosts={hosts}
+            isLoading={isLoadingHosts}
+            selectedHost={selectedHost}
+            onChange={onHostChanged}
+          />
         </>
       )}
 

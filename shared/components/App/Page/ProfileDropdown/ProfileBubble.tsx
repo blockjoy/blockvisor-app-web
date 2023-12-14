@@ -2,7 +2,7 @@ import { styles } from './ProfileBubble.styles';
 import { authAtoms } from '@modules/auth';
 import { useRecoilValue } from 'recoil';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import IconArrow from '@public/assets/icons/common/ArrowDown.svg';
+import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
 export const ProfileBubble = () => {
   const user = useRecoilValue(authAtoms.user);

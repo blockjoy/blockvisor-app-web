@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Select } from '@shared/components';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { hostClient } from '@modules/grpc/clients/hostClient';
-import { colors } from 'styles/utils.colors.styles';
+import { Dropdown } from '@shared/components';
 import { useDefaultOrganization } from '@modules/organization';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { useGetRegions } from '@modules/node/hooks/useGetRegions';
 
 type Props = {
   onChange: (region: Region | null) => void;
@@ -24,53 +23,38 @@ export const NodeRegionSelect = ({
   nodeType,
   version,
 }: Props) => {
-  const [serverError, setServerError] = useState('');
-  const [regions, setRegions] = useState<Region[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
   const { defaultOrganization } = useDefaultOrganization();
 
-  useEffect(() => {
-    if (version?.id) {
-      setServerError('');
-      (async () => {
-        try {
-          const regions: Region[] = await hostClient.getRegions(
-            defaultOrganization?.id!,
-            blockchainId,
-            nodeType,
-            version.version,
-          );
-          setRegions(regions);
+  const handleOpen = (open: boolean = true) => {
+    setIsOpen(open);
+  };
 
-          if (!regions.length) {
-            setServerError('Region List Empty');
-            return;
-          }
-          onLoad(regions[0]);
-        } catch (err) {
-          console.log('getRegionsError', err);
-          setServerError('Error Loading Regions');
-          onLoad(null);
-        }
+  const { regions, isLoading, error, getRegions } = useGetRegions();
+
+  useEffect(() => {
+    if (version?.id && defaultOrganization?.id) {
+      (async () => {
+        await getRegions(version, blockchainId, nodeType);
       })();
-    } else {
-      setRegions([]);
     }
-  }, [version?.id]);
+  }, [version?.id, defaultOrganization?.id]);
+
+  useEffect(() => {
+    const activeRegion = regions.length ? regions[0] : null;
+    onLoad(activeRegion);
+  }, [regions]);
 
   return (
-    <Select
-      disabled={!!serverError}
-      buttonText={
-        serverError ? (
-          <div css={[colors.warning]}>{serverError}</div>
-        ) : (
-          <p>{region?.name}</p>
-        )
-      }
-      items={regions?.map((r) => ({
-        name: r?.name || '',
-        onClick: () => onChange(r),
-      }))}
+    <Dropdown
+      items={regions}
+      handleSelected={onChange}
+      selectedItem={region}
+      isLoading={isLoading}
+      disabled={!!error}
+      {...(error && { error })}
+      isOpen={isOpen}
+      handleOpen={handleOpen}
     />
   );
 };

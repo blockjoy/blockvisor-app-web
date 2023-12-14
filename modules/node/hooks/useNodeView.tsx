@@ -33,7 +33,7 @@ export const useNodeView = (): Hook => {
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
 
-  const { nodeList } = useNodeList();
+  const { nodeList, modifyNodeInNodeList } = useNodeList();
 
   const stopNode = async (nodeId: Args) => {
     try {
@@ -77,10 +77,14 @@ export const useNodeView = (): Hook => {
   const updateNode = async (nodeRequest: NodeServiceUpdateConfigRequest) => {
     try {
       await nodeClient.updateNode(nodeRequest);
-      setNode({
+
+      const newNode = {
         ...node!,
         ...nodeRequest,
-      });
+      };
+
+      setNode(newNode);
+      modifyNodeInNodeList(newNode);
     } catch (err) {
       toast.error('Error Updating Node');
     }

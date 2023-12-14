@@ -17,6 +17,7 @@ const mockdata = [
     createdAt: new Date(),
     updatedAt: new Date(),
     nodeCount: 0,
+    hostCount: 0,
   },
   {
     id: '28ce6cf1-3caf-49a2-8928-bcd3777a2b3b',
@@ -27,6 +28,7 @@ const mockdata = [
     createdAt: new Date(),
     updatedAt: new Date(),
     nodeCount: 0,
+    hostCount: 0,
   },
   {
     id: '793be634-bf9e-495d-891f-b3185696030e',
@@ -37,6 +39,7 @@ const mockdata = [
     createdAt: new Date(),
     updatedAt: new Date(),
     nodeCount: 1,
+    hostCount: 0,
   },
 ];
 

@@ -1,6 +1,7 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
-import { formatters, NextLink } from '@shared/index';
+import { formatters } from '@shared/index';
+import { NextLink } from '@shared/components';
 
 export const mapNodeToGeneralDetails = (node: Node) => {
   if (!node?.nodeType) return [];

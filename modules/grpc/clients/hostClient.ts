@@ -5,6 +5,7 @@ import {
   HostServiceDefinition,
   HostServiceListRequest,
   HostServiceListResponse,
+  HostSortField,
   HostType,
   Region,
 } from '../library/blockjoy/v1/host';
@@ -16,7 +17,10 @@ import {
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { NodeType } from '../library/blockjoy/common/v1/node';
-import { SearchOperator } from '../library/blockjoy/common/v1/search';
+import {
+  SearchOperator,
+  SortOrder,
+} from '../library/blockjoy/common/v1/search';
 
 export type HostFilterCriteria = {
   hostStatus?: string[];
@@ -48,6 +52,12 @@ class HostClient {
       orgId,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page!,
+      sort: [
+        {
+          field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+          order: SortOrder.SORT_ORDER_ASCENDING,
+        },
+      ],
     };
 
     if (filterCriteria?.keyword) {
@@ -104,14 +114,11 @@ class HostClient {
       hostType: HostType.HOST_TYPE_CLOUD,
     };
 
-    console.log('getRegionsRequest', request);
-
     try {
       const response = await callWithTokenRefresh(
         this.client.regions.bind(this.client),
         request,
       );
-      console.log('getRegionsResponse', response);
       return response.regions!;
     } catch (err) {
       return handleError(err);

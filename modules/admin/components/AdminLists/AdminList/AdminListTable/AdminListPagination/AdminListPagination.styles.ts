@@ -14,15 +14,17 @@ export const styles = {
   paginationButton: (theme: ITheme) => css`
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
+    min-width: 38px;
+    height: 32px;
     padding: 0;
-    border: 0;
-    border-radius: 3px;
-    background: ${theme.colorCard};
-    color: #f9f9f9;
-    font-size: 13px;
+    border: 1px solid transparent;
+    border-radius: 22px;
+    background: transparent;
+    color: ${theme.colorText};
+    font-size: 12px;
     cursor: default;
+    user-select: none;
+    transition: 0.3s;
 
     :not(span) {
       cursor: pointer;
@@ -34,11 +36,12 @@ export const styles = {
 
     :hover:not(span, .active, :disabled) {
       opacity: 1;
+      background: ${theme.colorCard};
     }
 
     &.active {
-      background: ${theme.colorPrimary};
-      color: ${theme.colorPrimaryText};
+      border-color: ${theme.colorPrimary};
+      color: ${theme.colorPrimary};
     }
 
     &:disabled {
