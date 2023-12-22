@@ -18,11 +18,6 @@ export const styles = {
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${rgba(theme.colorBackground || '#000', 0.7)};
     backdrop-filter: blur(10px);
-
-    @media ${breakpoints.toSml} {
-      gap: 10px;
-      flex-wrap: wrap;
-    }
   `,
   title: css`
     display: flex;

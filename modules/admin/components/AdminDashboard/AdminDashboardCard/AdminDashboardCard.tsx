@@ -15,13 +15,16 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
   const [total, setTotal] = useState<number>();
 
   const handleSearch = (keyword: string) => {
+    const query: AdminQuery = {
+      name: name.toLowerCase(),
+      page: 1,
+    };
+
+    if (keyword) query.search = keyword.trim();
+
     router.push({
       pathname: '/admin',
-      query: {
-        name: name.toLowerCase(),
-        page: 0,
-        search: keyword.trim(),
-      },
+      query,
     });
   };
 
@@ -49,7 +52,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
           </var>
         </div>
       </div>
-      <AdminSearch onSearch={handleSearch} />
+      <AdminSearch onSearch={handleSearch} isDashboardSearch />
     </article>
   );
 };

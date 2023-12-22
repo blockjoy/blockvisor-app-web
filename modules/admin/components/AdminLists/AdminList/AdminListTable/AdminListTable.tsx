@@ -1,12 +1,13 @@
-import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { styles } from './AdminListTable.styles';
+import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 import { Copy, TableSkeleton } from '@shared/components';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { AdminListPagination } from './AdminListPagination/AdminListPagination';
+import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
 import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
-import { spacing } from 'styles/utils.spacing.styles';
 
 type Props = {
   name: string;
@@ -15,7 +16,6 @@ type Props = {
   list: IAdminItem[];
   listTotal?: number;
   listPage: number;
-  searchTerm?: string;
   activeSortField: number;
   activeSortOrder: SortOrder;
   onPageChanged: (page: number) => void;
@@ -29,7 +29,6 @@ export const AdminListTable = ({
   list,
   listTotal,
   listPage,
-  searchTerm,
   activeSortField,
   activeSortOrder,
   onPageChanged,
@@ -65,16 +64,11 @@ export const AdminListTable = ({
       </div>
     );
 
-  if (listTotal === 0) return <p>No {name} found.</p>;
+  if (listTotal === 0) return <p css={spacing.top.medium}>No {name} found.</p>;
 
   return (
     <>
-      {/* {searchTerm && (
-        <p css={styles.rowCount}>
-          Found <var css={styles.rowCountTotal}>{listTotal}</var> {name}
-        </p>
-      )} */}
-      <div css={styles.wrapper}>
+      <section css={styles.tableWrapper}>
         <table css={styles.table}>
           <thead>
             <tr>
@@ -125,13 +119,16 @@ export const AdminListTable = ({
             ))}
           </tbody>
         </table>
-      </div>
-      <AdminListPagination
-        listPage={listPage}
-        totalRowCount={listTotal!}
-        pageCount={pageCount}
-        onPageChanged={onPageChanged}
-      />
+      </section>
+      <section css={styles.bottomRow}>
+        <AdminListPagination
+          listPage={listPage}
+          totalRowCount={listTotal!}
+          pageCount={pageCount}
+          onPageChanged={onPageChanged}
+        />
+        <AdminListRowCount total={listTotal!} page={listPage} />
+      </section>
     </>
   );
 };

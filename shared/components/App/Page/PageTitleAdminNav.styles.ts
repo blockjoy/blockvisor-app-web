@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -60,5 +61,10 @@ export const styles = {
   `,
   iconActive: css`
     transform: rotate(-180deg);
+  `,
+  nameIcon: css`
+    @media ${breakpoints.toSml} {
+      display: none;
+    }
   `,
 };

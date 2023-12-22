@@ -1,9 +1,10 @@
 import { css } from '@emotion/react';
 import { rgba } from 'polished';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: (theme: ITheme) => css`
+  tableWrapper: css`
     overflow: auto;
     flex: 1 1 auto;
     min-width: 0;
@@ -15,20 +16,16 @@ export const styles = {
       width: 10px;
     }
 
-    /* Track */
     ::-webkit-scrollbar-track {
       background: transparent;
     }
 
-    /* Handle */
     ::-webkit-scrollbar-thumb {
-      background: ${theme.colorLabel};
-      opacity: 0.5;
+      background: rgb(255 255 255 / 10%);
     }
 
-    /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-      background: ${theme.colorDefault};
+      background: rgb(255 255 255 / 20%);
     }
   `,
   table: (theme: ITheme) => css`
@@ -87,13 +84,14 @@ export const styles = {
     display: flex;
     align-items: center;
   `,
-  rowCount: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    font-size: 14px;
-    margin-bottom: 14px;
-  `,
-  rowCountTotal: (theme: ITheme) => css`
-    color: ${theme.colorText};
-    font-style: normal;
+  bottomRow: css`
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    @media ${breakpoints.toSml} {
+      flex-direction: column;
+      margin-top: 10px;
+    }
   `,
 };

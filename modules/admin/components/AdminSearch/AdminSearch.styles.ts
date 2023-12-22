@@ -28,7 +28,7 @@ export const styles = {
       width: 100%;
       color: ${theme.colorText};
       padding-left: 40px;
-      padding-right: ${hideSearchButton ? '16px' : '100px'};
+      padding-right: ${hideSearchButton ? '32px' : '100px'};
       opacity: 0.8;
       transition: 0.3s;
 
@@ -72,6 +72,21 @@ export const styles = {
     :hover,
     :focus,
     :active {
+      opacity: 1;
+    }
+  `,
+  clearButton: css`
+    position: absolute;
+    top: 0;
+    right: 4px;
+    bottom: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+
+    :hover {
       opacity: 1;
     }
   `,

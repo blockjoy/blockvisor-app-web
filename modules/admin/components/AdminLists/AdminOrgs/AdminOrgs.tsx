@@ -25,7 +25,7 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
-    name: 'created',
+    name: 'createdAt',
     width: '230px',
     sortField: OrgSortField.ORG_SORT_FIELD_CREATED_AT,
     isVisible: true,
@@ -63,7 +63,7 @@ export const AdminOrgs = () => {
     list.map((item) => {
       return {
         ...item,
-        created: `${formatters.formatDate(
+        createdAt: `${formatters.formatDate(
           item.createdAt!,
         )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
       };

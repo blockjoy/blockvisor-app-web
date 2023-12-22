@@ -25,7 +25,7 @@ export const AdminDetailHeader = ({
       {isLoading ? (
         <Skeleton width="200px" />
       ) : (
-        <>
+        <div css={styles.wrapper}>
           <h2 css={styles.name}>{detailsName}</h2>
           <div css={styles.buttons}>
             {!!onOpenAppView && (
@@ -40,7 +40,7 @@ export const AdminDetailHeader = ({
               Copy Json
             </button>
           </div>
-        </>
+        </div>
       )}
     </AdminHeader>
   );

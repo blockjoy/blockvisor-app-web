@@ -11,9 +11,19 @@ import { capitalized } from '@modules/admin/utils/capitalized';
 const columns: AdminListColumn[] = [
   {
     name: 'name',
-    width: '330px',
+    width: '350px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
     isVisible: true,
+  },
+  {
+    name: 'ip',
+    width: '140px',
+    isVisible: false,
+  },
+  {
+    name: 'ipGateway',
+    width: '140px',
+    isVisible: false,
   },
   {
     name: 'status',
@@ -39,15 +49,42 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
+    name: 'blockHeight',
+    width: '190px',
+    isVisible: true,
+  },
+  {
+    name: 'network',
+    width: '100px',
+    isVisible: false,
+  },
+  {
+    name: 'version',
+    width: '130px',
+    isVisible: false,
+  },
+  {
+    name: 'region',
+    width: '210px',
+    isVisible: false,
+  },
+  {
     name: 'orgName',
     width: '240px',
     isVisible: true,
   },
   {
-    name: 'created',
+    name: 'createdAt',
+    displayName: 'Launched On',
     width: '230px',
     sortField: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
     isVisible: true,
+  },
+  {
+    name: 'createdBy',
+    displayName: 'Launched By',
+    width: '230px',
+    isVisible: false,
   },
 ];
 
@@ -86,9 +123,11 @@ export const AdminNodes = () => {
         ...node,
         status: <NodeStatus status={node.status} hasBorder={false} />,
         nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
-        created: `${formatters.formatDate(
+        region: node.placement?.scheduler?.region,
+        createdAt: `${formatters.formatDate(
           node.createdAt!,
         )} @ ${formatters.formatDate(node.createdAt!, 'time')}`,
+        createdBy: node.createdBy?.name,
         host: node.hostName,
       };
     });

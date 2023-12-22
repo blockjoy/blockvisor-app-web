@@ -13,6 +13,11 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
+    name: 'ip',
+    width: '320px',
+    isVisible: false,
+  },
+  {
     name: 'nodeCount',
     displayName: 'Nodes',
     width: '100px',
@@ -33,12 +38,30 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
+    name: 'version',
+    width: '150px',
+    sortField: HostSortField.HOST_SORT_FIELD_VERSION,
+    isVisible: true,
+  },
+  {
+    name: 'os',
+    width: '150px',
+    sortField: HostSortField.HOST_SORT_FIELD_OS,
+    isVisible: true,
+  },
+  {
+    name: 'osVersion',
+    width: '150px',
+    sortField: HostSortField.HOST_SORT_FIELD_OS_VERSION,
+    isVisible: true,
+  },
+  {
     name: 'orgName',
     width: '230px',
     isVisible: true,
   },
   {
-    name: 'created',
+    name: 'createdAt',
     width: '230px',
     sortField: HostSortField.HOST_SORT_FIELD_CREATED_AT,
     isVisible: true,
@@ -79,7 +102,7 @@ export const AdminHosts = () => {
       return {
         ...host,
         diskSizeBytes: formatters.formatSize(host.diskSizeBytes, 'bytes'),
-        created: `${formatters.formatDate(
+        createdAt: `${formatters.formatDate(
           host.createdAt!,
         )} @ ${formatters.formatDate(host.createdAt!, 'time')}`,
       };

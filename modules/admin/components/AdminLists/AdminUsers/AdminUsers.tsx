@@ -19,12 +19,6 @@ const columns: AdminListColumn[] = [
     isVisible: false,
   },
   {
-    name: 'fullName',
-    width: '280px',
-    sortField: UserSortField.USER_SORT_FIELD_FIRST_NAME,
-    isVisible: true,
-  },
-  {
     name: 'email',
     width: '330px',
     canCopy: true,
@@ -32,7 +26,7 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
-    name: 'created',
+    name: 'createdAt',
     sortField: UserSortField.USER_SORT_FIELD_CREATED_AT,
     isVisible: true,
   },
@@ -64,7 +58,7 @@ export const AdminUsers = () => {
       return {
         ...item,
         fullName: `${item.firstName} ${item.lastName}`,
-        created: `${formatters.formatDate(
+        createdAt: `${formatters.formatDate(
           item.createdAt!,
         )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
       };

@@ -33,23 +33,34 @@ export const PageTitleAdminNav = () => {
 
   const handleItemClick = (link: string) => {
     setIsOpen(false);
-    router.push(`/admin?name=${link}`);
+
+    setTimeout(() => {
+      router.push(`/admin?name=${link}`);
+    }, 250);
   };
 
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
+  const selectedLink = links.find((link) => link.name === name);
+
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
       <button css={styles.button} type="button" onClick={handleClick}>
-        <SvgIcon isDefaultColor>
-          {links.find((link) => link.name === name)?.icon}
-        </SvgIcon>
-        {name}
-        <span css={[styles.icon, isOpen && styles.iconActive]}>
-          <SvgIcon isDefaultColor size="11px">
-            <IconArrow />
-          </SvgIcon>
-        </span>
+        {selectedLink ? (
+          <>
+            <SvgIcon additionalStyles={[styles.nameIcon]} isDefaultColor>
+              {selectedLink?.icon}
+            </SvgIcon>
+            {selectedLink.name}
+            <span css={[styles.icon, isOpen && styles.iconActive]}>
+              <SvgIcon isDefaultColor size="11px">
+                <IconArrow />
+              </SvgIcon>
+            </span>
+          </>
+        ) : (
+          ''
+        )}
       </button>
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.menu}>
         <ul css={styles.links}>

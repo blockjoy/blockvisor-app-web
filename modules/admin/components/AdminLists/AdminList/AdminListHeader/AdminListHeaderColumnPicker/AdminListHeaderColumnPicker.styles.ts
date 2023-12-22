@@ -23,4 +23,11 @@ export const styles = {
       background: rgb(255 255 255 / 5%);
     }
   `,
+  dropdownInner: css`
+    max-height: 260px;
+
+    ::-webkit-scrollbar-track {
+      background: rgb(255 255 255 / 10%);
+    }
+  `,
 };

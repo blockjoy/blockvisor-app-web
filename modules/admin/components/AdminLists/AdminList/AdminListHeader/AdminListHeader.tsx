@@ -21,11 +21,7 @@ export const AdminListHeader = ({
 }: Props) => {
   return (
     <AdminHeader name={name}>
-      <AdminSearch
-        onSearch={onSearch}
-        hideSearchButton
-        placeholder="Quick search"
-      />
+      <AdminSearch onSearch={onSearch} placeholder="Quick search" />
       <div css={styles.buttons}>
         <AdminIconButton
           isDisabled

@@ -78,16 +78,19 @@ export const AdminList = ({
   };
 
   const handleSearch = async (keyword: string) => {
+    const query: AdminQuery = {
+      name,
+      page: 1,
+    };
+
+    if (keyword?.length) query.search = keyword.trim();
+
     router.push({
       pathname: `/admin`,
-      query: {
-        name,
-        page: 0,
-        search: keyword.trim(),
-      },
+      query,
     });
     setSearchTerm(keyword);
-    setListPage(0);
+    setListPage(1);
   };
 
   const handleSortChanged = (field: number, order: SortOrder) => {
@@ -136,12 +139,12 @@ export const AdminList = ({
 
   useEffect(() => {
     setSearchTerm((search as string) || '');
-    setListPage(page ? +page?.toString()! : 0);
+    setListPage(page ? +page?.toString()! : 1);
   }, [router.isReady]);
 
   useEffect(() => {
     if (searchTerm !== undefined && listPage !== undefined) {
-      handleGetList(searchTerm!, listPage!, sortField!, sortOrder!);
+      handleGetList(searchTerm!, listPage! - 1, sortField!, sortOrder!);
     }
   }, [searchTerm, listPage, sortField, sortOrder]);
 
@@ -159,7 +162,6 @@ export const AdminList = ({
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
-        searchTerm={searchTerm}
         columns={columnsState.filter((column) => column.isVisible)}
         activeSortField={sortField}
         activeSortOrder={sortOrder}

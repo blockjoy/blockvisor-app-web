@@ -7,24 +7,34 @@ export const styles = {
     flex: 1 1 auto;
     display: flex;
     align-items: center;
+
+    @media ${breakpoints.toSml} {
+      gap: 10px;
+      flex-wrap: wrap;
+    }
   `,
   name: css`
     white-space: nowrap;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-right: 20px;
     font-size: 16px;
+
+    @media ${breakpoints.toSml} {
+      display: none;
+    }
   `,
   separator: (theme: ITheme) => css`
     color: ${theme.colorBorderGrey};
+
+    @media ${breakpoints.toSml} {
+      display: none;
+    }
   `,
   buttons: (theme: ITheme) => css`
     display: flex;
     gap: 16px;
-
-    @media ${breakpoints.toSml} {
-      border-top: 1px solid ${theme.colorBorder};
-      width: 100%;
-      padding-top: 10px;
-    }
   `,
   button: (theme: ITheme) => css`
     border: 1px solid ${theme.colorBorderGrey};
