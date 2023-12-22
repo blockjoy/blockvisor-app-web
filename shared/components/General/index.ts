@@ -13,3 +13,6 @@ export * from './Modal/Modal';
 export * from './Portal/Portal';
 export * from './Copy/Copy';
 export * from './CopyToClipboard/CopyToClipboard';
+export * from './List/List';
+export * from './List/ListSearch/ListSearch';
+export * from './List/utils/withSearchList';

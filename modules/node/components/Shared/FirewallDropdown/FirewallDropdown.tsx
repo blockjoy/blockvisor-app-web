@@ -1,39 +1,43 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
+import IconFirewall from '@public/assets/icons/app/Firewall.svg';
 import {
   DropdownMenu,
   DropdownButton,
   DropdownWrapper,
 } from '@shared/components';
+import { useEsc } from '@shared/index';
 import { styles } from './FirewallDropdown.styles';
 import { FirewallDropdownHeader } from './FirewallDropdownHeader';
 import { FirewallDropdownForm } from './FirewallDropdownForm';
 import { FirewallDropdownItems } from './FirewallDropdownItems';
 import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
-import IconFirewall from '@public/assets/icons/app/Firewall.svg';
 
-type Props = {
+type FirewallDropdownProps = {
   deniedIps: FilteredIpAddr[];
   allowedIps: FilteredIpAddr[];
   onPropertyChanged: (name: string, value: FilteredIpAddr[]) => void;
   noBottomMargin?: boolean;
 };
 
-export const FirewallDropdown: FC<Props> = ({
+export const FirewallDropdown = ({
   allowedIps,
   deniedIps,
   onPropertyChanged,
   noBottomMargin,
-}) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+}: FirewallDropdownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const isAllowedIp = activeTabIndex === 0;
 
   const handleClick = () => {
-    if (activeTabIndex === -1) {
-      setActiveTabIndex(0);
-    }
+    if (activeTabIndex === -1) setActiveTabIndex(0);
+
     setIsOpen(!isOpen);
   };
+
+  useEsc(() => {
+    if (isOpen) handleClick();
+  });
 
   const handleRuleAdded = (rule: FilteredIpAddr) => {
     const listToAddCopy = isAllowedIp ? [...allowedIps] : [...deniedIps];

@@ -1,12 +1,6 @@
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  FormLabel,
-  FormHeader,
-  PillPicker,
-  SvgIcon,
-  Select,
-} from '@shared/components';
+import { FormLabel, FormHeader, PillPicker, SvgIcon } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -18,6 +12,7 @@ import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigCont
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   FirewallDropdown,
+  NodeVersionSelect,
   nodeLauncherAtoms,
   nodeLauncherSelectors,
 } from '@modules/node';
@@ -28,7 +23,7 @@ type NodeLauncherConfigProps = {
   onFileUploaded: (e: any) => void;
   onNodeConfigPropertyChanged: (e: any) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
-  onVersionChanged: (version: BlockchainVersion) => void;
+  onVersionChanged: (version: BlockchainVersion | null) => void;
 };
 
 export const NodeLauncherConfig = ({
@@ -57,7 +52,6 @@ export const NodeLauncherConfig = ({
             items={networks!.map((n) => n.name)}
             selectedItem={network!}
             onChange={onNodePropertyChanged}
-            tabIndexStart={3}
           />
         )}
 
@@ -83,15 +77,12 @@ export const NodeLauncherConfig = ({
           deniedIps={nodeLauncher?.denyIps}
         />
 
-        {versions.length > 1 && (
+        {Boolean(versions.length) && (
           <>
             <FormLabel>Version</FormLabel>
-            <Select
-              buttonText={<p>{selectedVersion?.version}</p>}
-              items={versions.map((version) => ({
-                name: version.version,
-                onClick: () => onVersionChanged(version),
-              }))}
+            <NodeVersionSelect
+              versions={versions}
+              onVersionChanged={onVersionChanged}
             />
           </>
         )}

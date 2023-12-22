@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { withSearch, Dropdown } from '@shared/components';
+import { withSearchDropdown, Dropdown } from '@shared/components';
 
 type HostSelectProps = {
   hosts: Host[];
@@ -32,7 +32,10 @@ export const HostSelect = ({
     return `${ipAddressCount} IP${ipAddressCount !== 1 ? 's' : ''}`;
   };
 
-  const HostSelectDropdown = useMemo(() => withSearch<Host>(Dropdown), [hosts]);
+  const HostSelectDropdown = useMemo(
+    () => withSearchDropdown<Host>(Dropdown),
+    [hosts],
+  );
 
   return (
     <HostSelectDropdown

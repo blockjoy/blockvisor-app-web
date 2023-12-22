@@ -1,106 +1,141 @@
+import { useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { blockchainSelectors, nodeLauncherAtoms } from '@modules/node';
-import { BlockchainIcon, EmptyColumn, sort } from '@shared/components';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import {
+  BlockchainIcon,
+  TableSkeleton,
+  List,
+  EmptyColumn,
+  withSearchList,
+} from '@shared/components';
+import { colors } from 'styles/utils.colors.styles';
+import { typo } from 'styles/utils.typography.styles';
+import {
+  blockchainAtoms,
+  nodeLauncherAtoms,
+  convertNodeTypeToName,
+  getNodeTypes,
+} from '@modules/node';
 import { styles } from './NodeLauncherProtocolBlockchains.styles';
-import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
-import { onlyUnique } from '@shared/utils/onlyUnique';
 
 type NodeLauncherProtocolBlockchainsProps = {
-  keyword: string;
   onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
 };
 
 export const NodeLauncherProtocolBlockchains = ({
-  keyword,
   onProtocolSelected,
 }: NodeLauncherProtocolBlockchainsProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
-  const filteredBlockchains = useRecoilValue(
-    blockchainSelectors.blockchainsFilteredByName(keyword),
-  );
+  const blockchains = useRecoilValue(blockchainAtoms.blockchains);
+  const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
+
+  const [isFocused, setIsFocused] = useState(false);
+  const handleFocus = (focus: boolean) => setIsFocused(focus);
 
   const { blockchainId: activeBlockchainId, nodeType: activeNodeType } =
     nodeLauncher;
 
+  const selectedBlockchain = blockchains?.find(
+    (blockchain) => blockchain.id === activeBlockchainId,
+  );
+
+  const handleSelect = (activeBlockchain: Blockchain) => {
+    const nodeTypes = getNodeTypes(activeBlockchain!);
+
+    onProtocolSelected(activeBlockchain?.id!, nodeTypes?.[0]?.nodeType);
+  };
+
+  // Blockchain component to show in the list
+  const renderItem = (blockchain: Blockchain, isActiveItem?: boolean) => {
+    const nodeTypes = getNodeTypes(blockchain);
+
+    const handleBlockchainSelected = () =>
+      onProtocolSelected(blockchain.id!, nodeTypes[0].nodeType);
+
+    return (
+      <div
+        css={[styles.row, styles.rowHover]}
+        className={`row list-item ${
+          blockchain.id === activeBlockchainId || isActiveItem ? 'active' : ''
+        }`}
+      >
+        <span css={styles.blockchainWrapper}>
+          <button
+            tabIndex={-1}
+            css={styles.button}
+            onClick={handleBlockchainSelected}
+          >
+            <BlockchainIcon
+              size="28px"
+              hideTooltip
+              blockchainName={blockchain?.name}
+            />
+            <p>{blockchain?.name}</p>
+          </button>
+        </span>
+        <div css={styles.nodeTypeButtons} className="node-type-buttons">
+          {nodeTypes.map((nodeType) => {
+            const isActive =
+              activeBlockchainId === blockchain.id &&
+              activeNodeType === nodeType.nodeType;
+
+            return (
+              <button
+                key={nodeType.nodeType}
+                disabled={isActive}
+                className={isActive ? 'active' : ''}
+                onClick={() =>
+                  onProtocolSelected(blockchain.id!, nodeType.nodeType)
+                }
+                type="button"
+                css={styles.createButton}
+                tabIndex={-1}
+              >
+                {convertNodeTypeToName(nodeType.nodeType)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Empty component to show when there are no blockchains
+  const renderEmpty = () => (
+    <EmptyColumn
+      title="No Blockchains."
+      description="Please refine your search."
+    />
+  );
+
+  const BlockchainsList = useMemo(
+    () => withSearchList<Blockchain>(List),
+    [blockchains],
+  );
+
+  // If loadingState is not finished, show TableSkeleton
+  if (loadingState !== 'finished') return <TableSkeleton />;
+
+  // If blockchains is empty, show error message
+  if (!blockchains?.length)
+    return (
+      <div css={[typo.small, colors.warning]} style={{ marginLeft: '16px' }}>
+        Error loading data, please contact our support team.
+      </div>
+    );
+
+  // If blockchains is not empty, show List
   return (
-    <>
-      {!filteredBlockchains?.length ? (
-        <EmptyColumn
-          title="No Blockchains."
-          description="Please refine your search."
-        />
-      ) : (
-        filteredBlockchains?.map((blockchain, index) => {
-          const nodeTypesWithName = blockchain.nodeTypes.map((nodeType) => ({
-            ...nodeType,
-            nodeTypeName: convertNodeTypeToName(nodeType.nodeType),
-          }));
-          const sortedNodeTypes = sort(nodeTypesWithName, {
-            field: 'nodeTypeName',
-            order: 'asc',
-          });
-          return (
-            <div
-              tabIndex={activeNodeType ? -1 : index + 1}
-              key={blockchain.id}
-              css={[styles.row, styles.rowHover]}
-              className={
-                blockchain.id === activeBlockchainId ? 'active row' : 'row'
-              }
-            >
-              <span css={styles.blockchainWrapper}>
-                <button
-                  onClick={() =>
-                    activeBlockchainId !== blockchain.id
-                      ? onProtocolSelected(
-                          blockchain.id!,
-                          sortedNodeTypes[0].nodeType,
-                        )
-                      : null
-                  }
-                  css={styles.name}
-                >
-                  <BlockchainIcon
-                    size="28px"
-                    hideTooltip
-                    blockchainName={blockchain.name}
-                  />
-                  <p>{blockchain.name}</p>
-                </button>
-              </span>
-              <div css={styles.nodeTypeButtons} className="node-type-buttons">
-                {sortedNodeTypes
-                  .map((type) => type.nodeType)
-                  .filter(onlyUnique)
-                  .map((nodeType: NodeType) => (
-                    <button
-                      tabIndex={nodeType ? -1 : index + 1}
-                      key={nodeType}
-                      className={
-                        nodeType === activeNodeType &&
-                        blockchain.id === activeBlockchainId
-                          ? 'active'
-                          : ''
-                      }
-                      disabled={
-                        activeBlockchainId === blockchain.id &&
-                        activeNodeType === nodeType
-                      }
-                      onClick={() =>
-                        onProtocolSelected(blockchain.id!, nodeType)
-                      }
-                      type="button"
-                      css={styles.createButton}
-                    >
-                      {convertNodeTypeToName(nodeType)}
-                    </button>
-                  ))}
-              </div>
-            </div>
-          );
-        })
-      )}
-    </>
+    <BlockchainsList
+      items={blockchains}
+      selectedItem={selectedBlockchain}
+      renderItem={renderItem}
+      renderEmpty={renderEmpty}
+      handleSelect={handleSelect}
+      searchPlaceholder="Find a Protocol"
+      isFocused={isFocused}
+      handleFocus={handleFocus}
+    />
   );
 };

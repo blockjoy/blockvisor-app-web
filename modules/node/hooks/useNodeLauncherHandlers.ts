@@ -30,7 +30,7 @@ interface IUseNodeLauncherHandlersHook {
   ) => void;
   handleNodePropertyChanged: (name: string, value: any) => void;
   handleNodeConfigPropertyChanged: (e: any) => void;
-  handleVersionChanged: (version: BlockchainVersion) => void;
+  handleVersionChanged: (version: BlockchainVersion | null) => void;
   handleFileUploaded: (e: any) => void;
   handleCreateNodeClicked: () => void;
 }
@@ -147,7 +147,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     });
   };
 
-  const handleVersionChanged = (version: BlockchainVersion) => {
+  const handleVersionChanged = (version: BlockchainVersion | null) => {
     Mixpanel.track('Launch Node - Version Changed');
     setSelectedVersion(version);
   };

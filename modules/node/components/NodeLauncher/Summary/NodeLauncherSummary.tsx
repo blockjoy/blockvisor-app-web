@@ -105,7 +105,6 @@ export const NodeLauncherSummary = ({
           />
         )}
         <button
-          tabIndex={20}
           onClick={onCreateNodeClicked}
           disabled={
             !canAddNode ||

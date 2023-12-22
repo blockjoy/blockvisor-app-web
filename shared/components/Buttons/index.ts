@@ -9,4 +9,4 @@ export * from './Dropdown/Dropdown';
 export * from './Dropdown/DropdownWrapper/DropdownWrapper';
 export * from './ActionsDropdown/ActionsDropdown';
 export * from './NextLink/NextLink';
-export * from './Dropdown/utils/withSearch';
+export * from './Dropdown/utils/withSearchDropdown';

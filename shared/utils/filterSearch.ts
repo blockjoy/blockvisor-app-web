@@ -1,15 +1,15 @@
 type FilterItem = { id?: string; name?: string; ip?: string };
 
-export const filterData = <T extends FilterItem>(
-  data: T[],
+export const filterSearch = <T extends FilterItem>(
+  items: T[],
   searchQuery: string,
 ): T[] => {
   const queryWords = searchQuery.toLowerCase().split(' ');
 
-  const isHost = data?.[0]?.hasOwnProperty('os');
+  const isHost = items?.[0]?.hasOwnProperty('os');
 
   if (isHost) {
-    return data.filter((item: T) => {
+    return items.filter((item: T) => {
       return queryWords.every((queryWord) => {
         const word = queryWord.toLowerCase();
         const hasId = item?.id?.toLowerCase() === word;
@@ -21,7 +21,7 @@ export const filterData = <T extends FilterItem>(
     });
   }
 
-  return data.filter((item: T) => {
+  return items.filter((item: T) => {
     const itemLower = item?.name?.toLowerCase();
     return queryWords.every((queryWord) => itemLower?.includes(queryWord));
   });

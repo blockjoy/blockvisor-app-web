@@ -9,6 +9,7 @@ export * from './components/NodeView/Tabs/Jobs/JobView/NodeViewJobView';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/Shared';
 
+export * from './hooks/useAccessibleList';
 export * from './hooks/useFilters';
 export * from './hooks/useGetBlockchains';
 export * from './hooks/useGetRegions';
@@ -28,3 +29,6 @@ export * from './store/nodeLauncherSelectors';
 export * from './types/common';
 
 export * from './ui/NodeUIContext';
+
+export * from './utils/convertNodeTypeToName';
+export * from './utils/getNodeTypes';

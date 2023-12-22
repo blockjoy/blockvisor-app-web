@@ -4,6 +4,12 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  blockchainWrapper: css`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 50%;
+  `,
   nodeTypeButtons: css`
     flex: 1 1 auto;
     min-width: 0;
@@ -14,13 +20,7 @@ export const styles = {
     scale: 0;
     position: absolute;
   `,
-  blockchainWrapper: css`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 50%;
-  `,
-  name: (theme: ITheme) => css`
+  button: (theme: ITheme) => css`
     position: relative;
     color: ${theme.colorText};
     opacity: 0.8;
@@ -58,6 +58,12 @@ export const styles = {
     }
   `,
   rowHover: (theme: ITheme) => css`
+    &:not(.active) {
+      &:hover {
+        background: none;
+      }
+    }
+
     &.active {
       background: ${rgba(theme.colorLightGrey || '#ffffff', 0.5)};
       opacity: 1;
@@ -93,7 +99,7 @@ export const styles = {
     }
 
     @media ${breakpoints.fromMed} {
-      &:hover:not(.active) {
+      :is(:hover):not(.active) {
         opacity: 0.9;
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
@@ -108,11 +114,11 @@ export const styles = {
         position: relative;
       }
 
-      &:hover .node-type-buttons {
+      :is(:hover) .node-type-buttons {
         opacity: 0.9;
       }
 
-      :hover span {
+      :is(:hover) span {
         opacity: 0.9;
       }
 
