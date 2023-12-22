@@ -9,6 +9,7 @@ export const themeDefault: ITheme = {
   colorBorder: '#363938',
   colorBorderGrey: '#5e605c',
   colorInput: '#313534',
+  colorInputOutline: 'rgba(255 255 255 / 10%)',
   colorDarkGrey: '#232524',
   colorTooltip: '#191b1a',
   colorLabel: '#5F615D',

@@ -4,6 +4,6 @@ export const styles = {
   card: css`
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    margin-bottom: 30px;
   `,
 };

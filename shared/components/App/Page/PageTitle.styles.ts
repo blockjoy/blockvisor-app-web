@@ -14,6 +14,7 @@ export const styles = {
     min-height: 72px;
     max-height: 72px;
     border-bottom: 1px solid ${theme.colorBorder};
+    user-select: none;
 
     h1 {
       font-size: 18px;

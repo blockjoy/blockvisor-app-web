@@ -1,9 +1,8 @@
 import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
-import { AdminDetail, AdminDetailItem } from '../AdminDetail/AdminDetail';
+import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { NextLink, NodeStatus } from '@shared/components';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
-import IconNode from '@public/assets/icons/app/Node.svg';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
@@ -128,7 +127,6 @@ export const AdminNode = () => {
       label: 'Node Type',
       data: capitalized(convertNodeTypeToName(node.nodeType)),
     },
-
     {
       id: 'orgName',
       label: 'Org Name',
@@ -228,7 +226,6 @@ export const AdminNode = () => {
     <AdminDetail
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
-      icon={<IconNode />}
       ignoreItems={ignoreItems}
       customItems={customItems}
       detailsName="id"

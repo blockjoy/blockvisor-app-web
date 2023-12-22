@@ -14,6 +14,7 @@ export type ITheme = {
   colorInput: string;
   colorTooltip: string;
   colorInput: string;
+  colorInputOutline: string;
   colorLabel: string;
   colorPlaceholder: string;
   colorActive: string;

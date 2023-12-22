@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
-import IconOrg from '@public/assets/icons/app/Organization.svg';
 
 export const AdminOrg = () => {
   const router = useRouter();
@@ -35,7 +34,6 @@ export const AdminOrg = () => {
       customItems={customItems}
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
-      icon={<IconOrg />}
       detailsName="id"
     />
   );

@@ -1,3 +1,4 @@
+import { usePermissions } from '@modules/auth';
 import { NodeStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { getNodeStatusInfo, NodeStatusType } from '@shared/components';
 
@@ -14,6 +15,8 @@ export const NodeStatusName = ({
   downloadingCurrent,
   downloadingTotal,
 }: Props) => {
+  const { isSuperUser } = usePermissions();
+
   const statusInfo = getNodeStatusInfo(status, type);
 
   let statusName = statusInfo.name?.toLowerCase();
@@ -29,7 +32,7 @@ export const NodeStatusName = ({
       statusName = 'Downloading';
       break;
     case isPending:
-      statusName = 'Launching';
+      statusName = isSuperUser ? 'Provisioning Pending' : 'Launching';
   }
 
   return <>{statusName}</>;

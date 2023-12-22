@@ -4,6 +4,7 @@ import { FC, ReactNode } from 'react';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './PageTitle.styles';
 import { PageTitleLaunchNode } from './PageTitleLaunchNode';
+import { PageTitleAdminNav } from './PageTitleAdminNav';
 
 interface Props {
   title: string;
@@ -12,6 +13,7 @@ interface Props {
   icon?: ReactNode;
   onTitleClick?: VoidFunction;
   isLoading?: boolean;
+  isAdmin?: boolean;
   hideOrgPicker?: boolean;
 }
 
@@ -22,6 +24,7 @@ export const PageTitle: FC<Props> = ({
   icon,
   onTitleClick,
   isLoading,
+  isAdmin,
   hideOrgPicker,
 }) => {
   const Title = () => (
@@ -53,12 +56,19 @@ export const PageTitle: FC<Props> = ({
           ) : (
             <Title />
           )}
-          {childTitle && (
+          {isAdmin ? (
             <>
               <span css={styles.separator}>/</span>
-              <p css={styles.childTitle}>{childTitle}</p>
-              {canCopyChild && <Copy value={childTitle} hideTooltip />}
+              <PageTitleAdminNav />
             </>
+          ) : (
+            childTitle && (
+              <>
+                <span css={styles.separator}>/</span>
+                <p css={styles.childTitle}>{childTitle}</p>
+                {canCopyChild && <Copy value={childTitle} hideTooltip />}
+              </>
+            )
           )}
         </div>
         <div css={styles.rightWrapper}>
