@@ -6,7 +6,7 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import { SvgIcon } from '@shared/components';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 type Props = { tab: string };
 
@@ -22,11 +22,11 @@ export const AdminSidebar = ({ tab }: Props) => {
   const [width, setWidth] = useState(
     +localStorage?.getItem('adminSidebarWidth')! || 200,
   );
-  const sidebarRef = useRef<HTMLElement>(null);
-  const sidebar = sidebarRef.current;
+
+  const [offsetLeft, setOffsetLeft] = useState<number>();
 
   const resize = (e: any) => {
-    let newWidth = e.clientX - sidebar?.offsetLeft!;
+    let newWidth = e.clientX - offsetLeft!;
     if (newWidth < 8) newWidth = 8;
     if (newWidth > 200) newWidth = 200;
     setWidth(newWidth);
@@ -44,11 +44,14 @@ export const AdminSidebar = ({ tab }: Props) => {
     window.addEventListener('mousemove', resize);
     window.addEventListener('mouseup', stopResize);
   };
+
   return (
     <aside
       style={{ width: `${width}px`, minWidth: `${width}px` }}
       css={styles.sidebar(width !== 8)}
-      ref={sidebarRef}
+      ref={(el) => {
+        setOffsetLeft(el?.offsetLeft);
+      }}
     >
       <div css={styles.handle} onMouseDown={initResize}></div>
       <ul css={styles.sidebarInner}>

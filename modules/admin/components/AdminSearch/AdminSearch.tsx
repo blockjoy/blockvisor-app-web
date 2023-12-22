@@ -51,7 +51,6 @@ export const AdminSearch = ({
   }, [router.isReady]);
 
   useEffect(() => {
-    console.log('debounce', debouncedSearchTerm);
     if (!isDashboardSearch && searchText !== search) {
       onSearch(debouncedSearchTerm);
     }
