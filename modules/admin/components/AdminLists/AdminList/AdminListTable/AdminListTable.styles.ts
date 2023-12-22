@@ -1,12 +1,32 @@
 import { css } from '@emotion/react';
+import { rgba } from 'polished';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  tableWrapper: css`
     overflow: auto;
     flex: 1 1 auto;
     min-width: 0;
     max-width: 100%;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgb(255 255 255 / 10%);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgb(255 255 255 / 20%);
+    }
   `,
   table: (theme: ITheme) => css`
     text-align: left;
@@ -16,15 +36,19 @@ export const styles = {
     border-collapse: collapse;
 
     th {
-      color: ${theme.colorDefault};
+      color: ${rgba(theme.colorDefault || '#a7a7a7', 0.8)};
       font-weight: 400;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid ${theme.colorBorder};
     }
 
     tbody tr td {
       vertical-align: middle;
       opacity: 0.8;
       padding: 0 10px 0 0;
-      border-bottom: 1px solid ${theme.colorBorder};
       height: 50px;
       white-space: nowrap;
       overflow: hidden;
@@ -60,13 +84,14 @@ export const styles = {
     display: flex;
     align-items: center;
   `,
-  rowCount: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    font-size: 14px;
-    margin-bottom: 14px;
-  `,
-  rowCountTotal: (theme: ITheme) => css`
-    color: ${theme.colorText};
-    font-style: normal;
+  bottomRow: css`
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    @media ${breakpoints.toSml} {
+      flex-direction: column;
+      margin-top: 10px;
+    }
   `,
 };

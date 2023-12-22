@@ -73,7 +73,7 @@ export const HostLauncher = () => {
                 tooltip: 'Insufficient Permissions.',
               })}
             >
-              <SvgIcon>
+              <SvgIcon size="12px">
                 <IconRefresh />
               </SvgIcon>
               Regenerate

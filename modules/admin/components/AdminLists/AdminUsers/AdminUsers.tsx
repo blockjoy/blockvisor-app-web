@@ -1,33 +1,52 @@
-import { AdminList, AdminListColumn } from '../AdminList/AdminList';
+import { AdminList } from '../AdminList/AdminList';
 import { userClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
-import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
-import IconUser from '@public/assets/icons/common/Person.svg';
+import { UserSortField } from '@modules/grpc/library/blockjoy/v1/user';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 const columns: AdminListColumn[] = [
   {
-    name: 'fullName',
+    name: 'firstName',
     width: '230px',
+    sortField: UserSortField.USER_SORT_FIELD_FIRST_NAME,
+    isVisible: false,
+  },
+  {
+    name: 'lastName',
+    width: '230px',
+    sortField: UserSortField.USER_SORT_FIELD_LAST_NAME,
+    isVisible: false,
   },
   {
     name: 'email',
-    width: '280px',
+    width: '330px',
     canCopy: true,
+    sortField: UserSortField.USER_SORT_FIELD_EMAIL,
+    isVisible: true,
   },
   {
-    name: 'created',
+    name: 'createdAt',
+    sortField: UserSortField.USER_SORT_FIELD_CREATED_AT,
+    isVisible: true,
   },
 ];
 
 export const AdminUsers = () => {
-  const { getTotalUsers: getTotal } = useAdminGetTotals();
-
-  const getList = async (keyword?: string, page?: number) => {
-    const response = await userClient.listUsers(keyword, {
-      current_page: page!,
-      items_per_page: pageSize,
-    });
+  const getList = async (
+    keyword?: string,
+    page?: number,
+    sortField?: UserSortField,
+    sortOrder?: SortOrder,
+  ) => {
+    const response = await userClient.listUsers(
+      keyword,
+      {
+        current_page: page!,
+        items_per_page: pageSize,
+      },
+      [{ field: sortField!, order: sortOrder! }],
+    );
     return {
       list: response.users,
       total: response.userCount,
@@ -39,7 +58,7 @@ export const AdminUsers = () => {
       return {
         ...item,
         fullName: `${item.firstName} ${item.lastName}`,
-        created: `${formatters.formatDate(
+        createdAt: `${formatters.formatDate(
           item.createdAt!,
         )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
       };
@@ -48,9 +67,9 @@ export const AdminUsers = () => {
   return (
     <AdminList
       name="users"
-      icon={<IconUser />}
       columns={columns}
-      getTotal={getTotal}
+      defaultSortField={UserSortField.USER_SORT_FIELD_FIRST_NAME}
+      defaultSortOrder={SortOrder.SORT_ORDER_ASCENDING}
       getList={getList}
       listMap={listMap}
     />

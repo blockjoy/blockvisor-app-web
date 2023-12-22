@@ -1,15 +1,26 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  footer: css`
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  `,
-  pagination: css`
+  pagination: (theme: ITheme) => css`
     display: flex;
     gap: 4px;
+    position: relative;
+    padding-right: 6px;
+
+    @media ${breakpoints.fromSml} {
+      ::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 1px;
+        height: 16px;
+        transform: translateY(-50%);
+        background: ${theme.colorBorder};
+      }
+    }
   `,
   paginationButton: (theme: ITheme) => css`
     display: grid;

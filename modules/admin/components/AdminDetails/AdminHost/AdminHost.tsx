@@ -4,8 +4,7 @@ import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
 import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
-import IconHost from '@public/assets/icons/app/Host.svg';
-import { HostIps } from '@shared/components';
+import { HostIps, HostStatus, NextLink } from '@shared/components';
 
 export const AdminHost = () => {
   const router = useRouter();
@@ -15,7 +14,7 @@ export const AdminHost = () => {
 
   const getItem = async () => await hostClient.getHost(id as string);
 
-  const customItems = (host: Host): AdminDetailProperty[] => [
+  const customItems = (host: Host & IAdminItem): AdminDetailProperty[] => [
     {
       id: 'name',
       label: 'Name',
@@ -27,6 +26,11 @@ export const AdminHost = () => {
       label: 'Id',
       data: host.id,
       copyValue: host.id,
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      data: <HostStatus hasBorder={false} />,
     },
     {
       id: 'memSize',
@@ -48,13 +52,35 @@ export const AdminHost = () => {
       label: 'Ip Addresses',
       data: <HostIps ipAddresses={host.ipAddresses} orgId={host.orgId} />,
     },
+    {
+      id: 'orgName',
+      label: 'Org Name',
+      data: (
+        <p>
+          <NextLink href={`/admin?name=orgs&id=${host.orgId}`}>
+            {host.orgName}
+          </NextLink>
+        </p>
+      ),
+    },
+    {
+      id: 'orgId',
+      label: 'Org Id',
+      data: (
+        <p>
+          <NextLink href={`/admin?name=orgs&id=${host.orgId}`}>
+            {host.orgId}
+          </NextLink>
+        </p>
+      ),
+      copyValue: host.orgId,
+    },
   ];
 
   return (
     <AdminDetail
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
-      icon={<IconHost />}
       detailsName="id"
       customItems={customItems}
       ignoreItems={[
@@ -63,6 +89,8 @@ export const AdminHost = () => {
         'ipAddresses',
         'memSizeBytes',
         'diskSizeBytes',
+        'orgId',
+        'orgName',
       ]}
     />
   );

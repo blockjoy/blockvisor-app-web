@@ -4,10 +4,9 @@ import { AdminHosts } from './AdminHosts/AdminHosts';
 import { AdminOrgs } from './AdminOrgs/AdminOrgs';
 import { styles } from './AdminLists.styles';
 import { useRouter } from 'next/router';
-import { AdminDetailItem } from '../AdminDetails/AdminDetail/AdminDetail';
 
 export type AdminGetList = {
-  list: AdminDetailItem[];
+  list: IAdminItem[];
   total: number;
 };
 

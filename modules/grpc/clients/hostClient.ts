@@ -5,6 +5,7 @@ import {
   HostServiceDefinition,
   HostServiceListRequest,
   HostServiceListResponse,
+  HostSort,
   HostSortField,
   HostType,
   Region,
@@ -47,12 +48,13 @@ class HostClient {
     orgId?: string,
     filterCriteria?: HostFilterCriteria,
     pagination?: HostPagination,
+    sort?: HostSort[],
   ): Promise<HostServiceListResponse> {
     const request: HostServiceListRequest = {
       orgId,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page!,
-      sort: [
+      sort: sort || [
         {
           field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
           order: SortOrder.SORT_ORDER_ASCENDING,
