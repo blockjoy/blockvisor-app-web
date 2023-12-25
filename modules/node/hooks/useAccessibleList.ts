@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 type UseAccessibleListParams<T> = {
   items: T[];
@@ -7,6 +7,7 @@ type UseAccessibleListParams<T> = {
   searchQuery?: string;
   isFocused?: boolean;
   handleFocus?: (isFocus: boolean) => void;
+  listRef?: RefObject<HTMLUListElement>;
 };
 
 type UseAccessibleListReturnType = {
@@ -22,6 +23,7 @@ export const useAccessibleList = <T>({
   searchQuery,
   isFocused,
   handleFocus,
+  listRef,
 }: UseAccessibleListParams<T>): UseAccessibleListReturnType => {
   const selectedItemIndex = selectedItem ? items.indexOf(selectedItem) : 0;
   const [activeIndex, setActiveIndex] = useState(selectedItemIndex);
@@ -35,22 +37,6 @@ export const useAccessibleList = <T>({
   useEffect(() => {
     if (searchQuery !== '') setActiveIndex(0);
   }, [searchQuery]);
-
-  useEffect(() => {
-    const mouseOverCallback = (e: MouseEvent) => {
-      if (!isFocused) return;
-      const liElement = (e.target as HTMLElement).closest('li');
-      if (liElement) {
-        const index = itemRefs.current.indexOf(liElement as HTMLLIElement);
-        setActiveIndex(index);
-      }
-    };
-
-    document.addEventListener('mouseover', mouseOverCallback);
-    return () => {
-      document.removeEventListener('mouseover', mouseOverCallback);
-    };
-  }, [isFocused, items]);
 
   useEffect(() => {
     const keyDownCallback = (e: KeyboardEvent) => {
@@ -128,6 +114,28 @@ export const useAccessibleList = <T>({
       document.removeEventListener('keydown', keyDownCallback);
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    const mouseOverCallback = (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!listRef?.current) return;
+
+      const liElement = (e.target as HTMLElement)?.closest('li');
+
+      if (liElement) {
+        const index = itemRefs.current.indexOf(liElement as HTMLLIElement);
+
+        setActiveIndex(index);
+      }
+    };
+
+    listRef?.current?.addEventListener('mousemove', mouseOverCallback);
+    return () => {
+      listRef?.current?.removeEventListener('mousemove', mouseOverCallback);
+    };
+  }, [items]);
 
   const handleItemRef = useCallback(
     (element: HTMLLIElement, index: number) => {

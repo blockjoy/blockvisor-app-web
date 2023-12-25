@@ -57,8 +57,8 @@ export const NodeLauncherProtocolBlockchains = ({
       <div
         css={[styles.row, styles.rowHover]}
         className={`row list-item ${
-          blockchain.id === activeBlockchainId || isActiveItem ? 'active' : ''
-        }`}
+          blockchain.id === activeBlockchainId ? 'active' : ''
+        } ${isActiveItem ? 'focus' : ''}`}
       >
         <span css={styles.blockchainWrapper}>
           <button

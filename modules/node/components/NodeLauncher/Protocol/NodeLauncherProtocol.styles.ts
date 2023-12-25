@@ -25,7 +25,8 @@ export const styles = {
       padding: 10px 0 20px;
     }
 
-    div:hover .row:hover {
+    div:hover .row:hover,
+    div .row.hovered {
       opacity: 1;
     }
   `,

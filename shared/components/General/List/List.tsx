@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import { useAccessibleList } from '@modules/node';
 
 export type ListProps<T = any> = {
@@ -22,6 +22,7 @@ export const List = <T extends { id?: string; name?: string }>({
   isFocused,
   handleFocus,
 }: ListProps<T>) => {
+  const listRef = useRef<HTMLUListElement>(null);
   const { activeIndex, handleItemRef } = useAccessibleList({
     items,
     selectedItem,
@@ -29,10 +30,11 @@ export const List = <T extends { id?: string; name?: string }>({
     searchQuery,
     isFocused,
     handleFocus,
+    listRef,
   });
 
   return items.length > 0 ? (
-    <ul>
+    <ul ref={listRef}>
       {items.map((item, index) => {
         const isActive = index === activeIndex;
 

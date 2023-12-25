@@ -58,12 +58,6 @@ export const styles = {
     }
   `,
   rowHover: (theme: ITheme) => css`
-    &:not(.active) {
-      &:hover {
-        background: none;
-      }
-    }
-
     &.active {
       background: ${rgba(theme.colorLightGrey || '#ffffff', 0.5)};
       opacity: 1;
@@ -75,31 +69,31 @@ export const styles = {
 
     @media ${breakpoints.toMed} {
       &:focus,
-      &:hover {
+      &.focus {
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
 
-      :is(:hover, :focus, .active) div {
+      :is(:focus, .active, .focus) div {
         opacity: 1;
         visibility: visible;
       }
 
-      :is(:hover, :focus, .active) span {
+      :is(:focus, .active, .focus) span {
         opacity: 1;
       }
 
-      :is(:hover, :focus, .active) path {
+      :is(:focus, .active, .focus) path {
         fill: ${theme.colorPrimary};
       }
 
-      :is(:hover, :focus, .active) .node-type-buttons {
+      :is(:focus, .active, .focus) .node-type-buttons {
         scale: 1;
         position: relative;
       }
     }
 
     @media ${breakpoints.fromMed} {
-      :is(:hover):not(.active) {
+      :is(.focus):not(.active) {
         opacity: 0.9;
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
@@ -108,29 +102,30 @@ export const styles = {
         opacity: 1;
       }
 
-      :is(:hover, .active) > :is(.node-type-buttons, span) {
+      :is(.active, .focus) > :is(.node-type-buttons, span) {
         visibility: visible;
         scale: 1;
         position: relative;
       }
 
-      :is(:hover) .node-type-buttons {
+      :is(.focus) .node-type-buttons {
         opacity: 0.9;
       }
 
-      :is(:hover) span {
+      :is(.focus) span {
         opacity: 0.9;
       }
 
-      &.active span {
+      &.active {
         opacity: 1;
       }
 
-      &.active .node-type-buttons {
+      &.active,
+      .node-type-buttons {
         opacity: 1;
       }
 
-      :is(:hover, .active) path {
+      :is(.active, .focus) path {
         fill: ${theme.colorPrimary};
       }
     }
@@ -139,7 +134,7 @@ export const styles = {
     opacity: 0.2;
     cursor: not-allowed;
 
-    :hover {
+    .focus {
       opacity: 1;
 
       .coming-soon-badge {
