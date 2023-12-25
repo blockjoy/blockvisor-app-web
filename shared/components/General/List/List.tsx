@@ -10,6 +10,7 @@ export type ListProps<T = any> = {
   searchQuery?: string;
   isFocused?: boolean;
   handleFocus?: (isFocus: boolean) => void;
+  isLoading?: boolean;
 };
 
 export const List = <T extends { id?: string; name?: string }>({

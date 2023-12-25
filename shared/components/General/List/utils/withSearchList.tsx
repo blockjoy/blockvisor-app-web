@@ -1,5 +1,5 @@
 import { ChangeEvent, ComponentType, useState } from 'react';
-import { ListProps, ListSearch } from '@shared/components';
+import { ListProps, ListSearch, TableSkeleton } from '@shared/components';
 import { filterSearch } from '@shared/index';
 
 export type WithSearchListProps<T> = ListProps<T> & {
@@ -10,7 +10,7 @@ export const withSearchList = <T extends { name: string }>(
   Component: ComponentType<WithSearchListProps<T>>,
 ) => {
   const WithSearchList = ({ ...props }: WithSearchListProps<T>) => {
-    const { items, searchPlaceholder, handleFocus } = props;
+    const { items, searchPlaceholder, handleFocus, isLoading } = props;
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredData, setFilteredData] = useState<T[]>(items);
@@ -33,7 +33,15 @@ export const withSearchList = <T extends { name: string }>(
           placeholder={searchPlaceholder}
           handleFocus={handleFocus}
         />
-        <Component {...props} items={filteredData} searchQuery={searchQuery} />
+        {isLoading ? (
+          <TableSkeleton />
+        ) : (
+          <Component
+            {...props}
+            items={filteredData}
+            searchQuery={searchQuery}
+          />
+        )}
       </>
     );
   };

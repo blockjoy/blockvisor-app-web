@@ -4,7 +4,6 @@ import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   BlockchainIcon,
-  TableSkeleton,
   List,
   EmptyColumn,
   withSearchList,
@@ -114,11 +113,8 @@ export const NodeLauncherProtocolBlockchains = ({
     [blockchains],
   );
 
-  // If loadingState is not finished, show TableSkeleton
-  if (loadingState !== 'finished') return <TableSkeleton />;
-
   // If blockchains is empty, show error message
-  if (!blockchains?.length)
+  if (!blockchains?.length && loadingState === 'finished')
     return (
       <div css={[typo.small, colors.warning]} style={{ marginLeft: '16px' }}>
         Error loading data, please contact our support team.
@@ -136,6 +132,7 @@ export const NodeLauncherProtocolBlockchains = ({
       searchPlaceholder="Find a Protocol"
       isFocused={isFocused}
       handleFocus={handleFocus}
+      isLoading={loadingState !== 'finished'}
     />
   );
 };
