@@ -21,7 +21,7 @@ type NodeLauncherConfigProps = {
   nodeTypeProperties?: NodeProperty[];
   nodeFiles?: NodeFiles[];
   onFileUploaded: (e: any) => void;
-  onNodeConfigPropertyChanged: (e: any) => void;
+  onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
   onVersionChanged: (version: BlockchainVersion | null) => void;
 };

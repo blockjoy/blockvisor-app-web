@@ -6,7 +6,7 @@ export const renderControls = (
   property: NodeProperty,
   nodeFiles: NodeFiles[],
   onFileUploaded: (e: any) => void,
-  onPropertyChanged: (e: any) => void,
+  onPropertyChanged: (name: string, value: string | boolean) => void,
 ) => {
   switch (property.uiType) {
     case UiType.UI_TYPE_FILE_UPLOAD:
@@ -42,6 +42,10 @@ export const renderControls = (
         />
       );
     case UiType.UI_TYPE_SWITCH:
+      const value =
+        property.value === 'true' ||
+        (typeof property.value === 'boolean' && property.value === true);
+
       return (
         <Switch
           defaultValue={property.value === 'true'}
@@ -49,6 +53,7 @@ export const renderControls = (
           disabled={!!property.disabled}
           tooltip="Feature disabled during beta."
           name={property.name}
+          checked={value}
           onPropertyChanged={onPropertyChanged}
         />
       );

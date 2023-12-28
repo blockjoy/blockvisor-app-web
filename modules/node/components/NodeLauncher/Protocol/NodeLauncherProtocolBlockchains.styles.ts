@@ -154,18 +154,13 @@ export const styles = {
     cursor: pointer;
     text-transform: capitalize;
 
-    @media ${breakpoints.toXlrg} {
-      &.active {
-        background: ${theme.colorPrimary};
-        color: ${theme.colorPrimaryText};
-      }
+    :is(:focus) {
+      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.125);
     }
 
-    @media ${breakpoints.fromXLrg} {
-      :is(:hover, :focus, .active) {
-        background: ${theme.colorPrimary};
-        color: ${theme.colorPrimaryText};
-      }
+    &.active {
+      background: ${theme.colorPrimary};
+      color: ${theme.colorPrimaryText};
     }
   `,
 };

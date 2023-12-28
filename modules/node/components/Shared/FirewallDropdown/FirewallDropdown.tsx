@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 import IconFirewall from '@public/assets/icons/app/Firewall.svg';
 import {
   DropdownMenu,
@@ -10,7 +11,6 @@ import { styles } from './FirewallDropdown.styles';
 import { FirewallDropdownHeader } from './FirewallDropdownHeader';
 import { FirewallDropdownForm } from './FirewallDropdownForm';
 import { FirewallDropdownItems } from './FirewallDropdownItems';
-import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 
 type FirewallDropdownProps = {
   deniedIps: FilteredIpAddr[];

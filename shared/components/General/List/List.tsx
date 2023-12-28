@@ -1,5 +1,5 @@
 import { ReactNode, useRef } from 'react';
-import { useAccessibleList } from '@modules/node';
+import { useAccessibleList } from '@shared/index';
 
 export type ListProps<T = any> = {
   items: T[];

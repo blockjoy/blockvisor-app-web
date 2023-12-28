@@ -16,7 +16,7 @@ type UseAccessibleListReturnType = {
   handleItemRef: (element: HTMLLIElement, index: number) => void;
 };
 
-export const useAccessibleList = <T>({
+export const useAccessibleList = <T extends { id?: string; name?: string }>({
   items,
   selectedItem,
   handleSelect,
@@ -86,7 +86,7 @@ export const useAccessibleList = <T>({
     return () => {
       document.removeEventListener('keydown', keyDownCallback);
     };
-  }, [isFocused, items, activeIndex]);
+  }, [isFocused, items, activeIndex, selectedItem]);
 
   useEffect(() => {
     const keyDownCallback = (e: KeyboardEvent) => {
@@ -144,10 +144,15 @@ export const useAccessibleList = <T>({
     [items],
   );
 
-  const handleSelectWhenAccessible = useCallback((item: T, index: number) => {
-    setActiveIndex(index);
-    handleSelect?.(item);
-  }, []);
+  const handleSelectWhenAccessible = useCallback(
+    (item: T, index: number) => {
+      if (item?.id === selectedItem?.id!) return;
+
+      setActiveIndex(index);
+      handleSelect?.(item);
+    },
+    [selectedItem],
+  );
 
   const handleBlur = useCallback(() => handleFocus?.(false), []);
 

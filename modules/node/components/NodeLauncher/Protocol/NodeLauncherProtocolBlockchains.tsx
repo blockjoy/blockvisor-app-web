@@ -46,18 +46,20 @@ export const NodeLauncherProtocolBlockchains = ({
   };
 
   // Blockchain component to show in the list
-  const renderItem = (blockchain: Blockchain, isActiveItem?: boolean) => {
+  const renderItem = (blockchain: Blockchain, isFocusedItem?: boolean) => {
     const nodeTypes = getNodeTypes(blockchain);
 
     const handleBlockchainSelected = () =>
       onProtocolSelected(blockchain.id!, nodeTypes[0].nodeType);
 
+    const isActiveItem = blockchain.id === activeBlockchainId;
+
     return (
       <div
         css={[styles.row, styles.rowHover]}
-        className={`row list-item ${
-          blockchain.id === activeBlockchainId ? 'active' : ''
-        } ${isActiveItem ? 'focus' : ''}`}
+        className={`row list-item ${isActiveItem ? 'active' : ''} ${
+          isFocusedItem ? 'focus' : ''
+        }`}
       >
         <span css={styles.blockchainWrapper}>
           <button
@@ -82,14 +84,13 @@ export const NodeLauncherProtocolBlockchains = ({
             return (
               <button
                 key={nodeType.nodeType}
-                disabled={isActive}
                 className={isActive ? 'active' : ''}
                 onClick={() =>
                   onProtocolSelected(blockchain.id!, nodeType.nodeType)
                 }
                 type="button"
                 css={styles.createButton}
-                tabIndex={-1}
+                {...(!isActiveItem && { tabIndex: -1 })}
               >
                 {convertNodeTypeToName(nodeType.nodeType)}
               </button>

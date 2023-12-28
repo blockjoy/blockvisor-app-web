@@ -29,7 +29,10 @@ interface IUseNodeLauncherHandlersHook {
     properties?: NodeProperty[],
   ) => void;
   handleNodePropertyChanged: (name: string, value: any) => void;
-  handleNodeConfigPropertyChanged: (e: any) => void;
+  handleNodeConfigPropertyChanged: (
+    name: string,
+    value: string | boolean,
+  ) => void;
   handleVersionChanged: (version: BlockchainVersion | null) => void;
   handleFileUploaded: (e: any) => void;
   handleCreateNodeClicked: () => void;
@@ -114,24 +117,24 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     });
   };
 
-  const handleNodeConfigPropertyChanged = (e: any) => {
+  const handleNodeConfigPropertyChanged = (
+    name: string,
+    value: boolean | string,
+  ) => {
     setError('');
     if (!nodeLauncherState.properties) return;
 
     const propertiesCopy = [...nodeLauncherState.properties!];
 
     const propertyIndex = propertiesCopy.findIndex(
-      (property) => property.name === e.target.name,
+      (property) => property.name === name,
     );
 
     if (propertyIndex === -1) return;
 
-    const newValue =
-      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
     const updatedProperty = {
       ...propertiesCopy[propertyIndex],
-      value: newValue,
+      value: value?.toString(),
     };
 
     propertiesCopy[propertyIndex] = updatedProperty;
@@ -143,7 +146,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
 
     Mixpanel.track('Launch Node - Node Config Property Changed', {
       propertyName: updatedProperty.name,
-      propertyValue: newValue,
+      propertyValue: value?.toString(),
     });
   };
 
