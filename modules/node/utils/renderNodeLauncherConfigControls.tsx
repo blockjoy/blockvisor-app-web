@@ -48,7 +48,6 @@ export const renderControls = (
 
       return (
         <Switch
-          defaultValue={property.value === 'true'}
           tabIndex={!!property.disabled ? -1 : 5}
           disabled={!!property.disabled}
           tooltip="Feature disabled during beta."

@@ -6,7 +6,6 @@ import { Tooltip } from '@shared/components';
 type SwitchProps = {
   checked?: boolean;
   name: string;
-  defaultValue?: boolean;
   tabIndex?: number;
   tooltip?: string;
   disabled: boolean;
@@ -18,7 +17,6 @@ export const Switch = ({
   onPropertyChanged,
   tooltip,
   disabled,
-  defaultValue,
   name,
   checked,
   tabIndex,
@@ -42,7 +40,6 @@ export const Switch = ({
           onChange={handleChange}
           checked={checked}
           onKeyDown={handleKeyDown}
-          defaultChecked={defaultValue}
         />
         <span className="switch" css={styles.switch}>
           <span className="handle" css={styles.handle}>

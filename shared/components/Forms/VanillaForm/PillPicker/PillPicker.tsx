@@ -5,7 +5,6 @@ type PillPickerProps = {
   name: string;
   items: string[];
   selectedItem: string;
-  tabIndexStart?: number;
   onChange: (name: string, item: string) => void;
 };
 
@@ -14,7 +13,6 @@ export const PillPicker = ({
   items,
   selectedItem,
   onChange,
-  tabIndexStart,
 }: PillPickerProps) => {
   const handleChange = (item: string) => onChange(name, item);
 
@@ -27,7 +25,6 @@ export const PillPicker = ({
       {items.map((item, index) => (
         <Fragment key={item}>
           <input
-            tabIndex={tabIndexStart! + index}
             css={styles.input}
             name={item}
             id={item}

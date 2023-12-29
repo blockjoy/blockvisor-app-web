@@ -1,5 +1,10 @@
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import { useRouter } from 'next/router';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
@@ -53,6 +58,9 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     nodeLauncherAtoms.selectedNodeType,
   );
   const [nodeLauncherState, setNodeLauncherState] = useRecoilState(
+    nodeLauncherAtoms.nodeLauncher,
+  );
+  const resetNodeLauncherState = useResetRecoilState(
     nodeLauncherAtoms.nodeLauncher,
   );
   const setError = useSetRecoilState(nodeLauncherAtoms.error);
@@ -205,6 +213,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
       (nodeId: string) => {
         Mixpanel.track('Launch Node - Node Launched');
         router.push(ROUTES.NODE(nodeId));
+        resetNodeLauncherState();
       },
       (error: string) => setError(error!),
     );

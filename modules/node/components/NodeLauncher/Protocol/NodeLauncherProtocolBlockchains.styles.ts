@@ -93,13 +93,9 @@ export const styles = {
     }
 
     @media ${breakpoints.fromMed} {
-      :is(.focus):not(.active) {
+      &.focus:not(.active) {
         opacity: 0.9;
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
-      }
-
-      &.active {
-        opacity: 1;
       }
 
       :is(.active, .focus) > :is(.node-type-buttons, span) {
@@ -108,11 +104,16 @@ export const styles = {
         position: relative;
       }
 
-      :is(.focus) .node-type-buttons {
+      &.focus .node-type-buttons {
         opacity: 0.9;
       }
 
-      :is(.focus) span {
+      &.focus .node-type-buttons button:hover {
+        background: ${theme.colorPrimary};
+        color: ${theme.colorPrimaryText};
+      }
+
+      &.focus span {
         opacity: 0.9;
       }
 
@@ -120,8 +121,7 @@ export const styles = {
         opacity: 1;
       }
 
-      &.active,
-      .node-type-buttons {
+      &.active .node-type-buttons {
         opacity: 1;
       }
 

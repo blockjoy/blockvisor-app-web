@@ -64,7 +64,6 @@ export const useAccessibleList = <T extends { id?: string; name?: string }>({
         case 'Esc':
         case 'Escape':
         case 'Tab':
-          e.preventDefault();
           handleBlur();
           break;
         case 'PageUp':

@@ -77,7 +77,7 @@ export const NodeLauncherConfig = ({
           deniedIps={nodeLauncher?.denyIps}
         />
 
-        {Boolean(versions.length) && (
+        {versions.length > 1 && (
           <>
             <FormLabel>Version</FormLabel>
             <NodeVersionSelect
