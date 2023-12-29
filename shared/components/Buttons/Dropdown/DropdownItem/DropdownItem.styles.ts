@@ -44,7 +44,7 @@ export const styles = {
         pointer-events: none;
       }
 
-      :is(.focus) {
+      :is(.focus, :hover) {
         text-decoration: none;
         background-color: rgb(255 255 255 / 10%);
 

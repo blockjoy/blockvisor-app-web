@@ -57,8 +57,8 @@ export const NodeLauncherProtocolBlockchains = ({
     return (
       <div
         css={[styles.row, styles.rowHover]}
-        className={`row list-item ${isActiveItem ? 'active' : ''} ${
-          isFocusedItem ? 'focus' : ''
+        className={`row list-item${isActiveItem ? ' active' : ''}${
+          isFocusedItem ? ' focus' : ''
         }`}
       >
         <span css={styles.blockchainWrapper}>

@@ -94,7 +94,7 @@ export const styles = {
 
     @media ${breakpoints.fromMed} {
       &.focus:not(.active) {
-        opacity: 0.9;
+        opacity: 1;
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
 
