@@ -12,7 +12,6 @@ export const renderControls = (
     case UiType.UI_TYPE_FILE_UPLOAD:
       return (
         <FileUpload
-          tabIndex={5}
           currentFiles={nodeFiles?.find((f) => f.name === property.name)?.files}
           multiple={true}
           onChange={onFileUploaded}
@@ -23,7 +22,6 @@ export const renderControls = (
     case UiType.UI_TYPE_PASSWORD:
       return (
         <Textbox
-          tabIndex={5}
           type="password"
           isRequired={property?.required && !property.value}
           name={property.name}
@@ -34,7 +32,6 @@ export const renderControls = (
       return (
         <Textbox
           defaultValue={property.value}
-          tabIndex={5}
           type="text"
           isRequired={property?.required && !property.value}
           name={property.name}
@@ -48,7 +45,7 @@ export const renderControls = (
 
       return (
         <Switch
-          tabIndex={!!property.disabled ? -1 : 5}
+          {...(!!property.disabled && { tabIndex: -1 })}
           disabled={!!property.disabled}
           tooltip="Feature disabled during beta."
           name={property.name}
