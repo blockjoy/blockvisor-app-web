@@ -1,5 +1,6 @@
 export * from './components/NodeList/NodeList';
 export * from './components/NodeView/NodeView';
+export * from './components/NodeView/SidePanel/NodeViewSidePanel';
 export * from './components/NodeView/Header/NodeViewReportProblem/NodeViewReportProblem';
 export * from './components/NodeView/Tabs/Details/NodeViewDetails';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
@@ -15,6 +16,7 @@ export * from './store/nodeWizard';
 export * from './store/blockchains';
 export * from './hooks/useFilters';
 export * from './hooks/useGetBlockchains';
+export * from './hooks/useGetRegions';
 export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeDelete';
 export * from './hooks/useNodeList';

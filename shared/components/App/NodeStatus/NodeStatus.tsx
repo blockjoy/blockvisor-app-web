@@ -4,7 +4,7 @@ import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { NodeStatusIcon } from './NodeStatusIcon';
 import { NodeStatusLoader } from './NodeStatusLoader';
 import { NodeStatusName } from './NodeStatusName';
-import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 export type NodeStatusType = 'container' | 'sync' | 'staking';
 
@@ -39,7 +39,7 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
 
   if (
     statusName?.match(
-      /RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING/g,
+      /RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING/g,
     )
   ) {
     return styles.statusColorGreen;

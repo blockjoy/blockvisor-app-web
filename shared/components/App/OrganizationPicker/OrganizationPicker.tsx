@@ -12,11 +12,10 @@ import { organizationAtoms } from '@modules/organization/store/organizationAtoms
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
-import { useRouter } from 'next/router';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
-import IconArrow from '@public/assets/icons/common/ArrowDown.svg';
+import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
 type Props = {
   isRightAligned?: boolean;
@@ -27,7 +26,6 @@ export const OrganizationPicker = ({
   isRightAligned = false,
   maxWidth,
 }: Props) => {
-  const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const allOrganizations = useRecoilValue(

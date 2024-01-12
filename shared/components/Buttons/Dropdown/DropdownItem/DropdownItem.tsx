@@ -11,13 +11,16 @@ type DropdownItemProps = {
   id?: string;
   href?: string;
   children?: ReactNode;
-  size?: 'large' | 'medium' | 'small';
+  size?: 'small' | 'medium' | 'large';
   onButtonClick?: MouseEventHandler<HTMLButtonElement>;
   additionalStyles?:
     | ((theme: ITheme) => SerializedStyles)[]
     | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
+  isDisabled?: boolean;
+  tabIndex?: number;
 };
+
 export const DropdownItem = ({
   href,
   id,
@@ -26,6 +29,8 @@ export const DropdownItem = ({
   onButtonClick,
   additionalStyles,
   type = 'plain',
+  isDisabled,
+  tabIndex,
 }: DropdownItemProps) => {
   switch (type) {
     case 'link':
@@ -40,6 +45,7 @@ export const DropdownItem = ({
             styles[size],
             additionalStyles && additionalStyles,
           ]}
+          {...(tabIndex && { tabIndex })}
         >
           {children}
         </Link>
@@ -49,6 +55,7 @@ export const DropdownItem = ({
         <button
           id={id}
           onClick={onButtonClick}
+          disabled={isDisabled}
           css={[
             reset.button,
             typo.tiny,
@@ -56,6 +63,7 @@ export const DropdownItem = ({
             styles[size],
             additionalStyles && additionalStyles,
           ]}
+          {...(tabIndex && { tabIndex })}
         >
           {children}
         </button>
@@ -69,6 +77,7 @@ export const DropdownItem = ({
             styles[size],
             additionalStyles && additionalStyles,
           ]}
+          {...(tabIndex && { tabIndex })}
         >
           {children}
         </div>

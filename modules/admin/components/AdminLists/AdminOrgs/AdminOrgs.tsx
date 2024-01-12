@@ -1,32 +1,55 @@
 import { AdminList } from '../AdminList/AdminList';
 import { organizationClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
-import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { pageSize } from '@modules/admin/constants/constants';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
-import IconOrg from '@public/assets/icons/app/Organization.svg';
+import { Org, OrgSortField } from '@modules/grpc/library/blockjoy/v1/org';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
-const columns = [
+const columns: AdminListColumn[] = [
   {
     name: 'name',
     width: '230px',
-    canCopy: true,
+    sortField: OrgSortField.ORG_SORT_FIELD_NAME,
+    isVisible: true,
   },
   {
-    name: 'created',
+    name: 'nodeCount',
+    displayName: 'Nodes',
+    width: '50px',
+    isVisible: true,
+  },
+  {
+    name: 'hostCount',
+    displayName: 'Hosts',
+    width: '100px',
+    isVisible: true,
+  },
+  {
+    name: 'createdAt',
     width: '230px',
+    sortField: OrgSortField.ORG_SORT_FIELD_CREATED_AT,
+    isVisible: true,
   },
 ];
 
 export const AdminOrgs = () => {
-  const { getTotalOrgs: getTotal } = useAdminGetTotals();
-
-  const getList = async (keyword?: string, page?: number) => {
+  const getList = async (
+    keyword?: string,
+    page?: number,
+    sortField?: OrgSortField,
+    sortOrder?: SortOrder,
+  ) => {
     const response = await organizationClient.getOrganizations(
       {
         current_page: page! || 0,
         items_per_page: pageSize,
       },
+      [
+        {
+          field: sortField!,
+          order: sortOrder!,
+        },
+      ],
       keyword,
       true,
     );
@@ -40,7 +63,7 @@ export const AdminOrgs = () => {
     list.map((item) => {
       return {
         ...item,
-        created: `${formatters.formatDate(
+        createdAt: `${formatters.formatDate(
           item.createdAt!,
         )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
       };
@@ -49,9 +72,9 @@ export const AdminOrgs = () => {
   return (
     <AdminList
       name="orgs"
-      icon={<IconOrg />}
+      defaultSortField={OrgSortField.ORG_SORT_FIELD_NAME}
+      defaultSortOrder={SortOrder.SORT_ORDER_ASCENDING}
       columns={columns}
-      getTotal={getTotal}
       getList={getList}
       listMap={listMap}
     />

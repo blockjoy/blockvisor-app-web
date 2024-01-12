@@ -11,6 +11,7 @@ export const HostViewTabs = () => {
   const tabs = [
     { href: createPath(''), name: 'Details' },
     { href: createPath('nodes'), name: 'Nodes' },
+    { href: createPath('metrics'), name: 'Metrics', className: 'metrics' },
   ];
 
   const isActive = (href: string) => {
@@ -30,6 +31,7 @@ export const HostViewTabs = () => {
               styles.tabButton,
               isActive(tab.href) && styles.tabButtonActive,
             ]}
+            className={tab.className}
           >
             {tab.name}
           </NextLink>

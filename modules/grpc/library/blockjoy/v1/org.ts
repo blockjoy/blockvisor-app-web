@@ -3,9 +3,17 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { SearchOperator } from "../common/v1/search";
+import { SearchOperator, SortOrder } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
+
+export enum OrgSortField {
+  ORG_SORT_FIELD_UNSPECIFIED = 0,
+  ORG_SORT_FIELD_NAME = 1,
+  ORG_SORT_FIELD_CREATED_AT = 2,
+  ORG_SORT_FIELD_UPDATED_AT = 3,
+  UNRECOGNIZED = -1,
+}
 
 /** Organization representation */
 export interface Org {
@@ -13,14 +21,8 @@ export interface Org {
   id: string;
   /** The name of this organization. */
   name: string;
-  /**
-   * If this field is set to true, this organization is a personal
-   * organization. A personal organization is the default organzation for a
-   * user that contains only them.
-   */
+  /** A personal organization is the default for a single user. */
   personal: boolean;
-  /** The number of users in this organization. */
-  memberCount: number;
   /** The moment which this organization was created. */
   createdAt:
     | Date
@@ -31,6 +33,10 @@ export interface Org {
     | undefined;
   /** This field contains the users of this organization. */
   members: OrgUser[];
+  /** The number of users in this organization. */
+  memberCount: number;
+  /** The number of nodes that this organization has. */
+  hostCount: number;
   /** The number of nodes that this organization has. */
   nodeCount: number;
 }
@@ -66,7 +72,11 @@ export interface OrgServiceListRequest {
    */
   limit: number;
   /** Search params. */
-  search?: OrgSearch | undefined;
+  search?:
+    | OrgSearch
+    | undefined;
+  /** The field sorting order of results. */
+  sort: OrgSort[];
 }
 
 /**
@@ -82,6 +92,11 @@ export interface OrgSearch {
     | undefined;
   /** Search only the name. */
   name?: string | undefined;
+}
+
+export interface OrgSort {
+  field: OrgSortField;
+  order: SortOrder;
 }
 
 export interface OrgServiceListResponse {
@@ -161,10 +176,11 @@ function createBaseOrg(): Org {
     id: "",
     name: "",
     personal: false,
-    memberCount: 0,
     createdAt: undefined,
     updatedAt: undefined,
     members: [],
+    memberCount: 0,
+    hostCount: 0,
     nodeCount: 0,
   };
 }
@@ -180,20 +196,23 @@ export const Org = {
     if (message.personal === true) {
       writer.uint32(24).bool(message.personal);
     }
-    if (message.memberCount !== 0) {
-      writer.uint32(32).uint64(message.memberCount);
-    }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(106).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(114).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.members) {
-      OrgUser.encode(v!, writer.uint32(122).fork()).ldelim();
+      OrgUser.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.memberCount !== 0) {
+      writer.uint32(56).uint64(message.memberCount);
+    }
+    if (message.hostCount !== 0) {
+      writer.uint32(64).uint64(message.hostCount);
     }
     if (message.nodeCount !== 0) {
-      writer.uint32(128).uint64(message.nodeCount);
+      writer.uint32(72).uint64(message.nodeCount);
     }
     return writer;
   },
@@ -227,35 +246,42 @@ export const Org = {
           message.personal = reader.bool();
           continue;
         case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.memberCount = longToNumber(reader.uint64() as Long);
-          continue;
-        case 13:
-          if (tag !== 106) {
+          if (tag !== 34) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 14:
-          if (tag !== 114) {
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
           message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 15:
-          if (tag !== 122) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
           message.members.push(OrgUser.decode(reader, reader.uint32()));
           continue;
-        case 16:
-          if (tag !== 128) {
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.memberCount = longToNumber(reader.uint64() as Long);
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.hostCount = longToNumber(reader.uint64() as Long);
+          continue;
+        case 9:
+          if (tag !== 72) {
             break;
           }
 
@@ -279,10 +305,11 @@ export const Org = {
     message.id = object.id ?? "";
     message.name = object.name ?? "";
     message.personal = object.personal ?? false;
-    message.memberCount = object.memberCount ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
     message.members = object.members?.map((e) => OrgUser.fromPartial(e)) || [];
+    message.memberCount = object.memberCount ?? 0;
+    message.hostCount = object.hostCount ?? 0;
     message.nodeCount = object.nodeCount ?? 0;
     return message;
   },
@@ -381,7 +408,7 @@ export const OrgServiceGetResponse = {
 };
 
 function createBaseOrgServiceListRequest(): OrgServiceListRequest {
-  return { memberId: undefined, personal: undefined, offset: 0, limit: 0, search: undefined };
+  return { memberId: undefined, personal: undefined, offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const OrgServiceListRequest = {
@@ -390,16 +417,19 @@ export const OrgServiceListRequest = {
       writer.uint32(10).string(message.memberId);
     }
     if (message.personal !== undefined) {
-      writer.uint32(32).bool(message.personal);
+      writer.uint32(16).bool(message.personal);
     }
     if (message.offset !== 0) {
-      writer.uint32(16).uint64(message.offset);
+      writer.uint32(24).uint64(message.offset);
     }
     if (message.limit !== 0) {
-      writer.uint32(24).uint64(message.limit);
+      writer.uint32(32).uint64(message.limit);
     }
     if (message.search !== undefined) {
-      OrgSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
+      OrgSearch.encode(message.search, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.sort) {
+      OrgSort.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -418,33 +448,40 @@ export const OrgServiceListRequest = {
 
           message.memberId = reader.string();
           continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.personal = reader.bool();
-          continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.offset = longToNumber(reader.uint64() as Long);
+          message.personal = reader.bool();
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
+          message.offset = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.limit = longToNumber(reader.uint64() as Long);
           continue;
-        case 8:
-          if (tag !== 66) {
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
           message.search = OrgSearch.decode(reader, reader.uint32());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.sort.push(OrgSort.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -468,6 +505,7 @@ export const OrgServiceListRequest = {
     message.search = (object.search !== undefined && object.search !== null)
       ? OrgSearch.fromPartial(object.search)
       : undefined;
+    message.sort = object.sort?.map((e) => OrgSort.fromPartial(e)) || [];
     return message;
   },
 };
@@ -536,6 +574,63 @@ export const OrgSearch = {
     message.operator = object.operator ?? 0;
     message.id = object.id ?? undefined;
     message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBaseOrgSort(): OrgSort {
+  return { field: 0, order: 0 };
+}
+
+export const OrgSort = {
+  encode(message: OrgSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field !== 0) {
+      writer.uint32(8).int32(message.field);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgSort {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgSort();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.field = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.order = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgSort>): OrgSort {
+    return OrgSort.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgSort>): OrgSort {
+    const message = createBaseOrgSort();
+    message.field = object.field ?? 0;
+    message.order = object.order ?? 0;
     return message;
   },
 };
@@ -1296,16 +1391,13 @@ export const OrgRole = {
   },
 };
 
-/** Manage organizations */
+/** Service for managing organizations. */
 export type OrgServiceDefinition = typeof OrgServiceDefinition;
 export const OrgServiceDefinition = {
   name: "OrgService",
   fullName: "blockjoy.v1.OrgService",
   methods: {
-    /**
-     * Get all the organizations for a user. All users automatically get a private
-     * (internal) organization.
-     */
+    /** Get all the organizations for a user. */
     get: {
       name: "Get",
       requestType: OrgServiceGetRequest,
@@ -1314,6 +1406,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** List all members of orgs matching a set of criteria. */
     list: {
       name: "List",
       requestType: OrgServiceListRequest,
@@ -1322,7 +1415,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Create a single organization */
+    /** Create a new organization. */
     create: {
       name: "Create",
       requestType: OrgServiceCreateRequest,
@@ -1331,7 +1424,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Update a single organization */
+    /** Update an existing organization. */
     update: {
       name: "Update",
       requestType: OrgServiceUpdateRequest,
@@ -1340,7 +1433,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Mark a single organization as deleted */
+    /** Mark an organization as deleted. */
     delete: {
       name: "Delete",
       requestType: OrgServiceDeleteRequest,
@@ -1349,7 +1442,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Remove organization member */
+    /** Remove a member from an organization. */
     removeMember: {
       name: "RemoveMember",
       requestType: OrgServiceRemoveMemberRequest,
@@ -1358,7 +1451,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Returns the host provision token for the provided user and organization. */
+    /** Get the host provision token for a user and organization. */
     getProvisionToken: {
       name: "GetProvisionToken",
       requestType: OrgServiceGetProvisionTokenRequest,
@@ -1367,10 +1460,7 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /**
-     * Regenerates and returns the host provision token for the provided user and
-     * organization.
-     */
+    /** Regenerates the host provision token for a user and organization. */
     resetProvisionToken: {
       name: "ResetProvisionToken",
       requestType: OrgServiceResetProvisionTokenRequest,
@@ -1383,47 +1473,42 @@ export const OrgServiceDefinition = {
 } as const;
 
 export interface OrgServiceImplementation<CallContextExt = {}> {
-  /**
-   * Get all the organizations for a user. All users automatically get a private
-   * (internal) organization.
-   */
+  /** Get all the organizations for a user. */
   get(
     request: OrgServiceGetRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceGetResponse>>;
+  /** List all members of orgs matching a set of criteria. */
   list(
     request: OrgServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceListResponse>>;
-  /** Create a single organization */
+  /** Create a new organization. */
   create(
     request: OrgServiceCreateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceCreateResponse>>;
-  /** Update a single organization */
+  /** Update an existing organization. */
   update(
     request: OrgServiceUpdateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceUpdateResponse>>;
-  /** Mark a single organization as deleted */
+  /** Mark an organization as deleted. */
   delete(
     request: OrgServiceDeleteRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceDeleteResponse>>;
-  /** Remove organization member */
+  /** Remove a member from an organization. */
   removeMember(
     request: OrgServiceRemoveMemberRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceRemoveMemberResponse>>;
-  /** Returns the host provision token for the provided user and organization. */
+  /** Get the host provision token for a user and organization. */
   getProvisionToken(
     request: OrgServiceGetProvisionTokenRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceGetProvisionTokenResponse>>;
-  /**
-   * Regenerates and returns the host provision token for the provided user and
-   * organization.
-   */
+  /** Regenerates the host provision token for a user and organization. */
   resetProvisionToken(
     request: OrgServiceResetProvisionTokenRequest,
     context: CallContext & CallContextExt,
@@ -1431,47 +1516,42 @@ export interface OrgServiceImplementation<CallContextExt = {}> {
 }
 
 export interface OrgServiceClient<CallOptionsExt = {}> {
-  /**
-   * Get all the organizations for a user. All users automatically get a private
-   * (internal) organization.
-   */
+  /** Get all the organizations for a user. */
   get(
     request: DeepPartial<OrgServiceGetRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceGetResponse>;
+  /** List all members of orgs matching a set of criteria. */
   list(
     request: DeepPartial<OrgServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceListResponse>;
-  /** Create a single organization */
+  /** Create a new organization. */
   create(
     request: DeepPartial<OrgServiceCreateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceCreateResponse>;
-  /** Update a single organization */
+  /** Update an existing organization. */
   update(
     request: DeepPartial<OrgServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceUpdateResponse>;
-  /** Mark a single organization as deleted */
+  /** Mark an organization as deleted. */
   delete(
     request: DeepPartial<OrgServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceDeleteResponse>;
-  /** Remove organization member */
+  /** Remove a member from an organization. */
   removeMember(
     request: DeepPartial<OrgServiceRemoveMemberRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceRemoveMemberResponse>;
-  /** Returns the host provision token for the provided user and organization. */
+  /** Get the host provision token for a user and organization. */
   getProvisionToken(
     request: DeepPartial<OrgServiceGetProvisionTokenRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceGetProvisionTokenResponse>;
-  /**
-   * Regenerates and returns the host provision token for the provided user and
-   * organization.
-   */
+  /** Regenerates the host provision token for a user and organization. */
   resetProvisionToken(
     request: DeepPartial<OrgServiceResetProvisionTokenRequest>,
     options?: CallOptions & CallOptionsExt,

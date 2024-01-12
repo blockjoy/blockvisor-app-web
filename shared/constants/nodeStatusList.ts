@@ -3,7 +3,7 @@ import {
   ContainerStatus,
   SyncStatus,
   StakingStatus,
-} from '@modules/grpc/library/blockjoy/v1/node';
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 import { NodeStatusListItem } from '@shared/components';
 
 export const nodeStatusList: NodeStatusListItem[] = [

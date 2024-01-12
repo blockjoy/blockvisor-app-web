@@ -4,6 +4,7 @@ import { nodeClient } from '@modules/grpc';
 import { InitialQueryParams, Pagination } from '../ui/NodeUIHelpers';
 import { getInitialQueryParams } from '../ui/NodeUIContext';
 import { useDefaultOrganization } from '@modules/organization';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const useNodeList = () => {
   const orgId = useDefaultOrganization().defaultOrganization?.id;
@@ -94,7 +95,19 @@ export const useNodeList = () => {
     setNodeListByHostLoadingState('finished');
   };
 
-  const addToNodeList = (node: any) => {
+  const modifyNodeInNodeList = (node: Node) => {
+    const nodeListCopy = [...nodeList];
+
+    const foundNodeIndex = nodeListCopy?.findIndex((n) => n.id === node.id);
+
+    if (foundNodeIndex < 0) return;
+
+    nodeListCopy[foundNodeIndex] = node;
+
+    setNodeList(nodeListCopy);
+  };
+
+  const addToNodeList = (node: Node) => {
     const foundNode = nodeList?.findIndex((n) => n.id === node.id)! > -1;
     if (foundNode) return;
 
@@ -120,6 +133,7 @@ export const useNodeList = () => {
     isLoading,
     addToNodeList,
     removeFromNodeList,
+    modifyNodeInNodeList,
     setIsLoading,
     listNodesByHost,
     nodeListByHost,

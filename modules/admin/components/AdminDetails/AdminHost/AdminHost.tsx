@@ -4,7 +4,7 @@ import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
 import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
-import IconHost from '@public/assets/icons/app/Host.svg';
+import { HostIps, HostStatus, NextLink } from '@shared/components';
 
 export const AdminHost = () => {
   const router = useRouter();
@@ -14,28 +14,66 @@ export const AdminHost = () => {
 
   const getItem = async () => await hostClient.getHost(id as string);
 
-  const customItems = (item: Host): AdminDetailProperty[] => [
+  const customItems = (host: Host & IAdminItem): AdminDetailProperty[] => [
     {
       id: 'name',
       label: 'Name',
-      data: item.name,
-      copyValue: item.name,
+      data: host.name,
+      copyValue: host.name,
     },
     {
       id: 'id',
       label: 'Id',
-      data: item.id,
-      copyValue: item.id,
+      data: host.id,
+      copyValue: host.id,
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      data: <HostStatus hasBorder={false} />,
     },
     {
       id: 'memSize',
       label: 'Memory Size',
-      data: formatters.formatSize(item.memSizeBytes, 'bytes'),
+      data: formatters.formatSize(host.memSizeBytes, 'bytes'),
     },
     {
       id: 'diskSize',
       label: 'Disk Size',
-      data: formatters.formatSize(item.diskSizeBytes, 'bytes'),
+      data: formatters.formatSize(host.diskSizeBytes, 'bytes'),
+    },
+    {
+      id: 'availableIps',
+      label: `Available Ip's`,
+      data: host?.ipAddresses.filter((ip) => !ip.assigned).length,
+    },
+    {
+      id: 'ipAddresses',
+      label: 'Ip Addresses',
+      data: <HostIps ipAddresses={host.ipAddresses} orgId={host.orgId} />,
+    },
+    {
+      id: 'orgName',
+      label: 'Org Name',
+      data: (
+        <p>
+          <NextLink href={`/admin?name=orgs&id=${host.orgId}`}>
+            {host.orgName}
+          </NextLink>
+        </p>
+      ),
+    },
+    {
+      id: 'orgId',
+      label: 'Org Id',
+      data: (
+        <p>
+          <NextLink href={`/admin?name=orgs&id=${host.orgId}`}>
+            {host.orgId}
+          </NextLink>
+        </p>
+      ),
+      copyValue: host.orgId,
     },
   ];
 
@@ -43,7 +81,6 @@ export const AdminHost = () => {
     <AdminDetail
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
-      icon={<IconHost />}
       detailsName="id"
       customItems={customItems}
       ignoreItems={[
@@ -52,6 +89,8 @@ export const AdminHost = () => {
         'ipAddresses',
         'memSizeBytes',
         'diskSizeBytes',
+        'orgId',
+        'orgName',
       ]}
     />
   );

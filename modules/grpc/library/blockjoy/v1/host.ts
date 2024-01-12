@@ -4,11 +4,25 @@ import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
-import { SearchOperator } from "../common/v1/search";
-import { NodeType } from "./node";
+import { NodeType } from "../common/v1/node";
+import { SearchOperator, SortOrder } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
 
+export enum HostSortField {
+  HOST_SORT_FIELD_UNSPECIFIED = 0,
+  HOST_SORT_FIELD_HOST_NAME = 1,
+  HOST_SORT_FIELD_CREATED_AT = 2,
+  HOST_SORT_FIELD_VERSION = 3,
+  HOST_SORT_FIELD_OS = 4,
+  HOST_SORT_FIELD_OS_VERSION = 5,
+  HOST_SORT_FIELD_CPU_COUNT = 6,
+  HOST_SORT_FIELD_MEM_SIZE_BYTES = 7,
+  HOST_SORT_FIELD_DISK_SIZE_BYTES = 8,
+  UNRECOGNIZED = -1,
+}
+
+/** The environment of host. */
 export enum HostType {
   HOST_TYPE_UNSPECIFIED = 0,
   /** HOST_TYPE_CLOUD - This host is a host on the blockjoy cloud platform. */
@@ -18,6 +32,7 @@ export enum HostType {
   UNRECOGNIZED = -1,
 }
 
+/** The connection status of a host. */
 export enum HostConnectionStatus {
   HOST_CONNECTION_STATUS_UNSPECIFIED = 0,
   HOST_CONNECTION_STATUS_ONLINE = 1,
@@ -162,7 +177,11 @@ export interface HostServiceListRequest {
    */
   limit: number;
   /** Search params. */
-  search?: HostSearch | undefined;
+  search?:
+    | HostSearch
+    | undefined;
+  /** The field sorting order of results. */
+  sort: HostSort[];
 }
 
 export interface HostSearch {
@@ -186,6 +205,11 @@ export interface HostSearch {
     | undefined;
   /** Search only for the ip address. */
   ip?: string | undefined;
+}
+
+export interface HostSort {
+  field: HostSortField;
+  order: SortOrder;
 }
 
 export interface HostServiceListResponse {
@@ -278,17 +302,17 @@ export interface Region {
   pricingTier?: string | undefined;
 }
 
-/** Used to indicate a change in the host status via MQTT. */
-export interface HostStatus {
-  hostId: string;
-  connectionStatus?: HostConnectionStatus | undefined;
-}
-
 export interface HostIpAddress {
   /** The ip address as a string. */
   ip: string;
   /** Whether or not the ip address is currently in use by a node. */
   assigned: boolean;
+}
+
+/** Used to indicate a change in the host status. */
+export interface HostStatus {
+  hostId: string;
+  connectionStatus?: HostConnectionStatus | undefined;
 }
 
 function createBaseHost(): Host {
@@ -960,7 +984,7 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0, search: undefined };
+  return { orgId: undefined, offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const HostServiceListRequest = {
@@ -976,6 +1000,9 @@ export const HostServiceListRequest = {
     }
     if (message.search !== undefined) {
       HostSearch.encode(message.search, writer.uint32(34).fork()).ldelim();
+    }
+    for (const v of message.sort) {
+      HostSort.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -1015,6 +1042,13 @@ export const HostServiceListRequest = {
 
           message.search = HostSearch.decode(reader, reader.uint32());
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.sort.push(HostSort.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1036,6 +1070,7 @@ export const HostServiceListRequest = {
     message.search = (object.search !== undefined && object.search !== null)
       ? HostSearch.fromPartial(object.search)
       : undefined;
+    message.sort = object.sort?.map((e) => HostSort.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1137,6 +1172,63 @@ export const HostSearch = {
     message.version = object.version ?? undefined;
     message.os = object.os ?? undefined;
     message.ip = object.ip ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostSort(): HostSort {
+  return { field: 0, order: 0 };
+}
+
+export const HostSort = {
+  encode(message: HostSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field !== 0) {
+      writer.uint32(8).int32(message.field);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostSort {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostSort();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.field = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.order = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostSort>): HostSort {
+    return HostSort.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostSort>): HostSort {
+    const message = createBaseHostSort();
+    message.field = object.field ?? 0;
+    message.order = object.order ?? 0;
     return message;
   },
 };
@@ -1884,63 +1976,6 @@ export const Region = {
   },
 };
 
-function createBaseHostStatus(): HostStatus {
-  return { hostId: "", connectionStatus: undefined };
-}
-
-export const HostStatus = {
-  encode(message: HostStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hostId !== "") {
-      writer.uint32(10).string(message.hostId);
-    }
-    if (message.connectionStatus !== undefined) {
-      writer.uint32(16).int32(message.connectionStatus);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostStatus {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostStatus();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.hostId = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.connectionStatus = reader.int32() as any;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostStatus>): HostStatus {
-    return HostStatus.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostStatus>): HostStatus {
-    const message = createBaseHostStatus();
-    message.hostId = object.hostId ?? "";
-    message.connectionStatus = object.connectionStatus ?? undefined;
-    return message;
-  },
-};
-
 function createBaseHostIpAddress(): HostIpAddress {
   return { ip: "", assigned: false };
 }
@@ -1998,13 +2033,70 @@ export const HostIpAddress = {
   },
 };
 
+function createBaseHostStatus(): HostStatus {
+  return { hostId: "", connectionStatus: undefined };
+}
+
+export const HostStatus = {
+  encode(message: HostStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.connectionStatus !== undefined) {
+      writer.uint32(16).int32(message.connectionStatus);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostStatus {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostStatus();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.connectionStatus = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostStatus>): HostStatus {
+    return HostStatus.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostStatus>): HostStatus {
+    const message = createBaseHostStatus();
+    message.hostId = object.hostId ?? "";
+    message.connectionStatus = object.connectionStatus ?? undefined;
+    return message;
+  },
+};
+
 /** Manage hosts. */
 export type HostServiceDefinition = typeof HostServiceDefinition;
 export const HostServiceDefinition = {
   name: "HostService",
   fullName: "blockjoy.v1.HostService",
   methods: {
-    /** Create a single host */
+    /** Create a single host. */
     create: {
       name: "Create",
       requestType: HostServiceCreateRequest,
@@ -2013,6 +2105,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Get info for a single host. */
     get: {
       name: "Get",
       requestType: HostServiceGetRequest,
@@ -2021,6 +2114,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** List all hosts matching some criteria. */
     list: {
       name: "List",
       requestType: HostServiceListRequest,
@@ -2029,10 +2123,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /**
-     * Update a single host
-     * This shall be used only by Host.
-     */
+    /** Update a single host. */
     update: {
       name: "Update",
       requestType: HostServiceUpdateRequest,
@@ -2041,7 +2132,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Delete a single host */
+    /** Delete a single host. */
     delete: {
       name: "Delete",
       requestType: HostServiceDeleteRequest,
@@ -2050,7 +2141,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Start a single host */
+    /** Start a single host. */
     start: {
       name: "Start",
       requestType: HostServiceStartRequest,
@@ -2059,7 +2150,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Stop a single host */
+    /** Stop a single host. */
     stop: {
       name: "Stop",
       requestType: HostServiceStopRequest,
@@ -2068,7 +2159,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Restart a single host */
+    /** Restart a single host. */
     restart: {
       name: "Restart",
       requestType: HostServiceRestartRequest,
@@ -2090,43 +2181,42 @@ export const HostServiceDefinition = {
 } as const;
 
 export interface HostServiceImplementation<CallContextExt = {}> {
-  /** Create a single host */
+  /** Create a single host. */
   create(
     request: HostServiceCreateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceCreateResponse>>;
+  /** Get info for a single host. */
   get(
     request: HostServiceGetRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceGetResponse>>;
+  /** List all hosts matching some criteria. */
   list(
     request: HostServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceListResponse>>;
-  /**
-   * Update a single host
-   * This shall be used only by Host.
-   */
+  /** Update a single host. */
   update(
     request: HostServiceUpdateRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceUpdateResponse>>;
-  /** Delete a single host */
+  /** Delete a single host. */
   delete(
     request: HostServiceDeleteRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceDeleteResponse>>;
-  /** Start a single host */
+  /** Start a single host. */
   start(
     request: HostServiceStartRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceStartResponse>>;
-  /** Stop a single host */
+  /** Stop a single host. */
   stop(
     request: HostServiceStopRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceStopResponse>>;
-  /** Restart a single host */
+  /** Restart a single host. */
   restart(
     request: HostServiceRestartRequest,
     context: CallContext & CallContextExt,
@@ -2139,43 +2229,42 @@ export interface HostServiceImplementation<CallContextExt = {}> {
 }
 
 export interface HostServiceClient<CallOptionsExt = {}> {
-  /** Create a single host */
+  /** Create a single host. */
   create(
     request: DeepPartial<HostServiceCreateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceCreateResponse>;
+  /** Get info for a single host. */
   get(
     request: DeepPartial<HostServiceGetRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceGetResponse>;
+  /** List all hosts matching some criteria. */
   list(
     request: DeepPartial<HostServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceListResponse>;
-  /**
-   * Update a single host
-   * This shall be used only by Host.
-   */
+  /** Update a single host. */
   update(
     request: DeepPartial<HostServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceUpdateResponse>;
-  /** Delete a single host */
+  /** Delete a single host. */
   delete(
     request: DeepPartial<HostServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceDeleteResponse>;
-  /** Start a single host */
+  /** Start a single host. */
   start(
     request: DeepPartial<HostServiceStartRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceStartResponse>;
-  /** Stop a single host */
+  /** Stop a single host. */
   stop(
     request: DeepPartial<HostServiceStopRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceStopResponse>;
-  /** Restart a single host */
+  /** Restart a single host. */
   restart(
     request: DeepPartial<HostServiceRestartRequest>,
     options?: CallOptions & CallOptionsExt,

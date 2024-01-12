@@ -6,7 +6,7 @@ import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 import {
   ContainerStatus,
   SyncStatus,
-} from '@modules/grpc/library/blockjoy/v1/node';
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 
 const iconSize = '24px';
 

@@ -1,33 +1,43 @@
-import { Skeleton } from '@shared/components';
-import { styles } from './AdminListHeader.styles';
 import { AdminHeader } from '@modules/admin/components/AdminHeader/AdminHeader';
 import { AdminSearch } from '@modules/admin/components/AdminSearch/AdminSearch';
+import { AdminListHeaderColumnPicker } from './AdminListHeaderColumnPicker/AdminListHeaderColumnPicker';
+import { styles } from './AdminListHeader.styles';
+import { AdminIconButton } from '@modules/admin/components/AdminIconButton/AdminIconButton';
+import IconRefresh from '@public/assets/icons/common/Refresh.svg';
+import IconFilter from '@public/assets/icons/common/Filter.svg';
 
 type Props = {
-  icon: React.ReactNode;
   name: string;
-  total: number;
+  columnsState: AdminListColumn[];
+  onColumnsChanged: (nextColumns: AdminListColumn[]) => void;
   onSearch: (search: string) => void;
 };
 
-export const AdminListHeader = ({ name, icon, total, onSearch }: Props) => {
+export const AdminListHeader = ({
+  name,
+  columnsState,
+  onColumnsChanged,
+  onSearch,
+}: Props) => {
   return (
-    <AdminHeader icon={icon} name={name}>
-      <>
-        {total > -1 ? (
-          <>
-            <div css={styles.total}>
-              <var css={[styles.totalValue]}>{total}</var>
-              <span className="tooltip" css={styles.totalTooltip}>
-                Total
-              </span>
-            </div>
-            <AdminSearch onSearch={onSearch} />
-          </>
-        ) : (
-          <Skeleton width="200px" margin="0 0 0 30px" />
-        )}
-      </>
+    <AdminHeader name={name}>
+      <AdminSearch onSearch={onSearch} placeholder="Quick search" />
+      <div css={styles.buttons}>
+        <AdminIconButton
+          isDisabled
+          icon={<IconRefresh />}
+          onClick={() => console.log('refresh')}
+        />
+        <AdminIconButton
+          isDisabled
+          icon={<IconFilter />}
+          onClick={() => console.log('filter')}
+        />
+        <AdminListHeaderColumnPicker
+          columnsState={columnsState}
+          onColumnsChanged={onColumnsChanged}
+        />
+      </div>
     </AdminHeader>
   );
 };

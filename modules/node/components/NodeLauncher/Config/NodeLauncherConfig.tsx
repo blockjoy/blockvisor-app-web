@@ -16,15 +16,13 @@ import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeLauncherState } from '../NodeLauncher';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
-import {
-  BlockchainNetwork,
-  BlockchainVersion,
-} from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 
 type Props = {
   nodeTypeProperties?: NodeProperty[];
   nodeFiles?: NodeFiles[];
-  networks?: BlockchainNetwork[];
+  networks?: NetworkConfig[];
   versions: BlockchainVersion[];
   selectedVersion?: BlockchainVersion;
   nodeLauncherState: NodeLauncherState;

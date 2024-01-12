@@ -8,6 +8,8 @@ import {
   OrgServiceListResponse,
   OrgServiceResetProvisionTokenResponse,
   OrgServiceUpdateResponse,
+  OrgSort,
+  OrgSortField,
 } from '../library/blockjoy/v1/org';
 import {
   getOptions,
@@ -20,7 +22,10 @@ import {
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { StatusResponse, StatusResponseFactory } from '../status_response';
-import { SearchOperator } from '../library/blockjoy/common/v1/search';
+import {
+  SearchOperator,
+  SortOrder,
+} from '../library/blockjoy/common/v1/search';
 
 class OrganizationClient {
   private client: OrgServiceClient;
@@ -45,6 +50,7 @@ class OrganizationClient {
 
   async getOrganizations(
     pagination?: UIPagination,
+    sort?: OrgSort[],
     keyword?: string,
     isAdmin?: boolean,
   ): Promise<OrgServiceListResponse> {
@@ -53,6 +59,7 @@ class OrganizationClient {
       offset: getPaginationOffset(pagination!),
       limit: pagination?.items_per_page!,
       personal: isAdmin ? false : undefined,
+      sort: sort || [],
     };
 
     if (keyword) {

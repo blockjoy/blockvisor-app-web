@@ -25,11 +25,6 @@ export const styles = {
       border-radius: 50%;
       background: ${theme.colorDanger};
     }
-
-    a {
-      color: ${theme.colorText};
-      text-decoration: underline;
-    }
   `,
   alertSuccess: (theme: ITheme) => css`
     ::after {

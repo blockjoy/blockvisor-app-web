@@ -142,6 +142,7 @@ export const EditableTitle: FC<Props> = ({
 
       {canUpdate && !isLoading && initialValue?.length && (
         <Button
+          onClick={handleEditToggled}
           className={isEditMode ? '' : 'edit-toggle'}
           style="icon"
           tooltip={isEditMode ? 'Cancel' : 'Edit Name'}

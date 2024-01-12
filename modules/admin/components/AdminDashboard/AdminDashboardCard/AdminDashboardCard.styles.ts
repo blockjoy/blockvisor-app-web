@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -37,7 +36,7 @@ export const styles = {
     color: ${theme.colorDefault};
     margin-bottom: 2px;
   `,
-  cardValue: (theme: ITheme) => css`
+  cardValue: css`
     font-style: normal;
     font-size: 34px;
   `,

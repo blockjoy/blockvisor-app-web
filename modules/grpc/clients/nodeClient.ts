@@ -1,6 +1,5 @@
 import {
   Node,
-  NodeType,
   NodeProperty,
   NodeServiceCreateRequest,
   NodeServiceClient,
@@ -9,8 +8,14 @@ import {
   NodeServiceListResponse,
   NodeServiceListRequest,
   NodeSearch,
+  NodeSort,
+  NodeSortField,
 } from '../library/blockjoy/v1/node';
-import { SearchOperator } from '../library/blockjoy/common/v1/search';
+import { NodeType } from '../library/blockjoy/common/v1/node';
+import {
+  SearchOperator,
+  SortOrder,
+} from '../library/blockjoy/common/v1/search';
 import {
   authClient,
   callWithTokenRefresh,
@@ -55,6 +60,7 @@ class NodeClient {
     orgId?: string,
     filter_criteria?: UIFilterCriteria,
     pagination?: UIPagination,
+    sort?: NodeSort[],
   ): Promise<NodeServiceListResponse> {
     const request: NodeServiceListRequest = {
       orgId,
@@ -63,6 +69,12 @@ class NodeClient {
       statuses: filter_criteria?.nodeStatus?.map((f) => +f)!,
       nodeTypes: filter_criteria?.nodeType?.map((f) => +f)!,
       blockchainIds: filter_criteria?.blockchain!,
+      sort: sort || [
+        {
+          field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
+          order: SortOrder.SORT_ORDER_DESCENDING,
+        },
+      ],
     };
 
     if (filter_criteria?.keyword) {

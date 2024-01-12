@@ -1,116 +1,172 @@
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
 
-export type AdminListColumn = {
-  name: string;
-  width?: string;
-  canCopy?: boolean;
-};
-
-export interface IAdminItem {
-  id: string;
-}
-
 type Props = {
   name: string;
-  icon: React.ReactNode;
   columns: AdminListColumn[];
-  listMap: (list: any[]) => IAdminItem[];
-  getTotal: () => Promise<number>;
+  defaultSortField: number;
+  defaultSortOrder: SortOrder;
+  listMap: (list: any[]) => any[];
   getList: (
     keyword?: string,
     page?: number,
+    sortField?: number,
+    sortOrder?: number,
   ) => Promise<{
     total: number;
-    list: IAdminItem[];
+    list: any[];
   }>;
 };
 
 export const AdminList = ({
   name,
-  icon,
   columns,
+  defaultSortField,
+  defaultSortOrder,
   listMap,
-  getTotal,
   getList,
 }: Props) => {
   const router = useRouter();
   const { search, page } = router.query;
-  const [list, setList] = useState<IAdminItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [list, setList] = useState<any[]>([]);
   const [listTotal, setListTotal] = useState<number>();
-  const [total, setTotal] = useState<number>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [listPage, setListPage] = useState<number>();
+  const [sortField, setSortField] = useState(
+    +localStorage?.getItem(`${name}SortField`)! || defaultSortField,
+  );
+  const [sortOrder, setSortOrder] = useState(
+    +localStorage?.getItem(`${name}SortOrder`)! || defaultSortOrder,
+  );
 
-  const handleGetTotal = async () => {
-    const response = await getTotal();
-    setTotal(response);
+  const localStorageColumns: AdminListColumn[] = JSON.parse(
+    localStorage.getItem(`${name}Columns`)!,
+  );
+
+  const loadColumns = () => {
+    let tempColumns = columns;
+
+    if (localStorageColumns) {
+      tempColumns.forEach((column) => {
+        const isVisible = localStorageColumns?.find(
+          (c: AdminListColumn) => c.name === column.name,
+        )?.isVisible;
+        column.isVisible = isVisible;
+      });
+    }
+
+    return tempColumns;
   };
 
-  const handleGetList = async (keyword: string, page: number) => {
-    const response = await getList(keyword, page);
+  const [columnsState, setColumnsState] = useState(loadColumns());
+
+  const handleGetList = async (
+    keyword: string,
+    page: number,
+    sortField: number,
+    sortOrder: SortOrder,
+  ) => {
+    const response = await getList(keyword, page, sortField, sortOrder);
     setList(response.list);
     setListTotal(response.total);
+    setIsLoading(false);
   };
 
   const handleSearch = async (keyword: string) => {
+    const query: AdminQuery = {
+      name,
+      page: 1,
+    };
+
+    if (keyword?.length) query.search = keyword.trim();
+
     router.push({
       pathname: `/admin`,
-      query: {
-        name,
-        page: 0,
-        search: keyword.trim(),
-      },
+      query,
     });
     setSearchTerm(keyword);
-    setListPage(0);
+    setListPage(1);
   };
 
-  const handlePageChanged = (page: number) => {
+  const handleSortChanged = (field: number, order: SortOrder) => {
+    const newSortOrder =
+      sortField !== field
+        ? SortOrder.SORT_ORDER_ASCENDING
+        : sortOrder === SortOrder.SORT_ORDER_ASCENDING
+        ? SortOrder.SORT_ORDER_DESCENDING
+        : SortOrder.SORT_ORDER_ASCENDING!;
+
+    setSortOrder(newSortOrder);
+    setSortField(field);
+
+    localStorage.setItem(`${name}SortField`, field.toString());
+    localStorage.setItem(`${name}SortOrder`, newSortOrder.toString());
+
+    const newColumns = [...columnsState];
+    const foundColumn = newColumns.find((column) => column.sortField === field);
+
+    if (!foundColumn) return;
+
+    foundColumn.sortOrder = newSortOrder;
+
+    setColumnsState(newColumns);
+  };
+
+  const handlePageChanged = (nextPage: number) => {
+    setListPage(nextPage);
+    const query: AdminQuery = {
+      name,
+      page: nextPage,
+    };
+
+    if (search) query.search = search as string;
+
     router.push({
       pathname: `/admin`,
-      query: {
-        name,
-        page,
-        search,
-      },
+      query,
     });
-    setListPage(page);
+  };
+
+  const handleColumnsChanged = (nextColumns: AdminListColumn[]) => {
+    localStorage.setItem(`${name}Columns`, JSON.stringify(nextColumns));
+    setColumnsState(nextColumns);
   };
 
   useEffect(() => {
-    (async () => {
-      setSearchTerm((search as string) || '');
-      setListPage(page ? +page?.toString()! : 0);
-    })();
+    setSearchTerm((search as string) || '');
+    setListPage(page ? +page?.toString()! : 1);
   }, [router.isReady]);
 
   useEffect(() => {
     if (searchTerm !== undefined && listPage !== undefined) {
-      handleGetTotal();
-      handleGetList(searchTerm!, listPage!);
+      handleGetList(searchTerm!, listPage! - 1, sortField!, sortOrder!);
     }
-  }, [searchTerm, listPage]);
+  }, [searchTerm, listPage, sortField, sortOrder]);
 
   return (
     <article key={name} id={name} css={styles.card}>
       <AdminListHeader
         name={name}
-        icon={icon}
-        total={total!}
         onSearch={handleSearch}
+        columnsState={columnsState}
+        onColumnsChanged={handleColumnsChanged}
       />
       <AdminListTable
         name={name}
+        isLoading={isLoading}
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
-        searchTerm={searchTerm}
-        columns={columns}
+        columns={columnsState.filter((column) => column.isVisible)}
+        activeSortField={sortField}
+        activeSortOrder={sortOrder}
         onPageChanged={handlePageChanged}
+        onSortChanged={handleSortChanged}
       />
     </article>
   );

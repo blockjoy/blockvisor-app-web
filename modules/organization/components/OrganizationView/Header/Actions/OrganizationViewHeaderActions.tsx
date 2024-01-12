@@ -9,7 +9,7 @@ import {
   useLeaveOrganization,
 } from '@modules/organization';
 import { useIdentity, usePermissions } from '@modules/auth';
-import { ActionsDropdown, DeleteModal } from '@shared/components';
+import { ActionsDropdown, DeleteModal, NextLink } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { useRouter } from 'next/router';
 
@@ -106,7 +106,7 @@ export const OrganizationViewHeaderActions = () => {
           isDisabledMessage={
             <>
               You cannot delete this Organization, it has{' '}
-              <Link
+              <NextLink
                 href={
                   organization?.nodeCount === 1 && singleNode
                     ? ROUTES.NODE(singleNode.id)
@@ -115,7 +115,7 @@ export const OrganizationViewHeaderActions = () => {
               >
                 {organization?.nodeCount}{' '}
                 {organization?.nodeCount === 1 ? 'Node' : 'Nodes'} attached.
-              </Link>
+              </NextLink>
             </>
           }
           onHide={handleDeleteModalClosed}

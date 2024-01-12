@@ -1,5 +1,5 @@
 import { styles } from './Filter.styles';
-import IconArrow from '@public/assets/icons/common/ArrowDown.svg';
+import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 import {
   Badge,
   DropdownItem,

@@ -1,10 +1,4 @@
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  InputHTMLAttributes,
-  MouseEventHandler,
-  ReactNode,
-} from 'react';
+import { ChangeEventHandler, ReactNode } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './Checkbox.styles';
 

@@ -1,11 +1,8 @@
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { NodeTypeConfigLabel, LockedSwitch } from '@modules/node';
 import { ReactNode } from 'react';
-import {
-  Node,
-  NodeProperty,
-  UiType,
-} from '@modules/grpc/library/blockjoy/v1/node';
+import { Node, NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
+import { UiType } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 export const mapNodeConfigToDetails = (node: Node) => {
   if (!node?.nodeType) return [];

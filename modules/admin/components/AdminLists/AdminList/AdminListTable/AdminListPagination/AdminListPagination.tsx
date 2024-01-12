@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { styles } from './AdminListPagination.styles';
-import IconArrowRight from '@public/assets/icons/common/ArrowRight.svg';
-import IconArrowLeft from '@public/assets/icons/common/ArrowLeft.svg';
 import { SvgIcon } from '@shared/components';
-import { pageSize } from '@modules/admin/constants/constants';
+import IconChevronRight from '@public/assets/icons/common/ChevronRight.svg';
+import IconChevronLeft from '@public/assets/icons/common/ChevronLeft.svg';
 
 type Props = {
   listPage: number;
@@ -15,89 +14,96 @@ type Props = {
 
 export const AdminListPagination = ({
   listPage,
-  maxPagesToDisplay = 5,
   pageCount = 10,
-  totalRowCount,
   onPageChanged,
 }: Props) => {
-  const [pages, setPages] = useState<number[]>([]);
-  const [isBuilding, setIsBuilding] = useState(true);
+  const allPages = Array.from({ length: pageCount }, (v, k) => k + 1);
+
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(5);
 
   const buildPagination = (pageIndex: number) => {
-    setPages([]);
+    let pageStart = 0,
+      pageEnd = Math.min(5, pageCount);
 
-    const pagesToDisplay = Math.min(maxPagesToDisplay, pageCount);
-
-    let newPages = [];
-
-    let start = 0;
-    let end = pagesToDisplay;
-
-    if (pageIndex > 3 && pageIndex < pageCount - 3) {
-      start = pageIndex - 1;
-      end = pageIndex - 1 + 3;
+    if (pageIndex > 4 && pageIndex < pageCount - 3) {
+      pageStart = pageIndex - 2;
+      pageEnd = pageIndex - 2 + 3;
     }
 
-    if (pageCount > 5 && pageIndex > pageCount - 5) {
-      start = pageCount - 5;
-      end = pageCount - 1;
+    if (pageCount > 6 && pageIndex > pageCount - 4) {
+      pageStart = pageCount - 5;
+      pageEnd = pageCount - 1;
     }
 
-    for (let i = start; i < end; i++) {
-      newPages.push(i);
-    }
-
-    setPages(newPages);
-    setIsBuilding(false);
+    setStart(pageStart);
+    setEnd(pageEnd);
   };
 
   useEffect(() => {
-    setIsBuilding(true);
     buildPagination(listPage);
   }, [pageCount, listPage]);
 
   if (pageCount === 1) return null;
 
   return (
-    <footer css={styles.footer}>
-      <div css={styles.pagination}>
-        {listPage >= 4 && (
-          <button
-            onClick={() => onPageChanged(0)}
-            type="button"
-            css={styles.paginationButton}
-          >
-            1
-          </button>
-        )}
-        {listPage >= 4 && <span css={styles.paginationButton}>...</span>}
-        {pages.map((page: number) => (
-          <button
-            css={styles.paginationButton}
-            className={listPage === page && !isBuilding ? 'active' : ''}
-            onClick={() => onPageChanged(page)}
-            key={page}
-            type="button"
-          >
-            {page + 1}
-          </button>
-        ))}
-        {listPage < pageCount - 4 && (
-          <span css={styles.paginationButton}>...</span>
-        )}
-        {pageCount > 5 && (
-          <button
-            className={
-              listPage === pageCount - 1 && !isBuilding ? 'active' : ''
-            }
-            onClick={() => onPageChanged(pageCount - 1)}
-            type="button"
-            css={styles.paginationButton}
-          >
-            {pageCount}
-          </button>
-        )}
-      </div>
-    </footer>
+    <div css={styles.pagination}>
+      <button
+        type="button"
+        css={styles.paginationButton}
+        onClick={() => onPageChanged(listPage - 1)}
+        disabled={listPage === 1}
+      >
+        <SvgIcon size="10px" isDefaultColor>
+          <IconChevronLeft />
+        </SvgIcon>
+      </button>
+      {(listPage >= 5 || listPage > pageCount - 5) && pageCount > 6 && (
+        <button
+          onClick={() => onPageChanged(1)}
+          type="button"
+          css={styles.paginationButton}
+        >
+          1
+        </button>
+      )}
+      {(listPage >= 5 || listPage > pageCount - 5) && pageCount > 6 && (
+        <span css={styles.paginationButton}>...</span>
+      )}
+      {allPages.slice(start, end)?.map((page: number) => (
+        <button
+          css={styles.paginationButton}
+          className={listPage === page ? 'active' : ''}
+          onClick={() => onPageChanged(page)}
+          key={page}
+          type="button"
+        >
+          {page}
+        </button>
+      ))}
+      {listPage < pageCount - 3 && pageCount > 6 && (
+        <span css={styles.paginationButton}>...</span>
+      )}
+      {pageCount > 5 && (
+        <button
+          className={listPage === pageCount ? 'active' : ''}
+          onClick={() => onPageChanged(pageCount)}
+          type="button"
+          css={styles.paginationButton}
+        >
+          {pageCount}
+        </button>
+      )}
+      <button
+        type="button"
+        css={styles.paginationButton}
+        onClick={() => onPageChanged(listPage + 1)}
+        disabled={listPage === pageCount}
+      >
+        <SvgIcon size="10px" isDefaultColor>
+          <IconChevronRight />
+        </SvgIcon>
+      </button>
+    </div>
   );
 };

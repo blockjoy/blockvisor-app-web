@@ -166,7 +166,9 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
             disabled={!isDirty}
             onClick={handleUpdateClicked}
           >
-            <IconRefresh />
+            <SvgIcon size="12px">
+              <IconRefresh />
+            </SvgIcon>
             Apply
           </button>
           {hasFiltersApplied && (

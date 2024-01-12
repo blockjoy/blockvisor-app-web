@@ -1,33 +1,44 @@
-import { SvgIcon } from '@shared/components';
 import { useRouter } from 'next/router';
 import { styles } from './AdminHeader.styles';
+import { SvgIcon } from '@shared/components';
+import IconBack from '@public/assets/icons/common/ArrowLeft.svg';
 
 type Props = {
-  icon: React.ReactNode;
   name: string;
   children?: React.ReactNode;
 };
 
-export const AdminHeader = ({ icon, name, children }: Props) => {
+export const AdminHeader = ({ name, children }: Props) => {
   const router = useRouter();
 
-  const { id } = router.query;
+  const { id, ip, search, page } = router.query;
 
   const handleTitleClicked = () => {
-    router.back();
+    const query: AdminQuery = {
+      name,
+    };
+
+    if (search) query.search = search as string;
+    if (page) query.page = +page;
+
+    router.push({
+      pathname: `admin`,
+      query,
+    });
   };
 
   return (
-    <header css={styles.cardHeader}>
-      <span css={styles.cardIcon}>
-        <SvgIcon size="16px">{icon}</SvgIcon>
-      </span>
-      <h2
-        onClick={() => (id ? handleTitleClicked() : null)}
-        css={[styles.cardTitle, id && styles.cardTitleClickable]}
-      >
-        {name}
-      </h2>
+    <header css={styles.header}>
+      {(id || ip) && (
+        <div css={styles.title}>
+          <a onClick={handleTitleClicked} css={styles.titleText}>
+            <SvgIcon>
+              <IconBack />
+            </SvgIcon>
+            {name}
+          </a>
+        </div>
+      )}
       {children}
     </header>
   );

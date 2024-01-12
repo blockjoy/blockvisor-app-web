@@ -4,7 +4,6 @@ import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import { Toast } from './toast/Toast';
 import {
   authAtoms,
   useIdentityRepository,
@@ -105,7 +104,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       </Head>
       <Burger />
       <Sidebar />
-      <Toast />
       {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
     </>
   );

@@ -38,10 +38,11 @@ export const HostList = () => {
   const currentQueryParams = useRef(hostUIProps.queryParams);
 
   const hasMore =
+    hostCount !== hostList.length &&
     hostUIContext.queryParams.pagination.current_page *
       hostUIContext.queryParams.pagination.items_per_page +
       hostUIContext.queryParams.pagination.items_per_page <
-    hostCount;
+      hostCount;
 
   useEffect(() => {
     if (!isEqual(currentQueryParams.current, hostUIProps.queryParams)) {

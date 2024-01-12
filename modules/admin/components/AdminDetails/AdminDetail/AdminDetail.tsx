@@ -1,7 +1,3 @@
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
-import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -12,11 +8,10 @@ import {
 } from './AdminDetailTable/AdminDetailTable';
 import { formatters } from '@shared/utils/formatters';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
-
-export type AdminDetailItem = Node & User & Host & Org;
+import { nodeClient } from '@modules/grpc';
+import { spacing } from 'styles/utils.spacing.styles';
 
 type Props = {
-  icon: React.ReactNode;
   ignoreItems?: string[];
   detailsName: string;
   getItem: () => Promise<{}>;
@@ -25,7 +20,6 @@ type Props = {
 };
 
 export const AdminDetail = ({
-  icon,
   ignoreItems,
   detailsName,
   getItem,
@@ -33,7 +27,7 @@ export const AdminDetail = ({
   onOpenInApp,
 }: Props) => {
   const router = useRouter();
-  const { name } = router.query;
+  const { name, ip, org_id } = router.query;
   const [error, setError] = useState('');
   const [item, setItem] = useState<any>();
 
@@ -69,11 +63,26 @@ export const AdminDetail = ({
   useEffect(() => {
     (async () => {
       try {
-        const item = await getItem();
-        setItem(item);
+        if (ip && org_id) {
+          const nodeResults = await nodeClient.listNodes(
+            org_id as string,
+            {
+              keyword: ip as string,
+            },
+            {
+              current_page: 0,
+              items_per_page: 1,
+            },
+          );
+          const item = await nodeClient.getNode(nodeResults.nodes[0].id);
+          setItem(item);
+        } else {
+          const item = await getItem();
+          setItem(item);
+        }
       } catch (err) {
         setItem({});
-        setError(`${capitalized(name as string)} not found`);
+        setError('Cannot load data');
       }
     })();
   }, []);
@@ -82,7 +91,6 @@ export const AdminDetail = ({
     <>
       <AdminDetailHeader
         name={name as string}
-        icon={icon}
         isLoading={item === undefined}
         detailsName={item ? item[detailsName] : undefined}
         onOpenAppView={onOpenInApp}
@@ -91,7 +99,7 @@ export const AdminDetail = ({
       {!error ? (
         <AdminDetailTable item={item!} properties={properties} />
       ) : (
-        <p>{error}</p>
+        <p css={spacing.top.medium}>{error}</p>
       )}
     </>
   );

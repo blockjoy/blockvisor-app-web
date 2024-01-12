@@ -3,22 +3,29 @@ import NextLink from 'next/link';
 import { styles } from './NodeViewTabs.styles';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
+import { useNodeView } from '@modules/node/hooks/useNodeView';
 
 export const NodeViewTabs = () => {
-  const router = useRouter();
-
-  console.log(router);
   const { query, asPath } = useRouter();
   const { id } = query;
+  const { node } = useNodeView();
 
   const createPath = (path: string) =>
     `${ROUTES.NODE(id as string)}${path ? `/${path}` : ''}`;
 
-  const tabs = [
+  const tabs: { href: string; name: string; className?: string }[] = [
     { href: createPath(''), name: 'Details' },
     { href: createPath('settings'), name: 'Settings' },
     { href: createPath('jobs'), name: 'Jobs' },
   ];
+
+  if (node?.blockHeight) {
+    tabs.push({
+      href: createPath('metrics'),
+      name: 'Metrics',
+      className: 'metrics',
+    });
+  }
 
   const isActive = (href: string) => {
     const routerPath = asPath
@@ -49,6 +56,7 @@ export const NodeViewTabs = () => {
                 styles.tabButton,
                 isActive(tab.href) && styles.tabButtonActive,
               ]}
+              className={tab.className}
             >
               {tab.name}
             </NextLink>

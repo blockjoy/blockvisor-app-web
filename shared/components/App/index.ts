@@ -5,6 +5,7 @@ export * from './EmptyColumn/EmptyColum';
 export * from './EmptyColumn/AnimatedGraphic';
 export * from './HostStatus/HostStatus';
 export * from './HostStatus/HostStatusIcon';
+export * from './HostIps/HostIps';
 export * from './HostOs/HostOs';
 export * from './Layout/Layout';
 export * from './Page/PageHeader';

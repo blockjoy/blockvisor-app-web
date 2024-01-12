@@ -11,17 +11,19 @@ import { useDefaultOrganization } from '@modules/organization';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import {
-  UiType,
   NodeProperty,
-  NodeType,
   NodeServiceCreateRequest,
   FilteredIpAddr,
   NodePlacement,
   NodeScheduler_ResourceAffinity,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
-  BlockchainNodeType,
+  UiType,
+  NodeType,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
+import {
   BlockchainVersion,
+  BlockchainNodeType,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   sortVersions,
@@ -32,7 +34,7 @@ import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Mixpanel } from '@shared/services/mixpanel';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { usePermissions } from '@modules/auth';
-import { useHostList } from '@modules/host';
+import { useHostList, useHostSelect } from '@modules/host';
 
 export type NodeLauncherState = {
   blockchainId: string;
@@ -77,6 +79,8 @@ export const NodeLauncher = () => {
   const { defaultOrganization } = useDefaultOrganization();
 
   const { hasPermission } = usePermissions();
+
+  const { hosts, isLoading: isLoadingHosts, getHosts } = useHostSelect();
 
   const canAddNode = hasPermission('node-create');
 
@@ -296,6 +300,10 @@ export const NodeLauncher = () => {
     Mixpanel.track('Launch Node - Opened');
   }, []);
 
+  useEffect(() => {
+    getHosts();
+  }, [defaultOrganization?.id]);
+
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
@@ -337,6 +345,8 @@ export const NodeLauncher = () => {
             selectedVersion={selectedVersion!}
             selectedHost={selectedHost}
             canAddNode={canAddNode}
+            hosts={hosts}
+            isLoadingHosts={isLoadingHosts}
             onHostChanged={handleHostChanged}
             onRegionChanged={handleRegionChanged}
             onCreateNodeClicked={handleCreateNodeClicked}
