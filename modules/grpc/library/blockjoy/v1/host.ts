@@ -40,6 +40,13 @@ export enum HostConnectionStatus {
   UNRECOGNIZED = -1,
 }
 
+export enum ManagedBy {
+  MANAGED_BY_UNSPECIFIED = 0,
+  MANAGED_BY_AUTOMATIC = 1,
+  MANAGED_BY_MANUAL = 2,
+  UNRECOGNIZED = -1,
+}
+
 export interface Host {
   /** This is the id of the host. */
   id: string;
@@ -99,6 +106,8 @@ export interface Host {
     | undefined;
   /** A list of ip addresses available for this host. */
   ipAddresses: HostIpAddress[];
+  /** The entity that can make decisions on whether to run nodes on this host. */
+  managedBy: ManagedBy;
 }
 
 export interface HostServiceCreateRequest {
@@ -148,7 +157,14 @@ export interface HostServiceCreateRequest {
    * i.e. config data, secrets, vm mountpoints. Usually this will be
    * `/var/lib/blockvisor`.
    */
-  vmmMountpoint?: string | undefined;
+  vmmMountpoint?:
+    | string
+    | undefined;
+  /**
+   * The entity that can make decisions on whether to run nodes on this host. By
+   * default this value will be set to `Automatic`.
+   */
+  managedBy?: ManagedBy | undefined;
 }
 
 export interface HostServiceCreateResponse {
@@ -235,7 +251,11 @@ export interface HostServiceUpdateRequest {
     | BillingAmount
     | undefined;
   /** This is total disk space installed on host, given in bytes. */
-  totalDiskSpace?: number | undefined;
+  totalDiskSpace?:
+    | number
+    | undefined;
+  /** The entity that can make decisions on whether to run nodes on this host. */
+  managedBy?: ManagedBy | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -337,6 +357,7 @@ function createBaseHost(): Host {
     billingAmount: undefined,
     vmmMountpoint: undefined,
     ipAddresses: [],
+    managedBy: 0,
   };
 }
 
@@ -401,6 +422,9 @@ export const Host = {
     }
     for (const v of message.ipAddresses) {
       HostIpAddress.encode(v!, writer.uint32(178).fork()).ldelim();
+    }
+    if (message.managedBy !== 0) {
+      writer.uint32(184).int32(message.managedBy);
     }
     return writer;
   },
@@ -552,6 +576,13 @@ export const Host = {
 
           message.ipAddresses.push(HostIpAddress.decode(reader, reader.uint32()));
           continue;
+        case 23:
+          if (tag !== 184) {
+            break;
+          }
+
+          message.managedBy = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -589,6 +620,7 @@ export const Host = {
       : undefined;
     message.vmmMountpoint = object.vmmMountpoint ?? undefined;
     message.ipAddresses = object.ipAddresses?.map((e) => HostIpAddress.fromPartial(e)) || [];
+    message.managedBy = object.managedBy ?? 0;
     return message;
   },
 };
@@ -611,6 +643,7 @@ function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
     region: undefined,
     billingAmount: undefined,
     vmmMountpoint: undefined,
+    managedBy: undefined,
   };
 }
 
@@ -663,6 +696,9 @@ export const HostServiceCreateRequest = {
     }
     if (message.vmmMountpoint !== undefined) {
       writer.uint32(130).string(message.vmmMountpoint);
+    }
+    if (message.managedBy !== undefined) {
+      writer.uint32(136).int32(message.managedBy);
     }
     return writer;
   },
@@ -786,6 +822,13 @@ export const HostServiceCreateRequest = {
 
           message.vmmMountpoint = reader.string();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.managedBy = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -819,6 +862,7 @@ export const HostServiceCreateRequest = {
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
     message.vmmMountpoint = object.vmmMountpoint ?? undefined;
+    message.managedBy = object.managedBy ?? undefined;
     return message;
   },
 };
@@ -1300,6 +1344,7 @@ function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
     region: undefined,
     billingAmount: undefined,
     totalDiskSpace: undefined,
+    managedBy: undefined,
   };
 }
 
@@ -1328,6 +1373,9 @@ export const HostServiceUpdateRequest = {
     }
     if (message.totalDiskSpace !== undefined) {
       writer.uint32(64).uint64(message.totalDiskSpace);
+    }
+    if (message.managedBy !== undefined) {
+      writer.uint32(72).int32(message.managedBy);
     }
     return writer;
   },
@@ -1395,6 +1443,13 @@ export const HostServiceUpdateRequest = {
 
           message.totalDiskSpace = longToNumber(reader.uint64() as Long);
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.managedBy = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1420,6 +1475,7 @@ export const HostServiceUpdateRequest = {
       ? BillingAmount.fromPartial(object.billingAmount)
       : undefined;
     message.totalDiskSpace = object.totalDiskSpace ?? undefined;
+    message.managedBy = object.managedBy ?? undefined;
     return message;
   },
 };

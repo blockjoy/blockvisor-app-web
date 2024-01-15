@@ -1,16 +1,38 @@
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import {
+  Host,
+  HostServiceUpdateRequest,
+  ManagedBy,
+} from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
-import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
-import { HostIps, HostStatus, NextLink } from '@shared/components';
+import {
+  createAdminUpdateRequest,
+  createDropdownValuesFromEnum,
+} from '@modules/admin/utils';
+import {
+  HostIps,
+  HostIpStatus,
+  HostManagedBy,
+  NextLink,
+} from '@shared/components';
 
 export const AdminHost = () => {
   const router = useRouter();
   const { id } = router.query;
 
   const handleOpenInApp = () => router.push(`/hosts/${id as string}`);
+
+  const handleSaveChanges = async (
+    properties: AdminDetailProperty[],
+    onSuccess: VoidFunction,
+  ) => {
+    const defaultRequest: HostServiceUpdateRequest = { id: id as string };
+    const request = createAdminUpdateRequest(defaultRequest, properties);
+    await hostClient.updateHost(request);
+    onSuccess();
+  };
 
   const getItem = async () => await hostClient.getHost(id as string);
 
@@ -20,6 +42,12 @@ export const AdminHost = () => {
       label: 'Name',
       data: host.name,
       copyValue: host.name,
+      editSettings: {
+        field: 'name',
+        isNumber: false,
+        controlType: 'text',
+        defaultValue: host.name,
+      },
     },
     {
       id: 'id',
@@ -28,9 +56,27 @@ export const AdminHost = () => {
       copyValue: host.id,
     },
     {
-      id: 'status',
-      label: 'Status',
-      data: <HostStatus hasBorder={false} />,
+      id: 'managedBy',
+      label: 'Managed By',
+      data: <HostManagedBy managedBy={host.managedBy} />,
+      editSettings: {
+        field: 'managedBy',
+        isNumber: true,
+        controlType: 'dropdown',
+        defaultValue: host.managedBy?.toString(),
+        dropdownValues: createDropdownValuesFromEnum(ManagedBy, 'MANAGED_BY_'),
+      },
+    },
+    {
+      id: 'version',
+      label: 'Version',
+      data: host.version,
+      editSettings: {
+        field: 'version',
+        isNumber: false,
+        controlType: 'text',
+        defaultValue: host.version,
+      },
     },
     {
       id: 'memSize',
@@ -43,9 +89,14 @@ export const AdminHost = () => {
       data: formatters.formatSize(host.diskSizeBytes, 'bytes'),
     },
     {
+      id: 'billingAmount',
+      label: 'Billing Amount',
+      data: host.billingAmount ? `$${host.billingAmount?.amount}` : '-',
+    },
+    {
       id: 'availableIps',
       label: `Available Ip's`,
-      data: host?.ipAddresses.filter((ip) => !ip.assigned).length,
+      data: <HostIpStatus ipAddresses={host.ipAddresses} />,
     },
     {
       id: 'ipAddresses',
@@ -81,6 +132,7 @@ export const AdminHost = () => {
     <AdminDetail
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
+      onSaveChanges={handleSaveChanges}
       detailsName="id"
       customItems={customItems}
       ignoreItems={[
@@ -91,6 +143,9 @@ export const AdminHost = () => {
         'diskSizeBytes',
         'orgId',
         'orgName',
+        'managedBy',
+        'billingAmount',
+        'version',
       ]}
     />
   );

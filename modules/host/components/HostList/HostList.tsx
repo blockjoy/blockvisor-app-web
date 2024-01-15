@@ -116,7 +116,11 @@ export const HostList = () => {
                 />
               ) : (
                 <div css={styles.gridWrapper}>
-                  <TableGrid isLoading={isLoading} cells={cells!} />
+                  <TableGrid
+                    isLoading={isLoading}
+                    cells={cells!}
+                    entityName="hosts"
+                  />
                 </div>
               )}
             </InfiniteScroll>

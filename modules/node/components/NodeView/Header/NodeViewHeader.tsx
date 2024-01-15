@@ -25,6 +25,7 @@ import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
+import { nodeClient } from '@modules/grpc';
 
 export const NodeViewHeader = () => {
   const router = useRouter();
@@ -53,8 +54,8 @@ export const NodeViewHeader = () => {
     });
   };
 
-  const handleReportProblem = (message: string) => {
-    // TODO: Report the problem
+  const handleReportProblem = async (message: string) => {
+    await nodeClient.reportProblem(node?.id!, message);
     toast.success('Problem Reported');
     toggleReportProblemModalOpen();
   };

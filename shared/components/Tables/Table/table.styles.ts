@@ -51,10 +51,16 @@ export const styles = {
       tr:hover .show-on-hover {
         opacity: 1;
       }
-    }
 
-    tr:hover {
-      opacity: 1;
+      tr:hover {
+        opacity: 1;
+      }
+
+      tr:hover td:first-of-type {
+        path {
+          fill: ${theme.colorPrimary};
+        }
+      }
     }
 
     tr path {

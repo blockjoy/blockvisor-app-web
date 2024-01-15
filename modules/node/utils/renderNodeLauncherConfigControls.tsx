@@ -25,7 +25,7 @@ export const renderControls = (
           type="password"
           isRequired={property?.required && !property.value}
           name={property.name}
-          onPropertyChanged={onPropertyChanged}
+          onChange={onPropertyChanged}
         />
       );
     case UiType.UI_TYPE_TEXT:
@@ -35,7 +35,7 @@ export const renderControls = (
           type="text"
           isRequired={property?.required && !property.value}
           name={property.name}
-          onPropertyChanged={onPropertyChanged}
+          onChange={onPropertyChanged}
         />
       );
     case UiType.UI_TYPE_SWITCH:
@@ -49,8 +49,7 @@ export const renderControls = (
           disabled={!!property.disabled}
           tooltip="Feature disabled during beta."
           name={property.name}
-          checked={value}
-          onPropertyChanged={onPropertyChanged}
+          onChange={onPropertyChanged}
         />
       );
   }

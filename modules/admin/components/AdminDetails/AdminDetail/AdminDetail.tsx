@@ -2,14 +2,12 @@ import { capitalized } from '@modules/admin/utils/capitalized';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AdminDetailHeader } from './AdminDetailHeader/AdminDetailHeader';
-import {
-  AdminDetailProperty,
-  AdminDetailTable,
-} from './AdminDetailTable/AdminDetailTable';
-import { formatters } from '@shared/utils/formatters';
+import { AdminDetailTable } from './AdminDetailTable/AdminDetailTable';
 import { copyToClipboard } from '@shared/utils/copyToClipboard';
 import { nodeClient } from '@modules/grpc';
 import { spacing } from 'styles/utils.spacing.styles';
+import { DateTime } from '@shared/components';
+import { AdminDetailEdit } from './AdminDetailEdit/AdminDetailEdit';
 
 type Props = {
   ignoreItems?: string[];
@@ -17,6 +15,10 @@ type Props = {
   getItem: () => Promise<{}>;
   customItems?: (item: any) => AdminDetailProperty[];
   onOpenInApp?: () => void;
+  onSaveChanges?: (
+    properties: AdminDetailProperty[],
+    onSuccess: VoidFunction,
+  ) => void;
 };
 
 export const AdminDetail = ({
@@ -25,11 +27,13 @@ export const AdminDetail = ({
   getItem,
   customItems,
   onOpenInApp,
+  onSaveChanges,
 }: Props) => {
   const router = useRouter();
   const { name, ip, org_id } = router.query;
   const [error, setError] = useState('');
   const [item, setItem] = useState<any>();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const properties: AdminDetailProperty[] =
     item &&
@@ -42,13 +46,12 @@ export const AdminDetail = ({
           id: label,
           label,
           data:
-            typeof value === 'object' && Boolean(Date.parse(value))
-              ? `${formatters.formatDate(
-                  item.createdAt!,
-                )} @ ${formatters.formatDate(item.createdAt!, 'time')}`
-              : typeof value === 'object' || typeof value === 'undefined'
-              ? undefined
-              : value?.toString(),
+            typeof value === 'object' && Boolean(Date.parse(value)) ? (
+              <DateTime date={new Date(item.createdAt)} />
+            ) : typeof value === 'object' ||
+              typeof value === 'undefined' ? undefined : (
+              value?.toString()
+            ),
         };
       });
 
@@ -56,9 +59,10 @@ export const AdminDetail = ({
     properties.unshift(...customItems(item));
   }
 
-  const handleCopyObject = () => {
+  const handleCopyObject = () =>
     copyToClipboard(JSON.stringify(item, undefined, 2));
-  };
+
+  const handleToggleEditMode = () => setIsEditMode(!isEditMode);
 
   useEffect(() => {
     (async () => {
@@ -85,21 +89,30 @@ export const AdminDetail = ({
         setError('Cannot load data');
       }
     })();
-  }, []);
+  }, [isEditMode]);
 
   return (
     <>
       <AdminDetailHeader
         name={name as string}
         isLoading={item === undefined}
+        isEditMode={isEditMode}
         detailsName={item ? item[detailsName] : undefined}
         onOpenAppView={onOpenInApp}
         onCopyObject={handleCopyObject}
+        onToggleEditMode={handleToggleEditMode}
       />
-      {!error ? (
-        <AdminDetailTable item={item!} properties={properties} />
-      ) : (
+      {error ? (
         <p css={spacing.top.medium}>{error}</p>
+      ) : isEditMode ? (
+        <AdminDetailEdit
+          itemName={item.name}
+          onSaveChanges={onSaveChanges!}
+          onToggleEditMode={handleToggleEditMode}
+          properties={properties.filter((property) => property.editSettings)}
+        />
+      ) : (
+        <AdminDetailTable item={item!} properties={properties} />
       )}
     </>
   );

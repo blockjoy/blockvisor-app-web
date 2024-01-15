@@ -17,9 +17,15 @@ type Props = {
   disabled?: boolean;
   items: MenuItem[];
   buttonText: string | ReactNode;
+  noBottomMargin?: boolean;
 };
 
-export const Select = ({ disabled, items, buttonText }: Props) => {
+export const Select = ({
+  disabled,
+  items,
+  buttonText,
+  noBottomMargin = false,
+}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleClick = () => setIsOpen(!isOpen);
@@ -34,6 +40,7 @@ export const Select = ({ disabled, items, buttonText }: Props) => {
       isEmpty={true}
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
+      noBottomMargin={noBottomMargin}
     >
       <DropdownButton
         disabled={disabled}

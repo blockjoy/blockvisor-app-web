@@ -47,7 +47,7 @@ export const NodeViewSettings = () => {
           tooltip=""
           disabled={false}
           name="autoUpdates"
-          onPropertyChanged={handleAutoUpdatesChanged}
+          onChange={handleAutoUpdatesChanged}
         />
       </div>
     </div>

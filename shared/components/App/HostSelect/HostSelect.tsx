@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { withSearchDropdown, Dropdown } from '@shared/components';
+import { withSearchDropdown, Dropdown, HostIpStatus } from '@shared/components';
 
 type HostSelectProps = {
   hosts: Host[];
@@ -24,12 +24,7 @@ export const HostSelect = ({
     item?.ipAddresses?.every((ip) => ip.assigned) ?? false;
 
   const renderItemLabel = (item?: Host) => {
-    const ipAddressCount = item?.ipAddresses?.reduce(
-      (acc, ip) => acc + (!ip.assigned ? 1 : 0),
-      0,
-    );
-
-    return `${ipAddressCount} IP${ipAddressCount !== 1 ? 's' : ''}`;
+    return <HostIpStatus ipAddresses={item?.ipAddresses!} />;
   };
 
   const HostSelectDropdown = useMemo(

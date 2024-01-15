@@ -1,8 +1,16 @@
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
-import { HostIps, HostOs, NextLink } from '@shared/components';
+import {
+  DateTime,
+  HostIps,
+  HostIpStatus,
+  HostManagedBy,
+  HostOs,
+  NextLink,
+} from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { usePermissions } from '@modules/auth/hooks/usePermissions';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const mapHostToDetails = (host: Host) => {
   const { isSuperUser } = usePermissions();
@@ -17,7 +25,11 @@ export const mapHostToDetails = (host: Host) => {
     { label: 'Gateway IP', data: host?.ipGateway || '-' },
     {
       label: `Available IP's`,
-      data: host?.ipAddresses.filter((ip) => !ip.assigned).length,
+      data: (
+        <div css={spacing.bottom.micro}>
+          <HostIpStatus ipAddresses={host.ipAddresses} />{' '}
+        </div>
+      ),
     },
     {
       label: 'IP Addresses',
@@ -72,12 +84,11 @@ export const mapHostToDetailsLaunch = (host: Host) => {
     },
     {
       label: 'Launched On',
-      data: !host.createdAt
-        ? '-'
-        : `${formatters.formatDate(host.createdAt)} @ ${formatters.formatDate(
-            host.createdAt,
-            'time',
-          )}`,
+      data: !host.createdAt ? '-' : <DateTime date={host.createdAt} />,
+    },
+    {
+      label: 'Managed By',
+      data: <HostManagedBy managedBy={host.managedBy} />,
     },
   ];
 

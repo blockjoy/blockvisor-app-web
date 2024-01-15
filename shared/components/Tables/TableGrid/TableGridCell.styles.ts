@@ -3,41 +3,6 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  grid: css`
-    display: grid;
-    gap: 16px;
-    grid-template-columns: 1fr;
-    padding: 0 0 20px;
-
-    @media ${breakpoints.fromSml} {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media ${breakpoints.fromXLrg} {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media ${breakpoints.fromHuge} {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    @media ${breakpoints.fromXHuge} {
-      grid-template-columns: repeat(5, 1fr);
-    }
-  `,
-
-  cellLeft: (theme: ITheme) => css`
-    padding-top: 10px;
-    width: 40px;
-    min-width: 40px;
-
-    > svg {
-    }
-
-    > svg > path {
-      fill: ${theme.colorLabel};
-    }
-  `,
   cell: (theme: ITheme) => css`
     display: flex;
     align-items: flex-start;
@@ -61,6 +26,18 @@ export const styles = {
     :hover,
     :active {
       border-color: transparent;
+    }
+  `,
+  cellLeft: (theme: ITheme) => css`
+    padding-top: 10px;
+    width: 40px;
+    min-width: 40px;
+
+    > svg {
+    }
+
+    > svg > path {
+      fill: ${theme.colorLabel};
     }
   `,
   cellCenter: css`
@@ -94,7 +71,7 @@ export const styles = {
   cellStatus: css`
     display: inline-block;
   `,
-  cellEarnings: (theme: ITheme) => css`
+  cellMiddle: (theme: ITheme) => css`
     display: flex;
     align-items: center;
     color: ${theme.colorLabel};
@@ -110,23 +87,5 @@ export const styles = {
     rotate: 90deg;
     width: 32px;
     height: 32px;
-  `,
-  deleteButton: (theme: ITheme) => css`
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    height: 40px;
-    width: 40px;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    border-radius: 4px;
-
-    :hover {
-      background: rgb(0 0 0 / 15%);
-      path {
-        fill: ${theme.colorText};
-      }
-    }
   `,
 };

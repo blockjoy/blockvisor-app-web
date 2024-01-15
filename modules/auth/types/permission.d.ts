@@ -65,6 +65,7 @@ type Permission =
   | 'node-get'
   | 'node-list'
   | 'node-restart'
+  | 'node-report'
   | 'node-start'
   | 'node-stop'
   | 'node-update-config'

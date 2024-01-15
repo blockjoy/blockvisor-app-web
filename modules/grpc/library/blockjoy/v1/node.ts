@@ -92,6 +92,8 @@ export interface Node {
    * may individually start, stop and fail.
    */
   jobs: NodeJob[];
+  /** A list of reports that have been created for this node. */
+  reports: NodeReport[];
 }
 
 /** This message is used to create a new node. */
@@ -250,6 +252,19 @@ export interface NodeServiceUpdateStatusRequest {
 }
 
 export interface NodeServiceUpdateStatusResponse {
+}
+
+export interface NodeServiceReportRequest {
+  /** The id of the user that created the report. */
+  userId: string;
+  /** The id of the node that this report pertains to. */
+  nodeId: string;
+  /** An error description of the problem. */
+  message: string;
+}
+
+export interface NodeServiceReportResponse {
+  id: string;
 }
 
 export interface NodeServiceStartRequest {
@@ -437,6 +452,18 @@ export interface NodeJobProgress {
   message?: string | undefined;
 }
 
+export interface NodeReport {
+  id: string;
+  /** The problem description. */
+  message: string;
+  /** The entity that created the report. */
+  createdBy:
+    | EntityUpdate
+    | undefined;
+  /** The moment the issue was raised. */
+  createdAt: Date | undefined;
+}
+
 function createBaseNode(): Node {
   return {
     id: "",
@@ -469,6 +496,7 @@ function createBaseNode(): Node {
     placement: undefined,
     dataDirectoryMountpoint: undefined,
     jobs: [],
+    reports: [],
   };
 }
 
@@ -563,6 +591,9 @@ export const Node = {
     }
     for (const v of message.jobs) {
       NodeJob.encode(v!, writer.uint32(266).fork()).ldelim();
+    }
+    for (const v of message.reports) {
+      NodeReport.encode(v!, writer.uint32(274).fork()).ldelim();
     }
     return writer;
   },
@@ -784,6 +815,13 @@ export const Node = {
 
           message.jobs.push(NodeJob.decode(reader, reader.uint32()));
           continue;
+        case 34:
+          if (tag !== 274) {
+            break;
+          }
+
+          message.reports.push(NodeReport.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -833,6 +871,7 @@ export const Node = {
       : undefined;
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
     message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
+    message.reports = object.reports?.map((e) => NodeReport.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1712,6 +1751,120 @@ export const NodeServiceUpdateStatusResponse = {
   },
 };
 
+function createBaseNodeServiceReportRequest(): NodeServiceReportRequest {
+  return { userId: "", nodeId: "", message: "" };
+}
+
+export const NodeServiceReportRequest = {
+  encode(message: NodeServiceReportRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.nodeId !== "") {
+      writer.uint32(18).string(message.nodeId);
+    }
+    if (message.message !== "") {
+      writer.uint32(26).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceReportRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceReportRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.nodeId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceReportRequest>): NodeServiceReportRequest {
+    return NodeServiceReportRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceReportRequest>): NodeServiceReportRequest {
+    const message = createBaseNodeServiceReportRequest();
+    message.userId = object.userId ?? "";
+    message.nodeId = object.nodeId ?? "";
+    message.message = object.message ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceReportResponse(): NodeServiceReportResponse {
+  return { id: "" };
+}
+
+export const NodeServiceReportResponse = {
+  encode(message: NodeServiceReportResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceReportResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceReportResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceReportResponse>): NodeServiceReportResponse {
+    return NodeServiceReportResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceReportResponse>): NodeServiceReportResponse {
+    const message = createBaseNodeServiceReportResponse();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
 function createBaseNodeServiceStartRequest(): NodeServiceStartRequest {
   return { id: "" };
 }
@@ -2503,6 +2656,87 @@ export const NodeJobProgress = {
   },
 };
 
+function createBaseNodeReport(): NodeReport {
+  return { id: "", message: "", createdBy: undefined, createdAt: undefined };
+}
+
+export const NodeReport = {
+  encode(message: NodeReport, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.message !== "") {
+      writer.uint32(18).string(message.message);
+    }
+    if (message.createdBy !== undefined) {
+      EntityUpdate.encode(message.createdBy, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeReport {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeReport();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeReport>): NodeReport {
+    return NodeReport.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeReport>): NodeReport {
+    const message = createBaseNodeReport();
+    message.id = object.id ?? "";
+    message.message = object.message ?? "";
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? EntityUpdate.fromPartial(object.createdBy)
+      : undefined;
+    message.createdAt = object.createdAt ?? undefined;
+    return message;
+  },
+};
+
 /** Service for interacting with a node. */
 export type NodeServiceDefinition = typeof NodeServiceDefinition;
 export const NodeServiceDefinition = {
@@ -2590,6 +2824,15 @@ export const NodeServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Create an error report about this host. */
+    report: {
+      name: "Report",
+      requestType: NodeServiceReportRequest,
+      requestStream: false,
+      responseType: NodeServiceReportResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -2639,6 +2882,11 @@ export interface NodeServiceImplementation<CallContextExt = {}> {
     request: NodeServiceDeleteRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<NodeServiceDeleteResponse>>;
+  /** Create an error report about this host. */
+  report(
+    request: NodeServiceReportRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<NodeServiceReportResponse>>;
 }
 
 export interface NodeServiceClient<CallOptionsExt = {}> {
@@ -2687,6 +2935,11 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<NodeServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<NodeServiceDeleteResponse>;
+  /** Create an error report about this host. */
+  report(
+    request: DeepPartial<NodeServiceReportRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<NodeServiceReportResponse>;
 }
 
 declare const self: any | undefined;

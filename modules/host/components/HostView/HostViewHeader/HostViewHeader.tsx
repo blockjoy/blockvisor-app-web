@@ -1,32 +1,19 @@
 import { styles } from './HostViewHeader.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
-import {
-  Button,
-  DeleteModal,
-  HostStatus,
-  Skeleton,
-  SkeletonGrid,
-  SvgIcon,
-} from '@shared/components';
+import { DeleteModal, Skeleton, SkeletonGrid } from '@shared/components';
 import { useHostView } from '@modules/host';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { toast } from 'react-toastify';
-import { HostViewHeaderScrolledDown } from './HeaderScrolledDown/HostViewHeaderScrolledDown';
-import { usePermissions } from '@modules/auth/hooks/usePermissions';
-import IconDelete from '@public/assets/icons/common/Trash.svg';
+import { HostViewHeaderActions } from './HostViewHeaderActions/HostViewHeaderActions';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-
-const heightForScrolledDown = 76;
 
 export const HostViewHeader = () => {
   const router = useRouter();
   const { host, isLoading, deleteHost } = useHostView();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [isScrolledDown, setIsScrolledDown] = useState(false);
-  const { hasPermission } = usePermissions();
 
   const handleDeleteHost = () =>
     deleteHost(host?.id!, () => {
@@ -37,23 +24,7 @@ export const HostViewHeader = () => {
 
   if (!host?.id) return null;
 
-  const handleScroll = () => {
-    const { pageYOffset } = window;
-    if (pageYOffset > heightForScrolledDown && !isScrolledDown) {
-      setIsScrolledDown(true);
-    } else if (pageYOffset <= heightForScrolledDown && isScrolledDown) {
-      setIsScrolledDown(false);
-    }
-  };
-
   const handleDeleteToggled = () => setIsDeleteMode(!isDeleteMode);
-
-  const canDelete = !host?.nodeCount;
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  });
 
   return (
     <>
@@ -66,11 +37,6 @@ export const HostViewHeader = () => {
           onSubmit={handleDeleteHost}
         />
       )}
-      <HostViewHeaderScrolledDown
-        isVisible={isScrolledDown}
-        canDelete={canDelete}
-        onDeleteClicked={handleDeleteToggled}
-      />
       <header css={[styles.header]}>
         {isLoading !== 'finished' && !host?.id ? (
           <SkeletonGrid>
@@ -81,9 +47,6 @@ export const HostViewHeader = () => {
             <div>
               <h2 css={styles.detailsHeader}>{host!.name}</h2>
               <div css={styles.detailsFooter}>
-                <div css={[styles.hostStatus]}>
-                  <HostStatus hasBorder={false} />
-                </div>
                 {host!.createdAt && (
                   <small css={[typo.small, colors.text2]}>
                     Launched{' '}
@@ -96,21 +59,7 @@ export const HostViewHeader = () => {
             </div>
           )
         )}
-        {hasPermission('host-delete') && (
-          <Button
-            disabled={host!.nodeCount > 0}
-            tooltip={
-              host!.nodeCount > 0 && !isScrolledDown ? 'Has Nodes Attached' : ''
-            }
-            onClick={handleDeleteToggled}
-            style="basic"
-          >
-            <SvgIcon>
-              <IconDelete />
-            </SvgIcon>
-            <p>Delete</p>
-          </Button>
-        )}
+        <HostViewHeaderActions onDeleteClicked={handleDeleteToggled} />
       </header>
     </>
   );

@@ -52,6 +52,10 @@ export const styles = {
     cursor: pointer;
     transition: 0.3s;
 
+    path {
+      fill: ${theme.colorText};
+    }
+
     :hover {
       opacity: 1;
       background: rgb(255 255 255 / 2.5%);

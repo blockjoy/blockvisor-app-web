@@ -53,11 +53,11 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
           key: '2',
           component: (
             <TableBlock
-              id={`${node.blockchainName} ${convertNodeTypeToName(
+              middleRow={`${node.blockchainName} ${convertNodeTypeToName(
                 node.nodeType,
               )}`}
-              name={node.name}
-              address={node?.ip!}
+              topRow={node.name}
+              bottomRow={node?.ip!}
             />
           ),
         },

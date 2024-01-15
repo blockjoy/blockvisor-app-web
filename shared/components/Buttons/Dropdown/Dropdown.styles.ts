@@ -17,6 +17,10 @@ export const styles = {
     ::-webkit-scrollbar-track {
       background: rgb(255 255 255 / 5%);
     }
+
+    .alert {
+      opacity: 0;
+    }
   `,
   active: (theme: ITheme) => css`
     background-color: ${rgba(theme.colorText || '#ffffff', 0.2)};
@@ -35,35 +39,5 @@ export const styles = {
   `,
   dropdownItem: css`
     gap: 20px;
-  `,
-  alert: (theme: ITheme) => css`
-    position: relative;
-    background: ${theme.colorInput};
-    padding: 4px 12px 4px 20px;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    opacity: 0;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 8px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      transform: translateY(-50%);
-    }
-  `,
-  alertDisabled: (theme: ITheme) => css`
-    &::before {
-      background: ${theme.colorDanger};
-    }
-  `,
-  alertSuccess: (theme: ITheme) => css`
-    &::before {
-      background: ${theme.colorPrimary};
-    }
   `,
 };

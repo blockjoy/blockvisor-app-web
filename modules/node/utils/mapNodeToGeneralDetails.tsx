@@ -1,7 +1,6 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
-import { formatters } from '@shared/index';
-import { NextLink } from '@shared/components';
+import { NextLink, DateTime } from '@shared/components';
 
 export const mapNodeToGeneralDetails = (node: Node) => {
   if (!node?.nodeType) return [];
@@ -28,12 +27,7 @@ export const mapNodeToGeneralDetails = (node: Node) => {
     { label: 'Launched By', data: node.createdBy?.name || '-' },
     {
       label: 'Launched On',
-      data: !node.createdAt
-        ? '-'
-        : `${formatters.formatDate(node.createdAt)} @ ${formatters.formatDate(
-            node.createdAt,
-            'time',
-          )}`,
+      data: !node.createdAt ? '-' : <DateTime date={node.createdAt} />,
     },
   ];
 

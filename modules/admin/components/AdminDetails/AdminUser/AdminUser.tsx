@@ -2,7 +2,6 @@ import { userClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { User } from '@modules/grpc/library/blockjoy/v1/user';
-import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
 
 export const AdminUser = () => {
   const router = useRouter();
