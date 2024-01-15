@@ -1,3 +1,4 @@
+import { isMobile } from 'react-device-detect';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { styles } from './SidebarMain.styles';
@@ -11,16 +12,16 @@ import IconSliders from '@public/assets/icons/app/Sliders.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
-import { invitationAtoms, useDefaultOrganization } from '@modules/organization';
-import { isMobile } from 'react-device-detect';
+import { invitationAtoms, organizationAtoms } from '@modules/organization';
 import { usePermissions } from '@modules/auth';
 
 export default () => {
   const router = useRouter();
 
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
-
-  const { defaultOrganization } = useDefaultOrganization();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const { isSuperUser } = usePermissions();
 

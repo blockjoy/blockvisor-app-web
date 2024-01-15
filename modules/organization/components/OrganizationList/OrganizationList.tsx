@@ -1,7 +1,6 @@
 import { styles } from './OrganizationList.styles';
 import { useRecoilValue } from 'recoil';
 import {
-  useDefaultOrganization,
   useGetOrganization,
   useGetOrganizations,
   useSwitchOrganization,
@@ -30,9 +29,11 @@ export const OrganizationsList = () => {
   const { isLoading, getOrganizations } = useGetOrganizations();
   const { getOrganization } = useGetOrganization();
 
-  const { defaultOrganization } = useDefaultOrganization();
   const { switchOrganization } = useSwitchOrganization();
 
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const organizationsActive = useRecoilValue(
     organizationAtoms.organizationsActive(organizationUIProps.queryParams),
   );

@@ -1,12 +1,6 @@
-import { FirewallDropdown } from '@modules/node';
-import { FC, Fragment } from 'react';
-import {
-  FormLabel,
-  FormHeader,
-  PillPicker,
-  SvgIcon,
-  Select,
-} from '@shared/components';
+import { Fragment } from 'react';
+import { useRecoilValue } from 'recoil';
+import { FormLabel, FormHeader, PillPicker, SvgIcon } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -14,35 +8,36 @@ import { styles } from './NodeLauncherConfig.styles';
 import IconInfo from '@public/assets/icons/common/Info.svg';
 import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
-import { NodeLauncherState } from '../NodeLauncher';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+import {
+  FirewallDropdown,
+  NodeVersionSelect,
+  nodeLauncherAtoms,
+  nodeLauncherSelectors,
+} from '@modules/node';
 
-type Props = {
+type NodeLauncherConfigProps = {
   nodeTypeProperties?: NodeProperty[];
   nodeFiles?: NodeFiles[];
-  networks?: NetworkConfig[];
-  versions: BlockchainVersion[];
-  selectedVersion?: BlockchainVersion;
-  nodeLauncherState: NodeLauncherState;
   onFileUploaded: (e: any) => void;
-  onNodeConfigPropertyChanged: (e: any) => void;
+  onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
-  onVersionChanged: (version: BlockchainVersion) => void;
+  onVersionChanged: (version: BlockchainVersion | null) => void;
 };
 
-export const NodeLauncherConfig: FC<Props> = ({
-  networks,
-  versions,
-  selectedVersion,
-  nodeLauncherState,
+export const NodeLauncherConfig = ({
   onFileUploaded,
   onNodePropertyChanged,
   onNodeConfigPropertyChanged,
   onVersionChanged,
-}) => {
-  const { network, properties, keyFiles } = nodeLauncherState;
+}: NodeLauncherConfigProps) => {
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const networks = useRecoilValue(nodeLauncherSelectors.networks);
+  const versions = useRecoilValue(nodeLauncherSelectors.versions);
+  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+
+  const { network, properties, keyFiles } = nodeLauncher;
 
   return (
     <NodeLauncherConfigWrapper>
@@ -57,7 +52,6 @@ export const NodeLauncherConfig: FC<Props> = ({
             items={networks!.map((n) => n.name)}
             selectedItem={network!}
             onChange={onNodePropertyChanged}
-            tabIndexStart={3}
           />
         )}
 
@@ -79,19 +73,16 @@ export const NodeLauncherConfig: FC<Props> = ({
 
         <FirewallDropdown
           onPropertyChanged={onNodePropertyChanged}
-          allowedIps={nodeLauncherState.allowIps}
-          deniedIps={nodeLauncherState.denyIps}
+          allowedIps={nodeLauncher?.allowIps}
+          deniedIps={nodeLauncher?.denyIps}
         />
 
         {versions.length > 1 && (
           <>
             <FormLabel>Version</FormLabel>
-            <Select
-              buttonText={<p>{selectedVersion?.version}</p>}
-              items={versions.map((version) => ({
-                name: version.version,
-                onClick: () => onVersionChanged(version),
-              }))}
+            <NodeVersionSelect
+              versions={versions}
+              onVersionChanged={onVersionChanged}
             />
           </>
         )}

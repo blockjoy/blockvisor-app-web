@@ -1,9 +1,9 @@
 import { atom, selector } from 'recoil';
-import { nodeTypeList } from '@shared/constants/lookups';
-import { nodeStatusList } from '@shared/constants/nodeStatusList';
-import { blockchainsAtoms } from './blockchains';
 import { isMobile } from 'react-device-detect';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { nodeTypeList } from '@shared/constants/lookups';
+import { nodeStatusList } from '@shared/constants/nodeStatusList';
+import { blockchainAtoms } from '@modules/node';
 import { sort } from '@shared/components';
 
 const activeNode = atom<Node | null>({
@@ -78,7 +78,7 @@ const filtersBlockchain = atom({
   default: selector({
     key: 'blockchains.filters/Default',
     get: ({ get }) => {
-      const blockchainsAll = get(blockchainsAtoms.blockchains);
+      const blockchainsAll = get(blockchainAtoms.blockchains);
 
       const mappedBlockchains: FilterItem[] = blockchainsAll?.map((b) => ({
         id: b.id,

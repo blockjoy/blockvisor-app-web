@@ -5,13 +5,14 @@ import {
   Skeleton,
   SkeletonGrid,
   Scrollbar,
-  SvgIcon,
+  // SvgIcon,
   FiltersBlock,
   FiltersRange,
   FiltersHeader,
 } from '@shared/components';
 import { blockchainSelectors } from '@modules/node';
 import {
+  organizationAtoms,
   useDefaultOrganization,
   useSwitchOrganization,
 } from '@modules/organization';
@@ -37,7 +38,9 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
     };
   }, [hostUIContext]);
 
-  const { defaultOrganization } = useDefaultOrganization();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const { filters, updateFilters, removeFilters, resetFilters } =
     useFilters(hostUIProps);

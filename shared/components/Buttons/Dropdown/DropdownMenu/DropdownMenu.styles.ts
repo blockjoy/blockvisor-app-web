@@ -21,10 +21,12 @@ export const styles = {
     transition: all 0.4s;
     background-color: ${theme.colorLightGrey};
     box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+    pointer-events: none;
   `,
   isOpen: css`
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    pointer-events: auto;
   `,
 };

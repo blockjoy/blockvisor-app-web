@@ -1,15 +1,15 @@
 import { ReactNode, useRef } from 'react';
 import { styles } from './Dropdown.styles';
-import { useClickOutside } from '@shared/hooks/useClickOutside';
+import { useAccessibleDropdown } from '@shared/index';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { DropdownItem, DropdownWrapper, Scrollbar } from '@shared/components';
 import { DropdownButton } from './DropdownButton/DropdownButton';
 import { DropdownMenu } from './DropdownMenu/DropdownMenu';
 import { colors } from 'styles/utils.colors.styles';
-import { useAccessibleDropdown } from '@shared/index';
 
 export type DropdownProps<T = any> = {
   items: T[];
+  itemKey?: string;
   selectedItem: T | null;
   handleSelected: (item: T | null) => void;
   defaultText?: string;
@@ -29,6 +29,7 @@ export type DropdownProps<T = any> = {
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
   items,
+  itemKey = 'name',
   selectedItem,
   handleSelected,
   defaultText,
@@ -45,11 +46,9 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   checkDisabledItem,
   renderItemLabel,
 }: DropdownProps<T>) => {
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLUListElement>(null);
 
   const handleClose = () => handleOpen(false);
-
-  useClickOutside<HTMLDivElement>(dropdownRef, handleClose);
 
   const handleSelect = (item: T) => {
     if (!item) return;
@@ -60,15 +59,21 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     handleClose();
   };
 
-  const { activeIndex, handleItemRef, handleFocus, handleBlur } =
-    useAccessibleDropdown({
-      items,
-      selectedItem,
-      handleSelect,
-      isOpen,
-      handleOpen,
-      searchQuery,
-    });
+  const {
+    activeIndex,
+    handleItemRef,
+    handleFocus,
+    handleBlur,
+    handleSelectAccessible,
+  } = useAccessibleDropdown({
+    items,
+    selectedItem,
+    handleSelect,
+    isOpen,
+    handleOpen,
+    searchQuery,
+    dropdownRef,
+  });
 
   return (
     <DropdownWrapper
@@ -86,18 +91,22 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
           ) : error ? (
             <div css={[colors.warning]}>{error}</div>
           ) : (
-            <p>{escapeHtml(selectedItem?.name || defaultText || 'Select')}</p>
+            <p>
+              {selectedItem
+                ? escapeHtml(selectedItem[itemKey]!)
+                : defaultText || 'Select'}
+            </p>
           )
         }
         {...(disabled && { disabled })}
         onClick={() => handleOpen(!isOpen)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        {...(handleFocus && { onFocus: handleFocus })}
+        {...(handleBlur && { onBlur: handleBlur })}
       />
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
         {renderSearch ? renderSearch(isOpen) : null}
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          <ul>
+          <ul ref={dropdownRef}>
             {items?.map((item: T, index: number) => {
               const isDisabled: boolean = checkDisabledItem
                 ? checkDisabledItem(item)
@@ -115,12 +124,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                   <DropdownItem
                     size={size}
                     type="button"
-                    onButtonClick={() => handleSelect(item)}
+                    onButtonClick={() => handleSelectAccessible(item)}
                     tabIndex={-1}
                     isDisabled={isDisabled}
                     additionalStyles={[styles.dropdownItem]}
                   >
-                    <p>{escapeHtml(item.name!)}</p>
+                    <p>{escapeHtml(item[itemKey])}</p>
                     {renderItemLabel ? (
                       <span
                         className="alert"

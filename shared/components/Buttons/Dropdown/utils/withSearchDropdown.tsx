@@ -1,23 +1,22 @@
 import { ChangeEvent, ComponentType, useState } from 'react';
+import { filterSearch } from '@shared/index';
 import { DropdownSearch } from '../DropdownSearch/DropdownSearch';
 import { DropdownProps } from '../Dropdown';
-import { filterData } from './filterData';
 
-export const withSearch = <T extends { id?: string; name?: string }>(
+export const withSearchDropdown = <T extends { id?: string; name?: string }>(
   Component: ComponentType<DropdownProps<T>>,
 ) => {
-  const withSearch = ({ ...props }: DropdownProps<T>) => {
+  const WithSearchDropdown = ({ ...props }: DropdownProps<T>) => {
     const { items, handleSelected } = props;
 
     const [searchQuery, setSearchQuery] = useState('');
-
     const [filteredData, setFilteredData] = useState<T[]>(items);
 
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
       const query = e.target.value;
       setSearchQuery(query);
 
-      const filtered = filterData<T>(items, query);
+      const filtered = filterSearch<T>(items, query);
 
       setFilteredData(filtered);
     };
@@ -39,7 +38,7 @@ export const withSearch = <T extends { id?: string; name?: string }>(
         searchQuery={searchQuery}
         renderSearch={(isOpen: boolean) => (
           <DropdownSearch
-            name="search-query"
+            name="search-dropdown"
             value={searchQuery}
             handleChange={handleSearch}
             isOpen={isOpen}
@@ -50,7 +49,9 @@ export const withSearch = <T extends { id?: string; name?: string }>(
     );
   };
 
-  withSearch.displayName = `withSearch(${Component.name || 'Component'})`;
+  WithSearchDropdown.displayName = `withSearchDropdown(${
+    Component.name || 'Component'
+  })`;
 
-  return withSearch;
+  return WithSearchDropdown;
 };

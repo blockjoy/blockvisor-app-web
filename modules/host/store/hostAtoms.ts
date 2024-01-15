@@ -30,6 +30,16 @@ const hostList = atom<Host[]>({
   default: [],
 });
 
+const allHosts = atom<Host[]>({
+  key: 'host.all',
+  default: [],
+});
+
+const isLoadingAllHosts = atom<LoadingState>({
+  key: 'host.all.loading',
+  default: 'initializing',
+});
+
 const isLoading = atom<LoadingState>({
   key: 'host.list.loading',
   default: 'initializing',
@@ -125,6 +135,8 @@ export const hostAtoms = {
   isLoadingActiveHost,
 
   hostList,
+  allHosts,
+  isLoadingAllHosts,
   hostCount,
   hostIpListType,
   isLoading,

@@ -33,6 +33,10 @@ export const styles = {
       translate: 26px 0;
       background: ${theme.colorPrimary};
     }
+
+    :is(:focus, :hover, :active) + span {
+      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.125);
+    }
   `,
   switch: (theme: ITheme) => css`
     display: block;

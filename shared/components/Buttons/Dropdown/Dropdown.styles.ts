@@ -20,17 +20,21 @@ export const styles = {
   `,
   active: (theme: ITheme) => css`
     background-color: ${rgba(theme.colorText || '#ffffff', 0.2)};
+
+    .alert {
+      opacity: 1;
+    }
   `,
   focus: (theme: ITheme) => css`
     background-color: ${rgba(theme.colorText || '#ffffff', 0.1)};
     outline: none;
+
+    .alert {
+      opacity: 1;
+    }
   `,
   dropdownItem: css`
     gap: 20px;
-
-    :hover .alert {
-      opacity: 1;
-    }
   `,
   alert: (theme: ITheme) => css`
     position: relative;

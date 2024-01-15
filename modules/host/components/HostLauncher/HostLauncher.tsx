@@ -1,3 +1,4 @@
+import { useRecoilValue } from 'recoil';
 import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 import {
   Button,
@@ -12,17 +13,17 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { useDefaultOrganization } from '@modules/organization';
+import { organizationAtoms } from '@modules/organization';
 import { usePermissions } from '@modules/auth';
 
 export const HostLauncher = () => {
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
-
-  const { defaultOrganization } = useDefaultOrganization();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const { hasPermission } = usePermissions();
-
   const canResetProvisionToken = hasPermission('org-provision-reset-token');
 
   return (

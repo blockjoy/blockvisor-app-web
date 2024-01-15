@@ -1,29 +1,34 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, KeyboardEvent } from 'react';
 import { styles } from './Switch.styles';
 import IconLock from '@public/assets/icons/common/Lock.svg';
 import { Tooltip } from '@shared/components';
 
-type Props = {
+type SwitchProps = {
   checked?: boolean;
   name: string;
-  defaultValue?: boolean;
   tabIndex?: number;
   tooltip?: string;
   disabled: boolean;
   noBottomMargin?: boolean;
-  onPropertyChanged: (e: ChangeEvent<HTMLInputElement>) => void;
+  onPropertyChanged: (name: string, value: boolean) => void;
 };
 
-export const Switch: FC<Props> = ({
+export const Switch = ({
   onPropertyChanged,
   tooltip,
   disabled,
-  defaultValue,
   name,
   checked,
   tabIndex,
   noBottomMargin,
-}) => {
+}: SwitchProps) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    onPropertyChanged(e.target.name, e.target.checked);
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') onPropertyChanged(name, !checked);
+  };
+
   return (
     <div css={[styles.wrapper, noBottomMargin && styles.wrapperNoBottomMargin]}>
       <label tabIndex={tabIndex}>
@@ -32,9 +37,9 @@ export const Switch: FC<Props> = ({
           name={name}
           type="checkbox"
           css={styles.input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => onPropertyChanged(e)}
+          onChange={handleChange}
           checked={checked}
-          defaultChecked={defaultValue}
+          onKeyDown={handleKeyDown}
         />
         <span className="switch" css={styles.switch}>
           <span className="handle" css={styles.handle}>

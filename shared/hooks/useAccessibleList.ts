@@ -1,37 +1,32 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
-type UseAccessibleDropdownParams<T> = {
+type UseAccessibleListParams<T> = {
   items: T[];
-  selectedItem: T | null;
-  isOpen: boolean;
-  handleOpen: (open?: boolean) => void;
-  handleSelect: (item: T, index: number) => void;
+  selectedItem?: T | null;
+  handleSelect?: (item: T) => void;
   searchQuery?: string;
-  dropdownRef?: RefObject<HTMLUListElement>;
+  isFocused?: boolean;
+  handleFocus?: (isFocus: boolean) => void;
+  listRef?: RefObject<HTMLUListElement>;
 };
 
-type UseAccessibleDropdownReturnType = {
+type UseAccessibleListReturnType = {
   activeIndex: number;
   setActiveIndex: (activeIndex: number) => void;
   handleItemRef: (element: HTMLLIElement, index: number) => void;
-  handleFocus: VoidFunction;
-  handleBlur: VoidFunction;
-  handleSelectAccessible: (item: any) => void;
 };
 
-export const useAccessibleDropdown = <T>({
+export const useAccessibleList = <T extends { id?: string; name?: string }>({
   items,
   selectedItem,
-  isOpen,
-  handleOpen,
   handleSelect,
   searchQuery,
-  dropdownRef,
-}: UseAccessibleDropdownParams<T>): UseAccessibleDropdownReturnType => {
+  isFocused,
+  handleFocus,
+  listRef,
+}: UseAccessibleListParams<T>): UseAccessibleListReturnType => {
   const selectedItemIndex = selectedItem ? items.indexOf(selectedItem) : 0;
   const [activeIndex, setActiveIndex] = useState(selectedItemIndex);
-
-  const [isFocus, setIsFocus] = useState(false);
 
   const itemRefs = useRef<HTMLLIElement[]>([]);
 
@@ -40,20 +35,12 @@ export const useAccessibleDropdown = <T>({
   }, [selectedItem, selectedItemIndex]);
 
   useEffect(() => {
-    if (typeof searchQuery !== 'undefined') setActiveIndex(0);
+    if (searchQuery !== '') setActiveIndex(0);
   }, [searchQuery]);
 
   useEffect(() => {
-    if (isOpen && itemRefs.current[activeIndex]) {
-      itemRefs.current[activeIndex]?.scrollIntoView({
-        block: 'nearest',
-      });
-    }
-  }, [activeIndex, isOpen]);
-
-  useEffect(() => {
     const keyDownCallback = (e: KeyboardEvent) => {
-      if (!isOpen) return;
+      if (!isFocused) return;
 
       switch (e.key) {
         case 'Up':
@@ -72,16 +59,12 @@ export const useAccessibleDropdown = <T>({
           break;
         case 'Enter':
           e.preventDefault();
-          handleSelectAccessible(items[activeIndex]);
-          handleFocus();
+          handleSelectWhenAccessible(items[activeIndex], activeIndex);
           break;
         case 'Esc':
         case 'Escape':
         case 'Tab':
-          e.preventDefault();
-          handleOpen(false);
-          handleFocus();
-          handleReset();
+          handleBlur();
           break;
         case 'PageUp':
         case 'Home':
@@ -102,11 +85,11 @@ export const useAccessibleDropdown = <T>({
     return () => {
       document.removeEventListener('keydown', keyDownCallback);
     };
-  }, [isOpen, items, activeIndex]);
+  }, [isFocused, items, activeIndex, selectedItem]);
 
   useEffect(() => {
     const keyDownCallback = (e: KeyboardEvent) => {
-      if (isOpen || !isFocus) return;
+      if (!isFocused) return;
 
       switch (e.key) {
         case 'Up':
@@ -116,7 +99,6 @@ export const useAccessibleDropdown = <T>({
         case ' ':
         case 'Enter':
           e.preventDefault();
-          handleOpen();
           break;
         case 'Tab':
           handleBlur();
@@ -130,14 +112,14 @@ export const useAccessibleDropdown = <T>({
     return () => {
       document.removeEventListener('keydown', keyDownCallback);
     };
-  }, [isOpen, isFocus]);
+  }, [isFocused]);
 
   useEffect(() => {
     const mouseOverCallback = (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
 
-      if (!dropdownRef?.current) return;
+      if (!listRef?.current) return;
 
       const liElement = (e.target as HTMLElement)?.closest('li');
 
@@ -148,17 +130,11 @@ export const useAccessibleDropdown = <T>({
       }
     };
 
-    dropdownRef?.current?.addEventListener('mousemove', mouseOverCallback);
+    listRef?.current?.addEventListener('mousemove', mouseOverCallback);
     return () => {
-      dropdownRef?.current?.removeEventListener('mousemove', mouseOverCallback);
+      listRef?.current?.removeEventListener('mousemove', mouseOverCallback);
     };
   }, [items]);
-
-  const handleSelectAccessible = useCallback((item: T) => {
-    const index = items.indexOf(item);
-    handleSelect(item, index);
-    setActiveIndex(index);
-  }, []);
 
   const handleItemRef = useCallback(
     (element: HTMLLIElement, index: number) => {
@@ -167,24 +143,21 @@ export const useAccessibleDropdown = <T>({
     [items],
   );
 
-  const handleReset = useCallback(() => {
-    if (selectedItem) return;
+  const handleSelectWhenAccessible = useCallback(
+    (item: T, index: number) => {
+      if (item?.id === selectedItem?.id!) return;
 
-    setActiveIndex(0);
-    itemRefs.current[0]?.scrollIntoView({
-      block: 'nearest',
-    });
-  }, [selectedItem]);
+      setActiveIndex(index);
+      handleSelect?.(item);
+    },
+    [selectedItem],
+  );
 
-  const handleFocus = useCallback(() => setIsFocus(true), []);
-  const handleBlur = useCallback(() => setIsFocus(false), []);
+  const handleBlur = useCallback(() => handleFocus?.(false), []);
 
   return {
     activeIndex,
     setActiveIndex,
     handleItemRef,
-    handleFocus,
-    handleBlur,
-    handleSelectAccessible,
   };
 };

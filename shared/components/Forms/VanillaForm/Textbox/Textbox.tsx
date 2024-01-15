@@ -7,7 +7,7 @@ type Props = {
   name: string;
   tabIndex?: number;
   type: string;
-  onPropertyChanged: (e: ChangeEvent<HTMLInputElement>) => void;
+  onPropertyChanged: (name: string, value: string) => void;
 };
 
 export const Textbox: FC<Props> = ({
@@ -18,6 +18,9 @@ export const Textbox: FC<Props> = ({
   type = 'text',
   tabIndex,
 }) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    onPropertyChanged(e.target.name, e.target.value);
+
   return (
     <input
       tabIndex={tabIndex}
@@ -27,7 +30,7 @@ export const Textbox: FC<Props> = ({
       autoComplete={type === 'password' ? 'new-password' : 'off'}
       css={[styles.input, isRequired && styles.inputRequired]}
       placeholder="Enter a value"
-      onChange={(e: ChangeEvent<HTMLInputElement>) => onPropertyChanged(e)}
+      onChange={handleChange}
     />
   );
 };

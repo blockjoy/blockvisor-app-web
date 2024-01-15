@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import {
-  Host,
-  HostServiceListResponse,
-} from '@modules/grpc/library/blockjoy/v1/host';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc';
-import { useDefaultOrganization } from '@modules/organization';
+import { organizationAtoms } from '@modules/organization';
+import { hostAtoms } from '@modules/host';
 
 export const useHostSelect = () => {
-  const [hosts, setHosts] = useState<Host[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { defaultOrganization } = useDefaultOrganization();
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
+  const [hosts, setHosts] = useRecoilState(hostAtoms.allHosts);
+  const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoadingAllHosts);
 
   const getHosts = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading('loading');
       const response: HostServiceListResponse = await hostClient.listHosts(
         defaultOrganization?.id!,
         undefined,
@@ -27,7 +27,7 @@ export const useHostSelect = () => {
     } catch (err) {
       console.error('Error occurred while fetching hosts', err);
     } finally {
-      setIsLoading(false);
+      setIsLoading('finished');
     }
   };
 

@@ -4,6 +4,12 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  blockchainWrapper: css`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 50%;
+  `,
   nodeTypeButtons: css`
     flex: 1 1 auto;
     min-width: 0;
@@ -14,13 +20,7 @@ export const styles = {
     scale: 0;
     position: absolute;
   `,
-  blockchainWrapper: css`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 50%;
-  `,
-  name: (theme: ITheme) => css`
+  button: (theme: ITheme) => css`
     position: relative;
     color: ${theme.colorText};
     opacity: 0.8;
@@ -69,54 +69,55 @@ export const styles = {
 
     @media ${breakpoints.toMed} {
       &:focus,
-      &:hover {
+      &.focus {
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
 
-      :is(:hover, :focus, .active) div {
+      :is(:focus, .active, .focus) div {
         opacity: 1;
         visibility: visible;
       }
 
-      :is(:hover, :focus, .active) span {
+      :is(:focus, .active, .focus) span {
         opacity: 1;
       }
 
-      :is(:hover, :focus, .active) path {
+      :is(:focus, .active, .focus) path {
         fill: ${theme.colorPrimary};
       }
 
-      :is(:hover, :focus, .active) .node-type-buttons {
+      :is(:focus, .active, .focus) .node-type-buttons {
         scale: 1;
         position: relative;
       }
     }
 
     @media ${breakpoints.fromMed} {
-      &:hover:not(.active) {
-        opacity: 0.9;
+      &.focus:not(.active) {
+        opacity: 1;
         background: ${rgba(theme.colorLightGrey || '#ffffff', 0.25)};
       }
 
-      &.active {
-        opacity: 1;
-      }
-
-      :is(:hover, .active) > :is(.node-type-buttons, span) {
+      :is(.active, .focus) > :is(.node-type-buttons, span) {
         visibility: visible;
         scale: 1;
         position: relative;
       }
 
-      &:hover .node-type-buttons {
+      &.focus .node-type-buttons {
         opacity: 0.9;
       }
 
-      :hover span {
+      &.focus .node-type-buttons button:hover {
+        background: ${theme.colorPrimary};
+        color: ${theme.colorPrimaryText};
+      }
+
+      &.focus span {
         opacity: 0.9;
       }
 
-      &.active span {
+      &.active {
         opacity: 1;
       }
 
@@ -124,7 +125,7 @@ export const styles = {
         opacity: 1;
       }
 
-      :is(:hover, .active) path {
+      :is(.active, .focus) path {
         fill: ${theme.colorPrimary};
       }
     }
@@ -133,7 +134,7 @@ export const styles = {
     opacity: 0.2;
     cursor: not-allowed;
 
-    :hover {
+    .focus {
       opacity: 1;
 
       .coming-soon-badge {
@@ -153,18 +154,13 @@ export const styles = {
     cursor: pointer;
     text-transform: capitalize;
 
-    @media ${breakpoints.toXlrg} {
-      &.active {
-        background: ${theme.colorPrimary};
-        color: ${theme.colorPrimaryText};
-      }
+    :is(:focus) {
+      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.125);
     }
 
-    @media ${breakpoints.fromXLrg} {
-      :is(:hover, :focus, .active) {
-        background: ${theme.colorPrimary};
-        color: ${theme.colorPrimaryText};
-      }
+    &.active {
+      background: ${theme.colorPrimary};
+      color: ${theme.colorPrimaryText};
     }
   `,
 };

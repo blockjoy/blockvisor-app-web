@@ -1,10 +1,6 @@
-import { NodeLauncherState, NodeRegionSelect } from '@modules/node';
-import { FC } from 'react';
+import { useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import { styles } from './NodeLauncherSummary.styles';
-import { useGetBlockchains } from '@modules/node/hooks/useGetBlockchains';
-import { nodeTypeList } from '@shared/constants/lookups';
-import { colors } from 'styles/utils.colors.styles';
-import { spacing } from 'styles/utils.spacing.styles';
 import {
   FormHeader,
   FormLabel,
@@ -12,57 +8,47 @@ import {
   OrganizationSelect,
   Tooltip,
 } from '@shared/components';
-import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
-import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { isMobile } from 'react-device-detect';
-import { useHostList } from '@modules/host';
+import { usePermissions } from '@modules/auth';
+import { hostAtoms, useHostList } from '@modules/host';
+import {
+  NodeRegionSelect,
+  nodeLauncherAtoms,
+  nodeLauncherSelectors,
+} from '@modules/node';
+import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
 
-type Props = {
-  serverError: string;
-  hasNetworkList: boolean;
-  isNodeValid: boolean;
-  isConfigValid: boolean | null;
-  isCreating: boolean;
-  hosts: Host[];
-  isLoadingHosts: boolean;
-  selectedHost: Host | null;
-  selectedVersion: BlockchainVersion;
-  selectedRegion: Region | null;
-  nodeLauncherState: NodeLauncherState;
-  canAddNode: boolean;
+type NodeLauncherSummaryProps = {
   onCreateNodeClicked: VoidFunction;
   onHostChanged: (host: Host | null) => void;
   onRegionChanged: (region: Region | null) => void;
   onRegionsLoaded: (region: Region | null) => void;
 };
 
-export const NodeLauncherSummary: FC<Props> = ({
-  serverError,
-  hasNetworkList,
-  isNodeValid,
-  isConfigValid,
-  isCreating,
-  hosts,
-  isLoadingHosts,
-  selectedHost,
-  selectedVersion,
-  selectedRegion,
-  nodeLauncherState,
-  canAddNode,
+export const NodeLauncherSummary = ({
   onCreateNodeClicked,
   onHostChanged,
   onRegionChanged,
   onRegionsLoaded,
-}) => {
-  const { blockchains } = useGetBlockchains();
-
+}: NodeLauncherSummaryProps) => {
   const { hostList } = useHostList();
 
-  const { blockchainId, nodeType, properties } = nodeLauncherState;
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const error = useRecoilValue(nodeLauncherAtoms.error);
+  const isLoading = useRecoilValue(nodeLauncherAtoms.isLoading);
+  const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
+  const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
+  const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
+  const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+  const allHosts = useRecoilValue(hostAtoms.allHosts);
+  const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
+
+  const { blockchainId, nodeType } = nodeLauncher;
+
+  const { hasPermission } = usePermissions();
+  const canAddNode = hasPermission('node-create');
 
   return (
     <div css={styles.wrapper}>
@@ -79,8 +65,8 @@ export const NodeLauncherSummary: FC<Props> = ({
             ) : null}
           </FormLabel>
           <HostSelect
-            hosts={hosts}
-            isLoading={isLoadingHosts}
+            hosts={allHosts}
+            isLoading={isLoadingAllHosts !== 'finished'}
             selectedHost={selectedHost}
             onChange={onHostChanged}
           />
@@ -95,8 +81,6 @@ export const NodeLauncherSummary: FC<Props> = ({
             onLoad={onRegionsLoaded}
             blockchainId={blockchainId}
             nodeType={nodeType}
-            version={selectedVersion}
-            region={selectedRegion}
           />
         </>
       )}
@@ -109,81 +93,8 @@ export const NodeLauncherSummary: FC<Props> = ({
       )}
 
       <FormLabel>Summary</FormLabel>
-      <div css={styles.summary}>
-        {!hasNetworkList ? (
-          <div css={[colors.warning, spacing.bottom.medium]}>
-            Cannot launch node, missing network configuration.
-          </div>
-        ) : (
-          <>
-            <ul css={styles.summaryList}>
-              <li>
-                <span css={styles.summaryIcon}>
-                  <IconCheckCircle />
-                </span>
-                <div>
-                  <label>Blockchain</label>
-                  <span>
-                    {blockchains?.find((b) => b.id === blockchainId)?.name ||
-                      'Not Selected'}
-                  </span>
-                </div>
-              </li>
-              <li>
-                <span css={styles.summaryIcon}>
-                  <IconCheckCircle />
-                </span>
-                <div>
-                  <label>Type</label>
-                  <span>
-                    {nodeTypeList?.find((n) => n.id === +nodeType)?.name ||
-                      'Not Selected'}
-                  </span>
-                </div>
-              </li>
-              <li>
-                {isConfigValid ? (
-                  <span css={styles.summaryIcon}>
-                    <IconCheckCircle />
-                  </span>
-                ) : (
-                  <span css={styles.summaryIcon}>
-                    <IconUncheckCircle />
-                  </span>
-                )}
+      <NodeLauncherSummaryDetails />
 
-                <div>
-                  <label>Configuration</label>
-                  <span>
-                    {isConfigValid ? 'Ready For Liftoff' : 'Needs Work'}
-                  </span>
-                </div>
-              </li>
-            </ul>
-            {!isConfigValid && (
-              <>
-                <h2 css={styles.missingFieldsTitle}>
-                  The following information needs to be added:
-                </h2>
-                <div css={styles.missingFields}>
-                  {properties
-                    ?.filter(
-                      (property) =>
-                        property.required &&
-                        !property.disabled &&
-                        !property.value,
-                    )
-                    .map((property) => (
-                      <div key={property.name}>{property.displayName}</div>
-                    ))}
-                </div>
-              </>
-            )}
-
-            {serverError && <div css={styles.serverError}>{serverError}</div>}
-          </>
-        )}
-      </div>
       <div css={styles.buttons}>
         {!canAddNode && (
           <Tooltip
@@ -194,23 +105,22 @@ export const NodeLauncherSummary: FC<Props> = ({
           />
         )}
         <button
-          tabIndex={20}
           onClick={onCreateNodeClicked}
           disabled={
             !canAddNode ||
             !hasNetworkList ||
             !isNodeValid ||
             !isConfigValid ||
-            Boolean(serverError) ||
-            isCreating
+            Boolean(error) ||
+            isLoading
           }
           css={[
             styles.createButton,
-            isCreating && !Boolean(serverError) && styles.createButtonLoading,
+            isLoading && !Boolean(error) && styles.createButtonLoading,
           ]}
         >
           <span css={styles.createButtonInner}>
-            {isCreating && !Boolean(serverError) ? (
+            {isLoading && !Boolean(error) ? (
               <span css={styles.cogIcon}>
                 <IconCog />
               </span>
@@ -218,9 +128,7 @@ export const NodeLauncherSummary: FC<Props> = ({
               <IconRocket />
             )}
             <span>
-              {isCreating && !Boolean(serverError)
-                ? 'Launching'
-                : 'Launch Your Node'}
+              {isLoading && !Boolean(error) ? 'Launching' : 'Launch Your Node'}
             </span>
           </span>
         </button>
