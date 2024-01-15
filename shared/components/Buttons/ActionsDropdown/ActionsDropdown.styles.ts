@@ -45,7 +45,6 @@ export const styles = {
     color: ${theme.colorDefault};
   `,
   icon: (theme: ITheme) => css`
-    rotate: 90deg;
     pointer-events: none;
     transition: transform 0.3s;
 
