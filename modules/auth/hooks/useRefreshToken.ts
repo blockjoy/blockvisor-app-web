@@ -1,8 +1,7 @@
+import { useSetRecoilState } from 'recoil';
 import { authClient } from '@modules/grpc';
-import { organizationAtoms } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
-import { useRecoilValue } from 'recoil';
-import { useIdentityRepository } from './useIdentityRepository';
+import { authAtoms, useIdentityRepository } from '@modules/auth';
 
 interface Hook {
   refreshToken: VoidFunction;
@@ -11,25 +10,48 @@ interface Hook {
 
 export const useRefreshToken = (): Hook => {
   const repository = useIdentityRepository();
-  const orgId = useRecoilValue(organizationAtoms.defaultOrganization);
+  const setUser = useSetRecoilState(authAtoms.user);
 
-  let refreshInterval: ReturnType<typeof setInterval>;
+  let refreshTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  const refreshToken = () => {
+  const refreshToken = async () => {
     const identity = repository?.getIdentity();
-    const user: any = readToken(identity?.accessToken!);
+    const accessToken = identity?.accessToken
+      ? readToken(identity.accessToken)
+      : null;
+    if (accessToken) scheduleTokenRefresh(accessToken.exp);
+  };
 
-    const expirationTime = user.exp;
-    const callTime = expirationTime * 1000 + 100 - Date.now();
+  const scheduleTokenRefresh = (expirationTime: number) => {
+    const callTime = Math.max(expirationTime * 1000 - Date.now() - 20000, 1000);
 
-    refreshInterval = setInterval(async (): Promise<void> => {
-      // TODO
-      //await apiClient.getDashboardMetrics(orgId?.id);
-    }, callTime);
+    if (refreshTimeout) clearTimeout(refreshTimeout);
+
+    refreshTimeout = setTimeout(handleTokenRefresh, callTime);
+  };
+
+  const handleTokenRefresh = async () => {
+    try {
+      const accessToken = await authClient.refreshToken();
+      if (accessToken) {
+        setUser((user) => ({
+          ...user,
+          accessToken,
+        }));
+
+        const user = readToken(accessToken);
+        scheduleTokenRefresh(user.exp);
+      }
+    } catch (error) {
+      console.error('Error while refreshing the token', error);
+    }
   };
 
   const removeRefreshTokenCall = () => {
-    clearInterval(refreshInterval);
+    if (refreshTimeout) {
+      clearTimeout(refreshTimeout);
+      refreshTimeout = null;
+    }
   };
 
   return {

@@ -7,6 +7,7 @@ export * from './hooks/useClickOutside';
 export * from './hooks/useAccessibleDropdown';
 export * from './hooks/useModal';
 export * from './hooks/useTabs';
+export * from './hooks/usePageVisibility';
 export * from './utils/storybook';
 export * from './utils/escapeHtml';
 export * from './utils/formatters';

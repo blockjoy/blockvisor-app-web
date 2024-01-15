@@ -1,9 +1,14 @@
 import Head from 'next/head';
 import { useEffect, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import { useIdentityRepository } from '@modules/auth';
+import {
+  authAtoms,
+  useIdentityRepository,
+  useRefreshToken,
+} from '@modules/auth';
 import {
   useDefaultOrganization,
   useGetOrganizations,
@@ -11,9 +16,10 @@ import {
   useProvisionToken,
 } from '@modules/organization';
 import { useGetBlockchains, useNodeList } from '@modules/node';
-import { MqttUIProvider, useMqtt } from '@modules/mqtt';
+import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
+import { usePageVisibility } from '@shared/index';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -27,7 +33,13 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const currentOrg = useRef<string>();
 
-  const { connect: mqttConnect } = useMqtt();
+  const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
+  const {
+    client: mqttClient,
+    connect: mqttConnect,
+    reconnect: mqttReconnect,
+    updateSubscription: updateMqttSubscription,
+  } = useMqtt();
   const { getPermissions } = usePermissions();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
@@ -36,14 +48,35 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
   const { defaultOrganization } = useDefaultOrganization();
+  const user = useRecoilValue(authAtoms.user);
+
+  usePageVisibility({
+    onVisible: refreshToken,
+  });
 
   useEffect(() => {
     (async () => {
       if (!organizations.length) await getOrganizations(true);
       await getReceivedInvitations(userEmail!);
-      mqttConnect();
     })();
   }, []);
+
+  useEffect(() => {
+    try {
+      refreshToken();
+    } catch (error: any) {
+      console.error('Error while refreshing the token');
+    }
+
+    return () => {
+      removeRefreshTokenCall();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mqttClient) mqttConnect();
+    else mqttReconnect();
+  }, [user?.accessToken]);
 
   useEffect(() => {
     if (!provisionToken && defaultOrganization?.id) {
@@ -60,7 +93,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       loadNodes();
       loadHosts();
       getPermissions();
-      mqttConnect();
+      if (mqttClient?.connected) updateMqttSubscription();
     }
   }, [defaultOrganization?.id]);
 
@@ -71,9 +104,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       </Head>
       <Burger />
       <Sidebar />
-      <MqttUIProvider>
-        {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
-      </MqttUIProvider>
+      {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
     </>
   );
 };
