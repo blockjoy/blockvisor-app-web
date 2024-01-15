@@ -3,7 +3,7 @@ import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { ReactNode, useRef, useState } from 'react';
 import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import IconArrow from '@public/assets/icons/common/ChevronRight.svg';
+import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 import { css } from '@emotion/react';
 
 type Item = {
@@ -40,7 +40,9 @@ export const ActionsDropdown = ({ items }: Props) => {
         </SvgIcon>
         <p>Actions</p>
         <span css={[styles.icon, isOpen && styles.iconActive]}>
-          <IconArrow />
+          <SvgIcon size="12px">
+            <IconArrow />
+          </SvgIcon>
         </span>
       </button>
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
