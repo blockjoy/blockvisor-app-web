@@ -4,7 +4,7 @@ import IconNodes from '@public/assets/icons/app/Node.svg';
 import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 
 export const showNotification = (
-  type: Channel,
+  type: Topic,
   message: string,
   content?: ReactNode,
 ): void => {

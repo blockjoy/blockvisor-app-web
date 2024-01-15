@@ -19,6 +19,7 @@ export const styles = {
   statusText: css`
     position: relative;
     z-index: 1;
+    white-space: nowrap;
   `,
   statusBorder: (theme: ITheme) => css`
     border: 1px solid ${theme.colorPrimary};

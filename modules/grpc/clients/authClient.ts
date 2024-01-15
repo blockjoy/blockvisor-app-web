@@ -119,21 +119,28 @@ class AuthClient {
     }
   }
 
-  async refreshToken(): Promise<void> {
+  async refreshToken(): Promise<string | null> {
     const currentDateTimestamp = Math.round(new Date().getTime() / 1000);
+    const accessToken = getIdentity().accessToken;
+    const accessTokenExpiry = localStorage.getItem('accessTokenExpiry');
+
     if (
-      !!localStorage.getItem('accessTokenExpiry') &&
-      currentDateTimestamp > +localStorage.getItem('accessTokenExpiry')! - 30
+      !!accessTokenExpiry &&
+      currentDateTimestamp > +accessTokenExpiry! - 30
     ) {
       try {
         const refreshTokenResponse = await this.client.refresh({
-          token: getIdentity().accessToken,
+          token: accessToken,
         });
         setTokenValue(refreshTokenResponse.token);
+        return refreshTokenResponse.token;
       } catch (err) {
         console.log('refreshTokenError', err);
+        return null;
       }
     }
+
+    return accessToken;
   }
 }
 

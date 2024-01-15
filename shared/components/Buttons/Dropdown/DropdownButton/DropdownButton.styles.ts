@@ -51,7 +51,6 @@ export const styles = {
     top: 50%;
     right: 10px;
     translate: 0 -50%;
-    rotate: 90deg;
     pointer-events: none;
     transition: 0.3s;
 
