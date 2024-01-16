@@ -57,9 +57,7 @@ const hasSummary = selector<boolean>({
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
     const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
 
-    return Boolean(
-      nodeLauncher.blockchainId && nodeLauncher.nodeType && selectedVersion?.id,
-    );
+    return Boolean(nodeLauncher.blockchainId && nodeLauncher.nodeType);
   },
 });
 
