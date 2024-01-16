@@ -4,6 +4,7 @@ import {
   UserServiceDefinition,
   UserServiceListRequest,
   UserServiceListResponse,
+  UserServiceUpdateRequest,
   UserSort,
   UserSortField,
 } from '../library/blockjoy/v1/user';
@@ -120,20 +121,15 @@ class UserClient {
     }
   }
 
-  async updateUser(
-    id: string,
-    firstName: string,
-    lastName: string,
-  ): Promise<User | StatusResponse> {
+  async updateUser(request: UserServiceUpdateRequest): Promise<User> {
     try {
+      console.log('updateUserRequest', request);
       await authClient.refreshToken();
-      const response = await this.client.update(
-        { id, firstName, lastName },
-        getOptions(),
-      );
+      const response = await this.client.update(request, getOptions());
+      console.log('updateUserResponse', response);
       return response.user!;
     } catch (err) {
-      return StatusResponseFactory.updateUserResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 }

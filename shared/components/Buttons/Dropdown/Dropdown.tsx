@@ -129,8 +129,8 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                     isDisabled={isDisabled}
                     additionalStyles={[styles.dropdownItem]}
                   >
-                    <p>{escapeHtml(item.name!)}</p>
-                    {renderItemLabel ? renderItemLabel(item) : null}
+                    <p>{escapeHtml(item[itemKey])}</p>
+                    {renderItemLabel && renderItemLabel(item)}
                   </DropdownItem>
                 </li>
               );

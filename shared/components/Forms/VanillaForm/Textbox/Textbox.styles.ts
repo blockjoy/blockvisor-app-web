@@ -56,7 +56,9 @@ export const styles = {
   inputRequired: (theme: ITheme) => css`
     &:invalid {
       border-color: ${theme.colorDanger};
-      animation: ${shake} 0.1s 3;
     }
+  `,
+  inputRequiredAnimation: css`
+    animation: ${shake} 0.1s 3;
   `,
 };

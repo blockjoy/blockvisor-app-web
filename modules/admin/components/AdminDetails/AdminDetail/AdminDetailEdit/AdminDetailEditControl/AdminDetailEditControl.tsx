@@ -1,6 +1,6 @@
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { Select, Textbox } from '@shared/components';
-import { ChangeEvent, KeyboardEvent } from 'react';
+import { KeyboardEvent } from 'react';
 
 type Props = {
   editSettings: AdminDetailEditSettings;
@@ -28,7 +28,7 @@ export const AdminDetailEditControl = ({
         }
         items={
           editSettings.dropdownValues?.map((value) => ({
-            name: capitalized(value.name),
+            name: capitalized(value.name)!,
             onClick: () => onChange(editSettings.field, value.id),
           }))!
         }
@@ -41,9 +41,7 @@ export const AdminDetailEditControl = ({
         type="text"
         noBottomMargin
         defaultValue={editSettings.defaultValue}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          onChange(editSettings.field, e.target.value)
-        }
+        onChange={onChange}
         onKeyUp={onKeyUp}
       />
     ),

@@ -97,6 +97,7 @@ export const AdminDetail = ({
         name={name as string}
         isLoading={item === undefined}
         isEditMode={isEditMode}
+        canEdit={Boolean(onSaveChanges)}
         detailsName={item ? item[detailsName] : undefined}
         onOpenAppView={onOpenInApp}
         onCopyObject={handleCopyObject}
@@ -106,7 +107,6 @@ export const AdminDetail = ({
         <p css={spacing.top.medium}>{error}</p>
       ) : isEditMode ? (
         <AdminDetailEdit
-          itemName={item.name}
           onSaveChanges={onSaveChanges!}
           onToggleEditMode={handleToggleEditMode}
           properties={properties.filter((property) => property.editSettings)}

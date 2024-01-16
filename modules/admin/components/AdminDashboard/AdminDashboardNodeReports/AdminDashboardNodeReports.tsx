@@ -7,9 +7,9 @@ import {
   TableSkeleton,
 } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { styles } from './AdminDashboardNodeProblems.styles';
+import { styles } from './AdminDashboardNodeReports.styles';
 
-export const AdminDashboardNodeProblems = () => {
+export const AdminDashboardNodeReports = () => {
   const [reports, setReports] = useState<CustomNodeReport[]>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,7 +24,11 @@ export const AdminDashboardNodeProblems = () => {
   return (
     <div css={styles.wrapper}>
       <h2 css={styles.h2}>Node Reports</h2>
-      {!isLoading ? (
+      {isLoading ? (
+        <TableSkeleton />
+      ) : !reports?.length ? (
+        <p>No node reports</p>
+      ) : (
         <div css={styles.tableWrapper}>
           <table css={styles.table}>
             <thead>
@@ -73,8 +77,6 @@ export const AdminDashboardNodeProblems = () => {
             </tbody>
           </table>
         </div>
-      ) : (
-        <TableSkeleton />
       )}
     </div>
   );

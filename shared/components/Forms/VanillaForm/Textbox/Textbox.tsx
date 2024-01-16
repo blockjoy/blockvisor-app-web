@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { styles } from './Textbox.styles';
 
 type Props = {
@@ -8,20 +8,27 @@ type Props = {
   tabIndex?: number;
   type: string;
   noBottomMargin?: boolean;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (name: string, value: string) => void;
   onKeyUp?: (e: KeyboardEvent<HTMLInputElement>) => void;
 };
 
 export const Textbox = ({
   onChange,
   onKeyUp,
-  defaultValue = '',
+  defaultValue,
   name,
   isRequired,
   type = 'text',
   tabIndex,
   noBottomMargin = false,
 }: Props) => {
+  const [value, setValue] = useState<string>();
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.name, e.target.value);
+    setValue(e.target.value);
+  };
+
   return (
     <div css={styles.wrapper}>
       <input
@@ -31,9 +38,13 @@ export const Textbox = ({
         defaultValue={defaultValue}
         autoComplete={type === 'password' ? 'new-password' : 'off'}
         required={isRequired}
-        css={[styles.input(noBottomMargin), isRequired && styles.inputRequired]}
+        css={[
+          styles.input(noBottomMargin),
+          isRequired && styles.inputRequired,
+          value === '' && isRequired && styles.inputRequiredAnimation,
+        ]}
         placeholder="Enter a value"
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e)}
+        onChange={handleChange}
         onKeyUp={onKeyUp}
       />
     </div>

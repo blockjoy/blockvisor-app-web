@@ -1,16 +1,13 @@
 import { capitalized } from '@modules/admin/utils/capitalized';
-import { Alert, Button, ButtonGroup } from '@shared/components';
+import { Button, ButtonGroup } from '@shared/components';
 import { KeyboardEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import { styles } from './AdminDetailEdit.styles';
 import { AdminDetailEditControl } from './AdminDetailEditControl/AdminDetailEditControl';
-import isEqual from 'lodash/isEqual';
-import { css } from '@emotion/react';
-import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
+import isEqual from 'lodash/isEqual';
 
 type Props = {
-  itemName?: string;
   properties: AdminDetailProperty[];
   onSaveChanges: (
     properties: AdminDetailProperty[],
@@ -20,7 +17,6 @@ type Props = {
 };
 
 export const AdminDetailEdit = ({
-  itemName,
   properties,
   onSaveChanges,
   onToggleEditMode,
@@ -53,7 +49,7 @@ export const AdminDetailEdit = ({
   };
 
   const handleEnterSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode === 13 && isValid && isDirty) {
+    if (e.code === 'Enter' && isValid && isDirty) {
       handleSaveChanges();
     }
   };
@@ -69,23 +65,6 @@ export const AdminDetailEdit = ({
 
   return (
     <>
-      {!!itemName && (
-        <div css={spacing.top.medium}>
-          <Alert
-            isSuccess
-            isRounded
-            additionalStyles={[
-              css`
-                display: inline-block;
-              `,
-            ]}
-          >
-            You are editing {String(name).substring(0, name?.length! - 1)}
-            {' - '}
-            {itemName}
-          </Alert>
-        </div>
-      )}
       {editedProperties.map((property) => (
         <div css={styles.row} key={property.id}>
           <div css={styles.label}>

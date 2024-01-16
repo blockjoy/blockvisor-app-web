@@ -11,6 +11,7 @@ type Props = {
   detailsName?: string;
   isLoading?: boolean;
   isEditMode?: boolean;
+  canEdit?: boolean;
   onOpenAppView?: VoidFunction;
   onCopyObject?: VoidFunction;
   onToggleEditMode?: VoidFunction;
@@ -21,6 +22,7 @@ export const AdminDetailHeader = ({
   detailsName,
   isLoading,
   isEditMode,
+  canEdit,
   onOpenAppView,
   onCopyObject,
   onToggleEditMode,
@@ -32,10 +34,12 @@ export const AdminDetailHeader = ({
         <Skeleton width="200px" />
       ) : (
         <div css={styles.wrapper}>
-          <h2 css={styles.name}>{detailsName}</h2>
+          <h2 css={[styles.name, !isEditMode && styles.nameShortened]}>
+            {detailsName}
+          </h2>
           {!isEditMode && (
             <div css={styles.buttons}>
-              {!!onToggleEditMode && (
+              {canEdit && (
                 <button css={styles.button} onClick={onToggleEditMode}>
                   <SvgIcon size="12px">
                     <IconPencil />
