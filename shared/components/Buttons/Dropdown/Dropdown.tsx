@@ -130,19 +130,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                     additionalStyles={[styles.dropdownItem]}
                   >
                     <p>{escapeHtml(item[itemKey])}</p>
-                    {renderItemLabel ? (
-                      <span
-                        className="alert"
-                        css={[
-                          styles.alert,
-                          isDisabled
-                            ? styles.alertDisabled
-                            : styles.alertSuccess,
-                        ]}
-                      >
-                        {renderItemLabel(item)}
-                      </span>
-                    ) : null}
+                    {renderItemLabel && renderItemLabel(item)}
                   </DropdownItem>
                 </li>
               );

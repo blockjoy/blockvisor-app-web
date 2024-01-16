@@ -31,7 +31,7 @@ interface IUseNodeLauncherHandlersHook {
   handleProtocolSelected: (
     blockchainId: string,
     nodeType: NodeType,
-    properties?: NodeProperty[],
+    // properties?: NodeProperty[],
   ) => void;
   handleNodePropertyChanged: (name: string, value: any) => void;
   handleNodeConfigPropertyChanged: (
@@ -105,7 +105,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
       ...nodeLauncherState,
       blockchainId,
       nodeType,
-      properties,
+      // properties,
     });
     Mixpanel.track('Launch Node - Protocol Selected', {
       blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
@@ -236,7 +236,9 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     const sortedVersions = sortVersions(activeNodeType.versions);
 
     setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
-    setSelectedVersion(sortedVersions[0]);
+
+    // default to latest version
+    setSelectedVersion(sortedVersions[sortedVersions.length - 1]);
   }, [nodeLauncherState.blockchainId, nodeLauncherState.nodeType]);
 
   useEffect(() => {
@@ -263,7 +265,11 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
       ...nodeLauncherState,
       keyFiles,
       properties,
-      network: sortNetworks(selectedVersion?.networks)[0]?.name,
+      network:
+        // default to main network
+        sortNetworks(selectedVersion?.networks)?.find(
+          (network) => network.name.includes('main')!,
+        )?.name || sortNetworks(selectedVersion?.networks)[0]?.name,
     });
   }, [selectedVersion?.id]);
 

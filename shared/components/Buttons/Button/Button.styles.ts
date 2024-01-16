@@ -10,9 +10,7 @@ const buttonStyle = {
     box-shadow: 0px 0px 0px 3px var(--color-primary-o0);
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
-    :hover,
-    :active,
-    :focus {
+    :not(:disabled):is(:hover, :active, :focus) {
       box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
     }
 
@@ -78,6 +76,7 @@ const buttonStyle = {
 
     :not(:disabled):is(:hover, :active, :focus) {
       opacity: 1;
+      box-shadow: 0px 0px 0px 3px rgb(255 255 255 / 12%);
     }
   `,
   icon: (theme: ITheme) => css`

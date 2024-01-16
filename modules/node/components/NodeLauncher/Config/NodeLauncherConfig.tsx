@@ -44,20 +44,30 @@ export const NodeLauncherConfig = ({
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
 
+        {versions.length > 1 && (
+          <>
+            <FormLabel>Version</FormLabel>
+            <NodeVersionSelect
+              versions={versions}
+              onVersionChanged={onVersionChanged}
+            />
+          </>
+        )}
+
         <FormLabel>Network</FormLabel>
 
-        {selectedVersion && Boolean(networks?.length) && (
+        {selectedVersion && Boolean(networks?.length) ? (
           <PillPicker
             name="network"
             items={networks!.map((n) => n.name)}
             selectedItem={network!}
             onChange={onNodePropertyChanged}
           />
-        )}
-
-        {selectedVersion && !networks?.length && (
+        ) : (
           <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
-            Missing Network Configuration
+            {selectedVersion
+              ? 'Missing Network Configuration'
+              : 'Version List Empty'}
           </div>
         )}
 
@@ -76,16 +86,6 @@ export const NodeLauncherConfig = ({
           allowedIps={nodeLauncher?.allowIps}
           deniedIps={nodeLauncher?.denyIps}
         />
-
-        {versions.length > 1 && (
-          <>
-            <FormLabel>Version</FormLabel>
-            <NodeVersionSelect
-              versions={versions}
-              onVersionChanged={onVersionChanged}
-            />
-          </>
-        )}
 
         {Boolean(networks?.length) &&
           properties?.map((property: NodeProperty) => {

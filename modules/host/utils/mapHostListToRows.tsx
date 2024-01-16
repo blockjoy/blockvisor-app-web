@@ -1,5 +1,10 @@
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { HostIcon, HostOs, HostStatus, TableBlock } from '@shared/components';
+import {
+  HostIcon,
+  HostIpStatus,
+  HostManagedBy,
+  TableBlock,
+} from '@shared/components';
 
 export const mapHostListToRows = (hostList?: Host[]) => {
   const headers: TableHeader[] = [
@@ -21,7 +26,7 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       width: '200px',
     },
     {
-      name: 'Status',
+      name: 'Managed By',
       key: '4',
       width: '200px',
     },
@@ -32,14 +37,14 @@ export const mapHostListToRows = (hostList?: Host[]) => {
     cells: [
       {
         key: '1',
-        component: <HostIcon />,
+        component: <HostIcon size="20px" />,
       },
       {
         key: '2',
         component: (
           <TableBlock
-            name={host.name}
-            address={<HostOs os={host.os} osVersion={host.osVersion} />}
+            topRow={host.name}
+            middleRow={<HostIpStatus ipAddresses={host.ipAddresses} />}
           />
         ),
       },
@@ -49,7 +54,7 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       },
       {
         key: '4',
-        component: <HostStatus />,
+        component: <HostManagedBy managedBy={host.managedBy} />,
       },
     ],
   }));

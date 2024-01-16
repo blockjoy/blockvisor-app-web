@@ -1,9 +1,9 @@
 import { AdminList } from '../AdminList/AdminList';
 import { organizationClient } from '@modules/grpc';
-import { formatters } from '@shared/utils/formatters';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Org, OrgSortField } from '@modules/grpc/library/blockjoy/v1/org';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { DateTime } from '@shared/components';
 
 const columns: AdminListColumn[] = [
   {
@@ -63,9 +63,7 @@ export const AdminOrgs = () => {
     list.map((item) => {
       return {
         ...item,
-        createdAt: `${formatters.formatDate(
-          item.createdAt!,
-        )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
+        createdAt: <DateTime date={item.createdAt!} />,
       };
     });
 

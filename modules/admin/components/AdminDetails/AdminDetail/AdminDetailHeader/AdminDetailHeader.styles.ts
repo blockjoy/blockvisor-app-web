@@ -14,16 +14,18 @@ export const styles = {
     }
   `,
   name: css`
-    white-space: nowrap;
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 20px;
     font-size: 16px;
 
     @media ${breakpoints.toSml} {
       display: none;
     }
+  `,
+  nameShortened: css`
+    white-space: nowrap;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 20px;
   `,
   separator: (theme: ITheme) => css`
     color: ${theme.colorBorderGrey};
@@ -32,7 +34,7 @@ export const styles = {
       display: none;
     }
   `,
-  buttons: (theme: ITheme) => css`
+  buttons: css`
     display: flex;
     gap: 16px;
   `,
@@ -51,6 +53,10 @@ export const styles = {
     opacity: 0.8;
     cursor: pointer;
     transition: 0.3s;
+
+    path {
+      fill: ${theme.colorText};
+    }
 
     :hover {
       opacity: 1;

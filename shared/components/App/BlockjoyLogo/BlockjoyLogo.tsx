@@ -1,15 +1,17 @@
 import { styles } from './BlockjoyLogo.styles';
-import LogoSmall from '@public/assets/icons/app/BlockJoyLogoBeta.svg';
-import { FC } from 'react';
+import { SvgIcon } from '@shared/components';
+import BlockJoyLogoBeta from '@public/assets/icons/app/BlockJoyLogoBeta.svg';
 
 type Props = {
   scale?: number;
 };
 
-export const BlockjoyLogo: FC<Props> = ({ scale = 0.8 }) => (
+export const BlockjoyLogo = ({ scale = 0.8 }: Props) => (
   <span css={[styles.wrapper]}>
     <span css={styles.icon} style={{ transform: `scale(${scale})` }}>
-      <LogoSmall />
+      <SvgIcon size="64px">
+        <BlockJoyLogoBeta />
+      </SvgIcon>
     </span>
   </span>
 );

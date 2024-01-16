@@ -2,13 +2,6 @@ import { styles } from './AdminDetailTable.styles';
 import { Copy, TableSkeleton } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 
-export type AdminDetailProperty = {
-  id: string;
-  label: string;
-  data: any;
-  copyValue?: string;
-};
-
 type Props = {
   item: IAdminItem;
   properties: AdminDetailProperty[];

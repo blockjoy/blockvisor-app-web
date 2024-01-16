@@ -3,6 +3,7 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   button: (theme: ITheme) => css`
+    position: relative;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -13,6 +14,7 @@ export const styles = {
     padding: 0 10px;
     background: transparent;
     cursor: pointer;
+    opacity: 0.8;
 
     :disabled {
       cursor: not-allowed;
@@ -29,12 +31,13 @@ export const styles = {
     }
 
     p {
-      color: ${theme.colorDefault};
+      color: ${theme.colorText};
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       padding-right: 20px;
     }
+
     :focus {
       svg path {
         fill: ${theme.colorText};
@@ -43,6 +46,8 @@ export const styles = {
       p {
         color: ${theme.colorText};
       }
+
+      opacity: 1;
       border-color: ${theme.colorLabel};
     }
   `,
@@ -50,6 +55,8 @@ export const styles = {
     position: absolute;
     top: 50%;
     right: 10px;
+    height: 12px;
+    width: 12px;
     translate: 0 -50%;
     pointer-events: none;
     transition: 0.3s;

@@ -9,7 +9,7 @@ export const styles = {
   menu: (theme: ITheme) => css`
     position: absolute;
     overflow: hidden;
-    z-index: 5;
+    z-index: 1;
     top: 40px;
     left: 0;
     font-size: 14px;

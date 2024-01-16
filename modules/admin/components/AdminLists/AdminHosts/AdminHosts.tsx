@@ -4,6 +4,7 @@ import { hostClient } from '@modules/grpc/clients/hostClient';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
+import { DateTime, HostIpStatus, HostManagedBy } from '@shared/components';
 
 const columns: AdminListColumn[] = [
   {
@@ -36,6 +37,16 @@ const columns: AdminListColumn[] = [
     width: '150px',
     sortField: HostSortField.HOST_SORT_FIELD_CPU_COUNT,
     isVisible: true,
+  },
+  {
+    name: 'availableIps',
+    width: '150px',
+    isVisible: false,
+  },
+  {
+    name: 'managedBy',
+    width: '150px',
+    isVisible: false,
   },
   {
     name: 'version',
@@ -102,9 +113,9 @@ export const AdminHosts = () => {
       return {
         ...host,
         diskSizeBytes: formatters.formatSize(host.diskSizeBytes, 'bytes'),
-        createdAt: `${formatters.formatDate(
-          host.createdAt!,
-        )} @ ${formatters.formatDate(host.createdAt!, 'time')}`,
+        availableIps: <HostIpStatus ipAddresses={host.ipAddresses} />,
+        managedBy: <HostManagedBy managedBy={host.managedBy} />,
+        createdAt: <DateTime date={host.createdAt!} />,
       };
     });
 

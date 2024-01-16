@@ -1,36 +1,34 @@
 import { css } from '@emotion/react';
-import { ReactNode } from 'react';
 import { ITheme } from 'types/theme';
 
 type Props = {
-  id?: string;
-  address: string | ReactNode;
-  name: string;
+  middleRow?: string | React.ReactNode;
+  bottomRow?: string | React.ReactNode;
+  topRow: string | React.ReactNode;
 };
 
 const styles = {
   wrapper: css`
     display: block;
   `,
-  name: (theme: ITheme) => css`
+  topRow: (theme: ITheme) => css`
     display: block;
     margin-bottom: 6px;
     color: ${theme.colorText};
   `,
-  row: (theme: ITheme) => css`
+  row: css`
     display: flex;
     flex-direction: column;
   `,
-  id: (theme: ITheme) => css`
+  middleRow: (theme: ITheme) => css`
     color: ${theme.colorDefault};
     margin-bottom: 6px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    text-transform: capitalize;
     max-width: 80%;
   `,
-  address: (theme: ITheme) => css`
+  bottomRow: (theme: ITheme) => css`
     color: ${theme.colorLabel};
 
     svg :is(path) {
@@ -39,14 +37,14 @@ const styles = {
   `,
 };
 
-export const TableBlock: React.FC<Props> = ({ name, id, address }) => (
+export const TableBlock = ({ topRow, middleRow, bottomRow }: Props) => (
   <span css={styles.wrapper}>
-    <span css={styles.name} className="has-hover-color">
-      {name}
+    <span css={styles.topRow} className="has-hover-color">
+      {topRow}
     </span>
     <span css={styles.row}>
-      {!!id && <span css={styles.id}>{id}</span>}
-      <span css={styles.address}>{address}</span>
+      {!!middleRow && <span css={styles.middleRow}>{middleRow}</span>}
+      {!!bottomRow && <span css={styles.bottomRow}>{bottomRow}</span>}
     </span>
   </span>
 );

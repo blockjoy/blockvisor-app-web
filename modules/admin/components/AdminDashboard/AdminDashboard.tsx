@@ -2,8 +2,8 @@ import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
 import { useRouter } from 'next/router';
 import { styles } from './AdminDashboard.styles';
 import { AdminDashboardCard } from './AdminDashboardCard/AdminDashboardCard';
-import { AdminHeader } from '../AdminHeader/AdminHeader';
-import IconDashboard from '@public/assets/icons/common/Grid.svg';
+import { AdminDashboardNodeReports } from './AdminDashboardNodeReports/AdminDashboardNodeReports';
+
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import IconOrg from '@public/assets/icons/app/Organization.svg';
@@ -57,6 +57,7 @@ export const AdminDashboard = () => {
           />
         ))}
       </div>
+      <AdminDashboardNodeReports />
     </section>
   );
 };

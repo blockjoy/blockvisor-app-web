@@ -10,11 +10,11 @@ type SwitchProps = {
   tooltip?: string;
   disabled: boolean;
   noBottomMargin?: boolean;
-  onPropertyChanged: (name: string, value: boolean) => void;
+  onChange: (name: string, value: boolean) => void;
 };
 
 export const Switch = ({
-  onPropertyChanged,
+  onChange,
   tooltip,
   disabled,
   name,
@@ -23,10 +23,10 @@ export const Switch = ({
   noBottomMargin,
 }: SwitchProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    onPropertyChanged(e.target.name, e.target.checked);
+    onChange(e.target.name, e.target.checked);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') onPropertyChanged(name, !checked);
+    if (e.key === 'Enter') onChange(name, !checked);
   };
 
   return (

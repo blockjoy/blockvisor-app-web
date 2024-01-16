@@ -19,7 +19,7 @@ export const NodeRegionSelect = ({
   blockchainId,
   nodeType,
 }: NodeRegionSelectProps) => {
-  const { regions, isLoading, error, getRegions } = useGetRegions();
+  const { regions, isLoading, error, setError, getRegions } = useGetRegions();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
@@ -32,6 +32,11 @@ export const NodeRegionSelect = ({
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
   useEffect(() => {
+    if (!version?.id) {
+      setError('Version List Empty');
+      return;
+    }
+
     if (version?.id && defaultOrganization?.id) {
       (async () => {
         await getRegions(version, blockchainId, nodeType);

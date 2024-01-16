@@ -1,5 +1,5 @@
 import { Skeleton } from '@shared/components';
-import { styles } from './tableGrid.styles';
+import { styles } from './TableGridCell.styles';
 
 export type TableGridLoaderProps = {
   length?: number;
@@ -18,7 +18,7 @@ const TableGridLoader = ({ length }: TableGridLoaderProps) => {
               <header css={styles.cellHeader}>
                 <Skeleton width="90%" />
               </header>
-              <div css={styles.cellEarnings}>
+              <div css={styles.cellMiddle}>
                 <Skeleton width="50px" />
               </div>
               <div css={styles.cellStatus}>

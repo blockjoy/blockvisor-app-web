@@ -6,15 +6,6 @@ import { ImageIdentifier } from "../common/v1/image";
 
 export const protobufPackage = "blockjoy.v1";
 
-/** The checksum type of a chunk of data. */
-export enum ChecksumType {
-  CHECKSUM_TYPE_UNSPECIFIED = 0,
-  CHECKSUM_TYPE_SHA1 = 1,
-  CHECKSUM_TYPE_SHA256 = 2,
-  CHECKSUM_TYPE_BLAKE3 = 3,
-  UNRECOGNIZED = -1,
-}
-
 export interface BlockchainArchiveServiceGetDownloadManifestRequest {
   /** The archive image identifier. */
   id:
@@ -106,10 +97,9 @@ export interface ChunkTarget {
 
 /** A checksum consisting of a type and value. */
 export interface Checksum {
-  /** The checksum type of the chunk data. */
-  checksumType: ChecksumType;
-  /** The checksum value of the chunk data. */
-  checksum: Uint8Array;
+  sha1?: Uint8Array | undefined;
+  sha256?: Uint8Array | undefined;
+  blake3?: Uint8Array | undefined;
 }
 
 /** Type of compression used on chunk data. */
@@ -750,16 +740,19 @@ export const ChunkTarget = {
 };
 
 function createBaseChecksum(): Checksum {
-  return { checksumType: 0, checksum: new Uint8Array(0) };
+  return { sha1: undefined, sha256: undefined, blake3: undefined };
 }
 
 export const Checksum = {
   encode(message: Checksum, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.checksumType !== 0) {
-      writer.uint32(24).int32(message.checksumType);
+    if (message.sha1 !== undefined) {
+      writer.uint32(10).bytes(message.sha1);
     }
-    if (message.checksum.length !== 0) {
-      writer.uint32(34).bytes(message.checksum);
+    if (message.sha256 !== undefined) {
+      writer.uint32(18).bytes(message.sha256);
+    }
+    if (message.blake3 !== undefined) {
+      writer.uint32(26).bytes(message.blake3);
     }
     return writer;
   },
@@ -771,19 +764,26 @@ export const Checksum = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 3:
-          if (tag !== 24) {
+        case 1:
+          if (tag !== 10) {
             break;
           }
 
-          message.checksumType = reader.int32() as any;
+          message.sha1 = reader.bytes();
           continue;
-        case 4:
-          if (tag !== 34) {
+        case 2:
+          if (tag !== 18) {
             break;
           }
 
-          message.checksum = reader.bytes();
+          message.sha256 = reader.bytes();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.blake3 = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -800,8 +800,9 @@ export const Checksum = {
 
   fromPartial(object: DeepPartial<Checksum>): Checksum {
     const message = createBaseChecksum();
-    message.checksumType = object.checksumType ?? 0;
-    message.checksum = object.checksum ?? new Uint8Array(0);
+    message.sha1 = object.sha1 ?? undefined;
+    message.sha256 = object.sha256 ?? undefined;
+    message.blake3 = object.blake3 ?? undefined;
     return message;
   },
 };

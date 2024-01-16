@@ -10,6 +10,7 @@ import {
   NodeSearch,
   NodeSort,
   NodeSortField,
+  NodeReport,
 } from '../library/blockjoy/v1/node';
 import { NodeType } from '../library/blockjoy/common/v1/node';
 import {
@@ -20,6 +21,7 @@ import {
   authClient,
   callWithTokenRefresh,
   createSearch,
+  getIdentity,
   getOptions,
   getPaginationOffset,
   handleError,
@@ -47,6 +49,8 @@ export type UIPagination = {
   current_page: number;
   items_per_page: number;
 };
+
+export type CustomNodeReport = NodeReport & { node: Node };
 
 class NodeClient {
   private client: NodeServiceClient;
@@ -183,6 +187,57 @@ class NodeClient {
     try {
       await authClient.refreshToken();
       await this.client.start({ id: nodeId }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async reportProblem(nodeId: string, message: string): Promise<void> {
+    try {
+      const { id: userId } = getIdentity();
+
+      const request = {
+        userId,
+        nodeId,
+        message,
+      };
+
+      console.log('reportProblemRequest', request);
+
+      await authClient.refreshToken();
+
+      const response = await this.client.report(
+        { userId, nodeId, message },
+        getOptions(),
+      );
+
+      console.log('reportProblemResponse', response);
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async listNodeProblems(): Promise<CustomNodeReport[]> {
+    try {
+      await authClient.refreshToken();
+
+      const nodesReponse = await this.client.list(
+        {
+          limit: 1000,
+        },
+        getOptions(),
+      );
+
+      const { nodes } = nodesReponse;
+
+      const reports = nodes.flatMap((node) =>
+        node.reports.map((report) => ({
+          ...report,
+          node,
+        })),
+      );
+
+      return reports;
     } catch (err) {
       return handleError(err);
     }

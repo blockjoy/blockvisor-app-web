@@ -1,7 +1,7 @@
 import { AdminList } from '../AdminList/AdminList';
 import { nodeClient } from '@modules/grpc';
 import { formatters } from '@shared/utils/formatters';
-import { NodeStatus } from '@shared/components';
+import { DateTime, NodeStatus } from '@shared/components';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
@@ -124,9 +124,7 @@ export const AdminNodes = () => {
         status: <NodeStatus status={node.status} hasBorder={false} />,
         nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
         region: node.placement?.scheduler?.region,
-        createdAt: `${formatters.formatDate(
-          node.createdAt!,
-        )} @ ${formatters.formatDate(node.createdAt!, 'time')}`,
+        createdAt: <DateTime date={node.createdAt!} />,
         createdBy: node.createdBy?.name,
         host: node.hostName,
       };

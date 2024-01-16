@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { hostClient } from '@modules/grpc';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -15,6 +15,7 @@ type UseGetRegionHook = {
     blockchainId: string,
     nodeType: NodeType,
   ) => Promise<void>;
+  setError: Dispatch<SetStateAction<string | null>>;
 };
 
 export const useGetRegions = (): UseGetRegionHook => {
@@ -63,5 +64,6 @@ export const useGetRegions = (): UseGetRegionHook => {
     error,
 
     getRegions,
+    setError,
   };
 };
