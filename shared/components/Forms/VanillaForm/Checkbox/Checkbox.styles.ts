@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   base: (theme: ITheme) => css`
     min-width: 0;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 8px;
     color: var(--color-text-3);

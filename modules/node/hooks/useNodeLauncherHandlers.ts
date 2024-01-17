@@ -233,12 +233,11 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
 
     if (!activeNodeType) return;
 
-    const sortedVersions = sortVersions(activeNodeType.versions);
-
     setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
 
     // default to latest version
-    setSelectedVersion(sortedVersions[sortedVersions.length - 1]);
+    const sortedVersions = sortVersions(activeNodeType.versions);
+    setSelectedVersion(sortedVersions[0]);
   }, [nodeLauncherState.blockchainId, nodeLauncherState.nodeType]);
 
   useEffect(() => {
