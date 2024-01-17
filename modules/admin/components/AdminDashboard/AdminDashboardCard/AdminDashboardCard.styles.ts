@@ -13,6 +13,18 @@ export const styles = {
     border-radius: 6px;
     border: 1px solid ${theme.colorBorderGrey};
   `,
+  cardTotal: (theme: ITheme) => css`
+    cursor: pointer;
+
+    label {
+      cursor: pointer;
+    }
+
+    :hover var::after {
+      opacity: 1;
+      visibility: visible;
+    }
+  `,
   cardTitle: css`
     display: flex;
     align-items: center;
@@ -36,8 +48,22 @@ export const styles = {
     color: ${theme.colorDefault};
     margin-bottom: 2px;
   `,
-  cardValue: css`
+  cardValue: (theme: ITheme) => css`
+    position: relative;
     font-style: normal;
     font-size: 34px;
+
+    ::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      right: 0;
+      height: 1px;
+      background: ${theme.colorText};
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
   `,
 };

@@ -51,7 +51,7 @@ export const DeleteModal = ({
         {!isDisabled && (
           <p css={spacing.bottom.medium}>
             To {type?.toLowerCase()}, type the name of your {entityName} and
-            then click "confirm".
+            then click "Confirm".
           </p>
         )}
 

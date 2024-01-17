@@ -44,16 +44,6 @@ export const NodeLauncherConfig = ({
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
 
-        {versions.length > 1 && (
-          <>
-            <FormLabel>Version</FormLabel>
-            <NodeVersionSelect
-              versions={versions}
-              onVersionChanged={onVersionChanged}
-            />
-          </>
-        )}
-
         <FormLabel>Network</FormLabel>
 
         {selectedVersion && Boolean(networks?.length) ? (
@@ -69,6 +59,16 @@ export const NodeLauncherConfig = ({
               ? 'Missing Network Configuration'
               : 'Version List Empty'}
           </div>
+        )}
+
+        {versions.length > 1 && (
+          <>
+            <FormLabel>Version</FormLabel>
+            <NodeVersionSelect
+              versions={versions}
+              onVersionChanged={onVersionChanged}
+            />
+          </>
         )}
 
         <FormLabel>

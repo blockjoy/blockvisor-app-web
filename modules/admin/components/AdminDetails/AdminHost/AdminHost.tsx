@@ -68,17 +68,6 @@ export const AdminHost = () => {
       },
     },
     {
-      id: 'version',
-      label: 'Version',
-      data: host.version,
-      editSettings: {
-        field: 'version',
-        isNumber: false,
-        controlType: 'text',
-        defaultValue: host.version,
-      },
-    },
-    {
       id: 'memSize',
       label: 'Memory Size',
       data: formatters.formatSize(host.memSizeBytes, 'bytes'),
@@ -145,7 +134,6 @@ export const AdminHost = () => {
         'orgName',
         'managedBy',
         'billingAmount',
-        'version',
       ]}
     />
   );

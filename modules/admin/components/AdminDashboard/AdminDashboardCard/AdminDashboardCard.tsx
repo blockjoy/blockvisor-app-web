@@ -14,14 +14,21 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
   const router = useRouter();
   const [total, setTotal] = useState<number>();
 
-  const handleSearch = (keyword: string) => {
-    const query: AdminQuery = {
-      name: name.toLowerCase(),
-      page: 1,
-    };
+  const query: AdminQuery = {
+    name: name.toLowerCase(),
+    page: 1,
+  };
 
+  const handleSearch = (keyword: string) => {
     if (keyword) query.search = keyword.trim();
 
+    router.push({
+      pathname: '/admin',
+      query,
+    });
+  };
+
+  const handleTotalClick = () => {
     router.push({
       pathname: '/admin',
       query,
@@ -41,7 +48,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
         <span css={styles.cardIcon}>
           <SvgIcon size="20px"> {icon}</SvgIcon>
         </span>
-        <div>
+        <a onClick={handleTotalClick} css={styles.cardTotal}>
           <label css={styles.cardLabel}>{name}</label>
           <var css={styles.cardValue}>
             {total! >= 0 ? (
@@ -50,7 +57,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
               <Skeleton height="34px" margin="6px 0 0" width="60px" />
             )}
           </var>
-        </div>
+        </a>
       </div>
       <AdminSearch onSearch={handleSearch} isDashboardSearch />
     </article>
