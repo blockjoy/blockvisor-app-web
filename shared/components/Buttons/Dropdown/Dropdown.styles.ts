@@ -22,13 +22,6 @@ export const styles = {
       opacity: 0;
     }
   `,
-  active: (theme: ITheme) => css`
-    background-color: ${rgba(theme.colorText || '#ffffff', 0.2)};
-
-    .alert {
-      opacity: 1;
-    }
-  `,
   focus: (theme: ITheme) => css`
     background-color: ${rgba(theme.colorText || '#ffffff', 0.1)};
     outline: none;

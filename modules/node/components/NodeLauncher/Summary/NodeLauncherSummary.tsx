@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import { styles } from './NodeLauncherSummary.styles';
@@ -35,6 +36,8 @@ export const NodeLauncherSummary = ({
 }: NodeLauncherSummaryProps) => {
   const { hostList } = useHostList();
 
+  const [isLoadingRegions, setIsLoadingRegions] = useState(true);
+
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const isLoading = useRecoilValue(nodeLauncherAtoms.isLoading);
@@ -42,6 +45,7 @@ export const NodeLauncherSummary = ({
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
 
@@ -49,6 +53,16 @@ export const NodeLauncherSummary = ({
 
   const { hasPermission } = usePermissions();
   const canAddNode = hasPermission('node-create');
+
+  const handleRegionsLoaded = (region: Region | null) => {
+    setIsLoadingRegions(false);
+    onRegionsLoaded(region);
+  };
+
+  useEffect(
+    () => setIsLoadingRegions(true),
+    [nodeLauncher.blockchainId, nodeLauncher.nodeType, selectedVersion],
+  );
 
   return (
     <div css={styles.wrapper}>
@@ -78,7 +92,7 @@ export const NodeLauncherSummary = ({
           <FormLabel>Region</FormLabel>
           <NodeRegionSelect
             onChange={onRegionChanged}
-            onLoad={onRegionsLoaded}
+            onLoad={handleRegionsLoaded}
             blockchainId={blockchainId}
             nodeType={nodeType}
           />
@@ -112,7 +126,8 @@ export const NodeLauncherSummary = ({
             !isNodeValid ||
             !isConfigValid ||
             Boolean(error) ||
-            isLoading
+            isLoading ||
+            isLoadingRegions
           }
           css={[
             styles.createButton,

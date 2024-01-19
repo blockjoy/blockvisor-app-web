@@ -13,25 +13,23 @@ export const AdminDetailEditControl = ({
   onChange,
   onKeyUp,
 }: Props) => {
+  const items = editSettings.dropdownValues?.map((value) => ({
+    ...value,
+    name: capitalized(value.name),
+  }));
+
+  const selectedItem = items?.find(
+    (value) => value.id === editSettings.defaultValue,
+  );
+
   const controls = {
     dropdown: (
       <Select
         noBottomMargin
-        buttonText={
-          <p>
-            {capitalized(
-              editSettings.dropdownValues?.find(
-                (value) => value.id === editSettings.defaultValue,
-              )?.name!,
-            )}
-          </p>
-        }
-        items={
-          editSettings.dropdownValues?.map((value) => ({
-            name: capitalized(value.name)!,
-            onClick: () => onChange(editSettings.field, value.id),
-          }))!
-        }
+        buttonText={<p>{capitalized(selectedItem?.name!)}</p>}
+        items={items!}
+        selectedItem={selectedItem!}
+        onSelect={(value: string) => onChange(editSettings.field, value)}
       />
     ),
     text: (

@@ -12,8 +12,19 @@ const handleGap = (size: string) => {
   }
 };
 
+const hoverStyles = css`
+  :is(.focus, :hover) {
+    text-decoration: none;
+    background-color: rgb(255 255 255 / 10%);
+
+    & :global(svg) {
+      color: var(--color-text-5);
+    }
+  }
+`;
+
 export const styles = {
-  base: (size: any) => (theme: ITheme) =>
+  base: (size: string, isAccessible?: boolean) => (theme: ITheme) =>
     css`
       color: ${theme.colorTextGrey};
       width: 100%;
@@ -44,14 +55,7 @@ export const styles = {
         pointer-events: none;
       }
 
-      :is(.focus, :hover) {
-        text-decoration: none;
-        background-color: rgb(255 255 255 / 10%);
-
-        & :global(svg) {
-          color: var(--color-text-5);
-        }
-      }
+      ${!isAccessible && hoverStyles}
     `,
   small: css`
     padding: 8px 12px;
@@ -61,13 +65,5 @@ export const styles = {
   `,
   large: css`
     padding: 16px 12px;
-  `,
-  isDisabledMessage: (theme: ITheme) => css`
-    color: ${theme.colorDanger};
-    border: 1px solid ${theme.colorDanger};
-    border-radius: 12px;
-    padding: 1px 6px;
-    margin-left: 6px;
-    font-size: 12px;
   `,
 };

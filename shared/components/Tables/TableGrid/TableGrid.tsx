@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { styles } from './Grid.styles';
+import { styles } from './TableGrid.styles';
 import { GridCell } from './types/GridCell';
 import TableGridLoader from './TableGridLoader';
 
