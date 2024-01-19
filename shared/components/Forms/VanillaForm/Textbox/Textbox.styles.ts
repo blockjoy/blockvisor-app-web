@@ -26,7 +26,7 @@ export const styles = {
         height: 44px;
         min-width: 400px;
         border-radius: 6px;
-        padding: 0 16px;
+        padding: 0 10px;
         ${!noBottomMargin && `margin-bottom: 20px;`};
         opacity: 0.8;
 

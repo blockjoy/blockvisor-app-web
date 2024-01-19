@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent } from 'react';
 import { styles } from './Switch.styles';
-import IconLock from '@public/assets/icons/common/Lock.svg';
 import { Tooltip } from '@shared/components';
+import IconLock from '@public/assets/icons/common/Lock.svg';
 
 type SwitchProps = {
   checked?: boolean;
@@ -9,8 +9,9 @@ type SwitchProps = {
   tabIndex?: number;
   tooltip?: string;
   disabled: boolean;
+  defaultChecked: boolean;
   noBottomMargin?: boolean;
-  onChange: (name: string, value: boolean) => void;
+  onChange?: (name: string, value: boolean) => void;
 };
 
 export const Switch = ({
@@ -20,13 +21,14 @@ export const Switch = ({
   name,
   checked,
   tabIndex,
+  defaultChecked,
   noBottomMargin,
 }: SwitchProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    onChange(e.target.name, e.target.checked);
+    onChange?.(e.target.name, e.target.checked);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') onChange(name, !checked);
+    if (e.key === 'Enter') onChange?.(name, !checked);
   };
 
   return (
@@ -39,6 +41,7 @@ export const Switch = ({
           css={styles.input}
           onChange={handleChange}
           checked={checked}
+          defaultChecked={defaultChecked}
           onKeyDown={handleKeyDown}
         />
         <span className="switch" css={styles.switch}>
@@ -47,7 +50,9 @@ export const Switch = ({
           </span>
         </span>
       </label>
-      {disabled && <Tooltip customCss={[styles.tooltip]} tooltip={tooltip!} />}
+      {disabled && !!tooltip && (
+        <Tooltip customCss={[styles.tooltip]} tooltip={tooltip} />
+      )}
     </div>
   );
 };

@@ -40,7 +40,7 @@ export const NodeViewJobList = () => {
           <p
             css={[
               styles.status,
-              job.status === NodeJobStatus.NODE_JOB_STATUS_FINISHED &&
+              job.status === NodeJobStatus.NODE_JOB_STATUS_RUNNING &&
                 styles.statusSuccess,
             ]}
           >
