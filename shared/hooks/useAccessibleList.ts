@@ -130,9 +130,17 @@ export const useAccessibleList = <T extends { id?: string; name?: string }>({
       }
     };
 
+    const mouseLeaveCallback = (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setActiveIndex(-1);
+    };
+
     listRef?.current?.addEventListener('mousemove', mouseOverCallback);
+    listRef?.current?.addEventListener('mouseleave', mouseLeaveCallback);
     return () => {
       listRef?.current?.removeEventListener('mousemove', mouseOverCallback);
+      listRef?.current?.removeEventListener('mouseleave', mouseLeaveCallback);
     };
   }, [items]);
 

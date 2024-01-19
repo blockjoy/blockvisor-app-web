@@ -168,9 +168,8 @@ export const useAccessibleDropdown = <T>({
   );
 
   const handleReset = useCallback(() => {
-    if (selectedItem) return;
-
-    setActiveIndex(0);
+    // Added Timeout due to animation in the DropdownMenu
+    setTimeout(() => setActiveIndex(selectedItemIndex), 300);
     itemRefs.current[0]?.scrollIntoView({
       block: 'nearest',
     });

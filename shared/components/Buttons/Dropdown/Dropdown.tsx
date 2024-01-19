@@ -116,10 +116,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                 <li
                   key={item.id || item.name}
                   ref={(el: HTMLLIElement) => handleItemRef(el, index)}
-                  css={[
-                    selectedItem?.id === item.id ? styles.active : null,
-                    activeIndex === index ? styles.focus : null,
-                  ]}
+                  css={activeIndex === index ? styles.focus : null}
                 >
                   <DropdownItem
                     size={size}
@@ -127,6 +124,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                     onButtonClick={() => handleSelectAccessible(item)}
                     tabIndex={-1}
                     isDisabled={isDisabled}
+                    isAccessible
                     additionalStyles={[styles.dropdownItem]}
                   >
                     <p>{escapeHtml(item[itemKey])}</p>

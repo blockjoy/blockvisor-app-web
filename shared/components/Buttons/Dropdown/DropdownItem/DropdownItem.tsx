@@ -18,6 +18,7 @@ type DropdownItemProps = {
     | SerializedStyles[];
   type?: 'link' | 'button' | 'plain';
   isDisabled?: boolean;
+  isAccessible?: boolean;
   tabIndex?: number;
 };
 
@@ -30,6 +31,7 @@ export const DropdownItem = ({
   additionalStyles,
   type = 'plain',
   isDisabled,
+  isAccessible,
   tabIndex,
 }: DropdownItemProps) => {
   switch (type) {
@@ -41,7 +43,7 @@ export const DropdownItem = ({
           css={[
             typo.tiny,
             link,
-            styles.base(size),
+            styles.base(size, isAccessible),
             styles[size],
             additionalStyles && additionalStyles,
           ]}
@@ -59,7 +61,7 @@ export const DropdownItem = ({
           css={[
             reset.button,
             typo.tiny,
-            styles.base(size),
+            styles.base(size, isAccessible),
             styles[size],
             additionalStyles && additionalStyles,
           ]}
@@ -73,7 +75,7 @@ export const DropdownItem = ({
         <div
           css={[
             typo.tiny,
-            styles.base(size),
+            styles.base(size, isAccessible),
             styles[size],
             additionalStyles && additionalStyles,
           ]}
