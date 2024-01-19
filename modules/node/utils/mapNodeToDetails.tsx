@@ -65,7 +65,6 @@ export const mapNodeToDetails = (node: Node) => {
         data:
           property.uiType === UiType.UI_TYPE_SWITCH ? (
             <LockedSwitch
-              tooltip="Feature disabled during beta."
               isChecked={property.value === 'true' ? true : false}
             />
           ) : property.value === 'null' ? (

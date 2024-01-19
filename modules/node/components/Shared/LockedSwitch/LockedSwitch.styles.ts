@@ -31,7 +31,7 @@ export const styles = {
     padding: 2px;
     border-radius: 15px;
     border: 1px solid ${theme.colorDefault};
-    opacity: 0.6;
+    opacity: 0.8;
   `,
   handle: (theme: ITheme) => css`
     width: 18px;
