@@ -26,7 +26,10 @@ export const AdminListPagination = ({
     let pageStart = 0,
       pageEnd = Math.min(5, pageCount);
 
-    if (pageIndex > 4 && pageIndex < pageCount - 4) {
+    if (
+      (pageIndex > 4 && pageIndex < pageCount - 3) ||
+      (pageIndex > pageCount - 4 && pageIndex < pageCount - 4)
+    ) {
       pageStart = pageIndex - 2;
       pageEnd = pageIndex - 2 + 3;
     }
@@ -58,7 +61,7 @@ export const AdminListPagination = ({
           <IconChevronLeft />
         </SvgIcon>
       </button>
-      {(listPage >= 5 || listPage > pageCount - 5) && pageCount > 6 && (
+      {(listPage >= 5 || listPage > pageCount - 4) && pageCount > 6 && (
         <button
           onClick={() => onPageChanged(1)}
           type="button"
@@ -67,7 +70,7 @@ export const AdminListPagination = ({
           1
         </button>
       )}
-      {(listPage >= 5 || listPage > pageCount - 5) && pageCount > 6 && (
+      {(listPage >= 5 || listPage > pageCount - 4) && pageCount > 6 && (
         <span css={styles.paginationButton}>...</span>
       )}
       {allPages.slice(start, end)?.map((page: number) => (
