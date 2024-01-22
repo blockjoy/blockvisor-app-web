@@ -1,4 +1,4 @@
-export const openGraphanaUrl = (
+export const openGrafanaUrl = (
   key: string,
   folder: 'nodes' | 'node-logs' = 'nodes',
 ) =>
