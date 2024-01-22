@@ -5,9 +5,9 @@ import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
 import {
-  authAtoms,
   useIdentityRepository,
   useRefreshToken,
+  useUserSubscription,
 } from '@modules/auth';
 import {
   organizationAtoms,
@@ -20,6 +20,12 @@ import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
 import { usePageVisibility } from '@shared/index';
+import {
+  billingSelectors,
+  useCustomer,
+  usePaymentMethods,
+  useSubscription,
+} from '@modules/billing';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -29,9 +35,14 @@ export type LayoutProps = {
 
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
-  const userEmail = repository?.getIdentity()?.email;
+  const user = repository?.getIdentity();
 
   const currentOrg = useRef<string>();
+
+  const billingId = useRecoilValue(billingSelectors.billingId);
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
   const {
@@ -47,22 +58,26 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
-
-  const user = useRecoilValue(authAtoms.user);
+  const { customer, getCustomer } = useCustomer();
+  const { fetchPaymentMethods } = usePaymentMethods();
+  const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
+  const { getUserSubscription } = useUserSubscription();
 
   usePageVisibility({
     onVisible: refreshToken,
   });
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
+  useEffect(() => {
+    if (!customer && billingId) getCustomer(billingId);
+  }, []);
 
   useEffect(() => {
-    (async () => {
+    const fetchReceivedInvitations = async () => {
       if (!organizations.length) await getOrganizations(true);
-      await getReceivedInvitations(userEmail!);
-    })();
+      await getReceivedInvitations(user?.email!);
+    };
+
+    fetchReceivedInvitations();
   }, []);
 
   useEffect(() => {
@@ -83,6 +98,16 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, [user?.accessToken]);
 
   useEffect(() => {
+    const fetchOrganizationSubscription = async () => {
+      setSubscriptionLoadingState('initializing');
+
+      const userSubscription = await getUserSubscription(
+        defaultOrganization?.id!,
+      );
+
+      await fetchSubscription(userSubscription?.externalId);
+    };
+
     if (!provisionToken && defaultOrganization?.id) {
       getProvisionToken(defaultOrganization?.id);
     }
@@ -94,12 +119,17 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
+      fetchOrganizationSubscription();
       loadNodes();
       loadHosts();
       getPermissions();
       if (mqttClient?.connected) updateMqttSubscription();
     }
   }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    fetchPaymentMethods();
+  }, [customer]);
 
   return (
     <>

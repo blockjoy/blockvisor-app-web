@@ -1,24 +1,25 @@
 import {
   Blockchain,
-  BlockchainNetwork,
-  BlockchainNetworkType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import {
+  NetworkConfig,
+  NetType,
+} from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   blockchainList,
   nodeNetworkTypes,
   nodeTypes,
 } from '@shared/constants/lookups';
+import { NodeLauncherState } from '@modules/node';
 
-type Payload =
-  | {
-      blockchain?: Blockchain | null;
-      node?: UpdateSubscriptionNode;
-      version?: BlockchainVersion | null;
-      region?: Region | null;
-    }
-  | { host?: UpdateSubscriptionHost };
+type Payload = {
+  blockchain?: Blockchain | null;
+  nodeLauncher?: NodeLauncherState;
+  version?: BlockchainVersion | null;
+  region?: Region | null;
+};
 
 export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
   // SKU
@@ -36,9 +37,9 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
     nodeType: '',
   };
 
-  if ('node' in payload) {
-    const { blockchain, node, version, region } = payload;
-    if (!node || !blockchain || !version || !region) return '';
+  if ('nodeLauncher' in payload) {
+    const { blockchain, nodeLauncher, version, region } = payload;
+    if (!blockchain || !nodeLauncher || !version || !region) return '';
 
     // PRODUCT
     SKU.product = 'FMN';
@@ -47,12 +48,11 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
     SKU.region = region.pricingTier;
 
     // NETWORK
-    const selectedNetwork: BlockchainNetwork | null =
+    const selectedNetwork: NetworkConfig | null =
       version?.networks.find(
-        (network: BlockchainNetwork) => network.name === node.network,
+        (network: NetworkConfig) => network.name === nodeLauncher.network,
       ) || null;
-    const selectedNetType: BlockchainNetworkType | null =
-      selectedNetwork?.netType || null;
+    const selectedNetType: NetType | null = selectedNetwork?.netType || null;
 
     SKU.nodeNetwork =
       nodeNetworkTypes?.find(
@@ -67,14 +67,11 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
       )?.abbreviation ?? '';
 
     // NODE TYPE
-    SKU.nodeType = nodeTypes[node?.nodeType];
+    SKU.nodeType = nodeTypes[nodeLauncher?.nodeType];
 
     console.log('SKU', SKU);
     return `${SKU.product}-${SKU.nodeBlockchain}-${SKU.nodeType}-${SKU.nodeNetwork}-${SKU.region}`;
-  } else if ('host' in payload) {
-    const { host } = payload;
-    if (!host) return '';
+  }
 
-    return 'SMH-THREAD-BASE';
-  } else return '';
+  return '';
 };

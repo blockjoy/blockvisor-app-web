@@ -1,10 +1,14 @@
-import { selector } from 'recoil';
+import { selector, selectorFamily } from 'recoil';
 import { nodeLauncherAtoms } from './nodeLauncherAtoms';
 import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import {
+  Blockchain,
+  BlockchainVersion,
+} from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { sortNetworks, sortVersions } from '../utils';
+import { blockchainAtoms } from './blockchainAtoms';
 
 const networks = selector<NetworkConfig[]>({
   key: 'nodeLauncher.networks',
@@ -98,6 +102,21 @@ const isConfigValid = selector<boolean>({
   },
 });
 
+const selectedBlockchain = selectorFamily<Blockchain | null, string>({
+  key: 'nodeLauncher.blockchain',
+  get:
+    (blockchainId: string) =>
+    ({ get }) => {
+      const allBlockchains = get(blockchainAtoms.blockchains);
+
+      return (
+        allBlockchains?.find(
+          (blockchain: Blockchain) => blockchain.id === blockchainId,
+        ) ?? null
+      );
+    },
+});
+
 export const nodeLauncherSelectors = {
   networks,
   versions,
@@ -109,4 +128,6 @@ export const nodeLauncherSelectors = {
 
   isNodeValid,
   isConfigValid,
+
+  selectedBlockchain,
 };

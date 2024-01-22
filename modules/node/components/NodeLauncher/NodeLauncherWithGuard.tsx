@@ -1,6 +1,8 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useSetRecoilState } from 'recoil';
 import {
   WithLauncherGuardAdditionalProps,
+  billingAtoms,
   withLauncherGuard,
 } from '@modules/billing';
 import { usePermissions } from '@modules/auth';
@@ -9,6 +11,8 @@ import { NodeLauncher } from '@modules/node';
 export const NodeLauncherWithGuard = ({
   itemPrices,
 }: WithLauncherGuardAdditionalProps) => {
+  const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
+
   const { hasPermission } = usePermissions();
 
   const canAddNode = hasPermission('node-create');
@@ -23,11 +27,14 @@ export const NodeLauncherWithGuard = ({
     [],
   );
 
+  useEffect(() => {
+    setItemPrices(itemPrices ?? null);
+  }, [itemPrices]);
+
   return (
     <NodeLauncherGuarded
       type="launch-node"
       isPermittedToCreate={isPermittedToCreate}
-      itemPrices={itemPrices}
     />
   );
 };

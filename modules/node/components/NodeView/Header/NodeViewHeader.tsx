@@ -44,7 +44,7 @@ export const NodeViewHeader = () => {
     setIsReportProblemMode(!isReportProblemMode);
 
   const handleDeleteNode = () => {
-    deleteNode(node!.id, () => {
+    deleteNode(node!, () => {
       loadHosts();
       getOrganizations();
       removeFromNodeList(node!.id);

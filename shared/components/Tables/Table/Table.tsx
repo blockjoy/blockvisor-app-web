@@ -99,8 +99,6 @@ export const Table = ({
             <TableRowLoader length={preload} />
           ) : (
             rows?.map((tr) => {
-              console.log('tr.key', tr.key);
-              console.log('activeRowKey', activeRowKey);
               return (
                 <tr
                   key={tr.key}
