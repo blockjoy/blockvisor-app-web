@@ -19,9 +19,9 @@ export const NodeViewSettings = () => {
       [name]: value,
     });
 
-  const handleAutoUpdatesChanged = (e: any) =>
+  const handleAutoUpdatesChanged = (name: string, value: boolean) =>
     handleUpdateNode({
-      selfUpdate: e.target.checked,
+      selfUpdate: value,
     });
 
   return isLoading && !node?.id ? (
@@ -47,7 +47,7 @@ export const NodeViewSettings = () => {
           tooltip=""
           disabled={false}
           name="autoUpdates"
-          onPropertyChanged={handleAutoUpdatesChanged}
+          onChange={handleAutoUpdatesChanged}
         />
       </div>
     </div>

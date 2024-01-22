@@ -32,7 +32,7 @@ export const NodeViewReportProblem = ({ onHide, onSubmit }: Props) => {
 
   return (
     <Modal portalId="nodeViewReportProblem" isOpen={true} handleClose={onHide}>
-      <h2 css={styles.header}>Report Problem On Node ({node?.name})</h2>
+      <h2 css={styles.header}>Report Problem on Node ({node?.name})</h2>
       <p></p>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit}>

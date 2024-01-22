@@ -2,7 +2,7 @@ import { AdminHeader } from '@modules/admin/components/AdminHeader/AdminHeader';
 import { AdminSearch } from '@modules/admin/components/AdminSearch/AdminSearch';
 import { AdminListHeaderColumnPicker } from './AdminListHeaderColumnPicker/AdminListHeaderColumnPicker';
 import { styles } from './AdminListHeader.styles';
-import { AdminIconButton } from '@modules/admin/components/AdminIconButton/AdminIconButton';
+import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
 
@@ -23,12 +23,12 @@ export const AdminListHeader = ({
     <AdminHeader name={name}>
       <AdminSearch onSearch={onSearch} placeholder="Quick search" />
       <div css={styles.buttons}>
-        <AdminIconButton
+        <AdminHeaderButton
           isDisabled
           icon={<IconRefresh />}
           onClick={() => console.log('refresh')}
         />
-        <AdminIconButton
+        <AdminHeaderButton
           isDisabled
           icon={<IconFilter />}
           onClick={() => console.log('filter')}

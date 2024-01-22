@@ -1,5 +1,5 @@
-import Head from 'next/head';
 import { useEffect, useRef } from 'react';
+import Head from 'next/head';
 import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
@@ -10,7 +10,7 @@ import {
   useRefreshToken,
 } from '@modules/auth';
 import {
-  useDefaultOrganization,
+  organizationAtoms,
   useGetOrganizations,
   useInvitations,
   useProvisionToken,
@@ -47,12 +47,16 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
-  const { defaultOrganization } = useDefaultOrganization();
+
   const user = useRecoilValue(authAtoms.user);
 
   usePageVisibility({
     onVisible: refreshToken,
   });
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   useEffect(() => {
     (async () => {

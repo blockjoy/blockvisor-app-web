@@ -1,17 +1,18 @@
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { blockchainClient } from '@modules/grpc';
-import { useDefaultOrganization } from '@modules/organization';
-import { useRecoilState } from 'recoil';
+import { organizationAtoms } from '@modules/organization';
 import { checkForTokenError } from 'utils/checkForTokenError';
-import { blockchainsAtoms } from '../store/blockchains';
+import { blockchainAtoms } from '@modules/node';
 
 export function useGetBlockchains() {
-  const { defaultOrganization } = useDefaultOrganization();
-
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const [blockchains, setBlockchains] = useRecoilState(
-    blockchainsAtoms.blockchains,
+    blockchainAtoms.blockchains,
   );
   const [loadingState, setLoadingState] = useRecoilState(
-    blockchainsAtoms.blockchainsLoadingState,
+    blockchainAtoms.blockchainsLoadingState,
   );
 
   const getBlockchains = async () => {

@@ -5,6 +5,7 @@ import {
   HostServiceDefinition,
   HostServiceListRequest,
   HostServiceListResponse,
+  HostServiceUpdateRequest,
   HostSort,
   HostSortField,
   HostType,
@@ -95,6 +96,20 @@ class HostClient {
       );
       console.log('getHostResponse', response);
       return response.host!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async updateHost(request: HostServiceUpdateRequest): Promise<Host> {
+    console.log('updateHostRequest', request);
+    try {
+      const response = await callWithTokenRefresh(
+        this.client.update.bind(this.client),
+        request,
+      );
+      console.log('updateHostResponse', response);
+      return response;
     } catch (err) {
       return handleError(err);
     }

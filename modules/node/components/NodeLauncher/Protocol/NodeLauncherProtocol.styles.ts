@@ -25,69 +25,13 @@ export const styles = {
       padding: 10px 0 20px;
     }
 
-    div:hover .row:hover {
+    div:hover .row:hover,
+    div .row.hovered {
       opacity: 1;
     }
   `,
   scrollbar: css`
     flex: 1 1 auto;
     min-height: 0;
-  `,
-  disabledBlockchains: css`
-    @media ${breakpoints.toXlrg} {
-      display: none;
-    }
-  `,
-  iconWrapper: (theme: ITheme) => css`
-    display: grid;
-    place-items: center;
-
-    > span {
-      width: 20px;
-      height: 20px;
-    }
-
-    path {
-      fill: ${theme.colorText};
-    }
-  `,
-  searchIcon: (theme: ITheme) => css`
-    position: absolute;
-    top: 50%;
-    left: 16px;
-    width: 16px;
-    height: 16px;
-    translate: 0 -50%;
-    pointer-events: none;
-
-    path {
-      fill: ${theme.colorLabel};
-    }
-  `,
-  searchWrapper: css`
-    position: relative;
-    margin: 0 0 16px 0;
-  `,
-  searchBox: (theme: ITheme) => css`
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    border-bottom: 1px solid ${theme.colorBorder};
-    height: 54px;
-    padding-left: 48px;
-    width: 100%;
-    outline: none;
-    color: ${theme.colorText};
-
-    :is(:focus, :hover) ~ span path {
-      fill: ${theme.colorText};
-    }
-
-    ::placeholder {
-      color: ${theme.colorDefault};
-    }
-  `,
-  skeletonWrapper: css`
-    padding: 20px 16px 0;
   `,
 };

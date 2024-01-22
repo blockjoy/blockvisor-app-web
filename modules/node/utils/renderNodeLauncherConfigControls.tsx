@@ -6,13 +6,12 @@ export const renderControls = (
   property: NodeProperty,
   nodeFiles: NodeFiles[],
   onFileUploaded: (e: any) => void,
-  onPropertyChanged: (e: any) => void,
+  onPropertyChanged: (name: string, value: string | boolean) => void,
 ) => {
   switch (property.uiType) {
     case UiType.UI_TYPE_FILE_UPLOAD:
       return (
         <FileUpload
-          tabIndex={5}
           currentFiles={nodeFiles?.find((f) => f.name === property.name)?.files}
           multiple={true}
           onChange={onFileUploaded}
@@ -23,33 +22,35 @@ export const renderControls = (
     case UiType.UI_TYPE_PASSWORD:
       return (
         <Textbox
-          tabIndex={5}
           type="password"
           isRequired={property?.required && !property.value}
           name={property.name}
-          onPropertyChanged={onPropertyChanged}
+          onChange={onPropertyChanged}
         />
       );
     case UiType.UI_TYPE_TEXT:
       return (
         <Textbox
           defaultValue={property.value}
-          tabIndex={5}
           type="text"
           isRequired={property?.required && !property.value}
           name={property.name}
-          onPropertyChanged={onPropertyChanged}
+          onChange={onPropertyChanged}
         />
       );
     case UiType.UI_TYPE_SWITCH:
+      const value =
+        property.value === 'true' ||
+        (typeof property.value === 'boolean' && property.value === true);
+
       return (
         <Switch
-          defaultValue={property.value === 'true'}
-          tabIndex={!!property.disabled ? -1 : 5}
+          {...(!!property.disabled && { tabIndex: -1 })}
+          defaultChecked={value}
           disabled={!!property.disabled}
           tooltip="Feature disabled during beta."
           name={property.name}
-          onPropertyChanged={onPropertyChanged}
+          onChange={onPropertyChanged}
         />
       );
   }

@@ -1,4 +1,4 @@
-import { AdminIconButton } from '@modules/admin/components/AdminIconButton/AdminIconButton';
+import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { Checkbox, DropdownMenu, Scrollbar } from '@shared/components';
 import { useRef, useState } from 'react';
@@ -42,7 +42,7 @@ export const AdminListHeaderColumnPicker = ({
 
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
-      <AdminIconButton
+      <AdminHeaderButton
         icon={<IconColumns />}
         onClick={() => setIsOpen(!isOpen)}
       />
@@ -59,15 +59,23 @@ export const AdminListHeaderColumnPicker = ({
         <h2 css={styles.title}>Columns</h2>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           {columnsState.map((column) => (
-            <label key={column.name} css={styles.item}>
+            <div key={column.name} css={styles.item}>
               <Checkbox
+                id={column.name}
                 checked={column.isVisible}
                 name={column.name}
                 onChange={() => handleColumnToggled(column.name)}
-              />
-              {capitalized(column.displayName || column.name)}
-              {column.isVisible}
-            </label>
+                additionalStyles={[
+                  css`
+                    flex: 1 1 auto;
+                    padding: 8px 52px 8px 0;
+                  `,
+                ]}
+              >
+                {capitalized(column.displayName || column.name)}
+                {column.isVisible}
+              </Checkbox>
+            </div>
           ))}
         </Scrollbar>
       </DropdownMenu>

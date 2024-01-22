@@ -1,11 +1,8 @@
-import {
-  useDefaultOrganization,
-  useGetOrganizations,
-} from '@modules/organization';
+import { organizationAtoms, useGetOrganizations } from '@modules/organization';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { hostFiltersDefaults } from '@shared/constants/lookups';
 import isEqual from 'lodash/isEqual';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
 import { HostUIProps } from '../ui/HostUIContext';
 import { InitialFilter, InitialQueryParams } from '../ui/HostUIHelpers';
@@ -13,9 +10,11 @@ import { buildParams } from '../utils/buildParams';
 
 export const useFilters = (hostUIProps: HostUIProps) => {
   const { organizationsSorted } = useGetOrganizations();
-  const { defaultOrganization } = useDefaultOrganization();
   const { switchOrganization } = useSwitchOrganization();
 
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
   const [filtersMemory, setFiltersMemory] = useRecoilState(
     hostAtoms.filtersMemory,
   );

@@ -6,7 +6,7 @@ import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 import { css } from '@emotion/react';
 
-type Item = {
+export type ActionsDropdownItem = {
   title: string;
   icon: ReactNode;
   method: VoidFunction;
@@ -14,7 +14,7 @@ type Item = {
 };
 
 type Props = {
-  items: Item[];
+  items: ActionsDropdownItem[];
 };
 
 export const ActionsDropdown = ({ items }: Props) => {

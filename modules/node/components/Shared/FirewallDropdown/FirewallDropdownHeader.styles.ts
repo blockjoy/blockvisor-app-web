@@ -32,7 +32,8 @@ export const styles = {
     cursor: pointer;
     transition: 0.2s;
 
-    &:hover {
+    &:hover,
+    &:focus {
       border-color: ${theme.colorBorderGrey};
     }
   `,

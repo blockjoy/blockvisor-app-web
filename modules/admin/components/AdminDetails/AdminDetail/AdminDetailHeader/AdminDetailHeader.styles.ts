@@ -14,16 +14,18 @@ export const styles = {
     }
   `,
   name: css`
-    white-space: nowrap;
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 20px;
     font-size: 16px;
 
     @media ${breakpoints.toSml} {
       display: none;
     }
+  `,
+  nameShortened: css`
+    white-space: nowrap;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 20px;
   `,
   separator: (theme: ITheme) => css`
     color: ${theme.colorBorderGrey};
@@ -33,28 +35,27 @@ export const styles = {
     }
   `,
   buttons: (theme: ITheme) => css`
+    position: relative;
     display: flex;
-    gap: 16px;
-  `,
-  button: (theme: ITheme) => css`
-    border: 1px solid ${theme.colorBorderGrey};
-    border-radius: 4px;
-    background: transparent;
-    white-space: nowrap;
-    color: ${theme.colorText};
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    padding: 0 16px;
-    height: 40px;
-    opacity: 0.8;
-    cursor: pointer;
-    transition: 0.3s;
+    gap: 8px;
+    margin-left: auto;
+    padding-left: 26px;
 
-    :hover {
-      opacity: 1;
-      background: rgb(255 255 255 / 2.5%);
+    @media ${breakpoints.fromSml} {
+      ::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 1px;
+        height: 16px;
+        transform: translateY(-50%);
+        background: ${theme.colorBorderGrey};
+      }
+    }
+
+    @media ${breakpoints.fromSml} {
+      margin-left: 0;
     }
   `,
 };

@@ -9,7 +9,7 @@ export const styles = {
   menu: (theme: ITheme) => css`
     position: absolute;
     overflow: hidden;
-    z-index: 5;
+    z-index: 1;
     top: 40px;
     left: 0;
     font-size: 14px;
@@ -21,10 +21,12 @@ export const styles = {
     transition: all 0.4s;
     background-color: ${theme.colorLightGrey};
     box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+    pointer-events: none;
   `,
   isOpen: css`
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    pointer-events: auto;
   `,
 };

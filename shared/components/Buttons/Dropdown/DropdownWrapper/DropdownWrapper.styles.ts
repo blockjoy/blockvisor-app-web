@@ -21,9 +21,7 @@ export const styles = {
           fill: ${theme.colorText};
         }
 
-        p {
-          color: ${theme.colorText};
-        }
+        opacity: 1;
         border-color: ${theme.colorLabel};
       }
     }

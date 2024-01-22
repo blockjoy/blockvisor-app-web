@@ -1,7 +1,6 @@
 import { organizationClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 
 export const AdminOrg = () => {

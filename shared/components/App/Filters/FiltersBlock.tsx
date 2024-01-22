@@ -77,7 +77,6 @@ export const FiltersBlock = ({
                 <div key={item.id} css={styles.checkboxRow}>
                   <Checkbox
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      e.stopPropagation();
                       onFilterChanged(e, filterList, setFilterList);
                     }}
                     id={item.id}

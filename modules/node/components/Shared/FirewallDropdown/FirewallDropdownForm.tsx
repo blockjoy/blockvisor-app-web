@@ -83,6 +83,7 @@ export const FirewallDropdownForm: FC<Props> = ({
           onKeyUp={handleSubmit}
           placeholder="IP"
           value={state.ip}
+          {...(!isOpen && { tabIndex: -1 })}
         />
         <input
           style={{ width: '50%' }}
@@ -91,12 +92,14 @@ export const FirewallDropdownForm: FC<Props> = ({
           onKeyUp={handleSubmit}
           placeholder="Comment"
           value={state.description}
+          {...(!isOpen && { tabIndex: -1 })}
         />
         <button
           style={{ width: '15%', minWidth: '70px' }}
           disabled={!isFormValid}
           css={styles.submit}
           onClick={() => handleSubmit()}
+          {...(!isOpen && { tabIndex: -1 })}
         >
           Add
         </button>

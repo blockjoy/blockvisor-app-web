@@ -1,22 +1,22 @@
 import { AdminList } from '../AdminList/AdminList';
 import { userClient } from '@modules/grpc';
-import { formatters } from '@shared/utils/formatters';
 import { pageSize } from '@modules/admin/constants/constants';
-import { UserSortField } from '@modules/grpc/library/blockjoy/v1/user';
+import { User, UserSortField } from '@modules/grpc/library/blockjoy/v1/user';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { DateTime } from '@shared/components';
 
 const columns: AdminListColumn[] = [
   {
     name: 'firstName',
     width: '230px',
     sortField: UserSortField.USER_SORT_FIELD_FIRST_NAME,
-    isVisible: false,
+    isVisible: true,
   },
   {
     name: 'lastName',
     width: '230px',
     sortField: UserSortField.USER_SORT_FIELD_LAST_NAME,
-    isVisible: false,
+    isVisible: true,
   },
   {
     name: 'email',
@@ -53,14 +53,12 @@ export const AdminUsers = () => {
     };
   };
 
-  const listMap = (list: any[]) =>
+  const listMap = (list: User[]) =>
     list.map((item) => {
       return {
         ...item,
         fullName: `${item.firstName} ${item.lastName}`,
-        createdAt: `${formatters.formatDate(
-          item.createdAt!,
-        )} @ ${formatters.formatDate(item.createdAt!, 'time')}`,
+        createdAt: <DateTime date={item.createdAt!} />,
       };
     });
 

@@ -14,8 +14,7 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 0 52px 0 10px;
-    height: 36px;
+    padding: 0 10px;
     cursor: pointer;
     font-size: 13px;
 

@@ -4,7 +4,6 @@ import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { NextLink, NodeStatus } from '@shared/components';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized } from '@modules/admin/utils/capitalized';
-import { AdminDetailProperty } from '../AdminDetail/AdminDetailTable/AdminDetailTable';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 const ignoreItems = [
@@ -229,6 +228,7 @@ export const AdminNode = () => {
       ignoreItems={ignoreItems}
       customItems={customItems}
       detailsName="id"
+      hasMetrics
     />
   );
 };

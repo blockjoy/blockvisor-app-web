@@ -1,4 +1,5 @@
-import { ChangeEventHandler, ReactNode } from 'react';
+import { SerializedStyles } from '@emotion/react';
+import { ChangeEvent, ChangeEventHandler, ReactNode } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './Checkbox.styles';
 
@@ -11,6 +12,7 @@ type Props = {
   checked?: boolean;
   onChange: ChangeEventHandler<HTMLInputElement>;
   children?: ReactNode;
+  additionalStyles?: SerializedStyles[];
 };
 
 export function Checkbox({
@@ -22,8 +24,14 @@ export function Checkbox({
   onChange,
   children,
   description = '',
+  additionalStyles,
   ...rest
 }: Props) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    onChange(e);
+  };
+
   return (
     <>
       <input
@@ -33,9 +41,16 @@ export function Checkbox({
         defaultChecked={checked}
         type="checkbox"
         {...rest}
-        onChange={onChange}
+        onChange={handleChange}
       />
-      <label css={[styles.base, checked ? styles.input : '']} htmlFor={id}>
+      <label
+        css={[
+          styles.base,
+          checked ? styles.input : '',
+          additionalStyles && additionalStyles,
+        ]}
+        htmlFor={id}
+      >
         {children}
       </label>
     </>

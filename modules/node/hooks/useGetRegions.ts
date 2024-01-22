@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { hostClient } from '@modules/grpc';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { useDefaultOrganization } from '@modules/organization';
+import { organizationAtoms } from '@modules/organization';
 
 type UseGetRegionHook = {
   regions: Region[];
@@ -14,13 +15,17 @@ type UseGetRegionHook = {
     blockchainId: string,
     nodeType: NodeType,
   ) => Promise<void>;
+  setError: Dispatch<SetStateAction<string | null>>;
 };
 
 export const useGetRegions = (): UseGetRegionHook => {
   const [error, setError] = useState<string | null>(null);
   const [regions, setRegions] = useState<Region[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { defaultOrganization } = useDefaultOrganization();
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const getRegions = async (
     version: BlockchainVersion,
@@ -59,5 +64,6 @@ export const useGetRegions = (): UseGetRegionHook => {
     error,
 
     getRegions,
+    setError,
   };
 };

@@ -58,6 +58,10 @@ export const styles = {
     path {
       fill: ${theme.colorText};
     }
+
+    @media ${breakpoints.toSml} {
+      display: none;
+    }
   `,
   iconActive: css`
     transform: rotate(-180deg);
