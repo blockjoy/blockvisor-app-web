@@ -17,6 +17,7 @@ export const NodeLauncher = () => {
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
+    handleNetworkChanged,
     handleFileUploaded,
     handleCreateNodeClicked,
   } = useNodeLauncherHandlers();
@@ -36,6 +37,7 @@ export const NodeLauncher = () => {
           <>
             {hasConfig && (
               <NodeLauncherConfig
+                onNetworkChanged={handleNetworkChanged}
                 onFileUploaded={handleFileUploaded}
                 onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
                 onNodePropertyChanged={handleNodePropertyChanged}

@@ -26,7 +26,7 @@ export const AdminListPagination = ({
     let pageStart = 0,
       pageEnd = Math.min(5, pageCount);
 
-    if (pageIndex > 4 && pageIndex < pageCount - 3) {
+    if (pageIndex > 4 && pageIndex < pageCount - 4) {
       pageStart = pageIndex - 2;
       pageEnd = pageIndex - 2 + 3;
     }

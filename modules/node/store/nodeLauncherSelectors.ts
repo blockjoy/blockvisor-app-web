@@ -55,7 +55,6 @@ const hasSummary = selector<boolean>({
   key: 'nodeLauncher.summary',
   get: ({ get }) => {
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
-    const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
 
     return Boolean(nodeLauncher.blockchainId && nodeLauncher.nodeType);
   },
@@ -80,10 +79,11 @@ const isConfigValid = selector<boolean>({
   key: 'nodeLauncher.isConfigValid',
   get: ({ get }) => {
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
+    const selectedNetwork = get(nodeLauncherAtoms.selectedNetwork);
 
     return (
-      Boolean(nodeLauncher.network) &&
-      (!nodeLauncher.properties?.length ||
+      Boolean(selectedNetwork) &&
+      (!nodeLauncher?.properties?.length ||
         Boolean(
           nodeLauncher.properties
             ?.filter(

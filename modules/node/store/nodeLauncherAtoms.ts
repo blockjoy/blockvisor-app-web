@@ -39,6 +39,11 @@ const selectedHost = atom<Host | null>({
   default: null,
 });
 
+const selectedNetwork = atom<string | null>({
+  key: 'nodeLauncher.network',
+  default: null,
+});
+
 const error = atom<string | null>({
   key: 'nodeLauncher.error',
   default: null,
@@ -56,6 +61,7 @@ export const nodeLauncherAtoms = {
   selectedRegion,
   selectedVersion,
   selectedHost,
+  selectedNetwork,
 
   error,
   isLoading,

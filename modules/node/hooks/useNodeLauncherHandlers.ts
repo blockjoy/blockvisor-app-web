@@ -23,22 +23,20 @@ import { organizationAtoms } from '@modules/organization';
 import { ROUTES } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { sortNetworks, sortNodeTypes, sortVersions } from '../utils';
+import isEqual from 'lodash/isEqual';
 
 interface IUseNodeLauncherHandlersHook {
   handleHostChanged: (host: Host | null) => void;
   handleRegionChanged: (region: Region | null) => void;
   handleRegionsLoaded: (region: Region | null) => void;
-  handleProtocolSelected: (
-    blockchainId: string,
-    nodeType: NodeType,
-    // properties?: NodeProperty[],
-  ) => void;
+  handleProtocolSelected: (blockchainId: string, nodeType: NodeType) => void;
   handleNodePropertyChanged: (name: string, value: any) => void;
   handleNodeConfigPropertyChanged: (
     name: string,
     value: string | boolean,
   ) => void;
   handleVersionChanged: (version: BlockchainVersion | null) => void;
+  handleNetworkChanged: (network: string) => void;
   handleFileUploaded: (e: any) => void;
   handleCreateNodeClicked: () => void;
 }
@@ -71,8 +69,19 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const [selectedVersion, setSelectedVersion] = useRecoilState(
     nodeLauncherAtoms.selectedVersion,
   );
+  const resetSelectedVersion = useResetRecoilState(
+    nodeLauncherAtoms.selectedVersion,
+  );
+
   const [selectedRegion, setSelectedRegion] = useRecoilState(
     nodeLauncherAtoms.selectedRegion,
+  );
+
+  const resetSelectedNetwork = useResetRecoilState(
+    nodeLauncherAtoms.selectedNetwork,
+  );
+  const [selectedNetwork, setSelectedNetwork] = useRecoilState(
+    nodeLauncherAtoms.selectedNetwork,
   );
 
   useEffect(() => {
@@ -94,19 +103,15 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     setSelectedRegion(region);
   };
 
-  const handleProtocolSelected = (
-    blockchainId: string,
-    nodeType: NodeType,
-    properties?: NodeProperty[],
-  ) => {
+  const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
     setError(null);
     setIsLoading(false);
     setNodeLauncherState({
       ...nodeLauncherState,
       blockchainId,
       nodeType,
-      // properties,
     });
+
     Mixpanel.track('Launch Node - Protocol Selected', {
       blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
       nodeType: NodeType[nodeType],
@@ -163,6 +168,8 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     setSelectedVersion(version);
   };
 
+  const handleNetworkChanged = (network: string) => setSelectedNetwork(network);
+
   const handleFileUploaded = (e: any) => {
     setError(null);
     const keyFilesCopy = [...nodeLauncherState.keyFiles!];
@@ -194,7 +201,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
       nodeType: +nodeLauncherState.nodeType ?? 0,
       blockchainId: nodeLauncherState.blockchainId ?? '',
       properties: nodeLauncherState.properties!,
-      network: nodeLauncherState.network!,
+      network: selectedNetwork!,
       allowIps: nodeLauncherState.allowIps,
       denyIps: nodeLauncherState.denyIps,
       placement: selectedHost
@@ -214,6 +221,8 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
         Mixpanel.track('Launch Node - Node Launched');
         router.push(ROUTES.NODE(nodeId));
         resetNodeLauncherState();
+        resetSelectedVersion();
+        resetSelectedNetwork();
       },
       (error: string) => setError(error!),
     );
@@ -235,15 +244,34 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
 
     setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
 
-    // default to latest version
-    const sortedVersions = sortVersions(activeNodeType.versions);
-    setSelectedVersion(sortedVersions[0]);
+    const selectedVersionExists = activeNodeType.versions.some(
+      (version) => version.id === selectedVersion?.id,
+    );
+
+    if (!selectedVersionExists) {
+      const sortedVersions = sortVersions(activeNodeType.versions);
+      setSelectedVersion(sortedVersions[0]);
+    }
   }, [nodeLauncherState.blockchainId, nodeLauncherState.nodeType]);
 
   useEffect(() => {
     let properties: NodeProperty[] | undefined, keyFiles;
 
-    if (selectedVersion?.properties.length) {
+    const propertyMap = (property: any) => ({
+      name: property.name,
+      default: property.default,
+    });
+
+    const nodeLauncherProperties =
+      nodeLauncherState.properties?.map(propertyMap);
+
+    const selectedVersionProperties =
+      selectedVersion?.properties.map(propertyMap);
+
+    if (
+      selectedVersionProperties &&
+      !isEqual(nodeLauncherProperties, selectedVersionProperties)
+    ) {
       const nodeTypePropertiesCopy = [...selectedVersion?.properties!];
 
       properties = nodeTypePropertiesCopy.map((property) => ({
@@ -258,18 +286,26 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
           name: p.name,
           files: [],
         }));
+    } else {
+      properties = nodeLauncherState.properties;
     }
 
     setNodeLauncherState({
       ...nodeLauncherState,
       keyFiles,
       properties,
-      network:
-        // default to main network
+    });
+
+    const selectedNetworkExists = selectedVersion?.networks
+      .map((network) => network.name)
+      .some((network) => network === selectedNetwork);
+
+    if (!selectedNetworkExists)
+      setSelectedNetwork(
         sortNetworks(selectedVersion?.networks)?.find(
           (network) => network.name.includes('main')!,
         )?.name || sortNetworks(selectedVersion?.networks)[0]?.name,
-    });
+      );
   }, [selectedVersion?.id]);
 
   useEffect(() => {
@@ -288,6 +324,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
+    handleNetworkChanged,
     handleFileUploaded,
     handleCreateNodeClicked,
   };
