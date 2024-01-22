@@ -1,4 +1,4 @@
-import { AdminIconButton } from '@modules/admin/components/AdminIconButton/AdminIconButton';
+import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { Checkbox, DropdownMenu, Scrollbar } from '@shared/components';
 import { useRef, useState } from 'react';
@@ -42,7 +42,7 @@ export const AdminListHeaderColumnPicker = ({
 
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
-      <AdminIconButton
+      <AdminHeaderButton
         icon={<IconColumns />}
         onClick={() => setIsOpen(!isOpen)}
       />

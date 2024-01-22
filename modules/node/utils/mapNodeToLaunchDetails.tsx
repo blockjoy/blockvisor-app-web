@@ -2,7 +2,7 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
 import { NextLink, DateTime } from '@shared/components';
 
-export const mapNodeToGeneralDetails = (node: Node) => {
+export const mapNodeToLaunchDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
   const details: { label: string; data: any | undefined }[] = [

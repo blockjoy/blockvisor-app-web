@@ -12,6 +12,9 @@ import { AdminDetailEdit } from './AdminDetailEdit/AdminDetailEdit';
 type Props = {
   ignoreItems?: string[];
   detailsName: string;
+  metricsKey?: string;
+  hasMetrics?: boolean;
+  hasLogs?: boolean;
   getItem: () => Promise<{}>;
   customItems?: (item: any) => AdminDetailProperty[];
   onOpenInApp?: () => void;
@@ -24,6 +27,9 @@ type Props = {
 export const AdminDetail = ({
   ignoreItems,
   detailsName,
+  metricsKey = 'id',
+  hasMetrics,
+  hasLogs,
   getItem,
   customItems,
   onOpenInApp,
@@ -97,8 +103,11 @@ export const AdminDetail = ({
         name={name as string}
         isLoading={item === undefined}
         isEditMode={isEditMode}
+        hasMetrics={hasMetrics}
+        hasLogs={hasLogs}
         canEdit={Boolean(onSaveChanges)}
         detailsName={item ? item[detailsName] : undefined}
+        identifier={item?.[metricsKey!]}
         onOpenAppView={onOpenInApp}
         onCopyObject={handleCopyObject}
         onToggleEditMode={handleToggleEditMode}

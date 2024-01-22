@@ -1,14 +1,21 @@
+import { openGraphanaUrl } from '@modules/admin/utils';
 import { Skeleton } from '@shared/components';
 import { AdminHeader } from '../../../AdminHeader/AdminHeader';
 import { styles } from './AdminDetailHeader.styles';
-import { SvgIcon } from '@shared/components';
+import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import IconCopy from '@public/assets/icons/common/Copy.svg';
 import IconPencil from '@public/assets/icons/common/Pencil.svg';
 import IconBinoculars from '@public/assets/icons/common/Binoculars.svg';
+import IconGraph from '@public/assets/icons/common/Graph.svg';
+import IconLogs from '@public/assets/icons/common/Logs.svg';
+import { isMobile } from 'react-device-detect';
 
 type Props = {
   name: string;
   detailsName?: string;
+  identifier?: string;
+  hasMetrics?: boolean;
+  hasLogs?: boolean;
   isLoading?: boolean;
   isEditMode?: boolean;
   canEdit?: boolean;
@@ -20,6 +27,9 @@ type Props = {
 export const AdminDetailHeader = ({
   name,
   detailsName,
+  identifier,
+  hasMetrics,
+  hasLogs,
   isLoading,
   isEditMode,
   canEdit,
@@ -30,7 +40,7 @@ export const AdminDetailHeader = ({
   return (
     <AdminHeader name={name}>
       <span css={styles.separator}>/</span>
-      {isLoading ? (
+      {isLoading && !isMobile ? (
         <Skeleton width="200px" />
       ) : (
         <div css={styles.wrapper}>
@@ -40,27 +50,40 @@ export const AdminDetailHeader = ({
           {!isEditMode && (
             <div css={styles.buttons}>
               {canEdit && (
-                <button css={styles.button} onClick={onToggleEditMode}>
-                  <SvgIcon size="12px">
-                    <IconPencil />
-                  </SvgIcon>{' '}
+                <AdminHeaderButton
+                  icon={<IconPencil />}
+                  onClick={onToggleEditMode}
+                >
                   Edit
-                </button>
+                </AdminHeaderButton>
               )}
               {!!onOpenAppView && (
-                <button css={styles.button} onClick={onOpenAppView}>
-                  <SvgIcon size="12px">
-                    <IconBinoculars />
-                  </SvgIcon>{' '}
-                  View
-                </button>
+                <AdminHeaderButton
+                  icon={<IconBinoculars />}
+                  onClick={onOpenAppView}
+                >
+                  View In App
+                </AdminHeaderButton>
               )}
-              <button css={styles.button} onClick={onCopyObject}>
-                <SvgIcon size="12px">
-                  <IconCopy />
-                </SvgIcon>{' '}
-                Json
-              </button>
+              {!!hasMetrics && (
+                <AdminHeaderButton
+                  icon={<IconGraph />}
+                  onClick={() => openGraphanaUrl?.(identifier!)}
+                >
+                  Graphana Metrics
+                </AdminHeaderButton>
+              )}
+              {!!hasLogs && (
+                <AdminHeaderButton
+                  icon={<IconLogs />}
+                  onClick={() => openGraphanaUrl(identifier!, 'node-logs')}
+                >
+                  Graphana Logs
+                </AdminHeaderButton>
+              )}
+              <AdminHeaderButton icon={<IconCopy />} onClick={onCopyObject}>
+                Copy Json
+              </AdminHeaderButton>
             </div>
           )}
         </div>
