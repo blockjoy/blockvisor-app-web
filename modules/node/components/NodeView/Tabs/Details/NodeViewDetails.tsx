@@ -1,5 +1,5 @@
 import { mapNodeToDetails } from '@modules/node/utils/mapNodeToDetails';
-import { mapNodeToGeneralDetails } from '@modules/node/utils/mapNodeToGeneralDetails';
+import { mapNodeToLaunchDetails } from '@modules/node/utils/mapNodeToLaunchDetails';
 import { DetailsTable } from '@shared/components';
 import { useNodeView } from '@modules/node';
 import { FormHeaderCaps } from '@shared/components';
@@ -16,7 +16,7 @@ export const NodeViewDetails = () => {
       </section>
       <section css={styles.section}>
         <FormHeaderCaps noBottomMargin>Launch Details</FormHeaderCaps>
-        <DetailsTable bodyElements={mapNodeToGeneralDetails(node!)} />
+        <DetailsTable bodyElements={mapNodeToLaunchDetails(node!)} />
       </section>
     </>
   );

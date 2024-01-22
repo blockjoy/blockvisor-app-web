@@ -5,6 +5,5 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: auto;
   `,
 };

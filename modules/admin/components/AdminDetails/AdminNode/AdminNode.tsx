@@ -228,6 +228,7 @@ export const AdminNode = () => {
       ignoreItems={ignoreItems}
       customItems={customItems}
       detailsName="id"
+      hasMetrics
     />
   );
 };

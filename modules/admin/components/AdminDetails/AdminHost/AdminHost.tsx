@@ -36,7 +36,7 @@ export const AdminHost = () => {
 
   const getItem = async () => await hostClient.getHost(id as string);
 
-  const customItems = (host: Host & IAdminItem): AdminDetailProperty[] => [
+  const customItems = (host: Host): AdminDetailProperty[] => [
     {
       id: 'name',
       label: 'Name',
@@ -123,6 +123,9 @@ export const AdminHost = () => {
       onOpenInApp={handleOpenInApp}
       onSaveChanges={handleSaveChanges}
       detailsName="id"
+      metricsKey="name"
+      hasMetrics
+      hasLogs
       customItems={customItems}
       ignoreItems={[
         'id',
