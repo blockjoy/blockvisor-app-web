@@ -33,5 +33,6 @@ export const styles = {
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
+    transition: box-shadow 0.3s;
   `,
 };

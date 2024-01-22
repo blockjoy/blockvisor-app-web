@@ -24,6 +24,7 @@ type NodeLauncherConfigProps = {
   onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
   onNodePropertyChanged: (name: string, value: any) => void;
   onVersionChanged: (version: BlockchainVersion | null) => void;
+  onNetworkChanged: (network: string) => void;
 };
 
 export const NodeLauncherConfig = ({
@@ -31,13 +32,19 @@ export const NodeLauncherConfig = ({
   onNodePropertyChanged,
   onNodeConfigPropertyChanged,
   onVersionChanged,
+  onNetworkChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const networks = useRecoilValue(nodeLauncherSelectors.networks);
   const versions = useRecoilValue(nodeLauncherSelectors.versions);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+  const selectedNetwork = useRecoilValue(nodeLauncherAtoms.selectedNetwork);
 
-  const { network, properties, keyFiles } = nodeLauncher;
+  const { properties, keyFiles } = nodeLauncher;
+
+  const handleNetworkChanged = (field: string, value: string) => {
+    onNetworkChanged(value);
+  };
 
   return (
     <NodeLauncherConfigWrapper>
@@ -45,13 +52,12 @@ export const NodeLauncherConfig = ({
         <FormHeader>Configure</FormHeader>
 
         <FormLabel>Network</FormLabel>
-
         {selectedVersion && Boolean(networks?.length) ? (
           <PillPicker
             name="network"
             items={networks!.map((n) => n.name)}
-            selectedItem={network!}
-            onChange={onNodePropertyChanged}
+            selectedItem={selectedNetwork!}
+            onChange={handleNetworkChanged}
           />
         ) : (
           <div css={[spacing.bottom.medium, colors.warning, typo.small]}>

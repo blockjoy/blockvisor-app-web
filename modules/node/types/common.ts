@@ -10,7 +10,6 @@ export type NodeLauncherState = {
   nodeType: NodeType;
   properties?: NodeProperty[];
   keyFiles?: NodeFiles[];
-  network?: string;
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];
   placement: NodePlacement;
