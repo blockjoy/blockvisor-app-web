@@ -1,7 +1,6 @@
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { useProvisionToken } from '@modules/organization/hooks/useProvisionToken';
 import {
-  Alert,
   Button,
   CopyToClipboard,
   FormHeaderCaps,
@@ -14,18 +13,34 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { organizationAtoms } from '@modules/organization';
-import { usePermissions } from '@modules/auth';
+import { useProvisionToken, organizationAtoms } from '@modules/organization';
+import { LAUNCH_ERRORS, LauncherWithGuardProps } from '@modules/billing';
 
-export const HostLauncher = () => {
-  const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
-    useProvisionToken();
+export const HostLauncher = ({
+  fulfilReqs,
+  resetFulfilReqs,
+  onCreateClick,
+  permissions,
+}: LauncherWithGuardProps) => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
 
-  const { hasPermission } = usePermissions();
-  const canResetProvisionToken = hasPermission('org-provision-reset-token');
+  const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
+    useProvisionToken();
+
+  useEffect(() => {
+    if (fulfilReqs) handleHostCreation();
+  }, [fulfilReqs]);
+
+  const token = !permissions?.disabled
+    ? provisionToken
+    : provisionToken?.replace(/./g, '*');
+
+  const handleHostCreation = async () => {
+    await resetProvisionToken(defaultOrganization?.id!);
+    resetFulfilReqs();
+  };
 
   return (
     <div>
@@ -40,24 +55,22 @@ export const HostLauncher = () => {
           </div>
         </li>
         <li>
-          <div css={spacing.bottom.large}>
+          <div css={spacing.bottom.medium}>
             <FormLabelCaps>Run terminal command</FormLabelCaps>
             <FormText>
               Launch a new host by running this command on any server
             </FormText>
             <div css={[styles.copy, spacing.bottom.medium]}>
               <CopyToClipboard
-                value={`bvup ${
-                  !canResetProvisionToken ? 'xxxxxxx' : provisionToken
-                }`}
-                disabled={!canResetProvisionToken}
+                value={`bvup ${token}`}
+                disabled={permissions?.disabled}
               />
-              {!canResetProvisionToken && (
+              {permissions?.disabled && (
                 <Tooltip
                   noWrap
                   top="-30px"
                   left="50%"
-                  tooltip="Insufficient Permissions"
+                  tooltip={permissions.message}
                 />
               )}
             </div>
@@ -66,16 +79,17 @@ export const HostLauncher = () => {
               size="small"
               disabled={
                 provisionTokenLoadingState !== 'finished' ||
-                !canResetProvisionToken
+                (!permissions?.permitted && !permissions.superUser)
               }
               css={styles.button}
-              onClick={() => resetProvisionToken(defaultOrganization?.id!)}
+              onClick={onCreateClick}
               loading={provisionTokenLoadingState !== 'finished'}
-              {...(!canResetProvisionToken && {
-                tooltip: 'Insufficient Permissions.',
-              })}
+              {...(!permissions?.permitted &&
+                !permissions.superUser && {
+                  tooltip: LAUNCH_ERRORS.NO_PERMISSION,
+                })}
             >
-              <SvgIcon size="12px">
+              <SvgIcon>
                 <IconRefresh />
               </SvgIcon>
               Regenerate

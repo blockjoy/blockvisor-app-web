@@ -61,7 +61,7 @@ export const withLauncherGuard = (Component: any) => {
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
 
     useEffect(() => {
-      if (fulfilRequirements) setFulfilRequirements(false);
+      setFulfilRequirements(false);
     }, [defaultOrganization?.id]);
 
     const isPermittedAsSuperUser = isSuperUser && isSuperUserBilling;
@@ -112,6 +112,8 @@ export const withLauncherGuard = (Component: any) => {
           ? LAUNCH_ERRORS.NO_BILLING
           : LAUNCH_ERRORS.NO_ACTIVE_SUBSCRIPTION
         : '';
+
+    console.log('activeView', activeView);
 
     return (
       <>

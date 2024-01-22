@@ -1123,6 +1123,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@chargebee/chargebee-js-react-wrapper@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@chargebee/chargebee-js-react-wrapper/-/chargebee-js-react-wrapper-0.6.3.tgz#fd7782cf6aa2be3fa98999a7160c64bb0b23df89"
+  integrity sha512-U3KJLZZiUxxkW4HAkAZr2bs6r4HqL1S59zo3AAp4UYtJZbxmBpfX5e/MlsSENvsRxd2GvOpumcHr8rR4V0D5vw==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -4314,6 +4319,13 @@ character-reference-invalid@^1.0.0:
   resolved "https://registry.yarnpkg.com/character-reference-invalid/-/character-reference-invalid-1.1.4.tgz#083329cda0eae272ab3dbbf37e9a382c13af1560"
   integrity sha512-mKKUkUbhPpQlCOfIuZkvSEgktjPFIsZKRRbC6KWVEMvlzblj3i3asQv5ODsrwt0N3pHAEvjP8KTQPHkp0+6jOg==
 
+chargebee-typescript@^2.20.1:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/chargebee-typescript/-/chargebee-typescript-2.28.0.tgz#9c09dd6a6845a6bcdc60221922ea05f1197652e7"
+  integrity sha512-ILhQU3USZSdhjHlpzYhs/6jT+vN0/oRqed47sKfhayWtCGYpAYJfX+11OyOwNd8blQnvNbWf8g7TFgdwU74dBA==
+  dependencies:
+    q ">=1.0.1"
+
 chokidar@^2.1.8:
   version "2.1.8"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.1.8.tgz#804b3a7b6a99358c3c5c61e71d8728f041cff917"
@@ -5053,19 +5065,11 @@ detect-port@^1.3.0:
     address "^1.0.1"
     debug "4"
 
-<<<<<<< HEAD
-=======
-dfa@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/dfa/-/dfa-1.2.0.tgz#96ac3204e2d29c49ea5b57af8d92c2ae12790657"
-  integrity sha512-ED3jP8saaweFTjeGX8HQPjeC1YYyZs98jGNZx6IiBvxW7JG5v492kamAQB3m2wop07CvU/RQmzcKr6bgcC5D/Q==
-
 diacritics@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/diacritics/-/diacritics-1.3.0.tgz#3efa87323ebb863e6696cebb0082d48ff3d6f7a1"
   integrity sha512-wlwEkqcsaxvPJML+rDh/2iS824jbREk6DUMUKkEaSlxdYHeS43cClJtsWglvw2RfeXGm6ohKDqsXteJ5sP5enA==
 
->>>>>>> e4bfde58 (fix: sc-2031 Extracted Subscription lifecycle methods into separate hook for better readability; Fixing weird country names - changing the library; Improved performance)
 diffie-hellman@^5.0.0:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/diffie-hellman/-/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
@@ -6770,13 +6774,6 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-<<<<<<< HEAD
-=======
-hyphen@^1.6.4:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/hyphen/-/hyphen-1.6.5.tgz#956a4c929c111441dc798ad88de3c941e1b383d3"
-  integrity sha512-MZbhHutRaHCUxjvJBYqL51Ntjbq16LemuJr2u+LpKd3UwyNHZsZAKh5uD+KmdAHtWpteupOqQTTezVGR/al43w==
-
 i18n-iso-countries@^7.6.0:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/i18n-iso-countries/-/i18n-iso-countries-7.6.0.tgz#4e2eac7043210a5552e7fd116b74d4f36a90b960"
@@ -6784,7 +6781,6 @@ i18n-iso-countries@^7.6.0:
   dependencies:
     diacritics "1.3.0"
 
->>>>>>> e4bfde58 (fix: sc-2031 Extracted Subscription lifecycle methods into separate hook for better readability; Fixing weird country names - changing the library; Improved performance)
 iconv-lite@0.4.24:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -9307,6 +9303,11 @@ punycode@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.0.tgz#f67fa67c94da8f4d0cfff981aee4118064199b8f"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
+
+q@>=1.0.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
+  integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
 
 qs@6.11.0, qs@^6.10.0:
   version "6.11.0"

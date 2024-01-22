@@ -1,4 +1,3 @@
-import { isMobile } from 'react-device-detect';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
@@ -11,25 +10,34 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconChat from '@public/assets/icons/common/Chat.svg';
 import IconSliders from '@public/assets/icons/app/Sliders.svg';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { invitationAtoms, organizationAtoms } from '@modules/organization';
+import { ROUTES } from '@shared/index';
 import { usePermissions } from '@modules/auth';
+
+type SidebarItem = {
+  name: string;
+  path: string;
+  icon: ReactNode;
+  isOrganizations?: boolean;
+};
 
 export default () => {
   const router = useRouter();
 
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-
-  const { isSuperUser } = usePermissions();
-
   const invitationCount = useRecoilValue(
     invitationAtoms.receivedInvitations,
   )?.length;
+
+  const { isSuperUser } = usePermissions();
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
@@ -58,7 +66,7 @@ export default () => {
       ],
     },
     {
-      title: 'ADMIN',
+      title: 'SETTINGS',
       items: [
         {
           name: 'Organizations',
@@ -87,10 +95,15 @@ export default () => {
   ];
 
   if (isSuperUser) {
-    blocks[0].items.unshift({
-      name: 'Admin',
-      path: '/admin?name=dashboard',
-      icon: <IconSliders />,
+    blocks.unshift({
+      title: 'BLOCKJOY',
+      items: [
+        {
+          name: 'Admin',
+          path: '/admin?name=dashboard',
+          icon: <IconSliders />,
+        },
+      ],
     });
   }
 

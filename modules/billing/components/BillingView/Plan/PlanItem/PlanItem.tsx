@@ -1,5 +1,5 @@
 import { Item } from 'chargebee-typescript/lib/resources';
-import { Button, List } from '@shared/components';
+import { Button, Checklist } from '@shared/components';
 import { styles } from './PlanItem.styles';
 
 export type PlanItemProps = {
@@ -21,7 +21,7 @@ export const PlanItem = ({ item, handleSelect }: PlanItemProps) => {
 
       {item.description && <p css={styles.description}>{item.description}</p>}
 
-      {item.metadata?.features && <List items={item.metadata?.features} />}
+      {item.metadata?.features && <Checklist items={item.metadata?.features} />}
 
       <Button style="outline" onClick={() => handleSelect(item)}>
         Select plan

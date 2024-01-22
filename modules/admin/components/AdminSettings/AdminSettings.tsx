@@ -13,7 +13,7 @@ export const AdminSettings = () => {
 
   return (
     <section css={styles.wrapper}>
-      <AdminHeader icon={<IconCog />} name="Settings"></AdminHeader>
+      <AdminHeader name="Settings"></AdminHeader>
       <div css={spacing.top.medium}>
         {cards.map((card) => (
           <AdminSettingsCard icon={card.icon} name={card.name}>

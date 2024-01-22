@@ -5,6 +5,7 @@ import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 import { css } from '@emotion/react';
+import { flex } from 'styles/utils.flex.styles';
 
 export type ActionsDropdownItem = {
   title: string;

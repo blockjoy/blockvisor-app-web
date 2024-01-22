@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   Item,
@@ -9,7 +9,6 @@ import {
   useSubscription,
   billingSelectors,
   usePaymentMethods,
-  // PlanParams,
   PaymentMethodsDropdown,
   PlanParamsInfo,
   DEFAULT_BILLING_PERIOD,
@@ -18,7 +17,7 @@ import {
   Alert,
   Button,
   ButtonGroup,
-  List,
+  Checklist,
   TableSkeleton,
 } from '@shared/components';
 import { Total } from '@shared/components';
@@ -50,11 +49,6 @@ export const PlanConfiguration = ({
   const activeItemPrice: ItemPrice | undefined = itemPrices?.find(
     (itemPrice: ItemPrice) => itemPrice.period_unit === periodUnit,
   );
-
-  // const handlePeriodUnit = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { value } = e.target;
-  //   setPeriodUnit(value);
-  // };
 
   const handlePaymentMethod = (paymentMethod: PaymentSource) => {
     setPaymentMethodId(paymentMethod.id);
@@ -93,7 +87,7 @@ export const PlanConfiguration = ({
       {item?.metadata?.features && (
         <div css={spacing.bottom.medium}>
           <h3 css={styles.headline}>What you get</h3>
-          <List items={item?.metadata?.features} />
+          <Checklist items={item?.metadata?.features} />
         </div>
       )}
 
