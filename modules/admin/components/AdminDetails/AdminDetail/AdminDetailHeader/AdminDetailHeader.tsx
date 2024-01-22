@@ -1,4 +1,4 @@
-import { openGraphanaUrl } from '@modules/admin/utils';
+import { openGrafanaUrl } from '@modules/admin/utils';
 import { Skeleton } from '@shared/components';
 import { AdminHeader } from '../../../AdminHeader/AdminHeader';
 import { styles } from './AdminDetailHeader.styles';
@@ -68,17 +68,17 @@ export const AdminDetailHeader = ({
               {!!hasMetrics && (
                 <AdminHeaderButton
                   icon={<IconGraph />}
-                  onClick={() => openGraphanaUrl?.(identifier!)}
+                  onClick={() => openGrafanaUrl?.(identifier!)}
                 >
-                  Graphana Metrics
+                  Grafana Metrics
                 </AdminHeaderButton>
               )}
               {!!hasLogs && (
                 <AdminHeaderButton
                   icon={<IconLogs />}
-                  onClick={() => openGraphanaUrl(identifier!, 'node-logs')}
+                  onClick={() => openGrafanaUrl(identifier!, 'node-logs')}
                 >
-                  Graphana Logs
+                  Grafana Logs
                 </AdminHeaderButton>
               )}
               <AdminHeaderButton icon={<IconCopy />} onClick={onCopyObject}>
