@@ -43,7 +43,7 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
     )
   ) {
     return styles.statusColorGreen;
-  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|STOPPED|DELETED/g)) {
+  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|STOPPED|DELETE|/g)) {
     return styles.statusColorRed;
   } else {
     return styles.statusColorDefault;
