@@ -83,7 +83,9 @@ export const FiltersBlock = ({
                     name={item.name!}
                     checked={item.isChecked}
                   >
-                    <p css={styles.selectedFilterRowText}>{item.name}</p>
+                    <p css={styles.selectedFilterRowText}>
+                      {item.name?.replaceAll('_', ' ')}
+                    </p>
                   </Checkbox>
                 </div>
               ))
