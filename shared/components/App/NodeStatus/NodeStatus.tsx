@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { styles } from './NodeStatus.styles';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { NodeStatusIcon } from './NodeStatusIcon';
@@ -43,23 +42,29 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
     )
   ) {
     return styles.statusColorGreen;
-  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|STOPPED|DELETED/g)) {
+  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|STOPPED|DELETE|/g)) {
     return styles.statusColorRed;
   } else {
     return styles.statusColorDefault;
   }
 };
 
-export const NodeStatus: FC<Props> = ({
+export const NodeStatus = ({
   status,
   type,
   hasBorder = true,
   downloadingCurrent,
   downloadingTotal,
-}) => {
+}: Props) => {
+  // TODO: Fix backend to have provisioning status if downloading
   const isDownloading =
-    status === NodeStatusEnum.NODE_STATUS_PROVISIONING &&
+    // status === NodeStatus.NODE_STATUS_PROVISIONING &&
     downloadingCurrent! !== downloadingTotal!;
+  const nodeStatus = isDownloading
+    ? NodeStatusEnum.NODE_STATUS_PROVISIONING
+    : status;
+
+  const statusColor = getNodeStatusColor(nodeStatus, type);
 
   return (
     <span
@@ -67,7 +72,7 @@ export const NodeStatus: FC<Props> = ({
         styles.status,
         hasBorder && styles.statusBorder,
         isDownloading && styles.statusLoading,
-        getNodeStatusColor(status, type),
+        statusColor,
       ]}
     >
       {isDownloading && (
@@ -76,8 +81,8 @@ export const NodeStatus: FC<Props> = ({
           total={downloadingTotal!}
         />
       )}
-      <NodeStatusIcon size="12px" status={status} type={type} />
-      <p css={[styles.statusText, getNodeStatusColor(status, type)]}>
+      <NodeStatusIcon size="12px" status={nodeStatus} type={type} />
+      <p css={[styles.statusText, statusColor]}>
         <NodeStatusName
           status={status}
           type={type}

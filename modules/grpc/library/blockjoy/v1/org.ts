@@ -165,6 +165,7 @@ export interface OrgUser {
   name: string;
   email: string;
   roles: OrgRole[];
+  joinedAt: Date | undefined;
 }
 
 export interface OrgRole {
@@ -1256,7 +1257,7 @@ export const OrgServiceResetProvisionTokenResponse = {
 };
 
 function createBaseOrgUser(): OrgUser {
-  return { userId: "", orgId: "", name: "", email: "", roles: [] };
+  return { userId: "", orgId: "", name: "", email: "", roles: [], joinedAt: undefined };
 }
 
 export const OrgUser = {
@@ -1275,6 +1276,9 @@ export const OrgUser = {
     }
     for (const v of message.roles) {
       OrgRole.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.joinedAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.joinedAt), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -1321,6 +1325,13 @@ export const OrgUser = {
 
           message.roles.push(OrgRole.decode(reader, reader.uint32()));
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.joinedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1341,6 +1352,7 @@ export const OrgUser = {
     message.name = object.name ?? "";
     message.email = object.email ?? "";
     message.roles = object.roles?.map((e) => OrgRole.fromPartial(e)) || [];
+    message.joinedAt = object.joinedAt ?? undefined;
     return message;
   },
 };

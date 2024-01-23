@@ -21,8 +21,9 @@ export const NodeStatusName = ({
 
   let statusName = statusInfo.name?.toLowerCase();
 
+  // TODO: Fix backend to have provisioning status if downloading
   const isDownloading =
-    status === NodeStatus.NODE_STATUS_PROVISIONING &&
+    // status === NodeStatus.NODE_STATUS_PROVISIONING &&
     downloadingCurrent! !== downloadingTotal!;
 
   const isPending = status === NodeStatus.NODE_STATUS_PROVISIONING_PENDING;
@@ -35,5 +36,5 @@ export const NodeStatusName = ({
       statusName = isSuperUser ? 'Provisioning Pending' : 'Launching';
   }
 
-  return <>{statusName}</>;
+  return <>{statusName?.replace('_', ' ')}</>;
 };
