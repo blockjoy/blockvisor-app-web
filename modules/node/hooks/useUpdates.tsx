@@ -1,4 +1,6 @@
 import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
+import { css } from '@emotion/react';
 import {
   NodeCreated,
   NodeDeleted,
@@ -7,9 +9,17 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/mqtt';
 import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
-import { useRecoilValue } from 'recoil';
-import { authAtoms } from '@modules/auth';
-import { usePermissions } from '@modules/auth/hooks/usePermissions';
+import { authAtoms, usePermissions } from '@modules/auth';
+
+const styles = {
+  linkToHost: css`
+    display: inline !important;
+
+    &::after {
+      content: none;
+    }
+  `,
+};
 
 export const useUpdates = () => {
   const router = useRouter();
@@ -37,15 +47,39 @@ export const useUpdates = () => {
 
         if (node?.createdBy?.resourceId === user?.id) break;
 
-        showNotification(
-          type,
-          `${node?.createdBy?.name} launched a node `,
-          hasPermission('node-admin-get') ? (
-            <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+        if (node?.createdBy?.resourceId)
+          showNotification(
+            type,
+            `${node?.createdBy?.name} launched a node `,
+            hasPermission('node-get') ? (
+              <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+            ) : (
+              ''
+            ),
+          );
+        else {
+          const linkToHost = hasPermission('host-get') ? (
+            <a
+              css={styles.linkToHost}
+              onClick={() => router.push(`/hosts/${node?.hostId}`)}
+            >
+              {node?.hostName}
+            </a>
           ) : (
             ''
-          ),
-        );
+          );
+
+          showNotification(
+            type,
+            <>Node launched from CLI for Host {linkToHost}</>,
+            hasPermission('node-get') ? (
+              <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+            ) : (
+              ''
+            ),
+          );
+        }
+
         break;
       }
       case !!payloadDeserialized.updated: {
@@ -80,7 +114,10 @@ export const useUpdates = () => {
 
         if (deletedBy?.resourceId === user?.id) break;
 
-        showNotification(type, `${deletedBy?.name} just deleted a node`);
+        if (deletedBy?.resourceId)
+          showNotification(type, `${deletedBy?.name} just deleted a node`);
+        else showNotification(type, 'Node deleted from CLI');
+
         break;
       }
       default:
