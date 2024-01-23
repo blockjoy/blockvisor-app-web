@@ -41,9 +41,11 @@ export const AdminDetailEdit = ({
   const handleChange = (field: string, value: string) => {
     const propertiesCopy = [...editedProperties];
     const foundProperty = propertiesCopy.find(
-      (property) => property.id === field,
+      (property) => property.editSettings?.field === field,
     );
+
     if (!foundProperty || !foundProperty.editSettings) return;
+
     foundProperty.editSettings.defaultValue = value;
     setEditedProperties(propertiesCopy);
   };
@@ -68,7 +70,10 @@ export const AdminDetailEdit = ({
       {editedProperties.map((property) => (
         <div css={styles.row} key={property.id}>
           <div css={styles.label}>
-            {capitalized(property.editSettings?.field!)}
+            {capitalized(
+              property.editSettings?.displayName! ||
+                property.editSettings?.field!,
+            )}
           </div>
           <div css={styles.control}>
             <AdminDetailEditControl

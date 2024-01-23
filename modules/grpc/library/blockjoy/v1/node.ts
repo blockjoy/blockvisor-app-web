@@ -230,6 +230,8 @@ export interface NodeServiceUpdateConfigRequest {
   allowIps: FilteredIpAddr[];
   /** A list of ip addresses denied all access to any ports on this node. */
   denyIps: FilteredIpAddr[];
+  /** If this field is specified, then the node is moved to this org. */
+  orgId?: string | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {
@@ -1524,7 +1526,7 @@ export const NodeServiceListResponse = {
 };
 
 function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
-  return { id: "", selfUpdate: undefined, allowIps: [], denyIps: [] };
+  return { id: "", selfUpdate: undefined, allowIps: [], denyIps: [], orgId: undefined };
 }
 
 export const NodeServiceUpdateConfigRequest = {
@@ -1540,6 +1542,9 @@ export const NodeServiceUpdateConfigRequest = {
     }
     for (const v of message.denyIps) {
       FilteredIpAddr.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.orgId !== undefined) {
+      writer.uint32(42).string(message.orgId);
     }
     return writer;
   },
@@ -1579,6 +1584,13 @@ export const NodeServiceUpdateConfigRequest = {
 
           message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1598,6 +1610,7 @@ export const NodeServiceUpdateConfigRequest = {
     message.selfUpdate = object.selfUpdate ?? undefined;
     message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    message.orgId = object.orgId ?? undefined;
     return message;
   },
 };

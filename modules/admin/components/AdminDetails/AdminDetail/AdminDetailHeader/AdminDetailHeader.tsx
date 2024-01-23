@@ -82,7 +82,7 @@ export const AdminDetailHeader = ({
                 </AdminHeaderButton>
               )}
               <AdminHeaderButton icon={<IconCopy />} onClick={onCopyObject}>
-                Copy Json
+                Copy Object
               </AdminHeaderButton>
             </div>
           )}

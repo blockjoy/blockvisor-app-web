@@ -21,6 +21,7 @@ type Props = {
   onSaveChanges?: (
     properties: AdminDetailProperty[],
     onSuccess: VoidFunction,
+    item?: any,
   ) => void;
 };
 
@@ -70,6 +71,13 @@ export const AdminDetail = ({
 
   const handleToggleEditMode = () => setIsEditMode(!isEditMode);
 
+  const handleSaveChanges = (
+    properties: AdminDetailProperty[],
+    onSuccess: VoidFunction,
+  ) => {
+    onSaveChanges?.(properties, onSuccess, item);
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -116,7 +124,7 @@ export const AdminDetail = ({
         <p css={spacing.top.medium}>{error}</p>
       ) : isEditMode ? (
         <AdminDetailEdit
-          onSaveChanges={onSaveChanges!}
+          onSaveChanges={handleSaveChanges}
           onToggleEditMode={handleToggleEditMode}
           properties={properties.filter((property) => property.editSettings)}
         />

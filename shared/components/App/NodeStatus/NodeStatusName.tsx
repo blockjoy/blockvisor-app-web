@@ -35,5 +35,5 @@ export const NodeStatusName = ({
       statusName = isSuperUser ? 'Provisioning Pending' : 'Launching';
   }
 
-  return <>{statusName}</>;
+  return <>{statusName?.replace('_', ' ')}</>;
 };

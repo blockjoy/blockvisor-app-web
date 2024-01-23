@@ -98,7 +98,9 @@ export const FiltersBlock = ({
                 <div css={styles.checkedIcon}>
                   <IconCheck />
                 </div>
-                <p css={styles.selectedFilterRowText}>{item.name}</p>
+                <p css={styles.selectedFilterRowText}>
+                  {item.name?.replaceAll('_', ' ')}
+                </p>
               </div>
             ))
         )}
