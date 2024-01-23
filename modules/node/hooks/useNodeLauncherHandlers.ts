@@ -50,7 +50,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-  const hostList = useRecoilValue(hostAtoms.hostList);
+  const allHosts = useRecoilValue(hostAtoms.allHosts);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const setSelectedNodeType = useSetRecoilState(
     nodeLauncherAtoms.selectedNodeType,
@@ -85,8 +85,13 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   );
 
   useEffect(() => {
-    setSelectedHost(null);
-  }, [hostList]);
+    let queriedHost = null;
+    if (router.isReady && router.query.hostId)
+      queriedHost =
+        allHosts.find((host: Host) => host.id === router.query.hostId) ?? null;
+
+    setSelectedHost(queriedHost);
+  }, [allHosts, router.isReady]);
 
   const handleHostChanged = (host: Host | null) => {
     Mixpanel.track('Launch Node - Host Changed');

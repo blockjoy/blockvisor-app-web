@@ -5,9 +5,21 @@ import { SvgIcon } from '@shared/components';
 
 export const PageTitleLaunchNode = () => {
   const router = useRouter();
+  const query: { hostId?: string | string[] } = {};
+
+  if (router.query.id && router.pathname === '/hosts/[id]')
+    query.hostId = router.query.id;
 
   return !router.pathname.includes('launch-node') ? (
-    <button css={styles.button} onClick={() => router.push('/launch-node')}>
+    <button
+      css={styles.button}
+      onClick={() =>
+        router.push({
+          pathname: '/launch-node',
+          query,
+        })
+      }
+    >
       <SvgIcon size="20px">
         <IconRocket />
       </SvgIcon>
