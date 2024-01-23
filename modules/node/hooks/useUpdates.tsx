@@ -47,38 +47,31 @@ export const useUpdates = () => {
 
         if (node?.createdBy?.resourceId === user?.id) break;
 
-        if (node?.createdBy?.resourceId)
-          showNotification(
-            type,
-            `${node?.createdBy?.name} launched a node `,
-            hasPermission('node-get') ? (
-              <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+        const message = node?.createdBy?.name ? (
+          `${node?.createdBy?.name} launched a node `
+        ) : (
+          <>
+            Node launched from CLI for Host{' '}
+            {hasPermission('host-get') ? (
+              <a
+                css={styles.linkToHost}
+                onClick={() => router.push(`/hosts/${node?.hostId}`)}
+              >
+                {node?.hostName}
+              </a>
             ) : (
               ''
-            ),
-          );
-        else {
-          const linkToHost = hasPermission('host-get') ? (
-            <a
-              css={styles.linkToHost}
-              onClick={() => router.push(`/hosts/${node?.hostId}`)}
-            >
-              {node?.hostName}
-            </a>
-          ) : (
-            ''
-          );
+            )}
+          </>
+        );
 
-          showNotification(
-            type,
-            <>Node launched from CLI for Host {linkToHost}</>,
-            hasPermission('node-get') ? (
-              <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
-            ) : (
-              ''
-            ),
-          );
-        }
+        const content = hasPermission('node-get') ? (
+          <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+        ) : (
+          ''
+        );
+
+        showNotification(type, message, content);
 
         break;
       }
@@ -114,9 +107,11 @@ export const useUpdates = () => {
 
         if (deletedBy?.resourceId === user?.id) break;
 
-        if (deletedBy?.resourceId)
-          showNotification(type, `${deletedBy?.name} just deleted a node`);
-        else showNotification(type, 'Node deleted from CLI');
+        const message = deletedBy?.name
+          ? `${deletedBy?.name} just deleted a node`
+          : 'Node deleted from CLI';
+
+        showNotification(type, message);
 
         break;
       }
