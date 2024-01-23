@@ -14,6 +14,11 @@ export const CommandsView = ({ commands }: CommandsViewProps) => {
   const canViewCommands = hasPermission('command-get');
   const canViewCommandsAsSuperUser = hasPermission('command-admin-list');
 
+  if (!(canViewCommands || (isSuperUser && canViewCommandsAsSuperUser)))
+    return <Alert>You don't have permission to view the commands.</Alert>;
+
+  if (!commands?.length) return <Alert>No Commands history</Alert>;
+
   return (
     <div css={styles.wrapper}>
       {canViewCommands || (isSuperUser && canViewCommandsAsSuperUser) ? (

@@ -25,7 +25,7 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
   useEffect(() => {
     if (router.isReady) {
       loadNode(id);
-      getCommands(id);
+      getCommands({ nodeId: id });
     }
 
     return () => {

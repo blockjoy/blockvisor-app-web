@@ -7,6 +7,7 @@ export * from './components/HostView/HostView';
 export * from './components/HostView/HostViewHeader/HostViewHeader';
 export * from './components/HostView/HostViewTitle/HostViewTitle';
 export * from './components/HostView/HostViewTabs/HostViewTabs';
+export * from './components/HostView/Tabs/Commands/HostCommands';
 export * from './components/HostView/Tabs/Details/HostViewDetails';
 export * from './components/HostView/Tabs/Nodes/HostViewNodes';
 export * from './components/HostWrapper/HostWrapper';

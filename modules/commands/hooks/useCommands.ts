@@ -11,23 +11,31 @@ export const useCommands = () => {
     commandAtoms.commandsLoadingState,
   );
 
-  const getCommands = async (
-    nodeId?: Args,
-    hostId?: string,
-    exitCode?: CommandExitCode,
-  ) => {
+  const getCommands = async ({
+    nodeId,
+    hostId,
+    exitCode,
+  }: {
+    nodeId?: Args;
+    hostId?: Args;
+    exitCode?: CommandExitCode;
+  }) => {
     setLoadingState('initializing');
+
+    const nodeIdAsString = nodeId ? nodeId.toString() : nodeId;
+    const hostIdAsString = hostId ? hostId.toString() : hostId;
 
     try {
       const response = await commandClient.listCommands(
-        nodeId as string,
-        hostId,
+        nodeIdAsString,
+        hostIdAsString,
         exitCode,
       );
 
       setCommands(response);
     } catch (err) {
       console.error('Error occured while fetching Commands', err);
+      setCommands([]);
     } finally {
       setLoadingState('finished');
     }
