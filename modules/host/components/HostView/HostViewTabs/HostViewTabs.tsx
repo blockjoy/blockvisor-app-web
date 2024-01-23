@@ -12,6 +12,7 @@ export const HostViewTabs = () => {
     { href: createPath(''), name: 'Details' },
     { href: createPath('nodes'), name: 'Nodes' },
     { href: createPath('metrics'), name: 'Metrics', className: 'metrics' },
+    { href: createPath('commands'), name: 'Commands' },
   ];
 
   const isActive = (href: string) => {
