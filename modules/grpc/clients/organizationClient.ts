@@ -9,7 +9,6 @@ import {
   OrgServiceResetProvisionTokenResponse,
   OrgServiceUpdateResponse,
   OrgSort,
-  OrgSortField,
 } from '../library/blockjoy/v1/org';
 import {
   getOptions,

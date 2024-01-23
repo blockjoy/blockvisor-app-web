@@ -1,6 +1,7 @@
-import { capitalized } from '@modules/admin/utils/capitalized';
-import { Select, Textbox } from '@shared/components';
 import { KeyboardEvent } from 'react';
+import { AdminDetailEditOrgSelect } from './AdminDetailEditOrgSelect/AdminDetailEditOrgSelect';
+import { AdminDetailEditSelect } from './AdminDetailEditSelect/AdminDetailEditSelect';
+import { AdminDetailEditTextbox } from './AdminDetailEditTextbox/AdminDetailEditTextbox';
 
 type Props = {
   editSettings: AdminDetailEditSettings;
@@ -13,34 +14,21 @@ export const AdminDetailEditControl = ({
   onChange,
   onKeyUp,
 }: Props) => {
-  const items = editSettings.dropdownValues?.map((value) => ({
-    ...value,
-    name: capitalized(value.name),
-  }));
-
-  const selectedItem = items?.find(
-    (value) => value.id === editSettings.defaultValue,
-  );
-
   const controls = {
     dropdown: (
-      <Select
-        noBottomMargin
-        buttonText={<p>{capitalized(selectedItem?.name!)}</p>}
-        items={items!}
-        selectedItem={selectedItem!}
-        onSelect={(value: string) => onChange(editSettings.field, value)}
-      />
+      <AdminDetailEditSelect editSettings={editSettings} onChange={onChange} />
     ),
     text: (
-      <Textbox
-        isRequired
-        name={editSettings.field}
-        type="text"
-        noBottomMargin
-        defaultValue={editSettings.defaultValue}
+      <AdminDetailEditTextbox
+        editSettings={editSettings}
         onChange={onChange}
         onKeyUp={onKeyUp}
+      />
+    ),
+    org: (
+      <AdminDetailEditOrgSelect
+        editSettings={editSettings}
+        onChange={onChange}
       />
     ),
   };

@@ -4,7 +4,11 @@ import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { NextLink, NodeStatus } from '@shared/components';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized } from '@modules/admin/utils/capitalized';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  Node,
+  NodeServiceUpdateConfigRequest,
+} from '@modules/grpc/library/blockjoy/v1/node';
+import { createAdminUpdateRequest } from '@modules/admin/utils';
 
 const ignoreItems = [
   'id',
@@ -37,6 +41,21 @@ export const AdminNode = () => {
   const { id, ip } = router.query;
 
   const handleOpenInApp = () => router.push(`/nodes/${id as string}`);
+
+  const handleSaveChanges = async (
+    properties: AdminDetailProperty[],
+    onSuccess: VoidFunction,
+    node: Node,
+  ) => {
+    const defaultRequest: NodeServiceUpdateConfigRequest = {
+      id: id as string,
+      allowIps: node.allowIps,
+      denyIps: node.denyIps,
+    };
+    const request = createAdminUpdateRequest(defaultRequest, properties);
+    await nodeClient.updateNode(request);
+    onSuccess();
+  };
 
   const getItem = async () => {
     if (ip) {
@@ -136,6 +155,13 @@ export const AdminNode = () => {
           </NextLink>
         </p>
       ),
+      editSettings: {
+        field: 'orgId',
+        displayName: 'Organization',
+        isNumber: false,
+        controlType: 'org',
+        defaultValue: node.orgId,
+      },
     },
     {
       id: 'orgId',
@@ -225,6 +251,7 @@ export const AdminNode = () => {
     <AdminDetail
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
+      onSaveChanges={handleSaveChanges}
       ignoreItems={ignoreItems}
       customItems={customItems}
       detailsName="id"
