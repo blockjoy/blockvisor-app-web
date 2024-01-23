@@ -14,6 +14,7 @@ export const styles = {
   `,
   time: (theme: ITheme) => css`
     color: ${theme.colorLabel};
+    margin-right: 16px;
 
     p {
       display: inline;

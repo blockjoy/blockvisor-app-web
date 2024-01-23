@@ -1,7 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { commandAtoms } from '@modules/commands';
 import { commandClient } from '@modules/grpc';
-import { DUMMY_COMMANDS } from '../dummy/dummy';
 import { CommandExitCode } from '@modules/grpc/library/blockjoy/v1/command';
 
 type Args = string | string[] | undefined;
@@ -20,17 +19,15 @@ export const useCommands = () => {
     setLoadingState('initializing');
 
     try {
-      // const response = await commandClient.listCommands(
-      //   nodeId as string,
-      //   hostId,
-      //   exitCode,
-      // );
-
-      // console.log('getCommands', response);
-      const response = DUMMY_COMMANDS;
+      const response = await commandClient.listCommands(
+        nodeId as string,
+        hostId,
+        exitCode,
+      );
 
       setCommands(response);
     } catch (err) {
+      console.error('Error occured while fetching Commands', err);
     } finally {
       setLoadingState('finished');
     }

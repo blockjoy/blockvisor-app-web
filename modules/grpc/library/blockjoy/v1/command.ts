@@ -23,7 +23,7 @@ export enum CommandExitCode {
 }
 
 export interface Command {
-  /** Each command has a unique id that identifies it. */
+  /** A unique command identifier. */
   id: string;
   /** A command may have an exit code. */
   exitCode?:
@@ -33,15 +33,16 @@ export interface Command {
   exitMessage?:
     | string
     | undefined;
-  /** Command may exit with error and retry hint. */
+  /** A command may exit with a transient error and time to retry. */
   retryHintSeconds?:
     | number
     | undefined;
-  /**
-   * A client may acknowledge that they have received a command, even if they
-   * have not finished processing it.
-   */
-  ackedAt?: Date | undefined;
+  /** The time the command was created. */
+  createdAt:
+    | Date
+    | undefined;
+  /** The time the client acknowledged receipt (even if not yet processed). */
+  ackedAt: Date | undefined;
   node?: NodeCommand | undefined;
   host?: HostCommand | undefined;
 }
@@ -83,18 +84,35 @@ export interface CommandServicePendingResponse {
   commands: Command[];
 }
 
+export interface HostCommand {
+  hostId: string;
+  start?: HostStart | undefined;
+  stop?: HostStop | undefined;
+  restart?: HostRestart | undefined;
+  pending?: HostPending | undefined;
+}
+
+export interface HostStart {
+}
+
+export interface HostStop {
+}
+
+export interface HostRestart {
+}
+
+export interface HostPending {
+}
+
 export interface NodeCommand {
   nodeId: string;
   hostId: string;
-  apiCommandId: string;
-  createdAt: Date | undefined;
+  create?: NodeCreate | undefined;
   start?: NodeStart | undefined;
   stop?: NodeStop | undefined;
   restart?: NodeRestart | undefined;
   upgrade?: NodeUpgrade | undefined;
   update?: NodeUpdate | undefined;
-  infoGet?: NodeGet | undefined;
-  create?: NodeCreate | undefined;
   delete?: NodeDelete | undefined;
 }
 
@@ -107,16 +125,13 @@ export interface NodeStop {
 export interface NodeRestart {
 }
 
-/** Update a node to a new image. */
+/** Upgrade a node to a new image. */
 export interface NodeUpgrade {
   image: ImageIdentifier | undefined;
 }
 
 export interface NodeUpdate {
   rules: FirewallRule[];
-}
-
-export interface NodeGet {
 }
 
 export interface NodeCreate {
@@ -131,16 +146,12 @@ export interface NodeCreate {
   network: string;
 }
 
-export interface NodeDelete {
-}
-
 export interface Parameter {
   name: string;
   value: string;
 }
 
-export interface HostCommand {
-  hostId: string;
+export interface NodeDelete {
 }
 
 function createBaseCommand(): Command {
@@ -149,6 +160,7 @@ function createBaseCommand(): Command {
     exitCode: undefined,
     exitMessage: undefined,
     retryHintSeconds: undefined,
+    createdAt: undefined,
     ackedAt: undefined,
     node: undefined,
     host: undefined,
@@ -169,14 +181,17 @@ export const Command = {
     if (message.retryHintSeconds !== undefined) {
       writer.uint32(32).uint64(message.retryHintSeconds);
     }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).ldelim();
+    }
     if (message.ackedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.ackedAt), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.ackedAt), writer.uint32(50).fork()).ldelim();
     }
     if (message.node !== undefined) {
-      NodeCommand.encode(message.node, writer.uint32(50).fork()).ldelim();
+      NodeCommand.encode(message.node, writer.uint32(58).fork()).ldelim();
     }
     if (message.host !== undefined) {
-      HostCommand.encode(message.host, writer.uint32(58).fork()).ldelim();
+      HostCommand.encode(message.host, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -221,17 +236,24 @@ export const Command = {
             break;
           }
 
-          message.ackedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.node = NodeCommand.decode(reader, reader.uint32());
+          message.ackedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 7:
           if (tag !== 58) {
+            break;
+          }
+
+          message.node = NodeCommand.decode(reader, reader.uint32());
+          continue;
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -256,6 +278,7 @@ export const Command = {
     message.exitCode = object.exitCode ?? undefined;
     message.exitMessage = object.exitMessage ?? undefined;
     message.retryHintSeconds = object.retryHintSeconds ?? undefined;
+    message.createdAt = object.createdAt ?? undefined;
     message.ackedAt = object.ackedAt ?? undefined;
     message.node = (object.node !== undefined && object.node !== null)
       ? NodeCommand.fromPartial(object.node)
@@ -692,19 +715,252 @@ export const CommandServicePendingResponse = {
   },
 };
 
+function createBaseHostCommand(): HostCommand {
+  return { hostId: "", start: undefined, stop: undefined, restart: undefined, pending: undefined };
+}
+
+export const HostCommand = {
+  encode(message: HostCommand, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.start !== undefined) {
+      HostStart.encode(message.start, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.stop !== undefined) {
+      HostStop.encode(message.stop, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.restart !== undefined) {
+      HostRestart.encode(message.restart, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.pending !== undefined) {
+      HostPending.encode(message.pending, writer.uint32(50).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostCommand {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostCommand();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.start = HostStart.decode(reader, reader.uint32());
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.stop = HostStop.decode(reader, reader.uint32());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.restart = HostRestart.decode(reader, reader.uint32());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.pending = HostPending.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostCommand>): HostCommand {
+    return HostCommand.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostCommand>): HostCommand {
+    const message = createBaseHostCommand();
+    message.hostId = object.hostId ?? "";
+    message.start = (object.start !== undefined && object.start !== null)
+      ? HostStart.fromPartial(object.start)
+      : undefined;
+    message.stop = (object.stop !== undefined && object.stop !== null) ? HostStop.fromPartial(object.stop) : undefined;
+    message.restart = (object.restart !== undefined && object.restart !== null)
+      ? HostRestart.fromPartial(object.restart)
+      : undefined;
+    message.pending = (object.pending !== undefined && object.pending !== null)
+      ? HostPending.fromPartial(object.pending)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseHostStart(): HostStart {
+  return {};
+}
+
+export const HostStart = {
+  encode(_: HostStart, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostStart {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostStart();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostStart>): HostStart {
+    return HostStart.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<HostStart>): HostStart {
+    const message = createBaseHostStart();
+    return message;
+  },
+};
+
+function createBaseHostStop(): HostStop {
+  return {};
+}
+
+export const HostStop = {
+  encode(_: HostStop, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostStop {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostStop();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostStop>): HostStop {
+    return HostStop.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<HostStop>): HostStop {
+    const message = createBaseHostStop();
+    return message;
+  },
+};
+
+function createBaseHostRestart(): HostRestart {
+  return {};
+}
+
+export const HostRestart = {
+  encode(_: HostRestart, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostRestart {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostRestart();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostRestart>): HostRestart {
+    return HostRestart.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<HostRestart>): HostRestart {
+    const message = createBaseHostRestart();
+    return message;
+  },
+};
+
+function createBaseHostPending(): HostPending {
+  return {};
+}
+
+export const HostPending = {
+  encode(_: HostPending, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostPending {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostPending();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostPending>): HostPending {
+    return HostPending.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<HostPending>): HostPending {
+    const message = createBaseHostPending();
+    return message;
+  },
+};
+
 function createBaseNodeCommand(): NodeCommand {
   return {
     nodeId: "",
     hostId: "",
-    apiCommandId: "",
-    createdAt: undefined,
+    create: undefined,
     start: undefined,
     stop: undefined,
     restart: undefined,
     upgrade: undefined,
     update: undefined,
-    infoGet: undefined,
-    create: undefined,
     delete: undefined,
   };
 }
@@ -717,35 +973,26 @@ export const NodeCommand = {
     if (message.hostId !== "") {
       writer.uint32(18).string(message.hostId);
     }
-    if (message.apiCommandId !== "") {
-      writer.uint32(26).string(message.apiCommandId);
-    }
-    if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
+    if (message.create !== undefined) {
+      NodeCreate.encode(message.create, writer.uint32(26).fork()).ldelim();
     }
     if (message.start !== undefined) {
-      NodeStart.encode(message.start, writer.uint32(42).fork()).ldelim();
+      NodeStart.encode(message.start, writer.uint32(34).fork()).ldelim();
     }
     if (message.stop !== undefined) {
-      NodeStop.encode(message.stop, writer.uint32(50).fork()).ldelim();
+      NodeStop.encode(message.stop, writer.uint32(42).fork()).ldelim();
     }
     if (message.restart !== undefined) {
-      NodeRestart.encode(message.restart, writer.uint32(58).fork()).ldelim();
+      NodeRestart.encode(message.restart, writer.uint32(50).fork()).ldelim();
     }
     if (message.upgrade !== undefined) {
-      NodeUpgrade.encode(message.upgrade, writer.uint32(66).fork()).ldelim();
+      NodeUpgrade.encode(message.upgrade, writer.uint32(58).fork()).ldelim();
     }
     if (message.update !== undefined) {
-      NodeUpdate.encode(message.update, writer.uint32(74).fork()).ldelim();
-    }
-    if (message.infoGet !== undefined) {
-      NodeGet.encode(message.infoGet, writer.uint32(82).fork()).ldelim();
-    }
-    if (message.create !== undefined) {
-      NodeCreate.encode(message.create, writer.uint32(90).fork()).ldelim();
+      NodeUpdate.encode(message.update, writer.uint32(66).fork()).ldelim();
     }
     if (message.delete !== undefined) {
-      NodeDelete.encode(message.delete, writer.uint32(98).fork()).ldelim();
+      NodeDelete.encode(message.delete, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -776,66 +1023,45 @@ export const NodeCommand = {
             break;
           }
 
-          message.apiCommandId = reader.string();
+          message.create = NodeCreate.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.start = NodeStart.decode(reader, reader.uint32());
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.start = NodeStart.decode(reader, reader.uint32());
+          message.stop = NodeStop.decode(reader, reader.uint32());
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.stop = NodeStop.decode(reader, reader.uint32());
+          message.restart = NodeRestart.decode(reader, reader.uint32());
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.restart = NodeRestart.decode(reader, reader.uint32());
+          message.upgrade = NodeUpgrade.decode(reader, reader.uint32());
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.upgrade = NodeUpgrade.decode(reader, reader.uint32());
+          message.update = NodeUpdate.decode(reader, reader.uint32());
           continue;
         case 9:
           if (tag !== 74) {
-            break;
-          }
-
-          message.update = NodeUpdate.decode(reader, reader.uint32());
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.infoGet = NodeGet.decode(reader, reader.uint32());
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.create = NodeCreate.decode(reader, reader.uint32());
-          continue;
-        case 12:
-          if (tag !== 98) {
             break;
           }
 
@@ -858,8 +1084,9 @@ export const NodeCommand = {
     const message = createBaseNodeCommand();
     message.nodeId = object.nodeId ?? "";
     message.hostId = object.hostId ?? "";
-    message.apiCommandId = object.apiCommandId ?? "";
-    message.createdAt = object.createdAt ?? undefined;
+    message.create = (object.create !== undefined && object.create !== null)
+      ? NodeCreate.fromPartial(object.create)
+      : undefined;
     message.start = (object.start !== undefined && object.start !== null)
       ? NodeStart.fromPartial(object.start)
       : undefined;
@@ -872,12 +1099,6 @@ export const NodeCommand = {
       : undefined;
     message.update = (object.update !== undefined && object.update !== null)
       ? NodeUpdate.fromPartial(object.update)
-      : undefined;
-    message.infoGet = (object.infoGet !== undefined && object.infoGet !== null)
-      ? NodeGet.fromPartial(object.infoGet)
-      : undefined;
-    message.create = (object.create !== undefined && object.create !== null)
-      ? NodeCreate.fromPartial(object.create)
       : undefined;
     message.delete = (object.delete !== undefined && object.delete !== null)
       ? NodeDelete.fromPartial(object.delete)
@@ -1085,41 +1306,6 @@ export const NodeUpdate = {
   },
 };
 
-function createBaseNodeGet(): NodeGet {
-  return {};
-}
-
-export const NodeGet = {
-  encode(_: NodeGet, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeGet {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeGet();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<NodeGet>): NodeGet {
-    return NodeGet.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<NodeGet>): NodeGet {
-    const message = createBaseNodeGet();
-    return message;
-  },
-};
-
 function createBaseNodeCreate(): NodeCreate {
   return {
     name: "",
@@ -1266,41 +1452,6 @@ export const NodeCreate = {
   },
 };
 
-function createBaseNodeDelete(): NodeDelete {
-  return {};
-}
-
-export const NodeDelete = {
-  encode(_: NodeDelete, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeDelete {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeDelete();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<NodeDelete>): NodeDelete {
-    return NodeDelete.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<NodeDelete>): NodeDelete {
-    const message = createBaseNodeDelete();
-    return message;
-  },
-};
-
 function createBaseParameter(): Parameter {
   return { name: "", value: "" };
 }
@@ -1358,32 +1509,22 @@ export const Parameter = {
   },
 };
 
-function createBaseHostCommand(): HostCommand {
-  return { hostId: "" };
+function createBaseNodeDelete(): NodeDelete {
+  return {};
 }
 
-export const HostCommand = {
-  encode(message: HostCommand, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hostId !== "") {
-      writer.uint32(10).string(message.hostId);
-    }
+export const NodeDelete = {
+  encode(_: NodeDelete, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostCommand {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeDelete {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostCommand();
+    const message = createBaseNodeDelete();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.hostId = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1393,13 +1534,12 @@ export const HostCommand = {
     return message;
   },
 
-  create(base?: DeepPartial<HostCommand>): HostCommand {
-    return HostCommand.fromPartial(base ?? {});
+  create(base?: DeepPartial<NodeDelete>): NodeDelete {
+    return NodeDelete.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostCommand>): HostCommand {
-    const message = createBaseHostCommand();
-    message.hostId = object.hostId ?? "";
+  fromPartial(_: DeepPartial<NodeDelete>): NodeDelete {
+    const message = createBaseNodeDelete();
     return message;
   },
 };
@@ -1419,11 +1559,7 @@ export const CommandServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /**
-     * Update the status of a command.
-     *
-     * This method is only used by the host.
-     */
+    /** Update the status of a command (only used by the host). */
     update: {
       name: "Update",
       requestType: CommandServiceUpdateRequest,
@@ -1459,11 +1595,7 @@ export interface CommandServiceImplementation<CallContextExt = {}> {
     request: CommandServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<CommandServiceListResponse>>;
-  /**
-   * Update the status of a command.
-   *
-   * This method is only used by the host.
-   */
+  /** Update the status of a command (only used by the host). */
   update(
     request: CommandServiceUpdateRequest,
     context: CallContext & CallContextExt,
@@ -1486,11 +1618,7 @@ export interface CommandServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<CommandServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<CommandServiceListResponse>;
-  /**
-   * Update the status of a command.
-   *
-   * This method is only used by the host.
-   */
+  /** Update the status of a command (only used by the host). */
   update(
     request: DeepPartial<CommandServiceUpdateRequest>,
     options?: CallOptions & CallOptionsExt,

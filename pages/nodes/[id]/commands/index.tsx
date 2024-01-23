@@ -1,7 +1,7 @@
 import { AppLayout } from '@modules/layout';
-import { NodeView, NodeCommandLogs } from '@modules/node';
+import { NodeView, NodeCommands } from '@modules/node';
 
-const Component = () => <NodeCommandLogs />;
+const Component = () => <NodeCommands />;
 
 Component.getLayout = function getLayout(page: any) {
   return (
