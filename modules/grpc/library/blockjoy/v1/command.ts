@@ -46,6 +46,16 @@ export interface Command {
   host?: HostCommand | undefined;
 }
 
+export interface CommandServiceListRequest {
+  nodeId?: string | undefined;
+  hostId?: string | undefined;
+  exitCode?: CommandExitCode | undefined;
+}
+
+export interface CommandServiceListResponse {
+  commands: Command[];
+}
+
 export interface CommandServiceUpdateRequest {
   id: string;
   exitCode?: CommandExitCode | undefined;
@@ -253,6 +263,120 @@ export const Command = {
     message.host = (object.host !== undefined && object.host !== null)
       ? HostCommand.fromPartial(object.host)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseCommandServiceListRequest(): CommandServiceListRequest {
+  return { nodeId: undefined, hostId: undefined, exitCode: undefined };
+}
+
+export const CommandServiceListRequest = {
+  encode(message: CommandServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.nodeId !== undefined) {
+      writer.uint32(10).string(message.nodeId);
+    }
+    if (message.hostId !== undefined) {
+      writer.uint32(18).string(message.hostId);
+    }
+    if (message.exitCode !== undefined) {
+      writer.uint32(24).int32(message.exitCode);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceListRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.nodeId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.exitCode = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CommandServiceListRequest>): CommandServiceListRequest {
+    return CommandServiceListRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CommandServiceListRequest>): CommandServiceListRequest {
+    const message = createBaseCommandServiceListRequest();
+    message.nodeId = object.nodeId ?? undefined;
+    message.hostId = object.hostId ?? undefined;
+    message.exitCode = object.exitCode ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCommandServiceListResponse(): CommandServiceListResponse {
+  return { commands: [] };
+}
+
+export const CommandServiceListResponse = {
+  encode(message: CommandServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.commands) {
+      Command.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceListResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceListResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.commands.push(Command.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CommandServiceListResponse>): CommandServiceListResponse {
+    return CommandServiceListResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CommandServiceListResponse>): CommandServiceListResponse {
+    const message = createBaseCommandServiceListResponse();
+    message.commands = object.commands?.map((e) => Command.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1286,6 +1410,15 @@ export const CommandServiceDefinition = {
   name: "CommandService",
   fullName: "blockjoy.v1.CommandService",
   methods: {
+    /** Allows a user to retrieve a list of commands using a set of filter params. */
+    list: {
+      name: "List",
+      requestType: CommandServiceListRequest,
+      requestStream: false,
+      responseType: CommandServiceListResponse,
+      responseStream: false,
+      options: {},
+    },
     /**
      * Update the status of a command.
      *
@@ -1321,6 +1454,11 @@ export const CommandServiceDefinition = {
 } as const;
 
 export interface CommandServiceImplementation<CallContextExt = {}> {
+  /** Allows a user to retrieve a list of commands using a set of filter params. */
+  list(
+    request: CommandServiceListRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<CommandServiceListResponse>>;
   /**
    * Update the status of a command.
    *
@@ -1343,6 +1481,11 @@ export interface CommandServiceImplementation<CallContextExt = {}> {
 }
 
 export interface CommandServiceClient<CallOptionsExt = {}> {
+  /** Allows a user to retrieve a list of commands using a set of filter params. */
+  list(
+    request: DeepPartial<CommandServiceListRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<CommandServiceListResponse>;
   /**
    * Update the status of a command.
    *
@@ -1364,10 +1507,10 @@ export interface CommandServiceClient<CallOptionsExt = {}> {
   ): Promise<CommandServicePendingResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

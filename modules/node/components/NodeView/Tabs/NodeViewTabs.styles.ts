@@ -7,13 +7,27 @@ export const styles = {
     display: flex;
     align-items: center;
     height: 56px;
-    border-bottom: 1px solid ${theme.colorBorder};
     margin-bottom: 20px;
+    overflow-y: hidden;
+    overflow-x: auto;
+
+    ::-webkit-scrollbar {
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: ${theme.colorLabel};
+    }
   `,
-  tabs: () => css`
+  tabs: (theme: ITheme) => css`
     display: flex;
     gap: 16px;
     align-self: stretch;
+    width: 100%;
+    border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromXHuge} {
       .metrics {

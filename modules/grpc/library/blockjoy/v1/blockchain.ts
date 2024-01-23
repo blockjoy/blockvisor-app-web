@@ -9,6 +9,14 @@ import { NodeType, UiType } from "../common/v1/node";
 
 export const protobufPackage = "blockjoy.v1";
 
+export enum BlockchainVisibility {
+  BLOCKCHAIN_VISIBILITY_UNSPECIFIED = 0,
+  BLOCKCHAIN_VISIBILITY_PRIVATE = 1,
+  BLOCKCHAIN_VISIBILITY_PUBLIC = 2,
+  BLOCKCHAIN_VISIBILITY_DEVELOPMENT = 3,
+  UNRECOGNIZED = -1,
+}
+
 export interface Blockchain {
   id: string;
   name: string;
@@ -23,6 +31,8 @@ export interface Blockchain {
   nodeTypes: BlockchainNodeType[];
   /** Optional statistics around the state of this chain. */
   stats: BlockchainStats | undefined;
+  visibility: BlockchainVisibility;
+  ticker: string;
 }
 
 export interface BlockchainServiceGetRequest {
@@ -92,6 +102,7 @@ export interface BlockchainNodeType {
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
   versions: BlockchainVersion[];
+  visibility: BlockchainVisibility;
 }
 
 export interface BlockchainVersion {
@@ -188,6 +199,8 @@ function createBaseBlockchain(): Blockchain {
     repoUrl: undefined,
     nodeTypes: [],
     stats: undefined,
+    visibility: 0,
+    ticker: "",
   };
 }
 
@@ -219,6 +232,12 @@ export const Blockchain = {
     }
     if (message.stats !== undefined) {
       BlockchainStats.encode(message.stats, writer.uint32(74).fork()).ldelim();
+    }
+    if (message.visibility !== 0) {
+      writer.uint32(80).int32(message.visibility);
+    }
+    if (message.ticker !== "") {
+      writer.uint32(90).string(message.ticker);
     }
     return writer;
   },
@@ -293,6 +312,20 @@ export const Blockchain = {
 
           message.stats = BlockchainStats.decode(reader, reader.uint32());
           continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.visibility = reader.int32() as any;
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.ticker = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -319,6 +352,8 @@ export const Blockchain = {
     message.stats = (object.stats !== undefined && object.stats !== null)
       ? BlockchainStats.fromPartial(object.stats)
       : undefined;
+    message.visibility = object.visibility ?? 0;
+    message.ticker = object.ticker ?? "";
     return message;
   },
 };
@@ -1022,7 +1057,15 @@ export const BlockchainServiceListImageVersionsResponse = {
 };
 
 function createBaseBlockchainNodeType(): BlockchainNodeType {
-  return { id: "", nodeType: 0, description: undefined, createdAt: undefined, updatedAt: undefined, versions: [] };
+  return {
+    id: "",
+    nodeType: 0,
+    description: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+    versions: [],
+    visibility: 0,
+  };
 }
 
 export const BlockchainNodeType = {
@@ -1044,6 +1087,9 @@ export const BlockchainNodeType = {
     }
     for (const v of message.versions) {
       BlockchainVersion.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.visibility !== 0) {
+      writer.uint32(56).int32(message.visibility);
     }
     return writer;
   },
@@ -1097,6 +1143,13 @@ export const BlockchainNodeType = {
 
           message.versions.push(BlockchainVersion.decode(reader, reader.uint32()));
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.visibility = reader.int32() as any;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1118,6 +1171,7 @@ export const BlockchainNodeType = {
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
     message.versions = object.versions?.map((e) => BlockchainVersion.fromPartial(e)) || [];
+    message.visibility = object.visibility ?? 0;
     return message;
   },
 };
@@ -1836,10 +1890,10 @@ export interface BlockchainServiceClient<CallOptionsExt = {}> {
   ): Promise<BlockchainServiceAddVersionResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
