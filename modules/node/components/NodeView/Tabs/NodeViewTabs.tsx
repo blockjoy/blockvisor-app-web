@@ -17,6 +17,7 @@ export const NodeViewTabs = () => {
     { href: createPath(''), name: 'Details' },
     { href: createPath('settings'), name: 'Settings' },
     { href: createPath('jobs'), name: 'Jobs' },
+    { href: createPath('commands'), name: 'Commands' },
   ];
 
   if (node?.blockHeight) {
