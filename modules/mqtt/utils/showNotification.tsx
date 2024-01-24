@@ -5,7 +5,7 @@ import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 
 export const showNotification = (
   type: Topic,
-  message: string,
+  message: string | ReactNode,
   content?: ReactNode,
 ): void => {
   toast(
