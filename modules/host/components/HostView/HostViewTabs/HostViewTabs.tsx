@@ -11,6 +11,7 @@ export const HostViewTabs = () => {
   const tabs = [
     { href: createPath(''), name: 'Details' },
     { href: createPath('nodes'), name: 'Nodes' },
+    { href: createPath('commands'), name: 'Commands' },
     { href: createPath('metrics'), name: 'Metrics', className: 'metrics' },
   ];
 

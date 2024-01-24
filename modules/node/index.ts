@@ -6,6 +6,7 @@ export * from './components/NodeView/SidePanel/NodeViewSidePanel';
 export * from './components/NodeView/Tabs/Details/NodeViewDetails';
 export * from './components/NodeView/Tabs/Jobs/JobList/NodeViewJobList';
 export * from './components/NodeView/Tabs/Jobs/JobView/NodeViewJobView';
+export * from './components/NodeView/Tabs/Commands/NodeCommands';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/Shared';
 

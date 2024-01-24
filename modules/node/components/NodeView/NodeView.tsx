@@ -8,6 +8,7 @@ import { NodeViewSidePanel } from './SidePanel/NodeViewSidePanel';
 import { NodeViewTabs } from './Tabs/NodeViewTabs';
 import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
+import { useCommands } from '@modules/commands';
 
 type Props = {
   children?: ReactNode;
@@ -19,10 +20,12 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
   const { id } = router.query;
 
   const { node, loadNode, unloadNode, isLoading, setIsLoading } = useNodeView();
+  const { getCommands } = useCommands();
 
   useEffect(() => {
     if (router.isReady) {
       loadNode(id);
+      getCommands({ nodeId: id });
     }
 
     return () => {

@@ -5,6 +5,7 @@ import { EmptyColumn, SkeletonView } from '@shared/components';
 import { useHostView, HostViewTabs, HostViewHeader } from '@modules/host';
 import { useNodeList } from '@modules/node';
 import { HostViewSidePanel } from './HostViewSidePanel/HostViewSidePanel';
+import { useCommands } from '@modules/commands';
 
 type HostViewProps = {
   children: ReactNode;
@@ -16,6 +17,7 @@ export const HostView = ({ children }: HostViewProps) => {
 
   const { host, loadHost, unloadHost, isLoading } = useHostView();
   const { listNodesByHost } = useNodeList();
+  const { getCommands } = useCommands();
 
   useEffect(() => {
     (async () => {
@@ -25,6 +27,7 @@ export const HostView = ({ children }: HostViewProps) => {
           items_per_page: 48,
         });
         loadHost(id);
+        getCommands({ hostId: id });
       }
     })();
     return () => {
