@@ -2,6 +2,7 @@ import { styles } from './PageTitleLaunchNode.styles';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { useRouter } from 'next/router';
 import { SvgIcon } from '@shared/components';
+import { PageTitleActivate } from './PageTitleActivate';
 
 export const PageTitleLaunchNode = () => {
   const router = useRouter();
@@ -25,5 +26,7 @@ export const PageTitleLaunchNode = () => {
       </SvgIcon>
       <span css={styles.buttonText}>Launch Node</span>
     </button>
-  ) : null;
+  ) : (
+    <PageTitleActivate />
+  );
 };

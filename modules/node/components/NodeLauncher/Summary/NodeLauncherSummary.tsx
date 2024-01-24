@@ -115,7 +115,7 @@ export const NodeLauncherSummary = ({
             noWrap
             top="-30px"
             left="50%"
-            tooltip="Feature disabled during beta."
+            tooltip="Disabled: Activate now to start launching nodes."
           />
         )}
         <button
