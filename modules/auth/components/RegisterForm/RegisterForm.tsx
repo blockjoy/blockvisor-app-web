@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Alert, Button, Input } from '@shared/components';
+import { Alert, Button, Input, useHubSpotForm } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
@@ -14,6 +14,7 @@ import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQ
 import { PasswordField } from '../PasswordField/PasswordField';
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { userClient } from '@modules/grpc';
+import { HUBSPOT_FORMS } from '@shared/index';
 
 type RegisterForm = {
   firstName: string;
@@ -47,6 +48,8 @@ export function RegisterForm() {
 
   const { setPassword } = usePasswordStrength();
 
+  const { submitHubSpotForm } = useHubSpotForm();
+
   const onSubmit = handleSubmit(
     async ({ email, password, firstName, lastName }) => {
       setIsLoading(true);
@@ -65,6 +68,16 @@ export function RegisterForm() {
         setIsLoading(false);
         return;
       }
+
+      submitHubSpotForm({
+        formId: HUBSPOT_FORMS.register.formId,
+        portalId: HUBSPOT_FORMS.register.portalId,
+        formData: {
+          email,
+          firstname: firstName,
+          lastname: lastName,
+        },
+      });
 
       setIsLoading(false);
       Router.push(Routes.verify);

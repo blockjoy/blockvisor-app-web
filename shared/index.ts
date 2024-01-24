@@ -1,6 +1,7 @@
 export * from './components';
 
 export * from './constants/routes';
+export * from './constants/forms';
 
 export * from './hooks/useAccessibleDropdown';
 export * from './hooks/useAccessibleList';
