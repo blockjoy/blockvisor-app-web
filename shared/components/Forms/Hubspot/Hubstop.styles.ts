@@ -1,11 +1,12 @@
 import { css, keyframes } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 const spin = keyframes`
   100% { transform: rotate(1turn); }
 `;
 
 export const styles = {
-  wrapper: css`
+  wrapper: (theme: ITheme) => css`
     min-height: 156px;
 
     .hs-form {
@@ -18,14 +19,14 @@ export const styles = {
 
     .hs-form .hs-email input {
       background: transparent;
-      border: 1px solid #5e605c;
+      border: 1px solid ${theme.colorBorderGrey};
       border-radius: 4px;
       height: 38px;
       min-width: 0;
       padding: 0 8px;
       font-size: 16px;
       outline: none;
-      color: #f9f9f9;
+      color: ${theme.colorText};
       -webkit-transition: 0.3s;
       transition: 0.3s;
       width: 100%;
@@ -33,7 +34,7 @@ export const styles = {
     }
 
     .hs-form .hs-email input.error {
-      border-color: #e66765;
+      border-color: ${theme.colorDanger};
     }
 
     .hs-form .hs-email > label {
@@ -57,8 +58,8 @@ export const styles = {
       align-items: center;
       justify-content: center;
       border-radius: 6px;
-      background: #bff589;
-      color: #232524;
+      background: ${theme.colorPrimary};
+      color: ${theme.colorPrimaryText};
       border: 0;
       cursor: pointer;
       transition: box-shadow 0.18s var(--transition-easing-cubic);
@@ -73,7 +74,7 @@ export const styles = {
       margin-left: 2px;
       margin-top: 5px;
       font-size: 14px;
-      color: #e66765;
+      color: ${theme.colorDanger};
     }
 
     .hs-form .hs_error_rollup {
@@ -85,7 +86,7 @@ export const styles = {
       font-weight: 600;
     }
   `,
-  loading: css`
+  loading: (theme: ITheme) => css`
     .hs-form .hs-submit {
       width: 125px;
     }
@@ -105,7 +106,7 @@ export const styles = {
       align-items: center;
       justify-content: center;
       border-radius: 6px;
-      background: #bff589;
+      background: ${theme.colorPrimary};
       cursor: no-drop;
       content: '';
       opacity: 0.5;

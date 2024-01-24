@@ -20,7 +20,11 @@ export const PageTitleActivate = () => {
         <span css={styles.buttonText}>Activate now</span>
       </button>
       {isOpen && (
-        <Modal portalId="modal-root" isOpen={isOpen} handleClose={handleClose}>
+        <Modal
+          portalId="modal-hubspot-form"
+          isOpen={isOpen}
+          handleClose={handleClose}
+        >
           <h2 css={[typo.medium, spacing.bottom.medium]}>
             Request Node Launch
           </h2>
