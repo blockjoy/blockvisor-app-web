@@ -8,7 +8,6 @@ export const styles = {
     css`
       display: inline-grid;
       vertical-align: middle;
-      margin-left: 16px;
       margin-right: 10px;
       color: ${getCommandColor(theme, exitCode)};
     `,

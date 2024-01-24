@@ -4,11 +4,15 @@ import { styles } from './NodeViewTabs.styles';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
+import { usePermissions } from '@modules/auth';
 
 export const NodeViewTabs = () => {
   const { query, asPath } = useRouter();
   const { id } = query;
   const { node } = useNodeView();
+
+  const { hasPermission } = usePermissions();
+  const canViewCommand = hasPermission('command-get');
 
   const createPath = (path: string) =>
     `${ROUTES.NODE(id as string)}${path ? `/${path}` : ''}`;

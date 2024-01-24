@@ -33,7 +33,7 @@ class CommandClient {
         request,
       );
 
-      return response;
+      return response.commands;
     } catch (err) {
       return handleError(err);
     }

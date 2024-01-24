@@ -1,13 +1,13 @@
 import { CommandExitCode } from '@modules/grpc/library/blockjoy/v1/command';
 import { SvgIcon } from '@shared/components';
 import { getCommandIcon } from '@modules/commands';
-import { styles } from './NodeCommandIcon.styles';
+import { styles } from './CommandIcon.styles';
 
-type NodeCommandIconProps = {
+type CommandIconProps = {
   exitCode?: CommandExitCode;
 };
 
-export const NodeCommandIcon = ({ exitCode }: NodeCommandIconProps) => {
+export const CommandIcon = ({ exitCode }: CommandIconProps) => {
   return (
     <SvgIcon additionalStyles={[styles.icon(exitCode)]} size="16px">
       {getCommandIcon(exitCode)}
