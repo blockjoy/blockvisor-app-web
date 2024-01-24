@@ -255,6 +255,7 @@ export const AdminNode = () => {
       ignoreItems={ignoreItems}
       customItems={customItems}
       detailsName="id"
+      metricsKey="ip"
       hasMetrics
     />
   );
