@@ -14,9 +14,13 @@ import { styles } from './NodeLauncherSummaryDetails.styles';
 export const NodeLauncherSummaryDetails = () => {
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
+  const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const error = useRecoilValue(nodeLauncherAtoms.error);
+  const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+  const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
 
   const { blockchainId, nodeType, properties } = nodeLauncher;
 
@@ -54,7 +58,7 @@ export const NodeLauncherSummaryDetails = () => {
               </div>
             </li>
             <li>
-              {isConfigValid ? (
+              {isConfigValid && isNodeValid ? (
                 <span css={styles.summaryIcon}>
                   <IconCheckCircle />
                 </span>
@@ -67,27 +71,38 @@ export const NodeLauncherSummaryDetails = () => {
               <div>
                 <label>Configuration</label>
                 <span>
-                  {isConfigValid ? 'Ready For Liftoff' : 'Needs Work'}
+                  {isConfigValid && isNodeValid
+                    ? 'Ready For Liftoff'
+                    : 'Needs Work'}
                 </span>
               </div>
             </li>
           </ul>
-          {!isConfigValid && (
+          {(!isConfigValid || !isNodeValid) && (
             <>
               <h2 css={styles.missingFieldsTitle}>
                 The following information needs to be added:
               </h2>
               <div css={styles.missingFields}>
-                {properties
-                  ?.filter(
-                    (property: any) =>
-                      property.required &&
-                      !property.disabled &&
-                      !property.value,
-                  )
-                  .map((property: any) => (
-                    <div key={property.name}>{property.displayName}</div>
-                  ))}
+                {!isConfigValid
+                  ? properties
+                      ?.filter(
+                        (property: any) =>
+                          property.required &&
+                          !property.disabled &&
+                          !property.value,
+                      )
+                      .map((property: any) => (
+                        <div key={property.name}>{property.displayName}</div>
+                      ))
+                  : null}
+                {!isNodeValid ? (
+                  <>
+                    {!selectedHost ? <div>Host</div> : null}
+                    {!selectedRegion ? <div>Region</div> : null}
+                    {!hasSummary ? <div>Blockchain</div> : null}
+                  </>
+                ) : null}
               </div>
             </>
           )}
