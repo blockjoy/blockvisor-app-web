@@ -143,7 +143,7 @@ export const ArchiveLocation = {
 };
 
 function createBaseRhaiPlugin(): RhaiPlugin {
-  return { identifier: undefined, rhaiContent: new Uint8Array(0) };
+  return { identifier: undefined, rhaiContent: new Uint8Array() };
 }
 
 export const RhaiPlugin = {
@@ -196,7 +196,7 @@ export const RhaiPlugin = {
     message.identifier = (object.identifier !== undefined && object.identifier !== null)
       ? ImageIdentifier.fromPartial(object.identifier)
       : undefined;
-    message.rhaiContent = object.rhaiContent ?? new Uint8Array(0);
+    message.rhaiContent = object.rhaiContent ?? new Uint8Array();
     return message;
   },
 };
