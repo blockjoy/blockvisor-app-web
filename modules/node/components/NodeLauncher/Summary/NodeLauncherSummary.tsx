@@ -20,6 +20,7 @@ import {
   nodeLauncherSelectors,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
+import { NodeLauncherSummaryHubSpot } from './NodeLauncherSummaryHubSpot';
 
 type NodeLauncherSummaryProps = {
   onCreateNodeClicked: VoidFunction;
@@ -37,6 +38,7 @@ export const NodeLauncherSummary = ({
   const { hostList } = useHostList();
 
   const [isLoadingRegions, setIsLoadingRegions] = useState(true);
+  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
 
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const error = useRecoilValue(nodeLauncherAtoms.error);
@@ -59,10 +61,26 @@ export const NodeLauncherSummary = ({
     onRegionsLoaded(region);
   };
 
+  const handleCreateNodeClicked = () => {
+    if (!canAddNode) handleOpenHubSpot();
+    else onCreateNodeClicked();
+  };
+
+  const handleOpenHubSpot = () => setIsOpenHubSpot(true);
+  const handleCloseHubSpot = () => setIsOpenHubSpot(false);
+
   useEffect(
     () => setIsLoadingRegions(true),
     [nodeLauncher.blockchainId, nodeLauncher.nodeType, selectedVersion],
   );
+
+  const isDisabled =
+    !hasNetworkList ||
+    !isNodeValid ||
+    !isConfigValid ||
+    Boolean(error) ||
+    isLoading ||
+    isLoadingRegions;
 
   return (
     <div css={styles.wrapper}>
@@ -110,25 +128,17 @@ export const NodeLauncherSummary = ({
       <NodeLauncherSummaryDetails />
 
       <div css={styles.buttons}>
-        {!canAddNode && (
+        {isDisabled && (
           <Tooltip
             noWrap
             top="-30px"
             left="50%"
-            tooltip="Disabled: Activate now to start launching nodes."
+            tooltip="Disabled: Please check your configuration."
           />
         )}
         <button
-          onClick={onCreateNodeClicked}
-          disabled={
-            !canAddNode ||
-            !hasNetworkList ||
-            !isNodeValid ||
-            !isConfigValid ||
-            Boolean(error) ||
-            isLoading ||
-            isLoadingRegions
-          }
+          onClick={handleCreateNodeClicked}
+          disabled={isDisabled}
           css={[
             styles.createButton,
             isLoading && !Boolean(error) && styles.createButtonLoading,
@@ -148,6 +158,12 @@ export const NodeLauncherSummary = ({
           </span>
         </button>
       </div>
+      {isOpenHubSpot && (
+        <NodeLauncherSummaryHubSpot
+          isOpenHubSpot={isOpenHubSpot}
+          handleClose={handleCloseHubSpot}
+        />
+      )}
     </div>
   );
 };
