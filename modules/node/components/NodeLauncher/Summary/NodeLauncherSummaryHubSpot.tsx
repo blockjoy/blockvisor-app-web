@@ -39,7 +39,7 @@ export const NodeLauncherSummaryHubSpot = ({
           setIsLoading(false);
           setIsSubmitted(true);
           handleClose();
-          toast.success('Request Submitted');
+          toast.success('Request Submitted', { autoClose: false });
         },
       });
     }

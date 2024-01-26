@@ -1,4 +1,5 @@
 import { css, keyframes } from '@emotion/react';
+import { rgba } from 'polished';
 import { ITheme } from 'types/theme';
 
 const spin = keyframes`
@@ -80,11 +81,6 @@ export const styles = {
     .hs-form .hs_error_rollup {
       display: none;
     }
-
-    .hs-form .submitted-message {
-      margin-top: 30px;
-      font-weight: 600;
-    }
   `,
   loading: (theme: ITheme) => css`
     .hs-form .hs-submit {
@@ -123,8 +119,8 @@ export const styles = {
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      border: 3px solid rgb(255 255 255 / 20%);
-      border-top-color: rgb(255 255 255 / 80%);
+      border: 3px solid ${rgba(theme.colorPrimaryText || '#000', 0.2)};
+      border-top-color: ${rgba(theme.colorPrimaryText || '#000', 0.8)};
       animation: ${spin} 0.7s infinite linear;
       position: absolute;
       top: 12px;

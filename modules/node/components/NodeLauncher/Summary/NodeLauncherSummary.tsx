@@ -7,7 +7,6 @@ import {
   FormLabel,
   HostSelect,
   OrganizationSelect,
-  Tooltip,
 } from '@shared/components';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
@@ -128,14 +127,6 @@ export const NodeLauncherSummary = ({
       <NodeLauncherSummaryDetails />
 
       <div css={styles.buttons}>
-        {isDisabled && (
-          <Tooltip
-            noWrap
-            top="-30px"
-            left="50%"
-            tooltip="Disabled: Please check your configuration."
-          />
-        )}
         <button
           onClick={handleCreateNodeClicked}
           disabled={isDisabled}
