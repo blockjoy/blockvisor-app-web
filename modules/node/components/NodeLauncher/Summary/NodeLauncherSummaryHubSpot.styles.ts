@@ -127,7 +127,4 @@ export const styles = {
       left: calc(50% - 12px);
     }
   `,
-  submitted: css`
-    min-height: auto;
-  `,
 };
