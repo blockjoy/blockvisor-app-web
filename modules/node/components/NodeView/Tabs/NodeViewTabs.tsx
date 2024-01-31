@@ -62,8 +62,8 @@ export const NodeViewTabs = () => {
               {tab.name}
             </NextLink>
           ))}
+          <header css={styles.sidePanelHeader}>Metrics</header>
         </div>
-        <header css={styles.sidePanelHeader}>Metrics</header>
       </div>
     </section>
   );

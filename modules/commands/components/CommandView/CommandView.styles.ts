@@ -23,5 +23,7 @@ export const styles = {
     css`
       color: ${getCommandColor(theme, exitCode)};
       vertical-align: middle;
+      word-wrap: break-word;
+      max-width: 100%;
     `,
 };
