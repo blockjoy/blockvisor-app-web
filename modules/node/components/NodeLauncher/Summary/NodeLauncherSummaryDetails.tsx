@@ -10,6 +10,7 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './NodeLauncherSummaryDetails.styles';
+import { hostAtoms } from '@modules/host';
 
 export const NodeLauncherSummaryDetails = () => {
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
@@ -20,6 +21,7 @@ export const NodeLauncherSummaryDetails = () => {
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+  const allHosts = useRecoilValue(hostAtoms.allHosts);
   const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
 
   const { blockchainId, nodeType, properties } = nodeLauncher;
@@ -98,8 +100,12 @@ export const NodeLauncherSummaryDetails = () => {
                   : null}
                 {!isNodeValid ? (
                   <>
-                    {!selectedHost ? <div>Host</div> : null}
-                    {!selectedRegion ? <div>Region</div> : null}
+                    {!selectedHost && allHosts?.length ? (
+                      <div>Host or Region</div>
+                    ) : null}
+                    {!selectedRegion && !allHosts?.length ? (
+                      <div>Region</div>
+                    ) : null}
                     {!hasSummary ? <div>Blockchain</div> : null}
                   </>
                 ) : null}
