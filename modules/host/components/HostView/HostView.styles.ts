@@ -30,8 +30,8 @@ export const styles = {
 
     @media ${breakpoints.fromXLrg} {
       position: sticky;
-      top: 150px;
-      height: calc(100vh - 200px);
+      top: 100px;
+      height: calc(100vh - 120px);
     }
 
     @media ${breakpoints.toXHuge} {

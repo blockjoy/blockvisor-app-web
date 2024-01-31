@@ -34,10 +34,6 @@ export const styles = {
         display: none;
       }
     }
-
-    @media ${breakpoints.fromXLrg} {
-      margin-right: 24px;
-    }
   `,
   tabButton: (theme: ITheme) => css`
     display: flex;
@@ -54,6 +50,8 @@ export const styles = {
     color: ${theme.colorText};
     margin-left: auto;
     width: 400px;
+    display: flex;
+    align-items: center;
 
     @media ${breakpoints.toXHuge} {
       display: none;

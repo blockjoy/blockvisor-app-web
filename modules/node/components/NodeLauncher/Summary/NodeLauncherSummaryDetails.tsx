@@ -10,13 +10,19 @@ import { nodeTypeList } from '@shared/constants/lookups';
 import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './NodeLauncherSummaryDetails.styles';
+import { hostAtoms } from '@modules/host';
 
 export const NodeLauncherSummaryDetails = () => {
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
+  const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const error = useRecoilValue(nodeLauncherAtoms.error);
+  const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+  const allHosts = useRecoilValue(hostAtoms.allHosts);
+  const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
 
   const { blockchainId, nodeType, properties } = nodeLauncher;
 
@@ -54,7 +60,7 @@ export const NodeLauncherSummaryDetails = () => {
               </div>
             </li>
             <li>
-              {isConfigValid ? (
+              {isConfigValid && isNodeValid ? (
                 <span css={styles.summaryIcon}>
                   <IconCheckCircle />
                 </span>
@@ -67,27 +73,42 @@ export const NodeLauncherSummaryDetails = () => {
               <div>
                 <label>Configuration</label>
                 <span>
-                  {isConfigValid ? 'Ready For Liftoff' : 'Needs Work'}
+                  {isConfigValid && isNodeValid
+                    ? 'Ready For Liftoff'
+                    : 'Needs Work'}
                 </span>
               </div>
             </li>
           </ul>
-          {!isConfigValid && (
+          {(!isConfigValid || !isNodeValid) && (
             <>
               <h2 css={styles.missingFieldsTitle}>
                 The following information needs to be added:
               </h2>
               <div css={styles.missingFields}>
-                {properties
-                  ?.filter(
-                    (property: any) =>
-                      property.required &&
-                      !property.disabled &&
-                      !property.value,
-                  )
-                  .map((property: any) => (
-                    <div key={property.name}>{property.displayName}</div>
-                  ))}
+                {!isConfigValid
+                  ? properties
+                      ?.filter(
+                        (property: any) =>
+                          property.required &&
+                          !property.disabled &&
+                          !property.value,
+                      )
+                      .map((property: any) => (
+                        <div key={property.name}>{property.displayName}</div>
+                      ))
+                  : null}
+                {!isNodeValid ? (
+                  <>
+                    {!selectedHost && allHosts?.length ? (
+                      <div>Host or Region</div>
+                    ) : null}
+                    {!selectedRegion && !allHosts?.length ? (
+                      <div>Region</div>
+                    ) : null}
+                    {!hasSummary ? <div>Blockchain</div> : null}
+                  </>
+                ) : null}
               </div>
             </>
           )}
