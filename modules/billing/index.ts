@@ -65,6 +65,7 @@ export * from './hooks/useEstimates';
 export * from './hooks/useInvoice';
 export * from './hooks/useInvoices';
 export * from './hooks/usePayment';
+export * from './hooks/usePaymentAuthorization';
 export * from './hooks/usePaymentMethod';
 export * from './hooks/usePaymentMethods';
 export * from './hooks/usePaymentMethodForm';
@@ -72,6 +73,8 @@ export * from './hooks/usePromoCode';
 export * from './hooks/useSubscription';
 export * from './hooks/useSubscriptionLifecycle';
 export * from './hooks/useUpdateSubscriptionItems';
+
+export * from './services/chargebee';
 
 export * from './store/billingAtoms';
 export * from './store/billingSelectors';
@@ -95,4 +98,5 @@ export * from './utils/mapPaymentMethodsToRows';
 export * from './utils/mapServicesToRows';
 export * from './utils/mapSubscriptionToDetails';
 export * from './utils/matchSKU';
+export * from './utils/updateSubscriptionMetadata';
 export * from './utils/withLauncherGuard';

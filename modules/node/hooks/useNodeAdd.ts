@@ -1,9 +1,10 @@
-import { nodeClient } from '@modules/grpc';
-import { useNodeList } from './useNodeList';
+import { useRecoilValue } from 'recoil';
 import {
   NodeServiceCreateRequest,
   Node,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import { nodeClient } from '@modules/grpc';
+import { useNodeList } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import {
@@ -11,9 +12,9 @@ import {
   billingAtoms,
   generateError,
   useUpdateSubscriptionItems,
+  usePaymentAuthorization,
 } from '@modules/billing';
 import { usePermissions } from '@modules/auth';
-import { useRecoilValue } from 'recoil';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
@@ -25,6 +26,7 @@ export const useNodeAdd = () => {
   const isSuperUserBilling = useRecoilValue(
     billingAtoms.isSuperUserBilling(isSuperUser),
   );
+  const { authorizePayment } = usePaymentAuthorization();
 
   const createNode = async (
     node: NodeServiceCreateRequest,
@@ -42,23 +44,26 @@ export const useNodeAdd = () => {
     };
 
     try {
-      if (!isSuperUserBilling)
-        try {
-          await updateSubscriptionItems({
-            type: UpdateSubscriptionAction.ADD_NODE,
-            payload: { node: nodeRequest },
-          });
-        } catch (error: any) {
-          const errorMessage = generateError(error);
-          onError(errorMessage);
-          return;
-        }
+      await authorizePayment(async () => {
+        const response: Node = await nodeClient.createNode(nodeRequest);
 
-      const response: Node = await nodeClient.createNode(nodeRequest);
-      loadNodes();
-      loadHosts();
-      getOrganizations();
-      onSuccess(response.id);
+        if (!isSuperUserBilling)
+          try {
+            await updateSubscriptionItems({
+              type: UpdateSubscriptionAction.ADD_NODE,
+              payload: { node: response },
+            });
+          } catch (error: any) {
+            const errorMessage = generateError(error);
+            onError(errorMessage);
+            return;
+          }
+
+        loadNodes();
+        loadHosts();
+        getOrganizations();
+        onSuccess(response.id);
+      });
     } catch (err: any) {
       console.log('Error Launching Node', err);
       onError('Error launching node, an unknown error occurred.');

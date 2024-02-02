@@ -7,11 +7,7 @@ import {
   NetType,
 } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import {
-  blockchainList,
-  nodeNetworkTypes,
-  nodeTypes,
-} from '@shared/constants/lookups';
+import { nodeNetworkTypes, nodeTypes } from '@shared/constants/lookups';
 import { NodeLauncherState } from '@modules/node';
 
 type Payload = {
@@ -60,11 +56,7 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
       )?.value ?? 'MN';
 
     // BLOCKCHAIN
-    const blockchainName: string = blockchain?.name;
-    SKU.nodeBlockchain =
-      blockchainList.find(
-        (blockchainItem) => blockchainItem.name === blockchainName,
-      )?.abbreviation ?? '';
+    SKU.nodeBlockchain = blockchain?.ticker ?? '';
 
     // NODE TYPE
     SKU.nodeType = nodeTypes[nodeLauncher?.nodeType];

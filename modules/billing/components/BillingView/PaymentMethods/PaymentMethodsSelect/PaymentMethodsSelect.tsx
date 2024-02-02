@@ -17,7 +17,7 @@ import { containers } from 'styles/containers.styles';
 
 type PaymentMethodsSelectProps = {
   subscriptionId: string;
-  currentPaymentMethod: PaymentSource;
+  currentPaymentMethod: PaymentSource | null;
   onHide: VoidFunction;
 };
 
@@ -27,7 +27,7 @@ export const PaymentMethodsSelect = ({
   onHide,
 }: PaymentMethodsSelectProps) => {
   const [activePaymentMethod, setActivePaymentMethod] =
-    useState<PaymentSource>(currentPaymentMethod);
+    useState<PaymentSource | null>(currentPaymentMethod ?? null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleClose = () => setIsOpen(!isOpen);
@@ -42,6 +42,8 @@ export const PaymentMethodsSelect = ({
   };
 
   const handleConfirm = async () => {
+    if (!activePaymentMethod?.id) return;
+
     try {
       await updateBillingProfile(subscriptionId, {
         paymentMethodId: activePaymentMethod?.id,

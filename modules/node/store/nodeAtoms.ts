@@ -1,6 +1,7 @@
 import { atom, selector } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { blockchainAtoms } from '@modules/node';
@@ -48,6 +49,16 @@ const isLoading = atom<LoadingState>({
 
 const isLoadingActiveNode = atom<LoadingState>({
   key: 'node.loadingActiveNode',
+  default: 'initializing',
+});
+
+const regions = atom<Region[]>({
+  key: 'node.regions',
+  default: [],
+});
+
+const regionsLoadingState = atom<LoadingState>({
+  key: 'node.regions.loadingState',
   default: 'initializing',
 });
 
@@ -254,6 +265,10 @@ export const nodeAtoms = {
   selectedSKU,
   isFiltersOpen,
   activeListType,
+
+  regions,
+  regionsLoadingState,
+
   filtersHealth,
   filtersBlockchain,
   filtersBlockchainTotal,
@@ -263,6 +278,7 @@ export const nodeAtoms = {
   filtersTypeTotal,
   filtersTotal,
   filtersAll,
+
   nodeListByHost,
   nodeListByHostCount,
   isLoadingNodeListByHost,

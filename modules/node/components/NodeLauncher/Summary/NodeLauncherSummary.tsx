@@ -41,7 +41,7 @@ export const NodeLauncherSummary = ({
 
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const error = useRecoilValue(nodeLauncherAtoms.error);
-  const isLoading = useRecoilValue(nodeLauncherAtoms.isLoading);
+  const isLaunching = useRecoilValue(nodeLauncherAtoms.isLaunching);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
@@ -126,17 +126,35 @@ export const NodeLauncherSummary = ({
       <FormLabel>Summary</FormLabel>
       <NodeLauncherSummaryDetails />
 
+<<<<<<< HEAD
+=======
+      <FormLabel>Pricing</FormLabel>
+      <Pricing itemPrice={itemPrice} />
+
+>>>>>>> a1f742f5 (feat: [sc-3018] payment authorization, [sc-3503] subscription metadata items, disabled credits)
       <div css={styles.buttons}>
         <button
+<<<<<<< HEAD
           onClick={handleCreateNodeClicked}
           disabled={isDisabled}
+=======
+          onClick={onCreateNodeClicked}
+          disabled={
+            !canAddNode ||
+            !hasNetworkList ||
+            !isNodeValid ||
+            !isConfigValid ||
+            Boolean(error) ||
+            isLaunching
+          }
+>>>>>>> a1f742f5 (feat: [sc-3018] payment authorization, [sc-3503] subscription metadata items, disabled credits)
           css={[
             styles.createButton,
-            isLoading && !Boolean(error) && styles.createButtonLoading,
+            isLaunching && !Boolean(error) && styles.createButtonLoading,
           ]}
         >
           <span css={styles.createButtonInner}>
-            {isLoading && !Boolean(error) ? (
+            {isLaunching && !Boolean(error) ? (
               <span css={styles.cogIcon}>
                 <IconCog />
               </span>
@@ -144,7 +162,9 @@ export const NodeLauncherSummary = ({
               <IconRocket />
             )}
             <span>
-              {isLoading && !Boolean(error) ? 'Launching' : 'Launch Your Node'}
+              {isLaunching && !Boolean(error)
+                ? 'Launching'
+                : 'Launch Your Node'}
             </span>
           </span>
         </button>

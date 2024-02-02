@@ -36,4 +36,8 @@ export const styles = {
       text-decoration: underline;
     }
   `,
+  disabled: css`
+    opacity: 0.5;
+    pointer-events: none;
+  `,
 };
