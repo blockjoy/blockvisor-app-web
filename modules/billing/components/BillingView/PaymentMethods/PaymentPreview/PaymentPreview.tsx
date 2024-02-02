@@ -7,6 +7,7 @@ import {
   billingSelectors,
   PaymentMethodsSelect,
   usePaymentMethod,
+  billingAtoms,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
@@ -21,6 +22,7 @@ export const PaymentPreview = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
 
   const { paymentMethod, paymentMethodLoadingState } = usePaymentMethod();
+  const allPaymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const { hasPermission } = usePermissions();
   const canUpdateSubscription = hasPermission('subscription-update');
@@ -29,14 +31,16 @@ export const PaymentPreview = () => {
   const onHide = () => setActiveView('list');
 
   const handleNewPaymentMethod = () => {
-    router.push(
-      {
-        pathname: ROUTES.SETTINGS,
-        query: { tab: '1', add: true, update: true },
-      },
-      undefined,
-      { shallow: true },
-    );
+    if (!allPaymentMethods.length)
+      router.push(
+        {
+          pathname: ROUTES.SETTINGS,
+          query: { tab: '1', add: true, update: true },
+        },
+        undefined,
+        { shallow: true },
+      );
+    else handleUpdate();
   };
 
   if (paymentMethodLoadingState !== 'finished') return <TableSkeleton />;
@@ -51,7 +55,7 @@ export const PaymentPreview = () => {
             Subscription is missing a payment method. Without one, the next
             payment cannot proceed, and services will be terminated
           </p>
-          <p css={styles.text}>Please add a new payment method to continue</p>
+          <p css={styles.text}>Please update the payment method to continue</p>
         </>
       )}
 
@@ -65,7 +69,7 @@ export const PaymentPreview = () => {
           css={spacing.top.medium}
           disabled={subscription?.status !== 'active'}
         >
-          {!!paymentMethod?.card
+          {!!paymentMethod?.card || !!allPaymentMethods.length
             ? 'Update payment method'
             : 'Add payment method'}
         </Button>
@@ -73,13 +77,13 @@ export const PaymentPreview = () => {
     </div>
   ) : (
     <>
-      {paymentMethod && (
+      {paymentMethod || (!paymentMethod && allPaymentMethods.length) ? (
         <PaymentMethodsSelect
           subscriptionId={subscription?.id!}
           currentPaymentMethod={paymentMethod}
           onHide={onHide}
         />
-      )}
+      ) : null}
     </>
   );
 };

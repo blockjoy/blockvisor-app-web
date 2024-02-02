@@ -1,59 +1,39 @@
-import { FormProvider, useForm } from 'react-hook-form';
-import { ItemPrice } from 'chargebee-typescript/lib/resources';
-import { css } from '@emotion/react';
-import { Button, Input, SvgIcon } from '@shared/components';
-import { display } from 'styles/utils.display.styles';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { SvgIcon } from '@shared/components';
 import { styles } from './Promo.styles';
 import IconDiscount from '@public/assets/icons/common/Discount.svg';
 import { formatters } from '@shared/utils/formatters';
-import { ItemPriceSimple, usePromoCode } from '@modules/billing';
-import { typo } from 'styles/utils.typography.styles';
-import { colors } from 'styles/utils.colors.styles';
-import { spacing } from 'styles/utils.spacing.styles';
-import { computePricing } from '@shared/index';
+import { billingAtoms, billingSelectors } from '@modules/billing';
+import { Skeleton } from '@shared/components';
+import { blockchainAtoms, nodeAtoms } from '@modules/node';
+import { PromoForm } from './PromoForm';
 
-type PromoProps = {
-  itemPrice: ItemPrice | ItemPriceSimple;
-};
-
-export const Promo = ({ itemPrice }: PromoProps) => {
-  const form = useForm<{ promo: string }>({
-    mode: 'onChange',
-  });
-
-  const {
-    promoCode,
-    promoCodeError,
-    promoCodeLoadingState,
-    getPromoCode,
-    resetPromoCode,
-    resetPromoCodeError,
-  } = usePromoCode();
-
-  const { handleSubmit, reset, watch } = form;
-
-  const onSubmit = handleSubmit(async ({ promo }) => {
-    const promoCode = await getPromoCode(promo);
-
-    if (!promoCode) return;
-
-    reset();
-  });
+export const Promo = () => {
+  const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
+  const blockchainsLoadingState = useRecoilValue(
+    blockchainAtoms.blockchainsLoadingState,
+  );
+  const [promoCode, setPromoCode] = useRecoilState(billingAtoms.promoCode);
+  const setPromoCodeError = useSetRecoilState(billingAtoms.promoCodeError);
+  const pricing = useRecoilValue(billingSelectors.pricing);
 
   const handleRemove = () => {
-    resetPromoCode();
-    resetPromoCodeError();
+    setPromoCode(null);
+    setPromoCodeError(null);
   };
 
-  const { discount, discountPercentage } = computePricing(itemPrice, promoCode);
+  const { discount, discountPercentage } = pricing;
 
-  const promoValue = watch('promo');
-  const isDisabled = !promoValue?.trim();
+  const isLoading =
+    regionsLoadingState !== 'finished' ||
+    blockchainsLoadingState !== 'finished';
 
   return (
     <>
       <div css={styles.wrapper}>
-        {promoCode ? (
+        {isLoading ? (
+          <Skeleton width="100%" height="57px" />
+        ) : promoCode ? (
           <div css={styles.promoWrapper}>
             <div>
               <SvgIcon size="24px" additionalStyles={[styles.icon]}>
@@ -81,40 +61,7 @@ export const Promo = ({ itemPrice }: PromoProps) => {
             </a>
           </div>
         ) : (
-          <div>
-            <FormProvider {...form}>
-              <form onSubmit={onSubmit} css={styles.form}>
-                <Input
-                  name="promo"
-                  type="text"
-                  autoFocus
-                  style={{ width: '100%' }}
-                  labelStyles={[display.visuallyHidden]}
-                  placeholder={`Enter promo code`}
-                  {...(promoCodeError && { inputStyles: [styles.invalid] })}
-                />
-                <Button
-                  disabled={isDisabled}
-                  loading={promoCodeLoadingState !== 'finished'}
-                  type="submit"
-                  size="medium"
-                  style="basic"
-                  customCss={[
-                    css`
-                      min-width: 125px;
-                    `,
-                  ]}
-                >
-                  Apply
-                </Button>
-              </form>
-            </FormProvider>
-            {promoCodeError && (
-              <p css={[typo.smaller, colors.warning, spacing.top.small]}>
-                {promoCodeError}
-              </p>
-            )}
-          </div>
+          <PromoForm />
         )}
       </div>
     </>

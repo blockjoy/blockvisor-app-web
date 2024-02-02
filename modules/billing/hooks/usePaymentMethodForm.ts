@@ -34,8 +34,8 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
     setError(null);
 
     try {
-      const customerData: Customer | null = await provideCustomer();
-      const intent: PaymentIntent = await createIntent();
+      const customerData = await provideCustomer();
+      const intent = await createIntent();
 
       try {
         const data: PaymentIntent = await cardRef.current.authorizeWith3ds(

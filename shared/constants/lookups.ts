@@ -35,27 +35,6 @@ export const nodeTypeConfigLabels = [
   { name: 'self-hosted', value: 'Self Hosted' },
 ];
 
-export const blockchainList = [
-  { abbreviation: 'ALEO', name: 'Aleo' },
-  { abbreviation: 'ALGO', name: 'Algorand' },
-  { abbreviation: 'APT', name: 'Aptos' },
-  { abbreviation: 'AVAX', name: 'Avalanche' },
-  { abbreviation: 'ADA', name: 'Cardano' },
-  { abbreviation: 'CELO', name: 'Celo' },
-  { abbreviation: 'ATOM', name: 'Cosmos' },
-  { abbreviation: 'ERI', name: 'Erigon' },
-  { abbreviation: 'ETH', name: 'Ethereum' },
-  { abbreviation: 'ETHS', name: 'Ethereum PoS' },
-  { abbreviation: 'HNT', name: 'Helium' },
-  { abbreviation: 'LBTC', name: 'Lightning' },
-  { abbreviation: 'NEAR', name: 'Near' },
-  { abbreviation: 'OP', name: 'Optimism' },
-  { abbreviation: 'POKT', name: 'Pocket' },
-  { abbreviation: 'MATIC', name: 'Polygon' },
-  { abbreviation: 'SOL', name: 'Solana' },
-  { abbreviation: 'XTZ', name: 'Tezos' },
-];
-
 export const blockchainsDisabled = [
   'Algorand',
   'Aptos',

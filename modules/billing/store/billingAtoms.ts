@@ -10,21 +10,6 @@ import { localStorageEffect } from 'utils/store/persist';
 import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
 import { ItemPriceSimple, PromoCode } from '@modules/billing';
 
-const promoCode = atom<PromoCode | null>({
-  key: 'billing.promoCode',
-  default: null,
-});
-
-const promoCodeError = atom<string | null>({
-  key: 'billing.promoCode.error',
-  default: null,
-});
-
-const promoCodeLoadingState = atom<LoadingState>({
-  key: 'billing.promoCode.loading',
-  default: 'finished',
-});
-
 const billing = atom<{
   identity: {
     id: string | null;
@@ -151,11 +136,22 @@ export const isSuperUserBilling = atomFamily<boolean, boolean>({
   },
 });
 
-export const billingAtoms = {
-  promoCode,
-  promoCodeError,
-  promoCodeLoadingState,
+const promoCode = atom<PromoCode | null>({
+  key: 'billing.promoCode',
+  default: null,
+});
 
+const promoCodeError = atom<string | null>({
+  key: 'billing.promoCode.error',
+  default: null,
+});
+
+const promoCodeLoadingState = atom<LoadingState>({
+  key: 'billing.promoCode.loading',
+  default: 'finished',
+});
+
+export const billingAtoms = {
   billing,
 
   billingAddressLoadingState,
@@ -186,4 +182,8 @@ export const billingAtoms = {
   subscriptionPaymentMethodLoadingState,
 
   isSuperUserBilling,
+
+  promoCode,
+  promoCodeError,
+  promoCodeLoadingState,
 };

@@ -62,7 +62,8 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
     nodeLauncherAtoms.nodeLauncher,
   );
   const setError = useSetRecoilState(nodeLauncherAtoms.error);
-  const setIsLoading = useSetRecoilState(nodeLauncherAtoms.isLoading);
+  const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
+
   const [selectedHost, setSelectedHost] = useRecoilState(
     nodeLauncherAtoms.selectedHost,
   );
@@ -110,7 +111,8 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
 
   const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
     setError(null);
-    setIsLoading(false);
+    setIsLaunching(false);
+
     setNodeLauncherState({
       ...nodeLauncherState,
       blockchainId,
@@ -198,7 +200,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   };
 
   const handleCreateNodeClicked = () => {
-    setIsLoading(true);
+    setIsLaunching(true);
 
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.id,

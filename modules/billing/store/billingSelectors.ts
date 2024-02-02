@@ -5,9 +5,10 @@ import {
   PaymentSource,
   Subscription,
 } from 'chargebee-typescript/lib/resources';
-import { ItemPriceSimple, billingAtoms } from '@modules/billing';
 import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
+import { ItemPriceSimple, billingAtoms } from '@modules/billing';
 import { nodeAtoms } from '@modules/node';
+import { computePricing } from '@shared/index';
 
 const billingId = selector<string | null>({
   key: 'billing.identity.id',
@@ -165,6 +166,31 @@ const canCreateResources = selector<boolean>({
   },
 });
 
+const pricing = selector<{
+  subtotal: number;
+  total: number;
+  discount: number;
+  discountPercentage: number;
+}>({
+  key: 'billing.pricing',
+  get: ({ get }) => {
+    const itemPrice = get(selectedItemPrice);
+    const promoCode = get(billingAtoms.promoCode);
+
+    const { subtotal, total, discount, discountPercentage } = computePricing(
+      itemPrice,
+      promoCode,
+    );
+
+    return {
+      subtotal,
+      total,
+      discount,
+      discountPercentage,
+    };
+  },
+});
+
 export const billingSelectors = {
   billingId,
   userSubscription,
@@ -182,4 +208,6 @@ export const billingSelectors = {
   hasSubscription,
   isActiveSubscription,
   canCreateResources,
+
+  pricing,
 };

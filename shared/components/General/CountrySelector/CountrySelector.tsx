@@ -110,6 +110,7 @@ export const CountrySelector = ({
           onClick={toggleDropdown}
           isOpen={isOpen}
           tabIndex={tabIndex}
+          type="input"
         />
 
         <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>

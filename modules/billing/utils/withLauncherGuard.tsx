@@ -113,8 +113,6 @@ export const withLauncherGuard = (Component: any) => {
           : LAUNCH_ERRORS.NO_ACTIVE_SUBSCRIPTION
         : '';
 
-    console.log('activeView', activeView);
-
     return (
       <>
         <Component

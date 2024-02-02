@@ -13,6 +13,7 @@ type Props = {
   onBlur?: VoidFunction;
   isLoading?: boolean;
   tabIndex?: number;
+  type?: 'input' | 'default';
 };
 
 export const DropdownButton = ({
@@ -25,12 +26,17 @@ export const DropdownButton = ({
   isOpen,
   isLoading,
   tabIndex,
+  type,
 }: Props) => {
   return (
     <button
       disabled={disabled || isLoading}
       type="button"
-      css={[styles.button, isLoading && styles.loading]}
+      css={[
+        styles.button,
+        isLoading && styles.loading,
+        type === 'input' && styles.buttonInput,
+      ]}
       onClick={onClick}
       onFocus={onFocus}
       onBlur={onBlur}

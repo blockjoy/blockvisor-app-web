@@ -9,11 +9,11 @@ interface IComputePricing {
 }
 
 export const computePricing = (
-  itemPrice: ItemPrice | ItemPriceSimple,
+  itemPrice: ItemPrice | ItemPriceSimple | null,
   promoCode: PromoCode | null,
 ): IComputePricing => {
   const subtotal = itemPrice?.price ?? 0;
-  let total = subtotal;
+  let total = subtotal ?? 0;
   let discount = 0;
   let discountPercentage = 0;
 

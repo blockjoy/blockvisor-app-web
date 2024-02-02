@@ -1,8 +1,10 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSWRConfig } from 'swr';
 import { _subscription } from 'chargebee-typescript';
 import { Subscription } from 'chargebee-typescript/lib/resources';
-import { useSWRConfig } from 'swr';
 import { SubscriptionItem } from 'chargebee-typescript/lib/resources/subscription';
+import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import {
   BILLING_API_ROUTES,
   billingAtoms,
@@ -10,6 +12,7 @@ import {
   useSubscription,
   fetchBilling,
   usePromoCode,
+  updateSubscriptionMetadata,
 } from '@modules/billing';
 
 export enum UpdateSubscriptionAction {
@@ -18,6 +21,11 @@ export enum UpdateSubscriptionAction {
   ADD_HOST = 'ADD_HOST',
   REMOVE_HOST = 'REMOVE_HOST',
 }
+
+type UpdateSubscriptionPayload = {
+  node?: Node;
+  host?: Host;
+};
 
 interface IUpdateSubscriptionHook {
   subscriptionLoadingState: LoadingState;
@@ -44,21 +52,22 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
     setSubscriptionLoadingState('initializing');
     const subscription = await provideSubscription();
 
-    const { type } = action;
+    const { type, payload } = action;
 
     const params: _subscription.update_for_items_params = {};
     const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
       [];
 
-    const itemPriceID: string = selectedItemPrice ? selectedItemPrice?.id : '';
-
-    const subscriptionItem: SubscriptionItem | undefined =
-      subscription?.subscription_items?.find(
-        (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
-      );
+    let itemPriceID: string = '';
+    let subscriptionItem: SubscriptionItem | undefined;
 
     switch (type) {
       case UpdateSubscriptionAction.ADD_NODE:
+        itemPriceID = selectedItemPrice ? selectedItemPrice?.id : '';
+        subscriptionItem = subscription?.subscription_items?.find(
+          (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
+        );
+
         let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
           {
             item_price_id: itemPriceID,
@@ -66,9 +75,23 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
           };
 
         subscriptionItems?.push(newSubscriptionItem!);
+
+        params.prorate = true;
         break;
 
       case UpdateSubscriptionAction.REMOVE_NODE:
+        const subscriptionMetadataItems =
+          subscription?.meta_data?.subscriptionItems ?? [];
+
+        itemPriceID =
+          subscriptionMetadataItems?.find(
+            (item: any) => item.id === payload.node?.id,
+          )?.itemPriceID ?? '';
+
+        subscriptionItem = subscription?.subscription_items?.find(
+          (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
+        );
+
         if (subscriptionItem?.quantity! > 1) {
           let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
             {
@@ -88,6 +111,8 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
 
           params.replace_items_list = true;
         }
+
+        params.prorate = false;
         break;
       case UpdateSubscriptionAction.ADD_HOST:
         break;
@@ -98,6 +123,12 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
     }
 
     params.subscription_items = subscriptionItems;
+
+    params.meta_data = updateSubscriptionMetadata(type, {
+      metadata: subscription?.meta_data,
+      resource: payload.node,
+      itemPriceID,
+    });
 
     if (promoCode) {
       const promoCodeValue = promoCode.couponCode
