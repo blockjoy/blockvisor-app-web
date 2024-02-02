@@ -8,11 +8,13 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
 import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
+import { AdminListFilter } from './AdminListFilter/AdminListFilter';
+import { UIEvent, useState } from 'react';
 
 type Props = {
   name: string;
   isLoading: boolean;
-  columns: AdminListColumn[];
+  columnsState: AdminListColumn[];
   list: IAdminItem[];
   listTotal?: number;
   listPage: number;
@@ -20,11 +22,13 @@ type Props = {
   activeSortOrder: SortOrder;
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
+  onFiltersChanged: (filters: AdminListColumn[]) => void;
+  onFiltersApplied: VoidFunction;
 };
 
 export const AdminListTable = ({
   name,
-  columns,
+  columnsState,
   isLoading,
   list,
   listTotal,
@@ -33,10 +37,14 @@ export const AdminListTable = ({
   activeSortOrder,
   onPageChanged,
   onSortChanged,
+  onFiltersChanged,
+  onFiltersApplied,
 }: Props) => {
   const router = useRouter();
 
   const { search, page, field, order } = router.query;
+
+  const [scrollPosition, setScrollPosition] = useState<number>();
 
   const pageCount = Math.ceil(listTotal! / pageSize);
 
@@ -57,6 +65,10 @@ export const AdminListTable = ({
     });
   };
 
+  const handleTableScroll = (e: UIEvent<HTMLDivElement>) => {
+    setScrollPosition(e.currentTarget.scrollLeft);
+  };
+
   if (isLoading)
     return (
       <div css={spacing.top.medium}>
@@ -64,11 +76,11 @@ export const AdminListTable = ({
       </div>
     );
 
-  if (listTotal === 0) return <p css={spacing.top.medium}>No {name} found.</p>;
+  const columns = columnsState.filter((column) => column.isVisible);
 
   return (
     <>
-      <section css={styles.tableWrapper}>
+      <section css={styles.tableWrapper} onScroll={handleTableScroll}>
         <table css={styles.table}>
           <thead>
             <tr>
@@ -77,49 +89,75 @@ export const AdminListTable = ({
                   key={column.name}
                   css={styles.tableCellWidth(column.width!)}
                 >
-                  {column.sortField ? (
-                    <AdminListTableSortButton
-                      sortField={column.sortField}
-                      sortOrder={column.sortOrder}
-                      activeSortField={activeSortField}
-                      activeSortOrder={activeSortOrder}
-                      onClick={() =>
-                        onSortChanged(column.sortField!, column.sortOrder!)
-                      }
-                    >
-                      {capitalized(column.displayName || column.name)}
-                    </AdminListTableSortButton>
-                  ) : (
-                    capitalized(column.displayName || column.name)
-                  )}
+                  <span css={styles.tableHeader}>
+                    {column.sortField ? (
+                      <AdminListTableSortButton
+                        sortField={column.sortField}
+                        sortOrder={column.sortOrder}
+                        activeSortField={activeSortField}
+                        activeSortOrder={activeSortOrder}
+                        onClick={() =>
+                          onSortChanged(column.sortField!, column.sortOrder!)
+                        }
+                      >
+                        {capitalized(column.displayName || column.name)}
+                      </AdminListTableSortButton>
+                    ) : (
+                      capitalized(column.displayName || column.name)
+                    )}
+                    {Boolean(column.filterSettings) && (
+                      <AdminListFilter
+                        filtersState={columnsState}
+                        filterSettings={column.filterSettings!}
+                        onChange={onFiltersChanged}
+                        onApplied={onFiltersApplied}
+                        onPageChanged={onPageChanged}
+                        tableScrollPosition={+scrollPosition!}
+                      />
+                    )}
+                  </span>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {list.map((item) => (
-              <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
-                {columns.map((column) => (
-                  <td
-                    key={column.name}
-                    css={styles.tableCellWidth(column.width!)}
-                  >
-                    {column.canCopy ? (
-                      <div css={styles.copyTd}>
-                        {item[column.name] || '-'}
-                        {column.canCopy && (
-                          <span className="copy-button" css={styles.copyButton}>
-                            <Copy value={item[column.name] || ''} hideTooltip />
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      item[column.name]
-                    )}
-                  </td>
-                ))}
+            {listTotal === 0 ? (
+              <tr>
+                <td>
+                  <p css={spacing.top.medium}>No {name} found.</p>
+                </td>
               </tr>
-            ))}
+            ) : (
+              list.map((item) => (
+                <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
+                  {columns.map((column) => (
+                    <td
+                      key={column.name}
+                      css={styles.tableCellWidth(column.width!)}
+                    >
+                      {column.canCopy ? (
+                        <div css={styles.copyTd}>
+                          {item[column.name] || '-'}
+                          {column.canCopy && (
+                            <span
+                              className="copy-button"
+                              css={styles.copyButton}
+                            >
+                              <Copy
+                                value={item[column.name] || ''}
+                                hideTooltip
+                              />
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        item[column.name]
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </section>

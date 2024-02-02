@@ -68,7 +68,7 @@ export const AdminListHeaderColumnPicker = ({
                 additionalStyles={[
                   css`
                     flex: 1 1 auto;
-                    padding: 8px 52px 8px 0;
+                    padding: 6px 52px 6px 0;
                   `,
                 ]}
               >

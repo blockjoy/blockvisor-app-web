@@ -6,4 +6,5 @@ type AdminListColumn = {
   sortOrder?: SortOrder;
   displayName?: string;
   isVisible?: boolean;
+  filterSettings?: AdminListColumnFilterSettings;
 };
