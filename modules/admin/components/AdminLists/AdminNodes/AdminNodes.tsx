@@ -1,12 +1,13 @@
 import { AdminList } from '../AdminList/AdminList';
 import { nodeClient } from '@modules/grpc';
-import { formatters } from '@shared/utils/formatters';
 import { DateTime, NodeStatus } from '@shared/components';
+import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized } from '@modules/admin/utils/capitalized';
+import { createDropdownValuesFromEnum } from '@modules/admin/utils';
 
 const columns: AdminListColumn[] = [
   {
@@ -30,6 +31,15 @@ const columns: AdminListColumn[] = [
     width: '230px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     isVisible: true,
+    filterSettings: {
+      type: 'default',
+      name: 'nodeStatus',
+      values: [],
+      dropdownItems: createDropdownValuesFromEnum(
+        NodeStatusEnum,
+        'NODE_STATUS_',
+      ),
+    },
   },
   {
     name: 'host',
@@ -47,6 +57,10 @@ const columns: AdminListColumn[] = [
     name: 'blockchainName',
     width: '190px',
     isVisible: true,
+    filterSettings: {
+      type: 'blockchain',
+      values: [],
+    },
   },
   {
     name: 'blockHeight',
@@ -94,11 +108,18 @@ export const AdminNodes = () => {
     page?: number,
     sortField?: number,
     sortOrder?: SortOrder,
+    filters?: AdminListColumn[],
   ) => {
     const response = await nodeClient.listNodes(
       undefined,
       {
         keyword,
+        blockchain: filters?.find(
+          (filter) => filter.filterSettings?.type === 'blockchain',
+        )?.filterSettings?.values,
+        nodeStatus: filters?.find(
+          (filter) => filter.filterSettings?.name === 'nodeStatus',
+        )?.filterSettings?.values,
       },
       {
         current_page: page!,
