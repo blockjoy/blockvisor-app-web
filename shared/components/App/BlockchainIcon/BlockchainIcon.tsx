@@ -26,6 +26,10 @@ const IconAlgorand = dynamic(
   () => import(`@public/assets/icons/blockchain/Algorand.svg`),
 );
 
+const IconArbitrum = dynamic(
+  () => import(`@public/assets/icons/blockchain/Arbitrum.svg`),
+);
+
 const IconAvalanche = dynamic(
   () => import(`@public/assets/icons/blockchain/Avalanche.svg`),
 );
@@ -125,6 +129,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'algorand':
       Component = IconAlgorand;
+      break;
+    case 'arbitrum':
+      Component = IconArbitrum;
       break;
     case 'avalanche':
       Component = IconAvalanche;
