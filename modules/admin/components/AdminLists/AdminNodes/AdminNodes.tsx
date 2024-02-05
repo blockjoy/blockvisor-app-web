@@ -58,6 +58,7 @@ const columns: AdminListColumn[] = [
     width: '190px',
     isVisible: true,
     filterSettings: {
+      name: 'blockchain',
       type: 'blockchain',
       values: [],
     },

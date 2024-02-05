@@ -10,6 +10,7 @@ type Props = {
   description?: string;
   formTouched?: boolean;
   checked?: boolean;
+  disabled?: boolean;
   onChange: ChangeEventHandler<HTMLInputElement>;
   children?: ReactNode;
   additionalStyles?: SerializedStyles[];
@@ -21,6 +22,7 @@ export function Checkbox({
   name,
   formTouched = false,
   checked,
+  disabled,
   onChange,
   children,
   description = '',
@@ -35,10 +37,11 @@ export function Checkbox({
   return (
     <>
       <input
-        css={[display.visuallyHidden]}
+        css={[display.visuallyHidden, styles.input]}
         id={id}
         name={name}
         defaultChecked={checked}
+        disabled={disabled}
         type="checkbox"
         {...rest}
         onChange={handleChange}
@@ -46,7 +49,7 @@ export function Checkbox({
       <label
         css={[
           styles.base,
-          checked ? styles.input : '',
+          checked ? styles.checked : '',
           additionalStyles && additionalStyles,
         ]}
         htmlFor={id}

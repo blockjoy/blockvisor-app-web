@@ -38,6 +38,7 @@ export const styles = {
 
     :hover path {
       fill: ${theme.colorText};
+      transition: 0.3s;
     }
   `,
   filterBadge: (theme: ITheme) => css`
@@ -54,5 +55,10 @@ export const styles = {
     color: ${theme.colorPrimaryText};
     background: ${theme.colorPrimary};
     border: 3px solid ${theme.colorBackground};
+  `,
+  buttonGroup: css`
+    padding: 10px;
+    margin: 0;
+    grid-template-columns: repeat(2, 1fr);
   `,
 };
