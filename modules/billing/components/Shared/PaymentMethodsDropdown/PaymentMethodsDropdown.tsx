@@ -7,9 +7,9 @@ import {
   billingSelectors,
   CreditCardTypes,
 } from '@modules/billing';
-import { styles } from './PaymentMethodsDropdown.styles';
 import { ROUTES } from '@shared/index';
-import { Badge, Select } from '@shared/components';
+import { Badge, Dropdown } from '@shared/components';
+import { styles } from './PaymentMethodsDropdown.styles';
 
 type PaymentMethodsDropdownProps = {
   primaryId?: string;
@@ -24,16 +24,17 @@ export const PaymentMethodsDropdown = ({
   const customer = useRecoilValue(billingSelectors.customer);
   const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleClose = () => setIsOpen(!isOpen);
+  const handleOpen = (open: boolean = true) => setIsOpen(open);
 
-  const handleSelect = (paymentMethod: PaymentSource) => {
-    handlePaymentMethod(paymentMethod);
-    handleClose();
+  const handleSelect = (paymentMethod: PaymentSource | null) => {
+    if (paymentMethod) handlePaymentMethod(paymentMethod);
+    handleOpen(false);
   };
 
-  const activePaymentMethod = paymentMethods.find((pm) => pm.id === primaryId);
+  const activePaymentMethod =
+    paymentMethods.find((pm) => pm.id === primaryId) ?? null;
 
   const handleNewPaymentMethod = () => {
     router.push(
@@ -46,49 +47,33 @@ export const PaymentMethodsDropdown = ({
     );
   };
 
+  const renderItem = (paymentMethod: PaymentSource) => (
+    <span css={styles.item}>
+      <span>
+        {CreditCardTypes[paymentMethod.card?.brand!]} ***
+        {paymentMethod.card?.last4}
+      </span>
+      {customer?.primary_payment_source_id === paymentMethod.id && (
+        <Badge
+          color="secondary"
+          style="outline"
+          customCss={[styles.item, styles.badge]}
+        >
+          Primary
+        </Badge>
+      )}
+    </span>
+  );
+
   return (
-    <Select
-      buttonText={
-        <p>
-          {activePaymentMethod ? (
-            <>
-              <span css={styles.title}>
-                {CreditCardTypes[activePaymentMethod.card?.brand!]} ***
-                {activePaymentMethod.card?.last4}
-              </span>
-              {customer?.primary_payment_source_id ===
-                activePaymentMethod.id && (
-                <Badge
-                  color="primary"
-                  style="outline"
-                  customCss={[styles.badge]}
-                >
-                  Primary
-                </Badge>
-              )}
-            </>
-          ) : (
-            'Select payment method'
-          )}
-        </p>
-      }
-      items={paymentMethods?.map((paymentMethod) => ({
-        name: paymentMethod.card?.last4 ?? '',
-        element: (
-          <p css={styles.dropdownItem}>
-            <span css={styles.title}>
-              {CreditCardTypes[paymentMethod.card?.brand!]} ***
-              {paymentMethod.card?.last4}
-            </span>
-            {customer?.primary_payment_source_id === paymentMethod.id && (
-              <Badge color="primary" style="outline" customCss={[styles.badge]}>
-                Primary
-              </Badge>
-            )}
-          </p>
-        ),
-        onClick: () => handleSelect(paymentMethod),
-      }))}
+    <Dropdown
+      items={paymentMethods}
+      handleSelected={handleSelect}
+      selectedItem={activePaymentMethod}
+      isOpen={isOpen}
+      handleOpen={handleOpen}
+      defaultText="Select payment method"
+      renderItem={renderItem}
       newItem={{
         title: 'Add payment method',
         onClick: handleNewPaymentMethod,

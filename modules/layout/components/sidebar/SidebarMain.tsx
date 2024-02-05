@@ -46,10 +46,12 @@ export default () => {
   };
 
   const blocks: {
+    id: string;
     title?: string;
     items: SidebarItem[];
   }[] = [
     {
+      id: 'blockvisor',
       title: 'BLOCKVISOR',
       items: [
         { name: 'Nodes', path: ROUTES.NODES, icon: <IconNodes /> },
@@ -66,6 +68,7 @@ export default () => {
       ],
     },
     {
+      id: 'settings',
       title: 'SETTINGS',
       items: [
         {
@@ -84,6 +87,7 @@ export default () => {
       ],
     },
     {
+      id: 'help',
       items: [
         {
           name: 'FAQ',
@@ -96,6 +100,7 @@ export default () => {
 
   if (isSuperUser) {
     blocks.unshift({
+      id: 'admin',
       title: 'BLOCKJOY',
       items: [
         {
@@ -111,11 +116,11 @@ export default () => {
     <main css={styles.wrapper(isSidebarOpen)}>
       <div css={styles.navigation}>
         {blocks.map((block) => (
-          <div css={styles.block(isSidebarOpen)}>
+          <div key={block.id} css={styles.block(isSidebarOpen)}>
             {block.title && isSidebarOpen && (
               <h4 css={styles.header}>{block.title}</h4>
             )}
-            <ul key={block.title} css={[styles.list]}>
+            <ul css={[styles.list]}>
               {block.items.map((item) => (
                 <li key={item.name}>
                   <Link

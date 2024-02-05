@@ -4,12 +4,7 @@ import { useRecoilValue } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
 import { ROUTES } from '@shared/index';
-import {
-  EmptyColumn,
-  Table,
-  TableSkeleton,
-  ButtonSpinner,
-} from '@shared/components';
+import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
 import {
   billingAtoms,
   mapInvoicesToRows,
@@ -85,12 +80,12 @@ export const InvoicesList = () => {
     <InfiniteScroll
       dataLength={invoices?.length}
       next={updateQueryParams}
-      hasMore={invoicesNextOffset !== undefined}
+      hasMore={!!invoicesNextOffset}
       style={{ overflow: 'hidden' }}
       scrollThreshold={1}
       loader={
         <div css={[spacing.top.medium, flex.display.flex, flex.justify.center]}>
-          <ButtonSpinner size="medium" />
+          <p>Loading</p>
         </div>
       }
     >

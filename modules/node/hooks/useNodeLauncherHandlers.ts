@@ -6,6 +6,7 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import { useRouter } from 'next/router';
+import isEqual from 'lodash/isEqual';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
@@ -18,12 +19,23 @@ import {
   NodeServiceCreateRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostAtoms, useHostSelect } from '@modules/host';
-import { useNodeAdd, nodeLauncherAtoms, blockchainAtoms } from '@modules/node';
+import {
+  useNodeAdd,
+  nodeLauncherAtoms,
+  blockchainAtoms,
+  nodeAtoms,
+  nodeLauncherSelectors,
+  useGetRegions,
+} from '@modules/node';
 import { organizationAtoms } from '@modules/organization';
 import { ROUTES } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { sortNetworks, sortNodeTypes, sortVersions } from '../utils';
-import isEqual from 'lodash/isEqual';
+import { matchSKU } from '@modules/billing';
+
+type IUseNodeLauncherHandlersParams = {
+  fulfilReqs: boolean;
+};
 
 interface IUseNodeLauncherHandlersHook {
   handleHostChanged: (host: Host | null) => void;
@@ -41,11 +53,14 @@ interface IUseNodeLauncherHandlersHook {
   handleCreateNodeClicked: () => void;
 }
 
-export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
+export const useNodeLauncherHandlers = ({
+  fulfilReqs,
+}: IUseNodeLauncherHandlersParams): IUseNodeLauncherHandlersHook => {
   const router = useRouter();
 
   const { getHosts } = useHostSelect();
   const { createNode } = useNodeAdd();
+  const { getAllRegions } = useGetRegions();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
@@ -61,9 +76,11 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const resetNodeLauncherState = useResetRecoilState(
     nodeLauncherAtoms.nodeLauncher,
   );
+  const selectedBlockchain = useRecoilValue(
+    nodeLauncherSelectors.selectedBlockchain(nodeLauncherState.blockchainId),
+  );
   const setError = useSetRecoilState(nodeLauncherAtoms.error);
   const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
-
   const [selectedHost, setSelectedHost] = useRecoilState(
     nodeLauncherAtoms.selectedHost,
   );
@@ -84,6 +101,11 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const [selectedNetwork, setSelectedNetwork] = useRecoilState(
     nodeLauncherAtoms.selectedNetwork,
   );
+  const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
+
+  useEffect(() => {
+    setSelectedHost(null);
+  }, [allHosts]);
 
   useEffect(() => {
     let queriedHost = null;
@@ -112,7 +134,6 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
     setError(null);
     setIsLaunching(false);
-
     setNodeLauncherState({
       ...nodeLauncherState,
       blockchainId,
@@ -316,12 +337,38 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   }, [selectedVersion?.id]);
 
   useEffect(() => {
+    const nodeSKU = matchSKU('node', {
+      blockchain: selectedBlockchain,
+      nodeLauncher: nodeLauncherState,
+      version: selectedVersion,
+      region: selectedRegion,
+      network: selectedNetwork,
+    });
+    setSelectedSKU(nodeSKU);
+  }, [
+    nodeLauncherState.nodeType,
+    selectedVersion,
+    selectedRegion,
+    selectedNetwork,
+  ]);
+
+  useEffect(() => {
+    if (fulfilReqs) handleCreateNodeClicked();
+  }, [fulfilReqs]);
+
+  useEffect(() => {
     Mixpanel.track('Launch Node - Opened');
   }, []);
 
   useEffect(() => {
     getHosts();
   }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    (async () => {
+      await getAllRegions();
+    })();
+  }, [blockchains]);
 
   return {
     handleHostChanged,

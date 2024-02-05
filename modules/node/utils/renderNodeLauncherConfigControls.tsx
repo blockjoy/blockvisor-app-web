@@ -46,7 +46,7 @@ export const renderControls = (
       return (
         <Switch
           {...(!!property.disabled && { tabIndex: -1 })}
-          defaultChecked={value}
+          checked={value}
           disabled={!!property.disabled}
           tooltip="Feature disabled during beta."
           name={property.name}

@@ -15,6 +15,7 @@ type Payload = {
   nodeLauncher?: NodeLauncherState;
   version?: BlockchainVersion | null;
   region?: Region | null;
+  network?: string | null;
 };
 
 export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
@@ -34,7 +35,13 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
   };
 
   if ('nodeLauncher' in payload) {
-    const { blockchain, nodeLauncher, version, region } = payload;
+    const {
+      blockchain,
+      nodeLauncher,
+      version,
+      region,
+      network: aciveNetwork,
+    } = payload;
     if (!blockchain || !nodeLauncher || !version || !region) return '';
 
     // PRODUCT
@@ -46,7 +53,7 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
     // NETWORK
     const selectedNetwork: NetworkConfig | null =
       version?.networks.find(
-        (network: NetworkConfig) => network.name === nodeLauncher.network,
+        (network: NetworkConfig) => network.name === aciveNetwork,
       ) || null;
     const selectedNetType: NetType | null = selectedNetwork?.netType || null;
 
@@ -61,7 +68,6 @@ export const matchSKU = (type: 'node' | 'host', payload: Payload): string => {
     // NODE TYPE
     SKU.nodeType = nodeTypes[nodeLauncher?.nodeType];
 
-    console.log('SKU', SKU);
     return `${SKU.product}-${SKU.nodeBlockchain}-${SKU.nodeType}-${SKU.nodeNetwork}-${SKU.region}`;
   }
 
