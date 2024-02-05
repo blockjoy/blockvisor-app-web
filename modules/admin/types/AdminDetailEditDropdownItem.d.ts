@@ -1,1 +1,1 @@
-type AdminDetailEditDropdownItem = { id: string; name: string };
+type AdminDetailEditDropdownItem = { id: string; name?: string };

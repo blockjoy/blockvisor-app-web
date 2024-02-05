@@ -235,7 +235,6 @@ export const AdminList = ({
         activeSortOrder={sortOrder}
         onPageChanged={handlePageChanged}
         onSortChanged={handleSortChanged}
-        onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
       />
     </article>
