@@ -1,6 +1,6 @@
 import { selector, selectorFamily } from 'recoil';
-import { blockchainAtoms } from './blockchainAtoms';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { BlockchainSimple, blockchainAtoms } from '@modules/node';
 
 const blockchainsHasError = selector<boolean>({
   key: 'blockchains.hasError',
@@ -24,7 +24,25 @@ const blockchainsFilteredByName = selectorFamily<Blockchain[], string>({
     },
 });
 
+const blockchainsByTypeAndVersion = selector<BlockchainSimple[]>({
+  key: 'blockchains.byTypeAndVersion',
+  get: ({ get }) => {
+    const blockchainsAll = get(blockchainAtoms.blockchains);
+
+    return blockchainsAll?.flatMap((blockchain) =>
+      blockchain.nodeTypes.flatMap((nodeType) =>
+        nodeType.versions.map((version) => ({
+          blockchainId: blockchain.id,
+          nodeType: nodeType.nodeType,
+          version: version.version,
+        })),
+      ),
+    );
+  },
+});
+
 export const blockchainSelectors = {
   blockchainsHasError,
   blockchainsFilteredByName,
+  blockchainsByTypeAndVersion,
 };

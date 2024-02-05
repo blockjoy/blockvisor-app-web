@@ -55,8 +55,8 @@ export const DeleteModal = ({
       <>
         {!isDisabled && (
           <p css={spacing.bottom.medium}>
-            To {type?.toLowerCase()}, type the name of your {entityName} and
-            then click "Confirm".
+            To {type?.toLowerCase()}, type the {elementType} of your{' '}
+            {entityName} and then click "confirm".
           </p>
         )}
 
@@ -68,7 +68,7 @@ export const DeleteModal = ({
                 style={{ maxWidth: '380px' }}
                 labelStyles={[display.visuallyHidden]}
                 name="elementNameToDelete"
-                placeholder={`Type ${entityName?.toLowerCase()} name`}
+                placeholder={`Type ${entityName?.toLowerCase()} ${elementType}`}
                 type="text"
                 validationOptions={{
                   required: 'This is a mandatory field',

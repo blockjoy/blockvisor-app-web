@@ -9,9 +9,11 @@ import { blockchainAtoms, nodeAtoms } from '@modules/node';
 import { PromoForm } from './PromoForm';
 
 export const Promo = () => {
-  const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
+  );
+  const allRegionsLoadingState = useRecoilValue(
+    nodeAtoms.allRegionsLoadingState,
   );
   const [promoCode, setPromoCode] = useRecoilState(billingAtoms.promoCode);
   const setPromoCodeError = useSetRecoilState(billingAtoms.promoCodeError);
@@ -25,8 +27,8 @@ export const Promo = () => {
   const { discount, discountPercentage } = pricing;
 
   const isLoading =
-    regionsLoadingState !== 'finished' ||
-    blockchainsLoadingState !== 'finished';
+    blockchainsLoadingState !== 'finished' ||
+    allRegionsLoadingState !== 'finished';
 
   return (
     <>

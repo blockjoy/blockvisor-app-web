@@ -197,7 +197,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
                 disabled={false}
                 tooltip="Use default Billing address"
                 checked={activeView === 'list'}
-                onPropertyChanged={handleNewAddress}
+                onChange={handleNewAddress}
               />
             </div>
           </div>

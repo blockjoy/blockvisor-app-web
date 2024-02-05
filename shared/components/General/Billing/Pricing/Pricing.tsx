@@ -17,9 +17,11 @@ type PricingProps = {
 
 export const Pricing = ({ itemPrice }: PricingProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
-  const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
+  );
+  const allRegionsLoadingState = useRecoilValue(
+    nodeAtoms.allRegionsLoadingState,
   );
   const pricing = useRecoilValue(billingSelectors.pricing);
   const promoCode = useRecoilValue(billingAtoms.promoCode);
@@ -36,8 +38,8 @@ export const Pricing = ({ itemPrice }: PricingProps) => {
   const { total, subtotal } = pricing;
 
   const isLoading =
-    regionsLoadingState !== 'finished' ||
-    blockchainsLoadingState !== 'finished';
+    blockchainsLoadingState !== 'finished' ||
+    allRegionsLoadingState !== 'finished';
 
   return (
     <>

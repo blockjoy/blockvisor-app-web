@@ -1,25 +1,27 @@
-import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
+import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './NodeLauncherSummary.styles';
 import {
   FormHeader,
   FormLabel,
   HostSelect,
   OrganizationSelect,
+  Pricing,
+  Tooltip,
 } from '@shared/components';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { usePermissions } from '@modules/auth';
 import { hostAtoms, useHostList } from '@modules/host';
 import {
   NodeRegionSelect,
+  nodeAtoms,
   nodeLauncherAtoms,
   nodeLauncherSelectors,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
-import { NodeLauncherSummaryHubSpot } from './NodeLauncherSummaryHubSpot';
+import { billingSelectors } from '@modules/billing';
 
 type NodeLauncherSummaryProps = {
   onCreateNodeClicked: VoidFunction;
@@ -36,50 +38,29 @@ export const NodeLauncherSummary = ({
 }: NodeLauncherSummaryProps) => {
   const { hostList } = useHostList();
 
-  const [isLoadingRegions, setIsLoadingRegions] = useState(true);
-  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
-
-  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const isLaunching = useRecoilValue(nodeLauncherAtoms.isLaunching);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
-  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
-
-  const { blockchainId, nodeType } = nodeLauncher;
+  const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
+  const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
 
   const { hasPermission } = usePermissions();
   const canAddNode = hasPermission('node-create');
 
-  const handleRegionsLoaded = (region: Region | null) => {
-    setIsLoadingRegions(false);
-    onRegionsLoaded(region);
-  };
-
-  const handleCreateNodeClicked = () => {
-    if (!canAddNode) handleOpenHubSpot();
-    else onCreateNodeClicked();
-  };
-
-  const handleOpenHubSpot = () => setIsOpenHubSpot(true);
-  const handleCloseHubSpot = () => setIsOpenHubSpot(false);
-
-  useEffect(
-    () => setIsLoadingRegions(true),
-    [nodeLauncher.blockchainId, nodeLauncher.nodeType, selectedVersion],
-  );
-
   const isDisabled =
+    !canAddNode ||
     !hasNetworkList ||
     !isNodeValid ||
     !isConfigValid ||
     Boolean(error) ||
-    isLoading ||
-    isLoadingRegions;
+    isLaunching ||
+    isLoadingAllRegions !== 'finished' ||
+    !itemPrice;
 
   return (
     <div css={styles.wrapper}>
@@ -109,9 +90,7 @@ export const NodeLauncherSummary = ({
           <FormLabel>Region</FormLabel>
           <NodeRegionSelect
             onChange={onRegionChanged}
-            onLoad={handleRegionsLoaded}
-            blockchainId={blockchainId}
-            nodeType={nodeType}
+            onLoad={onRegionsLoaded}
           />
         </>
       )}
@@ -126,28 +105,21 @@ export const NodeLauncherSummary = ({
       <FormLabel>Summary</FormLabel>
       <NodeLauncherSummaryDetails />
 
-<<<<<<< HEAD
-=======
       <FormLabel>Pricing</FormLabel>
       <Pricing itemPrice={itemPrice} />
 
->>>>>>> a1f742f5 (feat: [sc-3018] payment authorization, [sc-3503] subscription metadata items, disabled credits)
       <div css={styles.buttons}>
+        {!canAddNode && (
+          <Tooltip
+            noWrap
+            top="-30px"
+            left="50%"
+            tooltip="Insufficient permission to launch node."
+          />
+        )}
         <button
-<<<<<<< HEAD
-          onClick={handleCreateNodeClicked}
-          disabled={isDisabled}
-=======
           onClick={onCreateNodeClicked}
-          disabled={
-            !canAddNode ||
-            !hasNetworkList ||
-            !isNodeValid ||
-            !isConfigValid ||
-            Boolean(error) ||
-            isLaunching
-          }
->>>>>>> a1f742f5 (feat: [sc-3018] payment authorization, [sc-3503] subscription metadata items, disabled credits)
+          disabled={isDisabled}
           css={[
             styles.createButton,
             isLaunching && !Boolean(error) && styles.createButtonLoading,
@@ -169,12 +141,6 @@ export const NodeLauncherSummary = ({
           </span>
         </button>
       </div>
-      {isOpenHubSpot && (
-        <NodeLauncherSummaryHubSpot
-          isOpenHubSpot={isOpenHubSpot}
-          handleClose={handleCloseHubSpot}
-        />
-      )}
     </div>
   );
 };

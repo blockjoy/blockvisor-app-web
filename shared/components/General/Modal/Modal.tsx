@@ -57,11 +57,9 @@ export function Modal({
         >
           {children}
           <button type="button" onClick={handleClose} css={styles.closeButton}>
-            <span css={styles.iconWrapper}>
-              <SvgIcon size="26px">
-                <IconClose />
-              </SvgIcon>
-            </span>
+            <SvgIcon size="24px">
+              <IconClose />
+            </SvgIcon>
           </button>
         </div>
       </div>

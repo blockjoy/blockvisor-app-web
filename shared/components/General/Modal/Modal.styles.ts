@@ -34,8 +34,8 @@ export const styles = {
     display: grid;
     place-items: center;
     position: absolute;
-    right: 16px;
-    top: 10px;
+    right: 10px;
+    top: 5px;
     width: 40px;
     height: 40px;
     background: transparent;
@@ -45,9 +45,5 @@ export const styles = {
     path {
       fill: ${theme.colorText};
     }
-  `,
-  iconWrapper: css`
-    width: 18px;
-    height: 18px;
   `,
 };

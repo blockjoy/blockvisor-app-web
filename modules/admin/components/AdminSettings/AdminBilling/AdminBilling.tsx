@@ -22,7 +22,7 @@ export const AdminBilling = () => {
         name="superuser-billing"
         disabled={false}
         checked={isSuperUserBilling}
-        onPropertyChanged={handleSuperUserBilling}
+        onChange={handleSuperUserBilling}
       />
     </AdminSettingsInput>
   );

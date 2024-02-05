@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-import { SerializedStyles } from '@emotion/react';
-=======
->>>>>>> e162f124 (fix: sc-2031 permission to preview subscription; bug fixes)
 import { FC, ReactNode } from 'react';
+import { SerializedStyles } from '@emotion/react';
+import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './Alert.styles';
 
 type Props = {
@@ -10,6 +8,7 @@ type Props = {
   isRounded?: boolean;
   children: ReactNode;
   maxWidth?: string;
+  noBottomMargin?: boolean;
   additionalStyles?: SerializedStyles[];
 };
 
@@ -18,6 +17,7 @@ export const Alert: FC<Props> = ({
   isRounded,
   children,
   maxWidth = '100%',
+  noBottomMargin,
   additionalStyles,
 }) => (
   <div
@@ -26,6 +26,7 @@ export const Alert: FC<Props> = ({
       styles.alert,
       isSuccess ? styles.alertSuccess : styles.alertDanger,
       isRounded && styles.alertRounded,
+      noBottomMargin && spacing.bottom.none,
       additionalStyles && additionalStyles,
     ]}
     style={{ maxWidth }}

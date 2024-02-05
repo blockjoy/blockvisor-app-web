@@ -40,7 +40,7 @@ export const useEstimates = (): IEstimatesHook => {
     ? 'initializing'
     : 'finished';
 
-  const loadEstimates = () => {
+  const loadEstimates = async () => {
     preload(getKey, fetcher);
   };
 
