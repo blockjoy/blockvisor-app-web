@@ -26,15 +26,21 @@ export const styles = {
       background-position: 50% 50%;
       background-size: 8px;
     }
+
+    :hover {
+      cursor: pointer;
+    }
   `,
-  input: (theme: ITheme) => css`
+  input: css`
+    :disabled + label {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  `,
+  checked: (theme: ITheme) => css`
     &::before {
       border: 1px solid ${theme.colorSuccess};
       background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1 5 2 2 4-6' stroke='%2385F550' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
-  `,
-  disabled: css`
-    opacity: 0.4;
-    cursor: not-allowed;
   `,
 };

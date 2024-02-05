@@ -14,7 +14,7 @@ import { UIEvent, useState } from 'react';
 type Props = {
   name: string;
   isLoading: boolean;
-  columnsState: AdminListColumn[];
+  columns: AdminListColumn[];
   list: IAdminItem[];
   listTotal?: number;
   listPage: number;
@@ -23,12 +23,11 @@ type Props = {
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFiltersChanged: (filters: AdminListColumn[]) => void;
-  onFiltersApplied: VoidFunction;
 };
 
 export const AdminListTable = ({
   name,
-  columnsState,
+  columns,
   isLoading,
   list,
   listTotal,
@@ -38,7 +37,6 @@ export const AdminListTable = ({
   onPageChanged,
   onSortChanged,
   onFiltersChanged,
-  onFiltersApplied,
 }: Props) => {
   const router = useRouter();
 
@@ -76,7 +74,8 @@ export const AdminListTable = ({
       </div>
     );
 
-  const columns = columnsState.filter((column) => column.isVisible);
+  const columnsVisible = columns.filter((column) => column.isVisible);
+  const columnsWithFilter = columns.filter((column) => column.filterSettings);
 
   return (
     <>
@@ -84,7 +83,7 @@ export const AdminListTable = ({
         <table css={styles.table}>
           <thead>
             <tr>
-              {columns.map((column) => (
+              {columnsVisible.map((column) => (
                 <th
                   key={column.name}
                   css={styles.tableCellWidth(column.width!)}
@@ -107,11 +106,9 @@ export const AdminListTable = ({
                     )}
                     {Boolean(column.filterSettings) && (
                       <AdminListFilter
-                        filtersState={columnsState}
+                        filters={columnsWithFilter}
                         filterSettings={column.filterSettings!}
                         onChange={onFiltersChanged}
-                        onApplied={onFiltersApplied}
-                        onPageChanged={onPageChanged}
                         tableScrollPosition={+scrollPosition!}
                       />
                     )}
@@ -123,14 +120,16 @@ export const AdminListTable = ({
           <tbody>
             {listTotal === 0 ? (
               <tr>
-                <td>
-                  <p css={spacing.top.medium}>No {name} found.</p>
+                <td colSpan={1000}>
+                  <p css={[spacing.top.medium, spacing.bottom.medium]}>
+                    No {name} found.
+                  </p>
                 </td>
               </tr>
             ) : (
               list.map((item) => (
                 <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
-                  {columns.map((column) => (
+                  {columnsVisible.map((column) => (
                     <td
                       key={column.name}
                       css={styles.tableCellWidth(column.width!)}
@@ -161,15 +160,17 @@ export const AdminListTable = ({
           </tbody>
         </table>
       </section>
-      <section css={styles.bottomRow}>
-        <AdminListPagination
-          listPage={listPage}
-          totalRowCount={listTotal!}
-          pageCount={pageCount}
-          onPageChanged={onPageChanged}
-        />
-        <AdminListRowCount total={listTotal!} page={listPage} />
-      </section>
+      {listTotal! > 0 && (
+        <section css={styles.bottomRow}>
+          <AdminListPagination
+            listPage={listPage}
+            totalRowCount={listTotal!}
+            pageCount={pageCount}
+            onPageChanged={onPageChanged}
+          />
+          <AdminListRowCount total={listTotal!} page={listPage} />
+        </section>
+      )}
     </>
   );
 };

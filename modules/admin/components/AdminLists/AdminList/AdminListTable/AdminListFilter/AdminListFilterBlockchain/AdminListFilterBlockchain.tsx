@@ -1,17 +1,14 @@
 import { blockchainClient } from '@modules/grpc';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { useEffect, useState } from 'react';
-import { AdminListFilterControl } from '../AdminListFilterDropdown/AdminListFilterControl';
+import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
 
 type Props = {
-  filterSettings: AdminListColumnFilterSettings;
+  values: string[];
   onChange: (item: AdminFilterDropdownItem) => void;
 };
 
-export const AdminListFilterBlockchain = ({
-  filterSettings,
-  onChange,
-}: Props) => {
+export const AdminListFilterBlockchain = ({ values, onChange }: Props) => {
   const [blockchains, setBlockchains] = useState<Blockchain[] | undefined>();
 
   const getBlockchains = async () => {
@@ -33,7 +30,7 @@ export const AdminListFilterBlockchain = ({
           name: blockchain.name,
         }))!
       }
-      filterSettings={filterSettings}
+      values={values}
       onChange={onChange}
     />
   );

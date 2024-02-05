@@ -50,10 +50,13 @@ export const AdminList = ({
       localStorage.getItem(`${name}Columns`)!,
     );
 
-    let tempColumns = [...columns];
+    let columnsCopy = [...columns];
+    let localStorageColumnsCopy = localStorageColumns
+      ? [...localStorageColumns]
+      : [];
 
     if (localStorageColumns) {
-      tempColumns.forEach((column) => {
+      columnsCopy.forEach((column) => {
         const isVisible = localStorageColumns?.find(
           (c: AdminListColumn) => c.name === column.name,
         )?.isVisible;
@@ -61,7 +64,7 @@ export const AdminList = ({
         column.isVisible = isVisible;
 
         if (column.filterSettings) {
-          const foundLocalStorage = localStorageColumns?.find(
+          const foundLocalStorage = localStorageColumnsCopy?.find(
             (filter) =>
               filter.filterSettings?.type === column.filterSettings?.type,
           );
@@ -71,8 +74,12 @@ export const AdminList = ({
       });
     }
 
-    return tempColumns;
+    return columnsCopy;
   };
+
+  const [filters, setFilters] = useState<AdminListColumn[]>(
+    loadColumns().filter((column) => column.filterSettings),
+  );
 
   const [columnsState, setColumnsState] = useState(loadColumns());
 
@@ -155,13 +162,21 @@ export const AdminList = ({
     setColumnsState(nextColumns);
   };
 
-  const handleFiltersChanged = (nextColumns: AdminListColumn[]) => {
+  const handleFiltersChanged = (nextFilters: AdminListColumn[]) => {
+    const nextColumns = [...columnsState];
+
+    for (let column of nextColumns) {
+      const indexOfFilter = nextFilters.findIndex(
+        (c) => c.name === column.name,
+      );
+      if (indexOfFilter > -1) {
+        column = nextFilters[indexOfFilter];
+      }
+    }
+
     localStorage.setItem(`${name}Columns`, JSON.stringify(nextColumns));
     setColumnsState(nextColumns);
-  };
-
-  const handleFiltersApplied = () => {
-    handleGetList(searchTerm!, 0, sortField!, sortOrder!, columnsState);
+    setFilters(nextFilters);
   };
 
   useEffect(() => {
@@ -176,20 +191,38 @@ export const AdminList = ({
         listPage! - 1,
         sortField!,
         sortOrder!,
-        columnsState,
+        filters,
       );
     }
   }, [searchTerm, listPage, sortField, sortOrder]);
+
+  useEffect(() => {
+    if (listPage !== 1) {
+      const query: AdminQuery = {
+        name,
+        page: 1,
+      };
+
+      if (search) query.search = String(search).trim();
+
+      router.push({
+        pathname: `/admin`,
+        query,
+      });
+      setListPage(1);
+    } else {
+      handleGetList(searchTerm!, 0, sortField!, sortOrder!, filters);
+    }
+  }, [filters]);
 
   return (
     <article key={name} id={name} css={styles.card}>
       <AdminListHeader
         name={name}
         onSearch={handleSearch}
-        columnsState={columnsState}
+        columns={columnsState}
         onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
-        onFiltersApplied={handleFiltersApplied}
       />
       <AdminListTable
         name={name}
@@ -197,13 +230,13 @@ export const AdminList = ({
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
-        columnsState={columnsState}
+        columns={columnsState}
         activeSortField={sortField}
         activeSortOrder={sortOrder}
         onPageChanged={handlePageChanged}
         onSortChanged={handleSortChanged}
+        onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
-        onFiltersApplied={handleFiltersApplied}
       />
     </article>
   );

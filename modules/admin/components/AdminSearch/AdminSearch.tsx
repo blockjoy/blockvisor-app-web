@@ -19,7 +19,7 @@ export const AdminSearch = ({
 }: Props) => {
   const { search } = router.query;
 
-  const [searchText, setSearchText] = useState(search as string);
+  const [searchText, setSearchText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const debouncedSearchTerm = useDebounce(searchText, 500);

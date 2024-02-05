@@ -1,37 +1,26 @@
 import { AdminListFilterBlockchain } from './AdminListFilterBlockchain/AdminListFilterBlockchain';
 import { AdminListFilterDefault } from './AdminListFilterDefault/AdminListFilterDefault';
-import {
-  Button,
-  ButtonGroup,
-  DropdownMenu,
-  Scrollbar,
-  sort,
-  SvgIcon,
-} from '@shared/components';
-import { useEffect, useRef, useState } from 'react';
+import { Button, DropdownMenu, Scrollbar, SvgIcon } from '@shared/components';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './AdminListFilter.styles';
-import { spacing } from 'styles/utils.spacing.styles';
 import { css } from '@emotion/react';
+import { AdminDropdownHeader } from '@modules/admin/components';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
 import isEqual from 'lodash/isEqual';
 
 type Props = {
   filterSettings: AdminListColumnFilterSettings;
-  filtersState: AdminListColumn[];
+  filters: AdminListColumn[];
   tableScrollPosition: number;
   onChange: (filters: AdminListColumn[]) => void;
-  onApplied: VoidFunction;
-  onPageChanged: (page: number) => void;
 };
 
 export const AdminListFilter = ({
   filterSettings,
-  filtersState,
+  filters,
   tableScrollPosition,
   onChange,
-  onApplied,
-  onPageChanged,
 }: Props) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -39,51 +28,27 @@ export const AdminListFilter = ({
   const [menuRight, setMenuRight] = useState<string>();
   const [originalValues, setOriginalValues] = useState<string[]>([]);
 
-  useEffect(() => {
-    setOriginalValues(filterSettings.values);
-  }, []);
-
   const handleChange = (item: AdminFilterDropdownItem) => {
-    const filtersStateCopy = [...filtersState];
+    let valuesCopy = [...originalValues];
 
-    const foundFilter = filtersStateCopy.find(
-      (f) => f.filterSettings?.type === filterSettings.type,
-    );
-
-    if (!foundFilter || !foundFilter.filterSettings) return;
-
-    const valueExists = foundFilter?.filterSettings?.values?.some(
-      (value) => value === item.id,
-    );
-
-    let newValues = foundFilter.filterSettings.values || [];
+    const valueExists = valuesCopy?.some((value) => value === item.id);
 
     if (valueExists) {
-      newValues = foundFilter?.filterSettings?.values?.filter(
-        (v) => v !== item.id,
-      )!;
+      valuesCopy = valuesCopy.filter((v) => v !== item.id)!;
     } else {
-      newValues.push(item.id);
+      valuesCopy.push(item.id);
     }
 
-    foundFilter.filterSettings.values = newValues;
-
-    onChange(filtersStateCopy);
-  };
-
-  const handleApplied = () => {
-    setIsOpen(false);
-    onPageChanged(1);
-    onApplied();
-    setOriginalValues(filterSettings.values);
+    setOriginalValues(valuesCopy);
   };
 
   const handleReset = () => {
     setIsOpen(false);
+    setOriginalValues([]);
 
-    const filtersStateCopy = [...filtersState];
+    const filtersCopy = [...filters];
 
-    const foundFilter = filtersStateCopy.find(
+    const foundFilter = filtersCopy.find(
       (f) => f.filterSettings?.type === filterSettings.type,
     );
 
@@ -91,33 +56,23 @@ export const AdminListFilter = ({
 
     foundFilter.filterSettings.values = [];
 
-    onChange(filtersStateCopy);
-    onPageChanged(1);
-    onApplied();
+    onChange(filtersCopy);
   };
 
-  const isDirty = !isEqual(
-    sort(filterSettings.values, { order: 'asc' }),
-    sort(originalValues, { order: 'asc' }),
-  );
-
-  console.log('isDirty', {
-    values: sort(filterSettings.values, { order: 'asc' }),
-    original: sort(originalValues, { order: 'asc' }),
-  });
+  const hasFilters = Boolean(originalValues?.length);
 
   const controls = {
     blockchain: (
       <AdminListFilterBlockchain
         onChange={handleChange}
-        filterSettings={filterSettings}
+        values={filterSettings.values}
       />
     ),
     default: (
       <AdminListFilterDefault
         items={filterSettings.dropdownItems!}
         onChange={handleChange}
-        filterSettings={filterSettings}
+        values={filterSettings.values}
       />
     ),
   };
@@ -135,18 +90,46 @@ export const AdminListFilter = ({
     setIsOpen(!isOpen);
   };
 
-  const handleClickOutside = () => setIsOpen(false);
+  const handleClickOutside = () => {
+    setIsOpen(false);
+  };
 
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   useEffect(() => {
     setMenuPosition();
+    setOriginalValues(filterSettings.values);
   }, []);
+
+  useEffect(() => {
+    if (isOpen && !isEqual(originalValues, filterSettings.values)) {
+      setOriginalValues(filterSettings.values);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     handleClickOutside();
     setMenuPosition();
   }, [tableScrollPosition]);
+
+  useEffect(() => {
+    const filtersStateCopy = [...filters];
+
+    const foundFilter = filtersStateCopy.find(
+      (column) => column.filterSettings?.name === filterSettings.name,
+    );
+
+    if (!foundFilter || !foundFilter?.filterSettings) return;
+
+    foundFilter.filterSettings.values = originalValues;
+
+    onChange(filtersStateCopy);
+  }, [originalValues]);
+
+  useLayoutEffect(() => {
+    window.addEventListener('resize', handleClickOutside);
+    return () => window.removeEventListener('resize', handleClickOutside);
+  }, []);
 
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
@@ -169,30 +152,23 @@ export const AdminListFilter = ({
           min-width: 200px;
         `}
       >
+        <AdminDropdownHeader onClose={handleClickOutside}>
+          Filters ({filterSettings.values.length})
+        </AdminDropdownHeader>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           {controls[filterSettings.type]}
         </Scrollbar>
-        <ButtonGroup>
+        <div css={styles.buttonGroup}>
           <Button
-            disabled={!isDirty}
-            onClick={handleApplied}
-            style="primary"
-            size="small"
-            display="block"
-            css={spacing.top.small}
-          >
-            Apply
-          </Button>
-          <Button
+            disabled={!hasFilters}
             onClick={handleReset}
             style="outline"
             size="small"
             display="block"
-            css={spacing.top.small}
           >
             Reset
           </Button>
-        </ButtonGroup>
+        </div>
       </DropdownMenu>
     </div>
   );

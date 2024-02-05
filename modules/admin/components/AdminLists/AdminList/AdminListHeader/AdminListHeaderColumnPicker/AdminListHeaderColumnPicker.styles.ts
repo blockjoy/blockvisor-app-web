@@ -15,7 +15,6 @@ export const styles = {
     align-items: center;
     gap: 8px;
     padding: 0 10px;
-    cursor: pointer;
     font-size: 13px;
 
     :hover {
