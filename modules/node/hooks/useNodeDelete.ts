@@ -17,8 +17,6 @@ export function useNodeDelete() {
   );
 
   const deleteNode = async (node: Node, onSuccess: VoidFunction) => {
-    await nodeClient.deleteNode(node?.id);
-
     if (!isSuperUserBilling)
       try {
         await updateSubscriptionItems({
@@ -30,6 +28,8 @@ export function useNodeDelete() {
         console.log('Error occured while deleting a node', errorMessage);
         return;
       }
+
+    await nodeClient.deleteNode(node?.id);
 
     onSuccess();
   };

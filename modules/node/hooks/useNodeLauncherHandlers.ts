@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
   useSetRecoilState,
 } from 'recoil';
-import { useRouter } from 'next/router';
 import isEqual from 'lodash/isEqual';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
@@ -28,7 +28,7 @@ import {
   useGetRegions,
 } from '@modules/node';
 import { organizationAtoms } from '@modules/organization';
-import { ROUTES } from '@shared/index';
+import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { sortNetworks, sortNodeTypes, sortVersions } from '../utils';
 import { matchSKU } from '@modules/billing';
@@ -56,7 +56,8 @@ interface IUseNodeLauncherHandlersHook {
 export const useNodeLauncherHandlers = ({
   fulfilReqs,
 }: IUseNodeLauncherHandlersParams): IUseNodeLauncherHandlersHook => {
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { navigate } = useNavigate();
 
   const { getHosts } = useHostSelect();
   const { createNode } = useNodeAdd();
@@ -109,12 +110,13 @@ export const useNodeLauncherHandlers = ({
 
   useEffect(() => {
     let queriedHost = null;
-    if (router.isReady && router.query.hostId)
-      queriedHost =
-        allHosts.find((host: Host) => host.id === router.query.hostId) ?? null;
+    const hostId = searchParams.get('hostId');
+
+    if (hostId)
+      queriedHost = allHosts.find((host: Host) => host.id === hostId) ?? null;
 
     setSelectedHost(queriedHost);
-  }, [allHosts, router.isReady]);
+  }, [allHosts]);
 
   const handleHostChanged = (host: Host | null) => {
     Mixpanel.track('Launch Node - Host Changed');
@@ -247,10 +249,11 @@ export const useNodeLauncherHandlers = ({
       params,
       (nodeId: string) => {
         Mixpanel.track('Launch Node - Node Launched');
-        router.push(ROUTES.NODE(nodeId));
-        resetNodeLauncherState();
-        resetSelectedVersion();
-        resetSelectedNetwork();
+        navigate(ROUTES.NODE(nodeId), () => {
+          resetNodeLauncherState();
+          resetSelectedVersion();
+          resetSelectedNetwork();
+        });
       },
       (error: string) => setError(error!),
     );
