@@ -8,6 +8,7 @@ export * from './hooks/useAccessibleList';
 export * from './hooks/useClickOutside';
 export * from './hooks/useEsc';
 export * from './hooks/useModal';
+export * from './hooks/useNavigate';
 export * from './hooks/usePageVisibility';
 export * from './hooks/useTabs';
 export * from './hooks/useToast';

@@ -16,7 +16,6 @@ import {
   useNodeView,
 } from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
-import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
 import { toast } from 'react-toastify';
@@ -26,9 +25,10 @@ import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
+import { useNavigate } from '@shared/index';
 
 export const NodeViewHeader = () => {
-  const router = useRouter();
+  const { navigate } = useNavigate();
   const { node, isLoading } = useNodeView();
   const { getOrganizations } = useGetOrganizations();
   const { removeFromNodeList } = useNodeList();
@@ -45,12 +45,13 @@ export const NodeViewHeader = () => {
 
   const handleDeleteNode = () => {
     deleteNode(node!, () => {
-      loadHosts();
-      getOrganizations();
-      removeFromNodeList(node!.id);
-      toggleDeleteModalOpen();
       toast.success('Node Deleted');
-      router.push(ROUTES.NODES);
+      removeFromNodeList(node!.id);
+
+      navigate(ROUTES.NODES, () => {
+        loadHosts();
+        getOrganizations();
+      });
     });
   };
 
