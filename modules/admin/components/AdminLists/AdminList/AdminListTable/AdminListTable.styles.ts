@@ -74,6 +74,7 @@ export const styles = {
     width: ${width};
     min-width: ${width};
     max-width: ${width};
+    box-sizing: border-box;
   `,
   copyButton: css`
     opacity: 0;
