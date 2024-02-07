@@ -73,7 +73,10 @@ export const AdminListTable = ({
           <thead>
             <tr>
               {columns.map((column) => (
-                <th key={column.name}>
+                <th
+                  key={column.name}
+                  css={styles.tableCellWidth(column.width!)}
+                >
                   {column.sortField ? (
                     <AdminListTableSortButton
                       sortField={column.sortField}

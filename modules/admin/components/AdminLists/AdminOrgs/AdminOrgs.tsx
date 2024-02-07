@@ -8,20 +8,29 @@ import { DateTime } from '@shared/components';
 const columns: AdminListColumn[] = [
   {
     name: 'name',
-    width: '230px',
+    width: '300px',
     sortField: OrgSortField.ORG_SORT_FIELD_NAME,
     isVisible: true,
   },
   {
     name: 'nodeCount',
     displayName: 'Nodes',
-    width: '50px',
+    width: '100px',
+    sortField: OrgSortField.ORG_SORT_FIELD_NODE_COUNT,
     isVisible: true,
   },
   {
     name: 'hostCount',
     displayName: 'Hosts',
     width: '100px',
+    sortField: OrgSortField.ORG_SORT_FIELD_HOST_COUNT,
+    isVisible: true,
+  },
+  {
+    name: 'memberCount',
+    displayName: 'Members',
+    width: '100px',
+    sortField: OrgSortField.ORG_SORT_FIELD_MEMBER_COUNT,
     isVisible: true,
   },
   {

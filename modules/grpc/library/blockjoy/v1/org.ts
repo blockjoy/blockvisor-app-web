@@ -12,6 +12,9 @@ export enum OrgSortField {
   ORG_SORT_FIELD_NAME = 1,
   ORG_SORT_FIELD_CREATED_AT = 2,
   ORG_SORT_FIELD_UPDATED_AT = 3,
+  ORG_SORT_FIELD_HOST_COUNT = 4,
+  ORG_SORT_FIELD_NODE_COUNT = 5,
+  ORG_SORT_FIELD_MEMBER_COUNT = 6,
   UNRECOGNIZED = -1,
 }
 
@@ -1570,10 +1573,10 @@ export interface OrgServiceClient<CallOptionsExt = {}> {
   ): Promise<OrgServiceResetProvisionTokenResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
