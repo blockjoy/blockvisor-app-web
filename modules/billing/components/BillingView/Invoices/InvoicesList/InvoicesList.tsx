@@ -82,10 +82,10 @@ export const InvoicesList = () => {
       next={updateQueryParams}
       hasMore={!!invoicesNextOffset}
       style={{ overflow: 'hidden' }}
-      scrollThreshold={1}
+      scrollThreshold={0.75}
       loader={
         <div css={[spacing.top.medium, flex.display.flex, flex.justify.center]}>
-          <p>Loading</p>
+          <p>Loading...</p>
         </div>
       }
     >
