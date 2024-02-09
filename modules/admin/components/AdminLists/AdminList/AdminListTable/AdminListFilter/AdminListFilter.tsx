@@ -139,7 +139,7 @@ export const AdminListFilter = ({
         `}
       >
         <AdminDropdownHeader onClose={handleClickOutside}>
-          Filters ({filterSettings.values.length})
+          Filters ({filterSettings?.values?.length ?? 0})
         </AdminDropdownHeader>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           {controls[filterSettings.type]}
