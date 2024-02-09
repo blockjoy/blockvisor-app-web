@@ -9,7 +9,7 @@ type Props = {
 export const AdminDetailEditSelect = ({ editSettings, onChange }: Props) => {
   const items = editSettings.dropdownValues?.map((value) => ({
     ...value,
-    name: capitalized(value.name),
+    name: capitalized(value.name!),
   }));
 
   const selectedItem = items?.find(

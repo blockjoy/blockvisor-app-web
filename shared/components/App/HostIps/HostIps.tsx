@@ -90,6 +90,7 @@ export const HostIps = ({ ipAddresses, orgId }: Props) => {
               <input
                 onChange={handleChange}
                 checked={ipListType === type}
+                autoComplete="off"
                 type="radio"
                 value={type}
                 id={type}

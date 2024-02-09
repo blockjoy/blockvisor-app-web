@@ -8,6 +8,8 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
 import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
+import { AdminListFilter } from './AdminListFilter/AdminListFilter';
+import { UIEvent, useState } from 'react';
 
 type Props = {
   name: string;
@@ -20,6 +22,7 @@ type Props = {
   activeSortOrder: SortOrder;
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
+  onFiltersChanged: (filters: AdminListColumn[]) => void;
 };
 
 export const AdminListTable = ({
@@ -33,10 +36,13 @@ export const AdminListTable = ({
   activeSortOrder,
   onPageChanged,
   onSortChanged,
+  onFiltersChanged,
 }: Props) => {
   const router = useRouter();
 
   const { search, page, field, order } = router.query;
+
+  const [scrollPosition, setScrollPosition] = useState<number>();
 
   const pageCount = Math.ceil(listTotal! / pageSize);
 
@@ -57,6 +63,10 @@ export const AdminListTable = ({
     });
   };
 
+  const handleTableScroll = (e: UIEvent<HTMLDivElement>) => {
+    setScrollPosition(e.currentTarget.scrollLeft);
+  };
+
   if (isLoading)
     return (
       <div css={spacing.top.medium}>
@@ -64,74 +74,103 @@ export const AdminListTable = ({
       </div>
     );
 
-  if (listTotal === 0) return <p css={spacing.top.medium}>No {name} found.</p>;
+  const columnsVisible = columns.filter((column) => column.isVisible);
+  const columnsWithFilter = columns.filter((column) => column.filterSettings);
 
   return (
     <>
-      <section css={styles.tableWrapper}>
+      <section css={styles.tableWrapper} onScroll={handleTableScroll}>
         <table css={styles.table}>
           <thead>
             <tr>
-              {columns.map((column) => (
+              {columnsVisible.map((column) => (
                 <th
                   key={column.name}
                   css={styles.tableCellWidth(column.width!)}
                 >
-                  {column.sortField ? (
-                    <AdminListTableSortButton
-                      sortField={column.sortField}
-                      sortOrder={column.sortOrder}
-                      activeSortField={activeSortField}
-                      activeSortOrder={activeSortOrder}
-                      onClick={() =>
-                        onSortChanged(column.sortField!, column.sortOrder!)
-                      }
-                    >
-                      {capitalized(column.displayName || column.name)}
-                    </AdminListTableSortButton>
-                  ) : (
-                    capitalized(column.displayName || column.name)
-                  )}
+                  <span css={styles.tableHeader}>
+                    {column.sortField ? (
+                      <AdminListTableSortButton
+                        sortField={column.sortField}
+                        sortOrder={column.sortOrder}
+                        activeSortField={activeSortField}
+                        activeSortOrder={activeSortOrder}
+                        onClick={() =>
+                          onSortChanged(column.sortField!, column.sortOrder!)
+                        }
+                      >
+                        {capitalized(column.displayName || column.name)}
+                      </AdminListTableSortButton>
+                    ) : (
+                      capitalized(column.displayName || column.name)
+                    )}
+                    {Boolean(column.filterSettings) && (
+                      <AdminListFilter
+                        filters={columnsWithFilter}
+                        filterSettings={column.filterSettings!}
+                        onChange={onFiltersChanged}
+                        tableScrollPosition={+scrollPosition!}
+                      />
+                    )}
+                  </span>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {list.map((item) => (
-              <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
-                {columns.map((column) => (
-                  <td
-                    key={column.name}
-                    css={styles.tableCellWidth(column.width!)}
-                  >
-                    {column.canCopy ? (
-                      <div css={styles.copyTd}>
-                        {item[column.name] || '-'}
-                        {column.canCopy && (
-                          <span className="copy-button" css={styles.copyButton}>
-                            <Copy value={item[column.name] || ''} hideTooltip />
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      item[column.name]
-                    )}
-                  </td>
-                ))}
+            {listTotal === 0 ? (
+              <tr>
+                <td colSpan={1000}>
+                  <p css={[spacing.top.medium, spacing.bottom.medium]}>
+                    No {name} found.
+                  </p>
+                </td>
               </tr>
-            ))}
+            ) : (
+              list.map((item) => (
+                <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
+                  {columnsVisible.map((column) => (
+                    <td
+                      key={column.name}
+                      css={styles.tableCellWidth(column.width!)}
+                    >
+                      {column.canCopy ? (
+                        <div css={styles.copyTd}>
+                          {item[column.name] || '-'}
+                          {column.canCopy && (
+                            <span
+                              className="copy-button"
+                              css={styles.copyButton}
+                            >
+                              <Copy
+                                value={item[column.name] || ''}
+                                hideTooltip
+                              />
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        item[column.name]
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </section>
-      <section css={styles.bottomRow}>
-        <AdminListPagination
-          listPage={listPage}
-          totalRowCount={listTotal!}
-          pageCount={pageCount}
-          onPageChanged={onPageChanged}
-        />
-        <AdminListRowCount total={listTotal!} page={listPage} />
-      </section>
+      {listTotal! > 0 && (
+        <section css={styles.bottomRow}>
+          <AdminListPagination
+            listPage={listPage}
+            totalRowCount={listTotal!}
+            pageCount={pageCount}
+            onPageChanged={onPageChanged}
+          />
+          <AdminListRowCount total={listTotal!} page={listPage} />
+        </section>
+      )}
     </>
   );
 };

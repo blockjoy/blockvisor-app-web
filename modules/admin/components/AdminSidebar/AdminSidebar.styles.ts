@@ -9,6 +9,7 @@ export const styles = {
     (theme: ITheme) =>
       css`
         position: sticky;
+        z-index: 2;
         overflow: hidden;
         top: 92px;
         margin-top: 20px;
@@ -18,6 +19,7 @@ export const styles = {
         place-items: center;
         width: 200px;
         height: calc(100vh - 112px);
+        background: ${theme.colorBackground};
         border-right: 1px solid ${isOpen ? theme.colorBorder : 'transparent'};
         margin-right: ${isOpen ? '20px' : 0};
 
