@@ -27,7 +27,7 @@ export const AdminListFilter = ({
   const [menuRight, setMenuRight] = useState<string>();
 
   const handleChange = (item: AdminFilterDropdownItem) => {
-    let valuesCopy = [...filterSettings.values];
+    let valuesCopy = filterSettings?.values ? [...filterSettings.values] : [];
 
     const valueExists = valuesCopy?.some((value) => value === item.id);
 
