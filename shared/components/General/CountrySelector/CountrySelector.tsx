@@ -1,15 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SerializedStyles } from '@emotion/react';
-import { styles } from './CountrySelector.styles';
-import {
-  DropdownButton,
-  DropdownItem,
-  DropdownMenu,
-  DropdownWrapper,
-  InputLabel,
-  Scrollbar,
-} from '@shared/components';
-import { CountrySearch } from './CountrySearch/CountrySearch';
+import { Dropdown, InputLabel, withSearchDropdown } from '@shared/components';
 import { Country, useCountries } from '@shared/hooks/useCountries';
 
 export type CountrySelectorProps = {
@@ -23,65 +14,37 @@ export type CountrySelectorProps = {
   tabIndex?: number;
 };
 
-const filterCountries = (
-  searchValue: string,
-  countries: Country[],
-): Country[] =>
-  countries.filter((country: Country) =>
-    country.name.toLowerCase().includes(searchValue.toLowerCase()),
-  );
-
 export const CountrySelector = ({
   name,
   value,
-  onChange,
   inputSize,
   label,
   labelStyles,
   disabled,
-  tabIndex,
+  onChange,
 }: CountrySelectorProps) => {
   const COUNTRIES = useCountries();
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const countrySearchRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = (open: boolean = true) => {
+    setIsOpen(open);
+  };
 
   const defaultCountry =
     COUNTRIES.find((country: Country) => country.code === value) ?? null;
 
-  const [filteredCountries, setFilteredCountries] =
-    useState<Country[]>(COUNTRIES);
+  const [selectedCountry, setSelectedCountry] =
+    useState<Country | null>(defaultCountry);
 
-  const [activeCountryName, setActiveCountryName] = useState<string | null>(
-    defaultCountry?.name!,
+  const handleCountryChange = (country: Country | null) => {
+    if (country?.code) onChange(country?.code);
+    setSelectedCountry(country);
+  };
+
+  const CountrySelectDropdown = useMemo(
+    () => withSearchDropdown<Country>(Dropdown),
+    [],
   );
-
-  const toggleDropdown = () => setIsOpen(!isOpen);
-
-  const handleChange = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    country: Country,
-  ) => {
-    e.preventDefault();
-    onChange(country.code);
-    setActiveCountryName(country.name);
-    toggleDropdown();
-  };
-
-  const handleCountrySearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value.trim();
-    setFilteredCountries(filterCountries(searchValue, COUNTRIES));
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isOpen && countrySearchRef.current) {
-        countrySearchRef.current.focus();
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [isOpen]);
 
   return (
     <>
@@ -96,51 +59,16 @@ export const CountrySelector = ({
         </InputLabel>
       )}
 
-      <DropdownWrapper
-        isEmpty={false}
+      <CountrySelectDropdown
+        items={COUNTRIES}
+        selectedItem={selectedCountry}
+        handleSelected={handleCountryChange}
+        defaultText={defaultCountry ? defaultCountry?.name : 'Select country'}
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      >
-        <DropdownButton
-          text={
-            <p css={!value ? styles.placeholder : ''}>
-              {value ? activeCountryName : 'Select country'}
-            </p>
-          }
-          onClick={toggleDropdown}
-          isOpen={isOpen}
-          tabIndex={tabIndex}
-          type="input"
-        />
-
-        <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-          <CountrySearch
-            ref={countrySearchRef}
-            handleChange={handleCountrySearch}
-          />
-          <Scrollbar additionalStyles={[styles.dropdownInner]}>
-            <ul>
-              {filteredCountries.length ? (
-                filteredCountries.map((country: Country) => {
-                  return (
-                    <li key={country.name}>
-                      <DropdownItem
-                        size="medium"
-                        type="button"
-                        onButtonClick={(e) => handleChange(e, country)}
-                      >
-                        <p css={styles.active}>{country.name}</p>
-                      </DropdownItem>
-                    </li>
-                  );
-                })
-              ) : (
-                <p css={styles.noResults}>No results found</p>
-              )}
-            </ul>
-          </Scrollbar>
-        </DropdownMenu>
-      </DropdownWrapper>
+        handleOpen={handleOpen}
+        size="small"
+        buttonType="input"
+      />
     </>
   );
 };

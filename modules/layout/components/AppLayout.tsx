@@ -22,7 +22,6 @@ import { usePermissions } from '@modules/auth';
 import { usePageVisibility } from '@shared/index';
 import {
   billingSelectors,
-  useCustomer,
   usePaymentMethods,
   useSubscription,
 } from '@modules/billing';
@@ -39,10 +38,10 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const currentOrg = useRef<string>();
 
-  const billingId = useRecoilValue(billingSelectors.billingId);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
+  const customer = useRecoilValue(billingSelectors.customer);
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
   const {
@@ -58,7 +57,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
-  const { customer, getCustomer } = useCustomer();
   const { fetchPaymentMethods } = usePaymentMethods();
   const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
   const { getUserSubscription } = useUserSubscription();
@@ -68,7 +66,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   });
 
   useEffect(() => {
-    if (!customer && billingId) getCustomer(billingId);
+    if (customer) fetchPaymentMethods();
   }, []);
 
   useEffect(() => {
@@ -126,10 +124,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       if (mqttClient?.connected) updateMqttSubscription();
     }
   }, [defaultOrganization?.id]);
-
-  useEffect(() => {
-    fetchPaymentMethods();
-  }, [customer]);
 
   return (
     <>

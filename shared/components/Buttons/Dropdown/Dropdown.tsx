@@ -19,6 +19,7 @@ export type DropdownProps<T = any> = {
   handleSelected: (item: T | null) => void;
   defaultText?: string | ReactNode;
   searchQuery?: string;
+  isTouchedQuery?: boolean;
   renderSearch?: (isOpen: boolean) => ReactNode;
   isEmpty?: boolean;
   noBottomMargin?: boolean;
@@ -27,6 +28,7 @@ export type DropdownProps<T = any> = {
   error?: string;
   isOpen: boolean;
   size?: 'small' | 'medium' | 'large';
+  buttonType?: 'input' | 'default';
   handleOpen: (open?: boolean) => void;
   checkDisabledItem?: (item?: T) => boolean;
   renderItem?: (item: T) => ReactNode;
@@ -44,6 +46,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   handleSelected,
   defaultText,
   searchQuery,
+  isTouchedQuery,
   renderSearch,
   isEmpty = true,
   noBottomMargin = false,
@@ -52,6 +55,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   error,
   isOpen,
   size = 'medium',
+  buttonType = 'default',
   handleOpen,
   checkDisabledItem,
   renderItem,
@@ -84,6 +88,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     isOpen,
     handleOpen,
     searchQuery,
+    isTouchedQuery,
     dropdownRef,
   });
 
@@ -97,6 +102,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       <DropdownButton
         isOpen={isOpen}
         isLoading={isLoading}
+        type={buttonType}
         text={
           isLoading ? (
             <p>Loading...</p>

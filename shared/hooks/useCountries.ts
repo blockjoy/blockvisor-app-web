@@ -13,7 +13,7 @@ export const useCountries = () => {
   const countryNames = useMemo(() => {
     return Object.entries(countries.getNames('en', { select: 'official' }))
       .sort((a, b) => a[1].localeCompare(b[1]))
-      .map(([code, name]) => ({ code, name }));
+      .map(([code, name]) => ({ id: code, code, name }));
   }, []);
 
   return countryNames;

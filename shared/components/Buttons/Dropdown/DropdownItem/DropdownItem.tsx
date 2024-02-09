@@ -58,6 +58,7 @@ export const DropdownItem = ({
           id={id}
           onClick={onButtonClick}
           disabled={isDisabled}
+          type="button"
           css={[
             reset.button,
             typo.tiny,
