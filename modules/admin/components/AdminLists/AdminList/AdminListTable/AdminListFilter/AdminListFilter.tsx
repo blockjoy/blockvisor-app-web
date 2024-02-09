@@ -72,14 +72,14 @@ export const AdminListFilter = ({
     blockchain: (
       <AdminListFilterBlockchain
         onChange={handleChange}
-        values={filterSettings.values}
+        values={filterSettings.values!}
       />
     ),
     default: (
       <AdminListFilterDefault
         items={filterSettings.dropdownItems!}
         onChange={handleChange}
-        values={filterSettings.values}
+        values={filterSettings.values!}
       />
     ),
   };
