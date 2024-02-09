@@ -82,9 +82,12 @@ class OrganizationClient {
   }
 
   async createOrganization(name: string): Promise<Org | StatusResponse> {
+    const request = { name };
+    console.log('createOrganizationRequest', request);
     try {
       await authClient.refreshToken();
-      const response = await this.client.create({ name }, getOptions());
+      const response = await this.client.create(request, getOptions());
+      console.log('createOrganizationResponse', response);
       return response.org!;
     } catch (err) {
       return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');

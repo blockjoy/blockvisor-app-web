@@ -27,7 +27,7 @@ export const AdminListFilter = ({
   const [menuRight, setMenuRight] = useState<string>();
 
   const handleChange = (item: AdminFilterDropdownItem) => {
-    let valuesCopy = [...filterSettings.values];
+    let valuesCopy = filterSettings?.values ? [...filterSettings.values] : [];
 
     const valueExists = valuesCopy?.some((value) => value === item.id);
 
@@ -72,14 +72,14 @@ export const AdminListFilter = ({
     blockchain: (
       <AdminListFilterBlockchain
         onChange={handleChange}
-        values={filterSettings.values}
+        values={filterSettings.values!}
       />
     ),
     default: (
       <AdminListFilterDefault
         items={filterSettings.dropdownItems!}
         onChange={handleChange}
-        values={filterSettings.values}
+        values={filterSettings.values!}
       />
     ),
   };

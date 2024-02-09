@@ -1,7 +1,7 @@
 type AdminListColumnFilterSettings = {
   type: AdminListColumnFilterType;
   name?: string;
-  values: string[];
+  values?: string[];
   dropdownItems?: AdminFilterDropdownItem[];
 };
 
