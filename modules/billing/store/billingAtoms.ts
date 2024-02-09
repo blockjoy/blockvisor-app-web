@@ -53,7 +53,7 @@ const paymentMethods = atom<PaymentSource[]>({
 
 const paymentMethodsLoadingState = atom<LoadingState>({
   key: 'billing.paymentMethods.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const paymentMethod = atom<PaymentSource | null>({

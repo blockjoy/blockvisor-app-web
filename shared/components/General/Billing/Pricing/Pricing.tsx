@@ -10,6 +10,7 @@ import { styles } from './Pricing.styles';
 import { formatters } from '@shared/index';
 import { Promo, Skeleton } from '@shared/components';
 import { blockchainAtoms, nodeAtoms } from '@modules/node';
+import { usePermissions } from '@modules/auth';
 
 type PricingProps = {
   itemPrice: ItemPrice | ItemPriceSimple | null;
@@ -29,6 +30,10 @@ export const Pricing = ({ itemPrice }: PricingProps) => {
 
   const [isOpenPromo, setIsOpenPromo] = useState(Boolean(promoCode));
 
+  const { hasPermission } = usePermissions();
+
+  const canAddNode = hasPermission('node-create');
+
   useEffect(() => {
     return () => setPromoCodeError(null);
   }, []);
@@ -41,9 +46,11 @@ export const Pricing = ({ itemPrice }: PricingProps) => {
     blockchainsLoadingState !== 'finished' ||
     allRegionsLoadingState !== 'finished';
 
+  const isDisabled = !itemPrice || !canAddNode;
+
   return (
     <>
-      <div css={[styles.wrapper, !itemPrice ? styles.disabled : null]}>
+      <div css={[styles.wrapper, isDisabled ? styles.disabled : null]}>
         {isLoading ? (
           <Skeleton width="120px" height="25px" />
         ) : (

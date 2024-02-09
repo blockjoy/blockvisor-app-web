@@ -44,7 +44,6 @@ export const BillingAddressForm = ({
                 placeholder="First Name"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={1}
                 validationOptions={{
                   required: 'First Name is required',
                 }}
@@ -57,7 +56,6 @@ export const BillingAddressForm = ({
                 placeholder="Last Name"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={2}
                 validationOptions={{
                   required: 'Last Name is required',
                 }}
@@ -71,7 +69,6 @@ export const BillingAddressForm = ({
               placeholder="Company"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={3}
             />
           </li>
           <li css={[spacing.bottom.medium]}>
@@ -81,7 +78,6 @@ export const BillingAddressForm = ({
               placeholder="Address"
               inputSize="medium"
               labelStyles={[typo.base]}
-              tabIndex={4}
               validationOptions={{
                 required: 'Address is required',
               }}
@@ -98,7 +94,6 @@ export const BillingAddressForm = ({
                   label="Country"
                   labelStyles={[typo.base]}
                   onChange={onChange}
-                  tabIndex={5}
                 />
               )}
             />
@@ -111,7 +106,6 @@ export const BillingAddressForm = ({
                 placeholder="City"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={6}
                 validationOptions={{
                   required: 'City is required',
                 }}
@@ -124,7 +118,6 @@ export const BillingAddressForm = ({
                 placeholder="Postal code"
                 inputSize="medium"
                 labelStyles={[typo.base]}
-                tabIndex={7}
                 validationOptions={{
                   required: 'Postal code is required',
                 }}
@@ -138,18 +131,12 @@ export const BillingAddressForm = ({
             style="secondary"
             size="small"
             type="submit"
-            tabIndex={8}
             disabled={!isValid || !isDirty}
           >
             {hasBillingAddress ? 'Update' : 'Add'}
           </Button>
           {!hasBillingAddress && (
-            <Button
-              onClick={handleCancel}
-              style="outline"
-              size="small"
-              tabIndex={9}
-            >
+            <Button onClick={handleCancel} style="outline" size="small">
               Cancel
             </Button>
           )}
