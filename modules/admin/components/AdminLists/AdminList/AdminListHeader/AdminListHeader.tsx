@@ -3,7 +3,6 @@ import { AdminSearch } from '@modules/admin/components/AdminSearch/AdminSearch';
 import { AdminListHeaderColumnPicker } from './AdminListHeaderColumnPicker/AdminListHeaderColumnPicker';
 import { styles } from './AdminListHeader.styles';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
-import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import IconFilterClear from '@public/assets/icons/common/FilterClear.svg';
 
 type Props = {
@@ -35,7 +34,7 @@ export const AdminListHeader = ({
 
   const hasFilters = columns
     .filter((column) => column.filterSettings)
-    .flatMap((column) => column.filterSettings?.values).length;
+    .flatMap((column) => column.filterSettings?.values)?.length;
 
   const hasFilterColumns = columns.some((column) => column.filterSettings);
 
