@@ -43,6 +43,11 @@ export const AdminListPagination = ({
     setEnd(pageEnd);
   };
 
+  const handlePageChanged = (nextPage: number) => {
+    if (nextPage === listPage) return;
+    onPageChanged(nextPage);
+  };
+
   useEffect(() => {
     buildPagination(listPage);
   }, [pageCount, listPage]);
@@ -54,7 +59,7 @@ export const AdminListPagination = ({
       <button
         type="button"
         css={styles.paginationButton}
-        onClick={() => onPageChanged(listPage - 1)}
+        onClick={() => handlePageChanged(listPage - 1)}
         disabled={listPage === 1}
       >
         <SvgIcon size="10px" isDefaultColor>
@@ -63,7 +68,7 @@ export const AdminListPagination = ({
       </button>
       {(listPage >= 5 || listPage > pageCount - 4) && pageCount > 6 && (
         <button
-          onClick={() => onPageChanged(1)}
+          onClick={() => handlePageChanged(1)}
           type="button"
           css={styles.paginationButton}
         >
@@ -77,7 +82,7 @@ export const AdminListPagination = ({
         <button
           css={styles.paginationButton}
           className={listPage === page ? 'active' : ''}
-          onClick={() => onPageChanged(page)}
+          onClick={() => handlePageChanged(page)}
           key={page}
           type="button"
         >
@@ -90,7 +95,7 @@ export const AdminListPagination = ({
       {pageCount > 5 && (
         <button
           className={listPage === pageCount ? 'active' : ''}
-          onClick={() => onPageChanged(pageCount)}
+          onClick={() => handlePageChanged(pageCount)}
           type="button"
           css={styles.paginationButton}
         >
@@ -100,7 +105,7 @@ export const AdminListPagination = ({
       <button
         type="button"
         css={styles.paginationButton}
-        onClick={() => onPageChanged(listPage + 1)}
+        onClick={() => handlePageChanged(listPage + 1)}
         disabled={listPage === pageCount}
       >
         <SvgIcon size="10px" isDefaultColor>

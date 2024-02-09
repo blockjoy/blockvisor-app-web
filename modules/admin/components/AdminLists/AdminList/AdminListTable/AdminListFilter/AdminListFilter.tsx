@@ -7,7 +7,6 @@ import { styles } from './AdminListFilter.styles';
 import { css } from '@emotion/react';
 import { AdminDropdownHeader } from '@modules/admin/components';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
-import isEqual from 'lodash/isEqual';
 
 type Props = {
   filterSettings: AdminListColumnFilterSettings;
@@ -26,10 +25,9 @@ export const AdminListFilter = ({
   const [isOpen, setIsOpen] = useState(false);
   const [menuTop, setMenuTop] = useState<string>();
   const [menuRight, setMenuRight] = useState<string>();
-  const [originalValues, setOriginalValues] = useState<string[]>([]);
 
   const handleChange = (item: AdminFilterDropdownItem) => {
-    let valuesCopy = [...originalValues];
+    let valuesCopy = [...filterSettings.values];
 
     const valueExists = valuesCopy?.some((value) => value === item.id);
 
@@ -39,12 +37,21 @@ export const AdminListFilter = ({
       valuesCopy.push(item.id);
     }
 
-    setOriginalValues(valuesCopy);
+    const filtersStateCopy = [...filters];
+
+    const foundFilter = filtersStateCopy.find(
+      (column) => column.filterSettings?.name === filterSettings.name,
+    );
+
+    if (!foundFilter || !foundFilter?.filterSettings) return;
+
+    foundFilter.filterSettings.values = valuesCopy;
+
+    onChange(filtersStateCopy);
   };
 
   const handleReset = () => {
     setIsOpen(false);
-    setOriginalValues([]);
 
     const filtersCopy = [...filters];
 
@@ -59,7 +66,7 @@ export const AdminListFilter = ({
     onChange(filtersCopy);
   };
 
-  const hasFilters = Boolean(originalValues?.length);
+  const hasFilters = Boolean(filterSettings.values?.length);
 
   const controls = {
     blockchain: (
@@ -98,33 +105,12 @@ export const AdminListFilter = ({
 
   useEffect(() => {
     setMenuPosition();
-    setOriginalValues(filterSettings.values);
   }, []);
-
-  useEffect(() => {
-    if (isOpen && !isEqual(originalValues, filterSettings.values)) {
-      setOriginalValues(filterSettings.values);
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     handleClickOutside();
     setMenuPosition();
   }, [tableScrollPosition]);
-
-  useEffect(() => {
-    const filtersStateCopy = [...filters];
-
-    const foundFilter = filtersStateCopy.find(
-      (column) => column.filterSettings?.name === filterSettings.name,
-    );
-
-    if (!foundFilter || !foundFilter?.filterSettings) return;
-
-    foundFilter.filterSettings.values = originalValues;
-
-    onChange(filtersStateCopy);
-  }, [originalValues]);
 
   useLayoutEffect(() => {
     window.addEventListener('resize', handleClickOutside);

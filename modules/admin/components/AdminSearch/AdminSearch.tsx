@@ -1,7 +1,7 @@
 import { styles } from './AdminSearch.styles';
 import { SvgIcon } from '@shared/components';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { useDebounce } from '@modules/admin/hooks/useDebounce';
+import { useDebounce } from '@modules/admin';
 import IconSearch from '@public/assets/icons/common/Search.svg';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import router from 'next/router';
@@ -19,7 +19,8 @@ export const AdminSearch = ({
 }: Props) => {
   const { search } = router.query;
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState(search as string);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const debouncedSearchTerm = useDebounce(searchText, 500);
@@ -35,6 +36,8 @@ export const AdminSearch = ({
     setSearchText('');
     onSearch('');
     inputRef.current?.focus();
+    if (!inputRef.current) return;
+    inputRef.current.value = '';
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -42,13 +45,6 @@ export const AdminSearch = ({
       handleSearch();
     }
   };
-
-  useEffect(() => {
-    if (search && inputRef.current) {
-      setSearchText(search as string);
-      inputRef.current.defaultValue = search as string;
-    }
-  }, [router.isReady]);
 
   useEffect(() => {
     if (!isDashboardSearch && searchText !== search) {
@@ -70,7 +66,8 @@ export const AdminSearch = ({
         onInput={handleSearchChanged}
         onKeyUp={handleKeyUp}
         placeholder={placeholder}
-        value={searchText}
+        defaultValue={searchText}
+        autoComplete="off"
       />
       {isDashboardSearch && (
         <button css={styles.searchButton} onClick={handleSearch}>
