@@ -1,11 +1,9 @@
-import { MouseEventHandler, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { authClient } from '@modules/grpc';
-import { Button, Input } from '@shared/components';
+import { Button, FormError } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
-import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { PasswordToggle } from '@modules/auth';
 import { useRouter } from 'next/router';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
@@ -26,27 +24,21 @@ export function NewPasswordForm() {
 
   const router = useRouter();
 
-  const [activeType, setActiveType] = useState<
-    Record<keyof NewPassword, 'password' | 'text'>
-  >({
-    confirmPassword: 'password',
-    password: 'password',
-  });
+  const {
+    handleSubmit,
+    watch,
+    formState: { isDirty, isValid },
+  } = form;
 
-  const { handleSubmit, watch } = form;
-
-  const handleIconClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-    const name = e.currentTarget.name as keyof NewPassword;
-    const type = activeType[name] === 'password' ? 'text' : 'password';
-    setActiveType((prev) => ({ ...prev, [name]: type }));
-  };
+  const password = useRef({});
+  password.current = watch('confirmPassword', '');
 
   const onSubmit = async ({ password, confirmPassword }: NewPassword) => {
     setIsLoading(true);
 
     const { token } = router.query;
 
-    const response: any = await authClient.updateResetPassword(
+    const response = await authClient.updateResetPassword(
       token?.toString()!,
       password,
     );
@@ -60,6 +52,8 @@ export function NewPasswordForm() {
       });
     }
   };
+
+  const doPasswordsMatch = watch('confirmPassword') === watch('password');
 
   return serverError ? (
     <p css={[typo.small, colors.warning, spacing.bottom.medium]}>
@@ -80,33 +74,22 @@ export function NewPasswordForm() {
                   placeholder="Password"
                 />
               </li>
-              <li css={[spacing.bottom.medium]}>
-                <Input
+              <li css={[spacing.bottom.mediumSmall]}>
+                <PasswordField
+                  hideMeter
+                  loading={isLoading}
                   tabIndex={2}
-                  labelStyles={[display.visuallyHidden]}
                   name="confirmPassword"
-                  placeholder="Confirm password"
-                  type={activeType['confirmPassword']}
-                  validationOptions={{
-                    required: 'This is a mandatory field',
-                    validate: (value) => {
-                      if (watch('password') != value) {
-                        return 'Passwords do not match';
-                      }
-                    },
-                  }}
-                  rightIcon={
-                    <PasswordToggle
-                      tabIndex={5}
-                      name="confirmPassword"
-                      activeType={activeType['confirmPassword']}
-                      onClick={handleIconClick}
-                    />
-                  }
+                  placeholder="Confirm Password"
+                  compareTo={form.getValues().password}
                 />
+                <FormError isVisible={!doPasswordsMatch}>
+                  Passwords do not match
+                </FormError>
               </li>
             </ul>
             <Button
+              disabled={!isDirty || !doPasswordsMatch || !isValid}
               tabIndex={3}
               size="medium"
               display="block"
