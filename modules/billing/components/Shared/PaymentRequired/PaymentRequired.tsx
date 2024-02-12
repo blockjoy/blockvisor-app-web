@@ -37,6 +37,7 @@ export const PaymentRequired = ({
       isOpen={true}
       handleClose={handleCancel}
       additionalStyles={[styles.modal]}
+      isActive={false}
     >
       <h2 css={[typo.medium, spacing.bottom.medium]}>
         Payment Information Required

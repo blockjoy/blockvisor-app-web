@@ -7,7 +7,7 @@ import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import {
   blockchainAtoms,
   BlockchainSimple,
-  BlockchainSimpleRegion,
+  BlockchainSimpleWRegion,
 } from '@modules/node';
 import { sort } from '@shared/components';
 
@@ -66,7 +66,7 @@ const regionsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const allRegions = atom<BlockchainSimpleRegion[]>({
+const allRegions = atom<BlockchainSimpleWRegion[]>({
   key: 'node.regions.all',
   default: [],
 });

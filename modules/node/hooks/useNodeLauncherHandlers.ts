@@ -91,11 +91,12 @@ export const useNodeLauncherHandlers = ({
   const resetSelectedVersion = useResetRecoilState(
     nodeLauncherAtoms.selectedVersion,
   );
-
   const [selectedRegion, setSelectedRegion] = useRecoilState(
     nodeLauncherAtoms.selectedRegion,
   );
-
+  const selectedRegionByHost = useRecoilValue(
+    nodeLauncherSelectors.selectedRegionByHost(selectedHost?.region),
+  );
   const resetSelectedNetwork = useResetRecoilState(
     nodeLauncherAtoms.selectedNetwork,
   );
@@ -344,7 +345,7 @@ export const useNodeLauncherHandlers = ({
       blockchain: selectedBlockchain,
       nodeLauncher: nodeLauncherState,
       version: selectedVersion,
-      region: selectedRegion,
+      region: !!selectedHost ? selectedRegionByHost : selectedRegion,
       network: selectedNetwork,
     });
     setSelectedSKU(nodeSKU);
@@ -353,6 +354,7 @@ export const useNodeLauncherHandlers = ({
     selectedVersion,
     selectedRegion,
     selectedNetwork,
+    selectedHost,
   ]);
 
   useEffect(() => {
