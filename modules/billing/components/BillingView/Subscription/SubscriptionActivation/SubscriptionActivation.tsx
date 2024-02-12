@@ -70,7 +70,7 @@ export const SubscriptionActivation = ({
       </h2>
       <div css={[spacing.top.medium, spacing.bottom.medium]}>
         <p css={spacing.bottom.small}>
-          You are about to activate the BlockJoy subscription.
+          You are about to activate your BlockJoy subscription.
         </p>
         <p css={spacing.bottom.medium}>
           Once activated, you will have access to all our premium features.

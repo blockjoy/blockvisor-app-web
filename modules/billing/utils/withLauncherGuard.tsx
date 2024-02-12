@@ -129,7 +129,13 @@ export const withLauncherGuard = (Component: any) => {
         />
         {activeView === 'payment-required' && (
           <PaymentRequired
-            warningMessage={`Creating a ${name} requires a payment method.`}
+            warningMessage={`Launching a ${
+              type === 'launch-node'
+                ? 'Node'
+                : type === 'launch-host'
+                ? 'Host'
+                : 'Resource'
+            } requires a payment method.`}
             handleCancel={handleCancelAction}
             handleSubmit={handleSubmitPayment}
             handleBack={handleDefaultView}

@@ -61,7 +61,7 @@ export const CardComponent = forwardRef(
                 ]}
               >
                 <label css={[inputLabel, inputLabelSize.small, typo.base]}>
-                  Expiry
+                  Expiration Date
                 </label>
                 <div
                   css={[

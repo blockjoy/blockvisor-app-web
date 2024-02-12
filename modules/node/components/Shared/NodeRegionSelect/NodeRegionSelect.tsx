@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { organizationAtoms } from '@modules/organization';
 import { nodeAtoms, nodeLauncherAtoms } from '@modules/node';
 import { Dropdown } from '@shared/components';
 
@@ -14,11 +13,7 @@ export const NodeRegionSelect = ({
   onChange,
   onLoad,
 }: NodeRegionSelectProps) => {
-  const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
@@ -37,15 +32,15 @@ export const NodeRegionSelect = ({
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
   useEffect(() => {
-    if (!version?.id) setError('Version List Empty');
-    else if (!regionsByBlockchain.length) setError('Regions List Empty');
-    else setError(null);
-  }, [version?.id, defaultOrganization?.id]);
-
-  useEffect(() => {
     const activeRegion = regionsByBlockchain?.[0] ?? null;
     onLoad(activeRegion);
   }, [regionsByBlockchain]);
+
+  const error = !version?.id
+    ? 'Version List Empty'
+    : !regionsByBlockchain.length
+    ? 'Regions List Empty'
+    : null;
 
   return (
     <Dropdown

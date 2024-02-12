@@ -1,4 +1,5 @@
-import { useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './NodeLauncherSummary.styles';
@@ -39,7 +40,6 @@ export const NodeLauncherSummary = ({
   const { hostList } = useHostList();
 
   const error = useRecoilValue(nodeLauncherAtoms.error);
-  const isLaunching = useRecoilValue(nodeLauncherAtoms.isLaunching);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
@@ -48,6 +48,9 @@ export const NodeLauncherSummary = ({
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
   const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
   const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
+  const [isLaunching, setIsLaunching] = useRecoilState(
+    nodeLauncherAtoms.isLaunching,
+  );
 
   const { hasPermission } = usePermissions();
   const canAddNode = hasPermission('node-create');
@@ -61,6 +64,10 @@ export const NodeLauncherSummary = ({
     isLaunching ||
     isLoadingAllRegions !== 'finished' ||
     !itemPrice;
+
+  useEffect(() => {
+    setIsLaunching(false);
+  }, []);
 
   return (
     <div css={styles.wrapper}>
