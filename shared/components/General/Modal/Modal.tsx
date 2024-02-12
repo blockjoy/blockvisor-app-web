@@ -11,6 +11,7 @@ type Props = {
   portalId: string;
   handleClose?: any;
   additionalStyles?: SerializedStyles[];
+  isActive?: boolean;
 };
 
 export function Modal({
@@ -19,11 +20,10 @@ export function Modal({
   portalId,
   handleClose,
   additionalStyles,
+  isActive,
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
-  useClickOutside(ref, () => {
-    handleClose();
-  });
+  useClickOutside(ref, handleClose, isActive);
 
   const handleEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {

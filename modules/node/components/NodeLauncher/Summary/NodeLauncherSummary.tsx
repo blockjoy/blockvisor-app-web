@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
@@ -9,7 +9,6 @@ import {
   HostSelect,
   OrganizationSelect,
   Pricing,
-  Tooltip,
 } from '@shared/components';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
@@ -23,6 +22,7 @@ import {
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
 import { billingSelectors } from '@modules/billing';
+import { NodeLauncherSummaryHubSpot } from './NodeLauncherSummaryHubSpot';
 
 type NodeLauncherSummaryProps = {
   onCreateNodeClicked: VoidFunction;
@@ -52,11 +52,16 @@ export const NodeLauncherSummary = ({
     nodeLauncherAtoms.isLaunching,
   );
 
+  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
+
   const { hasPermission } = usePermissions();
   const canAddNode = hasPermission('node-create');
 
+  useEffect(() => {
+    setIsLaunching(false);
+  }, []);
+
   const isDisabled =
-    !canAddNode ||
     !hasNetworkList ||
     !isNodeValid ||
     !isConfigValid ||
@@ -65,9 +70,13 @@ export const NodeLauncherSummary = ({
     isLoadingAllRegions !== 'finished' ||
     !itemPrice;
 
-  useEffect(() => {
-    setIsLaunching(false);
-  }, []);
+  const handleCreateNodeClicked = () => {
+    if (!canAddNode) handleOpenHubSpot();
+    else onCreateNodeClicked();
+  };
+
+  const handleOpenHubSpot = () => setIsOpenHubSpot(true);
+  const handleCloseHubSpot = () => setIsOpenHubSpot(false);
 
   return (
     <div css={styles.wrapper}>
@@ -116,16 +125,8 @@ export const NodeLauncherSummary = ({
       <Pricing itemPrice={itemPrice} />
 
       <div css={styles.buttons}>
-        {!canAddNode && (
-          <Tooltip
-            noWrap
-            top="-30px"
-            left="50%"
-            tooltip="Insufficient permission to launch node."
-          />
-        )}
         <button
-          onClick={onCreateNodeClicked}
+          onClick={handleCreateNodeClicked}
           disabled={isDisabled}
           css={[
             styles.createButton,
@@ -148,6 +149,12 @@ export const NodeLauncherSummary = ({
           </span>
         </button>
       </div>
+      {isOpenHubSpot && (
+        <NodeLauncherSummaryHubSpot
+          isOpenHubSpot={isOpenHubSpot}
+          handleClose={handleCloseHubSpot}
+        />
+      )}
     </div>
   );
 };

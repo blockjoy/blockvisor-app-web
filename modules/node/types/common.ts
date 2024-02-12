@@ -33,6 +33,6 @@ export type BlockchainSimple = {
   version?: string;
 };
 
-export type BlockchainSimpleRegion = BlockchainSimple & {
+export type BlockchainSimpleWRegion = BlockchainSimple & {
   regions: Region[];
 };

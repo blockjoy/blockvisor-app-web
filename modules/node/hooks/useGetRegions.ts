@@ -6,13 +6,13 @@ import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { organizationAtoms } from '@modules/organization';
 import {
-  BlockchainSimpleRegion,
+  BlockchainSimpleWRegion,
   blockchainSelectors,
   nodeAtoms,
 } from '@modules/node';
 
 type UseGetRegionHook = {
-  allRegions: BlockchainSimpleRegion[];
+  allRegions: BlockchainSimpleWRegion[];
   allRegionsLoadingState: LoadingState;
   regions: Region[];
   isLoading: boolean;
