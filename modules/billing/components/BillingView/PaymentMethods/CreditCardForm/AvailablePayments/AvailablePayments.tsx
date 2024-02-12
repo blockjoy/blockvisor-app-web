@@ -5,7 +5,7 @@ export const AvailablePayments = () => {
   return (
     <div css={styles.wrapper}>
       {AVAILABLE_PAYMENT_METHODS.map((pm: AvailablePaymentMethod) => (
-        <PaymentIcon key={pm.id} brand={pm.id} type="outline" />
+        <PaymentIcon key={pm.id} brand={pm.id} />
       ))}
     </div>
   );

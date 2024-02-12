@@ -5,20 +5,19 @@ import { getPaymentMethodIcon } from '@modules/billing';
 
 type PaymentIconProps = {
   brand: string;
-  type?: 'default' | 'outline';
   size?: string;
 };
 
-export const PaymentIcon = ({
-  brand,
-  type = 'default',
-  size = '100%',
-}: PaymentIconProps) => {
+export const PaymentIcon = ({ brand, size = '100%' }: PaymentIconProps) => {
   const IconComponent = getPaymentMethodIcon(brand);
+  const bg = brand === 'visa' ? 'white' : 'none';
 
   return (
-    <span css={[styles.icon, type === 'outline' && styles.iconOutline]}>
-      <SvgIcon size={size}>
+    <span css={[styles.wrapper]}>
+      <SvgIcon
+        size={size}
+        additionalStyles={[styles.icon, styles.iconBgColor(bg)]}
+      >
         <Suspense fallback={null}>{<IconComponent />}</Suspense>
       </SvgIcon>
     </span>

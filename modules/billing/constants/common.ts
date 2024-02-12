@@ -18,6 +18,11 @@ export const AVAILABLE_PAYMENT_METHODS: AvailablePaymentMethod[] = [
     name: 'Visa',
     title: 'Visa',
   },
+  {
+    id: 'discover',
+    name: 'Discover',
+    title: 'Discover',
+  },
 ];
 
 export const BILLING_PERIOD: BillingPeriod[] = [
