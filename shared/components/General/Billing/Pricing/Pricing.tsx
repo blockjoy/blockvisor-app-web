@@ -75,7 +75,7 @@ export const Pricing = ({ itemPrice }: PricingProps) => {
           <Skeleton width="82px" height="25px" />
         ) : (
           <a onClick={togglePromo} css={styles.promo}>
-            Having a promo code?
+            Have a promo code?
           </a>
         )}
       </div>

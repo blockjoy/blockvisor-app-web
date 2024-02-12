@@ -109,7 +109,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
           ) : error ? (
             <div css={[colors.warning]}>{error}</div>
           ) : (
-            <p>
+            <p {...(!selectedItem && { css: styles.placeholder })}>
               {selectedItem
                 ? renderItem
                   ? renderItem(selectedItem)

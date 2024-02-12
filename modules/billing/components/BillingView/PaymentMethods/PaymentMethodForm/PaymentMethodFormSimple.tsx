@@ -156,7 +156,7 @@ export const PaymentMethodFormSimple = ({
           onClick={handleCreatePaymentMethod}
           customCss={[styles.confirmButton]}
         >
-          Confirm and Activate
+          Confirm & Activate
         </Button>
         <Button
           onClick={handleCancel}

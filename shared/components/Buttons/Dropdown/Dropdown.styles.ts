@@ -40,4 +40,7 @@ export const styles = {
   dropdownItem: css`
     gap: 20px;
   `,
+  placeholder: (theme: ITheme) => css`
+    color: ${theme.colorPlaceholder} !important;
+  `,
 };
