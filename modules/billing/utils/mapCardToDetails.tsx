@@ -18,7 +18,7 @@ export const mapCardToDetails = (card: Card) => {
       label: 'Type',
       data: (
         <div css={styles.info}>
-          <PaymentIcon brand={card?.brand} type="outline" />
+          <PaymentIcon brand={card?.brand} />
           <p>{capitalize(card?.brand)}</p>
         </div>
       ),

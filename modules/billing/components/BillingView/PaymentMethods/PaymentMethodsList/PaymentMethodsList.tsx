@@ -61,7 +61,12 @@ export const PaymentMethodsList = ({
             You have not yet added any cards. Click the button below to add one.
           </p>
         ) : (
-          <Table headers={headers} rows={rows} isLoading={'finished'} />
+          <Table
+            headers={headers}
+            rows={rows}
+            isLoading={'finished'}
+            isHover={false}
+          />
         )}
       </div>
       <Button onClick={handleAdding} style="primary" size="small">

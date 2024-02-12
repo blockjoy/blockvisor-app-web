@@ -17,6 +17,7 @@ export type TableProps = {
   properties?: InitialFilter;
   handleSort?: (dataField: string) => void;
   additionalStyles?: SerializedStyles[];
+  isHover?: boolean;
 };
 
 export const Table = ({
@@ -31,6 +32,7 @@ export const Table = ({
   properties,
   handleSort,
   additionalStyles,
+  isHover = true,
 }: TableProps) => {
   const [activeRowKey, setActiveRowKey] = useState<string>(rows?.[0]?.key);
 
@@ -48,6 +50,7 @@ export const Table = ({
           styles.table,
           fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
           additionalStyles && additionalStyles,
+          isHover && styles.tableHoverIcon,
         ]}
       >
         {!hideHeader && headers && rows?.length > 0 && (
