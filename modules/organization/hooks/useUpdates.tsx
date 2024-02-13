@@ -78,7 +78,7 @@ export const useUpdates = () => {
 
         updateMembersList(org!);
 
-        if (updatedBy === user?.id) break;
+        if (updatedBy?.resourceId === user?.id) break;
 
         const isKicked = !org?.members.find((m) => m.userId === user?.id);
 
@@ -103,7 +103,7 @@ export const useUpdates = () => {
 
         removeFromOrganizations(orgId);
 
-        if (deletedBy === user?.id) break;
+        if (deletedBy?.resourceId === user?.id) break;
 
         if (orgId === defaultOrganization?.id) {
           showNotification(
