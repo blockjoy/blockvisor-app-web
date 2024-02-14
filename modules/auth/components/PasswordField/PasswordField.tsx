@@ -1,6 +1,6 @@
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { Input } from '@shared/components';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
 import { typo } from 'styles/utils.typography.styles';
@@ -78,7 +78,9 @@ export const PasswordField = ({
         name={name}
         placeholder={placeholder}
         type={activeType}
-        onChange={(e) => setPassword(e.target.value)}
+        onInput={(e: ChangeEvent<HTMLInputElement>) =>
+          setPassword(e.target.value)
+        }
         onFocus={() => setMeter(!hideMeter)}
         validationOptions={{
           required: 'This is a mandatory field',

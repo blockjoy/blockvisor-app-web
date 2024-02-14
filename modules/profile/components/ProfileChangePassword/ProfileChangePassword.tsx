@@ -1,6 +1,6 @@
 import { MouseEventHandler, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Button, Input } from '@shared/components';
+import { Button, FormError, Input } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -9,7 +9,6 @@ import { PasswordToggle, useChangePassword } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
 import { styles } from './ProfileChangePassword.styles';
 import { toast } from 'react-toastify';
-import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetOrganizations } from '@modules/organization';
 import { PasswordField } from '@modules/auth/components/PasswordField/PasswordField';
 
@@ -58,12 +57,9 @@ export function ProfileChangePassword() {
         form.reset();
         toast.success('Password changed');
       } catch (error) {
-        if (error instanceof ApplicationError) {
-          const errorMessage = error.message.includes('invalid authentication')
-            ? 'Error changing password, please check current password.'
-            : 'Error changing password, please contact our support team.';
-          setChangePasswordError(errorMessage);
-        }
+        setChangePasswordError(
+          'Error changing password, check current password',
+        );
       } finally {
         setIsLoading(false);
       }
@@ -156,13 +152,11 @@ export function ProfileChangePassword() {
           >
             Change Password
           </Button>
-          {changePasswordError && (
-            <p css={[typo.smaller, colors.warning, spacing.top.small]}>
-              {changePasswordError}
-            </p>
-          )}
         </form>
       </FormProvider>
+      <FormError isVisible={Boolean(changePasswordError)}>
+        {changePasswordError}
+      </FormError>
     </>
   );
 }

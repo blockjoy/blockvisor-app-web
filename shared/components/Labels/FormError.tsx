@@ -8,13 +8,14 @@ const styles = {
     height: 0;
     overflow: hidden;
     font-size: 14px;
-    margin-top: 10px;
+    line-height: 36px;
     color: ${theme.colorDanger};
-    will-change: height;
-    transition: height 0.3s;
+    will-change: height, padding-top;
+    transition: 0.3s;
   `,
   errorVisible: css`
-    height: 26px;
+    height: 36px;
+    padding-top: 10px;
   `,
 };
 
