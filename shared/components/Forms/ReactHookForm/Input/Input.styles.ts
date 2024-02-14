@@ -43,7 +43,10 @@ const inputFieldOutline = css`
 `;
 
 const inputFieldError = css`
-  border-color: var(--color-utility-warning);
+  &,
+  &:focus {
+    border-color: var(--color-utility-warning);
+  }
 `;
 
 const inputTypesStyle: Record<InputSize, SerializedStyles> = {

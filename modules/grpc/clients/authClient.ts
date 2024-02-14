@@ -14,7 +14,6 @@ import {
   handleError,
   setTokenValue,
 } from '@modules/grpc';
-import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 export type NewPassword = {
   old_pwd: string;
@@ -33,10 +32,7 @@ class AuthClient {
     this.client = createClient(AuthServiceDefinition, channel);
   }
 
-  async login(
-    email: string,
-    password: string,
-  ): Promise<string | StatusResponse> {
+  async login(email: string, password: string): Promise<string> {
     try {
       const response = await this.client.login({
         email,
@@ -45,7 +41,7 @@ class AuthClient {
       setTokenValue(response.token);
       return response.token;
     } catch (err) {
-      return StatusResponseFactory.loginResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
@@ -63,11 +59,11 @@ class AuthClient {
     }
   }
 
-  async resetPassword(email: string): Promise<void | StatusResponse> {
+  async resetPassword(email: string): Promise<void> {
     try {
       await this.client.resetPassword({ email }, getOptions());
     } catch (err) {
-      return StatusResponseFactory.resetPasswordResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
@@ -84,10 +80,7 @@ class AuthClient {
     }
   }
 
-  async updateResetPassword(
-    token: string,
-    password: string,
-  ): Promise<void | StatusResponse> {
+  async updateResetPassword(token: string, password: string): Promise<void> {
     const authHeader = {
       metadata: Metadata({
         authorization: `Bearer ${token}`,
@@ -96,14 +89,11 @@ class AuthClient {
     try {
       await this.client.updatePassword({ password }, authHeader);
     } catch (err) {
-      return StatusResponseFactory.updateResetPasswordResponse(
-        err,
-        'grpcClient',
-      );
+      return handleError(err, false);
     }
   }
 
-  async updatePassword(pwd: NewPassword): Promise<void | StatusResponse> {
+  async updatePassword(pwd: NewPassword): Promise<void> {
     try {
       await this.refreshToken();
       await this.client.updateUIPassword(
@@ -115,7 +105,7 @@ class AuthClient {
         getOptions(),
       );
     } catch (err) {
-      return StatusResponseFactory.updatePasswordResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 

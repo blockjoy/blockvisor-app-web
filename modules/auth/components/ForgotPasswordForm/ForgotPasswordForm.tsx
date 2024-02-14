@@ -1,12 +1,10 @@
 import { FormProvider, useForm } from 'react-hook-form';
-
 import { authClient } from '@modules/grpc';
-
 import { Button, Input } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { isValidEmail } from '@shared/utils/validation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
@@ -21,7 +19,8 @@ export function ForgotPasswordForm() {
     reValidateMode: 'onBlur',
   });
 
-  const { isValid } = form.formState;
+  const { formState, setValue } = form;
+  const { isValid } = formState;
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,6 +35,13 @@ export function ForgotPasswordForm() {
 
     setIsLoading(false);
   });
+
+  useEffect(() => {
+    const { email } = router.query;
+    if (email) {
+      setValue('email', email?.toString());
+    }
+  }, [router.isReady]);
 
   return (
     <FormProvider {...form}>

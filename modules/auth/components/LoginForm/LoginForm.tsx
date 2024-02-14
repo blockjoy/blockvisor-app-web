@@ -1,18 +1,15 @@
 import { useSignIn } from '@modules/auth';
-import { ApplicationError } from '@modules/auth/utils/Errors';
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
-import { Alert, Button, Input } from '@shared/components';
+import { Alert, Button, FormError, Input } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { isValidEmail } from '@shared/utils/validation';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { colors } from 'styles/utils.colors.styles';
 import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { typo } from 'styles/utils.typography.styles';
 import { PasswordToggle } from '@modules/auth';
 
 type LoginForm = {
@@ -65,9 +62,7 @@ export function LoginForm() {
       getBlockchains();
       handleRedirect();
     } catch (error) {
-      if (error instanceof ApplicationError) {
-        setLoginError('Invalid Credentials');
-      }
+      setLoginError('Invalid Credentials');
       setIsLoading(false);
     }
   });
@@ -139,11 +134,9 @@ export function LoginForm() {
           >
             Login
           </Button>
-          {loginError && (
-            <p css={[typo.smaller, colors.warning, spacing.top.small]}>
-              {loginError}
-            </p>
-          )}
+          <FormError isVisible={Boolean(loginError)}>
+            Invalid email or password
+          </FormError>
         </form>
       </FormProvider>
     </>
