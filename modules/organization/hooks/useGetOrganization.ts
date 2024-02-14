@@ -7,7 +7,8 @@ import { useDefaultOrganization } from './useDefaultOrganization';
 import { useGetOrganizations } from './useGetOrganizations';
 
 export function useGetOrganization() {
-  const { getDefaultOrganization } = useDefaultOrganization();
+  const { getDefaultOrganization, setDefaultOrganization } =
+    useDefaultOrganization();
 
   const { organizations } = useGetOrganizations();
 
@@ -30,6 +31,10 @@ export function useGetOrganization() {
         checkForTokenError(organization);
         checkForApiError('organization', organization);
         setOrganization(organization);
+        setDefaultOrganization({
+          id: organization.id,
+          name: organization.name,
+        });
       } catch (err) {
         organization = null;
         await getDefaultOrganization(organizations);
