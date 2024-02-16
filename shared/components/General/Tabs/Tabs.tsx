@@ -23,7 +23,7 @@ export function Tabs({
 }: TabProps) {
   return (
     <div css={styles.wrapper(type)}>
-      <div css={[wrapper.main, styles.navi(type)]}>
+      <div css={type === 'default' ? wrapper.main : styles.navi(type)}>
         <nav css={styles.tabs(type)}>
           {isLoading ? (
             <div css={styles.loading}>

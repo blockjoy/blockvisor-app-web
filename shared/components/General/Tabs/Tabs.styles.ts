@@ -15,8 +15,6 @@ export const styles = {
     ${type === 'inner' &&
     `@media ${breakpoints.fromLrg} {
       width: 200px;
-      padding-left: 0;
-      padding-right: 0;
     }`}
   `,
   items: (type: TabType) => css`
@@ -26,13 +24,14 @@ export const styles = {
     }`}
   `,
   tabs: (type: TabType) => css`
-    box-shadow: inset 0 -1px 0 0 var(--color-text-5-o10);
+    ${type === 'inner' &&
+    'box-shadow: inset 0 -1px 0 0 var(--color-text-5-o10)'}
     position: relative;
     overflow: hidden;
     padding-top: 10px;
 
     ${type === 'inner' &&
-    `@media ${breakpoints.fromLrg} {
+    ` @media ${breakpoints.fromLrg} {
       min-height: 300px;
       box-shadow: inset -1px 0 0 0 var(--color-text-5-o10);
       padding-top: 0;
@@ -68,7 +67,15 @@ export const styles = {
       border-color 0.15s var(--transition-easing-cubic);
 
     ${type === 'inner' &&
-    `@media ${breakpoints.fromLrg} {
+    `@media ${breakpoints.toLrg} {
+      height: 40px;
+      font-size: 13px;
+
+      &:not(.active) {
+        box-shadow: inset 0 -1px 0 0 var(--color-text-5-o10);
+      }
+    }
+    @media ${breakpoints.fromLrg} {
       border-bottom: 0;
       border-right: 1px solid transparent;
     }`}
