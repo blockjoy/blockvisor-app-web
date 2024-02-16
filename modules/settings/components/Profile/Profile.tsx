@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useTabs } from '@shared/index';
-import { PageSection, Tabs } from '@shared/components';
+import { Tabs } from '@shared/components';
 import { authAtoms } from '@modules/auth';
 import { ProfileForm } from './ProfileForm/ProfileForm';
 import { ProfileDeleteAccount } from './ProfileDeleteAccount/ProfileDeleteAccount';
@@ -19,18 +19,12 @@ export const Profile = () => {
         label: 'Personal',
         value: 'personal',
         component: (
-          <PageSection
-            noSectionPadding={true}
-            topPadding={false}
-            bottomBorder={false}
-          >
-            <ProfileForm
-              firstName={user?.firstName}
-              lastName={user?.lastName}
-              id={user?.id}
-              email={user?.email}
-            />
-          </PageSection>
+          <ProfileForm
+            firstName={user?.firstName}
+            lastName={user?.lastName}
+            id={user?.id}
+            email={user?.email}
+          />
         ),
       },
       {
@@ -38,23 +32,19 @@ export const Profile = () => {
         value: 'account',
         component: (
           <>
-            <PageSection noSectionPadding={true} topPadding={false}>
-              <ProfileChangePassword />
-            </PageSection>
-            <PageSection bottomBorder={false} noSectionPadding={true}>
-              <header
-                css={[
-                  colors.text3,
-                  typo.medium,
-                  spacing.bottom.medium,
-                  spacing.top.medium,
-                ]}
-              >
-                Danger Zone
-              </header>
+            <ProfileChangePassword />
+            <header
+              css={[
+                colors.text3,
+                typo.medium,
+                spacing.bottom.medium,
+                spacing.top.medium,
+              ]}
+            >
+              Danger Zone
+            </header>
 
-              <ProfileDeleteAccount />
-            </PageSection>
+            <ProfileDeleteAccount />
           </>
         ),
       },

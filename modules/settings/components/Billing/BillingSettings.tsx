@@ -9,28 +9,12 @@ export const BillingSettings = () => {
       {
         label: 'Payment Methods',
         value: 'payment-methods',
-        component: (
-          <PageSection
-            noSectionPadding={true}
-            bottomBorder={false}
-            topPadding={false}
-          >
-            <PaymentMethods />
-          </PageSection>
-        ),
+        component: <PaymentMethods />,
       },
       {
         label: 'Billing Address',
         value: 'billing-address',
-        component: (
-          <PageSection
-            noSectionPadding={true}
-            bottomBorder={false}
-            topPadding={false}
-          >
-            <BillingInfo />
-          </PageSection>
-        ),
+        component: <BillingInfo />,
       },
     ],
     [],

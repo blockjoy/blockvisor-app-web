@@ -11,9 +11,8 @@ export const PageSection: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   bottomBorder = true,
   topPadding = true,
-  noSectionPadding = false,
 }) => (
-  <div css={[wrapper.main, noSectionPadding && styles.noSectionPadding]}>
+  <div css={wrapper.main}>
     <section
       css={[
         styles.section,
