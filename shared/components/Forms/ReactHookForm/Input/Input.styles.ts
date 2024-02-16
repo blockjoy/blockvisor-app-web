@@ -6,7 +6,7 @@ const inputWrapper = css`
   color: var(--color-text-3);
 `;
 
-const inputField = css`
+const inputField = (theme: ITheme) => css`
   border-radius: 4px;
   width: 100%;
   font-weight: var(--font-weight-normal);
@@ -20,6 +20,10 @@ const inputField = css`
     outline: 0;
     border-color: var(--color-text-5-o30);
     color: var(--color-text-5);
+  }
+
+  ::placeholder {
+    color: ${theme.colorPlaceholder};
   }
 `;
 

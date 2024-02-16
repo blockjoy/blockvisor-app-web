@@ -1,4 +1,4 @@
-import { Subscription } from 'chargebee-typescript/lib/resources';
+import { Card, Subscription } from 'chargebee-typescript/lib/resources';
 import { chargebee } from 'utils/billing/chargebeeInstance';
 import { createHandler } from 'utils/billing/createHandler';
 
@@ -7,14 +7,28 @@ const requestCallback = ({ id }: { id: string }) =>
 
 const mappingCallback = (result: {
   subscription: Subscription;
-}): Subscription => {
-  return result.subscription;
+  card: Card;
+}): Subscription | null => {
+  const subscription = result.subscription as Subscription;
+
+  let resultSubscription = subscription;
+
+  if (!subscription.payment_source_id) {
+    const card = result.card as Card;
+
+    resultSubscription = {
+      ...subscription,
+      payment_source_id: card.payment_source_id ?? null,
+    } as Subscription;
+  }
+
+  return resultSubscription;
 };
 
 const handler = createHandler<
   { id: string },
-  { subscription: Subscription },
-  Subscription
+  { subscription: Subscription; card: Card },
+  Subscription | null
 >(requestCallback, mappingCallback);
 
 export default handler;

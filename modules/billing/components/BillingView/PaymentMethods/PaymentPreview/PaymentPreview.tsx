@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import { Button, DetailsTable, TableSkeleton } from '@shared/components';
@@ -34,14 +34,18 @@ export const PaymentPreview = () => {
     if (!allPaymentMethods.length)
       router.push(
         {
-          pathname: ROUTES.SETTINGS,
-          query: { tab: '1', add: true, update: true },
+          pathname: ROUTES.SETTINGS_BILLING,
+          query: { tab: 'payment-methods', add: true, update: true },
         },
         undefined,
         { shallow: true },
       );
     else handleUpdate();
   };
+
+  useEffect(() => {
+    setActiveView('list');
+  }, [subscription?.status]);
 
   if (paymentMethodLoadingState !== 'finished') return <TableSkeleton />;
 

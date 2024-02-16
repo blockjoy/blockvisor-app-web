@@ -16,8 +16,9 @@ export const ROUTES = {
   LOGIN: '/login',
   ORGANIZATIONS: '/organizations',
   ORGANIZATION: (id: string) => `/organizations/${id}`,
-  PROFILE: '/profile',
   SETTINGS: '/settings',
+  SETTINGS_PROFILE: '/settings/profile',
+  SETTINGS_BILLING: '/settings/billing',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
 };
