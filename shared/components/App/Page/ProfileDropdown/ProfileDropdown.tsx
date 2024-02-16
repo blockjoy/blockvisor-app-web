@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { authAtoms, usePermissions, useSignOut } from '@modules/auth';
@@ -7,7 +7,6 @@ import { DropdownMenu, DropdownItem, Badge } from '@shared/components';
 import { ProfileBubble } from './ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
 import IconDoor from '@public/assets/icons/common/Door.svg';
-import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -27,16 +26,8 @@ export const ProfileDropdown = () => {
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   const handleRedirect = (path: string) => {
-    router.push(
-      {
-        pathname: path,
-        query: {
-          tab: 1,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
+    router.push(path);
+
     handleClickOutside();
   };
 
@@ -66,16 +57,6 @@ export const ProfileDropdown = () => {
               </Badge>
             )}
           </div>
-        </DropdownItem>
-        <DropdownItem
-          type="button"
-          size="medium"
-          onButtonClick={() => handleRedirect(ROUTES.PROFILE)}
-        >
-          <span css={styles.icon}>
-            <IconPerson />
-          </span>
-          Profile
         </DropdownItem>
         <DropdownItem
           type="button"

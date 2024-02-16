@@ -1,28 +1,29 @@
-import { useTabs } from '@shared/hooks/useTabs';
-import { PageSection, PageTitle, Tabs } from '@shared/components';
-import { useRecoilValue } from 'recoil';
-import { authAtoms } from '@modules/auth';
-import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useTabs } from '@shared/index';
+import { PageSection, Tabs } from '@shared/components';
+import { authAtoms } from '@modules/auth';
 import { ProfileForm } from './ProfileForm/ProfileForm';
 import { ProfileDeleteAccount } from './ProfileDeleteAccount/ProfileDeleteAccount';
 import { ProfileChangePassword } from './ProfileChangePassword/ProfileChangePassword';
 import { spacing } from 'styles/utils.spacing.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
-import IconPerson from '@public/assets/icons/common/Person.svg';
 
 export const Profile = () => {
   const user = useRecoilValue(authAtoms.user);
-  const { push } = useRouter();
 
   const tabItems = useMemo(
     () => [
       {
         label: 'Personal',
-        value: '1',
+        value: 'personal',
         component: (
-          <PageSection bottomBorder={false}>
+          <PageSection
+            noSectionPadding={true}
+            topPadding={false}
+            bottomBorder={false}
+          >
             <ProfileForm
               firstName={user?.firstName}
               lastName={user?.lastName}
@@ -34,13 +35,13 @@ export const Profile = () => {
       },
       {
         label: 'Account',
-        value: '2',
+        value: 'account',
         component: (
           <>
-            <PageSection>
+            <PageSection noSectionPadding={true} topPadding={false}>
               <ProfileChangePassword />
             </PageSection>
-            <PageSection bottomBorder={false}>
+            <PageSection bottomBorder={false} noSectionPadding={true}>
               <header
                 css={[
                   colors.text3,
@@ -60,27 +61,14 @@ export const Profile = () => {
     ],
     [user?.firstName, user?.lastName],
   );
-  const { activeTab, setActiveTab } = useTabs(tabItems.length);
+  const { activeTab, handleActiveTabChange } = useTabs(tabItems);
 
-  const handleClick = (tabValue: string) => {
-    setActiveTab(tabValue);
-    push(
-      {
-        pathname: '/profile',
-        query: { tab: tabValue },
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
   return (
-    <>
-      <PageTitle hideOrgPicker title="Profile" icon={<IconPerson />} />
-      <Tabs
-        activeTab={activeTab}
-        onTabClick={handleClick}
-        tabItems={tabItems}
-      />
-    </>
+    <Tabs
+      activeTab={activeTab}
+      onTabClick={handleActiveTabChange}
+      tabItems={tabItems}
+      type="inner"
+    />
   );
 };

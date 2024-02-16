@@ -28,7 +28,7 @@ export const mapCardToDetails = (card: Card) => {
       data: <p>{card?.masked_number}</p>,
     },
     {
-      label: 'Expiry',
+      label: 'Expiration Date',
       data: (
         <p>
           {card?.expiry_month?.toString().padStart(2, '0')}/{card?.expiry_year}

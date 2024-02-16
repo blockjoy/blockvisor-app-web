@@ -81,7 +81,7 @@ export default () => {
         },
         {
           name: 'Billing',
-          path: `${ROUTES.BILLING}?tab=1`,
+          path: `${ROUTES.BILLING}`,
           icon: <IconBilling />,
         },
       ],

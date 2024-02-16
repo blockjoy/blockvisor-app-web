@@ -44,7 +44,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
       [
         {
           label: subscription ? 'Subscription' : 'Plan',
-          value: '1',
+          value: 'subscription',
           component: (
             <PageSection bottomBorder={false}>
               <BillingView item={item} itemPrices={itemPrices} />
@@ -53,7 +53,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         },
         {
           label: 'Estimates',
-          value: '2',
+          value: 'estimates',
           component: (
             <PageSection bottomBorder={false}>
               <Estimates />
@@ -62,7 +62,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         },
         {
           label: 'Billing Contacts',
-          value: '3',
+          value: 'billing-contacts',
           component: (
             <PageSection bottomBorder={false}>
               <BillingContacts />
@@ -71,7 +71,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         },
         {
           label: 'Invoice History',
-          value: '4',
+          value: 'invoice-history',
           component: (
             <PageSection bottomBorder={false}>
               <Invoices />
@@ -80,15 +80,16 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
         },
       ].filter(
         (tabItem) =>
-          tabItem.value === '1' || (subscription && canUpdateSubscription),
+          tabItem.value === 'subscription' ||
+          (subscription && canUpdateSubscription),
       ),
     [subscription, canUpdateSubscription],
   );
 
-  const { activeTab, setActiveTab } = useTabs(tabItems.length);
+  const { activeTab, handleActiveTabChange } = useTabs(tabItems);
 
   useEffect(() => {
-    if (!userSubscription) handleClick('1');
+    if (!userSubscription) handleClick('subscription');
   }, [userSubscription]);
 
   useEffect(() => {
@@ -105,7 +106,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   }, [subscription]);
 
   const handleClick = (tabValue: string) => {
-    setActiveTab(tabValue);
+    handleActiveTabChange(tabValue);
     push(
       {
         pathname: ROUTES.BILLING,
@@ -117,7 +118,8 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   };
 
   useEffect(() => {
-    if (!canUpdateSubscription && query.tab !== '1') handleClick('1');
+    if (!canUpdateSubscription && query.tab !== 'subscription')
+      handleClick('subscription');
   }, [canUpdateSubscription]);
 
   return (

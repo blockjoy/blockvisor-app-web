@@ -12,6 +12,7 @@ export * from './hooks/useNavigate';
 export * from './hooks/usePageVisibility';
 export * from './hooks/useTabs';
 export * from './hooks/useToast';
+export * from './hooks/useUpdateSearchParams';
 
 export * from './services/mixpanel';
 
