@@ -39,8 +39,8 @@ export const PaymentMethodsDropdown = ({
   const handleNewPaymentMethod = () => {
     router.push(
       {
-        pathname: ROUTES.SETTINGS,
-        query: { tab: '1', add: true },
+        pathname: ROUTES.SETTINGS_BILLING,
+        query: { tab: 'payment-methods', add: true },
       },
       undefined,
       { shallow: true },

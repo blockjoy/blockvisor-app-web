@@ -49,7 +49,7 @@ export const CHARGEBEE_OPTIONS = {
 
   // Custom placeholders
   placeholder: {
-    number: '4111 1111 1111 1111',
+    number: 'Card number',
     expiry: 'MM / YY',
     cvv: 'CVV',
   },
