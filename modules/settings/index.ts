@@ -1,1 +1,3 @@
-export * from './components/Settings';
+export * from './components/SettingsView';
+export * from './components/Billing/BillingSettings';
+export * from './components/Profile/Profile';

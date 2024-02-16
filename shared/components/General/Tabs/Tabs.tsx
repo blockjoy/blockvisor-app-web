@@ -4,11 +4,12 @@ import { reset } from 'styles/utils.reset.styles';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './Tabs.styles';
 
-type Props = {
+type TabProps = {
   activeTab: string;
   tabItems: Array<TabItem>;
   onTabClick: (tabValue: string) => void;
   isLoading?: boolean;
+  type?: TabType;
 };
 
 export type TabItem = { value: string; label: string; component: ReactNode };
@@ -18,21 +19,22 @@ export function Tabs({
   activeTab,
   onTabClick,
   isLoading = false,
-}: Props) {
+  type = 'default',
+}: TabProps) {
   return (
-    <>
-      <div css={wrapper.main}>
-        <nav css={styles.tabs}>
+    <div css={styles.wrapper(type)}>
+      <div css={[wrapper.main, styles.navi(type)]}>
+        <nav css={styles.tabs(type)}>
           {isLoading ? (
             <div css={styles.loading}>
               <Skeleton width="200px" />
             </div>
           ) : (
-            <ul css={[reset.list, styles.tabList]}>
-              {tabItems.map((item, index) => (
-                <li key={index}>
+            <ul css={[reset.list, styles.tabList(type)]}>
+              {tabItems.map((item) => (
+                <li key={item.value}>
                   <button
-                    css={[reset.button, styles.tabsButton]}
+                    css={[reset.button, styles.tabsButton(type)]}
                     className={activeTab === item.value ? 'active' : ''}
                     onClick={() => onTabClick(item.value)}
                   >
@@ -44,13 +46,15 @@ export function Tabs({
           )}
         </nav>
       </div>
-      {tabItems.map((item, index) => {
-        return activeTab === item.value ? (
-          <div key={index} css={[styles.tabComponent]}>
-            {item.component}
-          </div>
-        ) : null;
-      })}
-    </>
+      <div css={styles.items(type)}>
+        {tabItems.map((item) => {
+          return activeTab === item.value ? (
+            <div key={item.value} css={[styles.tabComponent(type)]}>
+              {item.component}
+            </div>
+          ) : null;
+        })}
+      </div>
+    </div>
   );
 }

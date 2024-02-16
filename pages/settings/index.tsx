@@ -1,6 +1,6 @@
-import { AppLayout } from '@modules/layout';
-import { Settings as SettingsView } from '@modules/settings/components/Settings';
 import { ReactNode } from 'react';
+import { AppLayout } from '@modules/layout';
+import { SettingsView } from '@modules/settings';
 
 const Settings = () => <SettingsView />;
 

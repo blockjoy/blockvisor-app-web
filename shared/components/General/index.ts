@@ -4,6 +4,7 @@ export * from './Skeleton/SkeletonGrid';
 export * from './Skeleton/SkeletonView';
 export * from './LoadingSpinner/LoadingSpinner';
 export * from './Tabs/Tabs';
+export * from './Tabs/TabNavigation/TabNavigation';
 export * from './DateTime/DateTime';
 export * from './Alert/Alert';
 export * from './Badge/Badge';

@@ -15,4 +15,7 @@ export const styles = {
   sectionNoTopPadding: css`
     padding-top: 0;
   `,
+  noSectionPadding: css`
+    padding: 0;
+  `,
 };

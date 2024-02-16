@@ -22,19 +22,22 @@ export const styles = {
       background: ${theme.colorLabel};
     }
   `,
-  tabs: (theme: ITheme) => css`
-    display: flex;
-    gap: 16px;
-    align-self: stretch;
-    width: 100%;
-    border-bottom: 1px solid ${theme.colorBorder};
+  tabs:
+    (gap: string = '16px') =>
+    (theme: ITheme) =>
+      css`
+        display: flex;
+        gap: ${gap};
+        align-self: stretch;
+        width: 100%;
+        border-bottom: 1px solid ${theme.colorBorder};
 
-    @media ${breakpoints.fromXHuge} {
-      .metrics {
-        display: none;
-      }
-    }
-  `,
+        @media ${breakpoints.fromXHuge} {
+          .metrics {
+            display: none;
+          }
+        }
+      `,
   tabButton: (theme: ITheme) => css`
     display: flex;
     align-items: center;
