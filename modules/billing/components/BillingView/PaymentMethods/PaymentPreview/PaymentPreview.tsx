@@ -74,7 +74,7 @@ export const PaymentPreview = () => {
           disabled={subscription?.status !== 'active'}
         >
           {!!paymentMethod?.card || !!allPaymentMethods.length
-            ? 'Update payment method'
+            ? 'Change payment method'
             : 'Add payment method'}
         </Button>
       )}

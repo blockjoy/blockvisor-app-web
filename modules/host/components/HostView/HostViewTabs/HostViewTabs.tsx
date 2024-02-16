@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
-import NextLink from 'next/link';
-import { styles } from './HostViewTabs.styles';
+import { TabNavigation } from '@shared/components';
 
 export const HostViewTabs = () => {
   const { query, asPath } = useRouter();
@@ -21,24 +20,10 @@ export const HostViewTabs = () => {
     return routerPath === buttonPath;
   };
 
-  return (
-    <section css={styles.wrapper}>
-      <div css={styles.tabs}>
-        {tabs.map((tab) => (
-          <NextLink
-            key={tab.name}
-            href={tab.href}
-            css={[
-              styles.tabButton,
-              isActive(tab.href) && styles.tabButtonActive,
-            ]}
-            className={tab.className}
-          >
-            {tab.name}
-          </NextLink>
-        ))}
-        <header css={styles.sidePanelHeader}>Metrics</header>
-      </div>
-    </section>
-  );
+  const tabItems = tabs.map((tab) => ({
+    ...tab,
+    isActive: isActive(tab.href),
+  }));
+
+  return <TabNavigation items={tabItems} sidePanel="Metrics" />;
 };

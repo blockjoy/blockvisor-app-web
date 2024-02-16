@@ -36,7 +36,7 @@ export const mapCardToDetails = (card: Card) => {
       ),
     },
     {
-      label: 'Billing Info',
+      label: 'Billing Address',
       data: (
         <>
           {card?.billing_addr1 ? (

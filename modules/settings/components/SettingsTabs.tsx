@@ -1,5 +1,6 @@
 import { usePathname } from 'next/navigation';
 import { TabNavigation } from '@shared/components/';
+import { wrapper } from 'styles/wrapper.styles';
 
 export const SettingsTabs = () => {
   const pathname = usePathname();
@@ -14,5 +15,9 @@ export const SettingsTabs = () => {
     isActive: pathname?.includes(tab.href),
   }));
 
-  return <TabNavigation items={tabItems} gap="32px" />;
+  return (
+    <div css={wrapper.main}>
+      <TabNavigation items={tabItems} gap="32px" />
+    </div>
+  );
 };

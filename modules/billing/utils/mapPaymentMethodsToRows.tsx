@@ -38,7 +38,7 @@ export const mapPaymentMethodsToRows = (
       width: '600px',
     },
     {
-      name: 'Billing Info',
+      name: 'Billing Address',
       key: '3',
       width: '600px',
     },
