@@ -1,8 +1,7 @@
 import { useRouter } from 'next/router';
-import NextLink from 'next/link';
-import { styles } from './OrganizationViewTabs.styles';
 import { createPath } from '@modules/organization/utils/createPath';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
+import { TabNavigation } from '@shared/components';
 
 export const OrganizationViewTabs = () => {
   const { query, asPath } = useRouter();
@@ -23,19 +22,10 @@ export const OrganizationViewTabs = () => {
     return routerPath.includes(buttonPath);
   };
 
-  return (
-    <div css={styles.tabs}>
-      {tabs.map((tab) => (
-        <NextLink
-          key={tab.name}
-          href={tab.href}
-          className={tab.name.toLowerCase()}
-          css={[styles.tabButton, isActive(tab.href) && styles.tabButtonActive]}
-        >
-          {tab.name}
-        </NextLink>
-      ))}
-      <header css={styles.sidePanelHeader}>Details</header>
-    </div>
-  );
+  const tabItems = tabs.map((tab) => ({
+    ...tab,
+    isActive: isActive(tab.href),
+  }));
+
+  return <TabNavigation items={tabItems} sidePanel="Details" />;
 };

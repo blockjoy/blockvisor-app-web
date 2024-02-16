@@ -176,7 +176,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
       <div css={spacing.top.large}>
         <div css={[flex.display.flex, flex.direction.row]}>
-          <h4 css={styles.headline}>BILLING INFO</h4>
+          <h4 css={styles.headline}>Billing Address</h4>
           {activeView === 'action' && billingAddress && (
             <a onClick={handleDefaultAddress} css={styles.backToDefault}>
               Back to default

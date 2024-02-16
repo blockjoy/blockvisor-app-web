@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { useNodeView } from '@modules/node';
 import { TabNavigation } from '@shared/components';
+import { wrapper } from 'styles/wrapper.styles';
 
 export const NodeViewTabs = () => {
   const { query, asPath } = useRouter();
@@ -48,5 +49,9 @@ export const NodeViewTabs = () => {
     isActive: isActive(tab.href),
   }));
 
-  return <TabNavigation items={tabItems} />;
+  return (
+    <div css={wrapper.main}>
+      <TabNavigation items={tabItems} sidePanel="Metrics" />
+    </div>
+  );
 };

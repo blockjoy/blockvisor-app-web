@@ -9,6 +9,7 @@ export const styles = {
   `,
   headline: css`
     margin-bottom: 20px;
+    text-transform: uppercase;
   `,
   backToDefault: (theme: ITheme) => css`
     position: relative;
