@@ -24,8 +24,8 @@ export const styles = {
     }`}
   `,
   tabs: (type: TabType) => css`
-    ${type === 'inner' &&
-    'box-shadow: inset 0 -1px 0 0 var(--color-text-5-o10)'}
+    ${type === 'default' &&
+    'box-shadow: inset 0 -1px 0 0 var(--color-text-5-o10);'}
     position: relative;
     overflow: hidden;
     padding-top: 10px;
@@ -77,6 +77,7 @@ export const styles = {
     }
     @media ${breakpoints.fromLrg} {
       border-bottom: 0;
+      height: 50px;
       border-right: 1px solid transparent;
     }`}
 
