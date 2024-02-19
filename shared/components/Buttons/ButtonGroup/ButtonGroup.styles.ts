@@ -18,5 +18,6 @@ export const styles = {
     display: flex;
     flex-flow: row nowrap;
     gap: 8px;
+    align-items: center;
   `,
 };

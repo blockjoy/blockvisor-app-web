@@ -2,11 +2,13 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { DeleteModal, TableSkeleton } from '@shared/components';
+import { ConfirmDialog, DeleteModal, TableSkeleton } from '@shared/components';
 import {
   usePaymentMethods,
   PaymentMethodForm,
   PaymentMethodsList,
+  useCustomer,
+  CreditCardTypes,
 } from '@modules/billing';
 
 export const PaymentMethods = () => {
@@ -15,10 +17,11 @@ export const PaymentMethods = () => {
 
   const { paymentMethodsLoadingState, deletePaymentMethod } =
     usePaymentMethods();
+  const { assignPaymentRole } = useCustomer();
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [activeView, setActiveView] =
-    useState<string | 'list' | 'dialog'>('list');
+    useState<'list' | 'delete' | 'update'>('list');
 
   const [activePaymentMethod, setActivePaymentMethod] =
     useState<PaymentSource | null>(null);
@@ -32,9 +35,12 @@ export const PaymentMethods = () => {
 
   const onHide = () => setActiveView('list');
 
-  const handleRemove = (paymentMethod: PaymentSource) => {
+  const handleAction = (
+    action: PaymentMethodAction,
+    paymentMethod: PaymentSource,
+  ) => {
     setActivePaymentMethod(paymentMethod);
-    setActiveView('dialog');
+    setActiveView(action);
   };
 
   const handleDeletePaymentMethod = async () => {
@@ -47,6 +53,21 @@ export const PaymentMethods = () => {
     );
   };
 
+  const handleUpdatePaymentMethod = async () => {
+    await assignPaymentRole({
+      payment_source_id: activePaymentMethod?.id!,
+      role: 'primary',
+    });
+
+    onHide();
+
+    toast.success(
+      `Payment Method [${
+        CreditCardTypes[activePaymentMethod?.card?.brand!]
+      } ****${activePaymentMethod?.card?.last4}] is set as primary.`,
+    );
+  };
+
   if (paymentMethodsLoadingState === 'initializing') return <TableSkeleton />;
 
   return (
@@ -54,13 +75,13 @@ export const PaymentMethods = () => {
       {!isAdding ? (
         <PaymentMethodsList
           handleAdding={handleAdding}
-          handleRemove={handleRemove}
+          handleAction={handleAction}
         />
       ) : (
         <PaymentMethodForm handleCancel={handleCancel} />
       )}
 
-      {activeView === 'dialog' && activePaymentMethod && (
+      {activeView === 'delete' && activePaymentMethod && (
         <DeleteModal
           portalId="delete-payment-method-modal"
           elementType="last four digits"
@@ -69,6 +90,19 @@ export const PaymentMethods = () => {
           entityName="Payment Method"
           onHide={onHide}
           onSubmit={handleDeletePaymentMethod}
+        />
+      )}
+      {activeView === 'update' && activePaymentMethod && (
+        <ConfirmDialog
+          type="primary"
+          title="Update Primary payment method"
+          message={`Credit card [${
+            CreditCardTypes[activePaymentMethod?.card?.brand!]
+          } ****${
+            activePaymentMethod.card?.last4
+          }] will be set as primary for billing.`}
+          handleConfirm={handleUpdatePaymentMethod}
+          onHide={onHide}
         />
       )}
     </>

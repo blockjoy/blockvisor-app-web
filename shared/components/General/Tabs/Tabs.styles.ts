@@ -97,7 +97,7 @@ export const styles = {
 
     ${type === 'inner' &&
     `@media ${breakpoints.fromLrg} {
-      padding-top: 0;
+      padding-top: 5px;
       padding-left: 30px;
     }`}
   `,
