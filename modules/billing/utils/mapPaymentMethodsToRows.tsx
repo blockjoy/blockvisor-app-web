@@ -19,11 +19,21 @@ const styles = {
 
 export const mapPaymentMethodsToRows = (
   paymentMethods: PaymentSource[],
-  handleDelete: (paymentMethod: PaymentSource) => void,
-  handleDefault: (paymentSourceId: string) => void,
+  handleAction: (
+    action: PaymentMethodAction,
+    paymentMethod: PaymentSource,
+  ) => void,
   primaryPaymentMethodId?: string,
   loadingItem?: string,
 ) => {
+  const handleDelete = (paymentMethod: PaymentSource) => {
+    handleAction('delete', paymentMethod);
+  };
+
+  const handleDefault = (paymentMethod: PaymentSource) => {
+    handleAction('update', paymentMethod);
+  };
+
   const headers: TableHeader[] = [
     {
       name: '',
@@ -40,7 +50,7 @@ export const mapPaymentMethodsToRows = (
     {
       name: 'Billing Address',
       key: '3',
-      width: '600px',
+      width: '400px',
     },
     {
       name: '',
@@ -114,13 +124,14 @@ export const mapPaymentMethodsToRows = (
           {
             key: '4',
             component: (
-              <PaymentMethodActions
-                paymentMethod={paymentMethod}
-                handleRemove={handleDelete}
-                handleDefault={handleDefault}
-                isPrimary={primaryPaymentMethodId === paymentMethod.id}
-                isLoading={loadingItem === paymentMethod.id}
-              />
+              <div css={spacing.left.medium}>
+                <PaymentMethodActions
+                  handleDelete={() => handleDelete(paymentMethod)}
+                  handleDefault={() => handleDefault(paymentMethod)}
+                  isPrimary={primaryPaymentMethodId === paymentMethod.id}
+                  isLoading={loadingItem === paymentMethod.id}
+                />
+              </div>
             ),
           },
         ],

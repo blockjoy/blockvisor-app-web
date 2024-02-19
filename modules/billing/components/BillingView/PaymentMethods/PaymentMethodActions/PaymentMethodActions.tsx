@@ -1,43 +1,45 @@
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { ActionsDropdown } from '@shared/components';
+import { Button, ButtonGroup, SvgIcon } from '@shared/components';
+import { flex } from 'styles/utils.flex.styles';
+import { spacing } from 'styles/utils.spacing.styles';
+import { styles } from './PaymentMethodActions.styles';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
-import IconBilling from '@public/assets/icons/common/Billing.svg';
 
 type PaymentMethodActionsProps = {
-  paymentMethod: PaymentSource;
-  handleRemove: (paymentMethod: PaymentSource) => void;
-  handleDefault: (paymentSourceId: string) => void;
+  handleDelete: VoidFunction;
+  handleDefault: VoidFunction;
   isPrimary: boolean;
   isLoading?: boolean;
 };
 
 export const PaymentMethodActions = ({
-  paymentMethod,
-  handleRemove,
+  handleDelete,
   handleDefault,
   isPrimary,
   isLoading,
 }: PaymentMethodActionsProps) => {
-  let actions = [
-    {
-      title: 'Delete',
-      icon: <IconDelete />,
-      method: () => handleRemove(paymentMethod),
-    },
-  ];
-
-  if (!isPrimary) {
-    actions = [
-      {
-        title: 'Set as Default',
-        icon: <IconBilling />,
-        method: () => handleDefault(paymentMethod.id),
-      },
-      ...actions,
-    ];
-  }
-
   return (
-    <ActionsDropdown items={actions} align="right" isLoading={isLoading} />
+    <ButtonGroup type="flex" additionalStyles={[flex.justify.end]}>
+      {!isPrimary && (
+        <Button
+          size="small"
+          onClick={handleDefault}
+          style="outline"
+          loading={isLoading}
+          customCss={[styles.primaryBtn]}
+        >
+          Set as Primary
+        </Button>
+      )}
+      <Button
+        style="icon"
+        css={[flex.display.flex, spacing.left.small]}
+        onClick={handleDelete}
+        customCss={[styles.deleteBtn]}
+      >
+        <SvgIcon isDefaultColor size="16px">
+          <IconDelete />
+        </SvgIcon>
+      </Button>
+    </ButtonGroup>
   );
 };

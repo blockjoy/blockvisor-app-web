@@ -1,54 +1,45 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import { useRecoilValue } from 'recoil';
 import { PaymentSource } from 'chargebee-typescript/lib/resources';
 import { Button, SvgIcon, Table } from '@shared/components';
 import {
   usePaymentMethods,
   mapPaymentMethodsToRows,
-  useCustomer,
+  billingSelectors,
 } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import IconPlus from '@public/assets/icons/common/Plus.svg';
 
 type PaymentMethodsListProps = {
   handleAdding: VoidFunction;
-  handleRemove: (paymentMethod: PaymentSource) => void;
+  handleAction: (
+    action: PaymentMethodAction,
+    paymentMethod: PaymentSource,
+  ) => void;
 };
 
 export const PaymentMethodsList = ({
   handleAdding,
-  handleRemove,
+  handleAction,
 }: PaymentMethodsListProps) => {
-  const [loadingItem, setLoadingItem] = useState<string>('');
+  const [loadingItem, setLoadingItem] = useState('');
   const { paymentMethods } = usePaymentMethods();
+  const customer = useRecoilValue(billingSelectors.customer);
 
-  const { customer, assignPaymentRole } = useCustomer();
-
-  const handleDefault = async (paymentSourceId: string) => {
-    setLoadingItem(paymentSourceId);
-
-    await assignPaymentRole({
-      payment_source_id: paymentSourceId,
-      role: 'primary',
-    });
-
-    setLoadingItem('');
-
-    toast.success('Updated default Payment method');
-  };
-
-  const handleDelete = (paymentMethod: PaymentSource) => {
+  const handleUpdate = async (
+    action: PaymentMethodAction,
+    paymentMethod: PaymentSource,
+  ) => {
     setLoadingItem(paymentMethod?.id);
 
-    handleRemove(paymentMethod);
+    handleAction(action, paymentMethod);
 
     setLoadingItem('');
   };
 
   const { headers, rows } = mapPaymentMethodsToRows(
     paymentMethods,
-    handleDelete,
-    handleDefault,
+    handleUpdate,
     customer?.primary_payment_source_id,
     loadingItem,
   );

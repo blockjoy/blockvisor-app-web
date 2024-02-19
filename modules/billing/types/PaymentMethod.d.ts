@@ -10,3 +10,5 @@ type AvailablePaymentMethod = {
   name: string;
   title: string;
 };
+
+type PaymentMethodAction = 'update' | 'delete';

@@ -8,6 +8,7 @@ export type ConfirmDialogProps = {
   message: string;
   handleConfirm: () => void | Promise<void>;
   onHide: VoidFunction;
+  type?: ButtonStyle;
 };
 
 export const ConfirmDialog = ({
@@ -15,6 +16,7 @@ export const ConfirmDialog = ({
   message,
   handleConfirm,
   onHide,
+  type = 'warning',
 }: ConfirmDialogProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleSubmit = async () => {
@@ -33,7 +35,7 @@ export const ConfirmDialog = ({
         <p>{message}</p>
       </div>
       <ButtonGroup type="extended">
-        <Button style="warning" onClick={handleSubmit} loading={isLoading}>
+        <Button style={type} onClick={handleSubmit} loading={isLoading}>
           Confirm
         </Button>
         <Button style="outline" onClick={onHide}>
