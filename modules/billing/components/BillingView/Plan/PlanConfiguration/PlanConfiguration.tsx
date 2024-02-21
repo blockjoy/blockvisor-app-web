@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { toast } from 'react-toastify';
 import {
   Item,
   ItemPrice,
@@ -54,13 +55,15 @@ export const PlanConfiguration = ({
     setPaymentMethodId(paymentMethod.id);
   };
 
-  const handleSubscription = () => {
+  const handleSubscription = async () => {
     if (!activeItemPrice || !paymentMethodId) return;
 
-    createSubscription({
+    await createSubscription({
       itemPriceId: activeItemPrice?.id,
       paymentMethodId,
     });
+
+    toast.success('Subscription created');
   };
 
   if (paymentMethodsLoadingState !== 'finished') return <TableSkeleton />;
