@@ -21,6 +21,12 @@ export const styles = {
       min-width: 160px;
     }
   `,
+  columnAlign: (align: any) => css`
+    @media ${breakpoints.fromTny} {
+      flex-direction: row;
+      justify-content: ${align === 'center' ? 'center' : 'flex-start'};
+    }
+  `,
   description: (theme: ITheme) => css`
     margin-top: 8px;
     color: var(--color-text-3);

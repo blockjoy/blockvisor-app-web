@@ -7,16 +7,17 @@ type UseAccessibleDropdownParams<T> = {
   handleOpen: (open?: boolean) => void;
   handleSelect: (item: T, index: number) => void;
   searchQuery?: string;
+  isTouchedQuery?: boolean;
   dropdownRef?: RefObject<HTMLUListElement>;
 };
 
-type UseAccessibleDropdownReturnType = {
+type UseAccessibleDropdownReturnType<T> = {
   activeIndex: number;
   setActiveIndex: (activeIndex: number) => void;
   handleItemRef: (element: HTMLLIElement, index: number) => void;
   handleFocus: VoidFunction;
   handleBlur: VoidFunction;
-  handleSelectAccessible: (item: any) => void;
+  handleSelectAccessible: (item: T) => void;
 };
 
 export const useAccessibleDropdown = <T>({
@@ -26,8 +27,9 @@ export const useAccessibleDropdown = <T>({
   handleOpen,
   handleSelect,
   searchQuery,
+  isTouchedQuery,
   dropdownRef,
-}: UseAccessibleDropdownParams<T>): UseAccessibleDropdownReturnType => {
+}: UseAccessibleDropdownParams<T>): UseAccessibleDropdownReturnType<T> => {
   const selectedItemIndex = selectedItem ? items.indexOf(selectedItem) : 0;
   const [activeIndex, setActiveIndex] = useState(selectedItemIndex);
 
@@ -40,7 +42,7 @@ export const useAccessibleDropdown = <T>({
   }, [selectedItem, selectedItemIndex]);
 
   useEffect(() => {
-    if (typeof searchQuery !== 'undefined') setActiveIndex(0);
+    if (typeof searchQuery !== 'undefined' && isTouchedQuery) setActiveIndex(0);
   }, [searchQuery]);
 
   useEffect(() => {

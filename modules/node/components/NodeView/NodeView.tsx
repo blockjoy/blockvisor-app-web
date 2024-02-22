@@ -38,39 +38,33 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
     <>
       <NodeViewTitle />
 
-      {isLoading && !node?.id && (
+      {isLoading ? (
         <div css={[styles.wrapper, wrapper.main]}>
           <div css={styles.loader}>
             <SkeletonView />
           </div>
         </div>
-      )}
-      {!isLoading && !node?.id && (
+      ) : !node?.id ? (
         <EmptyColumn
           title="Node Not Found"
           description="No node exists with this ID"
         />
-      )}
-      {
+      ) : (
         <>
-          {node?.id && (
+          <NodeViewHeader />
+          <NodeViewTabs />
+          <div css={[styles.wrapper, wrapper.main]}>
             <>
-              <NodeViewHeader />
-              <NodeViewTabs />
-              <div css={[styles.wrapper, wrapper.main]}>
-                <>
-                  <div css={styles.content}>{children}</div>
-                  {!hideEditPanel && (
-                    <div css={styles.sidePanel}>
-                      <NodeViewSidePanel />
-                    </div>
-                  )}
-                </>
-              </div>
+              <div css={styles.content}>{children}</div>
+              {!hideEditPanel && (
+                <div css={styles.sidePanel}>
+                  <NodeViewSidePanel />
+                </div>
+              )}
             </>
-          )}
+          </div>
         </>
-      }
+      )}
     </>
   );
 };

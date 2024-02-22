@@ -1,4 +1,9 @@
-import { useSignIn } from '@modules/auth';
+import {
+  useSignIn,
+  useIdentityRepository,
+  useUserBilling,
+  useUserSubscription,
+} from '@modules/auth';
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, FormError, Input } from '@shared/components';
@@ -11,6 +16,8 @@ import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { PasswordToggle } from '@modules/auth';
+import { useCustomer, useSubscription } from '@modules/billing';
+import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
 
 type LoginForm = {
   email: string;
@@ -31,7 +38,12 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
+  const repository = useIdentityRepository();
   const { getBlockchains } = useGetBlockchains();
+  const { getCustomer } = useCustomer();
+  const { fetchSubscription } = useSubscription();
+  const { getUserBilling } = useUserBilling();
+  const { getUserSubscription } = useUserSubscription();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -59,10 +71,23 @@ export function LoginForm() {
       );
       await getOrganizations(!invited);
 
+      const userId = repository?.getIdentity()?.id;
+      const billingId = await getUserBilling(userId!);
+      if (billingId) await getCustomer(billingId!);
+
+      const defaultOrganization: DefaultOrganization = fetchFromLocalStorage(
+        'defaultOrganization',
+      );
+      const userSubscription = await getUserSubscription(
+        defaultOrganization?.id!,
+      );
+      await fetchSubscription(userSubscription?.externalId);
+
       getBlockchains();
       handleRedirect();
     } catch (error) {
       setLoginError('Invalid Credentials');
+
       setIsLoading(false);
     }
   });

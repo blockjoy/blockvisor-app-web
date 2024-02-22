@@ -10,9 +10,12 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
     const { items, handleSelected } = props;
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [isTouchedQuery, setIsTouchedQuery] = useState(false);
     const [filteredData, setFilteredData] = useState<T[]>(items);
 
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+      if (!isTouchedQuery) setIsTouchedQuery(true);
+
       const query = e.target.value;
       setSearchQuery(query);
 
@@ -36,6 +39,7 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
         handleSelected={handleSelect}
         items={filteredData}
         searchQuery={searchQuery}
+        isTouchedQuery={isTouchedQuery}
         renderSearch={(isOpen: boolean) => (
           <DropdownSearch
             name="search-dropdown"

@@ -1,8 +1,9 @@
 import { styles } from './table.styles';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import TableRowLoader from './TableRowLoader';
 import { isSafari } from 'react-device-detect';
 import { TableSortButton } from './TableSortButton';
+import { useState } from 'react';
 
 export type TableProps = {
   hideHeader?: boolean;
@@ -15,6 +16,8 @@ export type TableProps = {
   fixedRowHeight?: string;
   properties?: InitialFilter;
   handleSort?: (dataField: string) => void;
+  additionalStyles?: SerializedStyles[];
+  isHover?: boolean;
 };
 
 export const Table = ({
@@ -28,11 +31,16 @@ export const Table = ({
   fixedRowHeight,
   properties,
   handleSort,
+  additionalStyles,
+  isHover = true,
 }: TableProps) => {
+  const [activeRowKey, setActiveRowKey] = useState<string>(rows?.[0]?.key);
+
   const handleRowClick = (id: string) => {
     if (onRowClick) {
       onRowClick(id);
     }
+    setActiveRowKey(id);
   };
 
   return (
@@ -41,6 +49,8 @@ export const Table = ({
         css={[
           styles.table,
           fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
+          additionalStyles && additionalStyles,
+          isHover && styles.tableHoverIcon,
         ]}
       >
         {!hideHeader && headers && rows?.length > 0 && (
@@ -91,47 +101,51 @@ export const Table = ({
           {isLoading === 'initializing' ? (
             <TableRowLoader length={preload} />
           ) : (
-            rows?.map((tr) => (
-              <tr
-                key={tr.key}
-                className={tr.isDanger ? 'danger' : ''}
-                css={[
-                  !onRowClick || tr.isClickable === false
-                    ? null
-                    : !isSafari
-                    ? styles.rowFancyUnderlineHover
-                    : styles.rowBasicUnderlineHover,
-                ]}
-                onClick={
-                  tr.isClickable !== false
-                    ? () => handleRowClick(tr.key)
-                    : undefined
-                }
-              >
-                {tr.cells?.map((td, index) => (
-                  <td
-                    key={td.key}
-                    css={[
-                      headers &&
-                        headers[index]?.isHiddenOnMobile &&
-                        styles.hiddenOnMobile,
-                      verticalAlign ? styles[verticalAlign] : styles.middle,
-                      styles.textAlign(headers[index]?.textAlign || 'left'),
-                      css`
-                        width: ${headers[index]?.width};
-                        min-width: ${headers[index]?.minWidth};
-                        max-width: ${headers[index]?.maxWidth};
-                      `,
-                    ]}
-                  >
-                    {td.component}
-                    {index === 0 && !isSafari && (
-                      <span className="underline" css={styles.underline} />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))
+            rows?.map((tr) => {
+              return (
+                <tr
+                  key={tr.key}
+                  className={`${tr.isDanger ? 'danger' : ''} ${
+                    tr.key === activeRowKey ? 'active' : ''
+                  }`}
+                  css={[
+                    !onRowClick || tr.isClickable === false
+                      ? null
+                      : !isSafari
+                      ? styles.rowFancyUnderlineHover
+                      : styles.rowBasicUnderlineHover,
+                  ]}
+                  onClick={
+                    tr.isClickable !== false
+                      ? () => handleRowClick(tr.key)
+                      : undefined
+                  }
+                >
+                  {tr.cells?.map((td, index) => (
+                    <td
+                      key={td.key}
+                      css={[
+                        headers &&
+                          headers[index]?.isHiddenOnMobile &&
+                          styles.hiddenOnMobile,
+                        verticalAlign ? styles[verticalAlign] : styles.middle,
+                        styles.textAlign(headers[index]?.textAlign || 'left'),
+                        css`
+                          width: ${headers[index]?.width};
+                          min-width: ${headers[index]?.minWidth};
+                          max-width: ${headers[index]?.maxWidth};
+                        `,
+                      ]}
+                    >
+                      {td.component}
+                      {index === 0 && !isSafari && (
+                        <span className="underline" css={styles.underline} />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })
           )}
           {isLoading === 'loading' && preload ? (
             <TableRowLoader length={preload} />

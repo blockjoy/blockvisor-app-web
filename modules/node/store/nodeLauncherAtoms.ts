@@ -8,7 +8,7 @@ import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { NodeLauncherState } from '@modules/node';
 
 const nodeLauncher = atom<NodeLauncherState>({
-  key: 'nodeLauncherState',
+  key: 'nodeLauncher',
   default: {
     blockchainId: '',
     nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
@@ -49,8 +49,8 @@ const error = atom<string | null>({
   default: null,
 });
 
-const isLoading = atom<boolean>({
-  key: 'nodeLauncher.isCreating',
+const isLaunching = atom<boolean>({
+  key: 'nodeLauncher.isLaunching',
   default: false,
 });
 
@@ -64,5 +64,5 @@ export const nodeLauncherAtoms = {
   selectedNetwork,
 
   error,
-  isLoading,
+  isLaunching,
 };

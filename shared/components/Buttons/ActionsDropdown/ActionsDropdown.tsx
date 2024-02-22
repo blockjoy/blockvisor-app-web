@@ -5,6 +5,7 @@ import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 import { css } from '@emotion/react';
+import { flex } from 'styles/utils.flex.styles';
 
 export type ActionsDropdownItem = {
   title: string;
@@ -15,9 +16,15 @@ export type ActionsDropdownItem = {
 
 type Props = {
   items: ActionsDropdownItem[];
+  align?: 'left' | 'right';
+  isLoading?: boolean;
 };
 
-export const ActionsDropdown = ({ items }: Props) => {
+export const ActionsDropdown = ({
+  items,
+  align = 'left',
+  isLoading = false,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -33,9 +40,16 @@ export const ActionsDropdown = ({ items }: Props) => {
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   return (
-    <div css={styles.wrapper} ref={dropdownRef}>
+    <div
+      css={[styles.wrapper, align === 'right' && flex.justify.end]}
+      ref={dropdownRef}
+    >
       <button css={styles.dropdownButton} onClick={handleClick}>
-        <SvgIcon>
+        <SvgIcon
+          {...(isLoading && {
+            additionalStyles: [styles.cogIcon],
+          })}
+        >
           <IconCog />
         </SvgIcon>
         <p>Actions</p>

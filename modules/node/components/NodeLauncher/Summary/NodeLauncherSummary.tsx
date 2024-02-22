@@ -1,24 +1,27 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
+import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './NodeLauncherSummary.styles';
 import {
   FormHeader,
   FormLabel,
   HostSelect,
   OrganizationSelect,
+  Pricing,
 } from '@shared/components';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { usePermissions } from '@modules/auth';
 import { hostAtoms, useHostList } from '@modules/host';
 import {
   NodeRegionSelect,
+  nodeAtoms,
   nodeLauncherAtoms,
   nodeLauncherSelectors,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
+import { billingSelectors } from '@modules/billing';
 import { NodeLauncherSummaryHubSpot } from './NodeLauncherSummaryHubSpot';
 
 type NodeLauncherSummaryProps = {
@@ -36,29 +39,36 @@ export const NodeLauncherSummary = ({
 }: NodeLauncherSummaryProps) => {
   const { hostList } = useHostList();
 
-  const [isLoadingRegions, setIsLoadingRegions] = useState(true);
-  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
-
-  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const error = useRecoilValue(nodeLauncherAtoms.error);
-  const isLoading = useRecoilValue(nodeLauncherAtoms.isLoading);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
-  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
+  const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
+  const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
+  const [isLaunching, setIsLaunching] = useRecoilState(
+    nodeLauncherAtoms.isLaunching,
+  );
 
-  const { blockchainId, nodeType } = nodeLauncher;
+  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
 
   const { hasPermission } = usePermissions();
   const canAddNode = hasPermission('node-create');
 
-  const handleRegionsLoaded = (region: Region | null) => {
-    setIsLoadingRegions(false);
-    onRegionsLoaded(region);
-  };
+  useEffect(() => {
+    setIsLaunching(false);
+  }, []);
+
+  const isDisabled =
+    !hasNetworkList ||
+    !isNodeValid ||
+    !isConfigValid ||
+    Boolean(error) ||
+    isLaunching ||
+    isLoadingAllRegions !== 'finished' ||
+    !itemPrice;
 
   const handleCreateNodeClicked = () => {
     if (!canAddNode) handleOpenHubSpot();
@@ -67,19 +77,6 @@ export const NodeLauncherSummary = ({
 
   const handleOpenHubSpot = () => setIsOpenHubSpot(true);
   const handleCloseHubSpot = () => setIsOpenHubSpot(false);
-
-  useEffect(
-    () => setIsLoadingRegions(true),
-    [nodeLauncher.blockchainId, nodeLauncher.nodeType, selectedVersion],
-  );
-
-  const isDisabled =
-    !hasNetworkList ||
-    !isNodeValid ||
-    !isConfigValid ||
-    Boolean(error) ||
-    isLoading ||
-    isLoadingRegions;
 
   return (
     <div css={styles.wrapper}>
@@ -109,9 +106,7 @@ export const NodeLauncherSummary = ({
           <FormLabel>Region</FormLabel>
           <NodeRegionSelect
             onChange={onRegionChanged}
-            onLoad={handleRegionsLoaded}
-            blockchainId={blockchainId}
-            nodeType={nodeType}
+            onLoad={onRegionsLoaded}
           />
         </>
       )}
@@ -126,17 +121,20 @@ export const NodeLauncherSummary = ({
       <FormLabel>Summary</FormLabel>
       <NodeLauncherSummaryDetails />
 
+      <FormLabel>Pricing</FormLabel>
+      <Pricing itemPrice={itemPrice} />
+
       <div css={styles.buttons}>
         <button
           onClick={handleCreateNodeClicked}
           disabled={isDisabled}
           css={[
             styles.createButton,
-            isLoading && !Boolean(error) && styles.createButtonLoading,
+            isLaunching && !Boolean(error) && styles.createButtonLoading,
           ]}
         >
           <span css={styles.createButtonInner}>
-            {isLoading && !Boolean(error) ? (
+            {isLaunching && !Boolean(error) ? (
               <span css={styles.cogIcon}>
                 <IconCog />
               </span>
@@ -144,7 +142,9 @@ export const NodeLauncherSummary = ({
               <IconRocket />
             )}
             <span>
-              {isLoading && !Boolean(error) ? 'Launching' : 'Launch Your Node'}
+              {isLaunching && !Boolean(error)
+                ? 'Launching'
+                : 'Launch Your Node'}
             </span>
           </span>
         </button>

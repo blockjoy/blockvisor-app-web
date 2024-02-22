@@ -10,5 +10,7 @@ export * from './hooks/useChangePassword';
 export * from './hooks/useEditUser';
 export * from './hooks/useRefreshToken';
 export * from './hooks/useSignOut';
+export * from './hooks/useUserBilling';
+export * from './hooks/useUserSubscription';
 export * from './utils/BrowserStorage';
 export * from './utils/removeTokenFromUrl';

@@ -2,9 +2,14 @@ import { ReactNode, useRef } from 'react';
 import { styles } from './Dropdown.styles';
 import { useAccessibleDropdown } from '@shared/index';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { DropdownItem, DropdownWrapper, Scrollbar } from '@shared/components';
-import { DropdownButton } from './DropdownButton/DropdownButton';
-import { DropdownMenu } from './DropdownMenu/DropdownMenu';
+import {
+  DropdownItem,
+  DropdownWrapper,
+  DropdownButton,
+  DropdownMenu,
+  DropdownCreate,
+  Scrollbar,
+} from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 
 export type DropdownProps<T = any> = {
@@ -12,8 +17,9 @@ export type DropdownProps<T = any> = {
   itemKey?: string;
   selectedItem: T | null;
   handleSelected: (item: T | null) => void;
-  defaultText?: string;
+  defaultText?: string | ReactNode;
   searchQuery?: string;
+  isTouchedQuery?: boolean;
   renderSearch?: (isOpen: boolean) => ReactNode;
   isEmpty?: boolean;
   noBottomMargin?: boolean;
@@ -22,9 +28,15 @@ export type DropdownProps<T = any> = {
   error?: string;
   isOpen: boolean;
   size?: 'small' | 'medium' | 'large';
+  buttonType?: 'input' | 'default';
   handleOpen: (open?: boolean) => void;
   checkDisabledItem?: (item?: T) => boolean;
+  renderItem?: (item: T) => ReactNode;
   renderItemLabel?: (item?: T) => ReactNode;
+  newItem?: {
+    title: string;
+    onClick: VoidFunction;
+  };
 };
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
@@ -34,6 +46,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   handleSelected,
   defaultText,
   searchQuery,
+  isTouchedQuery,
   renderSearch,
   isEmpty = true,
   noBottomMargin = false,
@@ -42,9 +55,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   error,
   isOpen,
   size = 'medium',
+  buttonType = 'default',
   handleOpen,
   checkDisabledItem,
+  renderItem,
   renderItemLabel,
+  newItem,
 }: DropdownProps<T>) => {
   const dropdownRef = useRef<HTMLUListElement>(null);
 
@@ -72,6 +88,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     isOpen,
     handleOpen,
     searchQuery,
+    isTouchedQuery,
     dropdownRef,
   });
 
@@ -85,15 +102,18 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       <DropdownButton
         isOpen={isOpen}
         isLoading={isLoading}
+        type={buttonType}
         text={
           isLoading ? (
             <p>Loading...</p>
           ) : error ? (
             <div css={[colors.warning]}>{error}</div>
           ) : (
-            <p>
+            <p {...(!selectedItem && { css: styles.placeholder })}>
               {selectedItem
-                ? escapeHtml(selectedItem[itemKey]!)
+                ? renderItem
+                  ? renderItem(selectedItem)
+                  : escapeHtml(selectedItem[itemKey]!)
                 : defaultText || 'Select'}
             </p>
           )
@@ -116,7 +136,10 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                 <li
                   key={item.id || item.name}
                   ref={(el: HTMLLIElement) => handleItemRef(el, index)}
-                  css={activeIndex === index ? styles.focus : null}
+                  css={[
+                    selectedItem?.id === item.id ? styles.active : null,
+                    activeIndex === index ? styles.focus : null,
+                  ]}
                 >
                   <DropdownItem
                     size={size}
@@ -127,14 +150,23 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                     isAccessible
                     additionalStyles={[styles.dropdownItem]}
                   >
-                    <p>{escapeHtml(item[itemKey])}</p>
-                    {renderItemLabel && renderItemLabel(item)}
+                    {renderItem ? (
+                      renderItem(item)
+                    ) : (
+                      <>
+                        <p>{escapeHtml(item[itemKey])}</p>
+                        {renderItemLabel && renderItemLabel(item)}
+                      </>
+                    )}
                   </DropdownItem>
                 </li>
               );
             })}
           </ul>
         </Scrollbar>
+        {newItem && (
+          <DropdownCreate title={newItem.title} handleClick={newItem.onClick} />
+        )}
       </DropdownMenu>
     </DropdownWrapper>
   );

@@ -28,7 +28,6 @@ export * from './store/organizationAtoms';
 export * from './utils/typeGuards';
 export * from './utils/mapOrganizationDetails';
 export * from './utils/mapOrganizationsToRows';
-export * from './utils/getHandlerTableChange';
 export * from './utils/getOrganizationRole';
 
 export * from './ui/OrganizationMembersUIHelpers';
