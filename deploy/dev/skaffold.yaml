@@ -17,6 +17,8 @@ build:
                   NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
                   NEXT_PUBLIC_MIXPANEL_TOKEN: 'ceb51f9e98426b77862cfd9478415a1c'
                   NEXT_PUBLIC_MIXPANEL_PROJECT_URL: 'https://app.dev.blockjoy.com/mp'
+                  NEXT_PUBLIC_CHARGEBEE_SITE: 'blockjoy-test'
+                  NEXT_PUBLIC_CHARGEBEE_API_KEY: 'test_vWM0WV6tScukmLUT1CpdoppIOlNjCJRi5'
         - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-testing
           context: ./
           docker:
