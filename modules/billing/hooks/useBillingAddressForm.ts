@@ -29,6 +29,8 @@ export const useBillingAddressForm = (): IBillingAddressFormHook => {
     },
   });
 
+  const { reset } = form;
+
   const onSubmit: SubmitHandler<BillingAddressForm> = async ({
     firstName,
     lastName,
@@ -60,10 +62,12 @@ export const useBillingAddressForm = (): IBillingAddressFormHook => {
           !!billingAddress ? 'updated' : 'created'
         } successfully`,
       );
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       if (error instanceof ApplicationError) toast.error(error.message);
+    } finally {
+      setLoading(false);
+
+      reset({}, { keepValues: true });
     }
   };
 

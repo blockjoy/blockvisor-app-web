@@ -99,11 +99,17 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     const fetchOrganizationSubscription = async () => {
       setSubscriptionLoadingState('initializing');
 
-      const userSubscription = await getUserSubscription(
-        defaultOrganization?.id!,
-      );
+      try {
+        const userSubscription = await getUserSubscription(
+          defaultOrganization?.id!,
+        );
 
-      await fetchSubscription(userSubscription?.externalId);
+        await fetchSubscription(userSubscription?.externalId);
+      } catch (error: any) {
+        console.log('Error while fetching user subscription', error);
+      } finally {
+        setSubscriptionLoadingState('finished');
+      }
     };
 
     if (!provisionToken && defaultOrganization?.id) {

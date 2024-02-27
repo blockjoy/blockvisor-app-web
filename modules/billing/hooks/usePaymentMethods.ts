@@ -19,7 +19,7 @@ interface IPaymentMethodsHook {
   createPaymentMethod: (
     customerId: string,
     paymentIntentId: string,
-    onSuccess: (customerId: string, paymentSourceId: string) => void,
+    onSuccess?: (customerId: string, paymentSourceId: string) => void,
   ) => Promise<void>;
   deletePaymentMethod: (id: string) => Promise<void>;
   fetchPaymentMethods: VoidFunction;
@@ -84,7 +84,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
   const createPaymentMethod = async (
     customerId: string,
     paymentIntentId: string,
-    onSuccess: (customerId: string, paymentSourceId: string) => void,
+    onSuccess?: (customerId: string, paymentSourceId: string) => void,
   ) => {
     setPaymentMethodLoadingState('initializing');
 
@@ -111,7 +111,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
       setCustomer(customerData);
 
-      onSuccess(customerData?.id, paymentSource?.id);
+      onSuccess && onSuccess(customerData?.id, paymentSource?.id);
     } catch (error) {
       console.error('Failed to create Payment method', error);
     } finally {

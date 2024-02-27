@@ -76,6 +76,16 @@ const billingAddressLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
+const applePayLoadingState = atom<LoadingState>({
+  key: 'billing.walletPayments.applePay.loadingState',
+  default: 'initializing',
+});
+
+const googlePayLoadingState = atom<LoadingState>({
+  key: 'billing.walletPayments.googlePay.loadingState',
+  default: 'initializing',
+});
+
 const estimates = atom<Estimate | null>({
   key: 'billing.estimates',
   default: null,
@@ -176,6 +186,9 @@ export const billingAtoms = {
 
   paymentMethods,
   paymentMethodsLoadingState,
+
+  applePayLoadingState,
+  googlePayLoadingState,
 
   subscriptionLoadingState,
 

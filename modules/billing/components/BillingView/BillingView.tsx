@@ -9,6 +9,7 @@ import {
 import { Alert, TableSkeleton } from '@shared/components';
 import { styles } from './BillingView.styles';
 import { usePermissions } from '@modules/auth';
+import { containers } from 'styles/containers.styles';
 
 type BillingViewProps = {
   item: Item;
@@ -21,17 +22,23 @@ export const BillingView = ({ item, itemPrices }: BillingViewProps) => {
     billingAtoms.subscriptionLoadingState,
   );
 
-  const { hasPermission } = usePermissions();
+  const { hasPermission, permissionsLoadingState } = usePermissions();
   const canReadSubscription = hasPermission('subscription-get');
 
-  if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
+  if (
+    subscriptionLoadingState === 'initializing' ||
+    permissionsLoadingState !== 'finished'
+  )
+    return <TableSkeleton />;
 
   if (!canReadSubscription)
     return (
-      <Alert>
-        You don't have access to read the current organization billing plan! Try
-        switching the organization.
-      </Alert>
+      <div css={containers.medium}>
+        <Alert>
+          You don't have access to read the current organization billing plan!
+          Try switching the organization.
+        </Alert>
+      </div>
     );
 
   return (

@@ -11,17 +11,22 @@ interface IPaymentHook {
   createIntent: (
     amount?: number,
     referenceId?: string,
+    paymentMethodType?: 'card' | 'apple_pay' | 'google_pay',
   ) => Promise<PaymentIntent | undefined>;
 }
 
 export const usePayment = (): IPaymentHook => {
   const customer = useRecoilValue(billingSelectors.customer);
 
-  const createIntent = async (amount = 0, referenceId?: string) => {
+  const createIntent = async (
+    amount: number = 0,
+    referenceId?: string,
+    paymentMethodType: string = 'card',
+  ) => {
     const params: _payment_intent.create_params = {
       amount,
       currency_code: 'USD',
-      payment_method_type: 'card',
+      payment_method_type: paymentMethodType,
       customer_id: customer?.id,
     };
 

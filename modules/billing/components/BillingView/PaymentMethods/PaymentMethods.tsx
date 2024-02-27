@@ -9,7 +9,10 @@ import {
   PaymentMethodsList,
   useCustomer,
   CreditCardTypes,
+  WalletPayments,
 } from '@modules/billing';
+import { containers } from 'styles/containers.styles';
+import { styles } from './PaymentMethods.styles';
 
 export const PaymentMethods = () => {
   const router = useRouter();
@@ -78,7 +81,13 @@ export const PaymentMethods = () => {
           handleAction={handleAction}
         />
       ) : (
-        <PaymentMethodForm handleCancel={handleCancel} />
+        <div css={containers.mediumSmall}>
+          <WalletPayments />
+          <div css={styles.or}>
+            <span>or</span>
+          </div>
+          <PaymentMethodForm handleCancel={handleCancel} />
+        </div>
       )}
 
       {activeView === 'delete' && activePaymentMethod && (

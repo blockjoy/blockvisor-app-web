@@ -29,6 +29,7 @@ export * from './components/BillingView/PaymentMethods/PaymentMethodsList/Paymen
 export * from './components/BillingView/PaymentMethods/PaymentMethodActions/PaymentMethodActions';
 export * from './components/BillingView/PaymentMethods/PaymentMethodsSelect/PaymentMethodsSelect';
 export * from './components/BillingView/PaymentMethods/PaymentPreview/PaymentPreview';
+export * from './components/BillingView/PaymentMethods/WalletPayments/WalletPayments';
 
 export * from './components/BillingView/Plan/Plan';
 export * from './components/BillingView/Plan/PlanConfiguration/PlanParams/PlanParams';
@@ -73,6 +74,7 @@ export * from './hooks/usePromoCode';
 export * from './hooks/useSubscription';
 export * from './hooks/useSubscriptionLifecycle';
 export * from './hooks/useUpdateSubscriptionItems';
+export * from './hooks/useWalletPayments';
 
 export * from './services/chargebee';
 

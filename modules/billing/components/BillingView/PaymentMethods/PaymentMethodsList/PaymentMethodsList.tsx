@@ -64,7 +64,7 @@ export const PaymentMethodsList = ({
         <SvgIcon size="10px">
           <IconPlus />
         </SvgIcon>
-        <span>Add Credit Card</span>
+        <span>Add Payment method</span>
       </Button>
     </>
   );
