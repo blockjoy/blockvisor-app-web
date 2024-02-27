@@ -64,7 +64,6 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
     const params: _payment_source.payment_source_list_params = {
       customer_id: { is: customer?.id },
-      type: { is: 'card' },
     };
 
     try {

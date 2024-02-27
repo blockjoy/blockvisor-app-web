@@ -10,12 +10,14 @@ const IconVisa = dynamic(() => import(`@public/assets/icons/billing/Visa.svg`));
 const IconDiscover = dynamic(
   () => import(`@public/assets/icons/billing/Discover.svg`),
 );
-
 const IconBilling = dynamic(
   () => import(`@public/assets/icons/common/Billing.svg`),
 );
+const IconGooglePay = dynamic(
+  () => import(`@public/assets/icons/billing/GooglePay.svg`),
+);
 
-export const getPaymentMethodIcon = (name: string) => {
+export const getPaymentMethodIcon = (name?: string) => {
   switch (name) {
     case 'american_express':
       return IconAmericanExpress;
@@ -25,6 +27,8 @@ export const getPaymentMethodIcon = (name: string) => {
       return IconVisa;
     case 'discover':
       return IconDiscover;
+    case 'google_pay':
+      return IconGooglePay;
     default:
       return IconBilling;
   }

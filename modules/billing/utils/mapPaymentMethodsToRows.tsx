@@ -38,9 +38,9 @@ export const mapPaymentMethodsToRows = (
     {
       name: '',
       key: '1',
-      width: '30px',
-      minWidth: '30px',
-      maxWidth: '40px',
+      width: '50px',
+      minWidth: '50px',
+      maxWidth: '60px',
     },
     {
       name: 'Name',
@@ -66,7 +66,7 @@ export const mapPaymentMethodsToRows = (
         cells: [
           {
             key: '1',
-            component: <PaymentIcon brand={paymentMethod?.card?.brand!} />,
+            component: <PaymentIcon paymentMethod={paymentMethod} />,
           },
           {
             key: '2',
