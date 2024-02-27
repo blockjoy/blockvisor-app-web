@@ -82,7 +82,7 @@ export const PaymentMethods = () => {
         />
       ) : (
         <div css={containers.mediumSmall}>
-          <WalletPayments />
+          <WalletPayments handleCancel={handleCancel} />
           <div css={styles.or}>
             <span>or</span>
           </div>

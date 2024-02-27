@@ -19,7 +19,7 @@ export const useWalletPayments = () => {
   const { createPaymentMethod } = usePaymentMethods();
   const { provideCustomer } = useCustomer();
 
-  const initApplePay = async () => {
+  const initApplePay = async (handleSuccess: VoidFunction) => {
     setApplePayLoadingState('initializing');
 
     try {
@@ -55,6 +55,7 @@ export const useWalletPayments = () => {
           })
           .then(() => {
             console.log('Apple Pay has been successfully added');
+            handleSuccess();
           })
           .catch((error) => {
             console.error('Error occured while adding the Apple Pay', error);
@@ -67,7 +68,7 @@ export const useWalletPayments = () => {
     }
   };
 
-  const initGooglePay = async () => {
+  const initGooglePay = async (handleSuccess: VoidFunction) => {
     setGooglePayLoadingState('initializing');
 
     try {
@@ -87,11 +88,17 @@ export const useWalletPayments = () => {
             return gpayButton;
           })
           .then(() => gpayHandler.handlePayment())
-          .then((result) =>
-            createPaymentMethod(customerData?.id!, result?.paymentIntent?.id),
-          )
+          .then((result) => {
+            console.log('handlePayment result', result);
+
+            return createPaymentMethod(
+              customerData?.id!,
+              result?.paymentIntent?.id,
+            );
+          })
           .then(() => {
             console.log('Google Pay has been successfully added');
+            handleSuccess();
           })
           .catch((error) => {
             console.error('Error occured while adding the Google Pay', error);

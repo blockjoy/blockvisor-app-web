@@ -2,8 +2,13 @@ import { useEffect } from 'react';
 import { Skeleton } from '@shared/components';
 import { useWalletPayments } from '@modules/billing';
 import { styles } from './WalletPayments.styles';
+import { toast } from 'react-toastify';
 
-export const WalletPayments = () => {
+type WalletPaymentsProps = {
+  handleCancel: VoidFunction;
+};
+
+export const WalletPayments = ({ handleCancel }: WalletPaymentsProps) => {
   const {
     initApplePay,
     initGooglePay,
@@ -11,9 +16,14 @@ export const WalletPayments = () => {
     googlePayLoadingState,
   } = useWalletPayments();
 
+  const handleSuccess = () => {
+    toast.success('Payment method added');
+    handleCancel();
+  };
+
   useEffect(() => {
-    initApplePay();
-    initGooglePay();
+    initApplePay(handleSuccess);
+    initGooglePay(handleSuccess);
   }, []);
 
   const isLoading =
