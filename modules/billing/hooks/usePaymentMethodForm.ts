@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { Customer, PaymentIntent } from 'chargebee-typescript/lib/resources';
+import { PaymentIntent } from 'chargebee-typescript/lib/resources';
+import ChargebeeComponents from '@chargebee/chargebee-js-react-wrapper/dist/components/ComponentGroup';
 import {
   billingAtoms,
   useCustomer,
@@ -11,7 +12,7 @@ import {
 interface PaymentMethodFormHook {
   loading: boolean;
   onSubmit: (
-    cardRef: any,
+    cardRef: RefObject<ChargebeeComponents>,
     additionalData: { billingAddress: BillingAddressAdditionalData },
     onSuccess: (customerId: string, paymentSourceId: string) => void,
   ) => Promise<void>;
@@ -26,7 +27,7 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
   const { provideCustomer } = useCustomer();
 
   const onSubmit = async (
-    cardRef: any,
+    cardRef: RefObject<ChargebeeComponents>,
     additionalData: { billingAddress: BillingAddressAdditionalData },
     onSuccess: (customerId: string, paymentMethodId: string) => void,
   ) => {
@@ -38,21 +39,26 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
       const intent = await createIntent();
 
       try {
-        const data: PaymentIntent = await cardRef.current.authorizeWith3ds(
-          intent,
-          additionalData,
-        );
-        await createPaymentMethod(customerData?.id!, data.id, onSuccess);
+        await cardRef.current?.authorizeWith3ds(intent, additionalData, {
+          success: async (payment_intent: PaymentIntent) => {
+            await createPaymentMethod(
+              customerData?.id!,
+              payment_intent.id,
+              onSuccess,
+            );
+
+            setLoading(false);
+          },
+        });
       } catch (error: any) {
         const returnedError = JSON.parse(JSON.stringify(error));
         setError(returnedError);
+        setLoading(false);
         throw returnedError;
       }
     } catch (error: any) {
       const returnedError = JSON.parse(JSON.stringify(error));
       setError(returnedError);
-      throw returnedError;
-    } finally {
       setLoading(false);
     }
   };

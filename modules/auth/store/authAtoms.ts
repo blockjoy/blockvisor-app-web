@@ -21,6 +21,11 @@ const permissions = atom<string[] | undefined>({
   default: undefined,
 });
 
+const permissionsLoadingState = atom<LoadingState>({
+  key: 'auth.permissions.loadingState',
+  default: 'finished',
+});
+
 const loading = atom<LoadingState>({
   key: 'authentication.loading',
   default: 'initializing',
@@ -30,4 +35,5 @@ export const authAtoms = {
   user,
   loading,
   permissions,
+  permissionsLoadingState,
 };
