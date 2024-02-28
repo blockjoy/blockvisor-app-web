@@ -7,6 +7,9 @@ import { useIdentity } from './useIdentity';
 
 export function usePermissions() {
   const [permissions, setPermissions] = useRecoilState(authAtoms.permissions);
+  const [permissionsLoadingState, setPermissionsLoadingState] = useRecoilState(
+    authAtoms.permissionsLoadingState,
+  );
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -14,6 +17,7 @@ export function usePermissions() {
   const { user } = useIdentity();
 
   const getPermissions = async () => {
+    setPermissionsLoadingState('initializing');
     try {
       const response = await authClient.listPermissions(
         user?.id!,
@@ -29,6 +33,8 @@ export function usePermissions() {
     } catch (err) {
       console.log('getPermissionsError: ', err);
       setPermissions([]);
+    } finally {
+      setPermissionsLoadingState('finished');
     }
   };
 
@@ -39,6 +45,7 @@ export function usePermissions() {
 
   return {
     permissions,
+    permissionsLoadingState,
     isSuperUser,
     getPermissions,
     hasPermission,

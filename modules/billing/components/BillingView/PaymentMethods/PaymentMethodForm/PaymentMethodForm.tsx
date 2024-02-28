@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, ChangeEvent } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import ChargebeeComponents from '@chargebee/chargebee-js-react-wrapper/dist/components/ComponentGroup';
 import { Button, ButtonGroup, Checkbox, Switch } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './PaymentMethodForm.styles';
@@ -43,7 +44,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   );
   const subscription = useRecoilValue(billingSelectors.subscription);
 
-  const cardRef = useRef<any>(null);
+  const cardRef = useRef<ChargebeeComponents>(null);
 
   const [cardHolder, setCardHolder] = useState<CardHolder>({
     firstName: '',
@@ -57,8 +58,9 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     postal: '',
   });
 
-  const [primary, setPrimary] = useState<boolean>(false);
-  const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
+  const [primary, setPrimary] = useState(false);
+  const [isDefaultAddress, setIsDefaultAddress] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const defaultActiveView = billingAddress ? 'list' : 'action';
   const [activeView, setActiveView] =
@@ -79,6 +81,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   }, []);
 
   const handleSucces = async (customerId: string, paymentSourceId: string) => {
+    setIsProcessing(true);
+
     if (primary && paymentMethods.length)
       await assignPaymentRole({
         payment_source_id: paymentSourceId,
@@ -93,6 +97,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     toast.success('Payment method added');
 
     handleCancel();
+
+    setIsProcessing(false);
   };
 
   const handleSubmit = async () => {
@@ -153,6 +159,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const isValidHolderForm = Object.values(cardHolder).every(
     (value) => value.trim() !== '',
   );
+
+  const isLoading = loading || isProcessing;
 
   return (
     <div css={containers.mediumSmall}>
@@ -228,7 +236,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
 
       <ButtonGroup>
         <Button
-          loading={loading}
+          loading={isLoading}
           disabled={
             loading ||
             (activeView === 'action' && !isValidInfoForm) ||
