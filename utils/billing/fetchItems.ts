@@ -13,12 +13,11 @@ export async function fetchItems(id: string): Promise<{
     item_id: { is: item?.id },
   };
 
-  const itemPrices: ItemPrice[] = await listItemPrices(itemPricesParams);
+  const { itemPrices } = await listItemPrices(itemPricesParams);
 
   return { item, itemPrices };
 }
 
-// TOOD: include nextOffset so all addons can be read
 export async function fetchItemPrices() {
   const itemPricesParams: _item_price.item_price_list_params = {
     limit: 100,
@@ -26,29 +25,40 @@ export async function fetchItemPrices() {
     item_id: { starts_with: 'FMN' },
   };
 
-  const itemPricesMonthly: ItemPrice[] = await listItemPrices({
-    ...itemPricesParams,
-    period_unit: { is: 'month' },
-  });
+  let allItemPrices: ItemPriceSimple[] = [];
 
-  const itemPricesYearly: ItemPrice[] = await listItemPrices({
-    ...itemPricesParams,
-    period_unit: { is: 'year' },
-  });
+  async function fetchPricesRecursively(
+    params: _item_price.item_price_list_params,
+    offset?: string,
+  ) {
+    if (offset) {
+      params['offset'] = offset;
+    }
 
-  const itemPrices: ItemPriceSimple[] = [
-    ...itemPricesMonthly,
-    ...itemPricesYearly,
-  ].map((itemPrice: ItemPrice) => ({
-    id: itemPrice.id,
-    item_id: itemPrice.item_id,
-    price: itemPrice.price,
-    currency_code: itemPrice.currency_code,
-    period_unit: itemPrice.period_unit,
-  }));
+    const { itemPrices, nextOffset } = await listItemPrices({
+      ...params,
+      period_unit: { is: 'month' },
+    });
+
+    const simplifiedItemPrices = itemPrices.map((itemPrice) => ({
+      id: itemPrice.id,
+      item_id: itemPrice.item_id,
+      price: itemPrice.price,
+      currency_code: itemPrice.currency_code,
+      period_unit: itemPrice.period_unit,
+    }));
+
+    allItemPrices = allItemPrices.concat(simplifiedItemPrices);
+
+    if (nextOffset) {
+      await fetchPricesRecursively(params, nextOffset);
+    }
+  }
+
+  await fetchPricesRecursively(itemPricesParams);
 
   return {
-    itemPrices,
+    itemPrices: allItemPrices,
   };
 }
 
@@ -61,7 +71,7 @@ export async function getItem(id: string): Promise<Item | null> {
           if (error) {
             reject(error);
           } else {
-            resolve(JSON.parse(JSON.stringify(result.item)));
+            resolve(structuredClone(result.item));
           }
         });
     });
@@ -73,19 +83,24 @@ export async function getItem(id: string): Promise<Item | null> {
 
 export async function listItemPrices(
   params: _item_price.item_price_list_params,
-): Promise<ItemPrice[]> {
+): Promise<{ itemPrices: ItemPrice[]; nextOffset: string }> {
   try {
     return new Promise((resolve, reject) => {
       chargebee.item_price
         .list(params)
-        .request(function (error: any, result: { list: ItemPrice[] }) {
+        .request(function (
+          error: any,
+          result: { list: ItemPrice[]; next_offset: string },
+        ) {
           if (error) {
             reject(error);
           } else {
             const itemPrices = result.list.map(
               (listItem: any) => listItem.item_price as ItemPrice,
             );
-            resolve(JSON.parse(JSON.stringify(itemPrices)));
+            resolve(
+              structuredClone({ itemPrices, nextOffset: result.next_offset }),
+            );
           }
         });
     });
