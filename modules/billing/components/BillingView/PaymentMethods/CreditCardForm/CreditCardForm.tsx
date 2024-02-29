@@ -1,5 +1,6 @@
 import { ChangeEvent, forwardRef, Ref } from 'react';
 import { SetterOrUpdater } from 'recoil';
+import ChargebeeComponents from '@chargebee/chargebee-js-react-wrapper/dist/components/ComponentGroup';
 import { typo } from 'styles/utils.typography.styles';
 import { flex } from 'styles/utils.flex.styles';
 import {
@@ -27,7 +28,10 @@ export type CardHolder = {
 };
 
 export const CreditCardForm = forwardRef(
-  ({ cardHolder, setCardHolder }: CreditCardFormProps, ref: Ref<any>) => {
+  (
+    { cardHolder, setCardHolder }: CreditCardFormProps,
+    ref: Ref<ChargebeeComponents>,
+  ) => {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
 

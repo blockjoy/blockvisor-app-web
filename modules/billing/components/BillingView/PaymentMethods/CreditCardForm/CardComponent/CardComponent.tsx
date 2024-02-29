@@ -5,6 +5,7 @@ import {
   CardExpiry,
   CardCVV,
 } from '@chargebee/chargebee-js-react-wrapper';
+import ChargebeeComponents from '@chargebee/chargebee-js-react-wrapper/dist/components/ComponentGroup';
 import { CHARGEBEE_OPTIONS } from '@modules/billing';
 import { typo } from 'styles/utils.typography.styles';
 import { flex } from 'styles/utils.flex.styles';
@@ -25,7 +26,10 @@ type CardComponentProps = {
 };
 
 export const CardComponent = forwardRef(
-  ({ variant = 'default' }: CardComponentProps, ref: Ref<any>) => {
+  (
+    { variant = 'default' }: CardComponentProps,
+    ref: Ref<ChargebeeComponents>,
+  ) => {
     const { style, classes, locale, placeholder } = CHARGEBEE_OPTIONS;
 
     return (
