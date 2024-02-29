@@ -11,6 +11,8 @@ import {
   Scrollbar,
 } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export type DropdownProps<T = any> = {
   items: T[];
@@ -21,6 +23,13 @@ export type DropdownProps<T = any> = {
   searchQuery?: string;
   isTouchedQuery?: boolean;
   renderSearch?: (isOpen: boolean) => ReactNode;
+  renderHeader?: ReactNode;
+  renderButtonText?: ReactNode;
+  dropdownButtonStyles?: (theme: ITheme) => SerializedStyles;
+  dropdownMenuStyles?: SerializedStyles[];
+  hideDropdownIcon?: boolean;
+  hideSearch?: boolean;
+  excludeSelectedItem?: boolean;
   isEmpty?: boolean;
   noBottomMargin?: boolean;
   isLoading?: boolean;
@@ -48,6 +57,13 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   searchQuery,
   isTouchedQuery,
   renderSearch,
+  renderHeader,
+  renderButtonText,
+  dropdownButtonStyles,
+  dropdownMenuStyles,
+  hideDropdownIcon,
+  hideSearch,
+  excludeSelectedItem = false,
   isEmpty = true,
   noBottomMargin = false,
   isLoading,
@@ -92,6 +108,16 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     dropdownRef,
   });
 
+  const dropdownStyles = [styles.dropdown];
+
+  if (dropdownMenuStyles) {
+    dropdownStyles.push(...dropdownMenuStyles);
+  }
+
+  let filteredItems = items.filter(
+    (item) => !excludeSelectedItem || item.id !== selectedItem?.id,
+  );
+
   return (
     <DropdownWrapper
       isEmpty={isEmpty}
@@ -103,8 +129,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         isOpen={isOpen}
         isLoading={isLoading}
         type={buttonType}
+        buttonStyles={dropdownButtonStyles}
+        hideDropdownIcon={hideDropdownIcon}
         text={
-          isLoading ? (
+          Boolean(renderButtonText) ? (
+            renderButtonText
+          ) : isLoading ? (
             <p>Loading...</p>
           ) : error ? (
             <div css={[colors.warning]}>{error}</div>
@@ -123,11 +153,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         {...(handleFocus && { onFocus: handleFocus })}
         {...(handleBlur && { onBlur: handleBlur })}
       />
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        {renderSearch ? renderSearch(isOpen) : null}
+      <DropdownMenu isOpen={isOpen} additionalStyles={dropdownStyles}>
+        {Boolean(renderHeader) ? renderHeader : null}
+        {!hideSearch && renderSearch ? renderSearch(isOpen) : null}
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           <ul ref={dropdownRef}>
-            {items?.map((item: T, index: number) => {
+            {filteredItems?.map((item: T, index: number) => {
               const isDisabled: boolean = checkDisabledItem
                 ? checkDisabledItem(item)
                 : false;

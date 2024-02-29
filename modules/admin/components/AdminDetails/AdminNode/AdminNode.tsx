@@ -24,6 +24,7 @@ const ignoreItems = [
   'blockchainId',
   'blockchainName',
   'blockHeight',
+  'selfUpdate',
   'status',
   'containerStatus',
   'syncStatus',
@@ -57,12 +58,17 @@ export const AdminNode = () => {
     onSuccess();
   };
 
+  const handleDelete = async (onSuccess: VoidFunction) => {
+    await nodeClient.deleteNode(id as string);
+    onSuccess();
+  };
+
   const getItem = async () => {
     if (ip) {
       const nodeResults = await nodeClient.listNodes(
         undefined,
         { keyword: ip as string },
-        { current_page: 0, items_per_page: 1 },
+        { currentPage: 0, itemsPerPage: 1 },
       );
       const { id } = nodeResults.nodes[0];
       router.replace(`/admin?name=nodes&id=${id}`);
@@ -99,11 +105,11 @@ export const AdminNode = () => {
     },
     {
       id: 'status',
-      label: 'Status',
+      label: 'Node Status',
       data: <NodeStatus hasBorder={false} status={node.status}></NodeStatus>,
     },
     {
-      id: 'appStatus',
+      id: 'containerStatus',
       label: 'Container Status',
       data: (
         <NodeStatus
@@ -199,7 +205,44 @@ export const AdminNode = () => {
       ),
       copyValue: node.hostId,
     },
-
+    {
+      id: 'selfUpdate',
+      label: 'Auto Update',
+      data: node.selfUpdate?.toString(),
+      editSettings: {
+        field: 'selfUpdate',
+        displayName: 'Auto Update',
+        isBoolean: true,
+        controlType: 'switch',
+        defaultValue: node.selfUpdate?.toString(),
+      },
+    },
+    {
+      id: 'allowIps',
+      label: 'Allow Ips',
+      data: node.allowIps,
+      isHidden: true,
+      editSettings: {
+        field: 'allowIps',
+        displayName: 'Allow Ips',
+        isArray: true,
+        controlType: 'firewall',
+        defaultValue: JSON.stringify(node.allowIps),
+      },
+    },
+    {
+      id: 'denyIps',
+      label: 'Deny Ips',
+      data: node.denyIps,
+      isHidden: true,
+      editSettings: {
+        field: 'denyIps',
+        displayName: 'Deny Ips',
+        isArray: true,
+        controlType: 'firewall',
+        defaultValue: JSON.stringify(node.denyIps),
+      },
+    },
     {
       id: 'region',
       label: 'Region',
@@ -252,6 +295,7 @@ export const AdminNode = () => {
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
       onSaveChanges={handleSaveChanges}
+      onDelete={handleDelete}
       ignoreItems={ignoreItems}
       customItems={customItems}
       detailsName="id"

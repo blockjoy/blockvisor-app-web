@@ -32,7 +32,7 @@ export const NodeViewStatus = () => {
           <var css={[styles.cardValue, getNodeStatusColor(node.status!)]}>
             <NodeStatusName status={node.status} />
           </var>
-          <h3 css={styles.cardLabel}>App Status</h3>
+          <h3 css={styles.cardLabel}>Node Status</h3>
         </div>
         {node.containerStatus !==
           ContainerStatus.CONTAINER_STATUS_UNSPECIFIED && (
@@ -53,7 +53,7 @@ export const NodeViewStatus = () => {
                 'container',
               )?.name?.toLocaleLowerCase()}
             </var>
-            <h3 css={styles.cardLabel}>Node Status</h3>
+            <h3 css={styles.cardLabel}>Container Status</h3>
           </div>
         )}
         {node.syncStatus !== SyncStatus.SYNC_STATUS_UNSPECIFIED && (

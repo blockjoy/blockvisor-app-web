@@ -50,8 +50,8 @@ export const AdminOrgs = () => {
   ) => {
     const response = await organizationClient.getOrganizations(
       {
-        current_page: page! || 0,
-        items_per_page: pageSize,
+        currentPage: page! || 0,
+        itemsPerPage: pageSize,
       },
       [
         {
@@ -61,6 +61,7 @@ export const AdminOrgs = () => {
       ],
       keyword,
       true,
+      false,
     );
     return {
       list: response.orgs,

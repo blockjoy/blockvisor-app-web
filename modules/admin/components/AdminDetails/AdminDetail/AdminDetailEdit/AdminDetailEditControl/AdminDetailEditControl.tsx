@@ -1,7 +1,11 @@
+import {
+  AdminDetailEditFirewall,
+  AdminDetailEditOrgSelect,
+  AdminDetailEditSelect,
+  AdminDetailEditSwitch,
+  AdminDetailEditTextbox,
+} from '@modules/admin';
 import { KeyboardEvent } from 'react';
-import { AdminDetailEditOrgSelect } from './AdminDetailEditOrgSelect/AdminDetailEditOrgSelect';
-import { AdminDetailEditSelect } from './AdminDetailEditSelect/AdminDetailEditSelect';
-import { AdminDetailEditTextbox } from './AdminDetailEditTextbox/AdminDetailEditTextbox';
 
 type Props = {
   editSettings: AdminDetailEditSettings;
@@ -25,8 +29,17 @@ export const AdminDetailEditControl = ({
         onKeyUp={onKeyUp}
       />
     ),
+    switch: (
+      <AdminDetailEditSwitch editSettings={editSettings} onChange={onChange} />
+    ),
     org: (
       <AdminDetailEditOrgSelect
+        editSettings={editSettings}
+        onChange={onChange}
+      />
+    ),
+    firewall: (
+      <AdminDetailEditFirewall
         editSettings={editSettings}
         onChange={onChange}
       />

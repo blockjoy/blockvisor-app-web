@@ -23,6 +23,7 @@ type Props = {
     onSuccess: VoidFunction,
     item?: any,
   ) => void;
+  onDelete?: (onSuccess: VoidFunction) => void;
 };
 
 export const AdminDetail = ({
@@ -35,6 +36,7 @@ export const AdminDetail = ({
   customItems,
   onOpenInApp,
   onSaveChanges,
+  onDelete,
 }: Props) => {
   const router = useRouter();
   const { name, ip, org_id } = router.query;
@@ -88,8 +90,8 @@ export const AdminDetail = ({
               keyword: ip as string,
             },
             {
-              current_page: 0,
-              items_per_page: 1,
+              currentPage: 0,
+              itemsPerPage: 1,
             },
           );
           const item = await nodeClient.getNode(nodeResults.nodes[0].id);
@@ -119,6 +121,7 @@ export const AdminDetail = ({
         onOpenAppView={onOpenInApp}
         onCopyObject={handleCopyObject}
         onToggleEditMode={handleToggleEditMode}
+        onDelete={onDelete}
       />
       {error ? (
         <p css={spacing.top.medium}>{error}</p>

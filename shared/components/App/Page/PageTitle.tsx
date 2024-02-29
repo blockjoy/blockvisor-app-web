@@ -1,6 +1,6 @@
 import { Copy, SvgIcon, OrganizationPicker } from '@shared/components';
 import { ProfileDropdown } from './ProfileDropdown/ProfileDropdown';
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './PageTitle.styles';
 import { PageTitleLaunchNode } from './PageTitleLaunchNode';
@@ -17,7 +17,7 @@ interface Props {
   hideOrgPicker?: boolean;
 }
 
-export const PageTitle: FC<Props> = ({
+export const PageTitle = ({
   title,
   childTitle,
   canCopyChild,
@@ -26,7 +26,7 @@ export const PageTitle: FC<Props> = ({
   isLoading,
   isAdmin,
   hideOrgPicker,
-}) => {
+}: Props) => {
   const Title = () => (
     <span css={styles.title}>
       {icon && (

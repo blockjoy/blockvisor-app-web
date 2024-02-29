@@ -1,1 +1,6 @@
-type AdminDetailEditControlType = 'switch' | 'text' | 'dropdown' | 'org';
+type AdminDetailEditControlType =
+  | 'switch'
+  | 'text'
+  | 'dropdown'
+  | 'org'
+  | 'firewall';

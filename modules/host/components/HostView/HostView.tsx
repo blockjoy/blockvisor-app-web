@@ -23,8 +23,8 @@ export const HostView = ({ children }: HostViewProps) => {
     (async () => {
       if (router.isReady) {
         listNodesByHost(id as string, {
-          current_page: 0,
-          items_per_page: 48,
+          currentPage: 0,
+          itemsPerPage: 48,
         });
         loadHost(id);
         getCommands({ hostId: id });

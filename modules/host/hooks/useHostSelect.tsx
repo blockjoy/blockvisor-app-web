@@ -18,8 +18,8 @@ export const useHostSelect = () => {
         defaultOrganization?.id!,
         undefined,
         {
-          current_page: 0,
-          items_per_page: 1000,
+          currentPage: 0,
+          itemsPerPage: 1000,
         },
       );
 

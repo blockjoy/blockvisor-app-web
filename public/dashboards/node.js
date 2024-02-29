@@ -4,6 +4,12 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 var { id, disk_space_name, is_node } = params;
 
+const diskSpaceNameWithoutTrailingSlash = disk_space_name?.endsWith('/') 
+  ? disk_space_name.slice(0, -1) 
+  : disk_space_name;
+
+const diskSpaceName = diskSpaceNameWithoutTrailingSlash?.replace(/\//g, '_');
+
 var host = `https://magellan-1.slc.blockjoy.com/host/${id}`;
 // var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
 // var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';
@@ -213,7 +219,7 @@ const createChart = (chart) => {
 
 const createDiskSpaceChart = () => {
   const element = document.createElement("div");
-  element.setAttribute("data-netdata", `disk_space.${disk_space_name}`);
+  element.setAttribute("data-netdata", `disk_space.${diskSpaceName}`);
   element.setAttribute("data-chart-library", "d3pie");
   element.setAttribute("data-host", host);
   element.setAttribute("data-colors", "#bff589 #5F615D #a7a7a7");

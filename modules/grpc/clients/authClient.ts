@@ -68,12 +68,11 @@ class AuthClient {
   }
 
   async listPermissions(userId: string, orgId: string): Promise<string[]> {
+    const request = { userId, orgId, includeToken: true };
+    console.log('listPermissionsRequest', request);
     try {
       await this.refreshToken();
-      const response = await this.client.listPermissions(
-        { userId, orgId, includeToken: true },
-        getOptions(),
-      );
+      const response = await this.client.listPermissions(request, getOptions());
       return response.permissions;
     } catch (err) {
       return handleError(err);

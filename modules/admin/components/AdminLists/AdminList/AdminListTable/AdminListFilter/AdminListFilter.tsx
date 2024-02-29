@@ -1,11 +1,16 @@
-import { AdminListFilterBlockchain } from './AdminListFilterBlockchain/AdminListFilterBlockchain';
-import { AdminListFilterDefault } from './AdminListFilterDefault/AdminListFilterDefault';
-import { Button, DropdownMenu, Scrollbar, SvgIcon } from '@shared/components';
+import {
+  AdminListFilterBlockchain,
+  AdminListFilterDefault,
+  AdminListFilterOrg,
+  AdminListFilterUser,
+  AdminListFilterHost,
+  AdminDropdownHeader,
+} from '@modules/admin';
+import { Button, DropdownMenu, SvgIcon } from '@shared/components';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './AdminListFilter.styles';
 import { css } from '@emotion/react';
-import { AdminDropdownHeader } from '@modules/admin/components';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
 
 type Props = {
@@ -75,6 +80,24 @@ export const AdminListFilter = ({
         values={filterSettings.values!}
       />
     ),
+    org: (
+      <AdminListFilterOrg
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    user: (
+      <AdminListFilterUser
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    host: (
+      <AdminListFilterHost
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
     default: (
       <AdminListFilterDefault
         items={filterSettings.dropdownItems!}
@@ -129,21 +152,21 @@ export const AdminListFilter = ({
       </button>
       <DropdownMenu
         isOpen={isOpen}
-        additionalStyles={css`
-          position: fixed;
-          top: ${menuTop};
-          right: ${menuRight};
-          overflow: visible;
-          max-width: 200px;
-          min-width: 200px;
-        `}
+        additionalStyles={[
+          css`
+            position: fixed;
+            top: ${menuTop};
+            right: ${menuRight};
+            overflow: visible;
+            max-width: max-content;
+            min-width: max-content;
+          `,
+        ]}
       >
-        <AdminDropdownHeader onClose={handleClickOutside}>
+        {/* <AdminDropdownHeader onClose={handleClickOutside}>
           Filters ({filterSettings?.values?.length ?? 0})
-        </AdminDropdownHeader>
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          {controls[filterSettings.type]}
-        </Scrollbar>
+        </AdminDropdownHeader> */}
+        {controls[filterSettings.type]}
         <div css={styles.buttonGroup}>
           <Button
             disabled={!hasFilters}

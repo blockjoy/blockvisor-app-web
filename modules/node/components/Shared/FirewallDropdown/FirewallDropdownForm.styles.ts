@@ -7,6 +7,7 @@ export const styles = {
     display: flex;
     gap: 8px;
     margin-bottom: 10px;
+    padding-top: 20px;
 
     input {
       background: transparent;

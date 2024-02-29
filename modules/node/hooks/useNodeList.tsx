@@ -36,7 +36,7 @@ export const useNodeList = () => {
     }
 
     const loadingState =
-      queryParams.pagination.current_page === 0 ? 'initializing' : 'loading';
+      queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
 
     if (showLoader) {
       setIsLoading(loadingState);
@@ -55,7 +55,7 @@ export const useNodeList = () => {
 
       setNodeCount(nodeCount);
 
-      if (queryParams.pagination.current_page !== 0) {
+      if (queryParams.pagination.currentPage !== 0) {
         nodes = [...nodeList!, ...nodes];
       }
 
@@ -86,7 +86,7 @@ export const useNodeList = () => {
 
     let nodes = response.nodes;
 
-    if (pagination.current_page !== 0) {
+    if (pagination.currentPage !== 0) {
       nodes = [...nodeListByHost!, ...nodes];
     }
 

@@ -1,9 +1,7 @@
 import { KeyboardEvent } from 'react';
 import { Textbox } from '@shared/components';
 
-type Props = {
-  editSettings: AdminDetailEditSettings;
-  onChange: (field: string, value: string) => void;
+type Props = AdminDetailEditControlProps & {
   onKeyUp: (event: KeyboardEvent<HTMLInputElement>) => void;
 };
 

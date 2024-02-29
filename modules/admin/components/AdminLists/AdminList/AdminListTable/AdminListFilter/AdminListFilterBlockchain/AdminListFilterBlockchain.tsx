@@ -9,23 +9,21 @@ type Props = {
 };
 
 export const AdminListFilterBlockchain = ({ values, onChange }: Props) => {
-  const [blockchains, setBlockchains] = useState<Blockchain[] | undefined>();
+  const [list, setList] = useState<Blockchain[] | undefined>();
 
-  const getBlockchains = async () => {
-    const blockchains = await blockchainClient.getBlockchains();
-    setBlockchains(blockchains);
+  const getList = async () => {
+    const response = await blockchainClient.getBlockchains();
+    setList(response);
   };
 
   useEffect(() => {
-    (async () => {
-      await getBlockchains();
-    })();
+    (async () => await getList())();
   }, []);
 
   return (
     <AdminListFilterControl
       items={
-        blockchains?.map((blockchain) => ({
+        list?.map((blockchain) => ({
           id: blockchain.id,
           name: blockchain.name,
         }))!
