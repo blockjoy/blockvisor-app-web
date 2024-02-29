@@ -38,6 +38,7 @@ export const AdminLayout = () => {
   return (
     <>
       <PageTitle
+        isAdmin
         title="Admin"
         icon={<IconAdmin />}
         childTitle={name ? capitalized(name) : ''}
