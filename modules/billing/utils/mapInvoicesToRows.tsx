@@ -54,15 +54,11 @@ export const mapInvoicesToRows = (invoices?: Invoice[]) => {
           component: (
             <TableBlock
               topRow={invoice?.line_items?.[0].description!}
-              middleRow={
-                <p>
-                  {`${formatters.formatTimestamp(
-                    invoice?.line_items?.[0].date_from!,
-                  )} - ${formatters.formatTimestamp(
-                    invoice?.line_items?.[0].date_to!,
-                  )}`}
-                </p>
-              }
+              bottomRow={`${formatters.formatTimestamp(
+                invoice?.line_items?.[0].date_from!,
+              )} - ${formatters.formatTimestamp(
+                invoice?.line_items?.[0].date_to!,
+              )}`}
             />
           ),
         },
