@@ -51,13 +51,13 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
           },
         });
       } catch (error: any) {
-        const returnedError = JSON.parse(JSON.stringify(error));
+        const returnedError = structuredClone(error);
         setError(returnedError);
         setLoading(false);
         throw returnedError;
       }
     } catch (error: any) {
-      const returnedError = JSON.parse(JSON.stringify(error));
+      const returnedError = structuredClone(error);
       setError(returnedError);
       setLoading(false);
     }

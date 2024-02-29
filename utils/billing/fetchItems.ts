@@ -71,7 +71,7 @@ export async function getItem(id: string): Promise<Item | null> {
           if (error) {
             reject(error);
           } else {
-            resolve(JSON.parse(JSON.stringify(result.item)));
+            resolve(structuredClone(result.item));
           }
         });
     });
