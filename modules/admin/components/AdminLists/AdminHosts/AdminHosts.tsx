@@ -15,13 +15,14 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'ip',
-    width: '320px',
+    width: '180px',
     isVisible: false,
   },
   {
     name: 'nodeCount',
     displayName: 'Nodes',
     width: '100px',
+    sortField: HostSortField.HOST_SORT_FIELD_NODE_COUNT,
     isVisible: true,
   },
   {
@@ -41,12 +42,12 @@ const columns: AdminListColumn[] = [
   {
     name: 'availableIps',
     width: '150px',
-    isVisible: false,
+    isVisible: true,
   },
   {
     name: 'managedBy',
     width: '150px',
-    isVisible: false,
+    isVisible: true,
   },
   {
     name: 'version',
@@ -72,6 +73,11 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
+    name: 'region',
+    width: '230px',
+    isVisible: true,
+  },
+  {
     name: 'createdAt',
     width: '230px',
     sortField: HostSortField.HOST_SORT_FIELD_CREATED_AT,
@@ -92,8 +98,8 @@ export const AdminHosts = () => {
         keyword,
       },
       {
-        current_page: page!,
-        items_per_page: pageSize,
+        currentPage: page!,
+        itemsPerPage: pageSize,
       },
       [
         {

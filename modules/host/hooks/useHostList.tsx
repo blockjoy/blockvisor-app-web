@@ -41,7 +41,7 @@ export const useHostList = () => {
     }
 
     const loadingState =
-      queryParams.pagination.current_page === 0 ? 'initializing' : 'loading';
+      queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
 
     setIsLoading(loadingState);
 
@@ -60,7 +60,7 @@ export const useHostList = () => {
 
       if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
 
-      if (queryParams.pagination.current_page !== 0) {
+      if (queryParams.pagination.currentPage !== 0) {
         hosts = [...hostList!, ...hosts];
       }
 

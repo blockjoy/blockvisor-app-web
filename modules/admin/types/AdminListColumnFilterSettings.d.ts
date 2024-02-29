@@ -5,4 +5,10 @@ type AdminListColumnFilterSettings = {
   dropdownItems?: AdminFilterDropdownItem[];
 };
 
-type AdminListColumnFilterType = 'default' | 'blockchain';
+type AdminListColumnFilterType =
+  | 'nodeStatus'
+  | 'default'
+  | 'blockchain'
+  | 'org'
+  | 'host'
+  | 'user';

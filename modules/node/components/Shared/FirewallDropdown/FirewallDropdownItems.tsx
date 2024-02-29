@@ -5,7 +5,7 @@ import IconTrash from '@public/assets/icons/common/Trash.svg';
 
 type Props = {
   items: FilteredIpAddr[];
-  listType: string;
+  listType: 'allow' | 'deny';
   onRemoveClicked: (index: number) => void;
 };
 
@@ -35,7 +35,7 @@ export const FirewallDropdownItems: FC<Props> = ({
                     className="remove-button"
                     css={styles.removeButton}
                   >
-                    <SvgIcon size="16px">
+                    <SvgIcon size="16px" isDefaultColor>
                       <IconTrash />
                     </SvgIcon>
                   </button>

@@ -39,7 +39,7 @@ export const getInitialQueryParams = () => {
     filter: params,
     pagination: {
       ...initialQueryParams.pagination,
-      // items_per_page: itemsPerPage,
+      // itemsPerPage,
     },
   };
 };

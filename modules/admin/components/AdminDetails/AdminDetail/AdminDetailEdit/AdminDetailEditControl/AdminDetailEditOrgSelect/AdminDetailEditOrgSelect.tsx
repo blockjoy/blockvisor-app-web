@@ -3,12 +3,10 @@ import { organizationClient } from '@modules/grpc';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { withSearchDropdown, Dropdown, sort } from '@shared/components';
 
-type Props = {
-  editSettings: AdminDetailEditSettings;
-  onChange: (field: string, value: string) => void;
-};
-
-export const AdminDetailEditOrgSelect = ({ editSettings, onChange }: Props) => {
+export const AdminDetailEditOrgSelect = ({
+  editSettings,
+  onChange,
+}: AdminDetailEditControlProps) => {
   const [orgs, setOrgs] = useState<Org[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,12 +16,13 @@ export const AdminDetailEditOrgSelect = ({ editSettings, onChange }: Props) => {
     (async () => {
       const response = await organizationClient.getOrganizations(
         {
-          current_page: 0,
-          items_per_page: 1000,
+          currentPage: 0,
+          itemsPerPage: 1000,
         },
         undefined,
         undefined,
         true,
+        false,
       );
 
       setOrgs(sort(response.orgs, { field: 'name', order: 'asc' }));
@@ -56,6 +55,7 @@ export const AdminDetailEditOrgSelect = ({ editSettings, onChange }: Props) => {
       handleSelected={handleChange}
       defaultText={selectedOrg?.name}
       isOpen={isOpen}
+      excludeSelectedItem
       handleOpen={handleOpen}
       isLoading={isLoading}
       size="small"

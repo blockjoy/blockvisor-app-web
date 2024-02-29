@@ -23,7 +23,10 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
   );
 
   const updateOrganization = async (id: string, name: string) => {
-    const response: any = await organizationClient.updateOrganization(id, name);
+    const response: any = await organizationClient.updateOrganization({
+      id,
+      name,
+    });
 
     if (response) {
       const newOrg: Org = {

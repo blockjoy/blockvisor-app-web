@@ -43,4 +43,9 @@ export const styles = {
   placeholder: (theme: ITheme) => css`
     color: ${theme.colorPlaceholder} !important;
   `,
+  dropdownItemText: css`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `,
 };

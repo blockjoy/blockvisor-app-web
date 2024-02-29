@@ -3,8 +3,17 @@ export const createAdminUpdateRequest = (
   properties: AdminDetailProperty[],
 ) => {
   for (let property of properties) {
-    const { field, isNumber, defaultValue } = property.editSettings!;
-    defaultRequest[field!] = isNumber ? +defaultValue! : defaultValue;
+    const { field, isNumber, isBoolean, isArray, defaultValue } =
+      property.editSettings!;
+    defaultRequest[field!] = isNumber
+      ? Number(defaultValue)
+      : isArray
+      ? JSON.parse(defaultValue!)
+      : isBoolean
+      ? defaultValue === 'true'
+        ? true
+        : false
+      : defaultValue;
   }
   return defaultRequest;
 };

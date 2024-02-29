@@ -4,4 +4,5 @@ type AdminDetailProperty = {
   data: any;
   copyValue?: string;
   editSettings?: AdminDetailEditSettings;
+  isHidden?: boolean;
 };

@@ -51,7 +51,7 @@ export const useFilters = (hostUIProps: HostUIProps) => {
   const applyFilter = (values: InitialFilter) => {
     const newQueryParams = prepareFilter(hostUIProps.queryParams, values);
     if (!isEqual(newQueryParams, hostUIProps.queryParams)) {
-      newQueryParams.pagination.current_page = 1;
+      newQueryParams.pagination.currentPage = 1;
       hostUIProps.setQueryParams(newQueryParams);
     }
   };

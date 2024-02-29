@@ -6,10 +6,7 @@ export const styles = {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 40px 30px 24px;
-    height: 200px;
-    min-height: 200px;
-    max-height: 200px;
+    padding: 30px;
     border-radius: 6px;
     border: 1px solid ${theme.colorBorderGrey};
   `,
@@ -29,7 +26,7 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   `,
   cardIcon: (theme: ITheme) => css`
     display: grid;

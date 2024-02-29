@@ -10,15 +10,6 @@ export const styles = {
     margin-left: auto;
     margin-right: 4px;
   `,
-  dropdownInner: css`
-    max-height: 260px;
-    min-height: 26px;
-    height: 260px;
-
-    ::-webkit-scrollbar-track {
-      background: rgb(255 255 255 / 10%);
-    }
-  `,
   dropdownButton: (theme: ITheme) => css`
     position: relative;
     background: transparent;

@@ -8,7 +8,7 @@ type SwitchProps = {
   name: string;
   tabIndex?: number;
   tooltip?: string;
-  disabled: boolean;
+  disabled?: boolean;
   defaultChecked?: boolean;
   noBottomMargin?: boolean;
   onChange?: (name: string, value: boolean) => void;

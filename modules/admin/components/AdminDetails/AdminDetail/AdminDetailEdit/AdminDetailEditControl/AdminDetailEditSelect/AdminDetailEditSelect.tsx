@@ -1,12 +1,10 @@
 import { capitalized } from '@modules/admin/utils/capitalized';
 import { Select } from '@shared/components';
 
-type Props = {
-  editSettings: AdminDetailEditSettings;
-  onChange: (field: string, value: string) => void;
-};
-
-export const AdminDetailEditSelect = ({ editSettings, onChange }: Props) => {
+export const AdminDetailEditSelect = ({
+  editSettings,
+  onChange,
+}: AdminDetailEditControlProps) => {
   const items = editSettings.dropdownValues?.map((value) => ({
     ...value,
     name: capitalized(value.name!),

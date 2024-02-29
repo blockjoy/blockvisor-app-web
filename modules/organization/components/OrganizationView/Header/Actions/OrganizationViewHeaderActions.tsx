@@ -41,7 +41,8 @@ export const OrganizationViewHeaderActions = () => {
         getOrganizationRole(member.roles) === 'Owner',
     );
 
-  const canDeleteOrganization = hasPermission('org-delete');
+  const canDeleteOrganization =
+    hasPermission('org-delete') || hasPermission('org-admin-delete');
 
   const canLeaveOrganization =
     hasPermission('org-remove-self') && orgHasOtherAdmins;

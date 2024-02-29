@@ -55,7 +55,7 @@ class UserClient {
   ): Promise<UserServiceListResponse> {
     const request: UserServiceListRequest = {
       offset: getPaginationOffset(pagination),
-      limit: pagination?.items_per_page!,
+      limit: pagination?.itemsPerPage!,
       sort: sort || [
         {
           field: UserSortField.USER_SORT_FIELD_FIRST_NAME,

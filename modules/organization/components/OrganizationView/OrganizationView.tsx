@@ -4,15 +4,10 @@ import { queryAsString } from '@shared/utils/query';
 import { spacing } from 'styles/utils.spacing.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
 import { useGetOrganization } from '@modules/organization/hooks/useGetOrganization';
-import {
-  invitationAtoms,
-  OrganizationDetails,
-  useInvitations,
-} from '@modules/organization';
+import { OrganizationDetails, useInvitations } from '@modules/organization';
 import { OrganizationViewHeader } from './Header/OrganizationViewHeader';
 import { OrganizationViewTabs } from './Tabs/OrganizationViewTabs';
 import { styles } from './OrganizationView.styles';
-import { useRecoilValue } from 'recoil';
 import { useIdentity } from '@modules/auth';
 
 export const OrganizationView = ({ children }: PropsWithChildren) => {
@@ -28,12 +23,10 @@ export const OrganizationView = ({ children }: PropsWithChildren) => {
     getReceivedInvitations,
   } = useInvitations();
 
-  const sentInvitations = useRecoilValue(invitationAtoms.sentInvitations);
-
   useEffect(() => {
     (async () => {
       if (router.isReady) {
-        getOrganization(queryAsString(id));
+        getOrganization(queryAsString(id), true);
         getSentInvitations(queryAsString(id));
         getReceivedInvitations(user?.email!);
       }

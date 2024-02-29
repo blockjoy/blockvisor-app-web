@@ -52,13 +52,15 @@ export const AdminListHeaderColumnPicker = ({
       </AdminHeaderButton>
       <DropdownMenu
         isOpen={isOpen}
-        additionalStyles={css`
-          left: auto;
-          right: 0;
-          top: 54px;
-          min-width: max-content;
-          overflow: visible;
-        `}
+        additionalStyles={[
+          css`
+            left: auto;
+            right: 0;
+            top: 54px;
+            min-width: max-content;
+            overflow: visible;
+          `,
+        ]}
       >
         <AdminDropdownHeader onClose={handleClickOutside}>
           Columns

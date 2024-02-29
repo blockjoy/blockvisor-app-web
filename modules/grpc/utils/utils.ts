@@ -65,9 +65,9 @@ export const checkForRefreshTokenError = (message: string) => {
 export const getPaginationOffset = (pagination?: UIPagination) => {
   return !pagination
     ? 0
-    : pagination?.current_page! === 0
+    : pagination?.currentPage! === 0
     ? 0
-    : pagination?.current_page! * pagination?.items_per_page!;
+    : pagination?.currentPage! * pagination?.itemsPerPage!;
 };
 
 export const createSearch = (keyword: string) => `%${keyword}%`;

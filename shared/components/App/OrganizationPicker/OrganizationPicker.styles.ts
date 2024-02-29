@@ -2,26 +2,6 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: (theme: ITheme) => css`
-    position: relative;
-
-    p,
-    path {
-      transition: 0.3s;
-    }
-
-    button:not(:disabled) {
-      cursor: pointer;
-    }
-
-    :is(:hover, :focus) button:not(:disabled) p {
-      color: ${theme.colorText};
-    }
-
-    :is(:hover, :focus) button:not(:disabled) path {
-      fill: ${theme.colorText};
-    }
-  `,
   header: (theme: ITheme) => css`
     color: ${theme.colorDefault};
     font-size: 12px;
@@ -63,10 +43,29 @@ export const styles = {
     color: ${theme.colorText};
     padding: 0;
     border: 0;
+    height: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-align: left;
     text-overflow: ellipsis;
+    cursor: pointer;
+
+    p,
+    path {
+      transition: 0.3s;
+    }
+
+    button:not(:disabled) {
+      cursor: pointer;
+    }
+
+    :is(:hover, :focus):not(:disabled) p {
+      color: ${theme.colorText};
+    }
+
+    :is(:hover, :focus):not(:disabled) path {
+      fill: ${theme.colorText};
+    }
   `,
   selectText: (maxWidth?: string) => (theme: ITheme) =>
     css`
@@ -78,13 +77,14 @@ export const styles = {
       line-height: 1.8;
       font-size: 16px;
       color: ${theme.colorDefault};
+      transition: color 0.3s;
     `,
   dropdown: (isRightAligned: boolean) => css`
     top: 44px;
     left: 0;
-    max-width: 196px;
-    min-width: 196px;
-    width: 196px;
+    max-width: 200px;
+    min-width: 200px;
+    width: 200px;
 
     ${isRightAligned &&
     css`

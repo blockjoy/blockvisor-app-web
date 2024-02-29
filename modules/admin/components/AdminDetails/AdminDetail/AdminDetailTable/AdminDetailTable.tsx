@@ -18,21 +18,23 @@ export const AdminDetailTable = ({ item, properties }: Props) => {
   return (
     <table css={styles.table}>
       <tbody>
-        {properties.map((property) => {
-          return (
-            <tr key={property.id || property.label}>
-              <th>{property.label}</th>
-              <td>
-                {property.data ?? '-'}{' '}
-                {property.copyValue && (
-                  <span className="copy-button" css={styles.copyButton}>
-                    <Copy value={property.copyValue} hideTooltip />
-                  </span>
-                )}
-              </td>
-            </tr>
-          );
-        })}
+        {properties
+          .filter((property) => !property.isHidden)
+          .map((property) => {
+            return (
+              <tr key={property.id || property.label}>
+                <th>{property.label}</th>
+                <td>
+                  {property.data ?? '-'}{' '}
+                  {property.copyValue && (
+                    <span className="copy-button" css={styles.copyButton}>
+                      <Copy value={property.copyValue} hideTooltip />
+                    </span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
       </tbody>
     </table>
   );

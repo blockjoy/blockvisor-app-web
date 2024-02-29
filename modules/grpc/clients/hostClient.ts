@@ -33,8 +33,8 @@ export type HostFilterCriteria = {
 };
 
 export type HostPagination = {
-  current_page: number;
-  items_per_page: number;
+  currentPage: number;
+  itemsPerPage: number;
 };
 
 class HostClient {
@@ -54,7 +54,7 @@ class HostClient {
     const request: HostServiceListRequest = {
       orgId,
       offset: getPaginationOffset(pagination!),
-      limit: pagination?.items_per_page!,
+      limit: pagination?.itemsPerPage!,
       sort: sort || [
         {
           field: HostSortField.HOST_SORT_FIELD_HOST_NAME,

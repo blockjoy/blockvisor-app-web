@@ -33,7 +33,9 @@ export const OrganizationViewHeader: FC = () => {
     setIsSavingOrganization(null);
   };
 
-  const canUpdateOrganization = hasPermission('org-update');
+  const canUpdateOrganization =
+    (hasPermission('org-update') || hasPermission('org-admin-update')) &&
+    !organization?.personal;
 
   const isLoadingOrg =
     isLoading !== 'finished' || organization?.nodeCount === null;
@@ -54,7 +56,7 @@ export const OrganizationViewHeader: FC = () => {
                 isSaving={isSavingOrganization!}
                 onSaveClicked={handleSaveClicked}
                 onEditClicked={handleEditClicked}
-                canUpdate={canUpdateOrganization && !organization?.personal}
+                canUpdate={canUpdateOrganization}
               />
               {!organization.personal && <OrganizationViewHeaderActions />}
             </>

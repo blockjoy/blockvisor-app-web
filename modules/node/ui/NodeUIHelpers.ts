@@ -1,8 +1,8 @@
 import { itemsPerPage } from '@shared/index';
 
 export type Pagination = {
-  current_page: number;
-  items_per_page: number;
+  currentPage: number;
+  itemsPerPage: number;
 };
 
 export type InitialFilter = {
@@ -19,8 +19,8 @@ export type InitialQueryParams = {
 
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
-    current_page: 0,
-    items_per_page: itemsPerPage['xl'],
+    currentPage: 0,
+    itemsPerPage: itemsPerPage['xl'],
   },
 
   filter: {

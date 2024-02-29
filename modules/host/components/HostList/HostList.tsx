@@ -39,9 +39,9 @@ export const HostList = () => {
 
   const hasMore =
     hostCount !== hostList.length &&
-    hostUIContext.queryParams.pagination.current_page *
-      hostUIContext.queryParams.pagination.items_per_page +
-      hostUIContext.queryParams.pagination.items_per_page <
+    hostUIContext.queryParams.pagination.currentPage *
+      hostUIContext.queryParams.pagination.itemsPerPage +
+      hostUIContext.queryParams.pagination.itemsPerPage <
       hostCount;
 
   useEffect(() => {
@@ -52,13 +52,13 @@ export const HostList = () => {
   }, [hostUIProps.queryParams]);
 
   const updateQueryParams = async () => {
-    const newCurrentPage = hostUIProps.queryParams.pagination.current_page + 1;
+    const newCurrentPage = hostUIProps.queryParams.pagination.currentPage + 1;
     const newQueryParams = {
       ...hostUIProps.queryParams,
 
       pagination: {
         ...hostUIProps.queryParams.pagination,
-        current_page: newCurrentPage,
+        currentPage: newCurrentPage,
       },
     };
 

@@ -7,8 +7,10 @@ import {
   OrgServiceListRequest,
   OrgServiceListResponse,
   OrgServiceResetProvisionTokenResponse,
+  OrgServiceUpdateRequest,
   OrgServiceUpdateResponse,
   OrgSort,
+  OrgSortField,
 } from '../library/blockjoy/v1/org';
 import {
   getOptions,
@@ -20,7 +22,6 @@ import {
   createSearch,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { StatusResponse, StatusResponseFactory } from '../status_response';
 import {
   SearchOperator,
   SortOrder,
@@ -52,13 +53,21 @@ class OrganizationClient {
     sort?: OrgSort[],
     keyword?: string,
     isAdmin?: boolean,
+    includePersonal?: boolean,
   ): Promise<OrgServiceListResponse> {
     const request: OrgServiceListRequest = {
       memberId: !isAdmin ? getIdentity().id : undefined,
-      offset: getPaginationOffset(pagination!),
-      limit: pagination?.items_per_page!,
-      personal: isAdmin ? false : undefined,
-      sort: sort || [],
+      offset: getPaginationOffset(
+        pagination || { currentPage: 0, itemsPerPage: 1000 },
+      ),
+      limit: pagination?.itemsPerPage || 1000,
+      personal: includePersonal,
+      sort: sort || [
+        {
+          field: OrgSortField.ORG_SORT_FIELD_NAME,
+          order: SortOrder.SORT_ORDER_ASCENDING,
+        },
+      ],
     };
 
     if (keyword) {
@@ -81,7 +90,7 @@ class OrganizationClient {
     }
   }
 
-  async createOrganization(name: string): Promise<Org | StatusResponse> {
+  async createOrganization(name: string): Promise<Org> {
     const request = { name };
     console.log('createOrganizationRequest', request);
     try {
@@ -90,22 +99,18 @@ class OrganizationClient {
       console.log('createOrganizationResponse', response);
       return response.org!;
     } catch (err) {
-      return StatusResponseFactory.getOrganizationsResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
   async updateOrganization(
-    id: string,
-    name: string,
-  ): Promise<OrgServiceUpdateResponse | StatusResponse> {
+    request: OrgServiceUpdateRequest,
+  ): Promise<OrgServiceUpdateResponse> {
     try {
       await authClient.refreshToken();
-      return await this.client.update({ id, name }, getOptions());
+      return await this.client.update(request, getOptions());
     } catch (err) {
-      return StatusResponseFactory.deleteOrganizationResponse(
-        err,
-        'grpcClient',
-      );
+      return handleError(err);
     }
   }
 
@@ -119,9 +124,14 @@ class OrganizationClient {
   }
 
   async removeMember(userId: string, orgId: string): Promise<void> {
+    const request = {
+      userId,
+      orgId,
+    };
+    console.log('removeMemberRequest', request);
     try {
       await authClient.refreshToken();
-      await this.client.removeMember({ userId, orgId }, getOptions());
+      await this.client.removeMember(request, getOptions());
     } catch (err) {
       return handleError(err);
     }
@@ -142,12 +152,12 @@ class OrganizationClient {
   async resetProvisionToken(
     userId: string,
     orgId: string,
-  ): Promise<OrgServiceResetProvisionTokenResponse | StatusResponse> {
+  ): Promise<OrgServiceResetProvisionTokenResponse> {
     try {
       await authClient.refreshToken();
       return this.client.resetProvisionToken({ userId, orgId }, getOptions());
     } catch (err) {
-      return StatusResponseFactory.getHostProvisionResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 }
