@@ -10,7 +10,7 @@ export const styles = {
     top: 72px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     width: 100%;
     padding-top: 22px;
     padding-bottom: 20px;

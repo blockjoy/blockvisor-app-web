@@ -28,6 +28,10 @@ export const styles = {
       background: rgb(255 255 255 / 20%);
     }
   `,
+  tableHeader: css`
+    display: flex;
+    align-items: center;
+  `,
   table: (theme: ITheme) => css`
     text-align: left;
     width: 100%;
@@ -74,6 +78,7 @@ export const styles = {
     width: ${width};
     min-width: ${width};
     max-width: ${width};
+    box-sizing: border-box;
   `,
   copyButton: css`
     opacity: 0;

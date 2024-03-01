@@ -1,8 +1,10 @@
 import { ButtonHTMLAttributes, MouseEventHandler } from 'react';
-import IconEyeOpen from '@public/assets/icons/common/Eye.svg';
-import IconEyeClosed from '@public/assets/icons/common/EyeClosed.svg';
 import { passwordToggle } from './PasswordToggle.styles';
 import { reset } from 'styles/utils.reset.styles';
+import { SvgIcon } from '@shared/components';
+
+import IconEyeOpen from '@public/assets/icons/common/Eye.svg';
+import IconEyeClosed from '@public/assets/icons/common/EyeClosed.svg';
 
 type Props = {
   activeType: 'password' | 'text';
@@ -17,7 +19,9 @@ export function PasswordToggle({ activeType, onClick, ...rest }: Props) {
       type="button"
       onClick={onClick}
     >
-      {activeType === 'password' ? <IconEyeOpen /> : <IconEyeClosed />}
+      <SvgIcon>
+        {activeType === 'password' ? <IconEyeOpen /> : <IconEyeClosed />}
+      </SvgIcon>
     </button>
   );
 }

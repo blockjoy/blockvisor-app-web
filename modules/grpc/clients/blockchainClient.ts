@@ -4,14 +4,8 @@ import {
   BlockchainServiceDefinition,
 } from '../library/blockjoy/v1/blockchain';
 
-import {
-  authClient,
-  checkForRefreshTokenError,
-  getIdentity,
-  getOptions,
-} from '@modules/grpc';
+import { authClient, getOptions, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 class BlockchainClient {
   private client: BlockchainServiceClient;
@@ -21,7 +15,7 @@ class BlockchainClient {
     this.client = createClient(BlockchainServiceDefinition, channel);
   }
 
-  async getBlockchains(orgId?: string): Promise<Blockchain[] | StatusResponse> {
+  async getBlockchains(orgId?: string): Promise<Blockchain[]> {
     const request = {
       orgId,
     };
@@ -32,8 +26,7 @@ class BlockchainClient {
       console.log('getBlockchainsResponse', response);
       return response.blockchains;
     } catch (err: any) {
-      checkForRefreshTokenError(err.message);
-      return StatusResponseFactory.getBlockchainsResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 }

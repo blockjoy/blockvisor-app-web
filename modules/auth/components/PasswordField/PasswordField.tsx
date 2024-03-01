@@ -1,6 +1,6 @@
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { Input } from '@shared/components';
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { PasswordToggle, PasswordMeter } from '@modules/auth';
 import { typo } from 'styles/utils.typography.styles';
@@ -21,6 +21,8 @@ export type PasswordFieldProps = {
   placeholder: string;
   isCompact?: boolean;
   isSubmitted?: boolean;
+  hideMeter?: boolean;
+  compareTo?: string;
 };
 
 export const PasswordField = ({
@@ -31,6 +33,7 @@ export const PasswordField = ({
   placeholder,
   isCompact = false,
   isSubmitted = false,
+  hideMeter = false,
 }: PasswordFieldProps) => {
   const fieldRef = useRef<HTMLDivElement | null>(null);
   const [activeType, setActiveType] = useState<PasswordFieldType>(
@@ -78,8 +81,7 @@ export const PasswordField = ({
         onInput={(e: ChangeEvent<HTMLInputElement>) =>
           setPassword(e.target.value)
         }
-        // onChange={(e) => setPassword(e.target.value)}
-        onFocus={() => setMeter(true)}
+        onFocus={() => setMeter(!hideMeter)}
         validationOptions={{
           required: 'This is a mandatory field',
           minLength: {
@@ -95,15 +97,17 @@ export const PasswordField = ({
           />
         }
       />
-      <PasswordMeter
-        meter={meter || isMobile || isCompact}
-        isLabeled={Boolean(label)}
-        passwordStrength={passwordStrength}
-        passwordTracker={passwordTracker}
-        passwordMessage={passwordMessage}
-        isPasswordRare={isPasswordRare}
-        isCompact={isCompact}
-      />
+      {!hideMeter && (
+        <PasswordMeter
+          meter={meter || isMobile || isCompact}
+          isLabeled={Boolean(label)}
+          passwordStrength={passwordStrength}
+          passwordTracker={passwordTracker}
+          passwordMessage={passwordMessage}
+          isPasswordRare={isPasswordRare}
+          isCompact={isCompact}
+        />
+      )}
     </div>
   );
 };

@@ -1,21 +1,14 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
-const passwordToggle = css`
-  & > svg {
-    path {
-      fill: var(--color-text-2);
-      padding-top: 4px;
-      transition: fill 0.18s var(--transition-easing-cubic);
-    }
+const passwordToggle = (theme: ITheme) => css`
+  svg path {
+    fill: ${theme.colorLabel};
+    transition: 0.3s;
   }
 
-  &:hover,
-  &:active {
-    & > svg {
-      path {
-        fill: var(--color-text-3);
-      }
-    }
+  :hover svg path {
+    fill: ${theme.colorText};
   }
 `;
 

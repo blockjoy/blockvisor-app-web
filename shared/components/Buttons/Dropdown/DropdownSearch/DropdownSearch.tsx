@@ -39,6 +39,7 @@ export const DropdownSearch = ({
         type="text"
         placeholder={placeholder ?? 'Search...'}
         value={value}
+        autoComplete="off"
         onChange={handleChange}
       />
       {isEmpty && <p css={styles.empty}>No results found</p>}
