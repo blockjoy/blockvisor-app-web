@@ -19,7 +19,7 @@ export const ROUTES = {
 
 export const PUBLIC_ROUTES = [
   '/login',
-  '/password_reset',
+  '/password-reset',
   '/register',
   '/accept-invite',
   '/invite-registered',

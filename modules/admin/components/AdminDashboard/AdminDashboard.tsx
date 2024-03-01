@@ -1,4 +1,4 @@
-import { useAdminGetTotals } from '@modules/admin/hooks/useAdminGetTotals';
+import { useAdminGetTotals } from '@modules/admin';
 import { useRouter } from 'next/router';
 import { styles } from './AdminDashboard.styles';
 import { AdminDashboardCard } from './AdminDashboardCard/AdminDashboardCard';
