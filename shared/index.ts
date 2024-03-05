@@ -7,6 +7,7 @@ export * from './hooks/useAccessibleDropdown';
 export * from './hooks/useAccessibleList';
 export * from './hooks/useClickOutside';
 export * from './hooks/useEsc';
+export * from './hooks/useHubSpotForm';
 export * from './hooks/useModal';
 export * from './hooks/useNavigate';
 export * from './hooks/usePageVisibility';
