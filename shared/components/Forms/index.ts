@@ -14,4 +14,5 @@ export * from './ReactHookForm/Input/InputUtil';
 export * from './ReactHookForm/Input/InputLabel';
 export * from './ReactHookForm/Textarea/Textarea';
 
-export * from './Hubspot/hooks/useHubSpotForm';
+export * from './HubSpot/components/HubSpotForm/HubSpotForm';
+export * from './HubSpot/hooks/useHubSpotForm';

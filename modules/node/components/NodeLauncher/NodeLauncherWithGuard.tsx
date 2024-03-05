@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   WithLauncherGuardAdditionalProps,
   billingAtoms,
@@ -11,16 +11,23 @@ import { NodeLauncher } from '@modules/node';
 export const NodeLauncherWithGuard = ({
   itemPrices,
 }: WithLauncherGuardAdditionalProps) => {
+  const { hasPermission, isSuperUser } = usePermissions();
+  const isEnabledBillingPreview = useRecoilValue(
+    billingAtoms.isEnabledBillingPreview(isSuperUser),
+  );
   const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
 
-  const { hasPermission } = usePermissions();
-
   const canAddNode = hasPermission('node-create');
+
   const canCreateSubscription = hasPermission('subscription-create');
   const canUpdateSubscription = hasPermission('subscription-update');
 
-  const isPermittedToCreate =
-    canAddNode && (canCreateSubscription || canUpdateSubscription);
+  const hasBillingPermissionsToCreate = isEnabledBillingPreview
+    ? canCreateSubscription || canUpdateSubscription
+    : true;
+
+  const hasPermissionsToCreate =
+    isSuperUser || (canAddNode && hasBillingPermissionsToCreate);
 
   const NodeLauncherGuarded = useMemo(
     () => withLauncherGuard(NodeLauncher),
@@ -34,7 +41,7 @@ export const NodeLauncherWithGuard = ({
   return (
     <NodeLauncherGuarded
       type="launch-node"
-      isPermittedToCreate={isPermittedToCreate}
+      hasPermissionsToCreate={hasPermissionsToCreate}
     />
   );
 };

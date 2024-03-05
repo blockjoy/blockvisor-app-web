@@ -1,3 +1,4 @@
+import { useRecoilValue } from 'recoil';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
 import {
@@ -9,11 +10,11 @@ import {
   NextLink,
 } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
-import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import { spacing } from 'styles/utils.spacing.styles';
+import { authAtoms } from '@modules/auth';
 
 export const mapHostToDetails = (host: Host) => {
-  const { isSuperUser } = usePermissions();
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
 
   const details: { label: string; data: any | undefined }[] = [
     { label: 'Version', data: host?.version || '-' },

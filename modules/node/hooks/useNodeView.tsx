@@ -11,7 +11,7 @@ import {
   organizationAtoms,
   useSwitchOrganization,
 } from '@modules/organization';
-import { usePermissions } from '@modules/auth';
+import { authAtoms } from '@modules/auth';
 
 type Args = string | string[] | undefined;
 
@@ -33,17 +33,14 @@ const convertRouteParamToString = (id: Args) => {
 };
 
 export const useNodeView = (): Hook => {
+  const { switchOrganization } = useSwitchOrganization();
+  const { nodeList, modifyNodeInNodeList } = useNodeList();
+
   const [isLoading, setIsLoading] = useRecoilState(
     nodeAtoms.isLoadingActiveNode,
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-
-  const { nodeList, modifyNodeInNodeList } = useNodeList();
-
-  const { isSuperUser } = usePermissions();
-
-  const { switchOrganization } = useSwitchOrganization();
-
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );

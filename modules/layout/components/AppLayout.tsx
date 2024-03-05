@@ -4,11 +4,7 @@ import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import {
-  useIdentityRepository,
-  useRefreshToken,
-  useUserSubscription,
-} from '@modules/auth';
+import { useIdentityRepository, useRefreshToken } from '@modules/auth';
 import {
   organizationAtoms,
   useGetOrganizations,
@@ -20,11 +16,7 @@ import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
 import { usePageVisibility } from '@shared/index';
-import {
-  billingSelectors,
-  usePaymentMethods,
-  useSubscription,
-} from '@modules/billing';
+import { useBilling } from '@modules/billing';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -41,7 +33,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-  const customer = useRecoilValue(billingSelectors.customer);
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
   const {
@@ -57,17 +48,12 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
-  const { fetchPaymentMethods } = usePaymentMethods();
-  const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
-  const { getUserSubscription } = useUserSubscription();
 
   usePageVisibility({
     onVisible: refreshToken,
   });
 
-  useEffect(() => {
-    if (customer) fetchPaymentMethods();
-  }, []);
+  useBilling();
 
   useEffect(() => {
     const fetchReceivedInvitations = async () => {
@@ -96,22 +82,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, [user?.accessToken]);
 
   useEffect(() => {
-    const fetchOrganizationSubscription = async () => {
-      setSubscriptionLoadingState('initializing');
-
-      try {
-        const userSubscription = await getUserSubscription(
-          defaultOrganization?.id!,
-        );
-
-        await fetchSubscription(userSubscription?.externalId);
-      } catch (error: any) {
-        console.log('Error while fetching user subscription', error);
-      } finally {
-        setSubscriptionLoadingState('finished');
-      }
-    };
-
     if (!provisionToken && defaultOrganization?.id) {
       getProvisionToken(defaultOrganization?.id);
     }
@@ -123,7 +93,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      fetchOrganizationSubscription();
       loadNodes();
       loadHosts();
       getPermissions();

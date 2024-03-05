@@ -7,6 +7,7 @@ import {
   FormHeader,
   FormLabel,
   HostSelect,
+  HubSpotForm,
   OrganizationSelect,
   Pricing,
 } from '@shared/components';
@@ -22,7 +23,6 @@ import {
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
 import { billingSelectors } from '@modules/billing';
-import { NodeLauncherSummaryHubSpot } from './NodeLauncherSummaryHubSpot';
 
 type NodeLauncherSummaryProps = {
   onCreateNodeClicked: VoidFunction;
@@ -150,7 +150,9 @@ export const NodeLauncherSummary = ({
         </button>
       </div>
       {isOpenHubSpot && (
-        <NodeLauncherSummaryHubSpot
+        <HubSpotForm
+          title="Request Node Launch"
+          content="Interested in launching a node? Leave us your email to get started."
           isOpenHubSpot={isOpenHubSpot}
           handleClose={handleCloseHubSpot}
         />

@@ -2,8 +2,9 @@ import { ReactNode } from 'react';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import { _item } from 'chargebee-typescript';
 import { AppLayout } from '@modules/layout';
-import { Billing as BillingView, DEFAULT_ITEM_ID } from '@modules/billing';
+import { BillingView, DEFAULT_ITEM_ID } from '@modules/billing';
 import { fetchItems } from 'utils/billing/fetchItems';
+import { ProtectedRoute } from '@modules/auth';
 
 type BillingProps = {
   item: Item;
@@ -15,7 +16,11 @@ const Billing = ({ item, itemPrices }: BillingProps) => (
 );
 
 Billing.getLayout = function getLayout(page: ReactNode) {
-  return <AppLayout pageTitle="Billing">{page}</AppLayout>;
+  return (
+    <AppLayout pageTitle="Billing">
+      <ProtectedRoute>{page}</ProtectedRoute>
+    </AppLayout>
+  );
 };
 
 export async function getStaticProps() {

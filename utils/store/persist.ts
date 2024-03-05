@@ -8,8 +8,9 @@ export const localStorageEffect = <T>(
     const savedValue = localStorage.getItem(key);
     if (savedValue !== null) {
       setSelf(JSON.parse(savedValue));
+    } else if (defaultValue !== undefined) {
+      setSelf(defaultValue);
     }
-    if (defaultValue) setSelf(defaultValue);
 
     onSet((newValue) => {
       if (newValue instanceof DefaultValue) {

@@ -7,16 +7,19 @@ import {
   Plan,
 } from '@modules/billing';
 import { Alert, TableSkeleton } from '@shared/components';
-import { styles } from './BillingView.styles';
+import { styles } from './SubscriptionView.styles';
 import { usePermissions } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
 
-type BillingViewProps = {
+type SubscriptionViewProps = {
   item: Item;
   itemPrices: ItemPrice[];
 };
 
-export const BillingView = ({ item, itemPrices }: BillingViewProps) => {
+export const SubscriptionView = ({
+  item,
+  itemPrices,
+}: SubscriptionViewProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { Modal } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { styles } from './NodeLauncherSummaryHubSpot.styles';
+import { styles } from './HubSpotForm.styles';
 
 declare global {
   interface Window {
@@ -12,15 +12,19 @@ declare global {
   }
 }
 
-type NodeLauncherSummaryHubSpotProps = {
+type HubSpotFormProps = {
+  title: string;
+  content: string;
   isOpenHubSpot: boolean;
   handleClose: VoidFunction;
 };
 
-export const NodeLauncherSummaryHubSpot = ({
+export const HubSpotForm = ({
+  title,
+  content,
   isOpenHubSpot,
   handleClose,
-}: NodeLauncherSummaryHubSpotProps) => {
+}: HubSpotFormProps) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -60,11 +64,9 @@ export const NodeLauncherSummaryHubSpot = ({
         isOpen={isOpenHubSpot}
         handleClose={handleClose}
       >
-        <h2 css={[typo.medium, spacing.bottom.medium]}>Request Node Launch</h2>
+        <h2 css={[typo.medium, spacing.bottom.medium]}>{title}</h2>
         <div css={spacing.bottom.medium}>
-          <p>
-            Interested in launching a node? Leave us your email to get started.
-          </p>
+          <p>{content}</p>
         </div>
         <div
           className="hubspot-form"

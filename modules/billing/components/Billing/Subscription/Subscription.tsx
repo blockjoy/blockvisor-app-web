@@ -27,7 +27,6 @@ export const Subscription = () => {
 
   return (
     <>
-      {activeView === 'reactivate-subscription' && <p>test123</p>}
       <SubscriptionPreview onViewChange={setActiveView} />
       {activeView === 'cancel-subscription' && (
         <SubscriptionCancellation handleBack={handleBack} />

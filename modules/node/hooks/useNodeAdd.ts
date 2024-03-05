@@ -14,7 +14,7 @@ import {
   useUpdateSubscriptionItems,
   usePaymentAuthorization,
 } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { authAtoms } from '@modules/auth';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
@@ -22,9 +22,12 @@ export const useNodeAdd = () => {
   const { loadHosts } = useHostList();
 
   const { updateSubscriptionItems } = useUpdateSubscriptionItems();
-  const { isSuperUser } = usePermissions();
-  const isSuperUserBilling = useRecoilValue(
-    billingAtoms.isSuperUserBilling(isSuperUser),
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isEnabledBillingPreview = useRecoilValue(
+    billingAtoms.isEnabledBillingPreview(isSuperUser),
+  );
+  const bypassBillingForSuperUser = useRecoilValue(
+    billingAtoms.bypassBillingForSuperUser(isSuperUser),
   );
   const { authorizePayment } = usePaymentAuthorization();
 
@@ -44,10 +47,10 @@ export const useNodeAdd = () => {
     };
 
     try {
-      await authorizePayment(async () => {
+      const createNodeCallback = async () => {
         const response: Node = await nodeClient.createNode(nodeRequest);
 
-        if (!isSuperUserBilling)
+        if (isEnabledBillingPreview && !bypassBillingForSuperUser)
           try {
             await updateSubscriptionItems({
               type: UpdateSubscriptionAction.ADD_NODE,
@@ -63,7 +66,11 @@ export const useNodeAdd = () => {
         loadHosts();
         getOrganizations();
         onSuccess(response.id);
-      });
+      };
+
+      isEnabledBillingPreview
+        ? await authorizePayment(createNodeCallback)
+        : createNodeCallback();
     } catch (err: any) {
       console.log('Error Launching Node', err);
       onError('Error launching node, an unknown error occurred.');

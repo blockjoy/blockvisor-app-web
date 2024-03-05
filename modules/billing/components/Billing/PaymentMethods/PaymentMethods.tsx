@@ -49,7 +49,7 @@ export const PaymentMethods = () => {
     onHide();
 
     toast.success(
-      `Payment Method (${activePaymentMethod?.card?.masked_number}) Deleted`,
+      `Payment Method (${activePaymentMethod?.card?.masked_number}) removed`,
     );
   };
 

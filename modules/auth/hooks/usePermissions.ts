@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { authClient } from '@modules/grpc';
 import { organizationAtoms } from '@modules/organization';
@@ -10,6 +11,7 @@ export function usePermissions() {
   const [permissionsLoadingState, setPermissionsLoadingState] = useRecoilState(
     authAtoms.permissionsLoadingState,
   );
+  const [isSuperUser, setIsSuperUser] = useRecoilState(authAtoms.isSuperUser);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -41,7 +43,10 @@ export function usePermissions() {
   const hasPermission = (permission: Permission) =>
     permissions?.findIndex((p) => p === permission)! > -1;
 
-  const isSuperUser = hasPermission('auth-admin-list-permissions');
+  useEffect(() => {
+    const hasSuperUserPermission = hasPermission('auth-admin-list-permissions');
+    setIsSuperUser(hasSuperUserPermission);
+  }, [permissions]);
 
   return {
     permissions,
