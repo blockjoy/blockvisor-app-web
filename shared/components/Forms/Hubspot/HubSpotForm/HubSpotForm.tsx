@@ -6,12 +6,6 @@ import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HubSpotForm.styles';
 
-declare global {
-  interface Window {
-    hbspt: any;
-  }
-}
-
 type HubSpotFormProps = {
   title: string;
   content: string;
