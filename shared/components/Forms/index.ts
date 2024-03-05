@@ -1,4 +1,4 @@
-export * from './HubSpot/HubSpotForm/HubSpotForm';
+export * from './HubSpotTest/HubSpotForm/HubSpotForm';
 
 export * from './VanillaForm/Checkbox/Checkbox';
 export * from './VanillaForm/EditableTitle/EditableTitle';
