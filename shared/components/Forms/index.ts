@@ -1,3 +1,5 @@
+export * from './HubSpot/HubSpotForm/HubSpotForm';
+
 export * from './VanillaForm/Checkbox/Checkbox';
 export * from './VanillaForm/EditableTitle/EditableTitle';
 export * from './VanillaForm/FileUpload/FileUpload';
@@ -13,5 +15,3 @@ export * from './ReactHookForm/Input/Input';
 export * from './ReactHookForm/Input/InputUtil';
 export * from './ReactHookForm/Input/InputLabel';
 export * from './ReactHookForm/Textarea/Textarea';
-
-export * from './HubSpot/components/HubSpotForm/HubSpotForm';
