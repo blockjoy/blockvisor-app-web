@@ -113,7 +113,7 @@ export const styles = {
         color: ${theme.colorPrimaryText};
       }
 
-      &.focus span {
+      &.focus:not(.active) span {
         opacity: 0.9;
       }
 
