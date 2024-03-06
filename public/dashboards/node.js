@@ -2,17 +2,13 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
 
-var { id, disk_space_name, is_node } = params;
+var { id, name, disk_space_name, is_node } = params;
 
 const diskSpaceNameWithoutTrailingSlash = disk_space_name?.endsWith('/') 
-  ? disk_space_name.slice(0, -1) 
+  ? disk_space_name.slice(0, disk_space_name.length - 1) 
   : disk_space_name;
 
 const diskSpaceName = diskSpaceNameWithoutTrailingSlash?.replace(/\//g, '_');
-
-var host = `https://magellan-1.slc.blockjoy.com/host/${id}`;
-// var host = 'https://magellan-1.slc.blockjoy.com/host/magellan-1.slc.blockjoy.com'
-// var host = 'https://magellan-1.slc.blockjoy.com/spaces/magellan-1slcblockjoycom/rooms/local/nodes/fdf3144c-2cb4-11ee-b56e-96304f06953d/dashboard.js';
 
 const sidePanelTextonlyWidth = "160px",
       sidePanelTextonlyHeight = "55px",
@@ -144,10 +140,10 @@ const colorPrimary = "#bff589";
 const size = "140px";
 const after = "-600";
 
-const createChart = (chart) => {
+const createChart = (chart, nextHost) => {
   const element = document.createElement("div");
   element.setAttribute("data-netdata", chart.netdata);
-  element.setAttribute("data-host", host);
+  element.setAttribute("data-host", nextHost);
   element.setAttribute("data-colors", chart.color || colorPrimary);
   element.setAttribute("data-height", size);
   element.setAttribute("data-width", "100%");
@@ -217,11 +213,11 @@ const createChart = (chart) => {
   return element;
 }
 
-const createDiskSpaceChart = () => {
+const createDiskSpaceChart = (nextHost) => {
   const element = document.createElement("div");
   element.setAttribute("data-netdata", `disk_space.${diskSpaceName}`);
   element.setAttribute("data-chart-library", "d3pie");
-  element.setAttribute("data-host", host);
+  element.setAttribute("data-host", nextHost);
   element.setAttribute("data-colors", "#bff589 #5F615D #a7a7a7");
   element.setAttribute("data-d3pie-pieinnerradius", "90%");
   element.setAttribute("data-d3pie-pieouterradius", "100%");
@@ -233,7 +229,7 @@ const createDiskSpaceChart = () => {
   return element;
 }
 
-const onLoad = () => {
+var onLoad = (nextHost) => {
   charts.forEach((block) => {
 
     const row = document.createElement("div");
@@ -252,7 +248,7 @@ const onLoad = () => {
       const textonlyWrapper = document.createElement("div");
       textonlyWrapper.setAttribute("class", "textonly-wrapper");
   
-      const textonlyChart = createChart(block.charts[0]);
+      const textonlyChart = createChart(block.charts[0], nextHost);
       textonlyChart.setAttribute("id", block.title);
   
       textonlyWrapper.appendChild(textonlyChart);
@@ -268,18 +264,18 @@ const onLoad = () => {
       chartsDiv.appendChild(textonlyWrapper);
     }
 
-    const sparklineChart = createChart(block.charts[1]);
+    const sparklineChart = createChart(block.charts[1], nextHost);
 
     chartsDiv.appendChild(sparklineChart);
 
     main.appendChild(row);
   });
 
-  const diskSpaceChart = createDiskSpaceChart();
+  const diskSpaceChart = createDiskSpaceChart(nextHost);
   const diskPie = document.querySelector(".disk-pie");
   diskPie.appendChild(diskSpaceChart);
 }
 
 
-onLoad();
+// onLoad();
 // document.addEventListener("DOMContentLoaded", onLoad);

@@ -4,6 +4,10 @@ import { NetdataDashboard } from '@shared/components';
 export const HostViewSidePanel = () => {
   const { host } = useHostView();
   return (
-    <NetdataDashboard id={host?.name!} disk_space_name={host?.vmmMountpoint!} />
+    <NetdataDashboard
+      id={host?.name!}
+      name={host?.name!}
+      disk_space_name={host?.vmmMountpoint!}
+    />
   );
 };
