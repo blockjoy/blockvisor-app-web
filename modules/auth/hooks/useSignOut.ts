@@ -5,7 +5,8 @@ export function useSignOut() {
   const removeBilling = () => {
     localStorage.removeItem('billing');
     localStorage.removeItem('billing.paymentMethods');
-    localStorage.removeItem('billing.isSuperUser');
+    localStorage.removeItem('billing.bypassBillingForSuperUser');
+    localStorage.removeItem('billing.isEnabledForSuperUsers');
   };
 
   const signOut = () => {

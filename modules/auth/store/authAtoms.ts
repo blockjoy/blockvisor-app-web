@@ -23,17 +23,17 @@ const permissions = atom<string[] | undefined>({
 
 const permissionsLoadingState = atom<LoadingState>({
   key: 'auth.permissions.loadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
-const loading = atom<LoadingState>({
-  key: 'authentication.loading',
-  default: 'initializing',
+const isSuperUser = atom<boolean>({
+  key: 'auth.permissions.isSuperUser',
+  default: false,
 });
 
 export const authAtoms = {
   user,
-  loading,
   permissions,
   permissionsLoadingState,
+  isSuperUser,
 };

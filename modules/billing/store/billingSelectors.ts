@@ -9,6 +9,7 @@ import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy
 import { ItemPriceSimple, billingAtoms } from '@modules/billing';
 import { nodeAtoms } from '@modules/node';
 import { computePricing } from '@shared/index';
+import { authAtoms } from '@modules/auth';
 
 const billingId = selector<string | null>({
   key: 'billing.identity.id',
@@ -152,17 +153,24 @@ const isActiveSubscription = selector<boolean>({
   },
 });
 
-const canCreateResources = selector<boolean>({
+const hasAuthorizedBilling = selector<boolean>({
   key: 'billing.resources.canCreate',
   get: ({ get }) => {
+    const isSuperUser = get(authAtoms.isSuperUser);
+    const isEnabledBillingPreview = get(
+      billingAtoms.isEnabledBillingPreview(isSuperUser),
+    );
+
+    if (!isEnabledBillingPreview) return true;
+
     const hasSubscriptionVal = get(hasSubscription);
     const isActiveSubscriptionVal = get(isActiveSubscription);
     const hasPaymentMethodVal = get(hasPaymentMethod);
 
-    const canCreate =
+    const isAuthorized =
       hasPaymentMethodVal && hasSubscriptionVal && isActiveSubscriptionVal;
 
-    return canCreate || false;
+    return isAuthorized || false;
   },
 });
 
@@ -207,7 +215,7 @@ export const billingSelectors = {
   hasPaymentMethod,
   hasSubscription,
   isActiveSubscription,
-  canCreateResources,
+  hasAuthorizedBilling,
 
   pricing,
 };

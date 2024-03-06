@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useTabs } from '@shared/hooks/useTabs';
-import { PageSection, Tabs } from '@shared/components';
+import { useTabs } from '@shared/index';
+import { Tabs } from '@shared/components';
 import { BillingInfo, PaymentMethods } from '@modules/billing';
 
 export const BillingSettings = () => {

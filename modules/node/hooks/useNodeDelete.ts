@@ -7,17 +7,20 @@ import {
   generateError,
   useUpdateSubscriptionItems,
 } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { authAtoms } from '@modules/auth';
 
 export function useNodeDelete() {
   const { updateSubscriptionItems } = useUpdateSubscriptionItems();
-  const { isSuperUser } = usePermissions();
-  const isSuperUserBilling = useRecoilValue(
-    billingAtoms.isSuperUserBilling(isSuperUser),
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isEnabledBillingPreview = useRecoilValue(
+    billingAtoms.isEnabledBillingPreview(isSuperUser),
+  );
+  const bypassBillingForSuperUser = useRecoilValue(
+    billingAtoms.bypassBillingForSuperUser(isSuperUser),
   );
 
   const deleteNode = async (node: Node, onSuccess: VoidFunction) => {
-    if (!isSuperUserBilling)
+    if (isEnabledBillingPreview && !bypassBillingForSuperUser)
       try {
         await updateSubscriptionItems({
           type: UpdateSubscriptionAction.REMOVE_NODE,

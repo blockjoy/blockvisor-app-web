@@ -9,6 +9,7 @@ import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconUser from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
 const links = [
   { name: 'dashboard', icon: <IconDashboard /> },
@@ -16,6 +17,7 @@ const links = [
   { name: 'hosts', icon: <IconHost /> },
   { name: 'orgs', icon: <IconOrganization /> },
   { name: 'users', icon: <IconUser /> },
+  { name: 'settings', icon: <IconCog /> },
 ];
 
 export const PageTitleAdminNav = () => {

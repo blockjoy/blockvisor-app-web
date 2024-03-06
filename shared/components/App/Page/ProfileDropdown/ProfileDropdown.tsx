@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { authAtoms, usePermissions, useSignOut } from '@modules/auth';
+import { authAtoms, useSignOut } from '@modules/auth';
 import { ROUTES } from '@shared/constants/routes';
 import { DropdownMenu, DropdownItem, Badge } from '@shared/components';
 import { ProfileBubble } from './ProfileBubble';
@@ -15,6 +15,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 export const ProfileDropdown = () => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
 
   const [isOpen, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -35,8 +36,6 @@ export const ProfileDropdown = () => {
     signOut();
     handleClickOutside();
   };
-
-  const { isSuperUser } = usePermissions();
 
   return (
     <div ref={dropdownRef} css={styles.base}>

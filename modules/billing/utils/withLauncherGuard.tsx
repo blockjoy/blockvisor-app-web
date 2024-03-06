@@ -9,13 +9,13 @@ import {
   LAUNCH_ERRORS,
 } from '@modules/billing';
 import { useDefaultOrganization } from '@modules/organization';
-import { usePermissions } from '@modules/auth';
+import { authAtoms } from '@modules/auth';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
 type WithLauncherGuardBasicProps = {
   type: 'launch-host' | 'launch-node';
-  isPermittedToCreate: boolean;
+  hasPermissionsToCreate: boolean;
 };
 
 export type WithLauncherGuardAdditionalProps = {
@@ -44,16 +44,18 @@ export type LauncherWithGuardProps = LauncherWithGuardBasicProps &
 
 export const withLauncherGuard = (Component: any) => {
   const withLauncherGuard = ({ ...props }: WithLauncherGuardProps) => {
-    const { type, isPermittedToCreate, ...aditionalProps } = props;
+    const { type, hasPermissionsToCreate, ...aditionalProps } = props;
 
     const { defaultOrganization } = useDefaultOrganization();
-    const { isSuperUser } = usePermissions();
-
-    const canCreateResources = useRecoilValue(
-      billingSelectors.canCreateResources,
+    const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+    const isEnabledBillingPreview = useRecoilValue(
+      billingAtoms.isEnabledBillingPreview(isSuperUser),
     );
-    const isSuperUserBilling = useRecoilValue(
-      billingAtoms.isSuperUserBilling(isSuperUser),
+    const hasAuthorizedBilling = useRecoilValue(
+      billingSelectors.hasAuthorizedBilling,
+    );
+    const bypassBillingForSuperUser = useRecoilValue(
+      billingAtoms.bypassBillingForSuperUser(isSuperUser),
     );
     const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
@@ -64,9 +66,12 @@ export const withLauncherGuard = (Component: any) => {
       setFulfilRequirements(false);
     }, [defaultOrganization?.id]);
 
-    const isPermittedAsSuperUser = isSuperUser && isSuperUserBilling;
+    const isPermittedAsSuperUser =
+      isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
+
     const isDisabledAdding =
-      (!canCreateResources || !isPermittedToCreate) && !isPermittedAsSuperUser;
+      (!hasAuthorizedBilling || !hasPermissionsToCreate) &&
+      !isPermittedAsSuperUser;
 
     const handleDefaultView = () => {
       setActiveView('launcher');
@@ -86,7 +91,11 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (!canCreateResources && !isPermittedAsSuperUser) {
+      if (
+        isEnabledBillingPreview &&
+        !hasAuthorizedBilling &&
+        !isPermittedAsSuperUser
+      ) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';
@@ -104,14 +113,13 @@ export const withLauncherGuard = (Component: any) => {
       setFulfilRequirements(false);
     };
 
-    const warningMessage =
-      isDisabledAdding && !isPermittedAsSuperUser
-        ? !isPermittedToCreate
-          ? LAUNCH_ERRORS.NO_PERMISSION
-          : !hasPaymentMethod
-          ? LAUNCH_ERRORS.NO_BILLING
-          : LAUNCH_ERRORS.NO_ACTIVE_SUBSCRIPTION
-        : '';
+    const warningMessage = isDisabledAdding
+      ? !hasPermissionsToCreate
+        ? LAUNCH_ERRORS.NO_PERMISSION
+        : !hasPaymentMethod
+        ? LAUNCH_ERRORS.NO_BILLING
+        : LAUNCH_ERRORS.NO_ACTIVE_SUBSCRIPTION
+      : '';
 
     return (
       <>
@@ -121,7 +129,7 @@ export const withLauncherGuard = (Component: any) => {
           onCreateClick={handleCreateClicked}
           permissions={{
             disabled: isDisabledAdding,
-            permitted: isPermittedToCreate,
+            permitted: hasPermissionsToCreate,
             superUser: isPermittedAsSuperUser,
             message: warningMessage,
           }}

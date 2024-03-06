@@ -9,7 +9,7 @@ import {
   BillingContacts,
   billingSelectors,
   billingAtoms,
-  BillingView,
+  SubscriptionView,
   Estimates,
   useEstimates,
   useBillingContacts,
@@ -47,7 +47,7 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
           value: 'subscription',
           component: (
             <PageSection bottomBorder={false}>
-              <BillingView item={item} itemPrices={itemPrices} />
+              <SubscriptionView item={item} itemPrices={itemPrices} />
             </PageSection>
           ),
         },
@@ -93,6 +93,11 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   }, [userSubscription]);
 
   useEffect(() => {
+    if (!canUpdateSubscription && query.tab !== 'subscription')
+      handleClick('subscription');
+  }, [canUpdateSubscription]);
+
+  useEffect(() => {
     if (
       subscription?.status === 'active' &&
       subscriptionLoadingState === 'finished' &&
@@ -116,11 +121,6 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
       { shallow: true },
     );
   };
-
-  useEffect(() => {
-    if (!canUpdateSubscription && query.tab !== 'subscription')
-      handleClick('subscription');
-  }, [canUpdateSubscription]);
 
   return (
     <>

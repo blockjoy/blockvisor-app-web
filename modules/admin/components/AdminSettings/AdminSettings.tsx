@@ -1,5 +1,4 @@
 import { AdminHeader } from '../AdminHeader/AdminHeader';
-import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { styles } from './AdminSettings.styles';
 import { AdminBilling } from './AdminBilling/AdminBilling';
@@ -16,7 +15,7 @@ export const AdminSettings = () => {
       <AdminHeader name="Settings">Settings</AdminHeader>
       <div css={spacing.top.medium}>
         {cards.map((card) => (
-          <AdminSettingsCard icon={card.icon} name={card.name}>
+          <AdminSettingsCard key={card.name} icon={card.icon} name={card.name}>
             {card.component}
           </AdminSettingsCard>
         ))}
