@@ -8,6 +8,7 @@ import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconUser from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
 type LinkItem = {
   id?: string;
@@ -23,6 +24,7 @@ export const PageTitleAdminNav = () => {
       { id: 'hosts', name: 'Hosts', icon: <IconHost /> },
       { id: 'orgs', name: 'Orgs', icon: <IconOrganization /> },
       { id: 'users', name: 'Users', icon: <IconUser /> },
+      { id: 'settings', name: 'Settings', icon: <IconCog /> },
     ],
     [],
   );
@@ -77,6 +79,7 @@ export const PageTitleAdminNav = () => {
         dropdownMenuStyles={[styles.menu]}
         dropdownItemStyles={dropdownItemStyles}
         hideDropdownIcon={true}
+        dropdownScrollbarStyles={[styles.scrollbar]}
       />
     </div>
   );

@@ -42,6 +42,9 @@ export const styles = {
       display: grid;
     }
   `,
+  scrollbar: css`
+    max-height: inherit;
+  `,
   link: css`
     display: flex;
     align-items: center;
