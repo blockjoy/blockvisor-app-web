@@ -11,8 +11,6 @@ import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
-  const nodeUrl = `http://${node.name}.n0des.xyz`;
-
   const details: {
     label: string | any;
     data: any | undefined;
@@ -43,11 +41,11 @@ export const mapNodeToDetails = (node: Node) => {
               css={styles.link}
               target="_blank"
               rel="noopener noreferrer"
-              href={nodeUrl}
+              href={node.url}
             >
-              {nodeUrl}
+              {node.url}
             </a>
-            <Copy value={nodeUrl} />
+            <Copy value={node.url} />
           </>
         ) || '-',
     });

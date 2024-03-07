@@ -292,8 +292,13 @@ export interface HostServiceDeleteResponse {
 
 /** Used to produce a list of regions that are available to deploy nodes to. */
 export interface HostServiceRegionsRequest {
-  /** The org for which to produce the list. */
-  orgId: string;
+  /**
+   * The org for which to produce the list. This field is required for users
+   * that are not administrators of the whole system.
+   */
+  orgId?:
+    | string
+    | undefined;
   /** The type of host to include in this list. */
   hostType?:
     | HostType
@@ -1841,12 +1846,12 @@ export const HostServiceDeleteResponse = {
 };
 
 function createBaseHostServiceRegionsRequest(): HostServiceRegionsRequest {
-  return { orgId: "", hostType: undefined, blockchainId: "", version: "", nodeType: 0 };
+  return { orgId: undefined, hostType: undefined, blockchainId: "", version: "", nodeType: 0 };
 }
 
 export const HostServiceRegionsRequest = {
   encode(message: HostServiceRegionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
+    if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
     if (message.hostType !== undefined) {
@@ -1921,7 +1926,7 @@ export const HostServiceRegionsRequest = {
 
   fromPartial(object: DeepPartial<HostServiceRegionsRequest>): HostServiceRegionsRequest {
     const message = createBaseHostServiceRegionsRequest();
-    message.orgId = object.orgId ?? "";
+    message.orgId = object.orgId ?? undefined;
     message.hostType = object.hostType ?? undefined;
     message.blockchainId = object.blockchainId ?? "";
     message.version = object.version ?? "";
@@ -2333,10 +2338,10 @@ export interface HostServiceClient<CallOptionsExt = {}> {
   ): Promise<HostServiceRegionsResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
