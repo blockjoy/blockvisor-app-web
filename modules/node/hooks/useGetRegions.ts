@@ -1,9 +1,6 @@
-import { Dispatch, SetStateAction, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import useSWR from 'swr';
 import { hostClient } from '@modules/grpc';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { organizationAtoms } from '@modules/organization';
 import {
   BlockchainSimpleWRegion,
@@ -14,24 +11,9 @@ import {
 type UseGetRegionHook = {
   allRegions: BlockchainSimpleWRegion[];
   allRegionsLoadingState: LoadingState;
-  regions: Region[];
-  isLoading: boolean;
-  error: string | null;
-  getRegions: (
-    version: BlockchainVersion,
-    blockchainId: string,
-    nodeType: NodeType,
-  ) => Promise<void>;
-  getAllRegions: () => Promise<void>;
-  setError: Dispatch<SetStateAction<string | null>>;
 };
 
 export const useGetRegions = (): UseGetRegionHook => {
-  const [error, setError] = useState<string | null>(null);
-  const [regions, setRegions] = useRecoilState(nodeAtoms.regions);
-  const [regionsLoadingState, setRegionsLoadingState] = useRecoilState(
-    nodeAtoms.regionsLoadingState,
-  );
   const [allRegions, setAllRegions] = useRecoilState(nodeAtoms.allRegions);
   const [allRegionsLoadingState, setAllRegionsLoadingState] = useRecoilState(
     nodeAtoms.allRegionsLoadingState,
@@ -44,78 +26,53 @@ export const useGetRegions = (): UseGetRegionHook => {
     organizationAtoms.defaultOrganization,
   );
 
-  const getRegions = async (
-    version: BlockchainVersion,
-    blockchainId: string,
-    nodeType: NodeType,
-  ): Promise<void> => {
-    try {
-      setError(null);
-      setRegionsLoadingState('initializing');
+  const fetcher = async () => {
+    const responses = await Promise.all(
+      blockchainsByTypeAndVersion.map(async (item) => {
+        try {
+          const { blockchainId, nodeType, version } = item;
+          const response = await hostClient.getRegions(
+            defaultOrganization?.id!,
+            blockchainId!,
+            nodeType!,
+            version!,
+          );
+          return { blockchainId, version, nodeType, regions: response };
+        } catch (innerErr) {
+          console.error('Error fetching regions for item:', item, innerErr);
+          return [];
+        }
+      }),
+    );
 
-      if (version?.id) {
-        const response: Region[] = await hostClient.getRegions(
-          defaultOrganization?.id!,
-          blockchainId,
-          nodeType,
-          version.version,
-        );
-
-        setRegions(response);
-
-        if (!response.length) setError('Region List Empty');
-      }
-    } catch (err) {
-      console.log('getRegionsError', err);
-      setError('Error Loading Regions');
-      setRegions([]);
-    } finally {
-      setRegionsLoadingState('finished');
-    }
+    return responses.flat();
   };
 
-  const getAllRegions = async () => {
-    try {
-      setAllRegionsLoadingState('initializing');
+  useSWR(
+    () =>
+      defaultOrganization?.id && Boolean(blockchainsByTypeAndVersion.length)
+        ? `regions_${defaultOrganization.id}`
+        : null,
+    fetcher,
+    {
+      revalidateOnMount: true,
+      revalidateOnFocus: false,
 
-      const responses = await Promise.all(
-        blockchainsByTypeAndVersion.map(async (item) => {
-          try {
-            const { blockchainId, nodeType, version } = item;
-            const response = await hostClient.getRegions(
-              defaultOrganization?.id!,
-              blockchainId!,
-              nodeType!,
-              version!,
-            );
-            return { blockchainId, version, nodeType, regions: response };
-          } catch (innerErr) {
-            console.error('Error fetching regions for item:', item, innerErr);
-            return [];
-          }
-        }),
-      );
+      onSuccess: (data) => {
+        setAllRegions(data);
+        setAllRegionsLoadingState('finished');
+      },
+      onError: (error) => {
+        console.log('Error occured while fetching all regions', error);
 
-      setAllRegions(responses.flat());
-    } catch (err) {
-      console.log('Error occured while fetching all regions', err);
-    } finally {
-      setAllRegionsLoadingState('finished');
-    }
-  };
+        setAllRegions([]);
+        setAllRegionsLoadingState('finished');
+      },
+    },
+  );
 
   return {
     allRegions,
     allRegionsLoadingState,
-
-    regions,
-    isLoading: regionsLoadingState !== 'finished',
-
-    error,
-
-    getRegions,
-    getAllRegions,
-
-    setError,
   };
 };

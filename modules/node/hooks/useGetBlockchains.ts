@@ -4,8 +4,14 @@ import { blockchainClient } from '@modules/grpc';
 import { organizationAtoms } from '@modules/organization';
 import { blockchainAtoms } from '@modules/node';
 import { checkForTokenError } from 'utils/checkForTokenError';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
-export function useGetBlockchains() {
+type UseGetBlockchainsHook = {
+  blockchains: Blockchain[];
+  blockchainsLoadingState: LoadingState;
+};
+
+export const useGetBlockchains = (): UseGetBlockchainsHook => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -26,23 +32,28 @@ export function useGetBlockchains() {
     return response;
   };
 
-  useSWR(() => (defaultOrganization?.id ? 'blockchains' : null), fetcher, {
-    revalidateOnMount: true,
-    revalidateOnFocus: false,
+  useSWR(
+    () =>
+      defaultOrganization?.id ? `blockchains_${defaultOrganization.id}` : null,
+    fetcher,
+    {
+      revalidateOnMount: true,
+      revalidateOnFocus: false,
 
-    onSuccess: (data) => {
-      setBlockchains(data);
-      setBlockchainsLoadingState('finished');
+      onSuccess: (data) => {
+        setBlockchains(data);
+        setBlockchainsLoadingState('finished');
+      },
+      onError: (error) => {
+        console.error('Failed to fetch Blockchains', error);
+        setBlockchains([]);
+        setBlockchainsLoadingState('finished');
+      },
     },
-    onError: (error) => {
-      console.error('Failed to fetch Blockchains', error);
-      setBlockchains([]);
-      setBlockchainsLoadingState('finished');
-    },
-  });
+  );
 
   return {
     blockchains,
     blockchainsLoadingState,
   };
-}
+};
