@@ -32,7 +32,8 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-  const { getBlockchains } = useGetBlockchains();
+
+  useGetBlockchains();
 
   useBilling();
 
@@ -61,7 +62,6 @@ export function LoginForm() {
         !!invited,
       );
       await getOrganizations(!invited);
-      getBlockchains();
       handleRedirect();
     } catch (error) {
       setLoginError('Invalid Credentials');
