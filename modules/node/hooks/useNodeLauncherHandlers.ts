@@ -61,7 +61,7 @@ export const useNodeLauncherHandlers = ({
 
   const { getHosts } = useHostSelect();
   const { createNode } = useNodeAdd();
-  const { getAllRegions } = useGetRegions();
+  useGetRegions();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
@@ -368,12 +368,6 @@ export const useNodeLauncherHandlers = ({
   useEffect(() => {
     getHosts();
   }, [defaultOrganization?.id]);
-
-  useEffect(() => {
-    (async () => {
-      await getAllRegions();
-    })();
-  }, [blockchains]);
 
   return {
     handleHostChanged,
