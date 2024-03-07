@@ -115,11 +115,11 @@ class HostClient {
     }
   }
 
-  async getRegions(
-    orgId: string,
-    blockchainId: string,
-    nodeType: NodeType,
-    version: string,
+  async listRegions(
+    orgId?: string,
+    blockchainId?: string,
+    nodeType?: NodeType,
+    version?: string,
   ): Promise<Region[]> {
     const request = {
       blockchainId,

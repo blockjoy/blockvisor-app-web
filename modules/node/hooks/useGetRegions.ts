@@ -31,7 +31,7 @@ export const useGetRegions = (): UseGetRegionHook => {
       blockchainsByTypeAndVersion.map(async (item) => {
         try {
           const { blockchainId, nodeType, version } = item;
-          const response = await hostClient.getRegions(
+          const response = await hostClient.listRegions(
             defaultOrganization?.id!,
             blockchainId!,
             nodeType!,

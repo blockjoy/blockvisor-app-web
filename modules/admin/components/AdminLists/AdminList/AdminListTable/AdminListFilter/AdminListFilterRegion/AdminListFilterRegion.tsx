@@ -1,5 +1,5 @@
-import { organizationClient } from '@modules/grpc';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { hostClient } from '@modules/grpc';
+import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
 
@@ -8,18 +8,12 @@ type Props = {
   onChange: (item: AdminFilterDropdownItem) => void;
 };
 
-export const AdminListFilterOrg = ({ values, onChange }: Props) => {
-  const [list, setList] = useState<Org[]>();
+export const AdminListFilterRegion = ({ values, onChange }: Props) => {
+  const [list, setList] = useState<Region[]>();
 
   const getList = async () => {
-    const response = await organizationClient.listOrganizations(
-      undefined,
-      undefined,
-      undefined,
-      true,
-      false,
-    );
-    setList(response.orgs);
+    const response = await hostClient.listRegions();
+    setList(response);
   };
 
   useEffect(() => {
@@ -30,7 +24,7 @@ export const AdminListFilterOrg = ({ values, onChange }: Props) => {
     <AdminListFilterControl
       items={
         list?.map((item) => ({
-          id: item.id,
+          id: item.name!,
           name: item.name,
         }))!
       }

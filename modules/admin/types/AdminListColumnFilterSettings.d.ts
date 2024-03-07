@@ -11,4 +11,5 @@ type AdminListColumnFilterType =
   | 'blockchain'
   | 'org'
   | 'host'
-  | 'user';
+  | 'user'
+  | 'region';

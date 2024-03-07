@@ -31,7 +31,7 @@ export const useAdminGetTotals = () => {
   };
 
   const getTotalOrgs = async () => {
-    const response = await organizationClient.getOrganizations(
+    const response = await organizationClient.listOrganizations(
       {
         currentPage: 0,
         itemsPerPage: 0,

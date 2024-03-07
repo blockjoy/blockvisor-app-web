@@ -123,6 +123,11 @@ const columns: AdminListColumn[] = [
     name: 'region',
     width: '210px',
     isVisible: false,
+    filterSettings: {
+      name: 'region',
+      type: 'region',
+      values: [],
+    },
   },
   {
     name: 'orgName',

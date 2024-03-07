@@ -48,7 +48,7 @@ export const AdminOrgs = () => {
     sortField?: OrgSortField,
     sortOrder?: SortOrder,
   ) => {
-    const response = await organizationClient.getOrganizations(
+    const response = await organizationClient.listOrganizations(
       {
         currentPage: page! || 0,
         itemsPerPage: pageSize,
