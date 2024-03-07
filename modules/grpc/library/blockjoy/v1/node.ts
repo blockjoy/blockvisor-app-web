@@ -98,7 +98,14 @@ export interface Node {
    * A note you can use to explain what this node is for, or alternatively use
    * as a shopping list.
    */
-  note?: string | undefined;
+  note?:
+    | string
+    | undefined;
+  /**
+   * If this is an rpc node, this field contains the url where rpc requests can
+   * be sent to.
+   */
+  url: string;
 }
 
 /** This message is used to create a new node. */
@@ -518,6 +525,7 @@ function createBaseNode(): Node {
     jobs: [],
     reports: [],
     note: undefined,
+    url: "",
   };
 }
 
@@ -618,6 +626,9 @@ export const Node = {
     }
     if (message.note !== undefined) {
       writer.uint32(282).string(message.note);
+    }
+    if (message.url !== "") {
+      writer.uint32(290).string(message.url);
     }
     return writer;
   },
@@ -853,6 +864,13 @@ export const Node = {
 
           message.note = reader.string();
           continue;
+        case 36:
+          if (tag !== 290) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -904,6 +922,7 @@ export const Node = {
     message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
     message.reports = object.reports?.map((e) => NodeReport.fromPartial(e)) || [];
     message.note = object.note ?? undefined;
+    message.url = object.url ?? "";
     return message;
   },
 };
@@ -3056,10 +3075,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceReportResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

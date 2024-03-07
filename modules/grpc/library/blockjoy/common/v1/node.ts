@@ -56,6 +56,15 @@ export enum NodeStatus {
   NODE_STATUS_PROVISIONING_PENDING = 19,
   NODE_STATUS_UPDATE_PENDING = 20,
   NODE_STATUS_UPDATING = 21,
+  /**
+   * NODE_STATUS_INITIALIZING - The node has been provisioned, and the corresponding processes are starting
+   * inside the container.
+   */
+  NODE_STATUS_INITIALIZING = 22,
+  /** NODE_STATUS_DOWNLOADING - The node is downloading the chain data. */
+  NODE_STATUS_DOWNLOADING = 23,
+  /** NODE_STATUS_UPLOADING - The node is uploading an archive of its chain data. */
+  NODE_STATUS_UPLOADING = 24,
   UNRECOGNIZED = -1,
 }
 
