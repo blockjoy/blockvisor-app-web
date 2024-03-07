@@ -25,5 +25,5 @@ type PaymentError = {
 
 type BillingPeriod = {
   id: string;
-  title: string;
+  name: string;
 };

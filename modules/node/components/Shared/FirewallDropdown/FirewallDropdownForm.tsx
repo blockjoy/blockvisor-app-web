@@ -63,9 +63,11 @@ export const FirewallDropdownForm: FC<Props> = ({
   };
 
   useLayoutEffect(() => {
-    if (isOpen) {
-      ipRef?.current?.focus();
-    }
+    const timer = setTimeout(() => {
+      if (isOpen) ipRef?.current?.focus();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   useLayoutEffect(() => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 import IconFirewall from '@public/assets/icons/app/Firewall.svg';
 import {
@@ -31,11 +31,13 @@ export const FirewallDropdown = ({
 }: FirewallDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
   const isAllowedIp = type ? type === 'allow' : activeTabIndex === 0;
 
   const handleClick = () => {
     if (activeTabIndex === -1) setActiveTabIndex(0);
     setIsOpen(!isOpen);
+    dropdownButtonRef?.current?.focus();
   };
 
   useEsc(() => {
@@ -90,6 +92,7 @@ export const FirewallDropdown = ({
       onClose={() => setIsOpen(false)}
     >
       <DropdownButton
+        ref={dropdownButtonRef}
         isOpen={isOpen}
         icon={<IconFirewall />}
         text={selectText}

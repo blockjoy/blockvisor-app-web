@@ -15,7 +15,7 @@ export const styles = {
     background: transparent;
     border: 0;
     padding: 0;
-    color: ${theme.colorText};
+    color: ${theme.colorDefault};
     text-transform: capitalize;
     cursor: pointer;
     opacity: 0.8;
@@ -23,33 +23,32 @@ export const styles = {
     :hover {
       opacity: 1;
     }
+
+    :is(:hover, :focus):not(:disabled) span {
+      color: ${theme.colorText};
+    }
+
+    :is(:hover, :focus):not(:disabled) path {
+      fill: ${theme.colorText};
+    }
   `,
   menu: css`
     left: -20px;
     top: 50px;
     right: auto;
     min-width: 170px;
+
+    ul {
+      display: grid;
+    }
   `,
-  links: css`
-    display: grid;
-  `,
-  link: (theme: ITheme) => css`
+  link: css`
     display: flex;
     align-items: center;
     gap: 10px;
     height: 44px;
     padding: 0 16px;
-    text-transform: capitalize;
-    opacity: 0.8;
-
-    :hover {
-      background: rgb(255 255 255 / 10%);
-      opacity: 1;
-    }
-
-    :hover path {
-      fill: ${theme.colorPrimary};
-    }
+    font-size: 14px;
   `,
   icon: (theme: ITheme) => css`
     pointer-events: none;

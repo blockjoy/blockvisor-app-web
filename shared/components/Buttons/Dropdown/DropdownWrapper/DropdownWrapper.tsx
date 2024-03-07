@@ -1,5 +1,5 @@
-import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { ReactNode, useRef } from 'react';
+import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './DropdownWrapper.styles';
 
 type Props = {
@@ -19,6 +19,7 @@ export const DropdownWrapper = ({
 }: Props) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   useClickOutside<HTMLDivElement>(dropdownRef, onClose);
+
   return (
     <div
       className={`${!isEmpty ? 'not-empty' : ''} ${isOpen ? 'is-open' : ''}`}

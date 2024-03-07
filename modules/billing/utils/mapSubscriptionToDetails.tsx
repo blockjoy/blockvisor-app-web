@@ -37,7 +37,7 @@ export const mapSubscriptionToDetails = (
         <>
           {
             // isYearlySubscription ? (
-            billingPeriod?.title
+            billingPeriod?.name
             // ) : (
             //   <BillingPeriodSelect
             //     value={periodUnit}

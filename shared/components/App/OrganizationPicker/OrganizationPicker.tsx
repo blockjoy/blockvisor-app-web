@@ -54,9 +54,7 @@ export const OrganizationPicker = ({
 
     setIsOpen(false);
 
-    if (isMobile) {
-      setIsSidebarOpen(false);
-    }
+    if (isMobile) setIsSidebarOpen(false);
 
     if (!id) return;
 
@@ -70,6 +68,12 @@ export const OrganizationPicker = ({
     }
   };
 
+  const handleOpen = (open: boolean = true) => setIsOpen(open);
+
+  const selectedItem = allOrganizations.find(
+    (org) => org.id === defaultOrganization?.id,
+  )!;
+
   const OrgSelectDropdown = useMemo(
     () => withSearchDropdown<Org>(Dropdown),
     [allOrganizations],
@@ -78,12 +82,10 @@ export const OrganizationPicker = ({
   return (
     <OrgSelectDropdown
       items={allOrganizations}
-      selectedItem={
-        allOrganizations.find((org) => org.id === defaultOrganization?.id)!
-      }
+      selectedItem={selectedItem}
       handleSelected={handleChange}
       isOpen={isOpen}
-      handleOpen={(isOpen?: boolean) => setIsOpen(isOpen!)}
+      handleOpen={handleOpen}
       isLoading={false}
       size="small"
       dropdownButtonStyles={styles.select}

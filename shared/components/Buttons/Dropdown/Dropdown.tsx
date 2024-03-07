@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { styles } from './Dropdown.styles';
 import { useAccessibleDropdown } from '@shared/index';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -27,6 +27,8 @@ export type DropdownProps<T = any> = {
   renderButtonText?: ReactNode;
   dropdownButtonStyles?: (theme: ITheme) => SerializedStyles;
   dropdownMenuStyles?: SerializedStyles[];
+  dropdownItemStyles?: (item: T) => SerializedStyles[];
+  dropdownScrollbarStyles?: SerializedStyles[];
   hideDropdownIcon?: boolean;
   hideSearch?: boolean;
   excludeSelectedItem?: boolean;
@@ -61,6 +63,8 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   renderButtonText,
   dropdownButtonStyles,
   dropdownMenuStyles,
+  dropdownItemStyles,
+  dropdownScrollbarStyles,
   hideDropdownIcon,
   hideSearch,
   excludeSelectedItem = false,
@@ -91,15 +95,20 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     handleClose();
   };
 
+  let filteredItems = items.filter(
+    (item) => !excludeSelectedItem || item.id !== selectedItem?.id,
+  );
+
   const {
     activeIndex,
+    setActiveIndex,
     handleItemRef,
     handleFocus,
     handleBlur,
     handleSelectAccessible,
   } = useAccessibleDropdown({
-    items,
-    selectedItem,
+    items: filteredItems,
+    selectedItem: !excludeSelectedItem ? selectedItem : null,
     handleSelect,
     isOpen,
     handleOpen,
@@ -109,14 +118,23 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   });
 
   const dropdownStyles = [styles.dropdown];
+  const scrollbarStyles = [styles.dropdownInner];
 
   if (dropdownMenuStyles) {
     dropdownStyles.push(...dropdownMenuStyles);
   }
 
-  let filteredItems = items.filter(
-    (item) => !excludeSelectedItem || item.id !== selectedItem?.id,
-  );
+  if (dropdownScrollbarStyles) {
+    scrollbarStyles.push(...dropdownScrollbarStyles);
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (excludeSelectedItem) setActiveIndex(0);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, excludeSelectedItem]);
 
   return (
     <DropdownWrapper
@@ -156,7 +174,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       <DropdownMenu isOpen={isOpen} additionalStyles={dropdownStyles}>
         {Boolean(renderHeader) ? renderHeader : null}
         {!hideSearch && renderSearch ? renderSearch(isOpen) : null}
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
+        <Scrollbar additionalStyles={scrollbarStyles}>
           <ul ref={dropdownRef}>
             {filteredItems?.map((item: T, index: number) => {
               const isDisabled: boolean = checkDisabledItem
@@ -179,7 +197,9 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                     tabIndex={-1}
                     isDisabled={isDisabled}
                     isAccessible
-                    additionalStyles={[styles.dropdownItem]}
+                    {...(dropdownItemStyles && {
+                      additionalStyles: dropdownItemStyles(item),
+                    })}
                   >
                     {renderItem ? (
                       renderItem(item)

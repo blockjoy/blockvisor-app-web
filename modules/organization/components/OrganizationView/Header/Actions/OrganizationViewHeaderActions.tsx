@@ -83,26 +83,26 @@ export const OrganizationViewHeaderActions = () => {
 
   if (isSuperUser) {
     items.push({
-      title: 'Admin',
+      name: 'Admin',
       icon: <IconAdmin />,
-      method: gotoAdminPanel,
+      onClick: gotoAdminPanel,
     });
   }
 
   if (canLeaveOrganization) {
     items.push({
-      title: 'Leave',
+      name: 'Leave',
       icon: <IconDoor />,
-      method: toggleLeaveModalOpen,
+      onClick: toggleLeaveModalOpen,
       hasBorderTop: !canDeleteOrganization && hasBorderTop,
     });
   }
 
   if (canDeleteOrganization) {
     items.push({
-      title: 'Delete',
+      name: 'Delete',
       icon: <IconDelete />,
-      method: toggleDeleteModalOpen,
+      onClick: toggleDeleteModalOpen,
       hasBorderTop: hasBorderTop,
     });
   }

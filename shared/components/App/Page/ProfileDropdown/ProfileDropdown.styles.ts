@@ -19,33 +19,42 @@ export const styles = {
     transition: box-shadow 0.3s;
 
     &:hover,
-    &:active {
+    &:active,
+    &:focus {
       box-shadow: 0px 0px 0px 2px ${theme.colorInputOutline};
     }
   `,
   dropdown: css`
     top: 52px;
     right: 0;
+    left: auto;
     overflow: hidden;
     max-width: 180px;
     min-width: 180px;
   `,
-  userInfoContainer: (theme: ITheme) => css`
+  userInfo: (theme: ITheme) => css`
     border-bottom: 1px solid ${theme.colorLabel};
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 12px;
 
     :hover {
       background-color: transparent;
       cursor: default;
     }
-  `,
-  userInfo: css`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+
+    span {
+      line-height: var(--line-height-tiny);
+    }
   `,
   label: (theme: ITheme) => css`
     font-size: 10px;
     color: ${theme.colorPlaceholder};
+  `,
+  labelSub: (theme: ITheme) => css`
+    font-size: var(--font-size-tiny);
+    color: ${theme.colorTextGrey};
   `,
   icon: css`
     width: 12px;
