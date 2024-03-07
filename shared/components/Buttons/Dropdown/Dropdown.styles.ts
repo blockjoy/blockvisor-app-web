@@ -37,9 +37,6 @@ export const styles = {
       opacity: 1;
     }
   `,
-  dropdownItem: css`
-    gap: 20px;
-  `,
   placeholder: (theme: ITheme) => css`
     color: ${theme.colorPlaceholder} !important;
   `,

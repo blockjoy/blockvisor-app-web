@@ -20,7 +20,8 @@ export const styles = {
     transition: box-shadow 0.18s var(--transition-easing-cubic);
 
     &:hover,
-    &:active {
+    &:active,
+    &:focus {
       box-shadow: 0px 0px 0px 3px var(--color-primary-o30);
     }
 

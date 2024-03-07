@@ -37,7 +37,7 @@ export const PlanParams = ({
                   selectedValue={periodUnit}
                   onChange={handlePeriodUnit}
                 >
-                  {billingPeriod.title}
+                  {billingPeriod?.name}
                 </RadioButton>
               ))}
             </RadioButtonGroup>

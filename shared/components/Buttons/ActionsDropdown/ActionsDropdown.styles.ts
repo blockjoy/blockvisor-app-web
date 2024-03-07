@@ -18,6 +18,7 @@ export const styles = {
     right: 0;
     left: auto;
     width: 100%;
+    min-width: max-content;
     max-width: 200px;
   `,
   dropdownItem: css`
@@ -73,5 +74,8 @@ export const styles = {
   `,
   borderTop: css`
     border-top: 1px solid rgb(255 255 255 / 20%);
+  `,
+  scrollbar: css`
+    max-height: inherit;
   `,
 };
