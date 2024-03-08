@@ -17,10 +17,6 @@ export const styles = {
     &.not-empty,
     &.is-open {
       > button:not(:disabled) {
-        svg path {
-          fill: ${theme.colorText};
-        }
-
         p,
         span {
           color: ${theme.colorText};

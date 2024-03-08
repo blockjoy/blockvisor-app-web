@@ -3,7 +3,7 @@ import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './DropdownWrapper.styles';
 
 type Props = {
-  isEmpty: boolean;
+  isEmpty?: boolean;
   isOpen: boolean;
   onClose: VoidFunction;
   children: ReactNode;

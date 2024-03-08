@@ -236,6 +236,19 @@ export interface NodeServiceListResponse {
   nodeCount: number;
 }
 
+export interface NodeServiceUpgradeRequest {
+  /** The id of the node that you want to upgrade to a new version. */
+  id: string;
+  /**
+   * The version string to update it to. Make sure that this is a valid version
+   * for this <blockchain>/<node_type> combo.
+   */
+  version: string;
+}
+
+export interface NodeServiceUpgradeResponse {
+}
+
 /** This request is used for updating a node configuration. */
 export interface NodeServiceUpdateConfigRequest {
   /** The UUID of the node that you want to update. */
@@ -1634,6 +1647,98 @@ export const NodeServiceListResponse = {
   },
 };
 
+function createBaseNodeServiceUpgradeRequest(): NodeServiceUpgradeRequest {
+  return { id: "", version: "" };
+}
+
+export const NodeServiceUpgradeRequest = {
+  encode(message: NodeServiceUpgradeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.version !== "") {
+      writer.uint32(18).string(message.version);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpgradeRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpgradeRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpgradeRequest>): NodeServiceUpgradeRequest {
+    return NodeServiceUpgradeRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceUpgradeRequest>): NodeServiceUpgradeRequest {
+    const message = createBaseNodeServiceUpgradeRequest();
+    message.id = object.id ?? "";
+    message.version = object.version ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceUpgradeResponse(): NodeServiceUpgradeResponse {
+  return {};
+}
+
+export const NodeServiceUpgradeResponse = {
+  encode(_: NodeServiceUpgradeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpgradeResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpgradeResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpgradeResponse>): NodeServiceUpgradeResponse {
+    return NodeServiceUpgradeResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceUpgradeResponse>): NodeServiceUpgradeResponse {
+    const message = createBaseNodeServiceUpgradeResponse();
+    return message;
+  },
+};
+
 function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
   return { id: "", selfUpdate: undefined, allowIps: [], denyIps: [], orgId: undefined, note: undefined };
 }
@@ -2903,6 +3008,15 @@ export const NodeServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Upgrade a node to a new version. */
+    upgrade: {
+      name: "Upgrade",
+      requestType: NodeServiceUpgradeRequest,
+      requestStream: false,
+      responseType: NodeServiceUpgradeResponse,
+      responseStream: false,
+      options: {},
+    },
     /** Update a single blockchain node configuration. */
     updateConfig: {
       name: "UpdateConfig",
@@ -2985,6 +3099,11 @@ export interface NodeServiceImplementation<CallContextExt = {}> {
     request: NodeServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<NodeServiceListResponse>>;
+  /** Upgrade a node to a new version. */
+  upgrade(
+    request: NodeServiceUpgradeRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<NodeServiceUpgradeResponse>>;
   /** Update a single blockchain node configuration. */
   updateConfig(
     request: NodeServiceUpdateConfigRequest,
@@ -3038,6 +3157,11 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<NodeServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<NodeServiceListResponse>;
+  /** Upgrade a node to a new version. */
+  upgrade(
+    request: DeepPartial<NodeServiceUpgradeRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<NodeServiceUpgradeResponse>;
   /** Update a single blockchain node configuration. */
   updateConfig(
     request: DeepPartial<NodeServiceUpdateConfigRequest>,

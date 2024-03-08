@@ -132,6 +132,7 @@ export interface NodeUpgrade {
 
 export interface NodeUpdate {
   rules: FirewallRule[];
+  orgId: string;
 }
 
 export interface NodeCreate {
@@ -144,6 +145,7 @@ export interface NodeCreate {
   properties: Parameter[];
   rules: FirewallRule[];
   network: string;
+  orgId: string;
 }
 
 export interface Parameter {
@@ -1261,13 +1263,16 @@ export const NodeUpgrade = {
 };
 
 function createBaseNodeUpdate(): NodeUpdate {
-  return { rules: [] };
+  return { rules: [], orgId: "" };
 }
 
 export const NodeUpdate = {
   encode(message: NodeUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.rules) {
       FirewallRule.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.orgId !== "") {
+      writer.uint32(18).string(message.orgId);
     }
     return writer;
   },
@@ -1286,6 +1291,13 @@ export const NodeUpdate = {
 
           message.rules.push(FirewallRule.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1302,6 +1314,7 @@ export const NodeUpdate = {
   fromPartial(object: DeepPartial<NodeUpdate>): NodeUpdate {
     const message = createBaseNodeUpdate();
     message.rules = object.rules?.map((e) => FirewallRule.fromPartial(e)) || [];
+    message.orgId = object.orgId ?? "";
     return message;
   },
 };
@@ -1317,6 +1330,7 @@ function createBaseNodeCreate(): NodeCreate {
     properties: [],
     rules: [],
     network: "",
+    orgId: "",
   };
 }
 
@@ -1348,6 +1362,9 @@ export const NodeCreate = {
     }
     if (message.network !== "") {
       writer.uint32(74).string(message.network);
+    }
+    if (message.orgId !== "") {
+      writer.uint32(82).string(message.orgId);
     }
     return writer;
   },
@@ -1422,6 +1439,13 @@ export const NodeCreate = {
 
           message.network = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1448,6 +1472,7 @@ export const NodeCreate = {
     message.properties = object.properties?.map((e) => Parameter.fromPartial(e)) || [];
     message.rules = object.rules?.map((e) => FirewallRule.fromPartial(e)) || [];
     message.network = object.network ?? "";
+    message.orgId = object.orgId ?? "";
     return message;
   },
 };

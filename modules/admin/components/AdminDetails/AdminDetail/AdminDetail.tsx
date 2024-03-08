@@ -15,6 +15,7 @@ type Props = {
   metricsKey?: string;
   hasMetrics?: boolean;
   hasLogs?: boolean;
+  additionalHeaderButtons?: React.ReactNode;
   getItem: () => Promise<{}>;
   customItems?: (item: any) => AdminDetailProperty[];
   onOpenInApp?: () => void;
@@ -32,6 +33,7 @@ export const AdminDetail = ({
   metricsKey = 'id',
   hasMetrics,
   hasLogs,
+  additionalHeaderButtons,
   getItem,
   customItems,
   onOpenInApp,
@@ -118,6 +120,7 @@ export const AdminDetail = ({
         canEdit={Boolean(onSaveChanges)}
         detailsName={item ? item[detailsName] : undefined}
         identifier={item?.[metricsKey!]}
+        additionalHeaderButtons={additionalHeaderButtons}
         onOpenAppView={onOpenInApp}
         onCopyObject={handleCopyObject}
         onToggleEditMode={handleToggleEditMode}

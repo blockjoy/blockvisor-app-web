@@ -38,7 +38,8 @@ export const styles = {
       padding-right: 20px;
     }
 
-    :focus {
+    :focus,
+    :hover {
       svg path {
         fill: ${theme.colorText};
       }
