@@ -208,6 +208,15 @@ class NodeClient {
     }
   }
 
+  async upgradeNode(nodeId: string, version: string): Promise<void> {
+    try {
+      await authClient.refreshToken();
+      await this.client.upgrade({ id: nodeId, version }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
   async reportProblem(nodeId: string, message: string): Promise<void> {
     try {
       const { id: userId } = getIdentity();

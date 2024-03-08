@@ -9,6 +9,7 @@ import {
   NodeServiceUpdateConfigRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { createAdminUpdateRequest } from '@modules/admin/utils';
+import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
 
 const ignoreItems = [
   'id',
@@ -298,6 +299,7 @@ export const AdminNode = () => {
       onDelete={handleDelete}
       ignoreItems={ignoreItems}
       customItems={customItems}
+      additionalHeaderButtons={<AdminNodeUpgrade />}
       detailsName="id"
       metricsKey="ip"
       hasMetrics

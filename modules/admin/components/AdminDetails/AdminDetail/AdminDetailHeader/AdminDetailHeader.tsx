@@ -21,6 +21,7 @@ type Props = {
   isLoading?: boolean;
   isEditMode?: boolean;
   canEdit?: boolean;
+  additionalHeaderButtons: React.ReactNode;
   onOpenAppView?: VoidFunction;
   onCopyObject?: VoidFunction;
   onToggleEditMode?: VoidFunction;
@@ -36,6 +37,7 @@ export const AdminDetailHeader = ({
   isLoading,
   isEditMode,
   canEdit,
+  additionalHeaderButtons,
   onOpenAppView,
   onCopyObject,
   onToggleEditMode,
@@ -97,6 +99,7 @@ export const AdminDetailHeader = ({
               <AdminHeaderButton icon={<IconCopy />} onClick={onCopyObject}>
                 Copy Object
               </AdminHeaderButton>
+              {additionalHeaderButtons}
               {!!onDelete && (
                 <AdminDetailHeaderDelete onDelete={handleDelete} />
               )}
