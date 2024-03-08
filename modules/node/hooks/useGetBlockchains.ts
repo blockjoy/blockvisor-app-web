@@ -3,8 +3,8 @@ import useSWR from 'swr';
 import { blockchainClient } from '@modules/grpc';
 import { organizationAtoms } from '@modules/organization';
 import { blockchainAtoms } from '@modules/node';
-import { checkForTokenError } from 'utils/checkForTokenError';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { usePermissions } from '@modules/auth';
 
 type UseGetBlockchainsHook = {
   blockchains: Blockchain[];
@@ -12,6 +12,7 @@ type UseGetBlockchainsHook = {
 };
 
 export const useGetBlockchains = (): UseGetBlockchainsHook => {
+  const { hasPermission } = usePermissions();
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
@@ -27,14 +28,16 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
       defaultOrganization?.id!,
     );
 
-    checkForTokenError(blockchains);
-
     return response;
   };
 
+  const canList = hasPermission('blockchain-list');
+
   useSWR(
     () =>
-      defaultOrganization?.id ? `blockchains_${defaultOrganization.id}` : null,
+      canList && defaultOrganization?.id
+        ? `blockchains_${defaultOrganization.id}`
+        : null,
     fetcher,
     {
       revalidateOnMount: true,
