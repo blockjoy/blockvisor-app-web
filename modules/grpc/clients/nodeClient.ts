@@ -45,6 +45,7 @@ export type UIFilterCriteria = {
   orgIds?: string[];
   hostIds?: string[];
   userIds?: string[];
+  regions?: string[];
 };
 
 export type UIPagination = {
@@ -73,7 +74,7 @@ class NodeClient {
       hostIds: filter?.hostIds!,
       ipAddresses: [],
       networks: [],
-      regions: [],
+      regions: filter?.regions!,
       userIds: filter?.userIds!,
       versions: [],
       offset: getPaginationOffset(pagination!),

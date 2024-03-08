@@ -177,6 +177,7 @@ export const AdminNodes = () => {
         orgIds: createAdminFilterList(filters!, 'org'),
         userIds: createAdminFilterList(filters!, 'user'),
         hostIds: createAdminFilterList(filters!, 'host'),
+        regions: createAdminFilterList(filters!, 'region'),
       },
       { currentPage: page!, itemsPerPage: pageSize },
       [{ field: sortField!, order: sortOrder! }],
