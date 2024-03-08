@@ -31,7 +31,7 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
     return response;
   };
 
-  const canList = hasPermission('blockchain-get');
+  const canList = hasPermission('blockchain-list');
 
   useSWR(
     () =>
