@@ -1,5 +1,7 @@
 import { ReactNode, useRef } from 'react';
 import { useAccessibleList } from '@shared/index';
+import { Scrollbar } from '@shared/components';
+import { SerializedStyles } from '@emotion/react';
 
 export type ListProps<T = any> = {
   items: T[];
@@ -11,6 +13,8 @@ export type ListProps<T = any> = {
   isFocused?: boolean;
   handleFocus?: (isFocus: boolean) => void;
   isLoading?: boolean;
+  scrollable?: boolean;
+  listScrollbarStyles: SerializedStyles[];
 };
 
 export const List = <T extends { id?: string; name?: string }>({
@@ -22,6 +26,8 @@ export const List = <T extends { id?: string; name?: string }>({
   searchQuery,
   isFocused,
   handleFocus,
+  scrollable = false,
+  listScrollbarStyles,
 }: ListProps<T>) => {
   const listRef = useRef<HTMLUListElement>(null);
   const { activeIndex, handleItemRef } = useAccessibleList({
@@ -34,7 +40,7 @@ export const List = <T extends { id?: string; name?: string }>({
     listRef,
   });
 
-  return items.length > 0 ? (
+  const listContent = (
     <ul ref={listRef}>
       {items.map((item, index) => {
         const isActive = index === activeIndex;
@@ -49,6 +55,18 @@ export const List = <T extends { id?: string; name?: string }>({
         );
       })}
     </ul>
+  );
+
+  return items.length > 0 ? (
+    scrollable ? (
+      <Scrollbar
+        {...(listScrollbarStyles && { additionalStyles: listScrollbarStyles })}
+      >
+        {listContent}
+      </Scrollbar>
+    ) : (
+      listContent
+    )
   ) : (
     <>{renderEmpty?.()}</>
   );
