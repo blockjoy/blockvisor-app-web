@@ -1,3 +1,4 @@
+import { usePathname } from 'next/navigation';
 import { useRecoilValue } from 'recoil';
 import { Command } from '@modules/grpc/library/blockjoy/v1/command';
 import { DateTime } from '@shared/components';
@@ -11,6 +12,8 @@ type CommandViewProps = {
 };
 
 export const CommandView = ({ command }: CommandViewProps) => {
+  const pathname = usePathname();
+
   const { exitCode, ackedAt, exitMessage, node, host } = command;
 
   const commandType = node ? getCommandType(node) : getCommandType(host);
@@ -25,7 +28,10 @@ export const CommandView = ({ command }: CommandViewProps) => {
       </span>
       <CommandIcon exitCode={exitCode} />
       <span css={styles.message(exitCode)}>
-        {hostById?.name} → [{commandType}] {commandInfo}
+        {hostById?.name && !pathname?.startsWith('/hosts')
+          ? `${hostById?.name}: `
+          : ''}
+        [{commandType}] {commandInfo}
         {exitMessage ? ': ' : ''}
         {exitMessage}
       </span>
