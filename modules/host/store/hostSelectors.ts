@@ -1,8 +1,18 @@
+import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { hostFiltersDefaults } from '@shared/constants/lookups';
-import { selector } from 'recoil';
 import { hostAtoms } from './hostAtoms';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+
+const hostById = selectorFamily<Host | null, string | undefined>({
+  key: 'host.byId',
+  get:
+    (id) =>
+    ({ get }) => {
+      const hosts = get(hostAtoms.hostList);
+      return hosts.find((host) => host.id === id) ?? null;
+    },
+});
 
 const filtersTotal = selector<number>({
   key: 'host.filters.total',
@@ -37,6 +47,7 @@ const hostListSorted = selector<Host[]>({
 });
 
 export const hostSelectors = {
+  hostById,
   filtersTotal,
   hostListSorted,
 };
