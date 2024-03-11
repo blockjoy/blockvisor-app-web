@@ -1,5 +1,4 @@
-import { hostClient, nodeClient } from '@modules/grpc';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { nodeClient } from '@modules/grpc';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
 
@@ -8,7 +7,7 @@ type Props = {
   onChange: (item: AdminFilterDropdownItem) => void;
 };
 
-export const AdminListFilterRegion = ({ values, onChange }: Props) => {
+export const AdminListFilterIp = ({ values, onChange }: Props) => {
   const [list, setList] = useState<(string | undefined)[]>([]);
 
   const getList = async () => {
@@ -17,15 +16,9 @@ export const AdminListFilterRegion = ({ values, onChange }: Props) => {
       itemsPerPage: 50000,
     });
 
-    const regions = Array.from(
-      new Set(
-        nodes
-          .filter((node) => node.placement?.scheduler?.region)
-          .map((node) => node.placement?.scheduler?.region),
-      ),
-    );
+    const ips = Array.from(new Set(nodes.map((node) => node.ip)));
 
-    setList(regions);
+    setList(ips);
   };
 
   useEffect(() => {

@@ -46,6 +46,9 @@ export type UIFilterCriteria = {
   hostIds?: string[];
   userIds?: string[];
   regions?: string[];
+  ips?: string[];
+  versions?: string[];
+  networks?: string[];
 };
 
 export type UIPagination = {
@@ -72,11 +75,11 @@ class NodeClient {
     const request: NodeServiceListRequest = {
       orgIds: orgId ? [orgId!] : filter?.orgIds!,
       hostIds: filter?.hostIds!,
-      ipAddresses: [],
-      networks: [],
+      ipAddresses: filter?.ips!,
+      networks: filter?.networks!,
       regions: filter?.regions!,
       userIds: filter?.userIds!,
-      versions: [],
+      versions: filter?.versions!,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
       statuses: filter?.nodeStatus?.map((f) => +f)!,

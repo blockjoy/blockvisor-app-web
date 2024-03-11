@@ -12,4 +12,7 @@ type AdminListColumnFilterType =
   | 'org'
   | 'host'
   | 'user'
-  | 'region';
+  | 'region'
+  | 'ip'
+  | 'network'
+  | 'version';

@@ -5,6 +5,9 @@ import {
   AdminListFilterUser,
   AdminListFilterHost,
   AdminListFilterRegion,
+  AdminListFilterIp,
+  AdminListFilterNetwork,
+  AdminListFilterVersion,
 } from '@modules/admin';
 import { Button, DropdownMenu, SvgIcon } from '@shared/components';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -100,6 +103,24 @@ export const AdminListFilter = ({
     ),
     region: (
       <AdminListFilterRegion
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    ip: (
+      <AdminListFilterIp
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    network: (
+      <AdminListFilterNetwork
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    version: (
+      <AdminListFilterVersion
         onChange={handleChange}
         values={filterSettings.values!}
       />
