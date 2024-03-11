@@ -55,6 +55,9 @@ export const NodeLauncherSummary = ({
   const isEnabledBillingPreview = useRecoilValue(
     billingAtoms.isEnabledBillingPreview(isSuperUser),
   );
+  const bypassBillingForSuperUser = useRecoilValue(
+    billingAtoms.bypassBillingForSuperUser(isSuperUser),
+  );
 
   const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
 
@@ -71,7 +74,7 @@ export const NodeLauncherSummary = ({
     Boolean(error) ||
     isLaunching ||
     isLoadingAllRegions !== 'finished' ||
-    (isEnabledBillingPreview && !itemPrice);
+    (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice);
 
   const handleCreateNodeClicked = () => {
     if (!canAddNode) handleOpenHubSpot();
