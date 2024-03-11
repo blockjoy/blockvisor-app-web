@@ -35,7 +35,7 @@ export const AdminNodeUpgrade = () => {
     try {
       const node = await nodeClient.getNode(id as string);
 
-      const blockchains = await blockchainClient.getBlockchains();
+      const blockchains = await blockchainClient.listBlockchains();
 
       const blockchain = blockchains.find((b) => b.id === node.blockchainId);
 
@@ -69,6 +69,7 @@ export const AdminNodeUpgrade = () => {
         <DropdownMenu additionalStyles={styles.menu} isOpen={isOpen}>
           {versions.map((version) => (
             <DropdownItem
+              key={version.id}
               onButtonClick={() => handleUpgrade(version.version)}
               type="button"
               size="medium"

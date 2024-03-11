@@ -24,7 +24,7 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
   );
 
   const fetcher = async () => {
-    const response = await blockchainClient.getBlockchains(
+    const response = await blockchainClient.listBlockchains(
       defaultOrganization?.id!,
     );
 

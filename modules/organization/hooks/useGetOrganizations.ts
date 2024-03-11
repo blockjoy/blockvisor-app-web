@@ -1,6 +1,5 @@
 import { organizationClient } from '@modules/grpc';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
-import { Org, OrgSortField } from '@modules/grpc/library/blockjoy/v1/org';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   organizationAtoms,
@@ -28,7 +27,7 @@ export function useGetOrganizations() {
   ) => {
     if (showLoader) setIsLoading('initializing');
 
-    const response = await organizationClient.getOrganizations({
+    const response = await organizationClient.listOrganizations({
       currentPage: 0,
       itemsPerPage: 1000,
     });

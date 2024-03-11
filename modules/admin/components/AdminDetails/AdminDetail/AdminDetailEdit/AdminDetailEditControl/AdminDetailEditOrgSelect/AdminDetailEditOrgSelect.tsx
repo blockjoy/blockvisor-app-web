@@ -14,7 +14,7 @@ export const AdminDetailEditOrgSelect = ({
 
   useEffect(() => {
     (async () => {
-      const response = await organizationClient.getOrganizations(
+      const response = await organizationClient.listOrganizations(
         {
           currentPage: 0,
           itemsPerPage: 1000,

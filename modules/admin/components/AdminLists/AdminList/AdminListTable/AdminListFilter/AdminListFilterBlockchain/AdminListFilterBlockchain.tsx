@@ -12,7 +12,7 @@ export const AdminListFilterBlockchain = ({ values, onChange }: Props) => {
   const [list, setList] = useState<Blockchain[] | undefined>();
 
   const getList = async () => {
-    const response = await blockchainClient.getBlockchains();
+    const response = await blockchainClient.listBlockchains();
     setList(response);
   };
 

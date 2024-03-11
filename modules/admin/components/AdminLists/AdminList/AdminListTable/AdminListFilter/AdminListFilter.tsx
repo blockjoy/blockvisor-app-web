@@ -4,7 +4,10 @@ import {
   AdminListFilterOrg,
   AdminListFilterUser,
   AdminListFilterHost,
-  AdminDropdownHeader,
+  AdminListFilterRegion,
+  AdminListFilterIp,
+  AdminListFilterNetwork,
+  AdminListFilterVersion,
 } from '@modules/admin';
 import { Button, DropdownMenu, SvgIcon } from '@shared/components';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -98,6 +101,30 @@ export const AdminListFilter = ({
         values={filterSettings.values!}
       />
     ),
+    region: (
+      <AdminListFilterRegion
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    ip: (
+      <AdminListFilterIp
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    network: (
+      <AdminListFilterNetwork
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
+    version: (
+      <AdminListFilterVersion
+        onChange={handleChange}
+        values={filterSettings.values!}
+      />
+    ),
     default: (
       <AdminListFilterDefault
         items={filterSettings.dropdownItems!}
@@ -163,9 +190,6 @@ export const AdminListFilter = ({
           `,
         ]}
       >
-        {/* <AdminDropdownHeader onClose={handleClickOutside}>
-          Filters ({filterSettings?.values?.length ?? 0})
-        </AdminDropdownHeader> */}
         {controls[filterSettings.type]}
         <div css={styles.buttonGroup}>
           <Button

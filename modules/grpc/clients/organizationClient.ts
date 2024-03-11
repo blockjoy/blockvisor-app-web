@@ -48,7 +48,7 @@ class OrganizationClient {
     }
   }
 
-  async getOrganizations(
+  async listOrganizations(
     pagination?: UIPagination,
     sort?: OrgSort[],
     keyword?: string,

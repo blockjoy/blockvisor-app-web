@@ -25,8 +25,13 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'ip',
-    width: '140px',
+    width: '180px',
     isVisible: false,
+    filterSettings: {
+      type: 'ip',
+      name: 'ip',
+      values: [],
+    },
   },
   {
     name: 'ipGateway',
@@ -111,18 +116,33 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'network',
-    width: '100px',
+    width: '180px',
     isVisible: false,
+    filterSettings: {
+      name: 'network',
+      type: 'network',
+      values: [],
+    },
   },
   {
     name: 'version',
-    width: '130px',
+    width: '180px',
     isVisible: false,
+    filterSettings: {
+      name: 'version',
+      type: 'version',
+      values: [],
+    },
   },
   {
     name: 'region',
     width: '210px',
     isVisible: false,
+    filterSettings: {
+      name: 'region',
+      type: 'region',
+      values: [],
+    },
   },
   {
     name: 'orgName',
@@ -172,6 +192,10 @@ export const AdminNodes = () => {
         orgIds: createAdminFilterList(filters!, 'org'),
         userIds: createAdminFilterList(filters!, 'user'),
         hostIds: createAdminFilterList(filters!, 'host'),
+        regions: createAdminFilterList(filters!, 'region'),
+        ips: createAdminFilterList(filters!, 'ip'),
+        networks: createAdminFilterList(filters!, 'network'),
+        versions: createAdminFilterList(filters!, 'version'),
       },
       { currentPage: page!, itemsPerPage: pageSize },
       [{ field: sortField!, order: sortOrder! }],
