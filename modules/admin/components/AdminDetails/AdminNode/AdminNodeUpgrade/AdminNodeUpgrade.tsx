@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { styles } from './AdminNodeUpgrade.styles';
 import { toast } from 'react-toastify';
 import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
+import { sortVersionStringArray } from '@modules/admin/utils/sortVersionStringArray';
 
 export const AdminNodeUpgrade = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ export const AdminNodeUpgrade = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [versions, setVersions] = useState<BlockchainVersion[]>([]);
+  const [versions, setVersions] = useState<string[]>([]);
 
   const handleUpgrade = async (version: string) => {
     try {
@@ -43,7 +44,15 @@ export const AdminNodeUpgrade = () => {
         (t) => t.nodeType === node.nodeType,
       );
 
-      setVersions(nodeType?.versions!);
+      setVersions(
+        Array.from(
+          new Set(
+            sortVersionStringArray(
+              nodeType?.versions.map((version) => version.version),
+            ),
+          ),
+        ),
+      );
     } catch (err) {
       toast.error('Error Loading Versions');
     }
@@ -69,12 +78,12 @@ export const AdminNodeUpgrade = () => {
         <DropdownMenu additionalStyles={styles.menu} isOpen={isOpen}>
           {versions.map((version) => (
             <DropdownItem
-              key={version.id}
-              onButtonClick={() => handleUpgrade(version.version)}
+              key={version}
+              onButtonClick={() => handleUpgrade(version)}
               type="button"
               size="medium"
             >
-              <div>{version.version}</div>
+              <div>{version}</div>
             </DropdownItem>
           ))}
         </DropdownMenu>
