@@ -47,6 +47,7 @@ const formatDate = (date: Date, type?: FormatDateType): string => {
       formattedDate = new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
+        second: 'numeric',
       });
       break;
     default:
