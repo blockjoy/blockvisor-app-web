@@ -1,3 +1,4 @@
+import { sortVersionStringArray } from '@modules/admin/utils/sortVersionStringArray';
 import { nodeClient } from '@modules/grpc';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
@@ -16,9 +17,11 @@ export const AdminListFilterVersion = ({ values, onChange }: Props) => {
       itemsPerPage: 50000,
     });
 
-    const ips = Array.from(new Set(nodes.map((node) => node.version)));
+    const versions = sortVersionStringArray(
+      Array.from(new Set(nodes.map((node) => node.version))),
+    );
 
-    setList(ips);
+    setList(versions);
   };
 
   useEffect(() => {
