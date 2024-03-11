@@ -22,7 +22,7 @@ import {
   nodeLauncherSelectors,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
-import { billingSelectors } from '@modules/billing';
+import { billingAtoms, billingSelectors } from '@modules/billing';
 
 type NodeLauncherSummaryProps = {
   onCreateNodeClicked: VoidFunction;
@@ -38,6 +38,7 @@ export const NodeLauncherSummary = ({
   onRegionsLoaded,
 }: NodeLauncherSummaryProps) => {
   const { hostList } = useHostList();
+  const { hasPermission, isSuperUser } = usePermissions();
 
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
@@ -51,10 +52,15 @@ export const NodeLauncherSummary = ({
   const [isLaunching, setIsLaunching] = useRecoilState(
     nodeLauncherAtoms.isLaunching,
   );
+  const isEnabledBillingPreview = useRecoilValue(
+    billingAtoms.isEnabledBillingPreview(isSuperUser),
+  );
+  const bypassBillingForSuperUser = useRecoilValue(
+    billingAtoms.bypassBillingForSuperUser(isSuperUser),
+  );
 
   const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
 
-  const { hasPermission } = usePermissions();
   const canAddNode = hasPermission('node-create');
 
   useEffect(() => {
@@ -68,7 +74,7 @@ export const NodeLauncherSummary = ({
     Boolean(error) ||
     isLaunching ||
     isLoadingAllRegions !== 'finished' ||
-    !itemPrice;
+    (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice);
 
   const handleCreateNodeClicked = () => {
     if (!canAddNode) handleOpenHubSpot();
@@ -121,8 +127,12 @@ export const NodeLauncherSummary = ({
       <FormLabel>Summary</FormLabel>
       <NodeLauncherSummaryDetails />
 
-      <FormLabel>Pricing</FormLabel>
-      <Pricing itemPrice={itemPrice} />
+      {isEnabledBillingPreview && (
+        <>
+          <FormLabel>Pricing</FormLabel>
+          <Pricing itemPrice={itemPrice} />
+        </>
+      )}
 
       <div css={styles.buttons}>
         <button
