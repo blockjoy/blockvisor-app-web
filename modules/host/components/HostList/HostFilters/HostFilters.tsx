@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import { styles } from './HostFilters.styles';
 import {
   Skeleton,
@@ -45,6 +46,10 @@ export const HostFilters = () => {
   );
 
   const [openFilterId, setOpenFilterId] = useState('');
+
+  useEffect(() => {
+    if (isMobile) setFiltersOpen(false);
+  }, []);
 
   const hasFiltersApplied = filters.some((filter) => {
     if (filter.type === 'check') {

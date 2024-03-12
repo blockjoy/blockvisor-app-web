@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { styles } from './nodeFilters.styles';
@@ -53,6 +54,10 @@ export const NodeFilters = () => {
   );
 
   const [openFilterId, setOpenFilterId] = useState('');
+
+  useEffect(() => {
+    if (isMobile) setFiltersOpen(false);
+  }, []);
 
   const hasFiltersApplied = filters.some((filter) =>
     filter.list?.some((l: FilterListItem) => l.isChecked),
