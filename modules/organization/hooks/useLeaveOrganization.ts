@@ -12,16 +12,21 @@ export function useLeaveOrganization() {
   const repository = useIdentityRepository();
   const userId = repository?.getIdentity()?.id;
 
-  const leaveOrganization = async (orgId: string, callback: VoidFunction) => {
+  const leaveOrganization = async (
+    orgId: string,
+    onSuccess: VoidFunction,
+    onError: VoidFunction,
+  ) => {
     setLoadingState('loading');
     try {
       await organizationClient.removeMember(userId!, orgId);
       setLoadingState('finished');
       toast.success('Successfully left the organization');
-      callback();
+      onSuccess();
     } catch (error) {
       setLoadingState('finished');
-      toast.error('Error while leaving the organization');
+      toast.error('Error leaving organization');
+      onError();
     }
   };
 
