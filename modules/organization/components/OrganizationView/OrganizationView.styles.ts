@@ -19,7 +19,7 @@ export const styles = {
     margin-top: -20px;
 
     @media ${breakpoints.fromXLrg} {
-      padding-right: 30px;
+      padding-right: 20px;
     }
   `,
   rightWrapper: (theme: ITheme) => css`
@@ -31,7 +31,7 @@ export const styles = {
 
     @media ${breakpoints.fromXHuge} {
       flex: 0 0 460px;
-      padding-left: 30px;
+      padding-left: 20px;
       margin-bottom: 0;
       border-left: 1px solid ${theme.colorBorder};
     }

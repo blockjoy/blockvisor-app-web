@@ -52,7 +52,7 @@ export const styles = {
   sidePanelHeader: (theme: ITheme) => css`
     color: ${theme.colorText};
     margin-left: auto;
-    width: 400px;
+    width: 440px;
     display: flex;
     align-items: center;
 

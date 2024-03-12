@@ -150,7 +150,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         buttonStyles={dropdownButtonStyles}
         hideDropdownIcon={hideDropdownIcon}
         text={
-          Boolean(renderButtonText) ? (
+          Boolean(renderButtonText) && !isLoading ? (
             renderButtonText
           ) : isLoading ? (
             <p>Loading...</p>
