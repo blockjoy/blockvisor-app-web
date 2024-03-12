@@ -31,5 +31,13 @@ export const styles = {
       opacity: 1;
       box-shadow: 0px 0px 0px 2px ${theme.colorInputOutline};
     }
+
+    :disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  `,
+  buttonLoading: css`
+    cursor: not-allowed;
   `,
 };

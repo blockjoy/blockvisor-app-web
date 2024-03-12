@@ -103,6 +103,7 @@ export function NewPasswordForm() {
               </li>
             </ul>
             <Button
+              loading={isLoading}
               disabled={!isDirty || !doPasswordsMatch || !isValid}
               tabIndex={3}
               size="medium"
