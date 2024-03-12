@@ -1,8 +1,8 @@
 import { localStorageEffect } from 'utils/store/persist';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { hostFiltersDefaults } from '@shared/constants/lookups';
-import { isMobile } from 'react-device-detect';
+import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { atom } from 'recoil';
+import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
 
 const defaultHost = atom<Host | null>({
   key: 'host.default',
@@ -53,74 +53,23 @@ const activeListType = atom<string | 'table' | 'grid'>({
 const isFiltersOpen = atom<boolean>({
   key: 'host.filters.isOpen',
   default: false,
-  effects: [
-    ({ setSelf }) => {
-      if (isMobile) {
-        setSelf(false);
-        return;
-      }
-
-      const savedHostFiltersToggle =
-        typeof window !== 'undefined'
-          ? window.localStorage.getItem('hostFiltersOpen')
-          : null;
-      const isFiltersOpenValue = savedHostFiltersToggle
-        ? JSON.parse(savedHostFiltersToggle)
-        : true;
-      setSelf(isFiltersOpenValue);
-    },
-  ],
+  effects: [localStorageEffect('host.filters.isOpen')],
 });
 
-const filtersMemory = atom<[number, number]>({
-  key: 'host.filters.memory',
-  default: hostFiltersDefaults.memory,
-  effects: [
-    ({ setSelf }) => {
-      const savedHostFilters =
-        typeof window !== 'undefined'
-          ? window.localStorage.getItem('hostFilters')
-          : null;
-      if (savedHostFilters) {
-        const savedMemory = JSON.parse(savedHostFilters)['memory'];
-        if (savedMemory) setSelf(savedMemory);
-      }
-    },
-  ],
+const filters = atom<UIHostFilterCriteria>({
+  key: 'host.filters',
+  default: {
+    hostStatus: [],
+    hostCPU: HOST_FILTERS_DEFAULT.hostCPU,
+    hostMemory: HOST_FILTERS_DEFAULT.hostMemory,
+    hostSpace: HOST_FILTERS_DEFAULT.hostSpace,
+  },
+  effects: [localStorageEffect('host.filters')],
 });
 
-const filtersCPU = atom<[number, number]>({
-  key: 'host.filters.cpu',
-  default: hostFiltersDefaults.cpu,
-  effects: [
-    ({ setSelf }) => {
-      const savedHostFilters =
-        typeof window !== 'undefined'
-          ? window.localStorage.getItem('hostFilters')
-          : null;
-      if (savedHostFilters) {
-        const savedCPU = JSON.parse(savedHostFilters)['cpu'];
-        if (savedCPU) setSelf(savedCPU);
-      }
-    },
-  ],
-});
-
-const filtersSpace = atom<[number, number]>({
-  key: 'host.filters.space',
-  default: hostFiltersDefaults.space,
-  effects: [
-    ({ setSelf }) => {
-      const savedHostFilters =
-        typeof window !== 'undefined'
-          ? window.localStorage.getItem('hostFilters')
-          : null;
-      if (savedHostFilters) {
-        const savedSpace = JSON.parse(savedHostFilters)['space'];
-        if (savedSpace) setSelf(savedSpace);
-      }
-    },
-  ],
+const filtersTempTotal = atom<number>({
+  key: 'host.filters.temp.total',
+  default: 0,
 });
 
 const hostIpListType = atom<'all' | 'available' | 'assigned'>({
@@ -144,7 +93,6 @@ export const hostAtoms = {
   activeListType,
 
   isFiltersOpen,
-  filtersMemory,
-  filtersCPU,
-  filtersSpace,
+  filters,
+  filtersTempTotal,
 };

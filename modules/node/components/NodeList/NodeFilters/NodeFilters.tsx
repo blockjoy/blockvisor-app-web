@@ -1,5 +1,5 @@
-import { ChangeEvent, useMemo, useRef, useState } from 'react';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import { useMemo, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { styles } from './nodeFilters.styles';
@@ -11,19 +11,15 @@ import {
   FiltersHeader,
   FiltersBlock,
 } from '@shared/components';
-import { useSwitchOrganization } from '@modules/organization';
 import {
   nodeAtoms,
   blockchainSelectors,
-  useFilters,
+  useNodeFilters,
   useNodeUIContext,
+  blockchainAtoms,
 } from '@modules/node';
 
-export type NodeFiltersProps = {
-  isLoading: LoadingState;
-};
-
-export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
+export const NodeFilters = () => {
   const nodeUIContext = useNodeUIContext();
   const nodeUIProps = useMemo(() => {
     return {
@@ -32,91 +28,56 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
     };
   }, [nodeUIContext]);
 
-  const { filters, updateFilters, removeFilters, resetFilters } =
-    useFilters(nodeUIProps);
-
-  const { switchOrganization } = useSwitchOrganization();
-
-  const [isDirty, setIsDirty] = useState(false);
+  const {
+    filters,
+    isDirty,
+    tempFiltersTotal,
+    updateFilters,
+    resetFilters,
+    changeTempFilters,
+  } = useNodeFilters(nodeUIProps);
 
   const hasBlockchainError = useRecoilValue(
     blockchainSelectors.blockchainsHasError,
+  );
+
+  const nodeListLoadingState = useRecoilValue(nodeAtoms.isLoading);
+  const blockchainsLoadingState = useRecoilValue(
+    blockchainAtoms.blockchainsLoadingState,
   );
 
   const [isFiltersOpen, setFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
 
-  const filtersTotal = useRecoilValue(nodeAtoms.filtersTotal);
+  const [openFilterId, setOpenFilterId] = useState('');
 
-  const [openFilterName, setOpenFilterName] =
-    useState<string | 'Blockchain' | 'Status' | 'Type'>('');
-
-  const isCompleted = useRef(false);
-
-  const handleFilterChanged = (
-    e: ChangeEvent<HTMLInputElement>,
-    list: FilterItem[],
-    setFilterList: SetterOrUpdater<FilterItem[]>,
-  ) => {
-    if (!isDirty && !!setFilterList) {
-      setIsDirty(true);
-    }
-
-    if (!setFilterList) {
-      const foundOrg = list.find((item) => item.id === e.target.id);
-      switchOrganization(foundOrg?.id!, foundOrg?.name!);
-      return;
-    }
-
-    const filtersList = list.map((item) => {
-      if (item.id === e.target.id) {
-        return {
-          ...item,
-          isChecked: !item.isChecked,
-        };
-      }
-
-      return item;
-    });
-
-    setFilterList(filtersList);
-  };
-
-  const hasFiltersApplied = filters.some(
-    (filter) =>
-      filter.name !== 'Organization' &&
-      filter.filterList.some((l) => l.isChecked),
+  const hasFiltersApplied = filters.some((filter) =>
+    filter.list?.some((l: FilterListItem) => l.isChecked),
   );
 
   const handleResetFilters = () => {
-    setIsDirty(false);
     resetFilters();
-    removeFilters();
-    setOpenFilterName('');
+    setOpenFilterId('');
   };
 
-  const handleUpdateClicked = () => {
-    updateFilters();
-    setIsDirty(false);
+  const handleFilterBlockClicked = (filterId: string) => {
+    setOpenFilterId(filterId);
   };
 
-  const handleFilterBlockClicked = (filterName: string) => {
-    setOpenFilterName(filterName);
-  };
-
-  const handlePlusMinusClicked = (filterName: string, isOpen: boolean) => {
-    const filterNameValue = isOpen ? '' : filterName;
-    setOpenFilterName(filterNameValue);
+  const handlePlusMinusClicked = (filterId: string, isOpen: boolean) => {
+    const filterIdValue = isOpen ? '' : filterId;
+    setOpenFilterId(filterIdValue);
   };
 
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
-
-    localStorage.setItem('nodeFiltersOpen', JSON.stringify(false));
   };
 
-  if (isLoading === 'finished') isCompleted.current = true;
+  const isLoading = !(
+    nodeListLoadingState === 'finished' &&
+    blockchainsLoadingState === 'finished'
+  );
 
   return (
     <div
@@ -126,12 +87,12 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
       ]}
     >
       <FiltersHeader
-        isLoading={!isCompleted.current}
-        filtersTotal={filtersTotal}
+        isLoading={isLoading}
+        filtersTotal={tempFiltersTotal}
         isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
-      {!isCompleted.current ? (
+      {isLoading ? (
         isFiltersOpen && (
           <div css={[styles.skeleton]}>
             <SkeletonGrid>
@@ -145,17 +106,13 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
           <Scrollbar additionalStyles={[styles.filters]}>
             {filters.map((item) => (
               <FiltersBlock
-                hasError={item.name === 'Blockchain' && hasBlockchainError}
-                isDisabled={item.isDisabled}
-                isOpen={item.name === openFilterName}
+                key={item.id}
+                hasError={item.id === 'blockchain' && hasBlockchainError}
+                isOpen={item.id === openFilterId}
+                filter={item}
                 onPlusMinusClicked={handlePlusMinusClicked}
                 onFilterBlockClicked={handleFilterBlockClicked}
-                key={item.name}
-                name={item.name}
-                filterCount={item.filterCount}
-                filterList={item.filterList}
-                setFilterList={item?.setFilterList!}
-                onFilterChanged={handleFilterChanged}
+                onFilterChanged={changeTempFilters}
               />
             ))}
           </Scrollbar>
@@ -163,7 +120,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
             css={styles.updateButton}
             type="button"
             disabled={!isDirty}
-            onClick={handleUpdateClicked}
+            onClick={updateFilters}
           >
             <SvgIcon size="12px">
               <IconRefresh />

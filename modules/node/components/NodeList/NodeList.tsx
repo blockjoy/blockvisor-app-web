@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
-import { useNodeList } from '@modules/node/hooks/useNodeList';
-import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import {
   TableSkeleton,
   EmptyColumn,
@@ -10,19 +10,21 @@ import {
   Table,
   TableGrid,
 } from '@shared/components';
-import { toGrid } from '@modules/node/utils';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
-import { useNodeUIContext } from '../../ui/NodeUIContext';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { resultsStatus } from '@modules/node/utils';
+import {
+  resultsStatus,
+  toGrid,
+  mapNodeListToRows,
+  useNodeList,
+  nodeAtoms,
+  useNodeUIContext,
+} from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
-import { useRouter } from 'next/router';
 import { spacing } from 'styles/utils.spacing.styles';
-import { mapNodeListToRows } from '@modules/node/utils';
 import IconNode from '@public/assets/icons/app/Node.svg';
-import { ROUTES } from '@shared/constants/routes';
+import { ROUTES } from '@shared/index';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -94,7 +96,7 @@ export const NodeList = () => {
     <>
       <PageTitle title="Nodes" icon={<IconNode />} />
       <div css={[styles.wrapper, wrapper.main]}>
-        <NodeFilters isLoading={isLoading} />
+        <NodeFilters />
         <div css={styles.nodeListWrapper}>
           <NodeListHeader />
           {isLoading === 'initializing' ? (

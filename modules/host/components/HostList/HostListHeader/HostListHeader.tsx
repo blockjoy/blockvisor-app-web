@@ -15,7 +15,7 @@ export const HostListHeader = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
     hostAtoms.isFiltersOpen,
   );
-  const filtersTotal = useRecoilValue(hostSelectors.filtersTotal);
+  const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
 
   const isLoading = useRecoilValue(hostAtoms.isLoading);
 
@@ -28,7 +28,6 @@ export const HostListHeader = () => {
   // TODO: ADD FILTERS BACK IN ONCE IMPLEMENTED
   // const handleFilterCollapseToggled = () => {
   //   setIsFiltersOpen(!isFiltersOpen);
-  //   localStorage.setItem('hostFiltersOpen', JSON.stringify(!isFiltersOpen));
   // };
 
   return (

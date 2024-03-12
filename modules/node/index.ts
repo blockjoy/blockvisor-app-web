@@ -11,7 +11,7 @@ export * from './components/NodeView/Tabs/Commands/NodeCommands';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/Shared';
 
-export * from './hooks/useFilters';
+export * from './hooks/useNodeFilters';
 export * from './hooks/useGetBlockchains';
 export * from './hooks/useGetRegions';
 export * from './hooks/useNodeAdd';
@@ -24,6 +24,7 @@ export * from './hooks/useUpdates';
 export * from './store/blockchainAtoms';
 export * from './store/blockchainSelectors';
 export * from './store/nodeAtoms';
+export * from './store/nodeSelectors';
 export * from './store/nodeLauncherAtoms';
 export * from './store/nodeLauncherSelectors';
 
@@ -33,3 +34,11 @@ export * from './ui/NodeUIContext';
 
 export * from './utils/convertNodeTypeToName';
 export * from './utils/getNodeTypes';
+export * from './utils/loadPersistedFilters';
+export * from './utils/mapNodeListToRows';
+export * from './utils/resultsStatus';
+export * from './utils/sortLists';
+export * from './utils/toGrid';
+
+export * from './ui/NodeUIContext';
+export * from './ui/NodeUIHelpers';

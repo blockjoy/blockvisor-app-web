@@ -71,9 +71,10 @@ export const styles = {
     gap: 10px;
     color: ${theme.colorDefault};
     font-size: 16px;
-    height: 56px;
+    height: 40px;
     cursor: pointer;
     transition: 0.3s;
+    margin-top: 7px;
 
     path {
       fill: ${theme.colorDefault};

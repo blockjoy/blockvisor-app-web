@@ -38,7 +38,7 @@ export type UINode = {
   network: string;
 };
 
-export type UIFilterCriteria = {
+export type UINodeFilterCriteria = {
   blockchain?: string[];
   nodeType?: string[];
   nodeStatus?: string[];
@@ -69,7 +69,7 @@ class NodeClient {
 
   async listNodes(
     orgId?: string,
-    filter?: UIFilterCriteria,
+    filter?: UINodeFilterCriteria,
     pagination?: UIPagination,
     sort?: NodeSort[],
   ): Promise<NodeServiceListResponse> {

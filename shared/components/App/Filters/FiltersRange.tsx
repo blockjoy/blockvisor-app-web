@@ -1,43 +1,29 @@
-import { FiltersWrapper, RangeSlider } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { FiltersWrapper, RangeSlider } from '@shared/components';
 import { styles } from './FiltersRange.styles';
 
 type FiltersRangeProps = {
-  name: string;
-  isDisabled?: boolean;
-  step: number;
-  min: number;
-  max: number;
-  values: [number, number];
-  setValues: SetterOrUpdater<[number, number]>;
+  filter: FilterItem;
   isOpen: boolean;
   onPlusMinusClicked: (filterName: string, args1: boolean) => void;
   onFilterBlockClicked: (name: string) => void;
-  onStateChange: VoidFunction;
-  formatter: (val: number) => void;
   customValues?: [number, number];
 };
 
 export const FiltersRange = ({
-  name,
-  isDisabled = false,
-  step,
-  min,
-  max,
-  values,
-  setValues,
+  filter,
   isOpen,
   onPlusMinusClicked,
   onFilterBlockClicked,
-  onStateChange,
-  formatter,
   customValues,
 }: FiltersRangeProps) => {
+  const { id, name, step, min, max, values, setValues, disabled, formatter } =
+    filter;
+
   const [isFiltered, setIsFiltered] = useState(false);
 
   useEffect(() => {
-    if (values[0] !== min || values[1] !== max) {
+    if (values?.[0] !== min || values?.[1] !== max) {
       setIsFiltered(true);
     } else {
       if (isFiltered) setIsFiltered(false);
@@ -46,26 +32,26 @@ export const FiltersRange = ({
 
   return (
     <FiltersWrapper
+      id={id}
       name={name}
       isOpen={isOpen}
       onFilterBlockClicked={onFilterBlockClicked}
       onPlusMinusClicked={onPlusMinusClicked}
-      isDisabled={isDisabled}
+      isDisabled={disabled}
     >
       {isOpen ? (
         <RangeSlider
-          step={step}
-          min={min}
-          max={max}
-          values={values}
+          step={step!}
+          min={min!}
+          max={max!}
+          values={values!}
           setValues={setValues}
-          onStateChange={onStateChange}
           formatter={formatter}
           customValues={customValues}
         />
       ) : isFiltered ? (
         <p css={styles.preview}>
-          {`${formatter(values[0])} - ${formatter(values[1])}`}
+          {`${formatter(values?.[0] ?? 0)} - ${formatter(values?.[1] ?? 0)}`}
         </p>
       ) : null}
     </FiltersWrapper>

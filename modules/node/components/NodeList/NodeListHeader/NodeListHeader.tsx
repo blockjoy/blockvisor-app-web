@@ -1,31 +1,27 @@
-import { styles } from './styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import {
   Skeleton,
   GridTableViewPicker,
   FiltersHeaderIconText,
   Alert,
 } from '@shared/components';
-import { useNodeList } from '@modules/node/hooks/useNodeList';
+import { nodeAtoms, useNodeList } from '@modules/node';
+import { styles } from './styles';
 
 export const NodeListHeader = () => {
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
-
-  const { nodeCount } = useNodeList();
-
-  const filtersTotal = useRecoilValue(nodeAtoms.filtersTotal);
-
+  const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
   );
 
+  const { nodeCount } = useNodeList();
+
   const handleFilterCollapseToggled = () => {
     setIsFiltersOpen(!isFiltersOpen);
-    localStorage.setItem('nodeFiltersOpen', JSON.stringify(!isFiltersOpen));
   };
 
   const handleGridTableViewChanged = (type: string) => {
