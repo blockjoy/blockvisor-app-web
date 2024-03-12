@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { styles } from './HostFilters.styles';
 import {
@@ -32,6 +32,8 @@ export const HostFilters = () => {
     resetFilters,
     changeTempFilters,
   } = useHostFilters(hostUIProps);
+
+  const isCompleted = useRef(false);
 
   const hostListLoadingState = useRecoilValue(hostAtoms.isLoading);
   const blockchainsLoadingState = useRecoilValue(
@@ -72,23 +74,24 @@ export const HostFilters = () => {
     setFiltersOpen(!isFiltersOpen);
   };
 
-  const isLoading = !(
+  if (
     hostListLoadingState === 'finished' &&
     blockchainsLoadingState === 'finished'
-  );
+  )
+    isCompleted.current = true;
 
   return (
     <div
       css={[styles.outerWrapper, isFiltersOpen && styles.outerWrapperCollapsed]}
     >
       <FiltersHeader
-        isLoading={isLoading}
+        isLoading={!isCompleted.current}
         filtersTotal={tempFiltersTotal}
         isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
 
-      {isLoading ? (
+      {!isCompleted.current ? (
         isFiltersOpen && (
           <div css={[styles.skeleton]}>
             <SkeletonGrid>

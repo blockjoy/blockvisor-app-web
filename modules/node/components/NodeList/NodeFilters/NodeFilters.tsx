@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
@@ -37,6 +37,8 @@ export const NodeFilters = () => {
     changeTempFilters,
   } = useNodeFilters(nodeUIProps);
 
+  const isCompleted = useRef(false);
+
   const hasBlockchainError = useRecoilValue(
     blockchainSelectors.blockchainsHasError,
   );
@@ -74,10 +76,11 @@ export const NodeFilters = () => {
     setFiltersOpen(!isFiltersOpen);
   };
 
-  const isLoading = !(
+  if (
     nodeListLoadingState === 'finished' &&
     blockchainsLoadingState === 'finished'
-  );
+  )
+    isCompleted.current = true;
 
   return (
     <div
@@ -87,12 +90,12 @@ export const NodeFilters = () => {
       ]}
     >
       <FiltersHeader
-        isLoading={isLoading}
+        isLoading={!isCompleted.current}
         filtersTotal={tempFiltersTotal}
         isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
-      {isLoading ? (
+      {!isCompleted.current ? (
         isFiltersOpen && (
           <div css={[styles.skeleton]}>
             <SkeletonGrid>
