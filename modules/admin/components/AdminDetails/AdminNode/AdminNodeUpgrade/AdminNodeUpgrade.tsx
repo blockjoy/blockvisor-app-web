@@ -1,6 +1,5 @@
 import { AdminHeaderButton } from '@modules/admin';
 import { blockchainClient, nodeClient } from '@modules/grpc';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   DropdownItem,
   DropdownMenu,
@@ -10,8 +9,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { styles } from './AdminNodeUpgrade.styles';
 import { toast } from 'react-toastify';
-import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 import { sortVersionStringArray } from '@modules/admin/utils/sortVersionStringArray';
+import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 
 export const AdminNodeUpgrade = () => {
   const router = useRouter();
@@ -45,12 +44,8 @@ export const AdminNodeUpgrade = () => {
       );
 
       setVersions(
-        Array.from(
-          new Set(
-            sortVersionStringArray(
-              nodeType?.versions.map((version) => version.version),
-            ),
-          ),
+        sortVersionStringArray(
+          nodeType?.versions.map((version) => version.version),
         ),
       );
     } catch (err) {

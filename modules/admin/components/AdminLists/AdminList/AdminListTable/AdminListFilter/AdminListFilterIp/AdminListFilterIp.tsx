@@ -16,13 +16,13 @@ export const AdminListFilterIp = ({ values, onChange }: Props) => {
       itemsPerPage: 50000,
     });
 
-    const ips = Array.from(new Set(nodes.map((node) => node.ip)));
+    const ips = nodes.map((node) => node.ip);
 
     setList(ips);
   };
 
   useEffect(() => {
-    (async () => await getList())();
+    getList();
   }, []);
 
   return (
