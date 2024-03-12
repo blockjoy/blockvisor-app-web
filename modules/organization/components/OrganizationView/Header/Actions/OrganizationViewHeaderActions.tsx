@@ -64,17 +64,21 @@ export const OrganizationViewHeaderActions = () => {
   const gotoAdminPanel = () =>
     router.push(`/admin?name=orgs&id=${defaultOrganization?.id}`);
 
-  const callback = async () => {
+  const onSuccess = async () => {
     const newOrgs = removeFromOrganizations(organization?.id!);
     const newDefaultOrg = await getDefaultOrganization(newOrgs);
     router.push(ROUTES.ORGANIZATION(newDefaultOrg?.id!));
     setIsDeleteMode(false);
   };
 
+  const onError = () => {
+    setIsDeleteMode(false);
+  };
+
   const handleAction = () =>
     deleteType === 'Delete'
-      ? deleteOrganization(organization!.id, callback)
-      : leaveOrganization(organization!.id, callback);
+      ? deleteOrganization(organization!.id, onSuccess, onError)
+      : leaveOrganization(organization!.id, onSuccess, onError);
 
   const items = [];
 
