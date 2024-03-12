@@ -22,7 +22,6 @@ export const styles = {
       flex: 1 1 320px;
       max-width: 320px;
       max-height: calc(100vh - 72px);
-      padding-right: 10px;
       border-right: 1px solid ${theme.colorBorder};
     }
   `,
@@ -40,14 +39,14 @@ export const styles = {
     flex-direction: column;
 
     @media ${breakpoints.fromMed} {
-      padding-left: 30px;
+      padding-left: 20px;
     }
   `,
   invitationsWrapper: (theme: ITheme) => css`
     border-top: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromMed} {
-      margin-left: 30px;
+      margin-left: 20px;
     }
 
     @media ${breakpoints.fromXHuge} {
@@ -55,7 +54,7 @@ export const styles = {
       max-width: 300px;
       border-top: 0;
       border-left: 1px solid ${theme.colorBorder};
-      margin-left: 30px;
+      margin-left: 20px;
     }
   `,
 };
