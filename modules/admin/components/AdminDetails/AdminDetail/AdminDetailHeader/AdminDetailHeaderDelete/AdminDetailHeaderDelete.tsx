@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { styles } from './AdminDetailHeaderDelete.styles';
 import { AdminHeaderButton } from '@modules/admin';
+import { ButtonSpinner } from '@shared/components';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 
 type Props = {
@@ -10,9 +11,16 @@ type Props = {
 export const AdminDetailHeaderDelete = ({ onDelete }: Props) => {
   const [step, setStep] = useState<1 | 2>(1);
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const toggleStep = () => {
     const nextStep = step === 1 ? 2 : 1;
     setStep(nextStep);
+  };
+
+  const handleDelete = () => {
+    setIsDeleting(true);
+    onDelete();
   };
 
   return (
@@ -24,10 +32,20 @@ export const AdminDetailHeaderDelete = ({ onDelete }: Props) => {
       ) : (
         <>
           <p css={styles.text}>Delete?</p>
-          <button css={styles.button} type="button" onClick={onDelete}>
-            Yes
+          <button
+            disabled={isDeleting}
+            css={[styles.button, isDeleting && styles.buttonLoading]}
+            type="button"
+            onClick={handleDelete}
+          >
+            {isDeleting ? <ButtonSpinner size="small" /> : 'Yes'}
           </button>
-          <button css={styles.button} type="button" onClick={toggleStep}>
+          <button
+            disabled={isDeleting}
+            css={styles.button}
+            type="button"
+            onClick={toggleStep}
+          >
             No
           </button>
         </>
