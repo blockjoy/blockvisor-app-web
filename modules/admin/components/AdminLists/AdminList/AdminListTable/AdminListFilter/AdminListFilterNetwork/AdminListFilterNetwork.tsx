@@ -1,4 +1,5 @@
 import { nodeClient } from '@modules/grpc';
+import { sort } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
 
@@ -16,13 +17,15 @@ export const AdminListFilterNetwork = ({ values, onChange }: Props) => {
       itemsPerPage: 50000,
     });
 
-    const ips = Array.from(new Set(nodes.map((node) => node.network)));
+    const networks = Array.from(
+      new Set(sort(nodes.map((node) => node.network))),
+    );
 
-    setList(ips);
+    setList(networks);
   };
 
   useEffect(() => {
-    (async () => await getList())();
+    getList();
   }, []);
 
   return (

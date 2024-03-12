@@ -5,6 +5,7 @@ import {
   organizationAtoms,
   useDefaultOrganization,
 } from '@modules/organization';
+import { sort } from '@shared/components';
 
 export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
@@ -57,7 +58,7 @@ export function useGetOrganizations() {
 
     const organizationsCopy = [...organizations];
     organizationsCopy.push(org);
-    setOrganizations(organizationsCopy);
+    setOrganizations(sort(organizationsCopy, { field: 'name' }));
   };
 
   return {

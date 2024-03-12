@@ -6,6 +6,8 @@ import {
 import { sort } from '@shared/components';
 
 export const sortVersions = (list: BlockchainVersion[] | undefined) => {
+  console.log('sortVersions', list);
+
   if (!list) return [];
 
   const toVersion = (raw: string) =>

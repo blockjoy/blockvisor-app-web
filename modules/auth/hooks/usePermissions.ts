@@ -26,10 +26,7 @@ export function usePermissions() {
         defaultOrganization?.id!,
       );
 
-      console.log(
-        'getPermissionsResponse: ',
-        sort(response, { field: '', order: 'asc' }),
-      );
+      console.log('getPermissionsResponse: ', sort(response));
 
       setPermissions(response);
     } catch (err) {

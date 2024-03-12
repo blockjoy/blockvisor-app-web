@@ -25,7 +25,7 @@ export const AdminListFilterVersion = ({ values, onChange }: Props) => {
   };
 
   useEffect(() => {
-    (async () => await getList())();
+    getList();
   }, []);
 
   return (

@@ -9,7 +9,7 @@ type CommandViewProps = {
 };
 
 export const CommandView = ({ command }: CommandViewProps) => {
-  const { exitCode, ackedAt, exitMessage, node, host } = command;
+  const { exitCode, ackedAt, createdAt, exitMessage, node, host } = command;
 
   const commandType = node ? getCommandType(node) : getCommandType(host);
   const commandInfo = getCommandInfo(exitCode);
@@ -17,7 +17,7 @@ export const CommandView = ({ command }: CommandViewProps) => {
   return (
     <div css={styles.wrapper}>
       <span css={styles.time}>
-        {ackedAt ? <DateTime date={ackedAt} /> : '-'}
+        <DateTime date={ackedAt || createdAt!} />
       </span>
       <CommandIcon exitCode={exitCode} />
       <span css={styles.message(exitCode)}>
