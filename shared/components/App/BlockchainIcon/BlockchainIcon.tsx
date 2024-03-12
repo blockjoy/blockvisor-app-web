@@ -189,9 +189,12 @@ export const BlockchainIcon: FC<Props> = ({
       Component = IconHelium;
       break;
     case 'near':
+    case 'near_archive':
+    case 'near-archive':
       Component = IconNear;
       break;
     case 'optimism':
+    case 'optimism-erigon':
       Component = IconOptimism;
       break;
     case 'pocket':
