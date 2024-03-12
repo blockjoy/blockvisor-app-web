@@ -274,7 +274,7 @@ export const useNodeLauncherHandlers = ({
 
     if (!activeNodeType) return;
 
-    setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
+    setSelectedNodeType(activeNodeType);
 
     const selectedVersionExists = activeNodeType.versions.some(
       (version) => version.id === selectedVersion?.id,
