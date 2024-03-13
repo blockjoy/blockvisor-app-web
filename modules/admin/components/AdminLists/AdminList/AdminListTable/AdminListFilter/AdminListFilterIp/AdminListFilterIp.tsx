@@ -1,3 +1,4 @@
+import { sortIpStringArray } from '@modules/admin/utils';
 import { nodeClient } from '@modules/grpc';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
@@ -18,7 +19,7 @@ export const AdminListFilterIp = ({ values, onChange }: Props) => {
 
     const ips = nodes.map((node) => node.ip);
 
-    setList(ips);
+    setList(sortIpStringArray(ips));
   };
 
   useEffect(() => {

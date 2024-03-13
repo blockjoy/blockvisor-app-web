@@ -1,4 +1,4 @@
-import { sortVersionStringArray } from '@modules/admin/utils/sortVersionStringArray';
+import { sortVersionStringArray } from '@modules/admin/utils';
 import { nodeClient } from '@modules/grpc';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';

@@ -54,7 +54,8 @@ export const AdminDetailEditOrgSelect = ({
       noBottomMargin
       renderItem={(item: Org) => (
         <>
-          {item.name} <em css={styles.id}>{item.id}</em>
+          <span css={styles.name}>{item.name}</span>{' '}
+          <em css={styles.id}>{item.id}</em>
         </>
       )}
       renderButtonText={

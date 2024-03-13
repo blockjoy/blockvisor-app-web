@@ -3,6 +3,7 @@ import {
   BlockchainNodeType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { sort } from '@shared/components';
 
 export const sortVersions = (list: BlockchainVersion[] | undefined) => {
@@ -48,4 +49,25 @@ export const sortNodeTypes = (list: BlockchainNodeType[] | undefined) => {
   });
 
   return result;
+};
+
+export const sortIps = (ips: HostIpAddress[]) => {
+  const ipsCopy = [...ips];
+  const sortedIps = ipsCopy.sort((a, b) => {
+    const num1 = Number(
+      a.ip
+        .split('.')
+        .map((num) => `000${num}`.slice(-3))
+        .join(''),
+    );
+    const num2 = Number(
+      b.ip
+        .split('.')
+        .map((num) => `000${num}`.slice(-3))
+        .join(''),
+    );
+    return num1 - num2;
+  });
+
+  return sortedIps;
 };
