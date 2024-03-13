@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { authAtoms } from '@modules/auth';
 import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './HostIps.styles';
+import { sortIps } from '@modules/node/utils';
 
 type Props = {
   ipAddresses: HostIpAddress[];
@@ -37,31 +38,10 @@ export const HostIps = ({ ipAddresses, orgId }: Props) => {
     }
   }, [ipListType]);
 
-  const getSortedIps = (ips: HostIpAddress[]) => {
-    const ipsCopy = [...ips];
-    const sortedIps = ipsCopy.sort((a, b) => {
-      const num1 = Number(
-        a.ip
-          .split('.')
-          .map((num) => `000${num}`.slice(-3))
-          .join(''),
-      );
-      const num2 = Number(
-        b.ip
-          .split('.')
-          .map((num) => `000${num}`.slice(-3))
-          .join(''),
-      );
-      return num1 - num2;
-    });
-
-    return sortedIps;
-  };
-
   const sortedIps =
     ipListType === 'all'
-      ? getSortedIps(ipAddresses)
-      : getSortedIps([...getFilteredIps()]);
+      ? sortIps(ipAddresses)
+      : sortIps([...getFilteredIps()]);
 
   useEffect(() => {
     const newListHeight = listRef.current?.clientHeight;
@@ -128,7 +108,7 @@ export const HostIps = ({ ipAddresses, orgId }: Props) => {
                           styles.ipListLinkAssigned,
                           ipListType === 'all' && styles.ipAssigned,
                         ]}
-                        href={`/admin?name=nodes&page=0&ip=${ip}`}
+                        href={`/admin?name=nodes&page=1&ip=${ip}`}
                       >
                         {ip}
                       </Link>
