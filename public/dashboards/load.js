@@ -14,8 +14,6 @@ function loadScript() {
   var script = document.createElement( "script" )
   script.type = "text/javascript";
 
-  console.log("NETDATA host", host);
-
   if(script.readyState) { 
     script.onreadystatechange = function() {
       if ( script.readyState === "loaded" || script.readyState === "complete" ) {
@@ -31,19 +29,15 @@ function loadScript() {
 
   script.src = url;
   script.onerror = () => {  
+    console.error("NETDATA failed to load from name")
 
     var nextScript = document.createElement( "script" )
     nextScript.type = "text/javascript";
 
     const nextHost = `https://magellan-1.slc.blockjoy.com/host/${id}`;
 
-    console.log("NETDATA nextHost", nextHost);
-    console.log("NETDATA diskSpaceName", diskSpaceName);
-
     nextScript.src = `${nextHost}/dashboard.js`;
     nextScript.onerror = () => console.error("NETDATA failed to load from id");
-
-    console.error("NETDATA failed to load from name");
 
     if(nextScript.readyState) { 
       nextScript.onreadystatechange = function() {

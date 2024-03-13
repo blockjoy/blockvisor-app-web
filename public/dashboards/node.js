@@ -4,11 +4,12 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 var { id, name, disk_space_name, is_node } = params;
 
-const diskSpaceNameWithoutTrailingSlash = disk_space_name?.endsWith('/') 
-  ? disk_space_name.slice(0, disk_space_name.length - 1) 
-  : disk_space_name;
+// TODO: Handle trailing slashes
+// const diskSpaceNameWithoutTrailingSlash = disk_space_name?.endsWith('/') 
+//   ? disk_space_name.slice(0, disk_space_name.length - 1) 
+//   : disk_space_name;
 
-const diskSpaceName = diskSpaceNameWithoutTrailingSlash?.replace(/\//g, '_');
+const diskSpaceName = disk_space_name?.replace(/\//g, '_');
 
 const sidePanelTextonlyWidth = "160px",
       sidePanelTextonlyHeight = "55px",
