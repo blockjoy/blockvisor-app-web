@@ -29,8 +29,6 @@ const versions = selector<BlockchainVersion[]>({
   get: ({ get }) => {
     const selectedNodeType = get(nodeLauncherAtoms.selectedNodeType);
 
-    console.log('selectedNodeType versions', selectedNodeType?.versions);
-
     return sortVersions(selectedNodeType?.versions);
   },
 });
