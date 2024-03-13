@@ -12,7 +12,7 @@ export const styles = {
     width: 100%;
   `,
   dropdownInner: css`
-    max-height: 199px;
+    max-height: 200px;
 
     ::-webkit-scrollbar-track {
       background: rgb(255 255 255 / 5%);
@@ -20,6 +20,13 @@ export const styles = {
 
     .alert {
       opacity: 0;
+    }
+  `,
+  active: (theme: ITheme) => css`
+    background-color: ${rgba(theme.colorText || '#ffffff', 0.04)};
+
+    .alert {
+      opacity: 1;
     }
   `,
   focus: (theme: ITheme) => css`
@@ -30,7 +37,12 @@ export const styles = {
       opacity: 1;
     }
   `,
-  dropdownItem: css`
-    gap: 20px;
+  placeholder: (theme: ITheme) => css`
+    color: ${theme.colorPlaceholder} !important;
+  `,
+  dropdownItemText: css`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   `,
 };

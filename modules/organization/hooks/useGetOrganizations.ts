@@ -1,8 +1,11 @@
 import { organizationClient } from '@modules/grpc';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { organizationAtoms } from '../store/organizationAtoms';
-import { useDefaultOrganization } from './useDefaultOrganization';
+import {
+  organizationAtoms,
+  useDefaultOrganization,
+} from '@modules/organization';
+import { sort } from '@shared/components';
 
 export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
@@ -25,12 +28,14 @@ export function useGetOrganizations() {
   ) => {
     if (showLoader) setIsLoading('initializing');
 
-    const response = await organizationClient.getOrganizations({
-      current_page: 0,
-      items_per_page: 1000,
+    const response = await organizationClient.listOrganizations({
+      currentPage: 0,
+      itemsPerPage: 1000,
     });
 
-    setOrganizations(response.orgs);
+    const { orgs } = response;
+
+    setOrganizations(orgs);
 
     if (init) await getDefaultOrganization(response.orgs);
 
@@ -53,7 +58,7 @@ export function useGetOrganizations() {
 
     const organizationsCopy = [...organizations];
     organizationsCopy.push(org);
-    setOrganizations(organizationsCopy);
+    setOrganizations(sort(organizationsCopy, { field: 'name' }));
   };
 
   return {

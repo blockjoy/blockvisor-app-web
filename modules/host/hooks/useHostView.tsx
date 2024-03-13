@@ -1,29 +1,53 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useHostList } from './useHostList';
 import { toast } from 'react-toastify';
+import { authAtoms } from '@modules/auth';
+import {
+  organizationAtoms,
+  useSwitchOrganization,
+} from '@modules/organization';
 
 export const useHostView = () => {
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
+
+  const { switchOrganization } = useSwitchOrganization();
+
   const [isLoading, setIsLoading] = useRecoilState(
     hostAtoms.isLoadingActiveHost,
   );
+
   const [host, setHost] = useRecoilState(hostAtoms.activeHost);
 
   const { hostList, removeFromHostList } = useHostList();
 
   const loadHost = async (id?: string | string[]) => {
-    if (hostList.findIndex((h) => h.id === id) > -1) {
+    const foundHost = hostList.find((h) => h.id === id)!;
+    if (foundHost) {
       setIsLoading('finished');
-      setHost(hostList.find((h) => h.id === id)!);
+      if (!isSuperUser) {
+        setHost(hostList.find((h) => h.id === id)!);
+      } else {
+        setHost(foundHost);
+        const host = await hostClient.getHost(id as string);
+        setHost(host);
+        switchOrganization(foundHost.orgId, foundHost.orgName);
+      }
       return;
     }
 
     setIsLoading('initializing');
 
     try {
-      const host: any = await hostClient.getHost(id as string);
+      const host = await hostClient.getHost(id as string);
       setHost(host);
+      if (host.orgId !== defaultOrganization?.id)
+        switchOrganization(host.orgId, host.orgName);
     } catch (err) {
       setHost(null);
     } finally {

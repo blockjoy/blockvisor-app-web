@@ -1,16 +1,17 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useSignIn } from '@modules/auth';
 import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, FormError, Input } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { isValidEmail } from '@shared/utils/validation';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { PasswordToggle } from '@modules/auth';
+import { useBilling } from '@modules/billing';
 
 type LoginForm = {
   email: string;
@@ -31,7 +32,10 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-  const { getBlockchains } = useGetBlockchains();
+
+  useGetBlockchains();
+
+  useBilling();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';
@@ -58,11 +62,10 @@ export function LoginForm() {
         !!invited,
       );
       await getOrganizations(!invited);
-
-      getBlockchains();
       handleRedirect();
     } catch (error) {
       setLoginError('Invalid Credentials');
+
       setIsLoading(false);
     }
   });

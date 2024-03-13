@@ -5,7 +5,7 @@ import { styles } from './DropdownMenu.styles';
 type Props = {
   isOpen?: boolean;
   children?: ReactNode;
-  additionalStyles?: SerializedStyles;
+  additionalStyles?: SerializedStyles[] | SerializedStyles;
 };
 
 export function DropdownMenu({ isOpen, children, additionalStyles }: Props) {

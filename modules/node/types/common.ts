@@ -1,4 +1,5 @@
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   NodePlacement,
   NodeProperty,
@@ -24,4 +25,14 @@ export type CreateNodeParams = {
   network: string;
   allowedIps: FilteredIpAddr[];
   deniedIps: FilteredIpAddr[];
+};
+
+export type BlockchainSimple = {
+  blockchainId?: string;
+  nodeType?: NodeType;
+  version?: string;
+};
+
+export type BlockchainSimpleWRegion = BlockchainSimple & {
+  regions: Region[];
 };

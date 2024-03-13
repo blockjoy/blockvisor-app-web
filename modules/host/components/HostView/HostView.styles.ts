@@ -21,10 +21,10 @@ export const styles = {
     }
   `,
   sidePanel: (theme: ITheme) => css`
-    flex: 1 1 420px;
-    max-width: 420px;
-    min-width: 420px;
-    width: 420px;
+    flex: 1 1 460px;
+    max-width: 460px;
+    min-width: 460px;
+    width: 460px;
     padding: 0 0 20px 20px;
     border-left: 1px solid ${theme.colorBorder};
 

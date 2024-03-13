@@ -36,33 +36,33 @@ export const NodeViewHeaderActions = ({
 
   if (isSuperUser) {
     items.push({
-      title: 'Admin',
+      name: 'Admin',
       icon: <IconAdmin />,
-      method: handleAdminClicked,
+      onClick: handleAdminClicked,
     });
   }
 
   if (canStop) {
-    items.push({ title: 'Stop', icon: <IconStop />, method: handleStop });
+    items.push({ name: 'Stop', icon: <IconStop />, onClick: handleStop });
   }
 
   if (canStart) {
-    items.push({ title: 'Start', icon: <IconStart />, method: handleStart });
+    items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
   }
 
   if (canReport) {
     items.push({
-      title: 'Report Problem',
+      name: 'Report Problem',
       icon: <IconWarning />,
-      method: onReportProblemClicked,
+      onClick: onReportProblemClicked,
     });
   }
 
   if (canDelete) {
     items.push({
-      title: 'Delete',
+      name: 'Delete',
       icon: <IconDelete />,
-      method: onDeleteClicked,
+      onClick: onDeleteClicked,
       hasBorderTop: true,
     });
   }

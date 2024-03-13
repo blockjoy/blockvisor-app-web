@@ -1,20 +1,37 @@
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { styles } from './Dropdown.styles';
 import { useAccessibleDropdown } from '@shared/index';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { DropdownItem, DropdownWrapper, Scrollbar } from '@shared/components';
-import { DropdownButton } from './DropdownButton/DropdownButton';
-import { DropdownMenu } from './DropdownMenu/DropdownMenu';
+import {
+  DropdownItem,
+  DropdownWrapper,
+  DropdownButton,
+  DropdownMenu,
+  DropdownCreate,
+  Scrollbar,
+} from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export type DropdownProps<T = any> = {
   items: T[];
   itemKey?: string;
   selectedItem: T | null;
   handleSelected: (item: T | null) => void;
-  defaultText?: string;
+  defaultText?: string | ReactNode;
   searchQuery?: string;
+  isTouchedQuery?: boolean;
   renderSearch?: (isOpen: boolean) => ReactNode;
+  renderHeader?: ReactNode;
+  renderButtonText?: ReactNode;
+  dropdownButtonStyles?: (theme: ITheme) => SerializedStyles;
+  dropdownMenuStyles?: SerializedStyles[];
+  dropdownItemStyles?: (item: T) => SerializedStyles[];
+  dropdownScrollbarStyles?: SerializedStyles[];
+  hideDropdownIcon?: boolean;
+  hideSearch?: boolean;
+  excludeSelectedItem?: boolean;
   isEmpty?: boolean;
   noBottomMargin?: boolean;
   isLoading?: boolean;
@@ -22,9 +39,15 @@ export type DropdownProps<T = any> = {
   error?: string;
   isOpen: boolean;
   size?: 'small' | 'medium' | 'large';
+  buttonType?: 'input' | 'default';
   handleOpen: (open?: boolean) => void;
   checkDisabledItem?: (item?: T) => boolean;
+  renderItem?: (item: T) => ReactNode;
   renderItemLabel?: (item?: T) => ReactNode;
+  newItem?: {
+    title: string;
+    onClick: VoidFunction;
+  };
 };
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
@@ -34,7 +57,17 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   handleSelected,
   defaultText,
   searchQuery,
+  isTouchedQuery,
   renderSearch,
+  renderHeader,
+  renderButtonText,
+  dropdownButtonStyles,
+  dropdownMenuStyles,
+  dropdownItemStyles,
+  dropdownScrollbarStyles,
+  hideDropdownIcon,
+  hideSearch,
+  excludeSelectedItem = false,
   isEmpty = true,
   noBottomMargin = false,
   isLoading,
@@ -42,9 +75,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   error,
   isOpen,
   size = 'medium',
+  buttonType = 'default',
   handleOpen,
   checkDisabledItem,
+  renderItem,
   renderItemLabel,
+  newItem,
 }: DropdownProps<T>) => {
   const dropdownRef = useRef<HTMLUListElement>(null);
 
@@ -59,21 +95,46 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     handleClose();
   };
 
+  let filteredItems = items.filter(
+    (item) => !excludeSelectedItem || item.id !== selectedItem?.id,
+  );
+
   const {
     activeIndex,
+    setActiveIndex,
     handleItemRef,
     handleFocus,
     handleBlur,
     handleSelectAccessible,
   } = useAccessibleDropdown({
-    items,
-    selectedItem,
+    items: filteredItems,
+    selectedItem: !excludeSelectedItem ? selectedItem : null,
     handleSelect,
     isOpen,
     handleOpen,
     searchQuery,
+    isTouchedQuery,
     dropdownRef,
   });
+
+  const dropdownStyles = [styles.dropdown];
+  const scrollbarStyles = [styles.dropdownInner];
+
+  if (dropdownMenuStyles) {
+    dropdownStyles.push(...dropdownMenuStyles);
+  }
+
+  if (dropdownScrollbarStyles) {
+    scrollbarStyles.push(...dropdownScrollbarStyles);
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (excludeSelectedItem) setActiveIndex(0);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, excludeSelectedItem]);
 
   return (
     <DropdownWrapper
@@ -85,15 +146,22 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       <DropdownButton
         isOpen={isOpen}
         isLoading={isLoading}
+        type={buttonType}
+        buttonStyles={dropdownButtonStyles}
+        hideDropdownIcon={hideDropdownIcon}
         text={
-          isLoading ? (
+          Boolean(renderButtonText) && !isLoading ? (
+            renderButtonText
+          ) : isLoading ? (
             <p>Loading...</p>
           ) : error ? (
             <div css={[colors.warning]}>{error}</div>
           ) : (
-            <p>
+            <p {...(!selectedItem && { css: styles.placeholder })}>
               {selectedItem
-                ? escapeHtml(selectedItem[itemKey]!)
+                ? renderItem
+                  ? renderItem(selectedItem)
+                  : escapeHtml(selectedItem[itemKey]!)
                 : defaultText || 'Select'}
             </p>
           )
@@ -103,11 +171,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         {...(handleFocus && { onFocus: handleFocus })}
         {...(handleBlur && { onBlur: handleBlur })}
       />
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        {renderSearch ? renderSearch(isOpen) : null}
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
+      <DropdownMenu isOpen={isOpen} additionalStyles={dropdownStyles}>
+        {Boolean(renderHeader) ? renderHeader : null}
+        {!hideSearch && renderSearch ? renderSearch(isOpen) : null}
+        <Scrollbar additionalStyles={scrollbarStyles}>
           <ul ref={dropdownRef}>
-            {items?.map((item: T, index: number) => {
+            {filteredItems?.map((item: T, index: number) => {
               const isDisabled: boolean = checkDisabledItem
                 ? checkDisabledItem(item)
                 : false;
@@ -116,7 +185,10 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                 <li
                   key={item.id || item.name}
                   ref={(el: HTMLLIElement) => handleItemRef(el, index)}
-                  css={activeIndex === index ? styles.focus : null}
+                  css={[
+                    selectedItem?.id === item.id ? styles.active : null,
+                    activeIndex === index ? styles.focus : null,
+                  ]}
                 >
                   <DropdownItem
                     size={size}
@@ -125,16 +197,27 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
                     tabIndex={-1}
                     isDisabled={isDisabled}
                     isAccessible
-                    additionalStyles={[styles.dropdownItem]}
+                    {...(dropdownItemStyles && {
+                      additionalStyles: dropdownItemStyles(item),
+                    })}
                   >
-                    <p>{escapeHtml(item[itemKey])}</p>
-                    {renderItemLabel && renderItemLabel(item)}
+                    {renderItem ? (
+                      renderItem(item)
+                    ) : (
+                      <>
+                        <p>{escapeHtml(item[itemKey])}</p>
+                        {renderItemLabel && renderItemLabel(item)}
+                      </>
+                    )}
                   </DropdownItem>
                 </li>
               );
             })}
           </ul>
         </Scrollbar>
+        {newItem && (
+          <DropdownCreate title={newItem.title} handleClick={newItem.onClick} />
+        )}
       </DropdownMenu>
     </DropdownWrapper>
   );

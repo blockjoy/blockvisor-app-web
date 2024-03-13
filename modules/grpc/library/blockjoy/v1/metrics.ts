@@ -138,7 +138,14 @@ export interface HostMetrics {
     | number
     | undefined;
   /** This is the number of seconds that has elapsed since the host has started. */
-  uptime?: number | undefined;
+  uptime?:
+    | number
+    | undefined;
+  /**
+   * This is the list of IPs already in use - that include all nodes created on host (standalone too)
+   * or for any other purpose.
+   */
+  usedIps: string[];
 }
 
 function createBaseMetricsServiceNodeRequest(): MetricsServiceNodeRequest {
@@ -574,6 +581,7 @@ function createBaseHostMetrics(): HostMetrics {
     networkReceived: undefined,
     networkSent: undefined,
     uptime: undefined,
+    usedIps: [],
   };
 }
 
@@ -605,6 +613,9 @@ export const HostMetrics = {
     }
     if (message.uptime !== undefined) {
       writer.uint32(72).uint64(message.uptime);
+    }
+    for (const v of message.usedIps) {
+      writer.uint32(82).string(v!);
     }
     return writer;
   },
@@ -679,6 +690,13 @@ export const HostMetrics = {
 
           message.uptime = longToNumber(reader.uint64() as Long);
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.usedIps.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -703,6 +721,7 @@ export const HostMetrics = {
     message.networkReceived = object.networkReceived ?? undefined;
     message.networkSent = object.networkSent ?? undefined;
     message.uptime = object.uptime ?? undefined;
+    message.usedIps = object.usedIps?.map((e) => e) || [];
     return message;
   },
 };

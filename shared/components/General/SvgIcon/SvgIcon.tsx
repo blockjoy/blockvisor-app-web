@@ -3,12 +3,12 @@ import { styles } from './SvgIcon.styles';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { ITheme } from 'types/theme';
 
+type AdditionalStyle = SerializedStyles | ((theme: ITheme) => SerializedStyles);
+type AdditionalStyles = AdditionalStyle | AdditionalStyle[];
+
 type Props = {
   children?: React.ReactNode;
-  additionalStyles?:
-    | ((theme: ITheme) => SerializedStyles)[]
-    | SerializedStyles[]
-    | undefined;
+  additionalStyles?: AdditionalStyles;
   size?: string;
   tooltip?: string;
   tooltipMinWidth?: string;

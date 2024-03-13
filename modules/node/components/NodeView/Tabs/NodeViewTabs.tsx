@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
-import NextLink from 'next/link';
-import { styles } from './NodeViewTabs.styles';
-import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
-import { useNodeView } from '@modules/node/hooks/useNodeView';
+import { useNodeView } from '@modules/node';
+import { TabNavigation } from '@shared/components';
+import { wrapper } from 'styles/wrapper.styles';
 
 export const NodeViewTabs = () => {
   const { query, asPath } = useRouter();
@@ -45,26 +44,14 @@ export const NodeViewTabs = () => {
       : routerPath.includes(buttonPath);
   };
 
+  const tabItems = tabs.map((tab) => ({
+    ...tab,
+    isActive: isActive(tab.href),
+  }));
+
   return (
-    <section css={wrapper.main}>
-      <div css={styles.wrapper}>
-        <div css={styles.tabs}>
-          {tabs.map((tab) => (
-            <NextLink
-              key={tab.name}
-              href={tab.href}
-              css={[
-                styles.tabButton,
-                isActive(tab.href) && styles.tabButtonActive,
-              ]}
-              className={tab.className}
-            >
-              {tab.name}
-            </NextLink>
-          ))}
-          <header css={styles.sidePanelHeader}>Metrics</header>
-        </div>
-      </div>
-    </section>
+    <div css={wrapper.main}>
+      <TabNavigation items={tabItems} sidePanel="Metrics" />
+    </div>
   );
 };

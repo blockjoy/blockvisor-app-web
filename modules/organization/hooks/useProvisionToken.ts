@@ -3,7 +3,6 @@ import { organizationClient } from '@modules/grpc';
 import { useRecoilState } from 'recoil';
 import { checkForTokenError } from 'utils/checkForTokenError';
 import { organizationAtoms } from '../store/organizationAtoms';
-import { useDefaultOrganization } from './useDefaultOrganization';
 
 export const useProvisionToken = () => {
   const repository = useIdentityRepository();
@@ -26,7 +25,6 @@ export const useProvisionToken = () => {
       setProvisionToken(response.token);
     } catch (err) {
       console.log('getProvisionTokenError', err);
-      // do nothing
     }
   };
 

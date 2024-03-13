@@ -1,85 +1,82 @@
-import { DropdownMenu, DropdownItem, SvgIcon } from '@shared/components';
-import { useClickOutside } from '@shared/hooks/useClickOutside';
-import { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useState } from 'react';
+import { css } from '@emotion/react';
+import { SvgIcon, Dropdown } from '@shared/components';
 import { styles } from './ActionsDropdown.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
-import { css } from '@emotion/react';
 
 export type ActionsDropdownItem = {
-  title: string;
+  name: string;
   icon: ReactNode;
-  method: VoidFunction;
+  onClick: VoidFunction;
   hasBorderTop?: boolean;
 };
 
 type Props = {
   items: ActionsDropdownItem[];
+  isLoading?: boolean;
 };
 
-export const ActionsDropdown = ({ items }: Props) => {
+export const ActionsDropdown = ({ items, isLoading = false }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const renderItem = (item: ActionsDropdownItem) => (
+    <>
+      <SvgIcon isDefaultColor size="12px">
+        {item.icon}
+      </SvgIcon>
+      <p css={styles.dropdownText}>{item.name}</p>
+    </>
+  );
 
-  const handleClick = () => setIsOpen(!isOpen);
-  const handleClickOutside = () => setIsOpen(false);
+  const handleOpen = (open: boolean = true) => setIsOpen(open);
+  const handleSelect = (item: ActionsDropdownItem | null) => item?.onClick();
 
-  const handleDropdownItemClicked = (method: VoidFunction) => {
-    setIsOpen(false);
-    method();
+  const dropdownItemStyles = (item: ActionsDropdownItem) => {
+    const additionalStyles = [styles.dropdownItem];
+
+    if (item.hasBorderTop) {
+      additionalStyles.push(css`
+        border-top: 1px solid rgb(255 255 255 / 20%);
+      `);
+    }
+
+    return additionalStyles;
   };
 
-  useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
-
   return (
-    <div css={styles.wrapper} ref={dropdownRef}>
-      <button css={styles.dropdownButton} onClick={handleClick}>
-        <SvgIcon>
-          <IconCog />
-        </SvgIcon>
-        <p>Actions</p>
-        <span css={[styles.icon, isOpen && styles.iconActive]}>
-          <SvgIcon size="12px">
-            <IconArrow />
-          </SvgIcon>
-        </span>
-      </button>
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        <ul>
-          {items.map((item) => {
-            const additionalStyles = [
-              css`
-                padding-left: 18px;
-                padding-right: 20px;
-                gap: 12px;
-              `,
-            ];
-
-            if (item.hasBorderTop) {
-              additionalStyles.push(css`
-                border-top: 1px solid rgb(255 255 255 / 20%);
-              `);
-            }
-
-            return (
-              <li key={item.title}>
-                <DropdownItem
-                  onButtonClick={() => handleDropdownItemClicked(item.method)}
-                  size="medium"
-                  type="button"
-                  additionalStyles={additionalStyles}
-                >
-                  <SvgIcon isDefaultColor size="12px">
-                    {item.icon}
-                  </SvgIcon>
-                  <p css={styles.dropdownText}>{item.title}</p>
-                </DropdownItem>
-              </li>
-            );
-          })}
-        </ul>
-      </DropdownMenu>
+    <div css={styles.wrapper}>
+      <Dropdown
+        items={items}
+        handleOpen={handleOpen}
+        handleSelected={handleSelect}
+        isOpen={isOpen}
+        selectedItem={null}
+        noBottomMargin={true}
+        renderItem={renderItem}
+        renderButtonText={
+          <>
+            <SvgIcon
+              {...(isLoading && {
+                additionalStyles: [styles.cogIcon],
+              })}
+            >
+              <IconCog />
+            </SvgIcon>
+            <p>Actions</p>
+            <span css={[styles.icon, isOpen && styles.iconActive]}>
+              <SvgIcon size="12px">
+                <IconArrow />
+              </SvgIcon>
+            </span>
+          </>
+        }
+        hideDropdownIcon={true}
+        dropdownMenuStyles={[styles.dropdown]}
+        dropdownButtonStyles={styles.dropdownButton}
+        dropdownItemStyles={dropdownItemStyles}
+        dropdownScrollbarStyles={[styles.scrollbar]}
+      />
     </div>
   );
 };

@@ -1,22 +1,12 @@
-import { FC, useState } from 'react';
-import {
-  DropdownMenu,
-  DropdownButton,
-  DropdownItem,
-  Scrollbar,
-  DropdownWrapper,
-} from '@shared/components';
+import { useState, useMemo } from 'react';
+import { withSearchDropdown, Dropdown } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
-import { escapeHtml } from '@shared/utils/escapeHtml';
-import { styles } from './OrganizationSelect.styles';
 
-type Props = {
-  hideName?: boolean;
-};
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 
-export const OrganizationSelect: FC<Props> = ({ hideName }) => {
+export const OrganizationSelect = () => {
   const allOrganizations = useRecoilValue(
     organizationAtoms.allOrganizationsSorted,
   );
@@ -27,49 +17,35 @@ export const OrganizationSelect: FC<Props> = ({ hideName }) => {
   );
   const { switchOrganization } = useSwitchOrganization();
 
-  const handleClick = () => setIsOpen(!isOpen);
+  const handleClick = (isOpen?: boolean) => setIsOpen(isOpen!);
 
-  const handleChange = async (orgId?: string, orgName?: string) => {
-    if (orgId && orgName && orgId !== defaultOrganization?.id) {
-      await switchOrganization(orgId, orgName);
+  const handleChange = async (org: Org | null) => {
+    if (!org) return;
+
+    const { id, name } = org;
+
+    if (id && name && id !== defaultOrganization?.id) {
+      await switchOrganization(id, name);
       setIsOpen(false);
     }
   };
 
+  const OrgSelectDropdown = useMemo(
+    () => withSearchDropdown<Org>(Dropdown),
+    [allOrganizations],
+  );
+
   return (
-    <DropdownWrapper
-      isEmpty={true}
+    <OrgSelectDropdown
+      items={allOrganizations}
+      selectedItem={
+        allOrganizations.find((org) => org.id === defaultOrganization?.id)!
+      }
+      handleSelected={handleChange}
       isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-    >
-      <DropdownButton
-        text={
-          <p css={styles.selectText}>
-            {escapeHtml(defaultOrganization?.name!)}
-          </p>
-        }
-        onClick={handleClick}
-        isOpen={isOpen}
-      />
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          <ul>
-            {allOrganizations
-              ?.filter((org) => org.id !== defaultOrganization?.id)
-              ?.map((org) => (
-                <li key={org.id}>
-                  <DropdownItem
-                    size="medium"
-                    type="button"
-                    onButtonClick={() => handleChange(org.id, org.name)}
-                  >
-                    <p css={styles.selectText}>{escapeHtml(org.name!)}</p>
-                  </DropdownItem>
-                </li>
-              ))}
-          </ul>
-        </Scrollbar>
-      </DropdownMenu>
-    </DropdownWrapper>
+      handleOpen={handleClick}
+      isLoading={false}
+      size="small"
+    />
   );
 };

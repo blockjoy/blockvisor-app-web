@@ -55,12 +55,6 @@ export const styles = {
       tr:hover {
         opacity: 1;
       }
-
-      tr:hover td:first-of-type {
-        path {
-          fill: ${theme.colorPrimary};
-        }
-      }
     }
 
     tr path {
@@ -91,6 +85,19 @@ export const styles = {
       border-bottom: 1px solid ${theme.colorBorder};
       opacity: 0.8;
       transition: 0.3s;
+
+      &.active {
+        opacity: 1;
+      }
+    }
+  `,
+  tableHoverIcon: (theme: ITheme) => css`
+    @media ${breakpoints.fromXLrg} {
+      tr:hover td:first-of-type {
+        path {
+          fill: ${theme.colorPrimary};
+        }
+      }
     }
   `,
   rowFancyUnderlineHover: css`

@@ -55,7 +55,7 @@ class UserClient {
   ): Promise<UserServiceListResponse> {
     const request: UserServiceListRequest = {
       offset: getPaginationOffset(pagination),
-      limit: pagination?.items_per_page!,
+      limit: pagination?.itemsPerPage!,
       sort: sort || [
         {
           field: UserSortField.USER_SORT_FIELD_FIRST_NAME,
@@ -128,6 +128,42 @@ class UserClient {
       const response = await this.client.update(request, getOptions());
       console.log('updateUserResponse', response);
       return response.user!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async getBilling(userId: string): Promise<string | StatusResponse> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.getBilling({ userId }, getOptions());
+
+      return response.billingId!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async updateBilling(
+    userId: string,
+    billingId: string,
+  ): Promise<string | StatusResponse> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.updateBilling(
+        { userId, billingId },
+        getOptions(),
+      );
+      return response.billingId!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async deleteBilling(userId: string): Promise<void> {
+    try {
+      await authClient.refreshToken();
+      await this.client.deleteBilling({ userId }, getOptions());
     } catch (err) {
       return handleError(err);
     }

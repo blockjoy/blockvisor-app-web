@@ -1,5 +1,6 @@
-import { styles } from './Modal.styles';
 import { ReactNode, useEffect, useRef } from 'react';
+import { SerializedStyles } from '@emotion/react';
+import { styles } from './Modal.styles';
 import { Portal, SvgIcon } from '@shared/components';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import IconClose from '@public/assets/icons/common/Close.svg';
@@ -9,13 +10,20 @@ type Props = {
   children?: ReactNode;
   portalId: string;
   handleClose?: any;
+  additionalStyles?: SerializedStyles[];
+  isActive?: boolean;
 };
 
-export function Modal({ isOpen, children, portalId, handleClose }: Props) {
+export function Modal({
+  isOpen,
+  children,
+  portalId,
+  handleClose,
+  additionalStyles,
+  isActive,
+}: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
-  useClickOutside(ref, () => {
-    handleClose();
-  });
+  useClickOutside(ref, handleClose, isActive);
 
   const handleEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -43,14 +51,15 @@ export function Modal({ isOpen, children, portalId, handleClose }: Props) {
   return (
     <Portal wrapperId={portalId}>
       <div css={[isOpen && styles.modal]} id="js-auth-layout">
-        <div ref={ref} css={[isOpen && styles.base]}>
+        <div
+          ref={ref}
+          css={[isOpen && styles.base, additionalStyles && additionalStyles]}
+        >
           {children}
           <button type="button" onClick={handleClose} css={styles.closeButton}>
-            <span css={styles.iconWrapper}>
-              <SvgIcon size="26px">
-                <IconClose />
-              </SvgIcon>
-            </span>
+            <SvgIcon size="24px">
+              <IconClose />
+            </SvgIcon>
           </button>
         </div>
       </div>

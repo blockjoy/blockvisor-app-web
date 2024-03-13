@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { rgba } from 'polished';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
@@ -49,7 +50,21 @@ export const styles = {
       }
     }
   `,
+  buttonDanger: (theme: ITheme) => css`
+    background: ${rgba(theme.colorDanger || 'red', 0.2)};
+    path {
+      fill: ${theme.colorDanger};
+    }
 
+    :is(:hover, :active. :focus):not(:disabled) {
+      background: ${rgba(theme.colorDanger || 'red', 0.2)};
+      box-shadow: 0px 0px 0px 2px ${rgba(theme.colorDanger || 'red', 0.3)};
+
+      path {
+        fill: ${theme.colorDanger};
+      }
+    }
+  `,
   tooltip: (theme: ITheme) => css`
     position: absolute;
     z-index: 2;

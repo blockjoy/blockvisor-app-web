@@ -18,7 +18,7 @@ export const styles = {
 
     @media ${breakpoints.toXlrg} {
       display: block;
-      max-height: 1000px;
+      max-height: 100%;
       max-width: 100%;
       border-right: none;
       border-bottom: 1px solid ${theme.colorBorder};

@@ -15,6 +15,7 @@ import {
   nodeLauncherAtoms,
   convertNodeTypeToName,
   getNodeTypes,
+  nodeLauncherSelectors,
 } from '@modules/node';
 import { styles } from './NodeLauncherProtocolBlockchains.styles';
 
@@ -35,8 +36,8 @@ export const NodeLauncherProtocolBlockchains = ({
   const { blockchainId: activeBlockchainId, nodeType: activeNodeType } =
     nodeLauncher;
 
-  const selectedBlockchain = blockchains?.find(
-    (blockchain) => blockchain.id === activeBlockchainId,
+  const selectedBlockchain = useRecoilValue(
+    nodeLauncherSelectors.selectedBlockchain(activeBlockchainId),
   );
 
   const handleSelect = (activeBlockchain: Blockchain) => {

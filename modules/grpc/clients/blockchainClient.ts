@@ -15,7 +15,7 @@ class BlockchainClient {
     this.client = createClient(BlockchainServiceDefinition, channel);
   }
 
-  async getBlockchains(orgId?: string): Promise<Blockchain[]> {
+  async listBlockchains(orgId?: string): Promise<Blockchain[]> {
     const request = {
       orgId,
     };

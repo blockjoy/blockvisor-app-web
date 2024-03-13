@@ -119,6 +119,7 @@ const getIcon = (statusName: string) => {
       case 'RELAYING':
         return <IconRelaying />;
       case 'DELETED':
+      case 'DELETING':
       case 'DELETE_PENDING':
         return <IconDeleted />;
       case 'REMOVED':

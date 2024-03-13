@@ -3,17 +3,25 @@ import { ReactNode } from 'react';
 import { styles } from './ButtonGroup.styles';
 
 type ButtonGroupProps = {
-  type?: 'default' | 'flex' | 'inline';
-  additionalStyles?: SerializedStyles;
+  type?: 'default' | 'extended' | 'flex';
   children: ReactNode;
+  additionalStyles?: SerializedStyles[];
 };
 
 export const ButtonGroup = ({
   type = 'default',
-  additionalStyles,
   children,
+  additionalStyles,
 }: ButtonGroupProps) => {
   return (
-    <div css={[styles.wrapper, styles[type], additionalStyles]}>{children}</div>
+    <div
+      css={[
+        styles.wrapper,
+        styles[type],
+        additionalStyles ? additionalStyles : null,
+      ]}
+    >
+      {children}
+    </div>
   );
 };

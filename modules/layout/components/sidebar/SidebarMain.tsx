@@ -1,6 +1,8 @@
-import { isMobile } from 'react-device-detect';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { ReactNode } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import { styles } from './SidebarMain.styles';
 import { Badge } from '@shared/components';
 import IconNodes from '@public/assets/icons/app/Node.svg';
@@ -9,25 +11,41 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconChat from '@public/assets/icons/common/Chat.svg';
 import IconSliders from '@public/assets/icons/app/Sliders.svg';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { invitationAtoms, organizationAtoms } from '@modules/organization';
-import { usePermissions } from '@modules/auth';
+import { ROUTES } from '@shared/index';
+import { authAtoms } from '@modules/auth';
+import { billingAtoms } from '@modules/billing';
+
+type BlockItem = {
+  id: string;
+  title?: string;
+  items: SidebarItem[];
+};
+
+type SidebarItem = {
+  name: string;
+  path: string;
+  icon: ReactNode;
+  isOrganizations?: boolean;
+};
 
 export default () => {
   const router = useRouter();
 
-  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-
-  const { isSuperUser } = usePermissions();
-
+  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
   const invitationCount = useRecoilValue(
     invitationAtoms.receivedInvitations,
   )?.length;
+  const isEnabledBillingPreview = useRecoilValue(
+    billingAtoms.isEnabledBillingPreview(isSuperUser),
+  );
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
@@ -35,32 +53,44 @@ export default () => {
     }
   };
 
-  const blocks = [
+  const blocks: BlockItem[] = [
     {
+      id: 'blockvisor',
       title: 'BLOCKVISOR',
       items: [
-        { name: 'Nodes', path: '/nodes', icon: <IconNodes /> },
+        { name: 'Nodes', path: ROUTES.NODES, icon: <IconNodes /> },
         {
           name: 'Launch Node',
-          path: '/launch-node',
+          path: ROUTES.LAUNCH_NODE,
           icon: <IconRocket />,
         },
         {
           name: 'Hosts',
-          path: '/hosts',
+          path: ROUTES.HOSTS,
           icon: <IconHost />,
         },
+      ],
+    },
+    {
+      id: 'settings',
+      title: 'SETTINGS',
+      items: [
         {
           name: 'Organizations',
           path: isMobile
-            ? '/organizations'
-            : `/organizations/${defaultOrganization?.id}`,
+            ? ROUTES.ORGANIZATIONS
+            : `${ROUTES.ORGANIZATIONS}/${defaultOrganization?.id}`,
           icon: <IconOrganizations />,
           isOrganizations: true,
         },
+      ],
+    },
+    {
+      id: 'help',
+      items: [
         {
           name: 'FAQ',
-          path: '/faq',
+          path: ROUTES.FAQ,
           icon: <IconChat />,
         },
       ],
@@ -68,63 +98,94 @@ export default () => {
   ];
 
   if (isSuperUser) {
-    blocks[0].items.unshift({
-      name: 'Admin',
-      path: '/admin?name=dashboard',
-      icon: <IconSliders />,
+    blocks.unshift({
+      id: 'admin',
+      title: 'BLOCKJOY',
+      items: [
+        {
+          name: 'Admin',
+          path: '/admin?name=dashboard',
+          icon: <IconSliders />,
+        },
+      ],
     });
   }
 
-  return (
-    <main css={[styles.wrapper]}>
-      {blocks.map((block) => (
-        <ul key={block.title} css={[styles.list]}>
-          {block.items.map((item) => (
-            <li key={item.name}>
-              <Link
-                href={item.path}
-                onClick={handleLinkClicked}
-                css={[
-                  styles.link,
-                  !isSidebarOpen && styles.linkSidebarCollapsed,
-                ]}
-              >
-                <span
-                  css={styles.linkInner}
-                  className={`link-inner ${
-                    router.pathname.startsWith(item.path.substring(0, 3))
-                      ? 'active'
-                      : ''
-                  }`}
-                >
-                  <span
-                    className="link-icon"
-                    css={[
-                      styles.linkIcon,
-                      !isSidebarOpen && styles.linkIconSidebarOpen,
-                    ]}
-                  >
-                    {item.icon}
-                  </span>
-                  <span
-                    className="link-text"
-                    css={[
-                      styles.linkText,
-                      !isSidebarOpen && styles.linkTextHidden,
-                    ]}
-                  >
-                    {item.name}
+  let navBlocks: BlockItem[] = blocks.map((block: BlockItem) => {
+    if (block.id === 'settings' && isEnabledBillingPreview) {
+      return {
+        ...block,
+        items: [
+          ...block.items,
+          {
+            name: 'Billing',
+            path: ROUTES.BILLING,
+            icon: <IconBilling />,
+          },
+        ],
+      };
+    }
 
-                    {Boolean(invitationCount) && item.isOrganizations && (
-                      <Badge color="danger">{invitationCount}</Badge>
-                    )}
-                  </span>
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ))}
+    return block;
+  });
+
+  return (
+    <main css={styles.wrapper(isSidebarOpen)}>
+      <div css={styles.navigation}>
+        {navBlocks.map((block) => (
+          <div key={block.id} css={styles.block(isSidebarOpen)}>
+            {block.title && isSidebarOpen && (
+              <h4 css={styles.header}>{block.title}</h4>
+            )}
+            <ul css={[styles.list]}>
+              {block.items.map((item) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.path}
+                    onClick={handleLinkClicked}
+                    css={[
+                      styles.link,
+                      !isSidebarOpen && styles.linkSidebarCollapsed,
+                    ]}
+                  >
+                    <span
+                      css={styles.linkInner}
+                      className={`link-inner ${
+                        router.pathname.startsWith(item.path.substring(0, 3))
+                          ? 'active'
+                          : ''
+                      }`}
+                    >
+                      <span
+                        className="link-icon"
+                        css={[
+                          styles.linkIcon,
+                          !isSidebarOpen && styles.linkIconSidebarOpen,
+                        ]}
+                      >
+                        {item.icon}
+                      </span>
+                      <span
+                        className="link-text"
+                        css={[
+                          styles.linkText,
+                          !isSidebarOpen && styles.linkTextHidden,
+                        ]}
+                      >
+                        {item.name}
+
+                        {Boolean(invitationCount) && item.isOrganizations && (
+                          <Badge color="danger">{invitationCount}</Badge>
+                        )}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
       <SidebarFooter />
     </main>
   );

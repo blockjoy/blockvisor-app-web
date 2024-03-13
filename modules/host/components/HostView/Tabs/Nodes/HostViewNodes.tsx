@@ -43,8 +43,8 @@ export const HostViewNodes = () => {
   useEffect(() => {
     if (router.isReady) {
       listNodesByHost(id as string, {
-        current_page: pageIndex,
-        items_per_page: itemsPerPage,
+        currentPage: pageIndex,
+        itemsPerPage: itemsPerPage,
       });
     }
   }, [pageIndex, router.isReady]);

@@ -2,13 +2,15 @@ import { openGrafanaUrl } from '@modules/admin/utils';
 import { Skeleton } from '@shared/components';
 import { AdminHeader } from '../../../AdminHeader/AdminHeader';
 import { styles } from './AdminDetailHeader.styles';
-import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
+import { AdminDetailHeaderDelete, AdminHeaderButton } from '@modules/admin';
 import IconCopy from '@public/assets/icons/common/Copy.svg';
 import IconPencil from '@public/assets/icons/common/Pencil.svg';
 import IconBinoculars from '@public/assets/icons/common/Binoculars.svg';
 import IconGraph from '@public/assets/icons/common/Graph.svg';
 import IconLogs from '@public/assets/icons/common/Logs.svg';
 import { isMobile } from 'react-device-detect';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 type Props = {
   name: string;
@@ -19,9 +21,11 @@ type Props = {
   isLoading?: boolean;
   isEditMode?: boolean;
   canEdit?: boolean;
+  additionalHeaderButtons: React.ReactNode;
   onOpenAppView?: VoidFunction;
   onCopyObject?: VoidFunction;
   onToggleEditMode?: VoidFunction;
+  onDelete?: (onSuccess: VoidFunction) => void;
 };
 
 export const AdminDetailHeader = ({
@@ -33,10 +37,21 @@ export const AdminDetailHeader = ({
   isLoading,
   isEditMode,
   canEdit,
+  additionalHeaderButtons,
   onOpenAppView,
   onCopyObject,
   onToggleEditMode,
+  onDelete,
 }: Props) => {
+  const router = useRouter();
+
+  const handleDelete = () => {
+    onDelete?.(() => {
+      toast.success(`Deleted`);
+      router.back();
+    });
+  };
+
   return (
     <AdminHeader name={name}>
       <span css={styles.separator}>/</span>
@@ -84,6 +99,10 @@ export const AdminDetailHeader = ({
               <AdminHeaderButton icon={<IconCopy />} onClick={onCopyObject}>
                 Copy Object
               </AdminHeaderButton>
+              {additionalHeaderButtons}
+              {!!onDelete && (
+                <AdminDetailHeaderDelete onDelete={handleDelete} />
+              )}
             </div>
           )}
         </div>

@@ -1,12 +1,17 @@
 import { toast } from 'react-toastify';
 import { nodeClient } from '@modules/grpc';
-import { SetterOrUpdater, useRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
 import {
   Node,
   NodeServiceUpdateConfigRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import {
+  organizationAtoms,
+  useSwitchOrganization,
+} from '@modules/organization';
+import { authAtoms } from '@modules/auth';
 
 type Args = string | string[] | undefined;
 
@@ -28,12 +33,17 @@ const convertRouteParamToString = (id: Args) => {
 };
 
 export const useNodeView = (): Hook => {
+  const { switchOrganization } = useSwitchOrganization();
+  const { nodeList, modifyNodeInNodeList } = useNodeList();
+
   const [isLoading, setIsLoading] = useRecoilState(
     nodeAtoms.isLoadingActiveNode,
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-
-  const { nodeList, modifyNodeInNodeList } = useNodeList();
+  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const stopNode = async (nodeId: Args) => {
     try {
@@ -54,9 +64,20 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args) => {
-    if (nodeList?.findIndex((n) => n.id === id)! > -1) {
+    const foundNode = nodeList?.find((n) => n.id === id);
+
+    if (foundNode) {
       setIsLoading('finished');
-      setNode(nodeList?.find((n) => n.id === id)!);
+      if (!isSuperUser) {
+        setNode(foundNode);
+        switchOrganization(foundNode.orgId, foundNode.orgName);
+      } else {
+        setNode(foundNode);
+        const node = await nodeClient.getNode(id as string);
+        setNode(node);
+        switchOrganization(node.orgId, node.orgName);
+      }
+
       return;
     }
 
@@ -65,10 +86,12 @@ export const useNodeView = (): Hook => {
       const node = await nodeClient.getNode(nodeId);
       setNode(node);
       setIsLoading('finished');
+      if (node.orgId !== defaultOrganization?.id)
+        switchOrganization(node.orgId, node.orgName);
     } catch (err) {
-      setIsLoading('finished');
-      return;
+      setNode(null);
     } finally {
+      setIsLoading('finished');
     }
   };
 

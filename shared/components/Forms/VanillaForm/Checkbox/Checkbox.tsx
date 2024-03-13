@@ -1,5 +1,5 @@
-import { SerializedStyles } from '@emotion/react';
 import { ChangeEvent, ChangeEventHandler, ReactNode } from 'react';
+import { SerializedStyles } from '@emotion/react';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './Checkbox.styles';
 
@@ -22,7 +22,7 @@ export function Checkbox({
   name,
   formTouched = false,
   checked,
-  disabled,
+  disabled = false,
   onChange,
   children,
   description = '',
@@ -50,6 +50,7 @@ export function Checkbox({
         css={[
           styles.base,
           checked ? styles.checked : '',
+          disabled ? styles.disabled : '',
           additionalStyles && additionalStyles,
         ]}
         htmlFor={id}

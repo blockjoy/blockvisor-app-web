@@ -50,9 +50,9 @@ export const NodeList = () => {
 
   const hasMoreNodes =
     nodeCount !== nodeList?.length &&
-    nodeUIContext.queryParams.pagination.current_page *
-      nodeUIContext.queryParams.pagination.items_per_page +
-      nodeUIContext.queryParams.pagination.items_per_page <
+    nodeUIContext.queryParams.pagination.currentPage *
+      nodeUIContext.queryParams.pagination.itemsPerPage +
+      nodeUIContext.queryParams.pagination.itemsPerPage <
       nodeCount;
 
   const activeListType = useRecoilValue(nodeAtoms.activeListType);
@@ -67,13 +67,13 @@ export const NodeList = () => {
   }, [nodeUIProps.queryParams]);
 
   const updateQueryParams = () => {
-    const newCurrentPage = nodeUIProps.queryParams.pagination.current_page + 1;
+    const newCurrentPage = nodeUIProps.queryParams.pagination.currentPage + 1;
     const newQueryParams = {
       ...nodeUIProps.queryParams,
 
       pagination: {
         ...nodeUIProps.queryParams.pagination,
-        current_page: newCurrentPage,
+        currentPage: newCurrentPage,
         scrollPosition: window.scrollY,
       },
     };

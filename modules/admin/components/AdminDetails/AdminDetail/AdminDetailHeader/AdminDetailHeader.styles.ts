@@ -38,6 +38,7 @@ export const styles = {
     position: relative;
     display: flex;
     gap: 8px;
+    flex: 1 1 auto;
     margin-left: auto;
     padding-left: 26px;
 

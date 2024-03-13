@@ -17,8 +17,9 @@ export const styles = {
     &.not-empty,
     &.is-open {
       > button:not(:disabled) {
-        svg path {
-          fill: ${theme.colorText};
+        p,
+        span {
+          color: ${theme.colorText};
         }
 
         opacity: 1;
@@ -30,7 +31,8 @@ export const styles = {
       span {
         color: ${theme.colorDefault};
       }
-      p {
+      p,
+      span {
         color: ${theme.colorText};
       }
     }

@@ -27,7 +27,6 @@ import {
   handleError,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { StatusResponse, StatusResponseFactory } from '../status_response';
 
 export type UINode = {
   orgId: string;
@@ -43,11 +42,18 @@ export type UIFilterCriteria = {
   nodeType?: string[];
   nodeStatus?: string[];
   keyword?: string;
+  orgIds?: string[];
+  hostIds?: string[];
+  userIds?: string[];
+  regions?: string[];
+  ips?: string[];
+  versions?: string[];
+  networks?: string[];
 };
 
 export type UIPagination = {
-  current_page: number;
-  items_per_page: number;
+  currentPage: number;
+  itemsPerPage: number;
 };
 
 export type CustomNodeReport = NodeReport & { node: Node };
@@ -62,17 +68,23 @@ class NodeClient {
 
   async listNodes(
     orgId?: string,
-    filter_criteria?: UIFilterCriteria,
+    filter?: UIFilterCriteria,
     pagination?: UIPagination,
     sort?: NodeSort[],
   ): Promise<NodeServiceListResponse> {
     const request: NodeServiceListRequest = {
-      orgId,
+      orgIds: orgId ? [orgId!] : filter?.orgIds!,
+      hostIds: filter?.hostIds!,
+      ipAddresses: filter?.ips!,
+      networks: filter?.networks!,
+      regions: filter?.regions!,
+      userIds: filter?.userIds!,
+      versions: filter?.versions!,
       offset: getPaginationOffset(pagination!),
-      limit: pagination?.items_per_page!,
-      statuses: filter_criteria?.nodeStatus?.map((f) => +f)!,
-      nodeTypes: filter_criteria?.nodeType?.map((f) => +f)!,
-      blockchainIds: filter_criteria?.blockchain!,
+      limit: pagination?.itemsPerPage!,
+      statuses: filter?.nodeStatus?.map((f) => +f)!,
+      nodeTypes: filter?.nodeType?.map((f) => +f)!,
+      blockchainIds: filter?.blockchain!,
       sort: sort || [
         {
           field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
@@ -81,8 +93,8 @@ class NodeClient {
       ],
     };
 
-    if (filter_criteria?.keyword) {
-      const { keyword } = filter_criteria;
+    if (filter?.keyword) {
+      const { keyword } = filter;
       const search: NodeSearch = {
         id: createSearch(keyword),
         ip: createSearch(keyword),
@@ -115,7 +127,7 @@ class NodeClient {
       orgId,
       hostId,
       offset: getPaginationOffset(pagination!),
-      limit: pagination?.items_per_page!,
+      limit: pagination?.itemsPerPage!,
     };
 
     console.log('listNodesByHostRequest', request);
@@ -136,12 +148,17 @@ class NodeClient {
     const request = { id };
     console.log('getNodeRequest', request);
     await authClient.refreshToken();
-    const response = await callWithTokenRefresh(
-      this.client.get.bind(this.client),
-      { id },
-    );
-    console.log('getNodeResponse', response.node);
-    return response.node!;
+
+    try {
+      const response = await callWithTokenRefresh(
+        this.client.get.bind(this.client),
+        { id },
+      );
+      console.log('getNodeResponse', response.node);
+      return response.node!;
+    } catch (err) {
+      return handleError(err);
+    }
   }
 
   async createNode(node: NodeServiceCreateRequest): Promise<Node> {
@@ -157,6 +174,7 @@ class NodeClient {
   }
 
   async updateNode(node: NodeServiceUpdateConfigRequest): Promise<void> {
+    console.log('updateNodeRequest', node);
     try {
       await authClient.refreshToken();
       await this.client.updateConfig(node, getOptions());
@@ -165,12 +183,14 @@ class NodeClient {
     }
   }
 
-  async deleteNode(nodeId: string): Promise<void | StatusResponse> {
+  async deleteNode(id: string): Promise<void> {
+    const request = { id };
+    console.log('deleteNodeRequest', request);
     try {
       await authClient.refreshToken();
-      await this.client.delete({ id: nodeId }, getOptions());
+      await this.client.delete(request, getOptions());
     } catch (err) {
-      return StatusResponseFactory.deleteNodeResponse(err, 'grpcClient');
+      return handleError(err);
     }
   }
 
@@ -192,15 +212,20 @@ class NodeClient {
     }
   }
 
+  async upgradeNode(nodeId: string, version: string): Promise<void> {
+    try {
+      await authClient.refreshToken();
+      await this.client.upgrade({ id: nodeId, version }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
   async reportProblem(nodeId: string, message: string): Promise<void> {
     try {
       const { id: userId } = getIdentity();
 
-      const request = {
-        userId,
-        nodeId,
-        message,
-      };
+      const request = { userId, nodeId, message };
 
       console.log('reportProblemRequest', request);
 
@@ -221,14 +246,9 @@ class NodeClient {
     try {
       await authClient.refreshToken();
 
-      const nodesReponse = await this.client.list(
-        {
-          limit: 1000,
-        },
-        getOptions(),
-      );
+      const response = await this.client.list({ limit: 1000 }, getOptions());
 
-      const { nodes } = nodesReponse;
+      const { nodes } = response;
 
       const reports = nodes.flatMap((node) =>
         node.reports.map((report) => ({

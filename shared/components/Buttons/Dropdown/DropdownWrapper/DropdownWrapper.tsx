@@ -1,9 +1,9 @@
-import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { ReactNode, useRef } from 'react';
+import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './DropdownWrapper.styles';
 
 type Props = {
-  isEmpty: boolean;
+  isEmpty?: boolean;
   isOpen: boolean;
   onClose: VoidFunction;
   children: ReactNode;
@@ -19,6 +19,7 @@ export const DropdownWrapper = ({
 }: Props) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   useClickOutside<HTMLDivElement>(dropdownRef, onClose);
+
   return (
     <div
       className={`${!isEmpty ? 'not-empty' : ''} ${isOpen ? 'is-open' : ''}`}

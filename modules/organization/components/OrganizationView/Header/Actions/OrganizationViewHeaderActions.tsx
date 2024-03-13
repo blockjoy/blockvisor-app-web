@@ -41,7 +41,8 @@ export const OrganizationViewHeaderActions = () => {
         getOrganizationRole(member.roles) === 'Owner',
     );
 
-  const canDeleteOrganization = hasPermission('org-delete');
+  const canDeleteOrganization =
+    hasPermission('org-delete') || hasPermission('org-admin-delete');
 
   const canLeaveOrganization =
     hasPermission('org-remove-self') && orgHasOtherAdmins;
@@ -63,17 +64,21 @@ export const OrganizationViewHeaderActions = () => {
   const gotoAdminPanel = () =>
     router.push(`/admin?name=orgs&id=${defaultOrganization?.id}`);
 
-  const callback = async () => {
+  const onSuccess = async () => {
     const newOrgs = removeFromOrganizations(organization?.id!);
     const newDefaultOrg = await getDefaultOrganization(newOrgs);
     router.push(ROUTES.ORGANIZATION(newDefaultOrg?.id!));
     setIsDeleteMode(false);
   };
 
+  const onError = () => {
+    setIsDeleteMode(false);
+  };
+
   const handleAction = () =>
     deleteType === 'Delete'
-      ? deleteOrganization(organization!.id, callback)
-      : leaveOrganization(organization!.id, callback);
+      ? deleteOrganization(organization!.id, onSuccess, onError)
+      : leaveOrganization(organization!.id, onSuccess, onError);
 
   const items = [];
 
@@ -82,26 +87,26 @@ export const OrganizationViewHeaderActions = () => {
 
   if (isSuperUser) {
     items.push({
-      title: 'Admin',
+      name: 'Admin',
       icon: <IconAdmin />,
-      method: gotoAdminPanel,
+      onClick: gotoAdminPanel,
     });
   }
 
   if (canLeaveOrganization) {
     items.push({
-      title: 'Leave',
+      name: 'Leave',
       icon: <IconDoor />,
-      method: toggleLeaveModalOpen,
+      onClick: toggleLeaveModalOpen,
       hasBorderTop: !canDeleteOrganization && hasBorderTop,
     });
   }
 
   if (canDeleteOrganization) {
     items.push({
-      title: 'Delete',
+      name: 'Delete',
       icon: <IconDelete />,
-      method: toggleDeleteModalOpen,
+      onClick: toggleDeleteModalOpen,
       hasBorderTop: hasBorderTop,
     });
   }

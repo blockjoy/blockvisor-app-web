@@ -1,5 +1,14 @@
+type DefaultOrganization = {
+  id: string;
+  name: string;
+};
+
 interface IDeleteOrganizationHook {
-  deleteOrganization: (id: string, callback: VoidFunction) => void;
+  deleteOrganization: (
+    id: string,
+    onSuccess: VoidFunction,
+    onError: VoidFunction,
+  ) => void;
 }
 
 interface IUpdateOrganizationHook {

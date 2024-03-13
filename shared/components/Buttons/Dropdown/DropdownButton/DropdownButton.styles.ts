@@ -38,7 +38,8 @@ export const styles = {
       padding-right: 20px;
     }
 
-    :focus {
+    :focus,
+    :hover {
       svg path {
         fill: ${theme.colorText};
       }
@@ -49,6 +50,17 @@ export const styles = {
 
       opacity: 1;
       border-color: ${theme.colorLabel};
+    }
+  `,
+  buttonInput: (theme: ITheme) => css`
+    background-color: ${theme.colorInput};
+    border-color: var(--color-text-5-o10) !important;
+    color: var(--color-text-5);
+
+    &:focus {
+      outline: 0;
+      border-color: var(--color-text-5-o30) !important;
+      color: var(--color-text-5);
     }
   `,
   icon: (theme: ITheme) => css`

@@ -4,11 +4,7 @@ import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import {
-  authAtoms,
-  useIdentityRepository,
-  useRefreshToken,
-} from '@modules/auth';
+import { useIdentityRepository, useRefreshToken } from '@modules/auth';
 import {
   organizationAtoms,
   useGetOrganizations,
@@ -20,6 +16,7 @@ import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
 import { usePageVisibility } from '@shared/index';
+import { useBilling } from '@modules/billing';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -29,9 +26,13 @@ export type LayoutProps = {
 
 export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
-  const userEmail = repository?.getIdentity()?.email;
+  const user = repository?.getIdentity();
 
   const currentOrg = useRef<string>();
+
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
+  );
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
   const {
@@ -43,26 +44,25 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getPermissions } = usePermissions();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
-  const { getBlockchains, blockchains } = useGetBlockchains();
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
-
-  const user = useRecoilValue(authAtoms.user);
 
   usePageVisibility({
     onVisible: refreshToken,
   });
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
+  useGetBlockchains();
+
+  useBilling();
 
   useEffect(() => {
-    (async () => {
+    const fetchReceivedInvitations = async () => {
       if (!organizations.length) await getOrganizations(true);
-      await getReceivedInvitations(userEmail!);
-    })();
+      await getReceivedInvitations(user?.email!);
+    };
+
+    fetchReceivedInvitations();
   }, []);
 
   useEffect(() => {
@@ -85,9 +85,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   useEffect(() => {
     if (!provisionToken && defaultOrganization?.id) {
       getProvisionToken(defaultOrganization?.id);
-    }
-    if (!blockchains?.length && defaultOrganization?.id) {
-      getBlockchains();
     }
     if (
       defaultOrganization?.id !== currentOrg.current &&

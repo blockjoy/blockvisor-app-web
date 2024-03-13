@@ -2,13 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { organizationClient } from '@modules/grpc';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { withSearchDropdown, Dropdown, sort } from '@shared/components';
+import { styles } from './AdminDetailEditOrgSelect.styles';
 
-type Props = {
-  editSettings: AdminDetailEditSettings;
-  onChange: (field: string, value: string) => void;
-};
-
-export const AdminDetailEditOrgSelect = ({ editSettings, onChange }: Props) => {
+export const AdminDetailEditOrgSelect = ({
+  editSettings,
+  onChange,
+}: AdminDetailEditControlProps) => {
   const [orgs, setOrgs] = useState<Org[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -16,17 +15,18 @@ export const AdminDetailEditOrgSelect = ({ editSettings, onChange }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const response = await organizationClient.getOrganizations(
+      const response = await organizationClient.listOrganizations(
         {
-          current_page: 0,
-          items_per_page: 1000,
+          currentPage: 0,
+          itemsPerPage: 1000,
         },
         undefined,
         undefined,
         true,
+        false,
       );
 
-      setOrgs(sort(response.orgs, { field: 'name', order: 'asc' }));
+      setOrgs(sort(response.orgs, { field: 'name' }));
       setSelectedOrg(
         response.orgs.find((org) => org.id === editSettings.defaultValue),
       );
@@ -52,10 +52,21 @@ export const AdminDetailEditOrgSelect = ({ editSettings, onChange }: Props) => {
     <OrgSelectDropdown
       items={orgs}
       noBottomMargin
+      renderItem={(item: Org) => (
+        <>
+          {item.name} <em css={styles.id}>{item.id}</em>
+        </>
+      )}
+      renderButtonText={
+        <p css={styles.buttonText}>
+          {selectedOrg?.name} (<span>{selectedOrg?.id})</span>
+        </p>
+      }
       selectedItem={selectedOrg!}
       handleSelected={handleChange}
       defaultText={selectedOrg?.name}
       isOpen={isOpen}
+      excludeSelectedItem
       handleOpen={handleOpen}
       isLoading={isLoading}
       size="small"

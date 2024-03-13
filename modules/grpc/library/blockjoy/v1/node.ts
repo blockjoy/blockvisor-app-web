@@ -94,6 +94,18 @@ export interface Node {
   jobs: NodeJob[];
   /** A list of reports that have been created for this node. */
   reports: NodeReport[];
+  /**
+   * A note you can use to explain what this node is for, or alternatively use
+   * as a shopping list.
+   */
+  note?:
+    | string
+    | undefined;
+  /**
+   * If this is an rpc node, this field contains the url where rpc requests can
+   * be sent to.
+   */
+  url: string;
 }
 
 /** This message is used to create a new node. */
@@ -148,10 +160,8 @@ export interface NodeServiceGetResponse {
  * that are specified in the `filter` field.
  */
 export interface NodeServiceListRequest {
-  /** The organization within which we will search for nodes. */
-  orgId?:
-    | string
-    | undefined;
+  /** The organizations within which we will search for nodes. */
+  orgIds: string[];
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -174,10 +184,18 @@ export interface NodeServiceListRequest {
    * any of these blockchain ids will be returned.
    */
   blockchainIds: string[];
-  /** If this value is provided, only nodes running on this host are provided. */
-  hostId?:
-    | string
-    | undefined;
+  /** If this value is provided, only nodes running on these hosts are returned. */
+  hostIds: string[];
+  /** If this value is provided, only nodes created by these users are returned. */
+  userIds: string[];
+  /** If this value is provided, only nodes with these ip addresses are returned. */
+  ipAddresses: string[];
+  /** If this value is provided, only nodes with these versions are returned. */
+  versions: string[];
+  /** If this value is provided, only nodes with these networks are returned. */
+  networks: string[];
+  /** If this value is provided, only nodes with these regions are returned. */
+  regions: string[];
   /** Search params. */
   search?:
     | NodeSearch
@@ -218,6 +236,19 @@ export interface NodeServiceListResponse {
   nodeCount: number;
 }
 
+export interface NodeServiceUpgradeRequest {
+  /** The id of the node that you want to upgrade to a new version. */
+  id: string;
+  /**
+   * The version string to update it to. Make sure that this is a valid version
+   * for this <blockchain>/<node_type> combo.
+   */
+  version: string;
+}
+
+export interface NodeServiceUpgradeResponse {
+}
+
 /** This request is used for updating a node configuration. */
 export interface NodeServiceUpdateConfigRequest {
   /** The UUID of the node that you want to update. */
@@ -231,7 +262,14 @@ export interface NodeServiceUpdateConfigRequest {
   /** A list of ip addresses denied all access to any ports on this node. */
   denyIps: FilteredIpAddr[];
   /** If this field is specified, then the node is moved to this org. */
-  orgId?: string | undefined;
+  orgId?:
+    | string
+    | undefined;
+  /**
+   * A note you can use to explain what this node is for, or alternatively use
+   * as a shopping list.
+   */
+  note?: string | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {
@@ -499,6 +537,8 @@ function createBaseNode(): Node {
     dataDirectoryMountpoint: undefined,
     jobs: [],
     reports: [],
+    note: undefined,
+    url: "",
   };
 }
 
@@ -596,6 +636,12 @@ export const Node = {
     }
     for (const v of message.reports) {
       NodeReport.encode(v!, writer.uint32(274).fork()).ldelim();
+    }
+    if (message.note !== undefined) {
+      writer.uint32(282).string(message.note);
+    }
+    if (message.url !== "") {
+      writer.uint32(290).string(message.url);
     }
     return writer;
   },
@@ -824,6 +870,20 @@ export const Node = {
 
           message.reports.push(NodeReport.decode(reader, reader.uint32()));
           continue;
+        case 35:
+          if (tag !== 282) {
+            break;
+          }
+
+          message.note = reader.string();
+          continue;
+        case 36:
+          if (tag !== 290) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -874,6 +934,8 @@ export const Node = {
     message.dataDirectoryMountpoint = object.dataDirectoryMountpoint ?? undefined;
     message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
     message.reports = object.reports?.map((e) => NodeReport.fromPartial(e)) || [];
+    message.note = object.note ?? undefined;
+    message.url = object.url ?? "";
     return message;
   },
 };
@@ -1164,13 +1226,18 @@ export const NodeServiceGetResponse = {
 
 function createBaseNodeServiceListRequest(): NodeServiceListRequest {
   return {
-    orgId: undefined,
+    orgIds: [],
     offset: 0,
     limit: 0,
     statuses: [],
     nodeTypes: [],
     blockchainIds: [],
-    hostId: undefined,
+    hostIds: [],
+    userIds: [],
+    ipAddresses: [],
+    versions: [],
+    networks: [],
+    regions: [],
     search: undefined,
     sort: [],
   };
@@ -1178,8 +1245,8 @@ function createBaseNodeServiceListRequest(): NodeServiceListRequest {
 
 export const NodeServiceListRequest = {
   encode(message: NodeServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== undefined) {
-      writer.uint32(10).string(message.orgId);
+    for (const v of message.orgIds) {
+      writer.uint32(10).string(v!);
     }
     if (message.offset !== 0) {
       writer.uint32(16).uint64(message.offset);
@@ -1200,8 +1267,23 @@ export const NodeServiceListRequest = {
     for (const v of message.blockchainIds) {
       writer.uint32(50).string(v!);
     }
-    if (message.hostId !== undefined) {
-      writer.uint32(58).string(message.hostId);
+    for (const v of message.hostIds) {
+      writer.uint32(58).string(v!);
+    }
+    for (const v of message.userIds) {
+      writer.uint32(82).string(v!);
+    }
+    for (const v of message.ipAddresses) {
+      writer.uint32(90).string(v!);
+    }
+    for (const v of message.versions) {
+      writer.uint32(98).string(v!);
+    }
+    for (const v of message.networks) {
+      writer.uint32(106).string(v!);
+    }
+    for (const v of message.regions) {
+      writer.uint32(114).string(v!);
     }
     if (message.search !== undefined) {
       NodeSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
@@ -1224,7 +1306,7 @@ export const NodeServiceListRequest = {
             break;
           }
 
-          message.orgId = reader.string();
+          message.orgIds.push(reader.string());
           continue;
         case 2:
           if (tag !== 16) {
@@ -1286,7 +1368,42 @@ export const NodeServiceListRequest = {
             break;
           }
 
-          message.hostId = reader.string();
+          message.hostIds.push(reader.string());
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.userIds.push(reader.string());
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.ipAddresses.push(reader.string());
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.versions.push(reader.string());
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.networks.push(reader.string());
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.regions.push(reader.string());
           continue;
         case 8:
           if (tag !== 66) {
@@ -1317,13 +1434,18 @@ export const NodeServiceListRequest = {
 
   fromPartial(object: DeepPartial<NodeServiceListRequest>): NodeServiceListRequest {
     const message = createBaseNodeServiceListRequest();
-    message.orgId = object.orgId ?? undefined;
+    message.orgIds = object.orgIds?.map((e) => e) || [];
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.statuses = object.statuses?.map((e) => e) || [];
     message.nodeTypes = object.nodeTypes?.map((e) => e) || [];
     message.blockchainIds = object.blockchainIds?.map((e) => e) || [];
-    message.hostId = object.hostId ?? undefined;
+    message.hostIds = object.hostIds?.map((e) => e) || [];
+    message.userIds = object.userIds?.map((e) => e) || [];
+    message.ipAddresses = object.ipAddresses?.map((e) => e) || [];
+    message.versions = object.versions?.map((e) => e) || [];
+    message.networks = object.networks?.map((e) => e) || [];
+    message.regions = object.regions?.map((e) => e) || [];
     message.search = (object.search !== undefined && object.search !== null)
       ? NodeSearch.fromPartial(object.search)
       : undefined;
@@ -1525,8 +1647,100 @@ export const NodeServiceListResponse = {
   },
 };
 
+function createBaseNodeServiceUpgradeRequest(): NodeServiceUpgradeRequest {
+  return { id: "", version: "" };
+}
+
+export const NodeServiceUpgradeRequest = {
+  encode(message: NodeServiceUpgradeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.version !== "") {
+      writer.uint32(18).string(message.version);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpgradeRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpgradeRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpgradeRequest>): NodeServiceUpgradeRequest {
+    return NodeServiceUpgradeRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeServiceUpgradeRequest>): NodeServiceUpgradeRequest {
+    const message = createBaseNodeServiceUpgradeRequest();
+    message.id = object.id ?? "";
+    message.version = object.version ?? "";
+    return message;
+  },
+};
+
+function createBaseNodeServiceUpgradeResponse(): NodeServiceUpgradeResponse {
+  return {};
+}
+
+export const NodeServiceUpgradeResponse = {
+  encode(_: NodeServiceUpgradeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpgradeResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeServiceUpgradeResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeServiceUpgradeResponse>): NodeServiceUpgradeResponse {
+    return NodeServiceUpgradeResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<NodeServiceUpgradeResponse>): NodeServiceUpgradeResponse {
+    const message = createBaseNodeServiceUpgradeResponse();
+    return message;
+  },
+};
+
 function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
-  return { id: "", selfUpdate: undefined, allowIps: [], denyIps: [], orgId: undefined };
+  return { id: "", selfUpdate: undefined, allowIps: [], denyIps: [], orgId: undefined, note: undefined };
 }
 
 export const NodeServiceUpdateConfigRequest = {
@@ -1545,6 +1759,9 @@ export const NodeServiceUpdateConfigRequest = {
     }
     if (message.orgId !== undefined) {
       writer.uint32(42).string(message.orgId);
+    }
+    if (message.note !== undefined) {
+      writer.uint32(50).string(message.note);
     }
     return writer;
   },
@@ -1591,6 +1808,13 @@ export const NodeServiceUpdateConfigRequest = {
 
           message.orgId = reader.string();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.note = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1611,6 +1835,7 @@ export const NodeServiceUpdateConfigRequest = {
     message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.orgId = object.orgId ?? undefined;
+    message.note = object.note ?? undefined;
     return message;
   },
 };
@@ -2783,6 +3008,15 @@ export const NodeServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Upgrade a node to a new version. */
+    upgrade: {
+      name: "Upgrade",
+      requestType: NodeServiceUpgradeRequest,
+      requestStream: false,
+      responseType: NodeServiceUpgradeResponse,
+      responseStream: false,
+      options: {},
+    },
     /** Update a single blockchain node configuration. */
     updateConfig: {
       name: "UpdateConfig",
@@ -2865,6 +3099,11 @@ export interface NodeServiceImplementation<CallContextExt = {}> {
     request: NodeServiceListRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<NodeServiceListResponse>>;
+  /** Upgrade a node to a new version. */
+  upgrade(
+    request: NodeServiceUpgradeRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<NodeServiceUpgradeResponse>>;
   /** Update a single blockchain node configuration. */
   updateConfig(
     request: NodeServiceUpdateConfigRequest,
@@ -2918,6 +3157,11 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<NodeServiceListRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<NodeServiceListResponse>;
+  /** Upgrade a node to a new version. */
+  upgrade(
+    request: DeepPartial<NodeServiceUpgradeRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<NodeServiceUpgradeResponse>;
   /** Update a single blockchain node configuration. */
   updateConfig(
     request: DeepPartial<NodeServiceUpdateConfigRequest>,

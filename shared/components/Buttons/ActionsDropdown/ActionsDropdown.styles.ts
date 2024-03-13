@@ -1,16 +1,30 @@
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { ITheme } from 'types/theme';
+
+const spin = keyframes`
+  100% {
+    transform: rotate(1turn);
+  }
+`;
 
 export const styles = {
   wrapper: css`
     position: relative;
+    display: flex;
+    justify-content: flex-start;
   `,
   dropdown: css`
     top: 54px;
     right: 0;
     left: auto;
     width: 100%;
+    min-width: max-content;
     max-width: 200px;
+  `,
+  dropdownItem: css`
+    padding-left: 18px;
+    padding-right: 20px;
+    gap: 12px;
   `,
   dropdownButton: (theme: ITheme) => css`
     display: flex;
@@ -52,7 +66,16 @@ export const styles = {
       fill: ${theme.colorLabel};
     }
   `,
+  cogIcon: css`
+    animation: ${spin} 0.9s infinite linear;
+  `,
   iconActive: css`
     transform: rotate(-180deg);
+  `,
+  borderTop: css`
+    border-top: 1px solid rgb(255 255 255 / 20%);
+  `,
+  scrollbar: css`
+    max-height: inherit;
   `,
 };

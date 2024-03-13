@@ -24,17 +24,17 @@ export const HostViewHeaderActions = ({ onDeleteClicked }: Props) => {
 
   if (isSuperUser) {
     items.push({
-      title: 'Admin',
+      name: 'Admin',
       icon: <IconAdmin />,
-      method: handleAdminClicked,
+      onClick: handleAdminClicked,
     });
   }
 
   if (canDelete) {
     items.push({
-      title: 'Delete',
+      name: 'Delete',
       icon: <IconDelete />,
-      method: onDeleteClicked,
+      onClick: onDeleteClicked,
       hasBorderTop: isSuperUser,
     });
   }

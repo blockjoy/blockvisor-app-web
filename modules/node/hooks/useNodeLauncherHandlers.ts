@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
   useSetRecoilState,
 } from 'recoil';
-import { useRouter } from 'next/router';
+import isEqual from 'lodash/isEqual';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
@@ -18,12 +19,23 @@ import {
   NodeServiceCreateRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostAtoms, useHostSelect } from '@modules/host';
-import { useNodeAdd, nodeLauncherAtoms, blockchainAtoms } from '@modules/node';
+import {
+  useNodeAdd,
+  nodeLauncherAtoms,
+  blockchainAtoms,
+  nodeAtoms,
+  nodeLauncherSelectors,
+  useGetRegions,
+} from '@modules/node';
 import { organizationAtoms } from '@modules/organization';
-import { ROUTES } from '@shared/index';
+import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { sortNetworks, sortNodeTypes, sortVersions } from '../utils';
-import isEqual from 'lodash/isEqual';
+import { matchSKU } from '@modules/billing';
+
+type IUseNodeLauncherHandlersParams = {
+  fulfilReqs: boolean;
+};
 
 interface IUseNodeLauncherHandlersHook {
   handleHostChanged: (host: Host | null) => void;
@@ -41,11 +53,15 @@ interface IUseNodeLauncherHandlersHook {
   handleCreateNodeClicked: () => void;
 }
 
-export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
-  const router = useRouter();
+export const useNodeLauncherHandlers = ({
+  fulfilReqs,
+}: IUseNodeLauncherHandlersParams): IUseNodeLauncherHandlersHook => {
+  const searchParams = useSearchParams();
+  const { navigate } = useNavigate();
 
   const { getHosts } = useHostSelect();
   const { createNode } = useNodeAdd();
+  useGetRegions();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
@@ -61,8 +77,11 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const resetNodeLauncherState = useResetRecoilState(
     nodeLauncherAtoms.nodeLauncher,
   );
+  const selectedBlockchain = useRecoilValue(
+    nodeLauncherSelectors.selectedBlockchain(nodeLauncherState.blockchainId),
+  );
   const setError = useSetRecoilState(nodeLauncherAtoms.error);
-  const setIsLoading = useSetRecoilState(nodeLauncherAtoms.isLoading);
+  const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
   const [selectedHost, setSelectedHost] = useRecoilState(
     nodeLauncherAtoms.selectedHost,
   );
@@ -72,26 +91,33 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   const resetSelectedVersion = useResetRecoilState(
     nodeLauncherAtoms.selectedVersion,
   );
-
   const [selectedRegion, setSelectedRegion] = useRecoilState(
     nodeLauncherAtoms.selectedRegion,
   );
-
+  const selectedRegionByHost = useRecoilValue(
+    nodeLauncherSelectors.selectedRegionByHost(selectedHost?.region),
+  );
   const resetSelectedNetwork = useResetRecoilState(
     nodeLauncherAtoms.selectedNetwork,
   );
   const [selectedNetwork, setSelectedNetwork] = useRecoilState(
     nodeLauncherAtoms.selectedNetwork,
   );
+  const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
+
+  useEffect(() => {
+    setSelectedHost(null);
+  }, [allHosts]);
 
   useEffect(() => {
     let queriedHost = null;
-    if (router.isReady && router.query.hostId)
-      queriedHost =
-        allHosts.find((host: Host) => host.id === router.query.hostId) ?? null;
+    const hostId = searchParams.get('hostId');
+
+    if (hostId)
+      queriedHost = allHosts.find((host: Host) => host.id === hostId) ?? null;
 
     setSelectedHost(queriedHost);
-  }, [allHosts, router.isReady]);
+  }, [allHosts]);
 
   const handleHostChanged = (host: Host | null) => {
     Mixpanel.track('Launch Node - Host Changed');
@@ -110,7 +136,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
 
   const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
     setError(null);
-    setIsLoading(false);
+    setIsLaunching(false);
     setNodeLauncherState({
       ...nodeLauncherState,
       blockchainId,
@@ -198,7 +224,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
   };
 
   const handleCreateNodeClicked = () => {
-    setIsLoading(true);
+    setIsLaunching(true);
 
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.id,
@@ -224,10 +250,11 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
       params,
       (nodeId: string) => {
         Mixpanel.track('Launch Node - Node Launched');
-        router.push(ROUTES.NODE(nodeId));
-        resetNodeLauncherState();
-        resetSelectedVersion();
-        resetSelectedNetwork();
+        navigate(ROUTES.NODE(nodeId), () => {
+          resetNodeLauncherState();
+          resetSelectedVersion();
+          resetSelectedNetwork();
+        });
       },
       (error: string) => setError(error!),
     );
@@ -247,7 +274,7 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
 
     if (!activeNodeType) return;
 
-    setSelectedNodeType(sortNodeTypes(activeBlockchain.nodeTypes)[0]);
+    setSelectedNodeType(activeNodeType);
 
     const selectedVersionExists = activeNodeType.versions.some(
       (version) => version.id === selectedVersion?.id,
@@ -312,6 +339,27 @@ export const useNodeLauncherHandlers = (): IUseNodeLauncherHandlersHook => {
         )?.name || sortNetworks(selectedVersion?.networks)[0]?.name,
       );
   }, [selectedVersion?.id]);
+
+  useEffect(() => {
+    const nodeSKU = matchSKU('node', {
+      blockchain: selectedBlockchain,
+      nodeLauncher: nodeLauncherState,
+      version: selectedVersion,
+      region: !!selectedHost ? selectedRegionByHost : selectedRegion,
+      network: selectedNetwork,
+    });
+    setSelectedSKU(nodeSKU);
+  }, [
+    nodeLauncherState.nodeType,
+    selectedVersion,
+    selectedRegion,
+    selectedNetwork,
+    selectedHost,
+  ]);
+
+  useEffect(() => {
+    if (fulfilReqs) handleCreateNodeClicked();
+  }, [fulfilReqs]);
 
   useEffect(() => {
     Mixpanel.track('Launch Node - Opened');

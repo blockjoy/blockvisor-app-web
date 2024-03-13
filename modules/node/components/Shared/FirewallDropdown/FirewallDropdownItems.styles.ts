@@ -36,13 +36,22 @@ export const styles = {
       background: rgb(255 255 255 / 5%);
     }
   `,
-  removeButton: css`
+  removeButton: (theme: ITheme) => css`
     background: transparent;
     border: 0;
     cursor: pointer;
     transform: scale(0.75);
     height: 40px;
     width: 40px;
+
+    svg path {
+      fill: ${theme.colorDefault};
+      transition: 0.3s;
+    }
+
+    :hover svg path {
+      fill: ${theme.colorText};
+    }
 
     @media ${breakpoints.fromXLrg} {
       opacity: 0;

@@ -1,7 +1,6 @@
-import { DropdownMenu, NextLink, SvgIcon } from '@shared/components';
-import { useClickOutside } from '@shared/hooks/useClickOutside';
+import { ReactNode, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { Dropdown, SvgIcon } from '@shared/components';
 import { styles } from './PageTitleAdminNav.styles';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 import IconNode from '@public/assets/icons/app/Node.svg';
@@ -9,77 +8,79 @@ import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconUser from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
-const links = [
-  { name: 'dashboard', icon: <IconDashboard /> },
-  { name: 'nodes', icon: <IconNode /> },
-  { name: 'hosts', icon: <IconHost /> },
-  { name: 'orgs', icon: <IconOrganization /> },
-  { name: 'users', icon: <IconUser /> },
-];
+type LinkItem = {
+  id?: string;
+  name?: string;
+  icon?: ReactNode;
+};
 
 export const PageTitleAdminNav = () => {
+  const links: LinkItem[] = useMemo(
+    () => [
+      { id: 'dashboard', name: 'Dashboard', icon: <IconDashboard /> },
+      { id: 'nodes', name: 'Nodes', icon: <IconNode /> },
+      { id: 'hosts', name: 'Hosts', icon: <IconHost /> },
+      { id: 'orgs', name: 'Orgs', icon: <IconOrganization /> },
+      { id: 'users', name: 'Users', icon: <IconUser /> },
+      { id: 'settings', name: 'Settings', icon: <IconCog /> },
+    ],
+    [],
+  );
   const router = useRouter();
-
   const { name } = router.query;
 
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const handleOpen = (open: boolean = true) => setIsOpen(open);
 
-  const handleClick = () => setIsOpen(!isOpen);
+  const handleSelect = (item: LinkItem | null) =>
+    router.push(`/admin?name=${item?.id}`);
 
-  const handleClickOutside = () => setIsOpen(false);
+  const renderItem = (item: LinkItem) => (
+    <>
+      <SvgIcon size="12px" isDefaultColor>
+        {item.icon}
+      </SvgIcon>
+      {item.name}
+    </>
+  );
 
-  const handleItemClick = (link: string) => {
-    setIsOpen(false);
+  const selectedLink = links.find((link) => link.id === name) ?? null;
 
-    setTimeout(() => {
-      router.push(`/admin?name=${link}`);
-    }, 250);
-  };
-
-  useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
-
-  const selectedLink = links.find((link) => link.name === name);
+  const dropdownItemStyles = (item: LinkItem) => [styles.link];
 
   return (
-    <div css={styles.wrapper} ref={dropdownRef}>
-      <button css={styles.button} type="button" onClick={handleClick}>
-        {selectedLink ? (
+    <div css={styles.wrapper}>
+      <Dropdown
+        items={links}
+        handleOpen={handleOpen}
+        handleSelected={handleSelect}
+        isOpen={isOpen}
+        selectedItem={selectedLink}
+        noBottomMargin={true}
+        excludeSelectedItem
+        renderItem={renderItem}
+        renderButtonText={
           <>
             <SvgIcon additionalStyles={[styles.nameIcon]} isDefaultColor>
               {selectedLink?.icon}
             </SvgIcon>
-            {selectedLink.name}
+            <span>{selectedLink?.name}</span>
             <span css={[styles.icon, isOpen && styles.iconActive]}>
               <SvgIcon isDefaultColor size="11px">
                 <IconArrow />
               </SvgIcon>
             </span>
           </>
-        ) : (
-          ''
-        )}
-      </button>
-      <DropdownMenu isOpen={isOpen} additionalStyles={styles.menu}>
-        <ul css={styles.links}>
-          {links
-            .filter((link) => link.name !== name)
-            .map((link) => (
-              <a
-                key={link.name}
-                css={styles.link}
-                onClick={() => handleItemClick(link.name)}
-              >
-                <SvgIcon size="12px" isDefaultColor>
-                  {link.icon}
-                </SvgIcon>
-                {link.name}
-              </a>
-            ))}
-        </ul>
-      </DropdownMenu>
+        }
+        dropdownButtonStyles={styles.button}
+        dropdownMenuStyles={[styles.menu]}
+        dropdownItemStyles={dropdownItemStyles}
+        hideDropdownIcon={true}
+        dropdownScrollbarStyles={[styles.scrollbar]}
+      />
     </div>
   );
 };

@@ -6,7 +6,8 @@ export const HostViewSidePanel = () => {
   return (
     <NetdataDashboard
       id={host?.name!}
-      disk_space_name={host?.vmmMountpoint?.replace(/\//g, '_')!}
+      name={host?.name!}
+      disk_space_name={host?.vmmMountpoint!}
     />
   );
 };

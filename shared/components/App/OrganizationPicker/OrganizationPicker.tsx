@@ -1,19 +1,20 @@
-import { useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import {
-  DropdownMenu,
-  DropdownItem,
   SvgIcon,
-  Scrollbar,
   Badge,
+  withSearchDropdown,
+  Dropdown,
 } from '@shared/components';
 import { styles } from './OrganizationPicker.styles';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
-import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { isMobile } from 'react-device-detect';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@shared/constants/routes';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
@@ -26,7 +27,11 @@ export const OrganizationPicker = ({
   isRightAligned = false,
   maxWidth,
 }: Props) => {
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
+
+  const { pathname } = router;
+
+  const { id } = router.query;
 
   const allOrganizations = useRecoilValue(
     organizationAtoms.allOrganizationsSorted,
@@ -39,73 +44,84 @@ export const OrganizationPicker = ({
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
+
   const { switchOrganization } = useSwitchOrganization();
 
-  const handleClick = () => setIsOpen(!isOpen);
-  const handleClickOutside = () => setIsOpen(false);
+  const handleChange = async (nextOrg: Org | null) => {
+    if (!nextOrg) return;
 
-  const handleChange = async (orgId?: string, orgName?: string) => {
-    if (orgId && orgName && orgId !== defaultOrganization?.id) {
-      await switchOrganization(orgId, orgName);
-      setIsOpen(false);
-      if (isMobile) {
-        setIsSidebarOpen(false);
-      }
+    await switchOrganization(nextOrg.id, nextOrg.name);
+
+    setIsOpen(false);
+
+    if (isMobile) setIsSidebarOpen(false);
+
+    if (!id) return;
+
+    switch (true) {
+      case pathname.includes('nodes'):
+        router.push(ROUTES.NODES);
+        break;
+      case pathname.includes('hosts'):
+        router.push(ROUTES.HOSTS);
+        break;
     }
   };
 
-  useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
+  const handleOpen = (open: boolean = true) => setIsOpen(open);
+
+  const selectedItem = allOrganizations.find(
+    (org) => org.id === defaultOrganization?.id,
+  )!;
+
+  const OrgSelectDropdown = useMemo(
+    () => withSearchDropdown<Org>(Dropdown),
+    [allOrganizations],
+  );
 
   return (
-    <div css={styles.wrapper} ref={dropdownRef}>
-      <button
-        disabled={allOrganizations.length === 1}
-        css={styles.select}
-        onClick={handleClick}
-      >
-        <SvgIcon isDefaultColor size="16px">
-          <IconOrganization />
-        </SvgIcon>
-        <p css={styles.selectText(maxWidth)}>
-          {escapeHtml(defaultOrganization?.name!)}
-        </p>
-        {allOrganizations.length > 1 && (
-          <span css={[styles.icon, isOpen && styles.iconActive]}>
-            <SvgIcon isDefaultColor size="11px">
-              <IconArrow />
-            </SvgIcon>
-          </span>
-        )}
-      </button>
-      <DropdownMenu
-        isOpen={isOpen}
-        additionalStyles={styles.dropdown(isRightAligned)}
-      >
-        <h2 css={styles.header}>Your Organizations</h2>
-        <div css={styles.activeOrg}>
-          <p css={styles.orgText}>{escapeHtml(defaultOrganization?.name!)}</p>
-          <Badge color="primary" style="outline">
-            Current
-          </Badge>
-        </div>
-        <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          <ul>
-            {allOrganizations
-              ?.filter((org) => org.id !== defaultOrganization?.id)
-              ?.map((org) => (
-                <li key={org.id}>
-                  <DropdownItem
-                    size="medium"
-                    type="button"
-                    onButtonClick={() => handleChange(org.id, org.name)}
-                  >
-                    <p css={styles.orgText}>{escapeHtml(org.name!)}</p>
-                  </DropdownItem>
-                </li>
-              ))}
-          </ul>
-        </Scrollbar>
-      </DropdownMenu>
-    </div>
+    <OrgSelectDropdown
+      items={allOrganizations}
+      selectedItem={selectedItem}
+      handleSelected={handleChange}
+      isOpen={isOpen}
+      handleOpen={handleOpen}
+      isLoading={false}
+      size="small"
+      dropdownButtonStyles={styles.select}
+      dropdownMenuStyles={[styles.dropdown(isRightAligned)]}
+      hideDropdownIcon
+      noBottomMargin
+      excludeSelectedItem
+      hideSearch={allOrganizations.length < 10}
+      renderButtonText={
+        <>
+          <SvgIcon isDefaultColor size="16px">
+            <IconOrganization />
+          </SvgIcon>
+          <p css={styles.selectText(maxWidth)}>
+            {escapeHtml(defaultOrganization?.name!)}
+          </p>
+          {allOrganizations.length > 1 && (
+            <span css={[styles.icon, isOpen && styles.iconActive]}>
+              <SvgIcon isDefaultColor size="11px">
+                <IconArrow />
+              </SvgIcon>
+            </span>
+          )}
+        </>
+      }
+      renderHeader={
+        <>
+          <h2 css={styles.header}>Your Organizations</h2>
+          <div css={styles.activeOrg}>
+            <p css={styles.orgText}>{escapeHtml(defaultOrganization?.name!)}</p>
+            <Badge color="primary" style="outline">
+              Current
+            </Badge>
+          </div>
+        </>
+      }
+    />
   );
 };

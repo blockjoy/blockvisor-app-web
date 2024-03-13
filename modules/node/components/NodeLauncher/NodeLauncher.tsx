@@ -7,8 +7,12 @@ import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { EmptyColumn, PageTitle } from '@shared/components';
 import { wrapper } from 'styles/wrapper.styles';
 import { useNodeLauncherHandlers, nodeLauncherSelectors } from '@modules/node';
+import { LauncherWithGuardProps } from '@modules/billing';
 
-export const NodeLauncher = () => {
+export const NodeLauncher = ({
+  fulfilReqs,
+  onCreateClick,
+}: LauncherWithGuardProps) => {
   const {
     handleHostChanged,
     handleRegionChanged,
@@ -19,8 +23,7 @@ export const NodeLauncher = () => {
     handleVersionChanged,
     handleNetworkChanged,
     handleFileUploaded,
-    handleCreateNodeClicked,
-  } = useNodeLauncherHandlers();
+  } = useNodeLauncherHandlers({ fulfilReqs });
 
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
@@ -48,7 +51,7 @@ export const NodeLauncher = () => {
               <NodeLauncherSummary
                 onHostChanged={handleHostChanged}
                 onRegionChanged={handleRegionChanged}
-                onCreateNodeClicked={handleCreateNodeClicked}
+                onCreateNodeClicked={onCreateClick}
                 onRegionsLoaded={handleRegionsLoaded}
               />
             )}

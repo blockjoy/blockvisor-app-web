@@ -48,10 +48,10 @@ export const AdminOrgs = () => {
     sortField?: OrgSortField,
     sortOrder?: SortOrder,
   ) => {
-    const response = await organizationClient.getOrganizations(
+    const response = await organizationClient.listOrganizations(
       {
-        current_page: page! || 0,
-        items_per_page: pageSize,
+        currentPage: page! || 0,
+        itemsPerPage: pageSize,
       },
       [
         {
@@ -61,6 +61,7 @@ export const AdminOrgs = () => {
       ],
       keyword,
       true,
+      false,
     );
     return {
       list: response.orgs,

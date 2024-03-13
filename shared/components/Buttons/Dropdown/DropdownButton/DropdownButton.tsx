@@ -1,6 +1,8 @@
-import { ReactNode } from 'react';
+import { forwardRef, ReactNode, Ref } from 'react';
+import { SerializedStyles } from '@emotion/react';
 import { SvgIcon } from '@shared/components';
 import { styles } from './DropdownButton.styles';
+import { ITheme } from 'types/theme';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
 type Props = {
@@ -13,36 +15,58 @@ type Props = {
   onBlur?: VoidFunction;
   isLoading?: boolean;
   tabIndex?: number;
+  type?: 'input' | 'default';
+  buttonStyles?: (theme: ITheme) => SerializedStyles;
+  hideDropdownIcon?: boolean;
 };
 
-export const DropdownButton = ({
-  disabled,
-  icon,
-  onClick,
-  onFocus,
-  onBlur,
-  text,
-  isOpen,
-  isLoading,
-  tabIndex,
-}: Props) => {
-  return (
-    <button
-      disabled={disabled || isLoading}
-      type="button"
-      css={[styles.button, isLoading && styles.loading]}
-      onClick={onClick}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      {...(tabIndex && { tabIndex })}
-    >
-      {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
-      {text}
-      <span css={[styles.icon, isOpen && styles.iconOpen]}>
-        <SvgIcon size="12px">
-          <IconArrow />
-        </SvgIcon>
-      </span>
-    </button>
-  );
-};
+export const DropdownButton = forwardRef(
+  (
+    {
+      disabled,
+      icon,
+      onClick,
+      onFocus,
+      onBlur,
+      text,
+      isOpen,
+      isLoading,
+      tabIndex,
+      type,
+      buttonStyles,
+      hideDropdownIcon,
+    }: Props,
+    ref: Ref<HTMLButtonElement>,
+  ) => {
+    return (
+      <button
+        ref={ref}
+        disabled={disabled || isLoading}
+        type="button"
+        css={
+          buttonStyles
+            ? [buttonStyles]
+            : [
+                styles.button,
+                isLoading && styles.loading,
+                type === 'input' && styles.buttonInput,
+              ]
+        }
+        onClick={onClick}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        {...(tabIndex && { tabIndex })}
+      >
+        {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
+        {text}
+        {!hideDropdownIcon && (
+          <span css={[styles.icon, isOpen && styles.iconOpen]}>
+            <SvgIcon size="12px">
+              <IconArrow />
+            </SvgIcon>
+          </span>
+        )}
+      </button>
+    );
+  },
+);

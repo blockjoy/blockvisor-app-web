@@ -7,7 +7,6 @@ export const styles = {
     display: flex;
     gap: 5px;
     border-bottom: 1px solid ${theme.colorBorderGrey};
-    margin-bottom: 10px;
   `,
   tabsUnderline: (theme: ITheme) => css`
     position: absolute;

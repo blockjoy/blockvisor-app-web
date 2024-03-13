@@ -32,14 +32,19 @@ export const styles = {
   buttonActive: (theme: ITheme) => css`
     color: ${theme.colorText};
   `,
-  iconActive: (theme: ITheme) => css`
-    svg :is(path, circle, rect) {
-      fill: ${theme.colorText};
-    }
-  `,
-  iconAscending: (theme: ITheme) => css`
-    transform: rotate(180deg);
-  `,
+  icon: (isActive: boolean, isAscending: boolean) => (theme: ITheme) =>
+    css`
+      ${isActive &&
+      css`
+        svg :is(path, circle, rect) {
+          fill: ${theme.colorText};
+        }
+      `}
+      ${isAscending &&
+      css`
+        transform: rotate(180deg);
+      `}
+    `,
   text: css`
     letter-spacing: inherit;
     text-transform: inherit;

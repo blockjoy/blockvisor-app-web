@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { styles } from './HostWrapper.styles';
-import { HostLauncher } from '../HostLauncher/HostLauncher';
+import { HostLauncherWithGuard as HostLauncher } from '@modules/host';
 import { wrapper } from 'styles/wrapper.styles';
 
 type Props = {

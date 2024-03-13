@@ -10,6 +10,7 @@ export * from './DetailsTable/DetailsTable';
 export * from './DetailsTable/DataRow/DataRow';
 export * from './DetailsWrapper/DetailsWrapper';
 export * from './Table/utils/withQuery';
+export * from './Table/utils/getHandlerTableChange';
 export * from './Table/utils/paginate';
 export * from './Table/utils/sort';
 export * from './Table/utils/filter';

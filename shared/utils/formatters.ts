@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 import {
   Amount,
   Currency,
@@ -24,6 +26,12 @@ const formatAmount = (amount: Amount, type?: FormatAmountType): string => {
   }
 };
 
+const formatCurrency = (number: number) =>
+  Number(number / 100).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
 const formatDate = (date: Date, type?: FormatDateType): string => {
   let formattedDate: Intl.DateTimeFormat;
 
@@ -39,6 +47,7 @@ const formatDate = (date: Date, type?: FormatDateType): string => {
       formattedDate = new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
+        second: 'numeric',
       });
       break;
     default:
@@ -62,8 +71,21 @@ const formatSize = (value: number, type?: FormatSizeType): string => {
   }
 };
 
+const formatTimestamp = (timestamp: number | Date): string => {
+  let date = null;
+
+  if (typeof timestamp === 'number') {
+    date = new Date(timestamp * 1000);
+  } else {
+    date = timestamp;
+  }
+  return format(date, 'P', { locale: enUS });
+};
+
 export const formatters = {
   formatAmount,
+  formatCurrency,
   formatDate,
   formatSize,
+  formatTimestamp,
 };

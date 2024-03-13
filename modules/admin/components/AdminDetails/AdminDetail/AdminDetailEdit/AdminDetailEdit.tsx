@@ -22,7 +22,6 @@ export const AdminDetailEdit = ({
   onToggleEditMode,
 }: Props) => {
   const router = useRouter();
-  const { name } = router.query;
 
   const [editedProperties, setEditedProperties] = useState(properties);
   const [isSaving, setIsSaving] = useState(false);

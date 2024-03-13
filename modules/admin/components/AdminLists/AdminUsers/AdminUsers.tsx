@@ -42,8 +42,8 @@ export const AdminUsers = () => {
     const response = await userClient.listUsers(
       keyword,
       {
-        current_page: page!,
-        items_per_page: pageSize,
+        currentPage: page!,
+        itemsPerPage: pageSize,
       },
       [{ field: sortField!, order: sortOrder! }],
     );

@@ -1,12 +1,8 @@
-export type ItemsPerPage = {
-  sm: number;
-  lg: number;
-  xxl: number;
-};
+import { itemsPerPage } from '@shared/index';
 
 export type Pagination = {
-  current_page: number;
-  items_per_page: number;
+  currentPage: number;
+  itemsPerPage: number;
 };
 
 export type InitialFilter = {
@@ -21,17 +17,10 @@ export type InitialQueryParams = {
   filter: InitialFilter;
 };
 
-export const itemsPerPage = {
-  sm: 18,
-  lg: 36,
-  xl: 48,
-  xxl: 100,
-};
-
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
-    current_page: 0,
-    items_per_page: itemsPerPage['xl'],
+    currentPage: 0,
+    itemsPerPage: itemsPerPage['xl'],
   },
 
   filter: {

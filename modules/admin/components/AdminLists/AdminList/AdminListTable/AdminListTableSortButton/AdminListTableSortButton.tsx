@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react';
 import { styles } from './AdminListTableSortButton.styles';
 import { SvgIcon } from '@shared/components';
 import IconArrowDown from '@public/assets/icons/common/ArrowDown.svg';
+import { SerializedStyles } from '@emotion/react';
 
 type Props = {
   sortField?: number;
@@ -21,16 +22,11 @@ export const AdminListTableSortButton = ({
   children,
 }: Props) => {
   const isFieldActive = activeSortField === sortField;
+  const isAscending = activeSortOrder === SortOrder.SORT_ORDER_ASCENDING;
 
-  const iconStyles = [];
+  const iconStyles: SerializedStyles[] = [];
 
-  if (isFieldActive) {
-    iconStyles.push(styles.iconActive);
-  }
-
-  if (activeSortOrder === SortOrder.SORT_ORDER_ASCENDING) {
-    iconStyles.push(styles.iconAscending);
-  }
+  iconStyles.push();
 
   return (
     <button
@@ -39,7 +35,10 @@ export const AdminListTableSortButton = ({
     >
       <span css={[styles.text]}>{children}</span>
       {isFieldActive && (
-        <SvgIcon size="10px" additionalStyles={iconStyles}>
+        <SvgIcon
+          size="10px"
+          additionalStyles={[styles.icon(isFieldActive, isAscending)]}
+        >
           <IconArrowDown />
         </SvgIcon>
       )}
