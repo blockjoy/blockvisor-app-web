@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { styles } from './AdminNodeUpgrade.styles';
 import { toast } from 'react-toastify';
-import { sortVersionStringArray } from '@modules/admin/utils/sortVersionStringArray';
+import { sortVersionStringArray } from '@modules/admin/utils';
 import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 
 export const AdminNodeUpgrade = () => {

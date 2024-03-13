@@ -13,12 +13,16 @@ import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
 type AdminLayoutType = 'dashboard' | 'details' | 'list' | 'settings';
 
-const getType = (name?: string | null, id?: string | null): AdminLayoutType => {
+const getType = (
+  name?: string | null,
+  id?: string | null,
+  ip?: string | null,
+): AdminLayoutType => {
   if (!name) return 'dashboard';
   return ({
     dashboard: 'dashboard',
     settings: 'settings',
-  }[name] || (id ? 'details' : 'list')) as AdminLayoutType;
+  }[name] || (id || ip ? 'details' : 'list')) as AdminLayoutType;
 };
 
 export const AdminLayout = () => {
@@ -26,6 +30,7 @@ export const AdminLayout = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
   const id = searchParams.get('id');
+  const ip = searchParams.get('ip');
 
   useEffect(() => {
     if (!name) {
@@ -33,7 +38,7 @@ export const AdminLayout = () => {
     }
   }, [name]);
 
-  const type = getType(name, id);
+  const type = getType(name, id, ip);
 
   return (
     <>

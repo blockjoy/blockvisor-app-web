@@ -179,16 +179,14 @@ export const AdminListFilter = ({
       </button>
       <DropdownMenu
         isOpen={isOpen}
-        additionalStyles={[
-          css`
-            position: fixed;
-            top: ${menuTop};
-            right: ${menuRight};
-            overflow: visible;
-            max-width: max-content;
-            min-width: max-content;
-          `,
-        ]}
+        additionalStyles={css`
+          position: fixed;
+          top: ${menuTop};
+          right: ${menuRight};
+          overflow: visible;
+          max-width: 250px;
+          min-width: 250px;
+        `}
       >
         {controls[filterSettings.type]}
         <div css={styles.buttonGroup}>

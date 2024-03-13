@@ -6,9 +6,15 @@ export const styles = {
     color: ${theme.colorLabel};
     overflow: hidden;
     white-space: nowrap;
-    margin-left: 4px;
+    max-width: 300px;
     font-style: normal;
     text-overflow: ellipsis;
+  `,
+  name: css`
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
   `,
   buttonText: css`
     max-width: 370px;
