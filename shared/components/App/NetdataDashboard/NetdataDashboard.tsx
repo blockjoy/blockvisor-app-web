@@ -3,6 +3,7 @@ import { styles } from './NetdataDashboard.styles';
 
 type Props = {
   id: string;
+  name: string;
   disk_space_name: string;
   is_node?: string;
 };
@@ -14,6 +15,7 @@ const iframeDimensions = {
 
 export const NetdataDashboard = ({
   id,
+  name,
   disk_space_name,
   is_node = '',
 }: Props) => {
@@ -28,7 +30,7 @@ export const NetdataDashboard = ({
     if (!url) {
       setState({
         ...state,
-        url: `/dashboards/node.html?id=${id}&disk_space_name=${disk_space_name}&is_node=${is_node}`,
+        url: `/dashboards/node.html?id=${id}&name=${name}&disk_space_name=${disk_space_name}&is_node=${is_node}`,
         ...iframeDimensions,
       });
     }
