@@ -53,7 +53,7 @@ export const AdminDetailHeader = ({
   };
 
   return (
-    <AdminHeader name={name}>
+    <AdminHeader name={name} flexWrap>
       <span css={styles.separator}>/</span>
       {isLoading && !isMobile ? (
         <Skeleton width="200px" />

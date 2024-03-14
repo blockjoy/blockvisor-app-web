@@ -5,10 +5,11 @@ import IconBack from '@public/assets/icons/common/ArrowLeft.svg';
 
 type Props = {
   name: string;
+  flexWrap?: boolean;
   children?: React.ReactNode;
 };
 
-export const AdminHeader = ({ name, children }: Props) => {
+export const AdminHeader = ({ name, flexWrap, children }: Props) => {
   const router = useRouter();
 
   const { id, ip, search, page } = router.query;
@@ -28,7 +29,7 @@ export const AdminHeader = ({ name, children }: Props) => {
   };
 
   return (
-    <header css={styles.header}>
+    <header css={styles.header(flexWrap!)}>
       {(id || ip) && (
         <div css={styles.title}>
           <a onClick={handleTitleClicked} css={styles.titleText}>

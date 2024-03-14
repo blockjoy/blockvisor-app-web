@@ -6,6 +6,7 @@ export const styles = {
   input: (theme: ITheme) => css`
     background: transparent;
     border: 0;
+    border-radius: 0;
     border-bottom: 1px solid ${theme.colorBorderGrey};
     outline: none;
     color: ${theme.colorText};
