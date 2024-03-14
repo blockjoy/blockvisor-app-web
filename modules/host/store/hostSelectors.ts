@@ -4,7 +4,7 @@ import { hostFiltersDefaults } from '@shared/constants/lookups';
 import { hostAtoms } from './hostAtoms';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 const hostById = selectorFamily<Host | null, string | undefined>({
   key: 'host.byId',
@@ -18,7 +18,7 @@ const hostById = selectorFamily<Host | null, string | undefined>({
 
       if (host) return host;
 
-      const isSuperUser = get(authAtoms.isSuperUser);
+      const isSuperUser = get(authSelectors.isSuperUser);
       if (!isSuperUser) return null;
 
       const adminHost = get(adminHostById(id));

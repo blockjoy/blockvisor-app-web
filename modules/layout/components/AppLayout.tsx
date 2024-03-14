@@ -41,7 +41,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     reconnect: mqttReconnect,
     updateSubscription: updateMqttSubscription,
   } = useMqtt();
-  const { getPermissions } = usePermissions();
   const { getReceivedInvitations } = useInvitations();
   const { getOrganizations, organizations } = useGetOrganizations();
   const { loadNodes } = useNodeList();
@@ -52,8 +51,8 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     onVisible: refreshToken,
   });
 
+  usePermissions();
   useGetBlockchains();
-
   useBilling();
 
   useEffect(() => {
@@ -93,7 +92,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       currentOrg.current = defaultOrganization!.id;
       loadNodes();
       loadHosts();
-      getPermissions();
       if (mqttClient?.connected) updateMqttSubscription();
     }
   }, [defaultOrganization?.id]);

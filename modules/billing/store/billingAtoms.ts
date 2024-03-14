@@ -11,11 +11,21 @@ import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy
 import { ItemPriceSimple, PromoCode } from '@modules/billing';
 
 export const isEnabledBillingPreview = atomFamily<boolean, boolean>({
-  key: 'billing.isEnabled',
+  key: 'billing.preview',
   default: false,
   effects: (isSuperUser) => {
     return isSuperUser
       ? [localStorageEffect('billing.isEnabledForSuperUsers', false)]
+      : [];
+  },
+});
+
+export const bypassBillingForSuperUser = atomFamily<boolean, boolean>({
+  key: 'billing.superUser',
+  default: false,
+  effects: (isSuperUser) => {
+    return isSuperUser
+      ? [localStorageEffect('billing.bypassBillingForSuperUser', false)]
       : [];
   },
 });
@@ -136,16 +146,6 @@ const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-export const bypassBillingForSuperUser = atomFamily<boolean, boolean>({
-  key: 'billing.bypassBillingForSuperUser',
-  default: false,
-  effects: (isSuperUser) => {
-    return isSuperUser
-      ? [localStorageEffect('billing.bypassBillingForSuperUser', false)]
-      : [];
-  },
-});
-
 const promoCode = atom<PromoCode | null>({
   key: 'billing.promoCode',
   default: null,
@@ -163,6 +163,7 @@ const promoCodeLoadingState = atom<LoadingState>({
 
 export const billingAtoms = {
   isEnabledBillingPreview,
+  bypassBillingForSuperUser,
 
   billing,
 
@@ -192,8 +193,6 @@ export const billingAtoms = {
   subscriptionLoadingState,
 
   subscriptionPaymentMethodLoadingState,
-
-  bypassBillingForSuperUser,
 
   promoCode,
   promoCodeError,

@@ -2,18 +2,18 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { billingAtoms } from '@modules/billing';
 import { Switch } from '@shared/components';
 import { AdminSettingsInput } from '../AdminSettingsInput/AdminSettingsInput';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 export const AdminBilling = () => {
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
-  const [isEnabledBillingPreview, setisEnabledBillingPreview] = useRecoilState(
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const [isEnabledBillingPreview, setIsEnabledBillingPreview] = useRecoilState(
     billingAtoms.isEnabledBillingPreview(isSuperUser),
   );
   const [bypassBillingForSuperUser, setBypassBillingForSuperUser] =
     useRecoilState(billingAtoms.bypassBillingForSuperUser(isSuperUser));
 
   const handleActiveBilling = () => {
-    setisEnabledBillingPreview(!isEnabledBillingPreview);
+    setIsEnabledBillingPreview(!isEnabledBillingPreview);
   };
 
   const handleSuperUserBilling = () => {

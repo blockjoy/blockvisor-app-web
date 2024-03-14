@@ -1,6 +1,6 @@
-import { usePermissions, useIdentity } from '@modules/auth';
-import { Badge, Button, SvgIcon } from '@shared/components';
 import { useRecoilValue } from 'recoil';
+import { useIdentity, authSelectors } from '@modules/auth';
+import { Badge, Button, SvgIcon } from '@shared/components';
 import { flex } from 'styles/utils.flex.styles';
 import { organizationAtoms } from '../store/organizationAtoms';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
@@ -35,13 +35,13 @@ export const mapOrganizationMembersToRows = (
 ) => {
   const { user } = useIdentity();
 
-  const { hasPermission } = usePermissions();
-
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
 
-  const canRemoveMember = hasPermission('org-remove-member');
+  const canRemoveMember = useRecoilValue(
+    authSelectors.hasPermission('org-remove-member'),
+  );
 
   const handleRemoveMember = async (
     userId: string,

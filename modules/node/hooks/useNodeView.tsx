@@ -11,7 +11,7 @@ import {
   organizationAtoms,
   useSwitchOrganization,
 } from '@modules/organization';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 type Args = string | string[] | undefined;
 
@@ -40,7 +40,7 @@ export const useNodeView = (): Hook => {
     nodeAtoms.isLoadingActiveNode,
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );

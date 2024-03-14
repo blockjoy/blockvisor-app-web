@@ -9,7 +9,37 @@ import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy
 import { ItemPriceSimple, billingAtoms } from '@modules/billing';
 import { nodeAtoms } from '@modules/node';
 import { computePricing } from '@shared/index';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
+
+const isEnabledBillingPreview = selector<boolean>({
+  key: 'billing.preview.isEnabled',
+  get: ({ get }) => {
+    const isSuperUser = get(authSelectors.isSuperUser);
+    const isEnabled = get(billingAtoms.isEnabledBillingPreview(isSuperUser));
+
+    return isEnabled;
+  },
+  set: ({ set, get }, newValue) => {
+    const isSuperUser = get(authSelectors.isSuperUser);
+
+    return set(billingAtoms.isEnabledBillingPreview(isSuperUser), newValue);
+  },
+});
+
+const bypassBillingForSuperUser = selector<boolean>({
+  key: 'billing.superUser.bypass',
+  get: ({ get }) => {
+    const isSuperUser = get(authSelectors.isSuperUser);
+    const isEnabled = get(billingAtoms.bypassBillingForSuperUser(isSuperUser));
+
+    return isEnabled;
+  },
+  set: ({ set, get }, newValue) => {
+    const isSuperUser = get(authSelectors.isSuperUser);
+
+    return set(billingAtoms.bypassBillingForSuperUser(isSuperUser), newValue);
+  },
+});
 
 const billingId = selector<string | null>({
   key: 'billing.identity.id',
@@ -156,7 +186,7 @@ const isActiveSubscription = selector<boolean>({
 const hasAuthorizedBilling = selector<boolean>({
   key: 'billing.resources.canCreate',
   get: ({ get }) => {
-    const isSuperUser = get(authAtoms.isSuperUser);
+    const isSuperUser = get(authSelectors.isSuperUser);
     const isEnabledBillingPreview = get(
       billingAtoms.isEnabledBillingPreview(isSuperUser),
     );
@@ -200,6 +230,9 @@ const pricing = selector<{
 });
 
 export const billingSelectors = {
+  isEnabledBillingPreview,
+  bypassBillingForSuperUser,
+
   billingId,
   userSubscription,
 

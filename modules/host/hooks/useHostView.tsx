@@ -3,14 +3,14 @@ import { hostAtoms } from '../store/hostAtoms';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useHostList } from './useHostList';
 import { toast } from 'react-toastify';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import {
   organizationAtoms,
   useSwitchOrganization,
 } from '@modules/organization';
 
 export const useHostView = () => {
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,

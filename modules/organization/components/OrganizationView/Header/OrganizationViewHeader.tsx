@@ -1,19 +1,24 @@
-import { Skeleton, SkeletonGrid, EditableTitle } from '@shared/components';
 import { FC, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { toast } from 'react-toastify';
+import { Skeleton, SkeletonGrid, EditableTitle } from '@shared/components';
 import { styles } from './OrganizationViewHeader.styles';
 import {
   useGetOrganization,
   useUpdateOrganization,
 } from '@modules/organization';
-import { usePermissions } from '@modules/auth';
-import { toast } from 'react-toastify';
+import { authSelectors } from '@modules/auth';
 import { OrganizationViewHeaderActions } from './Actions/OrganizationViewHeaderActions';
 
 export const OrganizationViewHeader: FC = () => {
   const { organization, isLoading } = useGetOrganization();
 
   const { updateOrganization } = useUpdateOrganization();
-  const { hasPermission } = usePermissions();
+
+  const canUpdate = useRecoilValue(authSelectors.hasPermission('org-update'));
+  const canAdminUpdate = useRecoilValue(
+    authSelectors.hasPermission('org-admin-update'),
+  );
 
   const [isSavingOrganization, setIsSavingOrganization] =
     useState<boolean | null>(null);
@@ -34,8 +39,7 @@ export const OrganizationViewHeader: FC = () => {
   };
 
   const canUpdateOrganization =
-    (hasPermission('org-update') || hasPermission('org-admin-update')) &&
-    !organization?.personal;
+    (canUpdate || canAdminUpdate) && !organization?.personal;
 
   const isLoadingOrg =
     isLoading !== 'finished' || organization?.nodeCount === null;

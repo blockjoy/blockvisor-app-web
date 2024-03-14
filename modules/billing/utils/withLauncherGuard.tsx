@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
-  billingAtoms,
   billingSelectors,
   ItemPriceSimple,
   PaymentRequired,
@@ -9,7 +8,7 @@ import {
   LAUNCH_ERRORS,
 } from '@modules/billing';
 import { useDefaultOrganization } from '@modules/organization';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
@@ -47,15 +46,15 @@ export const withLauncherGuard = (Component: any) => {
     const { type, hasPermissionsToCreate, ...aditionalProps } = props;
 
     const { defaultOrganization } = useDefaultOrganization();
-    const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+    const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
     const isEnabledBillingPreview = useRecoilValue(
-      billingAtoms.isEnabledBillingPreview(isSuperUser),
+      billingSelectors.isEnabledBillingPreview,
     );
     const hasAuthorizedBilling = useRecoilValue(
       billingSelectors.hasAuthorizedBilling,
     );
     const bypassBillingForSuperUser = useRecoilValue(
-      billingAtoms.bypassBillingForSuperUser(isSuperUser),
+      billingSelectors.bypassBillingForSuperUser,
     );
     const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 

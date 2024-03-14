@@ -9,12 +9,12 @@ import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import {
   UpdateSubscriptionAction,
-  billingAtoms,
   generateError,
   useUpdateSubscriptionItems,
   usePaymentAuthorization,
+  billingSelectors,
 } from '@modules/billing';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
@@ -22,12 +22,11 @@ export const useNodeAdd = () => {
   const { loadHosts } = useHostList();
 
   const { updateSubscriptionItems } = useUpdateSubscriptionItems();
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
   const bypassBillingForSuperUser = useRecoilValue(
-    billingAtoms.bypassBillingForSuperUser(isSuperUser),
+    billingSelectors.bypassBillingForSuperUser,
   );
   const { authorizePayment } = usePaymentAuthorization();
 

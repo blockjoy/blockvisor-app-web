@@ -6,8 +6,7 @@ import { PageTitle } from '@shared/components';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import { SettingsTabs } from './SettingsTabs';
 import { wrapper } from 'styles/wrapper.styles';
-import { authAtoms } from '@modules/auth';
-import { billingAtoms } from '@modules/billing';
+import { billingSelectors } from '@modules/billing';
 import { ROUTES } from '@shared/index';
 
 type SettingsViewProps = {
@@ -18,9 +17,8 @@ export const SettingsView = ({ children }: SettingsViewProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
 
   useEffect(() => {
