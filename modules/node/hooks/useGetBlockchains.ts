@@ -36,6 +36,7 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
     fetcher,
     {
       revalidateOnMount: true,
+      revalidateOnFocus: false,
 
       onSuccess: (data) => {
         setBlockchains(data);
