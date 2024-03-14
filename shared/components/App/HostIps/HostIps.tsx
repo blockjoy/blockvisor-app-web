@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { authSelectors } from '@modules/auth';
 import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './HostIps.styles';
-import { sortIps } from '@modules/node/utils';
+import { sortIps } from '@modules/node';
 
 type Props = {
   ipAddresses: HostIpAddress[];
