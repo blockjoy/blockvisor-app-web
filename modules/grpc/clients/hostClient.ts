@@ -3,8 +3,11 @@ import {
   HostSearch,
   HostServiceClient,
   HostServiceDefinition,
+  HostServiceDeleteRequest,
+  HostServiceGetRequest,
   HostServiceListRequest,
   HostServiceListResponse,
+  HostServiceRegionsRequest,
   HostServiceUpdateRequest,
   HostSort,
   HostSortField,
@@ -87,7 +90,7 @@ class HostClient {
   }
 
   async getHost(id: string): Promise<Host> {
-    const request = { id };
+    const request: HostServiceGetRequest = { id };
     console.log('getHostRequest', request);
     try {
       const response = await callWithTokenRefresh(
@@ -116,12 +119,12 @@ class HostClient {
   }
 
   async listRegions(
-    orgId?: string,
-    blockchainId?: string,
-    nodeType?: NodeType,
-    version?: string,
+    orgId: string,
+    blockchainId: string,
+    nodeType: NodeType,
+    version: string,
   ): Promise<Region[]> {
-    const request = {
+    const request: HostServiceRegionsRequest = {
       blockchainId,
       nodeType,
       version,
@@ -141,7 +144,8 @@ class HostClient {
   }
 
   async deleteHost(id: string): Promise<void> {
-    await callWithTokenRefresh(this.client.delete.bind(this.client), { id });
+    const request: HostServiceDeleteRequest = { id };
+    await callWithTokenRefresh(this.client.delete.bind(this.client), request);
   }
 }
 
