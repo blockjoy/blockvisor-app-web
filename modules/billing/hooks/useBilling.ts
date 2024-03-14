@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
-  authAtoms,
   useIdentityRepository,
   useUserBilling,
   useUserSubscription,
 } from '@modules/auth';
 import {
-  billingAtoms,
   billingSelectors,
   useCustomer,
   usePaymentMethods,
@@ -22,7 +20,6 @@ type UseBillingHook = {
 
 export const useBilling = (): UseBillingHook => {
   const repository = useIdentityRepository();
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
   const { getCustomer } = useCustomer();
   const { getUserBilling } = useUserBilling();
   const { getUserSubscription } = useUserSubscription();
@@ -34,7 +31,7 @@ export const useBilling = (): UseBillingHook => {
     organizationAtoms.defaultOrganization,
   );
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
 
   const fetchBillingInfo = async () => {

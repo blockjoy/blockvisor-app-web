@@ -1,55 +1,50 @@
-import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import useSWR from 'swr';
 import { authClient } from '@modules/grpc';
 import { organizationAtoms } from '@modules/organization';
-import { sort } from '@shared/components';
 import { authAtoms } from '../store/authAtoms';
 import { useIdentity } from './useIdentity';
+import { sort } from '@shared/components';
 
 export function usePermissions() {
   const [permissions, setPermissions] = useRecoilState(authAtoms.permissions);
   const [permissionsLoadingState, setPermissionsLoadingState] = useRecoilState(
     authAtoms.permissionsLoadingState,
   );
-  const [isSuperUser, setIsSuperUser] = useRecoilState(authAtoms.isSuperUser);
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
 
   const { user } = useIdentity();
 
-  const getPermissions = async () => {
-    setPermissionsLoadingState('initializing');
-    try {
-      const response = await authClient.listPermissions(
-        user?.id!,
-        defaultOrganization?.id!,
-      );
+  const fetcher = async () =>
+    await authClient.listPermissions(user?.id!, defaultOrganization?.id!);
 
-      console.log('getPermissionsResponse: ', sort(response));
+  useSWR(
+    () =>
+      defaultOrganization?.id ? `permissions_${defaultOrganization.id}` : null,
+    fetcher,
+    {
+      revalidateOnMount: true,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
 
-      setPermissions(response);
-    } catch (err) {
-      console.log('getPermissionsError: ', err);
-      setPermissions([]);
-    } finally {
-      setPermissionsLoadingState('finished');
-    }
-  };
-
-  const hasPermission = (permission: Permission) =>
-    permissions?.findIndex((p) => p === permission)! > -1;
-
-  useEffect(() => {
-    const hasSuperUserPermission = hasPermission('auth-admin-list-permissions');
-    setIsSuperUser(hasSuperUserPermission);
-  }, [permissions]);
+      onSuccess: (data) => {
+        console.log('getPermissionsResponse: ', sort(data));
+        setPermissions(data);
+        setPermissionsLoadingState('finished');
+      },
+      onError: (error) => {
+        console.log('getPermissionsError: ', error);
+        setPermissions([]);
+        setPermissionsLoadingState('finished');
+      },
+    },
+  );
 
   return {
     permissions,
     permissionsLoadingState,
-    isSuperUser,
-    getPermissions,
-    hasPermission,
   };
 }

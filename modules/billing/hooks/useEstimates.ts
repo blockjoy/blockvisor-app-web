@@ -6,7 +6,7 @@ import {
   billingSelectors,
   fetchBilling,
 } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 interface IEstimatesHook {
   estimate: Estimate | null;
@@ -16,8 +16,9 @@ interface IEstimatesHook {
 
 export const useEstimates = (): IEstimatesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
-  const { hasPermission } = usePermissions();
-  const canUpdateSubscription = hasPermission('subscription-update');
+  const canUpdateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-update'),
+  );
 
   const fetcher = () =>
     fetchBilling(BILLING_API_ROUTES.estimates.get, {

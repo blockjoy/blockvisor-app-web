@@ -1,12 +1,13 @@
-import { useNodeView } from '@modules/node';
+import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
+import { useNodeView } from '@modules/node';
 import { ActionsDropdown, ActionsDropdownItem } from '@shared/components';
-import { usePermissions } from '@modules/auth/hooks/usePermissions';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconStart from '@public/assets/icons/app/NodeStart.svg';
 import IconWarning from '@public/assets/icons/common/Warning.svg';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
+import { authSelectors } from '@modules/auth';
 
 type Props = {
   onDeleteClicked: VoidFunction;
@@ -25,12 +26,11 @@ export const NodeViewHeaderActions = ({
   const handleAdminClicked = () =>
     router.push(`/admin?name=nodes&id=${node?.id}`);
 
-  const { hasPermission, isSuperUser } = usePermissions();
-
-  const canDelete = hasPermission('node-delete');
-  const canStart = hasPermission('node-start');
-  const canStop = hasPermission('node-stop');
-  const canReport = hasPermission('node-report');
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const canDelete = useRecoilValue(authSelectors.hasPermission('node-delete'));
+  const canStart = useRecoilValue(authSelectors.hasPermission('node-start'));
+  const canStop = useRecoilValue(authSelectors.hasPermission('node-stop'));
+  const canReport = useRecoilValue(authSelectors.hasPermission('node-report'));
 
   const items: ActionsDropdownItem[] = [];
 

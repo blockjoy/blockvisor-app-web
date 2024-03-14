@@ -1,10 +1,13 @@
+import { useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
+import { toast } from 'react-toastify';
 import {
   Table,
   TableAdd,
   getHandlerTableChange,
   withQuery,
 } from '@shared/components';
-import { useMemo, useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   useInvitations,
@@ -21,11 +24,8 @@ import {
 import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
 import { useOrganizationInvitationsUIContext } from '@modules/organization/ui/OrganizationInvitationsUIContext';
 import { mapOrganizationInvitationsToRows } from '@modules/organization/utils/mapOrganizationInvitationsToRows';
-import { useRecoilValue } from 'recoil';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 
 export const OrganizationInvitations = () => {
   const [isInviting, setIsInviting] = useState<boolean>(false);
@@ -53,6 +53,10 @@ export const OrganizationInvitations = () => {
 
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
+  );
+
+  const canCreateMember = useRecoilValue(
+    authSelectors.hasPermission('invitation-create'),
   );
 
   const members = selectedOrganization?.members;
@@ -86,7 +90,6 @@ export const OrganizationInvitations = () => {
   };
 
   const { resendInvitation } = useResendInvitation();
-  const { hasPermission } = usePermissions();
 
   const [activeView, setActiveView] =
     useState<string | 'list' | 'invite'>('list');
@@ -122,8 +125,6 @@ export const OrganizationInvitations = () => {
   };
 
   const InvitationsTable = withQuery(Table);
-
-  const canCreateMember = hasPermission('invitation-create');
 
   return (
     <section>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import {
   getOrganizationRole,
   useDefaultOrganization,
@@ -7,7 +8,7 @@ import {
   useGetOrganizations,
   useLeaveOrganization,
 } from '@modules/organization';
-import { useIdentity, usePermissions } from '@modules/auth';
+import { authSelectors, useIdentity } from '@modules/auth';
 import { ActionsDropdown, DeleteModal, NextLink } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { useRouter } from 'next/router';
@@ -30,8 +31,16 @@ export const OrganizationViewHeaderActions = () => {
   const { deleteOrganization } = useDeleteOrganization();
   const { leaveOrganization } = useLeaveOrganization();
   const { getDefaultOrganization } = useDefaultOrganization();
-  const { hasPermission, isSuperUser } = usePermissions();
   const { user } = useIdentity();
+
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const canDelete = useRecoilValue(authSelectors.hasPermission('org-delete'));
+  const canAdminDelete = useRecoilValue(
+    authSelectors.hasPermission('org-admin-delete'),
+  );
+  const canRemoveSelf = useRecoilValue(
+    authSelectors.hasPermission('org-remove-self'),
+  );
 
   const orgHasOtherAdmins = organization?.members
     .filter((member) => member.userId !== user?.id)
@@ -41,11 +50,9 @@ export const OrganizationViewHeaderActions = () => {
         getOrganizationRole(member.roles) === 'Owner',
     );
 
-  const canDeleteOrganization =
-    hasPermission('org-delete') || hasPermission('org-admin-delete');
+  const canDeleteOrganization = canDelete || canAdminDelete;
 
-  const canLeaveOrganization =
-    hasPermission('org-remove-self') && orgHasOtherAdmins;
+  const canLeaveOrganization = canRemoveSelf && orgHasOtherAdmins;
 
   const handleDeleteModalClosed = () => {
     setIsDeleteMode(false);

@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './HostIps.styles';
 import { sortIps } from '@modules/node/utils';
@@ -16,7 +16,7 @@ type ListType = 'all' | 'available' | 'assigned';
 export const HostIps = ({ ipAddresses, orgId }: Props) => {
   const listRef = useRef<HTMLOListElement>(null);
 
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [listHeight, setListHeight] = useState(0);
   const [listTypes, setListTypes] = useState<ListType[]>([]);

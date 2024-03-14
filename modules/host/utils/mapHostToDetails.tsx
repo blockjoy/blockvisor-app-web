@@ -11,10 +11,10 @@ import {
 } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { spacing } from 'styles/utils.spacing.styles';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 export const mapHostToDetails = (host: Host) => {
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const details: { label: string; data: any | undefined }[] = [
     { label: 'Version', data: host?.version || '-' },

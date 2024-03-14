@@ -1,20 +1,25 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { billingAtoms, withLauncherGuard } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { billingSelectors, withLauncherGuard } from '@modules/billing';
 import { HostLauncher } from '@modules/host';
+import { authSelectors } from '@modules/auth';
 
 export const HostLauncherWithGuard = () => {
-  const { hasPermission, isSuperUser } = usePermissions();
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
 
-  const canResetProvisionToken = hasPermission('org-provision-reset-token');
-  const canAddHost = hasPermission('host-create');
-
-  const canCreateSubscription = hasPermission('subscription-create');
-  const canUpdateSubscription = hasPermission('subscription-update');
+  const canResetProvisionToken = useRecoilValue(
+    authSelectors.hasPermission('org-provision-reset-token'),
+  );
+  const canAddHost = useRecoilValue(authSelectors.hasPermission('host-create'));
+  const canCreateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-create'),
+  );
+  const canUpdateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-update'),
+  );
 
   const hasBillingPermissionsToCreate = isEnabledBillingPreview
     ? canCreateSubscription || canUpdateSubscription
