@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -7,6 +8,10 @@ export const styles = {
     align-items: center;
     gap: 8px;
     margin-left: auto;
+
+    @media ${breakpoints.toLrg} {
+      display: none;
+    }
   `,
   text: (theme: ITheme) => css`
     color: ${theme.colorDefault};
