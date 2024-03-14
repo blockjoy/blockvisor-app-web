@@ -10,6 +10,7 @@ import { styles } from './styles';
 
 export const NodeListHeader = () => {
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
+  const nodeCount = useRecoilValue(nodeAtoms.nodeCount);
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
@@ -17,8 +18,6 @@ export const NodeListHeader = () => {
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
   );
-
-  const { nodeCount } = useNodeList();
 
   const handleFilterCollapseToggled = () => {
     setIsFiltersOpen(!isFiltersOpen);
@@ -35,7 +34,7 @@ export const NodeListHeader = () => {
       {!isFiltersOpen && (
         <div css={styles.wrapperInner}>
           {isLoading ? (
-            <Skeleton width="90px" />
+            <Skeleton width="80px" />
           ) : (
             <button
               onClick={handleFilterCollapseToggled}
@@ -47,9 +46,13 @@ export const NodeListHeader = () => {
         </div>
       )}
 
-      <Alert isRounded isSuccess={nodeCount > 0}>
-        {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
-      </Alert>
+      {isLoading ? (
+        <Skeleton width="115px" />
+      ) : (
+        <Alert isRounded isSuccess={nodeCount > 0}>
+          {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
+        </Alert>
+      )}
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker

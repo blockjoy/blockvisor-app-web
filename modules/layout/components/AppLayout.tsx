@@ -90,7 +90,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      getPermissions();
 
       loadNodes();
       loadHosts();

@@ -39,7 +39,7 @@ export const useGetRegions = (): UseGetRegionHook => {
           );
           return { blockchainId, version, nodeType, regions: response };
         } catch (innerErr) {
-          console.error('Error fetching regions for item:', item, innerErr);
+          console.log('Error fetching regions for item:', item, innerErr);
           return [];
         }
       }),
@@ -56,6 +56,7 @@ export const useGetRegions = (): UseGetRegionHook => {
     fetcher,
     {
       revalidateOnMount: true,
+      revalidateOnFocus: false,
 
       onSuccess: (data) => {
         setAllRegions(data);
