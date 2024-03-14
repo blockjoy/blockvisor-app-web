@@ -59,19 +59,42 @@ export const useAccessibleDropdown = <T>({
 
       switch (e.key) {
         case 'Up':
-        case 'ArrowUp':
+        case 'ArrowUp': {
           e.preventDefault();
-          setActiveIndex(
-            activeIndex <= 0 ? items?.length - 1 : activeIndex - 1,
-          );
+          let nextIndex =
+            activeIndex - 1 < 0 ? items.length - 1 : activeIndex - 1;
+
+          if (nextIndex === selectedItemIndex) {
+            if (nextIndex === items.length) {
+              nextIndex = 1;
+            } else if (nextIndex === 0) {
+              nextIndex = items.length - 1;
+            } else {
+              nextIndex = nextIndex - 1;
+            }
+          }
+
+          setActiveIndex(nextIndex);
+
           break;
+        }
         case 'Down':
-        case 'ArrowDown':
+        case 'ArrowDown': {
           e.preventDefault();
-          setActiveIndex(
-            activeIndex + 1 === items?.length ? 0 : activeIndex + 1,
-          );
+          let nextIndex =
+            activeIndex + 1 > items.length - 1 ? 0 : activeIndex + 1;
+
+          if (nextIndex === selectedItemIndex) {
+            if (nextIndex + 1 > items.length - 1) {
+              nextIndex = 0;
+            } else {
+              nextIndex = nextIndex + 1;
+            }
+          }
+
+          setActiveIndex(nextIndex);
           break;
+        }
         case 'Enter':
           e.preventDefault();
           handleSelectAccessible(items[activeIndex]);

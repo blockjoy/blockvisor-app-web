@@ -25,9 +25,7 @@ export const styles = {
     justify-content: space-between;
     align-items: center;
     gap: 6px;
-    padding: 12px;
-    background: rgb(0 0 0 / 10%);
-    font-size: 12px;
+    width: 100%;
   `,
   orgText: css`
     overflow: hidden;

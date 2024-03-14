@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import {
   SvgIcon,
@@ -27,6 +27,8 @@ export const OrganizationPicker = ({
   isRightAligned = false,
   maxWidth,
 }: Props) => {
+  const selectedOrg = useRef<Org>();
+
   const router = useRouter();
 
   const { pathname } = router;
@@ -52,6 +54,10 @@ export const OrganizationPicker = ({
 
     await switchOrganization(nextOrg.id, nextOrg.name);
 
+    selectedOrg.current = allOrganizations.find(
+      (org) => org.id === nextOrg?.id,
+    )!;
+
     setIsOpen(false);
 
     if (isMobile) setIsSidebarOpen(false);
@@ -70,9 +76,13 @@ export const OrganizationPicker = ({
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
-  const selectedItem = allOrganizations.find(
-    (org) => org.id === defaultOrganization?.id,
-  )!;
+  useEffect(() => {
+    if (defaultOrganization?.id && allOrganizations?.length) {
+      selectedOrg.current = allOrganizations.find(
+        (org) => org.id === defaultOrganization?.id,
+      )!;
+    }
+  }, [defaultOrganization?.id, allOrganizations]);
 
   const OrgSelectDropdown = useMemo(
     () => withSearchDropdown<Org>(Dropdown),
@@ -82,7 +92,7 @@ export const OrganizationPicker = ({
   return (
     <OrgSelectDropdown
       items={allOrganizations}
-      selectedItem={selectedItem}
+      selectedItem={selectedOrg.current!}
       handleSelected={handleChange}
       isOpen={isOpen}
       handleOpen={handleOpen}
@@ -92,8 +102,20 @@ export const OrganizationPicker = ({
       dropdownMenuStyles={[styles.dropdown(isRightAligned)]}
       hideDropdownIcon
       noBottomMargin
-      excludeSelectedItem
-      hideSearch={allOrganizations.length < 10}
+      hideSearch={allOrganizations.length < 25}
+      checkDisabledItem={(org?: Org) => org?.id === selectedOrg.current?.id}
+      renderItem={(org: Org) =>
+        org.id === selectedOrg.current?.id ? (
+          <div css={styles.activeOrg}>
+            <p css={styles.orgText}>{escapeHtml(defaultOrganization?.name!)}</p>
+            <Badge color="primary" style="outline">
+              Current
+            </Badge>
+          </div>
+        ) : (
+          <p css={styles.orgText}>{org.name}</p>
+        )
+      }
       renderButtonText={
         <>
           <SvgIcon isDefaultColor size="16px">
@@ -111,17 +133,7 @@ export const OrganizationPicker = ({
           )}
         </>
       }
-      renderHeader={
-        <>
-          <h2 css={styles.header}>Your Organizations</h2>
-          <div css={styles.activeOrg}>
-            <p css={styles.orgText}>{escapeHtml(defaultOrganization?.name!)}</p>
-            <Badge color="primary" style="outline">
-              Current
-            </Badge>
-          </div>
-        </>
-      }
+      renderHeader={<h2 css={styles.header}>Your Organizations</h2>}
     />
   );
 };
