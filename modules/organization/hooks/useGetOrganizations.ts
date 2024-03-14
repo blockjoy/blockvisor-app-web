@@ -58,7 +58,7 @@ export function useGetOrganizations() {
 
     const organizationsCopy = [...organizations];
     organizationsCopy.push(org);
-    setOrganizations(sort(organizationsCopy, { field: 'name' }));
+    setOrganizations(organizationsCopy);
   };
 
   return {

@@ -88,7 +88,9 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
 
   const handleSelect = (item: T) => {
     if (!item) return;
-    const isDisabled = checkDisabledItem ? checkDisabledItem(item) : false;
+    const isDisabled: boolean = checkDisabledItem
+      ? checkDisabledItem(item)
+      : false;
     if (isDisabled) return;
 
     handleSelected(item);
