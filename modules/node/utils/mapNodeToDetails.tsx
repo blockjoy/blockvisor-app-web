@@ -11,6 +11,8 @@ import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
 export const mapNodeToDetails = (node: Node) => {
   if (!node?.nodeType) return [];
 
+  const rpcUrl = `http://${node.url}`;
+
   const details: {
     label: string | any;
     data: any | undefined;
@@ -41,11 +43,11 @@ export const mapNodeToDetails = (node: Node) => {
               css={styles.link}
               target="_blank"
               rel="noopener noreferrer"
-              href={node.url}
+              href={rpcUrl}
             >
-              {node.url}
+              {rpcUrl}
             </a>
-            <Copy value={node.url} />
+            <Copy value={rpcUrl} />
           </>
         ) || '-',
     });
