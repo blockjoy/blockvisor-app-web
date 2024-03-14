@@ -8,7 +8,7 @@ const hasPermission = selectorFamily<boolean, Permission>({
     ({ get }) => {
       const permissions = get(authAtoms.permissions);
 
-      return Boolean(permissions?.indexOf(permission));
+      return permissions?.includes(permission) ?? false;
     },
 });
 

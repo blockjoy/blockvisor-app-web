@@ -28,7 +28,6 @@ export function usePermissions() {
       revalidateOnMount: true,
       revalidateIfStale: false,
       revalidateOnFocus: false,
-      revalidateOnReconnect: true,
 
       onSuccess: (data) => {
         console.log('getPermissionsResponse: ', sort(data));
