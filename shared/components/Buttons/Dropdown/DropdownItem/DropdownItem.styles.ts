@@ -32,6 +32,7 @@ export const styles = {
       justify-content: flex-start;
       gap: ${handleGap(size)};
       align-items: center;
+      text-align: left;
       min-width: 100%;
       cursor: pointer;
 
@@ -40,7 +41,7 @@ export const styles = {
       }
 
       :disabled p {
-        opacity: 0.45;
+        opacity: 0.65;
       }
 
       &,

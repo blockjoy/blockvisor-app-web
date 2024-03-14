@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { withSearchDropdown, Dropdown } from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
@@ -7,6 +7,8 @@ import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrga
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 
 export const OrganizationSelect = () => {
+  const selectedOrg = useRef<Org>();
+
   const allOrganizations = useRecoilValue(
     organizationAtoms.allOrganizationsSorted,
   );
@@ -19,21 +21,30 @@ export const OrganizationSelect = () => {
 
   const handleClick = (isOpen?: boolean) => setIsOpen(isOpen!);
 
-  const handleChange = async (org: Org | null) => {
-    if (!org) return;
+  const handleChange = async (nextOrg: Org | null) => {
+    if (!nextOrg) return;
 
-    const { id, name } = org;
+    await switchOrganization(nextOrg.id, nextOrg.name);
 
-    if (id && name && id !== defaultOrganization?.id) {
-      await switchOrganization(id, name);
-      setIsOpen(false);
-    }
+    selectedOrg.current = allOrganizations.find(
+      (org) => org.id === nextOrg?.id,
+    )!;
+
+    setIsOpen(false);
   };
 
   const OrgSelectDropdown = useMemo(
     () => withSearchDropdown<Org>(Dropdown),
     [allOrganizations],
   );
+
+  useEffect(() => {
+    if (defaultOrganization?.id && allOrganizations?.length) {
+      selectedOrg.current = allOrganizations.find(
+        (org) => org.id === defaultOrganization?.id,
+      )!;
+    }
+  }, [defaultOrganization?.id, allOrganizations]);
 
   return (
     <OrgSelectDropdown

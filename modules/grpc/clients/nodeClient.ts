@@ -11,6 +11,7 @@ import {
   NodeSort,
   NodeSortField,
   NodeReport,
+  NodeServiceGetRequest,
 } from '../library/blockjoy/v1/node';
 import { NodeType } from '../library/blockjoy/common/v1/node';
 import {
@@ -123,11 +124,25 @@ class NodeClient {
     hostId: string,
     pagination: UIPagination,
   ): Promise<NodeServiceListResponse> {
-    const request = {
-      orgId,
-      hostId,
+    const request: NodeServiceListRequest = {
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
+      orgIds: [orgId],
+      hostIds: [hostId],
+      statuses: [],
+      nodeTypes: [],
+      blockchainIds: [],
+      userIds: [],
+      ipAddresses: [],
+      versions: [],
+      networks: [],
+      regions: [],
+      sort: [
+        {
+          field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
+          order: SortOrder.SORT_ORDER_DESCENDING,
+        },
+      ],
     };
 
     console.log('listNodesByHostRequest', request);
@@ -145,7 +160,7 @@ class NodeClient {
   }
 
   async getNode(id: string): Promise<Node> {
-    const request = { id };
+    const request: NodeServiceGetRequest = { id };
     console.log('getNodeRequest', request);
     await authClient.refreshToken();
 

@@ -11,6 +11,7 @@ export const styles = {
     border: 1px solid ${theme.colorBorder};
     width: 100%;
     height: 44px;
+    line-height: 1.6;
     padding: 0 10px;
     background: transparent;
     cursor: pointer;

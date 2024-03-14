@@ -34,7 +34,9 @@ export const OrganizationsList = () => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
+  const allOrganizationsSorted = useRecoilValue(
+    organizationAtoms.allOrganizationsSorted,
+  );
 
   const handleRowClicked = (id: string, name: string) => {
     switchOrganization(id, name);
@@ -61,7 +63,7 @@ export const OrganizationsList = () => {
         </SkeletonGrid>
       ) : (
         <Scrollbar additionalStyles={[styles.scrollbar]}>
-          {allOrganizations?.map((org) => {
+          {allOrganizationsSorted?.map((org) => {
             const isActive = defaultOrganization?.id === org.id;
             return (
               <button
