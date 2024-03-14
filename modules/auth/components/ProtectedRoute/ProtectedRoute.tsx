@@ -1,9 +1,9 @@
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useRecoilValue } from 'recoil';
 import { authAtoms, authSelectors } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
-import { ROUTES } from '@shared/constants/routes';
-import { useRecoilValue } from 'recoil';
+import { ROUTES } from '@shared/index';
 
 interface Props {
   children?: ReactNode;

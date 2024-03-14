@@ -26,7 +26,6 @@ export function usePermissions() {
     fetcher,
     {
       revalidateOnMount: true,
-      revalidateIfStale: false,
       revalidateOnFocus: false,
 
       onSuccess: (data) => {
