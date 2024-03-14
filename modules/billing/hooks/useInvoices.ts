@@ -10,7 +10,7 @@ import {
   fetchBilling,
   InvoicesQueryParams,
 } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 interface IInvoicesHook {
   invoices: Invoice[];
@@ -22,8 +22,9 @@ interface IInvoicesHook {
 
 export const useInvoices = (): IInvoicesHook => {
   const subscription = useRecoilValue(billingSelectors.subscription);
-  const { hasPermission } = usePermissions();
-  const canUpdateSubscription = hasPermission('subscription-update');
+  const canUpdateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-update'),
+  );
 
   const queryParams = getInitialQueryParams();
 

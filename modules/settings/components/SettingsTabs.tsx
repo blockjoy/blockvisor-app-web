@@ -2,15 +2,13 @@ import { useRecoilValue } from 'recoil';
 import { usePathname } from 'next/navigation';
 import { TabNavigation } from '@shared/components/';
 import { wrapper } from 'styles/wrapper.styles';
-import { billingAtoms } from '@modules/billing';
-import { authAtoms } from '@modules/auth';
+import { billingSelectors } from '@modules/billing';
 
 export const SettingsTabs = () => {
   const pathname = usePathname();
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
 
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
 
   const tabs: TabNavItem[] = [{ href: '/settings/profile', name: 'Profile' }];

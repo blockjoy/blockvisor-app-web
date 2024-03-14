@@ -16,7 +16,7 @@ import {
   useInvoices,
   usePaymentMethod,
 } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
 
 type BillingProps = {
@@ -31,9 +31,10 @@ export const Billing = ({ item, itemPrices }: BillingProps) => {
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
+  const canUpdateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-update'),
+  );
 
-  const { hasPermission } = usePermissions();
-  const canUpdateSubscription = hasPermission('subscription-update');
   const { loadEstimates } = useEstimates();
   const { getBillingContacts } = useBillingContacts();
   const { loadInvoices } = useInvoices();

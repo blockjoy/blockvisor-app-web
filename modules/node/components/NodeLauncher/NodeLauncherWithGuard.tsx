@@ -4,23 +4,28 @@ import {
   WithLauncherGuardAdditionalProps,
   billingAtoms,
   withLauncherGuard,
+  billingSelectors,
 } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { NodeLauncher } from '@modules/node';
 
 export const NodeLauncherWithGuard = ({
   itemPrices,
 }: WithLauncherGuardAdditionalProps) => {
-  const { hasPermission, isSuperUser } = usePermissions();
-  const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
-  );
   const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
 
-  const canAddNode = hasPermission('node-create');
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const isEnabledBillingPreview = useRecoilValue(
+    billingSelectors.isEnabledBillingPreview,
+  );
 
-  const canCreateSubscription = hasPermission('subscription-create');
-  const canUpdateSubscription = hasPermission('subscription-update');
+  const canAddNode = useRecoilValue(authSelectors.hasPermission('node-create'));
+  const canCreateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-create'),
+  );
+  const canUpdateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-update'),
+  );
 
   const hasBillingPermissionsToCreate = isEnabledBillingPreview
     ? canCreateSubscription || canUpdateSubscription

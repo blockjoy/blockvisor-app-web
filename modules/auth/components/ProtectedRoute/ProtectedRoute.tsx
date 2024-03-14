@@ -1,8 +1,9 @@
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePermissions } from '@modules/auth';
+import { useRecoilValue } from 'recoil';
+import { authAtoms, authSelectors } from '@modules/auth';
 import { LoadingSpinner } from '@shared/components';
-import { ROUTES } from '@shared/constants/routes';
+import { ROUTES } from '@shared/index';
 
 interface Props {
   children?: ReactNode;
@@ -10,7 +11,10 @@ interface Props {
 
 export function ProtectedRoute({ children }: Props) {
   const router = useRouter();
-  const { isSuperUser, permissionsLoadingState } = usePermissions();
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const permissionsLoadingState = useRecoilValue(
+    authAtoms.permissionsLoadingState,
+  );
 
   useEffect(() => {
     if (!isSuperUser && permissionsLoadingState === 'finished') {

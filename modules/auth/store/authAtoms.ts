@@ -26,14 +26,8 @@ const permissionsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const isSuperUser = atom<boolean>({
-  key: 'auth.permissions.isSuperUser',
-  default: false,
-});
-
 export const authAtoms = {
   user,
   permissions,
   permissionsLoadingState,
-  isSuperUser,
 };

@@ -13,7 +13,7 @@ import {
 } from '@shared/components';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { hostAtoms, useHostList } from '@modules/host';
 import {
   NodeRegionSelect,
@@ -22,7 +22,7 @@ import {
   nodeLauncherSelectors,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
-import { billingAtoms, billingSelectors } from '@modules/billing';
+import { billingSelectors } from '@modules/billing';
 
 type NodeLauncherSummaryProps = {
   onCreateNodeClicked: VoidFunction;
@@ -38,8 +38,6 @@ export const NodeLauncherSummary = ({
   onRegionsLoaded,
 }: NodeLauncherSummaryProps) => {
   const { hostList } = useHostList();
-  const { hasPermission, isSuperUser } = usePermissions();
-
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
@@ -53,15 +51,14 @@ export const NodeLauncherSummary = ({
     nodeLauncherAtoms.isLaunching,
   );
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
   const bypassBillingForSuperUser = useRecoilValue(
-    billingAtoms.bypassBillingForSuperUser(isSuperUser),
+    billingSelectors.bypassBillingForSuperUser,
   );
+  const canAddNode = useRecoilValue(authSelectors.hasPermission('node-create'));
 
   const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
-
-  const canAddNode = hasPermission('node-create');
 
   useEffect(() => {
     setIsLaunching(false);

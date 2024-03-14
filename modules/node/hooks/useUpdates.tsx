@@ -9,7 +9,7 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/mqtt';
 import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
-import { authAtoms, usePermissions } from '@modules/auth';
+import { authAtoms, authSelectors } from '@modules/auth';
 
 const styles = {
   linkToHost: css`
@@ -27,7 +27,8 @@ export const useUpdates = () => {
   const { addToNodeList, removeFromNodeList, modifyNodeInNodeList } =
     useNodeList();
   const { unloadNode, modifyNode, node: activeNode } = useNodeView();
-  const { hasPermission } = usePermissions();
+  const canGetHost = useRecoilValue(authSelectors.hasPermission('host-get'));
+  const canGetNode = useRecoilValue(authSelectors.hasPermission('node-get'));
 
   const handleNodeUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -52,7 +53,7 @@ export const useUpdates = () => {
         ) : (
           <>
             Node launched from CLI for Host{' '}
-            {hasPermission('host-get') ? (
+            {canGetHost ? (
               <a
                 css={styles.linkToHost}
                 onClick={() => router.push(`/hosts/${node?.hostId}`)}
@@ -65,7 +66,7 @@ export const useUpdates = () => {
           </>
         );
 
-        const content = hasPermission('node-get') ? (
+        const content = canGetNode ? (
           <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
         ) : (
           ''
