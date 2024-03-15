@@ -9,12 +9,9 @@ import {
 } from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import {
-  loadPersistedFilters,
-  initialQueryParams,
-  InitialQueryParams,
-} from '@modules/node';
+import { initialQueryParams, InitialQueryParams } from '@modules/node';
 import { numOfItemsPerPage } from '@shared/index';
+import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
 
 type NodeUIContext = {
   queryParams: InitialQueryParams;
@@ -34,7 +31,7 @@ type NodeUIProvider = {
 const NodeUIContext = createContext<NodeUIContext>({} as NodeUIContext);
 
 export const getInitialQueryParams = () => {
-  const persistedNodeFilters = loadPersistedFilters();
+  const persistedNodeFilters = fetchFromLocalStorage('node.filters');
 
   if (!persistedNodeFilters) return initialQueryParams;
 

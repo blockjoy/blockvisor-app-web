@@ -34,7 +34,6 @@ export * from './ui/NodeUIContext';
 
 export * from './utils/convertNodeTypeToName';
 export * from './utils/getNodeTypes';
-export * from './utils/loadPersistedFilters';
 export * from './utils/mapNodeListToRows';
 export * from './utils/resultsStatus';
 export * from './utils/sortLists';

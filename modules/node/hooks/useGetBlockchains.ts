@@ -25,8 +25,7 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
     await blockchainClient.listBlockchains(defaultOrganization?.id!);
 
   useSWR(
-    () =>
-      defaultOrganization?.id ? `blockchains_${defaultOrganization.id}` : null,
+    defaultOrganization?.id ? `blockchains_${defaultOrganization.id}` : null,
     fetcher,
     {
       revalidateOnMount: true,

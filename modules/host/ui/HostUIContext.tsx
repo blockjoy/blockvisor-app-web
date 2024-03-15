@@ -8,12 +8,9 @@ import React, {
 } from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import {
-  loadPersistedFilters,
-  initialQueryParams,
-  InitialQueryParams,
-} from '@modules/host';
+import { initialQueryParams, InitialQueryParams } from '@modules/host';
 import { numOfItemsPerPage } from '@shared/index';
+import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
 
 type HostUIContext = {
   queryParams: InitialQueryParams;
@@ -33,7 +30,7 @@ type HostUIProvider = {
 const HostUIContext = createContext<HostUIContext>({} as HostUIContext);
 
 export const getInitialQueryParams = () => {
-  const persistedHostFilters = loadPersistedFilters();
+  const persistedHostFilters = fetchFromLocalStorage('host.filters');
 
   if (!persistedHostFilters) return initialQueryParams;
 

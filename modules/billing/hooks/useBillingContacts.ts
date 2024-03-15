@@ -29,10 +29,9 @@ export const useBillingContacts = (): IBillingContactsHook => {
     });
 
   const { data, error, isLoading, mutate } = useSWR(
-    () =>
-      subscription
-        ? `${BILLING_API_ROUTES.customer.contacts.list}_${subscription?.id}`
-        : null,
+    subscription
+      ? `${BILLING_API_ROUTES.customer.contacts.list}_${subscription?.id}`
+      : null,
     fetcher,
     {
       shouldRetryOnError: false,

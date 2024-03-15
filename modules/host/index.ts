@@ -25,7 +25,6 @@ export * from './store/hostSelectors';
 export * from './ui/HostUIContext';
 export * from './ui/HostUIHelpers';
 
-export * from './utils/loadPersistedFilters';
 export * from './utils/mapHostListToGrid';
 export * from './utils/mapHostListToRows';
 export * from './utils/mapHostNodesToRows';

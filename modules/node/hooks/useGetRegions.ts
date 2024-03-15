@@ -49,10 +49,9 @@ export const useGetRegions = (): UseGetRegionHook => {
   };
 
   useSWR(
-    () =>
-      defaultOrganization?.id && Boolean(blockchainsByTypeAndVersion.length)
-        ? `regions_${defaultOrganization.id}`
-        : null,
+    defaultOrganization?.id && Boolean(blockchainsByTypeAndVersion.length)
+      ? `regions_${defaultOrganization.id}`
+      : null,
     fetcher,
     {
       revalidateOnMount: true,

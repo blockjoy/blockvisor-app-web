@@ -18,6 +18,7 @@ import {
   useNodeFilters,
   useNodeUIContext,
   blockchainAtoms,
+  nodeSelectors,
 } from '@modules/node';
 
 export const NodeFilters = () => {
@@ -52,6 +53,9 @@ export const NodeFilters = () => {
   const [isFiltersOpen, setFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
+  const filtersBlockchainSelectedIds = useRecoilValue(
+    nodeSelectors.filtersBlockchainSelectedIds,
+  );
 
   const [openFilterId, setOpenFilterId] = useState('');
 
@@ -83,7 +87,8 @@ export const NodeFilters = () => {
 
   if (
     nodeListLoadingState === 'finished' &&
-    blockchainsLoadingState === 'finished'
+    (blockchainsLoadingState === 'finished' ||
+      !filtersBlockchainSelectedIds.length)
   )
     isCompleted.current = true;
 
