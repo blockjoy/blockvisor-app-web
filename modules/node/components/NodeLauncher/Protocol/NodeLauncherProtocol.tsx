@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -31,7 +31,9 @@ export const NodeLauncherProtocol = ({
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
 
   const [isFocused, setIsFocused] = useState(false);
-  const handleFocus = (focus: boolean) => setIsFocused(focus);
+  const handleFocus = useCallback((focus: boolean) => {
+    setIsFocused(focus);
+  }, []);
 
   const { blockchainId: activeBlockchainId, nodeType: activeNodeType } =
     nodeLauncher;
@@ -40,18 +42,33 @@ export const NodeLauncherProtocol = ({
     nodeLauncherSelectors.selectedBlockchain(activeBlockchainId),
   );
 
-  const handleSelect = (activeBlockchain: Blockchain) => {
-    const nodeTypes = getNodeTypes(activeBlockchain!);
+  const handleSelect = useCallback(
+    (activeBlockchain: Blockchain, nodeType?: NodeType) => {
+      const nodeTypes = getNodeTypes(activeBlockchain!);
+      onProtocolSelected(
+        activeBlockchain?.id!,
+        nodeType ?? nodeTypes?.[0]?.nodeType,
+      );
+    },
+    [onProtocolSelected],
+  );
 
-    onProtocolSelected(activeBlockchain?.id!, nodeTypes?.[0]?.nodeType);
-  };
+  const handleBlockchainSelected = useCallback(
+    (
+      e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
+      blockchain: Blockchain,
+      nodeType?: NodeType,
+    ) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSelect(blockchain, nodeType);
+    },
+    [handleSelect],
+  );
 
   // Blockchain component to show in the list
   const renderItem = (blockchain: Blockchain, isFocusedItem?: boolean) => {
     const nodeTypes = getNodeTypes(blockchain);
-
-    const handleBlockchainSelected = () =>
-      onProtocolSelected(blockchain.id!, nodeTypes[0]?.nodeType);
 
     const isActiveItem = blockchain.id === activeBlockchainId;
 
@@ -61,20 +78,15 @@ export const NodeLauncherProtocol = ({
         className={`row list-item${isActiveItem ? ' active' : ''}${
           isFocusedItem ? ' focus' : ''
         }`}
+        onClick={(e) => handleBlockchainSelected(e, blockchain)}
       >
         <div css={styles.blockchainWrapper}>
-          <button
-            tabIndex={-1}
-            css={styles.button}
-            onClick={handleBlockchainSelected}
-          >
-            <BlockchainIcon
-              size="28px"
-              hideTooltip
-              blockchainName={blockchain?.name}
-            />
-            <p>{blockchain?.name}</p>
-          </button>
+          <BlockchainIcon
+            size="28px"
+            hideTooltip
+            blockchainName={blockchain?.name}
+          />
+          <p>{blockchain?.name}</p>
         </div>
         <div css={styles.nodeTypeButtons} className="node-type-buttons">
           {nodeTypes.map((nodeType) => {
@@ -86,8 +98,8 @@ export const NodeLauncherProtocol = ({
               <button
                 key={nodeType.nodeType}
                 className={isActive ? 'active' : ''}
-                onClick={() =>
-                  onProtocolSelected(blockchain.id!, nodeType.nodeType)
+                onClick={(e) =>
+                  handleBlockchainSelected(e, blockchain, nodeType.nodeType)
                 }
                 type="button"
                 css={styles.createButton}

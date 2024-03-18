@@ -1,4 +1,5 @@
 import { ReactNode, useRef } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useAccessibleList } from '@shared/index';
 import { SerializedStyles } from '@emotion/react';
 
@@ -43,7 +44,9 @@ export const List = <T extends { id?: string; name?: string }>({
       {...(additionalyStyles ? { css: additionalyStyles } : null)}
     >
       {items.map((item, index) => {
-        const isActive = index === activeIndex;
+        const isActive = !isMobile
+          ? index === activeIndex
+          : selectedItem?.id === item.id;
 
         return (
           <li

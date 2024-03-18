@@ -55,21 +55,6 @@ export const styles = {
     scale: 0;
     position: absolute;
   `,
-  button: (theme: ITheme) => css`
-    position: relative;
-    color: ${theme.colorText};
-    opacity: 0.8;
-    text-align: left;
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 0 6px;
-    gap: 10px;
-    width: 100%;
-    height: inherit;
-  `,
   row: css`
     display: flex;
     align-items: center;
@@ -94,12 +79,24 @@ export const styles = {
     }
   `,
   rowHover: (theme: ITheme) => css`
+    @media ${breakpoints.toXlrg} {
+      p {
+        color: ${rgba(theme.colorText || '#ffffff', 0.7)};
+      }
+    }
+
     &.active {
       background: ${rgba(theme.colorLightGrey || '#ffffff', 0.5)};
       opacity: 1;
 
       .beta-badge {
         opacity: 1;
+      }
+
+      @media ${breakpoints.toXlrg} {
+        p {
+          color: ${theme.colorText};
+        }
       }
     }
 
