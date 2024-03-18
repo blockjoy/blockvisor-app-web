@@ -51,7 +51,7 @@ export const NodeLauncherProtocol = ({
     const nodeTypes = getNodeTypes(blockchain);
 
     const handleBlockchainSelected = () =>
-      onProtocolSelected(blockchain.id!, nodeTypes[0].nodeType);
+      onProtocolSelected(blockchain.id!, nodeTypes[0]?.nodeType);
 
     const isActiveItem = blockchain.id === activeBlockchainId;
 
@@ -132,8 +132,7 @@ export const NodeLauncherProtocol = ({
           isFocused={isFocused}
           handleFocus={handleFocus}
           isLoading={loadingState !== 'finished'}
-          scrollable={true}
-          listScrollbarStyles={[styles.scrollbar]}
+          additionalyStyles={[styles.scrollbar]}
         />
       )}
     </div>

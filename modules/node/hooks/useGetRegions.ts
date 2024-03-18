@@ -56,6 +56,7 @@ export const useGetRegions = (): UseGetRegionHook => {
     fetcher,
     {
       revalidateOnMount: true,
+      revalidateOnFocus: false,
 
       onSuccess: (data) => {
         setAllRegions(data);

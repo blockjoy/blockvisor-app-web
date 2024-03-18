@@ -32,11 +32,10 @@ export const styles = {
     }
   `,
   scrollbar: css`
-    flex: 1 1 auto;
-    min-height: 0;
-
     @media ${breakpoints.toXlrg} {
-      max-height: 510px;
+      max-height: 60vh;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
   `,
   blockchainWrapper: css`
@@ -44,6 +43,7 @@ export const styles = {
     align-items: center;
     gap: 10px;
     min-width: 50%;
+    height: inherit;
   `,
   nodeTypeButtons: css`
     flex: 1 1 auto;
@@ -68,6 +68,7 @@ export const styles = {
     padding: 0 6px;
     gap: 10px;
     width: 100%;
+    height: inherit;
   `,
   row: css`
     display: flex;
@@ -84,10 +85,10 @@ export const styles = {
     border-radius: 6px;
     border: 0;
     cursor: pointer;
-    opacity: 0.7;
     outline: none;
 
     @media ${breakpoints.fromXLrg} {
+      opacity: 0.7;
       max-height: 56px;
       min-height: 56px;
     }
