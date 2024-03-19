@@ -3,8 +3,7 @@ import {
   BlockchainServiceClient,
   BlockchainServiceDefinition,
 } from '../library/blockjoy/v1/blockchain';
-
-import { authClient, getOptions, handleError } from '@modules/grpc';
+import { callWithTokenRefresh, handleError } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 
 class BlockchainClient {
@@ -21,8 +20,10 @@ class BlockchainClient {
     };
     console.log('getBlockchainsRequest', request);
     try {
-      await authClient.refreshToken();
-      const response = await this.client.list(request, getOptions());
+      const response = await callWithTokenRefresh(
+        this.client.list.bind(this.client),
+        request,
+      );
       console.log('getBlockchainsResponse', response);
       return response.blockchains;
     } catch (err: any) {

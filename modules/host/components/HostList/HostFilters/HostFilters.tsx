@@ -1,35 +1,22 @@
-import { ChangeEvent, useMemo, useRef, useState } from 'react';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import { styles } from './HostFilters.styles';
 import {
   Skeleton,
   SkeletonGrid,
   Scrollbar,
-  // SvgIcon,
+  SvgIcon,
   FiltersBlock,
   FiltersRange,
   FiltersHeader,
 } from '@shared/components';
-import { blockchainSelectors } from '@modules/node';
-import {
-  organizationAtoms,
-  useDefaultOrganization,
-  useSwitchOrganization,
-} from '@modules/organization';
-import {
-  hostAtoms,
-  hostSelectors,
-  useHostUIContext,
-  useFilters,
-} from '@modules/host';
-// import IconClose from '@public/assets/icons/common/Close.svg';
-// import IconRefresh from '@public/assets/icons/common/Refresh.svg';
+import { hostAtoms, useHostUIContext, useHostFilters } from '@modules/host';
+import IconClose from '@public/assets/icons/common/Close.svg';
+import IconRefresh from '@public/assets/icons/common/Refresh.svg';
+import { blockchainAtoms } from '@modules/node';
 
-export type HostFiltersProps = {
-  isLoading: LoadingState;
-};
-
-export const HostFilters = ({ isLoading }: HostFiltersProps) => {
+export const HostFilters = () => {
   const hostUIContext = useHostUIContext();
   const hostUIProps = useMemo(() => {
     return {
@@ -38,105 +25,73 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
     };
   }, [hostUIContext]);
 
-  const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
+  const {
+    filters,
+    isDirty,
+    tempFiltersTotal,
+    updateFilters,
+    resetFilters,
+    changeTempFilters,
+  } = useHostFilters(hostUIProps);
 
-  const { filters, updateFilters, removeFilters, resetFilters } =
-    useFilters(hostUIProps);
+  const isCompleted = useRef(false);
 
-  const { switchOrganization } = useSwitchOrganization();
-
-  const [isDirty, setIsDirty] = useState(false);
-
-  const hasBlockchainError = useRecoilValue(
-    blockchainSelectors.blockchainsHasError,
+  const hostListLoadingState = useRecoilValue(hostAtoms.isLoading);
+  const blockchainsLoadingState = useRecoilValue(
+    blockchainAtoms.blockchainsLoadingState,
   );
 
   const [isFiltersOpen, setFiltersOpen] = useRecoilState(
     hostAtoms.isFiltersOpen,
   );
 
-  const filtersTotal = useRecoilValue(hostSelectors.filtersTotal);
+  const [openFilterId, setOpenFilterId] = useState('');
 
-  const [openFilterName, setOpenFilterName] =
-    useState<string | 'Memory' | 'Status' | 'CPU Cores' | 'Disk space'>('');
+  useEffect(() => {
+    if (isMobile) setFiltersOpen(false);
+  }, []);
 
-  const isCompleted = useRef(false);
-
-  const handleFilterChanged = (
-    e: ChangeEvent<HTMLInputElement>,
-    list: FilterItem[],
-    setFilterList: SetterOrUpdater<FilterItem[]>,
-  ) => {
-    if (!isDirty && !!setFilterList) {
-      setIsDirty(true);
+  const hasFiltersApplied = filters.some((filter) => {
+    if (filter.type === 'check') {
+      return filter.list?.some((l: any) => l.isChecked);
+    } else if (filter.type === 'range') {
+      return (
+        filter.min !== filter.values?.[0] || filter.max !== filter.values?.[1]
+      );
     }
+  });
 
-    const filtersList = list.map((item) => {
-      if (item.id === e.target.id) {
-        return {
-          ...item,
-          isChecked: !item.isChecked,
-        };
-      }
-
-      return item;
-    });
-
-    setFilterList(filtersList);
+  const handleResetFilters = () => {
+    resetFilters();
+    setOpenFilterId('');
   };
 
-  const handleTouched = () => setIsDirty(true);
-
-  // TODO: ADD BACK IN ONCE LUUK HAS IMPLEMENTED THEM
-  // const hasFiltersApplied = filters.some((filter: any) => {
-  //   if (filter.name === 'Organization') return false;
-  //   else if (filter.type === 'check') {
-  //     return filter.filterList.some((l: any) => l.isChecked);
-  //   } else if (filter.type === 'range') {
-  //     return filter.min !== filter.values[0] || filter.max !== filter.values[1];
-  //   }
-  // });
-
-  // const handleResetFilters = () => {
-  //   setIsDirty(false);
-  //   resetFilters();
-  //   removeFilters();
-  //   setOpenFilterName('');
-  // };
-
-  // const handleUpdateClicked = () => {
-  //   updateFilters();
-  //   setIsDirty(false);
-  // };
-
-  const handleFilterBlockClicked = (filterName: string) => {
-    setOpenFilterName(filterName);
+  const handleFilterBlockClicked = (filterId: string) => {
+    setOpenFilterId(filterId);
   };
 
-  const handlePlusMinusClicked = (filterName: string, isOpen: boolean) => {
-    const filterNameValue = isOpen ? '' : filterName;
-    setOpenFilterName(filterNameValue);
+  const handlePlusMinusClicked = (filterId: string, isOpen: boolean) => {
+    const filterNameValue = isOpen ? '' : filterId;
+    setOpenFilterId(filterNameValue);
   };
 
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
-    localStorage.setItem('hostFiltersOpen', JSON.stringify(!isFiltersOpen));
   };
 
-  if (isLoading === 'finished') isCompleted.current = true;
+  if (
+    hostListLoadingState === 'finished' &&
+    blockchainsLoadingState === 'finished'
+  )
+    isCompleted.current = true;
 
   return (
     <div
-      css={[
-        styles.outerWrapper,
-        !isFiltersOpen && styles.outerWrapperCollapsed,
-      ]}
+      css={[styles.outerWrapper, isFiltersOpen && styles.outerWrapperCollapsed]}
     >
       <FiltersHeader
         isLoading={!isCompleted.current}
-        filtersTotal={filtersTotal}
+        filtersTotal={tempFiltersTotal}
         isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
@@ -154,51 +109,39 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
           <Scrollbar additionalStyles={[styles.filters]}>
             {filters.map((item: any) => {
-              if (item.type === 'check')
-                return (
-                  <FiltersBlock
-                    hasError={item.name === 'Blockchain' && hasBlockchainError}
-                    isDisabled={item.isDisabled}
-                    isOpen={item.name === openFilterName}
-                    onPlusMinusClicked={handlePlusMinusClicked}
-                    onFilterBlockClicked={handleFilterBlockClicked}
-                    key={item.name}
-                    name={item.name}
-                    filterCount={item.filterCount}
-                    filterList={item.filterList}
-                    setFilterList={item?.setFilterList!}
-                    onFilterChanged={handleFilterChanged}
-                  />
-                );
-              else if (item.type === 'range')
+              if (item.type === 'range')
                 return (
                   <FiltersRange
-                    key={item.name}
-                    name={item.name}
-                    step={item.step}
-                    min={item.min}
-                    max={item.max}
-                    values={item.values}
-                    customValues={item.customValues}
-                    setValues={item.setValues}
-                    isOpen={item.name === openFilterName}
+                    key={item.id}
+                    filter={item}
+                    isOpen={item.id === openFilterId}
                     onPlusMinusClicked={handlePlusMinusClicked}
                     onFilterBlockClicked={handleFilterBlockClicked}
-                    onStateChange={handleTouched}
-                    formatter={item.formatter}
                   />
                 );
-              else return null;
+
+              return (
+                <FiltersBlock
+                  key={item.id}
+                  hasError={false}
+                  isOpen={item.id === openFilterId}
+                  filter={item}
+                  onPlusMinusClicked={handlePlusMinusClicked}
+                  onFilterBlockClicked={handleFilterBlockClicked}
+                  onFilterChanged={changeTempFilters}
+                />
+              );
             })}
           </Scrollbar>
-          {/* TODO: ADD BACK IN ONCE LUUK HAS IMPLEMENTED THEM */}
-          {/* <button
+          <button
             css={styles.updateButton}
             type="button"
             disabled={!isDirty}
-            onClick={handleUpdateClicked}
+            onClick={updateFilters}
           >
-            <IconRefresh />
+            <SvgIcon size="12px">
+              <IconRefresh />
+            </SvgIcon>
             Apply
           </button>
           {hasFiltersApplied && (
@@ -212,7 +155,7 @@ export const HostFilters = ({ isLoading }: HostFiltersProps) => {
               </SvgIcon>
               Reset Filters
             </button>
-          )} */}
+          )}
         </div>
       )}
     </div>

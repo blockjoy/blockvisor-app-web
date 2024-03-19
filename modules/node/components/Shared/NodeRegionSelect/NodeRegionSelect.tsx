@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { nodeAtoms, nodeLauncherAtoms } from '@modules/node';
+import { nodeAtoms, nodeLauncherAtoms, nodeSelectors } from '@modules/node';
 import { Dropdown } from '@shared/components';
 
 type NodeRegionSelectProps = {
@@ -19,7 +19,7 @@ export const NodeRegionSelect = ({
   const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
   const { blockchainId, nodeType } = nodeLauncher;
   const regionsByBlockchain = useRecoilValue(
-    nodeAtoms.regionsByBlockchain({
+    nodeSelectors.regionsByBlockchain({
       blockchainId,
       version: version?.version,
       nodeType,

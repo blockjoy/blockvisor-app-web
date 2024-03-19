@@ -27,11 +27,11 @@ import {
   SortOrder,
 } from '../library/blockjoy/common/v1/search';
 
-export type HostFilterCriteria = {
+export type UIHostFilterCriteria = {
   hostStatus?: string[];
-  hostMemory?: number[];
-  hostCPU?: number[];
-  hostSpace?: number[];
+  hostMemory?: [number, number];
+  hostCPU?: [number, number];
+  hostSpace?: [number, number];
   keyword?: string;
 };
 
@@ -50,7 +50,7 @@ class HostClient {
 
   async listHosts(
     orgId?: string,
-    filterCriteria?: HostFilterCriteria,
+    filterCriteria?: UIHostFilterCriteria,
     pagination?: HostPagination,
     sort?: HostSort[],
   ): Promise<HostServiceListResponse> {

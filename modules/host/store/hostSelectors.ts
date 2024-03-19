@@ -1,10 +1,10 @@
 import { selector, selectorFamily } from 'recoil';
-import isEqual from 'lodash/isEqual';
-import { hostFiltersDefaults } from '@shared/constants/lookups';
-import { hostAtoms } from './hostAtoms';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc';
 import { authSelectors } from '@modules/auth';
+import { hostAtoms } from '@modules/host';
+import { sort } from '@shared/components';
+import { nodeStatusList } from '@shared/constants/nodeStatusList';
 
 const hostById = selectorFamily<Host | null, string | undefined>({
   key: 'host.byId',
@@ -39,24 +39,6 @@ const adminHostById = selectorFamily<Host | null, string>({
   },
 });
 
-const filtersTotal = selector<number>({
-  key: 'host.filters.total',
-  get: ({ get }) => {
-    let total = 1;
-
-    const filtersMemory = get(hostAtoms.filtersMemory);
-    if (!isEqual(filtersMemory, hostFiltersDefaults.memory)) total++;
-
-    const filtersCPU = get(hostAtoms.filtersCPU);
-    if (!isEqual(filtersCPU, hostFiltersDefaults.cpu)) total++;
-
-    const filtersSpace = get(hostAtoms.filtersSpace);
-    if (!isEqual(filtersSpace, hostFiltersDefaults.space)) total++;
-
-    return total;
-  },
-});
-
 const hostListSorted = selector<Host[]>({
   key: 'hostList.sorted',
   get: ({ get }) => {
@@ -71,8 +53,83 @@ const hostListSorted = selector<Host[]>({
   },
 });
 
+const filtersStatusSelectedIds = selector<string[]>({
+  key: 'host.filters.hostStatus',
+  get: ({ get }) => get(hostAtoms.filters)?.hostStatus ?? [],
+  set: ({ set }, newValue) =>
+    set(hostAtoms.filters, (prevState: any) => ({
+      ...prevState,
+      hostStatus: newValue,
+    })),
+});
+
+const filtersStatusAll = selectorFamily<any, any[]>({
+  key: 'host.filters.hostStatus.all',
+  get: (tempFilters: string[]) => () => {
+    const allStatuses = sort(
+      nodeStatusList
+        .filter((item) => item.id !== 0 && !item.type)
+        .map((item) => ({
+          ...item,
+          name: item.name?.toLowerCase(),
+          id: item.id?.toString(),
+        })),
+      {
+        field: 'name',
+        order: 'asc',
+      },
+    );
+
+    if (!allStatuses.length) return [];
+
+    const allFilters = allStatuses.map((status) => ({
+      ...status,
+      isChecked: tempFilters.some((filter) => status.id === filter),
+    }));
+
+    return allFilters;
+  },
+});
+
+const filtersCPUSelectedRange = selector<[number, number]>({
+  key: 'host.filters.hostCPU',
+  get: ({ get }) => get(hostAtoms.filters)?.hostCPU ?? [0, 0],
+  set: ({ set }, newValue) =>
+    set(hostAtoms.filters, (prevState: any) => ({
+      ...prevState,
+      hostCPU: newValue,
+    })),
+});
+
+const filtersMemorySelectedRange = selector<[number, number]>({
+  key: 'host.filters.hostMemory',
+  get: ({ get }) => get(hostAtoms.filters)?.hostMemory ?? [0, 0],
+  set: ({ set }, newValue) =>
+    set(hostAtoms.filters, (prevState: any) => ({
+      ...prevState,
+      hostMemory: newValue,
+    })),
+});
+
+const filtersSpaceSelectedRange = selector<[number, number]>({
+  key: 'host.filters.hostSpace',
+  get: ({ get }) => get(hostAtoms.filters)?.hostSpace ?? [0, 0],
+  set: ({ set }, newValue) =>
+    set(hostAtoms.filters, (prevState: any) => ({
+      ...prevState,
+      hostSpace: newValue,
+    })),
+});
+
 export const hostSelectors = {
   hostById,
-  filtersTotal,
+
   hostListSorted,
+
+  filtersCPUSelectedRange,
+  filtersMemorySelectedRange,
+  filtersSpaceSelectedRange,
+  filtersStatusSelectedIds,
+
+  filtersStatusAll,
 };

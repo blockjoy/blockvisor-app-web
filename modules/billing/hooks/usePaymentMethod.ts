@@ -25,10 +25,9 @@ export const usePaymentMethod = (): IPaymentMethodHook => {
     });
 
   const { data, error, isLoading, mutate } = useSWR(
-    () =>
-      subscription?.payment_source_id
-        ? `${BILLING_API_ROUTES.payments.sources.get}_${subscription?.id}`
-        : null,
+    subscription?.payment_source_id
+      ? `${BILLING_API_ROUTES.payments.sources.get}_${subscription?.id}`
+      : null,
     fetcher,
     {
       shouldRetryOnError: false,

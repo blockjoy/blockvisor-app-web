@@ -1,13 +1,21 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import { InitialQueryParams, initialQueryParams } from './NodeUIHelpers';
-import { buildParams, loadPersistedFilters } from '@modules/node/utils';
+import { initialQueryParams, InitialQueryParams } from '@modules/node';
 import { numOfItemsPerPage } from '@shared/index';
+import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
 
 type NodeUIContext = {
   queryParams: InitialQueryParams;
-  setQueryParamsBase: React.Dispatch<React.SetStateAction<InitialQueryParams>>;
+  setQueryParamsBase: Dispatch<SetStateAction<InitialQueryParams>>;
   setQueryParams: (nextQueryParams: InitialQueryParams) => void;
 };
 
@@ -17,27 +25,24 @@ export type NodeUIProps = {
 };
 
 type NodeUIProvider = {
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
 const NodeUIContext = createContext<NodeUIContext>({} as NodeUIContext);
 
 export const getInitialQueryParams = () => {
-  const persistedNodeFilters = loadPersistedFilters();
+  const persistedNodeFilters = fetchFromLocalStorage('node.filters');
 
   if (!persistedNodeFilters) return initialQueryParams;
-
-  const { blockchain, type, status } = persistedNodeFilters;
-  const params = buildParams(blockchain, type, status);
 
   const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,
-    filter: params,
+    filter: persistedNodeFilters,
     pagination: {
       ...initialQueryParams.pagination,
-      itemsPerPage: itemsPerPage,
+      itemsPerPage,
     },
   };
 };

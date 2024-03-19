@@ -13,7 +13,7 @@ export * from './components/HostView/Tabs/Details/HostViewDetails';
 export * from './components/HostView/Tabs/Nodes/HostViewNodes';
 export * from './components/HostWrapper/HostWrapper';
 
-export * from './hooks/useFilters';
+export * from './hooks/useHostFilters';
 export * from './hooks/useHostList';
 export * from './hooks/useHostSelect';
 export * from './hooks/useHostView';
@@ -25,8 +25,6 @@ export * from './store/hostSelectors';
 export * from './ui/HostUIContext';
 export * from './ui/HostUIHelpers';
 
-export * from './utils/buildParams';
-export * from './utils/loadPersistedFilters';
 export * from './utils/mapHostListToGrid';
 export * from './utils/mapHostListToRows';
 export * from './utils/mapHostNodesToRows';

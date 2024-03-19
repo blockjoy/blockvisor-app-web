@@ -13,6 +13,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   hostAtoms,
+  // HostFilters,
   HostListHeader,
   mapHostListToGird,
   mapHostListToRows,
@@ -78,7 +79,7 @@ export const HostList = () => {
     <>
       <div css={styles.wrapper}>
         {/* TODO: Implement filters in api */}
-        {/* <HostFilters isLoading={isLoading} /> */}
+        {/* <HostFilters/> */}
         <div css={styles.listWrapper}>
           <HostListHeader />
           {isLoading === 'initializing' ? (

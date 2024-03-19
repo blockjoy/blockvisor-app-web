@@ -7,12 +7,13 @@ import {
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { sortNetworks, sortVersions } from '../utils';
 import {
   nodeAtoms,
   blockchainAtoms,
   nodeLauncherAtoms,
   BlockchainSimpleWRegion,
+  sortNetworks,
+  sortVersions,
 } from '@modules/node';
 
 const networks = selector<NetworkConfig[]>({
