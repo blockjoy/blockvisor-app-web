@@ -23,10 +23,10 @@ export const AdminNodeUpgrade = () => {
   const handleUpgrade = async (version: string) => {
     try {
       await nodeClient.upgradeNode(id as string, version);
+      toast.success('Upgrade Command Sent');
     } catch (err) {
       toast.error('Error Upgrading');
     } finally {
-      toast.success('Upgrade Command Sent');
       setIsOpen(false);
     }
   };
@@ -45,7 +45,7 @@ export const AdminNodeUpgrade = () => {
 
       setVersions(
         sortVersionStringArray(
-          nodeType?.versions.map((version) => version.version),
+          nodeType?.versions.map(({ version }) => version),
         ),
       );
     } catch (err) {
