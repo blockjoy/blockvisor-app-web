@@ -1,6 +1,7 @@
-import { Suspense, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { usePermissions } from '../../modules/auth';
+import { authAtoms, authSelectors, usePermissions } from '@modules/auth';
 import { PageLayoutType } from '../../modules/layout/components/page/Page';
 
 const AdminLayout = dynamic<{}>(() =>
@@ -32,13 +33,10 @@ const NotFound = dynamic<{}>(() =>
 );
 
 export const Admin = () => {
-  const { permissions, isSuperUser, getPermissions } = usePermissions();
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const permissions = useRecoilValue(authAtoms.permissions);
 
-  useEffect(() => {
-    if (permissions === undefined) {
-      getPermissions();
-    }
-  }, []);
+  usePermissions();
 
   if (permissions === undefined) return null;
 

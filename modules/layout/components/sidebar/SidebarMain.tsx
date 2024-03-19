@@ -16,8 +16,8 @@ import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { invitationAtoms, organizationAtoms } from '@modules/organization';
 import { ROUTES } from '@shared/index';
-import { authAtoms } from '@modules/auth';
-import { billingAtoms } from '@modules/billing';
+import { authSelectors } from '@modules/auth';
+import { billingSelectors } from '@modules/billing';
 
 type BlockItem = {
   id: string;
@@ -39,12 +39,12 @@ export default () => {
     organizationAtoms.defaultOrganization,
   );
   const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const invitationCount = useRecoilValue(
     invitationAtoms.receivedInvitations,
   )?.length;
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
 
   const handleLinkClicked = () => {

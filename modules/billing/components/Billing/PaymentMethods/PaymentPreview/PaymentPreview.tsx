@@ -13,7 +13,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
 import { styles } from './PaymentPreview.styles';
 import { ROUTES } from '@shared/index';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 export const PaymentPreview = () => {
   const router = useRouter();
@@ -24,8 +24,9 @@ export const PaymentPreview = () => {
   const { paymentMethod, paymentMethodLoadingState } = usePaymentMethod();
   const allPaymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
-  const { hasPermission } = usePermissions();
-  const canUpdateSubscription = hasPermission('subscription-update');
+  const canUpdateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-update'),
+  );
 
   const handleUpdate = () => setActiveView('dialog');
   const onHide = () => setActiveView('list');

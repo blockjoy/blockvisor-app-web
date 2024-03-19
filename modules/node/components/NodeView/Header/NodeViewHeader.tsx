@@ -21,7 +21,6 @@ import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
 import { toast } from 'react-toastify';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
-import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
@@ -100,8 +99,9 @@ export const NodeViewHeader = () => {
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
                       <p>
-                        {node.blockchainName}{' '}
-                        {convertNodeTypeToName(node?.nodeType)}
+                        {node.blockchainName}
+                        {' | '}
+                        {node.network}
                       </p>
                     </div>
                     {node!.createdAt && (

@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { NodeStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { authAtoms } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { getNodeStatusInfo, NodeStatusType } from '@shared/components';
 
 type Props = {
@@ -16,7 +16,7 @@ export const NodeStatusName = ({
   downloadingCurrent,
   downloadingTotal,
 }: Props) => {
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const statusInfo = getNodeStatusInfo(status, type);
 

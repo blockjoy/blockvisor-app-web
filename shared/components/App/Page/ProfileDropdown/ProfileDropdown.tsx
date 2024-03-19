@@ -1,15 +1,15 @@
 import { ReactNode, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/navigation';
-import { authAtoms, usePermissions, useSignOut } from '@modules/auth';
+import { authAtoms, authSelectors, useSignOut } from '@modules/auth';
 import { ROUTES } from '@shared/constants/routes';
 import { Badge, Dropdown } from '@shared/components';
 import { ProfileBubble } from './ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
-import IconDoor from '@public/assets/icons/common/Door.svg';
-import IconCog from '@public/assets/icons/common/Cog.svg';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { spacing } from 'styles/utils.spacing.styles';
+import IconDoor from '@public/assets/icons/common/Door.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
 type ProfileDropdownItem = {
   id: string;
@@ -45,7 +45,7 @@ export const ProfileDropdown = () => {
 
   const signOut = useSignOut();
 
-  const { isSuperUser } = usePermissions();
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const renderItem = (item: ProfileDropdownItem) => (
     <>

@@ -8,7 +8,7 @@ import {
   SubscriptionActions,
   ActiveView,
 } from '@modules/billing';
-import { usePermissions } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 
 type SubscriptionPreviewProps = {
   onViewChange: SetterOrUpdater<ActiveView>;
@@ -18,10 +18,12 @@ export const SubscriptionPreview = ({
   onViewChange,
 }: SubscriptionPreviewProps) => {
   const subscription = useRecoilValue(billingSelectors.subscription);
-
-  const { hasPermission } = usePermissions();
-  const canUpdateSubscription = hasPermission('subscription-update');
-  const canDeleteSubscription = hasPermission('subscription-delete');
+  const canUpdateSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-update'),
+  );
+  const canDeleteSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-delete'),
+  );
 
   return (
     <>

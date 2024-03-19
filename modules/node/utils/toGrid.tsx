@@ -1,7 +1,6 @@
 import { TableGridCell, NodeStatus } from '@shared/components';
 import { BlockchainIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { getNodeJobProgress } from './getNodeJobProgress';
 
 export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
@@ -13,11 +12,11 @@ export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
         <TableGridCell
           key={node.id}
           onCellClick={() => onCellClick(node.id)}
-          cellTitle={node.name}
-          cellIcon={
+          titleText={node.name}
+          titleIcon={
             <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
           }
-          cellStatus={
+          footer={
             <NodeStatus
               hasBorder
               status={node.status}
@@ -25,9 +24,7 @@ export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
               downloadingTotal={progress?.total}
             />
           }
-          cellType={`${node.blockchainName} ${convertNodeTypeToName(
-            node.nodeType,
-          )}`}
+          middleRow={`${node.blockchainName} | ${node.network}`}
         />
       ),
     };

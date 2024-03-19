@@ -1,4 +1,5 @@
 import { css, keyframes } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 const spin = keyframes`
@@ -20,6 +21,11 @@ export const styles = {
     width: 100%;
     min-width: max-content;
     max-width: 200px;
+
+    @media ${breakpoints.toLrg} {
+      left: 0;
+      right: auto;
+    }
   `,
   dropdownItem: css`
     padding-left: 18px;

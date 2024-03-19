@@ -12,10 +12,9 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { organizationAtoms } from '@modules/organization';
-import { usePermissions } from '@modules/auth/hooks/usePermissions';
-
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useRecoilValue } from 'recoil';
+import { authSelectors } from '@modules/auth';
 
 const itemsPerPage = 48;
 
@@ -25,10 +24,12 @@ export const HostViewNodes = () => {
   const { nodeListByHost, isLoading, listNodesByHost, nodeListByHostCount } =
     useNodeList();
   const { isLoading: isLoadingActiveHost } = useHostView();
-  const { hasPermission } = usePermissions();
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
+  );
+  const canAdminList = useRecoilValue(
+    authSelectors.hasPermission('node-admin-list'),
   );
 
   const [pageIndex, setPageIndex] = useState(0);
@@ -51,7 +52,7 @@ export const HostViewNodes = () => {
 
   return (
     <>
-      {hasPermission('node-admin-list') && (
+      {canAdminList && (
         <Alert isSuccess>
           Showing nodes for{' '}
           <NextLink href={ROUTES.ORGANIZATION(defaultOrganization?.id!)}>

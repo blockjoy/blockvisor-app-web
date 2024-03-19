@@ -8,7 +8,7 @@ import {
 } from '@modules/billing';
 import { Alert, TableSkeleton } from '@shared/components';
 import { styles } from './SubscriptionView.styles';
-import { usePermissions } from '@modules/auth';
+import { authAtoms, authSelectors } from '@modules/auth';
 import { containers } from 'styles/containers.styles';
 
 type SubscriptionViewProps = {
@@ -25,8 +25,12 @@ export const SubscriptionView = ({
     billingAtoms.subscriptionLoadingState,
   );
 
-  const { hasPermission, permissionsLoadingState } = usePermissions();
-  const canReadSubscription = hasPermission('subscription-get');
+  const canReadSubscription = useRecoilValue(
+    authSelectors.hasPermission('subscription-get'),
+  );
+  const permissionsLoadingState = useRecoilValue(
+    authAtoms.permissionsLoadingState,
+  );
 
   if (
     subscriptionLoadingState === 'initializing' ||

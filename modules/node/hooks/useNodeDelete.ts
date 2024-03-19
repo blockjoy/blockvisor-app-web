@@ -3,20 +3,18 @@ import { nodeClient } from '@modules/grpc';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import {
   UpdateSubscriptionAction,
-  billingAtoms,
   generateError,
   useUpdateSubscriptionItems,
+  billingSelectors,
 } from '@modules/billing';
-import { authAtoms } from '@modules/auth';
 
 export function useNodeDelete() {
   const { updateSubscriptionItems } = useUpdateSubscriptionItems();
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
   const bypassBillingForSuperUser = useRecoilValue(
-    billingAtoms.bypassBillingForSuperUser(isSuperUser),
+    billingSelectors.bypassBillingForSuperUser,
   );
 
   const deleteNode = async (node: Node, onSuccess: VoidFunction) => {

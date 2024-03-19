@@ -2,8 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useRecoilValue } from 'recoil';
 import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
-import { Billing, billingAtoms } from '@modules/billing';
-import { authAtoms } from '@modules/auth';
+import { Billing, billingSelectors } from '@modules/billing';
 import { ROUTES } from '@shared/index';
 
 type BillingProps = {
@@ -13,9 +12,8 @@ type BillingProps = {
 
 export const BillingView = ({ item, itemPrices }: BillingProps) => {
   const router = useRouter();
-  const isSuperUser = useRecoilValue(authAtoms.isSuperUser);
   const isEnabledBillingPreview = useRecoilValue(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+    billingSelectors.isEnabledBillingPreview,
   );
 
   useEffect(() => {

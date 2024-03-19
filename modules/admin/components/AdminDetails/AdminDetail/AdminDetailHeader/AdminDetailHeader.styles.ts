@@ -40,9 +40,10 @@ export const styles = {
     gap: 8px;
     flex: 1 1 auto;
     margin-left: auto;
-    padding-left: 26px;
 
     @media ${breakpoints.fromSml} {
+      padding-left: 26px;
+
       ::before {
         content: '';
         position: absolute;
