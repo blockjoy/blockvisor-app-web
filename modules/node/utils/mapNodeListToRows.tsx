@@ -2,8 +2,12 @@ import { TableBlock } from '@shared/components';
 import { formatDistanceToNow } from 'date-fns';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { convertNodeTypeToName } from './convertNodeTypeToName';
 import { getNodeJobProgress } from './getNodeJobProgress';
+import { css } from '@emotion/react';
+
+const middleRowStyles = css`
+  text-transform: capitalize;
+`;
 
 export const mapNodeListToRows = (nodeList?: Node[]) => {
   const headers: TableHeader[] = [
@@ -53,9 +57,11 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
           key: '2',
           component: (
             <TableBlock
-              middleRow={`${node.blockchainName} ${convertNodeTypeToName(
-                node.nodeType,
-              )}`}
+              middleRow={
+                <p css={middleRowStyles}>
+                  {node.blockchainName} | {node.network}
+                </p>
+              }
               topRow={node.name}
               bottomRow={node?.ip!}
             />
