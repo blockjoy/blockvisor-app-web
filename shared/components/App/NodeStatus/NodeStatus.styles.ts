@@ -11,6 +11,7 @@ export const styles = {
     line-height: 1;
     text-transform: uppercase;
     letter-spacing: 1px;
+    max-width: max-content;
 
     & path {
       fill: ${theme.colorPrimary};

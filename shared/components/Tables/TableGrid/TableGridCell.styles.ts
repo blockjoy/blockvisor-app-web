@@ -43,6 +43,9 @@ export const styles = {
   cellCenter: css`
     flex: 1 1 auto;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   `,
   cellHeader: css`
     min-width: 0;
@@ -50,11 +53,10 @@ export const styles = {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin-bottom: 4px;
     line-height: 1.6;
     white-space: nowrap;
   `,
-  cellRight: (theme: ITheme) => css`
+  cellRight: css`
     width: 40px;
     min-width: 40px;
     padding-top: 5px;
@@ -74,14 +76,19 @@ export const styles = {
   cellMiddle: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    color: ${theme.colorLabel};
-    margin-bottom: 16px;
+    color: ${theme.colorDefault};
     font-size: 13px;
     text-transform: capitalize;
-
-    svg path {
-      fill: ${theme.colorLabel};
-    }
+  `,
+  cellBottom: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    color: ${theme.colorLabel};
+    font-size: 13px;
+    text-transform: capitalize;
+  `,
+  cellFooter: css`
+    margin-top: 4px;
   `,
   moreIcon: css`
     rotate: 90deg;

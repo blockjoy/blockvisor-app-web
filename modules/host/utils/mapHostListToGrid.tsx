@@ -12,10 +12,10 @@ export const mapHostListToGird = (
         <TableGridCell
           key={host.id}
           onCellClick={() => onCellClick(host.id)}
-          cellTitle={host.name}
-          cellStatus={<HostIpStatus ipAddresses={host.ipAddresses} />}
-          cellIcon={<HostIcon />}
-          cellType={`Version: ${host.version}`}
+          titleIcon={<HostIcon />}
+          titleText={host.name}
+          footer={<HostIpStatus ipAddresses={host.ipAddresses} />}
+          middleRow={`Version: ${host.version}`}
         />
       ),
     };

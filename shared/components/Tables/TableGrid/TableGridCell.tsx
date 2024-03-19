@@ -5,32 +5,35 @@ import IconMore from '@public/assets/icons/common/More.svg';
 
 type Props = {
   onCellClick?: VoidFunction;
-  cellTitle: string;
-  cellStatus: ReactNode;
-  cellType?: string | ReactNode;
-  cellIcon: ReactNode;
+  titleText: string;
+  titleIcon: ReactNode;
+  middleRow?: ReactNode | string;
+  bottomRow?: ReactNode | string;
+  footer?: ReactNode | string;
 };
 
 export const TableGridCell: FC<Props> = ({
   onCellClick,
-  cellTitle,
-  cellStatus,
-  cellType,
-  cellIcon,
+  titleText,
+  titleIcon,
+  middleRow,
+  bottomRow,
+  footer,
 }) => (
   <div
     onClick={onCellClick}
     css={[styles.cell, !onCellClick && styles.cellNotClickable]}
   >
     <div css={styles.cellLeft}>
-      <SvgIcon size="16px">{cellIcon}</SvgIcon>
+      <SvgIcon size="16px">{titleIcon}</SvgIcon>
     </div>
     <div css={styles.cellCenter}>
       <header css={styles.cellHeader}>
-        <h2 css={styles.cellTitle}>{cellTitle}</h2>
+        <h2 css={styles.cellTitle}>{titleText}</h2>
       </header>
-      <div css={styles.cellMiddle}>{cellType}</div>
-      {cellStatus}
+      <div css={styles.cellMiddle}>{middleRow}</div>
+      <div css={styles.cellBottom}>{bottomRow}</div>
+      <div css={styles.cellFooter}>{footer}</div>
     </div>
     <div css={styles.cellRight}>
       <SvgIcon
