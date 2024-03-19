@@ -35,7 +35,7 @@ class CommandClient {
         request,
       );
 
-      console.log('listCommandResponse', request);
+      console.log('listCommandResponse', response);
 
       return response.commands;
     } catch (err) {
