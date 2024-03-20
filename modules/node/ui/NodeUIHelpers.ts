@@ -1,4 +1,5 @@
 import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
+import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { itemsPerPage } from '@shared/index';
 
 export type Pagination = {
@@ -11,12 +12,6 @@ export type InitialQueryParams = {
   filter: UINodeFilterCriteria;
 };
 
-export const initialFilter: UINodeFilterCriteria = {
-  blockchain: [],
-  nodeType: [],
-  nodeStatus: [],
-};
-
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     currentPage: 0,
@@ -24,7 +19,7 @@ export const initialQueryParams: InitialQueryParams = {
   },
 
   filter: {
-    ...initialFilter,
+    ...NODE_FILTERS_DEFAULT,
     keyword: '',
   },
 };

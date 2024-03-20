@@ -10,7 +10,7 @@ type RangeSliderProps = {
   max: number;
   values: [number, number];
   customValues?: [number, number];
-  setValues: SetterOrUpdater<[number, number]>;
+  setValues: (val: [number, number]) => void;
   formatter: (value: number) => void;
 };
 

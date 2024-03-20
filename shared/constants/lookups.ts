@@ -57,11 +57,27 @@ export const nodeTypeProps = {
   nodeSelector: 'node-selector',
 };
 
+export const NODE_FILTERS_DEFAULT: {
+  blockchain: string[];
+  nodeStatus: string[];
+  nodeType: string[];
+  networks: string[];
+  versions: string[];
+} = {
+  blockchain: [],
+  nodeStatus: [],
+  nodeType: [],
+  networks: [],
+  versions: [],
+};
+
 export const HOST_FILTERS_DEFAULT: {
+  hostStatus: string[];
   hostMemory: [number, number];
   hostCPU: [number, number];
   hostSpace: [number, number];
 } = {
+  hostStatus: [],
   hostMemory: [2 * Math.pow(1024, 3), 512 * Math.pow(1024, 3)],
   hostCPU: [1, 64],
   hostSpace: [250 * Math.pow(1024, 3), 10 * Math.pow(1024, 4)],

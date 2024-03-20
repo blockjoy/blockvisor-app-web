@@ -12,13 +12,6 @@ export type InitialQueryParams = {
   filter: UIHostFilterCriteria;
 };
 
-export const initialFilter: UIHostFilterCriteria = {
-  hostStatus: [],
-  hostMemory: HOST_FILTERS_DEFAULT.hostMemory,
-  hostCPU: HOST_FILTERS_DEFAULT.hostCPU,
-  hostSpace: HOST_FILTERS_DEFAULT.hostSpace,
-};
-
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     currentPage: 0,
@@ -26,6 +19,6 @@ export const initialQueryParams: InitialQueryParams = {
   },
 
   filter: {
-    ...initialFilter,
+    ...HOST_FILTERS_DEFAULT,
   },
 };

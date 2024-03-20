@@ -1,8 +1,8 @@
+import { atom } from 'recoil';
 import { localStorageEffect } from 'utils/store/persist';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
-import { atom } from 'recoil';
 import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
+import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
 
 const defaultHost = atom<Host | null>({
   key: 'host.default',
@@ -58,12 +58,7 @@ const isFiltersOpen = atom<boolean>({
 
 const filters = atom<UIHostFilterCriteria>({
   key: 'host.filters',
-  default: {
-    hostStatus: [],
-    hostCPU: HOST_FILTERS_DEFAULT.hostCPU,
-    hostMemory: HOST_FILTERS_DEFAULT.hostMemory,
-    hostSpace: HOST_FILTERS_DEFAULT.hostSpace,
-  },
+  default: HOST_FILTERS_DEFAULT,
   effects: [localStorageEffect('host.filters')],
 });
 

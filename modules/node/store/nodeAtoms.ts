@@ -4,6 +4,7 @@ import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { BlockchainSimpleWRegion } from '@modules/node';
 import { localStorageEffect } from 'utils/store/persist';
+import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 
 const activeNode = atom<Node | null>({
   key: 'node.activeNode',
@@ -83,11 +84,7 @@ const isFiltersOpen = atom<boolean>({
 
 const filters = atom<UINodeFilterCriteria>({
   key: 'node.filters',
-  default: {
-    blockchain: [],
-    nodeType: [],
-    nodeStatus: [],
-  },
+  default: NODE_FILTERS_DEFAULT,
   effects: [localStorageEffect('node.filters')],
 });
 
