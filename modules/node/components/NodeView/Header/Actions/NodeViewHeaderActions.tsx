@@ -31,17 +31,23 @@ export const NodeViewHeaderActions = ({
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
-  const canDelete =
-    useRecoilValue(authSelectors.hasPermission('node-delete')) ||
-    useRecoilValue(authSelectors.hasPermission('node-admin-delete'));
+  const canDelete = useRecoilValue(authSelectors.hasPermission('node-delete'));
 
-  const canStart =
-    useRecoilValue(authSelectors.hasPermission('node-start')) ||
-    useRecoilValue(authSelectors.hasPermission('node-admin-start'));
+  const canDeleteAdmin = useRecoilValue(
+    authSelectors.hasPermission('node-admin-delete'),
+  );
 
-  const canStop =
-    useRecoilValue(authSelectors.hasPermission('node-stop')) ||
-    useRecoilValue(authSelectors.hasPermission('node-admin-stop'));
+  const canStart = useRecoilValue(authSelectors.hasPermission('node-start'));
+
+  const canStartAdmin = useRecoilValue(
+    authSelectors.hasPermission('node-admin-start'),
+  );
+
+  const canStop = useRecoilValue(authSelectors.hasPermission('node-stop'));
+
+  const canStopAdmin = useRecoilValue(
+    authSelectors.hasPermission('node-admin-stop'),
+  );
 
   const canReport = useRecoilValue(authSelectors.hasPermission('node-report'));
 
@@ -55,11 +61,11 @@ export const NodeViewHeaderActions = ({
     });
   }
 
-  if (canStop) {
+  if (canStop || canStopAdmin) {
     items.push({ name: 'Stop', icon: <IconStop />, onClick: handleStop });
   }
 
-  if (canStart) {
+  if (canStart || canStartAdmin) {
     items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
   }
 
@@ -71,7 +77,7 @@ export const NodeViewHeaderActions = ({
     });
   }
 
-  if (canDelete) {
+  if (canDelete || canDeleteAdmin) {
     items.push({
       name: 'Delete',
       icon: <IconDelete />,
