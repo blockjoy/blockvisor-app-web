@@ -6,7 +6,7 @@ const commandExitCodeDescriptions: Record<CommandExitCode, string> = {
   [CommandExitCode.COMMAND_EXIT_CODE_NODE_NOT_FOUND]: 'NodeNotFound',
   [CommandExitCode.COMMAND_EXIT_CODE_SERVICE_BROKEN]: 'ServiceBroken',
   [CommandExitCode.COMMAND_EXIT_CODE_NOT_SUPPORTED]: 'NotSupported',
-  [CommandExitCode.UNRECOGNIZED]: 'Unrecognized',
+  [CommandExitCode.UNRECOGNIZED]: ' ',
   [CommandExitCode.COMMAND_EXIT_CODE_BLOCKING_JOB_RUNNING]:
     'BlockingJobRunning',
   [CommandExitCode.COMMAND_EXIT_CODE_SERVICE_NOT_READY]: 'ServiceNotReady',

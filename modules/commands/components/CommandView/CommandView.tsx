@@ -16,10 +16,10 @@ export const CommandView = ({ command }: CommandViewProps) => {
 
   const { exitCode, ackedAt, createdAt, exitMessage, node, host } = command;
 
+  const hostById = useRecoilValue(hostSelectors.hostById(node?.hostId));
+
   const commandType = node ? getCommandType(node) : getCommandType(host);
   const commandInfo = getCommandInfo(exitCode);
-
-  const hostById = useRecoilValue(hostSelectors.hostById(node?.hostId));
 
   return (
     <div css={styles.wrapper}>
