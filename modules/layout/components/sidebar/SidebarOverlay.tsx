@@ -1,14 +1,15 @@
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
+import { sidebarOpenMobile } from '@modules/layout';
 import { useRecoilState } from 'recoil';
 import { styles } from './SidebarOverlay.styles';
 
 export const SidebarOverlay = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+  const [isSidebarOpenMobile, setIsSidebarOpenMobile] =
+    useRecoilState(sidebarOpenMobile);
 
   return (
     <div
-      onClick={() => setIsSidebarOpen(false)}
-      css={[styles.overlay, isSidebarOpen && styles.visible]}
+      onClick={() => setIsSidebarOpenMobile(false)}
+      css={[styles.overlay, isSidebarOpenMobile && styles.visible]}
     />
   );
 };
