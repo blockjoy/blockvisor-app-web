@@ -53,15 +53,16 @@ export const HostFilters = () => {
     if (isMobile) setFiltersOpen(false);
   }, []);
 
-  const hasFiltersApplied = filters.some((filter) => {
-    if (filter.type === 'check') {
-      return filter.list?.some((l: any) => l.isChecked);
-    } else if (filter.type === 'range') {
-      return (
-        filter.min !== filter.values?.[0] || filter.max !== filter.values?.[1]
-      );
-    }
-  });
+  const hasFiltersApplied =
+    filters.some((filter) => {
+      if (filter.type === 'check') {
+        return filter.list?.some((l: any) => l.isChecked);
+      } else if (filter.type === 'range') {
+        return (
+          filter.min !== filter.values?.[0] || filter.max !== filter.values?.[1]
+        );
+      }
+    }) || Boolean(tempSearchQuery.length);
 
   const handleResetFilters = () => {
     resetFilters();

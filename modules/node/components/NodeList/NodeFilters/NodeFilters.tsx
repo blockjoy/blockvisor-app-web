@@ -65,9 +65,10 @@ export const NodeFilters = () => {
     if (isMobile) setFiltersOpen(false);
   }, []);
 
-  const hasFiltersApplied = filters.some((filter) =>
-    filter.list?.some((l: FilterListItem) => l.isChecked),
-  );
+  const hasFiltersApplied =
+    filters.some((filter) =>
+      filter.list?.some((l: FilterListItem) => l.isChecked),
+    ) || Boolean(tempSearchQuery.length);
 
   const handleResetFilters = () => {
     resetFilters();
