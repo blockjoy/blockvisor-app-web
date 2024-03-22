@@ -1,3 +1,5 @@
+import { UIHostFilterCriteria, UINodeFilterCriteria } from '@modules/grpc';
+
 export const nodeTypeList = [
   { id: 4, name: 'API' },
   { id: 8, name: 'Beacon' },
@@ -57,30 +59,21 @@ export const nodeTypeProps = {
   nodeSelector: 'node-selector',
 };
 
-export const NODE_FILTERS_DEFAULT: {
-  blockchain: string[];
-  nodeStatus: string[];
-  nodeType: string[];
-  networks: string[];
-  versions: string[];
-} = {
+export const NODE_FILTERS_DEFAULT: UINodeFilterCriteria = {
   blockchain: [],
   nodeStatus: [],
   nodeType: [],
   networks: [],
   versions: [],
+  keyword: '',
 };
 
-export const HOST_FILTERS_DEFAULT: {
-  hostStatus: string[];
-  hostMemory: [number, number];
-  hostCPU: [number, number];
-  hostSpace: [number, number];
-} = {
+export const HOST_FILTERS_DEFAULT: UIHostFilterCriteria = {
   hostStatus: [],
   hostMemory: [2 * Math.pow(1024, 3), 512 * Math.pow(1024, 3)],
   hostCPU: [1, 64],
   hostSpace: [250 * Math.pow(1024, 3), 10 * Math.pow(1024, 4)],
+  keyword: '',
 };
 
 export const HOST_FILTERS_STEPS = {

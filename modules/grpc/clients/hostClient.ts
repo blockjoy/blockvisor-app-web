@@ -50,7 +50,7 @@ class HostClient {
 
   async listHosts(
     orgId?: string,
-    filterCriteria?: UIHostFilterCriteria,
+    filter?: UIHostFilterCriteria,
     pagination?: HostPagination,
     sort?: HostSort[],
   ): Promise<HostServiceListResponse> {
@@ -66,8 +66,8 @@ class HostClient {
       ],
     };
 
-    if (filterCriteria?.keyword) {
-      const { keyword } = filterCriteria;
+    if (filter?.keyword) {
+      const { keyword } = filter;
       const search: HostSearch = {
         id: createSearch(keyword),
         ip: createSearch(keyword),
@@ -76,6 +76,8 @@ class HostClient {
       };
       request.search = search;
     }
+
+    console.log('listHostsRequest', request);
 
     try {
       const response = await callWithTokenRefresh(

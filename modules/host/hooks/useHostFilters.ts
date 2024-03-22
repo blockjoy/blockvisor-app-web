@@ -13,6 +13,7 @@ import { hostAtoms, hostSelectors, HostUIProps } from '@modules/host';
 type UseHostFiltersHook = {
   isDirty: boolean;
   filters: FilterItem[];
+  tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
   updateFilters: VoidFunction;
@@ -93,7 +94,7 @@ export const useHostFilters = (
     applyFilter();
   };
 
-  const changeTempFilters = (type: string, value: string) => {
+  const changeTempFilters = (key: string, value: string) => {
     const updateFunc = (currentItems: string[]) => {
       const index = currentItems.indexOf(value);
 
@@ -101,11 +102,17 @@ export const useHostFilters = (
       else return [...currentItems, value];
     };
 
-    switch (type) {
+    switch (key) {
+      case 'keyword':
+        setTempFilters((currentTempFilters) => ({
+          ...currentTempFilters,
+          [key]: value,
+        }));
+        return;
       case 'hostStatus':
         setTempFilters((currentTempFilters) => ({
           ...currentTempFilters,
-          [type]: updateFunc(currentTempFilters[type]!),
+          [key]: updateFunc(currentTempFilters[key]!),
         }));
         return;
       default:
@@ -137,8 +144,8 @@ export const useHostFilters = (
       label: 'GB',
       disabled: false,
       step: HOST_FILTERS_STEPS.hostMemory,
-      min: HOST_FILTERS_DEFAULT.hostMemory[0],
-      max: HOST_FILTERS_DEFAULT.hostMemory[1],
+      min: HOST_FILTERS_DEFAULT.hostMemory?.[0],
+      max: HOST_FILTERS_DEFAULT.hostMemory?.[1],
       values: tempFilters.hostMemory,
       setValues: (val: [number, number]) =>
         handleCustomUpdate('hostMemory', val),
@@ -150,8 +157,8 @@ export const useHostFilters = (
       type: 'range',
       disabled: false,
       step: HOST_FILTERS_STEPS.hostCPU,
-      min: HOST_FILTERS_DEFAULT.hostCPU[0],
-      max: HOST_FILTERS_DEFAULT.hostCPU[1],
+      min: HOST_FILTERS_DEFAULT.hostCPU?.[0],
+      max: HOST_FILTERS_DEFAULT.hostCPU?.[1],
       values: tempFilters.hostCPU,
       setValues: (val: [number, number]) => handleCustomUpdate('hostCPU', val),
       formatter: formatters.formatSize,
@@ -163,8 +170,8 @@ export const useHostFilters = (
       label: 'GB',
       disabled: false,
       step: HOST_FILTERS_STEPS.hostSpace,
-      min: HOST_FILTERS_DEFAULT.hostSpace[0],
-      max: HOST_FILTERS_DEFAULT.hostSpace[1],
+      min: HOST_FILTERS_DEFAULT.hostSpace?.[0],
+      max: HOST_FILTERS_DEFAULT.hostSpace?.[1],
       values: tempFilters.hostSpace,
       setValues: (val: [number, number]) =>
         handleCustomUpdate('hostSpace', val),
@@ -178,6 +185,7 @@ export const useHostFilters = (
 
     filters: filtersAll,
 
+    tempSearchQuery: tempFilters.keyword ?? '',
     tempFiltersTotal,
 
     changeTempFilters,

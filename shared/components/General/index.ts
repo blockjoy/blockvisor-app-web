@@ -25,3 +25,4 @@ export * from './List/utils/withSearchList';
 export * from './Billing/Pricing/Pricing';
 export * from './Billing/Pricing/Total/Total';
 export * from './Billing/Promo/Promo';
+export * from './Search/Search';

@@ -1,25 +1,59 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useMemo } from 'react';
+import { useRecoilState } from 'recoil';
 import {
   Alert,
   GridTableViewPicker,
   OrganizationPicker,
+  Search,
 } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import { hostAtoms, hostSelectors, useHostList } from '@modules/host';
+import {
+  hostAtoms,
+  hostSelectors,
+  useHostList,
+  useHostUIContext,
+} from '@modules/host';
 
 export const HostListHeader = () => {
+  const hostUIContext = useHostUIContext();
+  const hostUIProps = useMemo(() => {
+    return {
+      setQueryParams: hostUIContext.setQueryParams,
+      queryParams: hostUIContext.queryParams,
+    };
+  }, [hostUIContext]);
+
+  const { hostCount } = useHostList();
+
   const [activeListType, setActiveListType] = useRecoilState(
     hostAtoms.activeListType,
   );
 
-  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
-    hostAtoms.isFiltersOpen,
+  // const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
+  //   hostAtoms.isFiltersOpen,
+  // );
+  // const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
+
+  // const isLoading = useRecoilValue(hostAtoms.isLoading);
+
+  const [searchQuery, setSearchQuery] = useRecoilState(
+    hostSelectors.filtersSearchQuery,
   );
-  const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
 
-  const isLoading = useRecoilValue(hostAtoms.isLoading);
+  const handleSearch = (keyword: string) => {
+    setSearchQuery(keyword);
 
-  const { hostCount } = useHostList();
+    const newQueryParams = {
+      ...hostUIProps.queryParams,
+      filter: {
+        ...hostUIProps.queryParams.filter,
+        keyword,
+      },
+    };
+
+    newQueryParams.pagination.currentPage = 0;
+    hostUIProps.setQueryParams(newQueryParams);
+  };
 
   const handleActiveListType = (type: string) => {
     setActiveListType(type);
@@ -46,6 +80,7 @@ export const HostListHeader = () => {
           )}
         </div>
       )} */}
+      <Search version="instant" onSearch={handleSearch} value={searchQuery} />
       <Alert isRounded isSuccess={hostCount > 0}>
         {hostCount} {hostCount === 1 ? 'Host' : 'Hosts'}
       </Alert>

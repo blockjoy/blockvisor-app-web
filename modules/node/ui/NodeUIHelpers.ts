@@ -18,8 +18,5 @@ export const initialQueryParams: InitialQueryParams = {
     itemsPerPage: itemsPerPage['xl'],
   },
 
-  filter: {
-    ...NODE_FILTERS_DEFAULT,
-    keyword: '',
-  },
+  filter: NODE_FILTERS_DEFAULT,
 };

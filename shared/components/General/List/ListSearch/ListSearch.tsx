@@ -13,7 +13,7 @@ type ListSearchProps = {
 export const ListSearch = ({
   name,
   value,
-  placeholder,
+  placeholder = 'Search...',
   handleChange,
   handleFocus,
 }: ListSearchProps) => {
@@ -27,7 +27,7 @@ export const ListSearch = ({
         css={styles.searchBox}
         type="text"
         value={value}
-        placeholder={placeholder ?? 'Search...'}
+        placeholder={placeholder}
         onChange={handleChange}
         onFocus={() => handleFocus?.(true)}
         onBlur={() => handleFocus?.(false)}

@@ -84,10 +84,21 @@ const filtersStatusAll = selectorFamily<
   },
 });
 
+const filtersSearchQuery = selector<string>({
+  key: 'host.filters.searchQuery',
+  get: ({ get }) => get(hostAtoms.filters)?.keyword ?? '',
+  set: ({ set }, newValue) =>
+    set(hostAtoms.filters, (prevState: any) => ({
+      ...prevState,
+      keyword: newValue,
+    })),
+});
+
 export const hostSelectors = {
   hostById,
 
   hostListSorted,
 
   filtersStatusAll,
+  filtersSearchQuery,
 };

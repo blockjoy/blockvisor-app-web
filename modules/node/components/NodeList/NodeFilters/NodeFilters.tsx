@@ -11,6 +11,7 @@ import {
   SvgIcon,
   FiltersHeader,
   FiltersBlock,
+  Search,
 } from '@shared/components';
 import {
   nodeAtoms,
@@ -33,6 +34,7 @@ export const NodeFilters = () => {
   const {
     filters,
     isDirty,
+    tempSearchQuery,
     tempFiltersTotal,
     updateFilters,
     resetFilters,
@@ -85,6 +87,8 @@ export const NodeFilters = () => {
     setFiltersOpen(!isFiltersOpen);
   };
 
+  const handleSearch = (value: string) => changeTempFilters('keyword', value);
+
   if (
     nodeListLoadingState === 'finished' &&
     (blockchainsLoadingState === 'finished' ||
@@ -116,42 +120,50 @@ export const NodeFilters = () => {
         )
       ) : (
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-          <Scrollbar additionalStyles={[styles.filters]}>
-            {filters.map((item) => (
-              <FiltersBlock
-                key={item.id}
-                hasError={item.id === 'blockchain' && hasBlockchainError}
-                isOpen={item.id === openFilterId}
-                filter={item}
-                onPlusMinusClicked={handlePlusMinusClicked}
-                onFilterBlockClicked={handleFilterBlockClicked}
-                onFilterChanged={changeTempFilters}
-              />
-            ))}
-          </Scrollbar>
-          <button
-            css={styles.updateButton}
-            type="button"
-            disabled={!isDirty}
-            onClick={updateFilters}
-          >
-            <SvgIcon size="12px">
-              <IconRefresh />
-            </SvgIcon>
-            Apply
-          </button>
-          {hasFiltersApplied && (
+          <form css={styles.form}>
+            <Search
+              onInput={handleSearch}
+              value={tempSearchQuery}
+              size="small"
+              additionalStyles={styles.search}
+            />
+            <Scrollbar additionalStyles={[styles.filters]}>
+              {filters.map((item) => (
+                <FiltersBlock
+                  key={item.id}
+                  hasError={item.id === 'blockchain' && hasBlockchainError}
+                  isOpen={item.id === openFilterId}
+                  filter={item}
+                  onPlusMinusClicked={handlePlusMinusClicked}
+                  onFilterBlockClicked={handleFilterBlockClicked}
+                  onFilterChanged={changeTempFilters}
+                />
+              ))}
+            </Scrollbar>
             <button
-              css={styles.resetButton}
-              type="button"
-              onClick={handleResetFilters}
+              css={styles.updateButton}
+              type="submit"
+              disabled={!isDirty}
+              onClick={updateFilters}
             >
-              <SvgIcon size="18px">
-                <IconClose />
+              <SvgIcon size="12px">
+                <IconRefresh />
               </SvgIcon>
-              Reset Filters
+              Apply
             </button>
-          )}
+            {hasFiltersApplied && (
+              <button
+                css={styles.resetButton}
+                type="button"
+                onClick={handleResetFilters}
+              >
+                <SvgIcon size="18px">
+                  <IconClose />
+                </SvgIcon>
+                Reset Filters
+              </button>
+            )}
+          </form>
         </div>
       )}
     </div>

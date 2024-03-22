@@ -6,7 +6,6 @@ import {
   EmptyColumn,
   Table,
   TableGrid,
-  Alert,
 } from '@shared/components';
 import { styles } from './HostList.styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -79,7 +78,7 @@ export const HostList = () => {
     <>
       <div css={styles.wrapper}>
         {/* TODO: Implement filters in api */}
-        {/* <HostFilters/> */}
+        {/* <HostFilters /> */}
         <div css={styles.listWrapper}>
           <HostListHeader />
           {isLoading === 'initializing' ? (

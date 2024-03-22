@@ -8,6 +8,7 @@ import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 type UseNodeFiltersHook = {
   isDirty: boolean;
   filters: FilterItem[];
+  tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
   updateFilters: VoidFunction;
@@ -31,9 +32,9 @@ export const useNodeFilters = (
   const filtersStatusAll = useRecoilValue(
     nodeSelectors.filtersStatusAll(tempFilters.nodeStatus!),
   );
-  const filtersTypeAll = useRecoilValue(
-    nodeSelectors.filtersTypeAll(tempFilters.nodeType!),
-  );
+  // const filtersTypeAll = useRecoilValue(
+  //   nodeSelectors.filtersTypeAll(tempFilters.nodeType!),
+  // );
   const filtersNetworksAll = useRecoilValue(
     nodeSelectors.filtersNetworksAll(tempFilters.networks!),
   );
@@ -82,7 +83,7 @@ export const useNodeFilters = (
     applyFilter();
   };
 
-  const changeTempFilters = (type: string, value: string) => {
+  const changeTempFilters = (key: string, value: string) => {
     const updateFunc = (currentItems: string[]) => {
       const index = currentItems.indexOf(value);
 
@@ -92,7 +93,7 @@ export const useNodeFilters = (
 
     setTempFilters((currentTempFilters) => ({
       ...currentTempFilters,
-      [type]: updateFunc(currentTempFilters[type]),
+      [key]: key === 'keyword' ? value : updateFunc(currentTempFilters[key]),
     }));
   };
 
@@ -134,6 +135,7 @@ export const useNodeFilters = (
 
     filters: filtersAll,
 
+    tempSearchQuery: tempFilters.keyword ?? '',
     tempFiltersTotal,
 
     changeTempFilters,
