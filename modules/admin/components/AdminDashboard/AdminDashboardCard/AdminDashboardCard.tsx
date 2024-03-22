@@ -59,7 +59,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
           </div>
         )}
       </div>
-      <Search onSearch={handleSearch} version="submit" placeholder="Keyword" />
+      <Search version="submit" onSearch={handleSearch} placeholder="Keyword" />
     </article>
   );
 };

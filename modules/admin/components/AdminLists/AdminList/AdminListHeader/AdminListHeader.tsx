@@ -40,7 +40,11 @@ export const AdminListHeader = ({
 
   return (
     <AdminHeader name={name}>
-      <Search onInput={onSearch} version="instant" placeholder="Quick search" />
+      <Search
+        version="instant"
+        onSearch={onSearch}
+        placeholder="Quick search"
+      />
       <div css={styles.buttons}>
         <AdminListHeaderColumnPicker
           columns={columns}

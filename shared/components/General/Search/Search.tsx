@@ -38,7 +38,8 @@ export const Search = ({
   const debouncedSearchTerm = useDebounce(searchText, 500);
 
   useEffect(() => {
-    if (version === 'instant') onSearch?.(debouncedSearchTerm);
+    if (version === 'instant' && searchText !== searchParam)
+      onSearch?.(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +48,10 @@ export const Search = ({
   };
 
   const handleSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && version === 'submit') onSearch?.(searchText);
+    if (e.key === 'Enter' && version === 'submit') handleSearch();
   };
+
+  const handleSearch = () => onSearch?.(searchText);
 
   const handleClear = () => {
     setSearchText('');
@@ -77,11 +80,7 @@ export const Search = ({
         autoComplete="off"
       />
       {version === 'submit' && (
-        <button
-          css={styles.searchButton}
-          onClick={() => onSearch?.(searchText)}
-          type="button"
-        >
+        <button css={styles.searchButton} onClick={handleSearch} type="button">
           Search
         </button>
       )}

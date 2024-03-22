@@ -114,7 +114,7 @@ export const HostFilters = () => {
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
           <form css={styles.form}>
             <Search
-              onSearch={handleSearch}
+              onInput={handleSearch}
               value={tempSearchQuery}
               size="small"
               additionalStyles={styles.search}
