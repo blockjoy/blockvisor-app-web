@@ -33,7 +33,7 @@ export const styles = {
   `,
   scrollbar: css`
     @media ${breakpoints.toXlrg} {
-      max-height: 60vh;
+      max-height: 60svh;
       overflow-x: hidden;
       overflow-y: auto;
     }
