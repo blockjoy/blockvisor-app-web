@@ -2,7 +2,7 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { UpdateSubscriptionAction } from '@modules/billing';
 
-export const updateSubscriptionMetadata = (
+export const generateSubscriptionMetadata = (
   type: UpdateSubscriptionAction,
   payload: {
     metadata: SubscriptionMetadata;
@@ -16,6 +16,7 @@ export const updateSubscriptionMetadata = (
 
   switch (type) {
     case UpdateSubscriptionAction.ADD_NODE:
+    case UpdateSubscriptionAction.ADD_HOST:
       if (resource?.id && itemPriceID) {
         newSubscriptionItems.push({
           id: resource?.id,
@@ -25,6 +26,7 @@ export const updateSubscriptionMetadata = (
       }
       break;
     case UpdateSubscriptionAction.REMOVE_NODE:
+    case UpdateSubscriptionAction.REMOVE_HOST:
       newSubscriptionItems = newSubscriptionItems.filter(
         (item: SubscriptionMetadataItem) => item.id !== resource?.id,
       );

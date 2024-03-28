@@ -12,7 +12,10 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <Script src="https://js.chargebee.com/v2/chargebee.js"></Script>
+          <Script
+            src="https://js.chargebee.com/v2/chargebee.js"
+            strategy="afterInteractive"
+          ></Script>
         </Head>
         <body>
           <Main />
