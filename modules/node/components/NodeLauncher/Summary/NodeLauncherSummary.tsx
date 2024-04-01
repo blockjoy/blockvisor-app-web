@@ -13,7 +13,6 @@ import {
 } from '@shared/components';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { authSelectors } from '@modules/auth';
 import { hostAtoms, useHostList } from '@modules/host';
 import {
   NodeRegionSelect,
@@ -25,6 +24,7 @@ import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
 import { billingSelectors } from '@modules/billing';
 
 type NodeLauncherSummaryProps = {
+  hasPermissionsToCreate: boolean;
   onCreateNodeClicked: VoidFunction;
   onHostChanged: (host: Host | null) => void;
   onRegionChanged: (region: Region | null) => void;
@@ -32,6 +32,7 @@ type NodeLauncherSummaryProps = {
 };
 
 export const NodeLauncherSummary = ({
+  hasPermissionsToCreate,
   onCreateNodeClicked,
   onHostChanged,
   onRegionChanged,
@@ -56,7 +57,6 @@ export const NodeLauncherSummary = ({
   const bypassBillingForSuperUser = useRecoilValue(
     billingSelectors.bypassBillingForSuperUser,
   );
-  const canAddNode = useRecoilValue(authSelectors.hasPermission('node-create'));
 
   const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
 
@@ -74,7 +74,7 @@ export const NodeLauncherSummary = ({
     (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice);
 
   const handleCreateNodeClicked = () => {
-    if (!canAddNode) handleOpenHubSpot();
+    if (!hasPermissionsToCreate) handleOpenHubSpot();
     else onCreateNodeClicked();
   };
 

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   Button,
@@ -6,6 +6,7 @@ import {
   FormHeaderCaps,
   FormLabelCaps,
   FormText,
+  HubSpotForm,
   OrganizationSelect,
   SvgIcon,
   Tooltip,
@@ -14,7 +15,10 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { useProvisionToken, organizationAtoms } from '@modules/organization';
-import { LAUNCH_ERRORS, LauncherWithGuardProps } from '@modules/billing';
+import {
+  // LAUNCH_ERRORS,
+  LauncherWithGuardProps,
+} from '@modules/billing';
 
 export const HostLauncher = ({
   fulfilReqs,
@@ -28,6 +32,16 @@ export const HostLauncher = ({
 
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
+
+  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
+
+  const handleCreateNodeClicked = () => {
+    if (!permissions.permitted) handleOpenHubSpot();
+    else handleHostCreation();
+  };
+
+  const handleOpenHubSpot = () => setIsOpenHubSpot(true);
+  const handleCloseHubSpot = () => setIsOpenHubSpot(false);
 
   useEffect(() => {
     if (fulfilReqs) handleHostCreation();
@@ -77,17 +91,14 @@ export const HostLauncher = ({
             <Button
               style="outline"
               size="small"
-              disabled={
-                provisionTokenLoadingState !== 'finished' ||
-                (!permissions?.permitted && !permissions.superUser)
-              }
+              disabled={provisionTokenLoadingState !== 'finished'}
               css={styles.button}
-              onClick={onCreateClick}
+              onClick={handleCreateNodeClicked}
               loading={provisionTokenLoadingState !== 'finished'}
-              {...(!permissions?.permitted &&
-                !permissions.superUser && {
-                  tooltip: LAUNCH_ERRORS.NO_PERMISSION,
-                })}
+              // {...(!permissions?.permitted &&
+              //   !permissions.superUser && {
+              //     tooltip: LAUNCH_ERRORS.NO_PERMISSION,
+              //   })}
             >
               <SvgIcon>
                 <IconRefresh />
@@ -103,6 +114,14 @@ export const HostLauncher = ({
           </div>
         </li>
       </ul>
+      {isOpenHubSpot && (
+        <HubSpotForm
+          title="Request Host Launch"
+          content="Interested in launching a host? Leave us your email to get started."
+          isOpenHubSpot={isOpenHubSpot}
+          handleClose={handleCloseHubSpot}
+        />
+      )}
     </div>
   );
 };

@@ -12,6 +12,7 @@ import { LauncherWithGuardProps } from '@modules/billing';
 export const NodeLauncher = ({
   fulfilReqs,
   onCreateClick,
+  permissions,
 }: LauncherWithGuardProps) => {
   const {
     handleHostChanged,
@@ -49,6 +50,7 @@ export const NodeLauncher = ({
             )}
             {hasSummary && (
               <NodeLauncherSummary
+                hasPermissionsToCreate={permissions.permitted}
                 onHostChanged={handleHostChanged}
                 onRegionChanged={handleRegionChanged}
                 onCreateNodeClicked={onCreateClick}

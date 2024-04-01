@@ -79,7 +79,7 @@ export const withLauncherGuard = (Component: any) => {
     const handleCancelAction = () => {
       handleDefaultView();
     };
-    const handleSubmitPayment = () => {
+    const handleSubmittedPayment = () => {
       handleDefaultView();
       setFulfilRequirements(true);
     };
@@ -144,7 +144,7 @@ export const withLauncherGuard = (Component: any) => {
                 : 'Resource'
             } requires a payment method.`}
             handleCancel={handleCancelAction}
-            handleSubmit={handleSubmitPayment}
+            handleSubmit={handleSubmittedPayment}
             handleBack={handleDefaultView}
           />
         )}
