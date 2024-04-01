@@ -68,7 +68,8 @@ export const PaymentMethods = () => {
     );
   };
 
-  if (paymentMethodsLoadingState === 'initializing') return <TableSkeleton />;
+  if (paymentMethodsLoadingState === 'initializing' && !isAdding)
+    return <TableSkeleton />;
 
   return (
     <>
