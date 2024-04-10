@@ -2,16 +2,17 @@ import { styles } from './FiltersHeader.styles';
 import { FiltersHeaderIconText } from './FiltersHeaderIconText';
 import { Skeleton } from '@shared/components';
 import { OrganizationPicker } from '@shared/components';
-import IconPlus from '@public/assets/icons/common/Plus.svg';
-import IconMinus from '@public/assets/icons/common/Minus.svg';
+
 import IconClose from '@public/assets/icons/common/ArrowLeft.svg';
 import { isMobile } from 'react-device-detect';
+import { ReactNode } from 'react';
 
 export type FiltersHeaderProps = {
   isLoading: boolean;
   filtersTotal: number;
   isFiltersOpen: boolean;
   handleFiltersToggle: VoidFunction;
+  elements?: ReactNode;
 };
 
 export const FiltersHeader = ({
@@ -19,6 +20,7 @@ export const FiltersHeader = ({
   filtersTotal,
   isFiltersOpen,
   handleFiltersToggle,
+  elements,
 }: FiltersHeaderProps) => {
   return (
     <header css={styles.header}>
@@ -30,11 +32,12 @@ export const FiltersHeader = ({
             <span css={styles.collapseButton}>
               <IconClose />
             </span>
-            <FiltersHeaderIconText filtersTotal={filtersTotal} />
-            <span css={styles.dropdownIcon}>
-              {isFiltersOpen ? <IconMinus /> : <IconPlus />}
-            </span>
+            <FiltersHeaderIconText
+              filtersTotal={filtersTotal}
+              isFiltersOpen={isFiltersOpen}
+            />
           </button>
+          {elements ? elements : null}
           <div css={styles.orgPicker}>
             {isMobile && <OrganizationPicker maxWidth="140px" isRightAligned />}
           </div>

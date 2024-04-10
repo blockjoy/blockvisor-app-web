@@ -32,18 +32,22 @@ const NodeUIContext = createContext<NodeUIContext>({} as NodeUIContext);
 
 export const getInitialQueryParams = () => {
   const persistedNodeFilters = fetchFromLocalStorage('node.filters');
+  const persistedNodeSort = fetchFromLocalStorage('node.sort');
 
-  if (!persistedNodeFilters) return initialQueryParams;
+  if (!persistedNodeFilters && !persistedNodeSort) return initialQueryParams;
 
   const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,
-    filter: persistedNodeFilters,
+    filter: persistedNodeFilters
+      ? persistedNodeFilters
+      : initialQueryParams.filter,
     pagination: {
       ...initialQueryParams.pagination,
       itemsPerPage,
     },
+    sort: persistedNodeSort ? persistedNodeSort : initialQueryParams.sort,
   };
 };
 

@@ -31,18 +31,22 @@ const HostUIContext = createContext<HostUIContext>({} as HostUIContext);
 
 export const getInitialQueryParams = () => {
   const persistedHostFilters = fetchFromLocalStorage('host.filters');
+  const persistedHostSort = fetchFromLocalStorage('host.sort');
 
-  if (!persistedHostFilters) return initialQueryParams;
+  if (!persistedHostFilters && !persistedHostSort) return initialQueryParams;
 
   const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,
-    filter: persistedHostFilters,
+    filter: persistedHostFilters
+      ? persistedHostFilters
+      : initialQueryParams.filter,
     pagination: {
       ...initialQueryParams.pagination,
       itemsPerPage,
     },
+    sort: persistedHostSort ? persistedHostSort : initialQueryParams.sort,
   };
 };
 

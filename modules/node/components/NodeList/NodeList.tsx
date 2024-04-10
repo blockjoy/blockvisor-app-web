@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
 import {
@@ -38,6 +38,8 @@ export const NodeList = () => {
     };
   }, [nodeUIContext]);
 
+  const [nodeSort, setNodeSort] = useRecoilState(nodeAtoms.nodeSort);
+
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
 
   const handleNodeClicked = (nodeId: string) => {
@@ -68,6 +70,11 @@ export const NodeList = () => {
       currentQueryParams.current = nodeUIProps.queryParams;
     }
   }, [nodeUIProps.queryParams]);
+
+  useEffect(() => {
+    if (!isEqual(nodeUIProps.queryParams.sort, nodeSort))
+      setNodeSort(nodeUIProps.queryParams.sort);
+  }, [nodeUIProps.queryParams.sort]);
 
   const updateQueryParams = () => {
     const newCurrentPage = nodeUIProps.queryParams.pagination.currentPage + 1;

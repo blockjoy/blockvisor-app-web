@@ -12,12 +12,12 @@ export const HostListHeader = () => {
     hostAtoms.activeListType,
   );
 
-  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
-    hostAtoms.isFiltersOpen,
-  );
-  const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
+  // const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
+  //   hostAtoms.isFiltersOpen,
+  // );
+  // const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
 
-  const isLoading = useRecoilValue(hostAtoms.isLoading);
+  // const isLoading = useRecoilValue(hostAtoms.isLoading);
 
   const { hostCount } = useHostList();
 
@@ -46,15 +46,20 @@ export const HostListHeader = () => {
           )}
         </div>
       )} */}
-      <Alert isRounded isSuccess={hostCount > 0}>
+      <Alert
+        isRounded
+        isSuccess={hostCount > 0}
+        additionalStyles={[styles.alert]}
+      >
         {hostCount} {hostCount === 1 ? 'Host' : 'Hosts'}
       </Alert>
-      <div css={styles.orgPicker}>
-        <OrganizationPicker isRightAligned maxWidth="140px" />
-      </div>
 
       <div css={styles.sorting}>
         <HostSorting />
+      </div>
+
+      <div css={styles.orgPicker}>
+        <OrganizationPicker isRightAligned maxWidth="140px" />
       </div>
 
       <div css={[styles.endBlock, styles.listTypePicker]}>

@@ -1,6 +1,5 @@
 import { ComponentType } from 'react';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
-import { getHandlerTableChange } from '@shared/components';
 
 export const withSort = (Component: ComponentType) => {
   return ({ setQueryParams, queryParams, ...props }: any) => {
@@ -24,12 +23,12 @@ export const withSort = (Component: ComponentType) => {
         ];
       };
 
-      const updatedProperties = {
+      const updatedQueryParams = {
         ...queryParams,
         sort: updateSorting(),
       };
 
-      getHandlerTableChange(setQueryParams)('sort', updatedProperties);
+      setQueryParams(updatedQueryParams);
     };
 
     return (

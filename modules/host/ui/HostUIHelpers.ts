@@ -22,8 +22,8 @@ export const initialFilter: UIHostFilterCriteria = {
 
 export const initialSort: HostSort[] = [
   {
-    field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
-    order: SortOrder.SORT_ORDER_DESCENDING,
+    field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+    order: SortOrder.SORT_ORDER_ASCENDING,
   },
 ];
 export const initialQueryParams: InitialQueryParams = {

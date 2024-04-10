@@ -14,7 +14,7 @@ export const withFilter = (Component: ComponentType) => {
           },
         },
       };
-      setQueryParams('filter', updatedQueryParams);
+      setQueryParams(updatedQueryParams);
     };
 
     return (

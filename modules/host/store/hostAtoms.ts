@@ -1,8 +1,9 @@
-import { localStorageEffect } from 'utils/store/persist';
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { atom } from 'recoil';
+import { localStorageEffect } from 'utils/store/persist';
+import { Host, HostSort } from '@modules/grpc/library/blockjoy/v1/host';
 import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
+import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
+import { initialSort } from '@modules/host';
 
 const defaultHost = atom<Host | null>({
   key: 'host.default',
@@ -48,6 +49,7 @@ const isLoading = atom<LoadingState>({
 const activeListType = atom<string | 'table' | 'grid'>({
   key: 'host.list.type',
   default: 'table',
+  effects: [localStorageEffect('host.view', 'table')],
 });
 
 const isFiltersOpen = atom<boolean>({
@@ -77,6 +79,12 @@ const hostIpListType = atom<'all' | 'available' | 'assigned'>({
   default: 'all',
 });
 
+const hostSort = atom<HostSort[]>({
+  key: 'host.sort',
+  default: [],
+  effects: [localStorageEffect('host.sort')],
+});
+
 export const hostAtoms = {
   defaultHost,
 
@@ -95,4 +103,6 @@ export const hostAtoms = {
   isFiltersOpen,
   filters,
   filtersTempTotal,
+
+  hostSort,
 };

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import {
   TableSkeleton,
@@ -31,6 +31,8 @@ export const HostList = () => {
     };
   }, [hostUIContext]);
 
+  const [hostSort, setHostSort] = useRecoilState(hostAtoms.hostSort);
+
   const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
     useHostList();
 
@@ -51,6 +53,11 @@ export const HostList = () => {
       currentQueryParams.current = hostUIProps.queryParams;
     }
   }, [hostUIProps.queryParams]);
+
+  useEffect(() => {
+    if (!isEqual(hostUIProps.queryParams.sort, hostSort))
+      setHostSort(hostUIProps.queryParams.sort);
+  }, [hostUIProps.queryParams.sort]);
 
   const updateQueryParams = async () => {
     const newCurrentPage = hostUIProps.queryParams.pagination.currentPage + 1;

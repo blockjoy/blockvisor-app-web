@@ -16,6 +16,10 @@ export const styles = {
     margin-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${theme.colorBackground};
+
+    @media ${breakpoints.toXlrg} {
+      gap: 5px;
+    }
   `,
   wrapperInner: css``,
   listTypePicker: css`
@@ -61,10 +65,24 @@ export const styles = {
     }
   `,
   sorting: css`
-    margin-left: auto;
+    @media ${breakpoints.fromXLrg} {
+      margin-left: auto;
+    }
 
     @media ${breakpoints.toXlrg} {
-      display: none;
+      margin-right: auto;
+    }
+  `,
+  alert: css`
+    @media ${breakpoints.toLrg} {
+      height: 38px;
+      padding: 8px 12px 8px 30px;
+      display: flex;
+      align-items: center;
+
+      &::after {
+        left: 12px;
+      }
     }
   `,
 };
