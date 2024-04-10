@@ -3,7 +3,7 @@ import { itemsPerPage } from '@shared/utils/infiniteScroll';
 export type InvoicesQueryParams = {
   pagination: Pagination;
   filter: {
-    offset?: string;
+    offset?: string | undefined;
   };
   sort: {
     order: string;
