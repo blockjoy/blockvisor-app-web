@@ -3,6 +3,7 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Dropdown, SvgIcon } from '@shared/components';
 import { styles } from './Sorting.styles';
 import IconSort from '@public/assets/icons/common/Sort.svg';
+import { isMobile } from 'react-device-detect';
 
 export type SortingItem = {
   id: string;
@@ -37,12 +38,19 @@ export const Sorting = ({
         noBottomMargin
         renderButtonText={
           <>
-            <SvgIcon size="16px">
+            <SvgIcon size="14px">
               <IconSort />
             </SvgIcon>
-            <p>{selectedItem.name}</p>
+            <p css={styles.buttonText}>{selectedItem.name}</p>
           </>
         }
+        {...(isMobile
+          ? {
+              dropdownButtonStyles: styles.dropdownButton,
+            }
+          : null)}
+        hideDropdownIcon={isMobile}
+        dropdownMenuStyles={[styles.dropdownMenu]}
       />
     </div>
   );

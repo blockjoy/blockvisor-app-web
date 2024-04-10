@@ -1,36 +1,32 @@
 import { useMemo } from 'react';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
-import {
-  getHandlerTableChange,
-  Sorting,
-  SortingItem,
-} from '@shared/components';
+import { Sorting, SortingItem } from '@shared/components';
 import { InitialQueryParams, useHostUIContext } from '@modules/host';
 
 export const HostSorting = () => {
   const items: SortingItem[] = useMemo(
     () => [
       {
-        id: 'a-z',
-        name: 'Host name (A-Z)',
+        id: 'name-asc',
+        name: 'Name: A-Z',
         field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
         order: SortOrder.SORT_ORDER_ASCENDING,
       },
       {
-        id: 'z-a',
-        name: 'Host name (Z-A)',
+        id: 'name-desc',
+        name: 'Name: Z-A',
         field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
         order: SortOrder.SORT_ORDER_DESCENDING,
       },
       {
-        id: 'newest',
+        id: 'date-desc',
         name: 'Newest first',
         field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
         order: SortOrder.SORT_ORDER_DESCENDING,
       },
       {
-        id: 'oldest',
+        id: 'date-asc',
         name: 'Oldest first',
         field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
         order: SortOrder.SORT_ORDER_ASCENDING,
@@ -54,7 +50,7 @@ export const HostSorting = () => {
       sort: [{ field: item?.field, order: item?.order! }],
     };
 
-    getHandlerTableChange(hostUIProps.setQueryParams)('sort', newQueryParams);
+    hostUIProps.setQueryParams(newQueryParams);
   };
 
   const selectedItem =

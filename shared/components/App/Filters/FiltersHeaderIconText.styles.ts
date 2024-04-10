@@ -9,11 +9,37 @@ export const styles = {
     gap: 10px;
     color: rgba(255, 255, 255, 0.3);
     font-size: 16px;
+
+    @media ${breakpoints.toLrg} {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      padding: 0 4px;
+      height: 38px;
+      width: 38px;
+      border-radius: 6px;
+
+      path {
+        fill: ${theme.colorLabel};
+      }
+
+      &:hover,
+      &:active,
+      &:focus {
+        background: ${theme.colorActive};
+        & path {
+          fill: ${theme.colorText};
+        }
+      }
+    }
   `,
   filterIcon: css`
     position: relative;
-    height: 14px;
-    width: 14px;
   `,
   badge: (theme: ITheme) => css`
     position: absolute;
@@ -29,5 +55,25 @@ export const styles = {
     border-radius: 50%;
     color: ${theme.colorPrimaryText};
     background: ${theme.colorPrimary};
+  `,
+  label: css`
+    @media ${breakpoints.toLrg} {
+      display: none;
+    }
+  `,
+  dropdownIcon: css`
+    display: grid;
+    place-items: center;
+    width: 8px;
+    height: 8px;
+
+    @media ${breakpoints.fromXLrg} {
+      display: none;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
   `,
 };
