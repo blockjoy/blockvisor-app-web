@@ -1,3 +1,4 @@
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { sort } from '@shared/components';
 import { capitalized } from './capitalized';
 
@@ -16,7 +17,7 @@ export const createDropdownValuesFromEnum = (
       })),
     {
       field: 'name',
-      order: 'asc',
+      order: SortOrder.SORT_ORDER_ASCENDING,
     },
   );
   return items;

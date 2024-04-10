@@ -1,7 +1,7 @@
-export const filter = (items: any, filtering: Filtering) => {
+export const filter = (items: any, filter: any) => {
   const filteredRows = items.filter((i: any) => {
     const filters: any = Object.fromEntries(
-      Object.entries(filtering).filter(
+      Object.entries(filter).filter(
         ([_, filterData]: any) =>
           filterData?.value !== null && filterData.value !== '',
       ),

@@ -1,5 +1,6 @@
 import { atom, selectorFamily } from 'recoil';
 import { Invitation } from '@modules/grpc/library/blockjoy/v1/invitation';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { InitialQueryParams as InitialQueryParamsOrganizationInvitations } from '../ui/OrganizationInvitationsUIHelpers';
 import { sort, paginate } from '@shared/components';
 
@@ -18,14 +19,12 @@ const sentInvitationsActive = selectorFamily<
     ({ get }) => {
       const invitations = get(sentInvitations);
 
-      const { pagination } = queryParams;
-
       const sorted = sort(invitations, {
         field: 'inviteeEmail',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       });
 
-      const paginated = paginate(sorted, pagination);
+      const paginated = paginate(sorted, queryParams.pagination);
       return paginated;
     },
 });

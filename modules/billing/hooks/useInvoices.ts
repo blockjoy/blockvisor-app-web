@@ -32,7 +32,7 @@ export const useInvoices = (): IInvoicesHook => {
     subscription_id: { is: subscription?.id },
     limit: queryParams?.pagination?.itemsPerPage ?? 10,
     status: { in: ['paid', 'payment_due'] },
-    [`sort_by[${queryParams?.sorting.order}]`]: queryParams?.sorting.field,
+    [`sort_by[${queryParams?.sort.order}]`]: queryParams?.sort.field,
   };
 
   // TODO: move offset to next API; pass as query param

@@ -1,40 +1,50 @@
 export function getHandlerTableChange(setQueryParams: any) {
   return (
     type: string,
-    {
-      pagination: { currentPage, itemsPerPage },
-      sorting: { order, field },
-      filtering,
-    }: any,
+    payload: {
+      sort: any;
+      pagination: Pagination;
+      filter: any;
+    },
   ) => {
-    setQueryParams((prev: any) =>
-      type === 'sort'
-        ? {
+    setQueryParams((prev: any) => {
+      switch (type) {
+        case 'sort':
+          const { sort } = payload;
+          return {
             ...prev,
-            sorting: {
-              ...prev.sorting,
-              field,
-              order,
-            },
-          }
-        : type === 'pagination'
-        ? {
+            sort: [
+              {
+                field: sort[0]?.field,
+                order: sort[0]?.order,
+              },
+            ],
+          };
+        case 'pagination':
+          const {
+            pagination: { currentPage, itemsPerPage },
+          } = payload;
+          return {
             ...prev,
             pagination: {
               ...prev.pagination,
               currentPage,
               itemsPerPage,
             },
-          }
-        : type === 'filter'
-        ? {
+          };
+        case 'filter':
+          const { filter } = payload;
+          return {
             ...prev,
-            filtering: {
-              ...prev.filtering,
-              ...filtering,
+            filter: {
+              ...prev.filter,
+              ...filter,
             },
-          }
-        : prev,
-    );
+          };
+
+        default:
+          return prev;
+      }
+    });
   };
 }
