@@ -23,7 +23,6 @@ export const styles = {
   `,
   wrapperInner: css``,
   listTypePicker: css`
-    margin-left: auto;
     display: flex;
     justify-content: flex-end;
 
