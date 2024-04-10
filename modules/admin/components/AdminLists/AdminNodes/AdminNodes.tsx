@@ -126,7 +126,7 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'version',
-    width: '180px',
+    width: '210px',
     isVisible: false,
     filterSettings: {
       name: 'version',
