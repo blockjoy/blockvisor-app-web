@@ -2,7 +2,7 @@ import { FormEvent, useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { styles } from './nodeFilters2.styles';
+import { styles } from './nodeFilters.styles';
 import {
   Skeleton,
   SkeletonGrid,
