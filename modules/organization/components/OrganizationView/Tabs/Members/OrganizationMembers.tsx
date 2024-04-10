@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import {
   organizationAtoms,
   useResendInvitation,
@@ -10,9 +11,7 @@ import {
   mapOrganizationMembersToRows,
   Member,
 } from '@modules/organization/utils/mapOrganizationMembersToRows';
-import { useRecoilValue } from 'recoil';
-import { getHandlerTableChange, Table, withQuery } from '@shared/components';
-import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
+import { Table, withQuery } from '@shared/components';
 import { useOrganizationMembersUIContext } from '@modules/organization/ui/OrganizationMembersUIContext';
 
 export const OrganizationMembers = () => {
@@ -59,14 +58,9 @@ export const OrganizationMembers = () => {
 
   const { headers, rows } = mapOrganizationMembersToRows(members, methods);
 
-  const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
-    getHandlerTableChange(organizationMembersUIProps.setQueryParams)(
-      type,
-      queryParams,
-    );
-  };
-
-  const MembersTable = withQuery(Table);
+  const MembersTable = withQuery({
+    pagination: true,
+  })(Table);
 
   // reset currentPage to first page, when org ID changes
   useEffect(() => {
@@ -88,8 +82,8 @@ export const OrganizationMembers = () => {
         verticalAlign="middle"
         fixedRowHeight="74px"
         total={selectedOrganization?.memberCount!}
-        properties={organizationMembersUIProps.queryParams}
-        onTableChange={handleTableChange}
+        queryParams={organizationMembersUIProps.queryParams}
+        setQueryParams={organizationMembersUIProps.setQueryParams}
       />
       {activeView === 'action' && (
         <OrganizationDialog
