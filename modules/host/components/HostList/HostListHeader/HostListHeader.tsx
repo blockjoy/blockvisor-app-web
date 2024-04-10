@@ -5,7 +5,7 @@ import {
   OrganizationPicker,
 } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import { hostAtoms, hostSelectors, useHostList } from '@modules/host';
+import { hostAtoms, HostSorting, useHostList } from '@modules/host';
 
 export const HostListHeader = () => {
   const [activeListType, setActiveListType] = useRecoilState(
@@ -52,6 +52,11 @@ export const HostListHeader = () => {
       <div css={styles.orgPicker}>
         <OrganizationPicker isRightAligned maxWidth="140px" />
       </div>
+
+      <div css={styles.sorting}>
+        <HostSorting />
+      </div>
+
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleActiveListType}

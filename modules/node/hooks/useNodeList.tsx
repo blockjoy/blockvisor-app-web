@@ -5,7 +5,6 @@ import {
   nodeAtoms,
   getInitialQueryParams,
   InitialQueryParams,
-  Pagination,
 } from '@modules/node';
 import { useDefaultOrganization } from '@modules/organization';
 
@@ -49,6 +48,7 @@ export const useNodeList = () => {
         orgId!,
         queryParams.filter,
         queryParams.pagination,
+        queryParams.sort,
       );
 
       const { nodeCount } = response;

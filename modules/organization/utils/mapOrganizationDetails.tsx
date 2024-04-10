@@ -8,6 +8,7 @@ import { display } from 'styles/utils.display.styles';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { getOrganizationRole } from '@modules/organization';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 type Details = {
   label: string | ReactNode;
@@ -39,7 +40,7 @@ export function mapOrganizationDetails(org: Org | null, userId: string) {
     ),
     {
       field: 'email',
-      order: 'asc',
+      order: SortOrder.SORT_ORDER_ASCENDING,
     },
   );
 

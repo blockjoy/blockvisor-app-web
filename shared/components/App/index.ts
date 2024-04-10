@@ -29,3 +29,4 @@ export * from './HostIcon/HostIcon';
 export * from './DeleteModal/DeleteModal';
 export * from './NotFound/NotFound';
 export * from './Page/ProfileDropdown/ProfileDropdown';
+export * from './Sorting/Sorting';

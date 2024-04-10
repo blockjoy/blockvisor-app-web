@@ -19,7 +19,6 @@ export const styles = {
   `,
   wrapperInner: css``,
   listTypePicker: css`
-    margin-left: auto;
     display: flex;
     justify-content: flex-end;
 
@@ -58,6 +57,13 @@ export const styles = {
   `,
   orgPicker: css`
     @media ${breakpoints.fromLrg} {
+      display: none;
+    }
+  `,
+  sorting: css`
+    margin-left: auto;
+
+    @media ${breakpoints.toXlrg} {
       display: none;
     }
   `,

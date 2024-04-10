@@ -1,5 +1,6 @@
 import { selector, selectorFamily } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { sort } from '@shared/components';
@@ -83,7 +84,7 @@ const filtersStatusAll = selectorFamily<any, any[]>({
         })),
       {
         field: 'name',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       },
     );
 

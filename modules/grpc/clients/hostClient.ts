@@ -77,6 +77,8 @@ class HostClient {
       request.search = search;
     }
 
+    console.log('listHostsRequest', request);
+
     try {
       const response = await callWithTokenRefresh(
         this.client.list.bind(this.client),

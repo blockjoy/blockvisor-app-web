@@ -2,12 +2,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { toast } from 'react-toastify';
-import {
-  Table,
-  TableAdd,
-  getHandlerTableChange,
-  withQuery,
-} from '@shared/components';
+import { Table, TableAdd, withQuery } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   useInvitations,
@@ -21,7 +16,6 @@ import {
   Action,
   Member,
 } from '@modules/organization/utils/mapOrganizationMembersToRows';
-import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
 import { useOrganizationInvitationsUIContext } from '@modules/organization/ui/OrganizationInvitationsUIContext';
 import { mapOrganizationInvitationsToRows } from '@modules/organization/utils/mapOrganizationInvitationsToRows';
 import { authSelectors } from '@modules/auth';
@@ -117,14 +111,9 @@ export const OrganizationInvitations = () => {
     methods,
   );
 
-  const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
-    getHandlerTableChange(organizationInvitationsUIProps.setQueryParams)(
-      type,
-      queryParams,
-    );
-  };
-
-  const InvitationsTable = withQuery(Table);
+  const InvitationsTable = withQuery({
+    pagination: true,
+  })(Table);
 
   return (
     <section>
@@ -148,8 +137,8 @@ export const OrganizationInvitations = () => {
             verticalAlign="middle"
             fixedRowHeight="74px"
             total={sentInvitations?.length}
-            properties={organizationInvitationsUIProps.queryParams}
-            onTableChange={handleTableChange}
+            queryParams={organizationInvitationsUIProps.queryParams}
+            setQueryParams={organizationInvitationsUIProps.setQueryParams}
           />
           {activeView === 'action' && (
             <OrganizationDialog

@@ -1,7 +1,8 @@
+import { useRecoilState } from 'recoil';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { sort } from '@shared/components';
-import { useRecoilState } from 'recoil';
-import { organizationAtoms } from '../store/organizationAtoms';
+import { organizationAtoms } from '@modules/organization';
 
 export function useDefaultOrganization() {
   const [defaultOrganization, setDefaultOrganization] = useRecoilState(
@@ -19,7 +20,7 @@ export function useDefaultOrganization() {
     ) {
       const firstOrgInList = sort(organizations, {
         field: 'name',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       })[0];
 
       const newDefaultOrg = {

@@ -25,6 +25,7 @@ import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import { ROUTES } from '@shared/index';
+import { withQuery } from '@shared/components';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -92,6 +93,10 @@ export const NodeList = () => {
     nodeUIProps.queryParams.filter,
   );
 
+  const NodeListTable = withQuery({
+    sort: true,
+  })(Table);
+
   return (
     <>
       <PageTitle title="Nodes" icon={<IconNode />} />
@@ -129,12 +134,14 @@ export const NodeList = () => {
               loader={''}
             >
               {activeListType === 'table' ? (
-                <Table
+                <NodeListTable
                   isLoading={isLoading}
                   headers={headers}
                   preload={0}
                   rows={rows}
                   fixedRowHeight="120px"
+                  queryParams={nodeUIProps.queryParams}
+                  setQueryParams={nodeUIProps.setQueryParams}
                   onRowClick={handleNodeClicked}
                 />
               ) : (

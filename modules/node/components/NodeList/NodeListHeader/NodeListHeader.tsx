@@ -5,7 +5,7 @@ import {
   FiltersHeaderIconText,
   Alert,
 } from '@shared/components';
-import { nodeAtoms, useNodeList } from '@modules/node';
+import { nodeAtoms, NodeSorting } from '@modules/node';
 import { styles } from './styles';
 
 export const NodeListHeader = () => {
@@ -53,6 +53,8 @@ export const NodeListHeader = () => {
           {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
         </Alert>
       )}
+
+      <NodeSorting />
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker

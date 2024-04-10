@@ -3,27 +3,28 @@ import { SvgIcon } from '@shared/components';
 import IconSort from '@public/assets/icons/common/Sort.svg';
 import IconSortAsc from '@public/assets/icons/common/SortAsc.svg';
 import IconSortDesc from '@public/assets/icons/common/SortDesc.svg';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
-type Props = {
+type TableSortButtonProps = {
   children?: React.ReactNode;
   onClick: (arg0: string) => void;
-  sortExpression?: string;
-  activeSortExpression?: string;
-  activeOrder?: string;
+  dataField?: string;
+  activeSortField?: any;
+  activeSortOrder?: SortOrder;
 };
 
-export const TableSortButton: React.FC<Props> = ({
+export const TableSortButton = ({
   children,
   onClick,
-  sortExpression,
-  activeSortExpression,
-  activeOrder,
-}) => {
-  const isActive = sortExpression === activeSortExpression;
+  dataField,
+  activeSortField,
+  activeSortOrder,
+}: TableSortButtonProps) => {
+  const isActive = dataField === activeSortField;
 
   return (
     <button
-      onClick={() => onClick(sortExpression || '')}
+      onClick={() => onClick(dataField || '')}
       css={[styles.button, isActive && styles.buttonActive]}
     >
       <span css={[styles.text]}>{children}</span>
@@ -31,9 +32,9 @@ export const TableSortButton: React.FC<Props> = ({
         size="10px"
         additionalStyles={isActive ? [styles.active] : undefined}
       >
-        {!isActive || !activeOrder ? (
+        {!isActive || !activeSortOrder ? (
           <IconSort />
-        ) : activeOrder === 'asc' ? (
+        ) : activeSortOrder === SortOrder.SORT_ORDER_ASCENDING ? (
           <IconSortAsc />
         ) : (
           <IconSortDesc />

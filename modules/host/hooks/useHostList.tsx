@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
@@ -7,7 +7,6 @@ import { InitialQueryParams } from '../ui/HostUIHelpers';
 import { getInitialQueryParams } from '../ui/HostUIContext';
 import { useDefaultOrganization } from '@modules/organization';
 import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
-import { nodeAtoms } from '@modules/node';
 
 export const useHostList = () => {
   const router = useRouter();
@@ -34,7 +33,10 @@ export const useHostList = () => {
     setHostCount(hostCount - 1);
   };
 
-  const loadHosts = async (queryParams?: InitialQueryParams) => {
+  const loadHosts = async (
+    queryParams?: InitialQueryParams,
+    showLoader: boolean = true,
+  ) => {
     if (!queryParams) {
       const savedQueryParams = getInitialQueryParams();
       queryParams = savedQueryParams;
@@ -43,13 +45,16 @@ export const useHostList = () => {
     const loadingState =
       queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
 
-    setIsLoading(loadingState);
+    if (showLoader) {
+      setIsLoading(loadingState);
+    }
 
     try {
       const response: HostServiceListResponse = await hostClient.listHosts(
         orgId!,
         queryParams.filter,
         queryParams.pagination,
+        queryParams.sort,
       );
 
       const { hostCount } = response;

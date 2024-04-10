@@ -1,16 +1,9 @@
-export type Pagination = {
-  currentPage: number;
-  itemsPerPage: number;
-};
-
-export type Sorting = {
-  order: 'asc' | 'desc';
-  field: string;
-};
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { Sort } from '@shared/common/common';
 
 export type InitialQueryParams = {
   pagination: Pagination;
-  sorting: Sorting;
+  sort: Sort;
 };
 
 export const initialQueryParams: InitialQueryParams = {
@@ -18,5 +11,6 @@ export const initialQueryParams: InitialQueryParams = {
     currentPage: 1,
     itemsPerPage: 6,
   },
-  sorting: { order: 'asc', field: 'email' },
+
+  sort: { order: SortOrder.SORT_ORDER_ASCENDING, field: 'email' },
 };

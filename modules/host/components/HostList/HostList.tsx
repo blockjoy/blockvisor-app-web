@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef } from 'react';
-import isEqual from 'lodash/isEqual';
 import { useRecoilValue } from 'recoil';
+import isEqual from 'lodash/isEqual';
 import {
   TableSkeleton,
   EmptyColumn,
   Table,
   TableGrid,
-  Alert,
+  withQuery,
 } from '@shared/components';
 import { styles } from './HostList.styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -47,7 +47,7 @@ export const HostList = () => {
 
   useEffect(() => {
     if (!isEqual(currentQueryParams.current, hostUIProps.queryParams)) {
-      loadHosts(hostUIProps.queryParams);
+      loadHosts(hostUIProps.queryParams, !hostList?.length);
       currentQueryParams.current = hostUIProps.queryParams;
     }
   }, [hostUIProps.queryParams]);
@@ -74,6 +74,8 @@ export const HostList = () => {
     hostList.length,
     hostUIProps.queryParams.filter,
   );
+
+  const HostListTable = withQuery({ sort: true })(Table);
 
   return (
     <>
@@ -109,11 +111,13 @@ export const HostList = () => {
               loader={''}
             >
               {activeListType === 'table' ? (
-                <Table
+                <HostListTable
                   isLoading={isLoading}
                   headers={headers}
                   rows={rows}
                   onRowClick={handleHostClick}
+                  queryParams={hostUIProps.queryParams}
+                  setQueryParams={hostUIProps.setQueryParams}
                 />
               ) : (
                 <div css={styles.gridWrapper}>

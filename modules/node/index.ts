@@ -1,6 +1,7 @@
 export * from './components/NodeLauncher/NodeLauncher';
 export * from './components/NodeLauncher/NodeLauncherWithGuard';
 export * from './components/NodeList/NodeList';
+export * from './components/NodeList/NodeSorting/NodeSorting';
 export * from './components/NodeView/Header/NodeViewReportProblem/NodeViewReportProblem';
 export * from './components/NodeView/NodeView';
 export * from './components/NodeView/SidePanel/NodeViewSidePanel';

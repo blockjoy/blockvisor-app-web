@@ -6,24 +6,6 @@ type FilteringItem = {
 };
 
 type Pagination = {
-  currentPage?: number;
-  itemsPerPage?: number;
-};
-
-type Sorting = {
-  order?: 'asc' | 'desc';
-  field?: string;
-};
-
-type Filtering = {
-  [key: string]: {
-    dataField: string;
-    value: string | number;
-  };
-};
-
-type InitialFilter = {
-  pagination?: Pagination;
-  sorting?: Sorting;
-  filtering?: Filtering;
+  currentPage: number;
+  itemsPerPage: number;
 };

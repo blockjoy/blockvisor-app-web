@@ -1,23 +1,14 @@
 import { itemsPerPage } from '@shared/utils/infiniteScroll';
 
-export type Pagination = {
-  currentPage: number;
-  itemsPerPage: number;
-};
-
-export type Sorting = {
-  order: 'asc' | 'desc';
-  field: string;
-};
-
-export type Filtering = {
-  offset?: string | undefined;
-};
-
 export type InvoicesQueryParams = {
   pagination: Pagination;
-  sorting: Sorting;
-  filtering: Filtering;
+  filter: {
+    offset?: string | undefined;
+  };
+  sort: {
+    order: string;
+    field: string;
+  };
 };
 
 export const initialQueryParams: InvoicesQueryParams = {
@@ -25,8 +16,10 @@ export const initialQueryParams: InvoicesQueryParams = {
     currentPage: 1,
     itemsPerPage: itemsPerPage['xl'],
   },
-  sorting: { order: 'desc', field: 'date' },
-  filtering: {
+
+  sort: { order: 'desc', field: 'date' },
+
+  filter: {
     offset: undefined,
   },
 };

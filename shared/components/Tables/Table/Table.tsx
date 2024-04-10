@@ -1,9 +1,9 @@
-import { styles } from './table.styles';
-import { css, SerializedStyles } from '@emotion/react';
-import TableRowLoader from './TableRowLoader';
-import { isSafari } from 'react-device-detect';
-import { TableSortButton } from './TableSortButton';
 import { useState } from 'react';
+import { isSafari } from 'react-device-detect';
+import { css, SerializedStyles } from '@emotion/react';
+import { styles } from './table.styles';
+import TableRowLoader from './TableRowLoader';
+import { TableSortButton } from './TableSortButton';
 
 export type TableProps = {
   hideHeader?: boolean;
@@ -14,7 +14,8 @@ export type TableProps = {
   preload?: number;
   verticalAlign?: 'top' | 'middle';
   fixedRowHeight?: string;
-  properties?: InitialFilter;
+  queryParams?: any;
+  setQueryParams?: any;
   handleSort?: (dataField: string) => void;
   additionalStyles?: SerializedStyles[];
   isHover?: boolean;
@@ -29,7 +30,7 @@ export const Table = ({
   preload,
   verticalAlign,
   fixedRowHeight,
-  properties,
+  queryParams,
   handleSort,
   additionalStyles,
   isHover = true,
@@ -82,9 +83,9 @@ export const Table = ({
                     {sort && handleSort && dataField ? (
                       <TableSortButton
                         onClick={() => handleSort(dataField)}
-                        sortExpression={dataField}
-                        activeSortExpression={properties?.sorting?.field}
-                        activeOrder={properties?.sorting?.order}
+                        dataField={dataField}
+                        activeSortField={queryParams?.sort?.[0].field}
+                        activeSortOrder={queryParams?.sort?.[0].order}
                       >
                         {component || name}
                       </TableSortButton>

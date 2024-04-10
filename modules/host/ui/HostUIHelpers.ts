@@ -1,15 +1,16 @@
 import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import {
+  HostSort,
+  HostSortField,
+} from '@modules/grpc/library/blockjoy/v1/host';
 import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { itemsPerPage } from '@shared/utils/infiniteScroll';
-
-export type Pagination = {
-  currentPage: number;
-  itemsPerPage: number;
-};
 
 export type InitialQueryParams = {
   pagination: Pagination;
   filter: UIHostFilterCriteria;
+  sort: HostSort[];
 };
 
 export const initialFilter: UIHostFilterCriteria = {
@@ -19,13 +20,19 @@ export const initialFilter: UIHostFilterCriteria = {
   hostSpace: HOST_FILTERS_DEFAULT.hostSpace,
 };
 
+export const initialSort: HostSort[] = [
+  {
+    field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
+    order: SortOrder.SORT_ORDER_DESCENDING,
+  },
+];
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     currentPage: 0,
     itemsPerPage: itemsPerPage['xl'],
   },
 
-  filter: {
-    ...initialFilter,
-  },
+  filter: initialFilter,
+
+  sort: initialSort,
 };

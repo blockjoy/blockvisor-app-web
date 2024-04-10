@@ -1,5 +1,6 @@
 import { atom, selector, selectorFamily } from 'recoil';
-import { paginate, sort, filter } from '@shared/components';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { paginate, sort } from '@shared/components';
 import {
   InitialQueryParams as InitialQueryParamsOrganizations,
   initialQueryParams,
@@ -59,42 +60,6 @@ const organizationLoadingState = atom<LoadingState>({
   default: 'loading',
 });
 
-const organizationsFiltered = selectorFamily<
-  Org[],
-  InitialQueryParamsOrganizations
->({
-  key: 'organizations.active.filtered',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgs = get(allOrganizations);
-      const { sorting, filtering } = queryParams;
-
-      const filteredOrganizations = filter(allOrgs, filtering);
-      const sortedOrganizations = sort(filteredOrganizations, sorting);
-
-      return sortedOrganizations;
-    },
-});
-
-const organizationsActive = selectorFamily<
-  Org[],
-  InitialQueryParamsOrganizations
->({
-  key: 'organizations.active',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgs = get(organizationsFiltered(queryParams));
-
-      const { pagination } = queryParams;
-
-      const paginatedOrganizations = paginate(allOrgs, pagination);
-
-      return paginatedOrganizations;
-    },
-});
-
 const organizationMembersActive = selectorFamily<
   OrgUser[],
   InitialQueryParamsOrganizationMembers
@@ -105,18 +70,14 @@ const organizationMembersActive = selectorFamily<
     ({ get }) => {
       const org = get(selectedOrganization);
 
-      const { pagination } = queryParams;
-
-      if (!org?.members) {
-        return [];
-      }
+      if (!org?.members) return [];
 
       const sorted = sort(org?.members, {
         field: 'email',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       });
 
-      const paginated = paginate(sorted, pagination);
+      const paginated = paginate(sorted, queryParams.pagination);
 
       return paginated;
     },
@@ -145,8 +106,6 @@ export const organizationAtoms = {
   allOrganizations,
   allOrganizationsSorted,
   organizationsFilters,
-  organizationsFiltered,
-  organizationsActive,
   organizationMembersActive,
   defaultOrganization,
   organizationMemberLoadingState,

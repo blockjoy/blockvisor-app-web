@@ -6,6 +6,7 @@ import { ROUTES } from '@shared/constants/routes';
 import { convertNodeJobStatusToName } from '@modules/node/utils/convertNodeJobStatusToName';
 import { NodeJobStatus } from '@modules/grpc/library/blockjoy/v1/node';
 import { spacing } from 'styles/utils.spacing.styles';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 export const NodeViewJobList = () => {
   const { node } = useNodeView();
@@ -66,7 +67,10 @@ export const NodeViewJobList = () => {
     ],
   }));
 
-  const sortedRows = sort(rows, { field: 'key', order: 'asc' });
+  const sortedRows = sort(rows, {
+    field: 'key',
+    order: SortOrder.SORT_ORDER_ASCENDING,
+  });
 
   const handleRowClicked = (name: string) => {
     router.push({
