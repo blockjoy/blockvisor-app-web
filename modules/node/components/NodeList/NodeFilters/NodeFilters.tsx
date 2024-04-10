@@ -19,6 +19,7 @@ import {
   useNodeUIContext,
   blockchainAtoms,
   nodeSelectors,
+  NodeSorting,
 } from '@modules/node';
 import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
@@ -112,6 +113,7 @@ export const NodeFilters = () => {
         filtersTotal={tempFiltersTotal}
         isFiltersOpen={isOpen}
         handleFiltersToggle={handleFiltersToggle}
+        elements={<NodeSorting />}
       />
       {!isCompleted.current ? (
         isOpen && (

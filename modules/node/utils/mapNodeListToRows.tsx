@@ -39,6 +39,8 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       name: 'Status',
       key: '4',
       width: '400px',
+      sort: true,
+      dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     },
   ];
 

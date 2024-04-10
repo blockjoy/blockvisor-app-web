@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { getHandlerTableChange, Pagination } from '@shared/components';
+import { Pagination } from '@shared/components';
 
 export const withPagination = (Component: any) => {
   return ({ setQueryParams, queryParams, total, ...props }: any) => {
@@ -13,7 +13,7 @@ export const withPagination = (Component: any) => {
           currentPage: index,
         },
       };
-      getHandlerTableChange(setQueryParams)('pagination', updatedQueryParams);
+      setQueryParams(updatedQueryParams);
     };
 
     useEffect(() => {
@@ -24,7 +24,7 @@ export const withPagination = (Component: any) => {
           ...queryParams,
           pagination: { ...queryParams.pagination, currentPage: 1 },
         };
-        getHandlerTableChange(setQueryParams)('pagination', updatedQueryParams);
+        setQueryParams(updatedQueryParams);
       }
     }, [total, queryParams.pagination, setQueryParams]);
 

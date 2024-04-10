@@ -1,39 +1,47 @@
 import { useMemo } from 'react';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
-import {
-  getHandlerTableChange,
-  Sorting,
-  SortingItem,
-} from '@shared/components';
+import { Sorting, SortingItem } from '@shared/components';
 import { InitialQueryParams, useNodeUIContext } from '@modules/node';
 
 export const NodeSorting = () => {
   const items: SortingItem[] = useMemo(
     () => [
       {
-        id: 'a-z',
-        name: 'Node name (A-Z)',
+        id: 'name-asc',
+        name: 'Name: A-Z',
         field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
         order: SortOrder.SORT_ORDER_ASCENDING,
       },
       {
-        id: 'z-a',
-        name: 'Node name (Z-A)',
+        id: 'name-desc',
+        name: 'Name: Z-A',
         field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
         order: SortOrder.SORT_ORDER_DESCENDING,
       },
       {
-        id: 'newest',
+        id: 'date-desc',
         name: 'Newest first',
         field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
         order: SortOrder.SORT_ORDER_DESCENDING,
       },
       {
-        id: 'oldest',
+        id: 'date-asc',
         name: 'Oldest first',
         field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
         order: SortOrder.SORT_ORDER_ASCENDING,
+      },
+      {
+        id: 'status-asc',
+        name: 'Status: A-Z',
+        field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+        order: SortOrder.SORT_ORDER_ASCENDING,
+      },
+      {
+        id: 'status-desc',
+        name: 'Status: Z-A',
+        field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+        order: SortOrder.SORT_ORDER_DESCENDING,
       },
     ],
     [],
@@ -54,7 +62,7 @@ export const NodeSorting = () => {
       sort: [{ field: item?.field, order: item?.order! }],
     };
 
-    getHandlerTableChange(nodeUIProps.setQueryParams)('sort', newQueryParams);
+    nodeUIProps.setQueryParams(newQueryParams);
   };
 
   const selectedItem =
