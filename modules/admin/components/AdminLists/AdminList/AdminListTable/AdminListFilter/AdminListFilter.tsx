@@ -10,16 +10,18 @@ import {
   AdminListFilterVersion,
 } from '@modules/admin';
 import { Button, DropdownMenu, SvgIcon } from '@shared/components';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './AdminListFilter.styles';
 import { css } from '@emotion/react';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
+import { he } from 'date-fns/locale';
 
 type Props = {
   filterSettings: AdminListColumnFilterSettings;
   filters: AdminListColumn[];
   tableScrollPosition: number;
+  headerRef: RefObject<HTMLSpanElement>;
   onChange: (filters: AdminListColumn[]) => void;
 };
 
@@ -27,12 +29,14 @@ export const AdminListFilter = ({
   filterSettings,
   filters,
   tableScrollPosition,
+  headerRef,
   onChange,
 }: Props) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [menuTop, setMenuTop] = useState<string>();
-  const [menuRight, setMenuRight] = useState<string>();
+  const [menuLeft, setMenuLeft] = useState<string>();
+  const [maxWidth, setMaxWidth] = useState<string>();
 
   const handleChange = (item: AdminFilterDropdownItem) => {
     let valuesCopy = filterSettings?.values ? [...filterSettings.values] : [];
@@ -135,11 +139,13 @@ export const AdminListFilter = ({
   };
 
   const setMenuPosition = () => {
-    const rect = dropdownRef.current?.getBoundingClientRect();
-    const top = rect?.top! + 42;
-    const right = window.innerWidth - rect?.right!;
-    setMenuRight(`${right!}px`);
+    const rect = headerRef.current?.getBoundingClientRect();
+    const top = rect?.top! + 50;
+    const left = rect?.left!;
+    const maxWidth = headerRef.current?.clientWidth;
+    setMenuLeft(`${left!}px`);
     setMenuTop(`${top}px`);
+    setMaxWidth(`${maxWidth}px`);
   };
 
   const toggleOpen = () => {
@@ -182,10 +188,12 @@ export const AdminListFilter = ({
         additionalStyles={css`
           position: fixed;
           top: ${menuTop};
-          right: ${menuRight};
+          left: ${menuLeft};
+          right: auto;
           overflow: visible;
-          max-width: 250px;
-          min-width: 250px;
+          max-width: ${maxWidth};
+          width: ${maxWidth};
+          min-width: ${maxWidth};
         `}
       >
         {controls[filterSettings.type]}
