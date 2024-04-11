@@ -57,6 +57,7 @@ export const NodeFilters = () => {
   const filtersBlockchainSelectedIds = useRecoilValue(
     nodeSelectors.filtersBlockchainSelectedIds,
   );
+  const [activeView, setActiveView] = useRecoilState(nodeAtoms.activeView);
 
   const [openFilterId, setOpenFilterId] = useState('');
 
@@ -86,6 +87,8 @@ export const NodeFilters = () => {
     setFiltersOpen(!isFiltersOpen);
   };
 
+  const handleActiveView = (view: View) => setActiveView(view);
+
   if (
     nodeListLoadingState === 'finished' &&
     (blockchainsLoadingState === 'finished' ||
@@ -103,9 +106,14 @@ export const NodeFilters = () => {
       <FiltersHeader
         isLoading={!isCompleted.current}
         filtersTotal={tempFiltersTotal}
-        isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
-        elements={<NodeSorting />}
+        elements={
+          <div css={styles.sorting}>
+            <NodeSorting />
+          </div>
+        }
+        activeView={activeView}
+        handleActiveView={handleActiveView}
       />
       {!isCompleted.current ? (
         isFiltersOpen && (

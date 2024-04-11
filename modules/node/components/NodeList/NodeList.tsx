@@ -60,7 +60,7 @@ export const NodeList = () => {
       nodeUIContext.queryParams.pagination.itemsPerPage <
       nodeCount;
 
-  const activeListType = useRecoilValue(nodeAtoms.activeListType);
+  const activeView = useRecoilValue(nodeAtoms.activeView);
 
   const currentQueryParams = useRef(nodeUIProps.queryParams);
 
@@ -140,7 +140,7 @@ export const NodeList = () => {
               scrollThreshold={0.75}
               loader={''}
             >
-              {activeListType === 'table' ? (
+              {activeView === 'table' ? (
                 <NodeListTable
                   isLoading={isLoading}
                   headers={headers}

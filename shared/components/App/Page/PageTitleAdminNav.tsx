@@ -75,7 +75,7 @@ export const PageTitleAdminNav = () => {
             </span>
           </>
         }
-        dropdownButtonStyles={styles.button}
+        dropdownButtonStyles={[styles.button]}
         dropdownMenuStyles={[styles.menu]}
         dropdownItemStyles={dropdownItemStyles}
         hideDropdownIcon={true}

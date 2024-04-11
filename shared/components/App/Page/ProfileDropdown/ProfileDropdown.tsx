@@ -83,7 +83,7 @@ export const ProfileDropdown = () => {
         renderButtonText={<ProfileBubble />}
         hideDropdownIcon={true}
         dropdownMenuStyles={[styles.dropdown]}
-        dropdownButtonStyles={styles.button}
+        dropdownButtonStyles={[styles.button]}
       />
     </div>
   );

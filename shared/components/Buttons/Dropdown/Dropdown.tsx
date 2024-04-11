@@ -25,7 +25,7 @@ export type DropdownProps<T = any> = {
   renderSearch?: (isOpen: boolean) => ReactNode;
   renderHeader?: ReactNode;
   renderButtonText?: ReactNode;
-  dropdownButtonStyles?: (theme: ITheme) => SerializedStyles;
+  dropdownButtonStyles?: ((theme: ITheme) => SerializedStyles)[];
   dropdownMenuStyles?: SerializedStyles[];
   dropdownItemStyles?: (item: T) => SerializedStyles[];
   dropdownScrollbarStyles?: SerializedStyles[];
@@ -149,7 +149,9 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         isOpen={isOpen}
         isLoading={isLoading}
         type={buttonType}
-        buttonStyles={dropdownButtonStyles}
+        {...(dropdownButtonStyles
+          ? { buttonStyles: dropdownButtonStyles }
+          : null)}
         hideDropdownIcon={hideDropdownIcon}
         text={
           Boolean(renderButtonText) && !isLoading ? (

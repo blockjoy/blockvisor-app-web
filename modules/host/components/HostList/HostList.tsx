@@ -36,7 +36,7 @@ export const HostList = () => {
   const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
     useHostList();
 
-  const activeListType = useRecoilValue(hostAtoms.activeListType);
+  const activeView = useRecoilValue(hostAtoms.activeView);
 
   const currentQueryParams = useRef(hostUIProps.queryParams);
 
@@ -117,7 +117,7 @@ export const HostList = () => {
               scrollThreshold={0.75}
               loader={''}
             >
-              {activeListType === 'table' ? (
+              {activeView === 'table' ? (
                 <HostListTable
                   isLoading={isLoading}
                   headers={headers}

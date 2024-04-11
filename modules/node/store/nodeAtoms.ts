@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 import { Node, NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { BlockchainSimpleWRegion, initialSort } from '@modules/node';
+import { BlockchainSimpleWRegion } from '@modules/node';
 import { localStorageEffect } from 'utils/store/persist';
 
 const activeNode = atom<Node | null>({
@@ -10,10 +10,10 @@ const activeNode = atom<Node | null>({
   default: null,
 });
 
-const activeListType = atom<string | 'table' | 'grid'>({
-  key: 'node.activeListType',
+const activeView = atom<View>({
+  key: 'node.activeView',
   default: 'grid',
-  effects: [localStorageEffect('node.view', 'grid')],
+  effects: [localStorageEffect<View>('node.view', 'grid')],
 });
 
 const nodeList = atom<Node[]>({
@@ -110,7 +110,7 @@ export const nodeAtoms = {
   isLoading,
   isLoadingActiveNode,
   selectedSKU,
-  activeListType,
+  activeView,
 
   isFiltersOpen,
   filters,

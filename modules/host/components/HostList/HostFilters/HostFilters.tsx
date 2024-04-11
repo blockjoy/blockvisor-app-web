@@ -92,7 +92,6 @@ export const HostFilters = () => {
       <FiltersHeader
         isLoading={!isCompleted.current}
         filtersTotal={tempFiltersTotal}
-        isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
 

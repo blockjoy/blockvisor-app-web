@@ -3,6 +3,11 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  wrapper: css`
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+  `,
   collapseButton: css`
     display: none;
 

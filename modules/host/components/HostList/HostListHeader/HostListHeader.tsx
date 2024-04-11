@@ -1,16 +1,10 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  Alert,
-  GridTableViewPicker,
-  OrganizationPicker,
-} from '@shared/components';
+import { useRecoilState } from 'recoil';
+import { Alert, OrganizationPicker, ViewPicker } from '@shared/components';
 import { styles } from './HostListHeader.styles';
 import { hostAtoms, HostSorting, useHostList } from '@modules/host';
 
 export const HostListHeader = () => {
-  const [activeListType, setActiveListType] = useRecoilState(
-    hostAtoms.activeListType,
-  );
+  const [activeView, setactiveView] = useRecoilState(hostAtoms.activeView);
 
   // const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
   //   hostAtoms.isFiltersOpen,
@@ -21,8 +15,8 @@ export const HostListHeader = () => {
 
   const { hostCount } = useHostList();
 
-  const handleActiveListType = (type: string) => {
-    setActiveListType(type);
+  const handleActiveView = (view: View) => {
+    setactiveView(view);
   };
 
   // TODO: ADD FILTERS BACK IN ONCE IMPLEMENTED
@@ -63,9 +57,9 @@ export const HostListHeader = () => {
       </div>
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
-        <GridTableViewPicker
-          onChange={handleActiveListType}
-          activeListType={activeListType}
+        <ViewPicker
+          activeView={activeView}
+          handleActiveView={handleActiveView}
         />
       </div>
     </div>

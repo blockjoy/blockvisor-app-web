@@ -119,4 +119,9 @@ export const styles = {
       cursor: not-allowed;
     }
   `,
+  sorting: css`
+    @media ${breakpoints.fromLrg} {
+      display: none;
+    }
+  `,
 };

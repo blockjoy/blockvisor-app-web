@@ -1,9 +1,9 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   Skeleton,
-  GridTableViewPicker,
   FiltersHeaderIconText,
   Alert,
+  ViewPicker,
 } from '@shared/components';
 import { nodeAtoms, NodeSorting } from '@modules/node';
 import { styles } from './styles';
@@ -15,16 +15,14 @@ export const NodeListHeader = () => {
     nodeAtoms.isFiltersOpen,
   );
   const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
-  const [activeListType, setActiveListType] = useRecoilState(
-    nodeAtoms.activeListType,
-  );
+  const [activeView, setactiveView] = useRecoilState(nodeAtoms.activeView);
 
   const handleFilterCollapseToggled = () => {
     setIsFiltersOpen(!isFiltersOpen);
   };
 
-  const handleGridTableViewChanged = (type: string) => {
-    setActiveListType(type);
+  const handleActiveView = (view: View) => {
+    setactiveView(view);
   };
 
   const isLoading = isLoadingNodes !== 'finished';
@@ -40,10 +38,7 @@ export const NodeListHeader = () => {
               onClick={handleFilterCollapseToggled}
               css={[styles.filterToggle, styles.endBlock]}
             >
-              <FiltersHeaderIconText
-                filtersTotal={filtersTotal}
-                isFiltersOpen={isFiltersOpen}
-              />
+              <FiltersHeaderIconText filtersTotal={filtersTotal} />
             </button>
           )}
         </div>
@@ -60,9 +55,9 @@ export const NodeListHeader = () => {
       <NodeSorting />
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
-        <GridTableViewPicker
-          onChange={handleGridTableViewChanged}
-          activeListType={activeListType}
+        <ViewPicker
+          activeView={activeView}
+          handleActiveView={handleActiveView}
         />
       </div>
     </div>

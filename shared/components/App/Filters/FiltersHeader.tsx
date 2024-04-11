@@ -1,26 +1,27 @@
+import { ReactNode } from 'react';
+import { isMobile } from 'react-device-detect';
 import { styles } from './FiltersHeader.styles';
 import { FiltersHeaderIconText } from './FiltersHeaderIconText';
-import { Skeleton } from '@shared/components';
+import { Skeleton, ViewPicker } from '@shared/components';
 import { OrganizationPicker } from '@shared/components';
-
 import IconClose from '@public/assets/icons/common/ArrowLeft.svg';
-import { isMobile } from 'react-device-detect';
-import { ReactNode } from 'react';
 
 export type FiltersHeaderProps = {
   isLoading: boolean;
   filtersTotal: number;
-  isFiltersOpen: boolean;
   handleFiltersToggle: VoidFunction;
   elements?: ReactNode;
+  activeView?: View;
+  handleActiveView?: (view: View) => void;
 };
 
 export const FiltersHeader = ({
   isLoading,
   filtersTotal,
-  isFiltersOpen,
   handleFiltersToggle,
   elements,
+  activeView,
+  handleActiveView,
 }: FiltersHeaderProps) => {
   return (
     <header css={styles.header}>
@@ -28,16 +29,20 @@ export const FiltersHeader = ({
         <Skeleton />
       ) : (
         <>
-          <button onClick={handleFiltersToggle} css={styles.filtersButton}>
-            <span css={styles.collapseButton}>
-              <IconClose />
-            </span>
-            <FiltersHeaderIconText
-              filtersTotal={filtersTotal}
-              isFiltersOpen={isFiltersOpen}
+          <div css={styles.wrapper}>
+            <button onClick={handleFiltersToggle} css={styles.filtersButton}>
+              <span css={styles.collapseButton}>
+                <IconClose />
+              </span>
+              <FiltersHeaderIconText filtersTotal={filtersTotal} />
+            </button>
+            {elements ? elements : null}
+            <ViewPicker
+              type="dropdown"
+              activeView={activeView}
+              handleActiveView={handleActiveView}
             />
-          </button>
-          {elements ? elements : null}
+          </div>
           <div css={styles.orgPicker}>
             {isMobile && <OrganizationPicker maxWidth="140px" isRightAligned />}
           </div>
