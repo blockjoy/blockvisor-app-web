@@ -73,7 +73,7 @@ export const ActionsDropdown = ({ items, isLoading = false }: Props) => {
         }
         hideDropdownIcon={true}
         dropdownMenuStyles={[styles.dropdown]}
-        dropdownButtonStyles={styles.dropdownButton}
+        dropdownButtonStyles={[styles.dropdownButton]}
         dropdownItemStyles={dropdownItemStyles}
         dropdownScrollbarStyles={[styles.scrollbar]}
       />
