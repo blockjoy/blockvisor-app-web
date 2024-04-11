@@ -5,14 +5,10 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     @media ${breakpoints.fromLrg} {
-      min-width: 215px;
+      min-width: 180px;
       margin-left: auto;
       display: flex;
       justify-content: flex-end;
-    }
-    @media ${breakpoints.toLrg} {
-      margin-left: 5px;
-      margin-right: auto;
     }
   `,
   dropdownButton: (theme: ITheme) => css`
@@ -23,8 +19,8 @@ export const styles = {
       border: 0;
       cursor: pointer;
       padding: 0 4px;
-      height: 38px;
-      width: 38px;
+      height: 30px;
+      width: 30px;
       border-radius: 6px;
 
       path {
@@ -46,8 +42,12 @@ export const styles = {
     left: 0;
     right: auto;
     overflow: hidden;
-    max-width: 150px;
-    min-width: 150px;
+    max-width: 180px;
+    min-width: 180px;
+
+    @media ${breakpoints.toLrg} {
+      top: 36px;
+    }
   `,
   buttonText: css`
     @media ${breakpoints.toLrg} {
