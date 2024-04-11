@@ -46,7 +46,7 @@ export const Sorting = ({
         }
         {...(isMobile
           ? {
-              dropdownButtonStyles: styles.dropdownButton,
+              dropdownButtonStyles: [styles.dropdownButton],
             }
           : null)}
         hideDropdownIcon={isMobile}

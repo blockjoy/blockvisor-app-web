@@ -20,8 +20,8 @@ export const styles = {
       border: 0;
       cursor: pointer;
       padding: 0 4px;
-      height: 38px;
-      width: 38px;
+      height: 30px;
+      width: 30px;
       border-radius: 6px;
 
       path {
@@ -59,21 +59,6 @@ export const styles = {
   label: css`
     @media ${breakpoints.toLrg} {
       display: none;
-    }
-  `,
-  dropdownIcon: css`
-    display: grid;
-    place-items: center;
-    width: 8px;
-    height: 8px;
-
-    @media ${breakpoints.fromXLrg} {
-      display: none;
-    }
-
-    svg {
-      width: 100%;
-      height: 100%;
     }
   `,
 };
