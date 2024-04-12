@@ -77,10 +77,6 @@ export interface Host {
   createdAt:
     | Date
     | undefined;
-  /** The lowest ip address that this host may assign to a node. */
-  ipRangeFrom: string;
-  /** The highest ip address that this host may assign to a node. */
-  ipRangeTo: string;
   /** The ip gateway of this host. */
   ipGateway: string;
   /** The organization that this host belongs to. */
@@ -135,9 +131,12 @@ export interface HostServiceCreateRequest {
   /** The version of said operating system. */
   osVersion: string;
   ipAddr: string;
-  ipRangeFrom: string;
-  ipRangeTo: string;
   ipGateway: string;
+  /**
+   * A list of ip addresses that the nodes running on this host will be allowed
+   * to use.
+   */
+  ips: string[];
   /**
    * The organization that this host belongs to. This field _must_ be populated
    * with the current organization id.
@@ -353,8 +352,6 @@ function createBaseHost(): Host {
     osVersion: "",
     ip: "",
     createdAt: undefined,
-    ipRangeFrom: "",
-    ipRangeTo: "",
     ipGateway: "",
     orgId: "",
     nodeCount: 0,
@@ -398,12 +395,6 @@ export const Host = {
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(98).fork()).ldelim();
-    }
-    if (message.ipRangeFrom !== "") {
-      writer.uint32(106).string(message.ipRangeFrom);
-    }
-    if (message.ipRangeTo !== "") {
-      writer.uint32(114).string(message.ipRangeTo);
     }
     if (message.ipGateway !== "") {
       writer.uint32(122).string(message.ipGateway);
@@ -512,20 +503,6 @@ export const Host = {
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 13:
-          if (tag !== 106) {
-            break;
-          }
-
-          message.ipRangeFrom = reader.string();
-          continue;
-        case 14:
-          if (tag !== 114) {
-            break;
-          }
-
-          message.ipRangeTo = reader.string();
-          continue;
         case 15:
           if (tag !== 122) {
             break;
@@ -614,8 +591,6 @@ export const Host = {
     message.osVersion = object.osVersion ?? "";
     message.ip = object.ip ?? "";
     message.createdAt = object.createdAt ?? undefined;
-    message.ipRangeFrom = object.ipRangeFrom ?? "";
-    message.ipRangeTo = object.ipRangeTo ?? "";
     message.ipGateway = object.ipGateway ?? "";
     message.orgId = object.orgId ?? "";
     message.nodeCount = object.nodeCount ?? 0;
@@ -642,9 +617,8 @@ function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
     os: "",
     osVersion: "",
     ipAddr: "",
-    ipRangeFrom: "",
-    ipRangeTo: "",
     ipGateway: "",
+    ips: [],
     orgId: undefined,
     region: undefined,
     billingAmount: undefined,
@@ -682,14 +656,11 @@ export const HostServiceCreateRequest = {
     if (message.ipAddr !== "") {
       writer.uint32(74).string(message.ipAddr);
     }
-    if (message.ipRangeFrom !== "") {
-      writer.uint32(82).string(message.ipRangeFrom);
-    }
-    if (message.ipRangeTo !== "") {
-      writer.uint32(90).string(message.ipRangeTo);
-    }
     if (message.ipGateway !== "") {
       writer.uint32(98).string(message.ipGateway);
+    }
+    for (const v of message.ips) {
+      writer.uint32(146).string(v!);
     }
     if (message.orgId !== undefined) {
       writer.uint32(106).string(message.orgId);
@@ -779,26 +750,19 @@ export const HostServiceCreateRequest = {
 
           message.ipAddr = reader.string();
           continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.ipRangeFrom = reader.string();
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.ipRangeTo = reader.string();
-          continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
           message.ipGateway = reader.string();
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.ips.push(reader.string());
           continue;
         case 13:
           if (tag !== 106) {
@@ -859,9 +823,8 @@ export const HostServiceCreateRequest = {
     message.os = object.os ?? "";
     message.osVersion = object.osVersion ?? "";
     message.ipAddr = object.ipAddr ?? "";
-    message.ipRangeFrom = object.ipRangeFrom ?? "";
-    message.ipRangeTo = object.ipRangeTo ?? "";
     message.ipGateway = object.ipGateway ?? "";
+    message.ips = object.ips?.map((e) => e) || [];
     message.orgId = object.orgId ?? undefined;
     message.region = object.region ?? undefined;
     message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
