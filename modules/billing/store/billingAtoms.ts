@@ -88,7 +88,7 @@ const paymentMethodError = atom<PaymentError | null>({
 
 const paymentMethodLoadingState = atom<LoadingState>({
   key: 'billing.paymentMethod.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const billingAddressLoadingState = atom<LoadingState>({

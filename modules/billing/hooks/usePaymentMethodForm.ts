@@ -1,5 +1,5 @@
-import { RefObject, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { RefObject } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { PaymentIntent } from 'chargebee-typescript/lib/resources';
 import ChargebeeComponents from '@chargebee/chargebee-js-react-wrapper/dist/components/ComponentGroup';
 import {
@@ -10,7 +10,7 @@ import {
 } from '@modules/billing';
 
 interface PaymentMethodFormHook {
-  loading: boolean;
+  paymentMethodLoadingState: LoadingState;
   onSubmit: (
     cardRef: RefObject<ChargebeeComponents>,
     additionalData: { billingAddress: BillingAddressAdditionalData },
@@ -20,7 +20,8 @@ interface PaymentMethodFormHook {
 
 export const usePaymentMethodForm = (): PaymentMethodFormHook => {
   const setError = useSetRecoilState(billingAtoms.paymentMethodError);
-  const [loading, setLoading] = useState(false);
+  const [paymentMethodLoadingState, setPaymentMethodLoadingState] =
+    useRecoilState(billingAtoms.paymentMethodLoadingState);
 
   const { createIntent } = usePayment();
   const { createPaymentMethod } = usePaymentMethods();
@@ -31,37 +32,45 @@ export const usePaymentMethodForm = (): PaymentMethodFormHook => {
     additionalData: { billingAddress: BillingAddressAdditionalData },
     onSuccess: (customerId: string, paymentMethodId: string) => void,
   ) => {
-    setLoading(true);
+    setPaymentMethodLoadingState('initializing');
     setError(null);
 
-    try {
-      const customerData = await provideCustomer();
-      const intent = await createIntent();
+    const handleSuccess = (customerId: string, paymentMethodId: string) => {
+      onSuccess(customerId, paymentMethodId);
+      setPaymentMethodLoadingState('finished');
+    };
 
+    try {
       try {
+        const intent = await createIntent();
         await cardRef.current?.authorizeWith3ds(intent, additionalData, {
           success: async (payment_intent: PaymentIntent) => {
+            const customerData = await provideCustomer();
+
             await createPaymentMethod(
               customerData?.id!,
               payment_intent.id,
-              onSuccess,
+              handleSuccess,
             );
-
-            setLoading(false);
           },
         });
       } catch (error: any) {
-        const returnedError = structuredClone(error);
-        setError(returnedError);
-        setLoading(false);
+        const returnedError = handlePaymentMethodError(error);
         throw returnedError;
       }
     } catch (error: any) {
-      const returnedError = structuredClone(error);
-      setError(returnedError);
-      setLoading(false);
+      const returnedError = handlePaymentMethodError(error);
+      throw returnedError;
     }
   };
 
-  return { loading, onSubmit };
+  const handlePaymentMethodError = (error: any) => {
+    const returnedError = structuredClone(error);
+    setError(returnedError);
+    setPaymentMethodLoadingState('finished');
+
+    return returnedError;
+  };
+
+  return { paymentMethodLoadingState, onSubmit };
 };

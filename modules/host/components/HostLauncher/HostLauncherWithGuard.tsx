@@ -9,6 +9,9 @@ export const HostLauncherWithGuard = () => {
   const isEnabledBillingPreview = useRecoilValue(
     billingSelectors.isEnabledBillingPreview,
   );
+  const bypassBillingForSuperUser = useRecoilValue(
+    billingSelectors.bypassBillingForSuperUser,
+  );
 
   const canResetProvisionToken = useRecoilValue(
     authSelectors.hasPermission('org-provision-reset-token'),
@@ -25,8 +28,11 @@ export const HostLauncherWithGuard = () => {
     ? canCreateSubscription || canUpdateSubscription
     : true;
 
+  const isPermittedAsSuperUser =
+    isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
+
   const hasPermissionsToCreate =
-    isSuperUser ||
+    isPermittedAsSuperUser ||
     (canAddHost && canResetProvisionToken && hasBillingPermissionsToCreate);
 
   const HostLauncherGuarded = useMemo(

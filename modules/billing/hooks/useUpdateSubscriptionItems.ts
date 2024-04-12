@@ -12,7 +12,8 @@ import {
   useSubscription,
   fetchBilling,
   usePromoCode,
-  updateSubscriptionMetadata,
+  generateSubscriptionMetadata,
+  generateSubscriptionItems,
 } from '@modules/billing';
 
 export enum UpdateSubscriptionAction {
@@ -54,79 +55,59 @@ export const useUpdateSubscriptionItems = (): IUpdateSubscriptionHook => {
 
     const { type, payload } = action;
 
-    const params: _subscription.update_for_items_params = {};
-    const subscriptionItems: _subscription.subscription_items_update_for_items_params[] =
-      [];
-
     let itemPriceID: string = '';
+    const params: _subscription.update_for_items_params = {};
+
+    const subscriptionMetadataItems: SubscriptionMetadataItem[] =
+      subscription?.meta_data?.subscriptionItems ?? [];
     let subscriptionItem: SubscriptionItem | undefined;
 
     switch (type) {
       case UpdateSubscriptionAction.ADD_NODE:
         itemPriceID = selectedItemPrice ? selectedItemPrice?.id : '';
-        subscriptionItem = subscription?.subscription_items?.find(
-          (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
-        );
-
-        let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
-          {
-            item_price_id: itemPriceID,
-            quantity: subscriptionItem ? subscriptionItem?.quantity! + 1 : 1,
-          };
-
-        subscriptionItems?.push(newSubscriptionItem!);
 
         params.prorate = true;
         break;
-
       case UpdateSubscriptionAction.REMOVE_NODE:
-        const subscriptionMetadataItems =
-          subscription?.meta_data?.subscriptionItems ?? [];
-
         itemPriceID =
           subscriptionMetadataItems?.find(
-            (item: any) => item.id === payload.node?.id,
+            (item) => item.id === payload.node?.id,
           )?.itemPriceID ?? '';
 
         subscriptionItem = subscription?.subscription_items?.find(
-          (subItem: SubscriptionItem) => subItem.item_price_id === itemPriceID,
+          (subItem) => subItem.item_price_id === itemPriceID,
         );
-
-        if (subscriptionItem?.quantity! > 1) {
-          let newSubscriptionItem: _subscription.subscription_items_update_for_items_params =
-            {
-              item_price_id: itemPriceID,
-              quantity: subscriptionItem?.quantity! - 1,
-            };
-
-          subscriptionItems?.push(newSubscriptionItem!);
-        } else {
-          subscriptionItems.push(
-            ...subscription?.subscription_items?.filter(
-              (
-                subItem: _subscription.subscription_items_update_for_items_params,
-              ) => subItem.item_price_id !== subscriptionItem?.item_price_id!,
-            )!,
-          );
-
-          params.replace_items_list = true;
-        }
+        if (subscriptionItem?.quantity! <= 1) params.replace_items_list = true;
 
         params.prorate = false;
         break;
       case UpdateSubscriptionAction.ADD_HOST:
         break;
       case UpdateSubscriptionAction.REMOVE_HOST:
+        itemPriceID =
+          subscriptionMetadataItems?.find(
+            (item) => item.id === payload.host?.id,
+          )?.itemPriceID ?? '';
+
+        subscriptionItem = subscription?.subscription_items?.find(
+          (subItem) => subItem.item_price_id === itemPriceID,
+        );
+        if (subscriptionItem?.quantity! <= 1) params.replace_items_list = true;
+
+        params.prorate = false;
         break;
       default:
         break;
     }
 
-    params.subscription_items = subscriptionItems;
+    params.subscription_items = generateSubscriptionItems(type, {
+      subscription,
+      itemPriceID,
+    });
 
-    params.meta_data = updateSubscriptionMetadata(type, {
+    params.meta_data = generateSubscriptionMetadata(type, {
       metadata: subscription?.meta_data,
-      resource: payload.node,
+      resource: payload.node ?? payload.host,
       itemPriceID,
     });
 
