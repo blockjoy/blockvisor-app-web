@@ -9,6 +9,8 @@ import {
   PageTitle,
   Table,
   TableGrid,
+  PageTitleLabel,
+  withQuery,
 } from '@shared/components';
 import { NodeFilters } from './NodeFilters/NodeFilters';
 import { styles } from './nodeList.styles';
@@ -23,9 +25,8 @@ import {
 } from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import IconNode from '@public/assets/icons/app/Node.svg';
 import { ROUTES } from '@shared/index';
-import { withQuery } from '@shared/components';
+import IconNode from '@public/assets/icons/app/Node.svg';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -106,7 +107,17 @@ export const NodeList = () => {
 
   return (
     <>
-      <PageTitle title="Nodes" icon={<IconNode />} />
+      <PageTitle
+        title="Nodes"
+        icon={<IconNode />}
+        label={
+          <PageTitleLabel
+            isLoading={isLoading !== 'finished'}
+            isSuccess={nodeCount > 0}
+            label={`${nodeCount}`}
+          />
+        }
+      />
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters />
         <div css={styles.nodeListWrapper}>

@@ -10,6 +10,7 @@ export type FiltersHeaderProps = {
   isLoading: boolean;
   filtersTotal: number;
   handleFiltersToggle: VoidFunction;
+  hideFilters?: boolean;
   elements?: ReactNode;
   activeView?: View;
   handleActiveView?: (view: View) => void;
@@ -19,6 +20,7 @@ export const FiltersHeader = ({
   isLoading,
   filtersTotal,
   handleFiltersToggle,
+  hideFilters = false,
   elements,
   activeView,
   handleActiveView,
@@ -30,12 +32,14 @@ export const FiltersHeader = ({
       ) : (
         <>
           <div css={styles.wrapper}>
-            <button onClick={handleFiltersToggle} css={styles.filtersButton}>
-              <span css={styles.collapseButton}>
-                <IconClose />
-              </span>
-              <FiltersHeaderIconText filtersTotal={filtersTotal} />
-            </button>
+            {!hideFilters ? (
+              <button onClick={handleFiltersToggle} css={styles.filtersButton}>
+                <span css={styles.collapseButton}>
+                  <IconClose />
+                </span>
+                <FiltersHeaderIconText filtersTotal={filtersTotal} />
+              </button>
+            ) : null}
             {elements ? elements : null}
             <ViewPicker
               type="dropdown"

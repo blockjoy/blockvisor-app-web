@@ -10,7 +10,7 @@ export const styles = {
     color: rgba(255, 255, 255, 0.3);
     font-size: 16px;
 
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       display: flex;
       flex-flow: row nowrap;
       align-items: center;
@@ -57,7 +57,7 @@ export const styles = {
     background: ${theme.colorPrimary};
   `,
   label: css`
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       display: none;
     }
   `,

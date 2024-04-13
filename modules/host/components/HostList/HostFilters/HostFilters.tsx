@@ -1,38 +1,31 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef /* useMemo */ } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { styles } from './HostFilters.styles';
+import { /* Filters, */ FiltersHeader } from '@shared/components';
 import {
-  Skeleton,
-  SkeletonGrid,
-  Scrollbar,
-  SvgIcon,
-  FiltersBlock,
-  FiltersRange,
-  FiltersHeader,
-} from '@shared/components';
-import { hostAtoms, useHostUIContext, useHostFilters } from '@modules/host';
-import IconClose from '@public/assets/icons/common/Close.svg';
-import IconRefresh from '@public/assets/icons/common/Refresh.svg';
+  hostAtoms /*useHostUIContext, useHostFilters*/,
+  HostSorting,
+} from '@modules/host';
 import { blockchainAtoms } from '@modules/node';
+import { styles } from './HostFilters.styles';
 
 export const HostFilters = () => {
-  const hostUIContext = useHostUIContext();
-  const hostUIProps = useMemo(() => {
-    return {
-      setQueryParams: hostUIContext.setQueryParams,
-      queryParams: hostUIContext.queryParams,
-    };
-  }, [hostUIContext]);
+  // const hostUIContext = useHostUIContext();
+  // const hostUIProps = useMemo(() => {
+  //   return {
+  //     setQueryParams: hostUIContext.setQueryParams,
+  //     queryParams: hostUIContext.queryParams,
+  //   };
+  // }, [hostUIContext]);
 
-  const {
-    filters,
-    isDirty,
-    tempFiltersTotal,
-    updateFilters,
-    resetFilters,
-    changeTempFilters,
-  } = useHostFilters(hostUIProps);
+  // const {
+  //   filters,
+  //   isDirty,
+  //   tempFiltersTotal,
+  //   updateFilters,
+  //   resetFilters,
+  //   changeTempFilters,
+  // } = useHostFilters(hostUIProps);
 
   const isCompleted = useRef(false);
 
@@ -45,39 +38,43 @@ export const HostFilters = () => {
     hostAtoms.isFiltersOpen,
   );
 
-  const [openFilterId, setOpenFilterId] = useState('');
+  const [activeView, setActiveView] = useRecoilState(hostAtoms.activeView);
+
+  // const [openFilterId, setOpenFilterId] = useState('');
 
   useEffect(() => {
     if (isMobile) setFiltersOpen(false);
   }, []);
 
-  const hasFiltersApplied = filters.some((filter) => {
-    if (filter.type === 'check') {
-      return filter.list?.some((l: any) => l.isChecked);
-    } else if (filter.type === 'range') {
-      return (
-        filter.min !== filter.values?.[0] || filter.max !== filter.values?.[1]
-      );
-    }
-  });
+  // const hasFiltersApplied = filters.some((filter) => {
+  //   if (filter.type === 'check') {
+  //     return filter.list?.some((l: any) => l.isChecked);
+  //   } else if (filter.type === 'range') {
+  //     return (
+  //       filter.min !== filter.values?.[0] || filter.max !== filter.values?.[1]
+  //     );
+  //   }
+  // });
 
-  const handleResetFilters = () => {
-    resetFilters();
-    setOpenFilterId('');
-  };
+  // const handleResetFilters = () => {
+  //   resetFilters();
+  //   setOpenFilterId('');
+  // };
 
-  const handleFilterBlockClicked = (filterId: string) => {
-    setOpenFilterId(filterId);
-  };
+  // const handleFilterBlockClicked = (filterId: string) => {
+  //   setOpenFilterId(filterId);
+  // };
 
-  const handlePlusMinusClicked = (filterId: string, isOpen: boolean) => {
-    const filterNameValue = isOpen ? '' : filterId;
-    setOpenFilterId(filterNameValue);
-  };
+  // const handlePlusMinusClicked = (filterId: string, isOpen: boolean) => {
+  //   const filterNameValue = isOpen ? '' : filterId;
+  //   setOpenFilterId(filterNameValue);
+  // };
 
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
   };
+
+  const handleActiveView = (view: View) => setActiveView(view);
 
   if (
     hostListLoadingState === 'finished' &&
@@ -91,72 +88,26 @@ export const HostFilters = () => {
     >
       <FiltersHeader
         isLoading={!isCompleted.current}
-        filtersTotal={tempFiltersTotal}
+        hideFilters={true}
+        filtersTotal={0}
         handleFiltersToggle={handleFiltersToggle}
-      />
-
-      {!isCompleted.current ? (
-        isFiltersOpen && (
-          <div css={[styles.skeleton]}>
-            <SkeletonGrid>
-              <Skeleton width="80%" />
-              <Skeleton width="80%" />
-            </SkeletonGrid>
+        elements={
+          <div css={styles.sorting}>
+            <HostSorting />
           </div>
-        )
-      ) : (
-        <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-          <Scrollbar additionalStyles={[styles.filters]}>
-            {filters.map((item: any) => {
-              if (item.type === 'range')
-                return (
-                  <FiltersRange
-                    key={item.id}
-                    filter={item}
-                    isOpen={item.id === openFilterId}
-                    onPlusMinusClicked={handlePlusMinusClicked}
-                    onFilterBlockClicked={handleFilterBlockClicked}
-                  />
-                );
-
-              return (
-                <FiltersBlock
-                  key={item.id}
-                  hasError={false}
-                  isOpen={item.id === openFilterId}
-                  filter={item}
-                  onPlusMinusClicked={handlePlusMinusClicked}
-                  onFilterBlockClicked={handleFilterBlockClicked}
-                  onFilterChanged={changeTempFilters}
-                />
-              );
-            })}
-          </Scrollbar>
-          <button
-            css={styles.updateButton}
-            type="button"
-            disabled={!isDirty}
-            onClick={updateFilters}
-          >
-            <SvgIcon size="12px">
-              <IconRefresh />
-            </SvgIcon>
-            Apply
-          </button>
-          {hasFiltersApplied && (
-            <button
-              css={styles.resetButton}
-              type="button"
-              onClick={handleResetFilters}
-            >
-              <SvgIcon size="18px">
-                <IconClose />
-              </SvgIcon>
-              Reset Filters
-            </button>
-          )}
-        </div>
-      )}
+        }
+        activeView={activeView}
+        handleActiveView={handleActiveView}
+      />
+      {/* <Filters
+        filters={filters}
+        isDirty={isDirty}
+        changeTempFilters={changeTempFilters}
+        isFiltersOpen={isFiltersOpen}
+        resetFilters={resetFilters}
+        updateFilters={updateFilters}
+        isLoading={!isCompleted.current}
+      /> */}
     </div>
   );
 };

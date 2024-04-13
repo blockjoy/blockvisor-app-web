@@ -161,13 +161,17 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
           ) : error ? (
             <div css={[colors.warning]}>{error}</div>
           ) : (
-            <p {...(!selectedItem && { css: styles.placeholder })}>
-              {selectedItem
-                ? renderItem
-                  ? renderItem(selectedItem)
-                  : escapeHtml(selectedItem[itemKey]!)
-                : defaultText || 'Select'}
-            </p>
+            <>
+              {selectedItem ? (
+                renderItem ? (
+                  renderItem(selectedItem)
+                ) : (
+                  <p>{escapeHtml(selectedItem[itemKey]!)}</p>
+                )
+              ) : (
+                <p css={styles.placeholder}>{defaultText || 'Select'}</p>
+              )}
+            </>
           )
         }
         {...(disabled && { disabled })}

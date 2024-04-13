@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { Alert, OrganizationPicker, ViewPicker } from '@shared/components';
+import { Alert, ViewPicker } from '@shared/components';
 import { styles } from './HostListHeader.styles';
 import { hostAtoms, HostSorting, useHostList } from '@modules/host';
 
@@ -43,18 +43,12 @@ export const HostListHeader = () => {
       <Alert
         isRounded
         isSuccess={hostCount > 0}
-        additionalStyles={[styles.alert]}
+        additionalStyles={[styles.count]}
       >
         {hostCount} {hostCount === 1 ? 'Host' : 'Hosts'}
       </Alert>
 
-      <div css={styles.sorting}>
-        <HostSorting />
-      </div>
-
-      <div css={styles.orgPicker}>
-        <OrganizationPicker isRightAligned maxWidth="140px" />
-      </div>
+      <HostSorting />
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <ViewPicker

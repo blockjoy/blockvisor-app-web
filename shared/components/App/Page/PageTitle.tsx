@@ -11,6 +11,7 @@ interface Props {
   childTitle?: string;
   canCopyChild?: boolean;
   icon?: ReactNode;
+  label?: ReactNode;
   onTitleClick?: VoidFunction;
   isLoading?: boolean;
   isAdmin?: boolean;
@@ -22,6 +23,7 @@ export const PageTitle = ({
   childTitle,
   canCopyChild,
   icon,
+  label,
   onTitleClick,
   isLoading,
   isAdmin,
@@ -56,6 +58,7 @@ export const PageTitle = ({
           ) : (
             <Title />
           )}
+          {label ? label : null}
           {isAdmin ? (
             <>
               <span css={styles.separator}>/</span>

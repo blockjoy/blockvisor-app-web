@@ -23,5 +23,4 @@ export const styles = {
       margin-left: 0;
     }
   `,
-  endMessage: css``,
 };

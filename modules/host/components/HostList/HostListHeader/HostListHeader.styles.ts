@@ -18,7 +18,7 @@ export const styles = {
     background: ${theme.colorBackground};
 
     @media ${breakpoints.toXlrg} {
-      gap: 5px;
+      display: none;
     }
   `,
   wrapperInner: css``,
@@ -64,25 +64,7 @@ export const styles = {
       display: none;
     }
   `,
-  sorting: css`
-    @media ${breakpoints.fromXLrg} {
-      margin-left: auto;
-    }
-
-    @media ${breakpoints.toXlrg} {
-      margin-right: auto;
-    }
-  `,
-  alert: css`
-    @media ${breakpoints.toLrg} {
-      height: 38px;
-      padding: 8px 12px 8px 30px;
-      display: flex;
-      align-items: center;
-
-      &::after {
-        left: 12px;
-      }
-    }
+  count: css`
+    line-height: 1.2;
   `,
 };
