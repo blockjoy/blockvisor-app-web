@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
+import { styles as dropdownButtonStyles } from '@shared/components/Buttons/Dropdown/DropdownButton/DropdownButton.styles';
 
 export const styles = {
   wrapper: css`
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       min-width: 180px;
       margin-left: auto;
       display: flex;
@@ -12,7 +13,11 @@ export const styles = {
     }
   `,
   dropdownButton: (theme: ITheme) => css`
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.fromXLrg} {
+      ${dropdownButtonStyles.button(theme)}
+    }
+
+    @media ${breakpoints.toXlrg} {
       display: grid;
       place-items: center;
       background: transparent;
@@ -35,6 +40,10 @@ export const styles = {
           fill: ${theme.colorText};
         }
       }
+
+      .dropdown-caret {
+        display: none;
+      }
     }
   `,
   dropdownMenu: css`
@@ -45,12 +54,12 @@ export const styles = {
     max-width: 180px;
     min-width: 180px;
 
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       top: 36px;
     }
   `,
   buttonText: css`
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       display: none;
     }
   `,

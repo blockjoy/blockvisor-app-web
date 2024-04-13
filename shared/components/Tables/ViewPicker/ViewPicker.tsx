@@ -1,18 +1,19 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { Dropdown, SvgIcon } from '@shared/components';
+import { capitalized } from '@modules/admin';
 import { styles } from './ViewPicker.styles';
 import IconTable from '@public/assets/icons/common/Table.svg';
 import IconGrid from '@public/assets/icons/common/Grid.svg';
-import { Dropdown, SvgIcon } from '@shared/components';
 
 const VIEW_TYPES: ViewItem[] = [
-  { name: 'table', icon: <IconTable /> },
-  { name: 'grid', icon: <IconGrid /> },
+  { id: 'table', name: 'table', icon: <IconTable /> },
+  { id: 'grid', name: 'grid', icon: <IconGrid /> },
 ];
 
 type ViewPickerProps = {
   type?: 'list' | 'dropdown';
   activeView?: View;
-  handleActiveView?: (view: View) => void;
+  handleActiveView?: (item: View) => void;
 };
 
 export const ViewPicker = ({
@@ -27,6 +28,15 @@ export const ViewPicker = ({
   const selectedView =
     VIEW_TYPES.find((view) => view.name === activeView) ?? null;
 
+  const renderItem = useCallback((viewItem: ViewItem) => {
+    return (
+      <>
+        <SvgIcon size="14px">{viewItem.icon}</SvgIcon>
+        <span css={styles.itemLabel}>{capitalized(viewItem.name)}</span>
+      </>
+    );
+  }, []);
+
   return type === 'dropdown' ? (
     <div css={styles.dropdownView}>
       <Dropdown
@@ -34,8 +44,9 @@ export const ViewPicker = ({
         selectedItem={selectedView}
         handleOpen={handleOpen}
         isOpen={isOpen}
-        handleSelected={(view) => handleActiveView?.(view?.name ?? 'table')}
-        renderItem={(view) => <SvgIcon size="14px">{view.icon}</SvgIcon>}
+        handleSelected={(view) => handleActiveView?.(view?.name ?? 'grid')}
+        renderItem={renderItem}
+        renderButtonText={<SvgIcon size="14px">{selectedView?.icon}</SvgIcon>}
         dropdownButtonStyles={[styles.dropdownButton]}
         dropdownMenuStyles={[styles.dropdownMenu]}
         hideDropdownIcon
