@@ -5,7 +5,7 @@ import { Sorting, SortingItem } from '@shared/components';
 import { InitialQueryParams, useNodeUIContext } from '@modules/node';
 
 export const NodeSorting = () => {
-  const items: SortingItem[] = useMemo(
+  const items: SortingItem<NodeSortField>[] = useMemo(
     () => [
       {
         id: 'name-asc',
@@ -55,7 +55,9 @@ export const NodeSorting = () => {
     };
   }, [nodeUIContext]);
 
-  const handleSelect = (item: SortingItem | null) => {
+  const handleSelect = (item: SortingItem<NodeSortField> | null) => {
+    if (!item?.field) return;
+
     const newQueryParams: InitialQueryParams = {
       ...nodeUIProps.queryParams,
 
@@ -73,7 +75,7 @@ export const NodeSorting = () => {
     ) ?? items[0];
 
   return (
-    <Sorting
+    <Sorting<NodeSortField>
       items={items}
       selectedItem={selectedItem}
       handleSelect={handleSelect}

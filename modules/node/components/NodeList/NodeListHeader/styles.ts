@@ -85,4 +85,7 @@ export const styles = {
       fill: ${theme.colorText};
     }
   `,
+  count: css`
+    line-height: 1.2;
+  `,
 };

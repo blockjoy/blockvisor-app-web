@@ -58,14 +58,14 @@ export const styles = {
     left: 0;
     right: auto;
     overflow: hidden;
-    max-width: 38px;
-    min-width: 38px;
+    max-width: 80px;
+    min-width: 80px;
   `,
   dropdownView: css`
     display: flex;
     align-items: center;
 
-    @media ${breakpoints.fromLrg} {
+    @media ${breakpoints.fromXLrg} {
       display: none;
     }
   `,
@@ -74,8 +74,14 @@ export const styles = {
     gap: 4px;
     justify-content: flex-end;
 
-    @media ${breakpoints.toLrg} {
+    @media ${breakpoints.toXlrg} {
       display: none;
     }
+  `,
+  itemLabel: css`
+    position: relative;
+    margin-left: -34px;
+    padding-left: 34px;
+    line-height: 1;
   `,
 };
