@@ -2,14 +2,12 @@ import { styles } from './AdminListTable.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 import { Copy, TableSkeleton } from '@shared/components';
-import { capitalized } from '@modules/admin/utils/capitalized';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
-import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
-import { AdminListFilter } from './AdminListFilter/AdminListFilter';
 import { UIEvent, useState } from 'react';
+import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
 
 type Props = {
   name: string;
@@ -88,31 +86,15 @@ export const AdminListTable = ({
                   key={column.name}
                   css={styles.tableCellWidth(column.width!)}
                 >
-                  <span css={styles.tableHeader}>
-                    {column.sortField ? (
-                      <AdminListTableSortButton
-                        sortField={column.sortField}
-                        sortOrder={column.sortOrder}
-                        activeSortField={activeSortField}
-                        activeSortOrder={activeSortOrder}
-                        onClick={() =>
-                          onSortChanged(column.sortField!, column.sortOrder!)
-                        }
-                      >
-                        {capitalized(column.displayName || column.name)}
-                      </AdminListTableSortButton>
-                    ) : (
-                      capitalized(column.displayName || column.name)
-                    )}
-                    {Boolean(column.filterSettings) && (
-                      <AdminListFilter
-                        filters={columnsWithFilter}
-                        filterSettings={column.filterSettings!}
-                        onChange={onFiltersChanged}
-                        tableScrollPosition={+scrollPosition!}
-                      />
-                    )}
-                  </span>
+                  <AdminListTableHeader
+                    activeSortField={activeSortField}
+                    activeSortOrder={activeSortOrder}
+                    column={column}
+                    filters={columnsWithFilter}
+                    scrollPosition={scrollPosition!}
+                    onFiltersChanged={onFiltersChanged}
+                    onSortChanged={onSortChanged}
+                  />
                 </th>
               ))}
             </tr>

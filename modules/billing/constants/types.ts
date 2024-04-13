@@ -35,10 +35,11 @@ export enum InvoiceStatus {
   pending = 'pending',
 }
 
+// TODO: pick price_variant_id from ItemPrice once it's available in chargebee package
 export type ItemPriceSimple = Pick<
   ItemPrice,
   'id' | 'item_id' | 'price' | 'currency_code' | 'period_unit'
->;
+> & { price_variant_id: string };
 
 export type PromoCode = {
   coupon: Coupon | null;

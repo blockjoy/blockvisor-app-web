@@ -113,6 +113,7 @@ const columns: AdminListColumn[] = [
     name: 'blockHeight',
     width: '190px',
     isVisible: true,
+    sortField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
   },
   {
     name: 'network',
@@ -126,7 +127,7 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'version',
-    width: '180px',
+    width: '210px',
     isVisible: false,
     filterSettings: {
       name: 'version',

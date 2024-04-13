@@ -4,6 +4,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownWrapper,
+  Scrollbar,
 } from '@shared/components';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -71,16 +72,18 @@ export const AdminNodeUpgrade = () => {
           Upgrade
         </AdminHeaderButton>
         <DropdownMenu additionalStyles={styles.menu} isOpen={isOpen}>
-          {versions.map((version) => (
-            <DropdownItem
-              key={version}
-              onButtonClick={() => handleUpgrade(version)}
-              type="button"
-              size="medium"
-            >
-              <div>{version}</div>
-            </DropdownItem>
-          ))}
+          <Scrollbar additionalStyles={[styles.scrollbar]}>
+            {versions.map((version) => (
+              <DropdownItem
+                key={version}
+                onButtonClick={() => handleUpgrade(version)}
+                type="button"
+                size="medium"
+              >
+                <div>{version}</div>
+              </DropdownItem>
+            ))}
+          </Scrollbar>
         </DropdownMenu>
       </DropdownWrapper>
     </div>

@@ -132,7 +132,7 @@ const selectedItemPrice = selector<ItemPriceSimple | null>({
 
     const itemPrice = itemPrices.find(
       (itemPrice: ItemPriceSimple) =>
-        itemPrice.item_id === selectedSKU &&
+        `${itemPrice.item_id}-${itemPrice.price_variant_id}` === selectedSKU &&
         itemPrice.period_unit === billingPeriodUnit,
     );
 

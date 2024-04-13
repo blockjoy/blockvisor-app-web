@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 import { Command } from '@modules/grpc/library/blockjoy/v1/command';
 import { styles } from './CommandsView.styles';
 import { CommandView } from './CommandView/CommandView';
-import { Alert } from '@shared/components';
+import { Alert, LogsWrapper } from '@shared/components';
 import { authSelectors } from '@modules/auth';
 
 type CommandsViewProps = {
@@ -26,11 +26,11 @@ export const CommandsView = ({ commands }: CommandsViewProps) => {
   return (
     <div css={styles.wrapper}>
       {canViewCommands || (isSuperUser && canViewCommandsAsSuperUser) ? (
-        <>
+        <LogsWrapper>
           {commands?.map((command: Command) => (
             <CommandView key={command.id} command={command} />
           ))}
-        </>
+        </LogsWrapper>
       ) : (
         <Alert>You don't have permission to view the node commands.</Alert>
       )}

@@ -7,8 +7,7 @@ export const styles = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-left: auto;
-    margin-right: 4px;
+    margin-left: 6px;
   `,
   dropdownButton: (theme: ITheme) => css`
     position: relative;

@@ -1,27 +1,14 @@
 import { NodeJob } from '@modules/grpc/library/blockjoy/v1/node';
-import { Table } from '@shared/components';
-import { css } from '@emotion/react';
-
-const styles = {
-  log: css`
-    line-height: 1.65;
-  `,
-};
+import { Alert, Log, LogsWrapper } from '@shared/components';
 
 export const NodeViewJobViewLogs = ({ job }: { job: NodeJob }) => {
-  const rows = job.logs.map((log, index) => ({
-    key: `row-${index}`,
-    cells: [
-      {
-        key: '1',
-        component: <p css={styles.log}>{log}</p>,
-      },
-    ],
-  }));
-
   return job.logs.length ? (
-    <Table isLoading={'finished'} rows={rows} />
+    <LogsWrapper>
+      {job.logs.map((job) => (
+        <Log>{job}</Log>
+      ))}
+    </LogsWrapper>
   ) : (
-    <p>No logs</p>
+    <Alert>No logs</Alert>
   );
 };

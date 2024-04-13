@@ -66,7 +66,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const [activeView, setActiveView] =
     useState<'list' | 'action'>(defaultActiveView);
 
-  const { loading, onSubmit } = usePaymentMethodForm();
+  const { paymentMethodLoadingState, onSubmit } = usePaymentMethodForm();
   const { assignPaymentRole } = useCustomer();
   const { addBillingAddress } = useBillingAddress();
   const { getSubscription } = useSubscription();
@@ -76,7 +76,6 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   useEffect(() => {
     return () => {
       setError(null);
-      setPaymentMethodLoadingState('initializing');
     };
   }, []);
 
@@ -160,7 +159,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
     (value) => value.trim() !== '',
   );
 
-  const isLoading = loading || isProcessing;
+  const isLoading = paymentMethodLoadingState !== 'finished' || isProcessing;
 
   return (
     <div css={containers.mediumSmall}>
@@ -238,7 +237,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
         <Button
           loading={isLoading}
           disabled={
-            loading ||
+            paymentMethodLoadingState !== 'finished' ||
             (activeView === 'action' && !isValidInfoForm) ||
             !isValidHolderForm
           }

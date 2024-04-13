@@ -19,3 +19,8 @@ export const sidebarOpen = atom<boolean>({
   default: false,
   effects: [localStorageEffect('sidebarOpen')],
 });
+
+export const sidebarOpenMobile = atom<boolean>({
+  key: 'sidebarOpenMobile',
+  default: false,
+});

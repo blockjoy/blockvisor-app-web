@@ -4319,10 +4319,10 @@ character-reference-invalid@^1.0.0:
   resolved "https://registry.yarnpkg.com/character-reference-invalid/-/character-reference-invalid-1.1.4.tgz#083329cda0eae272ab3dbbf37e9a382c13af1560"
   integrity sha512-mKKUkUbhPpQlCOfIuZkvSEgktjPFIsZKRRbC6KWVEMvlzblj3i3asQv5ODsrwt0N3pHAEvjP8KTQPHkp0+6jOg==
 
-chargebee-typescript@^2.20.1:
-  version "2.28.0"
-  resolved "https://registry.yarnpkg.com/chargebee-typescript/-/chargebee-typescript-2.28.0.tgz#9c09dd6a6845a6bcdc60221922ea05f1197652e7"
-  integrity sha512-ILhQU3USZSdhjHlpzYhs/6jT+vN0/oRqed47sKfhayWtCGYpAYJfX+11OyOwNd8blQnvNbWf8g7TFgdwU74dBA==
+chargebee-typescript@^2.31.0:
+  version "2.31.0"
+  resolved "https://registry.yarnpkg.com/chargebee-typescript/-/chargebee-typescript-2.31.0.tgz#dcfaf76703f76f44f26a63bffddc44ec3603ce41"
+  integrity sha512-97CCQHIaq6LIVXMKD3PN04rZc2cfGIvk0CalRvuoTDkN6YQv1G7P1CrlNM2pxQSDVwpuPYObIN/QJiVCoaBGOw==
   dependencies:
     q ">=1.0.1"
 

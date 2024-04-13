@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
@@ -34,9 +34,7 @@ export const PaymentMethodFormSimple = ({
 }: PaymentMethodFormProps) => {
   const billingAddress = useRecoilValue(billingSelectors.billingAddress);
   const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
-  const setPaymentMethodLoadingState = useSetRecoilState(
-    billingAtoms.paymentMethodLoadingState,
-  );
+  const [isLoading, setIsLoading] = useState(false);
 
   const cardRef = useRef<any>(null);
 
@@ -57,13 +55,12 @@ export const PaymentMethodFormSimple = ({
 
   const [isDefaultAddress, setIsDefaultAddress] = useState<boolean>(false);
 
-  const { loading, onSubmit } = usePaymentMethodForm();
+  const { paymentMethodLoadingState, onSubmit } = usePaymentMethodForm();
   const { addBillingAddress } = useBillingAddress();
 
   useEffect(() => {
     return () => {
       setError(null);
-      setPaymentMethodLoadingState('initializing');
     };
   }, []);
 
@@ -72,9 +69,15 @@ export const PaymentMethodFormSimple = ({
       await addBillingAddress(customerId, { ...billingInfo, ...cardHolder });
 
     handleHide();
+
+    handleSubmit();
+
+    setIsLoading(false);
   };
 
   const handleCreatePaymentMethod = async () => {
+    setIsLoading(true);
+
     const additionalData: { billingAddress: BillingAddressAdditionalData } = {
       billingAddress: {
         firstName: cardHolder.firstName,
@@ -91,10 +94,10 @@ export const PaymentMethodFormSimple = ({
 
     try {
       await onSubmit(cardRef, additionalData, handleSucces);
-      handleSubmit();
       toast.success('Payment method added');
     } catch (error: any) {
       console.log('Error while adding a payment method', error);
+      setIsLoading(false);
     }
   };
 
@@ -108,6 +111,8 @@ export const PaymentMethodFormSimple = ({
   const isValidInfoForm = Object.values(billingInfo).every(
     (value) => value.trim() !== '',
   );
+
+  const loading = paymentMethodLoadingState !== 'finished' || isLoading;
 
   return (
     <div css={containers.mediumSmall}>
