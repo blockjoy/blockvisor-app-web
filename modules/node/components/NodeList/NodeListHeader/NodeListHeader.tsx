@@ -58,7 +58,11 @@ export const NodeListHeader = () => {
       {isLoading ? (
         <Skeleton width="115px" />
       ) : (
-        <Alert isRounded isSuccess={nodeCount > 0}>
+        <Alert
+          isRounded
+          isSuccess={nodeCount > 0}
+          additionalStyles={[styles.count]}
+        >
           {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
         </Alert>
       )}

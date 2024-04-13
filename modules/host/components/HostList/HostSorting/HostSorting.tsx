@@ -5,7 +5,7 @@ import { Sorting, SortingItem } from '@shared/components';
 import { InitialQueryParams, useHostUIContext } from '@modules/host';
 
 export const HostSorting = () => {
-  const items: SortingItem[] = useMemo(
+  const items: SortingItem<HostSortField>[] = useMemo(
     () => [
       {
         id: 'name-asc',
@@ -43,7 +43,9 @@ export const HostSorting = () => {
     };
   }, [hostUIContext]);
 
-  const handleSelect = (item: SortingItem | null) => {
+  const handleSelect = (item: SortingItem<HostSortField> | null) => {
+    if (!item?.field) return;
+
     const newQueryParams: InitialQueryParams = {
       ...hostUIProps.queryParams,
 
@@ -61,7 +63,7 @@ export const HostSorting = () => {
     ) ?? items[0];
 
   return (
-    <Sorting
+    <Sorting<HostSortField>
       items={items}
       selectedItem={selectedItem}
       handleSelect={handleSelect}
