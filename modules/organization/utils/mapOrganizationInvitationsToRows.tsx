@@ -40,7 +40,7 @@ export const mapOrganizationInvitationsToRows = (
     methods?.action(Action.revoke, { invitationId, email });
   };
 
-  const headers = [
+  const headers: TableHeader[] = [
     {
       name: 'Email',
       key: '1',
@@ -48,7 +48,6 @@ export const mapOrganizationInvitationsToRows = (
       minWidth: '300px',
       maxWidth: '300px',
       dataField: 'email',
-      sort: true,
     },
     {
       name: '',

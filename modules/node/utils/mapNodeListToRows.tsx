@@ -24,7 +24,6 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       key: '2',
       width: '300px',
       maxWidth: '300px',
-      sort: true,
       dataField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
     },
     {
@@ -32,14 +31,12 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       key: '3',
       width: '200px',
       maxWidth: '200px',
-      sort: true,
       dataField: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
     },
     {
       name: 'Status',
       key: '4',
       width: '400px',
-      sort: true,
       dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     },
   ];

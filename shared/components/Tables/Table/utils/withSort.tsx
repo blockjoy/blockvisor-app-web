@@ -1,12 +1,15 @@
 import { ComponentType } from 'react';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { BaseQueryParams } from '@shared/common/common';
 
-export const withSort = (Component: ComponentType) => {
-  return ({ setQueryParams, queryParams, ...props }: any) => {
+export const withSort = <T extends BaseQueryParams>(
+  Component: ComponentType<TableProps<T>>,
+) => {
+  return ({ setQueryParams, queryParams, ...props }: TableProps<T>) => {
     const handleSort = (key: any) => {
       const updateSorting = () => {
         const sortingMatch = queryParams?.sort?.find(
-          (singleSort: any) => singleSort.field === key,
+          (singleSort) => singleSort.field === key,
         );
 
         const sortOrder =
@@ -28,11 +31,15 @@ export const withSort = (Component: ComponentType) => {
         sort: updateSorting(),
       };
 
-      setQueryParams(updatedQueryParams);
+      setQueryParams?.(updatedQueryParams as T);
     };
 
     return (
-      <Component {...props} handleSort={handleSort} queryParams={queryParams} />
+      <Component
+        {...(props as TableProps<T>)}
+        handleSort={handleSort}
+        queryParams={queryParams}
+      />
     );
   };
 };
