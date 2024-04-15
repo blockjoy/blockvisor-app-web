@@ -4,49 +4,46 @@ import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { Sorting, SortingItem } from '@shared/components';
 import { InitialQueryParams, useNodeUIContext } from '@modules/node';
 
-export const NodeSorting = () => {
-  const items: SortingItem<NodeSortField>[] = useMemo(
-    () => [
-      {
-        id: 'name-asc',
-        name: 'Name: A-Z',
-        field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
-        order: SortOrder.SORT_ORDER_ASCENDING,
-      },
-      {
-        id: 'name-desc',
-        name: 'Name: Z-A',
-        field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
-        order: SortOrder.SORT_ORDER_DESCENDING,
-      },
-      {
-        id: 'date-desc',
-        name: 'Newest first',
-        field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
-        order: SortOrder.SORT_ORDER_DESCENDING,
-      },
-      {
-        id: 'date-asc',
-        name: 'Oldest first',
-        field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
-        order: SortOrder.SORT_ORDER_ASCENDING,
-      },
-      {
-        id: 'status-asc',
-        name: 'Status: A-Z',
-        field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
-        order: SortOrder.SORT_ORDER_ASCENDING,
-      },
-      {
-        id: 'status-desc',
-        name: 'Status: Z-A',
-        field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
-        order: SortOrder.SORT_ORDER_DESCENDING,
-      },
-    ],
-    [],
-  );
+const items: SortingItem<NodeSortField>[] = [
+  {
+    id: 'name-asc',
+    name: 'Name: A-Z',
+    field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+    order: SortOrder.SORT_ORDER_ASCENDING,
+  },
+  {
+    id: 'name-desc',
+    name: 'Name: Z-A',
+    field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+    order: SortOrder.SORT_ORDER_DESCENDING,
+  },
+  {
+    id: 'date-desc',
+    name: 'Newest first',
+    field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
+    order: SortOrder.SORT_ORDER_DESCENDING,
+  },
+  {
+    id: 'date-asc',
+    name: 'Oldest first',
+    field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
+    order: SortOrder.SORT_ORDER_ASCENDING,
+  },
+  {
+    id: 'status-asc',
+    name: 'Status: A-Z',
+    field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    order: SortOrder.SORT_ORDER_ASCENDING,
+  },
+  {
+    id: 'status-desc',
+    name: 'Status: Z-A',
+    field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    order: SortOrder.SORT_ORDER_DESCENDING,
+  },
+];
 
+export const NodeSorting = () => {
   const nodeUIContext = useNodeUIContext();
   const nodeUIProps = useMemo(() => {
     return {

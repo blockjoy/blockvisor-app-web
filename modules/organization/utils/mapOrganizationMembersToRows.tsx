@@ -51,7 +51,7 @@ export const mapOrganizationMembersToRows = (
     methods?.action(Action.remove, { userId, orgId, email });
   };
 
-  const headers = [
+  const headers: TableHeader[] = [
     {
       name: 'Email',
       key: '1',
@@ -59,7 +59,6 @@ export const mapOrganizationMembersToRows = (
       minWidth: '300px',
       maxWidth: '300px',
       dataField: 'email',
-      sort: true,
     },
     {
       name: '',

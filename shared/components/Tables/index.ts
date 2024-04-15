@@ -12,6 +12,4 @@ export * from './Table/utils/withQuery';
 export * from './Table/utils/paginate';
 export * from './Table/utils/sort';
 export * from './Table/utils/filter';
-export * from './Filtering/Filter';
-export * from './Filtering/Filtering';
 export * from './ViewPicker/ViewPicker';

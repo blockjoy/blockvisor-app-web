@@ -3,7 +3,7 @@ import { Sort } from '@shared/common/common';
 
 export type InitialQueryParams = {
   pagination: Pagination;
-  sort: Sort;
+  sort: Sort[];
 };
 
 export const initialQueryParams: InitialQueryParams = {
@@ -12,5 +12,5 @@ export const initialQueryParams: InitialQueryParams = {
     itemsPerPage: 6,
   },
 
-  sort: { order: SortOrder.SORT_ORDER_ASCENDING, field: 'email' },
+  sort: [{ order: SortOrder.SORT_ORDER_ASCENDING, field: 'email' }],
 };
