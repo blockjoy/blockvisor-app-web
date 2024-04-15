@@ -4,37 +4,34 @@ import { HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
 import { Sorting, SortingItem } from '@shared/components';
 import { InitialQueryParams, useHostUIContext } from '@modules/host';
 
-export const HostSorting = () => {
-  const items: SortingItem<HostSortField>[] = useMemo(
-    () => [
-      {
-        id: 'name-asc',
-        name: 'Name: A-Z',
-        field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
-        order: SortOrder.SORT_ORDER_ASCENDING,
-      },
-      {
-        id: 'name-desc',
-        name: 'Name: Z-A',
-        field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
-        order: SortOrder.SORT_ORDER_DESCENDING,
-      },
-      {
-        id: 'date-desc',
-        name: 'Newest first',
-        field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
-        order: SortOrder.SORT_ORDER_DESCENDING,
-      },
-      {
-        id: 'date-asc',
-        name: 'Oldest first',
-        field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
-        order: SortOrder.SORT_ORDER_ASCENDING,
-      },
-    ],
-    [],
-  );
+const items: SortingItem<HostSortField>[] = [
+  {
+    id: 'name-asc',
+    name: 'Name: A-Z',
+    field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+    order: SortOrder.SORT_ORDER_ASCENDING,
+  },
+  {
+    id: 'name-desc',
+    name: 'Name: Z-A',
+    field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+    order: SortOrder.SORT_ORDER_DESCENDING,
+  },
+  {
+    id: 'date-desc',
+    name: 'Newest first',
+    field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
+    order: SortOrder.SORT_ORDER_DESCENDING,
+  },
+  {
+    id: 'date-asc',
+    name: 'Oldest first',
+    field: HostSortField.HOST_SORT_FIELD_CREATED_AT,
+    order: SortOrder.SORT_ORDER_ASCENDING,
+  },
+];
 
+export const HostSorting = () => {
   const hostUIContext = useHostUIContext();
   const hostUIProps = useMemo(() => {
     return {

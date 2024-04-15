@@ -4,7 +4,7 @@ export type TableRowLoaderProps = {
   length?: number;
 };
 
-const TableRowLoader = ({ length }: TableRowLoaderProps) => {
+export const TableRowLoader = ({ length }: TableRowLoaderProps) => {
   return (
     <>
       {[...Array(length)].map((_, index) => {
@@ -32,5 +32,3 @@ const TableRowLoader = ({ length }: TableRowLoaderProps) => {
     </>
   );
 };
-
-export default TableRowLoader;
