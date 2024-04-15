@@ -4,6 +4,7 @@ import {
   FiltersBlock,
   FiltersRange,
   Scrollbar,
+  Search,
   Skeleton,
   SkeletonGrid,
   SvgIcon,
@@ -21,6 +22,8 @@ type FiltersProps = {
   updateFilters: VoidFunction;
   isDirty: boolean;
   isLoading: boolean;
+  handleSearch?: (value: string) => void;
+  searchValue?: string;
 };
 
 export const Filters = ({
@@ -31,6 +34,8 @@ export const Filters = ({
   updateFilters,
   isDirty,
   isLoading,
+  handleSearch,
+  searchValue,
 }: FiltersProps) => {
   const hasBlockchainError = useRecoilValue(
     blockchainSelectors.blockchainsHasError,
@@ -69,55 +74,65 @@ export const Filters = ({
         )
       ) : (
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-          <Scrollbar additionalStyles={[styles.filters]}>
-            {filters.map((item) => {
-              if (item.type === 'range')
+          <form css={styles.form}>
+            {handleSearch ? (
+              <Search
+                onInput={handleSearch}
+                value={searchValue}
+                size="small"
+                additionalStyles={styles.search}
+              />
+            ) : null}
+            <Scrollbar additionalStyles={[styles.filters]}>
+              {filters.map((item) => {
+                if (item.type === 'range')
+                  return (
+                    <FiltersRange
+                      key={item.id}
+                      filter={item}
+                      isOpen={item.id === openFilterId}
+                      onPlusMinusClicked={handlePlusMinusClicked}
+                      onFilterBlockClicked={handleFilterBlockClicked}
+                    />
+                  );
+
                 return (
-                  <FiltersRange
+                  <FiltersBlock
                     key={item.id}
-                    filter={item}
+                    hasError={item.id === 'blockchain' && hasBlockchainError}
                     isOpen={item.id === openFilterId}
+                    filter={item}
                     onPlusMinusClicked={handlePlusMinusClicked}
                     onFilterBlockClicked={handleFilterBlockClicked}
+                    onFilterChanged={changeTempFilters}
                   />
                 );
-
-              return (
-                <FiltersBlock
-                  key={item.id}
-                  hasError={item.id === 'blockchain' && hasBlockchainError}
-                  isOpen={item.id === openFilterId}
-                  filter={item}
-                  onPlusMinusClicked={handlePlusMinusClicked}
-                  onFilterBlockClicked={handleFilterBlockClicked}
-                  onFilterChanged={changeTempFilters}
-                />
-              );
-            })}
-          </Scrollbar>
-          <button
-            css={styles.updateButton}
-            type="button"
-            disabled={!isDirty}
-            onClick={updateFilters}
-          >
-            <SvgIcon size="12px">
-              <IconRefresh />
-            </SvgIcon>
-            Apply
-          </button>
-          {hasFiltersApplied && (
+              })}
+            </Scrollbar>
             <button
-              css={styles.resetButton}
-              type="button"
-              onClick={handleResetFilters}
+              css={styles.updateButton}
+              type="submit"
+              disabled={!isDirty}
+              onClick={updateFilters}
             >
-              <SvgIcon size="18px">
-                <IconClose />
+              <SvgIcon size="12px">
+                <IconRefresh />
               </SvgIcon>
-              Reset Filters
+              Apply
             </button>
-          )}
+            {hasFiltersApplied && (
+              <button
+                css={styles.resetButton}
+                type="button"
+                onClick={handleResetFilters}
+              >
+                <SvgIcon size="18px">
+                  <IconClose />
+                </SvgIcon>
+                Reset Filters
+              </button>
+            )}
+          </form>
         </div>
       )}
     </>
