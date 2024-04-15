@@ -1,10 +1,44 @@
+import { useMemo } from 'react';
 import { useRecoilState } from 'recoil';
-import { Alert, ViewPicker } from '@shared/components';
+import { Alert, Search, ViewPicker } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import { hostAtoms, HostSorting, useHostList } from '@modules/host';
+import {
+  hostAtoms,
+  hostSelectors,
+  HostSorting,
+  useHostList,
+  useHostUIContext,
+} from '@modules/host';
 
 export const HostListHeader = () => {
+  const hostUIContext = useHostUIContext();
+  const hostUIProps = useMemo(() => {
+    return {
+      setQueryParams: hostUIContext.setQueryParams,
+      queryParams: hostUIContext.queryParams,
+    };
+  }, [hostUIContext]);
+
   const [activeView, setactiveView] = useRecoilState(hostAtoms.activeView);
+
+  const [searchQuery, setSearchQuery] = useRecoilState(
+    hostSelectors.filtersSearchQuery,
+  );
+
+  const handleSearch = (keyword: string) => {
+    setSearchQuery(keyword);
+
+    const newQueryParams = {
+      ...hostUIProps.queryParams,
+      filter: {
+        ...hostUIProps.queryParams.filter,
+        keyword,
+      },
+    };
+
+    newQueryParams.pagination.currentPage = 0;
+    hostUIProps.setQueryParams(newQueryParams);
+  };
 
   // const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
   //   hostAtoms.isFiltersOpen,
@@ -40,6 +74,7 @@ export const HostListHeader = () => {
           )}
         </div>
       )} */}
+      <Search version="instant" onSearch={handleSearch} value={searchQuery} />
       <Alert
         isRounded
         isSuccess={hostCount > 0}

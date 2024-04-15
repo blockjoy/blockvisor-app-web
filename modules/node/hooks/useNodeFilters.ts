@@ -2,16 +2,13 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
-import {
-  initialFilter,
-  NodeUIProps,
-  nodeSelectors,
-  nodeAtoms,
-} from '@modules/node';
+import { NodeUIProps, nodeSelectors, nodeAtoms } from '@modules/node';
+import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 
 type UseNodeFiltersHook = {
   isDirty: boolean;
   filters: FilterItem[];
+  tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
   updateFilters: VoidFunction;
@@ -21,51 +18,37 @@ type UseNodeFiltersHook = {
 export const useNodeFilters = (
   nodeUIProps: NodeUIProps,
 ): UseNodeFiltersHook => {
-  const [filtersBlockchainSelectedIds, setFiltersBlockchainSelectedIds] =
-    useRecoilState(nodeSelectors.filtersBlockchainSelectedIds);
-  const [filtersStatusSelectedIds, setFiltersStatusSelectedIds] =
-    useRecoilState(nodeSelectors.filtersStatusSelectedIds);
-  const [filtersTypeSelectedIds, setFiltersTypeSelectedIds] = useRecoilState(
-    nodeSelectors.filtersTypeSelectedIds,
-  );
+  const [filters, setFilters] = useRecoilState(nodeAtoms.filters);
+  const [tempFilters, setTempFilters] = useState<UINodeFilterCriteria>(filters);
 
-  const [tempBlockchainSelectedIds, setTempBlockchainSelectedIds] = useState<
-    string[]
-  >(filtersBlockchainSelectedIds);
-  const [tempStatusSelectedIds, setTempStatusSelectedIds] = useState<string[]>(
-    filtersStatusSelectedIds,
-  );
-  const [tempTypeSelectedIds, setTempTypeSelectedIds] = useState<string[]>(
-    filtersTypeSelectedIds,
-  );
-
+  const resetInitialFilters = useResetRecoilState(nodeAtoms.filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     nodeAtoms.filtersTempTotal,
   );
 
   const filtersBlockchainAll = useRecoilValue(
-    nodeSelectors.filtersBlockchainAll(tempBlockchainSelectedIds),
+    nodeSelectors.filtersBlockchainAll(tempFilters.blockchain!),
   );
   const filtersStatusAll = useRecoilValue(
-    nodeSelectors.filtersStatusAll(tempStatusSelectedIds),
+    nodeSelectors.filtersStatusAll(tempFilters.nodeStatus!),
   );
-  const filtersTypeAll = useRecoilValue(
-    nodeSelectors.filtersTypeAll(tempTypeSelectedIds),
+  // const filtersTypeAll = useRecoilValue(
+  //   nodeSelectors.filtersTypeAll(tempFilters.nodeType!),
+  // );
+  const filtersNetworksAll = useRecoilValue(
+    nodeSelectors.filtersNetworksAll(tempFilters.networks!),
   );
-
-  const resetInitialFilters = useResetRecoilState(nodeAtoms.filters);
 
   useEffect(() => {
-    const total = [
-      tempBlockchainSelectedIds.length,
-      tempStatusSelectedIds.length,
-      tempTypeSelectedIds.length,
-    ].filter(Boolean).length;
+    const total = Object.values(tempFilters).reduce(
+      (acc, current) => acc + (current.length ? 1 : 0),
+      0,
+    );
 
     setTempFiltersTotal(total);
-  }, [tempBlockchainSelectedIds, tempStatusSelectedIds, tempTypeSelectedIds]);
+  }, [tempFilters]);
 
-  const applyFilter = (values: UINodeFilterCriteria = initialFilter) => {
+  const applyFilter = (values: UINodeFilterCriteria = NODE_FILTERS_DEFAULT) => {
     const newQueryParams = {
       ...nodeUIProps.queryParams,
       filter: {
@@ -81,30 +64,26 @@ export const useNodeFilters = (
   };
 
   const updateFilters = () => {
-    setFiltersBlockchainSelectedIds(tempBlockchainSelectedIds);
-    setFiltersStatusSelectedIds(tempStatusSelectedIds);
-    setFiltersTypeSelectedIds(tempTypeSelectedIds);
+    setFilters({
+      ...filters,
+      ...tempFilters,
+    });
 
-    const params: UINodeFilterCriteria = {
-      blockchain: tempBlockchainSelectedIds,
-      nodeStatus: tempStatusSelectedIds,
-      nodeType: tempTypeSelectedIds,
-    };
-
-    applyFilter(params);
+    applyFilter(tempFilters);
   };
 
   const resetFilters = () => {
     resetInitialFilters();
 
-    setTempBlockchainSelectedIds([]);
-    setTempStatusSelectedIds([]);
-    setTempTypeSelectedIds([]);
+    setTempFilters((currentTempFilters) => ({
+      ...currentTempFilters,
+      ...NODE_FILTERS_DEFAULT,
+    }));
 
     applyFilter();
   };
 
-  const changeTempFilters = (type: string, value: string) => {
+  const changeTempFilters = (key: string, value: string) => {
     const updateFunc = (currentItems: string[]) => {
       const index = currentItems.indexOf(value);
 
@@ -112,59 +91,51 @@ export const useNodeFilters = (
       else return [...currentItems, value];
     };
 
-    switch (type) {
-      case 'blockchain':
-        setTempBlockchainSelectedIds(updateFunc);
-        return;
-      case 'nodeStatus':
-        setTempStatusSelectedIds(updateFunc);
-        return;
-      case 'nodeType':
-        setTempTypeSelectedIds(updateFunc);
-        return;
-      default:
-        return;
-    }
+    setTempFilters((currentTempFilters) => ({
+      ...currentTempFilters,
+      [key]: key === 'keyword' ? value : updateFunc(currentTempFilters[key]),
+    }));
   };
 
-  const isDirty = !isEqual(
-    [
-      filtersBlockchainSelectedIds,
-      filtersStatusSelectedIds,
-      filtersTypeSelectedIds,
-    ],
-    [tempBlockchainSelectedIds, tempStatusSelectedIds, tempTypeSelectedIds],
-  );
+  const isDirty = !isEqual(filters, tempFilters);
 
-  const filters: FilterItem[] = [
+  const filtersAll: FilterItem[] = [
     {
       id: 'blockchain',
       name: 'Blockchain',
       disabled: false,
-      count: tempBlockchainSelectedIds.length,
+      count: tempFilters.blockchain?.length,
       list: filtersBlockchainAll,
     },
     {
       id: 'nodeStatus',
-      name: 'App Status',
+      name: 'Node Status',
       disabled: false,
-      count: tempStatusSelectedIds.length,
+      count: tempFilters.nodeStatus?.length,
       list: filtersStatusAll,
     },
+    // {
+    //   id: 'nodeType',
+    //   name: 'Node Type',
+    //   disabled: false,
+    //   count: tempFilters.nodeType?.length,
+    //   list: filtersTypeAll,
+    // },
     {
-      id: 'nodeType',
-      name: 'Node Type',
+      id: 'networks',
+      name: 'Network',
       disabled: false,
-      count: tempTypeSelectedIds.length,
-      list: filtersTypeAll,
+      count: tempFilters.networks?.length,
+      list: filtersNetworksAll,
     },
   ];
 
   return {
     isDirty,
 
-    filters,
+    filters: filtersAll,
 
+    tempSearchQuery: tempFilters.keyword ?? '',
     tempFiltersTotal,
 
     changeTempFilters,

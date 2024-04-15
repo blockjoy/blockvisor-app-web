@@ -1,4 +1,4 @@
-import { AdminHeaderButton } from '@modules/admin';
+import { AdminHeaderButton } from '@modules/admin/components';
 import { blockchainClient, nodeClient } from '@modules/grpc';
 import {
   DropdownItem,

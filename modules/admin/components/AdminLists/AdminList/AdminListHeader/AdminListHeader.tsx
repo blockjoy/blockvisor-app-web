@@ -1,9 +1,9 @@
 import { AdminHeader } from '@modules/admin/components/AdminHeader/AdminHeader';
-import { AdminSearch } from '@modules/admin/components/AdminSearch/AdminSearch';
 import { AdminListHeaderColumnPicker } from './AdminListHeaderColumnPicker/AdminListHeaderColumnPicker';
 import { styles } from './AdminListHeader.styles';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import IconFilterClear from '@public/assets/icons/common/FilterClear.svg';
+import { Search } from '@shared/components';
 
 type Props = {
   name: string;
@@ -40,7 +40,11 @@ export const AdminListHeader = ({
 
   return (
     <AdminHeader name={name}>
-      <AdminSearch onSearch={onSearch} placeholder="Quick search" />
+      <Search
+        version="instant"
+        onSearch={onSearch}
+        placeholder="Quick search"
+      />
       <div css={styles.buttons}>
         <AdminListHeaderColumnPicker
           columns={columns}

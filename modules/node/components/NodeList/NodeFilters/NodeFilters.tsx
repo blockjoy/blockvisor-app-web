@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { Filters, FiltersHeader } from '@shared/components';
+import { Filters, FiltersHeader, Search } from '@shared/components';
 import {
   nodeAtoms,
   useNodeFilters,
@@ -24,6 +24,7 @@ export const NodeFilters = () => {
   const {
     filters,
     isDirty,
+    tempSearchQuery,
     tempFiltersTotal,
     updateFilters,
     resetFilters,
@@ -51,6 +52,8 @@ export const NodeFilters = () => {
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
   };
+
+  const handleSearch = (value: string) => changeTempFilters('keyword', value);
 
   const handleActiveView = (view: View) => setActiveView(view);
 
@@ -80,6 +83,14 @@ export const NodeFilters = () => {
         activeView={activeView}
         handleActiveView={handleActiveView}
       />
+      <form css={styles.form}>
+        <Search
+          onInput={handleSearch}
+          value={tempSearchQuery}
+          size="small"
+          additionalStyles={styles.search}
+        />
+      </form>
       <Filters
         filters={filters}
         isDirty={isDirty}

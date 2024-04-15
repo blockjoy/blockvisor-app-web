@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { styles } from './AdminDetailHeaderDelete.styles';
-import { AdminHeaderButton } from '@modules/admin';
+import { AdminHeaderButton } from '@modules/admin/components';
 import { ButtonSpinner } from '@shared/components';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 

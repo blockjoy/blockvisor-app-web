@@ -2,7 +2,10 @@ import { openGrafanaUrl } from '@modules/admin/utils';
 import { Skeleton } from '@shared/components';
 import { AdminHeader } from '../../../AdminHeader/AdminHeader';
 import { styles } from './AdminDetailHeader.styles';
-import { AdminDetailHeaderDelete, AdminHeaderButton } from '@modules/admin';
+import {
+  AdminDetailHeaderDelete,
+  AdminHeaderButton,
+} from '@modules/admin/components';
 import IconCopy from '@public/assets/icons/common/Copy.svg';
 import IconPencil from '@public/assets/icons/common/Pencil.svg';
 import IconBinoculars from '@public/assets/icons/common/Binoculars.svg';

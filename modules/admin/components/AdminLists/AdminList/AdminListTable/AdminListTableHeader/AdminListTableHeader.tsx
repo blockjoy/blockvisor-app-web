@@ -1,8 +1,8 @@
+import { capitalized } from '@modules/admin';
 import {
   AdminListFilter,
   AdminListTableSortButton,
-  capitalized,
-} from '@modules/admin';
+} from '@modules/admin/components';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRef } from 'react';
 import { styles } from './AdminListTableHeader.styles';

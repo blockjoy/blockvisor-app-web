@@ -59,12 +59,7 @@ const isFiltersOpen = atom<boolean>({
 
 const filters = atom<UIHostFilterCriteria>({
   key: 'host.filters',
-  default: {
-    hostStatus: [],
-    hostCPU: HOST_FILTERS_DEFAULT.hostCPU,
-    hostMemory: HOST_FILTERS_DEFAULT.hostMemory,
-    hostSpace: HOST_FILTERS_DEFAULT.hostSpace,
-  },
+  default: HOST_FILTERS_DEFAULT,
   effects: [localStorageEffect('host.filters')],
 });
 

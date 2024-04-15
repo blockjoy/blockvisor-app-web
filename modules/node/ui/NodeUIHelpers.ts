@@ -1,10 +1,10 @@
 import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import {
-  NodeSort,
-  NodeSortField,
-} from '@modules/grpc/library/blockjoy/v1/node';
-import { itemsPerPage } from '@shared/index';
+  NODE_FILTERS_DEFAULT,
+  NODE_PAGINATION_DEFAULT,
+  NODE_SORT_DEFAULT,
+} from '@shared/constants/lookups';
 
 export type InitialQueryParams = {
   pagination: Pagination;
@@ -12,29 +12,8 @@ export type InitialQueryParams = {
   sort: NodeSort[];
 };
 
-export const initialFilter: UINodeFilterCriteria = {
-  blockchain: [],
-  nodeType: [],
-  nodeStatus: [],
-};
-
-export const initialSort: NodeSort[] = [
-  {
-    field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
-    order: SortOrder.SORT_ORDER_DESCENDING,
-  },
-];
-
 export const initialQueryParams: InitialQueryParams = {
-  pagination: {
-    currentPage: 0,
-    itemsPerPage: itemsPerPage['xl'],
-  },
-
-  filter: {
-    ...initialFilter,
-    keyword: '',
-  },
-
-  sort: initialSort,
+  pagination: NODE_PAGINATION_DEFAULT,
+  filter: NODE_FILTERS_DEFAULT,
+  sort: NODE_SORT_DEFAULT,
 };

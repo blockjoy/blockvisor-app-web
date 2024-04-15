@@ -8,7 +8,7 @@ import {
   AdminListFilterIp,
   AdminListFilterNetwork,
   AdminListFilterVersion,
-} from '@modules/admin';
+} from '@modules/admin/components';
 import { Button, DropdownMenu, SvgIcon } from '@shared/components';
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
