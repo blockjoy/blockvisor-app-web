@@ -83,14 +83,6 @@ export const NodeFilters = () => {
         activeView={activeView}
         handleActiveView={handleActiveView}
       />
-      <form css={styles.form}>
-        <Search
-          onInput={handleSearch}
-          value={tempSearchQuery}
-          size="small"
-          additionalStyles={styles.search}
-        />
-      </form>
       <Filters
         filters={filters}
         isDirty={isDirty}
@@ -99,6 +91,8 @@ export const NodeFilters = () => {
         resetFilters={resetFilters}
         updateFilters={updateFilters}
         isLoading={!isCompleted.current}
+        handleSearch={handleSearch}
+        searchValue={tempSearchQuery}
       />
     </div>
   );

@@ -1,34 +1,34 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef /* useMemo */ } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { FiltersHeader, Search } from '@shared/components';
+import { FiltersHeader /* Search */ } from '@shared/components';
 import {
   hostAtoms,
   HostSorting,
-  useHostFilters,
-  useHostUIContext,
+  // useHostFilters,
+  // useHostUIContext,
 } from '@modules/host';
 import { blockchainAtoms } from '@modules/node';
 import { styles } from './HostFilters.styles';
 
 export const HostFilters = () => {
-  const hostUIContext = useHostUIContext();
-  const hostUIProps = useMemo(() => {
-    return {
-      setQueryParams: hostUIContext.setQueryParams,
-      queryParams: hostUIContext.queryParams,
-    };
-  }, [hostUIContext]);
+  // const hostUIContext = useHostUIContext();
+  // const hostUIProps = useMemo(() => {
+  //   return {
+  //     setQueryParams: hostUIContext.setQueryParams,
+  //     queryParams: hostUIContext.queryParams,
+  //   };
+  // }, [hostUIContext]);
 
-  const {
-    //   filters,
-    //   isDirty,
-    tempSearchQuery,
-    //   tempFiltersTotal,
-    //   updateFilters,
-    //   resetFilters,
-    changeTempFilters,
-  } = useHostFilters(hostUIProps);
+  // const {
+  //   filters,
+  //   isDirty,
+  // tempSearchQuery,
+  //   tempFiltersTotal,
+  //   updateFilters,
+  //   resetFilters,
+  //   changeTempFilters,
+  // } = useHostFilters(hostUIProps);
 
   const isCompleted = useRef(false);
 
@@ -77,7 +77,7 @@ export const HostFilters = () => {
     setFiltersOpen(!isFiltersOpen);
   };
 
-  const handleSearch = (value: string) => changeTempFilters('keyword', value);
+  // const handleSearch = (value: string) => changeTempFilters('keyword', value);
 
   const handleActiveView = (view: View) => setActiveView(view);
 
@@ -104,15 +104,6 @@ export const HostFilters = () => {
         activeView={activeView}
         handleActiveView={handleActiveView}
       />
-      <form css={styles.form}>
-        <Search
-          onInput={handleSearch}
-          value={tempSearchQuery}
-          size="small"
-          additionalStyles={styles.search}
-        />
-      </form>
-
       {/* <Filters
         filters={filters}
         isDirty={isDirty}
