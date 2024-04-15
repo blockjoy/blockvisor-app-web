@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import { useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
 import {
   InitialQueryParams,
   initialQueryParams,
 } from './OrganizationsUIHelpers';
-import { useRecoilValue } from 'recoil';
-import { organizationAtoms } from '../store/organizationAtoms';
+import { organizationAtoms } from '@modules/organization';
 
 export type SetQueryParams = (nextQueryParams: InitialQueryParams) => void;
 

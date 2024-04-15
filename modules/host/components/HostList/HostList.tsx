@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
 import {
   TableSkeleton,
@@ -9,12 +10,12 @@ import {
   withQuery,
 } from '@shared/components';
 import { styles } from './HostList.styles';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   hostAtoms,
   HostFilters,
   HostListHeader,
+  InitialQueryParams,
   mapHostListToGird,
   mapHostListToRows,
   resultsStatus,
@@ -82,7 +83,7 @@ export const HostList = () => {
     hostUIProps.queryParams.filter,
   );
 
-  const HostListTable = withQuery({ sort: true })(Table);
+  const HostListTable = withQuery<InitialQueryParams>({ sort: true })(Table);
 
   return (
     <>

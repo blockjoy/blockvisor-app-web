@@ -1,26 +1,25 @@
-import { styles } from './TableSortButton.styles';
 import { SvgIcon } from '@shared/components';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { Sort } from '@shared/common/common';
+import { styles } from './TableSortButton.styles';
 import IconSort from '@public/assets/icons/common/Sort.svg';
 import IconSortAsc from '@public/assets/icons/common/SortAsc.svg';
 import IconSortDesc from '@public/assets/icons/common/SortDesc.svg';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 type TableSortButtonProps = {
   children?: React.ReactNode;
   onClick: (arg0: string) => void;
   dataField?: string;
-  activeSortField?: any;
-  activeSortOrder?: SortOrder;
+  sort?: Sort<any>;
 };
 
 export const TableSortButton = ({
   children,
   onClick,
   dataField,
-  activeSortField,
-  activeSortOrder,
+  sort,
 }: TableSortButtonProps) => {
-  const isActive = dataField === activeSortField;
+  const isActive = dataField === sort?.field;
 
   return (
     <button
@@ -32,9 +31,9 @@ export const TableSortButton = ({
         size="10px"
         additionalStyles={isActive ? [styles.active] : undefined}
       >
-        {!isActive || !activeSortOrder ? (
+        {!isActive || !sort?.order ? (
           <IconSort />
-        ) : activeSortOrder === SortOrder.SORT_ORDER_ASCENDING ? (
+        ) : sort?.order === SortOrder.SORT_ORDER_ASCENDING ? (
           <IconSortAsc />
         ) : (
           <IconSortDesc />

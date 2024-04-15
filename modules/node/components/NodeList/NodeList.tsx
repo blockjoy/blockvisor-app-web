@@ -22,6 +22,7 @@ import {
   useNodeList,
   nodeAtoms,
   useNodeUIContext,
+  InitialQueryParams,
 } from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -101,7 +102,7 @@ export const NodeList = () => {
     nodeUIProps.queryParams.filter,
   );
 
-  const NodeListTable = withQuery({
+  const NodeListTable = withQuery<InitialQueryParams>({
     sort: true,
   })(Table);
 

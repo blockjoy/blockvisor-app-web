@@ -1,10 +1,12 @@
 import { useRecoilState } from 'recoil';
-import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { hostClient } from '@modules/grpc/clients/hostClient';
-import { InitialQueryParams } from '../ui/HostUIHelpers';
-import { getInitialQueryParams } from '../ui/HostUIContext';
+import {
+  hostAtoms,
+  InitialQueryParams,
+  getInitialQueryParams,
+} from '@modules/host';
 import { useDefaultOrganization } from '@modules/organization';
 import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
 

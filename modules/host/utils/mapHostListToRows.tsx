@@ -19,7 +19,6 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       name: 'Host',
       key: '2',
       width: '300px',
-      sort: true,
       dataField: HostSortField.HOST_SORT_FIELD_HOST_NAME,
     },
     {
