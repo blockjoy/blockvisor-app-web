@@ -45,7 +45,7 @@ export const FiltersRange = ({
           min={min!}
           max={max!}
           values={values!}
-          setValues={setValues}
+          setValues={setValues!}
           formatter={formatter}
           customValues={customValues}
         />

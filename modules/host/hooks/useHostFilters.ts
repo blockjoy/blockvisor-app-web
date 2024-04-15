@@ -8,16 +8,12 @@ import {
   HOST_FILTERS_STEPS,
 } from '@shared/constants/lookups';
 import { formatters } from '@shared/index';
-import {
-  hostAtoms,
-  hostSelectors,
-  HostUIProps,
-  initialFilter,
-} from '@modules/host';
+import { hostAtoms, hostSelectors, HostUIProps } from '@modules/host';
 
 type UseHostFiltersHook = {
   isDirty: boolean;
   filters: FilterItem[];
+  tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
   updateFilters: VoidFunction;
@@ -27,69 +23,43 @@ type UseHostFiltersHook = {
 export const useHostFilters = (
   hostUIProps: HostUIProps,
 ): UseHostFiltersHook => {
-  const [filtersStatusSelectedIds, setFiltersStatusSelectedIds] =
-    useRecoilState(hostSelectors.filtersStatusSelectedIds);
-  const [filtersMemorySelectedRange, setFiltersMemorySelectedRange] =
-    useRecoilState(hostSelectors.filtersMemorySelectedRange);
-  const [filtersCPUSelectedRange, setFiltersCPUSelectedRange] = useRecoilState(
-    hostSelectors.filtersCPUSelectedRange,
-  );
-  const [filtersSpaceSelectedRange, setFiltersSpaceSelectedRange] =
-    useRecoilState(hostSelectors.filtersSpaceSelectedRange);
+  const [filters, setFilters] = useRecoilState(hostAtoms.filters);
+  const [tempFilters, setTempFilters] = useState<UIHostFilterCriteria>(filters);
 
-  const [tempStatusSelectedIds, setTempStatusSelectedIds] = useState<string[]>(
-    filtersStatusSelectedIds,
-  );
-  const [tempMemorySelectedRange, setTempMemorySelectedRange] = useState<
-    [number, number]
-  >(filtersMemorySelectedRange);
-  const [tempCPUSelectedRange, setTempCPUSelectedRange] = useState<
-    [number, number]
-  >(filtersCPUSelectedRange);
-  const [tempSpaceSelectedRange, setTempSpaceSelectedRange] = useState<
-    [number, number]
-  >(filtersSpaceSelectedRange);
-
+  const resetInitialFilters = useResetRecoilState(hostAtoms.filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     hostAtoms.filtersTempTotal,
   );
 
   const filtersStatusAll = useRecoilValue(
-    hostSelectors.filtersStatusAll(tempStatusSelectedIds),
+    hostSelectors.filtersStatusAll(tempFilters.hostStatus!),
   );
-
-  const resetInitialFilters = useResetRecoilState(hostAtoms.filters);
 
   useEffect(() => {
     const isDirtyMemory = !isEqual(
-      tempMemorySelectedRange,
+      tempFilters.hostMemory,
       HOST_FILTERS_DEFAULT.hostMemory,
     );
     const isDirtyCPU = !isEqual(
-      tempCPUSelectedRange,
+      tempFilters.hostCPU,
       HOST_FILTERS_DEFAULT.hostCPU,
     );
     const isDirtySpace = !isEqual(
-      tempSpaceSelectedRange,
+      tempFilters.hostSpace,
       HOST_FILTERS_DEFAULT.hostSpace,
     );
 
     const total = [
-      tempStatusSelectedIds.length,
+      tempFilters.hostStatus?.length,
       isDirtyMemory,
       isDirtyCPU,
       isDirtySpace,
     ].filter(Boolean).length;
 
     setTempFiltersTotal(total);
-  }, [
-    tempStatusSelectedIds,
-    tempMemorySelectedRange,
-    tempCPUSelectedRange,
-    tempSpaceSelectedRange,
-  ]);
+  }, [tempFilters]);
 
-  const applyFilter = (values: UIHostFilterCriteria = initialFilter) => {
+  const applyFilter = (values: UIHostFilterCriteria = HOST_FILTERS_DEFAULT) => {
     const newQueryParams = {
       ...hostUIProps.queryParams,
       filter: {
@@ -105,33 +75,26 @@ export const useHostFilters = (
   };
 
   const updateFilters = () => {
-    setFiltersMemorySelectedRange(tempMemorySelectedRange);
-    setFiltersCPUSelectedRange(tempCPUSelectedRange);
-    setFiltersSpaceSelectedRange(tempSpaceSelectedRange);
-    setFiltersStatusSelectedIds(tempStatusSelectedIds);
+    setFilters({
+      ...filters,
+      ...tempFilters,
+    });
 
-    const params: UIHostFilterCriteria = {
-      hostMemory: tempMemorySelectedRange,
-      hostCPU: tempCPUSelectedRange,
-      hostSpace: tempSpaceSelectedRange,
-      hostStatus: tempStatusSelectedIds,
-    };
-
-    applyFilter(params);
+    applyFilter(tempFilters);
   };
 
   const resetFilters = () => {
     resetInitialFilters();
 
-    setTempStatusSelectedIds([]);
-    setTempCPUSelectedRange(HOST_FILTERS_DEFAULT.hostCPU);
-    setTempMemorySelectedRange(HOST_FILTERS_DEFAULT.hostMemory);
-    setTempSpaceSelectedRange(HOST_FILTERS_DEFAULT.hostSpace);
+    setTempFilters((currentTempFilters) => ({
+      ...currentTempFilters,
+      ...HOST_FILTERS_DEFAULT,
+    }));
 
     applyFilter();
   };
 
-  const changeTempFilters = (type: string, value: string) => {
+  const changeTempFilters = (key: string, value: string) => {
     const updateFunc = (currentItems: string[]) => {
       const index = currentItems.indexOf(value);
 
@@ -139,36 +102,39 @@ export const useHostFilters = (
       else return [...currentItems, value];
     };
 
-    switch (type) {
+    switch (key) {
+      case 'keyword':
+        setTempFilters((currentTempFilters) => ({
+          ...currentTempFilters,
+          [key]: value,
+        }));
+        return;
       case 'hostStatus':
-        setTempStatusSelectedIds(updateFunc);
+        setTempFilters((currentTempFilters) => ({
+          ...currentTempFilters,
+          [key]: updateFunc(currentTempFilters[key]!),
+        }));
         return;
       default:
         return;
     }
   };
 
-  const isDirty = !isEqual(
-    [
-      filtersCPUSelectedRange,
-      filtersMemorySelectedRange,
-      filtersSpaceSelectedRange,
-      filtersStatusSelectedIds,
-    ],
-    [
-      tempCPUSelectedRange,
-      tempMemorySelectedRange,
-      tempSpaceSelectedRange,
-      tempStatusSelectedIds,
-    ],
-  );
+  const handleCustomUpdate = (type: string, value: [number, number]) => {
+    setTempFilters((currentTempFilters) => ({
+      ...currentTempFilters,
+      [type]: value,
+    }));
+  };
 
-  const filters: FilterItem[] = [
+  const isDirty = !isEqual(filters, tempFilters);
+
+  const filtersAll: FilterItem[] = [
     {
       id: 'hostStatus',
       name: 'Status',
       disabled: false,
-      count: tempStatusSelectedIds.length,
+      count: tempFilters.hostStatus?.length,
       list: filtersStatusAll,
     },
     {
@@ -178,10 +144,11 @@ export const useHostFilters = (
       label: 'GB',
       disabled: false,
       step: HOST_FILTERS_STEPS.hostMemory,
-      min: HOST_FILTERS_DEFAULT.hostMemory[0],
-      max: HOST_FILTERS_DEFAULT.hostMemory[1],
-      values: tempMemorySelectedRange,
-      setValues: setTempMemorySelectedRange,
+      min: HOST_FILTERS_DEFAULT.hostMemory?.[0],
+      max: HOST_FILTERS_DEFAULT.hostMemory?.[1],
+      values: tempFilters.hostMemory,
+      setValues: (val: [number, number]) =>
+        handleCustomUpdate('hostMemory', val),
       formatter: (value: number) => formatters.formatSize(value, 'bytes'),
     },
     {
@@ -190,10 +157,10 @@ export const useHostFilters = (
       type: 'range',
       disabled: false,
       step: HOST_FILTERS_STEPS.hostCPU,
-      min: HOST_FILTERS_DEFAULT.hostCPU[0],
-      max: HOST_FILTERS_DEFAULT.hostCPU[1],
-      values: tempCPUSelectedRange,
-      setValues: setTempCPUSelectedRange,
+      min: HOST_FILTERS_DEFAULT.hostCPU?.[0],
+      max: HOST_FILTERS_DEFAULT.hostCPU?.[1],
+      values: tempFilters.hostCPU,
+      setValues: (val: [number, number]) => handleCustomUpdate('hostCPU', val),
       formatter: formatters.formatSize,
     },
     {
@@ -203,11 +170,12 @@ export const useHostFilters = (
       label: 'GB',
       disabled: false,
       step: HOST_FILTERS_STEPS.hostSpace,
-      min: HOST_FILTERS_DEFAULT.hostSpace[0],
-      max: HOST_FILTERS_DEFAULT.hostSpace[1],
-      values: tempSpaceSelectedRange,
+      min: HOST_FILTERS_DEFAULT.hostSpace?.[0],
+      max: HOST_FILTERS_DEFAULT.hostSpace?.[1],
+      values: tempFilters.hostSpace,
+      setValues: (val: [number, number]) =>
+        handleCustomUpdate('hostSpace', val),
       customValues: HOST_FILTERS_CUSTOM_VALUES.hostSpace,
-      setValues: setTempSpaceSelectedRange,
       formatter: (value: number) => formatters.formatSize(value, 'bytes'),
     },
   ];
@@ -215,8 +183,9 @@ export const useHostFilters = (
   return {
     isDirty,
 
-    filters,
+    filters: filtersAll,
 
+    tempSearchQuery: tempFilters.keyword ?? '',
     tempFiltersTotal,
 
     changeTempFilters,

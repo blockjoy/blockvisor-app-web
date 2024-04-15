@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
+import { SearchSize, SearchVersion } from './Search';
 
 export const styles = {
   search: css`
@@ -11,14 +12,14 @@ export const styles = {
     min-width: 0;
     max-width: 400px;
   `,
-  searchIcon: css`
+  searchIcon: (size: 'small' | 'regular') => css`
     position: absolute;
     top: 50%;
-    left: 14px;
+    left: ${size === 'small' ? '10px' : '14px'};
     transform: translateY(-50%);
     pointer-events: none;
   `,
-  searchInput: (hideSearchButton: boolean) => (theme: ITheme) =>
+  searchInput: (version: SearchVersion, size: SearchSize) => (theme: ITheme) =>
     css`
       background: transparent;
       border: 1px solid ${theme.colorBorderGrey};
@@ -27,8 +28,8 @@ export const styles = {
       height: 44px;
       width: 100%;
       color: ${theme.colorText};
-      padding-left: 40px;
-      padding-right: ${hideSearchButton ? '32px' : '100px'};
+      padding-left: ${size === 'small' ? '30px' : '40px'};
+      padding-right: ${version !== 'submit' ? '32px' : '100px'};
       opacity: 0.8;
       transition: 0.3s;
 

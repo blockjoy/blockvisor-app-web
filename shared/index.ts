@@ -6,6 +6,7 @@ export * from './constants/forms';
 export * from './hooks/useAccessibleDropdown';
 export * from './hooks/useAccessibleList';
 export * from './hooks/useClickOutside';
+export * from './hooks/useDebounce';
 export * from './hooks/useEsc';
 export * from './hooks/useHubSpotForm';
 export * from './hooks/useModal';

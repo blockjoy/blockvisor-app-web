@@ -10,6 +10,7 @@ import {
   FiltersBlock,
   FiltersRange,
   FiltersHeader,
+  Search,
 } from '@shared/components';
 import { hostAtoms, useHostUIContext, useHostFilters } from '@modules/host';
 import IconClose from '@public/assets/icons/common/Close.svg';
@@ -28,6 +29,7 @@ export const HostFilters = () => {
   const {
     filters,
     isDirty,
+    tempSearchQuery,
     tempFiltersTotal,
     updateFilters,
     resetFilters,
@@ -51,15 +53,16 @@ export const HostFilters = () => {
     if (isMobile) setFiltersOpen(false);
   }, []);
 
-  const hasFiltersApplied = filters.some((filter) => {
-    if (filter.type === 'check') {
-      return filter.list?.some((l: any) => l.isChecked);
-    } else if (filter.type === 'range') {
-      return (
-        filter.min !== filter.values?.[0] || filter.max !== filter.values?.[1]
-      );
-    }
-  });
+  const hasFiltersApplied =
+    filters.some((filter) => {
+      if (filter.type === 'check') {
+        return filter.list?.some((l: any) => l.isChecked);
+      } else if (filter.type === 'range') {
+        return (
+          filter.min !== filter.values?.[0] || filter.max !== filter.values?.[1]
+        );
+      }
+    }) || Boolean(tempSearchQuery.length);
 
   const handleResetFilters = () => {
     resetFilters();
@@ -78,6 +81,8 @@ export const HostFilters = () => {
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
   };
+
+  const handleSearch = (value: string) => changeTempFilters('keyword', value);
 
   if (
     hostListLoadingState === 'finished' &&
@@ -107,55 +112,63 @@ export const HostFilters = () => {
         )
       ) : (
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-          <Scrollbar additionalStyles={[styles.filters]}>
-            {filters.map((item: any) => {
-              if (item.type === 'range')
+          <form css={styles.form}>
+            <Search
+              onInput={handleSearch}
+              value={tempSearchQuery}
+              size="small"
+              additionalStyles={styles.search}
+            />
+            <Scrollbar additionalStyles={[styles.filters]}>
+              {filters.map((item: any) => {
+                if (item.type === 'range')
+                  return (
+                    <FiltersRange
+                      key={item.id}
+                      filter={item}
+                      isOpen={item.id === openFilterId}
+                      onPlusMinusClicked={handlePlusMinusClicked}
+                      onFilterBlockClicked={handleFilterBlockClicked}
+                    />
+                  );
+
                 return (
-                  <FiltersRange
+                  <FiltersBlock
                     key={item.id}
-                    filter={item}
+                    hasError={false}
                     isOpen={item.id === openFilterId}
+                    filter={item}
                     onPlusMinusClicked={handlePlusMinusClicked}
                     onFilterBlockClicked={handleFilterBlockClicked}
+                    onFilterChanged={changeTempFilters}
                   />
                 );
-
-              return (
-                <FiltersBlock
-                  key={item.id}
-                  hasError={false}
-                  isOpen={item.id === openFilterId}
-                  filter={item}
-                  onPlusMinusClicked={handlePlusMinusClicked}
-                  onFilterBlockClicked={handleFilterBlockClicked}
-                  onFilterChanged={changeTempFilters}
-                />
-              );
-            })}
-          </Scrollbar>
-          <button
-            css={styles.updateButton}
-            type="button"
-            disabled={!isDirty}
-            onClick={updateFilters}
-          >
-            <SvgIcon size="12px">
-              <IconRefresh />
-            </SvgIcon>
-            Apply
-          </button>
-          {hasFiltersApplied && (
+              })}
+            </Scrollbar>
             <button
-              css={styles.resetButton}
-              type="button"
-              onClick={handleResetFilters}
+              css={styles.updateButton}
+              type="submit"
+              disabled={!isDirty}
+              onClick={updateFilters}
             >
-              <SvgIcon size="18px">
-                <IconClose />
+              <SvgIcon size="12px">
+                <IconRefresh />
               </SvgIcon>
-              Reset Filters
+              Apply
             </button>
-          )}
+            {hasFiltersApplied && (
+              <button
+                css={styles.resetButton}
+                type="button"
+                onClick={handleResetFilters}
+              >
+                <SvgIcon size="18px">
+                  <IconClose />
+                </SvgIcon>
+                Reset Filters
+              </button>
+            )}
+          </form>
         </div>
       )}
     </div>
