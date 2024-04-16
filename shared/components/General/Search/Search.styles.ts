@@ -10,7 +10,7 @@ export const styles = {
     align-items: center;
     gap: 16px;
     min-width: 0;
-    max-width: 400px;
+    max-width: 100%;
   `,
   searchIcon: (size: 'small' | 'regular') => css`
     position: absolute;

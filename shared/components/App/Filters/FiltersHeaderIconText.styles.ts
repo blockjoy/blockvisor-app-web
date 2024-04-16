@@ -30,7 +30,8 @@ export const styles = {
 
       &:hover,
       &:active,
-      &:focus {
+      &:focus,
+      &.active {
         background: ${theme.colorActive};
         & path {
           fill: ${theme.colorText};

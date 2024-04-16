@@ -110,6 +110,7 @@ export const NodeFilters = () => {
     <div css={[styles.outerWrapper, !isOpen && styles.outerWrapperCollapsed]}>
       <FiltersHeader
         isLoading={!isCompleted.current}
+        isFiltersOpen={isFiltersOpen}
         filtersTotal={tempFiltersTotal}
         isFiltersOpen={isOpen}
         handleFiltersToggle={handleFiltersToggle}

@@ -6,7 +6,6 @@ export const styles = {
   filters: css`
     overflow: auto;
     min-height: 0;
-    margin: 0 0 16px 0;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -97,9 +96,12 @@ export const styles = {
     flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
+    gap: 16px;
   `,
   search: css`
-    margin-bottom: 16px;
+    @media ${breakpoints.toXlrg} {
+      padding: 2px;
+    }
 
     input {
       height: 38px;
