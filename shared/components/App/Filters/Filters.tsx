@@ -83,32 +83,34 @@ export const Filters = ({
                 additionalStyles={styles.search}
               />
             ) : null}
-            <Scrollbar additionalStyles={[styles.filters]}>
-              {filters.map((item) => {
-                if (item.type === 'range')
+            {filters.length ? (
+              <Scrollbar additionalStyles={[styles.filters]}>
+                {filters.map((item) => {
+                  if (item.type === 'range')
+                    return (
+                      <FiltersRange
+                        key={item.id}
+                        filter={item}
+                        isOpen={item.id === openFilterId}
+                        onPlusMinusClicked={handlePlusMinusClicked}
+                        onFilterBlockClicked={handleFilterBlockClicked}
+                      />
+                    );
+
                   return (
-                    <FiltersRange
+                    <FiltersBlock
                       key={item.id}
-                      filter={item}
+                      hasError={item.id === 'blockchain' && hasBlockchainError}
                       isOpen={item.id === openFilterId}
+                      filter={item}
                       onPlusMinusClicked={handlePlusMinusClicked}
                       onFilterBlockClicked={handleFilterBlockClicked}
+                      onFilterChanged={changeTempFilters}
                     />
                   );
-
-                return (
-                  <FiltersBlock
-                    key={item.id}
-                    hasError={item.id === 'blockchain' && hasBlockchainError}
-                    isOpen={item.id === openFilterId}
-                    filter={item}
-                    onPlusMinusClicked={handlePlusMinusClicked}
-                    onFilterBlockClicked={handleFilterBlockClicked}
-                    onFilterChanged={changeTempFilters}
-                  />
-                );
-              })}
-            </Scrollbar>
+                })}
+              </Scrollbar>
+            ) : null}
             <button
               css={styles.updateButton}
               type="submit"
