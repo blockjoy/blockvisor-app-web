@@ -73,6 +73,7 @@ export const NodeFilters = () => {
     >
       <FiltersHeader
         isLoading={!isCompleted.current}
+        isFiltersOpen={isFiltersOpen}
         filtersTotal={tempFiltersTotal}
         handleFiltersToggle={handleFiltersToggle}
         elements={

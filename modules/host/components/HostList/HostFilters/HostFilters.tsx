@@ -1,34 +1,34 @@
-import { useEffect, useRef /* useMemo */ } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { FiltersHeader /* Search */ } from '@shared/components';
+import { Filters, FiltersHeader } from '@shared/components';
 import {
   hostAtoms,
   HostSorting,
-  // useHostFilters,
-  // useHostUIContext,
+  useHostFilters,
+  useHostUIContext,
 } from '@modules/host';
 import { blockchainAtoms } from '@modules/node';
 import { styles } from './HostFilters.styles';
 
 export const HostFilters = () => {
-  // const hostUIContext = useHostUIContext();
-  // const hostUIProps = useMemo(() => {
-  //   return {
-  //     setQueryParams: hostUIContext.setQueryParams,
-  //     queryParams: hostUIContext.queryParams,
-  //   };
-  // }, [hostUIContext]);
+  const hostUIContext = useHostUIContext();
+  const hostUIProps = useMemo(() => {
+    return {
+      setQueryParams: hostUIContext.setQueryParams,
+      queryParams: hostUIContext.queryParams,
+    };
+  }, [hostUIContext]);
 
-  // const {
-  //   filters,
-  //   isDirty,
-  // tempSearchQuery,
-  //   tempFiltersTotal,
-  //   updateFilters,
-  //   resetFilters,
-  //   changeTempFilters,
-  // } = useHostFilters(hostUIProps);
+  const {
+    // filters,
+    isDirty,
+    tempSearchQuery,
+    tempFiltersTotal,
+    updateFilters,
+    resetFilters,
+    changeTempFilters,
+  } = useHostFilters(hostUIProps);
 
   const isCompleted = useRef(false);
 
@@ -77,7 +77,7 @@ export const HostFilters = () => {
     setFiltersOpen(!isFiltersOpen);
   };
 
-  // const handleSearch = (value: string) => changeTempFilters('keyword', value);
+  const handleSearch = (value: string) => changeTempFilters('keyword', value);
 
   const handleActiveView = (view: View) => setActiveView(view);
 
@@ -89,12 +89,15 @@ export const HostFilters = () => {
 
   return (
     <div
-      css={[styles.outerWrapper, isFiltersOpen && styles.outerWrapperCollapsed]}
+      css={[
+        styles.outerWrapper,
+        !isFiltersOpen && styles.outerWrapperCollapsed,
+      ]}
     >
       <FiltersHeader
         isLoading={!isCompleted.current}
-        hideFilters={true}
-        filtersTotal={0}
+        isFiltersOpen={isFiltersOpen}
+        filtersTotal={tempFiltersTotal}
         handleFiltersToggle={handleFiltersToggle}
         elements={
           <div css={styles.sorting}>
@@ -104,15 +107,17 @@ export const HostFilters = () => {
         activeView={activeView}
         handleActiveView={handleActiveView}
       />
-      {/* <Filters
-        filters={filters}
+      <Filters
+        filters={[]}
         isDirty={isDirty}
         changeTempFilters={changeTempFilters}
         isFiltersOpen={isFiltersOpen}
         resetFilters={resetFilters}
         updateFilters={updateFilters}
         isLoading={!isCompleted.current}
-      /> */}
+        handleSearch={handleSearch}
+        searchValue={tempSearchQuery}
+      />
     </div>
   );
 };

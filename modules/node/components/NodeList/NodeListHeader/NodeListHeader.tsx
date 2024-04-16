@@ -38,7 +38,10 @@ export const NodeListHeader = () => {
               onClick={handleFilterCollapseToggled}
               css={[styles.filterToggle, styles.endBlock]}
             >
-              <FiltersHeaderIconText filtersTotal={filtersTotal} />
+              <FiltersHeaderIconText
+                filtersTotal={filtersTotal}
+                isFiltersOpen={isFiltersOpen}
+              />
             </button>
           )}
         </div>

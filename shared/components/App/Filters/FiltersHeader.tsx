@@ -8,9 +8,9 @@ import IconClose from '@public/assets/icons/common/ArrowLeft.svg';
 
 export type FiltersHeaderProps = {
   isLoading: boolean;
+  isFiltersOpen: boolean;
   filtersTotal: number;
   handleFiltersToggle: VoidFunction;
-  hideFilters?: boolean;
   elements?: ReactNode;
   activeView?: View;
   handleActiveView?: (view: View) => void;
@@ -18,9 +18,9 @@ export type FiltersHeaderProps = {
 
 export const FiltersHeader = ({
   isLoading,
+  isFiltersOpen,
   filtersTotal,
   handleFiltersToggle,
-  hideFilters = false,
   elements,
   activeView,
   handleActiveView,
@@ -32,14 +32,15 @@ export const FiltersHeader = ({
       ) : (
         <>
           <div css={styles.wrapper}>
-            {!hideFilters ? (
-              <button onClick={handleFiltersToggle} css={styles.filtersButton}>
-                <span css={styles.collapseButton}>
-                  <IconClose />
-                </span>
-                <FiltersHeaderIconText filtersTotal={filtersTotal} />
-              </button>
-            ) : null}
+            <button onClick={handleFiltersToggle} css={styles.filtersButton}>
+              <span css={styles.collapseButton}>
+                <IconClose />
+              </span>
+              <FiltersHeaderIconText
+                filtersTotal={filtersTotal}
+                isFiltersOpen={isFiltersOpen}
+              />
+            </button>
             {elements ? elements : null}
             <ViewPicker
               type="dropdown"

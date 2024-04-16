@@ -4,13 +4,18 @@ import { styles } from './FiltersHeaderIconText.styles';
 
 type FiltersHeaderIconTextProps = {
   filtersTotal: number;
+  isFiltersOpen: boolean;
 };
 
 export const FiltersHeaderIconText = ({
   filtersTotal,
+  isFiltersOpen,
 }: FiltersHeaderIconTextProps) => {
   return (
-    <span css={styles.title}>
+    <span
+      css={styles.title}
+      {...(isFiltersOpen ? { className: 'active' } : null)}
+    >
       <span css={styles.filterIcon}>
         <SvgIcon size="14px">
           <IconFilter />
