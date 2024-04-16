@@ -4,10 +4,12 @@ import { styles } from './FiltersHeaderIconText.styles';
 
 type FiltersHeaderIconTextProps = {
   filtersTotal: number;
+  isFiltersOpen: boolean;
 };
 
 export const FiltersHeaderIconText = ({
   filtersTotal,
+  isFiltersOpen,
 }: FiltersHeaderIconTextProps) => {
   return (
     <span
