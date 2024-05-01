@@ -1,4 +1,5 @@
 import { useUpdateQueryString } from '@modules/admin/hooks';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { loadAdminColumns } from '@modules/admin/utils';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRouter } from 'next/router';
@@ -57,7 +58,7 @@ export const AdminList = ({
     sortField: +localStorage?.getItem(`${name}SortField`)! || defaultSortField,
     sortOrder: +localStorage?.getItem(`${name}SortOrder`)! || defaultSortOrder,
     filters: loadAdminColumns(name, columns).filter(
-      (column) => column.filterSettings,
+      (column) => !!column.filterComponent,
     ),
   });
 

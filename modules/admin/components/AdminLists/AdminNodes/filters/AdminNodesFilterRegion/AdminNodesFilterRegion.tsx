@@ -1,14 +1,13 @@
 import { nodeClient } from '@modules/grpc';
 import { sort } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
+import { AdminListFilterControl } from '@modules/admin';
 
-type Props = {
-  values: string[];
-  onChange: (item: AdminFilterDropdownItem) => void;
-};
-
-export const AdminListFilterRegion = ({ values, onChange }: Props) => {
+export const AdminNodesFilterRegion = ({
+  columnName,
+  values,
+  onFilterChange,
+}: AdminFilterControlProps) => {
   const [list, setList] = useState<(string | undefined)[]>([]);
 
   const getList = async () => {
@@ -36,6 +35,7 @@ export const AdminListFilterRegion = ({ values, onChange }: Props) => {
 
   return (
     <AdminListFilterControl
+      columnName={columnName}
       items={
         list?.map((item) => ({
           id: item!,
@@ -43,7 +43,7 @@ export const AdminListFilterRegion = ({ values, onChange }: Props) => {
         }))!
       }
       values={values}
-      onChange={onChange}
+      onFilterChange={onFilterChange}
     />
   );
 };

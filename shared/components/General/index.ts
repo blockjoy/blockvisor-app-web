@@ -1,5 +1,6 @@
 export * from './Alert/Alert';
 export * from './Badge/Badge';
+export * from './BadgeCircle/BadgeCircle';
 export * from './Billing/Pricing/Pricing';
 export * from './Billing/Pricing/Total/Total';
 export * from './Billing/Promo/Promo';

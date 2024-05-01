@@ -52,6 +52,7 @@ export function useSignIn() {
 
     try {
       const userData = await userClient.getUser(userId);
+      const userSettings = await userClient.getUser(userId);
 
       Mixpanel.identify(userData.email);
 

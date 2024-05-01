@@ -26,9 +26,12 @@ export const AdminDetailHeaderDelete = ({ onDelete }: Props) => {
   return (
     <div css={styles.wrapper}>
       {step === 1 ? (
-        <AdminHeaderButton isDanger icon={<IconDelete />} onClick={toggleStep}>
-          Delete
-        </AdminHeaderButton>
+        <AdminHeaderButton
+          isDanger
+          icon={<IconDelete />}
+          onClick={toggleStep}
+          tooltip="Delete"
+        />
       ) : (
         <>
           <p css={styles.text}>Delete?</p>

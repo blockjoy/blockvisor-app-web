@@ -1,14 +1,13 @@
-import { hostClient, organizationClient } from '@modules/grpc';
+import { hostClient } from '@modules/grpc';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { useEffect, useState } from 'react';
-import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
+import { AdminListFilterControl } from '@modules/admin';
 
-type Props = {
-  values: string[];
-  onChange: (item: AdminFilterDropdownItem) => void;
-};
-
-export const AdminListFilterHost = ({ values, onChange }: Props) => {
+export const AdminNodesFilterHost = ({
+  columnName,
+  values,
+  onFilterChange,
+}: AdminFilterControlProps) => {
   const [list, setList] = useState<Host[]>();
 
   const getList = async () => {
@@ -25,6 +24,7 @@ export const AdminListFilterHost = ({ values, onChange }: Props) => {
 
   return (
     <AdminListFilterControl
+      columnName={columnName}
       items={
         list?.map((item) => ({
           id: item.id,
@@ -32,7 +32,7 @@ export const AdminListFilterHost = ({ values, onChange }: Props) => {
         }))!
       }
       values={values}
-      onChange={onChange}
+      onFilterChange={onFilterChange}
     />
   );
 };

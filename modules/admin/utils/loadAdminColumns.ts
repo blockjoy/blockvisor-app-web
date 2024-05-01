@@ -1,3 +1,5 @@
+import { AdminListColumn } from '../types/AdminListColumn';
+
 export const loadAdminColumns = (name: string, columns: AdminListColumn[]) => {
   const localStorageColumns: AdminListColumn[] = JSON.parse(
     localStorage.getItem(`${name}Columns`)!,
@@ -16,14 +18,13 @@ export const loadAdminColumns = (name: string, columns: AdminListColumn[]) => {
 
       column.isVisible = isVisible;
 
-      if (column.filterSettings) {
-        const foundLocalStorage = localStorageColumnsCopy?.find(
-          (filter) =>
-            filter.filterSettings?.type === column.filterSettings?.type,
-        );
-        column.filterSettings.values =
-          foundLocalStorage?.filterSettings?.values!;
-      }
+      const foundLocalStorage = localStorageColumnsCopy?.find(
+        (c) => c?.name === column?.name,
+      );
+
+      column.filterSettings = foundLocalStorage?.filterSettings || {};
+
+      column.filterSettings.values = foundLocalStorage?.filterSettings?.values!;
     });
   }
 

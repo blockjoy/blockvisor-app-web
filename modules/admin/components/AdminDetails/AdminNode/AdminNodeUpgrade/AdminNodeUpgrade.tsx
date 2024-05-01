@@ -68,9 +68,8 @@ export const AdminNodeUpgrade = () => {
         <AdminHeaderButton
           icon={<IconUpgrade />}
           onClick={() => setIsOpen(!isOpen)}
-        >
-          Upgrade
-        </AdminHeaderButton>
+          tooltip="Upgrade"
+        />
         <DropdownMenu additionalStyles={styles.menu} isOpen={isOpen}>
           <Scrollbar additionalStyles={[styles.scrollbar]}>
             {versions.map((version) => (
