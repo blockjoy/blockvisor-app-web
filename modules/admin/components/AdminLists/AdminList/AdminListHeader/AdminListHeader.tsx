@@ -2,8 +2,9 @@ import { AdminHeader } from '@modules/admin/components/AdminHeader/AdminHeader';
 import { AdminListHeaderColumnPicker } from './AdminListHeaderColumnPicker/AdminListHeaderColumnPicker';
 import { styles } from './AdminListHeader.styles';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
+import { BadgeCircle, Search } from '@shared/components';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import IconFilterClear from '@public/assets/icons/common/FilterClear.svg';
-import { Search } from '@shared/components';
 
 type Props = {
   name: string;
@@ -32,9 +33,9 @@ export const AdminListHeader = ({
     onFiltersChanged(filtersCopy);
   };
 
-  const hasFilters = columns
-    .filter((column) => column.filterSettings)
-    .flatMap((column) => column.filterSettings?.values)?.length;
+  const filterCount = columns.filter(
+    (column) => !!column.filterSettings?.values?.length,
+  )?.length;
 
   const hasFilterColumns = columns.some((column) => column.filterSettings);
 
@@ -52,11 +53,16 @@ export const AdminListHeader = ({
         />
         {hasFilterColumns && (
           <AdminHeaderButton
-            isDisabled={!hasFilters}
+            isDisabled={filterCount === 0}
             icon={<IconFilterClear />}
             onClick={handleResetFilters}
+            tooltip="Reset Filters"
           >
-            Reset Filters
+            {filterCount > 0 && (
+              <BadgeCircle additionalStyles={styles.badge}>
+                {filterCount}
+              </BadgeCircle>
+            )}
           </AdminHeaderButton>
         )}
       </div>

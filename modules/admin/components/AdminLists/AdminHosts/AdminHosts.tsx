@@ -5,6 +5,7 @@ import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
 import { DateTime, HostIpStatus, HostManagedBy } from '@shared/components';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 
 const columns: AdminListColumn[] = [
   {
@@ -94,19 +95,9 @@ export const AdminHosts = () => {
   ) => {
     const response = await hostClient.listHosts(
       undefined,
-      {
-        keyword,
-      },
-      {
-        currentPage: page!,
-        itemsPerPage: pageSize,
-      },
-      [
-        {
-          field: sortField!,
-          order: sortOrder!,
-        },
-      ],
+      { keyword },
+      { currentPage: page!, itemsPerPage: pageSize },
+      [{ field: sortField!, order: sortOrder! }],
     );
     return {
       list: response.hosts,

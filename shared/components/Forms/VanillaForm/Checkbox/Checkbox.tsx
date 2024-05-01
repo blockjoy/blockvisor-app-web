@@ -16,7 +16,7 @@ type Props = {
   additionalStyles?: SerializedStyles[];
 };
 
-export function Checkbox({
+export const Checkbox = ({
   label,
   id,
   name,
@@ -28,7 +28,7 @@ export function Checkbox({
   description = '',
   additionalStyles,
   ...rest
-}: Props) {
+}: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     onChange(e);
@@ -43,8 +43,8 @@ export function Checkbox({
         defaultChecked={checked}
         disabled={disabled}
         type="checkbox"
-        {...rest}
         onChange={handleChange}
+        {...rest}
       />
       <label
         css={[
@@ -59,4 +59,4 @@ export function Checkbox({
       </label>
     </>
   );
-}
+};

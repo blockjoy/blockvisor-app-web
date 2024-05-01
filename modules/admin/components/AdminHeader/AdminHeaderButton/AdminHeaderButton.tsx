@@ -3,6 +3,7 @@ import { styles } from './AdminHeaderButton.styles';
 
 type Props = {
   children?: React.ReactNode;
+  tooltip?: React.ReactNode | string;
   icon: React.ReactNode;
   isDisabled?: boolean;
   isDanger?: boolean;
@@ -11,6 +12,7 @@ type Props = {
 
 export const AdminHeaderButton = ({
   children,
+  tooltip,
   icon,
   isDisabled,
   isDanger,
@@ -23,11 +25,12 @@ export const AdminHeaderButton = ({
       onClick={onClick}
     >
       <SvgIcon size="15px">{icon}</SvgIcon>
-      {Boolean(children) && (
+      {Boolean(tooltip) && (
         <span className="tooltip" css={styles.tooltip}>
-          {children}
+          {tooltip}
         </span>
       )}
+      {children}
     </button>
   );
 };

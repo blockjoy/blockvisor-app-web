@@ -31,24 +31,7 @@ export const styles = {
       transition: 0.3s;
     }
   `,
-  filterBadge: (theme: ITheme) => css`
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    font-size: 10px;
-    font-weight: 600;
-    display: grid;
-    place-items: center;
-    color: ${theme.colorPrimaryText};
-    background: ${theme.colorPrimary};
-    border: 3px solid ${theme.colorBackground};
-  `,
-  buttonGroup: css`
+  resetButtonWrapper: css`
     padding: 10px;
-    margin: 0;
-    grid-template-columns: repeat(2, 1fr);
   `,
 };

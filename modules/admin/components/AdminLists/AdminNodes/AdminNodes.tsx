@@ -2,8 +2,20 @@ import { AdminList } from '../AdminList/AdminList';
 import { nodeClient } from '@modules/grpc';
 import { DateTime, NodeStatus } from '@shared/components';
 import {
+  AdminNodesFilterBlockchain,
+  AdminListFilterControl,
+  AdminNodesFilterOrg,
+  AdminNodesFilterUser,
+  AdminNodesFilterHost,
+  AdminNodesFilterRegion,
+  AdminNodesFilterIp,
+  AdminNodesFilterNetwork,
+  AdminNodesFilterVersion,
+} from '@modules/admin/components';
+import {
   ContainerStatus,
   NodeStatus as NodeStatusEnum,
+  NodeType,
   SyncStatus,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { pageSize } from '@modules/admin/constants/constants';
@@ -15,7 +27,7 @@ import {
   createAdminFilterList,
   createDropdownValuesFromEnum,
 } from '@modules/admin';
-
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 const columns: AdminListColumn[] = [
   {
     name: 'name',
@@ -27,11 +39,7 @@ const columns: AdminListColumn[] = [
     name: 'ip',
     width: '180px',
     isVisible: false,
-    filterSettings: {
-      type: 'ip',
-      name: 'ip',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterIp,
   },
   {
     name: 'ipGateway',
@@ -44,14 +52,9 @@ const columns: AdminListColumn[] = [
     width: '240px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     isVisible: true,
+    filterComponent: AdminListFilterControl,
     filterSettings: {
-      type: 'default',
-      name: 'nodeStatus',
-      values: [],
-      dropdownItems: createDropdownValuesFromEnum(
-        NodeStatusEnum,
-        'NODE_STATUS_',
-      ),
+      items: createDropdownValuesFromEnum(NodeStatusEnum, 'NODE_STATUS_'),
     },
   },
   {
@@ -59,55 +62,47 @@ const columns: AdminListColumn[] = [
     width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
     isVisible: false,
-    filterSettings: {
-      type: 'default',
-      name: 'containerStatus',
-      values: [],
-      dropdownItems: createDropdownValuesFromEnum(
-        ContainerStatus,
-        'CONTAINER_STATUS_',
-      ),
-    },
+    // TODO: Add back in when available in API
+    // filterComponent: AdminListFilterControl,
+    // filterSettings: {
+    //   items: createDropdownValuesFromEnum(ContainerStatus, 'CONTAINER_STATUS_'),
+    // },
   },
   {
     name: 'syncStatus',
     width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
     isVisible: false,
-    filterSettings: {
-      type: 'default',
-      name: 'syncStatus',
-      values: [],
-      dropdownItems: createDropdownValuesFromEnum(SyncStatus, 'SYNC_STATUS_'),
-    },
+    // TODO: Add back in when available in API
+    // filterComponent: AdminListFilterControl,
+    // filterSettings: {
+    //   items: createDropdownValuesFromEnum(SyncStatus, 'SYNC_STATUS_'),
+    // },
   },
   {
     name: 'host',
     width: '330px',
     sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
     isVisible: true,
-    filterSettings: {
-      name: 'host',
-      type: 'host',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterHost,
   },
   {
     name: 'nodeType',
     width: '150px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
     isVisible: true,
+    filterComponent: AdminListFilterControl,
+    filterSettings: {
+      items: createDropdownValuesFromEnum(NodeType, 'NODE_TYPE_'),
+    },
   },
+
   {
     name: 'blockchainName',
     displayName: 'blockchain',
     width: '190px',
     isVisible: true,
-    filterSettings: {
-      name: 'blockchain',
-      type: 'blockchain',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterBlockchain,
   },
   {
     name: 'blockHeight',
@@ -119,42 +114,26 @@ const columns: AdminListColumn[] = [
     name: 'network',
     width: '180px',
     isVisible: false,
-    filterSettings: {
-      name: 'network',
-      type: 'network',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterNetwork,
   },
   {
     name: 'version',
     width: '210px',
     isVisible: false,
-    filterSettings: {
-      name: 'version',
-      type: 'version',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterVersion,
   },
   {
     name: 'region',
     width: '210px',
     isVisible: false,
-    filterSettings: {
-      name: 'region',
-      type: 'region',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterRegion,
   },
   {
     name: 'orgName',
     displayName: 'Organization',
     width: '240px',
     isVisible: true,
-    filterSettings: {
-      name: 'org',
-      type: 'org',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterOrg,
   },
   {
     name: 'createdAt',
@@ -168,11 +147,7 @@ const columns: AdminListColumn[] = [
     displayName: 'Launched By',
     width: '230px',
     isVisible: false,
-    filterSettings: {
-      name: 'user',
-      type: 'user',
-      values: [],
-    },
+    filterComponent: AdminNodesFilterUser,
   },
 ];
 
@@ -188,10 +163,11 @@ export const AdminNodes = () => {
       undefined,
       {
         keyword,
-        blockchain: createAdminFilterList(filters!, 'blockchain'),
-        nodeStatus: createAdminFilterList(filters!, 'nodeStatus'),
-        orgIds: createAdminFilterList(filters!, 'org'),
-        userIds: createAdminFilterList(filters!, 'user'),
+        blockchain: createAdminFilterList(filters!, 'blockchainName'),
+        nodeStatus: createAdminFilterList(filters!, 'status'),
+        nodeType: createAdminFilterList(filters!, 'nodeType'),
+        orgIds: createAdminFilterList(filters!, 'orgName'),
+        userIds: createAdminFilterList(filters!, 'createdBy'),
         hostIds: createAdminFilterList(filters!, 'host'),
         regions: createAdminFilterList(filters!, 'region'),
         ips: createAdminFilterList(filters!, 'ip'),

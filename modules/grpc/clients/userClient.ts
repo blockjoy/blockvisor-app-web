@@ -133,6 +133,25 @@ class UserClient {
     }
   }
 
+  // async getSettings(userId: string): Promise<Record<string, string>> {
+  //   try {
+  //     await authClient.refreshToken();
+  //     const response = await this.client.getSettings({ userId }, getOptions());
+
+  //     const decoder = new TextDecoder();
+  //     let settings = Object.fromEntries(
+  //       Object.entries(response.settings).map(([key, value]) => [
+  //         key,
+  //         decoder.decode(value),
+  //       ]),
+  //     );
+
+  //     return settings;
+  //   } catch (err) {
+  //     return handleError(err);
+  //   }
+  // }
+
   async getBilling(userId: string): Promise<string | StatusResponse> {
     try {
       await authClient.refreshToken();

@@ -8,6 +8,7 @@ import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
 import { UIEvent, useState } from 'react';
 import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 
 type Props = {
   name: string;
@@ -20,7 +21,7 @@ type Props = {
   activeSortOrder: SortOrder;
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
-  onFiltersChanged: (filters: AdminListColumn[]) => void;
+  onFiltersChanged: (nextFilters: AdminListColumn[]) => void;
 };
 
 export const AdminListTable = ({
@@ -61,8 +62,52 @@ export const AdminListTable = ({
     });
   };
 
-  const handleTableScroll = (e: UIEvent<HTMLDivElement>) => {
+  const handleTableScroll = (e: UIEvent<HTMLDivElement>) =>
     setScrollPosition(e.currentTarget.scrollLeft);
+
+  const handleFilterChange = (
+    item: AdminFilterDropdownItem,
+    columnName: string,
+  ) => {
+    const column = columns.find((c) => c.name === columnName);
+
+    let valuesCopy = column?.filterSettings?.values
+      ? [...column?.filterSettings.values]
+      : [];
+
+    const valueExists = valuesCopy?.some((value) => value === item.id);
+
+    if (valueExists) {
+      valuesCopy = valuesCopy.filter((v) => v !== item.id)!;
+    } else {
+      valuesCopy.push(item.id);
+    }
+
+    const columnsCopy = [...columns];
+
+    const foundFilter = columnsCopy.find(
+      (column) => column.name === columnName,
+    );
+
+    if (!foundFilter || !foundFilter?.filterComponent) return;
+
+    foundFilter.filterSettings = foundFilter.filterSettings || {};
+
+    foundFilter.filterSettings.values = valuesCopy;
+
+    onFiltersChanged(columnsCopy);
+  };
+
+  const handleReset = (columnName: string) => {
+    const filtersCopy = [...columns];
+
+    const foundFilter = filtersCopy.find((f) => f.name === columnName);
+
+    if (!foundFilter || !foundFilter.filterSettings) return;
+
+    foundFilter.filterSettings.values = [];
+
+    onFiltersChanged(filtersCopy);
   };
 
   if (isLoading)
@@ -73,7 +118,6 @@ export const AdminListTable = ({
     );
 
   const columnsVisible = columns.filter((column) => column.isVisible);
-  const columnsWithFilter = columns.filter((column) => column.filterSettings);
 
   return (
     <>
@@ -90,10 +134,10 @@ export const AdminListTable = ({
                     activeSortField={activeSortField}
                     activeSortOrder={activeSortOrder}
                     column={column}
-                    filters={columnsWithFilter}
                     scrollPosition={scrollPosition!}
-                    onFiltersChanged={onFiltersChanged}
+                    onFilterChange={handleFilterChange}
                     onSortChanged={onSortChanged}
+                    onReset={handleReset}
                   />
                 </th>
               ))}

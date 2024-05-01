@@ -1,14 +1,14 @@
 import { sortIpStringArray } from '@modules/admin/utils';
 import { nodeClient } from '@modules/grpc';
 import { useEffect, useState } from 'react';
-import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
+import { AdminListFilterControl } from '../../../AdminList/AdminListTable/AdminListTableHeader/AdminListFilter/AdminListFilterControl/AdminListFilterControl';
 
-type Props = {
-  values: string[];
-  onChange: (item: AdminFilterDropdownItem) => void;
-};
-
-export const AdminListFilterIp = ({ values, onChange }: Props) => {
+export const AdminNodesFilterIp = ({
+  isOpen,
+  values,
+  columnName,
+  onFilterChange,
+}: AdminFilterControlProps) => {
   const [list, setList] = useState<(string | undefined)[]>([]);
 
   const getList = async () => {
@@ -28,6 +28,8 @@ export const AdminListFilterIp = ({ values, onChange }: Props) => {
 
   return (
     <AdminListFilterControl
+      isOpen={isOpen}
+      columnName={columnName}
       items={
         list?.map((item) => ({
           id: item!,
@@ -35,7 +37,7 @@ export const AdminListFilterIp = ({ values, onChange }: Props) => {
         }))!
       }
       values={values}
-      onChange={onChange}
+      onFilterChange={onFilterChange}
     />
   );
 };

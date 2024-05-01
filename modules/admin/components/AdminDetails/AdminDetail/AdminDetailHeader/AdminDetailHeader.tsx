@@ -71,37 +71,35 @@ export const AdminDetailHeader = ({
                 <AdminHeaderButton
                   icon={<IconPencil />}
                   onClick={onToggleEditMode}
-                >
-                  Edit
-                </AdminHeaderButton>
+                  tooltip="Edit"
+                />
               )}
               {!!onOpenAppView && (
                 <AdminHeaderButton
                   icon={<IconBinoculars />}
                   onClick={onOpenAppView}
-                >
-                  View In App
-                </AdminHeaderButton>
+                  tooltip="View In App"
+                />
               )}
               {!!hasMetrics && (
                 <AdminHeaderButton
                   icon={<IconGraph />}
                   onClick={() => openGrafanaUrl?.(identifier!)}
-                >
-                  Grafana Metrics
-                </AdminHeaderButton>
+                  tooltip="Grafana Metrics"
+                />
               )}
               {!!hasLogs && (
                 <AdminHeaderButton
                   icon={<IconLogs />}
                   onClick={() => openGrafanaUrl(identifier!, 'node-logs')}
-                >
-                  Grafana Logs
-                </AdminHeaderButton>
+                  tooltip="Grafana Logs"
+                />
               )}
-              <AdminHeaderButton icon={<IconCopy />} onClick={onCopyObject}>
-                Copy Object
-              </AdminHeaderButton>
+              <AdminHeaderButton
+                icon={<IconCopy />}
+                onClick={onCopyObject}
+                tooltip="Copy Object"
+              />
               {additionalHeaderButtons}
               {!!onDelete && (
                 <AdminDetailHeaderDelete onDelete={handleDelete} />

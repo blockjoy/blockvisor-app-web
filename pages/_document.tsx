@@ -14,7 +14,7 @@ class MyDocument extends Document {
         <Head>
           <Script
             src="https://js.chargebee.com/v2/chargebee.js"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           ></Script>
         </Head>
         <body>

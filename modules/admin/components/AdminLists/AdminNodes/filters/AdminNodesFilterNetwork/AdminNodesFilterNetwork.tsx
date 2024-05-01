@@ -1,14 +1,13 @@
-import { sortVersionStringArray } from '@modules/admin/utils';
 import { nodeClient } from '@modules/grpc';
+import { sort } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { AdminListFilterControl } from '../AdminListFilterControl/AdminListFilterControl';
+import { AdminListFilterControl } from '@modules/admin';
 
-type Props = {
-  values: string[];
-  onChange: (item: AdminFilterDropdownItem) => void;
-};
-
-export const AdminListFilterVersion = ({ values, onChange }: Props) => {
+export const AdminNodesFilterNetwork = ({
+  columnName,
+  values,
+  onFilterChange,
+}: AdminFilterControlProps) => {
   const [list, setList] = useState<(string | undefined)[]>([]);
 
   const getList = async () => {
@@ -17,11 +16,11 @@ export const AdminListFilterVersion = ({ values, onChange }: Props) => {
       itemsPerPage: 50000,
     });
 
-    const versions = sortVersionStringArray(
-      Array.from(new Set(nodes.map((node) => node.version))),
+    const networks = Array.from(
+      new Set(sort(nodes.map((node) => node.network))),
     );
 
-    setList(versions);
+    setList(networks);
   };
 
   useEffect(() => {
@@ -30,6 +29,7 @@ export const AdminListFilterVersion = ({ values, onChange }: Props) => {
 
   return (
     <AdminListFilterControl
+      columnName={columnName}
       items={
         list?.map((item) => ({
           id: item!,
@@ -37,7 +37,7 @@ export const AdminListFilterVersion = ({ values, onChange }: Props) => {
         }))!
       }
       values={values}
-      onChange={onChange}
+      onFilterChange={onFilterChange}
     />
   );
 };
