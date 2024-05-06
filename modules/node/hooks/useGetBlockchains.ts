@@ -32,7 +32,7 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
       revalidateOnFocus: false,
 
       onSuccess: (data) => {
-        setBlockchains(data);
+        setBlockchains(data.blockchains);
         setBlockchainsLoadingState('finished');
       },
       onError: (error) => {

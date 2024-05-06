@@ -1,6 +1,5 @@
 import { useRecoilValue } from 'recoil';
 import { styles } from './NodeLauncher.styles';
-import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
 import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
 import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
@@ -8,6 +7,7 @@ import { EmptyColumn, PageTitle } from '@shared/components';
 import { wrapper } from 'styles/wrapper.styles';
 import { useNodeLauncherHandlers, nodeLauncherSelectors } from '@modules/node';
 import { LauncherWithGuardProps } from '@modules/billing';
+import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
 export const NodeLauncher = ({
   fulfilReqs,

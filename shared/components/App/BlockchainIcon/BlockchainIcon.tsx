@@ -114,6 +114,10 @@ const IconStarknet = dynamic(
   () => import(`@public/assets/icons/blockchain/Starknet.svg`),
 );
 
+const IconSubsquid = dynamic(
+  () => import(`@public/assets/icons/blockchain/Subsquid.svg`),
+);
+
 const IconTezos = dynamic(
   () => import(`@public/assets/icons/blockchain/Tezos.svg`),
 );
@@ -201,6 +205,7 @@ export const BlockchainIcon: FC<Props> = ({
       Component = IconPocket;
       break;
     case 'polygon':
+    case 'polygon-zk':
       Component = IconPolygon;
       break;
     case 'solana':
@@ -208,6 +213,9 @@ export const BlockchainIcon: FC<Props> = ({
       break;
     case 'starknet':
       Component = IconStarknet;
+      break;
+    case 'subsquid':
+      Component = IconSubsquid;
       break;
     case 'tezos':
       Component = IconTezos;

@@ -182,9 +182,9 @@ export interface HostServiceGetResponse {
 }
 
 export interface HostServiceListRequest {
-  orgId?:
-    | string
-    | undefined;
+  orgIds: string[];
+  /** The version of the blockvisor software running on the host. */
+  versions: string[];
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -997,13 +997,16 @@ export const HostServiceGetResponse = {
 };
 
 function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0, search: undefined, sort: [] };
+  return { orgIds: [], versions: [], offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const HostServiceListRequest = {
   encode(message: HostServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== undefined) {
-      writer.uint32(10).string(message.orgId);
+    for (const v of message.orgIds) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.versions) {
+      writer.uint32(50).string(v!);
     }
     if (message.offset !== 0) {
       writer.uint32(16).uint64(message.offset);
@@ -1032,7 +1035,14 @@ export const HostServiceListRequest = {
             break;
           }
 
-          message.orgId = reader.string();
+          message.orgIds.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.versions.push(reader.string());
           continue;
         case 2:
           if (tag !== 16) {
@@ -1077,7 +1087,8 @@ export const HostServiceListRequest = {
 
   fromPartial(object: DeepPartial<HostServiceListRequest>): HostServiceListRequest {
     const message = createBaseHostServiceListRequest();
-    message.orgId = object.orgId ?? undefined;
+    message.orgIds = object.orgIds?.map((e) => e) || [];
+    message.versions = object.versions?.map((e) => e) || [];
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.search = (object.search !== undefined && object.search !== null)

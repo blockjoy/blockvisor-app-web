@@ -1,12 +1,10 @@
-import { capitalized } from '@modules/admin';
-import {
-  AdminListFilter,
-  AdminListTableSortButton,
-} from '@modules/admin/components';
+import { capitalized } from '@modules/admin/utils';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRef } from 'react';
 import { styles } from './AdminListTableHeader.styles';
+import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
+import { AdminListFilter } from './AdminListFilter/AdminListFilter';
 
 type Props = {
   column: AdminListColumn;
@@ -35,7 +33,7 @@ export const AdminListTableHeader = ({
   return (
     <span ref={headerRef} css={styles.tableHeader}>
       <>
-        {column.sortField ? (
+        {Boolean(column.sortField) ? (
           <AdminListTableSortButton
             sortField={column.sortField}
             sortOrder={column.sortOrder}

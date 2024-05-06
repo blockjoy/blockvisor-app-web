@@ -31,11 +31,28 @@ export const styles = {
       opacity: 1;
     }
   `,
-  scrollbar: css`
+  scrollbar: (theme: ITheme) => css`
     @media ${breakpoints.toXlrg} {
       max-height: 60svh;
       overflow-x: hidden;
       overflow-y: auto;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      max-height: 100svh;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    ::-webkit-scrollbar {
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: ${theme.colorLabel};
     }
   `,
   blockchainWrapper: css`

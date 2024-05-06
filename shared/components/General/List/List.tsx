@@ -2,6 +2,7 @@ import { ReactNode, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccessibleList } from '@shared/index';
 import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export type ListProps<T = any> = {
   items: T[];
@@ -13,7 +14,7 @@ export type ListProps<T = any> = {
   isFocused?: boolean;
   handleFocus?: (isFocus: boolean) => void;
   isLoading?: boolean;
-  additionalyStyles: SerializedStyles[];
+  additionalyStyles: SerializedStyles[] | ((theme: ITheme) => SerializedStyles);
 };
 
 export const List = <T extends { id?: string; name?: string }>({

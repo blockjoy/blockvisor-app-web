@@ -6,8 +6,15 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 import { NetworkConfig } from "../common/v1/blockchain";
 import { ArchiveLocation, ImageIdentifier, RhaiPlugin } from "../common/v1/image";
 import { NodeType, UiType } from "../common/v1/node";
+import { SearchOperator, SortOrder } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
+
+export enum BlockchainSortField {
+  BLOCKCHAIN_SORT_FIELD_UNSPECIFIED = 0,
+  BLOCKCHAIN_SORT_FIELD_NAME = 1,
+  UNRECOGNIZED = -1,
+}
 
 export enum BlockchainVisibility {
   BLOCKCHAIN_VISIBILITY_UNSPECIFIED = 0,
@@ -79,11 +86,51 @@ export interface BlockchainServiceGetRequirementsResponse {
 }
 
 export interface BlockchainServiceListRequest {
-  orgId?: string | undefined;
+  orgIds: string[];
+  /** The number of items to be skipped over. */
+  offset: number;
+  /**
+   * The number of items that will be returned. Together with offset, you can
+   * use this to get pagination.
+   */
+  limit: number;
+  /**
+   * Use these parameters for fuzzy searching (as opposed to the filtering
+   * that the rest of the params of this message provide).
+   */
+  search?:
+    | BlockchainSearch
+    | undefined;
+  /** The field sorting order of results. */
+  sort: BlockchainSort[];
+}
+
+/**
+ * This message contains fields used to search nodes as opposed to just
+ * filtering them.
+ */
+export interface BlockchainSearch {
+  /** The way the search parameters should be combined. */
+  operator: SearchOperator;
+  /** Search by id. */
+  id?:
+    | string
+    | undefined;
+  /** Search by name. */
+  name?: string | undefined;
+}
+
+export interface BlockchainSort {
+  /** Sort by this field. */
+  field: BlockchainSortField;
+  /** Sort ascending or descending. */
+  order: SortOrder;
 }
 
 export interface BlockchainServiceListResponse {
   blockchains: Blockchain[];
+  /** The total number of blockchains matching your query. */
+  blockchainCount: number;
 }
 
 export interface BlockchainServiceListImageVersionsRequest {
@@ -129,7 +176,7 @@ export interface BlockchainServiceAddNodeTypeResponse {
 
 export interface BlockchainServiceAddVersionRequest {
   /** The blockchain UUID to add the new version to. */
-  id: string;
+  blockchainId: string;
   /** A semantically parseable representation of the new version. */
   version: string;
   /** A readable description of the new version. */
@@ -858,13 +905,25 @@ export const BlockchainServiceGetRequirementsResponse = {
 };
 
 function createBaseBlockchainServiceListRequest(): BlockchainServiceListRequest {
-  return { orgId: undefined };
+  return { orgIds: [], offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const BlockchainServiceListRequest = {
   encode(message: BlockchainServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== undefined) {
-      writer.uint32(10).string(message.orgId);
+    for (const v of message.orgIds) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.offset !== 0) {
+      writer.uint32(16).uint64(message.offset);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(24).uint64(message.limit);
+    }
+    if (message.search !== undefined) {
+      BlockchainSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
+    }
+    for (const v of message.sort) {
+      BlockchainSort.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -881,7 +940,35 @@ export const BlockchainServiceListRequest = {
             break;
           }
 
-          message.orgId = reader.string();
+          message.orgIds.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.offset = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.limit = longToNumber(reader.uint64() as Long);
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.search = BlockchainSearch.decode(reader, reader.uint32());
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.sort.push(BlockchainSort.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -898,19 +985,153 @@ export const BlockchainServiceListRequest = {
 
   fromPartial(object: DeepPartial<BlockchainServiceListRequest>): BlockchainServiceListRequest {
     const message = createBaseBlockchainServiceListRequest();
-    message.orgId = object.orgId ?? undefined;
+    message.orgIds = object.orgIds?.map((e) => e) || [];
+    message.offset = object.offset ?? 0;
+    message.limit = object.limit ?? 0;
+    message.search = (object.search !== undefined && object.search !== null)
+      ? BlockchainSearch.fromPartial(object.search)
+      : undefined;
+    message.sort = object.sort?.map((e) => BlockchainSort.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseBlockchainSearch(): BlockchainSearch {
+  return { operator: 0, id: undefined, name: undefined };
+}
+
+export const BlockchainSearch = {
+  encode(message: BlockchainSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.operator !== 0) {
+      writer.uint32(8).int32(message.operator);
+    }
+    if (message.id !== undefined) {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainSearch {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainSearch();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.operator = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainSearch>): BlockchainSearch {
+    return BlockchainSearch.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainSearch>): BlockchainSearch {
+    const message = createBaseBlockchainSearch();
+    message.operator = object.operator ?? 0;
+    message.id = object.id ?? undefined;
+    message.name = object.name ?? undefined;
+    return message;
+  },
+};
+
+function createBaseBlockchainSort(): BlockchainSort {
+  return { field: 0, order: 0 };
+}
+
+export const BlockchainSort = {
+  encode(message: BlockchainSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field !== 0) {
+      writer.uint32(8).int32(message.field);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainSort {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainSort();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.field = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.order = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainSort>): BlockchainSort {
+    return BlockchainSort.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainSort>): BlockchainSort {
+    const message = createBaseBlockchainSort();
+    message.field = object.field ?? 0;
+    message.order = object.order ?? 0;
     return message;
   },
 };
 
 function createBaseBlockchainServiceListResponse(): BlockchainServiceListResponse {
-  return { blockchains: [] };
+  return { blockchains: [], blockchainCount: 0 };
 }
 
 export const BlockchainServiceListResponse = {
   encode(message: BlockchainServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.blockchains) {
       Blockchain.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.blockchainCount !== 0) {
+      writer.uint32(16).uint64(message.blockchainCount);
     }
     return writer;
   },
@@ -929,6 +1150,13 @@ export const BlockchainServiceListResponse = {
 
           message.blockchains.push(Blockchain.decode(reader, reader.uint32()));
           continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.blockchainCount = longToNumber(reader.uint64() as Long);
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -945,6 +1173,7 @@ export const BlockchainServiceListResponse = {
   fromPartial(object: DeepPartial<BlockchainServiceListResponse>): BlockchainServiceListResponse {
     const message = createBaseBlockchainServiceListResponse();
     message.blockchains = object.blockchains?.map((e) => Blockchain.fromPartial(e)) || [];
+    message.blockchainCount = object.blockchainCount ?? 0;
     return message;
   },
 };
@@ -1400,13 +1629,13 @@ export const BlockchainServiceAddNodeTypeResponse = {
 };
 
 function createBaseBlockchainServiceAddVersionRequest(): BlockchainServiceAddVersionRequest {
-  return { id: "", version: "", description: undefined, nodeType: 0, properties: [] };
+  return { blockchainId: "", version: "", description: undefined, nodeType: 0, properties: [] };
 }
 
 export const BlockchainServiceAddVersionRequest = {
   encode(message: BlockchainServiceAddVersionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.blockchainId !== "") {
+      writer.uint32(10).string(message.blockchainId);
     }
     if (message.version !== "") {
       writer.uint32(18).string(message.version);
@@ -1435,7 +1664,7 @@ export const BlockchainServiceAddVersionRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.blockchainId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -1480,7 +1709,7 @@ export const BlockchainServiceAddVersionRequest = {
 
   fromPartial(object: DeepPartial<BlockchainServiceAddVersionRequest>): BlockchainServiceAddVersionRequest {
     const message = createBaseBlockchainServiceAddVersionRequest();
-    message.id = object.id ?? "";
+    message.blockchainId = object.blockchainId ?? "";
     message.version = object.version ?? "";
     message.description = object.description ?? undefined;
     message.nodeType = object.nodeType ?? 0;

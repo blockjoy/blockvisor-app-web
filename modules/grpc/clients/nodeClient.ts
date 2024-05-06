@@ -42,6 +42,8 @@ export type UINodeFilterCriteria = {
   blockchain?: string[];
   nodeType?: string[];
   nodeStatus?: string[];
+  containerStatus?: string[];
+  syncStatus?: string[];
   keyword?: string;
   orgIds?: string[];
   hostIds?: string[];
@@ -84,6 +86,8 @@ class NodeClient {
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
       statuses: filter?.nodeStatus?.map((f) => +f)!,
+      containerStatuses: filter?.containerStatus?.map((f) => +f)!,
+      syncStatuses: filter?.syncStatus?.map((f) => +f)!,
       nodeTypes: filter?.nodeType?.map((f) => +f)!,
       blockchainIds: filter?.blockchain!,
       sort: sort || [
@@ -130,6 +134,8 @@ class NodeClient {
       orgIds: [orgId],
       hostIds: [hostId],
       statuses: [],
+      containerStatuses: [],
+      syncStatuses: [],
       nodeTypes: [],
       blockchainIds: [],
       userIds: [],

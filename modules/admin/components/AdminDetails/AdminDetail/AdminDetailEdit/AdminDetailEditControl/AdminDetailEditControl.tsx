@@ -4,7 +4,7 @@ import {
   AdminDetailEditSelect,
   AdminDetailEditSwitch,
   AdminDetailEditTextbox,
-} from '@modules/admin/components';
+} from '@modules/admin';
 import { KeyboardEvent } from 'react';
 
 type Props = {

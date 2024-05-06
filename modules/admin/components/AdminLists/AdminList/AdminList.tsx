@@ -11,6 +11,7 @@ import { AdminListTable } from './AdminListTable/AdminListTable';
 type Props = {
   name: string;
   columns: AdminListColumn[];
+  hidePagination?: boolean;
   defaultSortField: number;
   defaultSortOrder: SortOrder;
   listMap: (list: any[]) => any[];
@@ -37,6 +38,7 @@ type ListSettings = {
 export const AdminList = ({
   name,
   columns,
+  hidePagination,
   defaultSortField,
   defaultSortOrder,
   listMap,
@@ -195,6 +197,7 @@ export const AdminList = ({
         listTotal={listTotal}
         listPage={listPage!}
         columns={columnsState}
+        hidePagination={hidePagination}
         activeSortField={sortField}
         activeSortOrder={sortOrder}
         onPageChanged={handlePageChanged}

@@ -144,7 +144,7 @@ export const NodeLauncherProtocol = ({
           isFocused={isFocused}
           handleFocus={handleFocus}
           isLoading={loadingState !== 'finished'}
-          additionalyStyles={[styles.scrollbar]}
+          additionalyStyles={styles.scrollbar}
         />
       )}
     </div>
