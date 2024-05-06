@@ -12,7 +12,7 @@ export const AdminNodesFilterBlockchain = ({
 
   const getList = async () => {
     const response = await blockchainClient.listBlockchains();
-    setList(response);
+    setList(response.blockchains);
   };
 
   useEffect(() => {

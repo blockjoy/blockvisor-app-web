@@ -38,7 +38,9 @@ export const AdminNodeUpgrade = () => {
 
       const blockchains = await blockchainClient.listBlockchains();
 
-      const blockchain = blockchains.find((b) => b.id === node.blockchainId);
+      const blockchain = blockchains.blockchains.find(
+        (b) => b.id === node.blockchainId,
+      );
 
       const nodeType = blockchain?.nodeTypes.find(
         (t) => t.nodeType === node.nodeType,

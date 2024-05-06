@@ -3,7 +3,6 @@ import { PropsWithChildren } from 'react';
 import { styles } from './AdminListTableSortButton.styles';
 import { SvgIcon } from '@shared/components';
 import IconArrowDown from '@public/assets/icons/common/ArrowDown.svg';
-import { SerializedStyles } from '@emotion/react';
 
 type Props = {
   sortField?: number;
@@ -23,10 +22,6 @@ export const AdminListTableSortButton = ({
 }: Props) => {
   const isFieldActive = activeSortField === sortField;
   const isAscending = activeSortOrder === SortOrder.SORT_ORDER_ASCENDING;
-
-  const iconStyles: SerializedStyles[] = [];
-
-  iconStyles.push();
 
   return (
     <button

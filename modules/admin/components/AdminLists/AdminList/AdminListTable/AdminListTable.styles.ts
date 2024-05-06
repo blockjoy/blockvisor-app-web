@@ -44,6 +44,10 @@ export const styles = {
       font-weight: 400;
     }
 
+    th > span {
+      min-height: 53px;
+    }
+
     th,
     td {
       border-bottom: 1px solid ${theme.colorBorder};

@@ -55,7 +55,8 @@ class HostClient {
     sort?: HostSort[],
   ): Promise<HostServiceListResponse> {
     const request: HostServiceListRequest = {
-      orgId,
+      orgIds: orgId ? [orgId!] : [],
+      versions: [],
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
       sort: sort || [

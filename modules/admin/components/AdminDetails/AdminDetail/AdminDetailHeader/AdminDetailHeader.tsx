@@ -6,14 +6,14 @@ import {
   AdminDetailHeaderDelete,
   AdminHeaderButton,
 } from '@modules/admin/components';
+import { isMobile } from 'react-device-detect';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import IconCopy from '@public/assets/icons/common/Copy.svg';
 import IconPencil from '@public/assets/icons/common/Pencil.svg';
 import IconBinoculars from '@public/assets/icons/common/Binoculars.svg';
 import IconGraph from '@public/assets/icons/common/Graph.svg';
 import IconLogs from '@public/assets/icons/common/Logs.svg';
-import { isMobile } from 'react-device-detect';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 
 type Props = {
   name: string;
@@ -95,11 +95,13 @@ export const AdminDetailHeader = ({
                   tooltip="Grafana Logs"
                 />
               )}
-              <AdminHeaderButton
-                icon={<IconCopy />}
-                onClick={onCopyObject}
-                tooltip="Copy Object"
-              />
+              {!!onCopyObject && (
+                <AdminHeaderButton
+                  icon={<IconCopy />}
+                  onClick={onCopyObject}
+                  tooltip="Copy Object"
+                />
+              )}
               {additionalHeaderButtons}
               {!!onDelete && (
                 <AdminDetailHeaderDelete onDelete={handleDelete} />

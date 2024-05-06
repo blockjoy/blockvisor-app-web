@@ -144,6 +144,39 @@ export interface UserServiceDeleteBillingRequest {
 export interface UserServiceDeleteBillingResponse {
 }
 
+export interface UserServiceGetSettingsRequest {
+  /** The id of the user for which to return the settings. */
+  userId: string;
+}
+
+export interface UserServiceGetSettingsResponse {
+  settings: { [key: string]: Uint8Array };
+}
+
+export interface UserServiceGetSettingsResponse_SettingsEntry {
+  key: string;
+  value: Uint8Array;
+}
+
+export interface UserServiceUpdateSettingsRequest {
+  userId: string;
+  name: string;
+  value: Uint8Array;
+}
+
+export interface UserServiceUpdateSettingsResponse {
+  name: string;
+  value: Uint8Array;
+}
+
+export interface UserServiceDeleteSettingsRequest {
+  userId: string;
+  name: string;
+}
+
+export interface UserServiceDeleteSettingsResponse {
+}
+
 function createBaseUser(): User {
   return { id: "", email: "", firstName: "", lastName: "", createdAt: undefined };
 }
@@ -1207,6 +1240,388 @@ export const UserServiceDeleteBillingResponse = {
   },
 };
 
+function createBaseUserServiceGetSettingsRequest(): UserServiceGetSettingsRequest {
+  return { userId: "" };
+}
+
+export const UserServiceGetSettingsRequest = {
+  encode(message: UserServiceGetSettingsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetSettingsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceGetSettingsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceGetSettingsRequest>): UserServiceGetSettingsRequest {
+    return UserServiceGetSettingsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceGetSettingsRequest>): UserServiceGetSettingsRequest {
+    const message = createBaseUserServiceGetSettingsRequest();
+    message.userId = object.userId ?? "";
+    return message;
+  },
+};
+
+function createBaseUserServiceGetSettingsResponse(): UserServiceGetSettingsResponse {
+  return { settings: {} };
+}
+
+export const UserServiceGetSettingsResponse = {
+  encode(message: UserServiceGetSettingsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    Object.entries(message.settings).forEach(([key, value]) => {
+      UserServiceGetSettingsResponse_SettingsEntry.encode({ key: key as any, value }, writer.uint32(10).fork())
+        .ldelim();
+    });
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetSettingsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceGetSettingsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          const entry1 = UserServiceGetSettingsResponse_SettingsEntry.decode(reader, reader.uint32());
+          if (entry1.value !== undefined) {
+            message.settings[entry1.key] = entry1.value;
+          }
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceGetSettingsResponse>): UserServiceGetSettingsResponse {
+    return UserServiceGetSettingsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceGetSettingsResponse>): UserServiceGetSettingsResponse {
+    const message = createBaseUserServiceGetSettingsResponse();
+    message.settings = Object.entries(object.settings ?? {}).reduce<{ [key: string]: Uint8Array }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {},
+    );
+    return message;
+  },
+};
+
+function createBaseUserServiceGetSettingsResponse_SettingsEntry(): UserServiceGetSettingsResponse_SettingsEntry {
+  return { key: "", value: new Uint8Array(0) };
+}
+
+export const UserServiceGetSettingsResponse_SettingsEntry = {
+  encode(message: UserServiceGetSettingsResponse_SettingsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value.length !== 0) {
+      writer.uint32(18).bytes(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetSettingsResponse_SettingsEntry {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceGetSettingsResponse_SettingsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<UserServiceGetSettingsResponse_SettingsEntry>,
+  ): UserServiceGetSettingsResponse_SettingsEntry {
+    return UserServiceGetSettingsResponse_SettingsEntry.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<UserServiceGetSettingsResponse_SettingsEntry>,
+  ): UserServiceGetSettingsResponse_SettingsEntry {
+    const message = createBaseUserServiceGetSettingsResponse_SettingsEntry();
+    message.key = object.key ?? "";
+    message.value = object.value ?? new Uint8Array(0);
+    return message;
+  },
+};
+
+function createBaseUserServiceUpdateSettingsRequest(): UserServiceUpdateSettingsRequest {
+  return { userId: "", name: "", value: new Uint8Array(0) };
+}
+
+export const UserServiceUpdateSettingsRequest = {
+  encode(message: UserServiceUpdateSettingsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    if (message.value.length !== 0) {
+      writer.uint32(26).bytes(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateSettingsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceUpdateSettingsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.value = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceUpdateSettingsRequest>): UserServiceUpdateSettingsRequest {
+    return UserServiceUpdateSettingsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceUpdateSettingsRequest>): UserServiceUpdateSettingsRequest {
+    const message = createBaseUserServiceUpdateSettingsRequest();
+    message.userId = object.userId ?? "";
+    message.name = object.name ?? "";
+    message.value = object.value ?? new Uint8Array(0);
+    return message;
+  },
+};
+
+function createBaseUserServiceUpdateSettingsResponse(): UserServiceUpdateSettingsResponse {
+  return { name: "", value: new Uint8Array(0) };
+}
+
+export const UserServiceUpdateSettingsResponse = {
+  encode(message: UserServiceUpdateSettingsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.value.length !== 0) {
+      writer.uint32(18).bytes(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateSettingsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceUpdateSettingsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceUpdateSettingsResponse>): UserServiceUpdateSettingsResponse {
+    return UserServiceUpdateSettingsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceUpdateSettingsResponse>): UserServiceUpdateSettingsResponse {
+    const message = createBaseUserServiceUpdateSettingsResponse();
+    message.name = object.name ?? "";
+    message.value = object.value ?? new Uint8Array(0);
+    return message;
+  },
+};
+
+function createBaseUserServiceDeleteSettingsRequest(): UserServiceDeleteSettingsRequest {
+  return { userId: "", name: "" };
+}
+
+export const UserServiceDeleteSettingsRequest = {
+  encode(message: UserServiceDeleteSettingsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.name !== "") {
+      writer.uint32(18).string(message.name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteSettingsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceDeleteSettingsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceDeleteSettingsRequest>): UserServiceDeleteSettingsRequest {
+    return UserServiceDeleteSettingsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UserServiceDeleteSettingsRequest>): UserServiceDeleteSettingsRequest {
+    const message = createBaseUserServiceDeleteSettingsRequest();
+    message.userId = object.userId ?? "";
+    message.name = object.name ?? "";
+    return message;
+  },
+};
+
+function createBaseUserServiceDeleteSettingsResponse(): UserServiceDeleteSettingsResponse {
+  return {};
+}
+
+export const UserServiceDeleteSettingsResponse = {
+  encode(_: UserServiceDeleteSettingsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteSettingsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserServiceDeleteSettingsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UserServiceDeleteSettingsResponse>): UserServiceDeleteSettingsResponse {
+    return UserServiceDeleteSettingsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<UserServiceDeleteSettingsResponse>): UserServiceDeleteSettingsResponse {
+    const message = createBaseUserServiceDeleteSettingsResponse();
+    return message;
+  },
+};
+
 /** User related services. */
 export type UserServiceDefinition = typeof UserServiceDefinition;
 export const UserServiceDefinition = {
@@ -1285,6 +1700,38 @@ export const UserServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /**
+     * Retrieve the `settings` for this user. This is a string -> string map that
+     * may be used by frontends to communicate those settings that are not used by
+     * the backend in between sessions and devices. This field is free-form and
+     * ignored by the backend.
+     */
+    getSettings: {
+      name: "GetSettings",
+      requestType: UserServiceGetSettingsRequest,
+      requestStream: false,
+      responseType: UserServiceGetSettingsResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Modify a setting for this user. */
+    updateSettings: {
+      name: "UpdateSettings",
+      requestType: UserServiceUpdateSettingsRequest,
+      requestStream: false,
+      responseType: UserServiceUpdateSettingsResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Reset delete a setting for this user. */
+    deleteSettings: {
+      name: "DeleteSettings",
+      requestType: UserServiceDeleteSettingsRequest,
+      requestStream: false,
+      responseType: UserServiceDeleteSettingsResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -1329,6 +1776,26 @@ export interface UserServiceImplementation<CallContextExt = {}> {
     request: UserServiceDeleteBillingRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceDeleteBillingResponse>>;
+  /**
+   * Retrieve the `settings` for this user. This is a string -> string map that
+   * may be used by frontends to communicate those settings that are not used by
+   * the backend in between sessions and devices. This field is free-form and
+   * ignored by the backend.
+   */
+  getSettings(
+    request: UserServiceGetSettingsRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceGetSettingsResponse>>;
+  /** Modify a setting for this user. */
+  updateSettings(
+    request: UserServiceUpdateSettingsRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceUpdateSettingsResponse>>;
+  /** Reset delete a setting for this user. */
+  deleteSettings(
+    request: UserServiceDeleteSettingsRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UserServiceDeleteSettingsResponse>>;
 }
 
 export interface UserServiceClient<CallOptionsExt = {}> {
@@ -1372,6 +1839,26 @@ export interface UserServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<UserServiceDeleteBillingRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceDeleteBillingResponse>;
+  /**
+   * Retrieve the `settings` for this user. This is a string -> string map that
+   * may be used by frontends to communicate those settings that are not used by
+   * the backend in between sessions and devices. This field is free-form and
+   * ignored by the backend.
+   */
+  getSettings(
+    request: DeepPartial<UserServiceGetSettingsRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceGetSettingsResponse>;
+  /** Modify a setting for this user. */
+  updateSettings(
+    request: DeepPartial<UserServiceUpdateSettingsRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceUpdateSettingsResponse>;
+  /** Reset delete a setting for this user. */
+  deleteSettings(
+    request: DeepPartial<UserServiceDeleteSettingsRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UserServiceDeleteSettingsResponse>;
 }
 
 declare const self: any | undefined;

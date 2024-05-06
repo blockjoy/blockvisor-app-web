@@ -197,6 +197,16 @@ export interface NodeServiceListRequest {
   networks: string[];
   /** If this value is provided, only nodes with these regions are returned. */
   regions: string[];
+  /**
+   * If this value is provided, only nodes that are in this container status
+   * will be returned.
+   */
+  containerStatuses: ContainerStatus[];
+  /**
+   * If this value is provided, only nodes that are in this sync status will be
+   * returned.
+   */
+  syncStatuses: SyncStatus[];
   /** Search params. */
   search?:
     | NodeSearch
@@ -1239,6 +1249,8 @@ function createBaseNodeServiceListRequest(): NodeServiceListRequest {
     versions: [],
     networks: [],
     regions: [],
+    containerStatuses: [],
+    syncStatuses: [],
     search: undefined,
     sort: [],
   };
@@ -1286,6 +1298,16 @@ export const NodeServiceListRequest = {
     for (const v of message.regions) {
       writer.uint32(114).string(v!);
     }
+    writer.uint32(122).fork();
+    for (const v of message.containerStatuses) {
+      writer.int32(v);
+    }
+    writer.ldelim();
+    writer.uint32(130).fork();
+    for (const v of message.syncStatuses) {
+      writer.int32(v);
+    }
+    writer.ldelim();
     if (message.search !== undefined) {
       NodeSearch.encode(message.search, writer.uint32(66).fork()).ldelim();
     }
@@ -1406,6 +1428,40 @@ export const NodeServiceListRequest = {
 
           message.regions.push(reader.string());
           continue;
+        case 15:
+          if (tag === 120) {
+            message.containerStatuses.push(reader.int32() as any);
+
+            continue;
+          }
+
+          if (tag === 122) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.containerStatuses.push(reader.int32() as any);
+            }
+
+            continue;
+          }
+
+          break;
+        case 16:
+          if (tag === 128) {
+            message.syncStatuses.push(reader.int32() as any);
+
+            continue;
+          }
+
+          if (tag === 130) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.syncStatuses.push(reader.int32() as any);
+            }
+
+            continue;
+          }
+
+          break;
         case 8:
           if (tag !== 66) {
             break;
@@ -1447,6 +1503,8 @@ export const NodeServiceListRequest = {
     message.versions = object.versions?.map((e) => e) || [];
     message.networks = object.networks?.map((e) => e) || [];
     message.regions = object.regions?.map((e) => e) || [];
+    message.containerStatuses = object.containerStatuses?.map((e) => e) || [];
+    message.syncStatuses = object.syncStatuses?.map((e) => e) || [];
     message.search = (object.search !== undefined && object.search !== null)
       ? NodeSearch.fromPartial(object.search)
       : undefined;

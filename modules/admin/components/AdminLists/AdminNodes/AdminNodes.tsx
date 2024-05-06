@@ -62,22 +62,20 @@ const columns: AdminListColumn[] = [
     width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
     isVisible: false,
-    // TODO: Add back in when available in API
-    // filterComponent: AdminListFilterControl,
-    // filterSettings: {
-    //   items: createDropdownValuesFromEnum(ContainerStatus, 'CONTAINER_STATUS_'),
-    // },
+    filterComponent: AdminListFilterControl,
+    filterSettings: {
+      items: createDropdownValuesFromEnum(ContainerStatus, 'CONTAINER_STATUS_'),
+    },
   },
   {
     name: 'syncStatus',
     width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
     isVisible: false,
-    // TODO: Add back in when available in API
-    // filterComponent: AdminListFilterControl,
-    // filterSettings: {
-    //   items: createDropdownValuesFromEnum(SyncStatus, 'SYNC_STATUS_'),
-    // },
+    filterComponent: AdminListFilterControl,
+    filterSettings: {
+      items: createDropdownValuesFromEnum(SyncStatus, 'SYNC_STATUS_'),
+    },
   },
   {
     name: 'host',
@@ -165,6 +163,8 @@ export const AdminNodes = () => {
         keyword,
         blockchain: createAdminFilterList(filters!, 'blockchainName'),
         nodeStatus: createAdminFilterList(filters!, 'status'),
+        containerStatus: createAdminFilterList(filters!, 'containerStatus'),
+        syncStatus: createAdminFilterList(filters!, 'syncStatus'),
         nodeType: createAdminFilterList(filters!, 'nodeType'),
         orgIds: createAdminFilterList(filters!, 'orgName'),
         userIds: createAdminFilterList(filters!, 'createdBy'),

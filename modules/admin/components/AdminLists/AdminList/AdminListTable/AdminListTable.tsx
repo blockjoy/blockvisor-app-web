@@ -14,6 +14,7 @@ type Props = {
   name: string;
   isLoading: boolean;
   columns: AdminListColumn[];
+  hidePagination?: boolean;
   list: IAdminItem[];
   listTotal?: number;
   listPage: number;
@@ -27,6 +28,7 @@ type Props = {
 export const AdminListTable = ({
   name,
   columns,
+  hidePagination,
   isLoading,
   list,
   listTotal,
@@ -186,7 +188,7 @@ export const AdminListTable = ({
           </tbody>
         </table>
       </section>
-      {listTotal! > 0 && (
+      {listTotal! > 0 && !hidePagination && (
         <section css={styles.bottomRow}>
           <AdminListPagination
             listPage={listPage}

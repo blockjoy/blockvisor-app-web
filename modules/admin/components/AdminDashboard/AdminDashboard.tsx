@@ -8,19 +8,24 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import IconOrg from '@public/assets/icons/app/Organization.svg';
 import IconUser from '@public/assets/icons/common/Person.svg';
+import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
 
 type Card = {
-  name: 'Nodes' | 'Hosts' | 'Users' | 'Orgs';
+  name: 'Nodes' | 'Hosts' | 'Users' | 'Orgs' | 'Blockchains';
   getTotal: () => Promise<number>;
   icon: React.ReactNode;
 };
 
 export const AdminDashboard = () => {
   const router = useRouter();
-  const { name, id } = router.query;
 
-  const { getTotalUsers, getTotalHosts, getTotalNodes, getTotalOrgs } =
-    useAdminGetTotals();
+  const {
+    getTotalUsers,
+    getTotalHosts,
+    getTotalNodes,
+    getTotalOrgs,
+    getTotalBlockchains,
+  } = useAdminGetTotals();
 
   const cards: Card[] = [
     {
@@ -32,6 +37,11 @@ export const AdminDashboard = () => {
       name: 'Hosts',
       getTotal: getTotalHosts,
       icon: <IconHost />,
+    },
+    {
+      name: 'Blockchains',
+      getTotal: getTotalBlockchains,
+      icon: <IconBlockchain />,
     },
     {
       name: 'Orgs',

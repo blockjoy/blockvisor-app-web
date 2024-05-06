@@ -1,7 +1,7 @@
 import { sortIpStringArray } from '@modules/admin/utils';
 import { nodeClient } from '@modules/grpc';
 import { useEffect, useState } from 'react';
-import { AdminListFilterControl } from '../../../AdminList/AdminListTable/AdminListTableHeader/AdminListFilter/AdminListFilterControl/AdminListFilterControl';
+import { AdminListFilterControl } from '@modules/admin';
 
 export const AdminNodesFilterIp = ({
   isOpen,
