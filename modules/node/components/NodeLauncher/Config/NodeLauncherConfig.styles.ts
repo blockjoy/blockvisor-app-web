@@ -15,10 +15,4 @@ export const styles = {
     padding: 20px 30px;
     border-top: 1px solid ${theme.colorBorder};
   `,
-  requiredAsterix: (theme: ITheme) => css`
-    display: inline-block;
-    color: ${theme.colorDanger};
-    transform: translateY(4px);
-    font-size: 20px;
-  `,
 };

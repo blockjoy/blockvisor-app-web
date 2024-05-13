@@ -1,4 +1,4 @@
 type AdminFilterDropdownItem = {
-  id: string;
+  id?: string;
   name?: string;
 };

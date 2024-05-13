@@ -1,33 +1,56 @@
 import { useRouter } from 'next/router';
-import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { blockchainClient } from '@modules/grpc';
+import {
+  Blockchain,
+  BlockchainVisibility,
+} from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { capitalize } from 'utils/capitalize';
+import { AdminDetail } from '../AdminDetail/AdminDetail';
+import { AdminBlockchainVersionAdd } from './AdminBlockchainVersionAdd/AdminBlockchainVersionAdd';
+import { spacing } from 'styles/utils.spacing.styles';
+import { sortVersions } from '@modules/node';
 
 export const AdminBlockchain = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  // const handleOpenInApp = () => router.push(`/hosts/${id as string}`);
-
   const getItem = async () =>
     await blockchainClient.getBlockchain(id as string);
+
+  const customItems = (item: Blockchain): AdminDetailProperty[] => [
+    {
+      id: 'visibilityText',
+      label: 'Visibility',
+      data: capitalize(
+        BlockchainVisibility[item.visibility]
+          ?.toString()
+          .replace('BLOCKCHAIN_VISIBILITY_', '')
+          .toLowerCase(),
+      ),
+    },
+    {
+      id: 'versions',
+      label: 'Versions',
+      data: (
+        <ul>
+          {sortVersions(item.nodeTypes[0].versions).map((version) => (
+            <li key={version.id} css={spacing.bottom.small}>
+              {version.version}
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+  ];
 
   return (
     <AdminDetail
       getItem={getItem}
-      // onOpenInApp={handleOpenInApp}
       detailsName="name"
-      // customItems={undefined}
-      // ignoreItems={[
-      //   'id',
-      //   'name',
-      //   'ipAddresses',
-      //   'memSizeBytes',
-      //   'diskSizeBytes',
-      //   'orgId',
-      //   'orgName',
-      //   'managedBy',
-      //   'billingAmount',
-      // ]}
+      ignoreItems={['nodeTypes', 'stats', 'visibility', 'updatedAt']}
+      customItems={customItems}
+      customItemsAtEnd
+      additionalHeaderButtons={<AdminBlockchainVersionAdd />}
     />
   );
 };

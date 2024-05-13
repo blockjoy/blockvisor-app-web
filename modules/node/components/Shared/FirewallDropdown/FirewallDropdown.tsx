@@ -17,6 +17,7 @@ type FirewallDropdownProps = {
   ips?: FilteredIpAddr[];
   deniedIps?: FilteredIpAddr[];
   allowedIps?: FilteredIpAddr[];
+  isDisabled?: boolean;
   onPropertyChanged: (name: string, value: FilteredIpAddr[]) => void;
   noBottomMargin?: boolean;
 };
@@ -26,6 +27,7 @@ export const FirewallDropdown = ({
   ips,
   allowedIps,
   deniedIps,
+  isDisabled,
   onPropertyChanged,
   noBottomMargin,
 }: FirewallDropdownProps) => {
@@ -92,6 +94,7 @@ export const FirewallDropdown = ({
       onClose={() => setIsOpen(false)}
     >
       <DropdownButton
+        disabled={isDisabled}
         ref={dropdownButtonRef}
         isOpen={isOpen}
         icon={<IconFirewall />}

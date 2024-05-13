@@ -24,7 +24,7 @@ export const styles = {
         outline: none;
         color: ${theme.colorText};
         height: 44px;
-        min-width: 400px;
+        min-width: 100%;
         border-radius: 6px;
         padding: 0 10px;
         ${!noBottomMargin && `margin-bottom: 20px;`};
@@ -57,6 +57,9 @@ export const styles = {
     &:invalid {
       border-color: ${theme.colorDanger};
     }
+  `,
+  inputError: (theme: ITheme) => css`
+    border-color: ${theme.colorDanger} !important;
   `,
   inputRequiredAnimation: css`
     animation: ${shake} 0.1s 3;

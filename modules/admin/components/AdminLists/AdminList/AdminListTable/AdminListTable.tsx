@@ -82,7 +82,7 @@ export const AdminListTable = ({
     if (valueExists) {
       valuesCopy = valuesCopy.filter((v) => v !== item.id)!;
     } else {
-      valuesCopy.push(item.id);
+      valuesCopy.push(item.id!);
     }
 
     const columnsCopy = [...columns];

@@ -15,21 +15,19 @@ export const styles = {
     background: transparent;
     border: 0;
     padding: 0;
-    color: ${theme.colorDefault};
+    color: ${theme.colorText};
     text-transform: capitalize;
     cursor: pointer;
     opacity: 0.8;
+    transition: 0.3s;
+
+    > span > svg > path,
+    > span > span > svg > path {
+      fill: ${theme.colorText};
+    }
 
     :hover {
       opacity: 1;
-    }
-
-    :is(:hover, :focus):not(:disabled) span {
-      color: ${theme.colorText};
-    }
-
-    :is(:hover, :focus):not(:disabled) path {
-      fill: ${theme.colorText};
     }
   `,
   menu: css`

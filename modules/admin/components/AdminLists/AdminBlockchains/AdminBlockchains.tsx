@@ -1,7 +1,8 @@
 import { AdminList } from '../AdminList/AdminList';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { blockchainClient } from '@modules/grpc';
+import { blockchainClient, BlockchainFilter } from '@modules/grpc';
+import { pageSize } from '@modules/admin/constants/constants';
 import {
   Blockchain,
   BlockchainSortField,
@@ -10,12 +11,12 @@ import {
 import { DateTime } from '@shared/components';
 
 const columns: AdminListColumn[] = [
-  { name: 'name', isVisible: true },
-  { name: 'ticker', isVisible: true },
-  { name: 'nodes', isVisible: true },
-  { name: 'nodeTypes', isVisible: true },
-  { name: 'visibility', isVisible: true },
-  { name: 'createdAt', isVisible: true },
+  { name: 'name', isVisible: true, width: '200px' },
+  { name: 'ticker', isVisible: true, width: '120px' },
+  { name: 'nodes', isVisible: true, width: '80px' },
+  { name: 'nodeTypes', isVisible: true, width: '120px' },
+  { name: 'visibility', isVisible: true, width: '120px' },
+  { name: 'createdAt', isVisible: true, width: '160px' },
 ];
 
 export const AdminBlockchains = () => {
@@ -25,7 +26,16 @@ export const AdminBlockchains = () => {
     sortField?: number,
     sortOrder?: SortOrder,
   ) => {
-    const response = await blockchainClient.listBlockchains();
+    const Filter: BlockchainFilter = {
+      keyword,
+    };
+
+    const response = await blockchainClient.listBlockchains(
+      undefined,
+      { keyword },
+      { currentPage: page!, itemsPerPage: pageSize },
+      [{ field: sortField!, order: sortOrder! }],
+    );
     return {
       list: response.blockchains,
       total: response.blockchainCount,

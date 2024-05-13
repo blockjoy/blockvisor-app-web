@@ -1,27 +1,41 @@
 import {
   Blockchain,
   BlockchainProperty,
+  BlockchainSearch,
   BlockchainServiceAddVersionRequest,
   BlockchainServiceAddVersionResponse,
   BlockchainServiceClient,
   BlockchainServiceDefinition,
   BlockchainServiceGetRequest,
   BlockchainServiceGetResponse,
-  BlockchainServiceListImageVersionsRequest,
-  BlockchainServiceListImageVersionsResponse,
   BlockchainServiceListRequest,
   BlockchainServiceListResponse,
+  BlockchainSort,
   BlockchainSortField,
   BlockchainVersion,
 } from '../library/blockjoy/v1/blockchain';
-import { callWithTokenRefresh, handleError } from '@modules/grpc';
+import {
+  callWithTokenRefresh,
+  createSearch,
+  getPaginationOffset,
+  handleError,
+} from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import { NodeType } from '../library/blockjoy/common/v1/node';
-import { ImageIdentifier } from '../library/blockjoy/common/v1/image';
 import {
   SearchOperator,
   SortOrder,
 } from '../library/blockjoy/common/v1/search';
+
+export type BlockchainPagination = {
+  currentPage: number;
+  itemsPerPage: number;
+};
+
+export type BlockchainFilter = {
+  orgIds?: string[];
+  keyword?: string;
+};
 
 class BlockchainClient {
   private client: BlockchainServiceClient;
@@ -33,23 +47,32 @@ class BlockchainClient {
 
   async listBlockchains(
     orgId?: string,
+    filter?: BlockchainFilter,
+    pagination?: BlockchainPagination,
+    sort?: BlockchainSort[],
   ): Promise<BlockchainServiceListResponse> {
     const request: BlockchainServiceListRequest = {
       orgIds: orgId ? [orgId!] : [],
-      limit: 1000,
-      offset: 0,
-      sort: [
+      offset: getPaginationOffset(pagination!),
+      limit: pagination?.itemsPerPage! || 1000,
+      sort: sort || [
         {
           field: BlockchainSortField.BLOCKCHAIN_SORT_FIELD_NAME,
           order: SortOrder.SORT_ORDER_ASCENDING,
         },
       ],
-      search: {
-        operator: SearchOperator.SEARCH_OPERATOR_OR,
-        id: '%%',
-        name: '%%',
-      },
     };
+
+    if (filter?.keyword) {
+      const { keyword } = filter;
+      const search: BlockchainSearch = {
+        id: createSearch(keyword),
+        name: createSearch(keyword),
+        operator: SearchOperator.SEARCH_OPERATOR_OR,
+      };
+      request.search = search;
+    }
+
     console.log('listBlockchainsRequest', request);
     try {
       const response: BlockchainServiceListResponse =
@@ -80,19 +103,8 @@ class BlockchainClient {
   }
 
   async addVersion(
-    blockchainId: string,
-    nodeType: NodeType,
-    properties: BlockchainProperty[],
-    version: string,
-    description?: string,
+    request: BlockchainServiceAddVersionRequest,
   ): Promise<BlockchainVersion> {
-    const request: BlockchainServiceAddVersionRequest = {
-      blockchainId,
-      nodeType,
-      properties,
-      version,
-      description,
-    };
     console.log('addVersionRequest', request);
     try {
       const response: BlockchainServiceAddVersionResponse =
