@@ -146,6 +146,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       {...(noBottomMargin && { noBottomMargin })}
     >
       <DropdownButton
+        disabled={disabled}
         isOpen={isOpen}
         isLoading={isLoading}
         type={buttonType}
