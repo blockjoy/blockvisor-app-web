@@ -7,6 +7,11 @@ export const styles = {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding-bottom: 60px;
+
+    @media ${breakpoints.fromLrg} {
+      padding-bottom: 0;
+    }
   `,
   grid: css`
     display: grid;

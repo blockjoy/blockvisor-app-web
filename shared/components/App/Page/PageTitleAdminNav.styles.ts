@@ -6,6 +6,7 @@ export const styles = {
   wrapper: css`
     position: relative;
     height: 44px;
+    min-width: 0;
   `,
   button: (theme: ITheme) => css`
     display: flex;
@@ -15,6 +16,7 @@ export const styles = {
     background: transparent;
     border: 0;
     padding: 0;
+    min-width: 0;
     color: ${theme.colorText};
     text-transform: capitalize;
     cursor: pointer;
@@ -65,6 +67,12 @@ export const styles = {
   `,
   iconActive: css`
     transform: rotate(-180deg);
+  `,
+  name: css`
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.6;
   `,
   nameIcon: css`
     @media ${breakpoints.toSml} {
