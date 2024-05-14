@@ -1,3 +1,4 @@
+import { NetType } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
@@ -35,4 +36,11 @@ export type BlockchainSimple = {
 
 export type BlockchainSimpleWRegion = BlockchainSimple & {
   regions: Region[];
+};
+
+export type NetworkConfigSimple = {
+  id: string;
+  blockchainId?: string;
+  name?: string;
+  netType?: NetType;
 };

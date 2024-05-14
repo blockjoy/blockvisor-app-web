@@ -1,31 +1,26 @@
-import { styles } from './styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { nodeAtoms } from '@modules/node/store/nodeAtoms';
 import {
   Skeleton,
   GridTableViewPicker,
   FiltersHeaderIconText,
   Alert,
 } from '@shared/components';
-import { useNodeList } from '@modules/node/hooks/useNodeList';
+import { nodeAtoms, useNodeList } from '@modules/node';
+import { styles } from './styles';
 
 export const NodeListHeader = () => {
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
+  const nodeCount = useRecoilValue(nodeAtoms.nodeCount);
   const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
-
-  const { nodeCount } = useNodeList();
-
-  const filtersTotal = useRecoilValue(nodeAtoms.filtersTotal);
-
+  const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
   const [activeListType, setActiveListType] = useRecoilState(
     nodeAtoms.activeListType,
   );
 
   const handleFilterCollapseToggled = () => {
     setIsFiltersOpen(!isFiltersOpen);
-    localStorage.setItem('nodeFiltersOpen', JSON.stringify(!isFiltersOpen));
   };
 
   const handleGridTableViewChanged = (type: string) => {
@@ -39,7 +34,7 @@ export const NodeListHeader = () => {
       {!isFiltersOpen && (
         <div css={styles.wrapperInner}>
           {isLoading ? (
-            <Skeleton width="90px" />
+            <Skeleton width="80px" />
           ) : (
             <button
               onClick={handleFilterCollapseToggled}
@@ -51,9 +46,13 @@ export const NodeListHeader = () => {
         </div>
       )}
 
-      <Alert isRounded isSuccess={nodeCount > 0}>
-        {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
-      </Alert>
+      {isLoading ? (
+        <Skeleton width="115px" />
+      ) : (
+        <Alert isRounded isSuccess={nodeCount > 0}>
+          {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
+        </Alert>
+      )}
 
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker

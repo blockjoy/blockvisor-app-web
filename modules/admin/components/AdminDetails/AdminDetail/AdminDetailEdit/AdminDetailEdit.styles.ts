@@ -30,6 +30,7 @@ export const styles = {
 
     @media ${breakpoints.toLrg} {
       flex: 0 0 auto;
+      width: 100%;
     }
   `,
 };

@@ -1,8 +1,7 @@
-import { styles } from './AdminDashboardCard.styles';
-import { Skeleton, SvgIcon } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { AdminSearch } from '../../AdminSearch/AdminSearch';
+import { styles } from './AdminDashboardCard.styles';
+import { Search, Skeleton, SvgIcon } from '@shared/components';
 
 type Props = {
   name: string;
@@ -60,7 +59,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
           </div>
         )}
       </div>
-      <AdminSearch onSearch={handleSearch} isDashboardSearch />
+      <Search version="submit" onSearch={handleSearch} placeholder="Keyword" />
     </article>
   );
 };

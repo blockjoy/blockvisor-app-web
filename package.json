@@ -17,7 +17,7 @@
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
     "animejs": "^3.2.1",
-    "chargebee-typescript": "^2.20.1",
+    "chargebee-typescript": "^2.31.0",
     "date-fns": "^2.29.2",
     "google-protobuf": "^3.21.0",
     "i18n-iso-countries": "^7.6.0",

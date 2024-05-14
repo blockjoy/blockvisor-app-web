@@ -1,9 +1,10 @@
-import { AdminHeaderButton } from '@modules/admin';
+import { AdminHeaderButton } from '@modules/admin/components';
 import { blockchainClient, nodeClient } from '@modules/grpc';
 import {
   DropdownItem,
   DropdownMenu,
   DropdownWrapper,
+  Scrollbar,
 } from '@shared/components';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -23,10 +24,10 @@ export const AdminNodeUpgrade = () => {
   const handleUpgrade = async (version: string) => {
     try {
       await nodeClient.upgradeNode(id as string, version);
+      toast.success('Upgrade Command Sent');
     } catch (err) {
       toast.error('Error Upgrading');
     } finally {
-      toast.success('Upgrade Command Sent');
       setIsOpen(false);
     }
   };
@@ -37,7 +38,9 @@ export const AdminNodeUpgrade = () => {
 
       const blockchains = await blockchainClient.listBlockchains();
 
-      const blockchain = blockchains.find((b) => b.id === node.blockchainId);
+      const blockchain = blockchains.blockchains.find(
+        (b) => b.id === node.blockchainId,
+      );
 
       const nodeType = blockchain?.nodeTypes.find(
         (t) => t.nodeType === node.nodeType,
@@ -45,7 +48,7 @@ export const AdminNodeUpgrade = () => {
 
       setVersions(
         sortVersionStringArray(
-          nodeType?.versions.map((version) => version.version),
+          nodeType?.versions.map(({ version }) => version),
         ),
       );
     } catch (err) {
@@ -67,20 +70,21 @@ export const AdminNodeUpgrade = () => {
         <AdminHeaderButton
           icon={<IconUpgrade />}
           onClick={() => setIsOpen(!isOpen)}
-        >
-          Upgrade
-        </AdminHeaderButton>
+          tooltip="Upgrade"
+        />
         <DropdownMenu additionalStyles={styles.menu} isOpen={isOpen}>
-          {versions.map((version) => (
-            <DropdownItem
-              key={version}
-              onButtonClick={() => handleUpgrade(version)}
-              type="button"
-              size="medium"
-            >
-              <div>{version}</div>
-            </DropdownItem>
-          ))}
+          <Scrollbar additionalStyles={[styles.scrollbar]}>
+            {versions.map((version) => (
+              <DropdownItem
+                key={version}
+                onButtonClick={() => handleUpgrade(version)}
+                type="button"
+                size="medium"
+              >
+                <div>{version}</div>
+              </DropdownItem>
+            ))}
+          </Scrollbar>
         </DropdownMenu>
       </DropdownWrapper>
     </div>

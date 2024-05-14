@@ -1,5 +1,8 @@
 import { ReactNode, useRef } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useAccessibleList } from '@shared/index';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 export type ListProps<T = any> = {
   items: T[];
@@ -11,6 +14,7 @@ export type ListProps<T = any> = {
   isFocused?: boolean;
   handleFocus?: (isFocus: boolean) => void;
   isLoading?: boolean;
+  additionalyStyles: SerializedStyles[] | ((theme: ITheme) => SerializedStyles);
 };
 
 export const List = <T extends { id?: string; name?: string }>({
@@ -22,6 +26,7 @@ export const List = <T extends { id?: string; name?: string }>({
   searchQuery,
   isFocused,
   handleFocus,
+  additionalyStyles,
 }: ListProps<T>) => {
   const listRef = useRef<HTMLUListElement>(null);
   const { activeIndex, handleItemRef } = useAccessibleList({
@@ -34,10 +39,15 @@ export const List = <T extends { id?: string; name?: string }>({
     listRef,
   });
 
-  return items.length > 0 ? (
-    <ul ref={listRef}>
+  const listContent = (
+    <ul
+      ref={listRef}
+      {...(additionalyStyles ? { css: additionalyStyles } : null)}
+    >
       {items.map((item, index) => {
-        const isActive = index === activeIndex;
+        const isActive = !isMobile
+          ? index === activeIndex
+          : selectedItem?.id === item.id;
 
         return (
           <li
@@ -49,7 +59,7 @@ export const List = <T extends { id?: string; name?: string }>({
         );
       })}
     </ul>
-  ) : (
-    <>{renderEmpty?.()}</>
   );
+
+  return items.length > 0 ? listContent : <>{renderEmpty?.()}</>;
 };

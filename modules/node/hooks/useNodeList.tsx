@@ -1,10 +1,13 @@
 import { useRecoilState } from 'recoil';
-import { nodeAtoms } from '../store/nodeAtoms';
-import { nodeClient } from '@modules/grpc';
-import { InitialQueryParams, Pagination } from '../ui/NodeUIHelpers';
-import { getInitialQueryParams } from '../ui/NodeUIContext';
-import { useDefaultOrganization } from '@modules/organization';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { nodeClient } from '@modules/grpc';
+import {
+  nodeAtoms,
+  getInitialQueryParams,
+  InitialQueryParams,
+  Pagination,
+} from '@modules/node';
+import { useDefaultOrganization } from '@modules/organization';
 
 export const useNodeList = () => {
   const orgId = useDefaultOrganization().defaultOrganization?.id;
@@ -26,14 +29,13 @@ export const useNodeList = () => {
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
 
+  const savedQueryParams = getInitialQueryParams();
+
   const loadNodes = async (
     queryParams?: InitialQueryParams,
     showLoader: boolean = true,
   ) => {
-    if (!queryParams) {
-      const savedQueryParams = getInitialQueryParams();
-      queryParams = savedQueryParams;
-    }
+    if (!queryParams) queryParams = savedQueryParams;
 
     const loadingState =
       queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';

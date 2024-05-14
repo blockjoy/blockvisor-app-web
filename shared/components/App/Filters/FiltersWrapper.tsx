@@ -1,10 +1,11 @@
+import { MouseEvent, ReactNode } from 'react';
 import IconPlus from '@public/assets/icons/common/Plus.svg';
 import IconMinus from '@public/assets/icons/common/Minus.svg';
-import { MouseEvent, ReactNode } from 'react';
 import { styles } from './FiltersWrapper.styles';
 
 type FiltersWrapperProps = {
   children: ReactNode;
+  id: string;
   name: string;
   isOpen: boolean;
   isDisabled?: boolean;
@@ -14,6 +15,7 @@ type FiltersWrapperProps = {
 
 export const FiltersWrapper = ({
   children,
+  id,
   name,
   isOpen,
   isDisabled,
@@ -21,22 +23,21 @@ export const FiltersWrapper = ({
   onFilterBlockClicked,
 }: FiltersWrapperProps) => {
   const handleMinusClicked = (e: MouseEvent<HTMLLabelElement>) => {
-    if (!isDisabled) {
-      e.stopPropagation();
-      onPlusMinusClicked(name, isOpen);
-    }
+    if (isDisabled) return;
+
+    e.stopPropagation();
+    onPlusMinusClicked(id, isOpen);
   };
 
-  const handleFilterBlockClicked = (name: string) => {
-    if (!isDisabled) {
-      onFilterBlockClicked(name);
-    }
+  const handleFilterBlockClicked = () => {
+    if (isDisabled) return;
+    onFilterBlockClicked(id);
   };
 
   return (
     <div
       css={[styles.filterBlock, isDisabled && styles.filterBlockDisabled]}
-      onClick={() => handleFilterBlockClicked(name)}
+      onClick={handleFilterBlockClicked}
     >
       <label css={styles.labelHeader} onClick={handleMinusClicked}>
         <span css={styles.labelText}>{name}</span>

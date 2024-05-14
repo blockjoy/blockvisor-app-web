@@ -6,6 +6,7 @@ import { styles } from './AdminListHeaderColumnPicker.styles';
 import { css } from '@emotion/react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { AdminDropdownHeader } from '@modules/admin/components';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import IconColumns from '@public/assets/icons/common/Table.svg';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
 
@@ -47,9 +48,8 @@ export const AdminListHeaderColumnPicker = ({
       <AdminHeaderButton
         icon={<IconColumns />}
         onClick={() => setIsOpen(!isOpen)}
-      >
-        Change Columns
-      </AdminHeaderButton>
+        tooltip="Change Columns"
+      />
       <DropdownMenu
         isOpen={isOpen}
         additionalStyles={[

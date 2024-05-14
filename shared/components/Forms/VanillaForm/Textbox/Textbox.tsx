@@ -3,24 +3,30 @@ import { styles } from './Textbox.styles';
 
 type Props = {
   isRequired: boolean;
+  isError?: boolean;
   defaultValue?: string;
   name: string;
   tabIndex?: number;
   type: string;
   noBottomMargin?: boolean;
+  placeholder?: string;
+  autoFocus?: boolean;
   onChange: (name: string, value: string) => void;
   onKeyUp?: (e: KeyboardEvent<HTMLInputElement>) => void;
 };
 
 export const Textbox = ({
-  onChange,
-  onKeyUp,
   defaultValue,
   name,
   isRequired,
+  isError,
   type = 'text',
   tabIndex,
   noBottomMargin = false,
+  placeholder,
+  autoFocus,
+  onChange,
+  onKeyUp,
 }: Props) => {
   const [value, setValue] = useState<string>();
 
@@ -32,6 +38,7 @@ export const Textbox = ({
   return (
     <div css={styles.wrapper}>
       <input
+        autoFocus={autoFocus}
         tabIndex={tabIndex}
         name={name}
         type={type}
@@ -42,8 +49,9 @@ export const Textbox = ({
           styles.input(noBottomMargin),
           isRequired && styles.inputRequired,
           value === '' && isRequired && styles.inputRequiredAnimation,
+          isError && styles.inputError,
         ]}
-        placeholder="Enter a value"
+        placeholder={placeholder || 'Enter a value'}
         onChange={handleChange}
         onKeyUp={onKeyUp}
       />

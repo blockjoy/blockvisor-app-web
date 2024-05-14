@@ -1,3 +1,5 @@
+import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
+import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { itemsPerPage } from '@shared/utils/infiniteScroll';
 
 export type Pagination = {
@@ -5,17 +7,9 @@ export type Pagination = {
   itemsPerPage: number;
 };
 
-export type InitialFilter = {
-  hostStatus?: string[];
-  hostMemory: number[];
-  hostCPU: number[];
-  hostSpace: number[];
-  keyword?: string;
-};
-
 export type InitialQueryParams = {
   pagination: Pagination;
-  filter: InitialFilter;
+  filter: UIHostFilterCriteria;
 };
 
 export const initialQueryParams: InitialQueryParams = {
@@ -25,9 +19,6 @@ export const initialQueryParams: InitialQueryParams = {
   },
 
   filter: {
-    hostStatus: [],
-    hostMemory: [],
-    hostCPU: [],
-    hostSpace: [],
+    ...HOST_FILTERS_DEFAULT,
   },
 };

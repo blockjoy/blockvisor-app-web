@@ -1,8 +1,11 @@
 import { sort } from '@shared/components';
 import { capitalized } from './capitalized';
 
-export const createDropdownValuesFromEnum = (enumList: any, prefix: string) =>
-  sort(
+export const createDropdownValuesFromEnum = (
+  enumList: any,
+  prefix: string,
+): AdminFilterDropdownItem[] => {
+  const items = sort(
     Object.entries(enumList)
       .filter((f) => +f[0] > 0)
       .map(([id, name]) => ({
@@ -16,3 +19,5 @@ export const createDropdownValuesFromEnum = (enumList: any, prefix: string) =>
       order: 'asc',
     },
   );
+  return items;
+};

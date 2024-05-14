@@ -1,5 +1,6 @@
-import { ChangeEvent, useMemo, useRef, useState } from 'react';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { styles } from './nodeFilters.styles';
@@ -10,20 +11,18 @@ import {
   SvgIcon,
   FiltersHeader,
   FiltersBlock,
+  Search,
 } from '@shared/components';
-import { useSwitchOrganization } from '@modules/organization';
 import {
   nodeAtoms,
   blockchainSelectors,
-  useFilters,
+  useNodeFilters,
   useNodeUIContext,
+  blockchainAtoms,
+  nodeSelectors,
 } from '@modules/node';
 
-export type NodeFiltersProps = {
-  isLoading: LoadingState;
-};
-
-export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
+export const NodeFilters = () => {
   const nodeUIContext = useNodeUIContext();
   const nodeUIProps = useMemo(() => {
     return {
@@ -32,91 +31,71 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
     };
   }, [nodeUIContext]);
 
-  const { filters, updateFilters, removeFilters, resetFilters } =
-    useFilters(nodeUIProps);
+  const {
+    filters,
+    isDirty,
+    tempSearchQuery,
+    tempFiltersTotal,
+    updateFilters,
+    resetFilters,
+    changeTempFilters,
+  } = useNodeFilters(nodeUIProps);
 
-  const { switchOrganization } = useSwitchOrganization();
-
-  const [isDirty, setIsDirty] = useState(false);
+  const isCompleted = useRef(false);
 
   const hasBlockchainError = useRecoilValue(
     blockchainSelectors.blockchainsHasError,
   );
 
+  const nodeListLoadingState = useRecoilValue(nodeAtoms.isLoading);
+  const blockchainsLoadingState = useRecoilValue(
+    blockchainAtoms.blockchainsLoadingState,
+  );
+
   const [isFiltersOpen, setFiltersOpen] = useRecoilState(
     nodeAtoms.isFiltersOpen,
   );
-
-  const filtersTotal = useRecoilValue(nodeAtoms.filtersTotal);
-
-  const [openFilterName, setOpenFilterName] =
-    useState<string | 'Blockchain' | 'Status' | 'Type'>('');
-
-  const isCompleted = useRef(false);
-
-  const handleFilterChanged = (
-    e: ChangeEvent<HTMLInputElement>,
-    list: FilterItem[],
-    setFilterList: SetterOrUpdater<FilterItem[]>,
-  ) => {
-    if (!isDirty && !!setFilterList) {
-      setIsDirty(true);
-    }
-
-    if (!setFilterList) {
-      const foundOrg = list.find((item) => item.id === e.target.id);
-      switchOrganization(foundOrg?.id!, foundOrg?.name!);
-      return;
-    }
-
-    const filtersList = list.map((item) => {
-      if (item.id === e.target.id) {
-        return {
-          ...item,
-          isChecked: !item.isChecked,
-        };
-      }
-
-      return item;
-    });
-
-    setFilterList(filtersList);
-  };
-
-  const hasFiltersApplied = filters.some(
-    (filter) =>
-      filter.name !== 'Organization' &&
-      filter.filterList.some((l) => l.isChecked),
+  const filtersBlockchainSelectedIds = useRecoilValue(
+    nodeSelectors.filtersBlockchainSelectedIds,
   );
 
+  const [openFilterId, setOpenFilterId] = useState('');
+
+  useEffect(() => {
+    if (isMobile) setFiltersOpen(false);
+  }, []);
+
+  const hasFiltersApplied =
+    filters.some((filter) =>
+      filter.list?.some((l: FilterListItem) => l.isChecked),
+    ) || Boolean(tempSearchQuery.length);
+
   const handleResetFilters = () => {
-    setIsDirty(false);
     resetFilters();
-    removeFilters();
-    setOpenFilterName('');
+    setOpenFilterId('');
   };
 
-  const handleUpdateClicked = () => {
-    updateFilters();
-    setIsDirty(false);
+  const handleFilterBlockClicked = (filterId: string) => {
+    setOpenFilterId(filterId);
   };
 
-  const handleFilterBlockClicked = (filterName: string) => {
-    setOpenFilterName(filterName);
-  };
-
-  const handlePlusMinusClicked = (filterName: string, isOpen: boolean) => {
-    const filterNameValue = isOpen ? '' : filterName;
-    setOpenFilterName(filterNameValue);
+  const handlePlusMinusClicked = (filterId: string, isOpen: boolean) => {
+    const filterIdValue = isOpen ? '' : filterId;
+    setOpenFilterId(filterIdValue);
   };
 
   const handleFiltersToggle = () => {
     setFiltersOpen(!isFiltersOpen);
-
-    localStorage.setItem('nodeFiltersOpen', JSON.stringify(false));
   };
 
-  if (isLoading === 'finished') isCompleted.current = true;
+  const handleSearch = (value: string) => changeTempFilters('keyword', value);
+
+  if (
+    nodeListLoadingState === 'finished' &&
+    (blockchainsLoadingState === 'finished' ||
+      !filtersBlockchainSelectedIds.length)
+  )
+    isCompleted.current = true;
 
   return (
     <div
@@ -127,7 +106,7 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
     >
       <FiltersHeader
         isLoading={!isCompleted.current}
-        filtersTotal={filtersTotal}
+        filtersTotal={tempFiltersTotal}
         isFiltersOpen={isFiltersOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
@@ -142,46 +121,50 @@ export const NodeFilters = ({ isLoading }: NodeFiltersProps) => {
         )
       ) : (
         <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
-          <Scrollbar additionalStyles={[styles.filters]}>
-            {filters.map((item) => (
-              <FiltersBlock
-                hasError={item.name === 'Blockchain' && hasBlockchainError}
-                isDisabled={item.isDisabled}
-                isOpen={item.name === openFilterName}
-                onPlusMinusClicked={handlePlusMinusClicked}
-                onFilterBlockClicked={handleFilterBlockClicked}
-                key={item.name}
-                name={item.name}
-                filterCount={item.filterCount}
-                filterList={item.filterList}
-                setFilterList={item?.setFilterList!}
-                onFilterChanged={handleFilterChanged}
-              />
-            ))}
-          </Scrollbar>
-          <button
-            css={styles.updateButton}
-            type="button"
-            disabled={!isDirty}
-            onClick={handleUpdateClicked}
-          >
-            <SvgIcon size="12px">
-              <IconRefresh />
-            </SvgIcon>
-            Apply
-          </button>
-          {hasFiltersApplied && (
+          <form css={styles.form}>
+            <Search
+              onInput={handleSearch}
+              value={tempSearchQuery}
+              size="small"
+              additionalStyles={styles.search}
+            />
+            <Scrollbar additionalStyles={[styles.filters]}>
+              {filters.map((item) => (
+                <FiltersBlock
+                  key={item.id}
+                  hasError={item.id === 'blockchain' && hasBlockchainError}
+                  isOpen={item.id === openFilterId}
+                  filter={item}
+                  onPlusMinusClicked={handlePlusMinusClicked}
+                  onFilterBlockClicked={handleFilterBlockClicked}
+                  onFilterChanged={changeTempFilters}
+                />
+              ))}
+            </Scrollbar>
             <button
-              css={styles.resetButton}
-              type="button"
-              onClick={handleResetFilters}
+              css={styles.updateButton}
+              type="submit"
+              disabled={!isDirty}
+              onClick={updateFilters}
             >
-              <SvgIcon size="18px">
-                <IconClose />
+              <SvgIcon size="12px">
+                <IconRefresh />
               </SvgIcon>
-              Reset Filters
+              Apply
             </button>
-          )}
+            {hasFiltersApplied && (
+              <button
+                css={styles.resetButton}
+                type="button"
+                onClick={handleResetFilters}
+              >
+                <SvgIcon size="18px">
+                  <IconClose />
+                </SvgIcon>
+                Reset Filters
+              </button>
+            )}
+          </form>
         </div>
       )}
     </div>

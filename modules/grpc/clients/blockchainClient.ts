@@ -1,11 +1,41 @@
 import {
   Blockchain,
+  BlockchainProperty,
+  BlockchainSearch,
+  BlockchainServiceAddVersionRequest,
+  BlockchainServiceAddVersionResponse,
   BlockchainServiceClient,
   BlockchainServiceDefinition,
+  BlockchainServiceGetRequest,
+  BlockchainServiceGetResponse,
+  BlockchainServiceListRequest,
+  BlockchainServiceListResponse,
+  BlockchainSort,
+  BlockchainSortField,
+  BlockchainVersion,
 } from '../library/blockjoy/v1/blockchain';
-
-import { authClient, getOptions, handleError } from '@modules/grpc';
+import {
+  callWithTokenRefresh,
+  createSearch,
+  getPaginationOffset,
+  handleError,
+} from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
+import { NodeType } from '../library/blockjoy/common/v1/node';
+import {
+  SearchOperator,
+  SortOrder,
+} from '../library/blockjoy/common/v1/search';
+
+export type BlockchainPagination = {
+  currentPage: number;
+  itemsPerPage: number;
+};
+
+export type BlockchainFilter = {
+  orgIds?: string[];
+  keyword?: string;
+};
 
 class BlockchainClient {
   private client: BlockchainServiceClient;
@@ -15,16 +45,75 @@ class BlockchainClient {
     this.client = createClient(BlockchainServiceDefinition, channel);
   }
 
-  async listBlockchains(orgId?: string): Promise<Blockchain[]> {
-    const request = {
+  async listBlockchains(
+    orgId?: string,
+    filter?: BlockchainFilter,
+    pagination?: BlockchainPagination,
+    sort?: BlockchainSort[],
+  ): Promise<BlockchainServiceListResponse> {
+    const request: BlockchainServiceListRequest = {
+      orgIds: orgId ? [orgId!] : [],
+      offset: getPaginationOffset(pagination!),
+      limit: pagination?.itemsPerPage! || 1000,
+      sort: sort || [
+        {
+          field: BlockchainSortField.BLOCKCHAIN_SORT_FIELD_NAME,
+          order: SortOrder.SORT_ORDER_ASCENDING,
+        },
+      ],
+    };
+
+    if (filter?.keyword) {
+      const { keyword } = filter;
+      const search: BlockchainSearch = {
+        id: createSearch(keyword),
+        name: createSearch(keyword),
+        operator: SearchOperator.SEARCH_OPERATOR_OR,
+      };
+      request.search = search;
+    }
+
+    console.log('listBlockchainsRequest', request);
+    try {
+      const response: BlockchainServiceListResponse =
+        await callWithTokenRefresh(this.client.list.bind(this.client), request);
+      console.log('listBlockchainsResponse', response);
+      return response;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async getBlockchain(id: string, orgId?: string): Promise<Blockchain> {
+    const request: BlockchainServiceGetRequest = {
+      id,
       orgId,
     };
-    console.log('getBlockchainsRequest', request);
+    console.log('getBlockchainRequest', request);
     try {
-      await authClient.refreshToken();
-      const response = await this.client.list(request, getOptions());
-      console.log('getBlockchainsResponse', response);
-      return response.blockchains;
+      const response: BlockchainServiceGetResponse = await callWithTokenRefresh(
+        this.client.get.bind(this.client),
+        request,
+      );
+      console.log('getBlockchainResponse', response);
+      return response.blockchain!;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async addVersion(
+    request: BlockchainServiceAddVersionRequest,
+  ): Promise<BlockchainVersion> {
+    console.log('addVersionRequest', request);
+    try {
+      const response: BlockchainServiceAddVersionResponse =
+        await callWithTokenRefresh(
+          this.client.addVersion.bind(this.client),
+          request,
+        );
+      console.log('addVersionResponse', response);
+      return response.version!;
     } catch (err: any) {
       return handleError(err);
     }

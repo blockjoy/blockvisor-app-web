@@ -14,7 +14,6 @@ import {
   usePaymentAuthorization,
   billingSelectors,
 } from '@modules/billing';
-import { authSelectors } from '@modules/auth';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();

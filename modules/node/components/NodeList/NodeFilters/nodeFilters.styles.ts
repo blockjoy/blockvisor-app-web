@@ -71,9 +71,10 @@ export const styles = {
     gap: 10px;
     color: ${theme.colorDefault};
     font-size: 16px;
-    height: 56px;
+    height: 40px;
     cursor: pointer;
     transition: 0.3s;
+    margin-top: 7px;
 
     path {
       fill: ${theme.colorDefault};
@@ -116,6 +117,19 @@ export const styles = {
     &:disabled {
       opacity: 0.3;
       cursor: not-allowed;
+    }
+  `,
+  form: css`
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  `,
+  search: css`
+    margin-bottom: 16px;
+
+    input {
+      height: 38px;
     }
   `,
 };

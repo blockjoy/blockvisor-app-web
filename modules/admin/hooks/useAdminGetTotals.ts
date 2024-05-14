@@ -3,6 +3,7 @@ import {
   userClient,
   hostClient,
   organizationClient,
+  blockchainClient,
 } from '@modules/grpc';
 
 export const useAdminGetTotals = () => {
@@ -44,10 +45,16 @@ export const useAdminGetTotals = () => {
     return response.orgCount;
   };
 
+  const getTotalBlockchains = async () => {
+    const response = await blockchainClient.listBlockchains();
+    return response.blockchainCount;
+  };
+
   return {
     getTotalUsers,
     getTotalNodes,
     getTotalHosts,
     getTotalOrgs,
+    getTotalBlockchains,
   };
 };

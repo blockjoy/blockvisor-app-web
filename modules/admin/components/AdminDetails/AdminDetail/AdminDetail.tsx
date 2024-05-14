@@ -16,6 +16,7 @@ type Props = {
   hasMetrics?: boolean;
   hasLogs?: boolean;
   additionalHeaderButtons?: React.ReactNode;
+  customItemsAtEnd?: boolean;
   getItem: () => Promise<{}>;
   customItems?: (item: any) => AdminDetailProperty[];
   onOpenInApp?: () => void;
@@ -34,6 +35,7 @@ export const AdminDetail = ({
   hasMetrics,
   hasLogs,
   additionalHeaderButtons,
+  customItemsAtEnd,
   getItem,
   customItems,
   onOpenInApp,
@@ -67,7 +69,11 @@ export const AdminDetail = ({
       });
 
   if (properties && customItems) {
-    properties.unshift(...customItems(item));
+    if (customItemsAtEnd) {
+      properties.push(...customItems(item));
+    } else {
+      properties.unshift(...customItems(item));
+    }
   }
 
   const handleCopyObject = () =>

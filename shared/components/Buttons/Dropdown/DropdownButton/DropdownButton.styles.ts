@@ -39,8 +39,7 @@ export const styles = {
       padding-right: 20px;
     }
 
-    :focus,
-    :hover {
+    :not(:disabled):is(:focus, :hover) {
       svg path {
         fill: ${theme.colorText};
       }

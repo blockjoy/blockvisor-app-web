@@ -43,6 +43,8 @@ export async function fetchItemPrices() {
     const simplifiedItemPrices = itemPrices.map((itemPrice) => ({
       id: itemPrice.id,
       item_id: itemPrice.item_id,
+      // @ts-ignore
+      price_variant_id: itemPrice.price_variant_id,
       price: itemPrice.price,
       currency_code: itemPrice.currency_code,
       period_unit: itemPrice.period_unit,

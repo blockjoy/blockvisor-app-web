@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSignIn } from '@modules/auth';
-import { useGetBlockchains } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
 import { Alert, Button, FormError, Input } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
@@ -32,8 +31,6 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-
-  useGetBlockchains();
 
   useBilling();
 

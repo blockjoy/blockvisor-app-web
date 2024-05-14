@@ -1,83 +1,53 @@
-import { Checkbox } from '@shared/components';
-import { ChangeEvent, FC, MouseEvent } from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { ChangeEvent } from 'react';
+import { Checkbox, FiltersWrapper } from '@shared/components';
 import { styles } from './FiltersBlock.styles';
-import IconCheck from '@public/assets/icons/common/Check.svg';
-import IconPlus from '@public/assets/icons/common/Plus.svg';
-import IconMinus from '@public/assets/icons/common/Minus.svg';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
+import IconCheck from '@public/assets/icons/common/Check.svg';
 
 type FiltersBlockProps = {
-  name: string;
   hasError: boolean;
   isOpen: boolean;
-  isDisabled: boolean;
-  filterCount: number;
-  filterList: FilterItem[];
-  setFilterList: SetterOrUpdater<FilterItem[]>;
-  onPlusMinusClicked: (filterName: string, args1: boolean) => void;
-  onFilterBlockClicked: (name: string) => void;
-  onFilterChanged: (
-    e: ChangeEvent<HTMLInputElement>,
-    list: FilterItem[],
-    setFilterList: SetterOrUpdater<FilterItem[]>,
-  ) => void;
+  filter: FilterItem;
+  onPlusMinusClicked: (filterId: string, isOpen: boolean) => void;
+  onFilterBlockClicked: (id: string) => void;
+  onFilterChanged: (type: string, value: string) => void;
 };
 
 export const FiltersBlock = ({
-  name,
   hasError,
   isOpen,
-  isDisabled,
-  filterCount,
-  filterList,
+  filter,
   onPlusMinusClicked,
   onFilterBlockClicked,
   onFilterChanged,
-  setFilterList,
 }: FiltersBlockProps) => {
-  const handleMinusClicked = (e: MouseEvent<HTMLLabelElement>) => {
-    if (!isDisabled) {
-      e.stopPropagation();
-      onPlusMinusClicked(name, isOpen);
-    }
-  };
-
-  const handleFilterBlockClicked = (name: string) => {
-    if (!isDisabled) {
-      onFilterBlockClicked(name);
-    }
-  };
+  const { id, name, disabled, count, list } = filter;
 
   return (
-    <div
-      css={[styles.filterBlock, isDisabled && styles.filterBlockDisabled]}
-      onClick={() => handleFilterBlockClicked(name)}
+    <FiltersWrapper
+      id={id}
+      name={name}
+      isOpen={isOpen}
+      onFilterBlockClicked={onFilterBlockClicked}
+      onPlusMinusClicked={onPlusMinusClicked}
+      isDisabled={disabled}
     >
-      <label css={styles.labelHeader} onClick={handleMinusClicked}>
-        <span css={styles.labelText}>
-          {name} {filterCount ? `(${filterCount})` : ''}
-        </span>
-        {!isDisabled && (
-          <a css={styles.labelIcon}>{isOpen ? <IconMinus /> : <IconPlus />}</a>
-        )}
-      </label>
       <div
-        style={{ padding: !isOpen && !filterCount ? '0' : '' }}
+        style={{ padding: !isOpen && !count ? '0' : '' }}
         css={[styles.checkboxList, styles.checkboxListShowAll]}
       >
         {isOpen ? (
           hasError ? (
             <div css={[typo.smaller, colors.warning]}>Error loading data</div>
           ) : (
-            filterList
+            list
               ?.filter((item) => item.id)
               ?.map((item) => (
                 <div key={item.id} css={styles.checkboxRow}>
                   <Checkbox
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      onFilterChanged(e, filterList, setFilterList);
+                      onFilterChanged(id, item.id!);
                     }}
                     id={item.id}
                     name={item.name!}
@@ -91,8 +61,8 @@ export const FiltersBlock = ({
               ))
           )
         ) : (
-          filterList
-            .filter((item) => item.isChecked)
+          list
+            ?.filter((item) => item.isChecked)
             .map((item) => (
               <div key={item.id} css={styles.selectedFilterRow}>
                 <div css={styles.checkedIcon}>
@@ -105,6 +75,6 @@ export const FiltersBlock = ({
             ))
         )}
       </div>
-    </div>
+    </FiltersWrapper>
   );
 };

@@ -5,7 +5,7 @@ export type TableGridLoaderProps = {
   length?: number;
 };
 
-const TableGridLoader = ({ length }: TableGridLoaderProps) => {
+export const TableGridLoader = ({ length }: TableGridLoaderProps) => {
   return (
     <>
       {[...Array(length)].map((_, index) => {
@@ -31,5 +31,3 @@ const TableGridLoader = ({ length }: TableGridLoaderProps) => {
     </>
   );
 };
-
-export default TableGridLoader;

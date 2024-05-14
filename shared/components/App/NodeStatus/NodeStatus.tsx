@@ -8,7 +8,7 @@ import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/com
 export type NodeStatusType = 'container' | 'sync' | 'staking';
 
 export type NodeStatusListItem = {
-  id: number;
+  id: string | number;
   name: string;
   type?: NodeStatusType;
 };

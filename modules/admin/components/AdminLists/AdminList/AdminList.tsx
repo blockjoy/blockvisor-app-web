@@ -1,4 +1,5 @@
 import { useUpdateQueryString } from '@modules/admin/hooks';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { loadAdminColumns } from '@modules/admin/utils';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRouter } from 'next/router';
@@ -10,6 +11,7 @@ import { AdminListTable } from './AdminListTable/AdminListTable';
 type Props = {
   name: string;
   columns: AdminListColumn[];
+  hidePagination?: boolean;
   defaultSortField: number;
   defaultSortOrder: SortOrder;
   listMap: (list: any[]) => any[];
@@ -36,6 +38,7 @@ type ListSettings = {
 export const AdminList = ({
   name,
   columns,
+  hidePagination,
   defaultSortField,
   defaultSortOrder,
   listMap,
@@ -57,7 +60,7 @@ export const AdminList = ({
     sortField: +localStorage?.getItem(`${name}SortField`)! || defaultSortField,
     sortOrder: +localStorage?.getItem(`${name}SortOrder`)! || defaultSortOrder,
     filters: loadAdminColumns(name, columns).filter(
-      (column) => column.filterSettings,
+      (column) => !!column.filterComponent,
     ),
   });
 
@@ -194,6 +197,7 @@ export const AdminList = ({
         listTotal={listTotal}
         listPage={listPage!}
         columns={columnsState}
+        hidePagination={hidePagination}
         activeSortField={sortField}
         activeSortOrder={sortOrder}
         onPageChanged={handlePageChanged}

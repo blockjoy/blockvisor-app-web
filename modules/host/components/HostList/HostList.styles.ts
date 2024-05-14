@@ -9,8 +9,6 @@ export const styles = {
     @media ${breakpoints.fromXLrg} {
       display: flex;
       flex-direction: row;
-      padding: 0 24px 0 0;
-      flex: 1 1 auto;
     }
   `,
   gridWrapper: css`

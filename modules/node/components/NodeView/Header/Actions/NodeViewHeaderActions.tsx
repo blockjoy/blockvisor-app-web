@@ -2,12 +2,12 @@ import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import { useNodeView } from '@modules/node';
 import { ActionsDropdown, ActionsDropdownItem } from '@shared/components';
+import { authSelectors } from '@modules/auth';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconStart from '@public/assets/icons/app/NodeStart.svg';
 import IconWarning from '@public/assets/icons/common/Warning.svg';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
-import { authSelectors } from '@modules/auth';
 
 type Props = {
   onDeleteClicked: VoidFunction;
@@ -19,17 +19,36 @@ export const NodeViewHeaderActions = ({
   onReportProblemClicked,
 }: Props) => {
   const router = useRouter();
+
   const { node, stopNode, startNode } = useNodeView();
 
   const handleStop = () => stopNode(node?.id);
+
   const handleStart = () => startNode(node?.id);
+
   const handleAdminClicked = () =>
     router.push(`/admin?name=nodes&id=${node?.id}`);
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
   const canDelete = useRecoilValue(authSelectors.hasPermission('node-delete'));
+
+  const canDeleteAdmin = useRecoilValue(
+    authSelectors.hasPermission('node-admin-delete'),
+  );
+
   const canStart = useRecoilValue(authSelectors.hasPermission('node-start'));
+
+  const canStartAdmin = useRecoilValue(
+    authSelectors.hasPermission('node-admin-start'),
+  );
+
   const canStop = useRecoilValue(authSelectors.hasPermission('node-stop'));
+
+  const canStopAdmin = useRecoilValue(
+    authSelectors.hasPermission('node-admin-stop'),
+  );
+
   const canReport = useRecoilValue(authSelectors.hasPermission('node-report'));
 
   const items: ActionsDropdownItem[] = [];
@@ -42,11 +61,11 @@ export const NodeViewHeaderActions = ({
     });
   }
 
-  if (canStop) {
+  if (canStop || canStopAdmin) {
     items.push({ name: 'Stop', icon: <IconStop />, onClick: handleStop });
   }
 
-  if (canStart) {
+  if (canStart || canStartAdmin) {
     items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
   }
 
@@ -58,7 +77,7 @@ export const NodeViewHeaderActions = ({
     });
   }
 
-  if (canDelete) {
+  if (canDelete || canDeleteAdmin) {
     items.push({
       name: 'Delete',
       icon: <IconDelete />,

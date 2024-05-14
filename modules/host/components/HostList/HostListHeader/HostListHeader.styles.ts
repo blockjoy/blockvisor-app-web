@@ -61,4 +61,9 @@ export const styles = {
       display: none;
     }
   `,
+  search: css`
+    @media ${breakpoints.toMed} {
+      display: none;
+    }
+  `,
 };

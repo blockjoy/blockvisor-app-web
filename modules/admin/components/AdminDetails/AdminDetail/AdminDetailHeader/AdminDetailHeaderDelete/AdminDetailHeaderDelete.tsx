@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { styles } from './AdminDetailHeaderDelete.styles';
-import { AdminHeaderButton } from '@modules/admin';
+import { AdminHeaderButton } from '@modules/admin/components';
 import { ButtonSpinner } from '@shared/components';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 
@@ -26,9 +26,12 @@ export const AdminDetailHeaderDelete = ({ onDelete }: Props) => {
   return (
     <div css={styles.wrapper}>
       {step === 1 ? (
-        <AdminHeaderButton isDanger icon={<IconDelete />} onClick={toggleStep}>
-          Delete
-        </AdminHeaderButton>
+        <AdminHeaderButton
+          isDanger
+          icon={<IconDelete />}
+          onClick={toggleStep}
+          tooltip="Delete"
+        />
       ) : (
         <>
           <p css={styles.text}>Delete?</p>

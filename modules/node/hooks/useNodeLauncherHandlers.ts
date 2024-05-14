@@ -26,11 +26,13 @@ import {
   nodeAtoms,
   nodeLauncherSelectors,
   useGetRegions,
+  sortNetworks,
+  sortNodeTypes,
+  sortVersions,
 } from '@modules/node';
 import { organizationAtoms } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
-import { sortNetworks, sortNodeTypes, sortVersions } from '../utils';
 import { matchSKU } from '@modules/billing';
 
 type IUseNodeLauncherHandlersParams = {

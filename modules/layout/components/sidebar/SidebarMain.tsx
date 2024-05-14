@@ -13,7 +13,10 @@ import IconChat from '@public/assets/icons/common/Chat.svg';
 import IconSliders from '@public/assets/icons/app/Sliders.svg';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
+import {
+  sidebarOpen,
+  sidebarOpenMobile,
+} from '@modules/layout/store/layoutAtoms';
 import { invitationAtoms, organizationAtoms } from '@modules/organization';
 import { ROUTES } from '@shared/index';
 import { authSelectors } from '@modules/auth';
@@ -38,7 +41,10 @@ export default () => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-  const [isSidebarOpen, setIsSidebarOpen] = useRecoilState(sidebarOpen);
+  const isSidebarOpen = useRecoilValue(sidebarOpen);
+  const [isSidebarOpenMobile, setIsSidebarOpenMobile] =
+    useRecoilState(sidebarOpenMobile);
+
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const invitationCount = useRecoilValue(
     invitationAtoms.receivedInvitations,
@@ -49,7 +55,7 @@ export default () => {
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
-      setIsSidebarOpen(false);
+      setIsSidebarOpenMobile(false);
     }
   };
 
@@ -130,7 +136,7 @@ export default () => {
   });
 
   return (
-    <main css={styles.wrapper(isSidebarOpen)}>
+    <main css={styles.wrapper(isSidebarOpenMobile)}>
       <div css={styles.navigation}>
         {navBlocks.map((block) => (
           <div key={block.id} css={styles.block(isSidebarOpen)}>

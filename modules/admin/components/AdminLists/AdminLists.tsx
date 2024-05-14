@@ -2,6 +2,7 @@ import { AdminNodes } from './AdminNodes/AdminNodes';
 import { AdminUsers } from './AdminUsers/AdminUsers';
 import { AdminHosts } from './AdminHosts/AdminHosts';
 import { AdminOrgs } from './AdminOrgs/AdminOrgs';
+import { AdminBlockchains } from './AdminBlockchains/AdminBlockchains';
 import { styles } from './AdminLists.styles';
 import { useRouter } from 'next/router';
 
@@ -15,6 +16,7 @@ const views = [
   { name: 'nodes', component: <AdminNodes /> },
   { name: 'hosts', component: <AdminHosts /> },
   { name: 'orgs', component: <AdminOrgs /> },
+  { name: 'blockchains', component: <AdminBlockchains /> },
 ];
 
 export const AdminLists = () => {

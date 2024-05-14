@@ -28,10 +28,14 @@ class CommandClient {
         exitCode,
       };
 
+      console.log('listCommandRequest', request);
+
       const response = await callWithTokenRefresh(
         this.client.list.bind(this.client),
         request,
       );
+
+      console.log('listCommandResponse', response);
 
       return response.commands;
     } catch (err) {

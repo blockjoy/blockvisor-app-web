@@ -2,15 +2,18 @@ import { openGrafanaUrl } from '@modules/admin/utils';
 import { Skeleton } from '@shared/components';
 import { AdminHeader } from '../../../AdminHeader/AdminHeader';
 import { styles } from './AdminDetailHeader.styles';
-import { AdminDetailHeaderDelete, AdminHeaderButton } from '@modules/admin';
+import {
+  AdminDetailHeaderDelete,
+  AdminHeaderButton,
+} from '@modules/admin/components';
+import { isMobile } from 'react-device-detect';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import IconCopy from '@public/assets/icons/common/Copy.svg';
 import IconPencil from '@public/assets/icons/common/Pencil.svg';
 import IconBinoculars from '@public/assets/icons/common/Binoculars.svg';
 import IconGraph from '@public/assets/icons/common/Graph.svg';
 import IconLogs from '@public/assets/icons/common/Logs.svg';
-import { isMobile } from 'react-device-detect';
-import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 
 type Props = {
   name: string;
@@ -68,37 +71,37 @@ export const AdminDetailHeader = ({
                 <AdminHeaderButton
                   icon={<IconPencil />}
                   onClick={onToggleEditMode}
-                >
-                  Edit
-                </AdminHeaderButton>
+                  tooltip="Edit"
+                />
               )}
               {!!onOpenAppView && (
                 <AdminHeaderButton
                   icon={<IconBinoculars />}
                   onClick={onOpenAppView}
-                >
-                  View In App
-                </AdminHeaderButton>
+                  tooltip="View In App"
+                />
               )}
               {!!hasMetrics && (
                 <AdminHeaderButton
                   icon={<IconGraph />}
                   onClick={() => openGrafanaUrl?.(identifier!)}
-                >
-                  Grafana Metrics
-                </AdminHeaderButton>
+                  tooltip="Grafana Metrics"
+                />
               )}
               {!!hasLogs && (
                 <AdminHeaderButton
                   icon={<IconLogs />}
                   onClick={() => openGrafanaUrl(identifier!, 'node-logs')}
-                >
-                  Grafana Logs
-                </AdminHeaderButton>
+                  tooltip="Grafana Logs"
+                />
               )}
-              <AdminHeaderButton icon={<IconCopy />} onClick={onCopyObject}>
-                Copy Object
-              </AdminHeaderButton>
+              {!!onCopyObject && (
+                <AdminHeaderButton
+                  icon={<IconCopy />}
+                  onClick={onCopyObject}
+                  tooltip="Copy Object"
+                />
+              )}
               {additionalHeaderButtons}
               {!!onDelete && (
                 <AdminDetailHeaderDelete onDelete={handleDelete} />

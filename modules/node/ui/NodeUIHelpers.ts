@@ -1,3 +1,5 @@
+import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
+import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { itemsPerPage } from '@shared/index';
 
 export type Pagination = {
@@ -5,16 +7,9 @@ export type Pagination = {
   itemsPerPage: number;
 };
 
-export type InitialFilter = {
-  blockchain?: string[];
-  nodeStatus?: string[];
-  nodeType?: string[];
-  keyword?: string;
-};
-
 export type InitialQueryParams = {
   pagination: Pagination;
-  filter: InitialFilter;
+  filter: UINodeFilterCriteria;
 };
 
 export const initialQueryParams: InitialQueryParams = {
@@ -23,10 +18,5 @@ export const initialQueryParams: InitialQueryParams = {
     itemsPerPage: itemsPerPage['xl'],
   },
 
-  filter: {
-    blockchain: [],
-    nodeStatus: [],
-    nodeType: [],
-    keyword: '',
-  },
+  filter: NODE_FILTERS_DEFAULT,
 };

@@ -2,19 +2,19 @@ import { styles } from './AdminListTable.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 import { Copy, TableSkeleton } from '@shared/components';
-import { capitalized } from '@modules/admin/utils/capitalized';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
-import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
-import { AdminListFilter } from './AdminListFilter/AdminListFilter';
 import { UIEvent, useState } from 'react';
+import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 
 type Props = {
   name: string;
   isLoading: boolean;
   columns: AdminListColumn[];
+  hidePagination?: boolean;
   list: IAdminItem[];
   listTotal?: number;
   listPage: number;
@@ -22,12 +22,13 @@ type Props = {
   activeSortOrder: SortOrder;
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
-  onFiltersChanged: (filters: AdminListColumn[]) => void;
+  onFiltersChanged: (nextFilters: AdminListColumn[]) => void;
 };
 
 export const AdminListTable = ({
   name,
   columns,
+  hidePagination,
   isLoading,
   list,
   listTotal,
@@ -63,8 +64,52 @@ export const AdminListTable = ({
     });
   };
 
-  const handleTableScroll = (e: UIEvent<HTMLDivElement>) => {
+  const handleTableScroll = (e: UIEvent<HTMLDivElement>) =>
     setScrollPosition(e.currentTarget.scrollLeft);
+
+  const handleFilterChange = (
+    item: AdminFilterDropdownItem,
+    columnName: string,
+  ) => {
+    const column = columns.find((c) => c.name === columnName);
+
+    let valuesCopy = column?.filterSettings?.values
+      ? [...column?.filterSettings.values]
+      : [];
+
+    const valueExists = valuesCopy?.some((value) => value === item.id);
+
+    if (valueExists) {
+      valuesCopy = valuesCopy.filter((v) => v !== item.id)!;
+    } else {
+      valuesCopy.push(item.id!);
+    }
+
+    const columnsCopy = [...columns];
+
+    const foundFilter = columnsCopy.find(
+      (column) => column.name === columnName,
+    );
+
+    if (!foundFilter || !foundFilter?.filterComponent) return;
+
+    foundFilter.filterSettings = foundFilter.filterSettings || {};
+
+    foundFilter.filterSettings.values = valuesCopy;
+
+    onFiltersChanged(columnsCopy);
+  };
+
+  const handleReset = (columnName: string) => {
+    const filtersCopy = [...columns];
+
+    const foundFilter = filtersCopy.find((f) => f.name === columnName);
+
+    if (!foundFilter || !foundFilter.filterSettings) return;
+
+    foundFilter.filterSettings.values = [];
+
+    onFiltersChanged(filtersCopy);
   };
 
   if (isLoading)
@@ -75,7 +120,6 @@ export const AdminListTable = ({
     );
 
   const columnsVisible = columns.filter((column) => column.isVisible);
-  const columnsWithFilter = columns.filter((column) => column.filterSettings);
 
   return (
     <>
@@ -88,31 +132,15 @@ export const AdminListTable = ({
                   key={column.name}
                   css={styles.tableCellWidth(column.width!)}
                 >
-                  <span css={styles.tableHeader}>
-                    {column.sortField ? (
-                      <AdminListTableSortButton
-                        sortField={column.sortField}
-                        sortOrder={column.sortOrder}
-                        activeSortField={activeSortField}
-                        activeSortOrder={activeSortOrder}
-                        onClick={() =>
-                          onSortChanged(column.sortField!, column.sortOrder!)
-                        }
-                      >
-                        {capitalized(column.displayName || column.name)}
-                      </AdminListTableSortButton>
-                    ) : (
-                      capitalized(column.displayName || column.name)
-                    )}
-                    {Boolean(column.filterSettings) && (
-                      <AdminListFilter
-                        filters={columnsWithFilter}
-                        filterSettings={column.filterSettings!}
-                        onChange={onFiltersChanged}
-                        tableScrollPosition={+scrollPosition!}
-                      />
-                    )}
-                  </span>
+                  <AdminListTableHeader
+                    activeSortField={activeSortField}
+                    activeSortOrder={activeSortOrder}
+                    column={column}
+                    scrollPosition={scrollPosition!}
+                    onFilterChange={handleFilterChange}
+                    onSortChanged={onSortChanged}
+                    onReset={handleReset}
+                  />
                 </th>
               ))}
             </tr>
@@ -160,7 +188,7 @@ export const AdminListTable = ({
           </tbody>
         </table>
       </section>
-      {listTotal! > 0 && (
+      {listTotal! > 0 && !hidePagination && (
         <section css={styles.bottomRow}>
           <AdminListPagination
             listPage={listPage}

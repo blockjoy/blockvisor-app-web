@@ -4,6 +4,7 @@ import { pageSize } from '@modules/admin/constants/constants';
 import { User, UserSortField } from '@modules/grpc/library/blockjoy/v1/user';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { DateTime } from '@shared/components';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 
 const columns: AdminListColumn[] = [
   {

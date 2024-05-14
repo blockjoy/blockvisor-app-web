@@ -11,7 +11,13 @@ const blockchainsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const blockchainSearch = atom<string | null>({
+  key: 'blockchains.search',
+  default: null,
+});
+
 export const blockchainAtoms = {
   blockchains,
   blockchainsLoadingState,
+  blockchainSearch,
 };

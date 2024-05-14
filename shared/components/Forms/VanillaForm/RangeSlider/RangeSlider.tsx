@@ -10,8 +10,7 @@ type RangeSliderProps = {
   max: number;
   values: [number, number];
   customValues?: [number, number];
-  setValues: SetterOrUpdater<[number, number]>;
-  onStateChange: VoidFunction;
+  setValues: (val: [number, number]) => void;
   formatter: (value: number) => void;
 };
 
@@ -22,7 +21,6 @@ export const RangeSlider = ({
   values,
   customValues,
   setValues,
-  onStateChange,
   formatter,
 }: RangeSliderProps) => {
   const innerValuesDefaultFirst: number =
@@ -49,7 +47,6 @@ export const RangeSlider = ({
     if (customValues)
       setValues([customValues[values[0]], customValues[values[1]]]);
     else setValues(values as [number, number]);
-    onStateChange();
   };
 
   return (

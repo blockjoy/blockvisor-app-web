@@ -27,11 +27,11 @@ import {
   SortOrder,
 } from '../library/blockjoy/common/v1/search';
 
-export type HostFilterCriteria = {
+export type UIHostFilterCriteria = {
   hostStatus?: string[];
-  hostMemory?: number[];
-  hostCPU?: number[];
-  hostSpace?: number[];
+  hostMemory?: [number, number];
+  hostCPU?: [number, number];
+  hostSpace?: [number, number];
   keyword?: string;
 };
 
@@ -50,12 +50,13 @@ class HostClient {
 
   async listHosts(
     orgId?: string,
-    filterCriteria?: HostFilterCriteria,
+    filter?: UIHostFilterCriteria,
     pagination?: HostPagination,
     sort?: HostSort[],
   ): Promise<HostServiceListResponse> {
     const request: HostServiceListRequest = {
-      orgId,
+      orgIds: orgId ? [orgId!] : [],
+      versions: [],
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
       sort: sort || [
@@ -66,8 +67,8 @@ class HostClient {
       ],
     };
 
-    if (filterCriteria?.keyword) {
-      const { keyword } = filterCriteria;
+    if (filter?.keyword) {
+      const { keyword } = filter;
       const search: HostSearch = {
         id: createSearch(keyword),
         ip: createSearch(keyword),
@@ -76,6 +77,8 @@ class HostClient {
       };
       request.search = search;
     }
+
+    console.log('listHostsRequest', request);
 
     try {
       const response = await callWithTokenRefresh(

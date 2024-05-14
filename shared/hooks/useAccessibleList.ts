@@ -1,4 +1,5 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 
 type UseAccessibleListParams<T> = {
   items: T[];
@@ -115,6 +116,8 @@ export const useAccessibleList = <T extends { id?: string; name?: string }>({
   }, [isFocused]);
 
   useEffect(() => {
+    if (isMobile) return;
+
     const mouseOverCallback = (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();

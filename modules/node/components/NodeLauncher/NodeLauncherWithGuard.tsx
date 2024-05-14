@@ -18,6 +18,9 @@ export const NodeLauncherWithGuard = ({
   const isEnabledBillingPreview = useRecoilValue(
     billingSelectors.isEnabledBillingPreview,
   );
+  const bypassBillingForSuperUser = useRecoilValue(
+    billingSelectors.bypassBillingForSuperUser,
+  );
 
   const canAddNode = useRecoilValue(authSelectors.hasPermission('node-create'));
   const canCreateSubscription = useRecoilValue(
@@ -31,8 +34,11 @@ export const NodeLauncherWithGuard = ({
     ? canCreateSubscription || canUpdateSubscription
     : true;
 
+  const isPermittedAsSuperUser =
+    isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
+
   const hasPermissionsToCreate =
-    isSuperUser || (canAddNode && hasBillingPermissionsToCreate);
+    isPermittedAsSuperUser || (canAddNode && hasBillingPermissionsToCreate);
 
   const NodeLauncherGuarded = useMemo(
     () => withLauncherGuard(NodeLauncher),

@@ -9,6 +9,7 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 import IconUser from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
+import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
 
 type LinkItem = {
   id?: string;
@@ -22,6 +23,7 @@ export const PageTitleAdminNav = () => {
       { id: 'dashboard', name: 'Dashboard', icon: <IconDashboard /> },
       { id: 'nodes', name: 'Nodes', icon: <IconNode /> },
       { id: 'hosts', name: 'Hosts', icon: <IconHost /> },
+      { id: 'blockchains', name: 'Blockchains', icon: <IconBlockchain /> },
       { id: 'orgs', name: 'Orgs', icon: <IconOrganization /> },
       { id: 'users', name: 'Users', icon: <IconUser /> },
       { id: 'settings', name: 'Settings', icon: <IconCog /> },
@@ -67,7 +69,7 @@ export const PageTitleAdminNav = () => {
             <SvgIcon additionalStyles={[styles.nameIcon]} isDefaultColor>
               {selectedLink?.icon}
             </SvgIcon>
-            <span>{selectedLink?.name}</span>
+            <span css={styles.name}>{selectedLink?.name}</span>
             <span css={[styles.icon, isOpen && styles.iconActive]}>
               <SvgIcon isDefaultColor size="11px">
                 <IconArrow />

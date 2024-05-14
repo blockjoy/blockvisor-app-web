@@ -1,7 +1,17 @@
+import { css } from '@emotion/react';
 import { TableGridCell, NodeStatus } from '@shared/components';
 import { BlockchainIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
+
+const styles = {
+  blockchainNetwork: css`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.6;
+  `,
+};
 
 export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
   return nodeList?.map((node: Node) => {
@@ -24,7 +34,11 @@ export const toGrid = (nodeList: Node[], onCellClick: (args0: any) => void) => {
               downloadingTotal={progress?.total}
             />
           }
-          middleRow={`${node.blockchainName} | ${node.network}`}
+          middleRow={
+            <p css={styles.blockchainNetwork}>
+              {node.blockchainName} | {node.network}
+            </p>
+          }
         />
       ),
     };

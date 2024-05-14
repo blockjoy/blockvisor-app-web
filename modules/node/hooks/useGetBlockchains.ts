@@ -4,7 +4,6 @@ import { blockchainClient } from '@modules/grpc';
 import { organizationAtoms } from '@modules/organization';
 import { blockchainAtoms } from '@modules/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { authSelectors } from '@modules/auth';
 
 type UseGetBlockchainsHook = {
   blockchains: Blockchain[];
@@ -21,25 +20,19 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
   const [blockchainsLoadingState, setBlockchainsLoadingState] = useRecoilState(
     blockchainAtoms.blockchainsLoadingState,
   );
-  const canList = useRecoilValue(
-    authSelectors.hasPermission('blockchain-list'),
-  );
 
   const fetcher = async () =>
     await blockchainClient.listBlockchains(defaultOrganization?.id!);
 
   useSWR(
-    () =>
-      canList && defaultOrganization?.id
-        ? `blockchains_${defaultOrganization.id}`
-        : null,
+    defaultOrganization?.id ? `blockchains_${defaultOrganization.id}` : null,
     fetcher,
     {
       revalidateOnMount: true,
       revalidateOnFocus: false,
 
       onSuccess: (data) => {
-        setBlockchains(data);
+        setBlockchains(data.blockchains);
         setBlockchainsLoadingState('finished');
       },
       onError: (error) => {

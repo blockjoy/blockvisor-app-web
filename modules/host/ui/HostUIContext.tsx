@@ -1,14 +1,20 @@
-import React, { useContext, useState, useCallback, createContext } from 'react';
+import React, {
+  useContext,
+  useState,
+  useCallback,
+  createContext,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import { initialQueryParams, InitialQueryParams } from './HostUIHelpers';
-import { loadPersistedFilters } from '../utils/loadPersistedFilters';
-import { buildParams } from '../utils/buildParams';
-// import { numOfItemsPerPage } from '@shared/index';
+import { initialQueryParams, InitialQueryParams } from '@modules/host';
+import { numOfItemsPerPage } from '@shared/index';
+import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
 
 type HostUIContext = {
   queryParams: InitialQueryParams;
-  setQueryParamsBase: React.Dispatch<React.SetStateAction<InitialQueryParams>>;
+  setQueryParamsBase: Dispatch<SetStateAction<InitialQueryParams>>;
   setQueryParams: (nextQueryParams: InitialQueryParams) => void;
 };
 
@@ -24,22 +30,18 @@ type HostUIProvider = {
 const HostUIContext = createContext<HostUIContext>({} as HostUIContext);
 
 export const getInitialQueryParams = () => {
-  const persistedHostFilters = loadPersistedFilters();
+  const persistedHostFilters = fetchFromLocalStorage('host.filters');
 
   if (!persistedHostFilters) return initialQueryParams;
 
-  const { memory, cpu, space } = persistedHostFilters;
-  const params = buildParams(memory, cpu, space);
-
-  // TODO: Commented as this may be unnecessary
-  // const itemsPerPage = numOfItemsPerPage();
+  const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,
-    filter: params,
+    filter: persistedHostFilters,
     pagination: {
       ...initialQueryParams.pagination,
-      // itemsPerPage,
+      itemsPerPage,
     },
   };
 };

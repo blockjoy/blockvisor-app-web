@@ -1,13 +1,14 @@
-import { styles } from './AdminSidebar.styles';
+import { useState } from 'react';
 import NextLink from 'next/link';
+import { styles } from './AdminSidebar.styles';
+import { SvgIcon } from '@shared/components';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { SvgIcon } from '@shared/components';
-import { useState } from 'react';
+import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
 
 type Props = { tab: string };
 
@@ -15,6 +16,11 @@ const links = [
   { name: 'dashboard', icon: <IconDashboard />, href: '/admin?name=dashboard' },
   { name: 'nodes', icon: <IconNode />, href: '/admin?name=nodes' },
   { name: 'hosts', icon: <IconHost />, href: '/admin?name=hosts' },
+  {
+    name: 'blockchains',
+    icon: <IconBlockchain />,
+    href: '/admin?name=blockchains',
+  },
   { name: 'orgs', icon: <IconOrganization />, href: '/admin?name=orgs' },
   { name: 'users', icon: <IconPerson />, href: '/admin?name=users' },
   { name: 'settings', icon: <IconCog />, href: '/admin?name=settings' },

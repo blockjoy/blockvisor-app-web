@@ -15,7 +15,7 @@ export const usePaymentAuthorization = () => {
     ? subscriptionPaymentMethod?.reference_id
     : customer?.payment_method?.reference_id;
 
-  const authorizePayment = async (onSuccess: any) => {
+  const authorizePayment = async (onSuccess: VoidFunction) => {
     try {
       const { total } = pricing;
       const intent = await createIntent(total, referenceId);
@@ -26,7 +26,7 @@ export const usePaymentAuthorization = () => {
 
         threeDSHandler
           .handleCardPayment()
-          .then((paymentIntent: any) => {
+          .then(() => {
             onSuccess();
           })
           .catch((err: any) => {

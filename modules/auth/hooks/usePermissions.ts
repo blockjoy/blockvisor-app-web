@@ -17,12 +17,17 @@ export function usePermissions() {
 
   const { user } = useIdentity();
 
-  const fetcher = async () =>
-    await authClient.listPermissions(user?.id!, defaultOrganization?.id!);
+  const fetcher = async () => {
+    setPermissionsLoadingState('loading');
+
+    return await authClient.listPermissions(
+      user?.id!,
+      defaultOrganization?.id!,
+    );
+  };
 
   useSWR(
-    () =>
-      defaultOrganization?.id ? `permissions_${defaultOrganization.id}` : null,
+    defaultOrganization?.id ? `permissions_${defaultOrganization.id}` : null,
     fetcher,
     {
       revalidateOnMount: true,
