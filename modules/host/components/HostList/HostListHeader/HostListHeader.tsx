@@ -80,7 +80,9 @@ export const HostListHeader = () => {
           )}
         </div>
       )} */}
-      <Search version="instant" onSearch={handleSearch} value={searchQuery} />
+      <div css={styles.search}>
+        <Search version="instant" onSearch={handleSearch} value={searchQuery} />
+      </div>
       <Alert isRounded isSuccess={hostCount > 0}>
         {hostCount} {hostCount === 1 ? 'Host' : 'Hosts'}
       </Alert>

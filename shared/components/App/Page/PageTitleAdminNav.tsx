@@ -69,7 +69,7 @@ export const PageTitleAdminNav = () => {
             <SvgIcon additionalStyles={[styles.nameIcon]} isDefaultColor>
               {selectedLink?.icon}
             </SvgIcon>
-            <span>{selectedLink?.name}</span>
+            <span css={styles.name}>{selectedLink?.name}</span>
             <span css={[styles.icon, isOpen && styles.iconActive]}>
               <SvgIcon isDefaultColor size="11px">
                 <IconArrow />
