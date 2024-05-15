@@ -38,6 +38,10 @@ const IconAvalancheDfk = dynamic(
   () => import(`@public/assets/icons/blockchain/Avalanche-DFK.svg`),
 );
 
+const IconAxelar = dynamic(
+  () => import(`@public/assets/icons/blockchain/Axelar.svg`),
+);
+
 const IconBlast = dynamic(
   () => import(`@public/assets/icons/blockchain/Blast.svg`),
 );
@@ -147,6 +151,10 @@ export const BlockchainIcon: FC<Props> = ({
     case 'avalanche-dfk':
       Component = IconAvalancheDfk;
       break;
+    case 'axelar':
+    case 'axelar-full':
+      Component = IconAxelar;
+      break;
     case 'blast':
       Component = IconBlast;
       break;
@@ -164,6 +172,7 @@ export const BlockchainIcon: FC<Props> = ({
     case 'ethereum pos':
     case 'ethereum-reth':
     case 'ethereum-stateless':
+    case 'ethereum-reth-full':
       Component = IconEthereum;
       break;
     case 'eth erigon':
@@ -195,6 +204,7 @@ export const BlockchainIcon: FC<Props> = ({
     case 'near':
     case 'near_archive':
     case 'near-archive':
+    case 'near-rpc':
       Component = IconNear;
       break;
     case 'optimism':
