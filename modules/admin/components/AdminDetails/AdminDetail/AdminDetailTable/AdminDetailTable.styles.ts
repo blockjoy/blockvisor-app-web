@@ -33,6 +33,8 @@ export const styles = {
 
     td {
       vertical-align: middle;
+      word-break: break-all;
+      line-height: 1.6;
     }
 
     th,
@@ -54,6 +56,8 @@ export const styles = {
         border: 0;
         min-height: auto;
         height: 30px;
+        width: 100%;
+        max-width: 100%;
         padding: 10px 0 5px;
       }
 
