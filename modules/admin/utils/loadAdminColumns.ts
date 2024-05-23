@@ -22,9 +22,10 @@ export const loadAdminColumns = (name: string, columns: AdminListColumn[]) => {
         (c) => c?.name === column?.name,
       );
 
-      column.filterSettings = foundLocalStorage?.filterSettings || {};
-
-      column.filterSettings.values = foundLocalStorage?.filterSettings?.values!;
+      if (column.filterSettings && foundLocalStorage) {
+        column.filterSettings.values =
+          foundLocalStorage.filterSettings?.values!;
+      }
     });
   }
 
