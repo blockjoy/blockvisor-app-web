@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { Scrollbar } from '@shared/components';
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
@@ -15,9 +15,7 @@ const styles = {
   `,
 };
 
-export const NodeLauncherConfigWrapper: FC<PropsWithChildren> = ({
-  children,
-}) => {
+export const NodeLauncherConfigWrapper = ({ children }: PropsWithChildren) => {
   return (
     <div css={styles.wrapper}>
       {!isDesktop ? (

@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   DropdownMenu,
   DropdownButton,
@@ -13,7 +13,7 @@ type Props<T = any> = {
   disabled?: boolean;
   items: T[];
   selectedItem: T;
-  buttonText: string | ReactNode;
+  buttonText: string | React.ReactNode;
   noBottomMargin?: boolean;
   onSelect: (value: string) => void;
 };

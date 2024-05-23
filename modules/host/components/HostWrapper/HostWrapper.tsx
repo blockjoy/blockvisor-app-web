@@ -1,12 +1,10 @@
-import { ReactNode } from 'react';
 import { styles } from './HostWrapper.styles';
 import { HostLauncherWithGuard as HostLauncher } from '@modules/host';
 import { wrapper } from 'styles/wrapper.styles';
 
 type Props = {
-  children: ReactNode;
-  title: ReactNode;
-};
+  title: React.ReactNode;
+} & React.PropsWithChildren;
 
 export const HostWrapper = ({ children, title }: Props) => {
   return (

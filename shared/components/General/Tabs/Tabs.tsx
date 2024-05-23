@@ -1,5 +1,4 @@
 import { Skeleton } from '@shared/components';
-import { ReactNode } from 'react';
 import { reset } from 'styles/utils.reset.styles';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './Tabs.styles';
@@ -12,7 +11,11 @@ type TabProps = {
   type?: TabType;
 };
 
-export type TabItem = { value: string; label: string; component: ReactNode };
+export type TabItem = {
+  value: string;
+  label: string;
+  component: React.ReactNode;
+};
 
 export function Tabs({
   tabItems,

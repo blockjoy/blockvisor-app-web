@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { styles } from './Modal.styles';
 import { Portal, SvgIcon } from '@shared/components';
@@ -7,12 +7,11 @@ import IconClose from '@public/assets/icons/common/Close.svg';
 
 type Props = {
   isOpen?: boolean;
-  children?: ReactNode;
   portalId: string;
   handleClose?: any;
   additionalStyles?: SerializedStyles[];
   isActive?: boolean;
-};
+} & React.PropsWithChildren;
 
 export function Modal({
   isOpen,

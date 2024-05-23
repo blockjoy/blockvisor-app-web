@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import { useRef } from 'react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './DropdownWrapper.styles';
 
@@ -6,9 +6,8 @@ type Props = {
   isEmpty?: boolean;
   isOpen: boolean;
   onClose: VoidFunction;
-  children: ReactNode;
   noBottomMargin?: boolean;
-};
+} & React.PropsWithChildren;
 
 export const DropdownWrapper = ({
   isEmpty,

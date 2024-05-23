@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { ITheme } from 'types/theme';
 
 const styles = {
@@ -19,7 +19,7 @@ type Props = {
   noBottomMargin?: boolean;
 } & PropsWithChildren;
 
-export const FormLabelCaps: FC<Props> = ({ children, noBottomMargin }) => {
+export const FormLabelCaps = ({ children, noBottomMargin }: Props) => {
   return (
     <h4 css={[styles.h4, noBottomMargin && styles.h4NoBottomMargin]}>
       {children}

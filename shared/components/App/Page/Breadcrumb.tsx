@@ -1,11 +1,9 @@
-import { ReactNode } from 'react';
 import { styles } from './Breadcrumb.styles';
 
 type BreadcrumbProps = {
-  children: ReactNode;
-  title: ReactNode | string;
+  title: React.ReactNode | string;
   handleClick: VoidFunction;
-};
+} & React.PropsWithChildren;
 
 export const Breadcrumb = ({
   children,

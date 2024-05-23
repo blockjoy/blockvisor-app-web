@@ -16,9 +16,7 @@ type OrganizationsUIContext = {
   setQueryParams: SetQueryParams;
 };
 
-type OrganizationsUIProvider = {
-  children?: React.ReactNode;
-};
+type OrganizationsUIProvider = React.PropsWithChildren;
 
 const OrganizationsUIContext = createContext<OrganizationsUIContext>(
   {} as OrganizationsUIContext,

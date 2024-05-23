@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FC, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { ITheme } from 'types/theme';
 import Link from 'next/link';
 
@@ -47,11 +47,11 @@ type Props = {
   viewAllLink?: string;
 } & PropsWithChildren;
 
-export const FormHeaderCaps: FC<Props> = ({
+export const FormHeaderCaps = ({
   children,
   noBottomMargin,
   viewAllLink,
-}) => {
+}: Props) => {
   return (
     <h3 css={[styles.h3, noBottomMargin && styles.h3NoMargin]}>
       {children}

@@ -1,12 +1,10 @@
 import { SerializedStyles } from '@emotion/react';
-import { ReactNode } from 'react';
 import { styles } from './ButtonGroup.styles';
 
 type ButtonGroupProps = {
   type?: 'default' | 'extended' | 'flex';
-  children: ReactNode;
   additionalStyles?: SerializedStyles[];
-};
+} & React.PropsWithChildren;
 
 export const ButtonGroup = ({
   type = 'default',

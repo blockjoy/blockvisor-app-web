@@ -15,7 +15,7 @@ import { styles } from './nodeList.styles';
 import { NodeListHeader } from './NodeListHeader/NodeListHeader';
 import {
   resultsStatus,
-  toGrid,
+  mapNodeListToGrid,
   mapNodeListToRows,
   useNodeList,
   nodeAtoms,
@@ -83,7 +83,7 @@ export const NodeList = () => {
     nodeUIProps.setQueryParams(newQueryParams);
   };
 
-  const cells = toGrid(nodeList!, handleNodeClicked);
+  const cells = mapNodeListToGrid(nodeList!, handleNodeClicked);
 
   const { headers, rows } = mapNodeListToRows(nodeList);
 

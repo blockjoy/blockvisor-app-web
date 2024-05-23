@@ -1,5 +1,5 @@
 import { SerializedStyles } from '@emotion/react';
-import { InputHTMLAttributes, ReactNode, useEffect } from 'react';
+import { InputHTMLAttributes, useEffect } from 'react';
 import { isMobileSafari } from 'react-device-detect';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 import {
@@ -17,9 +17,9 @@ import { InputUtil } from './InputUtil';
 
 type InputProps = {
   name: string;
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
-  hints?: ReactNode;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  hints?: React.ReactNode;
   label?: string;
   labelStyles?: SerializedStyles[];
   inputStyles?: SerializedStyles[];

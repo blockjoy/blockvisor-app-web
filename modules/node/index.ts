@@ -37,7 +37,7 @@ export * from './utils/getNodeTypes';
 export * from './utils/mapNodeListToRows';
 export * from './utils/resultsStatus';
 export * from './utils/sortLists';
-export * from './utils/toGrid';
+export * from './utils/mapNodeListToGrid';
 
 export * from './ui/NodeUIContext';
 export * from './ui/NodeUIHelpers';

@@ -1,14 +1,14 @@
-import { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './spinner.styles';
 import SpinnerIcon from '@public/assets/icons/app/Spinner.svg';
 import anime from 'animejs';
 
-interface Props {
+type Props = {
   size: 'small' | 'medium' | 'large' | 'page';
-}
+};
 
-export const LoadingSpinner: FC<Props> = ({ size }) => {
+export const LoadingSpinner = ({ size }: Props) => {
   useEffect(() => {
     anime({
       targets: `.spinner__element`,

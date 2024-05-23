@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import { useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccessibleList } from '@shared/index';
 import { SerializedStyles } from '@emotion/react';
@@ -7,8 +7,8 @@ import { ITheme } from 'types/theme';
 export type ListProps<T = any> = {
   items: T[];
   selectedItem?: T | null;
-  renderItem: (item: T, isActiveItem?: boolean) => ReactNode;
-  renderEmpty?: () => ReactNode;
+  renderItem: (item: T, isActiveItem?: boolean) => React.ReactNode;
+  renderEmpty?: () => React.ReactNode;
   handleSelect?: (item: T) => void;
   searchQuery?: string;
   isFocused?: boolean;

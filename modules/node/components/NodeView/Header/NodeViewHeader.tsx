@@ -24,7 +24,7 @@ import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
-import { useNavigate } from '@shared/index';
+import { getBlockchainDisplayName, useNavigate } from '@shared/index';
 
 export const NodeViewHeader = () => {
   const { navigate } = useNavigate();
@@ -91,7 +91,9 @@ export const NodeViewHeader = () => {
                 <div css={styles.blockchainIcon}>
                   <BlockchainIcon
                     size="40px"
-                    blockchainName={node!.blockchainName}
+                    blockchainName={getBlockchainDisplayName(
+                      node!.blockchainName,
+                    )}
                   />
                 </div>
                 <div>
@@ -99,7 +101,7 @@ export const NodeViewHeader = () => {
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
                       <p>
-                        {node.blockchainName}
+                        {getBlockchainDisplayName(node.blockchainName)}
                         {' | '}
                         {node.network}
                       </p>

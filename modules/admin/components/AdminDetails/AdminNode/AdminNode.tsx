@@ -10,6 +10,7 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { createAdminUpdateRequest } from '@modules/admin/utils';
 import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
+import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 const ignoreItems = [
   'id',
@@ -139,7 +140,7 @@ export const AdminNode = () => {
     {
       id: 'blockchainName',
       label: 'Blockchain Name',
-      data: node.blockchainName,
+      data: getBlockchainDisplayName(node.blockchainName),
     },
     {
       id: 'blockchainId',

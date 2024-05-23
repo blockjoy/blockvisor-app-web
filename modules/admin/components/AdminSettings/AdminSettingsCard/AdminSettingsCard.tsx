@@ -1,12 +1,11 @@
 import { SvgIcon } from '@shared/components';
-import { ReactNode } from 'react';
 import { styles } from './AdminSettingsCard.styles';
 import { typo } from 'styles/utils.typography.styles';
 
 type AdminSettingsCardProps = {
   name: string;
-  icon: ReactNode;
-  children: ReactNode;
+  icon: React.ReactNode;
+  children: React.ReactNode;
 };
 
 export const AdminSettingsCard = ({
