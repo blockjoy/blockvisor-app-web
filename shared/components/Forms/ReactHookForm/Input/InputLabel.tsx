@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import type { InputHTMLAttributes } from 'react';
 import {
   inputLabel,
   inputLabelSize,
@@ -9,10 +9,10 @@ import { SerializedStyles } from '@emotion/serialize';
 
 type Props = {
   name: string;
-  children?: ReactNode;
   labelSize?: InputSize;
   additionalStyles?: SerializedStyles[];
-} & InputHTMLAttributes<HTMLLabelElement>;
+} & InputHTMLAttributes<HTMLLabelElement> &
+  React.PropsWithChildren;
 
 export function InputLabel({
   name,

@@ -1,4 +1,3 @@
-import { FC, ReactNode } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './Alert.styles';
@@ -6,20 +5,19 @@ import { styles } from './Alert.styles';
 type Props = {
   isSuccess?: boolean;
   isRounded?: boolean;
-  children: ReactNode;
   maxWidth?: string;
   noBottomMargin?: boolean;
   additionalStyles?: SerializedStyles[];
-};
+} & React.PropsWithChildren;
 
-export const Alert: FC<Props> = ({
+export const Alert = ({
   isSuccess,
   isRounded,
   children,
   maxWidth = '100%',
   noBottomMargin,
   additionalStyles,
-}) => (
+}: Props) => (
   <div
     className="alert"
     css={[

@@ -14,9 +14,7 @@ type OrganizationMembersUIContext = {
   setQueryParams: SetQueryParams;
 };
 
-type OrganizationMembersUIProvider = {
-  children?: React.ReactNode;
-};
+type OrganizationMembersUIProvider = React.PropsWithChildren;
 
 const OrganizationMembersUIContext =
   createContext<OrganizationMembersUIContext>(

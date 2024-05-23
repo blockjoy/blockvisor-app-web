@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { styles } from './HostOs.styles';
 import { SvgIcon } from '@shared/components';
@@ -12,7 +12,7 @@ const IconUbuntu = dynamic(
   () => import(`@public/assets/icons/hostOs/Ubuntu.svg`),
 );
 
-export const HostOs: FC<Props> = ({ os, osVersion }) => {
+export const HostOs = ({ os, osVersion }: Props) => {
   let Component;
   switch (os?.toLowerCase()) {
     case 'ubuntu':

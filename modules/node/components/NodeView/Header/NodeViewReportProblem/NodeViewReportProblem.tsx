@@ -1,15 +1,8 @@
 import { css } from '@emotion/react';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
-import {
-  BlockchainIcon,
-  Button,
-  Input,
-  Modal,
-  Textarea,
-} from '@shared/components';
-import { ReactNode, useState } from 'react';
+import { Button, Modal, Textarea } from '@shared/components';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './NodeViewReportProblem.styles';
 

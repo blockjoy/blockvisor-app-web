@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { styles } from './HostView.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
@@ -8,7 +8,7 @@ import { HostViewSidePanel } from './HostViewSidePanel/HostViewSidePanel';
 import { useCommands } from '@modules/commands';
 
 type HostViewProps = {
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
 export const HostView = ({ children }: HostViewProps) => {

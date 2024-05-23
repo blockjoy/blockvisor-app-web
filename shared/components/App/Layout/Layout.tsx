@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { BlockjoyLogo } from '@shared/components';
 import Head from 'next/head';
 import { layout, layoutTitle, layoutWrapper } from './Layout.styles';
@@ -7,8 +7,7 @@ import { layout, layoutTitle, layoutWrapper } from './Layout.styles';
 type Props = {
   title?: string;
   overflow?: 'visible' | 'hidden';
-  children?: ReactNode;
-};
+} & React.PropsWithChildren;
 
 export function Layout({ children, title, overflow = 'hidden' }: Props) {
   const animateEntry = () =>

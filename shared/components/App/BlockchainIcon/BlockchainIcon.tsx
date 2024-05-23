@@ -1,7 +1,8 @@
-import { FC, Suspense } from 'react';
+import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { styles } from './BlockchainIcon.styles';
 import { Tooltip, SvgIcon } from '@shared/components';
+import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 type Props = {
   blockchainId?: string;
@@ -40,6 +41,10 @@ const IconAvalancheDfk = dynamic(
 
 const IconAxelar = dynamic(
   () => import(`@public/assets/icons/blockchain/Axelar.svg`),
+);
+
+const IconBase = dynamic(
+  () => import(`@public/assets/icons/blockchain/Base.svg`),
 );
 
 const IconBlast = dynamic(
@@ -102,6 +107,10 @@ const IconOptimism = dynamic(
   () => import(`@public/assets/icons/blockchain/Optimism.svg`),
 );
 
+const IconOsmosis = dynamic(
+  () => import(`@public/assets/icons/blockchain/Osmosis.svg`),
+);
+
 const IconPocket = dynamic(
   () => import(`@public/assets/icons/blockchain/Pocket.svg`),
 );
@@ -126,11 +135,11 @@ const IconTezos = dynamic(
   () => import(`@public/assets/icons/blockchain/Tezos.svg`),
 );
 
-export const BlockchainIcon: FC<Props> = ({
+export const BlockchainIcon = ({
   blockchainName,
   hideTooltip,
   size = '24px',
-}) => {
+}: Props) => {
   let Component;
   switch (blockchainName?.toLowerCase()) {
     case 'aleo':
@@ -143,6 +152,7 @@ export const BlockchainIcon: FC<Props> = ({
       Component = IconAlgorand;
       break;
     case 'arbitrum':
+    case 'arbitrum-nova':
       Component = IconArbitrum;
       break;
     case 'avalanche':
@@ -154,6 +164,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'axelar':
     case 'axelar-full':
       Component = IconAxelar;
+      break;
+    case 'base':
+      Component = IconBase;
       break;
     case 'blast':
       Component = IconBlast;
@@ -211,6 +224,9 @@ export const BlockchainIcon: FC<Props> = ({
     case 'optimism-erigon':
       Component = IconOptimism;
       break;
+    case 'osmosis':
+      Component = IconOsmosis;
+      break;
     case 'pocket':
       Component = IconPocket;
       break;
@@ -240,7 +256,7 @@ export const BlockchainIcon: FC<Props> = ({
       {!hideTooltip && (
         <Tooltip
           noWrap
-          tooltip={blockchainName!}
+          tooltip={getBlockchainDisplayName(blockchainName!)}
           customCss={[styles.tooltip]}
         />
       )}

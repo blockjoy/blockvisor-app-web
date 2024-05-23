@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { css } from '@emotion/react';
 import { SvgIcon, Dropdown } from '@shared/components';
 import { styles } from './ActionsDropdown.styles';
@@ -7,7 +7,7 @@ import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
 export type ActionsDropdownItem = {
   name: string;
-  icon: ReactNode;
+  icon: React.ReactNode;
   onClick: VoidFunction;
   hasBorderTop?: boolean;
 };

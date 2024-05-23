@@ -1,11 +1,7 @@
-import { ReactNode } from 'react';
 import { DateTime } from '@shared/components';
 import { styles } from './Log.styles';
 
-type LogProps = {
-  children: ReactNode;
-  date?: Date;
-};
+type LogProps = { date?: Date } & React.PropsWithChildren;
 
 export const Log = ({ children, date }: LogProps) => {
   return (

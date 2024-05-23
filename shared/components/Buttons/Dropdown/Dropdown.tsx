@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { styles } from './Dropdown.styles';
 import { useAccessibleDropdown } from '@shared/index';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -19,12 +19,12 @@ export type DropdownProps<T = any> = {
   itemKey?: string;
   selectedItem: T | null;
   handleSelected: (item: T | null) => void;
-  defaultText?: string | ReactNode;
+  defaultText?: string | React.ReactNode;
   searchQuery?: string;
   isTouchedQuery?: boolean;
-  renderSearch?: (isOpen: boolean) => ReactNode;
-  renderHeader?: ReactNode;
-  renderButtonText?: ReactNode;
+  renderSearch?: (isOpen: boolean) => React.ReactNode;
+  renderHeader?: React.ReactNode;
+  renderButtonText?: React.ReactNode;
   dropdownButtonStyles?: (theme: ITheme) => SerializedStyles;
   dropdownMenuStyles?: SerializedStyles[];
   dropdownItemStyles?: (item: T) => SerializedStyles[];
@@ -42,8 +42,8 @@ export type DropdownProps<T = any> = {
   buttonType?: 'input' | 'default';
   handleOpen: (open?: boolean) => void;
   checkDisabledItem?: (item?: T) => boolean;
-  renderItem?: (item: T) => ReactNode;
-  renderItemLabel?: (item?: T) => ReactNode;
+  renderItem?: (item: T) => React.ReactNode;
+  renderItemLabel?: (item?: T) => React.ReactNode;
   newItem?: {
     title: string;
     onClick: VoidFunction;

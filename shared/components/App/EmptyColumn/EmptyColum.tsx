@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { typo } from 'styles/utils.typography.styles';
 import { AnimatedGraphic } from './AnimatedGraphic';
 import { styles } from './EmptyColumn.styles';
@@ -6,7 +5,7 @@ import { styles } from './EmptyColumn.styles';
 type Props = {
   id?: string;
   title: string;
-  description: string | ReactNode;
+  description: string | React.ReactNode;
   align?: 'left' | 'center';
   additionalStyles?: any;
 };

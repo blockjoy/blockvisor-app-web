@@ -9,6 +9,7 @@ import {
   BlockchainVisibility,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { DateTime } from '@shared/components';
+import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 const columns: AdminListColumn[] = [
   { name: 'name', isVisible: true, width: '200px' },
@@ -47,6 +48,7 @@ export const AdminBlockchains = () => {
       return {
         ...blockchain,
         nodes: blockchain.stats?.nodeCount,
+        name: getBlockchainDisplayName(blockchain.name),
         nodeTypes: blockchain.nodeTypes.length,
         createdAt: <DateTime date={blockchain.createdAt!} />,
         visibility: BlockchainVisibility[blockchain.visibility]

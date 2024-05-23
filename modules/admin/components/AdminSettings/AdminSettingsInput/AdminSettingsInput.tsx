@@ -1,11 +1,10 @@
-import { ReactNode } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './AdminSettingsInput.styles';
 
 type AdminSettingsInputProps = {
   label: string;
   description?: string;
-  children: ReactNode;
+  children: React.ReactNode;
 };
 
 export const AdminSettingsInput = ({

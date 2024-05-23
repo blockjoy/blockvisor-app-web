@@ -1,5 +1,4 @@
 import { Scrollbar, SvgIcon } from '@shared/components';
-import { FC } from 'react';
 import { styles } from './FirewallDropdownItems.styles';
 import IconTrash from '@public/assets/icons/common/Trash.svg';
 
@@ -9,11 +8,11 @@ type Props = {
   onRemoveClicked: (index: number) => void;
 };
 
-export const FirewallDropdownItems: FC<Props> = ({
+export const FirewallDropdownItems = ({
   items,
   listType,
   onRemoveClicked,
-}) => {
+}: Props) => {
   return (
     <Scrollbar additionalStyles={[styles.scrollbar]}>
       <table css={styles.table}>

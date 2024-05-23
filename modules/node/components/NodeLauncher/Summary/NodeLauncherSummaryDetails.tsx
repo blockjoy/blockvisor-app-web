@@ -11,6 +11,7 @@ import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './NodeLauncherSummaryDetails.styles';
 import { hostAtoms } from '@modules/host';
+import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 export const NodeLauncherSummaryDetails = () => {
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
@@ -42,8 +43,9 @@ export const NodeLauncherSummaryDetails = () => {
               <div>
                 <label>Blockchain</label>
                 <span>
-                  {blockchains?.find((b) => b.id === blockchainId)?.name ||
-                    'Not Selected'}
+                  {getBlockchainDisplayName(
+                    blockchains?.find((b) => b.id === blockchainId)?.name!,
+                  ) || 'Not Selected'}
                 </span>
               </div>
             </li>

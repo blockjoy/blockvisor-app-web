@@ -1,22 +1,21 @@
-import { FC, ReactNode } from 'react';
 import { styles } from './GridTableViewPicker.styles';
+import { SvgIcon } from '@shared/components/General';
 import IconTable from '@public/assets/icons/common/Table.svg';
 import IconGrid from '@public/assets/icons/common/Grid.svg';
-import { SvgIcon } from '@shared/components/General';
 
 type IconButtonProps = {
   activeListType: string | 'table' | 'grid';
   name: string;
   onClick: VoidFunction;
-  icon: ReactNode;
+  icon: React.ReactNode;
 };
 
-const IconButton: FC<IconButtonProps> = ({
+const IconButton = ({
   activeListType,
   name,
   onClick,
   icon,
-}) => (
+}: IconButtonProps) => (
   <button
     onClick={onClick}
     css={[styles.iconButton]}
@@ -36,10 +35,7 @@ const gridTableTypes = [
   { name: 'grid', icon: <IconGrid /> },
 ];
 
-export const GridTableViewPicker: FC<Props> = ({
-  activeListType,
-  onChange,
-}) => (
+export const GridTableViewPicker = ({ activeListType, onChange }: Props) => (
   <div css={[styles.listTypePicker]}>
     {gridTableTypes.map((type) => (
       <IconButton

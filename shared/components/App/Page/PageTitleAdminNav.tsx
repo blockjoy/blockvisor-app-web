@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Dropdown, SvgIcon } from '@shared/components';
 import { styles } from './PageTitleAdminNav.styles';
@@ -14,7 +14,7 @@ import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
 type LinkItem = {
   id?: string;
   name?: string;
-  icon?: ReactNode;
+  icon?: React.ReactNode;
 };
 
 export const PageTitleAdminNav = () => {

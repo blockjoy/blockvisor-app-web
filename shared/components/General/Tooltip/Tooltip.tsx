@@ -1,9 +1,8 @@
 import { SerializedStyles } from '@emotion/react';
-import { FC } from 'react';
 import { styles } from './Tooltip.styles';
 
 type Props = {
-  tooltip: string;
+  tooltip: string | React.ReactNode;
   top?: string;
   right?: string;
   bottom?: string;
@@ -13,7 +12,7 @@ type Props = {
   customCss?: SerializedStyles[];
 };
 
-export const Tooltip: FC<Props> = ({
+export const Tooltip = ({
   tooltip,
   top,
   right,
@@ -22,7 +21,7 @@ export const Tooltip: FC<Props> = ({
   hideOnMobile = false,
   noWrap = false,
   customCss,
-}) => {
+}: Props) => {
   const tooltipStyles = [
     styles.tooltip({ top, right, bottom, left, noWrap }),
     hideOnMobile && styles.tooltipHidden,

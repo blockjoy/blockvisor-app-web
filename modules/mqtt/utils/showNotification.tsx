@@ -1,12 +1,11 @@
-import { ReactNode } from 'react';
 import { toast } from 'react-toastify';
 import IconNodes from '@public/assets/icons/app/Node.svg';
 import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 
 export const showNotification = (
   type: Topic,
-  message: string | ReactNode,
-  content?: ReactNode,
+  message: string | React.ReactNode,
+  content?: React.ReactNode,
 ): void => {
   toast(
     <div>

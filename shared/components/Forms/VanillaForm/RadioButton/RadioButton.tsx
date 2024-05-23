@@ -1,16 +1,15 @@
-import { ChangeEventHandler, ReactNode } from 'react';
+import { ChangeEventHandler } from 'react';
 import { styles } from './RadioButton.styles';
 
 type RadioButtonProps = {
   name: string;
   id: string;
-  label?: ReactNode;
+  label?: React.ReactNode;
   description?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
-  children?: ReactNode;
   value: any;
   selectedValue: any;
-};
+} & React.PropsWithChildren;
 
 export const RadioButton = ({
   name,

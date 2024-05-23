@@ -1,10 +1,8 @@
-import type { ReactNode } from 'react';
 import { inputUtil, inputUtilLeft, inputUtilRight } from './InputUtil.styles';
 
 type Props = {
   position?: 'left' | 'right';
-  children?: ReactNode;
-};
+} & React.PropsWithChildren;
 
 export function InputUtil({ position = 'left', children }: Props) {
   return (
