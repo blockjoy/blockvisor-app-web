@@ -1,12 +1,11 @@
-import { FC } from 'react';
 import { styles } from './DataRow.styles';
 
-interface Props {
+type Props = {
   label: React.ReactNode | string;
   children: React.ReactNode;
-}
+};
 
-export const DataRow: FC<Props> = ({ label, children }) => {
+export const DataRow = ({ label, children }: Props) => {
   return (
     <tr css={styles.base}>
       <th css={[styles.column, styles.heading]}>{label}</th>

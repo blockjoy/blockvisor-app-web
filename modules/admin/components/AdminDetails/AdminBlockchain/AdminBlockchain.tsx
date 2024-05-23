@@ -9,6 +9,7 @@ import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { AdminBlockchainVersionAdd } from './AdminBlockchainVersionAdd/AdminBlockchainVersionAdd';
 import { spacing } from 'styles/utils.spacing.styles';
 import { sortVersions } from '@modules/node';
+import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 export const AdminBlockchain = () => {
   const router = useRouter();
@@ -18,6 +19,13 @@ export const AdminBlockchain = () => {
     await blockchainClient.getBlockchain(id as string);
 
   const customItems = (item: Blockchain): AdminDetailProperty[] => [
+    {
+      id: 'name',
+      label: 'Name',
+      data: getBlockchainDisplayName(item.name),
+      copyValue: getBlockchainDisplayName(item.name),
+    },
+    { id: 'id', label: 'Id', data: item.id, copyValue: item.id },
     {
       id: 'visibilityText',
       label: 'Visibility',
@@ -47,9 +55,15 @@ export const AdminBlockchain = () => {
     <AdminDetail
       getItem={getItem}
       detailsName="name"
-      ignoreItems={['nodeTypes', 'stats', 'visibility', 'updatedAt']}
+      ignoreItems={[
+        'name',
+        'id',
+        'nodeTypes',
+        'stats',
+        'visibility',
+        'updatedAt',
+      ]}
       customItems={customItems}
-      customItemsAtEnd
       additionalHeaderButtons={<AdminBlockchainVersionAdd />}
     />
   );

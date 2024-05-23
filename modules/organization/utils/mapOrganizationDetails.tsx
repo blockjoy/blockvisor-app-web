@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { ROUTES } from '@shared/constants/routes';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -10,7 +9,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { getOrganizationRole } from '@modules/organization';
 
 type Details = {
-  label: string | ReactNode;
+  label: string | React.ReactNode;
   data: string | number | EmotionJSX.Element | undefined;
 };
 

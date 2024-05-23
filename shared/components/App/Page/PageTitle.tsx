@@ -1,6 +1,5 @@
 import { Copy, SvgIcon, OrganizationPicker } from '@shared/components';
 import { ProfileDropdown } from './ProfileDropdown/ProfileDropdown';
-import { ReactNode } from 'react';
 import { wrapper } from 'styles/wrapper.styles';
 import { styles } from './PageTitle.styles';
 import { PageTitleLaunchNode } from './PageTitleLaunchNode';
@@ -10,7 +9,7 @@ interface Props {
   title: string;
   childTitle?: string;
   canCopyChild?: boolean;
-  icon?: ReactNode;
+  icon?: React.ReactNode;
   onTitleClick?: VoidFunction;
   isLoading?: boolean;
   isAdmin?: boolean;

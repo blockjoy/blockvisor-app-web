@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import {
   quoteBlock,
   quoteBlockContent,
@@ -10,11 +9,10 @@ import { typo } from 'styles/utils.typography.styles';
 import { grid } from 'styles/grid.styles';
 
 type Props = {
-  children?: ReactNode;
   author?: string;
   role?: string;
-  authorImage?: ReactNode;
-};
+  authorImage?: React.ReactNode;
+} & React.PropsWithChildren;
 
 export function QuoteBlock({ children, author, role, authorImage }: Props) {
   return (

@@ -1,15 +1,11 @@
+import { PropsWithChildren, useEffect } from 'react';
 import { useIdentity } from '@modules/auth';
 import { EmptyColumn } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 
-interface Props {
-  children?: ReactNode;
-}
-
-export function PublicRoute({ children }: Props) {
+export function PublicRoute({ children }: PropsWithChildren) {
   const router = useRouter();
   const { redirect } = router.query;
   const { isLoggedIn } = useIdentity();

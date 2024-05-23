@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import { styles } from './SidebarMain.styles';
@@ -31,7 +30,7 @@ type BlockItem = {
 type SidebarItem = {
   name: string;
   path: string;
-  icon: ReactNode;
+  icon: React.ReactNode;
   isOrganizations?: boolean;
 };
 

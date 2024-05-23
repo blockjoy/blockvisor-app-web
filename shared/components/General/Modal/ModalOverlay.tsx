@@ -1,10 +1,6 @@
-import { ReactNode } from 'react';
 import { styles } from './ModalOverlay.styles';
 
-type Props = {
-  isActive?: boolean;
-  children?: ReactNode;
-};
+type Props = { isActive?: boolean } & React.PropsWithChildren;
 
 export function ModalOverlay({ isActive, children }: Props) {
   if (!isActive) {

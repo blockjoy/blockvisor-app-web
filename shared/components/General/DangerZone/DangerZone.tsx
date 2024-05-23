@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import { Alert, Button, Input } from '@shared/components';
-import { FC, useState } from 'react';
+import { Button, Input } from '@shared/components';
+import { useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { display } from 'styles/utils.display.styles';
@@ -29,7 +29,7 @@ type DeleteForm = {
   elementNameToDelete: string;
 };
 
-export const DangerZone: FC<Props> = ({
+export const DangerZone = ({
   handleAction,
   elementName = 'Node',
   elementNameToCompare,
@@ -38,7 +38,7 @@ export const DangerZone: FC<Props> = ({
   activeAction = 'delete',
   isLoading = false,
   isDisabled = false,
-}) => {
+}: Props) => {
   const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);

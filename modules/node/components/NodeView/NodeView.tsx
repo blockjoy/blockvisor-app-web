@@ -1,7 +1,7 @@
 import { styles } from './NodeView.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { NodeViewTitle } from './Title/NodeViewTitle';
 import { NodeViewHeader } from './Header/NodeViewHeader';
 import { NodeViewSidePanel } from './SidePanel/NodeViewSidePanel';
@@ -11,9 +11,8 @@ import { EmptyColumn, SkeletonView } from '@shared/components';
 import { useCommands } from '@modules/commands';
 
 type Props = {
-  children?: ReactNode;
   hideEditPanel?: boolean;
-};
+} & React.PropsWithChildren;
 
 export const NodeView = ({ children, hideEditPanel }: Props) => {
   const router = useRouter();

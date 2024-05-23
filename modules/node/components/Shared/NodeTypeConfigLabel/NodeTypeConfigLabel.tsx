@@ -1,7 +1,7 @@
 import { nodeTypeConfigLabels } from '@shared/constants/lookups';
-import { FC, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 
-export const NodeTypeConfigLabel: FC<PropsWithChildren> = ({ children }) => {
+export const NodeTypeConfigLabel = ({ children }: PropsWithChildren) => {
   const configInfo = nodeTypeConfigLabels?.find(
     (config) => config.name === children,
   );

@@ -1,12 +1,10 @@
 import { SerializedStyles } from '@emotion/react';
-import { ReactNode } from 'react';
 import { styles } from './DropdownMenu.styles';
 
 type Props = {
   isOpen?: boolean;
-  children?: ReactNode;
   additionalStyles?: SerializedStyles[] | SerializedStyles;
-};
+} & React.PropsWithChildren;
 
 export function DropdownMenu({ isOpen, children, additionalStyles }: Props) {
   return (

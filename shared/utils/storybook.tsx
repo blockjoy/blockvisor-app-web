@@ -1,11 +1,8 @@
-import { StoryFnReactReturnType } from '@storybook/react/dist/ts3.9/client/preview/types';
-import { FC, ReactNode } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { StoryFnReactReturnType } from '@storybook/react/dist/ts3.9/client/preview/types';
 
-type Props = {
-  children?: ReactNode;
-};
-const StorybookFormProvider = ({ children }: Props) => {
+const StorybookFormProvider = ({ children }: PropsWithChildren) => {
   const methods = useForm();
   return (
     <FormProvider {...methods}>

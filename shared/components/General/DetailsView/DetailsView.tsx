@@ -1,11 +1,9 @@
-import { ReactNode } from 'react';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './DetailsView.styles';
 
 export type DetailsViewProps = {
-  children: ReactNode;
   headline: string;
-};
+} & React.PropsWithChildren;
 
 export const DetailsView = ({ children, headline }: DetailsViewProps) => {
   return (

@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/navigation';
 import { authAtoms, authSelectors, useSignOut } from '@modules/auth';
@@ -14,7 +14,7 @@ import IconCog from '@public/assets/icons/common/Cog.svg';
 type ProfileDropdownItem = {
   id: string;
   name: string;
-  icon: ReactNode;
+  icon: React.ReactNode;
   onClick: VoidFunction;
 };
 

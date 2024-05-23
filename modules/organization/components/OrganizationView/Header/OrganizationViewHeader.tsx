@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { toast } from 'react-toastify';
 import { Skeleton, SkeletonGrid, EditableTitle } from '@shared/components';
@@ -10,7 +10,7 @@ import {
 import { authSelectors } from '@modules/auth';
 import { OrganizationViewHeaderActions } from './Actions/OrganizationViewHeaderActions';
 
-export const OrganizationViewHeader: FC = () => {
+export const OrganizationViewHeader = () => {
   const { organization, isLoading } = useGetOrganization();
 
   const { updateOrganization } = useUpdateOrganization();

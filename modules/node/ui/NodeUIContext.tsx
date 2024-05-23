@@ -1,5 +1,4 @@
 import {
-  ReactNode,
   createContext,
   useContext,
   useState,
@@ -24,9 +23,7 @@ export type NodeUIProps = {
   setQueryParams: (nextQueryParams: InitialQueryParams) => void;
 };
 
-type NodeUIProvider = {
-  children?: ReactNode;
-};
+type NodeUIProvider = React.PropsWithChildren;
 
 const NodeUIContext = createContext<NodeUIContext>({} as NodeUIContext);
 

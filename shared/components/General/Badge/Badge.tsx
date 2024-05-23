@@ -1,13 +1,11 @@
 import { SerializedStyles } from '@emotion/serialize';
-import { ReactNode } from 'react';
 import { styles } from './Badge.styles';
 
 type Props = {
-  children?: ReactNode;
   color?: 'primary' | 'secondary' | 'note' | 'danger' | 'default';
   style?: 'standard' | 'outline';
   customCss?: SerializedStyles[];
-};
+} & React.PropsWithChildren;
 
 export function Badge({ children, color, style, customCss }: Props) {
   return (

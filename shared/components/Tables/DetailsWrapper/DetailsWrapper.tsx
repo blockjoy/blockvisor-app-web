@@ -1,12 +1,10 @@
-import { ReactNode } from 'react';
 import Link from 'next/link';
 import { styles } from './DetailsWrapper.styles';
 
 type DetailsWrapperProps = {
-  children: ReactNode;
   title: string;
   href: string;
-};
+} & React.PropsWithChildren;
 
 export const DetailsWrapper = ({
   children,

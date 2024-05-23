@@ -1,4 +1,3 @@
-import { FC, ReactNode } from 'react';
 import { styles } from './TableGridCell.styles';
 import { SvgIcon } from '@shared/components/General';
 import IconMore from '@public/assets/icons/common/More.svg';
@@ -6,20 +5,20 @@ import IconMore from '@public/assets/icons/common/More.svg';
 type Props = {
   onCellClick?: VoidFunction;
   titleText: string;
-  titleIcon: ReactNode;
-  middleRow?: ReactNode | string;
-  bottomRow?: ReactNode | string;
-  footer?: ReactNode | string;
+  titleIcon: React.ReactNode;
+  middleRow?: React.ReactNode | string;
+  bottomRow?: React.ReactNode | string;
+  footer?: React.ReactNode | string;
 };
 
-export const TableGridCell: FC<Props> = ({
+export const TableGridCell = ({
   onCellClick,
   titleText,
   titleIcon,
   middleRow,
   bottomRow,
   footer,
-}) => (
+}: Props) => (
   <div
     onClick={onCellClick}
     css={[styles.cell, !onCellClick && styles.cellNotClickable]}

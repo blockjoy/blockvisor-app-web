@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { styles } from './Skeleton.styles';
 
 type Props = {
@@ -7,7 +6,7 @@ type Props = {
   margin?: string;
 };
 
-export const Skeleton: FC<Props> = ({ width, height, margin }) => (
+export const Skeleton = ({ width, height, margin }: Props) => (
   <span
     style={{
       width,
