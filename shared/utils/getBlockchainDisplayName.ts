@@ -1,4 +1,7 @@
-const displayNames = [{ name: 'Arbitrum', displayName: 'Arbitrum-Nova' }];
+const displayNames = [
+  { name: 'Arbitrum', displayName: 'Arbitrum-Nova' },
+  { name: 'Near_Archive', displayName: 'Near-Archive' },
+];
 
 export const getBlockchainDisplayName = (name: string) => {
   const displayName =
