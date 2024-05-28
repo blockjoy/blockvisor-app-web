@@ -140,8 +140,14 @@ export const BlockchainIcon = ({
   hideTooltip,
   size = '24px',
 }: Props) => {
+  const trimmedBlockchainName =
+    blockchainName?.indexOf('-')! > 0
+      ? blockchainName?.substring(0, blockchainName?.indexOf('-'))
+      : blockchainName?.indexOf('_')! > 0
+      ? blockchainName?.substring(0, blockchainName?.indexOf('_'))
+      : blockchainName;
   let Component;
-  switch (blockchainName?.toLowerCase()) {
+  switch (trimmedBlockchainName?.toLowerCase()) {
     case 'aleo':
       Component = IconAleo;
       break;
@@ -152,7 +158,6 @@ export const BlockchainIcon = ({
       Component = IconAlgorand;
       break;
     case 'arbitrum':
-    case 'arbitrum-nova':
       Component = IconArbitrum;
       break;
     case 'avalanche':
@@ -162,7 +167,6 @@ export const BlockchainIcon = ({
       Component = IconAvalancheDfk;
       break;
     case 'axelar':
-    case 'axelar-full':
       Component = IconAxelar;
       break;
     case 'base':
@@ -182,10 +186,6 @@ export const BlockchainIcon = ({
       Component = IconCelo;
       break;
     case 'ethereum':
-    case 'ethereum pos':
-    case 'ethereum-reth':
-    case 'ethereum-stateless':
-    case 'ethereum-reth-full':
       Component = IconEthereum;
       break;
     case 'eth erigon':
@@ -215,13 +215,9 @@ export const BlockchainIcon = ({
       Component = IconHelium;
       break;
     case 'near':
-    case 'near_archive':
-    case 'near-archive':
-    case 'near-rpc':
       Component = IconNear;
       break;
     case 'optimism':
-    case 'optimism-erigon':
       Component = IconOptimism;
       break;
     case 'osmosis':
@@ -231,7 +227,6 @@ export const BlockchainIcon = ({
       Component = IconPocket;
       break;
     case 'polygon':
-    case 'polygon-zk':
       Component = IconPolygon;
       break;
     case 'solana':
