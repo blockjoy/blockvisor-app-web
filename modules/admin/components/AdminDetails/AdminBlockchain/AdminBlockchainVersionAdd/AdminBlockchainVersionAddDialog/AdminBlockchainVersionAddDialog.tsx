@@ -1,7 +1,10 @@
 import { KeyboardEvent, useEffect, useState } from 'react';
 import router from 'next/router';
 import { blockchainClient } from '@modules/grpc';
-import { BlockchainServiceAddVersionRequest } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import {
+  BlockchainServiceAddVersionRequest,
+  BlockchainProperty,
+} from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { styles } from './AdminBlockchainVersionAddDialog.styles';
 import {
   withSearchDropdown,
@@ -10,11 +13,13 @@ import {
   Textbox,
   Button,
   FormError,
+  Scrollbar,
 } from '@shared/components';
 import { createDropdownValuesFromEnum } from '@modules/admin/utils';
 import { toast } from 'react-toastify';
 import { spacing } from 'styles/utils.spacing.styles';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { AdminBlockchainVersionAddProperties } from './AdminBlockchainVersionAddProperties/AdminBlockchainVersionAddProperties';
 
 type Props = {
   isOpen: boolean;
@@ -80,6 +85,13 @@ export const AdminBlockchainVersionAddDialog = ({
     });
   };
 
+  const handlePropertiesChanged = (nextProperties: BlockchainProperty[]) => {
+    setNextVersion({
+      ...nextVersion,
+      properties: nextProperties,
+    });
+  };
+
   const handleEnterSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === 'Enter' && isValid) {
       addVersion();
@@ -113,63 +125,70 @@ export const AdminBlockchainVersionAddDialog = ({
       />
       <div css={[styles.dialog, isOpen && styles.dialogOpen]}>
         <h2 css={styles.dialogHeader}>Add Version</h2>
-        <form css={styles.dialogForm}>
-          <FormLabel isRequired>Version</FormLabel>
-          <div css={spacing.bottom.medium}>
+        <Scrollbar additionalStyles={[styles.scrollbar]}>
+          <form css={styles.dialogForm}>
+            <FormLabel isRequired>Version</FormLabel>
+            <div css={spacing.bottom.medium}>
+              <Textbox
+                autoFocus
+                type="text"
+                isRequired
+                isError={nextVersion.version !== '' && !isVersionValid}
+                onChange={handleChange}
+                onKeyUp={handleEnterSubmit}
+                name="version"
+                defaultValue={nextVersion.version}
+                noBottomMargin
+              />
+              <FormError
+                isVisible={!isVersionValid && nextVersion.version.length > 0}
+              >
+                Invalid version format
+              </FormError>
+            </div>
+            <FormLabel>Description</FormLabel>
             <Textbox
-              autoFocus
               type="text"
-              isRequired
-              isError={nextVersion.version !== '' && !isVersionValid}
+              isRequired={false}
               onChange={handleChange}
               onKeyUp={handleEnterSubmit}
-              name="version"
-              defaultValue={nextVersion.version}
-              noBottomMargin
+              name="description"
+              defaultValue={nextVersion.description}
             />
-            <FormError
-              isVisible={!isVersionValid && nextVersion.version.length > 0}
-            >
-              Invalid version format
-            </FormError>
-          </div>
-          <FormLabel>Description</FormLabel>
-          <Textbox
-            type="text"
-            isRequired={false}
-            onChange={handleChange}
-            onKeyUp={handleEnterSubmit}
-            name="description"
-            defaultValue={nextVersion.description}
-          />
-          <FormLabel>Node type</FormLabel>
-          <NodeTypeSelectDropdown
-            disabled
-            items={nodeTypes}
-            selectedItem={
-              nodeTypes.find(
-                (item) => item.id === nextVersion.nodeType?.toString(),
-              )!
-            }
-            isOpen={isNodeTypeDropdownOpen}
-            handleSelected={(item: AdminFilterDropdownItem | null) =>
-              handleChange('nodeType', +item?.id!)
-            }
-            handleOpen={handleNodeTypeDropdownOpen}
-            isLoading={false}
-            size="small"
-          />
+            <FormLabel>Node type</FormLabel>
+            <NodeTypeSelectDropdown
+              disabled
+              items={nodeTypes}
+              selectedItem={
+                nodeTypes.find(
+                  (item) => item.id === nextVersion.nodeType?.toString(),
+                )!
+              }
+              isOpen={isNodeTypeDropdownOpen}
+              handleSelected={(item: AdminFilterDropdownItem | null) =>
+                handleChange('nodeType', +item?.id!)
+              }
+              handleOpen={handleNodeTypeDropdownOpen}
+              isLoading={false}
+              size="small"
+            />
+            <FormLabel>Properties</FormLabel>
+            <AdminBlockchainVersionAddProperties
+              onPropertiesChanged={handlePropertiesChanged}
+              properties={nextVersion.properties}
+            />
 
-          <Button disabled={!isValid} loading={isAdding} onClick={addVersion}>
-            Add Version
-          </Button>
+            <Button disabled={!isValid} loading={isAdding} onClick={addVersion}>
+              Add Version
+            </Button>
 
-          <div css={spacing.top.small}>
-            <FormError isVisible={serverError.length > 0}>
-              {serverError}
-            </FormError>
-          </div>
-        </form>
+            <div css={spacing.top.small}>
+              <FormError isVisible={serverError.length > 0}>
+                {serverError}
+              </FormError>
+            </div>
+          </form>
+        </Scrollbar>
       </div>
     </>
   );

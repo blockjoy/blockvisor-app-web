@@ -17,6 +17,7 @@ export const styles = {
     }
   `,
   card: (theme: ITheme) => css`
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,6 +38,12 @@ export const styles = {
     color: ${theme.colorDefault};
     text-transform: capitalize;
     margin-bottom: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding: 0 20px;
+    line-height: 1.6;
   `,
   cardLabel: (theme: ITheme) => css`
     display: flex;

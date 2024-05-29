@@ -3,7 +3,7 @@ import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import { NodeStatusIcon } from './NodeStatusIcon';
 import { NodeStatusLoader } from './NodeStatusLoader';
 import { NodeStatusName } from './NodeStatusName';
-import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 export type NodeStatusType = 'container' | 'sync' | 'staking';
 
@@ -38,7 +38,7 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
 
   if (
     statusName?.match(
-      /RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING/g,
+      /RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING|UPLOADING|DOWNLOADING/g,
     )
   ) {
     return styles.statusColorGreen;
@@ -56,22 +56,27 @@ export const NodeStatus = ({
   downloadingCurrent,
   downloadingTotal,
 }: Props) => {
-  // TODO: Fix backend to have provisioning status if downloading
-  const isDownloading =
-    // status === NodeStatus.NODE_STATUS_PROVISIONING &&
-    downloadingCurrent! !== downloadingTotal!;
-  const nodeStatus = isDownloading
-    ? NodeStatusEnum.NODE_STATUS_PROVISIONING
-    : status;
+  const nameRef = useRef<HTMLParagraphElement>(null);
 
-  const statusColor = getNodeStatusColor(nodeStatus, type);
+  const isDownloading =
+    downloadingCurrent! >= 0 && downloadingCurrent !== downloadingTotal;
+
+  const statusColor = getNodeStatusColor(status, type);
+
+  const [statusNameWidth, setStatusNameWidth] = useState(
+    nameRef.current?.clientWidth!,
+  );
+
+  useLayoutEffect(() => {
+    setStatusNameWidth(nameRef.current?.clientWidth!);
+  }, []);
 
   return (
     <span
       css={[
         styles.status,
         hasBorder && styles.statusBorder,
-        isDownloading && styles.statusLoading,
+        isDownloading && styles.statusLoading(statusNameWidth),
         statusColor,
       ]}
     >
@@ -81,14 +86,9 @@ export const NodeStatus = ({
           total={downloadingTotal!}
         />
       )}
-      <NodeStatusIcon size="12px" status={nodeStatus} type={type} />
-      <p css={[styles.statusText, statusColor]}>
-        <NodeStatusName
-          status={status}
-          type={type}
-          downloadingCurrent={downloadingCurrent}
-          downloadingTotal={downloadingTotal}
-        />
+      <NodeStatusIcon size="12px" status={status} type={type} />
+      <p ref={nameRef} css={[styles.statusText, statusColor]}>
+        <NodeStatusName status={status} type={type} />
       </p>
     </span>
   );
