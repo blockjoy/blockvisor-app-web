@@ -5,8 +5,10 @@ import { getNodeStatusColor, NodeStatusName } from '@shared/components';
 import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 import {
   ContainerStatus,
+  NodeStatus,
   SyncStatus,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 
 const iconSize = '24px';
 
@@ -14,6 +16,8 @@ export const NodeViewStatus = () => {
   const { node } = useNodeView();
 
   if (!node?.id) return null;
+
+  const nodeJobProgress = getNodeJobProgress(node);
 
   return (
     <>
@@ -31,6 +35,12 @@ export const NodeViewStatus = () => {
           <NodeStatusIcon size={iconSize} status={node!.status} />
           <var css={[styles.cardValue, getNodeStatusColor(node.status!)]}>
             <NodeStatusName status={node.status} />
+            {node.status === NodeStatus.NODE_STATUS_UPLOADING ||
+            node.status === NodeStatus.NODE_STATUS_DOWNLOADING
+              ? ` ${Math.round(
+                  (nodeJobProgress?.current! / nodeJobProgress?.total!) * 100,
+                )}%`
+              : ''}
           </var>
           <h3 css={styles.cardLabel}>Node Status</h3>
         </div>

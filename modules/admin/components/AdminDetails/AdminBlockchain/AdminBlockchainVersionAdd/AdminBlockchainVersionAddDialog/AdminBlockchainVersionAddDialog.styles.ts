@@ -19,11 +19,16 @@ export const styles = {
     visibility: visible;
     opacity: 1;
   `,
+  scrollbar: css`
+    height: calc(100vh - 102px);
+    padding-bottom: 60px;
+    padding-top: 20px;
+  `,
   dialog: (theme: ITheme) => css`
     background: ${theme.colorBackground};
     position: fixed;
     z-index: 12;
-    padding: 0 20px 24px;
+    padding: 0 0 24px;
     top: 0;
     right: 0;
     width: 80%;
@@ -41,20 +46,23 @@ export const styles = {
 
     @media ${breakpoints.fromXLrg} {
       width: 440px;
-      padding: 0 30px 30px;
+      padding: 0 0 30px;
     }
   `,
   dialogOpen: css`
     translate: 0;
   `,
-  dialogHeader: css`
+  dialogHeader: (theme: ITheme) => css`
     font-size: 18px;
     margin: 0;
     height: 72px;
     display: flex;
     align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid ${theme.colorBorder};
   `,
   dialogForm: css`
     display: grid;
+    padding: 0 20px;
   `,
 };
