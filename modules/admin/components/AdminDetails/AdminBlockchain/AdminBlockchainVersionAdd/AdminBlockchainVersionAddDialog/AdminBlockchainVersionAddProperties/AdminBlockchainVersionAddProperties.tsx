@@ -45,16 +45,14 @@ export const AdminBlockchainVersionAddProperties = ({
   };
 
   const handlePropertyChanged = (
-    propertyName: string,
+    index: number,
     name: string,
     value: string,
     type?: 'boolean' | 'number',
   ) => {
     const nextProperties = [...properties];
 
-    const foundProperty = nextProperties.find(
-      (property) => property.name === propertyName,
-    );
+    const foundProperty = nextProperties[index];
 
     if (!foundProperty) return;
 
@@ -72,13 +70,14 @@ export const AdminBlockchainVersionAddProperties = ({
 
   return (
     <div css={styles.wrapper(properties.length > 0)}>
-      {properties.map((property) => (
-        <div css={styles.row} key={property.name}>
+      {properties.map((property, index) => (
+        <div css={styles.row} key={`property${index + 1}`}>
           <FormLabel>Name</FormLabel>
           <Textbox
+            autoFocus
             name="name"
             onChange={(name: string, value: string) =>
-              handlePropertyChanged(property.name, name, value)
+              handlePropertyChanged(index, name, value)
             }
             defaultValue={property.name}
             isRequired
@@ -88,7 +87,7 @@ export const AdminBlockchainVersionAddProperties = ({
           <Textbox
             name="displayName"
             onChange={(name: string, value: string) =>
-              handlePropertyChanged(property.name, name, value)
+              handlePropertyChanged(index, name, value)
             }
             isRequired={false}
             type="text"
@@ -97,7 +96,7 @@ export const AdminBlockchainVersionAddProperties = ({
           <Textbox
             name="default"
             onChange={(name: string, value: string) =>
-              handlePropertyChanged(property.name, name, value)
+              handlePropertyChanged(index, name, value)
             }
             isRequired={false}
             type="text"
@@ -117,7 +116,7 @@ export const AdminBlockchainVersionAddProperties = ({
               uiTypes.find((ui) => ui.id === property.uiType?.toString())!
             }
             onSelect={(value: string) =>
-              handlePropertyChanged(property.name, 'uiType', value, 'number')
+              handlePropertyChanged(index, 'uiType', value, 'number')
             }
           />
           <FormLabel>Required</FormLabel>
@@ -125,12 +124,7 @@ export const AdminBlockchainVersionAddProperties = ({
             name="required"
             defaultChecked={property.required}
             onChange={(name: string, value: boolean) =>
-              handlePropertyChanged(
-                property.name,
-                name,
-                value?.toString(),
-                'boolean',
-              )
+              handlePropertyChanged(index, name, value?.toString(), 'boolean')
             }
           />
           <button

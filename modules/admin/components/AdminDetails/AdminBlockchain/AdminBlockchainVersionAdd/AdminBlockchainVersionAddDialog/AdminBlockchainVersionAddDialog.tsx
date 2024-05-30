@@ -90,6 +90,7 @@ export const AdminBlockchainVersionAddDialog = ({
       ...nextVersion,
       properties: nextProperties,
     });
+    console.log('nextVersion', nextVersion);
   };
 
   const handleEnterSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
