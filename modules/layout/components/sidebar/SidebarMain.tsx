@@ -4,6 +4,12 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import { styles } from './SidebarMain.styles';
 import { Badge } from '@shared/components';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
+import { invitationAtoms, organizationAtoms } from '@modules/organization';
+import { ROUTES } from '@shared/index';
+import { authSelectors } from '@modules/auth';
+import { billingSelectors } from '@modules/billing';
+import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import IconNodes from '@public/assets/icons/app/Node.svg';
 import IconOrganizations from '@public/assets/icons/app/Organization.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
@@ -11,15 +17,6 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconChat from '@public/assets/icons/common/Chat.svg';
 import IconSliders from '@public/assets/icons/app/Sliders.svg';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
-import { SidebarFooter } from './SidebarFooter/SidebarFooter';
-import {
-  sidebarOpen,
-  sidebarOpenMobile,
-} from '@modules/layout/store/layoutAtoms';
-import { invitationAtoms, organizationAtoms } from '@modules/organization';
-import { ROUTES } from '@shared/index';
-import { authSelectors } from '@modules/auth';
-import { billingSelectors } from '@modules/billing';
 
 type BlockItem = {
   id: string;
@@ -40,9 +37,10 @@ export default () => {
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
   );
-  const isSidebarOpen = useRecoilValue(sidebarOpen);
-  const [isSidebarOpenMobile, setIsSidebarOpenMobile] =
-    useRecoilState(sidebarOpenMobile);
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
+  const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useRecoilState(
+    layoutAtoms.isSidebarOpenMobile,
+  );
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const invitationCount = useRecoilValue(

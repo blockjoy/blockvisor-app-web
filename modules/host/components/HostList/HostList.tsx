@@ -11,7 +11,6 @@ import { styles } from './HostList.styles';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
-  hostAtoms,
   // HostFilters,
   HostListHeader,
   mapHostListToGird,
@@ -20,6 +19,7 @@ import {
   useHostList,
   useHostUIContext,
 } from '@modules/host';
+import { layoutSelectors } from '@modules/layout';
 
 export const HostList = () => {
   const hostUIContext = useHostUIContext();
@@ -33,7 +33,7 @@ export const HostList = () => {
   const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
     useHostList();
 
-  const activeListType = useRecoilValue(hostAtoms.activeListType);
+  const view = useRecoilValue(layoutSelectors.hostView);
 
   const currentQueryParams = useRef(hostUIProps.queryParams);
 
@@ -107,7 +107,7 @@ export const HostList = () => {
               scrollThreshold={0.75}
               loader={''}
             >
-              {activeListType === 'table' ? (
+              {view === 'table' ? (
                 <Table
                   isLoading={isLoading}
                   headers={headers}

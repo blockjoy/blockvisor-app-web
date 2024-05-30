@@ -123,34 +123,67 @@ class UserClient {
 
   async updateUser(request: UserServiceUpdateRequest): Promise<User> {
     try {
-      console.log('updateUserRequest', request);
       await authClient.refreshToken();
       const response = await this.client.update(request, getOptions());
-      console.log('updateUserResponse', response);
+
       return response.user!;
     } catch (err) {
       return handleError(err);
     }
   }
 
-  // async getSettings(userId: string): Promise<Record<string, string>> {
-  //   try {
-  //     await authClient.refreshToken();
-  //     const response = await this.client.getSettings({ userId }, getOptions());
+  async getSettings(userId: string): Promise<Record<string, string>> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.getSettings({ userId }, getOptions());
 
-  //     const decoder = new TextDecoder();
-  //     let settings = Object.fromEntries(
-  //       Object.entries(response.settings).map(([key, value]) => [
-  //         key,
-  //         decoder.decode(value),
-  //       ]),
-  //     );
+      const decoder = new TextDecoder();
+      let settings = Object.fromEntries(
+        Object.entries(response.settings).map(([key, value]) => [
+          key,
+          decoder.decode(value),
+        ]),
+      );
 
-  //     return settings;
-  //   } catch (err) {
-  //     return handleError(err);
-  //   }
-  // }
+      return settings;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async updateSettings(
+    userId: string,
+    name: string,
+    value: string,
+  ): Promise<Record<string, string>> {
+    try {
+      await authClient.refreshToken();
+
+      const encoder = new TextEncoder();
+      const encodedValue = encoder.encode(value);
+
+      const response = await this.client.updateSettings(
+        { userId, name, value: encodedValue },
+        getOptions(),
+      );
+
+      const decoder = new TextDecoder();
+      const decodedValue = decoder.decode(response.value);
+
+      return { [name]: decodedValue };
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async deleteSettings(userId: string, name: string): Promise<void> {
+    try {
+      await authClient.refreshToken();
+      await this.client.deleteSettings({ userId, name }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
 
   async getBilling(userId: string): Promise<string | StatusResponse> {
     try {

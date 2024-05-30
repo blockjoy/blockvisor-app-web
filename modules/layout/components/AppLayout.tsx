@@ -4,7 +4,11 @@ import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import { useIdentityRepository, useRefreshToken } from '@modules/auth';
+import {
+  useIdentityRepository,
+  useRefreshToken,
+  useUserSettings,
+} from '@modules/auth';
 import {
   organizationAtoms,
   useGetOrganizations,
@@ -35,6 +39,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   );
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
+  const { getUserSettings } = useUserSettings();
   const {
     client: mqttClient,
     connect: mqttConnect,
@@ -54,6 +59,10 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   usePermissions();
   useGetBlockchains();
   useBilling();
+
+  useEffect(() => {
+    getUserSettings();
+  }, []);
 
   useEffect(() => {
     const fetchReceivedInvitations = async () => {

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   Alert,
   GridTableViewPicker,
@@ -7,12 +7,8 @@ import {
   Search,
 } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import {
-  hostAtoms,
-  hostSelectors,
-  useHostList,
-  useHostUIContext,
-} from '@modules/host';
+import { hostSelectors, useHostList, useHostUIContext } from '@modules/host';
+import { layoutSelectors, useLayout } from '@modules/layout';
 
 export const HostListHeader = () => {
   const hostUIContext = useHostUIContext();
@@ -25,13 +21,9 @@ export const HostListHeader = () => {
 
   const { hostCount } = useHostList();
 
-  const [activeListType, setActiveListType] = useRecoilState(
-    hostAtoms.activeListType,
-  );
+  const view = useRecoilValue(layoutSelectors.hostView);
 
-  // const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
-  //   hostAtoms.isFiltersOpen,
-  // );
+  // const isFiltersOpen = useRecoilValue(layoutSelectors.isHostFiltersOpen);
   // const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
 
   // const isLoading = useRecoilValue(hostAtoms.isLoading);
@@ -39,6 +31,8 @@ export const HostListHeader = () => {
   const [searchQuery, setSearchQuery] = useRecoilState(
     hostSelectors.filtersSearchQuery,
   );
+
+  const { updateLayout } = useLayout();
 
   const handleSearch = (keyword: string) => {
     setSearchQuery(keyword);
@@ -55,13 +49,13 @@ export const HostListHeader = () => {
     hostUIProps.setQueryParams(newQueryParams);
   };
 
-  const handleActiveListType = (type: string) => {
-    setActiveListType(type);
+  const handleActiveListType = (type: View) => {
+    updateLayout('host.view', type);
   };
 
   // TODO: ADD FILTERS BACK IN ONCE IMPLEMENTED
   // const handleFilterCollapseToggled = () => {
-  //   setIsFiltersOpen(!isFiltersOpen);
+  //  updateLayout('host.filters.isOpen', !isFiltersOpen);
   // };
 
   return (
@@ -92,7 +86,7 @@ export const HostListHeader = () => {
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleActiveListType}
-          activeListType={activeListType}
+          activeListType={view}
         />
       </div>
     </div>

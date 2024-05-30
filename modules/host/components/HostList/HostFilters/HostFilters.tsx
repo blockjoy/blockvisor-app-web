@@ -16,6 +16,7 @@ import { hostAtoms, useHostUIContext, useHostFilters } from '@modules/host';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { blockchainAtoms } from '@modules/node';
+import { layoutSelectors, useLayout } from '@modules/layout';
 
 export const HostFilters = () => {
   const hostUIContext = useHostUIContext();
@@ -43,14 +44,14 @@ export const HostFilters = () => {
     blockchainAtoms.blockchainsLoadingState,
   );
 
-  const [isFiltersOpen, setFiltersOpen] = useRecoilState(
-    hostAtoms.isFiltersOpen,
-  );
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isHostFiltersOpen);
 
   const [openFilterId, setOpenFilterId] = useState('');
 
+  const { updateLayout } = useLayout();
+
   useEffect(() => {
-    if (isMobile) setFiltersOpen(false);
+    if (isMobile) updateLayout('host.filters.isOpen', false);
   }, []);
 
   const hasFiltersApplied =
@@ -79,7 +80,7 @@ export const HostFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    setFiltersOpen(!isFiltersOpen);
+    updateLayout('host.filters.isOpen', !isFiltersOpen);
   };
 
   const handleSearch = (value: string) => changeTempFilters('keyword', value);

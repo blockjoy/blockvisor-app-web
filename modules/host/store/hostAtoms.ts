@@ -45,17 +45,6 @@ const isLoading = atom<LoadingState>({
   default: 'initializing',
 });
 
-const activeListType = atom<string | 'table' | 'grid'>({
-  key: 'host.list.type',
-  default: 'table',
-});
-
-const isFiltersOpen = atom<boolean>({
-  key: 'host.filters.isOpen',
-  default: false,
-  effects: [localStorageEffect('host.filters.isOpen')],
-});
-
 const filters = atom<UIHostFilterCriteria>({
   key: 'host.filters',
   default: HOST_FILTERS_DEFAULT,
@@ -85,9 +74,6 @@ export const hostAtoms = {
   hostIpListType,
   isLoading,
 
-  activeListType,
-
-  isFiltersOpen,
   filters,
   filtersTempTotal,
 };

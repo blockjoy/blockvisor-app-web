@@ -1,18 +1,16 @@
 import { useLayoutEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { layoutState, sidebarOpen, sidebarOpenMobile } from '@modules/layout';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { styles } from './Sidebar.styles';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarOverlay } from './SidebarOverlay';
 import SidebarMain from './SidebarMain';
 
 export default () => {
-  const isSidebarOpen = useRecoilValue(sidebarOpen);
-
-  const [isSidebarOpenMobile, setIsSidebarOpenMobile] =
-    useRecoilState(sidebarOpenMobile);
-
-  const layout = useRecoilValue(layoutState);
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
+  const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useRecoilState(
+    layoutAtoms.isSidebarOpenMobile,
+  );
 
   const [width, setWidth] = useState(window.innerWidth);
 
@@ -38,7 +36,6 @@ export default () => {
           (width < 1200 && isSidebarOpenMobile)
             ? styles.sidebarOpen
             : styles.sidebarClosed,
-          Boolean(layout) && isSidebarOpenMobile && styles.sidebarDrawerOpen,
         ]}
       >
         <SidebarHeader />

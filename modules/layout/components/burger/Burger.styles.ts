@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   button: css`
@@ -15,10 +14,6 @@ export const styles = {
     padding: 0;
     cursor: pointer;
     scale: 0.9;
-  `,
-  buttonClosed: css``,
-  overlayOpen: css`
-    z-index: 7;
   `,
   icon: css`
     width: 24px;

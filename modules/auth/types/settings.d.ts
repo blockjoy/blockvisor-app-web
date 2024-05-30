@@ -1,0 +1,3 @@
+type UserSettings = {
+  layout?: string;
+};

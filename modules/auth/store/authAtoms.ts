@@ -1,7 +1,8 @@
 import { atom } from 'recoil';
+import { localStorageEffect } from 'utils/store/persist';
 
 const user = atom<User | null>({
-  key: 'authentication.user',
+  key: 'auth.user',
   default: null,
   effects: [
     ({ setSelf }) => {
@@ -26,8 +27,22 @@ const permissionsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const userSettings = atom<UserSettings>({
+  key: 'auth.user.settings',
+  default: {},
+  effects: [localStorageEffect('user.settings')],
+});
+
+const userSettingsLoadingState = atom<LoadingState>({
+  key: 'auth.user.settings.loadingState',
+  default: 'finished',
+});
+
 export const authAtoms = {
   user,
   permissions,
   permissionsLoadingState,
+
+  userSettings,
+  userSettingsLoadingState,
 };

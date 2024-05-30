@@ -11,11 +11,6 @@ const activeNode = atom<Node | null>({
   default: null,
 });
 
-const activeListType = atom<string | 'table' | 'grid'>({
-  key: 'node.activeListType',
-  default: 'grid',
-});
-
 const nodeList = atom<Node[]>({
   key: 'node.nodeList',
   default: [],
@@ -76,12 +71,6 @@ const selectedSKU = atom<string>({
   default: '',
 });
 
-const isFiltersOpen = atom<boolean>({
-  key: 'node.filters.isOpen',
-  default: false,
-  effects: [localStorageEffect('node.filters.isOpen')],
-});
-
 const filters = atom<UINodeFilterCriteria>({
   key: 'node.filters',
   default: NODE_FILTERS_DEFAULT,
@@ -100,9 +89,7 @@ export const nodeAtoms = {
   isLoading,
   isLoadingActiveNode,
   selectedSKU,
-  activeListType,
 
-  isFiltersOpen,
   filters,
   filtersTempTotal,
 

@@ -1,14 +1,14 @@
+import { useRecoilValue } from 'recoil';
 import { flex } from 'styles/utils.flex.styles';
 import { opacity } from 'styles/utils.opacity.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './SidebarFooter.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { useRecoilValue } from 'recoil';
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { BlockjoyLogo } from '@shared/components';
+import { layoutSelectors } from '@modules/layout';
 
 export function SidebarFooter() {
-  const isSidebarOpen = useRecoilValue(sidebarOpen);
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
 
   return (
     <footer css={[styles.wrapper, !isSidebarOpen && styles.wrapperCollapsed]}>

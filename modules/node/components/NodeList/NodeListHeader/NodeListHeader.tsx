@@ -1,30 +1,29 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import {
   Skeleton,
   GridTableViewPicker,
   FiltersHeaderIconText,
   Alert,
 } from '@shared/components';
-import { nodeAtoms, useNodeList } from '@modules/node';
+import { nodeAtoms } from '@modules/node';
+import { layoutSelectors, useLayout } from '@modules/layout';
 import { styles } from './styles';
 
 export const NodeListHeader = () => {
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
   const nodeCount = useRecoilValue(nodeAtoms.nodeCount);
-  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
-    nodeAtoms.isFiltersOpen,
-  );
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
   const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
-  const [activeListType, setActiveListType] = useRecoilState(
-    nodeAtoms.activeListType,
-  );
+  const view = useRecoilValue(layoutSelectors.nodeView);
+
+  const { updateLayout } = useLayout();
 
   const handleFilterCollapseToggled = () => {
-    setIsFiltersOpen(!isFiltersOpen);
+    updateLayout('node.filters.isOpen', !isFiltersOpen);
   };
 
-  const handleGridTableViewChanged = (type: string) => {
-    setActiveListType(type);
+  const handleGridTableViewChanged = (type: View) => {
+    updateLayout('node.view', type);
   };
 
   const isLoading = isLoadingNodes !== 'finished';
@@ -57,7 +56,7 @@ export const NodeListHeader = () => {
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleGridTableViewChanged}
-          activeListType={activeListType}
+          activeListType={view}
         />
       </div>
     </div>

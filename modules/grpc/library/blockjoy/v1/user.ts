@@ -1,11 +1,11 @@
 /* eslint-disable */
-import Long from "long";
-import type { CallContext, CallOptions } from "nice-grpc-common";
-import _m0 from "protobufjs/minimal";
-import { Timestamp } from "../../google/protobuf/timestamp";
-import { SearchOperator, SortOrder } from "../common/v1/search";
+import Long from 'long';
+import type { CallContext, CallOptions } from 'nice-grpc-common';
+import _m0 from 'protobufjs/minimal';
+import { Timestamp } from '../../google/protobuf/timestamp';
+import { SearchOperator, SortOrder } from '../common/v1/search';
 
-export const protobufPackage = "blockjoy.v1";
+export const protobufPackage = 'blockjoy.v1';
 
 export enum UserSortField {
   USER_SORT_FIELD_UNSPECIFIED = 0,
@@ -38,9 +38,7 @@ export interface UserServiceListRequest {
    * Return only users from this org. This is required for users that do not
    * have access to the entire system (i.e. blockjoy's admins).
    */
-  orgId?:
-    | string
-    | undefined;
+  orgId?: string | undefined;
   /** The number of items to be skipped over. */
   offset: number;
   /**
@@ -49,9 +47,7 @@ export interface UserServiceListRequest {
    */
   limit: number;
   /** Search params. */
-  search?:
-    | UserSearch
-    | undefined;
+  search?: UserSearch | undefined;
   /** The field sorting order of results. */
   sort: UserSort[];
 }
@@ -64,18 +60,14 @@ export interface UserSearch {
   /** The way the search parameters should be combined. */
   operator: SearchOperator;
   /** Search only the id. */
-  id?:
-    | string
-    | undefined;
+  id?: string | undefined;
   /**
    * Return only users whose email has the provided pattern as a substring. Note
    * that this search is not case sensitive. The wildcard symbol here is `'%'`.
    * For example, a query for all users whose email starts with `baremetal`
    * would look like `"baremetal%"`.
    */
-  email?:
-    | string
-    | undefined;
+  email?: string | undefined;
   /** Search only the full name. */
   name?: string | undefined;
 }
@@ -117,8 +109,7 @@ export interface UserServiceDeleteRequest {
   id: string;
 }
 
-export interface UserServiceDeleteResponse {
-}
+export interface UserServiceDeleteResponse {}
 
 export interface UserServiceGetBillingRequest {
   userId: string;
@@ -141,8 +132,7 @@ export interface UserServiceDeleteBillingRequest {
   userId: string;
 }
 
-export interface UserServiceDeleteBillingResponse {
-}
+export interface UserServiceDeleteBillingResponse {}
 
 export interface UserServiceGetSettingsRequest {
   /** The id of the user for which to return the settings. */
@@ -174,8 +164,7 @@ export interface UserServiceDeleteSettingsRequest {
   name: string;
 }
 
-export interface UserServiceDeleteSettingsResponse {
-}
+export interface UserServiceDeleteSettingsResponse {}
 
 export interface UserServiceInitCardRequest {
   userId: string;
@@ -198,9 +187,7 @@ export interface PaymentMethod {
   userId: string;
   details: BillingDetails | undefined;
   createdAt: Date | undefined;
-  updatedAt:
-    | Date
-    | undefined;
+  updatedAt: Date | undefined;
   /** This payment method is done through a credit card. */
   card?: Card | undefined;
 }
@@ -233,31 +220,41 @@ export interface Card {
 }
 
 function createBaseUser(): User {
-  return { id: "", email: "", firstName: "", lastName: "", createdAt: undefined };
+  return {
+    id: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    createdAt: undefined,
+  };
 }
 
 export const User = {
   encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
-    if (message.email !== "") {
+    if (message.email !== '') {
       writer.uint32(18).string(message.email);
     }
-    if (message.firstName !== "") {
+    if (message.firstName !== '') {
       writer.uint32(26).string(message.firstName);
     }
-    if (message.lastName !== "") {
+    if (message.lastName !== '') {
       writer.uint32(34).string(message.lastName);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.createdAt),
+        writer.uint32(42).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): User {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUser();
     while (reader.pos < end) {
@@ -296,7 +293,9 @@ export const User = {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -313,29 +312,36 @@ export const User = {
 
   fromPartial(object: DeepPartial<User>): User {
     const message = createBaseUser();
-    message.id = object.id ?? "";
-    message.email = object.email ?? "";
-    message.firstName = object.firstName ?? "";
-    message.lastName = object.lastName ?? "";
+    message.id = object.id ?? '';
+    message.email = object.email ?? '';
+    message.firstName = object.firstName ?? '';
+    message.lastName = object.lastName ?? '';
     message.createdAt = object.createdAt ?? undefined;
     return message;
   },
 };
 
 function createBaseUserServiceGetRequest(): UserServiceGetRequest {
-  return { id: "" };
+  return { id: '' };
 }
 
 export const UserServiceGetRequest = {
-  encode(message: UserServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+  encode(
+    message: UserServiceGetRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceGetRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceGetRequest();
     while (reader.pos < end) {
@@ -361,9 +367,11 @@ export const UserServiceGetRequest = {
     return UserServiceGetRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceGetRequest>): UserServiceGetRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceGetRequest>,
+  ): UserServiceGetRequest {
     const message = createBaseUserServiceGetRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -373,15 +381,22 @@ function createBaseUserServiceGetResponse(): UserServiceGetResponse {
 }
 
 export const UserServiceGetResponse = {
-  encode(message: UserServiceGetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceGetResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceGetResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceGetResponse();
     while (reader.pos < end) {
@@ -407,9 +422,14 @@ export const UserServiceGetResponse = {
     return UserServiceGetResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceGetResponse>): UserServiceGetResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceGetResponse>,
+  ): UserServiceGetResponse {
     const message = createBaseUserServiceGetResponse();
-    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    message.user =
+      object.user !== undefined && object.user !== null
+        ? User.fromPartial(object.user)
+        : undefined;
     return message;
   },
 };
@@ -419,7 +439,10 @@ function createBaseUserServiceListRequest(): UserServiceListRequest {
 }
 
 export const UserServiceListRequest = {
-  encode(message: UserServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceListRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
@@ -438,8 +461,12 @@ export const UserServiceListRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceListRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceListRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceListRequest();
     while (reader.pos < end) {
@@ -493,14 +520,17 @@ export const UserServiceListRequest = {
     return UserServiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceListRequest>): UserServiceListRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceListRequest>,
+  ): UserServiceListRequest {
     const message = createBaseUserServiceListRequest();
     message.orgId = object.orgId ?? undefined;
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
-    message.search = (object.search !== undefined && object.search !== null)
-      ? UserSearch.fromPartial(object.search)
-      : undefined;
+    message.search =
+      object.search !== undefined && object.search !== null
+        ? UserSearch.fromPartial(object.search)
+        : undefined;
     message.sort = object.sort?.map((e) => UserSort.fromPartial(e)) || [];
     return message;
   },
@@ -511,7 +541,10 @@ function createBaseUserSearch(): UserSearch {
 }
 
 export const UserSearch = {
-  encode(message: UserSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserSearch,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.operator !== 0) {
       writer.uint32(8).int32(message.operator);
     }
@@ -528,7 +561,8 @@ export const UserSearch = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserSearch {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserSearch();
     while (reader.pos < end) {
@@ -590,7 +624,10 @@ function createBaseUserSort(): UserSort {
 }
 
 export const UserSort = {
-  encode(message: UserSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserSort,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.field !== 0) {
       writer.uint32(8).int32(message.field);
     }
@@ -601,7 +638,8 @@ export const UserSort = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserSort {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserSort();
     while (reader.pos < end) {
@@ -647,7 +685,10 @@ function createBaseUserServiceListResponse(): UserServiceListResponse {
 }
 
 export const UserServiceListResponse = {
-  encode(message: UserServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceListResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.users) {
       User.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -657,8 +698,12 @@ export const UserServiceListResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceListResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceListResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceListResponse();
     while (reader.pos < end) {
@@ -691,7 +736,9 @@ export const UserServiceListResponse = {
     return UserServiceListResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceListResponse>): UserServiceListResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceListResponse>,
+  ): UserServiceListResponse {
     const message = createBaseUserServiceListResponse();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
     message.userCount = object.userCount ?? 0;
@@ -700,28 +747,35 @@ export const UserServiceListResponse = {
 };
 
 function createBaseUserServiceCreateRequest(): UserServiceCreateRequest {
-  return { email: "", firstName: "", lastName: "", password: "" };
+  return { email: '', firstName: '', lastName: '', password: '' };
 }
 
 export const UserServiceCreateRequest = {
-  encode(message: UserServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== "") {
+  encode(
+    message: UserServiceCreateRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.email !== '') {
       writer.uint32(10).string(message.email);
     }
-    if (message.firstName !== "") {
+    if (message.firstName !== '') {
       writer.uint32(18).string(message.firstName);
     }
-    if (message.lastName !== "") {
+    if (message.lastName !== '') {
       writer.uint32(26).string(message.lastName);
     }
-    if (message.password !== "") {
+    if (message.password !== '') {
       writer.uint32(34).string(message.password);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceCreateRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceCreateRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceCreateRequest();
     while (reader.pos < end) {
@@ -764,16 +818,20 @@ export const UserServiceCreateRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceCreateRequest>): UserServiceCreateRequest {
+  create(
+    base?: DeepPartial<UserServiceCreateRequest>,
+  ): UserServiceCreateRequest {
     return UserServiceCreateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceCreateRequest>): UserServiceCreateRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceCreateRequest>,
+  ): UserServiceCreateRequest {
     const message = createBaseUserServiceCreateRequest();
-    message.email = object.email ?? "";
-    message.firstName = object.firstName ?? "";
-    message.lastName = object.lastName ?? "";
-    message.password = object.password ?? "";
+    message.email = object.email ?? '';
+    message.firstName = object.firstName ?? '';
+    message.lastName = object.lastName ?? '';
+    message.password = object.password ?? '';
     return message;
   },
 };
@@ -783,15 +841,22 @@ function createBaseUserServiceCreateResponse(): UserServiceCreateResponse {
 }
 
 export const UserServiceCreateResponse = {
-  encode(message: UserServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceCreateResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceCreateResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceCreateResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceCreateResponse();
     while (reader.pos < end) {
@@ -813,24 +878,34 @@ export const UserServiceCreateResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceCreateResponse>): UserServiceCreateResponse {
+  create(
+    base?: DeepPartial<UserServiceCreateResponse>,
+  ): UserServiceCreateResponse {
     return UserServiceCreateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceCreateResponse>): UserServiceCreateResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceCreateResponse>,
+  ): UserServiceCreateResponse {
     const message = createBaseUserServiceCreateResponse();
-    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    message.user =
+      object.user !== undefined && object.user !== null
+        ? User.fromPartial(object.user)
+        : undefined;
     return message;
   },
 };
 
 function createBaseUserServiceUpdateRequest(): UserServiceUpdateRequest {
-  return { id: "", firstName: undefined, lastName: undefined };
+  return { id: '', firstName: undefined, lastName: undefined };
 }
 
 export const UserServiceUpdateRequest = {
-  encode(message: UserServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+  encode(
+    message: UserServiceUpdateRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     if (message.firstName !== undefined) {
@@ -842,8 +917,12 @@ export const UserServiceUpdateRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceUpdateRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceUpdateRequest();
     while (reader.pos < end) {
@@ -879,13 +958,17 @@ export const UserServiceUpdateRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceUpdateRequest>): UserServiceUpdateRequest {
+  create(
+    base?: DeepPartial<UserServiceUpdateRequest>,
+  ): UserServiceUpdateRequest {
     return UserServiceUpdateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceUpdateRequest>): UserServiceUpdateRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceUpdateRequest>,
+  ): UserServiceUpdateRequest {
     const message = createBaseUserServiceUpdateRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? '';
     message.firstName = object.firstName ?? undefined;
     message.lastName = object.lastName ?? undefined;
     return message;
@@ -897,15 +980,22 @@ function createBaseUserServiceUpdateResponse(): UserServiceUpdateResponse {
 }
 
 export const UserServiceUpdateResponse = {
-  encode(message: UserServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceUpdateResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceUpdateResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceUpdateResponse();
     while (reader.pos < end) {
@@ -927,31 +1017,45 @@ export const UserServiceUpdateResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceUpdateResponse>): UserServiceUpdateResponse {
+  create(
+    base?: DeepPartial<UserServiceUpdateResponse>,
+  ): UserServiceUpdateResponse {
     return UserServiceUpdateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceUpdateResponse>): UserServiceUpdateResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceUpdateResponse>,
+  ): UserServiceUpdateResponse {
     const message = createBaseUserServiceUpdateResponse();
-    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    message.user =
+      object.user !== undefined && object.user !== null
+        ? User.fromPartial(object.user)
+        : undefined;
     return message;
   },
 };
 
 function createBaseUserServiceDeleteRequest(): UserServiceDeleteRequest {
-  return { id: "" };
+  return { id: '' };
 }
 
 export const UserServiceDeleteRequest = {
-  encode(message: UserServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
+  encode(
+    message: UserServiceDeleteRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceDeleteRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceDeleteRequest();
     while (reader.pos < end) {
@@ -973,13 +1077,17 @@ export const UserServiceDeleteRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceDeleteRequest>): UserServiceDeleteRequest {
+  create(
+    base?: DeepPartial<UserServiceDeleteRequest>,
+  ): UserServiceDeleteRequest {
     return UserServiceDeleteRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceDeleteRequest>): UserServiceDeleteRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceDeleteRequest>,
+  ): UserServiceDeleteRequest {
     const message = createBaseUserServiceDeleteRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -989,12 +1097,19 @@ function createBaseUserServiceDeleteResponse(): UserServiceDeleteResponse {
 }
 
 export const UserServiceDeleteResponse = {
-  encode(_: UserServiceDeleteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: UserServiceDeleteResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceDeleteResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceDeleteResponse();
     while (reader.pos < end) {
@@ -1009,30 +1124,41 @@ export const UserServiceDeleteResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceDeleteResponse>): UserServiceDeleteResponse {
+  create(
+    base?: DeepPartial<UserServiceDeleteResponse>,
+  ): UserServiceDeleteResponse {
     return UserServiceDeleteResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<UserServiceDeleteResponse>): UserServiceDeleteResponse {
+  fromPartial(
+    _: DeepPartial<UserServiceDeleteResponse>,
+  ): UserServiceDeleteResponse {
     const message = createBaseUserServiceDeleteResponse();
     return message;
   },
 };
 
 function createBaseUserServiceGetBillingRequest(): UserServiceGetBillingRequest {
-  return { userId: "" };
+  return { userId: '' };
 }
 
 export const UserServiceGetBillingRequest = {
-  encode(message: UserServiceGetBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceGetBillingRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetBillingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceGetBillingRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceGetBillingRequest();
     while (reader.pos < end) {
@@ -1054,13 +1180,17 @@ export const UserServiceGetBillingRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceGetBillingRequest>): UserServiceGetBillingRequest {
+  create(
+    base?: DeepPartial<UserServiceGetBillingRequest>,
+  ): UserServiceGetBillingRequest {
     return UserServiceGetBillingRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceGetBillingRequest>): UserServiceGetBillingRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceGetBillingRequest>,
+  ): UserServiceGetBillingRequest {
     const message = createBaseUserServiceGetBillingRequest();
-    message.userId = object.userId ?? "";
+    message.userId = object.userId ?? '';
     return message;
   },
 };
@@ -1070,15 +1200,22 @@ function createBaseUserServiceGetBillingResponse(): UserServiceGetBillingRespons
 }
 
 export const UserServiceGetBillingResponse = {
-  encode(message: UserServiceGetBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceGetBillingResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.billingId !== undefined) {
       writer.uint32(10).string(message.billingId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetBillingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceGetBillingResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceGetBillingResponse();
     while (reader.pos < end) {
@@ -1100,11 +1237,15 @@ export const UserServiceGetBillingResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceGetBillingResponse>): UserServiceGetBillingResponse {
+  create(
+    base?: DeepPartial<UserServiceGetBillingResponse>,
+  ): UserServiceGetBillingResponse {
     return UserServiceGetBillingResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceGetBillingResponse>): UserServiceGetBillingResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceGetBillingResponse>,
+  ): UserServiceGetBillingResponse {
     const message = createBaseUserServiceGetBillingResponse();
     message.billingId = object.billingId ?? undefined;
     return message;
@@ -1112,12 +1253,15 @@ export const UserServiceGetBillingResponse = {
 };
 
 function createBaseUserServiceUpdateBillingRequest(): UserServiceUpdateBillingRequest {
-  return { userId: "", billingId: undefined };
+  return { userId: '', billingId: undefined };
 }
 
 export const UserServiceUpdateBillingRequest = {
-  encode(message: UserServiceUpdateBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceUpdateBillingRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
     if (message.billingId !== undefined) {
@@ -1126,8 +1270,12 @@ export const UserServiceUpdateBillingRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateBillingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceUpdateBillingRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceUpdateBillingRequest();
     while (reader.pos < end) {
@@ -1156,13 +1304,17 @@ export const UserServiceUpdateBillingRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceUpdateBillingRequest>): UserServiceUpdateBillingRequest {
+  create(
+    base?: DeepPartial<UserServiceUpdateBillingRequest>,
+  ): UserServiceUpdateBillingRequest {
     return UserServiceUpdateBillingRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceUpdateBillingRequest>): UserServiceUpdateBillingRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceUpdateBillingRequest>,
+  ): UserServiceUpdateBillingRequest {
     const message = createBaseUserServiceUpdateBillingRequest();
-    message.userId = object.userId ?? "";
+    message.userId = object.userId ?? '';
     message.billingId = object.billingId ?? undefined;
     return message;
   },
@@ -1173,15 +1325,22 @@ function createBaseUserServiceUpdateBillingResponse(): UserServiceUpdateBillingR
 }
 
 export const UserServiceUpdateBillingResponse = {
-  encode(message: UserServiceUpdateBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceUpdateBillingResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.billingId !== undefined) {
       writer.uint32(10).string(message.billingId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateBillingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceUpdateBillingResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceUpdateBillingResponse();
     while (reader.pos < end) {
@@ -1203,11 +1362,15 @@ export const UserServiceUpdateBillingResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceUpdateBillingResponse>): UserServiceUpdateBillingResponse {
+  create(
+    base?: DeepPartial<UserServiceUpdateBillingResponse>,
+  ): UserServiceUpdateBillingResponse {
     return UserServiceUpdateBillingResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceUpdateBillingResponse>): UserServiceUpdateBillingResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceUpdateBillingResponse>,
+  ): UserServiceUpdateBillingResponse {
     const message = createBaseUserServiceUpdateBillingResponse();
     message.billingId = object.billingId ?? undefined;
     return message;
@@ -1215,19 +1378,26 @@ export const UserServiceUpdateBillingResponse = {
 };
 
 function createBaseUserServiceDeleteBillingRequest(): UserServiceDeleteBillingRequest {
-  return { userId: "" };
+  return { userId: '' };
 }
 
 export const UserServiceDeleteBillingRequest = {
-  encode(message: UserServiceDeleteBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceDeleteBillingRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteBillingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceDeleteBillingRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceDeleteBillingRequest();
     while (reader.pos < end) {
@@ -1249,13 +1419,17 @@ export const UserServiceDeleteBillingRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceDeleteBillingRequest>): UserServiceDeleteBillingRequest {
+  create(
+    base?: DeepPartial<UserServiceDeleteBillingRequest>,
+  ): UserServiceDeleteBillingRequest {
     return UserServiceDeleteBillingRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceDeleteBillingRequest>): UserServiceDeleteBillingRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceDeleteBillingRequest>,
+  ): UserServiceDeleteBillingRequest {
     const message = createBaseUserServiceDeleteBillingRequest();
-    message.userId = object.userId ?? "";
+    message.userId = object.userId ?? '';
     return message;
   },
 };
@@ -1265,12 +1439,19 @@ function createBaseUserServiceDeleteBillingResponse(): UserServiceDeleteBillingR
 }
 
 export const UserServiceDeleteBillingResponse = {
-  encode(_: UserServiceDeleteBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: UserServiceDeleteBillingResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteBillingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceDeleteBillingResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceDeleteBillingResponse();
     while (reader.pos < end) {
@@ -1285,30 +1466,41 @@ export const UserServiceDeleteBillingResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceDeleteBillingResponse>): UserServiceDeleteBillingResponse {
+  create(
+    base?: DeepPartial<UserServiceDeleteBillingResponse>,
+  ): UserServiceDeleteBillingResponse {
     return UserServiceDeleteBillingResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<UserServiceDeleteBillingResponse>): UserServiceDeleteBillingResponse {
+  fromPartial(
+    _: DeepPartial<UserServiceDeleteBillingResponse>,
+  ): UserServiceDeleteBillingResponse {
     const message = createBaseUserServiceDeleteBillingResponse();
     return message;
   },
 };
 
 function createBaseUserServiceGetSettingsRequest(): UserServiceGetSettingsRequest {
-  return { userId: "" };
+  return { userId: '' };
 }
 
 export const UserServiceGetSettingsRequest = {
-  encode(message: UserServiceGetSettingsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceGetSettingsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetSettingsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceGetSettingsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceGetSettingsRequest();
     while (reader.pos < end) {
@@ -1330,13 +1522,17 @@ export const UserServiceGetSettingsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceGetSettingsRequest>): UserServiceGetSettingsRequest {
+  create(
+    base?: DeepPartial<UserServiceGetSettingsRequest>,
+  ): UserServiceGetSettingsRequest {
     return UserServiceGetSettingsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceGetSettingsRequest>): UserServiceGetSettingsRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceGetSettingsRequest>,
+  ): UserServiceGetSettingsRequest {
     const message = createBaseUserServiceGetSettingsRequest();
-    message.userId = object.userId ?? "";
+    message.userId = object.userId ?? '';
     return message;
   },
 };
@@ -1346,16 +1542,25 @@ function createBaseUserServiceGetSettingsResponse(): UserServiceGetSettingsRespo
 }
 
 export const UserServiceGetSettingsResponse = {
-  encode(message: UserServiceGetSettingsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceGetSettingsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     Object.entries(message.settings).forEach(([key, value]) => {
-      UserServiceGetSettingsResponse_SettingsEntry.encode({ key: key as any, value }, writer.uint32(10).fork())
-        .ldelim();
+      UserServiceGetSettingsResponse_SettingsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(10).fork(),
+      ).ldelim();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetSettingsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceGetSettingsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceGetSettingsResponse();
     while (reader.pos < end) {
@@ -1366,7 +1571,10 @@ export const UserServiceGetSettingsResponse = {
             break;
           }
 
-          const entry1 = UserServiceGetSettingsResponse_SettingsEntry.decode(reader, reader.uint32());
+          const entry1 = UserServiceGetSettingsResponse_SettingsEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry1.value !== undefined) {
             message.settings[entry1.key] = entry1.value;
           }
@@ -1380,32 +1588,38 @@ export const UserServiceGetSettingsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceGetSettingsResponse>): UserServiceGetSettingsResponse {
+  create(
+    base?: DeepPartial<UserServiceGetSettingsResponse>,
+  ): UserServiceGetSettingsResponse {
     return UserServiceGetSettingsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceGetSettingsResponse>): UserServiceGetSettingsResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceGetSettingsResponse>,
+  ): UserServiceGetSettingsResponse {
     const message = createBaseUserServiceGetSettingsResponse();
-    message.settings = Object.entries(object.settings ?? {}).reduce<{ [key: string]: Uint8Array }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      {},
-    );
+    message.settings = Object.entries(object.settings ?? {}).reduce<{
+      [key: string]: Uint8Array;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
     return message;
   },
 };
 
 function createBaseUserServiceGetSettingsResponse_SettingsEntry(): UserServiceGetSettingsResponse_SettingsEntry {
-  return { key: "", value: new Uint8Array(0) };
+  return { key: '', value: new Uint8Array() };
 }
 
 export const UserServiceGetSettingsResponse_SettingsEntry = {
-  encode(message: UserServiceGetSettingsResponse_SettingsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
+  encode(
+    message: UserServiceGetSettingsResponse_SettingsEntry,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
     if (message.value.length !== 0) {
@@ -1414,8 +1628,12 @@ export const UserServiceGetSettingsResponse_SettingsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetSettingsResponse_SettingsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceGetSettingsResponse_SettingsEntry {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceGetSettingsResponse_SettingsEntry();
     while (reader.pos < end) {
@@ -1454,22 +1672,25 @@ export const UserServiceGetSettingsResponse_SettingsEntry = {
     object: DeepPartial<UserServiceGetSettingsResponse_SettingsEntry>,
   ): UserServiceGetSettingsResponse_SettingsEntry {
     const message = createBaseUserServiceGetSettingsResponse_SettingsEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? new Uint8Array(0);
+    message.key = object.key ?? '';
+    message.value = object.value ?? new Uint8Array();
     return message;
   },
 };
 
 function createBaseUserServiceUpdateSettingsRequest(): UserServiceUpdateSettingsRequest {
-  return { userId: "", name: "", value: new Uint8Array(0) };
+  return { userId: '', name: '', value: new Uint8Array() };
 }
 
 export const UserServiceUpdateSettingsRequest = {
-  encode(message: UserServiceUpdateSettingsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceUpdateSettingsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
-    if (message.name !== "") {
+    if (message.name !== '') {
       writer.uint32(18).string(message.name);
     }
     if (message.value.length !== 0) {
@@ -1478,8 +1699,12 @@ export const UserServiceUpdateSettingsRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateSettingsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceUpdateSettingsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceUpdateSettingsRequest();
     while (reader.pos < end) {
@@ -1515,26 +1740,33 @@ export const UserServiceUpdateSettingsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceUpdateSettingsRequest>): UserServiceUpdateSettingsRequest {
+  create(
+    base?: DeepPartial<UserServiceUpdateSettingsRequest>,
+  ): UserServiceUpdateSettingsRequest {
     return UserServiceUpdateSettingsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceUpdateSettingsRequest>): UserServiceUpdateSettingsRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceUpdateSettingsRequest>,
+  ): UserServiceUpdateSettingsRequest {
     const message = createBaseUserServiceUpdateSettingsRequest();
-    message.userId = object.userId ?? "";
-    message.name = object.name ?? "";
-    message.value = object.value ?? new Uint8Array(0);
+    message.userId = object.userId ?? '';
+    message.name = object.name ?? '';
+    message.value = object.value ?? new Uint8Array();
     return message;
   },
 };
 
 function createBaseUserServiceUpdateSettingsResponse(): UserServiceUpdateSettingsResponse {
-  return { name: "", value: new Uint8Array(0) };
+  return { name: '', value: new Uint8Array() };
 }
 
 export const UserServiceUpdateSettingsResponse = {
-  encode(message: UserServiceUpdateSettingsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+  encode(
+    message: UserServiceUpdateSettingsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     if (message.value.length !== 0) {
@@ -1543,8 +1775,12 @@ export const UserServiceUpdateSettingsResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateSettingsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceUpdateSettingsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceUpdateSettingsResponse();
     while (reader.pos < end) {
@@ -1573,35 +1809,46 @@ export const UserServiceUpdateSettingsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceUpdateSettingsResponse>): UserServiceUpdateSettingsResponse {
+  create(
+    base?: DeepPartial<UserServiceUpdateSettingsResponse>,
+  ): UserServiceUpdateSettingsResponse {
     return UserServiceUpdateSettingsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceUpdateSettingsResponse>): UserServiceUpdateSettingsResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceUpdateSettingsResponse>,
+  ): UserServiceUpdateSettingsResponse {
     const message = createBaseUserServiceUpdateSettingsResponse();
-    message.name = object.name ?? "";
-    message.value = object.value ?? new Uint8Array(0);
+    message.name = object.name ?? '';
+    message.value = object.value ?? new Uint8Array();
     return message;
   },
 };
 
 function createBaseUserServiceDeleteSettingsRequest(): UserServiceDeleteSettingsRequest {
-  return { userId: "", name: "" };
+  return { userId: '', name: '' };
 }
 
 export const UserServiceDeleteSettingsRequest = {
-  encode(message: UserServiceDeleteSettingsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceDeleteSettingsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
-    if (message.name !== "") {
+    if (message.name !== '') {
       writer.uint32(18).string(message.name);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteSettingsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceDeleteSettingsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceDeleteSettingsRequest();
     while (reader.pos < end) {
@@ -1630,14 +1877,18 @@ export const UserServiceDeleteSettingsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceDeleteSettingsRequest>): UserServiceDeleteSettingsRequest {
+  create(
+    base?: DeepPartial<UserServiceDeleteSettingsRequest>,
+  ): UserServiceDeleteSettingsRequest {
     return UserServiceDeleteSettingsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceDeleteSettingsRequest>): UserServiceDeleteSettingsRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceDeleteSettingsRequest>,
+  ): UserServiceDeleteSettingsRequest {
     const message = createBaseUserServiceDeleteSettingsRequest();
-    message.userId = object.userId ?? "";
-    message.name = object.name ?? "";
+    message.userId = object.userId ?? '';
+    message.name = object.name ?? '';
     return message;
   },
 };
@@ -1647,12 +1898,19 @@ function createBaseUserServiceDeleteSettingsResponse(): UserServiceDeleteSetting
 }
 
 export const UserServiceDeleteSettingsResponse = {
-  encode(_: UserServiceDeleteSettingsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: UserServiceDeleteSettingsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteSettingsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceDeleteSettingsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceDeleteSettingsResponse();
     while (reader.pos < end) {
@@ -1667,30 +1925,41 @@ export const UserServiceDeleteSettingsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceDeleteSettingsResponse>): UserServiceDeleteSettingsResponse {
+  create(
+    base?: DeepPartial<UserServiceDeleteSettingsResponse>,
+  ): UserServiceDeleteSettingsResponse {
     return UserServiceDeleteSettingsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<UserServiceDeleteSettingsResponse>): UserServiceDeleteSettingsResponse {
+  fromPartial(
+    _: DeepPartial<UserServiceDeleteSettingsResponse>,
+  ): UserServiceDeleteSettingsResponse {
     const message = createBaseUserServiceDeleteSettingsResponse();
     return message;
   },
 };
 
 function createBaseUserServiceInitCardRequest(): UserServiceInitCardRequest {
-  return { userId: "" };
+  return { userId: '' };
 }
 
 export const UserServiceInitCardRequest = {
-  encode(message: UserServiceInitCardRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceInitCardRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceInitCardRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceInitCardRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceInitCardRequest();
     while (reader.pos < end) {
@@ -1712,31 +1981,42 @@ export const UserServiceInitCardRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceInitCardRequest>): UserServiceInitCardRequest {
+  create(
+    base?: DeepPartial<UserServiceInitCardRequest>,
+  ): UserServiceInitCardRequest {
     return UserServiceInitCardRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceInitCardRequest>): UserServiceInitCardRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceInitCardRequest>,
+  ): UserServiceInitCardRequest {
     const message = createBaseUserServiceInitCardRequest();
-    message.userId = object.userId ?? "";
+    message.userId = object.userId ?? '';
     return message;
   },
 };
 
 function createBaseUserServiceInitCardResponse(): UserServiceInitCardResponse {
-  return { clientSecret: "" };
+  return { clientSecret: '' };
 }
 
 export const UserServiceInitCardResponse = {
-  encode(message: UserServiceInitCardResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clientSecret !== "") {
+  encode(
+    message: UserServiceInitCardResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.clientSecret !== '') {
       writer.uint32(10).string(message.clientSecret);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceInitCardResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceInitCardResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceInitCardResponse();
     while (reader.pos < end) {
@@ -1758,31 +2038,42 @@ export const UserServiceInitCardResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceInitCardResponse>): UserServiceInitCardResponse {
+  create(
+    base?: DeepPartial<UserServiceInitCardResponse>,
+  ): UserServiceInitCardResponse {
     return UserServiceInitCardResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceInitCardResponse>): UserServiceInitCardResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceInitCardResponse>,
+  ): UserServiceInitCardResponse {
     const message = createBaseUserServiceInitCardResponse();
-    message.clientSecret = object.clientSecret ?? "";
+    message.clientSecret = object.clientSecret ?? '';
     return message;
   },
 };
 
 function createBaseUserServiceListPaymentMethodsRequest(): UserServiceListPaymentMethodsRequest {
-  return { userId: "" };
+  return { userId: '' };
 }
 
 export const UserServiceListPaymentMethodsRequest = {
-  encode(message: UserServiceListPaymentMethodsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
+  encode(
+    message: UserServiceListPaymentMethodsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.userId !== '') {
       writer.uint32(10).string(message.userId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceListPaymentMethodsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceListPaymentMethodsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceListPaymentMethodsRequest();
     while (reader.pos < end) {
@@ -1804,13 +2095,17 @@ export const UserServiceListPaymentMethodsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceListPaymentMethodsRequest>): UserServiceListPaymentMethodsRequest {
+  create(
+    base?: DeepPartial<UserServiceListPaymentMethodsRequest>,
+  ): UserServiceListPaymentMethodsRequest {
     return UserServiceListPaymentMethodsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceListPaymentMethodsRequest>): UserServiceListPaymentMethodsRequest {
+  fromPartial(
+    object: DeepPartial<UserServiceListPaymentMethodsRequest>,
+  ): UserServiceListPaymentMethodsRequest {
     const message = createBaseUserServiceListPaymentMethodsRequest();
-    message.userId = object.userId ?? "";
+    message.userId = object.userId ?? '';
     return message;
   },
 };
@@ -1820,15 +2115,22 @@ function createBaseUserServiceListPaymentMethodsResponse(): UserServiceListPayme
 }
 
 export const UserServiceListPaymentMethodsResponse = {
-  encode(message: UserServiceListPaymentMethodsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserServiceListPaymentMethodsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.methods) {
       PaymentMethod.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceListPaymentMethodsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): UserServiceListPaymentMethodsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserServiceListPaymentMethodsResponse();
     while (reader.pos < end) {
@@ -1850,37 +2152,58 @@ export const UserServiceListPaymentMethodsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<UserServiceListPaymentMethodsResponse>): UserServiceListPaymentMethodsResponse {
+  create(
+    base?: DeepPartial<UserServiceListPaymentMethodsResponse>,
+  ): UserServiceListPaymentMethodsResponse {
     return UserServiceListPaymentMethodsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<UserServiceListPaymentMethodsResponse>): UserServiceListPaymentMethodsResponse {
+  fromPartial(
+    object: DeepPartial<UserServiceListPaymentMethodsResponse>,
+  ): UserServiceListPaymentMethodsResponse {
     const message = createBaseUserServiceListPaymentMethodsResponse();
-    message.methods = object.methods?.map((e) => PaymentMethod.fromPartial(e)) || [];
+    message.methods =
+      object.methods?.map((e) => PaymentMethod.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBasePaymentMethod(): PaymentMethod {
-  return { id: undefined, userId: "", details: undefined, createdAt: undefined, updatedAt: undefined, card: undefined };
+  return {
+    id: undefined,
+    userId: '',
+    details: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+    card: undefined,
+  };
 }
 
 export const PaymentMethod = {
-  encode(message: PaymentMethod, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: PaymentMethod,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.id !== undefined) {
       writer.uint32(10).string(message.id);
     }
-    if (message.userId !== "") {
+    if (message.userId !== '') {
       writer.uint32(18).string(message.userId);
     }
     if (message.details !== undefined) {
       BillingDetails.encode(message.details, writer.uint32(26).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.createdAt),
+        writer.uint32(34).fork(),
+      ).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.updatedAt),
+        writer.uint32(42).fork(),
+      ).ldelim();
     }
     if (message.card !== undefined) {
       Card.encode(message.card, writer.uint32(50).fork()).ldelim();
@@ -1889,7 +2212,8 @@ export const PaymentMethod = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PaymentMethod {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePaymentMethod();
     while (reader.pos < end) {
@@ -1921,14 +2245,18 @@ export const PaymentMethod = {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.updatedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 6:
           if (tag !== 50) {
@@ -1953,23 +2281,35 @@ export const PaymentMethod = {
   fromPartial(object: DeepPartial<PaymentMethod>): PaymentMethod {
     const message = createBasePaymentMethod();
     message.id = object.id ?? undefined;
-    message.userId = object.userId ?? "";
-    message.details = (object.details !== undefined && object.details !== null)
-      ? BillingDetails.fromPartial(object.details)
-      : undefined;
+    message.userId = object.userId ?? '';
+    message.details =
+      object.details !== undefined && object.details !== null
+        ? BillingDetails.fromPartial(object.details)
+        : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
-    message.card = (object.card !== undefined && object.card !== null) ? Card.fromPartial(object.card) : undefined;
+    message.card =
+      object.card !== undefined && object.card !== null
+        ? Card.fromPartial(object.card)
+        : undefined;
     return message;
   },
 };
 
 function createBaseBillingDetails(): BillingDetails {
-  return { address: undefined, email: undefined, name: undefined, phone: undefined };
+  return {
+    address: undefined,
+    email: undefined,
+    name: undefined,
+    phone: undefined,
+  };
 }
 
 export const BillingDetails = {
-  encode(message: BillingDetails, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: BillingDetails,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.address !== undefined) {
       Address.encode(message.address, writer.uint32(10).fork()).ldelim();
     }
@@ -1986,7 +2326,8 @@ export const BillingDetails = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BillingDetails {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBillingDetails();
     while (reader.pos < end) {
@@ -2035,9 +2376,10 @@ export const BillingDetails = {
 
   fromPartial(object: DeepPartial<BillingDetails>): BillingDetails {
     const message = createBaseBillingDetails();
-    message.address = (object.address !== undefined && object.address !== null)
-      ? Address.fromPartial(object.address)
-      : undefined;
+    message.address =
+      object.address !== undefined && object.address !== null
+        ? Address.fromPartial(object.address)
+        : undefined;
     message.email = object.email ?? undefined;
     message.name = object.name ?? undefined;
     message.phone = object.phone ?? undefined;
@@ -2057,7 +2399,10 @@ function createBaseAddress(): Address {
 }
 
 export const Address = {
-  encode(message: Address, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: Address,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.city !== undefined) {
       writer.uint32(10).string(message.city);
     }
@@ -2080,7 +2425,8 @@ export const Address = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Address {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddress();
     while (reader.pos < end) {
@@ -2154,12 +2500,12 @@ export const Address = {
 };
 
 function createBaseCard(): Card {
-  return { brand: "", expMonth: 0, expYear: 0, last4: "" };
+  return { brand: '', expMonth: 0, expYear: 0, last4: '' };
 }
 
 export const Card = {
   encode(message: Card, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.brand !== "") {
+    if (message.brand !== '') {
       writer.uint32(10).string(message.brand);
     }
     if (message.expMonth !== 0) {
@@ -2168,14 +2514,15 @@ export const Card = {
     if (message.expYear !== 0) {
       writer.uint32(24).int64(message.expYear);
     }
-    if (message.last4 !== "") {
+    if (message.last4 !== '') {
       writer.uint32(34).string(message.last4);
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Card {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCard();
     while (reader.pos < end) {
@@ -2224,10 +2571,10 @@ export const Card = {
 
   fromPartial(object: DeepPartial<Card>): Card {
     const message = createBaseCard();
-    message.brand = object.brand ?? "";
+    message.brand = object.brand ?? '';
     message.expMonth = object.expMonth ?? 0;
     message.expYear = object.expYear ?? 0;
-    message.last4 = object.last4 ?? "";
+    message.last4 = object.last4 ?? '';
     return message;
   },
 };
@@ -2235,12 +2582,12 @@ export const Card = {
 /** User related services. */
 export type UserServiceDefinition = typeof UserServiceDefinition;
 export const UserServiceDefinition = {
-  name: "UserService",
-  fullName: "blockjoy.v1.UserService",
+  name: 'UserService',
+  fullName: 'blockjoy.v1.UserService',
   methods: {
     /** Retrieve a single user. */
     get: {
-      name: "Get",
+      name: 'Get',
       requestType: UserServiceGetRequest,
       requestStream: false,
       responseType: UserServiceGetResponse,
@@ -2249,7 +2596,7 @@ export const UserServiceDefinition = {
     },
     /** Retrieve multiple users my means of a filter. */
     list: {
-      name: "List",
+      name: 'List',
       requestType: UserServiceListRequest,
       requestStream: false,
       responseType: UserServiceListResponse,
@@ -2258,7 +2605,7 @@ export const UserServiceDefinition = {
     },
     /** Create a single user. */
     create: {
-      name: "Create",
+      name: 'Create',
       requestType: UserServiceCreateRequest,
       requestStream: false,
       responseType: UserServiceCreateResponse,
@@ -2267,7 +2614,7 @@ export const UserServiceDefinition = {
     },
     /** Update a single user. */
     update: {
-      name: "Update",
+      name: 'Update',
       requestType: UserServiceUpdateRequest,
       requestStream: false,
       responseType: UserServiceUpdateResponse,
@@ -2276,7 +2623,7 @@ export const UserServiceDefinition = {
     },
     /** Delete a single user. */
     delete: {
-      name: "Delete",
+      name: 'Delete',
       requestType: UserServiceDeleteRequest,
       requestStream: false,
       responseType: UserServiceDeleteResponse,
@@ -2285,7 +2632,7 @@ export const UserServiceDefinition = {
     },
     /** Retrieve the billing details of this user. */
     getBilling: {
-      name: "GetBilling",
+      name: 'GetBilling',
       requestType: UserServiceGetBillingRequest,
       requestStream: false,
       responseType: UserServiceGetBillingResponse,
@@ -2294,7 +2641,7 @@ export const UserServiceDefinition = {
     },
     /** Overwrite the billing details of this user. */
     updateBilling: {
-      name: "UpdateBilling",
+      name: 'UpdateBilling',
       requestType: UserServiceUpdateBillingRequest,
       requestStream: false,
       responseType: UserServiceUpdateBillingResponse,
@@ -2303,7 +2650,7 @@ export const UserServiceDefinition = {
     },
     /** Remove the billing details of this user. */
     deleteBilling: {
-      name: "DeleteBilling",
+      name: 'DeleteBilling',
       requestType: UserServiceDeleteBillingRequest,
       requestStream: false,
       responseType: UserServiceDeleteBillingResponse,
@@ -2317,7 +2664,7 @@ export const UserServiceDefinition = {
      * ignored by the backend.
      */
     getSettings: {
-      name: "GetSettings",
+      name: 'GetSettings',
       requestType: UserServiceGetSettingsRequest,
       requestStream: false,
       responseType: UserServiceGetSettingsResponse,
@@ -2326,7 +2673,7 @@ export const UserServiceDefinition = {
     },
     /** Modify a setting for this user. */
     updateSettings: {
-      name: "UpdateSettings",
+      name: 'UpdateSettings',
       requestType: UserServiceUpdateSettingsRequest,
       requestStream: false,
       responseType: UserServiceUpdateSettingsResponse,
@@ -2335,7 +2682,7 @@ export const UserServiceDefinition = {
     },
     /** Reset delete a setting for this user. */
     deleteSettings: {
-      name: "DeleteSettings",
+      name: 'DeleteSettings',
       requestType: UserServiceDeleteSettingsRequest,
       requestStream: false,
       responseType: UserServiceDeleteSettingsResponse,
@@ -2344,7 +2691,7 @@ export const UserServiceDefinition = {
     },
     /** Add a new card to this user. */
     initCard: {
-      name: "InitCard",
+      name: 'InitCard',
       requestType: UserServiceInitCardRequest,
       requestStream: false,
       responseType: UserServiceInitCardResponse,
@@ -2353,7 +2700,7 @@ export const UserServiceDefinition = {
     },
     /** List all payment methods */
     listPaymentMethods: {
-      name: "ListPaymentMethods",
+      name: 'ListPaymentMethods',
       requestType: UserServiceListPaymentMethodsRequest,
       requestStream: false,
       responseType: UserServiceListPaymentMethodsResponse,
@@ -2509,30 +2856,42 @@ export interface UserServiceClient<CallOptionsExt = {}> {
   ): Promise<UserServiceListPaymentMethodsResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') {
     return globalThis;
   }
-  if (typeof self !== "undefined") {
+  if (typeof self !== 'undefined') {
     return self;
   }
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     return window;
   }
-  if (typeof global !== "undefined") {
+  if (typeof global !== 'undefined') {
     return global;
   }
-  throw "Unable to locate global object";
+  throw 'Unable to locate global object';
 })();
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function toTimestamp(date: Date): Timestamp {
@@ -2549,7 +2908,9 @@ function fromTimestamp(t: Timestamp): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error(
+      'Value is larger than Number.MAX_SAFE_INTEGER',
+    );
   }
   return long.toNumber();
 }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
@@ -21,6 +21,7 @@ import {
   blockchainAtoms,
   nodeSelectors,
 } from '@modules/node';
+import { layoutSelectors, useLayout } from '@modules/layout';
 
 export const NodeFilters = () => {
   const nodeUIContext = useNodeUIContext();
@@ -52,17 +53,18 @@ export const NodeFilters = () => {
     blockchainAtoms.blockchainsLoadingState,
   );
 
-  const [isFiltersOpen, setFiltersOpen] = useRecoilState(
-    nodeAtoms.isFiltersOpen,
-  );
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
+
   const filtersBlockchainSelectedIds = useRecoilValue(
     nodeSelectors.filtersBlockchainSelectedIds,
   );
 
   const [openFilterId, setOpenFilterId] = useState('');
 
+  const { updateLayout } = useLayout();
+
   useEffect(() => {
-    if (isMobile) setFiltersOpen(false);
+    if (isMobile) updateLayout('node.filters.isOpen', false);
   }, []);
 
   const hasFiltersApplied =
@@ -85,7 +87,7 @@ export const NodeFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    setFiltersOpen(!isFiltersOpen);
+    updateLayout('node.filters.isOpen', !isFiltersOpen);
   };
 
   const handleSearch = (value: string) => changeTempFilters('keyword', value);
