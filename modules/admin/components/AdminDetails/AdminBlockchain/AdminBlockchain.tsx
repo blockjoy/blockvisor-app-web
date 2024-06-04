@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { css } from '@emotion/react';
 import { blockchainClient } from '@modules/grpc';
 import {
   Blockchain,
@@ -10,6 +11,27 @@ import { AdminBlockchainVersionAdd } from './AdminBlockchainVersionAdd/AdminBloc
 import { spacing } from 'styles/utils.spacing.styles';
 import { sortVersions } from '@modules/node';
 import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
+import { breakpoints } from 'styles/variables.styles';
+
+const styles = {
+  versionList: css`
+    @media ${breakpoints.fromLrg} {
+      columns: 2;
+
+      li {
+        padding-right: 30px;
+      }
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      columns: 3;
+
+      li {
+        padding-right: 30px;
+      }
+    }
+  `,
+};
 
 export const AdminBlockchain = () => {
   const router = useRouter();
@@ -40,7 +62,7 @@ export const AdminBlockchain = () => {
       id: 'versions',
       label: 'Versions',
       data: (
-        <ul>
+        <ul css={item.nodeTypes[0].versions.length >= 10 && styles.versionList}>
           {sortVersions(item.nodeTypes[0].versions).map((version) => (
             <li key={version.id} css={spacing.bottom.small}>
               {version.version}

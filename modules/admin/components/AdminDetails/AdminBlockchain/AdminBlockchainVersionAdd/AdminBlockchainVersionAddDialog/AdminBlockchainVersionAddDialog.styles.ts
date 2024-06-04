@@ -20,9 +20,10 @@ export const styles = {
     opacity: 1;
   `,
   scrollbar: css`
-    height: calc(100vh - 102px);
+    height: calc(100vh - 73px);
     padding-bottom: 60px;
     padding-top: 20px;
+    margin-right: 10px;
   `,
   dialog: (theme: ITheme) => css`
     background: ${theme.colorBackground};
@@ -41,11 +42,11 @@ export const styles = {
     }
 
     @media ${breakpoints.fromLrg} {
-      width: 380px;
+      width: 420px;
     }
 
     @media ${breakpoints.fromXLrg} {
-      width: 440px;
+      width: 500px;
       padding: 0 0 30px;
     }
   `,
@@ -63,6 +64,6 @@ export const styles = {
   `,
   dialogForm: css`
     display: grid;
-    padding: 0 20px;
+    padding: 0 10px 0 20px;
   `,
 };

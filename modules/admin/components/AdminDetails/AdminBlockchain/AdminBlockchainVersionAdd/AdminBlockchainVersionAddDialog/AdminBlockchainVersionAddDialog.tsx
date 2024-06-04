@@ -90,7 +90,6 @@ export const AdminBlockchainVersionAddDialog = ({
       ...nextVersion,
       properties: nextProperties,
     });
-    console.log('nextVersion', nextVersion);
   };
 
   const handleEnterSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -105,7 +104,8 @@ export const AdminBlockchainVersionAddDialog = ({
     nextVersion.blockchainId &&
     nextVersion.version &&
     nextVersion.nodeType &&
-    isVersionValid;
+    isVersionValid &&
+    nextVersion.properties.every((property) => property.name !== '');
 
   const NodeTypeSelectDropdown =
     withSearchDropdown<AdminFilterDropdownItem>(Dropdown);
