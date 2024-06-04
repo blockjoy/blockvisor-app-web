@@ -13,5 +13,6 @@ export * from './VanillaForm/Select/Select';
 export * from './VanillaForm/Switch/Switch';
 export * from './VanillaForm/RangeSlider/RangeSlider';
 export * from './VanillaForm/Textbox/Textbox';
+export * from './VanillaForm/TextboxCompact/TextboxCompact';
 export * from './VanillaForm/RadioButton/RadioButton';
 export * from './VanillaForm/RadioButton/RadioButtonGroup';

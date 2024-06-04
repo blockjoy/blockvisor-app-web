@@ -70,11 +70,15 @@ export const NodeLauncherConfig = ({
           </div>
         )}
 
-        <FormLabel>Version</FormLabel>
-        <NodeVersionSelect
-          versions={versions}
-          onVersionChanged={onVersionChanged}
-        />
+        {selectedVersion && (
+          <>
+            <FormLabel>Version</FormLabel>
+            <NodeVersionSelect
+              versions={versions}
+              onVersionChanged={onVersionChanged}
+            />
+          </>
+        )}
 
         <FormLabel>
           Firewall Rules{' '}

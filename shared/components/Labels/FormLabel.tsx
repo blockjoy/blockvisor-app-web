@@ -4,6 +4,7 @@ import { ITheme } from 'types/theme';
 
 type Props = {
   isRequired?: boolean;
+  isCompact?: boolean;
 } & PropsWithChildren;
 
 const styles = {
@@ -15,6 +16,10 @@ const styles = {
     gap: 8px;
     color: ${theme.colorLabel};
   `,
+  labelCompact: css`
+    font-size: 12px;
+    margin-bottom: 8px;
+  `,
   requiredAsterix: (theme: ITheme) => css`
     display: inline-block;
     color: ${theme.colorDanger};
@@ -23,8 +28,8 @@ const styles = {
   `,
 };
 
-export const FormLabel = ({ isRequired, children }: Props) => (
-  <label css={styles.label}>
+export const FormLabel = ({ isRequired, isCompact, children }: Props) => (
+  <label css={[styles.label, isCompact && styles.labelCompact]}>
     {children}
     {isRequired && <span css={styles.requiredAsterix}>*</span>}
   </label>

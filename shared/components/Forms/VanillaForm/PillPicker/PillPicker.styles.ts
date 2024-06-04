@@ -5,11 +5,18 @@ export const styles = {
   wrapper: css`
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
     margin-bottom: 30px;
     width: 100%;
   `,
+  wrapperNoBottomMargin: css`
+    margin-bottom: 0;
+  `,
   label: css`
     min-width: 80px;
+  `,
+  labelCompact: css`
+    min-width: 40px;
   `,
   input: (theme: ITheme) => css`
     position: absolute;
@@ -34,5 +41,9 @@ export const styles = {
     cursor: pointer;
     width: 100%;
     transition: box-shadow 0.3s;
+  `,
+  buttonCompact: css`
+    font-size: 12px;
+    padding: 5px 6px;
   `,
 };
