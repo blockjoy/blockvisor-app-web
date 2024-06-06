@@ -13,6 +13,7 @@ export const protobufPackage = "blockjoy.v1";
 export enum BlockchainSortField {
   BLOCKCHAIN_SORT_FIELD_UNSPECIFIED = 0,
   BLOCKCHAIN_SORT_FIELD_NAME = 1,
+  BLOCKCHAIN_SORT_FIELD_DISPLAY_NAME = 2,
   UNRECOGNIZED = -1,
 }
 
@@ -27,6 +28,7 @@ export enum BlockchainVisibility {
 export interface Blockchain {
   id: string;
   name: string;
+  displayName: string;
   description?: string | undefined;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
@@ -117,7 +119,11 @@ export interface BlockchainSearch {
     | string
     | undefined;
   /** Search by name. */
-  name?: string | undefined;
+  name?:
+    | string
+    | undefined;
+  /** Search by display name. */
+  displayName?: string | undefined;
 }
 
 export interface BlockchainSort {
@@ -239,6 +245,7 @@ function createBaseBlockchain(): Blockchain {
   return {
     id: "",
     name: "",
+    displayName: "",
     description: undefined,
     createdAt: undefined,
     updatedAt: undefined,
@@ -258,6 +265,9 @@ export const Blockchain = {
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
+    }
+    if (message.displayName !== "") {
+      writer.uint32(98).string(message.displayName);
     }
     if (message.description !== undefined) {
       writer.uint32(26).string(message.description);
@@ -309,6 +319,13 @@ export const Blockchain = {
           }
 
           message.name = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.displayName = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -390,6 +407,7 @@ export const Blockchain = {
     const message = createBaseBlockchain();
     message.id = object.id ?? "";
     message.name = object.name ?? "";
+    message.displayName = object.displayName ?? "";
     message.description = object.description ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
@@ -997,7 +1015,7 @@ export const BlockchainServiceListRequest = {
 };
 
 function createBaseBlockchainSearch(): BlockchainSearch {
-  return { operator: 0, id: undefined, name: undefined };
+  return { operator: 0, id: undefined, name: undefined, displayName: undefined };
 }
 
 export const BlockchainSearch = {
@@ -1010,6 +1028,9 @@ export const BlockchainSearch = {
     }
     if (message.name !== undefined) {
       writer.uint32(26).string(message.name);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(34).string(message.displayName);
     }
     return writer;
   },
@@ -1042,6 +1063,13 @@ export const BlockchainSearch = {
 
           message.name = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1060,6 +1088,7 @@ export const BlockchainSearch = {
     message.operator = object.operator ?? 0;
     message.id = object.id ?? undefined;
     message.name = object.name ?? undefined;
+    message.displayName = object.displayName ?? undefined;
     return message;
   },
 };

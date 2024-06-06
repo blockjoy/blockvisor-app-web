@@ -11,7 +11,6 @@ import { styles } from './AdminBlockchainVersionAddProperties.styles';
 import IconPlus from '@public/assets/icons/common/Plus.svg';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import { createDropdownValuesFromEnum } from '@modules/admin/utils';
-import { ChangeEvent, FormEvent } from 'react';
 
 type Props = {
   properties: BlockchainProperty[];
@@ -110,17 +109,25 @@ export const AdminBlockchainVersionAddProperties = ({
                 handlePropertyChanged(index, name, value)
               }
             />
-            {/* <div css={styles.formGridFullWidth}>
-              <TextboxCompact
-                type="text"
-                name="default"
-                placeholder="Description"
-                noBottomMargin
-                onChange={(name: string, value: string) =>
-                  handlePropertyChanged(index, name, value)
-                }
-              />
-            </div> */}
+            <TextboxCompact
+              type="text"
+              name="default"
+              placeholder="Default"
+              noBottomMargin
+              onChange={(name: string, value: string) =>
+                handlePropertyChanged(index, name, value)
+              }
+            />
+            <TextboxCompact
+              type="text"
+              name="default"
+              placeholder="Description"
+              noBottomMargin
+              onChange={(name: string, value: string) =>
+                handlePropertyChanged(index, name, value)
+              }
+            />
+
             <div>
               <FormLabel isCompact>Required</FormLabel>
               <Switch

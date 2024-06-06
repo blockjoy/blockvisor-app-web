@@ -86,6 +86,7 @@ export interface CommandServicePendingResponse {
 
 export interface HostCommand {
   hostId: string;
+  hostName: string;
   start?: HostStart | undefined;
   stop?: HostStop | undefined;
   restart?: HostRestart | undefined;
@@ -106,7 +107,9 @@ export interface HostPending {
 
 export interface NodeCommand {
   nodeId: string;
+  nodeName: string;
   hostId: string;
+  hostName: string;
   create?: NodeCreate | undefined;
   start?: NodeStart | undefined;
   stop?: NodeStop | undefined;
@@ -718,13 +721,16 @@ export const CommandServicePendingResponse = {
 };
 
 function createBaseHostCommand(): HostCommand {
-  return { hostId: "", start: undefined, stop: undefined, restart: undefined, pending: undefined };
+  return { hostId: "", hostName: "", start: undefined, stop: undefined, restart: undefined, pending: undefined };
 }
 
 export const HostCommand = {
   encode(message: HostCommand, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.hostId !== "") {
       writer.uint32(10).string(message.hostId);
+    }
+    if (message.hostName !== "") {
+      writer.uint32(58).string(message.hostName);
     }
     if (message.start !== undefined) {
       HostStart.encode(message.start, writer.uint32(26).fork()).ldelim();
@@ -754,6 +760,13 @@ export const HostCommand = {
           }
 
           message.hostId = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.hostName = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -799,6 +812,7 @@ export const HostCommand = {
   fromPartial(object: DeepPartial<HostCommand>): HostCommand {
     const message = createBaseHostCommand();
     message.hostId = object.hostId ?? "";
+    message.hostName = object.hostName ?? "";
     message.start = (object.start !== undefined && object.start !== null)
       ? HostStart.fromPartial(object.start)
       : undefined;
@@ -956,7 +970,9 @@ export const HostPending = {
 function createBaseNodeCommand(): NodeCommand {
   return {
     nodeId: "",
+    nodeName: "",
     hostId: "",
+    hostName: "",
     create: undefined,
     start: undefined,
     stop: undefined,
@@ -972,8 +988,14 @@ export const NodeCommand = {
     if (message.nodeId !== "") {
       writer.uint32(10).string(message.nodeId);
     }
+    if (message.nodeName !== "") {
+      writer.uint32(82).string(message.nodeName);
+    }
     if (message.hostId !== "") {
       writer.uint32(18).string(message.hostId);
+    }
+    if (message.hostName !== "") {
+      writer.uint32(90).string(message.hostName);
     }
     if (message.create !== undefined) {
       NodeCreate.encode(message.create, writer.uint32(26).fork()).ldelim();
@@ -1013,12 +1035,26 @@ export const NodeCommand = {
 
           message.nodeId = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.nodeName = reader.string();
+          continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
           message.hostId = reader.string();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.hostName = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -1085,7 +1121,9 @@ export const NodeCommand = {
   fromPartial(object: DeepPartial<NodeCommand>): NodeCommand {
     const message = createBaseNodeCommand();
     message.nodeId = object.nodeId ?? "";
+    message.nodeName = object.nodeName ?? "";
     message.hostId = object.hostId ?? "";
+    message.hostName = object.hostName ?? "";
     message.create = (object.create !== undefined && object.create !== null)
       ? NodeCreate.fromPartial(object.create)
       : undefined;

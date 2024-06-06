@@ -6,6 +6,19 @@ import { ImageIdentifier } from "../common/v1/image";
 
 export const protobufPackage = "blockjoy.v1";
 
+export interface HasBlockchainArchiveRequest {
+  /** The archive image identifier. */
+  id:
+    | ImageIdentifier
+    | undefined;
+  /** The network name (e.g. "main", "testnet"). */
+  network: string;
+}
+
+export interface HasBlockchainArchiveResponse {
+  available: boolean;
+}
+
 export interface BlockchainArchiveServiceGetDownloadManifestRequest {
   /** The archive image identifier. */
   id:
@@ -121,6 +134,109 @@ export interface UploadSlot {
   /** A temporary, pre-signed upload url for the data. */
   url: string;
 }
+
+function createBaseHasBlockchainArchiveRequest(): HasBlockchainArchiveRequest {
+  return { id: undefined, network: "" };
+}
+
+export const HasBlockchainArchiveRequest = {
+  encode(message: HasBlockchainArchiveRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== undefined) {
+      ImageIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.network !== "") {
+      writer.uint32(18).string(message.network);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HasBlockchainArchiveRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHasBlockchainArchiveRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = ImageIdentifier.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HasBlockchainArchiveRequest>): HasBlockchainArchiveRequest {
+    return HasBlockchainArchiveRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HasBlockchainArchiveRequest>): HasBlockchainArchiveRequest {
+    const message = createBaseHasBlockchainArchiveRequest();
+    message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
+    message.network = object.network ?? "";
+    return message;
+  },
+};
+
+function createBaseHasBlockchainArchiveResponse(): HasBlockchainArchiveResponse {
+  return { available: false };
+}
+
+export const HasBlockchainArchiveResponse = {
+  encode(message: HasBlockchainArchiveResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.available === true) {
+      writer.uint32(8).bool(message.available);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HasBlockchainArchiveResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHasBlockchainArchiveResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.available = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HasBlockchainArchiveResponse>): HasBlockchainArchiveResponse {
+    return HasBlockchainArchiveResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HasBlockchainArchiveResponse>): HasBlockchainArchiveResponse {
+    const message = createBaseHasBlockchainArchiveResponse();
+    message.available = object.available ?? false;
+    return message;
+  },
+};
 
 function createBaseBlockchainArchiveServiceGetDownloadManifestRequest(): BlockchainArchiveServiceGetDownloadManifestRequest {
   return { id: undefined, network: "" };
@@ -963,6 +1079,15 @@ export const BlockchainArchiveServiceDefinition = {
   fullName: "blockjoy.v1.BlockchainArchiveService",
   methods: {
     /** Get the download manifest for a specific image and blockchain network. */
+    hasBlockchainArchive: {
+      name: "HasBlockchainArchive",
+      requestType: HasBlockchainArchiveRequest,
+      requestStream: false,
+      responseType: HasBlockchainArchiveResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Get the download manifest for a specific image and blockchain network. */
     getDownloadManifest: {
       name: "GetDownloadManifest",
       requestType: BlockchainArchiveServiceGetDownloadManifestRequest,
@@ -994,6 +1119,11 @@ export const BlockchainArchiveServiceDefinition = {
 
 export interface BlockchainArchiveServiceImplementation<CallContextExt = {}> {
   /** Get the download manifest for a specific image and blockchain network. */
+  hasBlockchainArchive(
+    request: HasBlockchainArchiveRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HasBlockchainArchiveResponse>>;
+  /** Get the download manifest for a specific image and blockchain network. */
   getDownloadManifest(
     request: BlockchainArchiveServiceGetDownloadManifestRequest,
     context: CallContext & CallContextExt,
@@ -1011,6 +1141,11 @@ export interface BlockchainArchiveServiceImplementation<CallContextExt = {}> {
 }
 
 export interface BlockchainArchiveServiceClient<CallOptionsExt = {}> {
+  /** Get the download manifest for a specific image and blockchain network. */
+  hasBlockchainArchive(
+    request: DeepPartial<HasBlockchainArchiveRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HasBlockchainArchiveResponse>;
   /** Get the download manifest for a specific image and blockchain network. */
   getDownloadManifest(
     request: DeepPartial<BlockchainArchiveServiceGetDownloadManifestRequest>,
