@@ -1,9 +1,9 @@
 import { atom } from 'recoil';
 import { Command } from '@modules/grpc/library/blockjoy/v1/command';
 
-const commands = atom<Command[]>({
+const commands = atom<Command[] | null>({
   key: 'commands.list',
-  default: [],
+  default: null,
 });
 
 const commandsLoadingState = atom<LoadingState>({

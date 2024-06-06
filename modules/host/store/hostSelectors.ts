@@ -1,55 +1,25 @@
 import { selector, selectorFamily } from 'recoil';
 import { Host, HostStatus } from '@modules/grpc/library/blockjoy/v1/host';
-import { hostClient } from '@modules/grpc';
-import { authSelectors } from '@modules/auth';
 import { hostAtoms } from '@modules/host';
 import { sort } from '@shared/components';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 
-const hostById = selectorFamily<Host | null, string | undefined>({
-  key: 'host.byId',
-  get:
-    (id) =>
-    ({ get }) => {
-      if (!id) return null;
-
-      const hosts = get(hostAtoms.hostList);
-      const host = hosts.find((host) => host.id === id);
-
-      if (host) return host;
-
-      const isSuperUser = get(authSelectors.isSuperUser);
-      if (!isSuperUser) return null;
-
-      const adminHost = get(adminHostById(id));
-      return adminHost;
-    },
-});
-
-const adminHostById = selectorFamily<Host | null, string>({
-  key: 'host.byId.admin',
-  get: (hostId) => async () => {
-    try {
-      const adminHost = await hostClient.getHost(hostId);
-      return adminHost;
-    } catch (error) {
-      console.log('Error while fetching a host for admin', error);
-      return null;
-    }
-  },
-});
-
 const hostListSorted = selector<Host[]>({
   key: 'hostList.sorted',
   get: ({ get }) => {
-    const hosts = get(hostAtoms.hostList);
-    return [...hosts].sort((orgA: Host, orgB: Host) => {
-      if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
-        return -1;
-      if (orgA.name!.toLocaleLowerCase() > orgB.name!.toLocaleLowerCase())
-        return 1;
-      return 0;
-    });
+    try {
+      const hosts = get(hostAtoms.hostList);
+      return [...hosts].sort((orgA: Host, orgB: Host) => {
+        if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
+          return -1;
+        if (orgA.name!.toLocaleLowerCase() > orgB.name!.toLocaleLowerCase())
+          return 1;
+        return 0;
+      });
+    } catch (err) {
+      console.log('hostListSortedError', err);
+      return [];
+    }
   },
 });
 
@@ -95,10 +65,7 @@ const filtersSearchQuery = selector<string>({
 });
 
 export const hostSelectors = {
-  hostById,
-
   hostListSorted,
-
   filtersStatusAll,
   filtersSearchQuery,
 };

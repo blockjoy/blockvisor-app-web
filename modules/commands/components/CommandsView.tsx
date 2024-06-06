@@ -11,9 +11,11 @@ type CommandsViewProps = {
 
 export const CommandsView = ({ commands }: CommandsViewProps) => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
   const canViewCommands = useRecoilValue(
     authSelectors.hasPermission('command-get'),
   );
+
   const canViewCommandsAsSuperUser = useRecoilValue(
     authSelectors.hasPermission('command-admin-list'),
   );
