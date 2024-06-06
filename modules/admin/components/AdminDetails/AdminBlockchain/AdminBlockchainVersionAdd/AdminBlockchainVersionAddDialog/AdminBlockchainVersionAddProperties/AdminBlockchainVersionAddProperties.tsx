@@ -2,10 +2,10 @@ import { UiType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { BlockchainProperty } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   FormLabel,
-  Select,
+  PillPicker,
   SvgIcon,
   Switch,
-  Textbox,
+  TextboxCompact,
 } from '@shared/components';
 import { styles } from './AdminBlockchainVersionAddProperties.styles';
 import IconPlus from '@public/assets/icons/common/Plus.svg';
@@ -45,16 +45,14 @@ export const AdminBlockchainVersionAddProperties = ({
   };
 
   const handlePropertyChanged = (
-    propertyName: string,
+    index: number,
     name: string,
     value: string,
     type?: 'boolean' | 'number',
   ) => {
     const nextProperties = [...properties];
 
-    const foundProperty = nextProperties.find(
-      (property) => property.name === propertyName,
-    );
+    const foundProperty = nextProperties[index];
 
     if (!foundProperty) return;
 
@@ -71,86 +69,107 @@ export const AdminBlockchainVersionAddProperties = ({
   };
 
   return (
-    <div css={styles.wrapper(properties.length > 0)}>
-      {properties.map((property) => (
-        <div css={styles.row} key={property.name}>
-          <FormLabel>Name</FormLabel>
-          <Textbox
-            name="name"
-            onChange={(name: string, value: string) =>
-              handlePropertyChanged(property.name, name, value)
-            }
-            defaultValue={property.name}
-            isRequired
-            type="text"
-          />
-          <FormLabel>Display Name</FormLabel>
-          <Textbox
-            name="displayName"
-            onChange={(name: string, value: string) =>
-              handlePropertyChanged(property.name, name, value)
-            }
-            isRequired={false}
-            type="text"
-          />
-          <FormLabel>Default</FormLabel>
-          <Textbox
-            name="default"
-            onChange={(name: string, value: string) =>
-              handlePropertyChanged(property.name, name, value)
-            }
-            isRequired={false}
-            type="text"
-          />
-          <FormLabel>UI Type</FormLabel>
-          <Select
-            buttonText={
-              <p>
-                {
-                  uiTypes.find((ui) => ui.id === property.uiType?.toString())
-                    ?.name!
-                }
-              </p>
-            }
-            items={uiTypes!}
-            selectedItem={
-              uiTypes.find((ui) => ui.id === property.uiType?.toString())!
-            }
-            onSelect={(value: string) =>
-              handlePropertyChanged(property.name, 'uiType', value, 'number')
-            }
-          />
-          <FormLabel>Required</FormLabel>
-          <Switch
-            name="required"
-            defaultChecked={property.required}
-            onChange={(name: string, value: boolean) =>
-              handlePropertyChanged(
-                property.name,
-                name,
-                value?.toString(),
-                'boolean',
-              )
-            }
-          />
-          <button
-            css={styles.addButton}
-            type="button"
-            onClick={() => handleDeleteProperty(property.name)}
-          >
-            <SvgIcon size="12px">
-              <IconDelete />
-            </SvgIcon>{' '}
-            Delete Property
-          </button>
-        </div>
-      ))}
-      <button css={styles.addButton} type="button" onClick={handleAddProperty}>
+    <div css={styles.wrapper}>
+      <button css={styles.button} type="button" onClick={handleAddProperty}>
         <SvgIcon size="12px">
           <IconPlus />
         </SvgIcon>{' '}
         Add Property
       </button>
+      {properties.map((property, index) => (
+        <div css={styles.row} key={`property${index + 1}`}>
+          <button
+            css={styles.deleteButton}
+            type="button"
+            onClick={() => handleDeleteProperty(property.name)}
+          >
+            <SvgIcon size="12px">
+              <IconDelete />
+            </SvgIcon>
+          </button>
+          <div css={styles.formGrid}>
+            <TextboxCompact
+              type="text"
+              autoFocus
+              isRequired
+              name="name"
+              placeholder="Name"
+              noBottomMargin
+              onChange={(name: string, value: string) =>
+                handlePropertyChanged(index, name, value)
+              }
+              defaultValue={property.name}
+            />
+            <TextboxCompact
+              type="text"
+              name="displayName"
+              placeholder="Display Name"
+              noBottomMargin
+              onChange={(name: string, value: string) =>
+                handlePropertyChanged(index, name, value)
+              }
+            />
+            <TextboxCompact
+              type="text"
+              name="default"
+              placeholder="Default"
+              noBottomMargin
+              onChange={(name: string, value: string) =>
+                handlePropertyChanged(index, name, value)
+              }
+            />
+            <TextboxCompact
+              type="text"
+              name="default"
+              placeholder="Description"
+              noBottomMargin
+              onChange={(name: string, value: string) =>
+                handlePropertyChanged(index, name, value)
+              }
+            />
+
+            <div>
+              <FormLabel isCompact>Required</FormLabel>
+              <Switch
+                noBottomMargin
+                name="required"
+                defaultChecked={property.required}
+                onChange={(name: string, value: boolean) =>
+                  handlePropertyChanged(
+                    index,
+                    name,
+                    value?.toString(),
+                    'boolean',
+                  )
+                }
+              />
+            </div>
+            <div>
+              <FormLabel isCompact>UI Type</FormLabel>
+              <PillPicker
+                isCompact
+                name={`uiType${index + 1}`}
+                noBottomMargin
+                items={uiTypes
+                  ?.filter((type) => +type?.id! !== UiType.UI_TYPE_FILE_UPLOAD)
+                  ?.map((type) => type?.name!)}
+                selectedItem={
+                  uiTypes.find((ui) => ui.id === property.uiType?.toString())
+                    ?.name!
+                }
+                onChange={(name: string, value: string) =>
+                  handlePropertyChanged(
+                    index,
+                    'uiType',
+                    uiTypes?.find((type) => type.name === value)?.id!,
+                    'number',
+                  )
+                }
+              />
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

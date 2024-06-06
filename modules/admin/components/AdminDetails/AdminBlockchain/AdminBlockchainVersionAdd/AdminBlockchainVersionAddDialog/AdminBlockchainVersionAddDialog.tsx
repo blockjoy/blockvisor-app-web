@@ -104,7 +104,8 @@ export const AdminBlockchainVersionAddDialog = ({
     nextVersion.blockchainId &&
     nextVersion.version &&
     nextVersion.nodeType &&
-    isVersionValid;
+    isVersionValid &&
+    nextVersion.properties.every((property) => property.name !== '');
 
   const NodeTypeSelectDropdown =
     withSearchDropdown<AdminFilterDropdownItem>(Dropdown);
