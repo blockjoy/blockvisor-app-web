@@ -10,7 +10,6 @@ import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { AdminBlockchainVersionAdd } from './AdminBlockchainVersionAdd/AdminBlockchainVersionAdd';
 import { spacing } from 'styles/utils.spacing.styles';
 import { sortVersions } from '@modules/node';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 import { breakpoints } from 'styles/variables.styles';
 
 const styles = {
@@ -44,8 +43,14 @@ export const AdminBlockchain = () => {
     {
       id: 'name',
       label: 'Name',
-      data: getBlockchainDisplayName(item.name),
-      copyValue: getBlockchainDisplayName(item.name),
+      data: item.name,
+      copyValue: item.name,
+    },
+    {
+      id: 'displayName',
+      label: 'Display Name',
+      data: item.displayName,
+      copyValue: item.displayName,
     },
     { id: 'id', label: 'Id', data: item.id, copyValue: item.id },
     {
@@ -79,6 +84,7 @@ export const AdminBlockchain = () => {
       detailsName="name"
       ignoreItems={[
         'name',
+        'displayName',
         'id',
         'nodeTypes',
         'stats',

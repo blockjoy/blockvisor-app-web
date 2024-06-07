@@ -27,4 +27,3 @@ export * from './utils/getDocumentWidth';
 export * from './utils/infiniteScroll';
 export * from './utils/storybook';
 export * from './utils/validation';
-export * from './utils/getBlockchainDisplayName';

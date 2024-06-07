@@ -2,7 +2,6 @@ import { blockchainClient } from '@modules/grpc';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl } from '@modules/admin';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 export const AdminNodesFilterBlockchain = ({
   columnName,
@@ -26,7 +25,7 @@ export const AdminNodesFilterBlockchain = ({
       items={
         list?.map((blockchain) => ({
           id: blockchain.id,
-          name: getBlockchainDisplayName(blockchain.name),
+          name: blockchain.displayName || blockchain.name,
         }))!
       }
       values={values}

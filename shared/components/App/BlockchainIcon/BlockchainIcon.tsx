@@ -2,11 +2,11 @@ import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { styles } from './BlockchainIcon.styles';
 import { Tooltip, SvgIcon } from '@shared/components';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 type Props = {
   blockchainId?: string;
   blockchainName?: string;
+  blockchainDisplayName?: string;
   hideTooltip?: boolean;
   size?: string;
 };
@@ -137,6 +137,7 @@ const IconTezos = dynamic(
 
 export const BlockchainIcon = ({
   blockchainName,
+  blockchainDisplayName,
   hideTooltip,
   size = '24px',
 }: Props) => {
@@ -251,7 +252,7 @@ export const BlockchainIcon = ({
       {!hideTooltip && (
         <Tooltip
           noWrap
-          tooltip={getBlockchainDisplayName(blockchainName!)}
+          tooltip={blockchainDisplayName || blockchainName}
           customCss={[styles.tooltip]}
         />
       )}
