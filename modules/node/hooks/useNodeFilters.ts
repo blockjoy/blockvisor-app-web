@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
 import { NodeUIProps, nodeSelectors, nodeAtoms } from '@modules/node';
 import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
+import { useSettings } from '@modules/settings';
 
 type UseNodeFiltersHook = {
   isDirty: boolean;
@@ -18,10 +19,9 @@ type UseNodeFiltersHook = {
 export const useNodeFilters = (
   nodeUIProps: NodeUIProps,
 ): UseNodeFiltersHook => {
-  const [filters, setFilters] = useRecoilState(nodeAtoms.filters);
-  const [tempFilters, setTempFilters] = useState<UINodeFilterCriteria>(filters);
+  const filters = useRecoilValue(nodeSelectors.filters);
 
-  const resetInitialFilters = useResetRecoilState(nodeAtoms.filters);
+  const [tempFilters, setTempFilters] = useState<UINodeFilterCriteria>(filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     nodeAtoms.filtersTempTotal,
   );
@@ -38,6 +38,9 @@ export const useNodeFilters = (
   const filtersNetworksAll = useRecoilValue(
     nodeSelectors.filtersNetworksAll(tempFilters.networks!),
   );
+  const setSearchQuery = useSetRecoilState(nodeAtoms.filtersSearchQuery);
+
+  const { updateSettings } = useSettings();
 
   useEffect(() => {
     const total = Object.values(tempFilters).reduce(
@@ -63,17 +66,18 @@ export const useNodeFilters = (
     }
   };
 
-  const updateFilters = () => {
-    setFilters({
-      ...filters,
-      ...tempFilters,
-    });
+  const updateFilters = async () => {
+    const { keyword, ...restFilters } = tempFilters;
+
+    setSearchQuery(keyword ?? '');
+
+    await updateSettings('nodes', { filters: restFilters });
 
     applyFilter(tempFilters);
   };
 
-  const resetFilters = () => {
-    resetInitialFilters();
+  const resetFilters = async () => {
+    await updateSettings('nodes', { filters: null });
 
     setTempFilters((currentTempFilters) => ({
       ...currentTempFilters,

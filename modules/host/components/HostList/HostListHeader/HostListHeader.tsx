@@ -7,8 +7,9 @@ import {
   Search,
 } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import { hostSelectors, useHostList, useHostUIContext } from '@modules/host';
-import { layoutSelectors, useLayout } from '@modules/layout';
+import { hostAtoms, useHostList, useHostUIContext } from '@modules/host';
+import { layoutSelectors } from '@modules/layout';
+import { useSettings } from '@modules/settings';
 
 export const HostListHeader = () => {
   const hostUIContext = useHostUIContext();
@@ -29,12 +30,12 @@ export const HostListHeader = () => {
   // const isLoading = useRecoilValue(hostAtoms.isLoading);
 
   const [searchQuery, setSearchQuery] = useRecoilState(
-    hostSelectors.filtersSearchQuery,
+    hostAtoms.filtersSearchQuery,
   );
 
-  const { updateLayout } = useLayout();
+  const { updateSettings } = useSettings();
 
-  const handleSearch = (keyword: string) => {
+  const handleSearch = async (keyword: string) => {
     setSearchQuery(keyword);
 
     const newQueryParams = {
@@ -49,13 +50,17 @@ export const HostListHeader = () => {
     hostUIProps.setQueryParams(newQueryParams);
   };
 
-  const handleActiveListType = (type: View) => {
-    updateLayout('host.view', type);
+  const handleActiveListType = async (type: View) => {
+    await updateSettings('layout', {
+      'hosts.view': type,
+    });
   };
 
   // TODO: ADD FILTERS BACK IN ONCE IMPLEMENTED
-  // const handleFilterCollapseToggled = () => {
-  //  updateLayout('host.filters.isOpen', !isFiltersOpen);
+  // const handleFilterCollapseToggled = async () => {
+  //   await updateSettings('layout', {
+  //     'hosts.filters.isOpen': !isFiltersOpen,
+  //   });
   // };
 
   return (

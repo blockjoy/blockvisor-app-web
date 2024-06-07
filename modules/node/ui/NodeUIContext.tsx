@@ -6,11 +6,17 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
+import { useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import { initialQueryParams, InitialQueryParams } from '@modules/node';
+import {
+  initialQueryParams,
+  InitialQueryParams,
+  nodeAtoms,
+  nodeSelectors,
+} from '@modules/node';
 import { numOfItemsPerPage } from '@shared/index';
-import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
+import { UINodeFilterCriteria } from '@modules/grpc';
 
 type NodeUIContext = {
   queryParams: InitialQueryParams;
@@ -27,16 +33,20 @@ type NodeUIProvider = React.PropsWithChildren;
 
 const NodeUIContext = createContext<NodeUIContext>({} as NodeUIContext);
 
-export const getInitialQueryParams = () => {
-  const persistedNodeFilters = fetchFromLocalStorage('node.filters');
-
-  if (!persistedNodeFilters) return initialQueryParams;
+export const getInitialQueryParams = (
+  initialFilters: UINodeFilterCriteria,
+  initialKeyword?: string,
+) => {
+  if (!initialFilters) return initialQueryParams;
 
   const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,
-    filter: persistedNodeFilters,
+    filter: {
+      ...initialFilters,
+      keyword: initialKeyword ?? initialFilters.keyword,
+    },
     pagination: {
       ...initialQueryParams.pagination,
       itemsPerPage,
@@ -51,7 +61,12 @@ export function useNodeUIContext() {
 export const NodeUIConsumer = NodeUIContext.Consumer;
 
 export function NodeUIProvider({ children }: NodeUIProvider) {
-  const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
+  const initialFilters = useRecoilValue(nodeSelectors.filters);
+  const initialKeyword = useRecoilValue(nodeAtoms.filtersSearchQuery);
+  const initialQueryParamsValue = getInitialQueryParams(
+    initialFilters,
+    initialKeyword,
+  );
 
   const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
     initialQueryParamsValue,

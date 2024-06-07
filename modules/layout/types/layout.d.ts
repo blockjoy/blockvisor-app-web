@@ -1,16 +1,9 @@
 type View = 'table' | 'grid';
 
-type Layout = {
+type LayoutSettings = {
   'sidebar.isOpen': boolean;
-  'node.view': View;
-  'node.filters.isOpen': boolean;
-  'host.view': View;
-  'host.filters.isOpen': boolean;
+  'nodes.view': View;
+  'nodes.filters.isOpen': boolean;
+  'hosts.view': View;
+  'hosts.filters.isOpen': boolean;
 };
-
-type LayoutSettings =
-  | 'sidebar.isOpen'
-  | 'node.view'
-  | 'node.filters.isOpen'
-  | 'host.view'
-  | 'host.filters.isOpen';

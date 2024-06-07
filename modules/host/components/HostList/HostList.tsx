@@ -75,58 +75,56 @@ export const HostList = () => {
   );
 
   return (
-    <>
-      <div css={styles.wrapper}>
-        {/* TODO: Implement filters in api */}
-        {/* <HostFilters /> */}
-        <div css={styles.listWrapper}>
-          <HostListHeader />
-          {isLoading === 'initializing' ? (
-            <TableSkeleton />
-          ) : !Boolean(hostList?.length) && isLoading === 'finished' ? (
-            <EmptyColumn
-              title="No Hosts."
-              description={
-                isFiltered && isEmpty ? (
-                  'Nothing to see here.'
-                ) : (
-                  <div>
-                    <h3 css={spacing.bottom.mediumSmall}>
-                      Here is where your hosts will show, once you have some.
-                    </h3>
-                  </div>
-                )
-              }
-            />
-          ) : (
-            <InfiniteScroll
-              dataLength={hostList.length}
-              next={updateQueryParams}
-              hasMore={hasMore}
-              style={{ overflow: 'hidden' }}
-              scrollThreshold={0.75}
-              loader={''}
-            >
-              {view === 'table' ? (
-                <Table
-                  isLoading={isLoading}
-                  headers={headers}
-                  rows={rows}
-                  onRowClick={handleHostClick}
-                />
+    <div css={styles.wrapper}>
+      {/* TODO: Implement filters in api */}
+      {/* <HostFilters /> */}
+      <div css={styles.listWrapper}>
+        <HostListHeader />
+        {isLoading === 'initializing' ? (
+          <TableSkeleton />
+        ) : !Boolean(hostList?.length) && isLoading === 'finished' ? (
+          <EmptyColumn
+            title="No Hosts."
+            description={
+              isFiltered && isEmpty ? (
+                'Nothing to see here.'
               ) : (
-                <div css={styles.gridWrapper}>
-                  <TableGrid
-                    isLoading={isLoading}
-                    cells={cells!}
-                    entityName="hosts"
-                  />
+                <div>
+                  <h3 css={spacing.bottom.mediumSmall}>
+                    Here is where your hosts will show, once you have some.
+                  </h3>
                 </div>
-              )}
-            </InfiniteScroll>
-          )}
-        </div>
+              )
+            }
+          />
+        ) : (
+          <InfiniteScroll
+            dataLength={hostList.length}
+            next={updateQueryParams}
+            hasMore={hasMore}
+            style={{ overflow: 'hidden' }}
+            scrollThreshold={0.75}
+            loader={''}
+          >
+            {view === 'table' ? (
+              <Table
+                isLoading={isLoading}
+                headers={headers}
+                rows={rows}
+                onRowClick={handleHostClick}
+              />
+            ) : (
+              <div css={styles.gridWrapper}>
+                <TableGrid
+                  isLoading={isLoading}
+                  cells={cells!}
+                  entityName="hosts"
+                />
+              </div>
+            )}
+          </InfiniteScroll>
+        )}
       </div>
-    </>
+    </div>
   );
 };

@@ -56,6 +56,7 @@ export const useUserSettings = (): UseUserSettingsHook => {
 
   return {
     userSettings,
+
     getUserSettings,
     updateUserSettings,
     deleteUserSettings,

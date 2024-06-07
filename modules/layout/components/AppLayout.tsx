@@ -21,6 +21,7 @@ import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
 import { usePageVisibility } from '@shared/index';
 import { useBilling } from '@modules/billing';
+import { useSettings } from '@modules/settings';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -40,6 +41,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
   const { getUserSettings } = useUserSettings();
+  const { updateSettings } = useSettings();
   const {
     client: mqttClient,
     connect: mqttConnect,
@@ -99,6 +101,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
+      updateSettings('organization', { default: defaultOrganization });
       loadNodes();
       loadHosts();
       if (mqttClient?.connected) updateMqttSubscription();

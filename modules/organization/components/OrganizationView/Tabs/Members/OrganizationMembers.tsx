@@ -3,6 +3,7 @@ import {
   organizationAtoms,
   useResendInvitation,
   OrganizationDialog,
+  organizationSelectors,
 } from '@modules/organization';
 import {
   Action,
@@ -24,7 +25,7 @@ export const OrganizationMembers = () => {
   }, [organizationMembersUIContext]);
 
   const members = useRecoilValue(
-    organizationAtoms.organizationMembersActive(
+    organizationSelectors.organizationMembersActive(
       organizationMembersUIProps.queryParams,
     ),
   );

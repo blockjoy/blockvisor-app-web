@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import { styles } from './HostFilters.styles';
 import {
@@ -16,7 +16,8 @@ import { hostAtoms, useHostUIContext, useHostFilters } from '@modules/host';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { blockchainAtoms } from '@modules/node';
-import { layoutSelectors, useLayout } from '@modules/layout';
+import { layoutSelectors } from '@modules/layout';
+import { useSettings } from '@modules/settings';
 
 export const HostFilters = () => {
   const hostUIContext = useHostUIContext();
@@ -48,10 +49,10 @@ export const HostFilters = () => {
 
   const [openFilterId, setOpenFilterId] = useState('');
 
-  const { updateLayout } = useLayout();
+  const { updateSettings } = useSettings();
 
   useEffect(() => {
-    if (isMobile) updateLayout('host.filters.isOpen', false);
+    if (isMobile) updateSettings('layout', { 'hosts.filters.isOpen': false });
   }, []);
 
   const hasFiltersApplied =
@@ -80,7 +81,7 @@ export const HostFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    updateLayout('host.filters.isOpen', !isFiltersOpen);
+    updateSettings('layout', { 'hosts.filters.isOpen': !isFiltersOpen });
   };
 
   const handleSearch = (value: string) => changeTempFilters('keyword', value);

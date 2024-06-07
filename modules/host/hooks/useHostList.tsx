@@ -1,13 +1,15 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { hostClient } from '@modules/grpc/clients/hostClient';
-import { InitialQueryParams } from '../ui/HostUIHelpers';
-import { getInitialQueryParams } from '../ui/HostUIContext';
+import {
+  hostAtoms,
+  getInitialQueryParams,
+  InitialQueryParams,
+  hostSelectors,
+} from 'modules/host';
 import { useDefaultOrganization } from '@modules/organization';
 import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
-import { nodeAtoms } from '@modules/node';
 
 export const useHostList = () => {
   const router = useRouter();
@@ -19,6 +21,9 @@ export const useHostList = () => {
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
+
+  const initialFilters = useRecoilValue(hostSelectors.filters);
+  const initialKeyword = useRecoilValue(hostAtoms.filtersSearchQuery);
 
   const handleHostClick = (id: string) => {
     router.push(ROUTES.HOST(id));
@@ -36,7 +41,10 @@ export const useHostList = () => {
 
   const loadHosts = async (queryParams?: InitialQueryParams) => {
     if (!queryParams) {
-      const savedQueryParams = getInitialQueryParams();
+      const savedQueryParams = getInitialQueryParams(
+        initialFilters,
+        initialKeyword,
+      );
       queryParams = savedQueryParams;
     }
 

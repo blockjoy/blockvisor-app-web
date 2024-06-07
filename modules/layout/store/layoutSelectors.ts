@@ -1,7 +1,7 @@
 import { selector } from 'recoil';
 import { authAtoms } from '@modules/auth';
 
-const layout = selector<Layout>({
+const layout = selector<LayoutSettings>({
   key: 'layout',
   get: ({ get }) => {
     const userSettings = get(authAtoms.userSettings);
@@ -21,38 +21,38 @@ const isSidebarOpen = selector<boolean>({
 });
 
 const nodeView = selector<View>({
-  key: 'layout.node.view',
+  key: 'layout.nodes.view',
   get: ({ get }) => {
     const layoutVal = get(layout);
 
-    return layoutVal?.['node.view'] ?? 'grid';
+    return layoutVal?.['nodes.view'] ?? 'grid';
   },
 });
 
 const isNodeFiltersOpen = selector<boolean>({
-  key: 'layout.node.filters.isOpen',
+  key: 'layout.nodes.filters.isOpen',
   get: ({ get }) => {
     const layoutVal = get(layout);
 
-    return layoutVal?.['node.filters.isOpen'] ?? false;
+    return layoutVal?.['nodes.filters.isOpen'] ?? false;
   },
 });
 
 const hostView = selector<View>({
-  key: 'layout.host.view',
+  key: 'layout.hosts.view',
   get: ({ get }) => {
     const layoutVal = get(layout);
 
-    return layoutVal?.['host.view'] ?? 'table';
+    return layoutVal?.['hosts.view'] ?? 'table';
   },
 });
 
 const isHostFiltersOpen = selector<boolean>({
-  key: 'layout.host.filters.isOpen',
+  key: 'layout.hosts.filters.isOpen',
   get: ({ get }) => {
     const layoutVal = get(layout);
 
-    return layoutVal?.['host.filters.isOpen'] ?? false;
+    return layoutVal?.['hosts.filters.isOpen'] ?? false;
   },
 });
 

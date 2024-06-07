@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import IconClose from '@public/assets/icons/common/Close.svg';
@@ -21,7 +21,8 @@ import {
   blockchainAtoms,
   nodeSelectors,
 } from '@modules/node';
-import { layoutSelectors, useLayout } from '@modules/layout';
+import { layoutSelectors } from '@modules/layout';
+import { useSettings } from '@modules/settings';
 
 export const NodeFilters = () => {
   const nodeUIContext = useNodeUIContext();
@@ -61,10 +62,10 @@ export const NodeFilters = () => {
 
   const [openFilterId, setOpenFilterId] = useState('');
 
-  const { updateLayout } = useLayout();
+  const { updateSettings } = useSettings();
 
   useEffect(() => {
-    if (isMobile) updateLayout('node.filters.isOpen', false);
+    if (isMobile) updateSettings('layout', { 'nodes.filters.isOpen': false });
   }, []);
 
   const hasFiltersApplied =
@@ -87,7 +88,12 @@ export const NodeFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    updateLayout('node.filters.isOpen', !isFiltersOpen);
+    updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    updateFilters();
   };
 
   const handleSearch = (value: string) => changeTempFilters('keyword', value);
@@ -147,7 +153,7 @@ export const NodeFilters = () => {
               css={styles.updateButton}
               type="submit"
               disabled={!isDirty}
-              onClick={updateFilters}
+              onClick={handleSubmit}
             >
               <SvgIcon size="12px">
                 <IconRefresh />

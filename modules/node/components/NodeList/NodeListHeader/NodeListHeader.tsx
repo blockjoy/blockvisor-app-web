@@ -6,8 +6,9 @@ import {
   Alert,
 } from '@shared/components';
 import { nodeAtoms } from '@modules/node';
-import { layoutSelectors, useLayout } from '@modules/layout';
+import { layoutSelectors } from '@modules/layout';
 import { styles } from './styles';
+import { useSettings } from '@modules/settings';
 
 export const NodeListHeader = () => {
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
@@ -16,14 +17,14 @@ export const NodeListHeader = () => {
   const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
   const view = useRecoilValue(layoutSelectors.nodeView);
 
-  const { updateLayout } = useLayout();
+  const { updateSettings } = useSettings();
 
   const handleFilterCollapseToggled = () => {
-    updateLayout('node.filters.isOpen', !isFiltersOpen);
+    updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
   };
 
   const handleGridTableViewChanged = (type: View) => {
-    updateLayout('node.view', type);
+    updateSettings('layout', { 'nodes.view': type });
   };
 
   const isLoading = isLoadingNodes !== 'finished';

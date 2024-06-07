@@ -1,6 +1,7 @@
 import { styles } from './OrganizationList.styles';
 import { useRecoilValue } from 'recoil';
 import {
+  organizationSelectors,
   useGetOrganization,
   useGetOrganizations,
   useSwitchOrganization,
@@ -35,7 +36,7 @@ export const OrganizationsList = () => {
     organizationAtoms.defaultOrganization,
   );
   const allOrganizationsSorted = useRecoilValue(
-    organizationAtoms.allOrganizationsSorted,
+    organizationSelectors.allOrganizationsSorted,
   );
 
   const handleRowClicked = (id: string, name: string) => {

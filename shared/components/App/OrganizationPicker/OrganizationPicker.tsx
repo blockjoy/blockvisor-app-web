@@ -13,8 +13,9 @@ import {
 import {
   useSwitchOrganization,
   organizationAtoms,
+  organizationSelectors,
 } from '@modules/organization';
-import { useLayout } from '@modules/layout';
+import { useSettings } from '@modules/settings';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { styles } from './OrganizationPicker.styles';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
@@ -36,7 +37,7 @@ export const OrganizationPicker = ({
   const { id } = router.query;
 
   const allOrganizations = useRecoilValue(
-    organizationAtoms.allOrganizationsSorted,
+    organizationSelectors.allOrganizationsSorted,
   );
 
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +47,7 @@ export const OrganizationPicker = ({
   );
 
   const { switchOrganization } = useSwitchOrganization();
-  const { updateLayout } = useLayout();
+  const { updateSettings } = useSettings();
 
   const handleChange = async (nextOrg: Org | null) => {
     if (!nextOrg) return;
@@ -59,7 +60,7 @@ export const OrganizationPicker = ({
 
     setIsOpen(false);
 
-    if (isMobile) updateLayout('sidebar.isOpen', false);
+    if (isMobile) updateSettings('layout', { 'sidebar.isOpen': false });
 
     if (!id) return;
 
