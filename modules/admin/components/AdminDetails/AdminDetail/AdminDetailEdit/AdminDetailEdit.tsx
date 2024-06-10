@@ -12,6 +12,7 @@ type Props = {
   onSaveChanges: (
     properties: AdminDetailProperty[],
     onSuccess: VoidFunction,
+    onError: VoidFunction,
   ) => void;
   onToggleEditMode: VoidFunction;
 };
@@ -57,11 +58,18 @@ export const AdminDetailEdit = ({
 
   const handleSaveChanges = () => {
     setIsSaving(true);
-    onSaveChanges(editedProperties, () => {
-      onToggleEditMode();
-      toast.success('Changes Saved');
-      setIsSaving(false);
-    });
+    onSaveChanges(
+      editedProperties,
+      () => {
+        onToggleEditMode();
+        toast.success('Changes Saved');
+        setIsSaving(false);
+      },
+      () => {
+        toast.error('Error updating');
+        setIsSaving(false);
+      },
+    );
   };
 
   return (
