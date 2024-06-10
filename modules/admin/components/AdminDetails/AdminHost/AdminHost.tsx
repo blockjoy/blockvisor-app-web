@@ -27,11 +27,16 @@ export const AdminHost = () => {
   const handleSaveChanges = async (
     properties: AdminDetailProperty[],
     onSuccess: VoidFunction,
+    onError: VoidFunction,
   ) => {
     const defaultRequest: HostServiceUpdateRequest = { id: id as string };
     const request = createAdminUpdateRequest(defaultRequest, properties);
-    await hostClient.updateHost(request);
-    onSuccess();
+    try {
+      await hostClient.updateHost(request);
+      onSuccess();
+    } catch (err) {
+      onError();
+    }
   };
 
   const getItem = async () => await hostClient.getHost(id as string);
