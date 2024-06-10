@@ -48,10 +48,9 @@ const filters = selector<UINodeFilterCriteria>({
     const nodeSettings = get(settings);
     const searchQuery = get(nodeAtoms.filtersSearchQuery);
 
-    return (
-      { ...nodeSettings.filters, keyword: searchQuery ?? '' } ??
-      NODE_FILTERS_DEFAULT
-    );
+    return nodeSettings?.filters
+      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
+      : NODE_FILTERS_DEFAULT;
   },
 });
 
@@ -120,7 +119,7 @@ const filtersTypeAll = selectorFamily<FilterListItem[], string[]>({
 
     const allFilters = allTypes.map((type) => ({
       ...type,
-      isChecked: tempFilters.some((filter) => type.id === filter),
+      isChecked: tempFilters?.some((filter) => type.id === filter),
     }));
 
     return allFilters;
@@ -139,7 +138,7 @@ const filtersNetworksAll = selectorFamily<
 
       const allFilters = allNetworks.map((network) => ({
         ...network,
-        isChecked: tempFilters.some((filter) => network.id === filter),
+        isChecked: tempFilters?.some((filter) => network.id === filter),
       }));
 
       return allFilters;

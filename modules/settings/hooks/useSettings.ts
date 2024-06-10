@@ -5,10 +5,12 @@ type UseSettingsHook = {
     name: T,
     value: Partial<UserSettingsUI[T]>,
   ) => Promise<void>;
+  removeSettings: <T extends keyof UserSettingsUI>(name: T) => Promise<void>;
 };
 
 export const useSettings = (): UseSettingsHook => {
-  const { userSettings, updateUserSettings } = useUserSettings();
+  const { userSettings, updateUserSettings, deleteUserSettings } =
+    useUserSettings();
 
   const updateSettings = async <T extends keyof UserSettingsUI>(
     name: T,
@@ -23,5 +25,9 @@ export const useSettings = (): UseSettingsHook => {
     await updateUserSettings(name, updatedSettingsString);
   };
 
-  return { updateSettings };
+  const removeSettings = async <T extends keyof UserSettingsUI>(name: T) => {
+    await deleteUserSettings(name);
+  };
+
+  return { updateSettings, removeSettings };
 };

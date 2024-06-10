@@ -1,3 +1,0 @@
-type HostSettings = {
-  filters: UIHostFilterCriteria;
-};

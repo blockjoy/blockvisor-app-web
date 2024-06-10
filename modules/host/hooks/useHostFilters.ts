@@ -35,7 +35,7 @@ export const useHostFilters = (
     hostSelectors.filtersStatusAll(tempFilters.hostStatus!),
   );
 
-  const { updateSettings } = useSettings();
+  const { updateSettings, removeSettings } = useSettings();
 
   useEffect(() => {
     const isDirtyMemory = !isEqual(
@@ -83,7 +83,7 @@ export const useHostFilters = (
   };
 
   const resetFilters = async () => {
-    await updateSettings('hosts', { filters: null });
+    await removeSettings('hosts');
 
     setTempFilters((currentTempFilters) => ({
       ...currentTempFilters,

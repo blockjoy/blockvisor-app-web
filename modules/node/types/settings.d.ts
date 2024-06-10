@@ -1,3 +1,0 @@
-type NodeSettings = {
-  filters: UINodeFilterCriteria;
-};

@@ -40,7 +40,7 @@ export const useNodeFilters = (
   );
   const setSearchQuery = useSetRecoilState(nodeAtoms.filtersSearchQuery);
 
-  const { updateSettings } = useSettings();
+  const { updateSettings, removeSettings } = useSettings();
 
   useEffect(() => {
     const total = Object.values(tempFilters).reduce(
@@ -77,7 +77,7 @@ export const useNodeFilters = (
   };
 
   const resetFilters = async () => {
-    await updateSettings('nodes', { filters: null });
+    await removeSettings('nodes');
 
     setTempFilters((currentTempFilters) => ({
       ...currentTempFilters,
@@ -89,9 +89,9 @@ export const useNodeFilters = (
 
   const changeTempFilters = (key: string, value: string) => {
     const updateFunc = (currentItems: string[]) => {
-      const index = currentItems.indexOf(value);
+      const index = currentItems?.indexOf(value);
 
-      if (index > -1) return currentItems.filter((_, i) => i !== index);
+      if (index > -1) return currentItems?.filter((_, i) => i !== index);
       else return [...currentItems, value];
     };
 

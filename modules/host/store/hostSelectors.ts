@@ -68,8 +68,11 @@ const filters = selector<UIHostFilterCriteria>({
   key: 'host.filters',
   get: ({ get }) => {
     const hostSettings = get(settings);
+    const searchQuery = get(hostAtoms.filtersSearchQuery);
 
-    return hostSettings.filters ?? HOST_FILTERS_DEFAULT;
+    return hostSettings?.filters
+      ? { ...hostSettings.filters, keyword: searchQuery ?? '' }
+      : HOST_FILTERS_DEFAULT;
   },
 });
 
@@ -97,7 +100,7 @@ const filtersStatusAll = selectorFamily<
 
     const allFilters = allStatuses.map((status) => ({
       ...status,
-      isChecked: tempFilters.some((filter) => status.id === filter),
+      isChecked: tempFilters?.some((filter) => status.id === filter),
     }));
 
     return allFilters;

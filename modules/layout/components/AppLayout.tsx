@@ -11,6 +11,7 @@ import {
 } from '@modules/auth';
 import {
   organizationAtoms,
+  organizationSelectors,
   useGetOrganizations,
   useInvitations,
   useProvisionToken,
@@ -37,6 +38,9 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
+  );
+  const settingsDefaultOrg = useRecoilValue(
+    organizationSelectors.settingsDefaultOrg,
   );
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
@@ -101,7 +105,8 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      updateSettings('organization', { default: defaultOrganization });
+      if (settingsDefaultOrg?.id !== defaultOrganization?.id)
+        updateSettings('organization', { default: defaultOrganization });
       loadNodes();
       loadHosts();
       if (mqttClient?.connected) updateMqttSubscription();
