@@ -21,7 +21,7 @@ export const NodeLauncherSummaryDetails = () => {
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const error = useRecoilValue(nodeLauncherAtoms.error);
-  const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+  const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
 
@@ -102,7 +102,7 @@ export const NodeLauncherSummaryDetails = () => {
                   : null}
                 {!isNodeValid ? (
                   <>
-                    {!selectedHost && allHosts?.length ? (
+                    {!selectedHosts && allHosts?.length ? (
                       <div>Host or Region</div>
                     ) : null}
                     {!selectedRegion && !allHosts?.length ? (

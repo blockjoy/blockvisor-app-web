@@ -6,6 +6,7 @@ import {
   useResetRecoilState,
   useSetRecoilState,
 } from 'recoil';
+import { toast } from 'react-toastify';
 import isEqual from 'lodash/isEqual';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
@@ -14,6 +15,7 @@ import {
   UiType,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
 import {
+  NodePlacement,
   NodeProperty,
   NodeScheduler_ResourceAffinity,
   NodeServiceCreateRequest,
@@ -27,20 +29,21 @@ import {
   nodeLauncherSelectors,
   useGetRegions,
   sortNetworks,
-  sortNodeTypes,
   sortVersions,
+  NodeLauncherHost,
 } from '@modules/node';
 import { organizationAtoms } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { matchSKU } from '@modules/billing';
+import { delay } from '@shared/utils/delay';
 
 type IUseNodeLauncherHandlersParams = {
   fulfilReqs: boolean;
 };
 
 interface IUseNodeLauncherHandlersHook {
-  handleHostChanged: (host: Host | null) => void;
+  handleHostsChanged: (hosts: NodeLauncherHost[] | null) => void;
   handleRegionChanged: (region: Region | null) => void;
   handleRegionsLoaded: (region: Region | null) => void;
   handleProtocolSelected: (blockchainId: string, nodeType: NodeType) => void;
@@ -53,6 +56,7 @@ interface IUseNodeLauncherHandlersHook {
   handleNetworkChanged: (network: string) => void;
   handleFileUploaded: (e: any) => void;
   handleCreateNodeClicked: () => void;
+  handleQuantityChanged: (quantity: number | null) => void;
 }
 
 export const useNodeLauncherHandlers = ({
@@ -84,8 +88,8 @@ export const useNodeLauncherHandlers = ({
   );
   const setError = useSetRecoilState(nodeLauncherAtoms.error);
   const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
-  const [selectedHost, setSelectedHost] = useRecoilState(
-    nodeLauncherAtoms.selectedHost,
+  const [selectedHosts, setSelectedHosts] = useRecoilState(
+    nodeLauncherAtoms.selectedHosts,
   );
   const [selectedVersion, setSelectedVersion] = useRecoilState(
     nodeLauncherAtoms.selectedVersion,
@@ -97,7 +101,9 @@ export const useNodeLauncherHandlers = ({
     nodeLauncherAtoms.selectedRegion,
   );
   const selectedRegionByHost = useRecoilValue(
-    nodeLauncherSelectors.selectedRegionByHost(selectedHost?.region),
+    nodeLauncherSelectors.selectedRegionByHost(
+      selectedHosts?.length ? selectedHosts[0].host?.region : '',
+    ),
   );
   const resetSelectedNetwork = useResetRecoilState(
     nodeLauncherAtoms.selectedNetwork,
@@ -108,22 +114,27 @@ export const useNodeLauncherHandlers = ({
   const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
 
   useEffect(() => {
-    setSelectedHost(null);
+    setSelectedHosts(null);
   }, [allHosts]);
 
   useEffect(() => {
     let queriedHost = null;
     const hostId = searchParams.get('hostId');
 
-    if (hostId)
+    if (hostId) {
       queriedHost = allHosts.find((host: Host) => host.id === hostId) ?? null;
-
-    setSelectedHost(queriedHost);
+      setSelectedHosts([
+        {
+          nodesToLaunch: 1,
+          host: queriedHost!,
+        },
+      ]);
+    }
   }, [allHosts]);
 
-  const handleHostChanged = (host: Host | null) => {
+  const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');
-    setSelectedHost(host);
+    setSelectedHosts(hosts);
     setSelectedRegion(null);
   };
 
@@ -225,9 +236,18 @@ export const useNodeLauncherHandlers = ({
     Mixpanel.track('Launch Node - Key File Uploaded');
   };
 
-  const handleCreateNodeClicked = () => {
-    setIsLaunching(true);
+  const handleQuantityChanged = (quantity: number | null) =>
+    setNodeLauncherState({
+      ...nodeLauncherState,
+      quantity,
+    });
 
+  const launchNode = async (
+    placement: NodePlacement,
+    launchDelay: number,
+    nodesLaunched: number,
+    onSuccess: (nodeId: string) => void,
+  ) => {
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.id,
       version: selectedVersion?.version!,
@@ -237,29 +257,81 @@ export const useNodeLauncherHandlers = ({
       network: selectedNetwork!,
       allowIps: nodeLauncherState.allowIps,
       denyIps: nodeLauncherState.denyIps,
-      placement: selectedHost
-        ? { hostId: selectedHost.id }
+      placement,
+    };
+
+    await delay(launchDelay);
+
+    await createNode(
+      params,
+      (nodeId: string) => {
+        Mixpanel.track('Launch Node - Node Launched');
+        nodesLaunched++;
+        if (nodeLauncherState.quantity! > 1) {
+          if (nodesLaunched === nodeLauncherState.quantity) {
+            toast.success('All nodes launched');
+            onSuccess(nodeId);
+          }
+        } else {
+          onSuccess(nodeId);
+        }
+      },
+      (error: string) => setError(error!),
+    );
+  };
+
+  const handleCreateNodeClicked = async () => {
+    setIsLaunching(true);
+    let nodesLaunched = 0;
+
+    if (selectedHosts?.length! > 1) {
+      for (let nodeLauncherHost of selectedHosts!) {
+        for (let i = 0; i < nodeLauncherHost.nodesToLaunch; i++) {
+          await launchNode(
+            { hostId: nodeLauncherHost.host.id },
+            3000,
+            nodesLaunched,
+            () => {
+              navigate(ROUTES.NODES, () => {
+                resetNodeLauncherState();
+                resetSelectedVersion();
+                resetSelectedNetwork();
+              });
+            },
+          );
+        }
+      }
+    } else {
+      const placement = selectedHosts
+        ? { hostId: selectedHosts[0].host.id }
         : {
             scheduler: {
               region: selectedRegion?.name!,
               resource:
                 NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
             },
-          },
-    };
+          };
 
-    createNode(
-      params,
-      (nodeId: string) => {
-        Mixpanel.track('Launch Node - Node Launched');
-        navigate(ROUTES.NODE(nodeId), () => {
-          resetNodeLauncherState();
-          resetSelectedVersion();
-          resetSelectedNetwork();
-        });
-      },
-      (error: string) => setError(error!),
-    );
+      for (let i = 0; i < nodeLauncherState.quantity!; i++) {
+        if (nodeLauncherState.quantity! > 1) {
+          await launchNode(placement, 3000, nodesLaunched, () => {
+            navigate(ROUTES.NODES, () => {
+              resetNodeLauncherState();
+              resetSelectedVersion();
+              resetSelectedNetwork();
+            });
+          });
+        } else {
+          launchNode(placement, 0, nodesLaunched, (nodeId: string) => {
+            navigate(ROUTES.NODE(nodeId), () => {
+              resetNodeLauncherState();
+              resetSelectedVersion();
+              resetSelectedNetwork();
+            });
+          });
+        }
+      }
+    }
   };
 
   useEffect(() => {
@@ -347,7 +419,7 @@ export const useNodeLauncherHandlers = ({
       blockchain: selectedBlockchain,
       nodeLauncher: nodeLauncherState,
       version: selectedVersion,
-      region: !!selectedHost ? selectedRegionByHost : selectedRegion,
+      region: !!selectedHosts ? selectedRegionByHost : selectedRegion,
       network: selectedNetwork,
     });
     setSelectedSKU(nodeSKU);
@@ -356,7 +428,7 @@ export const useNodeLauncherHandlers = ({
     selectedVersion,
     selectedRegion,
     selectedNetwork,
-    selectedHost,
+    selectedHosts,
   ]);
 
   useEffect(() => {
@@ -372,7 +444,7 @@ export const useNodeLauncherHandlers = ({
   }, [defaultOrganization?.id]);
 
   return {
-    handleHostChanged,
+    handleHostsChanged,
     handleRegionChanged,
     handleRegionsLoaded,
     handleProtocolSelected,
@@ -382,5 +454,6 @@ export const useNodeLauncherHandlers = ({
     handleNetworkChanged,
     handleFileUploaded,
     handleCreateNodeClicked,
+    handleQuantityChanged,
   };
 };

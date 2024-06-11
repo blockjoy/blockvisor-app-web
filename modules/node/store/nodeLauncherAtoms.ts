@@ -4,8 +4,8 @@ import {
   BlockchainNodeType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { NodeLauncherState } from '@modules/node';
+import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { NodeLauncherHost, NodeLauncherState } from '@modules/node';
 
 const nodeLauncher = atom<NodeLauncherState>({
   key: 'nodeLauncher',
@@ -16,6 +16,7 @@ const nodeLauncher = atom<NodeLauncherState>({
     allowIps: [],
     denyIps: [],
     placement: {},
+    quantity: 1,
   },
 });
 
@@ -34,8 +35,8 @@ const selectedRegion = atom<Region | null>({
   default: null,
 });
 
-const selectedHost = atom<Host | null>({
-  key: 'nodeLauncher.host',
+const selectedHosts = atom<NodeLauncherHost[] | null>({
+  key: 'nodeLauncher.hosts',
   default: null,
 });
 
@@ -60,7 +61,7 @@ export const nodeLauncherAtoms = {
   selectedNodeType,
   selectedRegion,
   selectedVersion,
-  selectedHost,
+  selectedHosts,
   selectedNetwork,
 
   error,

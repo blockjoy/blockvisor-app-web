@@ -7,43 +7,54 @@ import {
   FormHeader,
   FormLabel,
   HostSelect,
+  HostSelectMultiple,
   HubSpotForm,
+  NodeQuantity,
   OrganizationSelect,
   Pricing,
 } from '@shared/components';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
-import { hostAtoms, useHostList } from '@modules/host';
+import { hostAtoms } from '@modules/host';
 import {
   NodeRegionSelect,
   nodeAtoms,
   nodeLauncherAtoms,
   nodeLauncherSelectors,
+  NodeLauncherHost,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
 import { billingSelectors } from '@modules/billing';
+import { authSelectors } from '@modules/auth';
 
 type NodeLauncherSummaryProps = {
   hasPermissionsToCreate: boolean;
   onCreateNodeClicked: VoidFunction;
-  onHostChanged: (host: Host | null) => void;
+  onHostsChanged: (
+    hosts: NodeLauncherHost[] | null,
+    nodesToLaunch?: number,
+  ) => void;
   onRegionChanged: (region: Region | null) => void;
   onRegionsLoaded: (region: Region | null) => void;
+  onQuantityChanged: (quantity: number | null) => void;
 };
 
 export const NodeLauncherSummary = ({
   hasPermissionsToCreate,
   onCreateNodeClicked,
-  onHostChanged,
+  onHostsChanged,
   onRegionChanged,
   onRegionsLoaded,
+  onQuantityChanged,
 }: NodeLauncherSummaryProps) => {
-  const { hostList } = useHostList();
+  const hostList = useRecoilValue(hostAtoms.hostList);
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
-  const selectedHost = useRecoilValue(nodeLauncherAtoms.selectedHost);
+  const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
   const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
@@ -64,18 +75,60 @@ export const NodeLauncherSummary = ({
     setIsLaunching(false);
   }, []);
 
+  const totalAvailableIps = selectedHosts?.reduce(
+    (partialSum, host) =>
+      partialSum + host.host.ipAddresses.filter((ip) => !ip.assigned).length,
+    0,
+  )!;
+
+  const totalHostAllocation = selectedHosts?.reduce(
+    (partialSum, host) => partialSum + host.nodesToLaunch,
+    0,
+  )!;
+
+  const isNodeQuantityMoreThanAvailableIps =
+    !selectedHosts || nodeLauncher.quantity! <= totalAvailableIps;
+
+  const isNodeQuantityValid =
+    nodeLauncher.quantity === totalHostAllocation ||
+    isNodeQuantityMoreThanAvailableIps;
+
+  const isHostAllocationValid =
+    !isSuperUser ||
+    !selectedHosts ||
+    selectedHosts?.length === 1 ||
+    (isNodeQuantityValid &&
+      selectedHosts?.every((h) => h.isValid) &&
+      totalHostAllocation === nodeLauncher.quantity);
+
   const isDisabled =
     !hasNetworkList ||
     !isNodeValid ||
     !isConfigValid ||
     Boolean(error) ||
+    nodeLauncher.quantity === null ||
     isLaunching ||
     isLoadingAllRegions !== 'finished' ||
-    (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice);
+    (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice) ||
+    !isHostAllocationValid ||
+    !isNodeQuantityValid;
 
   const handleCreateNodeClicked = () => {
     if (!hasPermissionsToCreate) handleOpenHubSpot();
     else onCreateNodeClicked();
+  };
+
+  const handleHostsChanged = (nodeLauncherHosts: NodeLauncherHost[] | null) => {
+    onHostsChanged(nodeLauncherHosts);
+  };
+
+  const handleHostChanged = (host: Host | null) => {
+    onHostsChanged([
+      {
+        nodesToLaunch: 1,
+        host: host!,
+      },
+    ]);
   };
 
   const handleOpenHubSpot = () => setIsOpenHubSpot(true);
@@ -85,26 +138,45 @@ export const NodeLauncherSummary = ({
     <div css={styles.wrapper}>
       <FormHeader>Launch</FormHeader>
 
-      {Boolean(hostList?.length) && (
+      {isSuperUser && (
         <>
-          <FormLabel>
-            <span>Host</span>
-            {selectedHost !== null ? (
-              <a onClick={() => onHostChanged(null)} css={styles.autoSelect}>
-                Auto select
-              </a>
-            ) : null}
+          <FormLabel hint="Number of nodes that will be launched">
+            Quantity
           </FormLabel>
-          <HostSelect
-            hosts={allHosts}
-            isLoading={isLoadingAllHosts !== 'finished'}
-            selectedHost={selectedHost}
-            onChange={onHostChanged}
+          <NodeQuantity
+            isValid={isNodeQuantityMoreThanAvailableIps}
+            quantity={nodeLauncher.quantity!}
+            onChange={onQuantityChanged}
           />
         </>
       )}
 
-      {!selectedHost && (
+      <FormLabel>
+        <span>Host{isSuperUser ? 's' : ''}</span>
+        {selectedHosts !== null ? (
+          <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
+            Auto select
+          </a>
+        ) : null}
+      </FormLabel>
+      {isSuperUser ? (
+        <HostSelectMultiple
+          isValid={isHostAllocationValid}
+          onChange={handleHostsChanged}
+          nodeQuantity={nodeLauncher.quantity!}
+        />
+      ) : (
+        Boolean(hostList?.length) && (
+          <HostSelect
+            hosts={allHosts}
+            isLoading={isLoadingAllHosts !== 'finished'}
+            selectedHost={selectedHosts?.[0]?.host!}
+            onChange={handleHostChanged}
+          />
+        )
+      )}
+
+      {!selectedHosts && (
         <>
           <FormLabel>Region</FormLabel>
           <NodeRegionSelect
@@ -151,7 +223,7 @@ export const NodeLauncherSummary = ({
             <span>
               {isLaunching && !Boolean(error)
                 ? 'Launching'
-                : 'Launch Your Node'}
+                : `Launch Your Node${nodeLauncher.quantity! > 1 ? 's' : ''}`}
             </span>
           </span>
         </button>
