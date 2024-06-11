@@ -266,7 +266,6 @@ export const useNodeLauncherHandlers = ({
       params,
       (nodeId: string) => {
         Mixpanel.track('Launch Node - Node Launched');
-        nodesLaunched++;
         if (nodeLauncherState.quantity! > 1) {
           if (nodesLaunched === nodeLauncherState.quantity) {
             toast.success('All nodes launched');
@@ -287,6 +286,7 @@ export const useNodeLauncherHandlers = ({
     if (selectedHosts?.length! > 1) {
       for (let nodeLauncherHost of selectedHosts!) {
         for (let i = 0; i < nodeLauncherHost.nodesToLaunch; i++) {
+          nodesLaunched++;
           await launchNode(
             { hostId: nodeLauncherHost.host.id },
             3000,
@@ -314,6 +314,7 @@ export const useNodeLauncherHandlers = ({
 
       for (let i = 0; i < nodeLauncherState.quantity!; i++) {
         if (nodeLauncherState.quantity! > 1) {
+          nodesLaunched++;
           await launchNode(placement, 3000, nodesLaunched, () => {
             navigate(ROUTES.NODES, () => {
               resetNodeLauncherState();
