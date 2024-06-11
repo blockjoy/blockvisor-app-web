@@ -74,13 +74,13 @@ const isNodeValid = selector<boolean>({
   key: 'nodeLauncher.isNodeValid',
   get: ({ get }) => {
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
-    const selectedHost = get(nodeLauncherAtoms.selectedHost);
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
     const selectedRegion = get(nodeLauncherAtoms.selectedRegion);
 
     return Boolean(
       nodeLauncher.blockchainId &&
         nodeLauncher.nodeType &&
-        (selectedHost || selectedRegion),
+        (selectedHosts || selectedRegion),
     );
   },
 });

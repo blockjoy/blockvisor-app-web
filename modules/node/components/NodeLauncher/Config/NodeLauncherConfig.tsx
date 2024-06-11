@@ -16,7 +16,6 @@ import {
   nodeLauncherSelectors,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
-import IconInfo from '@public/assets/icons/common/Info.svg';
 
 type NodeLauncherConfigProps = {
   nodeTypeProperties?: NodeProperty[];
@@ -80,14 +79,8 @@ export const NodeLauncherConfig = ({
           </>
         )}
 
-        <FormLabel>
-          Firewall Rules{' '}
-          <SvgIcon
-            isDefaultColor
-            tooltip="Add IP addresses that are allowed/denied"
-          >
-            <IconInfo />
-          </SvgIcon>
+        <FormLabel hint="Add IP addresses that are allowed/denied">
+          Firewall Rules
         </FormLabel>
 
         <FirewallDropdown

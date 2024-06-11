@@ -15,7 +15,7 @@ export const NodeLauncher = ({
   permissions,
 }: LauncherWithGuardProps) => {
   const {
-    handleHostChanged,
+    handleHostsChanged,
     handleRegionChanged,
     handleRegionsLoaded,
     handleProtocolSelected,
@@ -24,6 +24,7 @@ export const NodeLauncher = ({
     handleVersionChanged,
     handleNetworkChanged,
     handleFileUploaded,
+    handleQuantityChanged,
   } = useNodeLauncherHandlers({ fulfilReqs });
 
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
@@ -51,10 +52,11 @@ export const NodeLauncher = ({
             {hasSummary && (
               <NodeLauncherSummary
                 hasPermissionsToCreate={permissions.permitted}
-                onHostChanged={handleHostChanged}
+                onHostsChanged={handleHostsChanged}
                 onRegionChanged={handleRegionChanged}
                 onCreateNodeClicked={onCreateClick}
                 onRegionsLoaded={handleRegionsLoaded}
+                onQuantityChanged={handleQuantityChanged}
               />
             )}
           </>

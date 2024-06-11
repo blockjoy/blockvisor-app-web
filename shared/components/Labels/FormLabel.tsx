@@ -1,10 +1,13 @@
 import { css } from '@emotion/react';
+import { SvgIcon } from '@shared/components';
 import { PropsWithChildren } from 'react';
 import { ITheme } from 'types/theme';
+import IconInfo from '@public/assets/icons/common/Info.svg';
 
 type Props = {
   isRequired?: boolean;
   isCompact?: boolean;
+  hint?: string;
 } & PropsWithChildren;
 
 const styles = {
@@ -28,9 +31,17 @@ const styles = {
   `,
 };
 
-export const FormLabel = ({ isRequired, isCompact, children }: Props) => (
+export const FormLabel = ({ isRequired, isCompact, hint, children }: Props) => (
   <label css={[styles.label, isCompact && styles.labelCompact]}>
     {children}
     {isRequired && <span css={styles.requiredAsterix}>*</span>}
+    {hint && (
+      <>
+        {' '}
+        <SvgIcon isDefaultColor tooltip={hint}>
+          <IconInfo />
+        </SvgIcon>
+      </>
+    )}
   </label>
 );

@@ -90,13 +90,6 @@ export const styles = {
       right: 0;
     `}
   `,
-  dropdownInner: css`
-    max-height: 240px;
-
-    ::-webkit-scrollbar-track {
-      background: rgb(255 255 255 / 5%);
-    }
-  `,
   icon: (theme: ITheme) => css`
     pointer-events: none;
     transition: 0.3s;
