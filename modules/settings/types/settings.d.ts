@@ -26,6 +26,7 @@ type NodeSettings = {
 
 type HostSettings = {
   filters: UIHostFilterCriteria;
+  default: Host | null;
 };
 
 type DefaultOrganization = {

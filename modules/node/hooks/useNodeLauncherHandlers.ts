@@ -32,7 +32,7 @@ import {
   sortVersions,
   NodeLauncherHost,
 } from '@modules/node';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { matchSKU } from '@modules/billing';
@@ -69,7 +69,7 @@ export const useNodeLauncherHandlers = ({
   useGetRegions();
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);

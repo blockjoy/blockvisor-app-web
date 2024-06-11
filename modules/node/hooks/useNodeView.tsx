@@ -8,7 +8,7 @@ import {
   NodeServiceUpdateConfigRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import {
-  organizationAtoms,
+  organizationSelectors,
   useSwitchOrganization,
 } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
@@ -42,7 +42,7 @@ export const useNodeView = (): Hook => {
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const stopNode = async (nodeId: Args) => {

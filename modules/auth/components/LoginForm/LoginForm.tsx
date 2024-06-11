@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSignIn } from '@modules/auth';
-import { useGetOrganizations } from '@modules/organization';
+import { useRecoilValue } from 'recoil';
+import { authAtoms, useSignIn, useUserSettings } from '@modules/auth';
+import {
+  useDefaultOrganization,
+  useGetOrganizations,
+} from '@modules/organization';
 import { Alert, Button, FormError, Input } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { isValidEmail } from '@shared/utils/validation';
@@ -18,10 +22,17 @@ type LoginForm = {
 };
 
 export function LoginForm() {
-  const { getOrganizations } = useGetOrganizations();
   const router = useRouter();
   const { verified, redirect, forgot, invitation_id, invited } = router.query;
+
+  const user = useRecoilValue(authAtoms.user);
+
+  const { organizations, getOrganizations } = useGetOrganizations();
   const signIn = useSignIn();
+  const { userSettings, getUserSettings } = useUserSettings();
+  const { defaultOrganization, setDefaultOrganization } =
+    useDefaultOrganization();
+
   const form = useForm<LoginForm>({
     mode: 'all',
     reValidateMode: 'onBlur',
@@ -58,14 +69,30 @@ export function LoginForm() {
         invitation_id as string,
         !!invited,
       );
-      await getOrganizations(!invited);
-      handleRedirect();
     } catch (error) {
       setLoginError('Invalid Credentials');
 
       setIsLoading(false);
     }
   });
+
+  useEffect(() => {
+    if (user?.id)
+      (async () => {
+        await getUserSettings();
+        await getOrganizations();
+
+        handleRedirect();
+      })();
+  }, [user]);
+
+  useEffect(() => {
+    if (user && organizations?.length && userSettings && !defaultOrganization)
+      setDefaultOrganization({
+        id: organizations[0]?.id,
+        name: organizations[0]?.name,
+      });
+  }, [user, userSettings, organizations]);
 
   return (
     <>

@@ -1,16 +1,13 @@
-import { styles } from './OrganizationList.styles';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
+import { styles } from './OrganizationList.styles';
 import {
   organizationSelectors,
   useGetOrganization,
   useGetOrganizations,
-  useSwitchOrganization,
 } from '@modules/organization';
 import { Badge, Scrollbar, Skeleton, SkeletonGrid } from '@shared/components';
-import { useOrganizationsUIContext } from '@modules/organization/ui/OrganizationsUIContext';
-import { useEffect, useMemo } from 'react';
-import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
-import { useRouter } from 'next/router';
 import { OrganizationListHeader } from '@modules/organization';
 import { ROUTES } from '@shared/constants/routes';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -19,28 +16,17 @@ export const OrganizationsList = () => {
   const router = useRouter();
   const { id: activeOrgId } = router.query;
 
-  const organizationUIContext = useOrganizationsUIContext();
-  const organizationUIProps = useMemo(() => {
-    return {
-      queryParams: organizationUIContext.queryParams,
-      setQueryParams: organizationUIContext.setQueryParams,
-    };
-  }, [organizationUIContext]);
-
   const { isLoading, getOrganizations } = useGetOrganizations();
   const { getOrganization } = useGetOrganization();
 
-  const { switchOrganization } = useSwitchOrganization();
-
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const allOrganizationsSorted = useRecoilValue(
     organizationSelectors.allOrganizationsSorted,
   );
 
-  const handleRowClicked = (id: string, name: string) => {
-    switchOrganization(id, name);
+  const handleRowClicked = (id: string) => {
     router.push(`${ROUTES.ORGANIZATION(id)}`);
   };
 
@@ -69,7 +55,7 @@ export const OrganizationsList = () => {
             return (
               <button
                 className={isActive ? 'active' : ''}
-                onClick={() => handleRowClicked(org.id, org.name)}
+                onClick={() => handleRowClicked(org.id)}
                 css={styles.row}
                 key={org.id}
               >

@@ -16,6 +16,7 @@ export const useSettings = (): UseSettingsHook => {
     name: T,
     value: Partial<UserSettingsUI[T]>,
   ) => {
+    console.log('%cUPDATE_SETTINGS', 'color: #f00', name, value);
     const settings = userSettings[name] ?? '{}';
     const parsedSettings = JSON.parse(settings);
 
@@ -26,6 +27,8 @@ export const useSettings = (): UseSettingsHook => {
   };
 
   const removeSettings = async <T extends keyof UserSettingsUI>(name: T) => {
+    console.log('%cDELETE_SETTINGS', 'color: #f00', name);
+
     await deleteUserSettings(name);
   };
 

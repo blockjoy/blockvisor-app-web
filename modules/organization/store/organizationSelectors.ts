@@ -16,7 +16,7 @@ const settings = selector<OrganizationSettings>({
   },
 });
 
-const settingsDefaultOrg = selector<DefaultOrganization | null>({
+const defaultOrganization = selector<DefaultOrganization | null>({
   key: 'organization.settings.default',
   get: ({ get }) => {
     const orgSettings = get(settings);
@@ -105,7 +105,7 @@ const organizationMembersActive = selectorFamily<
 export const organizationSelectors = {
   settings,
 
-  settingsDefaultOrg,
+  defaultOrganization,
 
   allOrganizationsSorted,
   organizationsFiltered,

@@ -2,12 +2,6 @@ import { atom } from 'recoil';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { localStorageEffect } from 'utils/store/persist';
 
-const defaultHost = atom<Host | null>({
-  key: 'host.default',
-  default: null,
-  effects: [localStorageEffect('defaultHost')],
-});
-
 const activeHost = atom<Host | null>({
   key: 'host',
   default: null,
@@ -60,8 +54,6 @@ const filtersSearchQuery = atom<string>({
 });
 
 export const hostAtoms = {
-  defaultHost,
-
   activeHost,
   isLoadingActiveHost,
 

@@ -6,12 +6,6 @@ import {
 import { localStorageEffect } from 'utils/store/persist';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 
-const defaultOrganization = atom<{ name: string; id: string } | null>({
-  key: 'organization.default',
-  default: null,
-  effects: [localStorageEffect('defaultOrganization')],
-});
-
 const selectedOrganization = atom<Org | null>({
   key: 'organization.current',
   default: null,
@@ -59,7 +53,6 @@ const provisionTokenLoadingState = atom<LoadingState>({
 });
 
 export const organizationAtoms = {
-  defaultOrganization,
   selectedOrganization,
   organizationsPageIndex,
   organizationLoadingState,

@@ -12,7 +12,6 @@ import {
 } from '@shared/components';
 import {
   useSwitchOrganization,
-  organizationAtoms,
   organizationSelectors,
 } from '@modules/organization';
 import { useSettings } from '@modules/settings';
@@ -43,7 +42,7 @@ export const OrganizationPicker = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const { switchOrganization } = useSwitchOrganization();
@@ -51,7 +50,6 @@ export const OrganizationPicker = ({
 
   const handleChange = async (nextOrg: Org | null) => {
     if (!nextOrg) return;
-
     await switchOrganization(nextOrg.id, nextOrg.name);
 
     selectedOrg.current = allOrganizations.find(

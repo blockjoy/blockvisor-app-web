@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import useSWR from 'swr';
 import { hostClient } from '@modules/grpc';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import {
   BlockchainSimpleWRegion,
   blockchainSelectors,
@@ -23,7 +23,7 @@ export const useGetRegions = (): UseGetRegionHook => {
   );
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const fetcher = async () => {

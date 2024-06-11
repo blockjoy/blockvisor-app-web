@@ -2,13 +2,13 @@ import { toast } from 'react-toastify';
 import { useRecoilValue } from 'recoil';
 import { invitationClient } from '@modules/grpc';
 import { useInvitations } from './useInvitations';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 
 export const useResendInvitation = () => {
   const { modifySentInvitations } = useInvitations();
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const resendInvitation = async (email: string, invitationId: string) => {

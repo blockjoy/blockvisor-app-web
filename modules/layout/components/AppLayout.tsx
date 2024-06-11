@@ -10,7 +10,6 @@ import {
   useUserSettings,
 } from '@modules/auth';
 import {
-  organizationAtoms,
   organizationSelectors,
   useGetOrganizations,
   useInvitations,
@@ -22,7 +21,6 @@ import { useHostList } from '@modules/host';
 import { usePermissions } from '@modules/auth';
 import { usePageVisibility } from '@shared/index';
 import { useBilling } from '@modules/billing';
-import { useSettings } from '@modules/settings';
 
 export type LayoutProps = {
   children: React.ReactNode;
@@ -37,15 +35,11 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const currentOrg = useRef<string>();
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
-  );
-  const settingsDefaultOrg = useRecoilValue(
-    organizationSelectors.settingsDefaultOrg,
+    organizationSelectors.defaultOrganization,
   );
 
   const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
-  const { getUserSettings } = useUserSettings();
-  const { updateSettings } = useSettings();
+  const { userSettings, getUserSettings } = useUserSettings();
   const {
     client: mqttClient,
     connect: mqttConnect,
@@ -67,7 +61,7 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   useBilling();
 
   useEffect(() => {
-    getUserSettings();
+    if (!userSettings) getUserSettings();
   }, []);
 
   useEffect(() => {
@@ -105,8 +99,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       defaultOrganization?.id
     ) {
       currentOrg.current = defaultOrganization!.id;
-      if (settingsDefaultOrg?.id !== defaultOrganization?.id)
-        updateSettings('organization', { default: defaultOrganization });
       loadNodes();
       loadHosts();
       if (mqttClient?.connected) updateMqttSubscription();

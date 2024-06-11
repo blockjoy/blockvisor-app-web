@@ -5,7 +5,7 @@ import { isMobile } from 'react-device-detect';
 import { styles } from './SidebarMain.styles';
 import { Badge } from '@shared/components';
 import { layoutAtoms, layoutSelectors } from '@modules/layout';
-import { invitationAtoms, organizationAtoms } from '@modules/organization';
+import { invitationAtoms, organizationSelectors } from '@modules/organization';
 import { ROUTES } from '@shared/index';
 import { authSelectors } from '@modules/auth';
 import { billingSelectors } from '@modules/billing';
@@ -35,7 +35,7 @@ export default () => {
   const router = useRouter();
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
   const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useRecoilState(

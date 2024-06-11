@@ -5,7 +5,7 @@ import { useHostList } from './useHostList';
 import { toast } from 'react-toastify';
 import { authSelectors } from '@modules/auth';
 import {
-  organizationAtoms,
+  organizationSelectors,
   useSwitchOrganization,
 } from '@modules/organization';
 
@@ -13,7 +13,7 @@ export const useHostView = () => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const { switchOrganization } = useSwitchOrganization();

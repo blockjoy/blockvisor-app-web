@@ -1,6 +1,7 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
+import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import {
   hostAtoms,
@@ -9,14 +10,11 @@ import {
   hostSelectors,
 } from 'modules/host';
 import { useDefaultOrganization } from '@modules/organization';
-import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
 
 export const useHostList = () => {
   const router = useRouter();
 
   const orgId = useDefaultOrganization()?.defaultOrganization?.id!;
-
-  const [defaultHost, setDefaultHost] = useRecoilState(hostAtoms.defaultHost);
 
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
@@ -65,8 +63,6 @@ export const useHostList = () => {
       let hosts = response.hosts;
 
       setHostCount(hostCount);
-
-      if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
 
       if (queryParams.pagination.currentPage !== 0) {
         hosts = [...hostList!, ...hosts];

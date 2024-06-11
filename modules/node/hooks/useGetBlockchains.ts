@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import useSWR from 'swr';
 import { blockchainClient } from '@modules/grpc';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import { blockchainAtoms } from '@modules/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
@@ -12,7 +12,7 @@ type UseGetBlockchainsHook = {
 
 export const useGetBlockchains = (): UseGetBlockchainsHook => {
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const [blockchains, setBlockchains] = useRecoilState(
     blockchainAtoms.blockchains,
