@@ -16,48 +16,6 @@ export const styles = {
     cursor: pointer;
     opacity: 0.8;
   `,
-  allocation: (theme: ITheme) => css`
-    border: 1px solid ${theme.colorBorder};
-    border-radius: 6px;
-    padding: 2px 10px 8px;
-    margin-bottom: 16px;
-  `,
-  allocationError: (theme: ITheme) => css`
-    border-color: ${theme.colorDanger};
-  `,
-  allocationHeader: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    font-size: 12px;
-    padding: 4px 0 0;
-  `,
-  allocationHeaderRow: css`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 4px 0;
-  `,
-  allocationRow: css`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 0;
-  `,
-  allocationInput: (theme: ITheme) => css`
-    background: transparent;
-    border: 1px solid ${theme.colorBorder};
-    border-radius: 4px;
-    width: 40px;
-    height: 36px;
-    margin-left: auto;
-    outline: none;
-    color: ${theme.colorText};
-    text-align: center;
-
-    :focus {
-      border-color: ${theme.colorLabel};
-    }
-  `,
-
   row: css`
     display: flex;
     align-items: center;
@@ -89,7 +47,43 @@ export const styles = {
     top: 56px;
     overflow: visible;
   `,
+  dropdownHeader: css`
+    position: relative;
+  `,
+  dropdownEmpty: (theme: ITheme) => css`
+    padding: 10px;
+    color: ${theme.colorDefault};
+  `,
+  hideFullNodesInput: css`
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  `,
   ipStatus: css`
     opacity: 0;
+  `,
+  searchInput: (theme: ITheme) => css`
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+    width: 100%;
+    padding: 10px;
+    color: ${theme.colorText};
+    outline: none;
+    transition: 0.3s;
+
+    :focus,
+    :hover {
+      border-bottom-color: rgb(255 255 255 / 20%);
+    }
+
+    ::placehoder {
+      rgb(255 255 255 / 20%)
+    }
+
+    :is(:focus, :hover)::placeholder {
+      color: rgb(255 255 255 / 40%);
+    }
   `,
 };

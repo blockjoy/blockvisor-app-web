@@ -14,7 +14,6 @@ export * from './Page/PageSection';
 export * from './Page/PageSpinner/PageSpinner';
 export * from './Page/PageTitle';
 export * from './NetdataDashboard/NetdataDashboard';
-export * from './NodeQuantity/NodeQuantity';
 export * from './NodeStatus/NodeStatus';
 export * from './NodeStatus/NodeStatusName';
 export * from './NodeStatus/NodeStatusIcon';

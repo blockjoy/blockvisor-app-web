@@ -16,7 +16,6 @@ const nodeLauncher = atom<NodeLauncherState>({
     allowIps: [],
     denyIps: [],
     placement: {},
-    quantity: 1,
   },
 });
 

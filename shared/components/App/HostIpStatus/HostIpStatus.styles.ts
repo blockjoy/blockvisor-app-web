@@ -9,6 +9,7 @@ export const styles = {
     display: inline-flex;
     align-items: center;
     font-size: 11px;
+    white-space: nowrap;
 
     &::after {
       left: 10px;
