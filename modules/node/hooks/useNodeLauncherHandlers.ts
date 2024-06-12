@@ -237,7 +237,6 @@ export const useNodeLauncherHandlers = ({
 
   const launchNode = async (
     placement: NodePlacement,
-    launchDelay: number,
     nodesLaunched: number,
     onSuccess: (nodeId: string) => void,
   ) => {
@@ -257,8 +256,6 @@ export const useNodeLauncherHandlers = ({
       denyIps: nodeLauncherState.denyIps,
       placement,
     };
-
-    await delay(launchDelay);
 
     await createNode(
       params,
@@ -282,29 +279,34 @@ export const useNodeLauncherHandlers = ({
     let nodesLaunched = 0;
 
     if (selectedHosts?.length!) {
+      const nodeLaunchers = [];
+
       for (let nodeLauncherHost of selectedHosts!) {
         for (let i = 0; i < nodeLauncherHost.nodesToLaunch; i++) {
           nodesLaunched++;
-          await launchNode(
-            { hostId: nodeLauncherHost.host.id },
-            0,
-            nodesLaunched,
-            (nodeId) => {
-              navigate(
-                selectedHosts?.length === 1 &&
-                  nodeLauncherHost.nodesToLaunch === 1
-                  ? ROUTES.NODE(nodeId)
-                  : ROUTES.NODES,
-                () => {
-                  resetNodeLauncherState();
-                  resetSelectedVersion();
-                  resetSelectedNetwork();
-                },
-              );
-            },
+          nodeLaunchers.push(
+            launchNode(
+              { hostId: nodeLauncherHost.host.id },
+              nodesLaunched,
+              (nodeId) => {
+                navigate(
+                  selectedHosts?.length === 1 &&
+                    nodeLauncherHost.nodesToLaunch === 1
+                    ? ROUTES.NODE(nodeId)
+                    : ROUTES.NODES,
+                  () => {
+                    resetNodeLauncherState();
+                    resetSelectedVersion();
+                    resetSelectedNetwork();
+                  },
+                );
+              },
+            ),
           );
         }
       }
+
+      await Promise.all(nodeLaunchers);
     } else {
       const placement = {
         scheduler: {
@@ -314,7 +316,7 @@ export const useNodeLauncherHandlers = ({
         },
       };
 
-      launchNode(placement, 0, nodesLaunched, (nodeId: string) => {
+      launchNode(placement, nodesLaunched, (nodeId: string) => {
         navigate(ROUTES.NODE(nodeId), () => {
           resetNodeLauncherState();
           resetSelectedVersion();
