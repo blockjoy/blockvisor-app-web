@@ -12,8 +12,14 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './NodeLauncherSummaryDetails.styles';
 import { hostAtoms } from '@modules/host';
 import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
+import { authSelectors } from '@modules/auth';
 
-export const NodeLauncherSummaryDetails = () => {
+type Props = {
+  totalNodesToLaunch: number;
+};
+
+export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
@@ -61,6 +67,17 @@ export const NodeLauncherSummaryDetails = () => {
                 </span>
               </div>
             </li>
+            {isSuperUser && selectedHosts && (
+              <li>
+                <span css={styles.summaryIcon}>
+                  <IconCheckCircle />
+                </span>
+                <div>
+                  <label>Quantity</label>
+                  <span>{totalNodesToLaunch}</span>
+                </div>
+              </li>
+            )}
             <li>
               {isConfigValid && isNodeValid ? (
                 <span css={styles.summaryIcon}>
@@ -85,7 +102,7 @@ export const NodeLauncherSummaryDetails = () => {
           {(!isConfigValid || !isNodeValid) && (
             <>
               <h2 css={styles.missingFieldsTitle}>
-                The following information needs to be added:
+                The following needs to be added:
               </h2>
               <div css={styles.missingFields}>
                 {!isConfigValid

@@ -15,7 +15,6 @@ export type NodeLauncherState = {
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];
   placement: NodePlacement;
-  quantity: number | null;
 };
 
 export type NodeLauncherHost = {

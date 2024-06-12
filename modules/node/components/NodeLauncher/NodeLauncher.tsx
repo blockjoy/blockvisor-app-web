@@ -24,7 +24,6 @@ export const NodeLauncher = ({
     handleVersionChanged,
     handleNetworkChanged,
     handleFileUploaded,
-    handleQuantityChanged,
   } = useNodeLauncherHandlers({ fulfilReqs });
 
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
@@ -56,7 +55,6 @@ export const NodeLauncher = ({
                 onRegionChanged={handleRegionChanged}
                 onCreateNodeClicked={onCreateClick}
                 onRegionsLoaded={handleRegionsLoaded}
-                onQuantityChanged={handleQuantityChanged}
               />
             )}
           </>

@@ -56,7 +56,6 @@ interface IUseNodeLauncherHandlersHook {
   handleNetworkChanged: (network: string) => void;
   handleFileUploaded: (e: any) => void;
   handleCreateNodeClicked: () => void;
-  handleQuantityChanged: (quantity: number | null) => void;
 }
 
 export const useNodeLauncherHandlers = ({
@@ -236,18 +235,17 @@ export const useNodeLauncherHandlers = ({
     Mixpanel.track('Launch Node - Key File Uploaded');
   };
 
-  const handleQuantityChanged = (quantity: number | null) =>
-    setNodeLauncherState({
-      ...nodeLauncherState,
-      quantity,
-    });
-
   const launchNode = async (
     placement: NodePlacement,
     launchDelay: number,
     nodesLaunched: number,
     onSuccess: (nodeId: string) => void,
   ) => {
+    const totalNodesToLaunch = selectedHosts?.reduce(
+      (partialSum, host) => partialSum + host.nodesToLaunch,
+      0,
+    )!;
+
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.id,
       version: selectedVersion?.version!,
@@ -266,8 +264,8 @@ export const useNodeLauncherHandlers = ({
       params,
       (nodeId: string) => {
         Mixpanel.track('Launch Node - Node Launched');
-        if (nodeLauncherState.quantity! > 1) {
-          if (nodesLaunched === nodeLauncherState.quantity) {
+        if (totalNodesToLaunch > 1) {
+          if (nodesLaunched === totalNodesToLaunch) {
             toast.success('All nodes launched');
             onSuccess(nodeId);
           }
@@ -283,55 +281,46 @@ export const useNodeLauncherHandlers = ({
     setIsLaunching(true);
     let nodesLaunched = 0;
 
-    if (selectedHosts?.length! > 1) {
+    if (selectedHosts?.length!) {
       for (let nodeLauncherHost of selectedHosts!) {
         for (let i = 0; i < nodeLauncherHost.nodesToLaunch; i++) {
           nodesLaunched++;
           await launchNode(
             { hostId: nodeLauncherHost.host.id },
-            3000,
+            0,
             nodesLaunched,
-            () => {
-              navigate(ROUTES.NODES, () => {
-                resetNodeLauncherState();
-                resetSelectedVersion();
-                resetSelectedNetwork();
-              });
+            (nodeId) => {
+              navigate(
+                selectedHosts?.length === 1 &&
+                  nodeLauncherHost.nodesToLaunch === 1
+                  ? ROUTES.NODE(nodeId)
+                  : ROUTES.NODES,
+                () => {
+                  resetNodeLauncherState();
+                  resetSelectedVersion();
+                  resetSelectedNetwork();
+                },
+              );
             },
           );
         }
       }
     } else {
-      const placement = selectedHosts
-        ? { hostId: selectedHosts[0].host.id }
-        : {
-            scheduler: {
-              region: selectedRegion?.name!,
-              resource:
-                NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
-            },
-          };
+      const placement = {
+        scheduler: {
+          region: selectedRegion?.name!,
+          resource:
+            NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+        },
+      };
 
-      for (let i = 0; i < nodeLauncherState.quantity!; i++) {
-        if (nodeLauncherState.quantity! > 1) {
-          nodesLaunched++;
-          await launchNode(placement, 3000, nodesLaunched, () => {
-            navigate(ROUTES.NODES, () => {
-              resetNodeLauncherState();
-              resetSelectedVersion();
-              resetSelectedNetwork();
-            });
-          });
-        } else {
-          launchNode(placement, 0, nodesLaunched, (nodeId: string) => {
-            navigate(ROUTES.NODE(nodeId), () => {
-              resetNodeLauncherState();
-              resetSelectedVersion();
-              resetSelectedNetwork();
-            });
-          });
-        }
-      }
+      launchNode(placement, 0, nodesLaunched, (nodeId: string) => {
+        navigate(ROUTES.NODE(nodeId), () => {
+          resetNodeLauncherState();
+          resetSelectedVersion();
+          resetSelectedNetwork();
+        });
+      });
     }
   };
 
@@ -455,6 +444,5 @@ export const useNodeLauncherHandlers = ({
     handleNetworkChanged,
     handleFileUploaded,
     handleCreateNodeClicked,
-    handleQuantityChanged,
   };
 };

@@ -9,7 +9,6 @@ import {
   HostSelect,
   HostSelectMultiple,
   HubSpotForm,
-  NodeQuantity,
   OrganizationSelect,
   Pricing,
 } from '@shared/components';
@@ -36,7 +35,6 @@ type NodeLauncherSummaryProps = {
   ) => void;
   onRegionChanged: (region: Region | null) => void;
   onRegionsLoaded: (region: Region | null) => void;
-  onQuantityChanged: (quantity: number | null) => void;
 };
 
 export const NodeLauncherSummary = ({
@@ -45,7 +43,6 @@ export const NodeLauncherSummary = ({
   onHostsChanged,
   onRegionChanged,
   onRegionsLoaded,
-  onQuantityChanged,
 }: NodeLauncherSummaryProps) => {
   const hostList = useRecoilValue(hostAtoms.hostList);
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
@@ -81,37 +78,24 @@ export const NodeLauncherSummary = ({
     0,
   )!;
 
-  const totalHostAllocation = selectedHosts?.reduce(
+  const totalNodesToLaunch = selectedHosts?.reduce(
     (partialSum, host) => partialSum + host.nodesToLaunch,
     0,
   )!;
 
-  const isNodeQuantityMoreThanAvailableIps =
-    !selectedHosts || nodeLauncher.quantity! <= totalAvailableIps;
-
-  const isNodeQuantityValid =
-    nodeLauncher.quantity === totalHostAllocation ||
-    isNodeQuantityMoreThanAvailableIps;
-
-  const isHostAllocationValid =
-    !isSuperUser ||
+  const isNodeAllocationValid =
     !selectedHosts ||
-    selectedHosts?.length === 1 ||
-    (isNodeQuantityValid &&
-      selectedHosts?.every((h) => h.isValid) &&
-      totalHostAllocation === nodeLauncher.quantity);
+    (selectedHosts?.every((h) => h.isValid) && totalNodesToLaunch > 0);
 
   const isDisabled =
     !hasNetworkList ||
     !isNodeValid ||
     !isConfigValid ||
     Boolean(error) ||
-    nodeLauncher.quantity === null ||
     isLaunching ||
     isLoadingAllRegions !== 'finished' ||
     (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice) ||
-    !isHostAllocationValid ||
-    !isNodeQuantityValid;
+    !isNodeAllocationValid;
 
   const handleCreateNodeClicked = () => {
     if (!hasPermissionsToCreate) handleOpenHubSpot();
@@ -138,7 +122,7 @@ export const NodeLauncherSummary = ({
     <div css={styles.wrapper}>
       <FormHeader>Launch</FormHeader>
 
-      {isSuperUser && (
+      {/* {isSuperUser && (
         <>
           <FormLabel hint="Number of nodes that will be launched">
             Quantity
@@ -149,7 +133,7 @@ export const NodeLauncherSummary = ({
             onChange={onQuantityChanged}
           />
         </>
-      )}
+      )} */}
 
       <FormLabel>
         <span>Host{isSuperUser ? 's' : ''}</span>
@@ -161,9 +145,8 @@ export const NodeLauncherSummary = ({
       </FormLabel>
       {isSuperUser ? (
         <HostSelectMultiple
-          isValid={isHostAllocationValid}
+          isValid={isNodeAllocationValid}
           onChange={handleHostsChanged}
-          nodeQuantity={nodeLauncher.quantity!}
         />
       ) : (
         Boolean(hostList?.length) && (
@@ -194,7 +177,7 @@ export const NodeLauncherSummary = ({
       )}
 
       <FormLabel>Summary</FormLabel>
-      <NodeLauncherSummaryDetails />
+      <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
 
       {isEnabledBillingPreview && (
         <>
@@ -223,7 +206,7 @@ export const NodeLauncherSummary = ({
             <span>
               {isLaunching && !Boolean(error)
                 ? 'Launching'
-                : `Launch Your Node${nodeLauncher.quantity! > 1 ? 's' : ''}`}
+                : `Launch Your Node${totalNodesToLaunch > 1 ? 's' : ''}`}
             </span>
           </span>
         </button>
