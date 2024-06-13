@@ -57,7 +57,7 @@ class BlockchainClient {
       limit: pagination?.itemsPerPage! || 1000,
       sort: sort || [
         {
-          field: BlockchainSortField.BLOCKCHAIN_SORT_FIELD_NAME,
+          field: BlockchainSortField.BLOCKCHAIN_SORT_FIELD_DISPLAY_NAME,
           order: SortOrder.SORT_ORDER_ASCENDING,
         },
       ],
