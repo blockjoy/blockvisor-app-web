@@ -68,6 +68,7 @@ class BlockchainClient {
       const search: BlockchainSearch = {
         id: createSearch(keyword),
         name: createSearch(keyword),
+        displayName: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;
