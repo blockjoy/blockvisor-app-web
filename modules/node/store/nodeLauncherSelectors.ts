@@ -74,13 +74,13 @@ const isNodeValid = selector<boolean>({
   key: 'nodeLauncher.isNodeValid',
   get: ({ get }) => {
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
-    const selectedHost = get(nodeLauncherAtoms.selectedHost);
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
     const selectedRegion = get(nodeLauncherAtoms.selectedRegion);
 
     return Boolean(
       nodeLauncher.blockchainId &&
         nodeLauncher.nodeType &&
-        (selectedHost || selectedRegion),
+        (selectedHosts || selectedRegion),
     );
   },
 });
@@ -105,6 +105,18 @@ const isConfigValid = selector<boolean>({
             .every((type) => type.value),
         ))
     );
+  },
+});
+
+const totalNodesToLaunch = selector<number>({
+  key: 'nodeLauncher.totalNodesToLaunch',
+  get: ({ get }) => {
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
+
+    return selectedHosts?.reduce(
+      (partialSum, host) => partialSum + host.nodesToLaunch,
+      0,
+    )!;
   },
 });
 
@@ -154,6 +166,8 @@ export const nodeLauncherSelectors = {
 
   isNodeValid,
   isConfigValid,
+
+  totalNodesToLaunch,
 
   selectedBlockchain,
   selectedRegionByHost,

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -18,7 +18,7 @@ import {
   nodeLauncherSelectors,
 } from '@modules/node';
 import { styles } from './NodeLauncherProtocol.styles';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
+import { authSelectors } from '@modules/auth';
 
 type NodeLauncherProtocolProps = {
   onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
@@ -30,6 +30,7 @@ export const NodeLauncherProtocol = ({
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = useCallback((focus: boolean) => {
@@ -53,6 +54,12 @@ export const NodeLauncherProtocol = ({
     },
     [onProtocolSelected],
   );
+
+  useEffect(() => {
+    if (isSuperUser && blockchains?.length) {
+      handleSelect(blockchains[0], blockchains[0].nodeTypes[0].nodeType);
+    }
+  }, [isSuperUser && blockchains.length]);
 
   const handleBlockchainSelected = useCallback(
     (
@@ -85,9 +92,9 @@ export const NodeLauncherProtocol = ({
           <BlockchainIcon
             size="28px"
             hideTooltip
-            blockchainName={blockchain?.name}
+            blockchainName={blockchain.name}
           />
-          <p>{getBlockchainDisplayName(blockchain.name)}</p>
+          <p>{blockchain.displayName || blockchain.name}</p>
         </div>
         <div css={styles.nodeTypeButtons} className="node-type-buttons">
           {nodeTypes.map((nodeType) => {

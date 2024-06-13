@@ -1,6 +1,6 @@
 import { NetType } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   NodePlacement,
   NodeProperty,
@@ -15,6 +15,12 @@ export type NodeLauncherState = {
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];
   placement: NodePlacement;
+};
+
+export type NodeLauncherHost = {
+  nodesToLaunch: number;
+  host: Host;
+  isValid?: boolean;
 };
 
 export type CreateNodeParams = {

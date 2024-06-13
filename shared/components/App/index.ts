@@ -7,6 +7,7 @@ export * from './HostIps/HostIps';
 export * from './HostIpStatus/HostIpStatus';
 export * from './HostManagedBy/HostManagedBy';
 export * from './HostOs/HostOs';
+export * from './HostSelectMultiple/HostSelectMultiple';
 export * from './Layout/Layout';
 export * from './Page/PageHeader';
 export * from './Page/PageSection';

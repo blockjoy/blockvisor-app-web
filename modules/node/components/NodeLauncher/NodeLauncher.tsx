@@ -15,7 +15,7 @@ export const NodeLauncher = ({
   permissions,
 }: LauncherWithGuardProps) => {
   const {
-    handleHostChanged,
+    handleHostsChanged,
     handleRegionChanged,
     handleRegionsLoaded,
     handleProtocolSelected,
@@ -51,7 +51,7 @@ export const NodeLauncher = ({
             {hasSummary && (
               <NodeLauncherSummary
                 hasPermissionsToCreate={permissions.permitted}
-                onHostChanged={handleHostChanged}
+                onHostsChanged={handleHostsChanged}
                 onRegionChanged={handleRegionChanged}
                 onCreateNodeClicked={onCreateClick}
                 onRegionsLoaded={handleRegionsLoaded}
