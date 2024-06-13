@@ -52,6 +52,9 @@ export const NodeLauncherSummary = ({
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
+  const totalNodesToLaunch = useRecoilValue(
+    nodeLauncherSelectors.totalNodesToLaunch,
+  );
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
   const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
@@ -72,20 +75,9 @@ export const NodeLauncherSummary = ({
     setIsLaunching(false);
   }, []);
 
-  const totalAvailableIps = selectedHosts?.reduce(
-    (partialSum, host) =>
-      partialSum + host.host.ipAddresses.filter((ip) => !ip.assigned).length,
-    0,
-  )!;
-
-  const totalNodesToLaunch = selectedHosts?.reduce(
-    (partialSum, host) => partialSum + host.nodesToLaunch,
-    0,
-  )!;
-
   const isNodeAllocationValid =
     !selectedHosts ||
-    (selectedHosts?.every((h) => h.isValid) && totalNodesToLaunch > 0);
+    (selectedHosts?.every((h) => h.isValid) && totalNodesToLaunch! > 0);
 
   const isDisabled =
     !hasNetworkList ||
@@ -111,6 +103,7 @@ export const NodeLauncherSummary = ({
       {
         nodesToLaunch: 1,
         host: host!,
+        isValid: true,
       },
     ]);
   };
@@ -121,20 +114,6 @@ export const NodeLauncherSummary = ({
   return (
     <div css={styles.wrapper}>
       <FormHeader>Launch</FormHeader>
-
-      {/* {isSuperUser && (
-        <>
-          <FormLabel hint="Number of nodes that will be launched">
-            Quantity
-          </FormLabel>
-          <NodeQuantity
-            isValid={isNodeQuantityMoreThanAvailableIps}
-            quantity={nodeLauncher.quantity!}
-            onChange={onQuantityChanged}
-          />
-        </>
-      )} */}
-
       <FormLabel>
         <span>Host{isSuperUser ? 's' : ''}</span>
         {selectedHosts !== null ? (

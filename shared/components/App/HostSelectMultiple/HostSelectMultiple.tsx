@@ -47,7 +47,7 @@ export const HostSelectMultiple = ({ isValid, onChange }: Props) => {
     } else {
       hostsCopy.push({
         host,
-        isValid,
+        isValid: true,
         nodesToLaunch: 1,
       });
     }
