@@ -58,7 +58,6 @@ export const AdminBlockchains = () => {
       return {
         ...blockchain,
         nodes: blockchain.stats?.nodeCount,
-        name: blockchain.displayName || blockchain.name,
         nodeTypes: blockchain.nodeTypes.length,
         createdAt: <DateTime date={blockchain.createdAt!} />,
         visibility: BlockchainVisibility[blockchain.visibility]
