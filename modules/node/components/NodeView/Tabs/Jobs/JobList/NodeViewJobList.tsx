@@ -75,7 +75,7 @@ export const NodeViewJobList = () => {
   };
 
   return sortedRows.length ? (
-    <section css={spacing.top.small}>
+    <section css={[styles.wrapper, spacing.top.small]}>
       <Table
         isLoading="finished"
         headers={headers}
