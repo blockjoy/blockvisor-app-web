@@ -3,9 +3,11 @@ import { useRouter } from 'next/router';
 import { useNodeView } from '@modules/node';
 import { ActionsDropdown, ActionsDropdownItem } from '@shared/components';
 import { authSelectors } from '@modules/auth';
+import { ContainerStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconStart from '@public/assets/icons/app/NodeStart.svg';
+import IconRestart from '@public/assets/icons/app/NodeRestart.svg';
 import IconWarning from '@public/assets/icons/common/Warning.svg';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
@@ -66,7 +68,15 @@ export const NodeViewHeaderActions = ({
   }
 
   if (canStart || canStartAdmin) {
-    items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
+    if (node?.containerStatus === ContainerStatus.CONTAINER_STATUS_STOPPED) {
+      items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
+    } else {
+      items.push({
+        name: 'Restart',
+        icon: <IconRestart />,
+        onClick: handleStart,
+      });
+    }
   }
 
   if (canReport) {
