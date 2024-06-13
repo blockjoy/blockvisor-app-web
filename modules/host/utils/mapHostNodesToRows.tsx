@@ -2,7 +2,6 @@ import { TableBlock } from '@shared/components';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 
 export const mapHostNodesToRows = (nodeList: Node[]) => {
@@ -45,9 +44,9 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
           component: (
             <>
               <TableBlock
-                middleRow={`${getBlockchainDisplayName(
-                  node.blockchainName,
-                )} ${convertNodeTypeToName(node.nodeType)}`}
+                middleRow={`${node.blockchainName} ${convertNodeTypeToName(
+                  node.nodeType,
+                )}`}
                 topRow={node.name}
                 bottomRow={node?.ip!}
               />

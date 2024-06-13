@@ -3,7 +3,6 @@ import { TableGridCell, NodeStatus } from '@shared/components';
 import { BlockchainIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 const styles = {
   blockchainNetwork: css`
@@ -40,7 +39,7 @@ export const mapNodeListToGrid = (
           }
           middleRow={
             <p css={styles.blockchainNetwork}>
-              {getBlockchainDisplayName(node.blockchainName)} | {node.network}
+              {node.blockchainName} | {node.network}
             </p>
           }
         />

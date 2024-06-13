@@ -18,7 +18,6 @@ import {
   nodeLauncherSelectors,
 } from '@modules/node';
 import { styles } from './NodeLauncherProtocol.styles';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 import { authSelectors } from '@modules/auth';
 
 type NodeLauncherProtocolProps = {
@@ -93,9 +92,9 @@ export const NodeLauncherProtocol = ({
           <BlockchainIcon
             size="28px"
             hideTooltip
-            blockchainName={blockchain?.name}
+            blockchainName={blockchain.name}
           />
-          <p>{getBlockchainDisplayName(blockchain.name)}</p>
+          <p>{blockchain.displayName || blockchain.name}</p>
         </div>
         <div css={styles.nodeTypeButtons} className="node-type-buttons">
           {nodeTypes.map((nodeType) => {

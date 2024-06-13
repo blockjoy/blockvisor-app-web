@@ -11,7 +11,6 @@ import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './NodeLauncherSummaryDetails.styles';
 import { hostAtoms } from '@modules/host';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 import { authSelectors } from '@modules/auth';
 
 type Props = {
@@ -33,6 +32,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
 
   const { blockchainId, nodeType, properties } = nodeLauncher;
 
+  const blockchain = blockchains?.find((b) => b.id === blockchainId);
+
   return (
     <div css={styles.summary}>
       {!hasNetworkList ? (
@@ -49,9 +50,9 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
               <div>
                 <label>Blockchain</label>
                 <span>
-                  {getBlockchainDisplayName(
-                    blockchains?.find((b) => b.id === blockchainId)?.name!,
-                  ) || 'Not Selected'}
+                  {blockchain?.displayName ||
+                    blockchain?.name ||
+                    'Not Selected'}
                 </span>
               </div>
             </li>

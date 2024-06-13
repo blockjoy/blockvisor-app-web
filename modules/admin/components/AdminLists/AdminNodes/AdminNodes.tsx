@@ -28,7 +28,6 @@ import {
   createDropdownValuesFromEnum,
 } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { getBlockchainDisplayName } from '@shared/utils/getBlockchainDisplayName';
 
 const columns: AdminListColumn[] = [
   {
@@ -197,7 +196,7 @@ export const AdminNodes = () => {
         syncStatus: (
           <NodeStatus status={node.syncStatus} type="sync" hasBorder={false} />
         ),
-        blockchainName: getBlockchainDisplayName(node.blockchainName),
+        blockchainName: node.blockchainName,
         nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
         region: node.placement?.scheduler?.region,
         createdAt: <DateTime date={node.createdAt!} />,
