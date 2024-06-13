@@ -108,6 +108,18 @@ const isConfigValid = selector<boolean>({
   },
 });
 
+const totalNodesToLaunch = selector<number>({
+  key: 'nodeLauncher.totalNodesToLaunch',
+  get: ({ get }) => {
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
+
+    return selectedHosts?.reduce(
+      (partialSum, host) => partialSum + host.nodesToLaunch,
+      0,
+    )!;
+  },
+});
+
 const selectedBlockchain = selectorFamily<Blockchain | null, string>({
   key: 'nodeLauncher.blockchain',
   get:
@@ -154,6 +166,8 @@ export const nodeLauncherSelectors = {
 
   isNodeValid,
   isConfigValid,
+
+  totalNodesToLaunch,
 
   selectedBlockchain,
   selectedRegionByHost,
