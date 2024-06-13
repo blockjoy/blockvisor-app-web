@@ -11,7 +11,18 @@ import {
 import { DateTime } from '@shared/components';
 
 const columns: AdminListColumn[] = [
-  { name: 'name', isVisible: true, width: '200px' },
+  {
+    name: 'name',
+    isVisible: true,
+    width: '200px',
+    sortField: BlockchainSortField.BLOCKCHAIN_SORT_FIELD_NAME,
+  },
+  {
+    name: 'displayName',
+    isVisible: true,
+    width: '200px',
+    sortField: BlockchainSortField.BLOCKCHAIN_SORT_FIELD_DISPLAY_NAME,
+  },
   { name: 'ticker', isVisible: true, width: '120px' },
   { name: 'nodes', isVisible: true, width: '80px' },
   { name: 'nodeTypes', isVisible: true, width: '120px' },
