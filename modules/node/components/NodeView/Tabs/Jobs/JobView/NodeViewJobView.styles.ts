@@ -4,7 +4,7 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
-    @media ${breakpoints.fromXLrg} {
+    @media ${breakpoints.fromXHuge} {
       padding-right: 20px;
     }
   `,

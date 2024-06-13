@@ -2,14 +2,7 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams, prop) => searchParams.get(prop),
 });
 
-var { id, name, disk_space_name, is_node } = params;
-
-// TODO: Handle trailing slashes
-// const diskSpaceNameWithoutTrailingSlash = disk_space_name?.endsWith('/') 
-//   ? disk_space_name.slice(0, disk_space_name.length - 1) 
-//   : disk_space_name;
-
-const diskSpaceName = disk_space_name?.replace(/\//g, '_');
+var { id, name, is_node } = params;
 
 const sidePanelTextonlyWidth = "160px",
       sidePanelTextonlyHeight = "55px",
@@ -214,22 +207,6 @@ const createChart = (chart, nextHost) => {
   return element;
 }
 
-const createDiskSpaceChart = (nextHost) => {
-  const element = document.createElement("div");
-  element.setAttribute("data-netdata", `disk_space.${diskSpaceName}`);
-  element.setAttribute("data-chart-library", "d3pie");
-  element.setAttribute("data-host", nextHost);
-  element.setAttribute("data-colors", "#bff589 #5F615D #a7a7a7");
-  element.setAttribute("data-d3pie-pieinnerradius", "90%");
-  element.setAttribute("data-d3pie-pieouterradius", "100%");
-  element.setAttribute("data-height", "200px");
-  element.setAttribute("data-width", "100%");
-  element.setAttribute("data-after", after);
-  element.setAttribute("data-points", "60");
-  element.setAttribute("data-dt-element-name", "time901");
-  return element;
-}
-
 var onLoad = (nextHost) => {
   charts.forEach((block) => {
 
@@ -271,12 +248,4 @@ var onLoad = (nextHost) => {
 
     main.appendChild(row);
   });
-
-  const diskSpaceChart = createDiskSpaceChart(nextHost);
-  const diskPie = document.querySelector(".disk-pie");
-  diskPie.appendChild(diskSpaceChart);
 }
-
-
-// onLoad();
-// document.addEventListener("DOMContentLoaded", onLoad);

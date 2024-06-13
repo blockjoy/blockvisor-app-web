@@ -1,8 +1,13 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css``,
+  wrapper: css`
+    @media ${breakpoints.fromXHuge} {
+      padding-right: 20px;
+    }
+  `,
   status: (theme: ITheme) => css`
     display: inline-block;
     padding: 2px 6px;
