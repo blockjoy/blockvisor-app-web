@@ -6,7 +6,6 @@ import { Tooltip, SvgIcon } from '@shared/components';
 type Props = {
   blockchainId?: string;
   blockchainName?: string;
-  blockchainDisplayName?: string;
   hideTooltip?: boolean;
   size?: string;
 };
@@ -135,9 +134,12 @@ const IconTezos = dynamic(
   () => import(`@public/assets/icons/blockchain/Tezos.svg`),
 );
 
+const IconZKSync = dynamic(
+  () => import(`@public/assets/icons/blockchain/ZKSync.svg`),
+);
+
 export const BlockchainIcon = ({
   blockchainName,
-  blockchainDisplayName,
   hideTooltip,
   size = '24px',
 }: Props) => {
@@ -242,6 +244,9 @@ export const BlockchainIcon = ({
     case 'tezos':
       Component = IconTezos;
       break;
+    case 'zksync':
+      Component = IconZKSync;
+      break;
     default:
       Component = IconBlockchain;
       break;
@@ -250,11 +255,7 @@ export const BlockchainIcon = ({
   return (
     <span css={styles.icon(size)}>
       {!hideTooltip && (
-        <Tooltip
-          noWrap
-          tooltip={blockchainDisplayName || blockchainName}
-          customCss={[styles.tooltip]}
-        />
+        <Tooltip noWrap tooltip={blockchainName} customCss={[styles.tooltip]} />
       )}
       <SvgIcon isDefaultColor size={size}>
         <Suspense fallback={null}>
