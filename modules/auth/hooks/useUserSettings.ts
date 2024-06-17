@@ -1,15 +1,11 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
+import useSWR from 'swr';
 import { userClient } from '@modules/grpc';
 import { authAtoms } from '@modules/auth';
 
 type UseUserSettingsHook = {
-  userSettings: UserSettings;
-  getUserSettings: () => Promise<void>;
-  updateUserSettings: (
-    name: keyof UserSettings,
-    value: string,
-  ) => Promise<void>;
-  deleteUserSettings: (name: keyof UserSettings) => Promise<void>;
+  userSettings: UserSettings | null;
+  userSettingsLoadingState: LoadingState;
 };
 
 export const useUserSettings = (): UseUserSettingsHook => {
@@ -17,48 +13,32 @@ export const useUserSettings = (): UseUserSettingsHook => {
   const [userSettings, setUserSettings] = useRecoilState(
     authAtoms.userSettings,
   );
+  const [userSettingsLoadingState, setUserSettingsLoadingState] =
+    useRecoilState(authAtoms.userSettingsLoadingState);
 
-  const getUserSettings = async () => {
-    try {
-      const response = await userClient.getSettings(user?.id!);
+  const fetcher = async () => {
+    setUserSettingsLoadingState('loading');
 
-      setUserSettings(response);
-    } catch (err: any) {
-      console.log('Error while fetching User settings', err);
-    }
+    return await userClient.getSettings(user?.id!);
   };
 
-  const updateUserSettings = async (name: string, value: string) => {
-    try {
-      const response = await userClient.updateSettings(user?.id!, name, value);
+  useSWR(user?.id ? `settings_${user?.id}` : null, fetcher, {
+    revalidateOnFocus: false,
 
-      setUserSettings((userSettings) => ({
-        ...userSettings,
-        ...response,
-      }));
-    } catch (err: any) {
-      console.log('Error while updating User settings', err);
-    }
-  };
-
-  const deleteUserSettings = async (name: string) => {
-    try {
-      await userClient.deleteSettings(user?.id!, name);
-      setUserSettings((userSettings) => {
-        const updatedSettings = { ...userSettings };
-        delete updatedSettings[name];
-        return updatedSettings;
-      });
-    } catch (err: any) {
-      console.log('Error while deleting User settings', err);
-    }
-  };
+    onSuccess: (data) => {
+      console.log('getUserSettingsResponse: ', data);
+      setUserSettings(data);
+      setUserSettingsLoadingState('finished');
+    },
+    onError: (error) => {
+      console.log('getUserSettingsError: ', error);
+      setUserSettings({});
+      setUserSettingsLoadingState('finished');
+    },
+  });
 
   return {
     userSettings,
-
-    getUserSettings,
-    updateUserSettings,
-    deleteUserSettings,
+    userSettingsLoadingState,
   };
 };

@@ -1,6 +1,5 @@
 import { useRecoilValue } from 'recoil';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { useRouter } from 'next/router';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { ROUTES } from '@shared/constants/routes';
@@ -14,7 +13,6 @@ import {
   useSwitchOrganization,
   organizationSelectors,
 } from '@modules/organization';
-import { useSettings } from '@modules/settings';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { styles } from './OrganizationPicker.styles';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
@@ -38,15 +36,13 @@ export const OrganizationPicker = ({
   const allOrganizations = useRecoilValue(
     organizationSelectors.allOrganizationsSorted,
   );
-
-  const [isOpen, setIsOpen] = useState(false);
-
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const { switchOrganization } = useSwitchOrganization();
-  const { updateSettings } = useSettings();
 
   const handleChange = async (nextOrg: Org | null) => {
     if (!nextOrg) return;
@@ -57,8 +53,6 @@ export const OrganizationPicker = ({
     )!;
 
     setIsOpen(false);
-
-    if (isMobile) updateSettings('layout', { 'sidebar.isOpen': false });
 
     if (!id) return;
 

@@ -1,4 +1,5 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { isMobile } from 'react-device-detect';
 import {
   Skeleton,
   GridTableViewPicker,
@@ -6,11 +7,14 @@ import {
   Alert,
 } from '@shared/components';
 import { nodeAtoms } from '@modules/node';
-import { layoutSelectors } from '@modules/layout';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { styles } from './styles';
 import { useSettings } from '@modules/settings';
 
 export const NodeListHeader = () => {
+  const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
+    layoutAtoms.isNodeFiltersOpenMobile,
+  );
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
   const nodeCount = useRecoilValue(nodeAtoms.nodeCount);
   const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
@@ -20,7 +24,8 @@ export const NodeListHeader = () => {
   const { updateSettings } = useSettings();
 
   const handleFilterCollapseToggled = () => {
-    updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
+    if (isMobile) setIsFiltersOpenMobile(!isFiltersOpenMobile);
+    else updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
   };
 
   const handleGridTableViewChanged = (type: View) => {

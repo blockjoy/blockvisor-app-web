@@ -1,5 +1,4 @@
 import { atom } from 'recoil';
-import { localStorageEffect } from 'utils/store/persist';
 
 const user = atom<User | null>({
   key: 'auth.user',
@@ -27,10 +26,9 @@ const permissionsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const userSettings = atom<UserSettings>({
+const userSettings = atom<UserSettings | null>({
   key: 'auth.user.settings',
-  default: {},
-  effects: [localStorageEffect('user.settings')],
+  default: null,
 });
 
 const userSettingsLoadingState = atom<LoadingState>({

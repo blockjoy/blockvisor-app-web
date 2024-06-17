@@ -1,5 +1,5 @@
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { FormEvent, useMemo, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
@@ -21,7 +21,7 @@ import {
   blockchainAtoms,
   nodeSelectors,
 } from '@modules/node';
-import { layoutSelectors } from '@modules/layout';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
 
 export const NodeFilters = () => {
@@ -48,14 +48,14 @@ export const NodeFilters = () => {
   const hasBlockchainError = useRecoilValue(
     blockchainSelectors.blockchainsHasError,
   );
-
   const nodeListLoadingState = useRecoilValue(nodeAtoms.isLoading);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
-
   const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
-
+  const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
+    layoutAtoms.isNodeFiltersOpenMobile,
+  );
   const filtersBlockchainSelectedIds = useRecoilValue(
     nodeSelectors.filtersBlockchainSelectedIds,
   );
@@ -63,10 +63,6 @@ export const NodeFilters = () => {
   const [openFilterId, setOpenFilterId] = useState('');
 
   const { updateSettings } = useSettings();
-
-  useEffect(() => {
-    if (isMobile) updateSettings('layout', { 'nodes.filters.isOpen': false });
-  }, []);
 
   const hasFiltersApplied =
     filters.some((filter) =>
@@ -88,7 +84,8 @@ export const NodeFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
+    if (isMobile) setIsFiltersOpenMobile(!isFiltersOpenMobile);
+    else updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
   };
 
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
@@ -105,21 +102,18 @@ export const NodeFilters = () => {
   )
     isCompleted.current = true;
 
+  const isOpen = isMobile ? isFiltersOpenMobile : isFiltersOpen;
+
   return (
-    <div
-      css={[
-        styles.outerWrapper,
-        !isFiltersOpen && styles.outerWrapperCollapsed,
-      ]}
-    >
+    <div css={[styles.outerWrapper, !isOpen && styles.outerWrapperCollapsed]}>
       <FiltersHeader
         isLoading={!isCompleted.current}
         filtersTotal={tempFiltersTotal}
-        isFiltersOpen={isFiltersOpen}
+        isFiltersOpen={isOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
       {!isCompleted.current ? (
-        isFiltersOpen && (
+        isOpen && (
           <div css={[styles.skeleton]}>
             <SkeletonGrid>
               <Skeleton width="80%" />
@@ -128,7 +122,7 @@ export const NodeFilters = () => {
           </div>
         )
       ) : (
-        <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
+        <div css={[styles.wrapper, isOpen && styles.wrapperOpen]}>
           <form css={styles.form}>
             <Search
               onInput={handleSearch}

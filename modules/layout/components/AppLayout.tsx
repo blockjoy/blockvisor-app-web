@@ -1,29 +1,23 @@
-import { useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRecoilValue } from 'recoil';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
-import {
-  useIdentityRepository,
-  useRefreshToken,
-  useUserSettings,
-} from '@modules/auth';
+import { useIdentityRepository } from '@modules/auth';
 import {
   organizationSelectors,
-  useGetOrganizations,
   useInvitations,
   useProvisionToken,
 } from '@modules/organization';
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
-import { usePermissions } from '@modules/auth';
-import { usePageVisibility } from '@shared/index';
 import { useBilling } from '@modules/billing';
+import { MasterLayout } from '@modules/layout';
 
 export type LayoutProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   isPageFlex?: boolean;
   pageTitle?: string;
 };
@@ -38,8 +32,6 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     organizationSelectors.defaultOrganization,
   );
 
-  const { refreshToken, removeRefreshTokenCall } = useRefreshToken();
-  const { userSettings, getUserSettings } = useUserSettings();
   const {
     client: mqttClient,
     connect: mqttConnect,
@@ -47,42 +39,17 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     updateSubscription: updateMqttSubscription,
   } = useMqtt();
   const { getReceivedInvitations } = useInvitations();
-  const { getOrganizations, organizations } = useGetOrganizations();
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
 
-  usePageVisibility({
-    onVisible: refreshToken,
-  });
-
-  usePermissions();
   useGetBlockchains();
   useBilling();
 
   useEffect(() => {
-    if (!userSettings) getUserSettings();
-  }, []);
-
-  useEffect(() => {
-    const fetchReceivedInvitations = async () => {
-      if (!organizations.length) await getOrganizations(true);
+    (async () => {
       await getReceivedInvitations(user?.email!);
-    };
-
-    fetchReceivedInvitations();
-  }, []);
-
-  useEffect(() => {
-    try {
-      refreshToken();
-    } catch (error: any) {
-      console.error('Error while refreshing the token');
-    }
-
-    return () => {
-      removeRefreshTokenCall();
-    };
+    })();
   }, []);
 
   useEffect(() => {
@@ -106,13 +73,13 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, [defaultOrganization?.id]);
 
   return (
-    <>
+    <MasterLayout>
       <Head>
         <title>{pageTitle}</title>
       </Head>
       <Burger />
       <Sidebar />
-      {defaultOrganization?.id && <Page isFlex={isPageFlex}>{children}</Page>}
-    </>
+      <Page isFlex={isPageFlex}>{children}</Page>
+    </MasterLayout>
   );
 };

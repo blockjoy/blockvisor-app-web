@@ -5,7 +5,7 @@ const layout = selector<LayoutSettings>({
   key: 'layout',
   get: ({ get }) => {
     const userSettings = get(authAtoms.userSettings);
-    if (!userSettings.hasOwnProperty('layout')) return {};
+    if (!userSettings?.hasOwnProperty('layout')) return {};
 
     return JSON.parse(userSettings?.layout ?? '{}');
   },

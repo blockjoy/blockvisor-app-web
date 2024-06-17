@@ -18,7 +18,7 @@ const settings = selector<NodeSettings>({
   key: 'node.settings',
   get: ({ get }) => {
     const userSettings = get(authAtoms.userSettings);
-    if (!userSettings.hasOwnProperty('nodes')) return {};
+    if (!userSettings?.hasOwnProperty('nodes')) return {};
 
     return JSON.parse(userSettings?.nodes ?? '{}');
   },

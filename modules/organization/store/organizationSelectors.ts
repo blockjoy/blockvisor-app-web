@@ -10,7 +10,7 @@ const settings = selector<OrganizationSettings>({
   key: 'organization.settings',
   get: ({ get }) => {
     const userSettings = get(authAtoms.userSettings);
-    if (!userSettings.hasOwnProperty('organization')) return {};
+    if (!userSettings?.hasOwnProperty('organization')) return {};
 
     return JSON.parse(userSettings?.organization ?? '{}');
   },

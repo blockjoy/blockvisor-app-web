@@ -26,10 +26,10 @@ export function LoginForm() {
   const { verified, redirect, forgot, invitation_id, invited } = router.query;
 
   const user = useRecoilValue(authAtoms.user);
+  const userSettings = useRecoilValue(authAtoms.userSettings);
 
   const { organizations, getOrganizations } = useGetOrganizations();
   const signIn = useSignIn();
-  const { userSettings, getUserSettings } = useUserSettings();
   const { defaultOrganization, setDefaultOrganization } =
     useDefaultOrganization();
 
@@ -43,6 +43,7 @@ export function LoginForm() {
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
 
+  useUserSettings();
   useBilling();
 
   const handleIconClick = () => {
@@ -79,7 +80,6 @@ export function LoginForm() {
   useEffect(() => {
     if (user?.id)
       (async () => {
-        await getUserSettings();
         await getOrganizations();
 
         handleRedirect();

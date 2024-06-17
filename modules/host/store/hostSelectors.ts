@@ -11,7 +11,7 @@ const settings = selector<HostSettings>({
   key: 'host.settings',
   get: ({ get }) => {
     const userSettings = get(authAtoms.userSettings);
-    if (!userSettings.hasOwnProperty('hosts')) return {};
+    if (!userSettings?.hasOwnProperty('hosts')) return {};
 
     return JSON.parse(userSettings?.hosts ?? '{}');
   },
