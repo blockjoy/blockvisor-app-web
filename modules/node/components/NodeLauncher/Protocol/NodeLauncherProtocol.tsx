@@ -92,9 +92,9 @@ export const NodeLauncherProtocol = ({
           <BlockchainIcon
             size="28px"
             hideTooltip
-            blockchainName={blockchain.name}
+            blockchainName={blockchain.displayName}
           />
-          <p>{blockchain.displayName || blockchain.name}</p>
+          <p>{blockchain.displayName}</p>
         </div>
         <div css={styles.nodeTypeButtons} className="node-type-buttons">
           {nodeTypes.map((nodeType) => {

@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const HostSelectMultiple = ({ isValid, onChange }: Props) => {
-  const hostList = useRecoilValue(hostAtoms.hostList);
+  const hostList = useRecoilValue(hostAtoms.allHosts);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
 
   const searchRef = useRef<HTMLInputElement>(null);
