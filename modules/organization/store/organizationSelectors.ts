@@ -20,8 +20,21 @@ const defaultOrganization = selector<DefaultOrganization | null>({
   key: 'organization.settings.default',
   get: ({ get }) => {
     const orgSettings = get(settings);
+    const organizations = get(organizationAtoms.allOrganizations);
 
-    return orgSettings?.default ?? null;
+    const defOrg = orgSettings?.default ?? null;
+
+    if (organizations?.length && defOrg) {
+      const org = organizations.find((org) => org?.id === defOrg?.id);
+
+      if (!org)
+        return {
+          id: organizations[0].id,
+          name: organizations[0].name,
+        };
+    }
+
+    return defOrg;
   },
 });
 
