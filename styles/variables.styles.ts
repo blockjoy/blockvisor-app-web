@@ -1,22 +1,23 @@
+import { viewportBreakpoints } from '@shared/constants/viewport';
 /**
  * Breakpoint values without @media tags
  */
 
 export const breakpoints = {
-  fromTny: 'screen and (min-width: 360px)',
-  toTny: 'screen and (max-width: 359px)',
-  fromSml: 'screen and (min-width: 568px)',
-  toSml: 'screen and (max-width: 567px)',
-  fromMed: 'screen and (min-width: 768px)',
-  toMed: 'screen and (max-width: 767px)',
-  fromLrg: 'screen and (min-width: 880px)',
-  toLrg: 'screen and (max-width: 879px)',
-  fromXLrg: 'screen and (min-width: 1200px)',
-  toXlrg: 'screen and (max-width: 1199px)',
-  fromHuge: 'screen and (min-width: 1360px)',
-  toHuge: 'screen and (max-width: 1359px)',
-  fromXHuge: 'screen and (min-width: 1600px)',
-  toXHuge: 'screen and (max-width: 1599px)',
+  fromTny: `screen and (min-width: ${viewportBreakpoints.tny}px)`,
+  toTny: `screen and (max-width: ${viewportBreakpoints.tny - 1}px)`,
+  fromSml: `screen and (min-width: ${viewportBreakpoints.sml}px)`,
+  toSml: `screen and (max-width: ${viewportBreakpoints.sml - 1}px)`,
+  fromMed: `screen and (min-width: ${viewportBreakpoints.med}px)`,
+  toMed: `screen and (max-width: ${viewportBreakpoints.med - 1}px)`,
+  fromLrg: `screen and (min-width: ${viewportBreakpoints.lrg}px)`,
+  toLrg: `screen and (max-width: ${viewportBreakpoints.lrg - 1}px)`,
+  fromXLrg: `screen and (min-width: ${viewportBreakpoints.xLrg}px)`,
+  toXlrg: `screen and (max-width: ${viewportBreakpoints.xLrg - 1}px)`,
+  fromHuge: `screen and (min-width: ${viewportBreakpoints.huge}px)`,
+  toHuge: `screen and (max-width: ${viewportBreakpoints.huge - 1}px)`,
+  fromXHuge: `screen and (min-width: ${viewportBreakpoints.xHuge}px)`,
+  toXHuge: `screen and (max-width: ${viewportBreakpoints.xHuge - 1}px)`,
 };
 
 /**

@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { isMobile } from 'react-device-detect';
 import { styles } from './HostFilters.styles';
 import {
   Skeleton,
@@ -16,6 +15,7 @@ import { hostAtoms, useHostUIContext, useHostFilters } from '@modules/host';
 import { blockchainAtoms } from '@modules/node';
 import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
+import { useViewport } from '@shared/index';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 
@@ -52,6 +52,7 @@ export const HostFilters = () => {
   const [openFilterId, setOpenFilterId] = useState('');
 
   const { updateSettings } = useSettings();
+  const { isXlrg } = useViewport();
 
   const hasFiltersApplied =
     filters.some((filter) => {
@@ -79,7 +80,7 @@ export const HostFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    if (isMobile) setIsFiltersOpenMobile(!isFiltersOpenMobile);
+    if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
     else updateSettings('layout', { 'hosts.filters.isOpen': !isFiltersOpen });
   };
 
@@ -91,7 +92,7 @@ export const HostFilters = () => {
   )
     isCompleted.current = true;
 
-  const isOpen = isMobile ? isFiltersOpenMobile : isFiltersOpen;
+  const isOpen = isXlrg ? isFiltersOpenMobile : isFiltersOpen;
 
   return (
     <div css={[styles.outerWrapper, isOpen && styles.outerWrapperCollapsed]}>
