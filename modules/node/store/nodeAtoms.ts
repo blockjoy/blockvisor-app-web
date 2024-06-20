@@ -1,19 +1,12 @@
 import { atom } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { BlockchainSimpleWRegion } from '@modules/node';
 import { localStorageEffect } from 'utils/store/persist';
-import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 
 const activeNode = atom<Node | null>({
   key: 'node.activeNode',
   default: null,
-});
-
-const activeListType = atom<string | 'table' | 'grid'>({
-  key: 'node.activeListType',
-  default: 'grid',
 });
 
 const nodeList = atom<Node[]>({
@@ -76,21 +69,15 @@ const selectedSKU = atom<string>({
   default: '',
 });
 
-const isFiltersOpen = atom<boolean>({
-  key: 'node.filters.isOpen',
-  default: false,
-  effects: [localStorageEffect('node.filters.isOpen')],
-});
-
-const filters = atom<UINodeFilterCriteria>({
-  key: 'node.filters',
-  default: NODE_FILTERS_DEFAULT,
-  effects: [localStorageEffect('node.filters')],
-});
-
 const filtersTempTotal = atom<number>({
   key: 'node.filters.temp.total',
   default: 0,
+});
+
+const filtersSearchQuery = atom<string>({
+  key: 'node.filters.searchQuery',
+  default: '',
+  effects: [localStorageEffect('node.filters.searchQuery')],
 });
 
 export const nodeAtoms = {
@@ -100,11 +87,9 @@ export const nodeAtoms = {
   isLoading,
   isLoadingActiveNode,
   selectedSKU,
-  activeListType,
 
-  isFiltersOpen,
-  filters,
   filtersTempTotal,
+  filtersSearchQuery,
 
   regions,
   regionsLoadingState,

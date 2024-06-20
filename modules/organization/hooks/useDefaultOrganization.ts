@@ -1,12 +1,15 @@
+import { useRecoilValue } from 'recoil';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { useSettings } from '@modules/settings';
 import { sort } from '@shared/components';
-import { useRecoilState } from 'recoil';
-import { organizationAtoms } from '../store/organizationAtoms';
+import { organizationSelectors } from '@modules/organization';
 
 export function useDefaultOrganization() {
-  const [defaultOrganization, setDefaultOrganization] = useRecoilState(
-    organizationAtoms.defaultOrganization,
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
   );
+
+  const { updateSettings } = useSettings();
 
   const getDefaultOrganization = async (organizations: Org[]) => {
     const doesLocalStorageDefaultOrgExistInList = organizations.find(
@@ -31,6 +34,12 @@ export function useDefaultOrganization() {
 
       return newDefaultOrg;
     }
+  };
+
+  const setDefaultOrganization = async (organization: DefaultOrganization) => {
+    await updateSettings('organization', {
+      default: organization,
+    });
   };
 
   return {

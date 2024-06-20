@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   Alert,
   GridTableViewPicker,
@@ -7,12 +7,9 @@ import {
   Search,
 } from '@shared/components';
 import { styles } from './HostListHeader.styles';
-import {
-  hostAtoms,
-  hostSelectors,
-  useHostList,
-  useHostUIContext,
-} from '@modules/host';
+import { hostAtoms, useHostList, useHostUIContext } from '@modules/host';
+import { layoutSelectors } from '@modules/layout';
+import { useSettings } from '@modules/settings';
 
 export const HostListHeader = () => {
   const hostUIContext = useHostUIContext();
@@ -25,22 +22,20 @@ export const HostListHeader = () => {
 
   const { hostCount } = useHostList();
 
-  const [activeListType, setActiveListType] = useRecoilState(
-    hostAtoms.activeListType,
-  );
+  const view = useRecoilValue(layoutSelectors.hostView);
 
-  // const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
-  //   hostAtoms.isFiltersOpen,
-  // );
+  // const isFiltersOpen = useRecoilValue(layoutSelectors.isHostFiltersOpen);
   // const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
 
   // const isLoading = useRecoilValue(hostAtoms.isLoading);
 
   const [searchQuery, setSearchQuery] = useRecoilState(
-    hostSelectors.filtersSearchQuery,
+    hostAtoms.filtersSearchQuery,
   );
 
-  const handleSearch = (keyword: string) => {
+  const { updateSettings } = useSettings();
+
+  const handleSearch = async (keyword: string) => {
     setSearchQuery(keyword);
 
     const newQueryParams = {
@@ -55,13 +50,17 @@ export const HostListHeader = () => {
     hostUIProps.setQueryParams(newQueryParams);
   };
 
-  const handleActiveListType = (type: string) => {
-    setActiveListType(type);
+  const handleActiveListType = async (type: View) => {
+    await updateSettings('layout', {
+      'hosts.view': type,
+    });
   };
 
   // TODO: ADD FILTERS BACK IN ONCE IMPLEMENTED
-  // const handleFilterCollapseToggled = () => {
-  //   setIsFiltersOpen(!isFiltersOpen);
+  // const handleFilterCollapseToggled = async () => {
+  //   await updateSettings('layout', {
+  //     'hosts.filters.isOpen': !isFiltersOpen,
+  //   });
   // };
 
   return (
@@ -92,7 +91,7 @@ export const HostListHeader = () => {
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleActiveListType}
-          activeListType={activeListType}
+          activeListType={view}
         />
       </div>
     </div>

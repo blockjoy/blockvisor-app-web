@@ -24,6 +24,7 @@ export * from './hooks/useUpdates';
 
 export * from './store/invitationAtoms';
 export * from './store/organizationAtoms';
+export * from './store/organizationSelectors';
 
 export * from './utils/typeGuards';
 export * from './utils/mapOrganizationDetails';

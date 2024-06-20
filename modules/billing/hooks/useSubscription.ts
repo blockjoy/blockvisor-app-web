@@ -9,7 +9,7 @@ import {
   billingSelectors,
   fetchBilling,
 } from '@modules/billing';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import { authAtoms, useUserSubscription } from '@modules/auth';
 
 interface ISubscriptionHook {
@@ -36,7 +36,7 @@ interface ISubscriptionHook {
 export const useSubscription = (): ISubscriptionHook => {
   const customer = useRecoilValue(billingSelectors.customer);
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const user = useRecoilValue(authAtoms.user);
 

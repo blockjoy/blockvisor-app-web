@@ -1,11 +1,11 @@
 import { useRecoilValue } from 'recoil';
 import { toast } from 'react-toastify';
 import { invitationClient } from '@modules/grpc';
-import { organizationAtoms } from '../store/organizationAtoms';
+import { organizationSelectors } from '../store/organizationSelectors';
 
 export const useInviteMembers = () => {
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const inviteMembers = async (

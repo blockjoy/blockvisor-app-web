@@ -2,7 +2,7 @@ import { selector, selectorFamily } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
-import { nodeTypeList } from '@shared/constants/lookups';
+import { nodeTypeList, NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { NodeStatusListItem, sort } from '@shared/components';
 import {
   nodeAtoms,
@@ -11,6 +11,18 @@ import {
   BlockchainSimple,
   NetworkConfigSimple,
 } from '@modules/node';
+import { UINodeFilterCriteria } from '@modules/grpc';
+import { authAtoms } from '@modules/auth';
+
+const settings = selector<NodeSettings>({
+  key: 'node.settings',
+  get: ({ get }) => {
+    const userSettings = get(authAtoms.userSettings);
+    if (!userSettings?.hasOwnProperty('nodes')) return {};
+
+    return JSON.parse(userSettings?.nodes ?? '{}');
+  },
+});
 
 const regionsByBlockchain = selectorFamily<Region[], BlockchainSimple>({
   key: 'node.regions.byBlockchain',
@@ -30,9 +42,21 @@ const regionsByBlockchain = selectorFamily<Region[], BlockchainSimple>({
     },
 });
 
+const filters = selector<UINodeFilterCriteria>({
+  key: 'node.filters',
+  get: ({ get }) => {
+    const nodeSettings = get(settings);
+    const searchQuery = get(nodeAtoms.filtersSearchQuery);
+
+    return nodeSettings?.filters
+      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
+      : NODE_FILTERS_DEFAULT;
+  },
+});
+
 const filtersBlockchainSelectedIds = selector<string[]>({
   key: 'node.filters.blockchain',
-  get: ({ get }) => get(nodeAtoms.filters)?.blockchain ?? [],
+  get: ({ get }) => get(filters)?.blockchain ?? [],
 });
 
 const filtersBlockchainAll = selectorFamily<
@@ -48,7 +72,7 @@ const filtersBlockchainAll = selectorFamily<
 
       const allFilters = allBlockchains.map((blockchain) => ({
         ...blockchain,
-        isChecked: tempFilters.some((filter) => blockchain.id === filter),
+        isChecked: tempFilters?.some((filter) => blockchain.id === filter),
       }));
 
       return allFilters;
@@ -76,7 +100,7 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
 
     const allFilters = allStatuses.map((status) => ({
       ...status,
-      isChecked: tempFilters.some((filter) => status.id === filter),
+      isChecked: tempFilters?.some((filter) => status.id === filter),
     }));
 
     return allFilters;
@@ -95,7 +119,7 @@ const filtersTypeAll = selectorFamily<FilterListItem[], string[]>({
 
     const allFilters = allTypes.map((type) => ({
       ...type,
-      isChecked: tempFilters.some((filter) => type.id === filter),
+      isChecked: tempFilters?.some((filter) => type.id === filter),
     }));
 
     return allFilters;
@@ -114,7 +138,7 @@ const filtersNetworksAll = selectorFamily<
 
       const allFilters = allNetworks.map((network) => ({
         ...network,
-        isChecked: tempFilters.some((filter) => network.id === filter),
+        isChecked: tempFilters?.some((filter) => network.id === filter),
       }));
 
       return allFilters;
@@ -123,6 +147,10 @@ const filtersNetworksAll = selectorFamily<
 
 export const nodeSelectors = {
   regionsByBlockchain,
+
+  settings,
+
+  filters,
 
   filtersBlockchainSelectedIds,
 

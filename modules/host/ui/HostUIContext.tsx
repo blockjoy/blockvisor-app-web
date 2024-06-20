@@ -6,11 +6,17 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
+import { useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import { initialQueryParams, InitialQueryParams } from '@modules/host';
+import {
+  hostAtoms,
+  hostSelectors,
+  initialQueryParams,
+  InitialQueryParams,
+} from '@modules/host';
 import { numOfItemsPerPage } from '@shared/index';
-import { fetchFromLocalStorage } from 'utils/fetchFromLocalStorage';
+import { UIHostFilterCriteria } from '@modules/grpc';
 
 type HostUIContext = {
   queryParams: InitialQueryParams;
@@ -29,16 +35,20 @@ type HostUIProvider = {
 
 const HostUIContext = createContext<HostUIContext>({} as HostUIContext);
 
-export const getInitialQueryParams = () => {
-  const persistedHostFilters = fetchFromLocalStorage('host.filters');
-
-  if (!persistedHostFilters) return initialQueryParams;
+export const getInitialQueryParams = (
+  initialFilters: UIHostFilterCriteria,
+  initialKeyword?: string,
+) => {
+  if (!initialFilters) return initialQueryParams;
 
   const itemsPerPage = numOfItemsPerPage();
 
   return {
     ...initialQueryParams,
-    filter: persistedHostFilters,
+    filter: {
+      ...initialFilters,
+      keyword: initialKeyword ?? initialFilters.keyword,
+    },
     pagination: {
       ...initialQueryParams.pagination,
       itemsPerPage,
@@ -53,7 +63,12 @@ export function useHostUIContext() {
 export const HostUIConsumer = HostUIContext.Consumer;
 
 export function HostUIProvider({ children }: HostUIProvider) {
-  const initialQueryParamsValue: InitialQueryParams = getInitialQueryParams();
+  const initialFilters = useRecoilValue(hostSelectors.filters);
+  const initialKeyword = useRecoilValue(hostAtoms.filtersSearchQuery);
+  const initialQueryParamsValue = getInitialQueryParams(
+    initialFilters,
+    initialKeyword,
+  );
 
   const [queryParams, setQueryParamsBase] = useState<InitialQueryParams>(
     initialQueryParamsValue,

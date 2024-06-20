@@ -1,44 +1,33 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { layoutState, sidebarOpen, sidebarOpenMobile } from '@modules/layout';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { styles } from './Sidebar.styles';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarOverlay } from './SidebarOverlay';
 import SidebarMain from './SidebarMain';
+import { useViewport } from '@shared/index';
 
 export default () => {
-  const isSidebarOpen = useRecoilValue(sidebarOpen);
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
+  const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useRecoilState(
+    layoutAtoms.isSidebarOpenMobile,
+  );
 
-  const [isSidebarOpenMobile, setIsSidebarOpenMobile] =
-    useRecoilState(sidebarOpenMobile);
+  const { isXlrg } = useViewport();
 
-  const layout = useRecoilValue(layoutState);
+  useEffect(() => {
+    if (isXlrg) setIsSidebarOpenMobile(false);
+  }, [isXlrg]);
 
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useLayoutEffect(() => {
-    const updateWidth = () => {
-      if (isSidebarOpenMobile) {
-        setIsSidebarOpenMobile(false);
-      }
-      setWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', updateWidth);
-
-    return document.removeEventListener('resize', updateWidth);
-  }, []);
   return (
     <>
       <SidebarOverlay />
       <aside
         css={[
           styles.sidebar,
-          (width >= 1200 && isSidebarOpen) ||
-          (width < 1200 && isSidebarOpenMobile)
+          (!isXlrg && isSidebarOpen) || (isXlrg && isSidebarOpenMobile)
             ? styles.sidebarOpen
             : styles.sidebarClosed,
-          Boolean(layout) && isSidebarOpenMobile && styles.sidebarDrawerOpen,
         ]}
       >
         <SidebarHeader />

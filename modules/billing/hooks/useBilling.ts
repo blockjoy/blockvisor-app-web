@@ -11,7 +11,7 @@ import {
   usePaymentMethods,
   useSubscription,
 } from '@modules/billing';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 
 type UseBillingHook = {
   fetchBillingInfo: () => Promise<void>;
@@ -28,7 +28,7 @@ export const useBilling = (): UseBillingHook => {
 
   const customer = useRecoilValue(billingSelectors.customer);
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const isEnabledBillingPreview = useRecoilValue(
     billingSelectors.isEnabledBillingPreview,

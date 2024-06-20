@@ -1,5 +1,5 @@
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
 import { useRecoilValue } from 'recoil';
+import { layoutSelectors } from '@modules/layout';
 import { styles } from './Page.styles';
 
 export type PageLayoutType = {
@@ -8,7 +8,8 @@ export type PageLayoutType = {
 };
 
 const Page = ({ children, isFlex }: PageLayoutType) => {
-  const isSidebarOpen = useRecoilValue(sidebarOpen);
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
+
   return (
     <div
       css={[

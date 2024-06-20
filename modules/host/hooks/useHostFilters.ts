@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
 import {
@@ -9,6 +9,7 @@ import {
 } from '@shared/constants/lookups';
 import { formatters } from '@shared/index';
 import { hostAtoms, hostSelectors, HostUIProps } from '@modules/host';
+import { useSettings } from '@modules/settings';
 
 type UseHostFiltersHook = {
   isDirty: boolean;
@@ -23,10 +24,9 @@ type UseHostFiltersHook = {
 export const useHostFilters = (
   hostUIProps: HostUIProps,
 ): UseHostFiltersHook => {
-  const [filters, setFilters] = useRecoilState(hostAtoms.filters);
-  const [tempFilters, setTempFilters] = useState<UIHostFilterCriteria>(filters);
+  const filters = useRecoilValue(hostSelectors.filters);
 
-  const resetInitialFilters = useResetRecoilState(hostAtoms.filters);
+  const [tempFilters, setTempFilters] = useState<UIHostFilterCriteria>(filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     hostAtoms.filtersTempTotal,
   );
@@ -34,6 +34,8 @@ export const useHostFilters = (
   const filtersStatusAll = useRecoilValue(
     hostSelectors.filtersStatusAll(tempFilters.hostStatus!),
   );
+
+  const { updateSettings, removeSettings } = useSettings();
 
   useEffect(() => {
     const isDirtyMemory = !isEqual(
@@ -74,17 +76,14 @@ export const useHostFilters = (
     }
   };
 
-  const updateFilters = () => {
-    setFilters({
-      ...filters,
-      ...tempFilters,
-    });
+  const updateFilters = async () => {
+    await updateSettings('hosts', { filters: tempFilters });
 
     applyFilter(tempFilters);
   };
 
-  const resetFilters = () => {
-    resetInitialFilters();
+  const resetFilters = async () => {
+    await removeSettings('hosts');
 
     setTempFilters((currentTempFilters) => ({
       ...currentTempFilters,

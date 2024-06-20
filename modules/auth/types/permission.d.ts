@@ -109,4 +109,5 @@ type Permission =
   | 'user-admin-update'
   | 'user-billing-get'
   | 'user-billing-update'
-  | 'user-billing-delete';
+  | 'user-billing-delete'
+  | 'user-settings-get';

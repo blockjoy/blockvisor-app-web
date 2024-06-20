@@ -32,14 +32,22 @@ export const Search = ({
   const params = useSearchParams();
   const searchParam = params.get('search');
 
+  const currentParam = useRef(searchParam ?? value);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [searchText, setSearchText] = useState(searchParam ?? value);
   const debouncedSearchTerm = useDebounce(searchText, 500);
 
   useEffect(() => {
-    if (version === 'instant' && searchText !== searchParam)
+    if (
+      version === 'instant' &&
+      searchText !== searchParam &&
+      currentParam.current !== debouncedSearchTerm
+    ) {
       onSearch?.(debouncedSearchTerm);
+      currentParam.current = debouncedSearchTerm;
+    }
   }, [debouncedSearchTerm]);
 
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +66,7 @@ export const Search = ({
     onSearch?.('');
     onInput?.('');
     inputRef.current?.focus();
+    currentParam.current = '';
   };
 
   return (

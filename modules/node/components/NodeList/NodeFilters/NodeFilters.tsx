@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { isMobile } from 'react-device-detect';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 import { styles } from './nodeFilters.styles';
@@ -21,6 +20,9 @@ import {
   blockchainAtoms,
   nodeSelectors,
 } from '@modules/node';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
+import { useSettings } from '@modules/settings';
+import { useViewport } from '@shared/index';
 
 export const NodeFilters = () => {
   const nodeUIContext = useNodeUIContext();
@@ -46,14 +48,13 @@ export const NodeFilters = () => {
   const hasBlockchainError = useRecoilValue(
     blockchainSelectors.blockchainsHasError,
   );
-
   const nodeListLoadingState = useRecoilValue(nodeAtoms.isLoading);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
-
-  const [isFiltersOpen, setFiltersOpen] = useRecoilState(
-    nodeAtoms.isFiltersOpen,
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
+  const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
+    layoutAtoms.isNodeFiltersOpenMobile,
   );
   const filtersBlockchainSelectedIds = useRecoilValue(
     nodeSelectors.filtersBlockchainSelectedIds,
@@ -61,9 +62,8 @@ export const NodeFilters = () => {
 
   const [openFilterId, setOpenFilterId] = useState('');
 
-  useEffect(() => {
-    if (isMobile) setFiltersOpen(false);
-  }, []);
+  const { updateSettings } = useSettings();
+  const { isXlrg } = useViewport();
 
   const hasFiltersApplied =
     filters.some((filter) =>
@@ -85,7 +85,13 @@ export const NodeFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    setFiltersOpen(!isFiltersOpen);
+    if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
+    else updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    updateFilters();
   };
 
   const handleSearch = (value: string) => changeTempFilters('keyword', value);
@@ -97,21 +103,18 @@ export const NodeFilters = () => {
   )
     isCompleted.current = true;
 
+  const isOpen = isXlrg ? isFiltersOpenMobile : isFiltersOpen;
+
   return (
-    <div
-      css={[
-        styles.outerWrapper,
-        !isFiltersOpen && styles.outerWrapperCollapsed,
-      ]}
-    >
+    <div css={[styles.outerWrapper, !isOpen && styles.outerWrapperCollapsed]}>
       <FiltersHeader
         isLoading={!isCompleted.current}
         filtersTotal={tempFiltersTotal}
-        isFiltersOpen={isFiltersOpen}
+        isFiltersOpen={isOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
       {!isCompleted.current ? (
-        isFiltersOpen && (
+        isOpen && (
           <div css={[styles.skeleton]}>
             <SkeletonGrid>
               <Skeleton width="80%" />
@@ -120,7 +123,7 @@ export const NodeFilters = () => {
           </div>
         )
       ) : (
-        <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
+        <div css={[styles.wrapper, isOpen && styles.wrapperOpen]}>
           <form css={styles.form}>
             <Search
               onInput={handleSearch}
@@ -145,7 +148,7 @@ export const NodeFilters = () => {
               css={styles.updateButton}
               type="submit"
               disabled={!isDirty}
-              onClick={updateFilters}
+              onClick={handleSubmit}
             >
               <SvgIcon size="12px">
                 <IconRefresh />

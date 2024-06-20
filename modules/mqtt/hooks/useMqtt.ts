@@ -6,7 +6,7 @@ import { getActiveTopic, createWebWorker, keepAlive } from '@modules/mqtt';
 import { useUpdates as useNodeUpdates } from '@modules/node';
 import {
   useUpdates as useOrgUpdates,
-  organizationAtoms,
+  organizationSelectors,
 } from '@modules/organization';
 import { getIdentity } from '@modules/grpc';
 
@@ -25,7 +25,7 @@ export const useMqtt = (): IMqttHook => {
   const { handleOrganizationUpdate } = useOrgUpdates();
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const [client, setClient] = useState<MqttClient | null>(null);

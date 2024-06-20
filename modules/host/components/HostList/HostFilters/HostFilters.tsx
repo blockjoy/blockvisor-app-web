@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { isMobile } from 'react-device-detect';
 import { styles } from './HostFilters.styles';
 import {
   Skeleton,
@@ -13,9 +12,12 @@ import {
   Search,
 } from '@shared/components';
 import { hostAtoms, useHostUIContext, useHostFilters } from '@modules/host';
+import { blockchainAtoms } from '@modules/node';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
+import { useSettings } from '@modules/settings';
+import { useViewport } from '@shared/index';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { blockchainAtoms } from '@modules/node';
 
 export const HostFilters = () => {
   const hostUIContext = useHostUIContext();
@@ -42,16 +44,15 @@ export const HostFilters = () => {
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
-
-  const [isFiltersOpen, setFiltersOpen] = useRecoilState(
-    hostAtoms.isFiltersOpen,
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isHostFiltersOpen);
+  const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
+    layoutAtoms.isHostFiltersOpenMobile,
   );
 
   const [openFilterId, setOpenFilterId] = useState('');
 
-  useEffect(() => {
-    if (isMobile) setFiltersOpen(false);
-  }, []);
+  const { updateSettings } = useSettings();
+  const { isXlrg } = useViewport();
 
   const hasFiltersApplied =
     filters.some((filter) => {
@@ -79,7 +80,8 @@ export const HostFilters = () => {
   };
 
   const handleFiltersToggle = () => {
-    setFiltersOpen(!isFiltersOpen);
+    if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
+    else updateSettings('layout', { 'hosts.filters.isOpen': !isFiltersOpen });
   };
 
   const handleSearch = (value: string) => changeTempFilters('keyword', value);
@@ -90,19 +92,19 @@ export const HostFilters = () => {
   )
     isCompleted.current = true;
 
+  const isOpen = isXlrg ? isFiltersOpenMobile : isFiltersOpen;
+
   return (
-    <div
-      css={[styles.outerWrapper, isFiltersOpen && styles.outerWrapperCollapsed]}
-    >
+    <div css={[styles.outerWrapper, isOpen && styles.outerWrapperCollapsed]}>
       <FiltersHeader
         isLoading={!isCompleted.current}
         filtersTotal={tempFiltersTotal}
-        isFiltersOpen={isFiltersOpen}
+        isFiltersOpen={isOpen}
         handleFiltersToggle={handleFiltersToggle}
       />
 
       {!isCompleted.current ? (
-        isFiltersOpen && (
+        isOpen && (
           <div css={[styles.skeleton]}>
             <SkeletonGrid>
               <Skeleton width="80%" />
@@ -111,7 +113,7 @@ export const HostFilters = () => {
           </div>
         )
       ) : (
-        <div css={[styles.wrapper, isFiltersOpen && styles.wrapperOpen]}>
+        <div css={[styles.wrapper, isOpen && styles.wrapperOpen]}>
           <form css={styles.form}>
             <Search
               onInput={handleSearch}

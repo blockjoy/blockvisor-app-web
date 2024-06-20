@@ -1,20 +1,20 @@
+import { useRecoilValue } from 'recoil';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { ROUTES } from '@shared/constants/routes';
 import {
   SvgIcon,
   Badge,
   withSearchDropdown,
   Dropdown,
 } from '@shared/components';
-import { styles } from './OrganizationPicker.styles';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
-import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
-import { isMobile } from 'react-device-detect';
+import {
+  useSwitchOrganization,
+  organizationSelectors,
+} from '@modules/organization';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { useRouter } from 'next/router';
-import { ROUTES } from '@shared/constants/routes';
+import { styles } from './OrganizationPicker.styles';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
@@ -30,28 +30,22 @@ export const OrganizationPicker = ({
   const selectedOrg = useRef<Org>();
 
   const router = useRouter();
-
   const { pathname } = router;
-
   const { id } = router.query;
 
   const allOrganizations = useRecoilValue(
-    organizationAtoms.allOrganizationsSorted,
+    organizationSelectors.allOrganizationsSorted,
   );
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const setIsSidebarOpen = useSetRecoilState(sidebarOpen);
-
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const { switchOrganization } = useSwitchOrganization();
 
   const handleChange = async (nextOrg: Org | null) => {
     if (!nextOrg) return;
-
     await switchOrganization(nextOrg.id, nextOrg.name);
 
     selectedOrg.current = allOrganizations.find(
@@ -59,8 +53,6 @@ export const OrganizationPicker = ({
     )!;
 
     setIsOpen(false);
-
-    if (isMobile) setIsSidebarOpen(false);
 
     if (!id) return;
 

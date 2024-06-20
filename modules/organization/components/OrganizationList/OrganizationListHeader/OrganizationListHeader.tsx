@@ -4,7 +4,6 @@ import {
   useCreateOrganization,
   useGetOrganization,
   useGetOrganizations,
-  useSwitchOrganization,
 } from '@modules/organization';
 import { TableAdd } from '@shared/components';
 import { useRouter } from 'next/router';
@@ -18,7 +17,6 @@ export const OrganizationListHeader = () => {
   const createOrganization = useCreateOrganization();
   const { addToOrganizations } = useGetOrganizations();
   const { setOrganization } = useGetOrganization();
-  const { switchOrganization } = useSwitchOrganization();
 
   const onSubmit = async (name: string) => {
     try {
@@ -27,7 +25,6 @@ export const OrganizationListHeader = () => {
         addToOrganizations(org);
         setOrganization(org);
         router.push(`/organizations/${org.id}`);
-        switchOrganization(org.id, name);
       });
     } catch (error) {
       if (error instanceof ApplicationError) toast.error(error.message);

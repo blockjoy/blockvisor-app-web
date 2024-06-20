@@ -2,9 +2,7 @@ import { useRecoilValue } from 'recoil';
 import { styles } from './TableGrid.styles';
 import { GridCell } from './types/GridCell';
 import { TableGridLoader } from './TableGridLoader';
-import { sidebarOpen } from '@modules/layout/store/layoutAtoms';
-import { hostAtoms } from '@modules/host';
-import { nodeAtoms } from '@modules/node';
+import { layoutSelectors } from '@modules/layout';
 
 type Props = {
   cells: GridCell[] | null;
@@ -19,11 +17,9 @@ export const TableGrid = ({
   preload,
   isLoading,
 }: Props) => {
-  const isSidebarOpen = useRecoilValue(sidebarOpen);
-
-  const isHostFiltersOpen = useRecoilValue(hostAtoms.isFiltersOpen);
-
-  const isNodeFiltersOpen = useRecoilValue(nodeAtoms.isFiltersOpen);
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
+  const isNodeFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
+  const isHostFiltersOpen = useRecoilValue(layoutSelectors.isHostFiltersOpen);
 
   const isFiltersOpen = isHostFiltersOpen || isNodeFiltersOpen;
 
