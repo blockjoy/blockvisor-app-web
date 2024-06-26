@@ -15,6 +15,7 @@ import {
   sortNetworks,
   sortVersions,
 } from '@modules/node';
+import { authSelectors } from '@modules/auth';
 
 const networks = selector<NetworkConfig[]>({
   key: 'nodeLauncher.networks',
@@ -46,18 +47,18 @@ const hasNetworkList = selector<boolean>({
 const hasProtocol = selector<boolean>({
   key: 'nodeLauncher.protocol',
   get: ({ get }) => {
-    const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
+    const { blockchainId, nodeType } = get(nodeLauncherAtoms.nodeLauncher);
 
-    return Boolean(nodeLauncher.blockchainId || nodeLauncher.nodeType);
+    return Boolean(blockchainId || nodeType);
   },
 });
 
 const hasConfig = selector<boolean>({
   key: 'nodeLauncher.config',
   get: ({ get }) => {
-    const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
+    const { blockchainId, nodeType } = get(nodeLauncherAtoms.nodeLauncher);
 
-    return Boolean(nodeLauncher.blockchainId && nodeLauncher.nodeType);
+    return Boolean(blockchainId && nodeType);
   },
 });
 
@@ -126,12 +127,13 @@ const selectedBlockchain = selectorFamily<Blockchain | null, string>({
     (blockchainId: string) =>
     ({ get }) => {
       const allBlockchains = get(blockchainAtoms.blockchains);
+      const isSuperUser = get(authSelectors.isSuperUser);
 
-      return (
-        allBlockchains?.find(
-          (blockchain: Blockchain) => blockchain.id === blockchainId,
-        ) ?? null
-      );
+      return allBlockchains?.find(
+        (blockchain: Blockchain) => blockchain.id === blockchainId,
+      ) ?? isSuperUser
+        ? allBlockchains[0]
+        : null;
     },
 });
 

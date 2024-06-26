@@ -36,7 +36,7 @@ import { organizationAtoms } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
 import { matchSKU } from '@modules/billing';
-import { delay } from '@shared/utils/delay';
+import { authSelectors } from '@modules/auth';
 
 type IUseNodeLauncherHandlersParams = {
   fulfilReqs: boolean;
@@ -67,6 +67,8 @@ export const useNodeLauncherHandlers = ({
   const { getHosts } = useHostSelect();
   const { createNode } = useNodeAdd();
   useGetRegions();
+
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const defaultOrganization = useRecoilValue(
     organizationAtoms.defaultOrganization,
@@ -122,14 +124,28 @@ export const useNodeLauncherHandlers = ({
 
     if (hostId) {
       queriedHost = allHosts.find((host: Host) => host.id === hostId) ?? null;
+
+      const isValid = queriedHost?.ipAddresses.some((host) => !host.assigned);
+
       setSelectedHosts([
         {
           nodesToLaunch: 1,
           host: queriedHost!,
+          isValid,
         },
       ]);
     }
   }, [allHosts]);
+
+  useEffect(() => {
+    if (!isSuperUser || !blockchains.length) return;
+
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
+      blockchainId: blockchains[0]?.id,
+      nodeType: blockchains[0]?.nodeTypes[0].nodeType,
+    }));
+  }, [isSuperUser, blockchains]);
 
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');
@@ -149,11 +165,12 @@ export const useNodeLauncherHandlers = ({
   const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
     setError(null);
     setIsLaunching(false);
-    setNodeLauncherState({
-      ...nodeLauncherState,
+
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
       blockchainId,
       nodeType,
-    });
+    }));
 
     Mixpanel.track('Launch Node - Protocol Selected', {
       blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
@@ -162,10 +179,10 @@ export const useNodeLauncherHandlers = ({
   };
 
   const handleNodePropertyChanged = (name: string, value: any) => {
-    setNodeLauncherState({
-      ...nodeLauncherState,
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
       [name]: value,
-    });
+    }));
 
     Mixpanel.track('Launch Node - Property Changed', {
       propertyName: name,
@@ -195,10 +212,10 @@ export const useNodeLauncherHandlers = ({
 
     propertiesCopy[propertyIndex] = updatedProperty;
 
-    setNodeLauncherState({
-      ...nodeLauncherState,
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
       properties: propertiesCopy,
-    });
+    }));
 
     Mixpanel.track('Launch Node - Node Config Property Changed', {
       propertyName: updatedProperty.name,
@@ -227,10 +244,10 @@ export const useNodeLauncherHandlers = ({
       foundNodeFiles?.files.push(file);
     }
 
-    setNodeLauncherState({
-      ...nodeLauncherState,
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
       keyFiles: keyFilesCopy,
-    });
+    }));
 
     Mixpanel.track('Launch Node - Key File Uploaded');
   };
@@ -353,7 +370,7 @@ export const useNodeLauncherHandlers = ({
   }, [nodeLauncherState.blockchainId, nodeLauncherState.nodeType]);
 
   useEffect(() => {
-    let properties: NodeProperty[] | undefined, keyFiles;
+    let properties: NodeProperty[] | undefined, keyFiles: any;
 
     const propertyMap = (property: any) => ({
       name: property.name,
@@ -388,11 +405,11 @@ export const useNodeLauncherHandlers = ({
       properties = nodeLauncherState.properties;
     }
 
-    setNodeLauncherState({
-      ...nodeLauncherState,
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
       keyFiles,
       properties,
-    });
+    }));
 
     const selectedNetworkExists = selectedVersion?.networks
       .map((network) => network.name)
