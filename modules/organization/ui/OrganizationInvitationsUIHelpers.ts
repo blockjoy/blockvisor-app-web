@@ -11,6 +11,5 @@ export const initialQueryParams: InitialQueryParams = {
     currentPage: 1,
     itemsPerPage: 6,
   },
-
   sort: [{ order: SortOrder.SORT_ORDER_ASCENDING, field: 'email' }],
 };

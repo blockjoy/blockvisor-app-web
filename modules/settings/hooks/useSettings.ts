@@ -6,6 +6,7 @@ type UseSettingsHook = {
   updateSettings: <T extends keyof UserSettingsUI>(
     name: T,
     value: Partial<UserSettingsUI[T]>,
+    onSuccess?: VoidFunction,
   ) => Promise<void>;
   removeSettings: <T extends keyof UserSettingsUI>(name: T) => Promise<void>;
 };
@@ -19,12 +20,18 @@ export const useSettings = (): UseSettingsHook => {
   const updateSettings = async <T extends keyof UserSettingsUI>(
     name: T,
     value: Partial<UserSettingsUI[T]>,
+    onSuccess?: VoidFunction,
   ) => {
     console.log('%cUPDATE_SETTINGS', 'color: #f00', name, value);
     const settings = userSettings?.[name] ?? '{}';
     const parsedSettings = JSON.parse(settings);
 
-    const updatedSettings = { ...parsedSettings, ...value };
+    const [key, val] = Object.entries(value)[0];
+
+    const updatedSettings = { ...parsedSettings };
+    if (!val) delete updatedSettings[key];
+    else updatedSettings[key] = val;
+
     const updatedSettingsString = JSON.stringify(updatedSettings);
 
     try {
@@ -38,6 +45,8 @@ export const useSettings = (): UseSettingsHook => {
         ...userSettings,
         ...response,
       }));
+
+      onSuccess?.();
     } catch (err: any) {
       console.log('Error while updating User settings', err);
     }

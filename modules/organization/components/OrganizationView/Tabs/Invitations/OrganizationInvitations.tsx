@@ -22,10 +22,7 @@ import { authSelectors } from '@modules/auth';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 
 export const OrganizationInvitations = () => {
-  const [isInviting, setIsInviting] = useState<boolean>(false);
-
   const router = useRouter();
-
   const { id } = router.query;
 
   const organizationInvitationsUIContext =
@@ -37,25 +34,29 @@ export const OrganizationInvitations = () => {
     };
   }, [organizationInvitationsUIContext]);
 
-  const { sentInvitations, getSentInvitations } = useInvitations();
-
   const sentInvitationsActive = useRecoilValue(
     invitationAtoms.sentInvitationsActive(
       organizationInvitationsUIProps.queryParams,
     ),
   );
-
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
-
   const canCreateMember = useRecoilValue(
     authSelectors.hasPermission('invitation-create'),
   );
 
-  const members = selectedOrganization?.members;
+  const [isInviting, setIsInviting] = useState<boolean>(false);
+  const [activeView, setActiveView] =
+    useState<string | 'list' | 'invite'>('list');
+  const [activeMember, setActiveMember] = useState<Member | null>(null);
+  const [activeAction, setActiveAction] = useState<Action | null>(null);
 
+  const { sentInvitations, getSentInvitations } = useInvitations();
   const { inviteMembers } = useInviteMembers();
+  const { resendInvitation } = useResendInvitation();
+
+  const members = selectedOrganization?.members;
 
   const handleInviteClicked = async (email: string) => {
     setIsInviting(true);
@@ -82,14 +83,6 @@ export const OrganizationInvitations = () => {
 
     return true;
   };
-
-  const { resendInvitation } = useResendInvitation();
-
-  const [activeView, setActiveView] =
-    useState<string | 'list' | 'invite'>('list');
-
-  const [activeMember, setActiveMember] = useState<Member | null>(null);
-  const [activeAction, setActiveAction] = useState<Action | null>(null);
 
   const methods = {
     action: (action: Action, orgMember: Member) => {

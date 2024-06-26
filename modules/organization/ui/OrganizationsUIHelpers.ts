@@ -10,8 +10,8 @@ export type Filter = {
 
 export type InitialQueryParams = {
   pagination: Pagination;
-  sort: OrgSort[];
   filter: Filter;
+  sort: OrgSort[];
 };
 
 export const initialSort: OrgSort[] = [
@@ -26,15 +26,13 @@ export const initialQueryParams: InitialQueryParams = {
     currentPage: 1,
     itemsPerPage: 20,
   },
-
-  sort: initialSort,
-
   filter: {
     role: {
       dataField: 'currentUser.role',
       value: '',
     },
   },
+  sort: initialSort,
 };
 
 export const FILTERS: FilteringItem[] = [
