@@ -55,12 +55,6 @@ export const NodeLauncherProtocol = ({
     [onProtocolSelected],
   );
 
-  useEffect(() => {
-    if (isSuperUser && blockchains?.length) {
-      handleSelect(blockchains[0], blockchains[0].nodeTypes[0].nodeType);
-    }
-  }, [isSuperUser && blockchains.length]);
-
   const handleBlockchainSelected = useCallback(
     (
       e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
