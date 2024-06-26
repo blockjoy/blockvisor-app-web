@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
 import {
@@ -36,8 +36,6 @@ export const NodeList = () => {
   const setPagination = useSetRecoilState(nodeAtoms.nodeListPagination);
 
   const currentQueryParams = useRef(queryParams);
-
-  const [nodeSort, setNodeSort] = useRecoilState(nodeAtoms.nodeSort);
 
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
   const { isXlrg } = useViewport();

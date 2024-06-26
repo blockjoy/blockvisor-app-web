@@ -21,7 +21,7 @@ export const useHostList = () => {
     const loadingState =
       queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
 
-    setIsLoading(loadingState);
+    if (!hostList?.length) setIsLoading(loadingState);
 
     try {
       const response: HostServiceListResponse = await hostClient.listHosts(

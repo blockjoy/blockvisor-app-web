@@ -7,7 +7,6 @@ import { EmptyColumn, sort, Table } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
 import { convertNodeJobStatusToName } from '@modules/node/utils/convertNodeJobStatusToName';
 import { spacing } from 'styles/utils.spacing.styles';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 export const NodeViewJobList = () => {
   const { node } = useNodeView();
