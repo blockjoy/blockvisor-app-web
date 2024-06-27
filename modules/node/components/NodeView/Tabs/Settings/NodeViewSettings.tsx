@@ -1,13 +1,24 @@
 import { authSelectors } from '@modules/auth';
 import { FirewallDropdown, LockedSwitch, useNodeView } from '@modules/node';
-import { FormLabelCaps, Switch, TableSkeleton } from '@shared/components';
+import {
+  FormLabelCaps,
+  Switch,
+  TableSkeleton,
+  Textbox,
+} from '@shared/components';
 import { useRecoilValue } from 'recoil';
 import { styles } from './NodeViewSettings.styles';
+import { useDebounce } from '@shared/index';
+import { useEffect, useState } from 'react';
 
 export const NodeViewSettings = () => {
   const { node, isLoading, updateNode } = useNodeView();
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
+  const [displayName, setDisplayName] = useState('');
+
+  const debouncedDisplayName = useDebounce(displayName, 500);
 
   const handleUpdateNode = (args: any) => {
     updateNode({
@@ -28,10 +39,36 @@ export const NodeViewSettings = () => {
       selfUpdate: value,
     });
 
+  const handleDisplayNameChanged = (name: string) => setDisplayName(name);
+
+  useEffect(() => {
+    if (debouncedDisplayName) {
+      handleUpdateNode({
+        displayName: debouncedDisplayName,
+      });
+    }
+  }, [debouncedDisplayName]);
+
   return isLoading && !node?.id ? (
     <TableSkeleton />
   ) : (
     <div css={styles.wrapper}>
+      <div css={styles.row}>
+        <FormLabelCaps noBottomMargin>Display Name</FormLabelCaps>
+        <div css={styles.firewallWrapper}>
+          <Textbox
+            noBottomMargin
+            type="text"
+            name="displayName"
+            defaultValue={node?.displayName}
+            placeholder="Display Name"
+            isRequired
+            onChange={(name: string, value: string) =>
+              handleDisplayNameChanged(value)
+            }
+          />
+        </div>
+      </div>
       <div css={styles.row}>
         <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
         <div css={styles.firewallWrapper}>
@@ -46,7 +83,6 @@ export const NodeViewSettings = () => {
       </div>
       <div css={styles.row}>
         <FormLabelCaps noBottomMargin>Auto Updates</FormLabelCaps>
-
         {isSuperUser ? (
           <Switch
             noBottomMargin
