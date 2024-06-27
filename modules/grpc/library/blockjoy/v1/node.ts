@@ -21,6 +21,8 @@ export enum NodeSortField {
   NODE_SORT_FIELD_CONTAINER_STATUS = 8,
   NODE_SORT_FIELD_STAKING_STATUS = 9,
   NODE_SORT_FIELD_BLOCK_HEIGHT = 10,
+  NODE_SORT_FIELD_DNS_NAME = 11,
+  NODE_SORT_FIELD_DISPLAY_NAME = 12,
   UNRECOGNIZED = -1,
 }
 
@@ -50,7 +52,9 @@ export interface Node {
   hostOrgId: string;
   blockchainId: string;
   blockchainName: string;
-  name: string;
+  nodeName: string;
+  dnsName: string;
+  displayName: string;
   /**
    * The P2P address of the node on the blockchain. This field is only set as
    * the node is started, so therefore it is optional.
@@ -222,16 +226,24 @@ export interface NodeServiceListRequest {
 export interface NodeSearch {
   /** The way the search parameters should be combined. */
   operator: SearchOperator;
-  /** Search only the name. */
+  /** Search for the node id. */
   id?:
     | string
     | undefined;
-  /** Search only the name. */
-  name?:
+  /** Search for the node ip address. */
+  ip?:
     | string
     | undefined;
-  /** Search only the ip address. */
-  ip?: string | undefined;
+  /** Search for the node name. */
+  nodeName?:
+    | string
+    | undefined;
+  /** Search for the DNS name. */
+  dnsName?:
+    | string
+    | undefined;
+  /** Search for the display name. */
+  displayName?: string | undefined;
 }
 
 export interface NodeSort {
@@ -276,11 +288,12 @@ export interface NodeServiceUpdateConfigRequest {
   orgId?:
     | string
     | undefined;
-  /**
-   * A note you can use to explain what this node is for, or alternatively use
-   * as a shopping list.
-   */
-  note?: string | undefined;
+  /** A note you can use to explain what this node is for. */
+  note?:
+    | string
+    | undefined;
+  /** Update the frontend display name of this node. */
+  displayName?: string | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {
@@ -529,7 +542,9 @@ function createBaseNode(): Node {
     hostOrgId: "",
     blockchainId: "",
     blockchainName: "",
-    name: "",
+    nodeName: "",
+    dnsName: "",
+    displayName: "",
     address: undefined,
     version: "",
     ip: "",
@@ -583,56 +598,62 @@ export const Node = {
     if (message.blockchainName !== "") {
       writer.uint32(66).string(message.blockchainName);
     }
-    if (message.name !== "") {
-      writer.uint32(74).string(message.name);
+    if (message.nodeName !== "") {
+      writer.uint32(74).string(message.nodeName);
+    }
+    if (message.dnsName !== "") {
+      writer.uint32(82).string(message.dnsName);
+    }
+    if (message.displayName !== "") {
+      writer.uint32(90).string(message.displayName);
     }
     if (message.address !== undefined) {
-      writer.uint32(82).string(message.address);
+      writer.uint32(98).string(message.address);
     }
     if (message.version !== "") {
-      writer.uint32(90).string(message.version);
+      writer.uint32(106).string(message.version);
     }
     if (message.ip !== "") {
-      writer.uint32(98).string(message.ip);
+      writer.uint32(114).string(message.ip);
     }
     if (message.nodeType !== 0) {
-      writer.uint32(104).int32(message.nodeType);
+      writer.uint32(120).int32(message.nodeType);
     }
     for (const v of message.properties) {
-      NodeProperty.encode(v!, writer.uint32(114).fork()).ldelim();
+      NodeProperty.encode(v!, writer.uint32(130).fork()).ldelim();
     }
     if (message.blockHeight !== undefined) {
-      writer.uint32(120).uint64(message.blockHeight);
+      writer.uint32(136).uint64(message.blockHeight);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(130).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(146).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(138).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(154).fork()).ldelim();
     }
     if (message.status !== 0) {
-      writer.uint32(144).int32(message.status);
+      writer.uint32(160).int32(message.status);
     }
     if (message.syncStatus !== 0) {
-      writer.uint32(152).int32(message.syncStatus);
+      writer.uint32(168).int32(message.syncStatus);
     }
     if (message.containerStatus !== 0) {
-      writer.uint32(160).int32(message.containerStatus);
+      writer.uint32(176).int32(message.containerStatus);
     }
     if (message.stakingStatus !== undefined) {
-      writer.uint32(168).int32(message.stakingStatus);
+      writer.uint32(184).int32(message.stakingStatus);
     }
     if (message.ipGateway !== "") {
-      writer.uint32(178).string(message.ipGateway);
+      writer.uint32(194).string(message.ipGateway);
     }
     if (message.selfUpdate === true) {
-      writer.uint32(184).bool(message.selfUpdate);
+      writer.uint32(200).bool(message.selfUpdate);
     }
     if (message.network !== "") {
-      writer.uint32(194).string(message.network);
+      writer.uint32(210).string(message.network);
     }
     if (message.createdBy !== undefined) {
-      EntityUpdate.encode(message.createdBy, writer.uint32(202).fork()).ldelim();
+      EntityUpdate.encode(message.createdBy, writer.uint32(218).fork()).ldelim();
     }
     for (const v of message.allowIps) {
       FilteredIpAddr.encode(v!, writer.uint32(226).fork()).ldelim();
@@ -729,115 +750,129 @@ export const Node = {
             break;
           }
 
-          message.name = reader.string();
+          message.nodeName = reader.string();
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.address = reader.string();
+          message.dnsName = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.version = reader.string();
+          message.displayName = reader.string();
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.ip = reader.string();
+          message.address = reader.string();
           continue;
         case 13:
-          if (tag !== 104) {
+          if (tag !== 106) {
             break;
           }
 
-          message.nodeType = reader.int32() as any;
+          message.version = reader.string();
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.properties.push(NodeProperty.decode(reader, reader.uint32()));
+          message.ip = reader.string();
           continue;
         case 15:
           if (tag !== 120) {
             break;
           }
 
-          message.blockHeight = longToNumber(reader.uint64() as Long);
+          message.nodeType = reader.int32() as any;
           continue;
         case 16:
           if (tag !== 130) {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.properties.push(NodeProperty.decode(reader, reader.uint32()));
           continue;
         case 17:
-          if (tag !== 138) {
+          if (tag !== 136) {
+            break;
+          }
+
+          message.blockHeight = longToNumber(reader.uint64() as Long);
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 19:
+          if (tag !== 154) {
             break;
           }
 
           message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 18:
-          if (tag !== 144) {
-            break;
-          }
-
-          message.status = reader.int32() as any;
-          continue;
-        case 19:
-          if (tag !== 152) {
-            break;
-          }
-
-          message.syncStatus = reader.int32() as any;
           continue;
         case 20:
           if (tag !== 160) {
             break;
           }
 
-          message.containerStatus = reader.int32() as any;
+          message.status = reader.int32() as any;
           continue;
         case 21:
           if (tag !== 168) {
             break;
           }
 
-          message.stakingStatus = reader.int32() as any;
+          message.syncStatus = reader.int32() as any;
           continue;
         case 22:
-          if (tag !== 178) {
+          if (tag !== 176) {
             break;
           }
 
-          message.ipGateway = reader.string();
+          message.containerStatus = reader.int32() as any;
           continue;
         case 23:
           if (tag !== 184) {
             break;
           }
 
-          message.selfUpdate = reader.bool();
+          message.stakingStatus = reader.int32() as any;
           continue;
         case 24:
           if (tag !== 194) {
             break;
           }
 
-          message.network = reader.string();
+          message.ipGateway = reader.string();
           continue;
         case 25:
-          if (tag !== 202) {
+          if (tag !== 200) {
+            break;
+          }
+
+          message.selfUpdate = reader.bool();
+          continue;
+        case 26:
+          if (tag !== 210) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
+        case 27:
+          if (tag !== 218) {
             break;
           }
 
@@ -922,7 +957,9 @@ export const Node = {
     message.hostOrgId = object.hostOrgId ?? "";
     message.blockchainId = object.blockchainId ?? "";
     message.blockchainName = object.blockchainName ?? "";
-    message.name = object.name ?? "";
+    message.nodeName = object.nodeName ?? "";
+    message.dnsName = object.dnsName ?? "";
+    message.displayName = object.displayName ?? "";
     message.address = object.address ?? undefined;
     message.version = object.version ?? "";
     message.ip = object.ip ?? "";
@@ -1518,7 +1555,7 @@ export const NodeServiceListRequest = {
 };
 
 function createBaseNodeSearch(): NodeSearch {
-  return { operator: 0, id: undefined, name: undefined, ip: undefined };
+  return { operator: 0, id: undefined, ip: undefined, nodeName: undefined, dnsName: undefined, displayName: undefined };
 }
 
 export const NodeSearch = {
@@ -1529,11 +1566,17 @@ export const NodeSearch = {
     if (message.id !== undefined) {
       writer.uint32(18).string(message.id);
     }
-    if (message.name !== undefined) {
-      writer.uint32(26).string(message.name);
-    }
     if (message.ip !== undefined) {
-      writer.uint32(34).string(message.ip);
+      writer.uint32(26).string(message.ip);
+    }
+    if (message.nodeName !== undefined) {
+      writer.uint32(34).string(message.nodeName);
+    }
+    if (message.dnsName !== undefined) {
+      writer.uint32(42).string(message.dnsName);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(50).string(message.displayName);
     }
     return writer;
   },
@@ -1564,14 +1607,28 @@ export const NodeSearch = {
             break;
           }
 
-          message.name = reader.string();
+          message.ip = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.ip = reader.string();
+          message.nodeName = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.dnsName = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.displayName = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1590,8 +1647,10 @@ export const NodeSearch = {
     const message = createBaseNodeSearch();
     message.operator = object.operator ?? 0;
     message.id = object.id ?? undefined;
-    message.name = object.name ?? undefined;
     message.ip = object.ip ?? undefined;
+    message.nodeName = object.nodeName ?? undefined;
+    message.dnsName = object.dnsName ?? undefined;
+    message.displayName = object.displayName ?? undefined;
     return message;
   },
 };
@@ -1803,7 +1862,15 @@ export const NodeServiceUpgradeResponse = {
 };
 
 function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
-  return { id: "", selfUpdate: undefined, allowIps: [], denyIps: [], orgId: undefined, note: undefined };
+  return {
+    id: "",
+    selfUpdate: undefined,
+    allowIps: [],
+    denyIps: [],
+    orgId: undefined,
+    note: undefined,
+    displayName: undefined,
+  };
 }
 
 export const NodeServiceUpdateConfigRequest = {
@@ -1825,6 +1892,9 @@ export const NodeServiceUpdateConfigRequest = {
     }
     if (message.note !== undefined) {
       writer.uint32(50).string(message.note);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(58).string(message.displayName);
     }
     return writer;
   },
@@ -1878,6 +1948,13 @@ export const NodeServiceUpdateConfigRequest = {
 
           message.note = reader.string();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1899,6 +1976,7 @@ export const NodeServiceUpdateConfigRequest = {
     message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.orgId = object.orgId ?? undefined;
     message.note = object.note ?? undefined;
+    message.displayName = object.displayName ?? undefined;
     return message;
   },
 };

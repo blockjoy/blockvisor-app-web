@@ -47,7 +47,7 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
                 middleRow={`${node.blockchainName} ${convertNodeTypeToName(
                   node.nodeType,
                 )}`}
-                topRow={node.name}
+                topRow={node.displayName}
                 bottomRow={node?.ip!}
               />
             </>

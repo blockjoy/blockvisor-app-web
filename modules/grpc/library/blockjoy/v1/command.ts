@@ -139,7 +139,9 @@ export interface NodeUpdate {
 }
 
 export interface NodeCreate {
-  name: string;
+  nodeName: string;
+  dnsName: string;
+  orgId: string;
   blockchain: string;
   image: ImageIdentifier | undefined;
   nodeType: NodeType;
@@ -148,7 +150,6 @@ export interface NodeCreate {
   properties: Parameter[];
   rules: FirewallRule[];
   network: string;
-  orgId: string;
 }
 
 export interface Parameter {
@@ -1359,7 +1360,9 @@ export const NodeUpdate = {
 
 function createBaseNodeCreate(): NodeCreate {
   return {
-    name: "",
+    nodeName: "",
+    dnsName: "",
+    orgId: "",
     blockchain: "",
     image: undefined,
     nodeType: 0,
@@ -1368,41 +1371,43 @@ function createBaseNodeCreate(): NodeCreate {
     properties: [],
     rules: [],
     network: "",
-    orgId: "",
   };
 }
 
 export const NodeCreate = {
   encode(message: NodeCreate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+    if (message.nodeName !== "") {
+      writer.uint32(10).string(message.nodeName);
     }
-    if (message.blockchain !== "") {
-      writer.uint32(18).string(message.blockchain);
-    }
-    if (message.image !== undefined) {
-      ImageIdentifier.encode(message.image, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.nodeType !== 0) {
-      writer.uint32(32).int32(message.nodeType);
-    }
-    if (message.ip !== "") {
-      writer.uint32(42).string(message.ip);
-    }
-    if (message.gateway !== "") {
-      writer.uint32(50).string(message.gateway);
-    }
-    for (const v of message.properties) {
-      Parameter.encode(v!, writer.uint32(58).fork()).ldelim();
-    }
-    for (const v of message.rules) {
-      FirewallRule.encode(v!, writer.uint32(66).fork()).ldelim();
-    }
-    if (message.network !== "") {
-      writer.uint32(74).string(message.network);
+    if (message.dnsName !== "") {
+      writer.uint32(18).string(message.dnsName);
     }
     if (message.orgId !== "") {
-      writer.uint32(82).string(message.orgId);
+      writer.uint32(26).string(message.orgId);
+    }
+    if (message.blockchain !== "") {
+      writer.uint32(34).string(message.blockchain);
+    }
+    if (message.image !== undefined) {
+      ImageIdentifier.encode(message.image, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.nodeType !== 0) {
+      writer.uint32(48).int32(message.nodeType);
+    }
+    if (message.ip !== "") {
+      writer.uint32(58).string(message.ip);
+    }
+    if (message.gateway !== "") {
+      writer.uint32(66).string(message.gateway);
+    }
+    for (const v of message.properties) {
+      Parameter.encode(v!, writer.uint32(74).fork()).ldelim();
+    }
+    for (const v of message.rules) {
+      FirewallRule.encode(v!, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.network !== "") {
+      writer.uint32(90).string(message.network);
     }
     return writer;
   },
@@ -1419,70 +1424,77 @@ export const NodeCreate = {
             break;
           }
 
-          message.name = reader.string();
+          message.nodeName = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.blockchain = reader.string();
+          message.dnsName = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.image = ImageIdentifier.decode(reader, reader.uint32());
+          message.orgId = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.nodeType = reader.int32() as any;
+          message.blockchain = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.ip = reader.string();
+          message.image = ImageIdentifier.decode(reader, reader.uint32());
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.gateway = reader.string();
+          message.nodeType = reader.int32() as any;
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.properties.push(Parameter.decode(reader, reader.uint32()));
+          message.ip = reader.string();
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.rules.push(FirewallRule.decode(reader, reader.uint32()));
+          message.gateway = reader.string();
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.network = reader.string();
+          message.properties.push(Parameter.decode(reader, reader.uint32()));
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.orgId = reader.string();
+          message.rules.push(FirewallRule.decode(reader, reader.uint32()));
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.network = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1499,7 +1511,9 @@ export const NodeCreate = {
 
   fromPartial(object: DeepPartial<NodeCreate>): NodeCreate {
     const message = createBaseNodeCreate();
-    message.name = object.name ?? "";
+    message.nodeName = object.nodeName ?? "";
+    message.dnsName = object.dnsName ?? "";
+    message.orgId = object.orgId ?? "";
     message.blockchain = object.blockchain ?? "";
     message.image = (object.image !== undefined && object.image !== null)
       ? ImageIdentifier.fromPartial(object.image)
@@ -1510,7 +1524,6 @@ export const NodeCreate = {
     message.properties = object.properties?.map((e) => Parameter.fromPartial(e)) || [];
     message.rules = object.rules?.map((e) => FirewallRule.fromPartial(e)) || [];
     message.network = object.network ?? "";
-    message.orgId = object.orgId ?? "";
     return message;
   },
 };

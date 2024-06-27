@@ -31,10 +31,22 @@ import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 
 const columns: AdminListColumn[] = [
   {
-    name: 'name',
+    name: 'displayName',
     width: '350px',
-    sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+    sortField: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
     isVisible: true,
+  },
+  // {
+  //   name: 'nodeName',
+  //   width: '350px',
+  //   sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+  //   isVisible: false,
+  // },
+  {
+    name: 'dnsName',
+    width: '350px',
+    sortField: NodeSortField.NODE_SORT_FIELD_DNS_NAME,
+    isVisible: false,
   },
   {
     name: 'ip',
@@ -89,7 +101,7 @@ const columns: AdminListColumn[] = [
     name: 'nodeType',
     width: '150px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
-    isVisible: true,
+    isVisible: false,
     filterComponent: AdminListFilterControl,
     filterSettings: {
       items: createDropdownValuesFromEnum(NodeType, 'NODE_TYPE_'),
@@ -106,7 +118,7 @@ const columns: AdminListColumn[] = [
   {
     name: 'blockHeight',
     width: '190px',
-    isVisible: true,
+    isVisible: false,
     sortField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
   },
   {
@@ -145,7 +157,7 @@ const columns: AdminListColumn[] = [
     name: 'createdBy',
     displayName: 'Launched By',
     width: '230px',
-    isVisible: false,
+    isVisible: true,
     filterComponent: AdminNodesFilterUser,
   },
 ];
@@ -196,7 +208,6 @@ export const AdminNodes = () => {
         syncStatus: (
           <NodeStatus status={node.syncStatus} type="sync" hasBorder={false} />
         ),
-        blockchainName: node.blockchainName,
         nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
         region: node.placement?.scheduler?.region,
         createdAt: <DateTime date={node.createdAt!} />,

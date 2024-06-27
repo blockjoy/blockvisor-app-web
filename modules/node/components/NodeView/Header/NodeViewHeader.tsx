@@ -65,7 +65,7 @@ export const NodeViewHeader = () => {
       {isDeleteMode && (
         <DeleteModal
           portalId="delete-node-modal"
-          elementName={node?.name!}
+          elementName={node?.displayName!}
           entityName="Node"
           onHide={toggleDeleteModalOpen}
           onSubmit={handleDeleteNode}
@@ -95,7 +95,7 @@ export const NodeViewHeader = () => {
                   />
                 </div>
                 <div>
-                  <h2 css={styles.detailsHeader}>{node!.name}</h2>
+                  <h2 css={styles.detailsHeader}>{node!.displayName}</h2>
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
                       <p>
