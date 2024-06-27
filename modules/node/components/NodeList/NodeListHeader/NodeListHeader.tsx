@@ -27,7 +27,7 @@ export const NodeListHeader = () => {
     updateSettings('layout', { 'nodes.view': type });
   };
 
-  const isLoading = isLoadingNodes !== 'finished';
+  const isLoading = isLoadingNodes === 'initializing';
 
   return (
     <div css={styles.wrapper}>

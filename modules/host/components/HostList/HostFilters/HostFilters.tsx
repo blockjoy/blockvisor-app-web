@@ -29,10 +29,11 @@ export const HostFilters = () => {
   const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
     layoutAtoms.isHostFiltersOpenMobile,
   );
-  const activeView = useRecoilValue(layoutSelectors.hostView);
 
   const { updateSettings } = useSettings();
   const { isXlrg } = useViewport();
+
+  const activeView = useRecoilValue(layoutSelectors.activeHostView(isXlrg));
 
   const handleFiltersToggle = () => {
     if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
@@ -42,9 +43,9 @@ export const HostFilters = () => {
   const handleSearch = (value: string) => changeTempFilters('keyword', value);
 
   const handleActiveView = (view: View) => {
-    updateSettings('layout', {
-      'nodes.view': view,
-    });
+    const activeViewKey = isXlrg ? 'mobile.hosts.view' : 'hosts.view';
+
+    updateSettings('layout', { [activeViewKey]: view });
   };
 
   if (
