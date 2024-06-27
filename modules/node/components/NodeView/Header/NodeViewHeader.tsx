@@ -24,7 +24,7 @@ import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
-import { useNavigate } from '@shared/index';
+import { escapeHtml, useNavigate } from '@shared/index';
 
 export const NodeViewHeader = () => {
   const { navigate } = useNavigate();
@@ -65,7 +65,7 @@ export const NodeViewHeader = () => {
       {isDeleteMode && (
         <DeleteModal
           portalId="delete-node-modal"
-          elementName={node?.displayName!}
+          elementName={escapeHtml(node?.displayName!)}
           entityName="Node"
           onHide={toggleDeleteModalOpen}
           onSubmit={handleDeleteNode}

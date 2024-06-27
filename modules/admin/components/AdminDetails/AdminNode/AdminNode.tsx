@@ -10,6 +10,7 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { createAdminUpdateRequest } from '@modules/admin/utils';
 import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 const ignoreItems = [
   'id',
@@ -91,8 +92,14 @@ export const AdminNode = () => {
     {
       id: 'displayName',
       label: 'Display Name',
-      data: node.displayName,
+      data: escapeHtml(node.displayName),
       copyValue: node.displayName,
+      editSettings: {
+        field: 'displayName',
+        isNumber: false,
+        controlType: 'text',
+        defaultValue: node.displayName,
+      },
     },
     {
       id: 'dnsName',

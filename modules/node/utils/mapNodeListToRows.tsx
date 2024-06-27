@@ -4,6 +4,7 @@ import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
 import { css } from '@emotion/react';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 const middleRowStyles = css`
   text-transform: capitalize;
@@ -62,7 +63,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
                   {node.blockchainName} | {node.network}
                 </p>
               }
-              topRow={node.displayName}
+              topRow={escapeHtml(node.displayName)}
               bottomRow={node?.ip!}
             />
           ),
