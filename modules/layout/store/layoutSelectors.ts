@@ -107,15 +107,6 @@ const activeHostView = selectorFamily<View, boolean>({
     },
 });
 
-const adminFullWidth = selector<boolean>({
-  key: 'layout.admin.fullWidth',
-  get: ({ get }) => {
-    const layoutVal = get(layout);
-
-    return layoutVal?.['admin.fullWidth'] ?? false;
-  },
-});
-
 export const layoutSelectors = {
   layout,
 
