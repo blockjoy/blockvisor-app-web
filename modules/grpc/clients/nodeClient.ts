@@ -187,8 +187,8 @@ class NodeClient {
     try {
       await authClient.refreshToken();
       const response = await this.client.create(node, getOptions());
-      console.log('createNodeResponse', response.node);
-      return response.node!;
+      console.log('createNodeResponse', response.nodes);
+      return response.nodes[0];
     } catch (err) {
       return handleError(err);
     }

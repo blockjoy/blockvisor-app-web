@@ -138,8 +138,8 @@ export interface NodeServiceCreateRequest {
 
 /** Message returned when a node is created. */
 export interface NodeServiceCreateResponse {
-  /** The actual node that was just created. */
-  node: Node | undefined;
+  /** All nodes that were created. */
+  nodes: Node[];
 }
 
 /**
@@ -346,23 +346,18 @@ export interface NodeServiceDeleteRequest {
 export interface NodeServiceDeleteResponse {
 }
 
-/**
- * This message contains the two possible ways in which the location of a node
- * may be determined.
- */
+/** Determines the placement of a new node. */
 export interface NodePlacement {
-  /**
-   * Simply place the node on the provided host id. This means that retrying
-   * on another host is disabled.
-   */
+  /** The scheduler determines placement (see `NodeScheduler`). */
+  scheduler?:
+    | NodeScheduler
+    | undefined;
+  /** Use this host id (retrying on another host is disabled). */
   hostId?:
     | string
     | undefined;
-  /**
-   * The scheduler decides where to place this node. Refer to the
-   * documentation of the `NodeScheduler` message for more details.
-   */
-  scheduler?: NodeScheduler | undefined;
+  /** Batch create multiple nodes on these hosts. */
+  multiple?: MultipleNodes | undefined;
 }
 
 /**
@@ -422,6 +417,15 @@ export enum NodeScheduler_ResourceAffinity {
   /** RESOURCE_AFFINITY_LEAST_RESOURCES - Prefer to utilize empty hosts first. */
   RESOURCE_AFFINITY_LEAST_RESOURCES = 2,
   UNRECOGNIZED = -1,
+}
+
+export interface MultipleNodes {
+  nodeCounts: NodeCount[];
+}
+
+export interface NodeCount {
+  hostId: string;
+  nodeCount: number;
 }
 
 /** IP Addresses used to filter access. */
@@ -1098,13 +1102,13 @@ export const NodeServiceCreateRequest = {
 };
 
 function createBaseNodeServiceCreateResponse(): NodeServiceCreateResponse {
-  return { node: undefined };
+  return { nodes: [] };
 }
 
 export const NodeServiceCreateResponse = {
   encode(message: NodeServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.node !== undefined) {
-      Node.encode(message.node, writer.uint32(10).fork()).ldelim();
+    for (const v of message.nodes) {
+      Node.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -1121,7 +1125,7 @@ export const NodeServiceCreateResponse = {
             break;
           }
 
-          message.node = Node.decode(reader, reader.uint32());
+          message.nodes.push(Node.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1138,7 +1142,7 @@ export const NodeServiceCreateResponse = {
 
   fromPartial(object: DeepPartial<NodeServiceCreateResponse>): NodeServiceCreateResponse {
     const message = createBaseNodeServiceCreateResponse();
-    message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
+    message.nodes = object.nodes?.map((e) => Node.fromPartial(e)) || [];
     return message;
   },
 };
@@ -2487,16 +2491,19 @@ export const NodeServiceDeleteResponse = {
 };
 
 function createBaseNodePlacement(): NodePlacement {
-  return { hostId: undefined, scheduler: undefined };
+  return { scheduler: undefined, hostId: undefined, multiple: undefined };
 }
 
 export const NodePlacement = {
   encode(message: NodePlacement, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hostId !== undefined) {
-      writer.uint32(10).string(message.hostId);
-    }
     if (message.scheduler !== undefined) {
-      NodeScheduler.encode(message.scheduler, writer.uint32(18).fork()).ldelim();
+      NodeScheduler.encode(message.scheduler, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.hostId !== undefined) {
+      writer.uint32(18).string(message.hostId);
+    }
+    if (message.multiple !== undefined) {
+      MultipleNodes.encode(message.multiple, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -2513,14 +2520,21 @@ export const NodePlacement = {
             break;
           }
 
-          message.hostId = reader.string();
+          message.scheduler = NodeScheduler.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.scheduler = NodeScheduler.decode(reader, reader.uint32());
+          message.hostId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.multiple = MultipleNodes.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2537,9 +2551,12 @@ export const NodePlacement = {
 
   fromPartial(object: DeepPartial<NodePlacement>): NodePlacement {
     const message = createBaseNodePlacement();
-    message.hostId = object.hostId ?? undefined;
     message.scheduler = (object.scheduler !== undefined && object.scheduler !== null)
       ? NodeScheduler.fromPartial(object.scheduler)
+      : undefined;
+    message.hostId = object.hostId ?? undefined;
+    message.multiple = (object.multiple !== undefined && object.multiple !== null)
+      ? MultipleNodes.fromPartial(object.multiple)
       : undefined;
     return message;
   },
@@ -2609,6 +2626,109 @@ export const NodeScheduler = {
     message.resource = object.resource ?? 0;
     message.similarity = object.similarity ?? undefined;
     message.region = object.region ?? "";
+    return message;
+  },
+};
+
+function createBaseMultipleNodes(): MultipleNodes {
+  return { nodeCounts: [] };
+}
+
+export const MultipleNodes = {
+  encode(message: MultipleNodes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.nodeCounts) {
+      NodeCount.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MultipleNodes {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMultipleNodes();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.nodeCounts.push(NodeCount.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<MultipleNodes>): MultipleNodes {
+    return MultipleNodes.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<MultipleNodes>): MultipleNodes {
+    const message = createBaseMultipleNodes();
+    message.nodeCounts = object.nodeCounts?.map((e) => NodeCount.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseNodeCount(): NodeCount {
+  return { hostId: "", nodeCount: 0 };
+}
+
+export const NodeCount = {
+  encode(message: NodeCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.nodeCount !== 0) {
+      writer.uint32(16).uint32(message.nodeCount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeCount {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeCount();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.nodeCount = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeCount>): NodeCount {
+    return NodeCount.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeCount>): NodeCount {
+    const message = createBaseNodeCount();
+    message.hostId = object.hostId ?? "";
+    message.nodeCount = object.nodeCount ?? 0;
     return message;
   },
 };
@@ -3258,10 +3378,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceReportResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
