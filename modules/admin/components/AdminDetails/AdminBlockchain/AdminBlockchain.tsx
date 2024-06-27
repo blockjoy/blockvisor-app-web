@@ -59,8 +59,8 @@ export const AdminBlockchain = () => {
       data: capitalize(
         BlockchainVisibility[item.visibility]
           ?.toString()
-          .replace('BLOCKCHAIN_VISIBILITY_', '')
-          .toLowerCase(),
+          ?.replace('BLOCKCHAIN_VISIBILITY_', '')
+          ?.toLowerCase(),
       ),
     },
     {

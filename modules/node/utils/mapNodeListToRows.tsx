@@ -62,7 +62,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
                   {node.blockchainName} | {node.network}
                 </p>
               }
-              topRow={node.name}
+              topRow={node.displayName}
               bottomRow={node?.ip!}
             />
           ),

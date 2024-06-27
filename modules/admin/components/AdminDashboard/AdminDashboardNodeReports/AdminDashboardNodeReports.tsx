@@ -63,7 +63,7 @@ export const AdminDashboardNodeReports = () => {
                         <NextLink
                           href={`/admin?name=nodes&id=${report.node?.id}`}
                         >
-                          {report.node?.name}
+                          {report.node?.displayName}
                         </NextLink>
                       }
                       middleRow={report.node?.id}

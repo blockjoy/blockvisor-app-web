@@ -13,7 +13,9 @@ import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
 
 const ignoreItems = [
   'id',
-  'name',
+  'nodeName',
+  'displayName',
+  'dnsName',
   'orgId',
   'orgName',
   'hostName',
@@ -81,10 +83,22 @@ export const AdminNode = () => {
 
   const customItems = (node: Node): AdminDetailProperty[] => [
     {
-      id: 'name',
-      label: 'Name',
-      data: node.name,
-      copyValue: node.name,
+      id: 'nodeName',
+      label: 'Node Name',
+      data: node.nodeName,
+      copyValue: node.nodeName,
+    },
+    {
+      id: 'displayName',
+      label: 'Display Name',
+      data: node.displayName,
+      copyValue: node.displayName,
+    },
+    {
+      id: 'dnsName',
+      label: 'Dns Name',
+      data: node.dnsName,
+      copyValue: node.dnsName,
     },
     {
       id: 'id',

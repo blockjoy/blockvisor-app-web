@@ -25,7 +25,7 @@ export const mapNodeListToGrid = (
         <TableGridCell
           key={node.id}
           onCellClick={() => onCellClick(node.id)}
-          titleText={node.name}
+          titleText={node.displayName}
           titleIcon={
             <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
           }

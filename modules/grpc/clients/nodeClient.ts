@@ -103,7 +103,9 @@ class NodeClient {
       const search: NodeSearch = {
         id: createSearch(keyword),
         ip: createSearch(keyword),
-        name: createSearch(keyword),
+        nodeName: createSearch(keyword),
+        displayName: createSearch(keyword),
+        dnsName: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;
