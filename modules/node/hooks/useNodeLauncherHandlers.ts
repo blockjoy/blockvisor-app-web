@@ -252,15 +252,12 @@ export const useNodeLauncherHandlers = ({
     Mixpanel.track('Launch Node - Key File Uploaded');
   };
 
-  const launchNode = async (
-    placement: NodePlacement,
-    nodesLaunched: number,
-    onSuccess: (nodeId: string) => void,
-  ) => {
-    const totalNodesToLaunch = selectedHosts?.reduce(
-      (partialSum, host) => partialSum + host.nodesToLaunch,
-      0,
-    )!;
+  const handleCreateNodeClicked = async () => {
+    setIsLaunching(true);
+
+    const isSingleNode =
+      !selectedHosts ||
+      (selectedHosts?.length === 1 && selectedHosts[0].nodesToLaunch === 1);
 
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.id,
@@ -271,76 +268,45 @@ export const useNodeLauncherHandlers = ({
       network: selectedNetwork!,
       allowIps: nodeLauncherState.allowIps,
       denyIps: nodeLauncherState.denyIps,
-      placement,
+      placement: {},
     };
 
-    await createNode(
-      params,
-      (nodeId: string) => {
-        Mixpanel.track('Launch Node - Node Launched');
-        if (totalNodesToLaunch > 1) {
-          if (nodesLaunched === totalNodesToLaunch) {
-            toast.success('All nodes launched');
-            onSuccess(nodeId);
-          }
-        } else {
-          onSuccess(nodeId);
-        }
-      },
-      (error: string) => setError(error!),
-    );
-  };
-
-  const handleCreateNodeClicked = async () => {
-    setIsLaunching(true);
-    let nodesLaunched = 0;
-
     if (selectedHosts?.length!) {
-      const nodeLaunchers = [];
-
-      for (let nodeLauncherHost of selectedHosts!) {
-        for (let i = 0; i < nodeLauncherHost.nodesToLaunch; i++) {
-          nodesLaunched++;
-          nodeLaunchers.push(
-            launchNode(
-              { hostId: nodeLauncherHost.host.id },
-              nodesLaunched,
-              (nodeId) => {
-                navigate(
-                  selectedHosts?.length === 1 &&
-                    nodeLauncherHost.nodesToLaunch === 1
-                    ? ROUTES.NODE(nodeId)
-                    : ROUTES.NODES,
-                  () => {
-                    resetNodeLauncherState();
-                    resetSelectedVersion();
-                    resetSelectedNetwork();
-                  },
-                );
-              },
-            ),
-          );
-        }
-      }
-
-      await Promise.all(nodeLaunchers);
+      params.placement = {
+        multiple: {
+          nodeCounts: selectedHosts.map(
+            ({ host: { id: hostId }, nodesToLaunch: nodeCount }) => ({
+              hostId,
+              nodeCount,
+            }),
+          ),
+        },
+      };
     } else {
-      const placement = {
+      params.placement = {
         scheduler: {
           region: selectedRegion?.name!,
           resource:
             NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
         },
       };
+    }
 
-      launchNode(placement, nodesLaunched, (nodeId: string) => {
-        navigate(ROUTES.NODE(nodeId), () => {
+    await createNode(
+      params,
+      (nodeId: string) => {
+        Mixpanel.track('Launch Node - Node Launched');
+
+        if (!isSingleNode) toast.success('All nodes launched');
+
+        navigate(isSingleNode ? ROUTES.NODE(nodeId) : ROUTES.NODES, () => {
           resetNodeLauncherState();
           resetSelectedVersion();
           resetSelectedNetwork();
         });
-      });
-    }
+      },
+      (error: string) => setError(error!),
+    );
   };
 
   useEffect(() => {
