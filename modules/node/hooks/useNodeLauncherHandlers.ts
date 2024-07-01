@@ -125,15 +125,17 @@ export const useNodeLauncherHandlers = ({
     if (hostId) {
       queriedHost = allHosts.find((host: Host) => host.id === hostId) ?? null;
 
-      const isValid = queriedHost?.ipAddresses.some((host) => !host.assigned);
+      if (queriedHost) {
+        const isValid = queriedHost.ipAddresses.some((host) => !host.assigned);
 
-      setSelectedHosts([
-        {
-          nodesToLaunch: 1,
-          host: queriedHost!,
-          isValid,
-        },
-      ]);
+        setSelectedHosts([
+          {
+            nodesToLaunch: 1,
+            host: queriedHost!,
+            isValid,
+          },
+        ]);
+      }
     }
   }, [allHosts]);
 

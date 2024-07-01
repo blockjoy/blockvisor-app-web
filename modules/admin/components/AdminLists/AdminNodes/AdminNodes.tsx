@@ -140,6 +140,12 @@ const columns: AdminListColumn[] = [
     filterComponent: AdminNodesFilterRegion,
   },
   {
+    name: 'address',
+    width: '350px',
+    displayName: 'Node Address',
+    isVisible: false,
+  },
+  {
     name: 'orgName',
     displayName: 'Organization',
     width: '240px',
