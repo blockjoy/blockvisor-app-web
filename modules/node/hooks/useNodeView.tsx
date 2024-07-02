@@ -20,7 +20,7 @@ type Hook = {
   stopNode: (nodeId: Args) => void;
   startNode: (nodeId: Args) => void;
   modifyNode: (node: Node) => void;
-  updateNode: (node: NodeServiceUpdateConfigRequest) => void;
+  updateNode: (node: NodeServiceUpdateConfigRequest) => Promise<void>;
   isLoading: boolean;
   unloadNode: any;
   node: Node | null;
@@ -108,8 +108,11 @@ export const useNodeView = (): Hook => {
 
       setNode(newNode);
       modifyNodeInNodeList(newNode);
+
+      return;
     } catch (err) {
       toast.error('Error Updating Node');
+      return;
     }
   };
 

@@ -6,7 +6,6 @@ export const styles = {
   wrapper: css`
     display: flex;
     align-items: center;
-    gap: 10px;
   `,
   wrapperEditable: css`
     @media ${breakpoints.fromXLrg} {
@@ -36,18 +35,17 @@ export const styles = {
     border: 0;
     padding: 0;
     border-radius: 0;
-    border-bottom: 1px solid transparent;
     resize: none;
     cursor: text;
+    word-wrap: break-word;
+    word-break: break-all;
 
     :disabled {
       -webkit-text-fill-color: ${theme.colorText};
       opacity: 1;
     }
   `,
-  inputEditable: (theme: ITheme) => css`
-    border-color: ${theme.colorBorder};
-  `,
+  inputEditable: (theme: ITheme) => css``,
   iconWrapper: css`
     width: 24px;
     height: 24px;
@@ -61,5 +59,10 @@ export const styles = {
     margin-right: 11px;
     min-width: 0;
     overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+  `,
+  button: css`
+    margin-left: 10px;
   `,
 };

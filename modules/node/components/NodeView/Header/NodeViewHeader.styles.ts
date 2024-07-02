@@ -10,6 +10,7 @@ export const styles = {
     margin-bottom: 0;
     border-bottom: 1px solid ${theme.colorBorder};
     min-height: 100px;
+    padding: 10px 0;
 
     @media ${breakpoints.toLrg} {
       flex-direction: column;
