@@ -36,12 +36,12 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
     isVisible: true,
   },
-  // {
-  //   name: 'nodeName',
-  //   width: '350px',
-  //   sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
-  //   isVisible: false,
-  // },
+  {
+    name: 'nodeName',
+    width: '350px',
+    sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+    isVisible: false,
+  },
   {
     name: 'dnsName',
     width: '350px',

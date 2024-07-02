@@ -43,7 +43,7 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
         {
           key: '2',
           component: (
-            <>
+            <div style={{ maxWidth: '400px' }}>
               <TableBlock
                 middleRow={`${node.blockchainName} ${convertNodeTypeToName(
                   node.nodeType,
@@ -51,7 +51,7 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
                 topRow={escapeHtml(node.displayName)}
                 bottomRow={node?.ip!}
               />
-            </>
+            </div>
           ),
         },
         {
