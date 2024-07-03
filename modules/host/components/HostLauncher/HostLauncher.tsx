@@ -14,7 +14,10 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './HostLauncher.styles';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { useProvisionToken, organizationAtoms } from '@modules/organization';
+import {
+  useProvisionToken,
+  organizationSelectors,
+} from '@modules/organization';
 import {
   // LAUNCH_ERRORS,
   LauncherWithGuardProps,
@@ -27,7 +30,7 @@ export const HostLauncher = ({
   permissions,
 }: LauncherWithGuardProps) => {
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =

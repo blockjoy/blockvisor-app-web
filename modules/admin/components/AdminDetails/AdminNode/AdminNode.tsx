@@ -10,10 +10,13 @@ import {
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { createAdminUpdateRequest } from '@modules/admin/utils';
 import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 const ignoreItems = [
   'id',
-  'name',
+  'nodeName',
+  'displayName',
+  'dnsName',
   'orgId',
   'orgName',
   'hostName',
@@ -81,10 +84,28 @@ export const AdminNode = () => {
 
   const customItems = (node: Node): AdminDetailProperty[] => [
     {
-      id: 'name',
-      label: 'Name',
-      data: node.name,
-      copyValue: node.name,
+      id: 'nodeName',
+      label: 'Node Name',
+      data: node.nodeName,
+      copyValue: node.nodeName,
+    },
+    {
+      id: 'displayName',
+      label: 'Display Name',
+      data: escapeHtml(node.displayName),
+      copyValue: node.displayName,
+      editSettings: {
+        field: 'displayName',
+        isNumber: false,
+        controlType: 'text',
+        defaultValue: node.displayName,
+      },
+    },
+    {
+      id: 'dnsName',
+      label: 'Dns Name',
+      data: node.dnsName,
+      copyValue: node.dnsName,
     },
     {
       id: 'id',

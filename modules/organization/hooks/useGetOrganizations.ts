@@ -3,9 +3,9 @@ import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   organizationAtoms,
+  organizationSelectors,
   useDefaultOrganization,
 } from '@modules/organization';
-import { sort } from '@shared/components';
 
 export function useGetOrganizations() {
   const [organizations, setOrganizations] = useRecoilState(
@@ -13,7 +13,7 @@ export function useGetOrganizations() {
   );
 
   const organizationsSorted = useRecoilValue(
-    organizationAtoms.allOrganizationsSorted,
+    organizationSelectors.allOrganizationsSorted,
   );
 
   const [isLoading, setIsLoading] = useRecoilState(

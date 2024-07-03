@@ -18,13 +18,13 @@ import {
   mapNodeListToGrid,
   mapNodeListToRows,
   useNodeList,
-  nodeAtoms,
   useNodeUIContext,
 } from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import { ROUTES } from '@shared/index';
+import { layoutSelectors } from '@modules/layout';
 
 export const NodeList = () => {
   const router = useRouter();
@@ -57,7 +57,7 @@ export const NodeList = () => {
       nodeUIContext.queryParams.pagination.itemsPerPage <
       nodeCount;
 
-  const activeListType = useRecoilValue(nodeAtoms.activeListType);
+  const view = useRecoilValue(layoutSelectors.nodeView);
 
   const currentQueryParams = useRef(nodeUIProps.queryParams);
 
@@ -128,7 +128,7 @@ export const NodeList = () => {
               scrollThreshold={0.75}
               loader={''}
             >
-              {activeListType === 'table' ? (
+              {view === 'table' ? (
                 <Table
                   isLoading={isLoading}
                   headers={headers}

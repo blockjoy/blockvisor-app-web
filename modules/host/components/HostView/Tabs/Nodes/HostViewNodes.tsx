@@ -11,7 +11,7 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useRecoilValue } from 'recoil';
 import { authSelectors } from '@modules/auth';
@@ -26,7 +26,7 @@ export const HostViewNodes = () => {
   const { isLoading: isLoadingActiveHost } = useHostView();
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const canAdminList = useRecoilValue(
     authSelectors.hasPermission('node-admin-list'),

@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  KeyboardEvent,
-  FC,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { styles } from './EditableTitle.styles';
 import IconPencil from '@public/assets/icons/common/Pencil.svg';
 import IconClose from '@public/assets/icons/common/Close.svg';
@@ -39,16 +32,16 @@ const setCaret = (el?: HTMLInputElement) => {
   }
 };
 
-export const EditableTitle: FC<Props> = ({
+export const EditableTitle = ({
   isLoading,
   isSaving,
   initialValue,
   onSaveClicked,
   onEditClicked,
   canUpdate,
-}) => {
+}: Props) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [isValid, setIsValid] = useState<boolean>(true);
+  const [isValid, setIsValid] = useState<boolean>(false);
   const [isDirty, setIsDirty] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -163,6 +156,7 @@ export const EditableTitle: FC<Props> = ({
             onClick={handleSaveClicked}
             size="small"
             style="secondary"
+            customCss={[styles.button]}
           >
             Save
           </Button>

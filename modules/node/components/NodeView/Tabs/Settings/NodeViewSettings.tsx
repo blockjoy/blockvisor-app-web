@@ -46,7 +46,6 @@ export const NodeViewSettings = () => {
       </div>
       <div css={styles.row}>
         <FormLabelCaps noBottomMargin>Auto Updates</FormLabelCaps>
-
         {isSuperUser ? (
           <Switch
             noBottomMargin

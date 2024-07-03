@@ -3,13 +3,16 @@ import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useRecoilState } from 'recoil';
 import { checkForApiError } from 'utils/checkForApiError';
 import { checkForTokenError } from 'utils/checkForTokenError';
-import { organizationAtoms } from '../store/organizationAtoms';
-import { useDefaultOrganization } from './useDefaultOrganization';
-import { useGetOrganizations } from './useGetOrganizations';
-import { useSwitchOrganization } from './useSwitchOrganization';
+import {
+  organizationAtoms,
+  useDefaultOrganization,
+  useGetOrganizations,
+  useSwitchOrganization,
+} from '@modules/organization';
 
 export function useGetOrganization() {
-  const { getDefaultOrganization } = useDefaultOrganization();
+  const { defaultOrganization, getDefaultOrganization } =
+    useDefaultOrganization();
 
   const { switchOrganization } = useSwitchOrganization();
 
@@ -28,9 +31,14 @@ export function useGetOrganization() {
       (o) => o.id === id,
     )!;
 
+    const shouldUpdateDefault =
+      shouldSetDefault &&
+      organization?.id &&
+      organization?.id !== defaultOrganization?.id;
+
     if (organization) {
       setOrganization(organization);
-      if (shouldSetDefault)
+      if (shouldUpdateDefault)
         switchOrganization(organization.id, organization.name);
     } else {
       try {
@@ -38,7 +46,7 @@ export function useGetOrganization() {
         checkForTokenError(organization);
         checkForApiError('organization', organization);
         setOrganization(organization);
-        if (shouldSetDefault)
+        if (shouldUpdateDefault)
           switchOrganization(organization.id, organization.name);
       } catch (err) {
         await getDefaultOrganization(organizations);

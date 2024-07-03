@@ -175,6 +175,94 @@ export interface OrgRole {
   name?: string | undefined;
 }
 
+export interface OrgServiceInitCardRequest {
+  /** The id of the org for which you want to initialise a new card. */
+  orgId: string;
+  /** The user that initiates this card. */
+  userId: string;
+}
+
+export interface OrgServiceInitCardResponse {
+  clientSecret: string;
+}
+
+export interface OrgServiceListPaymentMethodsRequest {
+  orgId: string;
+}
+
+export interface OrgServiceListPaymentMethodsResponse {
+  methods: PaymentMethod[];
+}
+
+export interface PaymentMethod {
+  /** The id of the org to which this payment method belongs. */
+  orgId?:
+    | string
+    | undefined;
+  /** The id of the user that created this payment method. */
+  userId?: string | undefined;
+  details: BillingDetails | undefined;
+  createdAt: Date | undefined;
+  updatedAt:
+    | Date
+    | undefined;
+  /** This payment method is done through a credit card. */
+  card?: Card | undefined;
+}
+
+/**
+ * Contains data related to billing for a specific user. Note that we store a separate email address
+ * here since the billing email may be different from the user email.
+ */
+export interface BillingDetails {
+  address?: Address | undefined;
+  email?: string | undefined;
+  name?: string | undefined;
+  phone?: string | undefined;
+}
+
+export interface Address {
+  city?: string | undefined;
+  country?: string | undefined;
+  line1?: string | undefined;
+  line2?: string | undefined;
+  postalCode?: string | undefined;
+  state?: string | undefined;
+}
+
+export interface Card {
+  brand: string;
+  expMonth: number;
+  expYear: number;
+  last4: string;
+}
+
+export interface OrgServiceBillingDetailsRequest {
+  orgId: string;
+}
+
+export interface OrgServiceBillingDetailsResponse {
+  currency: string;
+  currentPeriodStart: Date | undefined;
+  currentPeriodEnd: Date | undefined;
+  defaultPaymentMethod?: string | undefined;
+  createdAt: Date | undefined;
+  status: string;
+  items: BillingItem[];
+}
+
+export interface BillingItem {
+  name?:
+    | string
+    | undefined;
+  /** In the lowest denomination, e.g. dollar cents or pennies. */
+  unitAmount?:
+    | number
+    | undefined;
+  /** The number of items. */
+  quantity?: number | undefined;
+}
+
 function createBaseOrg(): Org {
   return {
     id: "",
@@ -1406,6 +1494,813 @@ export const OrgRole = {
   },
 };
 
+function createBaseOrgServiceInitCardRequest(): OrgServiceInitCardRequest {
+  return { orgId: "", userId: "" };
+}
+
+export const OrgServiceInitCardRequest = {
+  encode(message: OrgServiceInitCardRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    if (message.userId !== "") {
+      writer.uint32(18).string(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceInitCardRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceInitCardRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceInitCardRequest>): OrgServiceInitCardRequest {
+    return OrgServiceInitCardRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceInitCardRequest>): OrgServiceInitCardRequest {
+    const message = createBaseOrgServiceInitCardRequest();
+    message.orgId = object.orgId ?? "";
+    message.userId = object.userId ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceInitCardResponse(): OrgServiceInitCardResponse {
+  return { clientSecret: "" };
+}
+
+export const OrgServiceInitCardResponse = {
+  encode(message: OrgServiceInitCardResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clientSecret !== "") {
+      writer.uint32(10).string(message.clientSecret);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceInitCardResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceInitCardResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clientSecret = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceInitCardResponse>): OrgServiceInitCardResponse {
+    return OrgServiceInitCardResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceInitCardResponse>): OrgServiceInitCardResponse {
+    const message = createBaseOrgServiceInitCardResponse();
+    message.clientSecret = object.clientSecret ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceListPaymentMethodsRequest(): OrgServiceListPaymentMethodsRequest {
+  return { orgId: "" };
+}
+
+export const OrgServiceListPaymentMethodsRequest = {
+  encode(message: OrgServiceListPaymentMethodsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceListPaymentMethodsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceListPaymentMethodsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceListPaymentMethodsRequest>): OrgServiceListPaymentMethodsRequest {
+    return OrgServiceListPaymentMethodsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceListPaymentMethodsRequest>): OrgServiceListPaymentMethodsRequest {
+    const message = createBaseOrgServiceListPaymentMethodsRequest();
+    message.orgId = object.orgId ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceListPaymentMethodsResponse(): OrgServiceListPaymentMethodsResponse {
+  return { methods: [] };
+}
+
+export const OrgServiceListPaymentMethodsResponse = {
+  encode(message: OrgServiceListPaymentMethodsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.methods) {
+      PaymentMethod.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceListPaymentMethodsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceListPaymentMethodsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.methods.push(PaymentMethod.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceListPaymentMethodsResponse>): OrgServiceListPaymentMethodsResponse {
+    return OrgServiceListPaymentMethodsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceListPaymentMethodsResponse>): OrgServiceListPaymentMethodsResponse {
+    const message = createBaseOrgServiceListPaymentMethodsResponse();
+    message.methods = object.methods?.map((e) => PaymentMethod.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBasePaymentMethod(): PaymentMethod {
+  return {
+    orgId: undefined,
+    userId: undefined,
+    details: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+    card: undefined,
+  };
+}
+
+export const PaymentMethod = {
+  encode(message: PaymentMethod, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== undefined) {
+      writer.uint32(18).string(message.orgId);
+    }
+    if (message.userId !== undefined) {
+      writer.uint32(26).string(message.userId);
+    }
+    if (message.details !== undefined) {
+      BillingDetails.encode(message.details, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).ldelim();
+    }
+    if (message.updatedAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.card !== undefined) {
+      Card.encode(message.card, writer.uint32(58).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PaymentMethod {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePaymentMethod();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.details = BillingDetails.decode(reader, reader.uint32());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.card = Card.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<PaymentMethod>): PaymentMethod {
+    return PaymentMethod.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<PaymentMethod>): PaymentMethod {
+    const message = createBasePaymentMethod();
+    message.orgId = object.orgId ?? undefined;
+    message.userId = object.userId ?? undefined;
+    message.details = (object.details !== undefined && object.details !== null)
+      ? BillingDetails.fromPartial(object.details)
+      : undefined;
+    message.createdAt = object.createdAt ?? undefined;
+    message.updatedAt = object.updatedAt ?? undefined;
+    message.card = (object.card !== undefined && object.card !== null) ? Card.fromPartial(object.card) : undefined;
+    return message;
+  },
+};
+
+function createBaseBillingDetails(): BillingDetails {
+  return { address: undefined, email: undefined, name: undefined, phone: undefined };
+}
+
+export const BillingDetails = {
+  encode(message: BillingDetails, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.address !== undefined) {
+      Address.encode(message.address, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.email !== undefined) {
+      writer.uint32(18).string(message.email);
+    }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.phone !== undefined) {
+      writer.uint32(34).string(message.phone);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BillingDetails {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBillingDetails();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.address = Address.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.phone = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BillingDetails>): BillingDetails {
+    return BillingDetails.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BillingDetails>): BillingDetails {
+    const message = createBaseBillingDetails();
+    message.address = (object.address !== undefined && object.address !== null)
+      ? Address.fromPartial(object.address)
+      : undefined;
+    message.email = object.email ?? undefined;
+    message.name = object.name ?? undefined;
+    message.phone = object.phone ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAddress(): Address {
+  return {
+    city: undefined,
+    country: undefined,
+    line1: undefined,
+    line2: undefined,
+    postalCode: undefined,
+    state: undefined,
+  };
+}
+
+export const Address = {
+  encode(message: Address, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.city !== undefined) {
+      writer.uint32(10).string(message.city);
+    }
+    if (message.country !== undefined) {
+      writer.uint32(18).string(message.country);
+    }
+    if (message.line1 !== undefined) {
+      writer.uint32(26).string(message.line1);
+    }
+    if (message.line2 !== undefined) {
+      writer.uint32(34).string(message.line2);
+    }
+    if (message.postalCode !== undefined) {
+      writer.uint32(42).string(message.postalCode);
+    }
+    if (message.state !== undefined) {
+      writer.uint32(50).string(message.state);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Address {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddress();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.city = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.country = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.line1 = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.line2 = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.postalCode = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.state = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Address>): Address {
+    return Address.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Address>): Address {
+    const message = createBaseAddress();
+    message.city = object.city ?? undefined;
+    message.country = object.country ?? undefined;
+    message.line1 = object.line1 ?? undefined;
+    message.line2 = object.line2 ?? undefined;
+    message.postalCode = object.postalCode ?? undefined;
+    message.state = object.state ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCard(): Card {
+  return { brand: "", expMonth: 0, expYear: 0, last4: "" };
+}
+
+export const Card = {
+  encode(message: Card, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.brand !== "") {
+      writer.uint32(10).string(message.brand);
+    }
+    if (message.expMonth !== 0) {
+      writer.uint32(16).int64(message.expMonth);
+    }
+    if (message.expYear !== 0) {
+      writer.uint32(24).int64(message.expYear);
+    }
+    if (message.last4 !== "") {
+      writer.uint32(34).string(message.last4);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Card {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCard();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.brand = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.expMonth = longToNumber(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.expYear = longToNumber(reader.int64() as Long);
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.last4 = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Card>): Card {
+    return Card.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Card>): Card {
+    const message = createBaseCard();
+    message.brand = object.brand ?? "";
+    message.expMonth = object.expMonth ?? 0;
+    message.expYear = object.expYear ?? 0;
+    message.last4 = object.last4 ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceBillingDetailsRequest(): OrgServiceBillingDetailsRequest {
+  return { orgId: "" };
+}
+
+export const OrgServiceBillingDetailsRequest = {
+  encode(message: OrgServiceBillingDetailsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceBillingDetailsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceBillingDetailsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceBillingDetailsRequest>): OrgServiceBillingDetailsRequest {
+    return OrgServiceBillingDetailsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceBillingDetailsRequest>): OrgServiceBillingDetailsRequest {
+    const message = createBaseOrgServiceBillingDetailsRequest();
+    message.orgId = object.orgId ?? "";
+    return message;
+  },
+};
+
+function createBaseOrgServiceBillingDetailsResponse(): OrgServiceBillingDetailsResponse {
+  return {
+    currency: "",
+    currentPeriodStart: undefined,
+    currentPeriodEnd: undefined,
+    defaultPaymentMethod: undefined,
+    createdAt: undefined,
+    status: "",
+    items: [],
+  };
+}
+
+export const OrgServiceBillingDetailsResponse = {
+  encode(message: OrgServiceBillingDetailsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.currency !== "") {
+      writer.uint32(10).string(message.currency);
+    }
+    if (message.currentPeriodStart !== undefined) {
+      Timestamp.encode(toTimestamp(message.currentPeriodStart), writer.uint32(18).fork()).ldelim();
+    }
+    if (message.currentPeriodEnd !== undefined) {
+      Timestamp.encode(toTimestamp(message.currentPeriodEnd), writer.uint32(26).fork()).ldelim();
+    }
+    if (message.defaultPaymentMethod !== undefined) {
+      writer.uint32(34).string(message.defaultPaymentMethod);
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).ldelim();
+    }
+    if (message.status !== "") {
+      writer.uint32(58).string(message.status);
+    }
+    for (const v of message.items) {
+      BillingItem.encode(v!, writer.uint32(66).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OrgServiceBillingDetailsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOrgServiceBillingDetailsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.currency = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.currentPeriodStart = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.currentPeriodEnd = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.defaultPaymentMethod = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.items.push(BillingItem.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<OrgServiceBillingDetailsResponse>): OrgServiceBillingDetailsResponse {
+    return OrgServiceBillingDetailsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<OrgServiceBillingDetailsResponse>): OrgServiceBillingDetailsResponse {
+    const message = createBaseOrgServiceBillingDetailsResponse();
+    message.currency = object.currency ?? "";
+    message.currentPeriodStart = object.currentPeriodStart ?? undefined;
+    message.currentPeriodEnd = object.currentPeriodEnd ?? undefined;
+    message.defaultPaymentMethod = object.defaultPaymentMethod ?? undefined;
+    message.createdAt = object.createdAt ?? undefined;
+    message.status = object.status ?? "";
+    message.items = object.items?.map((e) => BillingItem.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseBillingItem(): BillingItem {
+  return { name: undefined, unitAmount: undefined, quantity: undefined };
+}
+
+export const BillingItem = {
+  encode(message: BillingItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.unitAmount !== undefined) {
+      writer.uint32(16).int64(message.unitAmount);
+    }
+    if (message.quantity !== undefined) {
+      writer.uint32(24).uint64(message.quantity);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BillingItem {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBillingItem();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.unitAmount = longToNumber(reader.int64() as Long);
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.quantity = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BillingItem>): BillingItem {
+    return BillingItem.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BillingItem>): BillingItem {
+    const message = createBaseBillingItem();
+    message.name = object.name ?? undefined;
+    message.unitAmount = object.unitAmount ?? undefined;
+    message.quantity = object.quantity ?? undefined;
+    return message;
+  },
+};
+
 /** Service for managing organizations. */
 export type OrgServiceDefinition = typeof OrgServiceDefinition;
 export const OrgServiceDefinition = {
@@ -1484,6 +2379,33 @@ export const OrgServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Add a new card to this org. */
+    initCard: {
+      name: "InitCard",
+      requestType: OrgServiceInitCardRequest,
+      requestStream: false,
+      responseType: OrgServiceInitCardResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** List all payment methods for the current org. */
+    listPaymentMethods: {
+      name: "ListPaymentMethods",
+      requestType: OrgServiceListPaymentMethodsRequest,
+      requestStream: false,
+      responseType: OrgServiceListPaymentMethodsResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Returns details about the billing and billing cycle for this org. */
+    billingDetails: {
+      name: "BillingDetails",
+      requestType: OrgServiceBillingDetailsRequest,
+      requestStream: false,
+      responseType: OrgServiceBillingDetailsResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -1528,6 +2450,21 @@ export interface OrgServiceImplementation<CallContextExt = {}> {
     request: OrgServiceResetProvisionTokenRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<OrgServiceResetProvisionTokenResponse>>;
+  /** Add a new card to this org. */
+  initCard(
+    request: OrgServiceInitCardRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<OrgServiceInitCardResponse>>;
+  /** List all payment methods for the current org. */
+  listPaymentMethods(
+    request: OrgServiceListPaymentMethodsRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<OrgServiceListPaymentMethodsResponse>>;
+  /** Returns details about the billing and billing cycle for this org. */
+  billingDetails(
+    request: OrgServiceBillingDetailsRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<OrgServiceBillingDetailsResponse>>;
 }
 
 export interface OrgServiceClient<CallOptionsExt = {}> {
@@ -1571,6 +2508,21 @@ export interface OrgServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<OrgServiceResetProvisionTokenRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<OrgServiceResetProvisionTokenResponse>;
+  /** Add a new card to this org. */
+  initCard(
+    request: DeepPartial<OrgServiceInitCardRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<OrgServiceInitCardResponse>;
+  /** List all payment methods for the current org. */
+  listPaymentMethods(
+    request: DeepPartial<OrgServiceListPaymentMethodsRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<OrgServiceListPaymentMethodsResponse>;
+  /** Returns details about the billing and billing cycle for this org. */
+  billingDetails(
+    request: DeepPartial<OrgServiceBillingDetailsRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<OrgServiceBillingDetailsResponse>;
 }
 
 declare const self: any | undefined;

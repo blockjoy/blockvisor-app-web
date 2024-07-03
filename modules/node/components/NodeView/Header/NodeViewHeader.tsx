@@ -24,17 +24,20 @@ import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
-import { useNavigate } from '@shared/index';
+import { escapeHtml, useNavigate } from '@shared/index';
+import { EditableTitle } from '@shared/components';
 
 export const NodeViewHeader = () => {
   const { navigate } = useNavigate();
-  const { node, isLoading } = useNodeView();
+  const { node, isLoading, updateNode } = useNodeView();
   const { getOrganizations } = useGetOrganizations();
   const { removeFromNodeList } = useNodeList();
   const { loadHosts } = useHostList();
   const { deleteNode } = useNodeDelete();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [isReportProblemMode, setIsReportProblemMode] = useState(false);
+
+  const [isSaving, setIsSaving] = useState<boolean | null>(null);
 
   const progress = getNodeJobProgress(node!);
 
@@ -60,12 +63,28 @@ export const NodeViewHeader = () => {
     toggleReportProblemModalOpen();
   };
 
+  const handleUpdateNode = async (value: string) => {
+    setIsSaving(true);
+    await updateNode({
+      displayName: value,
+      allowIps: node?.allowIps!,
+      denyIps: node?.denyIps!,
+      id: node?.id!,
+    });
+    toast.success('Node name updated');
+    setIsSaving(false);
+  };
+
+  const handleEditClicked = () => {
+    setIsSaving(null);
+  };
+
   return (
     <>
       {isDeleteMode && (
         <DeleteModal
           portalId="delete-node-modal"
-          elementName={node?.name!}
+          elementName={escapeHtml(node?.displayName!)}
           entityName="Node"
           onHide={toggleDeleteModalOpen}
           onSubmit={handleDeleteNode}
@@ -95,7 +114,15 @@ export const NodeViewHeader = () => {
                   />
                 </div>
                 <div>
-                  <h2 css={styles.detailsHeader}>{node!.name}</h2>
+                  {/* <h2 css={styles.detailsHeader}>{node!.displayName}</h2> */}
+                  <EditableTitle
+                    initialValue={node.displayName}
+                    isLoading={isLoading}
+                    isSaving={isSaving!}
+                    onSaveClicked={handleUpdateNode}
+                    onEditClicked={handleEditClicked}
+                    canUpdate
+                  />
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
                       <p>

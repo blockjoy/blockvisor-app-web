@@ -71,7 +71,7 @@ export const AdminListHeaderColumnPicker = ({
             return (
               <div key={column.name} css={styles.item}>
                 <Checkbox
-                  id={column.name}
+                  id={`column_${column.name}`}
                   disabled={isDisabled}
                   checked={column.isVisible}
                   name={column.name}

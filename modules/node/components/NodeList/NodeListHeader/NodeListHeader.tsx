@@ -5,26 +5,32 @@ import {
   FiltersHeaderIconText,
   Alert,
 } from '@shared/components';
-import { nodeAtoms, useNodeList } from '@modules/node';
+import { nodeAtoms } from '@modules/node';
+import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { styles } from './styles';
+import { useSettings } from '@modules/settings';
+import { useViewport } from '@shared/index';
 
 export const NodeListHeader = () => {
+  const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
+    layoutAtoms.isNodeFiltersOpenMobile,
+  );
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
   const nodeCount = useRecoilValue(nodeAtoms.nodeCount);
-  const [isFiltersOpen, setIsFiltersOpen] = useRecoilState(
-    nodeAtoms.isFiltersOpen,
-  );
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
   const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
-  const [activeListType, setActiveListType] = useRecoilState(
-    nodeAtoms.activeListType,
-  );
+  const view = useRecoilValue(layoutSelectors.nodeView);
+
+  const { updateSettings } = useSettings();
+  const { isXlrg } = useViewport();
 
   const handleFilterCollapseToggled = () => {
-    setIsFiltersOpen(!isFiltersOpen);
+    if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
+    else updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
   };
 
-  const handleGridTableViewChanged = (type: string) => {
-    setActiveListType(type);
+  const handleGridTableViewChanged = (type: View) => {
+    updateSettings('layout', { 'nodes.view': type });
   };
 
   const isLoading = isLoadingNodes !== 'finished';
@@ -57,7 +63,7 @@ export const NodeListHeader = () => {
       <div css={[styles.endBlock, styles.listTypePicker]}>
         <GridTableViewPicker
           onChange={handleGridTableViewChanged}
-          activeListType={activeListType}
+          activeListType={view}
         />
       </div>
     </div>

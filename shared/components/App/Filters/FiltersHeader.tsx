@@ -2,10 +2,10 @@ import { styles } from './FiltersHeader.styles';
 import { FiltersHeaderIconText } from './FiltersHeaderIconText';
 import { Skeleton } from '@shared/components';
 import { OrganizationPicker } from '@shared/components';
+import { useViewport } from '@shared/index';
 import IconPlus from '@public/assets/icons/common/Plus.svg';
 import IconMinus from '@public/assets/icons/common/Minus.svg';
 import IconClose from '@public/assets/icons/common/ArrowLeft.svg';
-import { isMobile } from 'react-device-detect';
 
 export type FiltersHeaderProps = {
   isLoading: boolean;
@@ -20,6 +20,8 @@ export const FiltersHeader = ({
   isFiltersOpen,
   handleFiltersToggle,
 }: FiltersHeaderProps) => {
+  const { isLrg } = useViewport();
+
   return (
     <header css={styles.header}>
       {isLoading ? (
@@ -36,7 +38,7 @@ export const FiltersHeader = ({
             </span>
           </button>
           <div css={styles.orgPicker}>
-            {isMobile && <OrganizationPicker maxWidth="140px" isRightAligned />}
+            {isLrg && <OrganizationPicker maxWidth="140px" isRightAligned />}
           </div>
         </>
       )}

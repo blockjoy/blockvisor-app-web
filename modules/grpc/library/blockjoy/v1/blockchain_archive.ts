@@ -6,7 +6,7 @@ import { ImageIdentifier } from "../common/v1/image";
 
 export const protobufPackage = "blockjoy.v1";
 
-export interface HasBlockchainArchiveRequest {
+export interface BlockchainArchiveServiceHasBlockchainArchiveRequest {
   /** The archive image identifier. */
   id:
     | ImageIdentifier
@@ -15,7 +15,7 @@ export interface HasBlockchainArchiveRequest {
   network: string;
 }
 
-export interface HasBlockchainArchiveResponse {
+export interface BlockchainArchiveServiceHasBlockchainArchiveResponse {
   available: boolean;
 }
 
@@ -135,12 +135,15 @@ export interface UploadSlot {
   url: string;
 }
 
-function createBaseHasBlockchainArchiveRequest(): HasBlockchainArchiveRequest {
+function createBaseBlockchainArchiveServiceHasBlockchainArchiveRequest(): BlockchainArchiveServiceHasBlockchainArchiveRequest {
   return { id: undefined, network: "" };
 }
 
-export const HasBlockchainArchiveRequest = {
-  encode(message: HasBlockchainArchiveRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BlockchainArchiveServiceHasBlockchainArchiveRequest = {
+  encode(
+    message: BlockchainArchiveServiceHasBlockchainArchiveRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.id !== undefined) {
       ImageIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
     }
@@ -150,10 +153,10 @@ export const HasBlockchainArchiveRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HasBlockchainArchiveRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceHasBlockchainArchiveRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHasBlockchainArchiveRequest();
+    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -180,34 +183,41 @@ export const HasBlockchainArchiveRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<HasBlockchainArchiveRequest>): HasBlockchainArchiveRequest {
-    return HasBlockchainArchiveRequest.fromPartial(base ?? {});
+  create(
+    base?: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveRequest>,
+  ): BlockchainArchiveServiceHasBlockchainArchiveRequest {
+    return BlockchainArchiveServiceHasBlockchainArchiveRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HasBlockchainArchiveRequest>): HasBlockchainArchiveRequest {
-    const message = createBaseHasBlockchainArchiveRequest();
+  fromPartial(
+    object: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveRequest>,
+  ): BlockchainArchiveServiceHasBlockchainArchiveRequest {
+    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveRequest();
     message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
     message.network = object.network ?? "";
     return message;
   },
 };
 
-function createBaseHasBlockchainArchiveResponse(): HasBlockchainArchiveResponse {
+function createBaseBlockchainArchiveServiceHasBlockchainArchiveResponse(): BlockchainArchiveServiceHasBlockchainArchiveResponse {
   return { available: false };
 }
 
-export const HasBlockchainArchiveResponse = {
-  encode(message: HasBlockchainArchiveResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BlockchainArchiveServiceHasBlockchainArchiveResponse = {
+  encode(
+    message: BlockchainArchiveServiceHasBlockchainArchiveResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.available === true) {
       writer.uint32(8).bool(message.available);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HasBlockchainArchiveResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceHasBlockchainArchiveResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHasBlockchainArchiveResponse();
+    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -227,12 +237,16 @@ export const HasBlockchainArchiveResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<HasBlockchainArchiveResponse>): HasBlockchainArchiveResponse {
-    return HasBlockchainArchiveResponse.fromPartial(base ?? {});
+  create(
+    base?: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveResponse>,
+  ): BlockchainArchiveServiceHasBlockchainArchiveResponse {
+    return BlockchainArchiveServiceHasBlockchainArchiveResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HasBlockchainArchiveResponse>): HasBlockchainArchiveResponse {
-    const message = createBaseHasBlockchainArchiveResponse();
+  fromPartial(
+    object: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveResponse>,
+  ): BlockchainArchiveServiceHasBlockchainArchiveResponse {
+    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveResponse();
     message.available = object.available ?? false;
     return message;
   },
@@ -1081,9 +1095,9 @@ export const BlockchainArchiveServiceDefinition = {
     /** Get the download manifest for a specific image and blockchain network. */
     hasBlockchainArchive: {
       name: "HasBlockchainArchive",
-      requestType: HasBlockchainArchiveRequest,
+      requestType: BlockchainArchiveServiceHasBlockchainArchiveRequest,
       requestStream: false,
-      responseType: HasBlockchainArchiveResponse,
+      responseType: BlockchainArchiveServiceHasBlockchainArchiveResponse,
       responseStream: false,
       options: {},
     },
@@ -1120,9 +1134,9 @@ export const BlockchainArchiveServiceDefinition = {
 export interface BlockchainArchiveServiceImplementation<CallContextExt = {}> {
   /** Get the download manifest for a specific image and blockchain network. */
   hasBlockchainArchive(
-    request: HasBlockchainArchiveRequest,
+    request: BlockchainArchiveServiceHasBlockchainArchiveRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HasBlockchainArchiveResponse>>;
+  ): Promise<DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveResponse>>;
   /** Get the download manifest for a specific image and blockchain network. */
   getDownloadManifest(
     request: BlockchainArchiveServiceGetDownloadManifestRequest,
@@ -1143,9 +1157,9 @@ export interface BlockchainArchiveServiceImplementation<CallContextExt = {}> {
 export interface BlockchainArchiveServiceClient<CallOptionsExt = {}> {
   /** Get the download manifest for a specific image and blockchain network. */
   hasBlockchainArchive(
-    request: DeepPartial<HasBlockchainArchiveRequest>,
+    request: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<HasBlockchainArchiveResponse>;
+  ): Promise<BlockchainArchiveServiceHasBlockchainArchiveResponse>;
   /** Get the download manifest for a specific image and blockchain network. */
   getDownloadManifest(
     request: DeepPartial<BlockchainArchiveServiceGetDownloadManifestRequest>,

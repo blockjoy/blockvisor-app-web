@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 
 const user = atom<User | null>({
-  key: 'authentication.user',
+  key: 'auth.user',
   default: null,
   effects: [
     ({ setSelf }) => {
@@ -26,8 +26,21 @@ const permissionsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
+const userSettings = atom<UserSettings | null>({
+  key: 'auth.user.settings',
+  default: null,
+});
+
+const userSettingsLoadingState = atom<LoadingState>({
+  key: 'auth.user.settings.loadingState',
+  default: 'finished',
+});
+
 export const authAtoms = {
   user,
   permissions,
   permissionsLoadingState,
+
+  userSettings,
+  userSettingsLoadingState,
 };

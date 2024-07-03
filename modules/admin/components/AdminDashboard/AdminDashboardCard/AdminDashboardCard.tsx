@@ -14,7 +14,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
   const [total, setTotal] = useState<number>();
 
   const query: AdminQuery = {
-    name: name.toLowerCase(),
+    name: name?.toLowerCase(),
     page: 1,
   };
 

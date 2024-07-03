@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Button, Modal, Textarea } from '@shared/components';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -25,7 +26,9 @@ export const NodeViewReportProblem = ({ onHide, onSubmit }: Props) => {
 
   return (
     <Modal portalId="nodeViewReportProblem" isOpen={true} handleClose={onHide}>
-      <h2 css={styles.header}>Report Problem on Node ({node?.name})</h2>
+      <h2 css={styles.header}>
+        Report Problem on Node ({escapeHtml(node?.displayName!)})
+      </h2>
       <p></p>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit}>

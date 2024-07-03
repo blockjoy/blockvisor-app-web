@@ -3,6 +3,7 @@ import { TableGridCell, NodeStatus } from '@shared/components';
 import { BlockchainIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 const styles = {
   blockchainNetwork: css`
@@ -25,7 +26,7 @@ export const mapNodeListToGrid = (
         <TableGridCell
           key={node.id}
           onCellClick={() => onCellClick(node.id)}
-          titleText={node.name}
+          titleText={escapeHtml(node.displayName)}
           titleIcon={
             <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
           }

@@ -1,14 +1,6 @@
 import { atom } from 'recoil';
-import { localStorageEffect } from 'utils/store/persist';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
-import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
-import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
-
-const defaultHost = atom<Host | null>({
-  key: 'host.default',
-  default: null,
-  effects: [localStorageEffect('defaultHost')],
-});
+import { localStorageEffect } from 'utils/store/persist';
 
 const activeHost = atom<Host | null>({
   key: 'host',
@@ -45,23 +37,6 @@ const isLoading = atom<LoadingState>({
   default: 'initializing',
 });
 
-const activeListType = atom<string | 'table' | 'grid'>({
-  key: 'host.list.type',
-  default: 'table',
-});
-
-const isFiltersOpen = atom<boolean>({
-  key: 'host.filters.isOpen',
-  default: false,
-  effects: [localStorageEffect('host.filters.isOpen')],
-});
-
-const filters = atom<UIHostFilterCriteria>({
-  key: 'host.filters',
-  default: HOST_FILTERS_DEFAULT,
-  effects: [localStorageEffect('host.filters')],
-});
-
 const filtersTempTotal = atom<number>({
   key: 'host.filters.temp.total',
   default: 0,
@@ -72,9 +47,13 @@ const hostIpListType = atom<'all' | 'available' | 'assigned'>({
   default: 'all',
 });
 
-export const hostAtoms = {
-  defaultHost,
+const filtersSearchQuery = atom<string>({
+  key: 'host.filters.searchQuery',
+  default: '',
+  effects: [localStorageEffect('host.filters.searchQuery')],
+});
 
+export const hostAtoms = {
   activeHost,
   isLoadingActiveHost,
 
@@ -85,9 +64,6 @@ export const hostAtoms = {
   hostIpListType,
   isLoading,
 
-  activeListType,
-
-  isFiltersOpen,
-  filters,
   filtersTempTotal,
+  filtersSearchQuery,
 };

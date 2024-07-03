@@ -2,19 +2,19 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { withSearchDropdown, Dropdown } from '@shared/components';
-import { organizationAtoms } from '@modules/organization/store/organizationAtoms';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
+import { organizationSelectors } from '@modules/organization';
 
 export const OrganizationSelect = () => {
   const selectedOrg = useRef<Org>();
 
   const allOrganizations = useRecoilValue(
-    organizationAtoms.allOrganizationsSorted,
+    organizationSelectors.allOrganizationsSorted,
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const { switchOrganization } = useSwitchOrganization();
 

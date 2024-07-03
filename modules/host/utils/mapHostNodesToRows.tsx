@@ -3,6 +3,7 @@ import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
+import { escapeHtml } from '@shared/utils/escapeHtml';
 
 export const mapHostNodesToRows = (nodeList: Node[]) => {
   const headers: TableHeader[] = [
@@ -42,15 +43,15 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
         {
           key: '2',
           component: (
-            <>
+            <div style={{ maxWidth: '400px' }}>
               <TableBlock
                 middleRow={`${node.blockchainName} ${convertNodeTypeToName(
                   node.nodeType,
                 )}`}
-                topRow={node.name}
+                topRow={escapeHtml(node.displayName)}
                 bottomRow={node?.ip!}
               />
-            </>
+            </div>
           ),
         },
         {

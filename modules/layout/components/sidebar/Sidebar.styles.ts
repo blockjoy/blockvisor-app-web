@@ -44,7 +44,4 @@ export const styles = {
       width: 64px;
     }
   `,
-  sidebarDrawerOpen: css`
-    z-index: 7;
-  `,
 };

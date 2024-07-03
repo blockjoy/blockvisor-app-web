@@ -15,6 +15,10 @@ const styles = {
     display: block;
     margin-bottom: 6px;
     color: ${theme.colorText};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
   `,
   row: css`
     display: flex;

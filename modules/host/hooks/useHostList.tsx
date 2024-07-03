@@ -1,24 +1,27 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { hostAtoms } from '../store/hostAtoms';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { hostClient } from '@modules/grpc/clients/hostClient';
-import { InitialQueryParams } from '../ui/HostUIHelpers';
-import { getInitialQueryParams } from '../ui/HostUIContext';
-import { useDefaultOrganization } from '@modules/organization';
 import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
-import { nodeAtoms } from '@modules/node';
+import { hostClient } from '@modules/grpc/clients/hostClient';
+import {
+  hostAtoms,
+  getInitialQueryParams,
+  InitialQueryParams,
+  hostSelectors,
+} from 'modules/host';
+import { useDefaultOrganization } from '@modules/organization';
 
 export const useHostList = () => {
   const router = useRouter();
 
   const orgId = useDefaultOrganization()?.defaultOrganization?.id!;
 
-  const [defaultHost, setDefaultHost] = useRecoilState(hostAtoms.defaultHost);
-
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
+
+  const initialFilters = useRecoilValue(hostSelectors.filters);
+  const initialKeyword = useRecoilValue(hostAtoms.filtersSearchQuery);
 
   const handleHostClick = (id: string) => {
     router.push(ROUTES.HOST(id));
@@ -36,7 +39,10 @@ export const useHostList = () => {
 
   const loadHosts = async (queryParams?: InitialQueryParams) => {
     if (!queryParams) {
-      const savedQueryParams = getInitialQueryParams();
+      const savedQueryParams = getInitialQueryParams(
+        initialFilters,
+        initialKeyword,
+      );
       queryParams = savedQueryParams;
     }
 
@@ -57,8 +63,6 @@ export const useHostList = () => {
       let hosts = response.hosts;
 
       setHostCount(hostCount);
-
-      if (!defaultHost && Boolean(hosts.length)) setDefaultHost(hosts[0]);
 
       if (queryParams.pagination.currentPage !== 0) {
         hosts = [...hostList!, ...hosts];

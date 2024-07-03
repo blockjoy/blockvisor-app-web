@@ -1,8 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import {
-  NodeServiceCreateRequest,
-  Node,
-} from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeClient } from '@modules/grpc';
 import { useNodeList } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
@@ -46,7 +43,7 @@ export const useNodeAdd = () => {
 
     try {
       const createNodeCallback = async () => {
-        const response: Node = await nodeClient.createNode(nodeRequest);
+        const response = await nodeClient.createNode(nodeRequest);
 
         if (isEnabledBillingPreview && !bypassBillingForSuperUser)
           try {

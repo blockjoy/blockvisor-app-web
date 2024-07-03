@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeClient } from '@modules/grpc';
 import {
@@ -6,6 +6,7 @@ import {
   getInitialQueryParams,
   InitialQueryParams,
   Pagination,
+  nodeSelectors,
 } from '@modules/node';
 import { useDefaultOrganization } from '@modules/organization';
 
@@ -13,23 +14,25 @@ export const useNodeList = () => {
   const orgId = useDefaultOrganization().defaultOrganization?.id;
 
   const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
-
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
-
   const [nodeCount, setNodeCount] = useRecoilState(nodeAtoms.nodeCount);
+
+  const initialFilters = useRecoilValue(nodeSelectors.filters);
+  const initialKeyword = useRecoilValue(nodeAtoms.filtersSearchQuery);
 
   const [nodeListByHost, setNodeListByHost] = useRecoilState(
     nodeAtoms.nodeListByHost,
   );
-
   const [nodeListByHostCount, setNodeListByHostCount] = useRecoilState(
     nodeAtoms.nodeListByHostCount,
   );
-
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
 
-  const savedQueryParams = getInitialQueryParams();
+  const savedQueryParams = getInitialQueryParams(
+    initialFilters,
+    initialKeyword,
+  );
 
   const loadNodes = async (
     queryParams?: InitialQueryParams,
