@@ -1,25 +1,15 @@
 import { useRecoilValue } from 'recoil';
-import { Item, ItemPrice } from 'chargebee-typescript/lib/resources';
 import {
   billingAtoms,
   billingSelectors,
-  Subscription,
+  SubscriptionViewTabs,
   Plan,
 } from '@modules/billing';
-import { Alert, TableSkeleton } from '@shared/components';
-import { styles } from './SubscriptionView.styles';
+import { TableSkeleton, Unauthorized } from '@shared/components';
 import { authAtoms, authSelectors } from '@modules/auth';
-import { containers } from 'styles/containers.styles';
+import { styles } from './SubscriptionView.styles';
 
-type SubscriptionViewProps = {
-  item: Item;
-  itemPrices: ItemPrice[];
-};
-
-export const SubscriptionView = ({
-  item,
-  itemPrices,
-}: SubscriptionViewProps) => {
+export const SubscriptionView = () => {
   const subscription = useRecoilValue(billingSelectors.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
@@ -40,21 +30,15 @@ export const SubscriptionView = ({
 
   if (!canReadSubscription)
     return (
-      <div css={containers.medium}>
-        <Alert>
-          You don't have access to read the current organization billing plan!
-          Try switching the organization.
-        </Alert>
-      </div>
+      <Unauthorized>
+        You don't have access to read the current organization billing plan! Try
+        switching the organization.
+      </Unauthorized>
     );
 
   return (
     <div css={styles.wrapper}>
-      {subscription ? (
-        <Subscription />
-      ) : (
-        <Plan item={item} itemPrices={itemPrices} />
-      )}
+      {subscription ? <SubscriptionViewTabs /> : <Plan />}
     </div>
   );
 };

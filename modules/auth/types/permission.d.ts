@@ -94,6 +94,8 @@ type Permission =
   | 'org-remove-self'
   | 'org-provision-get-token'
   | 'org-provision-reset-token'
+  | 'org-billing-init-card'
+  | 'org-billing-list-payment-methods'
   | 'subscription-create'
   | 'subscription-get'
   | 'subscription-list'
@@ -110,4 +112,5 @@ type Permission =
   | 'user-billing-get'
   | 'user-billing-update'
   | 'user-billing-delete'
+  | 'user-billing-init-card'
   | 'user-settings-get';

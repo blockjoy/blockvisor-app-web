@@ -9,7 +9,7 @@ import { styles } from './ProfileDropdown.styles';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { spacing } from 'styles/utils.spacing.styles';
 import IconDoor from '@public/assets/icons/common/Door.svg';
-import IconCog from '@public/assets/icons/common/Cog.svg';
+import IconPerson from '@public/assets/icons/common/Person.svg';
 
 type ProfileDropdownItem = {
   id: string;
@@ -19,13 +19,15 @@ type ProfileDropdownItem = {
 };
 
 export const ProfileDropdown = () => {
+  const router = useRouter();
+
   const items: ProfileDropdownItem[] = useMemo(
     () => [
       {
-        id: 'settings',
-        name: 'Settings',
-        icon: <IconCog />,
-        onClick: () => router.push(ROUTES.SETTINGS),
+        id: 'profile',
+        name: 'Profile',
+        icon: <IconPerson />,
+        onClick: () => router.push(ROUTES.PROFILE),
       },
       {
         id: 'sign-out',
@@ -37,7 +39,6 @@ export const ProfileDropdown = () => {
     [],
   );
 
-  const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
 
   const [isOpen, setIsOpen] = useState(false);

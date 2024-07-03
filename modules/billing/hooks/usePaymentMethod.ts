@@ -1,57 +1,105 @@
-import { useRecoilValue } from 'recoil';
-import useSWR from 'swr';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { toast } from 'react-toastify';
 import {
-  BILLING_API_ROUTES,
-  billingSelectors,
-  fetchBilling,
-} from '@modules/billing';
+  PaymentMethodCreateParams,
+  StripeCardNumberElement,
+} from '@stripe/stripe-js';
+import {
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from '@stripe/react-stripe-js';
+import { authAtoms } from '@modules/auth';
+import { billingAtoms, usePaymentMethods } from '@modules/billing';
+import { organizationClient } from '@modules/grpc';
+import { organizationAtoms } from '@modules/organization';
 
-interface IPaymentMethodHook {
-  paymentMethod: PaymentSource | null;
+interface PaymentMethodHook {
   paymentMethodLoadingState: LoadingState;
-  getPaymentMethod: VoidFunction;
+  initPaymentMethod: (
+    billingDetails: PaymentMethodCreateParams.BillingDetails,
+    onSuccess: VoidFunction,
+  ) => Promise<void>;
 }
 
-export const usePaymentMethod = (): IPaymentMethodHook => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
-  const subscriptionPaymentMethod = useRecoilValue(
-    billingSelectors.paymentMethodById(subscription?.payment_source_id!),
+export const usePaymentMethod = (): PaymentMethodHook => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const user = useRecoilValue(authAtoms.user);
+  const defaultOrganization = useRecoilValue(
+    organizationAtoms.defaultOrganization,
   );
+  const setError = useSetRecoilState(billingAtoms.paymentMethodError);
+  const [paymentMethodLoadingState, setPaymentMethodLoadingState] =
+    useRecoilState(billingAtoms.paymentMethodLoadingState);
 
-  const fetcher = () =>
-    fetchBilling(BILLING_API_ROUTES.payments.sources.get, {
-      id: subscription?.payment_source_id,
-    });
+  const { getPaymentMethods } = usePaymentMethods();
 
-  const { data, error, isLoading, mutate } = useSWR(
-    subscription?.payment_source_id
-      ? `${BILLING_API_ROUTES.payments.sources.get}_${subscription?.id}`
-      : null,
-    fetcher,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    },
-  );
+  const initPaymentMethod = async (
+    billingDetails: PaymentMethodCreateParams.BillingDetails,
+    onSuccess: VoidFunction,
+  ) => {
+    setPaymentMethodLoadingState('initializing');
+    setError(null);
 
-  if (error) console.error('Failed to fetch Payment Methods', error);
+    try {
+      if (!stripe || !elements) return;
 
-  const paymentMethodLoadingState: LoadingState =
-    isLoading && !subscriptionPaymentMethod ? 'initializing' : 'finished';
+      const clientSecret = await organizationClient.initCard(
+        defaultOrganization?.id!,
+        user?.id!,
+      );
 
-  const getPaymentMethod = () => {
-    if (!subscriptionPaymentMethod) mutate();
+      if (!clientSecret) return;
+
+      const { setupIntent, error } = await stripe.confirmCardSetup(
+        clientSecret,
+        {
+          payment_method: {
+            card: elements.getElement(
+              CardNumberElement,
+            ) as StripeCardNumberElement,
+            billing_details: billingDetails,
+          },
+        },
+        {
+          handleActions: false,
+        },
+      );
+
+      if (error) {
+        const returnedError = handlePaymentMethodError(error);
+        throw returnedError;
+      }
+
+      setTimeout(async () => {
+        const paymentMethods = await getPaymentMethods();
+        console.log('setupIntent', setupIntent);
+        console.log('paymentMethods', paymentMethods);
+
+        // const isPMInTheList = paymentMethods.find(
+        //   (pm) => pm?.id === setupIntent.payment_method,
+        // );
+
+        onSuccess();
+        setPaymentMethodLoadingState('finished');
+
+        toast.success('Payment method added');
+      }, 5000);
+    } catch (error: any) {
+      const returnedError = handlePaymentMethodError(error);
+      throw returnedError;
+    }
   };
 
-  const returnedPaymentMethod = subscriptionPaymentMethod
-    ? subscriptionPaymentMethod
-    : data;
+  const handlePaymentMethodError = (error: any) => {
+    const returnedError = structuredClone(error);
+    setError(returnedError);
+    setPaymentMethodLoadingState('finished');
 
-  return {
-    paymentMethod: returnedPaymentMethod,
-    paymentMethodLoadingState,
-
-    getPaymentMethod,
+    return returnedError;
   };
+
+  return { paymentMethodLoadingState, initPaymentMethod };
 };

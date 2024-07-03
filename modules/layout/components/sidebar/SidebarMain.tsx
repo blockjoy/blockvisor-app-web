@@ -46,9 +46,6 @@ export default () => {
   const invitationCount = useRecoilValue(
     invitationAtoms.receivedInvitations,
   )?.length;
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
-  );
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
@@ -56,7 +53,7 @@ export default () => {
     }
   };
 
-  const blocks: BlockItem[] = [
+  const navBlocks: BlockItem[] = [
     {
       id: 'blockvisor',
       title: 'BLOCKVISOR',
@@ -86,6 +83,11 @@ export default () => {
           icon: <IconOrganizations />,
           isOrganizations: true,
         },
+        {
+          name: 'Billing',
+          path: ROUTES.BILLING,
+          icon: <IconBilling />,
+        },
       ],
     },
     {
@@ -101,7 +103,7 @@ export default () => {
   ];
 
   if (isSuperUser) {
-    blocks.unshift({
+    navBlocks.unshift({
       id: 'admin',
       title: 'BLOCKJOY',
       items: [
@@ -113,24 +115,6 @@ export default () => {
       ],
     });
   }
-
-  let navBlocks: BlockItem[] = blocks.map((block: BlockItem) => {
-    if (block.id === 'settings' && isEnabledBillingPreview) {
-      return {
-        ...block,
-        items: [
-          ...block.items,
-          {
-            name: 'Billing',
-            path: ROUTES.BILLING,
-            icon: <IconBilling />,
-          },
-        ],
-      };
-    }
-
-    return block;
-  });
 
   return (
     <main css={styles.wrapper(isSidebarOpenMobile)}>

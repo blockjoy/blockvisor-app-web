@@ -17,12 +17,13 @@ export const Promo = () => {
   );
   const [promoCode, setPromoCode] = useRecoilState(billingAtoms.promoCode);
   const setPromoCodeError = useSetRecoilState(billingAtoms.promoCodeError);
-  const pricing = useRecoilValue(billingSelectors.pricing);
 
   const handleRemove = () => {
     setPromoCode(null);
     setPromoCodeError(null);
   };
+
+  const pricing: any = { discount: 0, discountPercentage: 0 };
 
   const { discount, discountPercentage } = pricing;
 

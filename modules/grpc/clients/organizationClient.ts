@@ -1,6 +1,7 @@
 import {
   Org,
   OrgSearch,
+  OrgServiceBillingDetailsResponse,
   OrgServiceClient,
   OrgServiceDefinition,
   OrgServiceGetProvisionTokenResponse,
@@ -11,6 +12,7 @@ import {
   OrgServiceUpdateResponse,
   OrgSort,
   OrgSortField,
+  PaymentMethod,
 } from '../library/blockjoy/v1/org';
 import {
   getOptions,
@@ -156,6 +158,50 @@ class OrganizationClient {
     try {
       await authClient.refreshToken();
       return this.client.resetProvisionToken({ userId, orgId }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  // BILLING
+  async initCard(orgId: string, userId: string): Promise<string> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.initCard(
+        { orgId, userId },
+        getOptions(),
+      );
+
+      return response.clientSecret!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async listPaymentMethods(orgId: string): Promise<PaymentMethod[]> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.listPaymentMethods(
+        { orgId },
+        getOptions(),
+      );
+
+      return response.methods!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async getSubscription(
+    orgId: string,
+  ): Promise<OrgServiceBillingDetailsResponse> {
+    try {
+      const req = { orgId };
+      console.log('this.client.billingDetails req', req);
+      await authClient.refreshToken();
+      const response = await this.client.billingDetails(req, getOptions());
+
+      return response;
     } catch (err) {
       return handleError(err);
     }

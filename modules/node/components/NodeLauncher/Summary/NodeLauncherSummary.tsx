@@ -23,7 +23,6 @@ import {
   NodeLauncherHost,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
-import { billingSelectors } from '@modules/billing';
 import { authAtoms, authSelectors } from '@modules/auth';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
@@ -58,16 +57,9 @@ export const NodeLauncherSummary = ({
   );
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
-  const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
   const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
   const [isLaunching, setIsLaunching] = useRecoilState(
     nodeLauncherAtoms.isLaunching,
-  );
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
-  );
-  const bypassBillingForSuperUser = useRecoilValue(
-    billingSelectors.bypassBillingForSuperUser,
   );
   const user = useRecoilValue(authAtoms.user);
   const nodeLauncherInfo = useRecoilValue(
@@ -90,9 +82,7 @@ export const NodeLauncherSummary = ({
     !isConfigValid ||
     Boolean(error) ||
     isLaunching ||
-    isLoadingAllRegions !== 'finished' ||
-    (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice) ||
-    !isNodeAllocationValid;
+    isLoadingAllRegions !== 'finished';
 
   const handleCreateNodeClicked = async () => {
     if (!hasPermissionsToCreate) {
@@ -187,12 +177,8 @@ export const NodeLauncherSummary = ({
       <FormLabel>Summary</FormLabel>
       <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
 
-      {isEnabledBillingPreview && (
-        <>
-          <FormLabel>Pricing</FormLabel>
-          <Pricing itemPrice={itemPrice} />
-        </>
-      )}
+      <FormLabel>Pricing</FormLabel>
+      <Pricing />
 
       <div css={styles.buttons}>
         <button

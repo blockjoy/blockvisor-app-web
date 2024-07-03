@@ -6,9 +6,6 @@ import { authSelectors } from '@modules/auth';
 
 export const HostLauncherWithGuard = () => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
-  );
   const bypassBillingForSuperUser = useRecoilValue(
     billingSelectors.bypassBillingForSuperUser,
   );
@@ -24,12 +21,10 @@ export const HostLauncherWithGuard = () => {
     authSelectors.hasPermission('subscription-update'),
   );
 
-  const hasBillingPermissionsToCreate = isEnabledBillingPreview
-    ? canCreateSubscription || canUpdateSubscription
-    : true;
+  const hasBillingPermissionsToCreate =
+    canCreateSubscription || canUpdateSubscription;
 
-  const isPermittedAsSuperUser =
-    isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
+  const isPermittedAsSuperUser = isSuperUser && bypassBillingForSuperUser;
 
   const hasPermissionsToCreate =
     isPermittedAsSuperUser ||

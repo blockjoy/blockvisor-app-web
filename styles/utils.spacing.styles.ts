@@ -24,6 +24,9 @@ export const spacing = {
     medium: css`
       margin-bottom: 20px;
     `,
+    mediumLarge: css`
+      margin-bottom: 30px;
+    `,
     large: css`
       margin-bottom: 40px;
     `,
@@ -58,6 +61,9 @@ export const spacing = {
     `,
     medium: css`
       margin-top: 20px;
+    `,
+    mediumLarge: css`
+      margin-top: 30px;
     `,
     large: css`
       margin-top: 40px;
@@ -94,6 +100,9 @@ export const spacing = {
     medium: css`
       margin-left: 20px;
     `,
+    mediumLarge: css`
+      margin-left: 30px;
+    `,
     large: css`
       margin-left: 40px;
     `,
@@ -128,6 +137,9 @@ export const spacing = {
     `,
     medium: css`
       margin-right: 20px;
+    `,
+    mediumLarge: css`
+      margin-right: 30px;
     `,
     large: css`
       margin-right: 40px;

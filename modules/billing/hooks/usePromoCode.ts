@@ -1,23 +1,16 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { _customer } from 'chargebee-typescript';
-import { Coupon, CouponCode } from 'chargebee-typescript/lib/resources';
 import {
-  BILLING_API_ROUTES,
   PROMO_CODE_ERROR_MESSAGES,
-  PromoCode,
   billingAtoms,
   billingSelectors,
-  fetchBilling,
-  isApplicablePromoCode,
-  isAppliedPromoCode,
 } from '@modules/billing';
 import { nodeAtoms } from '@modules/node';
 
 interface IPromoCodeHook {
-  promoCode: PromoCode | null;
+  promoCode: any | null;
   promoCodeError: string | null;
   promoCodeLoadingState: LoadingState;
-  getPromoCode: (id: string) => Promise<PromoCode | null>;
+  getPromoCode: (id: string) => Promise<any | null>;
   resetPromoCode: VoidFunction;
   resetPromoCodeError: VoidFunction;
 }
@@ -38,23 +31,15 @@ export const usePromoCode = (): IPromoCodeHook => {
     setPromoCodeError(null);
 
     try {
-      const isRedeemed = isAppliedPromoCode(subscription, id);
+      const isRedeemed = false;
       if (isRedeemed) {
         setPromoCodeError(PROMO_CODE_ERROR_MESSAGES.INVALID);
         return null;
       }
 
-      const couponCode: CouponCode | null = await fetchBilling(
-        BILLING_API_ROUTES.coupons.code.get,
-        { id },
-      );
+      const couponCode: any = null;
 
-      const coupon: Coupon | null = await fetchBilling(
-        BILLING_API_ROUTES.coupons.get,
-        {
-          id: couponCode ? couponCode.coupon_id : id,
-        },
-      );
+      const coupon: any = null;
 
       if (!coupon) {
         setPromoCodeError(PROMO_CODE_ERROR_MESSAGES.INVALID);
@@ -71,13 +56,13 @@ export const usePromoCode = (): IPromoCodeHook => {
         return null;
       }
 
-      const isApplicable = isApplicablePromoCode(sku, coupon);
+      const isApplicable = false;
       if (!isApplicable) {
         setPromoCodeError(PROMO_CODE_ERROR_MESSAGES.INVALID);
         return null;
       }
 
-      const promoCodeData: PromoCode | null = coupon
+      const promoCodeData: any = coupon
         ? {
             coupon,
             couponCode,

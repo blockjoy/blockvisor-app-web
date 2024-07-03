@@ -1,15 +1,10 @@
 import { css } from '@emotion/react';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
-import { Badge } from '@shared/components';
+import { PaymentMethod } from '@modules/grpc/library/blockjoy/v1/org';
 import { typo } from 'styles/utils.typography.styles';
 import { ITheme } from 'types/theme';
 import { flex } from 'styles/utils.flex.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import {
-  CreditCardTypes,
-  PaymentIcon,
-  PaymentMethodActions,
-} from '@modules/billing';
+import { PaymentIcon, CreditCardBrand } from '@modules/billing';
 
 const styles = {
   expiry: (theme: ITheme) => css`
@@ -18,21 +13,22 @@ const styles = {
 };
 
 export const mapPaymentMethodsToRows = (
-  paymentMethods: PaymentSource[],
-  handleAction: (
-    action: PaymentMethodAction,
-    paymentMethod: PaymentSource,
-  ) => void,
-  primaryPaymentMethodId?: string,
-  loadingItem?: string,
+  paymentMethods: PaymentMethod[],
+  // handleAction: (
+  //   action: PaymentMethodAction,
+  //   paymentMethod: PaymentMethod,
+  // ) => void,
+  // primaryPaymentMethodId?: string,
+  // loadingItem?: string,
+  // canInitCard?: boolean,
 ) => {
-  const handleDelete = (paymentMethod: PaymentSource) => {
-    handleAction('delete', paymentMethod);
-  };
+  // const handleDelete = (paymentMethod: PaymentMethod) => {
+  //   handleAction('delete', paymentMethod);
+  // };
 
-  const handleDefault = (paymentMethod: PaymentSource) => {
-    handleAction('update', paymentMethod);
-  };
+  // const handleDefault = (paymentMethod: PaymentMethod) => {
+  //   handleAction('update', paymentMethod);
+  // };
 
   const headers: TableHeader[] = [
     {
@@ -52,17 +48,17 @@ export const mapPaymentMethodsToRows = (
       key: '3',
       width: '400px',
     },
-    {
-      name: '',
-      key: '4',
-      width: '200px',
-    },
+    // {
+    //   name: '',
+    //   key: '4',
+    //   width: '200px',
+    // },
   ];
 
   const rows: Row[] =
-    paymentMethods?.map((paymentMethod: PaymentSource) => {
+    paymentMethods?.map((paymentMethod: PaymentMethod) => {
       return {
-        key: paymentMethod?.id!,
+        key: paymentMethod?.card?.last4!,
         cells: [
           {
             key: '1',
@@ -74,7 +70,7 @@ export const mapPaymentMethodsToRows = (
               <div css={[flex.display.flex, flex.direction.column]}>
                 <div>
                   <p css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-                    {`${CreditCardTypes[paymentMethod?.card?.brand!]} ****${
+                    {`${CreditCardBrand[paymentMethod?.card?.brand!]} ****${
                       paymentMethod.card?.last4
                     }`}
                   </p>
@@ -89,16 +85,15 @@ export const mapPaymentMethodsToRows = (
                   ]}
                 >
                   <p css={[styles.expiry, spacing.right.small]}>
-                    {paymentMethod?.card?.expiry_month
-                      ?.toString()
-                      .padStart(2, '0')}
-                    /{paymentMethod?.card?.expiry_year}
+                    {paymentMethod?.card?.expMonth?.toString().padStart(2, '0')}
+                    /{paymentMethod?.card?.expYear}
                   </p>
-                  {primaryPaymentMethodId === paymentMethod.id && (
-                    <Badge color="primary" style="outline">
-                      Primary
-                    </Badge>
-                  )}
+                  {/* {!!primaryPaymentMethodId &&
+                    primaryPaymentMethodId === paymentMethod.id && (
+                      <Badge color="primary" style="outline">
+                        Primary
+                      </Badge>
+                    )} */}
                 </div>
               </div>
             ),
@@ -107,13 +102,13 @@ export const mapPaymentMethodsToRows = (
             key: '3',
             component: (
               <>
-                {paymentMethod.card?.billing_addr1 ? (
+                {paymentMethod.details?.address?.line1 ? (
                   <p>
-                    {paymentMethod.card?.billing_addr1}
+                    {paymentMethod.details?.address?.line1}
                     <br />
-                    {paymentMethod.card?.billing_zip}{' '}
-                    {paymentMethod.card?.billing_city},{' '}
-                    {paymentMethod.card?.billing_country}
+                    {paymentMethod.details?.address?.postalCode}{' '}
+                    {paymentMethod.details?.address.city},{' '}
+                    {paymentMethod.details?.address.country}
                   </p>
                 ) : (
                   '-'
@@ -121,19 +116,22 @@ export const mapPaymentMethodsToRows = (
               </>
             ),
           },
-          {
-            key: '4',
-            component: (
-              <div css={spacing.left.medium}>
-                <PaymentMethodActions
-                  handleDelete={() => handleDelete(paymentMethod)}
-                  handleDefault={() => handleDefault(paymentMethod)}
-                  isPrimary={primaryPaymentMethodId === paymentMethod.id}
-                  isLoading={loadingItem === paymentMethod.id}
-                />
-              </div>
-            ),
-          },
+          // {
+          //   key: '4',
+          //   component: canInitCard && (
+          //     <div css={spacing.left.medium}>
+          //       <PaymentMethodActions
+          //         handleDelete={() => handleDelete(paymentMethod)}
+          //         handleDefault={() => handleDefault(paymentMethod)}
+          //         isPrimary={
+          //           !!primaryPaymentMethodId &&
+          //           primaryPaymentMethodId === paymentMethod.id
+          //         }
+          //         isLoading={loadingItem === paymentMethod.id}
+          //       />
+          //     </div>
+          //   ),
+          // },
         ],
       };
     }) ?? [];

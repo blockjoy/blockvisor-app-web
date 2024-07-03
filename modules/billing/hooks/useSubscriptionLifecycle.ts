@@ -1,11 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { _subscription } from 'chargebee-typescript';
-import {
-  BILLING_API_ROUTES,
-  billingAtoms,
-  billingSelectors,
-  fetchBilling,
-} from '@modules/billing';
+import { billingAtoms, billingSelectors } from '@modules/billing';
 
 interface ISubscriptionLifecycleHook {
   subscriptionLoadingState: LoadingState;
@@ -26,12 +20,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
     setSubscriptionLoadingState('loading');
 
     try {
-      const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.cancel, {
-        id: subscription?.id!,
-        params: {
-          end_of_term: endOfTerm,
-        },
-      });
+      const data = null;
 
       setSubscription(data);
     } catch (error) {
@@ -45,10 +34,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
     setSubscriptionLoadingState('loading');
 
     try {
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.restore,
-        { id },
-      );
+      const data = null;
 
       setSubscription(data);
     } catch (error) {
@@ -62,14 +48,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
     setSubscriptionLoadingState('loading');
 
     try {
-      const params: _subscription.update_params = {
-        invoice_immediately: true,
-      };
-
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.reactivate,
-        { id, params },
-      );
+      const data = null;
 
       setSubscription(data);
     } catch (error) {

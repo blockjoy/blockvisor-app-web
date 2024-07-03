@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   billingSelectors,
-  ItemPriceSimple,
   PaymentRequired,
   SubscriptionActivation,
   LAUNCH_ERRORS,
@@ -12,17 +11,10 @@ import { authSelectors } from '@modules/auth';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
-type WithLauncherGuardBasicProps = {
+type WithLauncherGuardProps = {
   type: 'launch-host' | 'launch-node';
   hasPermissionsToCreate: boolean;
 };
-
-export type WithLauncherGuardAdditionalProps = {
-  itemPrices?: ItemPriceSimple[];
-};
-
-type WithLauncherGuardProps = WithLauncherGuardBasicProps &
-  Partial<WithLauncherGuardAdditionalProps>;
 
 export type WithLauncherGuardPermissions = {
   disabled: boolean;
@@ -36,10 +28,10 @@ type LauncherWithGuardBasicProps = {
   resetFulfilReqs: VoidFunction;
   onCreateClick: VoidFunction;
   permissions: WithLauncherGuardPermissions;
-} & Partial<WithLauncherGuardAdditionalProps>;
+} & Partial<WithLauncherGuardProps>;
 
 export type LauncherWithGuardProps = LauncherWithGuardBasicProps &
-  Partial<WithLauncherGuardAdditionalProps>;
+  Partial<WithLauncherGuardProps>;
 
 export const withLauncherGuard = (Component: any) => {
   const withLauncherGuard = ({ ...props }: WithLauncherGuardProps) => {
@@ -47,9 +39,6 @@ export const withLauncherGuard = (Component: any) => {
 
     const { defaultOrganization } = useDefaultOrganization();
     const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-    const isEnabledBillingPreview = useRecoilValue(
-      billingSelectors.isEnabledBillingPreview,
-    );
     const hasAuthorizedBilling = useRecoilValue(
       billingSelectors.hasAuthorizedBilling,
     );
@@ -65,8 +54,7 @@ export const withLauncherGuard = (Component: any) => {
       setFulfilRequirements(false);
     }, [defaultOrganization?.id]);
 
-    const isPermittedAsSuperUser =
-      isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
+    const isPermittedAsSuperUser = isSuperUser && bypassBillingForSuperUser;
 
     const isDisabledAdding =
       (!hasAuthorizedBilling || !hasPermissionsToCreate) &&
@@ -90,11 +78,7 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (
-        isEnabledBillingPreview &&
-        !hasAuthorizedBilling &&
-        !isPermittedAsSuperUser
-      ) {
+      if (!hasAuthorizedBilling && !isPermittedAsSuperUser) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';
@@ -145,7 +129,6 @@ export const withLauncherGuard = (Component: any) => {
             } requires a payment method.`}
             handleCancel={handleCancelAction}
             handleSubmit={handleSubmittedPayment}
-            handleBack={handleDefaultView}
           />
         )}
         {activeView === 'confirm-subscription' && (

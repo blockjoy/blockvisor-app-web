@@ -1,6 +1,5 @@
 // _document.tsx
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-import Script from 'next/script';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: any) {
@@ -11,12 +10,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head>
-          <Script
-            src="https://js.chargebee.com/v2/chargebee.js"
-            strategy="lazyOnload"
-          ></Script>
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />

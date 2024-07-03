@@ -1,30 +1,8 @@
 import { selector, selectorFamily } from 'recoil';
-import {
-  Customer,
-  CustomerBillingAddress,
-  PaymentSource,
-  Subscription,
-} from 'chargebee-typescript/lib/resources';
-import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
-import { ItemPriceSimple, billingAtoms } from '@modules/billing';
-import { nodeAtoms } from '@modules/node';
-import { computePricing } from '@shared/index';
-import { authSelectors } from '@modules/auth';
-
-const isEnabledBillingPreview = selector<boolean>({
-  key: 'billing.preview.isEnabled',
-  get: ({ get }) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-    const isEnabled = get(billingAtoms.isEnabledBillingPreview(isSuperUser));
-
-    return isEnabled;
-  },
-  set: ({ set, get }, newValue) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-
-    return set(billingAtoms.isEnabledBillingPreview(isSuperUser), newValue);
-  },
-});
+import { billingAtoms } from '@modules/billing';
+import { authAtoms, authSelectors } from '@modules/auth';
+import { Address, PaymentMethodCreateParams } from '@stripe/stripe-js';
+import { OrgServiceBillingDetailsResponse } from '@modules/grpc/library/blockjoy/v1/org';
 
 const bypassBillingForSuperUser = selector<boolean>({
   key: 'billing.superUser.bypass',
@@ -54,20 +32,7 @@ const billingId = selector<string | null>({
     })),
 });
 
-const userSubscription = selector<UserSubscription | null>({
-  key: 'billing.identity.subscription',
-  get: ({ get }) => get(billingAtoms.billing)?.identity?.subscription,
-  set: ({ set }, newValue) =>
-    set(billingAtoms.billing, (prevState: any) => ({
-      ...prevState,
-      identity: {
-        ...prevState.identity,
-        subscription: newValue,
-      },
-    })),
-});
-
-const customer = selector<Customer | null>({
+const customer = selector<any>({
   key: 'billing.customer',
   get: ({ get }) => get(billingAtoms.billing)?.customer,
   set: ({ set }, newValue) =>
@@ -77,20 +42,26 @@ const customer = selector<Customer | null>({
     })),
 });
 
-const billingAddress = selector<CustomerBillingAddress | null>({
+const billingAddress = selector<Address | null>({
   key: 'billing.billingAddress',
   get: ({ get }) => {
     const customerVal = get(customer);
     if (!customerVal) return null;
 
-    const billingAddress = customerVal.billing_address;
-    if (!billingAddress) return null;
+    const address: Address = {
+      city: '',
+      country: '',
+      line1: '',
+      line2: '',
+      postal_code: '',
+      state: '',
+    };
 
-    return billingAddress;
+    return address;
   },
 });
 
-const paymentMethodById = selectorFamily<PaymentSource | null, string>({
+const paymentMethodById = selectorFamily<any | null, string>({
   key: 'billing.paymentMethodById',
   get:
     (paymentSourceId: string) =>
@@ -101,14 +72,14 @@ const paymentMethodById = selectorFamily<PaymentSource | null, string>({
       if (!paymentMethods || !paymentMethods.length) return null;
 
       const selectedPaymentMethod = paymentMethods.find(
-        (paymentMethod: PaymentSource) => paymentMethod.id === paymentSourceId,
+        (paymentMethod: any) => paymentMethod.id === paymentSourceId,
       );
 
       return selectedPaymentMethod || null;
     },
 });
 
-const subscription = selector<Subscription | null>({
+const subscription = selector<OrgServiceBillingDetailsResponse | null>({
   key: 'billing.subscription',
   get: ({ get }) => get(billingAtoms.billing).subscription,
   set: ({ set }, newValue) =>
@@ -116,28 +87,6 @@ const subscription = selector<Subscription | null>({
       ...prevState,
       subscription: newValue,
     })),
-});
-
-const selectedItemPrice = selector<ItemPriceSimple | null>({
-  key: 'billing.selectedItemPrice',
-  get: ({ get }) => {
-    const itemPrices = get(billingAtoms.itemPrices);
-    if (!itemPrices?.length) return null;
-
-    const selectedSKU = get(nodeAtoms.selectedSKU);
-    if (!selectedSKU) return null;
-
-    const subscriptionVal = get(subscription);
-    const billingPeriodUnit = subscriptionVal?.billing_period_unit ?? 'month';
-
-    const itemPrice = itemPrices.find(
-      (itemPrice: ItemPriceSimple) =>
-        `${itemPrice.item_id}-${itemPrice.price_variant_id}` === selectedSKU &&
-        itemPrice.period_unit === billingPeriodUnit,
-    );
-
-    return itemPrice || null;
-  },
 });
 
 const hasBillingAddress = selector<boolean>({
@@ -167,7 +116,7 @@ const hasPaymentMethod = selector<boolean>({
 const hasSubscription = selector<boolean>({
   key: 'billing.hasSubscription',
   get: ({ get }) => {
-    const subscription = get(billingAtoms.billing)?.identity?.subscription;
+    const subscription = get(billingAtoms.billing)?.subscription;
 
     return subscription !== null;
   },
@@ -179,20 +128,14 @@ const isActiveSubscription = selector<boolean>({
     const subscriptionVal = get(subscription);
     if (!subscriptionVal) return false;
 
-    return subscriptionVal?.status === 'active';
+    // return subscriptionVal?.status === 'active';
+    return true;
   },
 });
 
 const hasAuthorizedBilling = selector<boolean>({
   key: 'billing.resources.canCreate',
   get: ({ get }) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-    const isEnabledBillingPreview = get(
-      billingAtoms.isEnabledBillingPreview(isSuperUser),
-    );
-
-    if (!isEnabledBillingPreview) return true;
-
     const hasSubscriptionVal = get(hasSubscription);
     const isActiveSubscriptionVal = get(isActiveSubscription);
     const hasPaymentMethodVal = get(hasPaymentMethod);
@@ -204,42 +147,61 @@ const hasAuthorizedBilling = selector<boolean>({
   },
 });
 
-const pricing = selector<{
-  subtotal: number;
-  total: number;
-  discount: number;
-  discountPercentage: number;
-}>({
-  key: 'billing.pricing',
+const billingDetails = selector<PaymentMethodCreateParams.BillingDetails>({
+  key: 'billing.card.billingDetails',
   get: ({ get }) => {
-    const itemPrice = get(selectedItemPrice);
-    const promoCode = get(billingAtoms.promoCode);
-
-    const { subtotal, total, discount, discountPercentage } = computePricing(
-      itemPrice,
-      promoCode,
-    );
+    const cardHolder = get(billingAtoms.cardHolder);
+    const address = get(billingAtoms.cardAddress);
+    const user = get(authAtoms.user);
 
     return {
-      subtotal,
-      total,
-      discount,
-      discountPercentage,
+      address: {
+        city: address.city ?? '',
+        country: address.country ?? '',
+        line1: address.line1 ?? '',
+        postal_code: address.postal_code ?? '',
+      },
+      email: user?.email,
+      name: `${cardHolder.firstName} ${cardHolder.lastName}`,
     };
   },
 });
 
+const isValidCardForm = selector<boolean>({
+  key: 'billing.card.isValidForm',
+  get: ({ get }) => {
+    const isValidCardVal = get(billingAtoms.isValidCard);
+    const billingDetailsVal = get(billingDetails);
+
+    const isValidBillingDetails =
+      Object.values(billingDetailsVal?.address!).every(
+        (value) => value.trim() !== '',
+      ) &&
+      billingDetailsVal.email!.trim() !== '' &&
+      billingDetailsVal.name!.trim() !== '';
+
+    return isValidCardVal && isValidBillingDetails;
+  },
+});
+
+const invoice = selectorFamily<any | null, string>({
+  key: 'billing.invoice',
+  get:
+    (id: string) =>
+    ({ get }) => {
+      const invoicesVal = get(billingAtoms.invoices);
+
+      return invoicesVal.find((invoice) => invoice.id === id) || null;
+    },
+});
+
 export const billingSelectors = {
-  isEnabledBillingPreview,
   bypassBillingForSuperUser,
 
   billingId,
-  userSubscription,
 
   customer,
   subscription,
-
-  selectedItemPrice,
 
   billingAddress,
   paymentMethodById,
@@ -250,5 +212,9 @@ export const billingSelectors = {
   isActiveSubscription,
   hasAuthorizedBilling,
 
-  pricing,
+  billingDetails,
+
+  isValidCardForm,
+
+  invoice,
 };

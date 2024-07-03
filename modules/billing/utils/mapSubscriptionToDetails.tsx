@@ -1,62 +1,35 @@
-import { Subscription } from 'chargebee-typescript/lib/resources';
+import { OrgServiceBillingDetailsResponse } from '@modules/grpc/library/blockjoy/v1/org';
 import { formatters } from '@shared/index';
 import { Badge } from '@shared/components';
 import {
   getSubscriptionStatusColor,
   getSubscriptionStatusText,
-  // BillingPeriodSelect,
-  BILLING_PERIOD,
-  calcNextRenewDate,
 } from '@modules/billing';
 
 export const mapSubscriptionToDetails = (
-  subscription: Subscription,
-  props: UpdateSubscriptionProperties,
-  onlyPreview: boolean = false,
+  subscription: OrgServiceBillingDetailsResponse,
 ) => {
-  const { value: periodUnit, handleUpdate: handlePeriodUnit } = props.period;
-
-  const billingPeriod = BILLING_PERIOD.find(
-    (billingPeriod: BillingPeriod) => billingPeriod.id === periodUnit,
-  );
-
-  // const billingPeriodYearly = BILLING_PERIOD.find(
-  //   (billingPeriod: BillingPeriod) => billingPeriod.id === 'year',
-  // );
-  // const isYearlySubscription =
-  //   subscription.billing_period_unit === billingPeriodYearly?.id;
-
   return [
     {
       label: 'Activated at',
-      data: formatters.formatTimestamp(subscription.activated_at!),
+      data: formatters.formatDate(subscription.createdAt!),
     },
     {
       label: 'Billing period',
-      data: (
-        <>
-          {
-            // isYearlySubscription ? (
-            billingPeriod?.name
-            // ) : (
-            //   <BillingPeriodSelect
-            //     value={periodUnit}
-            //     onChange={handlePeriodUnit}
-            //     disabled={onlyPreview}
-            //   />
-            // )
-          }
-        </>
-      ),
+      data: 'Monthly',
     },
     {
       label: 'Status',
       data: (
         <Badge
-          color={getSubscriptionStatusColor(subscription?.status)}
+          color={getSubscriptionStatusColor(
+            subscription?.status as SubscriptionStatus,
+          )}
           style="outline"
         >
-          {getSubscriptionStatusText(subscription?.status)}
+          {getSubscriptionStatusText(
+            subscription?.status as SubscriptionStatus,
+          )}
         </Badge>
       ),
     },
@@ -64,8 +37,9 @@ export const mapSubscriptionToDetails = (
       label: 'Auto renew',
       data: (
         <p>
-          {subscription.status === 'active'
-            ? formatters.formatDate(calcNextRenewDate(periodUnit))
+          {subscription.status.toLowerCase() === 'active' &&
+          subscription.currentPeriodEnd
+            ? formatters.formatDate(subscription.currentPeriodEnd)
             : '-'}
         </p>
       ),

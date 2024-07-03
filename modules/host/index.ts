@@ -14,7 +14,6 @@ export * from './components/HostView/Tabs/Details/HostViewDetails';
 export * from './components/HostView/Tabs/Nodes/HostViewNodes';
 export * from './components/HostWrapper/HostWrapper';
 
-export * from './hooks/useHostDelete';
 export * from './hooks/useHostFilters';
 export * from './hooks/useHostList';
 export * from './hooks/useHostSelect';

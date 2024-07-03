@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
-  WithLauncherGuardAdditionalProps,
   billingAtoms,
   withLauncherGuard,
   billingSelectors,
@@ -9,15 +8,8 @@ import {
 import { authSelectors } from '@modules/auth';
 import { NodeLauncher } from '@modules/node';
 
-export const NodeLauncherWithGuard = ({
-  itemPrices,
-}: WithLauncherGuardAdditionalProps) => {
-  const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
-
+export const NodeLauncherWithGuard = () => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
-  );
   const bypassBillingForSuperUser = useRecoilValue(
     billingSelectors.bypassBillingForSuperUser,
   );
@@ -30,12 +22,10 @@ export const NodeLauncherWithGuard = ({
     authSelectors.hasPermission('subscription-update'),
   );
 
-  const hasBillingPermissionsToCreate = isEnabledBillingPreview
-    ? canCreateSubscription || canUpdateSubscription
-    : true;
+  const hasBillingPermissionsToCreate =
+    canCreateSubscription || canUpdateSubscription;
 
-  const isPermittedAsSuperUser =
-    isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
+  const isPermittedAsSuperUser = isSuperUser && bypassBillingForSuperUser;
 
   const hasPermissionsToCreate =
     isPermittedAsSuperUser || (canAddNode && hasBillingPermissionsToCreate);
@@ -44,10 +34,6 @@ export const NodeLauncherWithGuard = ({
     () => withLauncherGuard(NodeLauncher),
     [],
   );
-
-  useEffect(() => {
-    setItemPrices(itemPrices ?? null);
-  }, [itemPrices]);
 
   return (
     <NodeLauncherGuarded

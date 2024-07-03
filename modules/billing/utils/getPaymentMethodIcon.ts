@@ -17,7 +17,7 @@ const IconBilling = dynamic(
 
 export const getPaymentMethodIcon = (name: string) => {
   switch (name) {
-    case 'american_express':
+    case 'amex':
       return IconAmericanExpress;
     case 'mastercard':
       return IconMasterCard;

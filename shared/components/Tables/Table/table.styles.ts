@@ -36,6 +36,7 @@ export const styles = {
       text-transform: uppercase;
       cursor: default;
       white-space: nowrap;
+      padding-right: 20px;
 
       @media ${breakpoints.toXlrg} {
         padding: 0 16px 10px 0;

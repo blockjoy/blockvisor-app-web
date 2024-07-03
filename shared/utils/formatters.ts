@@ -54,7 +54,9 @@ const formatDate = (date: Date, type?: FormatDateType): string => {
       formattedDate = new Intl.DateTimeFormat();
   }
 
-  return formattedDate.format(date);
+  const dateValue = typeof date === 'string' ? new Date(date) : date;
+
+  return formattedDate.format(dateValue);
 };
 
 const formatSize = (value: number, type?: FormatSizeType): string => {

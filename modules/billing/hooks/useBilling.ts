@@ -1,81 +1,46 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
-  useIdentityRepository,
-  useUserBilling,
-  useUserSubscription,
-} from '@modules/auth';
-import {
-  billingSelectors,
-  useCustomer,
+  useEstimates,
+  useInvoices,
   usePaymentMethods,
   useSubscription,
 } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
 
-type UseBillingHook = {
-  fetchBillingInfo: () => Promise<void>;
-  fetchOrganizationSubscription: () => Promise<void>;
-};
-
-export const useBilling = (): UseBillingHook => {
-  const repository = useIdentityRepository();
-  const { getCustomer } = useCustomer();
-  const { getUserBilling } = useUserBilling();
-  const { getUserSubscription } = useUserSubscription();
-  const { fetchSubscription, setSubscriptionLoadingState } = useSubscription();
-  const { fetchPaymentMethods } = usePaymentMethods();
-
-  const customer = useRecoilValue(billingSelectors.customer);
+export const useBilling = () => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
+  const { getPaymentMethods } = usePaymentMethods();
+  const { subscription, getSubscription } = useSubscription();
+  const { getEstimates } = useEstimates();
+  const { getInvoices } = useInvoices();
+
+  const currentOrgId = useRef<string | undefined>(defaultOrganization?.id);
+  // TODO: change to ID
+  const currentSubId = useRef<Date | undefined>(
+    subscription?.currentPeriodStart,
   );
 
-  const fetchBillingInfo = async () => {
-    const userId = repository?.getIdentity()?.id;
-    const billingId = await getUserBilling(userId!);
-    if (billingId) await getCustomer(billingId!);
-  };
+  useEffect(() => {
+    if (currentOrgId && currentOrgId.current !== defaultOrganization?.id) {
+      getPaymentMethods();
+      getSubscription();
 
-  const fetchOrganizationSubscription = async () => {
-    setSubscriptionLoadingState('initializing');
-
-    if (!isEnabledBillingPreview) {
-      setSubscriptionLoadingState('finished');
-      return;
+      currentOrgId.current = defaultOrganization?.id;
     }
+  }, [defaultOrganization?.id]);
 
-    try {
-      const userSubscription = await getUserSubscription(
-        defaultOrganization?.id!,
-      );
+  useEffect(() => {
+    if (
+      currentSubId &&
+      currentOrgId.current !== subscription?.currentPeriodStart
+    ) {
+      getEstimates();
+      getInvoices();
 
-      await fetchSubscription(userSubscription?.externalId);
-    } catch (error: any) {
-      console.log('Error while fetching user subscription', error);
-    } finally {
-      setSubscriptionLoadingState('finished');
+      currentSubId.current = subscription?.currentPeriodStart;
     }
-  };
-
-  useEffect(() => {
-    if (isEnabledBillingPreview) fetchBillingInfo();
-  }, [isEnabledBillingPreview]);
-
-  useEffect(() => {
-    if (isEnabledBillingPreview && customer) fetchPaymentMethods();
-  }, [isEnabledBillingPreview, customer]);
-
-  useEffect(() => {
-    if (isEnabledBillingPreview && defaultOrganization?.id)
-      fetchOrganizationSubscription();
-  }, [isEnabledBillingPreview, defaultOrganization?.id]);
-
-  return {
-    fetchBillingInfo,
-    fetchOrganizationSubscription,
-  };
+  }, [subscription?.createdAt]);
 };

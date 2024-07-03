@@ -14,3 +14,15 @@ type SubscriptionMetadataItem = {
   createdAt?: Date;
   itemPriceID?: string;
 };
+
+type SubscriptionStatus =
+  | 'incomplete'
+  | 'incomplete_expired'
+  | 'trialing'
+  | 'active'
+  | 'past_due'
+  | 'canceled'
+  | 'unpaid'
+  | 'paused';
+
+type SubscriptionBillingPeriod = 'month' | 'year';
