@@ -1,5 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useSettings } from '@modules/settings';
 import { sort } from '@shared/components';
 import { organizationSelectors } from '@modules/organization';
@@ -22,7 +23,7 @@ export function useDefaultOrganization() {
     ) {
       const firstOrgInList = sort(organizations, {
         field: 'name',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       })[0];
 
       const newDefaultOrg = {

@@ -1,14 +1,7 @@
-export type Pagination = {
-  currentPage: number;
-  itemsPerPage: number;
-};
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { OrgSort, OrgSortField } from '@modules/grpc/library/blockjoy/v1/org';
 
-export type Sorting = {
-  order: 'asc' | 'desc';
-  field: string;
-};
-
-export type Filtering = {
+export type Filter = {
   role: {
     dataField: string;
     value: string | number;
@@ -17,22 +10,29 @@ export type Filtering = {
 
 export type InitialQueryParams = {
   pagination: Pagination;
-  sorting: Sorting;
-  filtering: Filtering;
+  filter: Filter;
+  sort: OrgSort[];
 };
+
+export const initialSort: OrgSort[] = [
+  {
+    field: OrgSortField.ORG_SORT_FIELD_NAME,
+    order: SortOrder.SORT_ORDER_ASCENDING,
+  },
+];
 
 export const initialQueryParams: InitialQueryParams = {
   pagination: {
     currentPage: 1,
     itemsPerPage: 20,
   },
-  sorting: { order: 'asc', field: 'name' },
-  filtering: {
+  filter: {
     role: {
       dataField: 'currentUser.role',
       value: '',
     },
   },
+  sort: initialSort,
 };
 
 export const FILTERS: FilteringItem[] = [

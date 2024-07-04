@@ -1,10 +1,10 @@
-import { TableBlock } from '@shared/components';
-import { formatDistanceToNow } from 'date-fns';
-import { BlockchainIcon, NodeStatus } from '@shared/components';
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { getNodeJobProgress } from './getNodeJobProgress';
 import { css } from '@emotion/react';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { formatDistanceToNow } from 'date-fns';
+import { TableBlock } from '@shared/components';
+import { BlockchainIcon, NodeStatus } from '@shared/components';
+import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
+import { getNodeJobProgress } from './getNodeJobProgress';
 
 const middleRowStyles = css`
   text-transform: capitalize;
@@ -24,17 +24,20 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       key: '2',
       width: '300px',
       maxWidth: '300px',
+      dataField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
     },
     {
       name: 'Launched',
       key: '3',
       width: '200px',
       maxWidth: '200px',
+      dataField: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
     },
     {
       name: 'Status',
       key: '4',
       width: '400px',
+      dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     },
   ];
 

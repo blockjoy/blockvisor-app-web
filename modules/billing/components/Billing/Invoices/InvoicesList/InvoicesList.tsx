@@ -61,8 +61,8 @@ export const InvoicesList = () => {
         ...invoicesUIProps.queryParams.pagination,
         currentPage: newCurrentPage,
       },
-      filtering: {
-        ...invoicesUIProps.queryParams.filtering,
+      filter: {
+        ...invoicesUIProps.queryParams.filter,
         offset: invoicesNextOffset,
       },
     };

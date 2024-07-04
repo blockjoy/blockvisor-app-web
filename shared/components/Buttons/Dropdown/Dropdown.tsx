@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { styles } from './Dropdown.styles';
 import { useAccessibleDropdown } from '@shared/index';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -19,13 +19,13 @@ export type DropdownProps<T = any> = {
   itemKey?: string;
   selectedItem: T | null;
   handleSelected: (item: T | null) => void;
-  defaultText?: string | React.ReactNode;
+  defaultText?: string | ReactNode;
   searchQuery?: string;
   isTouchedQuery?: boolean;
-  renderSearch?: (isOpen: boolean) => React.ReactNode;
-  renderHeader?: React.ReactNode;
-  renderButtonText?: React.ReactNode;
-  dropdownButtonStyles?: (theme: ITheme) => SerializedStyles;
+  renderSearch?: (isOpen: boolean) => ReactNode;
+  renderHeader?: ReactNode;
+  renderButtonText?: ReactNode;
+  dropdownButtonStyles?: ((theme: ITheme) => SerializedStyles)[];
   dropdownMenuStyles?: SerializedStyles[];
   dropdownItemStyles?: (item: T) => SerializedStyles[];
   dropdownScrollbarStyles?: SerializedStyles[];
@@ -42,8 +42,8 @@ export type DropdownProps<T = any> = {
   buttonType?: 'input' | 'default';
   handleOpen: (open?: boolean) => void;
   checkDisabledItem?: (item?: T) => boolean;
-  renderItem?: (item: T) => React.ReactNode;
-  renderItemLabel?: (item?: T) => React.ReactNode;
+  renderItem?: (item: T) => ReactNode;
+  renderItemLabel?: (item?: T) => ReactNode;
   newItem?: {
     title: string;
     onClick: VoidFunction;
@@ -146,11 +146,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       {...(noBottomMargin && { noBottomMargin })}
     >
       <DropdownButton
-        disabled={disabled}
         isOpen={isOpen}
         isLoading={isLoading}
         type={buttonType}
-        buttonStyles={dropdownButtonStyles}
+        {...(dropdownButtonStyles
+          ? { buttonStyles: dropdownButtonStyles }
+          : null)}
         hideDropdownIcon={hideDropdownIcon}
         text={
           Boolean(renderButtonText) && !isLoading ? (
@@ -160,13 +161,17 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
           ) : error ? (
             <div css={[colors.warning]}>{error}</div>
           ) : (
-            <p {...(!selectedItem && { css: styles.placeholder })}>
-              {selectedItem
-                ? renderItem
-                  ? renderItem(selectedItem)
-                  : escapeHtml(selectedItem[itemKey]!)
-                : defaultText || 'Select'}
-            </p>
+            <>
+              {selectedItem ? (
+                renderItem ? (
+                  renderItem(selectedItem)
+                ) : (
+                  <p>{escapeHtml(selectedItem[itemKey]!)}</p>
+                )
+              ) : (
+                <p css={styles.placeholder}>{defaultText || 'Select'}</p>
+              )}
+            </>
           )
         }
         {...(disabled && { disabled })}

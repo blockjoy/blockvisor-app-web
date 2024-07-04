@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Copy, SvgIcon, OrganizationPicker } from '@shared/components';
 import { ProfileDropdown } from './ProfileDropdown/ProfileDropdown';
 import { wrapper } from 'styles/wrapper.styles';
@@ -9,7 +10,8 @@ interface Props {
   title: string;
   childTitle?: string;
   canCopyChild?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
+  label?: ReactNode;
   onTitleClick?: VoidFunction;
   isLoading?: boolean;
   isAdmin?: boolean;
@@ -21,6 +23,7 @@ export const PageTitle = ({
   childTitle,
   canCopyChild,
   icon,
+  label,
   onTitleClick,
   isLoading,
   isAdmin,
@@ -55,6 +58,7 @@ export const PageTitle = ({
           ) : (
             <Title />
           )}
+          {label ? label : null}
           {isAdmin ? (
             <>
               <span css={styles.separator}>/</span>

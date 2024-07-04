@@ -1,5 +1,5 @@
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import { Org, OrgSortField } from '@modules/grpc/library/blockjoy/v1/org';
 
 export const mapOrganizationsToRows = (
   organizations: Org[],
@@ -12,8 +12,7 @@ export const mapOrganizationsToRows = (
       minWidth: '100%',
       maxWidth: '100%',
       width: '100%',
-      dataField: 'name',
-      sort: true,
+      dataField: OrgSortField.ORG_SORT_FIELD_NAME,
     },
   ];
 

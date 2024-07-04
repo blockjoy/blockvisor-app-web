@@ -1,38 +1,19 @@
-import { FormEvent, useMemo, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import IconClose from '@public/assets/icons/common/Close.svg';
-import IconRefresh from '@public/assets/icons/common/Refresh.svg';
-import { styles } from './nodeFilters.styles';
-import {
-  Skeleton,
-  SkeletonGrid,
-  Scrollbar,
-  SvgIcon,
-  FiltersHeader,
-  FiltersBlock,
-  Search,
-} from '@shared/components';
 import {
   nodeAtoms,
-  blockchainSelectors,
   useNodeFilters,
-  useNodeUIContext,
   blockchainAtoms,
   nodeSelectors,
+  NodeSorting,
 } from '@modules/node';
 import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
+import { FiltersHeader, Filters } from '@shared/components';
 import { useViewport } from '@shared/index';
+import { styles } from './nodeFilters.styles';
 
 export const NodeFilters = () => {
-  const nodeUIContext = useNodeUIContext();
-  const nodeUIProps = useMemo(() => {
-    return {
-      setQueryParams: nodeUIContext.setQueryParams,
-      queryParams: nodeUIContext.queryParams,
-    };
-  }, [nodeUIContext]);
-
   const {
     filters,
     isDirty,
@@ -41,13 +22,10 @@ export const NodeFilters = () => {
     updateFilters,
     resetFilters,
     changeTempFilters,
-  } = useNodeFilters(nodeUIProps);
+  } = useNodeFilters();
 
   const isCompleted = useRef(false);
 
-  const hasBlockchainError = useRecoilValue(
-    blockchainSelectors.blockchainsHasError,
-  );
   const nodeListLoadingState = useRecoilValue(nodeAtoms.isLoading);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
@@ -60,41 +38,23 @@ export const NodeFilters = () => {
     nodeSelectors.filtersBlockchainSelectedIds,
   );
 
-  const [openFilterId, setOpenFilterId] = useState('');
-
   const { updateSettings } = useSettings();
   const { isXlrg } = useViewport();
 
-  const hasFiltersApplied =
-    filters.some((filter) =>
-      filter.list?.some((l: FilterListItem) => l.isChecked),
-    ) || Boolean(tempSearchQuery.length);
-
-  const handleResetFilters = () => {
-    resetFilters();
-    setOpenFilterId('');
-  };
-
-  const handleFilterBlockClicked = (filterId: string) => {
-    setOpenFilterId(filterId);
-  };
-
-  const handlePlusMinusClicked = (filterId: string, isOpen: boolean) => {
-    const filterIdValue = isOpen ? '' : filterId;
-    setOpenFilterId(filterIdValue);
-  };
+  const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
 
   const handleFiltersToggle = () => {
     if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
     else updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    updateFilters();
-  };
-
   const handleSearch = (value: string) => changeTempFilters('keyword', value);
+
+  const handleActiveView = (view: View) => {
+    const activeViewKey = isXlrg ? 'mobile.nodes.view' : 'nodes.view';
+
+    updateSettings('layout', { [activeViewKey]: view });
+  };
 
   if (
     nodeListLoadingState === 'finished' &&
@@ -109,67 +69,28 @@ export const NodeFilters = () => {
     <div css={[styles.outerWrapper, !isOpen && styles.outerWrapperCollapsed]}>
       <FiltersHeader
         isLoading={!isCompleted.current}
-        filtersTotal={tempFiltersTotal}
         isFiltersOpen={isOpen}
+        filtersTotal={tempFiltersTotal}
         handleFiltersToggle={handleFiltersToggle}
-      />
-      {!isCompleted.current ? (
-        isOpen && (
-          <div css={[styles.skeleton]}>
-            <SkeletonGrid>
-              <Skeleton width="80%" />
-              <Skeleton width="80%" />
-            </SkeletonGrid>
+        elements={
+          <div css={styles.sorting}>
+            <NodeSorting />
           </div>
-        )
-      ) : (
-        <div css={[styles.wrapper, isOpen && styles.wrapperOpen]}>
-          <form css={styles.form}>
-            <Search
-              onInput={handleSearch}
-              value={tempSearchQuery}
-              size="small"
-              additionalStyles={styles.search}
-            />
-            <Scrollbar additionalStyles={[styles.filters]}>
-              {filters.map((item) => (
-                <FiltersBlock
-                  key={item.id}
-                  hasError={item.id === 'blockchain' && hasBlockchainError}
-                  isOpen={item.id === openFilterId}
-                  filter={item}
-                  onPlusMinusClicked={handlePlusMinusClicked}
-                  onFilterBlockClicked={handleFilterBlockClicked}
-                  onFilterChanged={changeTempFilters}
-                />
-              ))}
-            </Scrollbar>
-            <button
-              css={styles.updateButton}
-              type="submit"
-              disabled={!isDirty}
-              onClick={handleSubmit}
-            >
-              <SvgIcon size="12px">
-                <IconRefresh />
-              </SvgIcon>
-              Apply
-            </button>
-            {hasFiltersApplied && (
-              <button
-                css={styles.resetButton}
-                type="button"
-                onClick={handleResetFilters}
-              >
-                <SvgIcon size="18px">
-                  <IconClose />
-                </SvgIcon>
-                Reset Filters
-              </button>
-            )}
-          </form>
-        </div>
-      )}
+        }
+        activeView={activeView}
+        handleActiveView={handleActiveView}
+      />
+      <Filters
+        filters={filters}
+        isDirty={isDirty}
+        changeTempFilters={changeTempFilters}
+        isFiltersOpen={isOpen}
+        resetFilters={resetFilters}
+        updateFilters={updateFilters}
+        isLoading={!isCompleted.current}
+        handleSearch={handleSearch}
+        searchValue={tempSearchQuery}
+      />
     </div>
   );
 };

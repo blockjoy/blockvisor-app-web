@@ -1,26 +1,12 @@
-import { styles } from './table.styles';
-import { css, SerializedStyles } from '@emotion/react';
-import TableRowLoader from './TableRowLoader';
-import { isSafari } from 'react-device-detect';
-import { TableSortButton } from './TableSortButton';
 import { useState } from 'react';
+import { isSafari } from 'react-device-detect';
+import { css } from '@emotion/react';
+import { styles } from './table.styles';
+import { TableRowLoader } from './TableRowLoader';
+import { TableSortButton } from './TableSortButton';
+import { BaseQueryParams } from '@shared/common/common';
 
-export type TableProps = {
-  hideHeader?: boolean;
-  headers?: TableHeader[];
-  rows?: Row[];
-  onRowClick?: (id: string) => void;
-  isLoading: LoadingState;
-  preload?: number;
-  verticalAlign?: 'top' | 'middle';
-  fixedRowHeight?: string;
-  properties?: InitialFilter;
-  handleSort?: (dataField: string) => void;
-  additionalStyles?: SerializedStyles[];
-  isHover?: boolean;
-};
-
-export const Table = ({
+export const Table = <T extends BaseQueryParams>({
   hideHeader,
   headers = [],
   rows = [],
@@ -29,11 +15,11 @@ export const Table = ({
   preload,
   verticalAlign,
   fixedRowHeight,
-  properties,
+  queryParams,
   handleSort,
   additionalStyles,
   isHover = true,
-}: TableProps) => {
+}: TableProps<T>) => {
   const [activeRowKey, setActiveRowKey] = useState<string>(rows?.[0]?.key);
 
   const handleRowClick = (id: string) => {
@@ -66,7 +52,6 @@ export const Table = ({
                   textAlign,
                   name,
                   component,
-                  sort,
                   dataField,
                 }) => (
                   <th
@@ -79,12 +64,11 @@ export const Table = ({
                       text-align: ${textAlign || 'left'};
                     `}
                   >
-                    {sort && handleSort && dataField ? (
+                    {handleSort && dataField ? (
                       <TableSortButton
                         onClick={() => handleSort(dataField)}
-                        sortExpression={dataField}
-                        activeSortExpression={properties?.sorting?.field}
-                        activeOrder={properties?.sorting?.order}
+                        dataField={dataField}
+                        sort={queryParams?.sort?.[0]}
                       >
                         {component || name}
                       </TableSortButton>

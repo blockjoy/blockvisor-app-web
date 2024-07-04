@@ -1,4 +1,4 @@
-import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   HostIcon,
   HostIpStatus,
@@ -19,6 +19,7 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       name: 'Host',
       key: '2',
       width: '300px',
+      dataField: HostSortField.HOST_SORT_FIELD_HOST_NAME,
     },
     {
       name: 'Version',

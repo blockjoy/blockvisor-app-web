@@ -1,39 +1,33 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import {
   Skeleton,
-  GridTableViewPicker,
   FiltersHeaderIconText,
   Alert,
+  ViewPicker,
 } from '@shared/components';
-import { nodeAtoms } from '@modules/node';
-import { layoutAtoms, layoutSelectors } from '@modules/layout';
-import { styles } from './styles';
+import { nodeAtoms, NodeSorting } from '@modules/node';
+import { layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
-import { useViewport } from '@shared/index';
+import { styles } from './NodeListHeader.styles';
 
 export const NodeListHeader = () => {
-  const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
-    layoutAtoms.isNodeFiltersOpenMobile,
-  );
   const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
   const nodeCount = useRecoilValue(nodeAtoms.nodeCount);
-  const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
   const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
-  const view = useRecoilValue(layoutSelectors.nodeView);
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
+  const activeView = useRecoilValue(layoutSelectors.nodeView);
 
   const { updateSettings } = useSettings();
-  const { isXlrg } = useViewport();
 
   const handleFilterCollapseToggled = () => {
-    if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
-    else updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
+    updateSettings('layout', { 'nodes.filters.isOpen': !isFiltersOpen });
   };
 
-  const handleGridTableViewChanged = (type: View) => {
+  const handleActiveView = (type: View) => {
     updateSettings('layout', { 'nodes.view': type });
   };
 
-  const isLoading = isLoadingNodes !== 'finished';
+  const isLoading = isLoadingNodes === 'initializing';
 
   return (
     <div css={styles.wrapper}>
@@ -46,7 +40,10 @@ export const NodeListHeader = () => {
               onClick={handleFilterCollapseToggled}
               css={[styles.filterToggle, styles.endBlock]}
             >
-              <FiltersHeaderIconText filtersTotal={filtersTotal} />
+              <FiltersHeaderIconText
+                filtersTotal={filtersTotal}
+                isFiltersOpen={isFiltersOpen}
+              />
             </button>
           )}
         </div>
@@ -55,15 +52,21 @@ export const NodeListHeader = () => {
       {isLoading ? (
         <Skeleton width="115px" />
       ) : (
-        <Alert isRounded isSuccess={nodeCount > 0}>
+        <Alert
+          isRounded
+          isSuccess={nodeCount > 0}
+          additionalStyles={[styles.count]}
+        >
           {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
         </Alert>
       )}
 
+      <NodeSorting />
+
       <div css={[styles.endBlock, styles.listTypePicker]}>
-        <GridTableViewPicker
-          onChange={handleGridTableViewChanged}
-          activeListType={view}
+        <ViewPicker
+          activeView={activeView}
+          handleActiveView={handleActiveView}
         />
       </div>
     </div>
