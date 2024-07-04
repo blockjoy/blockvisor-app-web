@@ -19,7 +19,7 @@ export const Table = <T extends BaseQueryParams>({
   handleSort,
   additionalStyles,
   isHover = true,
-}: TableProps) => {
+}: TableProps<T>) => {
   const [activeRowKey, setActiveRowKey] = useState<string>(
     rows?.[0]?.isClickable ? rows?.[0]?.key : '',
   );

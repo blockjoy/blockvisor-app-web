@@ -12,7 +12,7 @@ import {
 import { authAtoms } from '@modules/auth';
 import { billingAtoms, usePaymentMethods } from '@modules/billing';
 import { organizationClient } from '@modules/grpc';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 
 interface PaymentMethodHook {
   paymentMethodLoadingState: LoadingState;
@@ -28,7 +28,7 @@ export const usePaymentMethod = (): PaymentMethodHook => {
 
   const user = useRecoilValue(authAtoms.user);
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
   const setError = useSetRecoilState(billingAtoms.paymentMethodError);
   const [paymentMethodLoadingState, setPaymentMethodLoadingState] =

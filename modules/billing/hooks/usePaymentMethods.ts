@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { PaymentMethod } from '@modules/grpc/library/blockjoy/v1/org';
 import { billingAtoms } from '@modules/billing';
 import { organizationClient } from '@modules/grpc';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
 
 interface IPaymentMethodsHook {
@@ -15,7 +15,7 @@ interface IPaymentMethodsHook {
 
 export const usePaymentMethods = (): IPaymentMethodsHook => {
   const defaultOrganization = useRecoilValue(
-    organizationAtoms.defaultOrganization,
+    organizationSelectors.defaultOrganization,
   );
 
   const [paymentMethods, setPaymentMethods] = useRecoilState(

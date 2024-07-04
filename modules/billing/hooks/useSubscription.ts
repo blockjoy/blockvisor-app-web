@@ -1,6 +1,6 @@
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { billingAtoms, billingSelectors } from '@modules/billing';
-import { organizationAtoms } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import { organizationClient } from '@modules/grpc';
 import { OrgServiceBillingDetailsResponse } from '@modules/grpc/library/blockjoy/v1/org';
 
