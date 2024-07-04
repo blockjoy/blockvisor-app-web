@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { Controller, FormProvider } from 'react-hook-form';
-import { billingSelectors } from '@modules/billing';
+import { billingSelectors, useBillingAddressForm } from '@modules/billing';
 import {
   ButtonGroup,
   Button,
@@ -12,7 +12,6 @@ import { typo } from 'styles/utils.typography.styles';
 import { containers } from 'styles/containers.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { form as formStyles } from 'styles/form.styles';
-import { useBillingAddressForm } from '@modules/billing/hooks/useBillingAddressForm';
 
 type BillingAddressFormProps = {
   handleCancel: () => void;

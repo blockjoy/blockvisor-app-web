@@ -1,5 +1,5 @@
 import { Button, Checklist } from '@shared/components';
-import { PLAN_ITEM } from '@modules/billing/constants';
+import { PLAN_ITEM } from '@modules/billing';
 import { styles } from './PlanItem.styles';
 
 type PlanItemProps = {

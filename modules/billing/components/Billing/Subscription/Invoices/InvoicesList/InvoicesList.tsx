@@ -1,72 +1,27 @@
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import isEqual from 'lodash/isEqual';
 import { ROUTES } from '@shared/index';
 import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
-import {
-  billingAtoms,
-  mapInvoicesToRows,
-  useInvoices,
-  useInvoicesUIContext,
-} from '@modules/billing';
+import { billingAtoms, mapInvoicesToRows } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
 
 export const InvoicesList = () => {
+  const router = useRouter();
+
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-
-  const router = useRouter();
-
-  const { invoices, invoicesLoadingState, getInvoices } = useInvoices();
-
-  const invoicesUIContext = useInvoicesUIContext();
-  const invoicesUIProps = useMemo(() => {
-    return {
-      queryParams: invoicesUIContext.queryParams,
-      setQueryParams: invoicesUIContext.setQueryParams,
-    };
-  }, [invoicesUIContext]);
-
-  const currentQueryParams = useRef(invoicesUIProps.queryParams);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    if (!isEqual(currentQueryParams.current, invoicesUIProps.queryParams)) {
-      getInvoices();
-      currentQueryParams.current = invoicesUIProps.queryParams;
-    }
-  }, [invoicesUIProps.queryParams]);
+  const invoices = useRecoilValue(billingAtoms.invoices);
+  const invoicesLoadingState = useRecoilValue(
+    billingAtoms.invoicesLoadingState,
+  );
 
   const { headers, rows } = mapInvoicesToRows(invoices);
 
   const handleRowClicked = (id: string) => {
     router.push(ROUTES.INVOICE(id));
-  };
-
-  const updateQueryParams = async () => {
-    const newCurrentPage =
-      invoicesUIProps.queryParams.pagination.currentPage + 1;
-    const newQueryParams = {
-      ...invoicesUIProps.queryParams,
-
-      pagination: {
-        ...invoicesUIProps.queryParams.pagination,
-        currentPage: newCurrentPage,
-      },
-      filter: {
-        ...invoicesUIProps.queryParams.filter,
-        offset: null as any,
-      },
-    };
-
-    invoicesUIProps.setQueryParams(newQueryParams);
   };
 
   if (
@@ -78,8 +33,8 @@ export const InvoicesList = () => {
   return invoices?.length ? (
     <InfiniteScroll
       dataLength={invoices?.length}
-      next={updateQueryParams}
-      hasMore={!!false}
+      next={() => {}}
+      hasMore={false}
       style={{ overflow: 'hidden' }}
       scrollThreshold={0.75}
       loader={
