@@ -6,11 +6,13 @@ export const styles = {
   wrapper: css`
     display: flex;
     flex: 1 1 auto;
+    overflow: hidden;
 
     @media ${breakpoints.toXlrg} {
       flex-direction: column;
       padding-left: 10px;
       padding-right: 10px;
+      overflow: visible;
     }
   `,
   empty: (theme: ITheme) => css`

@@ -11,6 +11,7 @@ import { AdminBlockchainVersionAdd } from './AdminBlockchainVersionAdd/AdminBloc
 import { spacing } from 'styles/utils.spacing.styles';
 import { sortVersions } from '@modules/node';
 import { breakpoints } from 'styles/variables.styles';
+import { ITheme } from 'types/theme';
 
 const styles = {
   versionList: css`
@@ -29,6 +30,11 @@ const styles = {
         padding-right: 30px;
       }
     }
+  `,
+  versionDescription: (theme: ITheme) => css`
+    color: ${theme.colorDefault};
+    margin-left: 10px;
+    font-size: 14px;
   `,
 };
 
@@ -71,6 +77,11 @@ export const AdminBlockchain = () => {
           {sortVersions(item.nodeTypes[0].versions).map((version) => (
             <li key={version.id} css={spacing.bottom.small}>
               {version.version}
+              {version.description && (
+                <span css={styles.versionDescription}>
+                  {version.description}
+                </span>
+              )}
             </li>
           ))}
         </ul>
