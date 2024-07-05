@@ -1,3 +1,6 @@
+import { useRecoilValue } from 'recoil';
+import { usePathname } from 'next/navigation';
+import { layoutSelectors } from '@modules/layout';
 import { Copy, SvgIcon, OrganizationPicker } from '@shared/components';
 import { ProfileDropdown } from './ProfileDropdown/ProfileDropdown';
 import { wrapper } from 'styles/wrapper.styles';
@@ -26,6 +29,11 @@ export const PageTitle = ({
   isAdmin,
   hideOrgPicker,
 }: Props) => {
+  const pathname = usePathname();
+  const adminFullWidth = useRecoilValue(layoutSelectors.adminFullWidth);
+
+  const isFullWidth = pathname === '/admin' && adminFullWidth;
+
   const Title = () => (
     <span css={styles.title}>
       {icon && (
@@ -40,7 +48,7 @@ export const PageTitle = ({
 
   return (
     <header css={styles.base}>
-      <div css={[styles.wrapper, wrapper.main]}>
+      <div css={[styles.wrapper, isFullWidth ? wrapper.full : wrapper.main]}>
         <div css={styles.breadcrumb}>
           {!hideOrgPicker && (
             <div css={styles.orgPicker}>

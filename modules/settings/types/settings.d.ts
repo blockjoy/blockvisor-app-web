@@ -18,6 +18,7 @@ type LayoutSettings = {
   'nodes.filters.isOpen': boolean;
   'hosts.view': View;
   'hosts.filters.isOpen': boolean;
+  'admin.fullWidth': boolean;
 };
 
 type NodeSettings = {
