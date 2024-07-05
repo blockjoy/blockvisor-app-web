@@ -18,6 +18,12 @@ const main = css`
   max-width: 1676px;
 `;
 
+const full = css`
+  ${base}
+  max-width: 100%;
+`;
+
 export const wrapper = {
   main,
+  full,
 };

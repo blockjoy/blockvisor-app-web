@@ -30,6 +30,7 @@ type LayoutBasicSettings = {
   'nodes.filters.isOpen': boolean;
   'hosts.view': View;
   'hosts.filters.isOpen': boolean;
+  'admin.fullWidth': boolean;
 };
 
 type LayoutMobileSettings = {

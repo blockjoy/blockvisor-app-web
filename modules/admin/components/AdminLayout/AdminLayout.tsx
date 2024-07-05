@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AdminSidebar } from '../AdminSidebar/AdminSidebar';
 import { styles } from './AdminLayout.styles';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { wrapper } from 'styles/wrapper.styles';
 import { AdminLists } from '../AdminLists/AdminLists';
 import { AdminDetails } from '../AdminDetails/AdminDetails';
 import { AdminDashboard } from '../AdminDashboard/AdminDashboard';
 import { AdminSettings } from '../AdminSettings/AdminSettings';
 import { PageTitle } from '@shared/components';
+import { layoutSelectors } from '@modules/layout';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
@@ -32,6 +34,8 @@ export const AdminLayout = () => {
   const id = searchParams.get('id');
   const ip = searchParams.get('ip');
 
+  const adminFullWidth = useRecoilValue(layoutSelectors.adminFullWidth);
+
   useEffect(() => {
     if (!name) {
       router.replace('/admin?name=dashboard');
@@ -52,7 +56,9 @@ export const AdminLayout = () => {
         }
         hideOrgPicker
       />
-      <section css={[styles.wrapper, wrapper.main]}>
+      <section
+        css={[styles.wrapper, adminFullWidth ? wrapper.full : wrapper.main]}
+      >
         <AdminSidebar tab={name as string} />
         {type === 'dashboard' ? (
           <AdminDashboard />
