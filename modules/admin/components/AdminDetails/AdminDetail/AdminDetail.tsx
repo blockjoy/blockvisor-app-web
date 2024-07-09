@@ -17,6 +17,8 @@ type Props = {
   hasLogs?: boolean;
   additionalHeaderButtons?: React.ReactNode;
   customItemsAtEnd?: boolean;
+  shouldRefresh?: boolean;
+  onRefreshed?: VoidFunction;
   getItem: () => Promise<{}>;
   customItems?: (item: any) => AdminDetailProperty[];
   onOpenInApp?: () => void;
@@ -36,6 +38,8 @@ export const AdminDetail = ({
   hasLogs,
   additionalHeaderButtons,
   customItemsAtEnd,
+  shouldRefresh,
+  onRefreshed,
   getItem,
   customItems,
   onOpenInApp,
@@ -79,6 +83,33 @@ export const AdminDetail = ({
   const handleCopyObject = () =>
     copyToClipboard(JSON.stringify(item, undefined, 2));
 
+  const handleRefresh = async () => {
+    onRefreshed?.();
+
+    try {
+      if (ip && org_id) {
+        const nodeResults = await nodeClient.listNodes(
+          org_id as string,
+          {
+            keyword: ip as string,
+          },
+          {
+            currentPage: 0,
+            itemsPerPage: 1,
+          },
+        );
+        const item = await nodeClient.getNode(nodeResults.nodes[0].id);
+        setItem(item);
+      } else {
+        const item = await getItem();
+        setItem(item);
+      }
+    } catch (err) {
+      setItem({});
+      setError('Cannot load data');
+    }
+  };
+
   const handleToggleEditMode = () => setIsEditMode(!isEditMode);
 
   const handleSaveChanges = (
@@ -89,31 +120,12 @@ export const AdminDetail = ({
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        if (ip && org_id) {
-          const nodeResults = await nodeClient.listNodes(
-            org_id as string,
-            {
-              keyword: ip as string,
-            },
-            {
-              currentPage: 0,
-              itemsPerPage: 1,
-            },
-          );
-          const item = await nodeClient.getNode(nodeResults.nodes[0].id);
-          setItem(item);
-        } else {
-          const item = await getItem();
-          setItem(item);
-        }
-      } catch (err) {
-        setItem({});
-        setError('Cannot load data');
-      }
-    })();
+    handleRefresh();
   }, [isEditMode]);
+
+  useEffect(() => {
+    if (shouldRefresh) handleRefresh();
+  }, [shouldRefresh]);
 
   return (
     <>

@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { AdminBlockchainVersionAddDialog } from './AdminBlockchainVersionAddDialog/AdminBlockchainVersionAddDialog';
 import IconUpgrade from '@public/assets/icons/common/ListAdd.svg';
 
-export const AdminBlockchainVersionAdd = () => {
+type Props = {
+  onRefreshed: VoidFunction;
+};
+
+export const AdminBlockchainVersionAdd = ({ onRefreshed }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -18,6 +22,7 @@ export const AdminBlockchainVersionAdd = () => {
         <AdminBlockchainVersionAddDialog
           isOpen={isOpen}
           toggleOpen={() => setIsOpen(!isOpen)}
+          onRefreshed={onRefreshed}
         />,
         document.body.querySelector('#__next')!,
       )}
