@@ -12,6 +12,8 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { sortVersions } from '@modules/node';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
+import { useState } from 'react';
+import { delay } from '@shared/utils/delay';
 
 const styles = {
   versionList: css`
@@ -41,6 +43,14 @@ const styles = {
 export const AdminBlockchain = () => {
   const router = useRouter();
   const { id } = router.query;
+
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+
+  const handleRefreshed = async () => {
+    setShouldRefresh(true);
+    await delay(250);
+    setShouldRefresh(false);
+  };
 
   const getItem = async () =>
     await blockchainClient.getBlockchain(id as string);
@@ -91,6 +101,8 @@ export const AdminBlockchain = () => {
 
   return (
     <AdminDetail
+      shouldRefresh={shouldRefresh}
+      onRefreshed={handleRefreshed}
       getItem={getItem}
       detailsName="name"
       ignoreItems={[
@@ -103,7 +115,9 @@ export const AdminBlockchain = () => {
         'updatedAt',
       ]}
       customItems={customItems}
-      additionalHeaderButtons={<AdminBlockchainVersionAdd />}
+      additionalHeaderButtons={
+        <AdminBlockchainVersionAdd onRefreshed={handleRefreshed} />
+      }
     />
   );
 };

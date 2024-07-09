@@ -24,11 +24,13 @@ import { AdminBlockchainVersionAddProperties } from './AdminBlockchainVersionAdd
 type Props = {
   isOpen: boolean;
   toggleOpen: VoidFunction;
+  onRefreshed: VoidFunction;
 };
 
 export const AdminBlockchainVersionAddDialog = ({
   isOpen,
   toggleOpen,
+  onRefreshed,
 }: Props) => {
   const { id } = router.query;
 
@@ -58,12 +60,13 @@ export const AdminBlockchainVersionAddDialog = ({
     setIsAdding(true);
     try {
       await blockchainClient.addVersion(nextVersion);
+      onRefreshed();
       toggleOpen();
       toast.success('Version Added');
       resetForm();
     } catch (err: any) {
       const errorString: string = err?.toString();
-      console.log('error', err);
+      console.log('blockchainAddVersionError', err);
       setServerError(
         `Error: ${errorString?.substring(
           errorString.lastIndexOf(': '),
