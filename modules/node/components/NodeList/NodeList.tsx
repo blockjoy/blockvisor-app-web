@@ -34,12 +34,13 @@ export const NodeList = () => {
 
   const queryParams = useRecoilValue(nodeSelectors.queryParams);
   const setPagination = useSetRecoilState(nodeAtoms.nodeListPagination);
-  const view = useRecoilValue(layoutSelectors.nodeView);
 
   const currentQueryParams = useRef(queryParams);
 
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
   const { isXlrg } = useViewport();
+
+  const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
 
   const loadNodesDebounced = debounce(loadNodes, 70);
 
@@ -123,7 +124,7 @@ export const NodeList = () => {
               scrollThreshold={0.75}
               loader={''}
             >
-              {view === 'table' ? (
+              {activeView === 'table' ? (
                 <Table
                   isLoading={isLoading}
                   headers={headers}

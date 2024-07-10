@@ -26,13 +26,14 @@ import { styles } from './HostList.styles';
 export const HostList = () => {
   const queryParams = useRecoilValue(hostSelectors.queryParams);
   const setPagination = useSetRecoilState(hostAtoms.hostListPagination);
-  const view = useRecoilValue(layoutSelectors.hostView);
 
   const currentQueryParams = useRef(queryParams);
 
   const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
     useHostList();
   const { isXlrg } = useViewport();
+
+  const activeView = useRecoilValue(layoutSelectors.activeHostView(isXlrg));
 
   useEffect(() => {
     if (!isEqual(currentQueryParams.current, queryParams)) {
@@ -95,7 +96,7 @@ export const HostList = () => {
             scrollThreshold={0.75}
             loader={''}
           >
-            {view === 'table' ? (
+            {activeView === 'table' ? (
               <Table
                 isLoading={isLoading}
                 headers={headers}
