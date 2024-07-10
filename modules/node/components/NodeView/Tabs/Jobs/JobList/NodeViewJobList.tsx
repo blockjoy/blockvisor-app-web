@@ -1,12 +1,12 @@
+import { useRouter } from 'next/router';
+import { NodeJobStatus } from '@modules/grpc/library/blockjoy/v1/node';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { styles } from './NodeViewJobList.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
 import { EmptyColumn, sort, Table } from '@shared/components';
-import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { convertNodeJobStatusToName } from '@modules/node/utils/convertNodeJobStatusToName';
-import { NodeJobStatus } from '@modules/grpc/library/blockjoy/v1/node';
 import { spacing } from 'styles/utils.spacing.styles';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 export const NodeViewJobList = () => {
   const { node } = useNodeView();

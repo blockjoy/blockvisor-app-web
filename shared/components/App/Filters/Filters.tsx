@@ -61,6 +61,11 @@ export const Filters = ({
     filter.list?.some((l: FilterListItem) => l.isChecked),
   );
 
+  const handleFiltering = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateFilters();
+  };
+
   return (
     <>
       {isLoading ? (
@@ -115,7 +120,7 @@ export const Filters = ({
               css={styles.updateButton}
               type="submit"
               disabled={!isDirty}
-              onClick={updateFilters}
+              onClick={handleFiltering}
             >
               <SvgIcon size="12px">
                 <IconRefresh />

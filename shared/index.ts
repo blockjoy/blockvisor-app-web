@@ -22,6 +22,7 @@ export * from './services/mixpanel';
 
 export * from './utils/computePricing';
 export * from './utils/copyToClipboard';
+export * from './utils/debounce';
 export * from './utils/escapeHtml';
 export * from './utils/filterSearch';
 export * from './utils/formatters';

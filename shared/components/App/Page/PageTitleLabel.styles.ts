@@ -11,15 +11,13 @@ export const styles = {
     }
   `,
   title: css`
-    @media ${breakpoints.toXlrg} {
-      display: flex;
-      align-items: center;
-      height: 30px;
-      padding: 5px 12px 5px 26px;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 5px 12px 5px 26px;
 
-      &::after {
-        left: 10px;
-      }
+    &::after {
+      left: 10px;
     }
   `,
 };

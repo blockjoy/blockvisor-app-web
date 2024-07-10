@@ -24,8 +24,7 @@ export * from './hooks/useHostUpdate';
 export * from './store/hostAtoms';
 export * from './store/hostSelectors';
 
-export * from './ui/HostUIContext';
-export * from './ui/HostUIHelpers';
+export * from './types/common';
 
 export * from './utils/mapHostListToGrid';
 export * from './utils/mapHostListToRows';

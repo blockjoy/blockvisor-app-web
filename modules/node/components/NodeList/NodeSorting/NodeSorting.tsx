@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { Sorting, SortingItem } from '@shared/components';
-import { InitialQueryParams, useNodeUIContext } from '@modules/node';
+import { nodeAtoms, nodeSelectors } from '@modules/node';
+import { useSettings } from '@modules/settings';
 
 const items: SortingItem<NodeSortField>[] = [
   {
@@ -44,31 +45,24 @@ const items: SortingItem<NodeSortField>[] = [
 ];
 
 export const NodeSorting = () => {
-  const nodeUIContext = useNodeUIContext();
-  const nodeUIProps = useMemo(() => {
-    return {
-      queryParams: nodeUIContext.queryParams,
-      setQueryParams: nodeUIContext.setQueryParams,
-    };
-  }, [nodeUIContext]);
+  const nodeSort = useRecoilValue(nodeSelectors.nodeSort);
+  const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
 
-  const handleSelect = (item: SortingItem<NodeSortField> | null) => {
-    if (!item?.field) return;
+  const { updateSettings } = useSettings();
 
-    const newQueryParams: InitialQueryParams = {
-      ...nodeUIProps.queryParams,
-
-      sort: [{ field: item?.field, order: item?.order! }],
-    };
-
-    nodeUIProps.setQueryParams(newQueryParams);
+  const handleSelect = async (item: SortingItem<NodeSortField> | null) => {
+    await updateSettings(
+      'nodes',
+      { sort: [{ field: item?.field!, order: item?.order! }] },
+      resetPagination,
+    );
   };
 
   const selectedItem =
     items.find(
       (item) =>
-        item.field === nodeUIProps.queryParams?.sort?.[0].field &&
-        item.order === nodeUIProps.queryParams?.sort?.[0].order,
+        item.field === nodeSort?.[0].field &&
+        item.order === nodeSort?.[0].order,
     ) ?? items[0];
 
   return (

@@ -59,8 +59,11 @@ export const DropdownButton = forwardRef(
       >
         {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
         {text}
-        {!hideDropdownIcon && !disabled && (
-          <span css={[styles.icon, isOpen && styles.iconOpen]}>
+        {!hideDropdownIcon && (
+          <span
+            className="dropdown-caret"
+            css={[styles.icon, isOpen && styles.iconOpen]}
+          >
             <SvgIcon size="12px">
               <IconArrow />
             </SvgIcon>

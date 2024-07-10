@@ -1,10 +1,10 @@
 import { selector, selectorFamily } from 'recoil';
 import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
-import { paginate, sort, filter } from '@shared/components';
-import { InitialQueryParams as InitialQueryParamsOrganizations } from '../ui/OrganizationsUIHelpers';
+import { paginate, sort } from '@shared/components';
 import { InitialQueryParams as InitialQueryParamsOrganizationMembers } from '../ui/OrganizationMembersUIHelpers';
 import { organizationAtoms } from '@modules/organization';
 import { authAtoms } from '@modules/auth';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 const settings = selector<OrganizationSettings>({
   key: 'organization.settings',
@@ -52,42 +52,6 @@ const allOrganizationsSorted = selector<Org[]>({
   },
 });
 
-const organizationsFiltered = selectorFamily<
-  Org[],
-  InitialQueryParamsOrganizations
->({
-  key: 'organizations.active.filtered',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgs = get(organizationAtoms.allOrganizations);
-      const { sorting, filtering } = queryParams;
-
-      const filteredOrganizations = filter(allOrgs, filtering);
-      const sortedOrganizations = sort(filteredOrganizations, sorting);
-
-      return sortedOrganizations;
-    },
-});
-
-const organizationsActive = selectorFamily<
-  Org[],
-  InitialQueryParamsOrganizations
->({
-  key: 'organizations.active',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgs = get(organizationsFiltered(queryParams));
-
-      const { pagination } = queryParams;
-
-      const paginatedOrganizations = paginate(allOrgs, pagination);
-
-      return paginatedOrganizations;
-    },
-});
-
 const organizationMembersActive = selectorFamily<
   OrgUser[],
   InitialQueryParamsOrganizationMembers
@@ -98,18 +62,14 @@ const organizationMembersActive = selectorFamily<
     ({ get }) => {
       const org = get(organizationAtoms.selectedOrganization);
 
-      const { pagination } = queryParams;
-
-      if (!org?.members) {
-        return [];
-      }
+      if (!org?.members) return [];
 
       const sorted = sort(org?.members, {
         field: 'email',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       });
 
-      const paginated = paginate(sorted, pagination);
+      const paginated = paginate(sorted, queryParams.pagination);
 
       return paginated;
     },
@@ -121,7 +81,5 @@ export const organizationSelectors = {
   defaultOrganization,
 
   allOrganizationsSorted,
-  organizationsFiltered,
-  organizationsActive,
   organizationMembersActive,
 };

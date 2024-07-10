@@ -1,3 +1,15 @@
+declare namespace globalThis {
+  type NodeSettings = {
+    filters: import('@modules/grpc').UINodeFilterCriteria;
+    sort: import('@modules/grpc/library/blockjoy/v1/node').NodeSort[];
+  };
+
+  type HostSettings = {
+    filters: import('@modules/grpc').UIHostFilterCriteria;
+    sort: import('@modules/grpc/library/blockjoy/v1/node').HostSort[];
+  };
+}
+
 type UserSettings = {
   layout?: string;
   nodes?: string;
@@ -12,7 +24,7 @@ type UserSettingsUI = {
   organization?: OrganizationSettings;
 };
 
-type LayoutSettings = {
+type LayoutBasicSettings = {
   'sidebar.isOpen': boolean;
   'nodes.view': View;
   'nodes.filters.isOpen': boolean;
@@ -21,14 +33,12 @@ type LayoutSettings = {
   'admin.fullWidth': boolean;
 };
 
-type NodeSettings = {
-  filters: UINodeFilterCriteria;
+type LayoutMobileSettings = {
+  'mobile.nodes.view': View;
+  'mobile.hosts.view': View;
 };
 
-type HostSettings = {
-  filters: UIHostFilterCriteria;
-  default: Host | null;
-};
+type LayoutSettings = LayoutBasicSettings & LayoutMobileSettings;
 
 type DefaultOrganization = {
   id: string;
