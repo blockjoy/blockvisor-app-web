@@ -1,25 +1,17 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeClient } from '@modules/grpc';
-import {
-  nodeAtoms,
-  getInitialQueryParams,
-  InitialQueryParams,
-  Pagination,
-  nodeSelectors,
-} from '@modules/node';
-import { useDefaultOrganization } from '@modules/organization';
+import { nodeAtoms, nodeSelectors } from '@modules/node';
+import { organizationSelectors } from '@modules/organization';
 
 export const useNodeList = () => {
-  const orgId = useDefaultOrganization().defaultOrganization?.id;
-
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
+  );
+  const queryParams = useRecoilValue(nodeSelectors.queryParams);
   const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const [nodeCount, setNodeCount] = useRecoilState(nodeAtoms.nodeCount);
-
-  const initialFilters = useRecoilValue(nodeSelectors.filters);
-  const initialKeyword = useRecoilValue(nodeAtoms.filtersSearchQuery);
-
   const [nodeListByHost, setNodeListByHost] = useRecoilState(
     nodeAtoms.nodeListByHost,
   );
@@ -29,29 +21,18 @@ export const useNodeList = () => {
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
 
-  const savedQueryParams = getInitialQueryParams(
-    initialFilters,
-    initialKeyword,
-  );
-
-  const loadNodes = async (
-    queryParams?: InitialQueryParams,
-    showLoader: boolean = true,
-  ) => {
-    if (!queryParams) queryParams = savedQueryParams;
-
+  const loadNodes = async () => {
     const loadingState =
       queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
 
-    if (showLoader) {
-      setIsLoading(loadingState);
-    }
+    if (!nodeList?.length) setIsLoading(loadingState);
 
     try {
       const response = await nodeClient.listNodes(
-        orgId!,
+        defaultOrganization?.id!,
         queryParams.filter,
         queryParams.pagination,
+        queryParams.sort,
       );
 
       const { nodeCount } = response;
@@ -80,7 +61,7 @@ export const useNodeList = () => {
     setNodeListByHostLoadingState('initializing');
 
     const response = await nodeClient.listNodesByHost(
-      orgId!,
+      defaultOrganization?.id!,
       hostId,
       pagination,
     );

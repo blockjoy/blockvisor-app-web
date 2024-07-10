@@ -1,8 +1,15 @@
 import { selector, selectorFamily } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
+import { UINodeFilterCriteria } from '@modules/grpc';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
-import { nodeTypeList, NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
+import {
+  nodeTypeList,
+  NODE_FILTERS_DEFAULT,
+  NODE_SORT_DEFAULT,
+} from '@shared/constants/lookups';
 import { NodeStatusListItem, sort } from '@shared/components';
 import {
   nodeAtoms,
@@ -10,8 +17,8 @@ import {
   blockchainSelectors,
   BlockchainSimple,
   NetworkConfigSimple,
+  InitialNodeQueryParams,
 } from '@modules/node';
-import { UINodeFilterCriteria } from '@modules/grpc';
 import { authAtoms } from '@modules/auth';
 
 const settings = selector<NodeSettings>({
@@ -21,6 +28,47 @@ const settings = selector<NodeSettings>({
     if (!userSettings?.hasOwnProperty('nodes')) return {};
 
     return JSON.parse(userSettings?.nodes ?? '{}');
+  },
+});
+
+const filters = selector<UINodeFilterCriteria>({
+  key: 'node.filters',
+  get: ({ get }) => {
+    const nodeSettings = get(settings);
+    const searchQuery = get(nodeAtoms.filtersSearchQuery);
+
+    return nodeSettings?.filters
+      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
+      : NODE_FILTERS_DEFAULT;
+  },
+});
+
+const nodeSort = selector<NodeSort[]>({
+  key: 'node.sort',
+  get: ({ get }) => {
+    const nodeSettings = get(settings);
+
+    return nodeSettings?.sort ?? NODE_SORT_DEFAULT;
+  },
+});
+
+const queryParams = selector<InitialNodeQueryParams>({
+  key: 'node.queryParams',
+
+  get: ({ get }) => {
+    const filter = get(filters);
+    const sort = get(nodeSort);
+    const pagination = get(nodeAtoms.nodeListPagination);
+    const keyword = get(nodeAtoms.filtersSearchQuery);
+
+    return {
+      pagination,
+      filter: {
+        ...filter,
+        keyword: keyword ?? filter.keyword,
+      },
+      sort,
+    };
   },
 });
 
@@ -40,18 +88,6 @@ const regionsByBlockchain = selectorFamily<Region[], BlockchainSimple>({
         )?.regions ?? []
       );
     },
-});
-
-const filters = selector<UINodeFilterCriteria>({
-  key: 'node.filters',
-  get: ({ get }) => {
-    const nodeSettings = get(settings);
-    const searchQuery = get(nodeAtoms.filtersSearchQuery);
-
-    return nodeSettings?.filters
-      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
-      : NODE_FILTERS_DEFAULT;
-  },
 });
 
 const filtersBlockchainSelectedIds = selector<string[]>({
@@ -92,7 +128,7 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
         })),
       {
         field: 'name',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       },
     );
 
@@ -146,11 +182,12 @@ const filtersNetworksAll = selectorFamily<
 });
 
 export const nodeSelectors = {
-  regionsByBlockchain,
-
   settings,
-
   filters,
+  nodeSort,
+  queryParams,
+
+  regionsByBlockchain,
 
   filtersBlockchainSelectedIds,
 

@@ -9,14 +9,6 @@ export const styles = {
 
     @media ${breakpoints.fromXLrg} {
       display: none;
-      // top: 71px;
-      // position: sticky;
-      // flex: 0 0 200px;
-      // min-width: 200px;
-      // max-width: 200px;
-      // height: calc(100vh - 82px);
-      // padding-right: 16px;
-      // margin-bottom: 0;
     }
   `,
   outerWrapperCollapsed: css`

@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
 import { Sorting, SortingItem } from '@shared/components';
-import { InitialQueryParams, useHostUIContext } from '@modules/host';
+import { hostAtoms, hostSelectors } from '@modules/host';
+import { useSettings } from '@modules/settings';
 
 const items: SortingItem<HostSortField>[] = [
   {
@@ -32,31 +33,24 @@ const items: SortingItem<HostSortField>[] = [
 ];
 
 export const HostSorting = () => {
-  const hostUIContext = useHostUIContext();
-  const hostUIProps = useMemo(() => {
-    return {
-      queryParams: hostUIContext.queryParams,
-      setQueryParams: hostUIContext.setQueryParams,
-    };
-  }, [hostUIContext]);
+  const hostSort = useRecoilValue(hostSelectors.hostSort);
+  const resetPagination = useResetRecoilState(hostAtoms.hostListPagination);
+
+  const { updateSettings } = useSettings();
 
   const handleSelect = (item: SortingItem<HostSortField> | null) => {
-    if (!item?.field) return;
-
-    const newQueryParams: InitialQueryParams = {
-      ...hostUIProps.queryParams,
-
-      sort: [{ field: item?.field, order: item?.order! }],
-    };
-
-    hostUIProps.setQueryParams(newQueryParams);
+    updateSettings(
+      'hosts',
+      { sort: [{ field: item?.field!, order: item?.order! }] },
+      resetPagination,
+    );
   };
 
   const selectedItem =
     items.find(
       (item) =>
-        item.field === hostUIProps.queryParams?.sort?.[0].field &&
-        item.order === hostUIProps.queryParams?.sort?.[0].order,
+        item.field === hostSort?.[0].field &&
+        item.order === hostSort?.[0].order,
     ) ?? items[0];
 
   return (

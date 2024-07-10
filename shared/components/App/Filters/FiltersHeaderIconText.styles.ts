@@ -3,7 +3,7 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  title: css`
+  title: (theme: ITheme) => css`
     display: flex;
     align-items: center;
     gap: 10px;

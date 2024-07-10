@@ -58,10 +58,6 @@ export const OrganizationMembers = () => {
 
   const { headers, rows } = mapOrganizationMembersToRows(members, methods);
 
-  const MembersTable = withQuery({
-    pagination: true,
-  })(Table);
-
   // reset currentPage to first page, when org ID changes
   useEffect(() => {
     organizationMembersUIProps.setQueryParams({
@@ -72,6 +68,10 @@ export const OrganizationMembers = () => {
       },
     });
   }, [selectedOrganization?.id]);
+
+  const MembersTable = withQuery({
+    pagination: true,
+  })(Table);
 
   return (
     <section>
