@@ -37,10 +37,11 @@ export const NodeFilters = () => {
   const filtersBlockchainSelectedIds = useRecoilValue(
     nodeSelectors.filtersBlockchainSelectedIds,
   );
-  const activeView = useRecoilValue(layoutSelectors.nodeView);
 
   const { updateSettings } = useSettings();
   const { isXlrg } = useViewport();
+
+  const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
 
   const handleFiltersToggle = () => {
     if (isXlrg) setIsFiltersOpenMobile(!isFiltersOpenMobile);
@@ -50,9 +51,9 @@ export const NodeFilters = () => {
   const handleSearch = (value: string) => changeTempFilters('keyword', value);
 
   const handleActiveView = (view: View) => {
-    updateSettings('layout', {
-      'nodes.view': view,
-    });
+    const activeViewKey = isXlrg ? 'mobile.nodes.view' : 'nodes.view';
+
+    updateSettings('layout', { [activeViewKey]: view });
   };
 
   if (

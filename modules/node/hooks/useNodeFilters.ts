@@ -8,10 +8,7 @@ import {
 import isEqual from 'lodash/isEqual';
 import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
 import { nodeSelectors, nodeAtoms } from '@modules/node';
-import {
-  NODE_FILTERS_DEFAULT,
-  NODE_PAGINATION_DEFAULT,
-} from '@shared/constants/lookups';
+import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { useSettings } from '@modules/settings';
 
 type UseNodeFiltersHook = {
@@ -26,7 +23,6 @@ type UseNodeFiltersHook = {
 
 export const useNodeFilters = (): UseNodeFiltersHook => {
   const filters = useRecoilValue(nodeSelectors.filters);
-  const setPagination = useSetRecoilState(nodeAtoms.nodeListPagination);
   const [tempFilters, setTempFilters] = useState<UINodeFilterCriteria>(filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     nodeAtoms.filtersTempTotal,
@@ -60,12 +56,6 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
     setSearchQuery(keyword ?? '');
 
     await updateSettings('nodes', { filters: restFilters }, resetPagination);
-
-    if (!isEqual(tempFilters, filters))
-      setPagination((oldPagi) => ({
-        ...oldPagi,
-        currentPage: 0,
-      }));
   };
 
   const resetFilters = async () => {
@@ -75,8 +65,6 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
       ...currentTempFilters,
       ...NODE_FILTERS_DEFAULT,
     }));
-
-    setPagination(NODE_PAGINATION_DEFAULT);
   };
 
   const changeTempFilters = (key: string, value: string) => {

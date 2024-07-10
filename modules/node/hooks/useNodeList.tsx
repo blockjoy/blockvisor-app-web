@@ -25,7 +25,7 @@ export const useNodeList = () => {
     const loadingState =
       queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
 
-    if (!nodeList?.length) setIsLoading(loadingState);
+    setIsLoading(loadingState);
 
     try {
       const response = await nodeClient.listNodes(
