@@ -74,15 +74,6 @@ const isHostFiltersOpen = selector<boolean>({
   },
 });
 
-const adminFullWidth = selector<boolean>({
-  key: 'layout.admin.fullWidth',
-  get: ({ get }) => {
-    const layoutVal = get(layout);
-
-    return layoutVal?.['admin.fullWidth'] ?? false;
-  },
-});
-
 const activeNodeView = selectorFamily<View, boolean>({
   key: 'layout.nodes.activeView',
   get:
