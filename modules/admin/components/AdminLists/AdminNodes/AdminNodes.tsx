@@ -18,6 +18,7 @@ import {
   NodeType,
   SyncStatus,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { AdminNodesUpgrade } from './AdminNodesUpgrade/AdminNodesUpgrade';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
@@ -28,6 +29,7 @@ import {
   createDropdownValuesFromEnum,
 } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
+import { useState } from 'react';
 
 const columns: AdminListColumn[] = [
   {
@@ -222,6 +224,32 @@ export const AdminNodes = () => {
       };
     });
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const [selectedBlockchains, setSelectedBlockchains] = useState<string[]>([]);
+
+  const handleIdAllSelected = (ids: string[]) => {
+    console.log('ids', ids);
+    setSelectedIds(ids);
+  };
+
+  const handleIdSelected = async (nodeId: string, blockchainId?: string) => {
+    const selectedBlockchainsCopy = [...selectedBlockchains];
+
+    if (!selectedBlockchainsCopy.includes(blockchainId!)) {
+      selectedBlockchainsCopy.push(blockchainId!);
+      setSelectedBlockchains(selectedBlockchainsCopy);
+    }
+
+    if (selectedIds.some((id) => id === nodeId)) {
+      setSelectedIds(selectedIds.filter((id) => id !== nodeId));
+    } else {
+      const selectedIdsCopy = [...selectedIds];
+      selectedIdsCopy.push(nodeId);
+      setSelectedIds(selectedIdsCopy);
+    }
+  };
+
   return (
     <AdminList
       name="nodes"
@@ -230,6 +258,15 @@ export const AdminNodes = () => {
       columns={columns}
       getList={getList}
       listMap={listMap}
+      selectedIds={selectedIds}
+      onIdSelected={handleIdSelected}
+      onIdAllSelected={handleIdAllSelected}
+      additionalHeaderButtons={
+        <AdminNodesUpgrade
+          isDisabled={!selectedIds.length || selectedBlockchains?.length > 1}
+          selectedIds={selectedIds}
+        />
+      }
     />
   );
 };

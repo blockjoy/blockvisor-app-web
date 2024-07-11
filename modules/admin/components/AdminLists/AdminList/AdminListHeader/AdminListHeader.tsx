@@ -9,6 +9,7 @@ import IconFilterClear from '@public/assets/icons/common/FilterClear.svg';
 type Props = {
   name: string;
   columns: AdminListColumn[];
+  additionalHeaderButtons?: React.ReactNode;
   onColumnsChanged: (nextColumns: AdminListColumn[]) => void;
   onFiltersChanged: (nextFilters: AdminListColumn[]) => void;
   onSearch: (search: string) => void;
@@ -17,6 +18,7 @@ type Props = {
 export const AdminListHeader = ({
   name,
   columns,
+  additionalHeaderButtons,
   onColumnsChanged,
   onFiltersChanged,
   onSearch,
@@ -65,6 +67,7 @@ export const AdminListHeader = ({
             )}
           </AdminHeaderButton>
         )}
+        {Boolean(additionalHeaderButtons) && additionalHeaderButtons}
       </div>
     </AdminHeader>
   );
