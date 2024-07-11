@@ -1,12 +1,12 @@
 import { styles } from './AdminListTable.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { useRouter } from 'next/router';
-import { Copy, TableSkeleton } from '@shared/components';
+import { Checkbox, Copy, TableSkeleton } from '@shared/components';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
-import { UIEvent, useState } from 'react';
+import { MouseEvent, UIEvent, useState } from 'react';
 import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 
@@ -20,6 +20,9 @@ type Props = {
   listPage: number;
   activeSortField: number;
   activeSortOrder: SortOrder;
+  selectedIds?: string[];
+  onIdSelected?: (id: string, secondId?: string) => void;
+  onIdAllSelected?: (ids: string[]) => void;
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFiltersChanged: (nextFilters: AdminListColumn[]) => void;
@@ -35,6 +38,9 @@ export const AdminListTable = ({
   listPage,
   activeSortField,
   activeSortOrder,
+  selectedIds,
+  onIdSelected,
+  onIdAllSelected,
   onPageChanged,
   onSortChanged,
   onFiltersChanged,
@@ -127,6 +133,27 @@ export const AdminListTable = ({
         <table css={styles.table}>
           <thead>
             <tr>
+              {Boolean(onIdSelected) && (
+                <th>
+                  <button
+                    type="button"
+                    css={styles.checkboxButton}
+                    onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                      e.stopPropagation();
+                      if (selectedIds?.length === list.length) {
+                        onIdAllSelected?.([]);
+                      } else {
+                        onIdAllSelected?.(list.map((item) => item.id));
+                      }
+                    }}
+                  >
+                    <Checkbox
+                      name="check-all"
+                      checked={selectedIds?.length === list.length}
+                    />
+                  </button>
+                </th>
+              )}
               {columnsVisible.map((column) => (
                 <th
                   key={column.name}
@@ -157,6 +184,24 @@ export const AdminListTable = ({
             ) : (
               list.map((item) => (
                 <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
+                  {Boolean(onIdSelected) && (
+                    <td>
+                      <button
+                        css={styles.checkboxButton}
+                        type="button"
+                        onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                          e.stopPropagation();
+                          onIdSelected?.(item.id);
+                        }}
+                      >
+                        <Checkbox
+                          name={item.id}
+                          checked={selectedIds?.includes(item.id)}
+                          onChange={() => onIdSelected?.(item.id)}
+                        />
+                      </button>
+                    </td>
+                  )}
                   {columnsVisible.map((column) => (
                     <td
                       key={column.name}

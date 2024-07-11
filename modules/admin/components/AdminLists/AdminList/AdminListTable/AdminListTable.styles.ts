@@ -103,4 +103,10 @@ export const styles = {
       margin-top: 10px;
     }
   `,
+  checkboxButton: css`
+    background: transparent;
+    border: 0;
+    height: 56px;
+    cursor: pointer;
+  `,
 };
