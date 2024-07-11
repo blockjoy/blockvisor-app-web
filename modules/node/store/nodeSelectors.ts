@@ -108,6 +108,7 @@ const filtersBlockchainAll = selectorFamily<
 
       const allFilters = allBlockchains.map((blockchain) => ({
         ...blockchain,
+        name: blockchain.displayName,
         isChecked: tempFilters?.some((filter) => blockchain.id === filter),
       }));
 

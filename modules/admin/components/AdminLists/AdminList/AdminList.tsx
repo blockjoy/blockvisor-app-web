@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { useSettings } from '@modules/settings';
 import { useUpdateQueryString } from '@modules/admin/hooks';
-import { adminSelectors } from '@modules/admin';
+import { adminSelectors, loadAdminColumns } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRouter } from 'next/router';
@@ -66,6 +66,8 @@ export const AdminList = ({
 
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings[name]?.columns ?? [];
+
+  const [columnsState, setColumnsState] = useState<AdminListColumn[]>([]);
 
   const [listSettings, setListSettings] = useState<ListSettings>({
     listSearch: (search as string) || '',
@@ -144,6 +146,8 @@ export const AdminList = ({
 
     if (!foundColumn) return;
 
+    setColumnsState(nextColumns);
+
     handleGetList(listSearch, listPage, nextSortField, nextSortOrder, filters);
   };
 
@@ -165,10 +169,11 @@ export const AdminList = ({
         columns: nextColumns,
       },
     });
+    setColumnsState(nextColumns);
   };
 
   const handleFiltersChanged = (nextFilters: AdminListColumn[]) => {
-    const nextColumns = [...settingsColumns];
+    const nextColumns = [...columnsState];
 
     for (let column of nextColumns) {
       const indexOfFilter = nextFilters.findIndex(
@@ -185,6 +190,8 @@ export const AdminList = ({
         columns: nextColumns,
       },
     });
+
+    setColumnsState(nextColumns);
 
     setListSettings({
       ...listSettings,
@@ -209,16 +216,27 @@ export const AdminList = ({
   };
 
   useEffect(() => {
+    const adminColumns = loadAdminColumns(columns, settingsColumns);
+    setColumnsState(adminColumns);
+    setListSettings({
+      ...listSettings,
+      filters: adminColumns.filter((col) => !!col.filterSettings),
+    });
+  }, [settingsColumns]);
+
+  useEffect(() => {
     initSettingsColumns();
-    handleGetList(listSearch, listPage, sortField, sortOrder, filters);
-  }, []);
+    if (columnsState.length) {
+      handleGetList(listSearch, listPage, sortField, sortOrder, filters);
+    }
+  }, [columnsState]);
 
   return (
     <article key={name} id={name} css={styles.card}>
       <AdminListHeader
         name={name}
         onSearch={handleSearch}
-        columns={settingsColumns}
+        columns={columnsState}
         onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
         additionalHeaderButtons={additionalHeaderButtons}
@@ -229,7 +247,7 @@ export const AdminList = ({
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
-        columns={settingsColumns}
+        columns={columnsState}
         hidePagination={hidePagination}
         activeSortField={sortField}
         activeSortOrder={sortOrder}

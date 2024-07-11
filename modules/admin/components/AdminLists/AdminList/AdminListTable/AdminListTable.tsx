@@ -134,7 +134,9 @@ export const AdminListTable = ({
           <thead>
             <tr>
               {Boolean(onIdSelected) && (
-                <th>
+                <th
+                  style={{ width: '40px', minWidth: '40px', maxWidth: '40px' }}
+                >
                   <button
                     type="button"
                     css={styles.checkboxButton}
