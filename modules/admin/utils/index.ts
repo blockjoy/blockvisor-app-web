@@ -5,3 +5,4 @@ export * from './openGrafanaUrl';
 export * from './createAdminFilterList';
 export * from './sortVersionStringArray';
 export * from './sortIpStringArray';
+export * from './loadAdminColumns';
