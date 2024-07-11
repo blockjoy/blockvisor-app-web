@@ -8,6 +8,12 @@ declare namespace globalThis {
     filters: import('@modules/grpc').UIHostFilterCriteria;
     sort: import('@modules/grpc/library/blockjoy/v1/node').HostSort[];
   };
+
+  type SearchSortOrder =
+    import('@modules/grpc/library/blockjoy/common/v1/search').SortOrder;
+
+  type AdminListColumn =
+    import('@modules/admin/types/AdminListColumn').AdminListColumn;
 }
 
 type UserSettings = {
@@ -15,6 +21,7 @@ type UserSettings = {
   nodes?: string;
   hosts?: string;
   organization?: string;
+  admin?: string;
 };
 
 type UserSettingsUI = {
@@ -22,6 +29,7 @@ type UserSettingsUI = {
   nodes?: NodeSettings;
   hosts?: HostSettings;
   organization?: OrganizationSettings;
+  admin?: AdminSettings;
 };
 
 type LayoutBasicSettings = {
@@ -31,6 +39,7 @@ type LayoutBasicSettings = {
   'hosts.view': View;
   'hosts.filters.isOpen': boolean;
   'admin.fullWidth': boolean;
+  'admin.sidebarWidth': number;
 };
 
 type LayoutMobileSettings = {
@@ -47,4 +56,22 @@ type DefaultOrganization = {
 
 type OrganizationSettings = {
   default?: DefaultOrganization | null;
+};
+
+type AdminSettingsSort = {
+  field: number;
+  order: SortOrder;
+};
+
+type AdminSettingsItem = {
+  sort?: AdminSettingsSort;
+  columns?: AdminListColumn[];
+};
+
+type AdminSettings = {
+  nodes?: AdminSettingsItem;
+  hosts?: AdminSettingsItem;
+  blockchains?: AdminSettingsItem;
+  orgs?: AdminSettingsItem;
+  users?: AdminSettingsItem;
 };

@@ -1,6 +1,8 @@
+import { useRecoilValue } from 'recoil';
+import { useSettings } from '@modules/settings';
 import { useUpdateQueryString } from '@modules/admin/hooks';
+import { adminSelectors } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { loadAdminColumns } from '@modules/admin/utils';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -9,7 +11,7 @@ import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
 
 type Props = {
-  name: string;
+  name: keyof AdminSettings;
   columns: AdminListColumn[];
   hidePagination?: boolean;
   defaultSortField: number;
@@ -62,21 +64,20 @@ export const AdminList = ({
 
   const { updateQueryString } = useUpdateQueryString(name);
 
+  const settings = useRecoilValue(adminSelectors.settings);
+  const settingsColumns = settings[name]?.columns ?? [];
+
   const [listSettings, setListSettings] = useState<ListSettings>({
     listSearch: (search as string) || '',
     listPage: page ? +page?.toString()! : 1,
-    sortField: +localStorage?.getItem(`${name}SortField`)! || defaultSortField,
-    sortOrder: +localStorage?.getItem(`${name}SortOrder`)! || defaultSortOrder,
-    filters: loadAdminColumns(name, columns).filter(
-      (column) => !!column.filterComponent,
-    ),
+    sortField: settings[name]?.sort?.field || defaultSortField,
+    sortOrder: settings[name]?.sort?.order || defaultSortOrder,
+    filters: settingsColumns.filter((column) => !!column.filterComponent),
   });
 
-  const [columnsState, setColumnsState] = useState(
-    loadAdminColumns(name, columns),
-  );
-
   const { listSearch, listPage, sortField, sortOrder, filters } = listSettings;
+
+  const { updateSettings } = useSettings();
 
   const handleGetList = async (
     keyword: string,
@@ -126,19 +127,22 @@ export const AdminList = ({
       sortOrder: nextSortOrder,
     });
 
-    localStorage.setItem(`${name}SortField`, nextSortField.toString());
-    localStorage.setItem(`${name}SortOrder`, nextSortOrder.toString());
-
-    const nextColumns = [...columnsState];
+    const nextColumns = [...settingsColumns];
     const foundColumn = nextColumns.find(
       (column) => column.sortField === nextSortField,
     );
 
+    updateSettings('admin', {
+      [name]: {
+        columns: foundColumn ? nextColumns : settings[name]?.columns,
+        sort: {
+          field: nextSortField,
+          order: nextSortOrder,
+        },
+      },
+    });
+
     if (!foundColumn) return;
-
-    foundColumn.sortOrder = nextSortOrder;
-
-    setColumnsState(nextColumns);
 
     handleGetList(listSearch, listPage, nextSortField, nextSortOrder, filters);
   };
@@ -155,12 +159,16 @@ export const AdminList = ({
   };
 
   const handleColumnsChanged = (nextColumns: AdminListColumn[]) => {
-    localStorage.setItem(`${name}Columns`, JSON.stringify(nextColumns));
-    setColumnsState(nextColumns);
+    updateSettings('admin', {
+      [name]: {
+        ...settings[name],
+        columns: nextColumns,
+      },
+    });
   };
 
   const handleFiltersChanged = (nextFilters: AdminListColumn[]) => {
-    const nextColumns = [...columnsState];
+    const nextColumns = [...settingsColumns];
 
     for (let column of nextColumns) {
       const indexOfFilter = nextFilters.findIndex(
@@ -171,8 +179,12 @@ export const AdminList = ({
       }
     }
 
-    localStorage.setItem(`${name}Columns`, JSON.stringify(nextColumns));
-    setColumnsState(nextColumns);
+    updateSettings('admin', {
+      [name]: {
+        ...settings[name],
+        columns: nextColumns,
+      },
+    });
 
     setListSettings({
       ...listSettings,
@@ -185,7 +197,19 @@ export const AdminList = ({
     handleGetList(listSearch, 1, sortField, sortOrder, nextFilters);
   };
 
+  const initSettingsColumns = () => {
+    if (!!settings[name]) return;
+
+    updateSettings('admin', {
+      [name]: {
+        ...settings[name],
+        columns,
+      },
+    });
+  };
+
   useEffect(() => {
+    initSettingsColumns();
     handleGetList(listSearch, listPage, sortField, sortOrder, filters);
   }, []);
 
@@ -194,7 +218,7 @@ export const AdminList = ({
       <AdminListHeader
         name={name}
         onSearch={handleSearch}
-        columns={columnsState}
+        columns={settingsColumns}
         onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
         additionalHeaderButtons={additionalHeaderButtons}
@@ -205,7 +229,7 @@ export const AdminList = ({
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
-        columns={columnsState}
+        columns={settingsColumns}
         hidePagination={hidePagination}
         activeSortField={sortField}
         activeSortOrder={sortOrder}

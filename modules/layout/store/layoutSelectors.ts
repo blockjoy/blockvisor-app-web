@@ -74,15 +74,6 @@ const isHostFiltersOpen = selector<boolean>({
   },
 });
 
-const adminFullWidth = selector<boolean>({
-  key: 'layout.admin.fullWidth',
-  get: ({ get }) => {
-    const layoutVal = get(layout);
-
-    return layoutVal?.['admin.fullWidth'] ?? false;
-  },
-});
-
 const activeNodeView = selectorFamily<View, boolean>({
   key: 'layout.nodes.activeView',
   get:
@@ -107,6 +98,24 @@ const activeHostView = selectorFamily<View, boolean>({
     },
 });
 
+const adminFullWidth = selector<boolean>({
+  key: 'layout.admin.fullWidth',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['admin.fullWidth'] ?? false;
+  },
+});
+
+const adminSidebarWidth = selector<number>({
+  key: 'layout.admin.sidebarWidth',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['admin.sidebarWidth'] ?? 200;
+  },
+});
+
 export const layoutSelectors = {
   layout,
 
@@ -123,4 +132,5 @@ export const layoutSelectors = {
   isHostFiltersOpen,
 
   adminFullWidth,
+  adminSidebarWidth,
 };

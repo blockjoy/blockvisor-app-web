@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import NextLink from 'next/link';
 import { styles } from './AdminSidebar.styles';
 import { SvgIcon } from '@shared/components';
@@ -9,6 +10,9 @@ import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
+import { layoutSelectors } from '@modules/layout';
+import { useSettings } from '@modules/settings';
+import { useDebounce } from '@shared/index';
 
 type Props = { tab: string };
 
@@ -27,18 +31,27 @@ const links = [
 ];
 
 export const AdminSidebar = ({ tab }: Props) => {
-  const [width, setWidth] = useState(
-    +localStorage?.getItem('adminSidebarWidth')! || 200,
-  );
+  const adminSidebarWidth = useRecoilValue(layoutSelectors.adminSidebarWidth);
+  const [width, setWidth] = useState(adminSidebarWidth);
 
   const [offsetLeft, setOffsetLeft] = useState<number>();
+
+  const { updateSettings } = useSettings();
+
+  const debouncedWidth = useDebounce(width, 200);
+
+  useEffect(() => {
+    if (width !== adminSidebarWidth)
+      updateSettings('layout', {
+        'admin.sidebarWidth': debouncedWidth,
+      });
+  }, [debouncedWidth]);
 
   const resize = (e: any) => {
     let newWidth = e.clientX - offsetLeft!;
     if (newWidth < 8) newWidth = 8;
     if (newWidth > 200) newWidth = 200;
     setWidth(newWidth);
-    localStorage.setItem('adminSidebarWidth', newWidth?.toString());
   };
 
   const stopResize = () => {
