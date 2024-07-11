@@ -74,6 +74,30 @@ const isHostFiltersOpen = selector<boolean>({
   },
 });
 
+const activeNodeView = selectorFamily<View, boolean>({
+  key: 'layout.nodes.activeView',
+  get:
+    (isXlrg) =>
+    ({ get }) => {
+      const nodeViewVal = get(nodeView);
+      const nodeViewMobileVal = get(nodeViewMobile);
+
+      return isXlrg ? nodeViewMobileVal : nodeViewVal;
+    },
+});
+
+const activeHostView = selectorFamily<View, boolean>({
+  key: 'layout.hosts.activeView',
+  get:
+    (isXlrg) =>
+    ({ get }) => {
+      const hostViewVal = get(hostView);
+      const hostViewMobileVal = get(hostViewMobile);
+
+      return isXlrg ? hostViewMobileVal : hostViewVal;
+    },
+});
+
 const adminFullWidth = selector<boolean>({
   key: 'layout.admin.fullWidth',
   get: ({ get }) => {
