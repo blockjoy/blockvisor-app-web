@@ -32,6 +32,6 @@ metadata:
   annotations: {}
   labels: {}
 description: prod
-requireApproval: true
+requireApproval: false
 gke:
   cluster: projects/blockjoy-prod/locations/us-east1-b/clusters/blockjoy-prod
