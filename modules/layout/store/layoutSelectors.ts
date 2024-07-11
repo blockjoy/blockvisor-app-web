@@ -107,6 +107,15 @@ const adminFullWidth = selector<boolean>({
   },
 });
 
+const adminSidebarWidth = selector<number>({
+  key: 'layout.admin.sidebarWidth',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['admin.sidebarWidth'] ?? 200;
+  },
+});
+
 export const layoutSelectors = {
   layout,
 
@@ -123,4 +132,5 @@ export const layoutSelectors = {
   isHostFiltersOpen,
 
   adminFullWidth,
+  adminSidebarWidth,
 };
