@@ -14,6 +14,10 @@ type Props = {
   hidePagination?: boolean;
   defaultSortField: number;
   defaultSortOrder: SortOrder;
+  additionalHeaderButtons?: React.ReactNode;
+  selectedIds?: string[];
+  onIdSelected?: (id: string, secondId?: string) => void;
+  onIdAllSelected?: (ids: string[]) => void;
   listMap: (list: any[]) => any[];
   getList: (
     keyword?: string,
@@ -41,6 +45,10 @@ export const AdminList = ({
   hidePagination,
   defaultSortField,
   defaultSortOrder,
+  selectedIds,
+  additionalHeaderButtons,
+  onIdSelected,
+  onIdAllSelected,
   listMap,
   getList,
 }: Props) => {
@@ -189,6 +197,7 @@ export const AdminList = ({
         columns={columnsState}
         onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
+        additionalHeaderButtons={additionalHeaderButtons}
       />
       <AdminListTable
         name={name}
@@ -200,6 +209,9 @@ export const AdminList = ({
         hidePagination={hidePagination}
         activeSortField={sortField}
         activeSortOrder={sortOrder}
+        selectedIds={selectedIds}
+        onIdSelected={onIdSelected}
+        onIdAllSelected={onIdAllSelected}
         onPageChanged={handlePageChanged}
         onSortChanged={handleSortChanged}
         onFiltersChanged={handleFiltersChanged}

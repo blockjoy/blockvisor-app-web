@@ -240,6 +240,7 @@ class NodeClient {
       await authClient.refreshToken();
       await this.client.upgrade({ id: nodeId, version }, getOptions());
     } catch (err) {
+      console.log('upgradeNodeError', err);
       return handleError(err);
     }
   }

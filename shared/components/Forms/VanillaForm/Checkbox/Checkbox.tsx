@@ -11,7 +11,7 @@ type Props = {
   formTouched?: boolean;
   checked?: boolean;
   disabled?: boolean;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
   children?: ReactNode;
   additionalStyles?: SerializedStyles[];
 };
@@ -31,7 +31,7 @@ export const Checkbox = ({
 }: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    onChange(e);
+    onChange?.(e);
   };
 
   return (
