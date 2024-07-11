@@ -24,19 +24,12 @@ export const AdminListHeaderColumnPicker = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleColumnToggled = (columnName: string) => {
-    const columnsStateCopy = [...columns];
-
-    const foundColumn = columnsStateCopy.find(
-      (column) => column.name === columnName,
+    const nextColumns = columns.map((column) =>
+      column.name === columnName
+        ? { ...column, isVisible: !column.isVisible }
+        : column,
     );
-
-    if (!foundColumn) return;
-
-    foundColumn.isVisible = !foundColumn?.isVisible;
-
-    if (!columnsStateCopy.some((column) => column.isVisible)) return;
-
-    onColumnsChanged(columnsStateCopy);
+    onColumnsChanged(nextColumns);
   };
 
   const handleClickOutside = () => setIsOpen(false);
