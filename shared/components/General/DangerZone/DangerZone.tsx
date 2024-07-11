@@ -1,8 +1,6 @@
-import { useRouter } from 'next/router';
 import { Button, Input } from '@shared/components';
 import { useState } from 'react';
 import { spacing } from 'styles/utils.spacing.styles';
-import { typo } from 'styles/utils.typography.styles';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './DangerZone.styles';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -23,6 +21,7 @@ interface Props {
   activeAction?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
+  size?: 'default' | 'small';
 }
 
 type DeleteForm = {
@@ -38,8 +37,8 @@ export const DangerZone = ({
   activeAction = 'delete',
   isLoading = false,
   isDisabled = false,
+  size = 'default',
 }: Props) => {
-  const router = useRouter();
   const [step, setStep] = useState<number | 1 | 2>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const form = useForm<DeleteForm>({ mode: 'onChange' });
@@ -57,7 +56,13 @@ export const DangerZone = ({
   };
 
   return (
-    <section css={[spacing.top.large, spacing.bottom.xLarge]}>
+    <section
+      css={[
+        size === 'default'
+          ? [spacing.top.large, spacing.bottom.xLarge]
+          : [spacing.top.medium, spacing.bottom.large],
+      ]}
+    >
       {step === 1 && (
         <>
           <div css={spacing.bottom.medium}>

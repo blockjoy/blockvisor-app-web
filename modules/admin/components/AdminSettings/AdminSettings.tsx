@@ -1,7 +1,7 @@
 import { AdminHeader } from '../AdminHeader/AdminHeader';
 import { styles } from './AdminSettings.styles';
 import { AdminBilling } from './AdminBilling/AdminBilling';
-import { AdminSettingsCard } from './AdminSettingsCard/AdminSettingsCard';
+import { Card } from '@shared/components';
 import { AdminLayoutSettings } from './AdminLayoutSettings/AdminLayoutSettings';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
 import IconLayout from '@public/assets/icons/common/Layout.svg';
@@ -21,9 +21,9 @@ export const AdminSettings = () => {
       <AdminHeader name="Settings">Settings</AdminHeader>
       <div css={styles.list}>
         {cards.map((card) => (
-          <AdminSettingsCard key={card.name} icon={card.icon} name={card.name}>
+          <Card key={card.name} icon={card.icon} name={card.name}>
             {card.component}
-          </AdminSettingsCard>
+          </Card>
         ))}
       </div>
     </section>

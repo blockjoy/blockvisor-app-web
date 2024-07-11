@@ -28,6 +28,7 @@ export const ProfileDeleteAccount = () => {
       isDisabled={isDeleting}
       activeAction="deactivate your account"
       buttonText="Deactivate"
+      size="small"
     />
   );
 };

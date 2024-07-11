@@ -4,6 +4,7 @@ export * from './BadgeCircle/BadgeCircle';
 export * from './Billing/Pricing/Pricing';
 export * from './Billing/Pricing/Total/Total';
 export * from './Billing/Promo/Promo';
+export * from './Card/Card';
 export * from './Checklist/Checklist';
 export * from './ConfirmDialog/ConfirmDialog';
 export * from './Copy/Copy';
