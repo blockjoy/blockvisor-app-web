@@ -37,10 +37,16 @@ export function useDefaultOrganization() {
     }
   };
 
-  const setDefaultOrganization = async (organization: DefaultOrganization) => {
-    await updateSettings('organization', {
-      default: organization,
-    });
+  const setDefaultOrganization = async (
+    organization: DefaultOrganization,
+    userId?: string,
+  ) => {
+    await updateSettings(
+      'organization',
+      { default: organization },
+      undefined,
+      userId,
+    );
   };
 
   return {

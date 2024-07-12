@@ -7,6 +7,7 @@ type UseSettingsHook = {
     name: T,
     value: Partial<UserSettingsUI[T]>,
     onSuccess?: VoidFunction,
+    userId?: string,
   ) => Promise<void>;
   removeSettings: <T extends keyof UserSettingsUI>(name: T) => Promise<void>;
 };
@@ -20,6 +21,7 @@ export const useSettings = (): UseSettingsHook => {
         name: T,
         value: Partial<UserSettingsUI[T]>,
         onSuccess?: VoidFunction,
+        userId?: string,
       ) => {
         console.log('%cUPDATE_SETTINGS', 'color: #f00', name, value);
 
@@ -38,7 +40,7 @@ export const useSettings = (): UseSettingsHook => {
 
         try {
           const response = await userClient.updateSettings(
-            user?.id!,
+            userId || user?.id!,
             name,
             updatedSettingsString,
           );

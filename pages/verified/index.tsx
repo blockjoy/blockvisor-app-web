@@ -46,12 +46,16 @@ const Verified: NextPage = () => {
             );
 
             await acceptInvitation(invitationId);
+            await getOrganizations();
 
             if (invitation) {
-              setDefaultOrganization({
-                id: invitation.orgId,
-                name: invitation.orgName,
-              });
+              await setDefaultOrganization(
+                {
+                  id: invitation.orgId,
+                  name: invitation.orgName,
+                },
+                user.id,
+              );
             }
           }
 
