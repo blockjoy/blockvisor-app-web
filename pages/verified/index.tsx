@@ -29,11 +29,12 @@ const Verified: NextPage = () => {
             emailToken?.toString()!,
           );
           await signIn(undefined, accessToken);
-          await getOrganizations();
 
           const accessTokenObject = readToken(accessToken);
           const emailTokenObject = readToken(emailToken as string);
           const user = await userClient.getUser(accessTokenObject.resource_id);
+
+          await getOrganizations(true, false, user.id);
 
           const invitationId = emailTokenObject?.data?.invitation_id;
 

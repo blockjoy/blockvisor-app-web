@@ -12,7 +12,10 @@ export function useDefaultOrganization() {
 
   const { updateSettings } = useSettings();
 
-  const getDefaultOrganization = async (organizations: Org[]) => {
+  const getDefaultOrganization = async (
+    organizations: Org[],
+    userId?: string,
+  ) => {
     const doesLocalStorageDefaultOrgExistInList = organizations.find(
       (org) => org.id === defaultOrganization?.id,
     );
@@ -31,7 +34,7 @@ export function useDefaultOrganization() {
         id: firstOrgInList.id,
       };
 
-      setDefaultOrganization(newDefaultOrg);
+      setDefaultOrganization(newDefaultOrg, userId);
 
       return newDefaultOrg;
     }
