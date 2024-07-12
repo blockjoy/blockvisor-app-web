@@ -6,7 +6,7 @@ import { authAtoms } from '@modules/auth';
 import { ProfileForm } from './ProfileForm/ProfileForm';
 import { ProfileDeleteAccount } from './ProfileDeleteAccount/ProfileDeleteAccount';
 import { ProfileChangePassword } from './ProfileChangePassword/ProfileChangePassword';
-import { ProfileSettings } from './ProfileSettings/ProfileSettings';
+// import { ProfileSettings } from './ProfileSettings/ProfileSettings';
 import { spacing } from 'styles/utils.spacing.styles';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -42,19 +42,19 @@ export const Profile = () => {
           </>
         ),
       },
-      {
-        label: 'Settings',
-        value: 'settings',
-        component: (
-          <>
-            <header css={[colors.text3, typo.medium, spacing.bottom.medium]}>
-              Email preferences
-            </header>
+      // {
+      //   label: 'Settings',
+      //   value: 'settings',
+      //   component: (
+      //     <>
+      //       <header css={[colors.text3, typo.medium, spacing.bottom.medium]}>
+      //         Email preferences
+      //       </header>
 
-            <ProfileSettings />
-          </>
-        ),
-      },
+      //       <ProfileSettings />
+      //     </>
+      //   ),
+      // },
     ],
     [user?.firstName, user?.lastName],
   );
