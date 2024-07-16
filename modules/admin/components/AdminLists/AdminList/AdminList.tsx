@@ -129,7 +129,7 @@ export const AdminList = ({
       sortOrder: nextSortOrder,
     });
 
-    const nextColumns = [...settingsColumns];
+    const nextColumns = [...columnsState];
     const foundColumn = nextColumns.find(
       (column) => column.sortField === nextSortField,
     );
@@ -147,8 +147,6 @@ export const AdminList = ({
     if (!foundColumn) return;
 
     setColumnsState(nextColumns);
-
-    handleGetList(listSearch, listPage, nextSortField, nextSortOrder, filters);
   };
 
   const handlePageChanged = (nextPage: number) => {
@@ -200,8 +198,6 @@ export const AdminList = ({
     });
 
     updateQueryString(1, search as string);
-
-    handleGetList(listSearch, 1, sortField, sortOrder, nextFilters);
   };
 
   const initSettingsColumns = () => {
@@ -229,7 +225,7 @@ export const AdminList = ({
     if (columnsState.length) {
       handleGetList(listSearch, listPage, sortField, sortOrder, filters);
     }
-  }, [columnsState]);
+  }, [listSettings]);
 
   return (
     <article key={name} id={name} css={styles.card}>
