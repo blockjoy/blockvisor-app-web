@@ -11,7 +11,9 @@ export const loadAdminColumns = (
       );
 
       if (foundSettingsColumn) {
-        column.isVisible = foundSettingsColumn.isVisible;
+        if (foundSettingsColumn.isVisible !== undefined) {
+          column.isVisible = foundSettingsColumn.isVisible;
+        }
 
         if (column.filterComponent) {
           if (!column.filterSettings) column.filterSettings = {};
