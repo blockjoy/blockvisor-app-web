@@ -18,7 +18,8 @@ export const styles = {
       min-height: 156px;
     }
 
-    .hs-form .hs-email input {
+    .hs-form input[type='text'],
+    .hs-form input[type='email'] {
       background: transparent;
       border: 1px solid ${theme.colorBorderGrey};
       border-radius: 4px;
@@ -34,11 +35,13 @@ export const styles = {
       height: 44px;
     }
 
-    .hs-form .hs-email input.error {
+    .hs-form input[type='text'].error,
+    .hs-form input[type='email'].error {
       border-color: ${theme.colorDanger};
     }
 
-    .hs-form .hs-email > label {
+    .hs-form input[type='text'] > label,
+    .hs-form input[type='email'] > label {
       display: inline-block;
       color: var(--color-text-3);
       margin-bottom: 8px;

@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
+import { css, Global } from '@emotion/react';
 import {
   TableSkeleton,
   EmptyColumn,
@@ -27,6 +28,7 @@ import { layoutSelectors } from '@modules/layout';
 import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './nodeList.styles';
+import { breakpoints } from 'styles/variables.styles';
 import IconNode from '@public/assets/icons/app/Node.svg';
 
 export const NodeList = () => {
@@ -35,12 +37,15 @@ export const NodeList = () => {
   const queryParams = useRecoilValue(nodeSelectors.queryParams);
   const setPagination = useSetRecoilState(nodeAtoms.nodeListPagination);
 
+  const nodeListWrapperRef = useRef<HTMLDivElement>(null);
   const currentQueryParams = useRef(queryParams);
 
   const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
   const { isXlrg } = useViewport();
 
   const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
+
+  const [isOverflow, setIsOverflow] = useState(false);
 
   const loadNodesDebounced = debounce(loadNodes, 70);
 
@@ -50,6 +55,29 @@ export const NodeList = () => {
       loadNodesDebounced();
     }
   }, [queryParams]);
+
+  const handleResize = () => {
+    if (nodeListWrapperRef.current) {
+      const height = nodeListWrapperRef.current.offsetHeight;
+      setIsOverflow(height > window.innerHeight - 72);
+    }
+  };
+
+  useLayoutEffect(() => {
+    const observer = new ResizeObserver(handleResize);
+
+    if (nodeListWrapperRef.current) {
+      observer.observe(nodeListWrapperRef.current);
+    }
+
+    handleResize();
+
+    return () => {
+      if (nodeListWrapperRef.current) {
+        observer.unobserve(nodeListWrapperRef.current);
+      }
+    };
+  }, []);
 
   const handleNodeClicked = (nodeId: string) => {
     router.push(ROUTES.NODE(nodeId));
@@ -78,6 +106,15 @@ export const NodeList = () => {
 
   return (
     <>
+      <Global
+        styles={css`
+          body {
+            @media ${breakpoints.fromXLrg} {
+              overflow: ${isOverflow ? 'auto' : 'hidden'};
+            }
+          }
+        `}
+      />
       <PageTitle
         title="Nodes"
         icon={<IconNode />}
@@ -92,7 +129,7 @@ export const NodeList = () => {
 
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters />
-        <div css={styles.nodeListWrapper}>
+        <div css={styles.nodeListWrapper} ref={nodeListWrapperRef}>
           {!isXlrg && <NodeListHeader />}
 
           {isLoading === 'initializing' ? (

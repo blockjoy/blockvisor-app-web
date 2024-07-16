@@ -22,7 +22,7 @@ export type LayoutProps = {
   pageTitle?: string;
 };
 
-export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
+const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const repository = useIdentityRepository();
   const user = repository?.getIdentity();
 
@@ -73,13 +73,21 @@ export const AppLayout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, [defaultOrganization?.id]);
 
   return (
-    <MasterLayout>
+    <>
       <Head>
         <title>{pageTitle}</title>
       </Head>
       <Burger />
       <Sidebar />
       <Page isFlex={isPageFlex}>{children}</Page>
+    </>
+  );
+};
+
+export const AppLayout = (props: LayoutProps) => {
+  return (
+    <MasterLayout>
+      <Layout {...props} />
     </MasterLayout>
   );
 };

@@ -1,5 +1,6 @@
 import { selector, selectorFamily } from 'recoil';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import {
   BlockchainSimple,
   blockchainAtoms,
@@ -101,34 +102,42 @@ const activeBlockchain = selectorFamily<Blockchain | null, string>({
     },
 });
 
-const blockchainNetworks = selector<NetworkConfigSimple[]>({
+const blockchainNetworks = selectorFamily<NetworkConfigSimple[], string[]>({
   key: 'blockchains.networks',
-  get: ({ get }) => {
-    const blockchainsAll = get(blockchainAtoms.blockchains);
+  get:
+    (selectedBlockchainsIDs) =>
+    ({ get }) => {
+      const blockchainsAll = get(blockchainAtoms.blockchains);
 
-    const allNetworks = blockchainsAll.flatMap((blockchain) =>
-      blockchain.nodeTypes.flatMap((nodeType) =>
-        nodeType.versions.flatMap((version) =>
-          version.networks.map((network) => ({
-            id: network.name,
-            name: network.name,
-          })),
+      const blockchainsSelected = selectedBlockchainsIDs.length
+        ? blockchainsAll.filter((blockchain) =>
+            selectedBlockchainsIDs.includes(blockchain.id),
+          )
+        : blockchainsAll;
+
+      const allNetworks = blockchainsSelected.flatMap((blockchain) =>
+        blockchain.nodeTypes.flatMap((nodeType) =>
+          nodeType.versions.flatMap((version) =>
+            version.networks.map((network) => ({
+              id: network.name,
+              name: network.name,
+            })),
+          ),
         ),
-      ),
-    );
+      );
 
-    const uniqueItems = allNetworks.reduce((accumulator, currentItem) => {
-      if (!accumulator[currentItem.id]) {
-        accumulator[currentItem.id] = currentItem;
-      }
-      return accumulator;
-    }, {});
+      const uniqueItems = allNetworks.reduce((accumulator, currentItem) => {
+        if (!accumulator[currentItem.id]) {
+          accumulator[currentItem.id] = currentItem;
+        }
+        return accumulator;
+      }, {});
 
-    return sort(Object.values(uniqueItems), {
-      field: 'name',
-      order: 'asc',
-    });
-  },
+      return sort(Object.values(uniqueItems), {
+        field: 'name',
+        order: SortOrder.SORT_ORDER_ASCENDING,
+      });
+    },
 });
 
 export const blockchainSelectors = {
