@@ -3,11 +3,13 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeClient } from '@modules/grpc';
 import { nodeAtoms, nodeSelectors } from '@modules/node';
 import { organizationSelectors } from '@modules/organization';
+import { authSelectors } from '@modules/auth';
 
 export const useNodeList = () => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const queryParams = useRecoilValue(nodeSelectors.queryParams);
   const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
@@ -61,9 +63,9 @@ export const useNodeList = () => {
     setNodeListByHostLoadingState('initializing');
 
     const response = await nodeClient.listNodesByHost(
-      defaultOrganization?.id!,
       hostId,
       pagination,
+      isSuperUser ? undefined : defaultOrganization?.id!,
     );
 
     const { nodeCount } = response;

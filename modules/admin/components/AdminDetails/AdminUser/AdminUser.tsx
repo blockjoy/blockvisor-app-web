@@ -6,11 +6,17 @@ import {
   UserServiceUpdateRequest,
 } from '@modules/grpc/library/blockjoy/v1/user';
 import { createAdminUpdateRequest } from '@modules/admin/utils';
+// import { useEffect, useState } from 'react';
+// import { AdminHeaderButton } from '../../AdminHeader/AdminHeaderButton/AdminHeaderButton';
+// import IconDelete from '@public/assets/icons/common/Trash.svg';
+// import { toast } from 'react-toastify';
 
 export const AdminUser = () => {
   const router = useRouter();
   const { id } = router.query;
   const getItem = async () => await userClient.getUser(id as string);
+
+  // const [userSettings, setUserSettings] = useState<Record<string, string>>();
 
   const handleSaveChanges = async (
     properties: AdminDetailProperty[],
@@ -21,6 +27,19 @@ export const AdminUser = () => {
     await userClient.updateUser(request);
     onSuccess();
   };
+
+  // const handleDeleteSettings = async () => {
+  //   await userClient.deleteSettings(id as string, 'admin');
+  //   toast.success('Settings deleted');
+  // };
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const settings = await userClient.getSettings(id as string);
+  //     console.log('settings', settings);
+  //     setUserSettings(settings);
+  //   })();
+  // }, []);
 
   const customItems = (item: User): AdminDetailProperty[] => [
     {
@@ -51,6 +70,17 @@ export const AdminUser = () => {
         defaultValue: item.lastName,
       },
     },
+    // {
+    //   id: 'userSettings',
+    //   label: 'Settings',
+    //   data: (
+    //     <pre>
+    //       <code style={{ wordWrap: 'break-word' }}>
+    //         {JSON.stringify(userSettings, undefined, 2)}
+    //       </code>
+    //     </pre>
+    //   ),
+    // },
   ];
 
   return (
@@ -58,6 +88,13 @@ export const AdminUser = () => {
       ignoreItems={['id', 'firstName', 'lastName']}
       customItems={customItems}
       getItem={getItem}
+      // additionalHeaderButtons={
+      //   <AdminHeaderButton
+      //     icon={<IconDelete />}
+      //     onClick={handleDeleteSettings}
+      //     tooltip="Delete Settings"
+      //   />
+      // }
       detailsName="id"
       onSaveChanges={handleSaveChanges}
     />

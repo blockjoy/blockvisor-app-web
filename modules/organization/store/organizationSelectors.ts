@@ -3,7 +3,7 @@ import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { paginate, sort } from '@shared/components';
 import { InitialQueryParams as InitialQueryParamsOrganizationMembers } from '../ui/OrganizationMembersUIHelpers';
 import { organizationAtoms } from '@modules/organization';
-import { authAtoms } from '@modules/auth';
+import { authAtoms, authSelectors } from '@modules/auth';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 const settings = selector<OrganizationSettings>({
@@ -21,10 +21,11 @@ const defaultOrganization = selector<DefaultOrganization | null>({
   get: ({ get }) => {
     const orgSettings = get(settings);
     const organizations = get(organizationAtoms.allOrganizations);
+    const isSuperUser = get(authSelectors.isSuperUser);
 
     const defOrg = orgSettings?.default ?? null;
 
-    if (organizations?.length && defOrg) {
+    if (organizations?.length && defOrg && !isSuperUser) {
       const org = organizations.find((org) => org?.id === defOrg?.id);
 
       if (!org)
