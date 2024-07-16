@@ -1,11 +1,19 @@
+import { useRecoilValue } from 'recoil';
+import { css } from '@emotion/react';
 import { TableBlock } from '@shared/components';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { authSelectors } from '@modules/auth';
+
+const middleRowStyles = css`
+  text-transform: capitalize;
+`;
 
 export const mapHostNodesToRows = (nodeList: Node[]) => {
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
   const headers: TableHeader[] = [
     {
       name: '',
@@ -45,11 +53,13 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
           component: (
             <div style={{ maxWidth: '400px' }}>
               <TableBlock
-                middleRow={`${node.blockchainName} ${convertNodeTypeToName(
-                  node.nodeType,
-                )}`}
+                middleRow={
+                  <p css={middleRowStyles}>
+                    {node.blockchainName} | {node.network}
+                  </p>
+                }
                 topRow={escapeHtml(node.displayName)}
-                bottomRow={node?.ip!}
+                bottomRow={isSuperUser ? node.orgName : node?.ip!}
               />
             </div>
           ),

@@ -2,30 +2,23 @@ export const loadAdminColumns = (
   columns: AdminListColumn[],
   settingsColumns: AdminListColumn[],
 ) => {
-  let columnsCopy = [...columns];
-  let settingsColumnsCopy = [...settingsColumns];
+  let columnsCopy = columns;
 
-  if (settingsColumnsCopy) {
+  if (settingsColumns) {
     columnsCopy.forEach((column) => {
-      const isVisible = settingsColumnsCopy?.find(
-        (c: AdminListColumn) => c.name === column.name,
-      )?.isVisible;
-
-      column.isVisible = isVisible;
-
-      const foundSettingsColumn = settingsColumnsCopy?.find(
+      const foundSettingsColumn = settingsColumns?.find(
         (c) => c?.name === column?.name,
       );
 
       if (foundSettingsColumn) {
         column.isVisible = foundSettingsColumn.isVisible;
 
-        if (!column.filterSettings) {
-          column.filterSettings = {};
-        }
+        if (column.filterComponent) {
+          if (!column.filterSettings) column.filterSettings = {};
 
-        column.filterSettings.values =
-          foundSettingsColumn.filterSettings?.values!;
+          column.filterSettings.values =
+            foundSettingsColumn.filterSettings?.values!;
+        }
       }
     });
   }

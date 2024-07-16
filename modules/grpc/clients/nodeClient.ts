@@ -126,14 +126,14 @@ class NodeClient {
   }
 
   async listNodesByHost(
-    orgId: string,
     hostId: string,
     pagination: UIPagination,
+    orgId?: string,
   ): Promise<NodeServiceListResponse> {
     const request: NodeServiceListRequest = {
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
-      orgIds: [orgId],
+      orgIds: orgId ? [orgId!] : [],
       hostIds: [hostId],
       statuses: [],
       containerStatuses: [],

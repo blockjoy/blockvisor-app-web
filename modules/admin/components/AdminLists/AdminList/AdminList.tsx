@@ -222,7 +222,7 @@ export const AdminList = ({
       ...listSettings,
       filters: adminColumns.filter((col) => !!col.filterSettings),
     });
-  }, [settingsColumns]);
+  }, []);
 
   useEffect(() => {
     initSettingsColumns();

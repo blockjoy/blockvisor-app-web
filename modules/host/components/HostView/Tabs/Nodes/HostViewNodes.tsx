@@ -28,9 +28,8 @@ export const HostViewNodes = () => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
-  const canAdminList = useRecoilValue(
-    authSelectors.hasPermission('node-admin-list'),
-  );
+
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -52,7 +51,7 @@ export const HostViewNodes = () => {
 
   return (
     <>
-      {canAdminList && (
+      {!isSuperUser && (
         <Alert isSuccess>
           Showing nodes for{' '}
           <NextLink href={ROUTES.ORGANIZATION(defaultOrganization?.id!)}>
