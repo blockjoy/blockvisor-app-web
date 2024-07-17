@@ -106,15 +106,18 @@ export const NodeList = () => {
 
   return (
     <>
-      <Global
-        styles={css`
-          body {
-            @media ${breakpoints.fromXLrg} {
-              overflow: ${isOverflow ? 'auto' : 'hidden'};
+      {!isOverflow ? (
+        <Global
+          styles={css`
+            body {
+              @media ${breakpoints.fromXLrg} {
+                overflow: hidden;
+              }
             }
-          }
-        `}
-      />
+          `}
+        />
+      ) : null}
+
       <PageTitle
         title="Nodes"
         icon={<IconNode />}
