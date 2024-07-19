@@ -40,6 +40,8 @@ export const FiltersBlock = ({
         {isOpen ? (
           hasError ? (
             <div css={[typo.smaller, colors.warning]}>Error loading data</div>
+          ) : !list?.length ? (
+            <p css={[typo.smaller, colors.text4]}>No data</p>
           ) : (
             list
               ?.filter((item) => item.id)

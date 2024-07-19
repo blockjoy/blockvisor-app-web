@@ -18,10 +18,11 @@ export const getOptions = (token?: string) => {
 };
 
 export const handleError = (error: any, shouldRedirect: boolean = true) => {
-  // check if token has expired
+  // check if token has expired or user not found
   if (
     error?.message?.includes('JWT') ||
-    error?.message?.includes('TOKEN_EXPIRED')
+    error?.message?.includes('TOKEN_EXPIRED') ||
+    ['UserService', 'NOT_FOUND'].every((msg) => error?.message?.includes(msg))
   ) {
     localStorage.removeItem('identity');
     if (shouldRedirect) {

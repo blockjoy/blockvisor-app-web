@@ -171,7 +171,11 @@ const filtersNetworksAll = selectorFamily<
   get:
     (tempFilters: string[]) =>
     ({ get }) => {
-      const allNetworks = get(blockchainSelectors.blockchainNetworks);
+      const filterBlockchainsIDs = get(filtersBlockchainSelectedIds);
+
+      const allNetworks = get(
+        blockchainSelectors.blockchainNetworks(filterBlockchainsIDs),
+      );
 
       const allFilters = allNetworks.map((network) => ({
         ...network,
