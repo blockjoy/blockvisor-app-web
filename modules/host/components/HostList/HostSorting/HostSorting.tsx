@@ -1,4 +1,4 @@
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
 import { Sorting, SortingItem } from '@shared/components';
@@ -34,8 +34,11 @@ const items: SortingItem<HostSortField>[] = [
 
 export const HostSorting = () => {
   const hostSort = useRecoilValue(hostSelectors.hostSort);
+  const hostListLoadingState = useRecoilValue(hostAtoms.hostListLoadingState);
+  const [appLoadingState, setAppLoadingState] = useRecoilState(
+    settingsAtoms.appLoadingState,
+  );
   const resetPagination = useResetRecoilState(hostAtoms.hostListPagination);
-  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
   const { updateSettings } = useSettings();
 
@@ -60,6 +63,9 @@ export const HostSorting = () => {
       items={items}
       selectedItem={selectedItem}
       handleSelect={handleSelect}
+      disabled={
+        appLoadingState !== 'finished' || hostListLoadingState !== 'finished'
+      }
     />
   );
 };

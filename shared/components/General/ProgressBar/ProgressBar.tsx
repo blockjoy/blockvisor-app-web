@@ -36,7 +36,6 @@ export const ProgressBar = () => {
       if (timer) clearInterval(timer);
 
       if (!isLoading) {
-        setProgress(0);
         timer = setInterval(() => {
           setProgress((prev) => (prev < 20 ? prev + 1 : prev));
         }, 20);

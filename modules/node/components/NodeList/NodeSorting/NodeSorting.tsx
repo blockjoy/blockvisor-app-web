@@ -1,4 +1,4 @@
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { Sorting, SortingItem } from '@shared/components';
@@ -46,8 +46,11 @@ const items: SortingItem<NodeSortField>[] = [
 
 export const NodeSorting = () => {
   const nodeSort = useRecoilValue(nodeSelectors.nodeSort);
+  const nodeListLoadingState = useRecoilValue(nodeAtoms.nodeListLoadingState);
+  const [appLoadingState, setAppLoadingState] = useRecoilState(
+    settingsAtoms.appLoadingState,
+  );
   const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
-  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
   const { updateSettings } = useSettings();
 
@@ -72,6 +75,9 @@ export const NodeSorting = () => {
       items={items}
       selectedItem={selectedItem}
       handleSelect={handleSelect}
+      disabled={
+        appLoadingState !== 'finished' || nodeListLoadingState !== 'finished'
+      }
     />
   );
 };
