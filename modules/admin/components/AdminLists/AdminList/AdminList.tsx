@@ -18,6 +18,7 @@ type Props = {
   defaultSortOrder: SortOrder;
   additionalHeaderButtons?: React.ReactNode;
   selectedIds?: string[];
+  updatedTags?: AdminTags[];
   onIdSelected?: (id: string, secondId?: string) => void;
   onIdAllSelected?: (ids: string[]) => void;
   listMap: (list: any[]) => any[];
@@ -49,6 +50,7 @@ export const AdminList = ({
   defaultSortOrder,
   selectedIds,
   additionalHeaderButtons,
+  updatedTags,
   onIdSelected,
   onIdAllSelected,
   listMap,
@@ -226,6 +228,24 @@ export const AdminList = ({
       handleGetList(listSearch, listPage, sortField, sortOrder, filters);
     }
   }, [listSettings]);
+
+  useEffect(() => {
+    const listCopy = [...list];
+
+    updatedTags?.forEach((tag) => {
+      const foundListItem = listCopy.find((item) => item.id === tag.id);
+
+      if (foundListItem) {
+        foundListItem.tags = {
+          tags: tag.tags.map((t) => ({
+            name: t,
+          })),
+        };
+      }
+    });
+
+    setList(listCopy);
+  }, [updatedTags]);
 
   return (
     <article key={name} id={name} css={styles.card}>

@@ -185,7 +185,7 @@ export const AdminListTable = ({
               </tr>
             ) : (
               list.map((item) => (
-                <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
+                <tr key={item['id']}>
                   {Boolean(onIdSelected) && (
                     <td>
                       <button
@@ -208,6 +208,9 @@ export const AdminListTable = ({
                     <td
                       key={column.name}
                       css={styles.tableCellWidth(column.width!)}
+                      onClick={() =>
+                        column.isRowClickDisabled ? null : gotoDetails(item.id)
+                      }
                     >
                       {column.canCopy ? (
                         <div css={styles.copyTd}>
