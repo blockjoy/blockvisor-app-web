@@ -1,14 +1,18 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { usePathname } from 'next/navigation';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
-import { useSettings } from '@modules/settings';
+import { settingsAtoms, useSettings } from '@modules/settings';
 import { sort } from '@shared/components';
 import { organizationSelectors } from '@modules/organization';
 
 export function useDefaultOrganization() {
+  const pathname = usePathname();
+
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
+  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
   const { updateSettings } = useSettings();
 
@@ -44,6 +48,8 @@ export function useDefaultOrganization() {
     organization: DefaultOrganization,
     userId?: string,
   ) => {
+    if (pathname?.includes('/nodes')) setAppLoadingState('loading');
+
     await updateSettings(
       'organization',
       { default: organization },

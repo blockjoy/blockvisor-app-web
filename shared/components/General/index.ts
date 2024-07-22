@@ -20,6 +20,7 @@ export * from './Logs/Log';
 export * from './Logs/LogsWrapper';
 export * from './Modal/Modal';
 export * from './Portal/Portal';
+export * from './ProgressBar/ProgressBar';
 export * from './Scrollbar/Scrollbar';
 export * from './Search/Search';
 export * from './Skeleton/Skeleton';

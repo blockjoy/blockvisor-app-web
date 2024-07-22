@@ -40,8 +40,8 @@ const isLoadingNodeListByHost = atom<LoadingState>({
   default: 'initializing',
 });
 
-const isLoading = atom<LoadingState>({
-  key: 'node.loading',
+const nodeListLoadingState = atom<LoadingState>({
+  key: 'node.list.loadingState',
   default: 'initializing',
 });
 
@@ -91,7 +91,7 @@ export const nodeAtoms = {
   nodeList,
   nodeListPagination,
   nodeCount,
-  isLoading,
+  nodeListLoadingState,
   isLoadingActiveNode,
   selectedSKU,
 

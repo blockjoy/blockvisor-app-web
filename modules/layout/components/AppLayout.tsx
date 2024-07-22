@@ -15,6 +15,7 @@ import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { useBilling } from '@modules/billing';
 import { MasterLayout } from '@modules/layout';
+import { ProgressBar } from '@shared/components';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -77,6 +78,7 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
+      <ProgressBar />
       <Burger />
       <Sidebar />
       <Page isFlex={isPageFlex}>{children}</Page>

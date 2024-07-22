@@ -40,7 +40,8 @@ export const NodeList = () => {
   const nodeListWrapperRef = useRef<HTMLDivElement>(null);
   const currentQueryParams = useRef(queryParams);
 
-  const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
+  const { loadNodes, nodeList, nodeCount, nodeListLoadingState } =
+    useNodeList();
   const { isXlrg } = useViewport();
 
   const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
@@ -123,7 +124,7 @@ export const NodeList = () => {
         icon={<IconNode />}
         label={
           <PageTitleLabel
-            isLoading={isLoading !== 'finished'}
+            isLoading={nodeListLoadingState !== 'finished'}
             isSuccess={nodeCount > 0}
             label={`${nodeCount}`}
           />
@@ -135,9 +136,9 @@ export const NodeList = () => {
         <div css={styles.nodeListWrapper} ref={nodeListWrapperRef}>
           {!isXlrg && <NodeListHeader />}
 
-          {isLoading === 'initializing' ? (
+          {nodeListLoadingState === 'initializing' ? (
             <TableSkeleton />
-          ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
+          ) : !Boolean(nodeList?.length) ? (
             <EmptyColumn
               title="No Nodes."
               description={
@@ -166,7 +167,7 @@ export const NodeList = () => {
             >
               {activeView === 'table' ? (
                 <Table
-                  isLoading={isLoading}
+                  isLoading={nodeListLoadingState}
                   headers={headers}
                   preload={0}
                   rows={rows}
@@ -176,7 +177,7 @@ export const NodeList = () => {
                 />
               ) : (
                 <div css={styles.gridWrapper}>
-                  <TableGrid isLoading={isLoading} cells={cells!} />
+                  <TableGrid isLoading={nodeListLoadingState} cells={cells!} />
                 </div>
               )}
             </InfiniteScroll>

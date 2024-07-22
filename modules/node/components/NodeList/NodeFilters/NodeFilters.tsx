@@ -26,7 +26,7 @@ export const NodeFilters = () => {
 
   const isCompleted = useRef(false);
 
-  const nodeListLoadingState = useRecoilValue(nodeAtoms.isLoading);
+  const nodeListLoadingState = useRecoilValue(nodeAtoms.nodeListLoadingState);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
