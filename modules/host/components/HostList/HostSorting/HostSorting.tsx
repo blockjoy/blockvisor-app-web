@@ -1,9 +1,9 @@
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
 import { Sorting, SortingItem } from '@shared/components';
 import { hostAtoms, hostSelectors } from '@modules/host';
-import { useSettings } from '@modules/settings';
+import { settingsAtoms, useSettings } from '@modules/settings';
 
 const items: SortingItem<HostSortField>[] = [
   {
@@ -35,10 +35,12 @@ const items: SortingItem<HostSortField>[] = [
 export const HostSorting = () => {
   const hostSort = useRecoilValue(hostSelectors.hostSort);
   const resetPagination = useResetRecoilState(hostAtoms.hostListPagination);
+  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
   const { updateSettings } = useSettings();
 
   const handleSelect = (item: SortingItem<HostSortField> | null) => {
+    setAppLoadingState('loading');
     updateSettings(
       'hosts',
       { sort: [{ field: item?.field!, order: item?.order! }] },

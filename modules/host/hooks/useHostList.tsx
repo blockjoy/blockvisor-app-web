@@ -13,15 +13,15 @@ export const useHostList = () => {
     organizationSelectors.defaultOrganization,
   );
   const queryParams = useRecoilValue(hostSelectors.queryParams);
-  const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
+  const [hostListLoadingState, setHostListLoadingState] = useRecoilState(
+    hostAtoms.hostListLoadingState,
+  );
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
 
   const loadHosts = async () => {
-    const loadingState =
-      queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
-
-    setIsLoading(loadingState);
+    if (hostListLoadingState !== 'initializing')
+      setHostListLoadingState('loading');
 
     try {
       const response: HostServiceListResponse = await hostClient.listHosts(
@@ -39,12 +39,19 @@ export const useHostList = () => {
 
       if (queryParams.pagination.currentPage !== 0) {
         hosts = [...hostList!, ...hosts];
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant' as ScrollBehavior,
+        });
       }
 
       setHostList(hosts);
-      setIsLoading('finished');
     } catch (err) {
-      setIsLoading('finished');
+      setHostList([]);
+      setHostCount(0);
+    } finally {
+      setHostListLoadingState('finished');
     }
   };
 
@@ -65,7 +72,7 @@ export const useHostList = () => {
   return {
     hostList,
     hostCount,
-    isLoading,
+    hostListLoadingState,
 
     loadHosts,
     setHostList,

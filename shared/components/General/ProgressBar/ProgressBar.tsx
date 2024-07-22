@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { usePathname } from 'next/navigation';
 import { settingsAtoms } from '@modules/settings';
-import { styles } from './ProgressBar.styles';
 import { nodeAtoms } from '@modules/node';
+import { hostAtoms } from '@modules/host';
+import { styles } from './ProgressBar.styles';
 
 export const ProgressBar = () => {
+  const pathname = usePathname();
+
   const [progress, setProgress] = useState(0);
-  const [combinedLoading, setCombinedLoading] = useState(false);
-  const [hasStartedLoading, setHasStartedLoading] = useState(false);
 
   const [appLoadingState, setAppLoadingState] = useRecoilState(
     settingsAtoms.appLoadingState,
@@ -16,43 +18,43 @@ export const ProgressBar = () => {
   const nodeListPagination = useRecoilValue(nodeAtoms.nodeListPagination);
   const nodeListLoadingState = useRecoilValue(nodeAtoms.nodeListLoadingState);
 
+  const hostListPagination = useRecoilValue(hostAtoms.hostListPagination);
+  const hostListLoadingState = useRecoilValue(hostAtoms.hostListLoadingState);
+
   const isLoading =
-    nodeListLoadingState === 'loading' && nodeListPagination.currentPage === 0;
-
-  useEffect(() => {
-    let debounceTimeout: NodeJS.Timeout;
-
-    debounceTimeout = setTimeout(() => {
-      const isCurrentlyLoading = isLoading || appLoadingState === 'loading';
-      setCombinedLoading(isCurrentlyLoading);
-      if (isCurrentlyLoading) setHasStartedLoading(true);
-    }, 100);
-
-    return () => clearTimeout(debounceTimeout);
-  }, [isLoading, appLoadingState]);
+    (pathname?.includes('/nodes') &&
+      nodeListLoadingState === 'loading' &&
+      nodeListPagination.currentPage === 0) ||
+    (pathname?.includes('/hosts') &&
+      hostListLoadingState === 'loading' &&
+      hostListPagination.currentPage === 0);
 
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined;
 
-    if (combinedLoading) {
-      setProgress(0);
-      timer = setInterval(() => {
-        setProgress((prev) => {
-          if (prev < 20) return prev + 20;
-          else return prev < 70 ? prev + 1 : prev;
-        });
-      }, 500);
-    } else if (hasStartedLoading) {
+    if (appLoadingState === 'loading') {
       if (timer) clearInterval(timer);
-      // if (newTimer) clearInterval(newTimer);
+
+      if (!isLoading) {
+        setProgress(0);
+        timer = setInterval(() => {
+          setProgress((prev) => (prev < 20 ? prev + 1 : prev));
+        }, 20);
+      } else {
+        timer = setInterval(() => {
+          setProgress((prev) => (prev < 70 ? prev + 1 : prev));
+        }, 300);
+      }
+    } else {
+      if (timer) clearInterval(timer);
       timer = setInterval(() => {
         setProgress((prev) => (prev < 100 ? prev + 20 : 100));
       }, 20);
+
       setTimeout(() => {
         setProgress(100);
         setTimeout(() => {
           setProgress(0);
-          setHasStartedLoading(false);
           setAppLoadingState('finished');
           if (timer) clearInterval(timer);
         }, 100);
@@ -62,13 +64,13 @@ export const ProgressBar = () => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [combinedLoading, hasStartedLoading]);
+  }, [isLoading, appLoadingState]);
 
   useEffect(() => {
     if (isLoading === false) setAppLoadingState('finished');
   }, [isLoading]);
 
-  if (progress === 0 && !hasStartedLoading) return null;
+  if (progress === 0 && appLoadingState !== 'loading') return null;
 
   return <div css={styles.wrapper} style={{ width: `${progress}%` }}></div>;
 };

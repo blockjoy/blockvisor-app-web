@@ -36,7 +36,8 @@ export const useHostView = () => {
         setHost(foundHost);
         const host = await hostClient.getHost(id as string);
         setHost(host);
-        switchOrganization(foundHost.orgId, foundHost.orgName);
+        if (foundHost.orgId !== defaultOrganization?.id)
+          switchOrganization(foundHost.orgId, foundHost.orgName);
       }
       return;
     }
