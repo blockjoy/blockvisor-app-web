@@ -17,9 +17,9 @@ import IconRefresh from '@public/assets/icons/common/Refresh.svg';
 type FiltersProps = {
   filters: FilterItem[];
   isFiltersOpen: boolean;
-  resetFilters: VoidFunction;
+  resetFilters: () => Promise<void>;
   changeTempFilters: (type: string, value: string) => void;
-  updateFilters: VoidFunction;
+  updateFilters: () => Promise<void>;
   isDirty: boolean;
   isLoading: boolean;
   handleSearch?: (value: string) => void;
@@ -43,8 +43,8 @@ export const Filters = ({
 
   const [openFilterId, setOpenFilterId] = useState('');
 
-  const handleResetFilters = () => {
-    resetFilters();
+  const handleResetFilters = async () => {
+    await resetFilters();
     setOpenFilterId('');
   };
 

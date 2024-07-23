@@ -9,6 +9,7 @@ import { styles } from './ProgressBar.styles';
 export const ProgressBar = () => {
   const pathname = usePathname();
 
+  const [hasStartedLoading, setHasStartedLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const [appLoadingState, setAppLoadingState] = useRecoilState(
@@ -30,6 +31,13 @@ export const ProgressBar = () => {
       hostListPagination.currentPage === 0);
 
   useEffect(() => {
+    if (appLoadingState === 'loading' && !hasStartedLoading)
+      setHasStartedLoading(true);
+  }, [appLoadingState]);
+
+  useEffect(() => {
+    if (!hasStartedLoading) return;
+
     let timer: NodeJS.Timeout | undefined;
 
     if (appLoadingState === 'loading') {
@@ -53,9 +61,10 @@ export const ProgressBar = () => {
       setTimeout(() => {
         setProgress(100);
         setTimeout(() => {
+          if (timer) clearInterval(timer);
           setProgress(0);
           setAppLoadingState('finished');
-          if (timer) clearInterval(timer);
+          setHasStartedLoading(false);
         }, 100);
       }, 300);
     }
@@ -63,7 +72,7 @@ export const ProgressBar = () => {
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [isLoading, appLoadingState]);
+  }, [isLoading, appLoadingState, hasStartedLoading]);
 
   useEffect(() => {
     if (isLoading === false) setAppLoadingState('finished');

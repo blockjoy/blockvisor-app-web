@@ -17,8 +17,8 @@ type UseNodeFiltersHook = {
   tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
-  updateFilters: VoidFunction;
-  resetFilters: VoidFunction;
+  updateFilters: () => Promise<void>;
+  resetFilters: () => Promise<void>;
 };
 
 export const useNodeFilters = (): UseNodeFiltersHook => {
