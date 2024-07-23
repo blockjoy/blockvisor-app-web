@@ -4,15 +4,27 @@ import { hostClient } from '@modules/grpc/clients/hostClient';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
-import { DateTime, HostIpStatus, HostManagedBy } from '@shared/components';
+import {
+  DateTime,
+  HostIpStatus,
+  HostManagedBy,
+  TagList,
+} from '@shared/components';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
+import { AdminHostsTag } from './AdminHostsTag/AdminHostsTag';
+import { useState } from 'react';
 
 const columns: AdminListColumn[] = [
   {
     name: 'name',
-    width: '320px',
+    width: '280px',
     sortField: HostSortField.HOST_SORT_FIELD_HOST_NAME,
     isVisible: true,
+  },
+  {
+    name: 'tags',
+    isVisible: true,
+    isRowClickDisabled: true,
   },
   {
     name: 'ip',
@@ -87,6 +99,26 @@ const columns: AdminListColumn[] = [
 ];
 
 export const AdminHosts = () => {
+  const [tagsAdded, setTagsAdded] = useState<AdminTags[]>([]);
+
+  const [tagsRemoved, setTagsRemoved] = useState<AdminTags[]>([]);
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleIdAllSelected = (ids: string[]) => {
+    setSelectedIds(ids);
+  };
+
+  const handleIdSelected = async (nodeId: string, blockchainId?: string) => {
+    if (selectedIds.some((id) => id === nodeId)) {
+      setSelectedIds(selectedIds.filter((id) => id !== nodeId));
+    } else {
+      const selectedIdsCopy = [...selectedIds];
+      selectedIdsCopy.push(nodeId);
+      setSelectedIds(selectedIdsCopy);
+    }
+  };
+
   const getList = async (
     keyword?: string,
     page?: number,
@@ -105,6 +137,56 @@ export const AdminHosts = () => {
     };
   };
 
+  const handleRemoveTag = async (newTags: string[], hostId?: string) => {
+    hostClient.updateHost({
+      id: hostId!,
+      updateTags: {
+        overwriteTags: { tags: newTags.map((tag) => ({ name: tag })) },
+      },
+    });
+
+    const tagsRemovedCopy = [...tagsRemoved];
+
+    const tagIndex = tagsRemovedCopy.findIndex(
+      (adminTag) => adminTag.id === hostId,
+    );
+
+    if (tagIndex > -1) {
+      tagsRemovedCopy[tagIndex] = {
+        id: hostId!,
+        tags: newTags,
+      };
+    } else {
+      tagsRemovedCopy.push({
+        id: hostId!,
+        tags: newTags,
+      });
+    }
+
+    setTagsRemoved(tagsRemovedCopy);
+  };
+
+  const handleAddTag = async (newTag: string, hostId?: string) => {
+    hostClient.updateHost({
+      id: hostId!,
+      updateTags: { addTag: { name: newTag } },
+    });
+    const tagsAddedCopy = [...tagsAdded];
+
+    const foundTag = tagsAddedCopy.find((tag) => tag.id === hostId);
+
+    if (foundTag) {
+      foundTag.tags.push(newTag);
+    } else {
+      tagsAddedCopy.push({
+        id: hostId!,
+        tags: [newTag],
+      });
+    }
+
+    setTagsAdded(tagsAddedCopy);
+  };
+
   const listMap = (list: Host[]) =>
     list.map((host) => {
       return {
@@ -113,6 +195,15 @@ export const AdminHosts = () => {
         availableIps: <HostIpStatus ipAddresses={host.ipAddresses} />,
         managedBy: <HostManagedBy managedBy={host.managedBy} />,
         createdAt: <DateTime date={host.createdAt!} />,
+        tags: (
+          <TagList
+            isInTable
+            id={host.id}
+            tags={host?.tags?.tags?.map((tag) => tag.name)!}
+            onRemove={handleRemoveTag}
+            onAdd={handleAddTag}
+          />
+        ),
       };
     });
 
@@ -124,6 +215,21 @@ export const AdminHosts = () => {
       columns={columns}
       getList={getList}
       listMap={listMap}
+      selectedIds={selectedIds}
+      onIdAllSelected={handleIdAllSelected}
+      onIdSelected={handleIdSelected}
+      setTagsAdded={setTagsAdded}
+      setTagsRemoved={setTagsRemoved}
+      tagsAdded={tagsAdded}
+      tagsRemoved={tagsRemoved}
+      additionalHeaderButtons={
+        <AdminHostsTag
+          tagsAdded={tagsAdded}
+          setTagsAdded={setTagsAdded}
+          isDisabled={!selectedIds.length}
+          selectedIds={selectedIds}
+        />
+      }
     />
   );
 };

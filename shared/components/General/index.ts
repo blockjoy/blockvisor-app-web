@@ -28,4 +28,6 @@ export * from './Skeleton/SkeletonView';
 export * from './SvgIcon/SvgIcon';
 export * from './Tabs/Tabs';
 export * from './Tabs/TabNavigation/TabNavigation';
+export * from './Tag/Tag';
+export * from './TagList/TagList';
 export * from './Tooltip/Tooltip';

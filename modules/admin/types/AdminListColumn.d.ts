@@ -8,6 +8,7 @@ type AdminListColumn = {
   sortOrder?: SortOrder;
   displayName?: string;
   isVisible?: boolean;
+  isRowClickDisabled?: boolean;
   filterComponent?: React.FunctionComponent<AdminFilterControlProps>;
   filterSettings?: AdminListColumnFilterSettings;
 };
