@@ -18,6 +18,7 @@ import {
   mapHostListToRows,
   resultsStatus,
   useHostList,
+  useHostSort,
 } from '@modules/host';
 import { layoutSelectors } from '@modules/layout';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -36,6 +37,8 @@ export const HostList = () => {
     hostListLoadingState,
     handleHostClick,
   } = useHostList();
+  const { updateSorting } = useHostSort();
+
   const { isXlrg } = useViewport();
 
   const activeView = useRecoilValue(layoutSelectors.activeHostView(isXlrg));
@@ -107,6 +110,7 @@ export const HostList = () => {
                 headers={headers}
                 rows={rows}
                 queryParams={queryParams}
+                handleSort={updateSorting}
                 onRowClick={handleHostClick}
               />
             ) : (

@@ -18,6 +18,7 @@ export * from './hooks/useHostDelete';
 export * from './hooks/useHostFilters';
 export * from './hooks/useHostList';
 export * from './hooks/useHostSelect';
+export * from './hooks/useHostSort';
 export * from './hooks/useHostView';
 export * from './hooks/useHostUpdate';
 
