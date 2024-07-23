@@ -5,7 +5,7 @@ export const styles = {
   tag: (theme: ITheme) => css`
     display: flex;
     align-items: center;
-    background: ${theme.colorLightGrey};
+    background: ${theme.colorBorderGrey};
     padding: 0 0 0 12px;
     height: 24px;
     border-radius: 16px;

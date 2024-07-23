@@ -11,6 +11,9 @@ export const styles = {
       opacity: 1;
     }
   `,
+  tagListWrap: css`
+    flex-wrap: wrap;
+  `,
   tagAddButton: (theme: ITheme) => css`
     background: transparent;
     border: 0;
@@ -38,6 +41,7 @@ export const styles = {
     display: inline-flex;
     align-items: center;
     outline: none;
+    cursor: text;
 
     ::before {
       content: 'Tag Name';
@@ -58,8 +62,8 @@ export const styles = {
   listItem: css`
     display: flex;
     align-items: center;
-    width: 100%;
     height: 24px;
+    width: 100%;
   `,
   iconButton: (theme: ITheme) => css`
     display: grid;
@@ -68,7 +72,7 @@ export const styles = {
     height: 24px;
     margin-left: 6px;
     border-radius: 4px;
-    background: ${theme.colorInput};
+    background: ${theme.colorBorderGrey};
     border: 0;
     opacity: 0.7;
     cursor: pointer;

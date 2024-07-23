@@ -11,6 +11,7 @@ import {
   TagList,
 } from '@shared/components';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
+import { AdminHostsTag } from './AdminHostsTag/AdminHostsTag';
 import { useState } from 'react';
 
 const columns: AdminListColumn[] = [
@@ -98,7 +99,25 @@ const columns: AdminListColumn[] = [
 ];
 
 export const AdminHosts = () => {
-  const [updatedTags, setUpdatedTags] = useState<AdminTags[]>([]);
+  const [tagsAdded, setTagsAdded] = useState<AdminTags[]>([]);
+
+  const [tagsRemoved, setTagsRemoved] = useState<AdminTags[]>([]);
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleIdAllSelected = (ids: string[]) => {
+    setSelectedIds(ids);
+  };
+
+  const handleIdSelected = async (nodeId: string, blockchainId?: string) => {
+    if (selectedIds.some((id) => id === nodeId)) {
+      setSelectedIds(selectedIds.filter((id) => id !== nodeId));
+    } else {
+      const selectedIdsCopy = [...selectedIds];
+      selectedIdsCopy.push(nodeId);
+      setSelectedIds(selectedIdsCopy);
+    }
+  };
 
   const getList = async (
     keyword?: string,
@@ -118,54 +137,54 @@ export const AdminHosts = () => {
     };
   };
 
-  const handleRemoveTag = async (hostId: string, newTags: string[]) => {
+  const handleRemoveTag = async (newTags: string[], hostId?: string) => {
     hostClient.updateHost({
-      id: hostId,
+      id: hostId!,
       updateTags: {
         overwriteTags: { tags: newTags.map((tag) => ({ name: tag })) },
       },
     });
 
-    const updatedTagsCopy = [...updatedTags];
+    const tagsRemovedCopy = [...tagsRemoved];
 
-    const tagIndex = updatedTagsCopy.findIndex(
+    const tagIndex = tagsRemovedCopy.findIndex(
       (adminTag) => adminTag.id === hostId,
     );
 
     if (tagIndex > -1) {
-      updatedTagsCopy[tagIndex] = {
-        id: hostId,
+      tagsRemovedCopy[tagIndex] = {
+        id: hostId!,
         tags: newTags,
       };
     } else {
-      updatedTagsCopy.push({
-        id: hostId,
+      tagsRemovedCopy.push({
+        id: hostId!,
         tags: newTags,
       });
     }
 
-    setUpdatedTags(updatedTagsCopy);
+    setTagsRemoved(tagsRemovedCopy);
   };
 
-  const handleAddTag = async (hostId: string, newTag: string) => {
+  const handleAddTag = async (newTag: string, hostId?: string) => {
     hostClient.updateHost({
-      id: hostId,
+      id: hostId!,
       updateTags: { addTag: { name: newTag } },
     });
-    const updatedTagsCopy = [...updatedTags];
+    const tagsAddedCopy = [...tagsAdded];
 
-    const foundTag = updatedTagsCopy.find((tag) => tag.id === hostId);
+    const foundTag = tagsAddedCopy.find((tag) => tag.id === hostId);
 
     if (foundTag) {
       foundTag.tags.push(newTag);
     } else {
-      updatedTagsCopy.push({
-        id: hostId,
+      tagsAddedCopy.push({
+        id: hostId!,
         tags: [newTag],
       });
     }
 
-    setUpdatedTags(updatedTagsCopy);
+    setTagsAdded(tagsAddedCopy);
   };
 
   const listMap = (list: Host[]) =>
@@ -178,6 +197,7 @@ export const AdminHosts = () => {
         createdAt: <DateTime date={host.createdAt!} />,
         tags: (
           <TagList
+            isInTable
             id={host.id}
             tags={host?.tags?.tags?.map((tag) => tag.name)!}
             onRemove={handleRemoveTag}
@@ -195,7 +215,21 @@ export const AdminHosts = () => {
       columns={columns}
       getList={getList}
       listMap={listMap}
-      updatedTags={updatedTags}
+      selectedIds={selectedIds}
+      onIdAllSelected={handleIdAllSelected}
+      onIdSelected={handleIdSelected}
+      setTagsAdded={setTagsAdded}
+      setTagsRemoved={setTagsRemoved}
+      tagsAdded={tagsAdded}
+      tagsRemoved={tagsRemoved}
+      additionalHeaderButtons={
+        <AdminHostsTag
+          tagsAdded={tagsAdded}
+          setTagsAdded={setTagsAdded}
+          isDisabled={!selectedIds.length}
+          selectedIds={selectedIds}
+        />
+      }
     />
   );
 };

@@ -5,7 +5,7 @@ import { adminSelectors, loadAdminColumns } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
@@ -18,7 +18,10 @@ type Props = {
   defaultSortOrder: SortOrder;
   additionalHeaderButtons?: React.ReactNode;
   selectedIds?: string[];
-  updatedTags?: AdminTags[];
+  tagsAdded?: AdminTags[];
+  tagsRemoved?: AdminTags[];
+  setTagsAdded?: Dispatch<SetStateAction<AdminTags[]>>;
+  setTagsRemoved?: Dispatch<SetStateAction<AdminTags[]>>;
   onIdSelected?: (id: string, secondId?: string) => void;
   onIdAllSelected?: (ids: string[]) => void;
   listMap: (list: any[]) => any[];
@@ -50,7 +53,10 @@ export const AdminList = ({
   defaultSortOrder,
   selectedIds,
   additionalHeaderButtons,
-  updatedTags,
+  tagsAdded,
+  tagsRemoved,
+  setTagsAdded,
+  setTagsRemoved,
   onIdSelected,
   onIdAllSelected,
   listMap,
@@ -230,22 +236,49 @@ export const AdminList = ({
   }, [listSettings]);
 
   useEffect(() => {
-    const listCopy = [...list];
+    if (tagsAdded?.length) {
+      const listCopy = [...list];
 
-    updatedTags?.forEach((tag) => {
-      const foundListItem = listCopy.find((item) => item.id === tag.id);
+      tagsAdded?.forEach((tag) => {
+        const foundListItem = listCopy.find((item) => item.id === tag.id);
 
-      if (foundListItem) {
-        foundListItem.tags = {
-          tags: tag.tags.map((t) => ({
-            name: t,
-          })),
-        };
-      }
-    });
+        if (foundListItem) {
+          foundListItem.tags = {
+            tags: [
+              ...foundListItem.tags.tags,
+              ...tag.tags.map((t) => ({
+                name: t,
+              })),
+            ],
+          };
+        }
+      });
 
-    setList(listCopy);
-  }, [updatedTags]);
+      setList(listCopy);
+      setTagsAdded?.([]);
+    }
+  }, [tagsAdded]);
+
+  useEffect(() => {
+    if (tagsRemoved?.length) {
+      const listCopy = [...list];
+
+      tagsRemoved?.forEach((tag) => {
+        const foundListItem = listCopy.find((item) => item.id === tag.id);
+
+        if (foundListItem) {
+          foundListItem.tags = {
+            tags: tag.tags.map((t) => ({
+              name: t,
+            })),
+          };
+        }
+      });
+
+      setList(listCopy);
+      setTagsRemoved?.([]);
+    }
+  }, [tagsRemoved]);
 
   return (
     <article key={name} id={name} css={styles.card}>

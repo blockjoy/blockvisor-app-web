@@ -13,13 +13,24 @@ import IconClose from '@public/assets/icons/common/Close.svg';
 import IconCheck from '@public/assets/icons/common/Check2.svg';
 
 type Props = {
-  id: string;
+  id?: string;
   tags: string[];
-  onRemove?: (hostId: string, newTags: string[]) => void;
-  onAdd?: (hostId: string, newTag: string) => void;
+  isInTable?: boolean;
+  shouldWrap?: boolean;
+  showToasts?: boolean;
+  onRemove?: (newTags: string[], id?: string) => void;
+  onAdd?: (newTag: string, id?: string) => void;
 };
 
-export const TagList = ({ id, tags, onAdd, onRemove }: Props) => {
+export const TagList = ({
+  id,
+  tags,
+  isInTable = false,
+  shouldWrap,
+  showToasts = true,
+  onAdd,
+  onRemove,
+}: Props) => {
   const [isAddMode, setIsAddMode] = useState(false);
 
   const [newTag, setNewTag] = useState('');
@@ -28,7 +39,7 @@ export const TagList = ({ id, tags, onAdd, onRemove }: Props) => {
 
   const handleRemove = (name: string) => {
     const newTags = tags.filter((tag) => tag !== name);
-    onRemove?.(id, newTags);
+    onRemove?.(newTags, id);
   };
 
   const handleAdd = (e: MouseEvent<HTMLButtonElement>) => {
@@ -38,17 +49,21 @@ export const TagList = ({ id, tags, onAdd, onRemove }: Props) => {
   };
 
   const handleAddConfirm = () => {
-    onAdd?.(id, newTag);
+    onAdd?.(newTag, id);
     setIsAddMode(false);
     setNewTag('');
-    toast.success('Tag Added');
+    if (showToasts) toast.success('Tag Added');
   };
 
   const handleInput = (e: ChangeEvent<HTMLSpanElement>) =>
-    setNewTag(e.target.innerText);
+    setNewTag(e.target.innerText.replace(/\n/g, ''));
 
   const handleEnterSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleAddConfirm();
+    if (e.key === 'Enter') {
+      e.stopPropagation();
+      e.preventDefault();
+      handleAddConfirm();
+    }
   };
 
   const handleCancel = () => {
@@ -63,7 +78,7 @@ export const TagList = ({ id, tags, onAdd, onRemove }: Props) => {
   }, [isAddMode]);
 
   return (
-    <ul css={styles.tagList}>
+    <ul css={[styles.tagList, shouldWrap && styles.tagListWrap]}>
       {tags.map((tag) => (
         <li key={tag}>
           <Tag name={tag} onRemove={handleRemove!} />
@@ -75,7 +90,7 @@ export const TagList = ({ id, tags, onAdd, onRemove }: Props) => {
             className="add-tag-button"
             css={[
               styles.tagAddButton,
-              tags?.length && styles.tagAddButtonNotEmpty,
+              tags?.length && isInTable && styles.tagAddButtonNotEmpty,
             ]}
             type="button"
             onClick={handleAdd}

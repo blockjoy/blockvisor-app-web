@@ -151,7 +151,10 @@ export const AdminListTable = ({
                   >
                     <Checkbox
                       name="check-all"
-                      checked={selectedIds?.length === list.length}
+                      checked={
+                        selectedIds?.length! > 0 &&
+                        selectedIds?.length === list.length
+                      }
                     />
                   </button>
                 </th>
