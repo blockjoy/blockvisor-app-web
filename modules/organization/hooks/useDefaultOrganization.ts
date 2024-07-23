@@ -48,7 +48,8 @@ export function useDefaultOrganization() {
     organization: DefaultOrganization,
     userId?: string,
   ) => {
-    if (pathname?.includes('/nodes')) setAppLoadingState('loading');
+    if (['/nodes', '/hosts'].some((path) => pathname?.includes(path)))
+      setAppLoadingState('loading');
 
     await updateSettings(
       'organization',
