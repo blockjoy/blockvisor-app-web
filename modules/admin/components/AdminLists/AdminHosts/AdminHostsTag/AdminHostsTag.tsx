@@ -108,7 +108,6 @@ export const AdminHostsTag = ({
           <TagList
             tags={tags}
             shouldWrap
-            showToasts={false}
             onRemove={handleRemoveTag}
             onAdd={handleAddTag}
           />

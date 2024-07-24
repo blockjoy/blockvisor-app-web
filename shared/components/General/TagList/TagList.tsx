@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { toast } from 'react-toastify';
 import { styles } from './TagList.styles';
 import { SvgIcon, Tag } from '@shared/components';
 import IconClose from '@public/assets/icons/common/Close.svg';
@@ -17,7 +16,6 @@ type Props = {
   tags: string[];
   isInTable?: boolean;
   shouldWrap?: boolean;
-  showToasts?: boolean;
   onRemove?: (newTags: string[], id?: string) => void;
   onAdd?: (newTag: string, id?: string) => void;
 };
@@ -27,7 +25,6 @@ export const TagList = ({
   tags,
   isInTable = false,
   shouldWrap,
-  showToasts = true,
   onAdd,
   onRemove,
 }: Props) => {
@@ -36,6 +33,10 @@ export const TagList = ({
   const [newTag, setNewTag] = useState('');
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isValid =
+    newTag?.length > 0 &&
+    !tags.some((tag) => tag.toLowerCase() === newTag.toLowerCase());
 
   const handleRemove = (name: string) => {
     const newTags = tags.filter((tag) => tag !== name);
@@ -49,17 +50,18 @@ export const TagList = ({
   };
 
   const handleAddConfirm = () => {
+    if (!isValid) return;
     onAdd?.(newTag, id);
     setIsAddMode(false);
     setNewTag('');
-    if (showToasts) toast.success('Tag Added');
   };
 
-  const handleInput = (e: ChangeEvent<HTMLSpanElement>) =>
-    setNewTag(e.target.innerText.replace(/\n/g, ''));
+  const handleInput = (e: ChangeEvent<HTMLSpanElement>) => {
+    setNewTag(e.target.innerText.replace(/\n/g, '').replaceAll(/<br>/g, ''));
+  };
 
   const handleEnterSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && isValid) {
       e.stopPropagation();
       e.preventDefault();
       handleAddConfirm();
@@ -125,7 +127,7 @@ export const TagList = ({
               type="button"
               css={styles.iconButton}
               onClick={handleAddConfirm}
-              disabled={!newTag?.length}
+              disabled={!isValid}
             >
               <span>
                 <SvgIcon size="12px">
