@@ -51,7 +51,6 @@ export const styles = {
       color: ${theme.colorPlaceholder};
     }
   `,
-
   tagAddInputNotEmpty: css`
     ::before {
       opacity: 0;
