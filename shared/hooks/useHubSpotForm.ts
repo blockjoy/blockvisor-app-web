@@ -13,7 +13,7 @@ export const useHubSpotForm = (): UseHubSpotFormHook => {
     });
 
     try {
-      await window.fetch(
+      const response = await window.fetch(
         `https://api.hsforms.com/submissions/v3/integration/submit/23318034/${formId}`,
         {
           method: 'POST',
@@ -27,7 +27,12 @@ export const useHubSpotForm = (): UseHubSpotFormHook => {
         },
       );
 
-      callback?.();
+      const data: HubSpotFormResponse = await response.json();
+
+      callback?.(
+        data?.inlineMessage ??
+          'Thank you for your interest in launching a node! We have received your request and will contact you shortly.',
+      );
     } catch (err: any) {
       console.error('Error occured while submitting data to HubSpot', err);
     }

@@ -1,7 +1,7 @@
 type HubSpotForm = {
   formId: string;
   formData: HubSpotFormData;
-  callback?: VoidFunction;
+  callback?: (message?: string) => void;
 };
 
 type HubSpotFormData = {
@@ -10,4 +10,8 @@ type HubSpotFormData = {
   lastname?: string;
   node_info?: HubSpotFormNodeInfo;
   what_network_s__?: string;
+};
+
+type HubSpotFormResponse = {
+  inlineMessage?: string;
 };

@@ -94,16 +94,17 @@ export const NodeLauncherSummary = ({
     (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice) ||
     !isNodeAllocationValid;
 
-  const handleCreateNodeClicked = () => {
-    if (!hasPermissionsToCreate)
-      submitForm({
+  const handleCreateNodeClicked = async () => {
+    if (!hasPermissionsToCreate) {
+      setIsLaunching(true);
+      await submitForm({
         formId: HUBSPOT_FORMS.requestNodeLaunch,
         formData: {
           email: user?.email,
           what_network_s__: 'ignore',
           node_info: Object.values(nodeLauncherInfo).join(' | '),
         },
-        callback: () => {
+        callback: (message) => {
           toast(
             <div>
               <h5>
@@ -112,10 +113,7 @@ export const NodeLauncherSummary = ({
                 </SvgIcon>
                 <span>Request Received</span>
               </h5>
-              <p>
-                Thank you for your interest in launching a node! We have
-                received your request and will contact you shortly.
-              </p>
+              <p>{message}</p>
             </div>,
             {
               autoClose: false,
@@ -125,7 +123,8 @@ export const NodeLauncherSummary = ({
           );
         },
       });
-    else onCreateNodeClicked();
+      setIsLaunching(false);
+    } else onCreateNodeClicked();
   };
 
   const handleHostsChanged = (nodeLauncherHosts: NodeLauncherHost[] | null) => {
