@@ -130,6 +130,9 @@ const selectedBlockchain = selectorFamily<Blockchain | null, string>({
       const allBlockchains = get(blockchainAtoms.blockchains);
       const isSuperUser = get(authSelectors.isSuperUser);
 
+      console.log('allBlockchains', allBlockchains);
+      console.log('blockchainId', blockchainId);
+
       return allBlockchains?.find(
         (blockchain: Blockchain) => blockchain.id === blockchainId,
       ) ?? isSuperUser
@@ -162,7 +165,10 @@ const nodeLauncherInfo = selector<NodeLauncherBasicInfo>({
   key: 'nodeLauncher.info',
   get: ({ get }) => {
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
-    const blockchain = get(selectedBlockchain(nodeLauncher.blockchainId));
+    const allBlockchains = get(blockchainAtoms.blockchains);
+    const selectedBlockchain = allBlockchains.find(
+      (blockchain) => blockchain.id === nodeLauncher.blockchainId,
+    );
 
     const nodeType = get(nodeLauncherAtoms.selectedNodeType);
     const selectedNodeType = nodeTypeList.find(
@@ -174,7 +180,7 @@ const nodeLauncherInfo = selector<NodeLauncherBasicInfo>({
     const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
 
     return {
-      blockchainName: blockchain?.name ?? '',
+      blockchainName: selectedBlockchain?.name ?? '',
       nodeTypeName: selectedNodeType?.name ?? '',
       networkName: selectedNetwork ?? '',
       versionName: selectedVersion?.version ?? '',
