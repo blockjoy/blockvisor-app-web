@@ -1,11 +1,13 @@
 type HubSpotForm = {
-  portalId: string;
   formId: string;
   formData: HubSpotFormData;
+  callback?: VoidFunction;
 };
 
 type HubSpotFormData = {
-  firstname: string;
-  lastname: string;
-  email: string;
+  email?: string;
+  firstname?: string;
+  lastname?: string;
+  node_info?: HubSpotFormNodeInfo;
+  what_network_s__?: string;
 };

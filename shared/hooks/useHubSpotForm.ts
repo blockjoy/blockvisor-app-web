@@ -1,14 +1,12 @@
-import { HUBSPOT_FORMS } from '@shared/constants/forms';
+type UseHubSpotFormHook = {
+  submitForm: ({ formId, formData }: HubSpotForm) => Promise<void>;
+};
 
-export const useHubSpotForm = () => {
-  const submitHubSpotForm = async ({
-    portalId,
-    formId,
-    formData,
-  }: HubSpotForm) => {
+export const useHubSpotForm = (): UseHubSpotFormHook => {
+  const submitForm = async ({ formId, formData, callback }: HubSpotForm) => {
     const formFields = Object.keys(formData).map((key: string) => {
       return {
-        objectTypeId: HUBSPOT_FORMS.register.objectTypeId,
+        objectTypeId: '0-1',
         name: key,
         value: formData[key],
       };
@@ -16,7 +14,7 @@ export const useHubSpotForm = () => {
 
     try {
       await window.fetch(
-        `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`,
+        `https://api.hsforms.com/submissions/v3/integration/submit/23318034/${formId}`,
         {
           method: 'POST',
           headers: {
@@ -28,12 +26,14 @@ export const useHubSpotForm = () => {
           }),
         },
       );
+
+      callback?.();
     } catch (err: any) {
       console.error('Error occured while submitting data to HubSpot', err);
     }
   };
 
   return {
-    submitHubSpotForm,
+    submitForm,
   };
 };

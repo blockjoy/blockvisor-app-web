@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   Button,
@@ -6,7 +6,6 @@ import {
   FormHeaderCaps,
   FormLabelCaps,
   FormText,
-  HubSpotForm,
   OrganizationSelect,
   SvgIcon,
   Tooltip,
@@ -36,15 +35,9 @@ export const HostLauncher = ({
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
-  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
-
-  const handleCreateNodeClicked = () => {
-    if (!permissions.permitted) handleOpenHubSpot();
-    else handleHostCreation();
+  const handleCreateHostClicked = () => {
+    if (permissions.permitted) handleHostCreation();
   };
-
-  const handleOpenHubSpot = () => setIsOpenHubSpot(true);
-  const handleCloseHubSpot = () => setIsOpenHubSpot(false);
 
   useEffect(() => {
     if (fulfilReqs) handleHostCreation();
@@ -94,9 +87,12 @@ export const HostLauncher = ({
             <Button
               style="outline"
               size="small"
-              disabled={provisionTokenLoadingState !== 'finished'}
+              disabled={
+                provisionTokenLoadingState !== 'finished' ||
+                !permissions.permitted
+              }
               css={styles.button}
-              onClick={handleCreateNodeClicked}
+              onClick={handleCreateHostClicked}
               loading={provisionTokenLoadingState !== 'finished'}
               // {...(!permissions?.permitted &&
               //   !permissions.superUser && {
@@ -117,14 +113,6 @@ export const HostLauncher = ({
           </div>
         </li>
       </ul>
-      {isOpenHubSpot && (
-        <HubSpotForm
-          title="Request Host Launch"
-          content="Interested in launching a host? Leave us your email to get started."
-          isOpenHubSpot={isOpenHubSpot}
-          handleClose={handleCloseHubSpot}
-        />
-      )}
     </div>
   );
 };

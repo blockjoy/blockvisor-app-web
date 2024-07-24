@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
+import { toast } from 'react-toastify';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './NodeLauncherSummary.styles';
 import {
@@ -8,12 +9,11 @@ import {
   FormLabel,
   HostSelect,
   HostSelectMultiple,
-  HubSpotForm,
   OrganizationSelect,
   Pricing,
+  SvgIcon,
 } from '@shared/components';
-import IconRocket from '@public/assets/icons/app/Rocket.svg';
-import IconCog from '@public/assets/icons/common/Cog.svg';
+import { HUBSPOT_FORMS, useHubSpotForm } from '@shared/index';
 import { hostAtoms } from '@modules/host';
 import {
   NodeRegionSelect,
@@ -24,7 +24,9 @@ import {
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
 import { billingSelectors } from '@modules/billing';
-import { authSelectors } from '@modules/auth';
+import { authAtoms, authSelectors } from '@modules/auth';
+import IconRocket from '@public/assets/icons/app/Rocket.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
 type NodeLauncherSummaryProps = {
   hasPermissionsToCreate: boolean;
@@ -45,7 +47,6 @@ export const NodeLauncherSummary = ({
   onRegionsLoaded,
 }: NodeLauncherSummaryProps) => {
   const hostList = useRecoilValue(hostAtoms.hostList);
-  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const hasNetworkList = useRecoilValue(nodeLauncherSelectors.hasNetworkList);
@@ -68,8 +69,12 @@ export const NodeLauncherSummary = ({
   const bypassBillingForSuperUser = useRecoilValue(
     billingSelectors.bypassBillingForSuperUser,
   );
+  const user = useRecoilValue(authAtoms.user);
+  const nodeLauncherInfo = useRecoilValue(
+    nodeLauncherSelectors.nodeLauncherInfo,
+  );
 
-  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
+  const { submitForm } = useHubSpotForm();
 
   useEffect(() => {
     setIsLaunching(false);
@@ -90,7 +95,36 @@ export const NodeLauncherSummary = ({
     !isNodeAllocationValid;
 
   const handleCreateNodeClicked = () => {
-    if (!hasPermissionsToCreate) handleOpenHubSpot();
+    if (!hasPermissionsToCreate)
+      submitForm({
+        formId: HUBSPOT_FORMS.requestNodeLaunch,
+        formData: {
+          email: user?.email,
+          what_network_s__: 'ignore',
+          node_info: Object.values(nodeLauncherInfo).join(' | '),
+        },
+        callback: () => {
+          toast(
+            <div>
+              <h5>
+                <SvgIcon size="20px">
+                  <IconRocket />
+                </SvgIcon>
+                <span>Request Received</span>
+              </h5>
+              <p>
+                Thank you for your interest in launching a node! We have
+                received your request and will contact you shortly.
+              </p>
+            </div>,
+            {
+              autoClose: false,
+              hideProgressBar: true,
+              className: 'Toastify__notification',
+            },
+          );
+        },
+      });
     else onCreateNodeClicked();
   };
 
@@ -107,9 +141,6 @@ export const NodeLauncherSummary = ({
       },
     ]);
   };
-
-  const handleOpenHubSpot = () => setIsOpenHubSpot(true);
-  const handleCloseHubSpot = () => setIsOpenHubSpot(false);
 
   return (
     <div css={styles.wrapper}>
@@ -190,14 +221,6 @@ export const NodeLauncherSummary = ({
           </span>
         </button>
       </div>
-      {isOpenHubSpot && (
-        <HubSpotForm
-          title="Request Node Launch"
-          content="Interested in launching a node? Leave us your email to get started."
-          isOpenHubSpot={isOpenHubSpot}
-          handleClose={handleCloseHubSpot}
-        />
-      )}
     </div>
   );
 };
