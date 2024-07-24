@@ -101,7 +101,6 @@ export const NodeLauncherSummary = ({
         formId: HUBSPOT_FORMS.requestNodeLaunch,
         formData: {
           email: user?.email,
-          what_network_s__: 'ignore',
           node_info: Object.values(nodeLauncherInfo).join(' | '),
         },
         callback: (message) => {
