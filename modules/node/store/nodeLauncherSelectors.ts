@@ -130,9 +130,6 @@ const selectedBlockchain = selectorFamily<Blockchain | null, string>({
       const allBlockchains = get(blockchainAtoms.blockchains);
       const isSuperUser = get(authSelectors.isSuperUser);
 
-      console.log('allBlockchains', allBlockchains);
-      console.log('blockchainId', blockchainId);
-
       return allBlockchains?.find(
         (blockchain: Blockchain) => blockchain.id === blockchainId,
       ) ?? isSuperUser
