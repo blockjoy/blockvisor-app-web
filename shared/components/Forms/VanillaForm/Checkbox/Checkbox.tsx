@@ -1,5 +1,6 @@
 import { ChangeEvent, ChangeEventHandler, ReactNode } from 'react';
 import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 import { display } from 'styles/utils.display.styles';
 import { styles } from './Checkbox.styles';
 
@@ -13,7 +14,9 @@ type Props = {
   disabled?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   children?: ReactNode;
-  additionalStyles?: SerializedStyles[];
+  additionalStyles?:
+    | ((theme: ITheme) => SerializedStyles)[]
+    | SerializedStyles[];
 };
 
 export const Checkbox = ({

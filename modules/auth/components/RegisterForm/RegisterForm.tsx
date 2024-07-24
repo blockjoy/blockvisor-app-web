@@ -15,6 +15,7 @@ import { PasswordField } from '../PasswordField/PasswordField';
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { userClient } from '@modules/grpc';
 import { HUBSPOT_FORMS, useHubSpotForm } from '@shared/index';
+import { styles } from './RegisterForm.styles';
 
 type RegisterForm = {
   firstName: string;
@@ -170,6 +171,16 @@ export function RegisterForm() {
           >
             Create Account
           </Button>
+          <div css={styles.marketing}>
+            By creating an account, you agree to BlockJoy's{' '}
+            <a href="https://www.blockjoy.com/terms-of-use">
+              Terms & Conditions
+            </a>
+            {` `}
+            and{` `}
+            <a href="https://www.blockjoy.com/privacy-policy">Privacy Policy</a>
+            .
+          </div>
           {registerError && (
             <p css={[typo.smaller, colors.warning, spacing.top.medium]}>
               {registerError}

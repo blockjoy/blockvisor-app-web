@@ -1,7 +1,6 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { billingAtoms, billingSelectors } from '@modules/billing';
-import { Switch } from '@shared/components';
-import { AdminSettingsInput } from '../AdminSettingsInput/AdminSettingsInput';
+import { Switch, SwitchLabel } from '@shared/components';
 import { authSelectors } from '@modules/auth';
 
 export const AdminBilling = () => {
@@ -22,7 +21,7 @@ export const AdminBilling = () => {
 
   return (
     <>
-      <AdminSettingsInput
+      <SwitchLabel
         label="Enable Billing Preview for Super Users"
         description="When active, Super Users will be able to preview Billing."
       >
@@ -32,8 +31,8 @@ export const AdminBilling = () => {
           checked={isEnabledBillingPreview}
           onChange={handleActiveBilling}
         />
-      </AdminSettingsInput>
-      <AdminSettingsInput
+      </SwitchLabel>
+      <SwitchLabel
         label="Exclude Super Users from Billing"
         description="When active, Super Users will be able to bypass Billing when creating new Resources."
       >
@@ -43,7 +42,7 @@ export const AdminBilling = () => {
           checked={bypassBillingForSuperUser}
           onChange={handleSuperUserBilling}
         />
-      </AdminSettingsInput>
+      </SwitchLabel>
     </>
   );
 };

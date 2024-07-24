@@ -1,18 +1,14 @@
 import { SvgIcon } from '@shared/components';
-import { styles } from './AdminSettingsCard.styles';
+import { styles } from './Card.styles';
 import { typo } from 'styles/utils.typography.styles';
 
-type AdminSettingsCardProps = {
+type CardProps = {
   name: string;
   icon: React.ReactNode;
   children: React.ReactNode;
 };
 
-export const AdminSettingsCard = ({
-  name,
-  icon,
-  children,
-}: AdminSettingsCardProps) => {
+export const Card = ({ name, icon, children }: CardProps) => {
   return (
     <article css={styles.card}>
       <div css={styles.cardTitle}>
