@@ -16,12 +16,14 @@ type SortingProps<T> = {
   items: SortingItem<T>[];
   selectedItem: SortingItem<T>;
   handleSelect: (item: SortingItem<T> | null) => void;
+  disabled?: boolean;
 };
 
 export const Sorting = <T extends {}>({
   items,
   selectedItem,
   handleSelect,
+  disabled = false,
 }: SortingProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -35,6 +37,7 @@ export const Sorting = <T extends {}>({
         handleOpen={handleOpen}
         handleSelected={handleSelect}
         selectedItem={selectedItem}
+        disabled={disabled}
         noBottomMargin
         renderButtonText={
           <>

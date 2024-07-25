@@ -15,7 +15,7 @@ import {
 } from '@shared/constants/lookups';
 import { formatters } from '@shared/index';
 import { hostAtoms, hostSelectors } from '@modules/host';
-import { useSettings } from '@modules/settings';
+import { settingsAtoms, useSettings } from '@modules/settings';
 
 type UseHostFiltersHook = {
   isDirty: boolean;
@@ -23,14 +23,15 @@ type UseHostFiltersHook = {
   tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
-  updateFilters: VoidFunction;
-  resetFilters: VoidFunction;
+  updateFilters: () => Promise<void>;
+  resetFilters: () => Promise<void>;
 };
 
 export const useHostFilters = (): UseHostFiltersHook => {
   const filters = useRecoilValue(hostSelectors.filters);
   const setPagination = useSetRecoilState(hostAtoms.hostListPagination);
   const resetPagination = useResetRecoilState(hostAtoms.hostListPagination);
+  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
   const [tempFilters, setTempFilters] = useState<UIHostFilterCriteria>(filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     hostAtoms.filtersTempTotal,
@@ -66,6 +67,7 @@ export const useHostFilters = (): UseHostFiltersHook => {
   }, [tempFilters]);
 
   const updateFilters = async () => {
+    setAppLoadingState('loading');
     await updateSettings('hosts', { filters: tempFilters }, resetPagination);
 
     if (!isEqual(tempFilters, filters))
@@ -76,6 +78,7 @@ export const useHostFilters = (): UseHostFiltersHook => {
   };
 
   const resetFilters = async () => {
+    setAppLoadingState('loading');
     await updateSettings('hosts', { filters: undefined }, resetPagination);
 
     setTempFilters((currentTempFilters) => ({

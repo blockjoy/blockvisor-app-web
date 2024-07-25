@@ -5,7 +5,7 @@ import { styles } from './HostListTitle.styles';
 import IconHost from '@public/assets/icons/app/Host.svg';
 
 export const HostListTitle = () => {
-  const isLoading = useRecoilValue(hostAtoms.isLoading);
+  const hostListLoadingState = useRecoilValue(hostAtoms.hostListLoadingState);
   const hostCount = useRecoilValue(hostAtoms.hostCount);
 
   return (
@@ -14,7 +14,7 @@ export const HostListTitle = () => {
       icon={<IconHost />}
       label={
         <PageTitleLabel
-          isLoading={isLoading !== 'finished'}
+          isLoading={hostListLoadingState !== 'finished'}
           isSuccess={hostCount > 0}
           label={`${hostCount}`}
           additionalStyles={[styles.pageTitle]}

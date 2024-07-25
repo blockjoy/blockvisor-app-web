@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { display } from 'styles/utils.display.styles';
-import { styles } from './spinner.styles';
+import { styles } from './LoadingSpinner.styles';
 import SpinnerIcon from '@public/assets/icons/app/Spinner.svg';
 import anime from 'animejs';
 

@@ -21,8 +21,12 @@ const itemsPerPage = 48;
 export const HostViewNodes = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { nodeListByHost, isLoading, listNodesByHost, nodeListByHostCount } =
-    useNodeList();
+  const {
+    nodeListByHost,
+    nodeListLoadingState,
+    listNodesByHost,
+    nodeListByHostCount,
+  } = useNodeList();
   const { isLoading: isLoadingActiveHost } = useHostView();
 
   const defaultOrganization = useRecoilValue(
@@ -61,7 +65,8 @@ export const HostViewNodes = () => {
         </Alert>
       )}
 
-      {isLoading !== 'finished' && isLoadingActiveHost !== 'finished' ? (
+      {nodeListLoadingState !== 'finished' &&
+      isLoadingActiveHost !== 'finished' ? (
         <TableSkeleton />
       ) : !Boolean(nodeListByHost?.length) ? (
         <EmptyColumn
@@ -88,7 +93,7 @@ export const HostViewNodes = () => {
         >
           <Table
             hideHeader
-            isLoading={isLoading}
+            isLoading={nodeListLoadingState}
             headers={headers}
             rows={rows}
             fixedRowHeight="120px"

@@ -11,7 +11,7 @@ import { useSettings } from '@modules/settings';
 import { styles } from './NodeListHeader.styles';
 
 export const NodeListHeader = () => {
-  const isLoadingNodes = useRecoilValue(nodeAtoms.isLoading);
+  const nodeListLoadingState = useRecoilValue(nodeAtoms.nodeListLoadingState);
   const nodeCount = useRecoilValue(nodeAtoms.nodeCount);
   const filtersTotal = useRecoilValue(nodeAtoms.filtersTempTotal);
   const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
@@ -27,7 +27,7 @@ export const NodeListHeader = () => {
     updateSettings('layout', { 'nodes.view': type });
   };
 
-  const isLoading = isLoadingNodes === 'initializing';
+  const isLoading = nodeListLoadingState === 'initializing';
 
   return (
     <div css={styles.wrapper}>

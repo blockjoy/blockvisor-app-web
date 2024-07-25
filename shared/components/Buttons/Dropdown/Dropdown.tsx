@@ -1,5 +1,7 @@
 import { ReactNode, useEffect, useRef } from 'react';
-import { styles } from './Dropdown.styles';
+import isEqual from 'lodash/isEqual';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 import { useAccessibleDropdown } from '@shared/index';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import {
@@ -11,8 +13,7 @@ import {
   Scrollbar,
 } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
-import { SerializedStyles } from '@emotion/react';
-import { ITheme } from 'types/theme';
+import { styles } from './Dropdown.styles';
 
 export type DropdownProps<T = any> = {
   items: T[];
@@ -88,9 +89,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
 
   const handleSelect = (item: T) => {
     if (!item) return;
-    const isDisabled: boolean = checkDisabledItem
-      ? checkDisabledItem(item)
-      : false;
+    const isDisabled = checkDisabledItem ? checkDisabledItem(item) : false;
     if (isDisabled) return;
 
     handleSelected(item);
@@ -185,9 +184,9 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
         <Scrollbar additionalStyles={scrollbarStyles}>
           <ul ref={dropdownRef}>
             {filteredItems?.map((item: T, index: number) => {
-              const isDisabled: boolean = checkDisabledItem
+              const isDisabled = checkDisabledItem
                 ? checkDisabledItem(item)
-                : false;
+                : isEqual(item, selectedItem);
 
               return (
                 <li

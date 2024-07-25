@@ -29,8 +29,13 @@ export const HostList = () => {
 
   const currentQueryParams = useRef(queryParams);
 
-  const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
-    useHostList();
+  const {
+    loadHosts,
+    hostList,
+    hostCount,
+    hostListLoadingState,
+    handleHostClick,
+  } = useHostList();
   const { isXlrg } = useViewport();
 
   const activeView = useRecoilValue(layoutSelectors.activeHostView(isXlrg));
@@ -70,9 +75,9 @@ export const HostList = () => {
       <div css={styles.listWrapper}>
         {!isXlrg && <HostListHeader />}
 
-        {isLoading === 'initializing' ? (
+        {hostListLoadingState === 'initializing' ? (
           <TableSkeleton />
-        ) : !Boolean(hostList?.length) && isLoading === 'finished' ? (
+        ) : !Boolean(hostList?.length) ? (
           <EmptyColumn
             title="No Hosts."
             description={
@@ -98,7 +103,7 @@ export const HostList = () => {
           >
             {activeView === 'table' ? (
               <Table
-                isLoading={isLoading}
+                isLoading={hostListLoadingState}
                 headers={headers}
                 rows={rows}
                 queryParams={queryParams}
@@ -107,7 +112,7 @@ export const HostList = () => {
             ) : (
               <div css={styles.gridWrapper}>
                 <TableGrid
-                  isLoading={isLoading}
+                  isLoading={hostListLoadingState}
                   cells={cells!}
                   entityName="hosts"
                 />

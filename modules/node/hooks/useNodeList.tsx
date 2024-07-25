@@ -11,7 +11,9 @@ export const useNodeList = () => {
   );
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const queryParams = useRecoilValue(nodeSelectors.queryParams);
-  const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
+  const [nodeListLoadingState, setNodeListLoadingState] = useRecoilState(
+    nodeAtoms.nodeListLoadingState,
+  );
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const [nodeCount, setNodeCount] = useRecoilState(nodeAtoms.nodeCount);
   const [nodeListByHost, setNodeListByHost] = useRecoilState(
@@ -24,10 +26,8 @@ export const useNodeList = () => {
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
 
   const loadNodes = async () => {
-    const loadingState =
-      queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
-
-    setIsLoading(loadingState);
+    if (nodeListLoadingState !== 'initializing')
+      setNodeListLoadingState('loading');
 
     try {
       const response = await nodeClient.listNodes(
@@ -45,14 +45,19 @@ export const useNodeList = () => {
 
       if (queryParams.pagination.currentPage !== 0) {
         nodes = [...nodeList!, ...nodes];
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant' as ScrollBehavior,
+        });
       }
 
       setNodeList(nodes);
-      setIsLoading('finished');
     } catch (err) {
-      setIsLoading('finished');
       setNodeList([]);
       setNodeCount(0);
+    } finally {
+      setNodeListLoadingState('finished');
     }
   };
 
@@ -118,11 +123,10 @@ export const useNodeList = () => {
     nodeList,
     nodeCount,
     loadNodes,
-    isLoading,
+    nodeListLoadingState,
     addToNodeList,
     removeFromNodeList,
     modifyNodeInNodeList,
-    setIsLoading,
     listNodesByHost,
     nodeListByHost,
     nodeListByHostCount,

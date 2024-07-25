@@ -21,7 +21,7 @@ export const HostFilters = () => {
 
   const isCompleted = useRef(false);
 
-  const hostListLoadingState = useRecoilValue(hostAtoms.isLoading);
+  const hostListLoadingState = useRecoilValue(hostAtoms.hostListLoadingState);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );

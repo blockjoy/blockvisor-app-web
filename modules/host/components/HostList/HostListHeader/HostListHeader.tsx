@@ -2,11 +2,11 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Alert, Search, ViewPicker } from '@shared/components';
 import { hostAtoms, useHostList, HostSorting } from '@modules/host';
 import { layoutSelectors } from '@modules/layout';
-import { useSettings } from '@modules/settings';
+import { settingsAtoms, useSettings } from '@modules/settings';
 import { styles } from './HostListHeader.styles';
 
 export const HostListHeader = () => {
-  // const isLoading = useRecoilValue(hostAtoms.isLoading);
+  // const isLoading = useRecoilValue(hostAtoms.hostListLoadingState);
   // const filtersTotal = useRecoilValue(hostAtoms.filtersTempTotal);
   // const isFiltersOpen = useRecoilValue(layoutSelectors.isHostFiltersOpen);
   const activeView = useRecoilValue(layoutSelectors.hostView);
@@ -14,11 +14,13 @@ export const HostListHeader = () => {
     hostAtoms.filtersSearchQuery,
   );
   const setPagination = useSetRecoilState(hostAtoms.hostListPagination);
+  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
   const { hostCount } = useHostList();
   const { updateSettings } = useSettings();
 
   const handleSearch = async (keyword: string) => {
+    setAppLoadingState('loading');
     setSearchQuery(keyword);
 
     setPagination((oldPagi) => ({

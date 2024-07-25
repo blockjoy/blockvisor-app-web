@@ -38,7 +38,7 @@ const isLoadingAllHosts = atom<LoadingState>({
   default: 'initializing',
 });
 
-const isLoading = atom<LoadingState>({
+const hostListLoadingState = atom<LoadingState>({
   key: 'host.list.loading',
   default: 'initializing',
 });
@@ -69,7 +69,7 @@ export const hostAtoms = {
   isLoadingAllHosts,
   hostCount,
   hostIpListType,
-  isLoading,
+  hostListLoadingState,
 
   filtersTempTotal,
   filtersSearchQuery,

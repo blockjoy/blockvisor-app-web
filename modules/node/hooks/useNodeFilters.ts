@@ -9,7 +9,7 @@ import isEqual from 'lodash/isEqual';
 import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
 import { nodeSelectors, nodeAtoms } from '@modules/node';
 import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
-import { useSettings } from '@modules/settings';
+import { settingsAtoms, useSettings } from '@modules/settings';
 
 type UseNodeFiltersHook = {
   isDirty: boolean;
@@ -17,8 +17,8 @@ type UseNodeFiltersHook = {
   tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
-  updateFilters: VoidFunction;
-  resetFilters: VoidFunction;
+  updateFilters: () => Promise<void>;
+  resetFilters: () => Promise<void>;
 };
 
 export const useNodeFilters = (): UseNodeFiltersHook => {
@@ -38,6 +38,7 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   );
   const setSearchQuery = useSetRecoilState(nodeAtoms.filtersSearchQuery);
   const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
+  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
   const { updateSettings } = useSettings();
 
@@ -51,6 +52,7 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   }, [tempFilters]);
 
   const updateFilters = async () => {
+    setAppLoadingState('loading');
     const { keyword, ...restFilters } = tempFilters;
 
     setSearchQuery(keyword ?? '');
@@ -59,6 +61,7 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   };
 
   const resetFilters = async () => {
+    setAppLoadingState('loading');
     await updateSettings('nodes', { filters: undefined }, resetPagination);
 
     setTempFilters((currentTempFilters) => ({
