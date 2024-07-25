@@ -36,7 +36,9 @@ export const TagList = ({
 
   const isValid =
     newTag?.length > 0 &&
-    !tags.some((tag) => tag.toLowerCase() === newTag.toLowerCase());
+    !tags.some(
+      (tag) => tag.trim().toLowerCase() === newTag.trim().toLowerCase(),
+    );
 
   const handleRemove = (name: string) => {
     const newTags = tags.filter((tag) => tag !== name);
@@ -56,15 +58,20 @@ export const TagList = ({
     setNewTag('');
   };
 
-  const handleInput = (e: ChangeEvent<HTMLSpanElement>) => {
-    setNewTag(e.target.innerText.replace(/\n/g, '').replaceAll(/<br>/g, ''));
-  };
+  const handleInput = (e: ChangeEvent<HTMLSpanElement>) =>
+    setNewTag(e.target.innerText.trim());
 
-  const handleEnterSubmit = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyUp = (e: KeyboardEvent<HTMLSpanElement>) => {
     if (e.key === 'Enter' && isValid) {
       e.stopPropagation();
       e.preventDefault();
       handleAddConfirm();
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
     }
   };
 
@@ -81,7 +88,7 @@ export const TagList = ({
 
   return (
     <ul css={[styles.tagList, shouldWrap && styles.tagListWrap]}>
-      {tags.map((tag) => (
+      {tags?.map((tag) => (
         <li key={tag}>
           <Tag name={tag} onRemove={handleRemove!} />
         </li>
@@ -105,7 +112,8 @@ export const TagList = ({
             <span
               ref={inputRef}
               onInput={handleInput}
-              onKeyUp={handleEnterSubmit}
+              onKeyUp={handleKeyUp}
+              onKeyDown={handleKeyDown}
               css={[
                 styles.tagAddInput,
                 newTag !== '' && styles.tagAddInputNotEmpty,
