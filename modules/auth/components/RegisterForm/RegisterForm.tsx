@@ -49,12 +49,12 @@ export function RegisterForm() {
 
   const { setPassword } = usePasswordStrength();
 
-  const { submitHubSpotForm } = useHubSpotForm();
+  const { submitForm } = useHubSpotForm();
 
   const onSubmit = handleSubmit(
     async ({ email, password, firstName, lastName }) => {
       setIsLoading(true);
-      const response: any = await userClient.createUser(
+      const response = await userClient.createUser(
         {
           firstName,
           lastName,
@@ -70,9 +70,8 @@ export function RegisterForm() {
         return;
       }
 
-      submitHubSpotForm({
-        formId: HUBSPOT_FORMS.register.formId,
-        portalId: HUBSPOT_FORMS.register.portalId,
+      submitForm({
+        formId: HUBSPOT_FORMS.register,
         formData: {
           email,
           firstname: firstName,
