@@ -21,6 +21,7 @@ export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeDelete';
 export * from './hooks/useNodeLauncherHandlers';
 export * from './hooks/useNodeList';
+export * from './hooks/useNodeSort';
 export * from './hooks/useNodeView';
 export * from './hooks/useUpdates';
 

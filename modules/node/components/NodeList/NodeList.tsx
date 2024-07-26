@@ -23,6 +23,7 @@ import {
   useNodeList,
   nodeAtoms,
   nodeSelectors,
+  useNodeSort,
 } from '@modules/node';
 import { layoutSelectors } from '@modules/layout';
 import { wrapper } from 'styles/wrapper.styles';
@@ -42,6 +43,7 @@ export const NodeList = () => {
 
   const { loadNodes, nodeList, nodeCount, nodeListLoadingState } =
     useNodeList();
+  const { updateSorting } = useNodeSort();
   const { isXlrg } = useViewport();
 
   const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
@@ -173,6 +175,7 @@ export const NodeList = () => {
                   rows={rows}
                   fixedRowHeight="120px"
                   queryParams={queryParams}
+                  handleSort={updateSorting}
                   onRowClick={handleNodeClicked}
                 />
               ) : (
