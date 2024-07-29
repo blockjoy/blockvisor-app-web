@@ -40,7 +40,6 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     reconnect: mqttReconnect,
     updateSubscription: updateMqttSubscription,
   } = useMqtt();
-  const { stripe } = useStripeSetup();
   const { getReceivedInvitations } = useInvitations();
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
@@ -89,11 +88,12 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
 };
 
 export const AppLayout = (props: LayoutProps) => {
+  const { stripe } = useStripeSetup();
+
   return (
     <MasterLayout>
-      <Layout {...props} />
       <Elements stripe={stripe}>
-        <Page isFlex={isPageFlex}>{children}</Page>
+        <Layout {...props} />
       </Elements>
     </MasterLayout>
   );

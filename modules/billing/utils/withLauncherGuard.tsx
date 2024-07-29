@@ -4,10 +4,8 @@ import {
   billingSelectors,
   PaymentRequired,
   SubscriptionActivation,
-  LAUNCH_ERRORS,
 } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
-import { authSelectors } from '@modules/auth';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
@@ -16,18 +14,10 @@ type WithLauncherGuardProps = {
   hasPermissionsToCreate: boolean;
 };
 
-export type WithLauncherGuardPermissions = {
-  disabled: boolean;
-  permitted: boolean;
-  superUser: boolean;
-  message: string;
-};
-
 type LauncherWithGuardBasicProps = {
   fulfilReqs: boolean;
   resetFulfilReqs: VoidFunction;
   onCreateClick: VoidFunction;
-  permissions: WithLauncherGuardPermissions;
 } & Partial<WithLauncherGuardProps>;
 
 export type LauncherWithGuardProps = LauncherWithGuardBasicProps &
@@ -35,40 +25,32 @@ export type LauncherWithGuardProps = LauncherWithGuardBasicProps &
 
 export const withLauncherGuard = (Component: any) => {
   const withLauncherGuard = ({ ...props }: WithLauncherGuardProps) => {
-    const { type, hasPermissionsToCreate, ...aditionalProps } = props;
+    const { type, hasPermissionsToCreate, ...additionalProps } = props;
 
     const defaultOrganization = useRecoilValue(
       organizationSelectors.defaultOrganization,
     );
-    const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+    const { isAdmin, isOwner } = useRecoilValue(
+      organizationSelectors.organizationRole,
+    );
+    const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
+    /**
+     * Determines if a resource can be created.
+     * Conditions:
+     * - User has a subscription
+     * - User has a payment method
+     * - User is an admin or the owner
+     */
     const canCreateResource = useRecoilValue(
       billingSelectors.canCreateResource,
     );
-    const bypassBillingForSuperUser = useRecoilValue(
-      billingSelectors.bypassBillingForSuperUser,
-    );
-    const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
 
     const [activeView, setActiveView] = useState<LauncherView>('launcher');
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
 
-    console.table({
-      hasPermissionsToCreate,
-      isSuperUser,
-      canCreateResource,
-      bypassBillingForSuperUser,
-      hasPaymentMethod,
-    });
-
     useEffect(() => {
       setFulfilRequirements(false);
     }, [defaultOrganization?.id]);
-
-    const isPermittedAsSuperUser = isSuperUser && bypassBillingForSuperUser;
-
-    const isDisabledAdding =
-      (!canCreateResource || !hasPermissionsToCreate) &&
-      !isPermittedAsSuperUser;
 
     const handleDefaultView = () => {
       setActiveView('launcher');
@@ -88,7 +70,7 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (!canCreateResource && !isPermittedAsSuperUser) {
+      if (!canCreateResource) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';
@@ -106,27 +88,16 @@ export const withLauncherGuard = (Component: any) => {
       setFulfilRequirements(false);
     };
 
-    const warningMessage = isDisabledAdding
-      ? !hasPermissionsToCreate
-        ? LAUNCH_ERRORS.NO_PERMISSION
-        : !hasPaymentMethod
-        ? LAUNCH_ERRORS.NO_BILLING
-        : LAUNCH_ERRORS.NO_ACTIVE_SUBSCRIPTION
-      : '';
-
     return (
       <>
         <Component
           fulfilReqs={fulfilRequirements}
           resetFulfilReqs={resetFulfilReqs}
           onCreateClick={handleCreateClicked}
-          permissions={{
-            disabled: isDisabledAdding,
-            permitted: hasPermissionsToCreate,
-            superUser: isPermittedAsSuperUser,
-            message: warningMessage,
-          }}
-          {...aditionalProps}
+          hasPermissionsToCreate={
+            hasPermissionsToCreate && (isAdmin || isOwner)
+          }
+          {...additionalProps}
         />
         {activeView === 'payment-required' && (
           <PaymentRequired

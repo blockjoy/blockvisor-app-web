@@ -1,43 +1,40 @@
 import { selector, selectorFamily } from 'recoil';
 import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
 import { billingAtoms } from '@modules/billing';
-import { authSelectors } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
+import { authAtoms, authSelectors } from '@modules/auth';
 
-const bypassBillingForSuperUser = selector<boolean>({
-  key: 'billing.superUser.bypass',
+const settings = selector<BillingSettings>({
+  key: 'billing.settings',
   get: ({ get }) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-    const isEnabled = get(billingAtoms.bypassBillingForSuperUser(isSuperUser));
+    const userSettings = get(authAtoms.userSettings);
+    if (!userSettings?.hasOwnProperty('billing')) return {};
 
-    return isEnabled;
-  },
-  set: ({ set, get }, newValue) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-
-    return set(billingAtoms.bypassBillingForSuperUser(isSuperUser), newValue);
+    return JSON.parse(userSettings?.billing ?? '{}');
   },
 });
 
-const paymentMethodById = selectorFamily<any | null, string>({
-  key: 'billing.paymentMethodById',
+const bypassBillingForSuperUser = selector({
+  key: 'billing.settings.superUser.bypassBilling',
+  get: ({ get }) => {
+    const billingSettings = get(settings);
+
+    return billingSettings.bypassBilling ?? false;
+  },
+});
+
+const invoiceById = selectorFamily<Invoice | null, string>({
+  key: 'billing.invoice',
   get:
-    (paymentSourceId: string) =>
+    (id: string) =>
     ({ get }) => {
-      if (!paymentSourceId) return null;
+      const invoicesVal = get(billingAtoms.invoices);
 
-      const paymentMethods = get(billingAtoms.paymentMethods);
-      if (!paymentMethods || !paymentMethods.length) return null;
-
-      const selectedPaymentMethod = paymentMethods.find(
-        (paymentMethod: any) => paymentMethod.id === paymentSourceId,
-      );
-
-      return selectedPaymentMethod || null;
+      return invoicesVal.find((invoice) => invoice.number === id) || null;
     },
 });
 
-const hasPaymentMethod = selector<boolean>({
+const hasPaymentMethod = selector({
   key: 'billing.hasPaymentMethod',
   get: ({ get }) => {
     const paymentMethods = get(billingAtoms.paymentMethods);
@@ -46,7 +43,7 @@ const hasPaymentMethod = selector<boolean>({
   },
 });
 
-const hasSubscription = selector<boolean>({
+const hasSubscription = selector({
   key: 'billing.hasSubscription',
   get: ({ get }) => {
     const subscriptionVal = get(billingAtoms.subscription);
@@ -55,7 +52,7 @@ const hasSubscription = selector<boolean>({
   },
 });
 
-const canCreateResource = selector<boolean>({
+const canCreateResource = selector({
   key: 'billing.resources.canCreate',
   get: ({ get }) => {
     const hasSubscriptionVal = get(hasSubscription);
@@ -67,25 +64,13 @@ const canCreateResource = selector<boolean>({
   },
 });
 
-const invoice = selectorFamily<Invoice | null, string>({
-  key: 'billing.invoice',
-  get:
-    (id: string) =>
-    ({ get }) => {
-      const invoicesVal = get(billingAtoms.invoices);
-
-      return invoicesVal.find((invoice) => invoice.number === id) || null;
-    },
-});
-
 export const billingSelectors = {
   bypassBillingForSuperUser,
 
-  paymentMethodById,
+  invoiceById,
 
   hasPaymentMethod,
   hasSubscription,
-  canCreateResource,
 
-  invoice,
+  canCreateResource,
 };

@@ -35,7 +35,7 @@ export const InvoiceView = () => {
   const invoicesLoadingState = useRecoilValue(
     billingAtoms.invoicesLoadingState,
   );
-  const invoice = useRecoilValue(billingSelectors.invoice(id as string));
+  const invoice = useRecoilValue(billingSelectors.invoiceById(id as string));
   const billingAddress = useRecoilValue(billingAtoms.billingAddress);
 
   const handleBillingClicked = () => {

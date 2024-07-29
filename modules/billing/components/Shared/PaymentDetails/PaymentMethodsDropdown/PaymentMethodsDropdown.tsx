@@ -2,11 +2,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { PaymentMethod } from '@modules/grpc/library/blockjoy/v1/org';
-import {
-  billingAtoms,
-  billingSelectors,
-  CreditCardBrand,
-} from '@modules/billing';
+import { billingAtoms, CreditCardBrand } from '@modules/billing';
 import { ROUTES } from '@shared/index';
 import { Badge, Dropdown } from '@shared/components';
 import { styles } from './PaymentMethodsDropdown.styles';
@@ -21,7 +17,6 @@ export const PaymentMethodsDropdown = ({
   handlePaymentMethod,
 }: PaymentMethodsDropdownProps) => {
   const router = useRouter();
-  const customer = useRecoilValue(billingSelectors.customer);
   const paymentMethods = useRecoilValue(billingAtoms.paymentMethods);
 
   const [isOpen, setIsOpen] = useState(false);

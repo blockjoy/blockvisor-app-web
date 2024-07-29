@@ -12,7 +12,7 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 export const NodeLauncher = ({
   fulfilReqs,
   onCreateClick,
-  permissions,
+  hasPermissionsToCreate,
 }: LauncherWithGuardProps) => {
   const {
     handleHostsChanged,
@@ -50,7 +50,7 @@ export const NodeLauncher = ({
             )}
             {hasSummary && (
               <NodeLauncherSummary
-                permissions={permissions}
+                hasPermissionsToCreate={!!hasPermissionsToCreate}
                 onHostsChanged={handleHostsChanged}
                 onRegionChanged={handleRegionChanged}
                 onCreateNodeClicked={onCreateClick}

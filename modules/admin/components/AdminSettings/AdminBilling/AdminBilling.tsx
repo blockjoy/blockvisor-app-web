@@ -1,15 +1,19 @@
-import { useRecoilState } from 'recoil';
-import { billingSelectors } from '@modules/billing';
+import { useRecoilValue } from 'recoil';
 import { Switch, SwitchLabel } from '@shared/components';
+import { billingSelectors } from '@modules/billing';
+import { useSettings } from '@modules/settings';
 
 export const AdminBilling = () => {
-  const [bypassBillingForSuperUser, setBypassBillingForSuperUser] =
-    useRecoilState(billingSelectors.bypassBillingForSuperUser);
+  const { updateSettings } = useSettings();
+  const bypassBillingForSuperUser = useRecoilValue(
+    billingSelectors.bypassBillingForSuperUser,
+  );
 
   const handleSuperUserBilling = () => {
-    setBypassBillingForSuperUser(!bypassBillingForSuperUser);
+    updateSettings('billing', {
+      bypassBilling: !bypassBillingForSuperUser,
+    });
   };
-
   return (
     <SwitchLabel
       label="Exclude Super Users from Billing"

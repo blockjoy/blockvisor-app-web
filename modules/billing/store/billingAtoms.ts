@@ -9,16 +9,6 @@ import { Address } from '@modules/grpc/library/blockjoy/common/v1/address';
 import { authAtoms } from '@modules/auth';
 import { Amount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 
-export const bypassBillingForSuperUser = atomFamily<boolean, boolean>({
-  key: 'billing.superUser',
-  default: false,
-  effects: (isSuperUser) => {
-    return isSuperUser
-      ? [localStorageEffect('billing.bypassBillingForSuperUser', false)]
-      : [];
-  },
-});
-
 const billingContacts = atom<any | null>({
   key: 'billing.contacts',
   default: null,
@@ -147,8 +137,6 @@ const isValidCard = atom<boolean>({
 });
 
 export const billingAtoms = {
-  bypassBillingForSuperUser,
-
   subscription,
   subscriptionLoadingState,
 

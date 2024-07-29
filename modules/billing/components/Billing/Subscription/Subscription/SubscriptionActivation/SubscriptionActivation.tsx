@@ -66,7 +66,7 @@ export const SubscriptionActivation = ({
       handleClose={handleBack}
     >
       <h2 css={[typo.medium, spacing.bottom.medium]}>
-        Subscription Activation
+        Activate Your BlockJoy Subscription
       </h2>
       <div css={[spacing.top.medium, spacing.bottom.medium]}>
         <p css={spacing.bottom.small}>
@@ -74,6 +74,10 @@ export const SubscriptionActivation = ({
         </p>
         <p css={spacing.bottom.medium}>
           Once activated, you will have access to all our premium features.
+        </p>
+        <p css={spacing.bottom.medium}>
+          By confirming, your saved payment method will be used to create a
+          subscription and you will gain full premium access.
         </p>
         <p>Confirm to gain full premium access?</p>
       </div>

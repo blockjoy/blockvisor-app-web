@@ -23,7 +23,7 @@ export const HostLauncher = ({
   fulfilReqs,
   resetFulfilReqs,
   onCreateClick,
-  permissions,
+  hasPermissionsToCreate,
 }: LauncherWithGuardProps) => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
@@ -36,7 +36,7 @@ export const HostLauncher = ({
     if (fulfilReqs) handleHostCreation();
   }, [fulfilReqs]);
 
-  const token = !permissions.disabled
+  const token = hasPermissionsToCreate
     ? provisionToken
     : provisionToken?.replace(/./g, '*');
 
@@ -66,9 +66,9 @@ export const HostLauncher = ({
             <div css={[styles.copy, spacing.bottom.medium]}>
               <CopyToClipboard
                 value={`bvup ${token}`}
-                disabled={permissions.disabled}
+                disabled={!hasPermissionsToCreate}
               />
-              {permissions.disabled && (
+              {!hasPermissionsToCreate && (
                 <Tooltip
                   noWrap
                   top="-30px"
@@ -82,12 +82,12 @@ export const HostLauncher = ({
               size="small"
               disabled={
                 provisionTokenLoadingState !== 'finished' ||
-                permissions.disabled
+                !hasPermissionsToCreate
               }
               css={styles.button}
               onClick={onCreateClick}
               loading={provisionTokenLoadingState !== 'finished'}
-              {...(permissions.disabled && {
+              {...(!hasPermissionsToCreate && {
                 tooltip: LAUNCH_ERRORS.NO_PERMISSION,
               })}
             >
