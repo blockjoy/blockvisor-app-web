@@ -43,11 +43,6 @@ export const mapPaymentMethodsToRows = (
       key: '2',
       width: '600px',
     },
-    {
-      name: 'Billing Address',
-      key: '3',
-      width: '400px',
-    },
     // {
     //   name: '',
     //   key: '4',
@@ -96,24 +91,6 @@ export const mapPaymentMethodsToRows = (
                     )} */}
                 </div>
               </div>
-            ),
-          },
-          {
-            key: '3',
-            component: (
-              <>
-                {paymentMethod.details?.address?.line1 ? (
-                  <p>
-                    {paymentMethod.details?.address?.line1}
-                    <br />
-                    {paymentMethod.details?.address?.postalCode}{' '}
-                    {paymentMethod.details?.address.city},{' '}
-                    {paymentMethod.details?.address.country}
-                  </p>
-                ) : (
-                  '-'
-                )}
-              </>
             ),
           },
           // {

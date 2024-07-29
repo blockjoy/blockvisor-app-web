@@ -25,19 +25,26 @@ export const PaymentDetails = () => {
   const canListPaymentMethods = useRecoilValue(
     authSelectors.hasPermission('org-billing-list-payment-methods'),
   );
+  const canGetBillingAddress = useRecoilValue(
+    authSelectors.hasPermission('org-address-get'),
+  );
 
   const { activeTab, handleActiveTabChange } = useTabs(tabItems);
 
-  return canListPaymentMethods ? (
+  if (!canListPaymentMethods || !canGetBillingAddress)
+    return (
+      <Unauthorized>
+        You don't have access to read the current organization billing plan! Try
+        switching the organization.
+      </Unauthorized>
+    );
+
+  return (
     <Tabs
       activeTab={activeTab}
       onTabClick={handleActiveTabChange}
       tabItems={tabItems}
       type="inner"
     />
-  ) : (
-    <Unauthorized>
-      You don't have permission to preview the organization's payment methods.
-    </Unauthorized>
   );
 };

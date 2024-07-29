@@ -1,7 +1,9 @@
 import { useRecoilState } from 'recoil';
-import { billingAtoms, billingSelectors } from '@modules/billing';
+import { OrgServiceBillingDetailsResponse } from '@modules/grpc/library/blockjoy/v1/org';
+import { billingAtoms } from '@modules/billing';
 
 interface ISubscriptionLifecycleHook {
+  subscription: OrgServiceBillingDetailsResponse | null;
   subscriptionLoadingState: LoadingState;
   cancelSubscription: (params: { endOfTerm: boolean }) => Promise<void>;
   restoreSubscription: (id: string) => Promise<void>;
@@ -10,7 +12,7 @@ interface ISubscriptionLifecycleHook {
 
 export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
   const [subscription, setSubscription] = useRecoilState(
-    billingSelectors.subscription,
+    billingAtoms.subscription,
   );
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
@@ -59,6 +61,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
   };
 
   return {
+    subscription,
     subscriptionLoadingState,
 
     cancelSubscription,

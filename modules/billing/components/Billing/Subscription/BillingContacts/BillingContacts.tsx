@@ -6,7 +6,6 @@ import {
   BillingContactForm,
   useBillingContacts,
   checkIfBillingContactExists,
-  billingSelectors,
   billingAtoms,
 } from '@modules/billing';
 import { Alert, Button, TableSkeleton } from '@shared/components';
@@ -14,7 +13,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { containers } from 'styles/containers.styles';
 
 export const BillingContacts = () => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );

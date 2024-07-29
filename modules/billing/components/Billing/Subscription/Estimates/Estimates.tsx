@@ -2,7 +2,6 @@ import { useRecoilValue } from 'recoil';
 import {
   useEstimates,
   mapEstimatesToRows,
-  billingSelectors,
   billingAtoms,
 } from '@modules/billing';
 import { Alert, Table, TableSkeleton } from '@shared/components';
@@ -10,7 +9,7 @@ import { containers } from 'styles/containers.styles';
 import { styles } from './Estimates.styles';
 
 export const Estimates = () => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );

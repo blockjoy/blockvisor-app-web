@@ -1,24 +1,25 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { toast } from 'react-toastify';
-import {
-  PaymentMethodCreateParams,
-  StripeCardNumberElement,
-} from '@stripe/stripe-js';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { StripeCardNumberElement } from '@stripe/stripe-js';
 import {
   CardNumberElement,
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
 import { authAtoms } from '@modules/auth';
-import { billingAtoms, usePaymentMethods } from '@modules/billing';
+import {
+  billingAtoms,
+  PAYMENT_ERRORS,
+  usePaymentMethods,
+} from '@modules/billing';
 import { organizationClient } from '@modules/grpc';
 import { organizationSelectors } from '@modules/organization';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 
 interface PaymentMethodHook {
   paymentMethodLoadingState: LoadingState;
   initPaymentMethod: (
-    billingDetails: PaymentMethodCreateParams.BillingDetails,
     onSuccess: VoidFunction,
+    onError?: (errorMessage: string) => void,
   ) => Promise<void>;
 }
 
@@ -30,18 +31,16 @@ export const usePaymentMethod = (): PaymentMethodHook => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
-  const setError = useSetRecoilState(billingAtoms.paymentMethodError);
   const [paymentMethodLoadingState, setPaymentMethodLoadingState] =
     useRecoilState(billingAtoms.paymentMethodLoadingState);
 
   const { getPaymentMethods } = usePaymentMethods();
 
   const initPaymentMethod = async (
-    billingDetails: PaymentMethodCreateParams.BillingDetails,
     onSuccess: VoidFunction,
+    onError?: (errorMessage: string) => void,
   ) => {
     setPaymentMethodLoadingState('initializing');
-    setError(null);
 
     try {
       if (!stripe || !elements) return;
@@ -60,7 +59,6 @@ export const usePaymentMethod = (): PaymentMethodHook => {
             card: elements.getElement(
               CardNumberElement,
             ) as StripeCardNumberElement,
-            billing_details: billingDetails,
           },
         },
         {
@@ -68,37 +66,27 @@ export const usePaymentMethod = (): PaymentMethodHook => {
         },
       );
 
-      if (error) {
-        const returnedError = handlePaymentMethodError(error);
-        throw returnedError;
-      }
+      if (error)
+        throw new ApplicationError(
+          'InitCardError',
+          error.message ?? 'Intent error',
+        );
 
-      setTimeout(async () => {
-        const paymentMethods = await getPaymentMethods();
-        console.log('setupIntent', setupIntent);
-        console.log('paymentMethods', paymentMethods);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
 
-        // const isPMInTheList = paymentMethods.find(
-        //   (pm) => pm?.id === setupIntent.payment_method,
-        // );
+      const paymentMethods = await getPaymentMethods();
+      console.log('setupIntent', setupIntent);
+      console.log('paymentMethods', paymentMethods);
 
-        onSuccess();
-        setPaymentMethodLoadingState('finished');
+      if (!paymentMethods.length)
+        throw new ApplicationError('InitCardError', 'Webhook failed');
 
-        toast.success('Payment method added');
-      }, 5000);
-    } catch (error: any) {
-      const returnedError = handlePaymentMethodError(error);
-      throw returnedError;
+      onSuccess();
+    } catch (error) {
+      onError?.(PAYMENT_ERRORS.FAILED);
+    } finally {
+      setPaymentMethodLoadingState('finished');
     }
-  };
-
-  const handlePaymentMethodError = (error: any) => {
-    const returnedError = structuredClone(error);
-    setError(returnedError);
-    setPaymentMethodLoadingState('finished');
-
-    return returnedError;
   };
 
   return { paymentMethodLoadingState, initPaymentMethod };

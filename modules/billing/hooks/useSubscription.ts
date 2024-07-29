@@ -1,8 +1,9 @@
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
-import { billingAtoms, billingSelectors } from '@modules/billing';
-import { organizationSelectors } from '@modules/organization';
 import { organizationClient } from '@modules/grpc';
 import { OrgServiceBillingDetailsResponse } from '@modules/grpc/library/blockjoy/v1/org';
+import { billingAtoms } from '@modules/billing';
+import { organizationSelectors } from '@modules/organization';
+import { authSelectors } from '@modules/auth';
 
 interface ISubscriptionHook {
   subscription: OrgServiceBillingDetailsResponse | null;
@@ -24,7 +25,7 @@ export const useSubscription = (): ISubscriptionHook => {
   );
 
   const [subscription, setSubscription] = useRecoilState(
-    billingSelectors.subscription,
+    billingAtoms.subscription,
   );
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
     useRecoilState(billingAtoms.subscriptionLoadingState);
@@ -33,7 +34,13 @@ export const useSubscription = (): ISubscriptionHook => {
     setSubscriptionPaymentMethodLoadingState,
   ] = useRecoilState(billingAtoms.subscriptionPaymentMethodLoadingState);
 
+  const canListPaymentMethods = useRecoilValue(
+    authSelectors.hasPermission('org-billing-list-payment-methods'),
+  );
+
   const getSubscription = async () => {
+    if (!canListPaymentMethods) return;
+
     setSubscriptionLoadingState('initializing');
 
     try {

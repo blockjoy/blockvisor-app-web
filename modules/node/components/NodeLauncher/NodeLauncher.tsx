@@ -50,7 +50,7 @@ export const NodeLauncher = ({
             )}
             {hasSummary && (
               <NodeLauncherSummary
-                hasPermissionsToCreate={permissions.permitted}
+                permissions={permissions}
                 onHostsChanged={handleHostsChanged}
                 onRegionChanged={handleRegionChanged}
                 onCreateNodeClicked={onCreateClick}

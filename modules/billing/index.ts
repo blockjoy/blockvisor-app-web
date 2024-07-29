@@ -3,7 +3,6 @@ export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddress
 export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddressForm/BillingAddressForm';
 export * from './components/Billing/PaymentDetails/PaymentDetails';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/AvailablePayments/AvailablePayments';
-export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/BillingDetailsForm/BillingDetailsForm';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/CreditCardForm/CardComponent/CardComponent';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/CreditCardForm/CreditCardForm';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
@@ -45,13 +44,13 @@ export * from './constants/common';
 
 export * from './hooks/useBilling';
 export * from './hooks/useBillingAddress';
-export * from './hooks/useBillingAddressForm';
 export * from './hooks/useBillingContacts';
 export * from './hooks/useBillingContactsForm';
 export * from './hooks/useEstimates';
 export * from './hooks/useInvoices';
 export * from './hooks/usePaymentMethod';
 export * from './hooks/usePaymentMethods';
+export * from './hooks/usePricing';
 export * from './hooks/usePromoCode';
 export * from './hooks/useStripeSetup';
 export * from './hooks/useSubscription';
@@ -74,5 +73,4 @@ export * from './utils/mapInvoicesToRows';
 export * from './utils/mapInvoiceLineItemsToRows';
 export * from './utils/mapPaymentMethodsToRows';
 export * from './utils/mapSubscriptionToDetails';
-export * from './utils/matchSKU';
 export * from './utils/withLauncherGuard';

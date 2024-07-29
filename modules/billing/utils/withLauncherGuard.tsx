@@ -6,7 +6,7 @@ import {
   SubscriptionActivation,
   LAUNCH_ERRORS,
 } from '@modules/billing';
-import { useDefaultOrganization } from '@modules/organization';
+import { organizationSelectors } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
@@ -37,10 +37,12 @@ export const withLauncherGuard = (Component: any) => {
   const withLauncherGuard = ({ ...props }: WithLauncherGuardProps) => {
     const { type, hasPermissionsToCreate, ...aditionalProps } = props;
 
-    const { defaultOrganization } = useDefaultOrganization();
+    const defaultOrganization = useRecoilValue(
+      organizationSelectors.defaultOrganization,
+    );
     const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-    const hasAuthorizedBilling = useRecoilValue(
-      billingSelectors.hasAuthorizedBilling,
+    const canCreateResource = useRecoilValue(
+      billingSelectors.canCreateResource,
     );
     const bypassBillingForSuperUser = useRecoilValue(
       billingSelectors.bypassBillingForSuperUser,
@@ -50,6 +52,14 @@ export const withLauncherGuard = (Component: any) => {
     const [activeView, setActiveView] = useState<LauncherView>('launcher');
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
 
+    console.table({
+      hasPermissionsToCreate,
+      isSuperUser,
+      canCreateResource,
+      bypassBillingForSuperUser,
+      hasPaymentMethod,
+    });
+
     useEffect(() => {
       setFulfilRequirements(false);
     }, [defaultOrganization?.id]);
@@ -57,7 +67,7 @@ export const withLauncherGuard = (Component: any) => {
     const isPermittedAsSuperUser = isSuperUser && bypassBillingForSuperUser;
 
     const isDisabledAdding =
-      (!hasAuthorizedBilling || !hasPermissionsToCreate) &&
+      (!canCreateResource || !hasPermissionsToCreate) &&
       !isPermittedAsSuperUser;
 
     const handleDefaultView = () => {
@@ -78,7 +88,7 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (!hasAuthorizedBilling && !isPermittedAsSuperUser) {
+      if (!canCreateResource && !isPermittedAsSuperUser) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';

@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { Button, DetailsTable, TableSkeleton } from '@shared/components';
 import {
   mapCardToDetails,
-  billingSelectors,
   PaymentMethodsSelect,
   usePaymentMethod,
   billingAtoms,
@@ -19,7 +18,7 @@ export const PaymentPreview = () => {
   const router = useRouter();
   const [activeView, setActiveView] = useState<'list' | 'dialog'>('list');
 
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
 
   const paymentMethod = useRecoilValue(billingAtoms.paymentMethods)?.[0];
 

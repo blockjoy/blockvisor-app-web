@@ -1,16 +1,11 @@
 import { useRecoilValue } from 'recoil';
-import {
-  billingAtoms,
-  billingSelectors,
-  SubscriptionViewTabs,
-  Plan,
-} from '@modules/billing';
+import { billingAtoms, SubscriptionViewTabs, Plan } from '@modules/billing';
 import { TableSkeleton, Unauthorized } from '@shared/components';
-import { authAtoms, authSelectors } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { styles } from './SubscriptionView.styles';
 
 export const SubscriptionView = () => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
@@ -18,15 +13,8 @@ export const SubscriptionView = () => {
   const canReadSubscription = useRecoilValue(
     authSelectors.hasPermission('subscription-get'),
   );
-  const permissionsLoadingState = useRecoilValue(
-    authAtoms.permissionsLoadingState,
-  );
 
-  if (
-    subscriptionLoadingState === 'initializing' ||
-    permissionsLoadingState !== 'finished'
-  )
-    return <TableSkeleton />;
+  if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
 
   if (!canReadSubscription)
     return (

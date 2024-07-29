@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { EmptyColumn } from '@shared/components';
 import { styles } from './Plan.styles';
 import { authSelectors } from '@modules/auth';
-import { PlanConfiguration, PlanItem } from '@modules/billing';
+// import { PlanConfiguration, PlanItem } from '@modules/billing';
 
 export const Plan = () => {
   const [activeView, setActiveView] =
@@ -25,7 +25,7 @@ export const Plan = () => {
             <div>
               <p style={{ marginBottom: '10px' }}>
                 {canCreateSubscription
-                  ? 'You are currently on a free plan. To access BlockVisor features add a paid plan.'
+                  ? "To unlock BlockVisor's features, add your payment and billing information, then go to the NodeLauncher and simply launch your desired node."
                   : 'There are no plans available for your organization.'}
               </p>
             </div>
@@ -34,12 +34,12 @@ export const Plan = () => {
           additionalStyles={styles.emptyColumn}
         />
       )}
-      {canCreateSubscription &&
+      {/* {canCreateSubscription &&
         (activeView === 'default' ? (
           <PlanItem handleSelect={handleSelect} />
         ) : (
           <PlanConfiguration handleCancel={handleCancel} />
-        ))}
+        ))} */}
     </>
   );
 };

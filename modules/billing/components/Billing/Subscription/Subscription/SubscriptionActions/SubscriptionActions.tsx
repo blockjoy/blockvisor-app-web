@@ -1,10 +1,6 @@
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { Button } from '@shared/components';
-import {
-  ActiveView,
-  SubscriptionStatus,
-  billingSelectors,
-} from '@modules/billing';
+import { ActiveView, SubscriptionStatus, billingAtoms } from '@modules/billing';
 import { containers } from 'styles/containers.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './SubscriptionActions.styles';
@@ -16,7 +12,7 @@ type SubscriptionActionsProps = {
 export const SubscriptionActions = ({
   onViewChange,
 }: SubscriptionActionsProps) => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
 
   const handleCancellation = () => onViewChange('cancel-subscription');
   const handleRestoration = () => onViewChange('restore-subscription');

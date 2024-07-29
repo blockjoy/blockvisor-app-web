@@ -88,6 +88,11 @@ export const LAUNCH_ERRORS = {
   NO_ACTIVE_SUBSCRIPTION: 'Active subscription required to launch.',
 };
 
+export const PAYMENT_ERRORS = {
+  FAILED:
+    'Something went wrong. Please update you credit card details and try again',
+};
+
 export const CARD_ELEMENT_OPTIONS:
   | StripeCardNumberElementOptions
   | StripeCardExpiryElementOptions

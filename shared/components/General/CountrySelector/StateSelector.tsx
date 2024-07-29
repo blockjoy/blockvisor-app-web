@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { Dropdown, InputLabel, withSearchDropdown } from '@shared/components';
-import { getCountries } from '@shared/utils/getCountries';
+import { getStates } from '@shared/utils/getCountries';
 
-export type CountrySelectorProps = {
+export type StateSelectorProps = {
   name: string;
   value: string;
   onChange: (value: string) => void;
@@ -12,9 +12,10 @@ export type CountrySelectorProps = {
   labelStyles?: SerializedStyles[];
   disabled?: boolean;
   tabIndex?: number;
+  country?: string;
 };
 
-export const CountrySelector = ({
+export const StateSelector = ({
   name,
   value,
   inputSize,
@@ -22,27 +23,29 @@ export const CountrySelector = ({
   labelStyles,
   disabled,
   onChange,
-}: CountrySelectorProps) => {
-  const countries = useMemo(() => getCountries(), []);
+  country,
+}: StateSelectorProps) => {
+  const states = useMemo(() => getStates(country), [country]);
+
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = (open: boolean = true) => {
     setIsOpen(open);
   };
 
-  const defaultCountry =
-    countries.find((country: Country) => country.code === value) ?? null;
+  const defaultState =
+    states.find((state: State) => state.code === value) ?? null;
 
-  const [selectedCountry, setSelectedCountry] =
-    useState<Country | null>(defaultCountry);
+  const [selectedState, setSelectedState] =
+    useState<State | null>(defaultState);
 
-  const handleCountryChange = (country: Country | null) => {
-    if (country?.code) onChange(country?.code);
-    setSelectedCountry(country);
+  const handleStateChange = (state: State | null) => {
+    if (state?.code) onChange(state?.code);
+    setSelectedState(state);
   };
 
-  const CountrySelectDropdown = useMemo(
-    () => withSearchDropdown<Country>(Dropdown),
-    [],
+  const StateSelectDropdown = useMemo(
+    () => withSearchDropdown<State>(Dropdown),
+    [states],
   );
 
   return (
@@ -58,11 +61,11 @@ export const CountrySelector = ({
         </InputLabel>
       )}
 
-      <CountrySelectDropdown
-        items={countries}
-        selectedItem={selectedCountry}
-        handleSelected={handleCountryChange}
-        defaultText={defaultCountry ? defaultCountry?.name : 'Select country'}
+      <StateSelectDropdown
+        items={states}
+        selectedItem={selectedState}
+        handleSelected={handleStateChange}
+        defaultText={defaultState ? defaultState?.name : 'Select state'}
         isOpen={isOpen}
         handleOpen={handleOpen}
         size="small"

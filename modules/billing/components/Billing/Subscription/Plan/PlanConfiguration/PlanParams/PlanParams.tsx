@@ -1,11 +1,7 @@
 import { ChangeEvent } from 'react';
 import { useRecoilValue } from 'recoil';
 import { RadioButton, RadioButtonGroup } from '@shared/components';
-import {
-  BILLING_PERIOD,
-  PlanParamsInfo,
-  billingSelectors,
-} from '@modules/billing';
+import { BILLING_PERIOD, PlanParamsInfo, billingAtoms } from '@modules/billing';
 import { styles } from './PlanParams.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 
@@ -18,7 +14,7 @@ export const PlanParams = ({
   periodUnit,
   handlePeriodUnit,
 }: PlanParamsProps) => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
 
   return (
     <>

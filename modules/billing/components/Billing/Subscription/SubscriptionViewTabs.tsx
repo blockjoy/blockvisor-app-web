@@ -4,8 +4,6 @@ import { PageSection, Tabs } from '@shared/components';
 import { useTabs } from '@shared/index';
 import {
   Invoices,
-  BillingContacts,
-  billingSelectors,
   billingAtoms,
   Subscription,
   Estimates,
@@ -13,7 +11,7 @@ import {
 import { authSelectors } from '@modules/auth';
 
 export const SubscriptionViewTabs = () => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
@@ -29,15 +27,10 @@ export const SubscriptionViewTabs = () => {
           value: 'details',
           component: <Subscription />,
         },
-        {
-          label: 'Estimates',
-          value: 'estimates',
-          component: <Estimates />,
-        },
         // {
-        //   label: 'Billing Contacts',
-        //   value: 'billing-contacts',
-        //   component: <>{/* <BillingContacts /> */}</>,
+        //   label: 'Estimates',
+        //   value: 'estimates',
+        //   component: <Estimates />,
         // },
         {
           label: 'Invoices',

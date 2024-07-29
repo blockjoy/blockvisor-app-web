@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { ConfirmDialog, Table } from '@shared/components';
-import { billingSelectors, mapBillingContactsToRows } from '@modules/billing';
+import { billingAtoms, mapBillingContactsToRows } from '@modules/billing';
 import { useRecoilValue } from 'recoil';
 
 export type BillingContactsListProps = {
@@ -13,7 +13,7 @@ export const BillingContactsList = ({
   billingContacts,
   handleRemove,
 }: BillingContactsListProps) => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
 
   const [activeView, setActiveView] =
     useState<string | 'list' | 'dialog'>('list');

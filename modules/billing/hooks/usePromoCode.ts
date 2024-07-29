@@ -1,9 +1,5 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  PROMO_CODE_ERROR_MESSAGES,
-  billingAtoms,
-  billingSelectors,
-} from '@modules/billing';
+import { PROMO_CODE_ERROR_MESSAGES, billingAtoms } from '@modules/billing';
 import { nodeAtoms } from '@modules/node';
 
 interface IPromoCodeHook {
@@ -16,7 +12,7 @@ interface IPromoCodeHook {
 }
 
 export const usePromoCode = (): IPromoCodeHook => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const sku = useRecoilValue(nodeAtoms.selectedSKU);
   const [promoCode, setPromoCode] = useRecoilState(billingAtoms.promoCode);
   const [promoCodeError, setPromoCodeError] = useRecoilState(

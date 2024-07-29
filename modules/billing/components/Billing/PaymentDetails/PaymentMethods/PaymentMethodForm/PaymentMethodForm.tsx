@@ -1,18 +1,14 @@
-import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup } from '@shared/components';
+import { useRecoilValue } from 'recoil';
+import { Button, ButtonGroup, FormError } from '@shared/components';
 import {
-  billingAtoms,
-  billingSelectors,
   usePaymentMethod,
   AvailablePayments,
   CreditCardForm,
-  BillingDetailsForm,
+  billingAtoms,
 } from '@modules/billing';
-import { typo } from 'styles/utils.typography.styles';
 import { spacing } from 'styles/utils.spacing.styles';
-import { colors } from 'styles/utils.colors.styles';
 import { containers } from 'styles/containers.styles';
 import { styles } from './PaymentMethodForm.styles';
 
@@ -21,37 +17,35 @@ type PaymentMethodFormProps = {
 };
 
 export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
-  const billingDetails = useRecoilValue(billingSelectors.billingDetails);
-  const isValidCardForm = useRecoilValue(billingSelectors.isValidCardForm);
-  const [error, setError] = useRecoilState(billingAtoms.paymentMethodError);
+  const [error, setError] = useState<string | null>(null);
 
   const { paymentMethodLoadingState, initPaymentMethod } = usePaymentMethod();
 
-  useEffect(() => {
-    return () => {
-      setError(null);
-    };
-  }, []);
+  const isValidCard = useRecoilValue(billingAtoms.isValidCard);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isValidCard) return;
+
     try {
-      await initPaymentMethod(billingDetails, () => {
-        toast.success('Payment method added');
-        handleCancel();
-      });
+      await initPaymentMethod(
+        () => {
+          toast.success('Payment method added');
+          handleCancel();
+        },
+        (err) => setError(err),
+      );
     } catch (error: any) {
       console.log('Error while adding a payment method', error);
     }
   };
 
-  const errorMessage = error
-    ? 'Something went wrong. Please update you credit card details and try again'
-    : null;
   const isLoading = paymentMethodLoadingState !== 'finished';
 
   return (
     <div css={containers.mediumSmall}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div css={spacing.bottom.mediumLarge}>
           <div css={styles.header}>
             <h4 css={styles.headline}>Card details</h4>
@@ -61,36 +55,13 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
           <CreditCardForm />
         </div>
 
-        <div css={spacing.bottom.mediumLarge}>
-          <div css={styles.header}>
-            <h4 css={styles.headline}>Billing Details</h4>
-          </div>
-
-          <BillingDetailsForm />
-        </div>
-
-        {errorMessage && (
-          <p
-            css={[
-              typo.smaller,
-              colors.warning,
-              spacing.top.medium,
-              spacing.bottom.medium,
-            ]}
-          >
-            {errorMessage}
-          </p>
-        )}
         <ButtonGroup>
           <Button
             loading={isLoading}
-            disabled={
-              paymentMethodLoadingState !== 'finished' || !isValidCardForm
-            }
+            disabled={isLoading || !isValidCard}
             style="primary"
             size="small"
             type="submit"
-            onClick={handleSubmit}
           >
             Add
           </Button>
@@ -98,6 +69,8 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
             Cancel
           </Button>
         </ButtonGroup>
+
+        <FormError isVisible={Boolean(error)}>{error}</FormError>
       </form>
     </div>
   );

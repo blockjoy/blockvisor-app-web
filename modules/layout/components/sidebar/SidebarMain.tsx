@@ -8,7 +8,6 @@ import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { invitationAtoms, organizationSelectors } from '@modules/organization';
 import { ROUTES } from '@shared/index';
 import { authSelectors } from '@modules/auth';
-import { billingSelectors } from '@modules/billing';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import IconNodes from '@public/assets/icons/app/Node.svg';
 import IconOrganizations from '@public/assets/icons/app/Organization.svg';
@@ -41,8 +40,10 @@ export default () => {
   const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useRecoilState(
     layoutAtoms.isSidebarOpenMobile,
   );
-
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const canInitCard = useRecoilValue(
+    authSelectors.hasPermission('org-billing-init-card'),
+  );
   const invitationCount = useRecoilValue(
     invitationAtoms.receivedInvitations,
   )?.length;
@@ -53,7 +54,7 @@ export default () => {
     }
   };
 
-  const navBlocks: BlockItem[] = [
+  const blocks: BlockItem[] = [
     {
       id: 'blockvisor',
       title: 'BLOCKVISOR',
@@ -83,11 +84,6 @@ export default () => {
           icon: <IconOrganizations />,
           isOrganizations: true,
         },
-        {
-          name: 'Billing',
-          path: ROUTES.BILLING,
-          icon: <IconBilling />,
-        },
       ],
     },
     {
@@ -103,7 +99,7 @@ export default () => {
   ];
 
   if (isSuperUser) {
-    navBlocks.unshift({
+    blocks.unshift({
       id: 'admin',
       title: 'BLOCKJOY',
       items: [
@@ -115,6 +111,24 @@ export default () => {
       ],
     });
   }
+
+  let navBlocks: BlockItem[] = blocks.map((block: BlockItem) => {
+    if (block.id === 'settings' && canInitCard) {
+      return {
+        ...block,
+        items: [
+          ...block.items,
+          {
+            name: 'Billing',
+            path: ROUTES.BILLING,
+            icon: <IconBilling />,
+          },
+        ],
+      };
+    }
+
+    return block;
+  });
 
   return (
     <main css={styles.wrapper(isSidebarOpenMobile)}>

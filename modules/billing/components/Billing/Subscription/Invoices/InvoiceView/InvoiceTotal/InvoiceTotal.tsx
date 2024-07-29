@@ -5,14 +5,9 @@ import { styles } from './InvoiceTotal.styles';
 export type InvoiceTotalProps = {
   total: number;
   subtotal: number;
-  amountDue: number;
 };
 
-export const InvoiceTotal = ({
-  total,
-  subtotal,
-  amountDue,
-}: InvoiceTotalProps) => {
+export const InvoiceTotal = ({ total, subtotal }: InvoiceTotalProps) => {
   const items = useMemo(
     () => [
       {
@@ -23,12 +18,8 @@ export const InvoiceTotal = ({
         title: 'Total',
         data: formatters.formatCurrency(total!),
       },
-      {
-        title: 'Amount due',
-        data: formatters.formatCurrency(amountDue!),
-      },
     ],
-    [total, subtotal, amountDue],
+    [total, subtotal],
   );
 
   return (

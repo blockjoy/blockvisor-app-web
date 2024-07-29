@@ -28,7 +28,7 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 
 type NodeLauncherSummaryProps = {
-  hasPermissionsToCreate: boolean;
+  permissions: WithLauncherGuardPermissions;
   onCreateNodeClicked: VoidFunction;
   onHostsChanged: (
     hosts: NodeLauncherHost[] | null,
@@ -39,7 +39,7 @@ type NodeLauncherSummaryProps = {
 };
 
 export const NodeLauncherSummary = ({
-  hasPermissionsToCreate,
+  permissions,
   onCreateNodeClicked,
   onHostsChanged,
   onRegionChanged,
@@ -58,6 +58,7 @@ export const NodeLauncherSummary = ({
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
   const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
+  const price = useRecoilValue(billingAtoms.price);
   const [isLaunching, setIsLaunching] = useRecoilState(
     nodeLauncherAtoms.isLaunching,
   );
@@ -77,6 +78,7 @@ export const NodeLauncherSummary = ({
     (selectedHosts?.every((h) => h.isValid) && totalNodesToLaunch! > 0);
 
   const isDisabled =
+    permissions.disabled ||
     !hasNetworkList ||
     !isNodeValid ||
     !isConfigValid ||
@@ -177,12 +179,24 @@ export const NodeLauncherSummary = ({
       <FormLabel>Summary</FormLabel>
       <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
 
-      <FormLabel>Pricing</FormLabel>
-      <Pricing />
+      {price && (
+        <>
+          <FormLabel>Pricing</FormLabel>
+          <Pricing />
+        </>
+      )}
 
       <div css={styles.buttons}>
+        {permissions.disabled && (
+          <Tooltip
+            noWrap
+            top="-30px"
+            left="50%"
+            tooltip={LAUNCH_ERRORS.NO_PERMISSION}
+          />
+        )}
         <button
-          onClick={handleCreateNodeClicked}
+          onClick={onCreateNodeClicked}
           disabled={isDisabled}
           css={[
             styles.createButton,

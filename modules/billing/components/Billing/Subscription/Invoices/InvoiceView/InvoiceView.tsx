@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
-import { ROUTES, formatters } from '@shared/index';
+import { COUNTRIES, ROUTES } from '@shared/index';
 import {
   BackButton,
   Badge,
@@ -12,6 +12,7 @@ import {
   SkeletonGrid,
   TableSkeleton,
   SvgIcon,
+  DateTime,
 } from '@shared/components';
 import {
   InvoiceDownload,
@@ -35,6 +36,7 @@ export const InvoiceView = () => {
     billingAtoms.invoicesLoadingState,
   );
   const invoice = useRecoilValue(billingSelectors.invoice(id as string));
+  const billingAddress = useRecoilValue(billingAtoms.billingAddress);
 
   const handleBillingClicked = () => {
     router.push(
@@ -56,7 +58,9 @@ export const InvoiceView = () => {
         icon={<IconBilling />}
         onTitleClick={handleBillingClicked}
         isLoading={true}
-        childTitle={invoice?.id ? `Invoice (${invoice?.id})` : undefined}
+        childTitle={
+          invoice?.number ? `Invoice (${invoice?.number})` : undefined
+        }
       />
       <PageSection bottomBorder={false} topPadding={false}>
         <div css={spacing.top.medium}>
@@ -75,7 +79,7 @@ export const InvoiceView = () => {
                     <div css={styles.header}>
                       <h2 css={styles.headline}>
                         <span>
-                          Invoice #<b>{`${invoice.id}`}</b>
+                          Invoice #<b>{`${invoice.number}`}</b>
                         </span>
                         <Badge
                           color={getInvoiceStatusColor(invoice.status)}
@@ -84,64 +88,62 @@ export const InvoiceView = () => {
                           {getInvoiceStatusText(invoice.status)}
                         </Badge>
                       </h2>
-                      {invoice?.created && (
+                      {invoice?.createdAt && (
                         <div css={styles.info}>
                           <SvgIcon size="10px" isDefaultColor>
                             <IconCalendar />
                           </SvgIcon>
-                          <span>
-                            {formatters.formatTimestamp(invoice?.created)}
-                          </span>
+                          <DateTime date={invoice.createdAt!} />
                         </div>
                       )}
                     </div>
-                    <InvoiceDownload invoicePdf={invoice.invoice_pdf} />
+                    {invoice.pdfUrl && (
+                      <InvoiceDownload invoicePdf={invoice.pdfUrl} />
+                    )}
                   </div>
-                  {invoice?.customer_address && (
+                  {billingAddress && (
                     <div css={styles.sectionWrapper}>
                       <h3 css={styles.subheadline}>Billed to</h3>
                       <div css={styles.address}>
-                        <span>{invoice.customer_name}</span>
                         <span>
-                          {`${invoice.customer_address.line1}${
-                            invoice.customer_address.line2
-                              ? ` ${invoice.customer_address.line2}`
+                          {`${billingAddress.line1}${
+                            billingAddress.line2
+                              ? ` ${billingAddress.line2}`
                               : ''
                           }`}
                         </span>
                         <span>
-                          {`${invoice.customer_address.city}${
-                            invoice.customer_address.state
-                              ? ` ${invoice.customer_address.state}`
+                          {`${billingAddress.city}${
+                            billingAddress.state
+                              ? ` ${billingAddress.state}`
                               : ''
                           }${
-                            invoice.customer_address.postal_code
-                              ? ` ${invoice.customer_address.postal_code}`
+                            billingAddress.postalCode
+                              ? ` ${billingAddress.postalCode}`
                               : ''
                           }${
-                            invoice.customer_address.country
-                              ? ` ${invoice.customer_address.country}`
+                            billingAddress.country
+                              ? ` ${COUNTRIES[billingAddress.country]}`
                               : ''
                           }`}
                         </span>
                       </div>
                     </div>
                   )}
-                  {invoice.lines && invoice?.total !== undefined && (
-                    <>
-                      <div css={styles.sectionWrapper}>
-                        <h3 css={styles.subheadline}>Details</h3>
-                        <InvoiceLineItems items={invoice.lines.data} />
-                        <div css={styles.total}>
-                          <InvoiceTotal
-                            total={invoice.total}
-                            subtotal={invoice.subtotal}
-                            amountDue={invoice.amount_due}
-                          />
-                        </div>
+                  <div css={styles.sectionWrapper}>
+                    <h3 css={styles.subheadline}>Details</h3>
+                    {invoice.lineItems && (
+                      <InvoiceLineItems items={invoice.lineItems} />
+                    )}
+                    {invoice.total && invoice.subtotal && (
+                      <div css={styles.total}>
+                        <InvoiceTotal
+                          total={invoice.total}
+                          subtotal={invoice.subtotal}
+                        />
                       </div>
-                    </>
-                  )}
+                    )}
+                  </div>
                 </>
               ) : (
                 <EmptyColumn

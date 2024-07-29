@@ -1,9 +1,11 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
 import { billingAtoms } from '@modules/billing';
-import { _INVOICES } from '../mocks/invoices';
+import { organizationClient } from '@modules/grpc';
+import { organizationSelectors } from '@modules/organization';
 
 interface IInvoicesHook {
-  invoices: any[];
+  invoices: Invoice[];
   invoicesLoadingState: LoadingState;
   getInvoices: () => Promise<void>;
 }
@@ -14,11 +16,17 @@ export const useInvoices = (): IInvoicesHook => {
     billingAtoms.invoicesLoadingState,
   );
 
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
+  );
+
   const getInvoices = async () => {
     setInvoicesLoadingState('initializing');
 
     try {
-      const data: any = _INVOICES;
+      const data = await organizationClient.getInvoices(
+        defaultOrganization?.id!,
+      );
 
       console.log('%cGetInvoices', 'color: #bff589', data);
       setInvoices(data);

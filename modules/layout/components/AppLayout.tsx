@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { useRecoilValue } from 'recoil';
+import { Elements } from '@stripe/react-stripe-js';
 import Sidebar from './sidebar/Sidebar';
 import { Burger } from './burger/Burger';
 import Page from './page/Page';
@@ -13,7 +14,7 @@ import {
 import { useGetBlockchains, useNodeList } from '@modules/node';
 import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
-import { useBilling } from '@modules/billing';
+import { useBilling, useStripeSetup } from '@modules/billing';
 import { MasterLayout } from '@modules/layout';
 import { ProgressBar } from '@shared/components';
 
@@ -39,13 +40,14 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     reconnect: mqttReconnect,
     updateSubscription: updateMqttSubscription,
   } = useMqtt();
+  const { stripe } = useStripeSetup();
   const { getReceivedInvitations } = useInvitations();
   const { loadNodes } = useNodeList();
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
 
-  useGetBlockchains();
   useBilling();
+  useGetBlockchains();
 
   useEffect(() => {
     (async () => {
@@ -90,6 +92,9 @@ export const AppLayout = (props: LayoutProps) => {
   return (
     <MasterLayout>
       <Layout {...props} />
+      <Elements stripe={stripe}>
+        <Page isFlex={isPageFlex}>{children}</Page>
+      </Elements>
     </MasterLayout>
   );
 };

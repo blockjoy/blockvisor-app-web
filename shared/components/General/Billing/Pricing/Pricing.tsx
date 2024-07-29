@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { billingAtoms, billingSelectors } from '@modules/billing';
+import { billingAtoms } from '@modules/billing';
 import { styles } from './Pricing.styles';
 import { formatters } from '@shared/index';
 import { Promo, Skeleton } from '@shared/components';
 import { blockchainAtoms, nodeAtoms } from '@modules/node';
 
 export const Pricing = () => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
@@ -24,6 +24,8 @@ export const Pricing = () => {
   }, []);
 
   const togglePromo = () => setIsOpenPromo(!isOpenPromo);
+
+  const price = useRecoilValue(billingAtoms.price);
 
   const pricing: any = { total: 0, subtotal: 0 };
 
@@ -42,29 +44,30 @@ export const Pricing = () => {
           <Skeleton width="120px" height="25px" />
         ) : (
           <div css={styles.priceWrapper}>
-            {total !== subtotal && (
+            {/* {total !== subtotal && (
               <span css={styles.priceSubtotal}>
                 {formatters.formatCurrency(subtotal)}
               </span>
-            )}
+            )} */}
             <span css={styles.priceTotal}>
-              {formatters.formatCurrency(total)}
+              {formatters.formatCurrency(price?.value!)}
             </span>
             <span css={styles.priceLabel}>
-              {`/ ${
+              {/* {`/ ${
                 promoCode?.coupon?.duration_type === 'one_time' ? 'first ' : ''
-              }${/*subscription?.billing_period_unit ??*/ 'month'}`}
+              }month`} */}
+              / month
             </span>
           </div>
         )}
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <Skeleton width="82px" height="25px" />
         ) : (
           <a onClick={togglePromo} css={styles.promo}>
             Have a promo code?
           </a>
-        )}
+        )} */}
       </div>
       {isOpenPromo ? <Promo /> : null}
     </>

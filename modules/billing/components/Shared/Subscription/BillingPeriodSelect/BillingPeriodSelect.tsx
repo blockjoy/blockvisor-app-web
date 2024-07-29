@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { Dropdown } from '@shared/components';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { styles } from './BillingPeriodSelect.styles';
-import { BILLING_PERIOD, billingSelectors } from '@modules/billing';
+import { BILLING_PERIOD, billingAtoms } from '@modules/billing';
 
 type BillingPeriodSelectProps = {
   value: string;
@@ -16,7 +16,7 @@ export const BillingPeriodSelect = ({
   onChange,
   disabled = false,
 }: BillingPeriodSelectProps) => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const activePeriod =

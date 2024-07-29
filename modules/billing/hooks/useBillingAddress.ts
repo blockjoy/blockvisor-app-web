@@ -1,51 +1,80 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { billingAtoms, billingSelectors } from '@modules/billing';
+import { Address } from '@modules/grpc/library/blockjoy/common/v1/address';
+import { billingAtoms } from '@modules/billing';
+import { organizationClient } from '@modules/grpc';
+import { organizationSelectors } from '@modules/organization';
 
 interface IBillingAddressHook {
-  billingAddress: any;
+  billingAddress: Address | null;
   billingAddressLoadingState: LoadingState;
-  addBillingAddress: (billingAddress: BillingAddressForm) => Promise<void>;
+  getBillingAddress: VoidFunction;
+  createBillingAddress: (
+    address: Address,
+    onSuccess?: VoidFunction,
+    onError?: (errorMessage: string) => void,
+  ) => Promise<void>;
 }
 
 export const useBillingAddress = (): IBillingAddressHook => {
-  const billingAddress = useRecoilValue(billingSelectors.billingAddress);
-
-  const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
-  const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
-    billingAtoms.customerLoadingState,
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
   );
+  const [billingAddress, setBillingAddress] = useRecoilState(
+    billingAtoms.billingAddress,
+  );
+  const [billingAddressLoadingState, setBillingAddressLoadingState] =
+    useRecoilState(billingAtoms.billingAddressLoadingState);
 
-  const addBillingAddress = async (billingAddress: BillingAddressForm) => {
-    setCustomerLoadingState('loading');
+  const getBillingAddress = async () => {
+    setBillingAddressLoadingState('initializing');
+
     try {
-      const {
-        firstName,
-        lastName,
-        company,
+      const data = await organizationClient.getBillingAddress(
+        defaultOrganization?.id!,
+      );
+
+      setBillingAddress(data);
+
+      console.log('%cGetBillingAddress', 'color: #bff589', data);
+    } catch (error) {
+      setBillingAddress(null);
+      console.error('Failed to get billing address', error);
+    } finally {
+      setBillingAddressLoadingState('finished');
+    }
+  };
+
+  const createBillingAddress = async (
+    address: Address,
+    onSuccess?: VoidFunction,
+    onError?: (errorMessage: string) => void,
+  ) => {
+    setBillingAddressLoadingState('loading');
+    try {
+      await organizationClient.createBillingAddress(
+        defaultOrganization?.id!,
         address,
-        city,
-        country,
-        region,
-        postal,
-      } = billingAddress;
+      );
 
-      const data: any = null;
-
-      setCustomer(data);
-      console.log('%cAddBillingAddress', 'color: #bff589', {
-        billingAddress,
-        data,
-      });
+      setBillingAddress(address);
+      onSuccess?.();
     } catch (error) {
       console.error('Failed to create billing address', error);
+      onError?.(
+        `Error ${
+          billingAddress ? 'updating' : 'creating'
+        } an address, an unknown error occurred`,
+      );
     } finally {
-      setCustomerLoadingState('finished');
+      setBillingAddressLoadingState('finished');
     }
   };
 
   return {
     billingAddress,
-    billingAddressLoadingState: customerLoadingState,
-    addBillingAddress,
+    billingAddressLoadingState,
+
+    getBillingAddress,
+    createBillingAddress,
   };
 };

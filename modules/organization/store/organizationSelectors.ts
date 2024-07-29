@@ -1,5 +1,5 @@
 import { selector, selectorFamily } from 'recoil';
-import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { Org, OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { paginate, sort } from '@shared/components';
 import { InitialQueryParams as InitialQueryParamsOrganizationMembers } from '../ui/OrganizationMembersUIHelpers';
 import { organizationAtoms } from '@modules/organization';
@@ -76,6 +76,38 @@ const organizationMembersActive = selectorFamily<
     },
 });
 
+const organizationRoles = selector<OrgRole[]>({
+  key: 'organization.roles',
+  get: ({ get }) => {
+    const user = get(authAtoms.user);
+    const defOrg = get(defaultOrganization);
+    const allOrgs = get(organizationAtoms.allOrganizations);
+
+    const currentOrg = allOrgs.find((org) => org.id === defOrg?.id);
+    const currentMember = currentOrg?.members?.find(
+      (member) => member.userId === user?.id,
+    );
+
+    return currentMember?.roles ?? [];
+  },
+});
+
+const organizationRole = selector({
+  key: 'organization.role',
+  get: ({ get }) => {
+    const roles = get(organizationRoles);
+    const isOwner = roles?.some((role) => role.name === 'org-owner');
+    const isAdmin = roles?.some((role) => role.name === 'org-admin');
+    const isMember = roles?.some((role) => role.name === 'org-member');
+
+    return {
+      isOwner,
+      isAdmin,
+      isMember,
+    };
+  },
+});
+
 export const organizationSelectors = {
   settings,
 
@@ -83,4 +115,7 @@ export const organizationSelectors = {
 
   allOrganizationsSorted,
   organizationMembersActive,
+
+  organizationRoles,
+  organizationRole,
 };

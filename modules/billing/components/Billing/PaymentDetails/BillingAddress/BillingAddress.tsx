@@ -1,29 +1,38 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  BillingAddressForm,
-  billingAtoms,
-  billingSelectors,
-} from '@modules/billing';
-import { Button, TableSkeleton } from '@shared/components';
+import { BillingAddressForm, billingAtoms } from '@modules/billing';
+import { Button, TableSkeleton, Unauthorized } from '@shared/components';
+import { authSelectors } from '@modules/auth';
 import { spacing } from 'styles/utils.spacing.styles';
 
 export const BillingAddress = () => {
+  const billingAddress = useRecoilValue(billingAtoms.billingAddress);
   const billingAddressLoadingState = useRecoilValue(
     billingAtoms.billingAddressLoadingState,
   );
+  const canCreateBillingAddress = useRecoilValue(
+    authSelectors.hasPermission('org-address-get'),
+  );
 
-  const hasBillingAddress = useRecoilValue(billingSelectors.hasBillingAddress);
-  const [isAdding, setIsAdding] = useState<boolean>(hasBillingAddress);
+  const [isAdding, setIsAdding] = useState<boolean>(!!billingAddress);
 
   const handleAdding = () => setIsAdding(true);
   const handleCancel = () => setIsAdding(false);
 
-  if (billingAddressLoadingState !== 'finished') return <TableSkeleton />;
+  if (!canCreateBillingAddress)
+    return (
+      <Unauthorized>
+        You don't have permission to create a billing address for the current
+        organization! Try switching the organization or contact your
+        administrator.
+      </Unauthorized>
+    );
+
+  if (billingAddressLoadingState === 'initializing') return <TableSkeleton />;
 
   return (
     <>
-      {!isAdding ? (
+      {!billingAddress && !isAdding ? (
         <div>
           <p css={spacing.bottom.medium}>
             You have not yet added a billing address. Click the button below to

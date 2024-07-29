@@ -5,6 +5,7 @@ import {
   getInvoiceStatusText,
   InvoiceDownload,
 } from '@modules/billing';
+import { css } from '@emotion/react';
 
 export const mapInvoicesToRows = (invoices?: any[]) => {
   const headers: TableHeader[] = [
@@ -38,19 +39,27 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
 
   const rows: Row[] =
     invoices?.map((invoice: any) => ({
-      key: invoice.id,
+      key: invoice.number,
       cells: [
         {
           key: '1',
-          component: <span>{invoice.id}</span>,
+          component: (
+            <span
+              css={css`
+                white-space: nowrap;
+              `}
+            >
+              {invoice.number}
+            </span>
+          ),
         },
         {
           key: '2',
-          component: <span>{formatters.formatCurrency(invoice?.total!)}</span>,
+          component: <span>{formatters.formatCurrency(invoice.total)}</span>,
         },
         {
           key: '3',
-          component: <span>{formatters.formatTimestamp(invoice.created)}</span>,
+          component: <span>{formatters.formatDate(invoice.createdAt)}</span>,
         },
         {
           key: '5',
@@ -65,7 +74,7 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
         },
         {
           key: '6',
-          component: <InvoiceDownload invoicePdf={invoice.invoice_pdf} />,
+          component: <InvoiceDownload invoicePdf={invoice.pdf_url} />,
         },
       ],
     })) ?? [];

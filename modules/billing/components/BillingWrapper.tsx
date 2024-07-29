@@ -1,10 +1,11 @@
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { usePathname } from 'next/navigation';
-import { Elements } from '@stripe/react-stripe-js';
-import { PageTitle, TabNavigation } from '@shared/components';
-import { useStripeSetup } from '@modules/billing';
+import { useRecoilValue } from 'recoil';
+import { PageTitle, TableSkeleton, TabNavigation } from '@shared/components';
+import { authAtoms } from '@modules/auth';
 import { wrapper } from 'styles/wrapper.styles';
+import { spacing } from 'styles/utils.spacing.styles';
 import IconBilling from '@public/assets/icons/common/Billing.svg';
 
 type BillingWrapperProps = {
@@ -20,7 +21,9 @@ export const BillingWrapper = ({ children }: BillingWrapperProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { stripe } = useStripeSetup();
+  const permissionsLoadingState = useRecoilValue(
+    authAtoms.permissionsLoadingState,
+  );
 
   const tabItems = tabs.map((tab) => ({
     ...tab,
@@ -32,12 +35,20 @@ export const BillingWrapper = ({ children }: BillingWrapperProps) => {
   }, [router]);
 
   return (
-    <Elements stripe={stripe}>
+    <>
       <PageTitle title="Billing" icon={<IconBilling />} />
       <div css={wrapper.main}>
-        <TabNavigation items={tabItems} gap="32px" />
-        {children}
+        {permissionsLoadingState !== 'finished' ? (
+          <div css={[spacing.top.medium]}>
+            <TableSkeleton />
+          </div>
+        ) : (
+          <>
+            <TabNavigation items={tabItems} gap="32px" />
+            {children}
+          </>
+        )}
       </div>
-    </Elements>
+    </>
   );
 };

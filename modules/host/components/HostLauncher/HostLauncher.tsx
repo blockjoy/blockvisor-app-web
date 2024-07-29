@@ -17,10 +17,7 @@ import {
   useProvisionToken,
   organizationSelectors,
 } from '@modules/organization';
-import {
-  // LAUNCH_ERRORS,
-  LauncherWithGuardProps,
-} from '@modules/billing';
+import { LAUNCH_ERRORS, LauncherWithGuardProps } from '@modules/billing';
 
 export const HostLauncher = ({
   fulfilReqs,
@@ -35,15 +32,11 @@ export const HostLauncher = ({
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
-  const handleCreateHostClicked = () => {
-    if (permissions.permitted) handleHostCreation();
-  };
-
   useEffect(() => {
     if (fulfilReqs) handleHostCreation();
   }, [fulfilReqs]);
 
-  const token = !permissions?.disabled
+  const token = !permissions.disabled
     ? provisionToken
     : provisionToken?.replace(/./g, '*');
 
@@ -73,14 +66,14 @@ export const HostLauncher = ({
             <div css={[styles.copy, spacing.bottom.medium]}>
               <CopyToClipboard
                 value={`bvup ${token}`}
-                disabled={permissions?.disabled}
+                disabled={permissions.disabled}
               />
-              {permissions?.disabled && (
+              {permissions.disabled && (
                 <Tooltip
                   noWrap
                   top="-30px"
                   left="50%"
-                  tooltip={permissions.message}
+                  tooltip={LAUNCH_ERRORS.NO_PERMISSION}
                 />
               )}
             </div>
@@ -89,15 +82,14 @@ export const HostLauncher = ({
               size="small"
               disabled={
                 provisionTokenLoadingState !== 'finished' ||
-                !permissions.permitted
+                permissions.disabled
               }
               css={styles.button}
-              onClick={handleCreateHostClicked}
+              onClick={onCreateClick}
               loading={provisionTokenLoadingState !== 'finished'}
-              // {...(!permissions?.permitted &&
-              //   !permissions.superUser && {
-              //     tooltip: LAUNCH_ERRORS.NO_PERMISSION,
-              //   })}
+              {...(permissions.disabled && {
+                tooltip: LAUNCH_ERRORS.NO_PERMISSION,
+              })}
             >
               <SvgIcon>
                 <IconRefresh />

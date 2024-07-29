@@ -4,13 +4,26 @@ import { Badge } from '@shared/components';
 import { ITheme } from 'types/theme';
 import { flex } from 'styles/utils.flex.styles';
 import { typo } from 'styles/utils.typography.styles';
+import { LineItem } from '@modules/grpc/library/blockjoy/v1/org';
 
 const styles = {
+  description: css`
+    display: inline-flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+    align-items: flex-start;
+    width: 100%;
+  `,
   nickname: (theme: ITheme) => css`
     display: block;
     color: ${theme.colorPlaceholder};
     margin-top: 2px;
     font-size: 15px;
+  `,
+  discounts: css`
+    display: inline-flex;
+    flex-flow: row wrap;
+    gap: 5px;
   `,
   period: css`
     gap: 3px;
@@ -28,7 +41,7 @@ const styles = {
   `,
 };
 
-export const mapInvoiceLineItemsToRows = (items?: any[]) => {
+export const mapInvoiceLineItemsToRows = (items?: LineItem[]) => {
   const headers: TableHeader[] = [
     {
       name: 'Service Name',
@@ -61,55 +74,72 @@ export const mapInvoiceLineItemsToRows = (items?: any[]) => {
   ];
 
   const rows: Row[] =
-    items?.map((item: any) => ({
-      key: item?.id!,
-      cells: [
-        {
-          key: '1',
-          component: (
-            <span css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-              {item.description}
-              <span css={styles.nickname}>{item.plan?.nickname}</span>
-            </span>
-          ),
-        },
-        {
-          key: '2',
-          component: (
-            <div
-              css={[styles.period, flex.display.flex, flex.direction.column]}
-            >
-              <span>{formatters.formatTimestamp(item?.period?.start)}</span>
-              <span css={styles.periodEnd}>
-                {formatters.formatTimestamp(item?.period?.end)}
-              </span>
-            </div>
-          ),
-        },
-        {
-          key: '3',
-          component: <span>{item.quantity}</span>,
-        },
+    items?.map((item, i) => {
+      return {
+        key: `${i}`,
+        cells: [
+          {
+            key: '1',
+            component: (
+              <div css={styles.description}>
+                <span css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+                  {item.description}
+                  <span css={styles.nickname}>{item.plan}</span>
+                </span>
+                {item?.discounts.length ? (
+                  <span css={styles.discounts}>
+                    {item?.discounts.map((discountAmount, i) => (
+                      <Badge key={i} color="primary" style="outline">
+                        {discountAmount.name}
+                      </Badge>
+                    ))}
+                  </span>
+                ) : null}
+              </div>
+            ),
+          },
+          {
+            key: '2',
+            component: (
+              <div
+                css={[styles.period, flex.display.flex, flex.direction.column]}
+              >
+                <span>{formatters.formatTimestamp(item?.start!)}</span>
+                <span css={styles.periodEnd}>
+                  {formatters.formatTimestamp(item?.end!)}
+                </span>
+              </div>
+            ),
+          },
+          {
+            key: '3',
+            component: <span>{item.quantity}</span>,
+          },
 
-        {
-          key: '4',
-          component: (
-            <span>{formatters.formatCurrency(item?.price?.unit_amount!)}</span>
-          ),
-        },
-        {
-          key: '5',
-          component: (
-            <div css={styles.amountWrapper}>
-              <Badge color="default" style="outline" customCss={[styles.badge]}>
-                prorated
-              </Badge>
-              {formatters.formatCurrency(item?.amount!)}
-            </div>
-          ),
-        },
-      ],
-    })) ?? [];
+          {
+            key: '4',
+            component: <span>{formatters.formatCurrency(item?.total!)}</span>,
+          },
+          {
+            key: '5',
+            component: (
+              <div css={styles.amountWrapper}>
+                {item.proration && (
+                  <Badge
+                    color="default"
+                    style="outline"
+                    customCss={[styles.badge]}
+                  >
+                    prorated
+                  </Badge>
+                )}
+                {formatters.formatCurrency(item?.subtotal!)}
+              </div>
+            ),
+          },
+        ],
+      };
+    }) ?? [];
 
   return {
     rows,

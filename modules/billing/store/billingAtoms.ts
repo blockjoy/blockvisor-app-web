@@ -1,11 +1,13 @@
 import { atom, atomFamily, selector } from 'recoil';
 import { localStorageEffect } from 'utils/store/persist';
-import { Address } from '@stripe/stripe-js';
-import { authAtoms } from '@modules/auth';
 import {
+  Invoice,
   OrgServiceBillingDetailsResponse,
   PaymentMethod,
 } from '@modules/grpc/library/blockjoy/v1/org';
+import { Address } from '@modules/grpc/library/blockjoy/common/v1/address';
+import { authAtoms } from '@modules/auth';
+import { Amount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 
 export const bypassBillingForSuperUser = atomFamily<boolean, boolean>({
   key: 'billing.superUser',
@@ -15,24 +17,6 @@ export const bypassBillingForSuperUser = atomFamily<boolean, boolean>({
       ? [localStorageEffect('billing.bypassBillingForSuperUser', false)]
       : [];
   },
-});
-
-const billing = atom<{
-  identity: {
-    id: string | null;
-  };
-  customer: any | null | any;
-  subscription: OrgServiceBillingDetailsResponse | null;
-}>({
-  key: 'billing',
-  default: {
-    identity: {
-      id: null,
-    },
-    customer: null,
-    subscription: null,
-  },
-  effects: [localStorageEffect('billing')],
 });
 
 const billingContacts = atom<any | null>({
@@ -66,14 +50,14 @@ const paymentMethod = atom<PaymentMethod | null>({
   default: null,
 });
 
-const paymentMethodError = atom<PaymentError | null>({
-  key: 'billing.paymentMethod.error',
-  default: null,
-});
-
 const paymentMethodLoadingState = atom<LoadingState>({
   key: 'billing.paymentMethod.loadingState',
   default: 'finished',
+});
+
+const billingAddress = atom<Address | null>({
+  key: 'billing.billingAddress',
+  default: null,
 });
 
 const billingAddressLoadingState = atom<LoadingState>({
@@ -92,7 +76,7 @@ const estimatesLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const invoices = atom<any[]>({
+const invoices = atom<Invoice[]>({
   key: 'billing.invoices',
   default: [],
 });
@@ -102,14 +86,9 @@ const invoicesLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const invoicesNextOffset = atom<string | undefined>({
-  key: 'billing.invoices.nextOffset',
-  default: undefined,
-});
-
-const preloadInvoices = atom<number>({
-  key: 'billing.invoices.preload',
-  default: 0,
+const subscription = atom<OrgServiceBillingDetailsResponse | null>({
+  key: 'billing.subscription',
+  default: null,
 });
 
 const subscriptionLoadingState = atom<LoadingState>({
@@ -120,6 +99,16 @@ const subscriptionLoadingState = atom<LoadingState>({
 const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
   key: 'billing.subscription.paymentMethod.loadingState',
   default: 'finished',
+});
+
+const price = atom<Amount | null>({
+  key: 'billing.price',
+  default: null,
+});
+
+const priceLoadingState = atom<LoadingState>({
+  key: 'billing.price.loadingState',
+  default: 'initializing',
 });
 
 const promoCode = atom<any | null>({
@@ -152,29 +141,6 @@ const cardHolder = atom<{ firstName: string; lastName: string }>({
   }),
 });
 
-const cardAddress = atom<Address>({
-  key: 'billing.card.address',
-  default: selector({
-    key: 'billing.card.address.default',
-    get: ({ get }) => {
-      const customer = get(billingAtoms.billing)?.customer;
-
-      // TODO-BILLING: remove as Address
-      // const { city, country, line1, line2, postal_code, state } =
-      //   customer?.address! as Address;
-
-      return {
-        city: '',
-        country: '',
-        line1: '',
-        line2: '',
-        postal_code: '',
-        state: '',
-      };
-    },
-  }),
-});
-
 const isValidCard = atom<boolean>({
   key: 'billing.card.isValid',
   default: false,
@@ -183,12 +149,15 @@ const isValidCard = atom<boolean>({
 export const billingAtoms = {
   bypassBillingForSuperUser,
 
-  billing,
+  subscription,
+  subscriptionLoadingState,
 
   billingContacts,
   billingContactsLoadingState,
 
+  billingAddress,
   billingAddressLoadingState,
+
   customerLoadingState,
 
   estimates,
@@ -196,26 +165,23 @@ export const billingAtoms = {
 
   invoices,
   invoicesLoadingState,
-  invoicesNextOffset,
-  preloadInvoices,
 
   paymentMethod,
-  paymentMethodError,
   paymentMethodLoadingState,
 
   paymentMethods,
   paymentMethodsLoadingState,
 
-  subscriptionLoadingState,
-
   subscriptionPaymentMethodLoadingState,
+
+  price,
+  priceLoadingState,
 
   promoCode,
   promoCodeError,
   promoCodeLoadingState,
 
   cardHolder,
-  cardAddress,
 
   isValidCard,
 };

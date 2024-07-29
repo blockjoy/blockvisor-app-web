@@ -11,7 +11,7 @@ import {
   Modal,
 } from '@shared/components';
 import { styles } from './SubscriptionCancellation.styles';
-import { billingSelectors, useSubscriptionLifecycle } from '@modules/billing';
+import { billingAtoms, useSubscriptionLifecycle } from '@modules/billing';
 
 type SubscriptionCancellationProps = {
   handleBack: VoidFunction;
@@ -26,7 +26,7 @@ export const SubscriptionCancellation = ({
   const { cancelSubscription, subscriptionLoadingState } =
     useSubscriptionLifecycle();
 
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
 
   const handleCancellation = () => setActiveView('dialog');
   const onHide = () => setActiveView('preview');

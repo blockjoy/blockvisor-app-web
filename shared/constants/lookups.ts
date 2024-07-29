@@ -120,3 +120,21 @@ export const HOST_FILTERS_CUSTOM_VALUES = {
     10 * Math.pow(1024, 4),
   ],
 };
+
+export const STATE_TYPE = {
+  AE: 'emirate',
+  AR: 'province',
+  AU: 'state',
+  BB: 'parish',
+  BR: 'state',
+  CA: 'province',
+  CN: 'province',
+  ES: 'province',
+  HK: 'area',
+  JP: 'prefecture',
+  KR: 'do_si',
+  MX: 'state',
+  SV: 'province',
+  US: 'state',
+  VN: 'province',
+};

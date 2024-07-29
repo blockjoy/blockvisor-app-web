@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { toast } from 'react-toastify';
 import { css } from '@emotion/react';
-import { billingSelectors, useSubscriptionLifecycle } from '@modules/billing';
+import { billingAtoms, useSubscriptionLifecycle } from '@modules/billing';
 import { Button, ButtonGroup, Modal } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -28,7 +28,7 @@ export const SubscriptionActivation = ({
   type = 'activate-subscription',
 }: SubscriptionActivationProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const subscription = useRecoilValue(billingSelectors.subscription);
+  const subscription = useRecoilValue(billingAtoms.subscription);
 
   const { restoreSubscription, reactivateSubscription } =
     useSubscriptionLifecycle();

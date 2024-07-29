@@ -1,21 +1,21 @@
-import { InvoiceStatus } from '@modules/billing';
+import { InvoiceStatus } from '@modules/grpc/library/blockjoy/v1/org';
 
-export const getInvoiceStatusColor = (status: string) => {
+export const getInvoiceStatusColor = (status?: InvoiceStatus) => {
   switch (status) {
-    case InvoiceStatus.paid:
+    case InvoiceStatus.INVOICE_STATUS_PAID:
       return 'primary';
-    case InvoiceStatus.open:
+    case InvoiceStatus.INVOICE_STATUS_OPEN:
       return 'note';
     default:
       return 'default';
   }
 };
 
-export const getInvoiceStatusText = (status: string) => {
+export const getInvoiceStatusText = (status?: InvoiceStatus) => {
   switch (status) {
-    case InvoiceStatus.paid:
+    case InvoiceStatus.INVOICE_STATUS_PAID:
       return 'Paid';
-    case InvoiceStatus.open:
+    case InvoiceStatus.INVOICE_STATUS_OPEN:
       return 'Payment due';
     default:
       return 'Unknown';
