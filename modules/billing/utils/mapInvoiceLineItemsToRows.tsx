@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
+import { LineItem } from '@modules/grpc/library/blockjoy/v1/org';
 import { formatters } from '@shared/index';
 import { Badge } from '@shared/components';
 import { ITheme } from 'types/theme';
 import { flex } from 'styles/utils.flex.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { LineItem } from '@modules/grpc/library/blockjoy/v1/org';
 
 const styles = {
   description: css`
@@ -33,11 +33,10 @@ const styles = {
   `,
   amountWrapper: css`
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column-reverse nowrap;
     justify-content: flex-end;
-  `,
-  badge: css`
-    margin-right: 5px;
+    align-items: flex-end;
+    gap: 5px;
   `,
 };
 
@@ -51,7 +50,7 @@ export const mapInvoiceLineItemsToRows = (items?: LineItem[]) => {
     {
       name: 'Period',
       key: '2',
-      width: '200px',
+      width: '100px',
     },
     {
       name: 'Qty',
@@ -62,7 +61,7 @@ export const mapInvoiceLineItemsToRows = (items?: LineItem[]) => {
     {
       name: 'Unit price',
       key: '4',
-      width: '100px',
+      width: '150px',
       textAlign: 'right',
     },
     {
@@ -118,18 +117,17 @@ export const mapInvoiceLineItemsToRows = (items?: LineItem[]) => {
 
           {
             key: '4',
-            component: <span>{formatters.formatCurrency(item?.total!)}</span>,
+            component:
+              item.subtotal > 0 ? (
+                <span>{formatters.formatCurrency(item?.total!)}</span>
+              ) : null,
           },
           {
             key: '5',
             component: (
               <div css={styles.amountWrapper}>
                 {item.proration && (
-                  <Badge
-                    color="default"
-                    style="outline"
-                    customCss={[styles.badge]}
-                  >
+                  <Badge color="default" style="outline">
                     prorated
                   </Badge>
                 )}

@@ -8,6 +8,7 @@ export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodF
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethods';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodsList/PaymentMethodsList';
+export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodsList/PaymentMethodsListItem';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodsList/PaymentMethodActions/PaymentMethodActions';
 export * from './components/Billing/Subscription/BillingContacts/BillingContactForm/BillingContactForm';
 export * from './components/Billing/Subscription/BillingContacts/BillingContacts';
@@ -71,6 +72,5 @@ export * from './utils/mapCardToDetails';
 export * from './utils/mapEstimatesToRows';
 export * from './utils/mapInvoicesToRows';
 export * from './utils/mapInvoiceLineItemsToRows';
-export * from './utils/mapPaymentMethodsToRows';
 export * from './utils/mapSubscriptionToDetails';
 export * from './utils/withLauncherGuard';

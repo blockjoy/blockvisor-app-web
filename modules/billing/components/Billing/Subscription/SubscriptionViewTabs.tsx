@@ -5,44 +5,36 @@ import { useTabs } from '@shared/index';
 import {
   Invoices,
   billingAtoms,
-  Subscription,
-  Estimates,
+  // Subscription,
+  // Estimates,
+  SubscriptionInfo,
 } from '@modules/billing';
-import { authSelectors } from '@modules/auth';
 
 export const SubscriptionViewTabs = () => {
   const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-  const canUpdateSubscription = useRecoilValue(
-    authSelectors.hasPermission('subscription-update'),
-  );
 
   const tabItems = useMemo(
-    () =>
-      [
-        {
-          label: 'Details',
-          value: 'details',
-          component: <Subscription />,
-        },
-        // {
-        //   label: 'Estimates',
-        //   value: 'estimates',
-        //   component: <Estimates />,
-        // },
-        {
-          label: 'Invoices',
-          value: 'invoices',
-          component: <Invoices />,
-        },
-      ].filter(
-        (tabItem) =>
-          tabItem.value === 'subscription' ||
-          (subscription && canUpdateSubscription),
-      ),
-    [subscription, canUpdateSubscription],
+    () => [
+      {
+        label: 'Details',
+        value: 'details',
+        component: <SubscriptionInfo />,
+      },
+      // {
+      //   label: 'Estimates',
+      //   value: 'estimates',
+      //   component: <Estimates />,
+      // },
+      {
+        label: 'Invoices',
+        value: 'invoices',
+        component: <Invoices />,
+      },
+    ],
+    [subscription],
   );
 
   const { activeTab, handleActiveTabChange } = useTabs(tabItems);

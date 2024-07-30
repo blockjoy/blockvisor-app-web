@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { TableSkeleton } from '@shared/components';
 import {
-  SubscriptionCancellation,
+  // SubscriptionCancellation,
   billingAtoms,
   SubscriptionPreview,
-  SubscriptionActivation,
+  // SubscriptionActivation,
 } from '@modules/billing';
 
 export type ActiveView =
@@ -18,9 +18,9 @@ export const Subscription = () => {
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-  const [activeView, setActiveView] = useState<ActiveView>('preview');
+  const [_, setActiveView] = useState<ActiveView>('preview');
 
-  const handleBack = () => setActiveView('preview');
+  // const handleBack = () => setActiveView('preview');
 
   if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
 

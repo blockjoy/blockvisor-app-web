@@ -9,14 +9,13 @@ export const SubscriptionView = () => {
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-
-  const canReadSubscription = useRecoilValue(
-    authSelectors.hasPermission('subscription-get'),
+  const canGetBillingDetails = useRecoilValue(
+    authSelectors.hasPermission('org-billing-get-billing-details'),
   );
 
   if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
 
-  if (!canReadSubscription)
+  if (!canGetBillingDetails)
     return (
       <Unauthorized>
         You don't have access to read the current organization billing plan! Try

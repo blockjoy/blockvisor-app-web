@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { StripeCardNumberElement } from '@stripe/stripe-js';
 import {
   CardNumberElement,
@@ -33,6 +33,9 @@ export const usePaymentMethod = (): PaymentMethodHook => {
   );
   const [paymentMethodLoadingState, setPaymentMethodLoadingState] =
     useRecoilState(billingAtoms.paymentMethodLoadingState);
+  const setHasCreatedPaymentMethod = useSetRecoilState(
+    billingAtoms.hasCreatedPaymentMethod,
+  );
 
   const { getPaymentMethods } = usePaymentMethods();
 
@@ -81,6 +84,7 @@ export const usePaymentMethod = (): PaymentMethodHook => {
       if (!paymentMethods.length)
         throw new ApplicationError('InitCardError', 'Webhook failed');
 
+      setHasCreatedPaymentMethod(true);
       onSuccess();
     } catch (error) {
       onError?.(PAYMENT_ERRORS.FAILED);

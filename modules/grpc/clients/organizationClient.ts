@@ -253,14 +253,11 @@ class OrganizationClient {
         orgId,
       };
 
-      console.log('OrgServiceGetInvoicesRequest', request);
-
       const response: OrgServiceGetInvoicesResponse =
         await callWithTokenRefresh(
           this.client.getInvoices.bind(this.client),
           request,
         );
-      console.log('OrgServiceGetInvoicesResponse', response);
 
       return response.invoices;
     } catch (err) {

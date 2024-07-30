@@ -30,13 +30,10 @@ export const PlanConfiguration = ({ handleCancel }: PlanConfigurationProps) => {
   const { createSubscription, subscriptionLoadingState } = useSubscription();
   const { paymentMethods, paymentMethodsLoadingState } = usePaymentMethods();
 
-  // const customer = useRecoilValue(billingSelectors.customer);
-
   // const [paymentMethodId, setPaymentMethodId] = useState<string | undefined>(
   //   customer?.primary_payment_source_id,
   // );
 
-  const customer = null;
   const paymentMethodId = '';
 
   const handlePaymentMethod = (paymentMethod: PaymentMethod) => {

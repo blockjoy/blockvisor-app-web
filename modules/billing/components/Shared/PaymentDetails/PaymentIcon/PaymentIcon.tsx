@@ -4,20 +4,16 @@ import { styles } from './PaymentIcon.styles';
 import { getPaymentMethodIcon } from '@modules/billing';
 
 type PaymentIconProps = {
-  brand: string;
-  size?: string;
+  brand: CreditCardBrand;
+  size?: 'small' | 'large';
 };
 
-export const PaymentIcon = ({ brand, size = '100%' }: PaymentIconProps) => {
+export const PaymentIcon = ({ brand, size = 'small' }: PaymentIconProps) => {
   const IconComponent = getPaymentMethodIcon(brand);
-  const bg = brand === 'visa' ? 'white' : 'none';
 
   return (
-    <span css={[styles.wrapper]}>
-      <SvgIcon
-        size={size}
-        additionalStyles={[styles.icon, styles.iconBgColor(bg)]}
-      >
+    <span css={[styles.wrapper(size)]}>
+      <SvgIcon size="100%" additionalStyles={[styles.icon]}>
         <Suspense fallback={null}>{<IconComponent />}</Suspense>
       </SvgIcon>
     </span>

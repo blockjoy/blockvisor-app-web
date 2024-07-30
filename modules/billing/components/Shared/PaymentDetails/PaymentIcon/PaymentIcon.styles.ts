@@ -1,14 +1,13 @@
 import { css } from '@emotion/react';
-import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (size?: 'small' | 'large') => css`
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 28px;
-    height: 19px;
+    height: ${size === 'small' ? '20px' : '32px'};
+    aspect-ratio: 1.4;
 
     :hover .tooltip {
       opacity: 1;
@@ -21,11 +20,7 @@ export const styles = {
     }
   `,
   icon: css`
-    border-radius: 1px;
+    border-radius: 3px;
     overflow: hidden;
   `,
-  iconBgColor: (bg: string) => (theme: ITheme) =>
-    css`
-      background-color: ${bg === 'white' ? theme.colorText : 'transparent'};
-    `,
 };

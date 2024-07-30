@@ -16,10 +16,6 @@ type SubscriptionPreviewProps = {
 export const SubscriptionPreview = ({
   onViewChange,
 }: SubscriptionPreviewProps) => {
-  // const canDeleteSubscription = useRecoilValue(
-  //   authSelectors.hasPermission('subscription-delete'),
-  // );
-
   return (
     <>
       <SubscriptionInfo />
