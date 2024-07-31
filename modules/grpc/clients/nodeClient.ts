@@ -235,10 +235,10 @@ class NodeClient {
     }
   }
 
-  async upgradeNode(nodeId: string, version: string): Promise<void> {
+  async upgradeNode(ids: string[], version: string): Promise<void> {
     try {
       await authClient.refreshToken();
-      await this.client.upgrade({ id: nodeId, version }, getOptions());
+      await this.client.upgrade({ ids, version }, getOptions());
     } catch (err) {
       console.log('upgradeNodeError', err);
       return handleError(err);

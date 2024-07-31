@@ -10,6 +10,7 @@ export const styles = {
     right: 0;
     top: 54px;
     min-width: max-content;
+    max-width: 320px;
     overflow: visible;
 
     @media ${breakpoints.toMed} {

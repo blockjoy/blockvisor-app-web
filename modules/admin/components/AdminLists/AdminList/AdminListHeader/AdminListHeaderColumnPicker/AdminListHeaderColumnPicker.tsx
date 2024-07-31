@@ -43,18 +43,7 @@ export const AdminListHeaderColumnPicker = ({
         onClick={() => setIsOpen(!isOpen)}
         tooltip="Change Columns"
       />
-      <DropdownMenu
-        isOpen={isOpen}
-        additionalStyles={[
-          css`
-            left: auto;
-            right: 0;
-            top: 54px;
-            min-width: max-content;
-            overflow: visible;
-          `,
-        ]}
-      >
+      <DropdownMenu isOpen={isOpen} additionalStyles={[styles.dropdownMenu]}>
         <AdminDropdownHeader onClose={handleClickOutside}>
           Columns
         </AdminDropdownHeader>
