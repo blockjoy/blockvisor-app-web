@@ -96,7 +96,9 @@ const organizationRole = selector({
   key: 'organization.role',
   get: ({ get }) => {
     const roles = get(organizationRoles);
-    const isOwner = roles?.some((role) => role.name === 'org-owner');
+    const isOwner = roles?.some(
+      (role) => role.name === 'org-owner' || role.name === 'org-personal',
+    );
     const isAdmin = roles?.some((role) => role.name === 'org-admin');
     const isMember = roles?.some((role) => role.name === 'org-member');
 
