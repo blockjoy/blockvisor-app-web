@@ -69,9 +69,8 @@ export const BillingAddressForm = ({
     );
   };
 
-  const stateLabel = selectedCountry
-    ? capitalize(STATE_TYPE[selectedCountry])
-    : null;
+  const state = selectedCountry ? STATE_TYPE[selectedCountry] : null;
+  const stateLabel = state ? capitalize(state) : null;
 
   // reset({}, { keepValues: true });
 
