@@ -161,7 +161,6 @@ export const AdminBlockchainVersionAddDialog = ({
             />
             <FormLabel>Node type</FormLabel>
             <NodeTypeSelectDropdown
-              disabled
               items={nodeTypes}
               selectedItem={
                 nodeTypes.find(
