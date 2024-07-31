@@ -1,5 +1,3 @@
-import { format } from 'date-fns';
-import { enUS } from 'date-fns/locale';
 import {
   Amount,
   Currency,
@@ -81,7 +79,7 @@ const formatTimestamp = (timestamp: number | Date): string => {
   } else {
     date = timestamp;
   }
-  return format(date, 'P', { locale: enUS });
+  return formatDate(date);
 };
 
 export const formatters = {

@@ -7,7 +7,6 @@ export const styles = {
     flex-flow: row nowrap;
     align-items: center;
     gap: 15px;
-    max-width: 430px;
     padding: 20px;
     border: 1px solid ${theme.colorOverlay};
     border-radius: 7px;

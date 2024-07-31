@@ -6,11 +6,14 @@ import { nodeClient } from '@modules/grpc';
 import { useNodeList } from '@modules/node';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
+import { useInvoices, useSubscription } from '@modules/billing';
 
 export const useNodeAdd = () => {
   const { loadNodes } = useNodeList();
   const { getOrganizations } = useGetOrganizations();
   const { loadHosts } = useHostList();
+  const { subscription, getSubscription } = useSubscription();
+  const { getInvoices } = useInvoices();
 
   const createNode = async (
     node: NodeServiceCreateRequest,
@@ -33,6 +36,10 @@ export const useNodeAdd = () => {
       loadNodes();
       loadHosts();
       getOrganizations();
+
+      if (!subscription) getSubscription();
+      getInvoices();
+
       onSuccess(response.id);
     } catch (err: any) {
       console.log('Error Launching Node', err);

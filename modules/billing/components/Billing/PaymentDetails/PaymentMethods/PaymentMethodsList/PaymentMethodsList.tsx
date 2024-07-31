@@ -1,10 +1,11 @@
 import { useRecoilValue } from 'recoil';
-import { Button, SvgIcon, Table } from '@shared/components';
+import { Button, SvgIcon } from '@shared/components';
 import { usePaymentMethods, PaymentMethodsListItem } from '@modules/billing';
 import { authSelectors } from '@modules/auth';
 import { spacing } from 'styles/utils.spacing.styles';
-import IconPlus from '@public/assets/icons/common/Plus.svg';
 import { styles } from './PaymentMethodsList.styles';
+import { containers } from 'styles/containers.styles';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
 
 type PaymentMethodsListProps = {
   handleAdding: VoidFunction;
@@ -26,7 +27,7 @@ export const PaymentMethodsList = ({
           You have not yet added any cards. Click the button below to add one.
         </p>
       ) : (
-        <div css={styles.wrapper}>
+        <div css={[containers.mediumSmall, styles.wrapper]}>
           {paymentMethods.map((paymentMethod) => (
             <PaymentMethodsListItem
               key={paymentMethod.createdAt?.toString()}

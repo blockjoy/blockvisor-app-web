@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
-  billingAtoms,
   useBillingAddress,
   useInvoices,
   usePaymentMethods,
@@ -17,20 +16,16 @@ export const useBilling = () => {
   const permissionsLoadingState = useRecoilValue(
     authAtoms.permissionsLoadingState,
   );
-  const hasCreatedPaymentMethod = useRecoilValue(
-    billingAtoms.hasCreatedPaymentMethod,
-  );
 
   const { getPaymentMethods } = usePaymentMethods();
   const { getBillingAddress } = useBillingAddress();
-  const { subscription, getSubscription } = useSubscription();
+  const { getSubscription } = useSubscription();
   const { getInvoices } = useInvoices();
 
   const currentOrgId = useRef<string>();
 
   useEffect(() => {
     if (
-      currentOrgId &&
       currentOrgId.current !== defaultOrganization?.id &&
       permissionsLoadingState === 'finished'
     ) {
@@ -42,11 +37,4 @@ export const useBilling = () => {
       currentOrgId.current = defaultOrganization?.id;
     }
   }, [defaultOrganization?.id, permissionsLoadingState]);
-
-  useEffect(() => {
-    if (!subscription && hasCreatedPaymentMethod) {
-      getSubscription();
-      getInvoices();
-    }
-  }, [hasCreatedPaymentMethod]);
 };

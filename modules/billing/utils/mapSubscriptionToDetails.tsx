@@ -11,7 +11,7 @@ export const mapSubscriptionToDetails = (
 ) => {
   return [
     {
-      label: 'Activated at',
+      label: 'Created',
       data: formatters.formatDate(subscription.createdAt!),
     },
     {
@@ -34,13 +34,11 @@ export const mapSubscriptionToDetails = (
       ),
     },
     {
-      label: 'Auto renew',
+      label: 'Current period',
       data: (
         <p>
-          {subscription.status.toLowerCase() === 'active' &&
-          subscription.currentPeriodEnd
-            ? formatters.formatDate(subscription.currentPeriodEnd)
-            : '-'}
+          {formatters.formatDate(subscription.currentPeriodStart!)} -{` `}
+          {formatters.formatDate(subscription.currentPeriodEnd!)}
         </p>
       ),
     },
