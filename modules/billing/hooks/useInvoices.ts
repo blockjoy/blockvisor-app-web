@@ -31,7 +31,7 @@ export const useInvoices = (): IInvoicesHook => {
       console.log('%cGetInvoices', 'color: #bff589', data);
       setInvoices(data);
     } catch (error) {
-      console.error('Failed to fetch Invoices', error);
+      console.log('Failed to fetch Invoices', error);
       setInvoices([]);
     } finally {
       setInvoicesLoadingState('finished');

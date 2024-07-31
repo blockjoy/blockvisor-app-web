@@ -38,7 +38,7 @@ export const useBillingAddress = (): IBillingAddressHook => {
       console.log('%cGetBillingAddress', 'color: #bff589', data);
     } catch (error) {
       setBillingAddress(null);
-      console.error('Failed to get billing address', error);
+      console.log('Failed to get billing address', error);
     } finally {
       setBillingAddressLoadingState('finished');
     }

@@ -51,7 +51,7 @@ export const useSubscription = (): ISubscriptionHook => {
       console.log('%cGetSubscription', 'color: #bff589', data);
       setSubscription(data);
     } catch (error) {
-      console.error('Failed to fetch Subscription', error);
+      console.log('Failed to fetch Subscription', error);
       setSubscription(null);
     } finally {
       setSubscriptionLoadingState('finished');

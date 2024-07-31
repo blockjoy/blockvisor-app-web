@@ -1,11 +1,16 @@
-import { useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styles } from './NodeLauncher.styles';
 import { NodeLauncherConfig } from './Config/NodeLauncherConfig';
 import { NodeLauncherProtocol } from './Protocol/NodeLauncherProtocol';
 import { NodeLauncherSummary } from './Summary/NodeLauncherSummary';
 import { EmptyColumn, PageTitle } from '@shared/components';
 import { wrapper } from 'styles/wrapper.styles';
-import { useNodeLauncherHandlers, nodeLauncherSelectors } from '@modules/node';
+import {
+  useNodeLauncherHandlers,
+  nodeLauncherSelectors,
+  nodeLauncherAtoms,
+} from '@modules/node';
 import { LauncherWithGuardProps } from '@modules/billing';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
@@ -29,6 +34,13 @@ export const NodeLauncher = ({
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
   const hasConfig = useRecoilValue(nodeLauncherSelectors.hasConfig);
+  const setError = useSetRecoilState(nodeLauncherAtoms.error);
+
+  useEffect(() => {
+    return () => {
+      setError(null);
+    };
+  }, []);
 
   return (
     <>
