@@ -1,3 +1,5 @@
+import { css } from '@emotion/react';
+import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
 import { Badge } from '@shared/components';
 import { formatters } from '@shared/index';
 import {
@@ -5,9 +7,8 @@ import {
   getInvoiceStatusText,
   InvoiceDownload,
 } from '@modules/billing';
-import { css } from '@emotion/react';
 
-export const mapInvoicesToRows = (invoices?: any[]) => {
+export const mapInvoicesToRows = (invoices: Invoice[]) => {
   const headers: TableHeader[] = [
     {
       name: 'Invoice number',
@@ -38,8 +39,8 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
   ];
 
   const rows: Row[] =
-    invoices?.map((invoice: any) => ({
-      key: invoice.number,
+    invoices?.map((invoice) => ({
+      key: invoice?.number!,
       cells: [
         {
           key: '1',
@@ -49,32 +50,44 @@ export const mapInvoicesToRows = (invoices?: any[]) => {
                 white-space: nowrap;
               `}
             >
-              {invoice.number}
+              {invoice?.number}
             </span>
           ),
         },
         {
           key: '2',
-          component: <span>{formatters.formatCurrency(invoice.total)}</span>,
+          component: invoice?.total ? (
+            <span>{formatters.formatCurrency(invoice.total)}</span>
+          ) : (
+            '-'
+          ),
         },
         {
           key: '3',
-          component: <span>{formatters.formatDate(invoice.createdAt)}</span>,
+          component: invoice?.createdAt ? (
+            <span>{formatters.formatDate(invoice.createdAt!)}</span>
+          ) : (
+            '-'
+          ),
         },
         {
           key: '5',
           component: (
             <Badge
-              color={getInvoiceStatusColor(invoice.status)}
+              color={getInvoiceStatusColor(invoice?.status)}
               style="outline"
             >
-              {getInvoiceStatusText(invoice.status)}
+              {getInvoiceStatusText(invoice?.status)}
             </Badge>
           ),
         },
         {
           key: '6',
-          component: <InvoiceDownload invoicePdf={invoice.pdf_url} />,
+          component: invoice?.pdfUrl ? (
+            <InvoiceDownload invoicePdf={invoice.pdfUrl} />
+          ) : (
+            '-'
+          ),
         },
       ],
     })) ?? [];
