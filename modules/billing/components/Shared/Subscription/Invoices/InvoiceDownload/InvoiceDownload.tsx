@@ -14,6 +14,8 @@ export const InvoiceDownload = ({ invoicePdf }: InvoiceDownloadProps) => {
 
   const handleInvoicePDF = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    if (!invoicePdf) return;
+
     setIsLoading('initializing');
 
     const link = document.createElement('a');
