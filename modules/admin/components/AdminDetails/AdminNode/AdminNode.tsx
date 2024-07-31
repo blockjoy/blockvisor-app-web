@@ -53,9 +53,7 @@ export const AdminNode = () => {
     node: Node,
   ) => {
     const defaultRequest: NodeServiceUpdateConfigRequest = {
-      id: id as string,
-      allowIps: node.allowIps,
-      denyIps: node.denyIps,
+      ids: [id as string],
     };
     const request = createAdminUpdateRequest(defaultRequest, properties);
     await nodeClient.updateNode(request);
@@ -185,7 +183,7 @@ export const AdminNode = () => {
         </p>
       ),
       editSettings: {
-        field: 'orgId',
+        field: 'newOrgId',
         displayName: 'Organization',
         isNumber: false,
         controlType: 'org',
@@ -240,32 +238,33 @@ export const AdminNode = () => {
         defaultValue: node.selfUpdate?.toString(),
       },
     },
-    {
-      id: 'allowIps',
-      label: 'Allow Ips',
-      data: node.allowIps,
-      isHidden: true,
-      editSettings: {
-        field: 'allowIps',
-        displayName: 'Allow Ips',
-        isArray: true,
-        controlType: 'firewall',
-        defaultValue: JSON.stringify(node.allowIps),
-      },
-    },
-    {
-      id: 'denyIps',
-      label: 'Deny Ips',
-      data: node.denyIps,
-      isHidden: true,
-      editSettings: {
-        field: 'denyIps',
-        displayName: 'Deny Ips',
-        isArray: true,
-        controlType: 'firewall',
-        defaultValue: JSON.stringify(node.denyIps),
-      },
-    },
+    // TODO: Hidden as not supported in API
+    // {
+    //   id: 'allowIps',
+    //   label: 'Allow Ips',
+    //   data: node.allowIps,
+    //   isHidden: true,
+    //   editSettings: {
+    //     field: 'allowIps',
+    //     displayName: 'Allow Ips',
+    //     isArray: true,
+    //     controlType: 'firewall',
+    //     defaultValue: JSON.stringify(node.allowIps),
+    //   },
+    // },
+    // {
+    //   id: 'denyIps',
+    //   label: 'Deny Ips',
+    //   data: node.denyIps,
+    //   isHidden: true,
+    //   editSettings: {
+    //     field: 'denyIps',
+    //     displayName: 'Deny Ips',
+    //     isArray: true,
+    //     controlType: 'firewall',
+    //     defaultValue: JSON.stringify(node.denyIps),
+    //   },
+    // },
     {
       id: 'region',
       label: 'Region',

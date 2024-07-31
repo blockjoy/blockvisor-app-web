@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { styles } from './AdminNodesUpgrade.styles';
+import { styles } from './AdminNodesOrgAssign.styles';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import {
@@ -10,22 +10,22 @@ import {
   Scrollbar,
 } from '@shared/components';
 import { AdminDropdownHeader } from '@modules/admin/components';
-import { blockchainClient, nodeClient } from '@modules/grpc';
+import { nodeClient, organizationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
+import { Org } from '@modules/grpc/library/blockjoy/v1/org';
+import IconOrg from '@public/assets/icons/app/Organization.svg';
 
 type Props = {
   isDisabled?: boolean;
   selectedIds: string[];
 };
 
-export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
+export const AdminNodesOrgAssign = ({ isDisabled, selectedIds }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [selectedVersion, setSelectedVersion] = useState<BlockchainVersion>();
+  const [selectedOrg, setSelectedOrg] = useState<Org>();
 
-  const [versions, setVersions] = useState<BlockchainVersion[]>([]);
+  const [orgs, setOrgs] = useState<Org[]>();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,12 +33,17 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
 
   const handleClickOutside = () => setIsOpen(false);
 
-  const handleUpgrade = async () => {
+  const handleOrgAssign = async () => {
+    setIsLoading(true);
+
     try {
-      toast.success('Upgrade Command Sent');
-      await nodeClient.upgradeNode(selectedIds, selectedVersion?.version!);
+      await nodeClient.updateNode({
+        ids: selectedIds,
+        newOrgId: selectedOrg?.id,
+      });
+      toast.success('Update Complete');
     } catch (err) {
-      toast.error(`Error Upgrading`);
+      toast.error(`Error Updating`);
     } finally {
       setIsOpen(false);
       setIsLoading(false);
@@ -49,14 +54,19 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
 
   useEffect(() => {
     (async () => {
-      if (selectedIds.length && !versions.length) {
-        const blockchainId = (await nodeClient.getNode(selectedIds[0]))
-          .blockchainId!;
+      if (selectedIds.length && !orgs?.length) {
+        const orgsResponse = await organizationClient.listOrganizations(
+          {
+            currentPage: 0,
+            itemsPerPage: 10000,
+          },
+          undefined,
+          undefined,
+          true,
+          false,
+        );
 
-        const versions = (await blockchainClient.getBlockchain(blockchainId))
-          .nodeTypes[0].versions;
-
-        setVersions(versions);
+        setOrgs(orgsResponse.orgs);
       }
     })();
   }, [selectedIds]);
@@ -65,25 +75,25 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
     <div css={styles.wrapper} ref={dropdownRef}>
       <AdminHeaderButton
         isDisabled={isDisabled}
-        icon={<IconUpgrade />}
+        icon={<IconOrg />}
         onClick={() => setIsOpen(!isOpen)}
-        tooltip="Upgrade"
+        tooltip="Update Org"
       />
       <DropdownMenu isOpen={isOpen} additionalStyles={[styles.dropdownMenu]}>
         <AdminDropdownHeader onClose={handleClickOutside}>
-          Upgrade Nodes
+          Update Org
         </AdminDropdownHeader>
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
-          {versions.map((version) => (
+          {orgs?.map((org) => (
             <DropdownItem
-              key={version.version}
-              onButtonClick={() => setSelectedVersion(version)}
+              key={org.id}
+              onButtonClick={() => setSelectedOrg(org)}
               type="button"
               size="medium"
             >
               <div>
-                {version.version}
-                {selectedVersion === version && (
+                {org.name}
+                {selectedOrg?.id === org.id && (
                   <Badge style="outline">Selected</Badge>
                 )}
               </div>
@@ -92,12 +102,13 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
         </Scrollbar>
         <div css={styles.buttonWrapper}>
           <Button
-            disabled={!selectedVersion}
+            display="block"
+            disabled={!selectedOrg}
             loading={isLoading}
             type="button"
-            onClick={handleUpgrade}
+            onClick={handleOrgAssign}
           >
-            Upgrade Nodes
+            Update Nodes
           </Button>
         </div>
       </DropdownMenu>

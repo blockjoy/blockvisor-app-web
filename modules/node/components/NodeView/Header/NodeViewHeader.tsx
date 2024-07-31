@@ -67,9 +67,7 @@ export const NodeViewHeader = () => {
     setIsSaving(true);
     await updateNode({
       displayName: value,
-      allowIps: node?.allowIps!,
-      denyIps: node?.denyIps!,
-      id: node?.id!,
+      ids: [node?.id!],
     });
     toast.success('Node name updated');
     setIsSaving(false);

@@ -260,12 +260,9 @@ export interface NodeServiceListResponse {
 }
 
 export interface NodeServiceUpgradeRequest {
-  /** The id of the node that you want to upgrade to a new version. */
-  id: string;
-  /**
-   * The version string to update it to. Make sure that this is a valid version
-   * for this <blockchain>/<node_type> combo.
-   */
+  /** The ids of the nodes that you want to upgrade. */
+  ids: string[];
+  /** The version to upgrade the nodes to. */
   version: string;
 }
 
@@ -274,18 +271,14 @@ export interface NodeServiceUpgradeResponse {
 
 /** This request is used for updating a node configuration. */
 export interface NodeServiceUpdateConfigRequest {
-  /** The UUID of the node that you want to update. */
-  id: string;
+  /** The ids of the nodes to update. */
+  ids: string[];
   /** Whether or not the node software should update itself. */
   selfUpdate?:
     | boolean
     | undefined;
-  /** A list of ip addresses allowed to access public ports on this node. */
-  allowIps: FilteredIpAddr[];
-  /** A list of ip addresses denied all access to any ports on this node. */
-  denyIps: FilteredIpAddr[];
   /** If this field is specified, then the node is moved to this org. */
-  orgId?:
+  newOrgId?:
     | string
     | undefined;
   /** A note you can use to explain what this node is for. */
@@ -301,8 +294,8 @@ export interface NodeServiceUpdateConfigResponse {
 
 /** This request is used for updating a node status. */
 export interface NodeServiceUpdateStatusRequest {
-  /** The UUID of the node that you want to update. */
-  id: string;
+  /** The ids of the nodes to update. */
+  ids: string[];
   /** The version of the node image that is currently used. */
   version?:
     | string
@@ -1770,13 +1763,13 @@ export const NodeServiceListResponse = {
 };
 
 function createBaseNodeServiceUpgradeRequest(): NodeServiceUpgradeRequest {
-  return { id: "", version: "" };
+  return { ids: [], version: "" };
 }
 
 export const NodeServiceUpgradeRequest = {
   encode(message: NodeServiceUpgradeRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
     if (message.version !== "") {
       writer.uint32(18).string(message.version);
@@ -1796,7 +1789,7 @@ export const NodeServiceUpgradeRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
@@ -1820,7 +1813,7 @@ export const NodeServiceUpgradeRequest = {
 
   fromPartial(object: DeepPartial<NodeServiceUpgradeRequest>): NodeServiceUpgradeRequest {
     const message = createBaseNodeServiceUpgradeRequest();
-    message.id = object.id ?? "";
+    message.ids = object.ids?.map((e) => e) || [];
     message.version = object.version ?? "";
     return message;
   },
@@ -1862,39 +1855,25 @@ export const NodeServiceUpgradeResponse = {
 };
 
 function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
-  return {
-    id: "",
-    selfUpdate: undefined,
-    allowIps: [],
-    denyIps: [],
-    orgId: undefined,
-    note: undefined,
-    displayName: undefined,
-  };
+  return { ids: [], selfUpdate: undefined, newOrgId: undefined, note: undefined, displayName: undefined };
 }
 
 export const NodeServiceUpdateConfigRequest = {
   encode(message: NodeServiceUpdateConfigRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
     if (message.selfUpdate !== undefined) {
       writer.uint32(16).bool(message.selfUpdate);
     }
-    for (const v of message.allowIps) {
-      FilteredIpAddr.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    for (const v of message.denyIps) {
-      FilteredIpAddr.encode(v!, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.orgId !== undefined) {
-      writer.uint32(42).string(message.orgId);
+    if (message.newOrgId !== undefined) {
+      writer.uint32(26).string(message.newOrgId);
     }
     if (message.note !== undefined) {
-      writer.uint32(50).string(message.note);
+      writer.uint32(34).string(message.note);
     }
     if (message.displayName !== undefined) {
-      writer.uint32(58).string(message.displayName);
+      writer.uint32(42).string(message.displayName);
     }
     return writer;
   },
@@ -1911,7 +1890,7 @@ export const NodeServiceUpdateConfigRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 16) {
@@ -1925,31 +1904,17 @@ export const NodeServiceUpdateConfigRequest = {
             break;
           }
 
-          message.allowIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          message.newOrgId = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
+          message.note = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
-            break;
-          }
-
-          message.orgId = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.note = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
             break;
           }
 
@@ -1970,11 +1935,9 @@ export const NodeServiceUpdateConfigRequest = {
 
   fromPartial(object: DeepPartial<NodeServiceUpdateConfigRequest>): NodeServiceUpdateConfigRequest {
     const message = createBaseNodeServiceUpdateConfigRequest();
-    message.id = object.id ?? "";
+    message.ids = object.ids?.map((e) => e) || [];
     message.selfUpdate = object.selfUpdate ?? undefined;
-    message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
-    message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
-    message.orgId = object.orgId ?? undefined;
+    message.newOrgId = object.newOrgId ?? undefined;
     message.note = object.note ?? undefined;
     message.displayName = object.displayName ?? undefined;
     return message;
@@ -2017,13 +1980,13 @@ export const NodeServiceUpdateConfigResponse = {
 };
 
 function createBaseNodeServiceUpdateStatusRequest(): NodeServiceUpdateStatusRequest {
-  return { id: "", version: undefined, containerStatus: undefined, address: undefined };
+  return { ids: [], version: undefined, containerStatus: undefined, address: undefined };
 }
 
 export const NodeServiceUpdateStatusRequest = {
   encode(message: NodeServiceUpdateStatusRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
     }
     if (message.version !== undefined) {
       writer.uint32(18).string(message.version);
@@ -2049,7 +2012,7 @@ export const NodeServiceUpdateStatusRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.ids.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
@@ -2087,7 +2050,7 @@ export const NodeServiceUpdateStatusRequest = {
 
   fromPartial(object: DeepPartial<NodeServiceUpdateStatusRequest>): NodeServiceUpdateStatusRequest {
     const message = createBaseNodeServiceUpdateStatusRequest();
-    message.id = object.id ?? "";
+    message.ids = object.ids?.map((e) => e) || [];
     message.version = object.version ?? undefined;
     message.containerStatus = object.containerStatus ?? undefined;
     message.address = object.address ?? undefined;
