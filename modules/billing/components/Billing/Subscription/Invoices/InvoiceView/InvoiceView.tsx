@@ -13,6 +13,7 @@ import {
   TableSkeleton,
   SvgIcon,
   DateTime,
+  Heading,
 } from '@shared/components';
 import {
   InvoiceDownload,
@@ -103,7 +104,7 @@ export const InvoiceView = () => {
                   </div>
                   {billingAddress && (
                     <div css={styles.sectionWrapper}>
-                      <h3 css={styles.subheadline}>Billed to</h3>
+                      <Heading>Billed to</Heading>
                       <div css={styles.address}>
                         <span>
                           {`${billingAddress.line1}${
@@ -131,7 +132,7 @@ export const InvoiceView = () => {
                     </div>
                   )}
                   <div css={styles.sectionWrapper}>
-                    <h3 css={styles.subheadline}>Details</h3>
+                    <Heading>Details</Heading>
                     {invoice.lineItems && (
                       <InvoiceLineItems items={invoice.lineItems} />
                     )}
@@ -140,6 +141,7 @@ export const InvoiceView = () => {
                         <InvoiceTotal
                           total={invoice.total}
                           subtotal={invoice.subtotal}
+                          discounts={invoice.discounts}
                         />
                       </div>
                     )}

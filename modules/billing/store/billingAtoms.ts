@@ -1,4 +1,4 @@
-import { atom, atomFamily, selector } from 'recoil';
+import { atom, selector } from 'recoil';
 import { localStorageEffect } from 'utils/store/persist';
 import {
   Invoice,
@@ -55,10 +55,9 @@ const billingAddressLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const estimates = atom<any | null>({
+const estimates = atom<Invoice | null>({
   key: 'billing.estimates',
-  // TODO: Mock data
-  default: [],
+  default: null,
 });
 
 const estimatesLoadingState = atom<LoadingState>({

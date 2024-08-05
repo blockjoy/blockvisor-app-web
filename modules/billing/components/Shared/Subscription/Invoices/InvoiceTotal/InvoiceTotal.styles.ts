@@ -13,7 +13,13 @@ export const styles = {
     padding: 15px 10px 15px 0;
 
     :is(:last-child) {
-      span {
+      span:first-child {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      span:last-child {
+        font-size: 22px;
         font-weight: 700;
       }
     }
@@ -35,7 +41,7 @@ export const styles = {
     display: flex;
     justify-content: flex-end;
     width: 50%;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
   `,
 };

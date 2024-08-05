@@ -1,22 +1,22 @@
 import { useRecoilValue } from 'recoil';
 import {
-  useEstimates,
-  mapEstimatesToRows,
   billingAtoms,
+  InvoiceTotal,
+  mapInvoiceLineItemsToRows,
 } from '@modules/billing';
-import { Alert, Table, TableSkeleton } from '@shared/components';
-import { containers } from 'styles/containers.styles';
+import { Table, TableSkeleton } from '@shared/components';
 import { styles } from './Estimates.styles';
 
 export const Estimates = () => {
-  const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
+  const estimates = useRecoilValue(billingAtoms.estimates);
+  const estimatesLoadingState = useRecoilValue(
+    billingAtoms.estimatesLoadingState,
+  );
 
-  const { estimates, estimatesLoadingState } = useEstimates();
-
-  const { headers, rows } = mapEstimatesToRows(estimates);
+  const { headers, rows } = mapInvoiceLineItemsToRows(estimates?.lineItems);
 
   if (
     estimatesLoadingState !== 'finished' ||
@@ -25,24 +25,15 @@ export const Estimates = () => {
     return <TableSkeleton />;
 
   return (
-    <>
-      {/* {subscription?.status === 'active' ? ( */}
-      {subscription ? (
-        <Table
-          isLoading={'finished'}
-          headers={headers}
-          rows={rows}
-          additionalStyles={[styles.totalWrapper]}
+    <div css={styles.sectionWrapper}>
+      <Table headers={headers} rows={rows} />
+      <div css={styles.total}>
+        <InvoiceTotal
+          total={estimates?.total}
+          subtotal={estimates?.subtotal}
+          discounts={estimates?.discounts}
         />
-      ) : (
-        <div css={containers.medium}>
-          <Alert>
-            Unlock the full potential of our platform by ensuring your
-            subscription is active. Only then can you view subscription
-            estimates.
-          </Alert>
-        </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 };

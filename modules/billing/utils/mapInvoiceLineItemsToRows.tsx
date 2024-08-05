@@ -31,12 +31,17 @@ const styles = {
   periodEnd: (theme: ITheme) => css`
     color: ${theme.colorPlaceholder};
   `,
-  amountWrapper: css`
-    display: flex;
-    flex-flow: column-reverse nowrap;
-    justify-content: flex-end;
-    align-items: flex-end;
+  amount: css`
+    display: inline-flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
     gap: 5px;
+    align-items: flex-end;
+  `,
+  discountedPrice: (theme: ITheme) => css`
+    color: ${theme.colorPlaceholder};
+    text-decoration: line-through;
+    font-size: 14px;
   `,
 };
 
@@ -73,33 +78,33 @@ export const mapInvoiceLineItemsToRows = (items?: LineItem[]) => {
   ];
 
   const rows: Row[] =
-    items?.map((item, i) => {
-      return {
-        key: `${i}`,
-        cells: [
-          {
-            key: '1',
-            component: (
-              <div css={styles.description}>
-                <span css={typo.ellipsis} style={{ maxWidth: '90%' }}>
-                  {item.description}
-                  <span css={styles.nickname}>{item.plan}</span>
+    items?.map((item, i) => ({
+      key: `${i}`,
+      cells: [
+        {
+          key: '1',
+          component: (
+            <div css={styles.description}>
+              <span css={typo.ellipsis} style={{ maxWidth: '90%' }}>
+                {item.description}
+                <span css={styles.nickname}>{item.plan}</span>
+              </span>
+              {item?.discounts.length ? (
+                <span css={styles.discounts}>
+                  {item?.discounts.map((discountAmount, i) => (
+                    <Badge key={i} color="primary" style="outline">
+                      {discountAmount.name}
+                    </Badge>
+                  ))}
                 </span>
-                {item?.discounts.length ? (
-                  <span css={styles.discounts}>
-                    {item?.discounts.map((discountAmount, i) => (
-                      <Badge key={i} color="primary" style="outline">
-                        {discountAmount.name}
-                      </Badge>
-                    ))}
-                  </span>
-                ) : null}
-              </div>
-            ),
-          },
-          {
-            key: '2',
-            component: (
+              ) : null}
+            </div>
+          ),
+        },
+        {
+          key: '2',
+          component:
+            item?.start && item.end ? (
               <div
                 css={[styles.period, flex.display.flex, flex.direction.column]}
               >
@@ -108,36 +113,39 @@ export const mapInvoiceLineItemsToRows = (items?: LineItem[]) => {
                   {formatters.formatTimestamp(item?.end!)}
                 </span>
               </div>
+            ) : (
+              '-'
             ),
-          },
-          {
-            key: '3',
-            component: <span>{item.quantity}</span>,
-          },
-
-          {
-            key: '4',
-            component:
-              item.subtotal > 0 ? (
-                <span>{formatters.formatCurrency(item?.total!)}</span>
-              ) : null,
-          },
-          {
-            key: '5',
-            component: (
-              <div css={styles.amountWrapper}>
-                {item.proration && (
-                  <Badge color="default" style="outline">
-                    prorated
-                  </Badge>
-                )}
+        },
+        {
+          key: '3',
+          component: <span>{item.quantity}</span>,
+        },
+        {
+          key: '4',
+          component: (
+            <span>{formatters.formatCurrency(item?.unitAmount!)}</span>
+          ),
+        },
+        {
+          key: '5',
+          component: (
+            <div css={styles.amount}>
+              <span
+                {...(item?.subtotal !== item?.total && {
+                  css: styles.discountedPrice,
+                })}
+              >
                 {formatters.formatCurrency(item?.subtotal!)}
-              </div>
-            ),
-          },
-        ],
-      };
-    }) ?? [];
+              </span>
+              {item?.subtotal !== item?.total && (
+                <span>{formatters.formatCurrency(item.total!)}</span>
+              )}
+            </div>
+          ),
+        },
+      ],
+    })) ?? [];
 
   return {
     rows,

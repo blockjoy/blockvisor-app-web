@@ -142,7 +142,7 @@ export interface HostMetrics {
     | number
     | undefined;
   /**
-   * This is the list of IPs already in use - that include all nodes created on host (standalone too)
+   * This is the list of IPs already in use - that include all nodes created on host (those in dev mode too)
    * or for any other purpose.
    */
   usedIps: string[];

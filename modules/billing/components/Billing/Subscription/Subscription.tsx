@@ -1,16 +1,15 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { PageSection, Tabs } from '@shared/components';
+import { Tabs } from '@shared/components';
 import { useTabs } from '@shared/index';
 import {
   Invoices,
   billingAtoms,
-  // Subscription,
   // Estimates,
   SubscriptionInfo,
 } from '@modules/billing';
 
-export const SubscriptionViewTabs = () => {
+export const Subscription = () => {
   const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,

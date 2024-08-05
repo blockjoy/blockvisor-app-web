@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { billingAtoms, SubscriptionViewTabs, Plan } from '@modules/billing';
+import { billingAtoms, Subscription, Plan } from '@modules/billing';
 import { TableSkeleton, Unauthorized } from '@shared/components';
 import { authSelectors } from '@modules/auth';
 import { styles } from './SubscriptionView.styles';
@@ -24,8 +24,6 @@ export const SubscriptionView = () => {
     );
 
   return (
-    <div css={styles.wrapper}>
-      {subscription ? <SubscriptionViewTabs /> : <Plan />}
-    </div>
+    <div css={styles.wrapper}>{subscription ? <Subscription /> : <Plan />}</div>
   );
 };

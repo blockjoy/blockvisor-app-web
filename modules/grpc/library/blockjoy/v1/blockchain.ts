@@ -217,6 +217,7 @@ export interface BlockchainServicePricingResponse {
  * 1. blockchain type,
  * 2. node type,
  * 3. version.
+ *
  * When a blockchain node is created, a list of properties must be submitted by
  * the caller. The properties that are required / allowed are defined by these
  * properties here.

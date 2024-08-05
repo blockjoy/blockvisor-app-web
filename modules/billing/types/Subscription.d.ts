@@ -1,20 +1,3 @@
-type UpdateSubscriptionProperties = {
-  period: {
-    value: string;
-    handleUpdate: (billingPeriod: BillingPeriod) => void;
-  };
-};
-
-type SubscriptionMetadata = {
-  subscriptionItems: SubscriptionMetadataItem[];
-};
-
-type SubscriptionMetadataItem = {
-  id?: string;
-  createdAt?: Date;
-  itemPriceID?: string;
-};
-
 type SubscriptionStatus =
   | 'incomplete'
   | 'incomplete_expired'
@@ -26,3 +9,14 @@ type SubscriptionStatus =
   | 'paused';
 
 type SubscriptionBillingPeriod = 'month' | 'year';
+
+type SubscriptionActionConfig = {
+  heading: string;
+  content: string;
+};
+
+type SubscriptionView =
+  | 'preview'
+  | 'cancel-subscription'
+  | 'reactivate-subscription'
+  | 'restore-subscription';

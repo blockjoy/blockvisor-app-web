@@ -1,9 +1,10 @@
 import { useRecoilState } from 'recoil';
+import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
 import { billingAtoms } from '@modules/billing';
-import { _UPCOMING_LINES } from '../mocks/upcomingLines';
+import { _UPCOMING_INVOICE } from '../mocks/upcomingInvoice';
 
 interface IEstimatesHook {
-  estimates: any | null;
+  estimates: Invoice | null;
   estimatesLoadingState: LoadingState;
   getEstimates: () => Promise<void>;
 }
@@ -18,13 +19,13 @@ export const useEstimates = (): IEstimatesHook => {
     setEstimatesLoadingState('initializing');
 
     try {
-      const data: any = _UPCOMING_LINES;
+      const data: Invoice = _UPCOMING_INVOICE;
 
       console.log('%cGetEstimates', 'color: #bff589', data);
       setEstimates(data);
     } catch (error) {
       console.error('Failed to fetch Estimates', error);
-      setEstimates([]);
+      setEstimates(null);
     } finally {
       setEstimatesLoadingState('finished');
     }

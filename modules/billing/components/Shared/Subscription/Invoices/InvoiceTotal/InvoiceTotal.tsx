@@ -1,13 +1,19 @@
-import { formatters } from '@shared/index';
 import { useMemo } from 'react';
+import { Discount } from '@modules/grpc/library/blockjoy/v1/org';
+import { formatters } from '@shared/index';
 import { styles } from './InvoiceTotal.styles';
 
 export type InvoiceTotalProps = {
-  total: number;
-  subtotal: number;
+  total?: number;
+  subtotal?: number;
+  discounts?: Discount[];
 };
 
-export const InvoiceTotal = ({ total, subtotal }: InvoiceTotalProps) => {
+export const InvoiceTotal = ({
+  total,
+  subtotal,
+  discounts,
+}: InvoiceTotalProps) => {
   const items = useMemo(
     () => [
       {
@@ -20,6 +26,13 @@ export const InvoiceTotal = ({ total, subtotal }: InvoiceTotalProps) => {
       },
     ],
     [total, subtotal],
+  );
+
+  discounts?.forEach((discount) =>
+    items.splice(1, 0, {
+      title: `Discount (${discount.name!})`,
+      data: `- ${formatters.formatCurrency(discount.amount?.value!)}`,
+    }),
   );
 
   return (

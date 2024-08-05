@@ -107,3 +107,23 @@ export const CARD_ELEMENT_OPTIONS:
     },
   },
 };
+
+export const SUBSCRIPTION_CONFIG: Pick<
+  Record<SubscriptionStatus, SubscriptionActionConfig>,
+  'active' | 'paused' | 'canceled'
+> = {
+  active: {
+    heading: 'Cancel subscription',
+    content: 'Not satisfied? You can cancel your subscription at any time.',
+  },
+  paused: {
+    heading: 'Restore subscription',
+    content:
+      'Changed your mind? You can easily restore your subscription here.',
+  },
+  canceled: {
+    heading: 'Reactivate subscription',
+    content:
+      'Miss our services? Reactivate your subscription with a single click!',
+  },
+};

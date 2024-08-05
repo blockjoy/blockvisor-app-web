@@ -29,12 +29,6 @@ export const styles = {
     overflow: hidden;
     max-width: 100%;
   `,
-  subheadline: (theme: ITheme) => css`
-    font-size: 18px;
-    text-transform: uppercase;
-    color: ${theme.colorPlaceholder};
-    margin-bottom: 16px;
-  `,
   info: (theme: ITheme) => css`
     font-size: 10px;
     margin-top: 10px;

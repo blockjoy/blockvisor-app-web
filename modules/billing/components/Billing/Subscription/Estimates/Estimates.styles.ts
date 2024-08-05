@@ -1,9 +1,14 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  totalWrapper: css`
-    tr:last-child {
-      border-bottom: none;
-    }
+  sectionWrapper: css`
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+  `,
+  total: css`
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
   `,
 };
