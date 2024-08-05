@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
+import { isSafari } from 'react-device-detect';
 import { authAtoms, useSignIn, useUserSettings } from '@modules/auth';
 import {
   useDefaultOrganization,
@@ -136,10 +137,15 @@ export function LoginForm() {
                 name="password"
                 placeholder="Password"
                 type={activeType}
-                validationOptions={{
-                  required: 'This is a mandatory field',
-                  minLength: { value: 6, message: 'Password too short' },
-                }}
+                // TODO: Fix issue with validation in Safari
+                validationOptions={
+                  isSafari
+                    ? undefined
+                    : {
+                        required: 'This is a mandatory field',
+                        minLength: { value: 6, message: 'Password too short' },
+                      }
+                }
                 rightIcon={
                   <PasswordToggle
                     tabIndex={4}
