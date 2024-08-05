@@ -29,6 +29,7 @@ type UseHostFiltersHook = {
 
 export const useHostFilters = (): UseHostFiltersHook => {
   const filters = useRecoilValue(hostSelectors.filters);
+  const isFiltersEmpty = useRecoilValue(hostSelectors.isFiltersEmpty);
   const setPagination = useSetRecoilState(hostAtoms.hostListPagination);
   const resetPagination = useResetRecoilState(hostAtoms.hostListPagination);
   const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
@@ -78,7 +79,7 @@ export const useHostFilters = (): UseHostFiltersHook => {
   };
 
   const resetFilters = async () => {
-    setAppLoadingState('loading');
+    if (!isFiltersEmpty) setAppLoadingState('loading');
     await updateSettings('hosts', { filters: undefined }, resetPagination);
 
     setTempFilters((currentTempFilters) => ({

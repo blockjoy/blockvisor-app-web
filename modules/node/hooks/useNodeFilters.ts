@@ -23,6 +23,7 @@ type UseNodeFiltersHook = {
 
 export const useNodeFilters = (): UseNodeFiltersHook => {
   const filters = useRecoilValue(nodeSelectors.filters);
+  const isFiltersEmpty = useRecoilValue(nodeSelectors.isFiltersEmpty);
   const [tempFilters, setTempFilters] = useState<UINodeFilterCriteria>(filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     nodeAtoms.filtersTempTotal,
@@ -61,7 +62,7 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   };
 
   const resetFilters = async () => {
-    setAppLoadingState('loading');
+    if (!isFiltersEmpty) setAppLoadingState('loading');
     await updateSettings('nodes', { filters: undefined }, resetPagination);
 
     setTempFilters((currentTempFilters) => ({
