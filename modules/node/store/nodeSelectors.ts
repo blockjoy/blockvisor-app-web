@@ -1,4 +1,5 @@
 import { selector, selectorFamily } from 'recoil';
+import isEqual from 'lodash/isEqual';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
@@ -40,6 +41,15 @@ const filters = selector<UINodeFilterCriteria>({
     return nodeSettings?.filters
       ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
       : NODE_FILTERS_DEFAULT;
+  },
+});
+
+const isFiltersEmpty = selector({
+  key: 'node.filters.isEmpty',
+  get: ({ get }) => {
+    const filtersVal = get(filters);
+
+    return isEqual(filtersVal, NODE_FILTERS_DEFAULT);
   },
 });
 
@@ -189,6 +199,7 @@ const filtersNetworksAll = selectorFamily<
 export const nodeSelectors = {
   settings,
   filters,
+  isFiltersEmpty,
   nodeSort,
   queryParams,
 

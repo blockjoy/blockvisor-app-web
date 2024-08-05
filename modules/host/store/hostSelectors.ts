@@ -1,4 +1,5 @@
 import { selector, selectorFamily } from 'recoil';
+import isEqual from 'lodash/isEqual';
 import {
   Host,
   HostSort,
@@ -34,6 +35,15 @@ const filters = selector<UIHostFilterCriteria>({
     return hostSettings?.filters
       ? { ...hostSettings.filters, keyword: searchQuery ?? '' }
       : HOST_FILTERS_DEFAULT;
+  },
+});
+
+const isFiltersEmpty = selector({
+  key: 'host.filters.isEmpty',
+  get: ({ get }) => {
+    const filtersVal = get(filters);
+
+    return isEqual(filtersVal, HOST_FILTERS_DEFAULT);
   },
 });
 
@@ -147,6 +157,7 @@ const filtersStatusAll = selectorFamily<
 export const hostSelectors = {
   settings,
   filters,
+  isFiltersEmpty,
   hostSort,
   queryParams,
 
