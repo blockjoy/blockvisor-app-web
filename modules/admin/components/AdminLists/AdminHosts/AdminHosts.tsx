@@ -222,14 +222,7 @@ export const AdminHosts = () => {
       setTagsRemoved={setTagsRemoved}
       tagsAdded={tagsAdded}
       tagsRemoved={tagsRemoved}
-      additionalHeaderButtons={
-        <AdminHostsTag
-          tagsAdded={tagsAdded}
-          setTagsAdded={setTagsAdded}
-          isDisabled={!selectedIds.length}
-          selectedIds={selectedIds}
-        />
-      }
+      additionalHeaderButtons={[AdminHostsTag]}
     />
   );
 };

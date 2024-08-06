@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { styles } from './AdminNodesOrgAssign.styles';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
@@ -16,11 +16,12 @@ import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import IconOrg from '@public/assets/icons/app/Organization.svg';
 
 type Props = {
-  isDisabled?: boolean;
   selectedIds: string[];
+  list: any[];
+  setList: Dispatch<SetStateAction<any[]>>;
 };
 
-export const AdminNodesOrgAssign = ({ isDisabled, selectedIds }: Props) => {
+export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedOrg, setSelectedOrg] = useState<Org>();
@@ -36,11 +37,22 @@ export const AdminNodesOrgAssign = ({ isDisabled, selectedIds }: Props) => {
   const handleOrgAssign = async () => {
     setIsLoading(true);
 
+    const listCopy = [...list];
+
     try {
       await nodeClient.updateNode({
         ids: selectedIds,
         newOrgId: selectedOrg?.id,
       });
+
+      for (let id of selectedIds) {
+        const foundNode = listCopy.find((n) => n.id === id);
+        foundNode.orgName = selectedOrg?.name;
+        foundNode.orgId = selectedOrg?.id;
+      }
+
+      setList(listCopy);
+
       toast.success('Update Complete');
     } catch (err) {
       toast.error(`Error Updating`);
@@ -74,7 +86,7 @@ export const AdminNodesOrgAssign = ({ isDisabled, selectedIds }: Props) => {
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
       <AdminHeaderButton
-        isDisabled={isDisabled}
+        isDisabled={!selectedIds.length}
         icon={<IconOrg />}
         onClick={() => setIsOpen(!isOpen)}
         tooltip="Update Org"

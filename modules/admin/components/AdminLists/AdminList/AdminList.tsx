@@ -1,11 +1,17 @@
+import {
+  Dispatch,
+  FunctionComponent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { useSettings } from '@modules/settings';
 import { useUpdateQueryString } from '@modules/admin/hooks';
 import { adminSelectors, loadAdminColumns } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
-import { useRouter } from 'next/router';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
@@ -16,7 +22,11 @@ type Props = {
   hidePagination?: boolean;
   defaultSortField: number;
   defaultSortOrder: SortOrder;
-  additionalHeaderButtons?: React.ReactNode;
+  additionalHeaderButtons?: FunctionComponent<{
+    selectedIds: string[];
+    list: any[];
+    setList: Dispatch<SetStateAction<any[]>>;
+  }>[];
   selectedIds?: string[];
   tagsAdded?: AdminTags[];
   tagsRemoved?: AdminTags[];
@@ -289,6 +299,9 @@ export const AdminList = ({
         onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
         additionalHeaderButtons={additionalHeaderButtons}
+        selectedIds={selectedIds!}
+        list={list}
+        setList={setList}
       />
       <AdminListTable
         name={name}
