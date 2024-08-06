@@ -6,6 +6,7 @@ import {
   SubscriptionActivation,
 } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
+import { authSelectors } from '@modules/auth';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
@@ -44,6 +45,9 @@ export const withLauncherGuard = (Component: any) => {
     const canCreateResource = useRecoilValue(
       billingSelectors.canCreateResource,
     );
+    const billingExempt = useRecoilValue(
+      authSelectors.hasPermission('billing-exempt'),
+    );
 
     const [activeView, setActiveView] = useState<LauncherView>('launcher');
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
@@ -70,7 +74,7 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (!canCreateResource) {
+      if (!canCreateResource && !billingExempt) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';
@@ -95,7 +99,7 @@ export const withLauncherGuard = (Component: any) => {
           resetFulfilReqs={resetFulfilReqs}
           onCreateClick={handleCreateClicked}
           hasPermissionsToCreate={
-            hasPermissionsToCreate && (isAdmin || isOwner)
+            (hasPermissionsToCreate && (isAdmin || isOwner)) || billingExempt
           }
           {...additionalProps}
         />

@@ -58,6 +58,9 @@ export const NodeLauncherSummary = ({
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
   const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
   const price = useRecoilValue(billingAtoms.price);
+  const billingExempt = useRecoilValue(
+    authSelectors.hasPermission('billing-exempt'),
+  );
   const [isLaunching, setIsLaunching] = useRecoilState(
     nodeLauncherAtoms.isLaunching,
   );
@@ -98,21 +101,23 @@ export const NodeLauncherSummary = ({
   return (
     <div css={styles.wrapper}>
       <FormHeader>Launch</FormHeader>
-      <FormLabel>
-        <span>Host{isSuperUser ? 's' : ''}</span>
-        {selectedHosts !== null ? (
-          <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
-            Auto select
-          </a>
-        ) : null}
-      </FormLabel>
+      {(isSuperUser || Boolean(allHosts?.length)) && (
+        <FormLabel>
+          <span>Host{isSuperUser ? 's' : ''}</span>
+          {selectedHosts !== null ? (
+            <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
+              Auto select
+            </a>
+          ) : null}
+        </FormLabel>
+      )}
       {isSuperUser ? (
         <HostSelectMultiple
           isValid={isNodeAllocationValid}
           onChange={handleHostsChanged}
         />
       ) : (
-        Boolean(hostList?.length) && (
+        Boolean(allHosts?.length) && (
           <HostSelect
             hosts={allHosts}
             isLoading={isLoadingAllHosts !== 'finished'}
@@ -160,7 +165,7 @@ export const NodeLauncherSummary = ({
         )}
         <button
           onClick={onCreateNodeClicked}
-          disabled={isDisabled}
+          disabled={isDisabled && !billingExempt}
           css={[
             styles.createButton,
             isLaunching && !Boolean(error) && styles.createButtonLoading,
