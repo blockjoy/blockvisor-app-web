@@ -134,6 +134,10 @@ const IconTezos = dynamic(
   () => import(`@public/assets/icons/blockchain/Tezos.svg`),
 );
 
+const IconTon = dynamic(
+  () => import(`@public/assets/icons/blockchain/Ton.svg`),
+);
+
 const IconZKSync = dynamic(
   () => import(`@public/assets/icons/blockchain/ZKSync.svg`),
 );
@@ -243,6 +247,9 @@ export const BlockchainIcon = ({
       break;
     case 'tezos':
       Component = IconTezos;
+      break;
+    case 'ton':
+      Component = IconTon;
       break;
     case 'zksync':
       Component = IconZKSync;
