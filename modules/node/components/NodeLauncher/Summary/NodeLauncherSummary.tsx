@@ -98,21 +98,23 @@ export const NodeLauncherSummary = ({
   return (
     <div css={styles.wrapper}>
       <FormHeader>Launch</FormHeader>
-      <FormLabel>
-        <span>Host{isSuperUser ? 's' : ''}</span>
-        {selectedHosts !== null ? (
-          <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
-            Auto select
-          </a>
-        ) : null}
-      </FormLabel>
+      {(isSuperUser || Boolean(allHosts?.length)) && (
+        <FormLabel>
+          <span>Host{isSuperUser ? 's' : ''}</span>
+          {selectedHosts !== null ? (
+            <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
+              Auto select
+            </a>
+          ) : null}
+        </FormLabel>
+      )}
       {isSuperUser ? (
         <HostSelectMultiple
           isValid={isNodeAllocationValid}
           onChange={handleHostsChanged}
         />
       ) : (
-        Boolean(hostList?.length) && (
+        Boolean(allHosts?.length) && (
           <HostSelect
             hosts={allHosts}
             isLoading={isLoadingAllHosts !== 'finished'}
