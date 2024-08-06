@@ -58,6 +58,9 @@ export const NodeLauncherSummary = ({
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
   const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
   const price = useRecoilValue(billingAtoms.price);
+  const billingExempt = useRecoilValue(
+    authSelectors.hasPermission('billing-exempt'),
+  );
   const [isLaunching, setIsLaunching] = useRecoilState(
     nodeLauncherAtoms.isLaunching,
   );
@@ -162,7 +165,7 @@ export const NodeLauncherSummary = ({
         )}
         <button
           onClick={onCreateNodeClicked}
-          disabled={isDisabled}
+          disabled={isDisabled && !billingExempt}
           css={[
             styles.createButton,
             isLaunching && !Boolean(error) && styles.createButtonLoading,
